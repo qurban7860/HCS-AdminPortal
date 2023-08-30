@@ -476,7 +476,7 @@ function ToolsInstalledAddForm() {
                     <Button
                       onClick={ handleCompositToolNumberIncrease }
                       fullWidth={ isMobile }
-                      disabled={compositToolNumber >= toolsInstalled.length || compositToolNumber >= CONFIG.COMPOSITE_TOOL_CONFIG_MAX_LENGTH }
+                      disabled={ compositToolNumber >= CONFIG.COMPOSITE_TOOL_CONFIG_MAX_LENGTH }
                       variant="contained"
                       color='primary'
                       startIcon={<Iconify icon="eva:plus-fill" />}
@@ -791,7 +791,7 @@ function ToolsInstalledAddForm() {
                           <Autocomplete
                             {...field}
                             id={`engageInstruction_${index}`}
-                            options={toolsInstalled.filter((option)=> !compositToolVal.some((value, someIndex ) => option?.tool?._id === value?.engage?.tool?._id && someIndex !== index ) )}
+                            options={toolsInstalled}
                             getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
                             isOptionEqualToValue={(option, value) => option?.tool?._id === value?.tool?._id}
                             onChange={(event, value) => {
@@ -825,7 +825,7 @@ function ToolsInstalledAddForm() {
                           <Autocomplete
                             {...field}
                             id={`disengageInstruction_${index}`}
-                            options={toolsInstalled.filter((option)=> !compositToolVal.some((value, someIndex ) => option?.tool?._id === value?.disengage?.tool?._id && someIndex !== index ) )}
+                            options={toolsInstalled}
                             getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
                             isOptionEqualToValue={(option, value) => option?.tool?._id === value?.tool?._id}
                             // onChange={(event, value) => field.onChange(value)}
