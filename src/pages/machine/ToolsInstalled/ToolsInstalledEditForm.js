@@ -222,49 +222,6 @@ function ToolsInstalledEditForm() {
     // disengageInstruction: Yup.object()
   });
 
-  // const defaultValues = useMemo(
-  //   () => ({
-  //     tool: toolInstalled?.tool || null,
-  //     offset: toolInstalled?.offset || '',
-  //     isApplyWaste: toolInstalled?.isApplyWaste || false,
-  //     wasteTriggerDistance: toolInstalled?.wasteTriggerDistance || '',
-  //     isApplyCrimp: toolInstalled?.isApplyCrimp || false,
-  //     crimpTriggerDistance: toolInstalled?.crimpTriggerDistance || '',
-  //     isBackToBackPunch: toolInstalled?.isBackToBackPunch || false,
-  //     isManualSelect: toolInstalled?.isManualSelect || false,
-  //     isAssign: toolInstalled?.isAssign || false,
-  //     operations: toolInstalled?.operations || '',
-      // toolType: null,
-
-  //     // singleToolConfig {label: 'PASS'} {label: 'NO CONDITION'}
-  //     engageSolenoidLocation: toolInstalled?.singleToolConfig?.engageSolenoidLocation || '',
-  //     returnSolenoidLocation: toolInstalled?.singleToolConfig?.returnSolenoidLocation || '',
-  //     engageOnCondition: null,
-  //     engageOffCondition: null,
-  //     timeOut: toolInstalled?.singleToolConfig?.timeOut || null,
-  //     engagingDuration: toolInstalled?.singleToolConfig?.engagingDuration || null,
-  //     returningDuration: toolInstalled?.singleToolConfig?.returningDuration || null,
-  //     twoWayCheckDelayTime: toolInstalled?.singleToolConfig?.twoWayCheckDelayTime || null,
-  //     homeProximitySensorLocation: toolInstalled?.singleToolConfig?.homeProximitySensorLocation || '',
-  //     engagedProximitySensorLocation: toolInstalled?.singleToolConfig?.engagedProximitySensorLocation || '',
-  //     pressureTarget: toolInstalled?.singleToolConfig?.pressureTarget ||'',
-  //     distanceSensorLocation: toolInstalled?.singleToolConfig?.distanceSensorLocation ||'',
-  //     distanceSensorTarget: toolInstalled?.singleToolConfig?.distanceSensorTarget ||'',
-  //     isHasTwoWayCheck: toolInstalled?.singleToolConfig?.isHasTwoWayCheck ||false,
-  //     isEngagingHasEnable: toolInstalled?.singleToolConfig?.isEngagingHasEnable ||true,
-  //     isReturningHasEnable: toolInstalled?.singleToolConfig?.isReturningHasEnable ||false,
-  //     movingPunchCondition: null,
-
-  //     // compositeToolConfig  
-  //     engageInstruction: toolInstalled?.compositeToolConfig?.engageInstruction || '',
-  //     disengageInstruction: toolInstalled?.compositeToolConfig?.disengageInstruction || '',
-
-  //     isActive: toolInstalled?.isActive,
-  //   }),
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   []
-  // );
-  // console.log("defaultValues  : ",defaultValues)
   const methods = useForm({
     resolver: yupResolver(EditSettingSchema),
     defaultValues:{
@@ -903,12 +860,8 @@ function ToolsInstalledEditForm() {
               </Box>
               </>}
 
-              { toolType?.name === 'COMPOSIT TOOL' && Array.from({ length: compositToolNumber }).map((_, index) => {
-                if(index === 0) {
-                console.log('value composite', compositToolVal[index]?.engage.tool.name)
-                console.log('value tools', toolInstalled?.compositeToolConfig[index].disengageInstruction.tool.name)
-                }
-                 return (<Box
+              { toolType?.name === 'COMPOSIT TOOL' && Array.from({ length: compositToolNumber }).map((_, index) => (
+                    <Box
                       rowGap={2}
                       columnGap={2}
                       display="grid"
@@ -919,7 +872,7 @@ function ToolsInstalledEditForm() {
                       key={index}
                     >
                           <Autocomplete
-                            value={toolInstalled?.compositeToolConfig[index].engageInstruction || null}
+                            value={compositToolVal[index]?.engage || null}
                             id={`engageInstruction_${index}`}
                             options={toolsInstalled}
                             getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
@@ -941,7 +894,7 @@ function ToolsInstalledEditForm() {
                           />
 
                           <Autocomplete
-                            value={toolInstalled?.compositeToolConfig[index].disengageInstruction || null}
+                            value={compositToolVal[index]?.disengage || null}
                             id={`disengageInstruction_${index}`}
                             options={toolsInstalled}
                             getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
@@ -962,7 +915,7 @@ function ToolsInstalledEditForm() {
                             )}
                           />
                   </Box>)
-                  })}
+                  )}
               
               <RHFSwitch
                   name="isActive"
