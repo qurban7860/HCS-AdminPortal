@@ -579,6 +579,27 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                   </Typography>
                 }
               />
+
+
+              <RHFSwitch
+                name="currentEmployee"
+                labelPlacement="start"
+                label={
+                  <Typography
+                    variant="subtitle2"
+                    sx={{
+                      mx: 0,
+                      width: 1,
+                      justifyContent: 'space-between',
+                      mb: 0.5,
+                      color: 'text.secondary',
+                    }}
+                  >
+                    {' '}
+                    Current Employee
+                  </Typography>
+                }
+              />
             </Grid>
             <Stack sx={{ mt: 3 }}>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

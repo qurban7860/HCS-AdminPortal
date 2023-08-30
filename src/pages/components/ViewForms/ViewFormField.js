@@ -29,6 +29,7 @@ function ViewFormField({
   customerAccess,
   documentIsActive,
   multiAuth,
+  currentEmp,
   chips,
   userRolesChips,
   NewVersion,
@@ -91,6 +92,7 @@ function ViewFormField({
         {/* input fields params */}
         {documentIsActive !== undefined && <IconPopover documentIsActive={documentIsActive} />}
         {multiAuth !== undefined && <IconPopover multiAuth={multiAuth} />}
+        {currentEmp !== undefined && <IconPopover currentEmp={currentEmp} />}
         {customerAccess !== undefined && <IconPopover customerAccess={customerAccess} />}
         {param && typeof param === 'string' && param.trim().length > 0 && param}
         {param &&
@@ -231,6 +233,7 @@ ViewFormField.propTypes = {
   customerAccess: PropTypes.bool,
   documentIsActive: PropTypes.bool,
   multiAuth: PropTypes.bool,
+  currentEmp: PropTypes.bool,
   chipDialogArrayParam: PropTypes.array,
   chips: PropTypes.any,
   userRolesChips: PropTypes.array,

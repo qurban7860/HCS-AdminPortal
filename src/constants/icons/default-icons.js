@@ -68,6 +68,20 @@ export const ICONS = {
     color: 'red',
     heading: 'Inactive',
   },
+
+  // ------------------------------------------------------------
+  // CURRENT EMPLOYEE
+  CURR_EMP_ACTIVE: {
+    icon: 'raphael:employee',
+    color: 'green',
+    heading: 'Employee',
+  },
+  CURR_EMP_INACTIVE: {
+    icon: 'clarity:employee-line',
+    color: 'red',
+    heading: 'Not Employee',
+  },
+
   // ------------------------------------------------------------
   // customerAccess
   ALLOWED: {
