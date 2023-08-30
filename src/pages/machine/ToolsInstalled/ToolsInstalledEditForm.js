@@ -46,55 +46,14 @@ function ToolsInstalledEditForm() {
   const { machine } = useSelector((state) => state.machine);
 
   const [compositToolVal, setCompositToolVal] = useState([]);
+  console.log("compositToolVal : ",compositToolVal)
   const [compositToolNumber, setCompositToolNumber] = useState(1);
 
   const [toolsVal, setToolsVal] = useState([]);
 
-  useLayoutEffect(() => {
-    const filterTool = [];
-    toolsInstalled.map((toolInstall) => filterTool.push(toolInstall?.tool?._id));
-    const filteredTool = activeTools.filter((item) => !filterTool.includes(item._id));
-    filteredTool.sort((a, b) => {
-      const nameA = a.name.toUpperCase();
-      const nameB = b.name.toUpperCase();
-      if (nameA < nameB) {
-        return -1;
-      }
-      if (nameA > nameB) {
-        return 1;
-      }
-      return 0;
-    });
-    setToolsVal(filteredTool);
-  }, [activeTools, toolsInstalled, machine]);
-
   const dispatch = useDispatch();
   const isMobile = useResponsive('down', 'sm');
   const { enqueueSnackbar } = useSnackbar();
-
-  // useLayoutEffect(() => {
-  //   setToolVal(toolInstalled.tool);
-  //   setToolType(toolInstalled.toolType);
-  //   if(toolInstalled?.singleToolConfig?.engagingDuration){
-  //     setEngagingDuration(toolInstalled?.singleToolConfig?.engagingDuration);
-  //   }
-  //   if(toolInstalled?.singleToolConfig?.timeOut){
-  //     setTimeOut(toolInstalled?.singleToolConfig?.timeOut);
-  //   }
-  //   if(toolInstalled?.singleToolConfig?.returningDuration){
-  //     setReturningDuration(toolInstalled?.singleToolConfig?.returningDuration);
-  //   }
-  //   if(toolInstalled?.singleToolConfig?.twoWayCheckDelayTime){
-  //     setTwoWayCheckDelayTime(toolInstalled?.singleToolConfig?.twoWayCheckDelayTime);
-  //   }
-  //   if(toolInstalled?.toolType === 'SINGLE TOOL'){
-  //     setSingleTool(true);
-  //   }
-  //   if(toolInstalled?.toolType === 'COMPOSITE TOOL'){
-  //     setCompositeTool(true);
-  //   }
-  //   dispatch(getTools());
-  // }, [dispatch, toolInstalled]);
 
   const EditSettingSchema = Yup.object().shape({
     tool: Yup.object().shape({
@@ -263,49 +222,6 @@ function ToolsInstalledEditForm() {
     // disengageInstruction: Yup.object()
   });
 
-  // const defaultValues = useMemo(
-  //   () => ({
-  //     tool: toolInstalled?.tool || null,
-  //     offset: toolInstalled?.offset || '',
-  //     isApplyWaste: toolInstalled?.isApplyWaste || false,
-  //     wasteTriggerDistance: toolInstalled?.wasteTriggerDistance || '',
-  //     isApplyCrimp: toolInstalled?.isApplyCrimp || false,
-  //     crimpTriggerDistance: toolInstalled?.crimpTriggerDistance || '',
-  //     isBackToBackPunch: toolInstalled?.isBackToBackPunch || false,
-  //     isManualSelect: toolInstalled?.isManualSelect || false,
-  //     isAssign: toolInstalled?.isAssign || false,
-  //     operations: toolInstalled?.operations || '',
-      // toolType: null,
-
-  //     // singleToolConfig {label: 'PASS'} {label: 'NO CONDITION'}
-  //     engageSolenoidLocation: toolInstalled?.singleToolConfig?.engageSolenoidLocation || '',
-  //     returnSolenoidLocation: toolInstalled?.singleToolConfig?.returnSolenoidLocation || '',
-  //     engageOnCondition: null,
-  //     engageOffCondition: null,
-  //     timeOut: toolInstalled?.singleToolConfig?.timeOut || null,
-  //     engagingDuration: toolInstalled?.singleToolConfig?.engagingDuration || null,
-  //     returningDuration: toolInstalled?.singleToolConfig?.returningDuration || null,
-  //     twoWayCheckDelayTime: toolInstalled?.singleToolConfig?.twoWayCheckDelayTime || null,
-  //     homeProximitySensorLocation: toolInstalled?.singleToolConfig?.homeProximitySensorLocation || '',
-  //     engagedProximitySensorLocation: toolInstalled?.singleToolConfig?.engagedProximitySensorLocation || '',
-  //     pressureTarget: toolInstalled?.singleToolConfig?.pressureTarget ||'',
-  //     distanceSensorLocation: toolInstalled?.singleToolConfig?.distanceSensorLocation ||'',
-  //     distanceSensorTarget: toolInstalled?.singleToolConfig?.distanceSensorTarget ||'',
-  //     isHasTwoWayCheck: toolInstalled?.singleToolConfig?.isHasTwoWayCheck ||false,
-  //     isEngagingHasEnable: toolInstalled?.singleToolConfig?.isEngagingHasEnable ||true,
-  //     isReturningHasEnable: toolInstalled?.singleToolConfig?.isReturningHasEnable ||false,
-  //     movingPunchCondition: null,
-
-  //     // compositeToolConfig  
-  //     engageInstruction: toolInstalled?.compositeToolConfig?.engageInstruction || '',
-  //     disengageInstruction: toolInstalled?.compositeToolConfig?.disengageInstruction || '',
-
-  //     isActive: toolInstalled?.isActive,
-  //   }),
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   []
-  // );
-  // console.log("defaultValues  : ",defaultValues)
   const methods = useForm({
     resolver: yupResolver(EditSettingSchema),
     defaultValues:{
@@ -420,6 +336,7 @@ function ToolsInstalledEditForm() {
     data.distanceSensorLocation = distanceSensorLocation
     data.distanceSensorTarget = distanceSensorTarget
     data.compositeToolConfig = compositToolVal;
+    console.log("tool install edit data : ", data);
     try {
       data.toolType = toolType;
       await dispatch(updateToolInstalled(machine._id, toolInstalled._id, data));
@@ -460,7 +377,7 @@ function ToolsInstalledEditForm() {
                       <Autocomplete
                         {...field}
                         disabled
-                        options={toolsVal}
+                        options={activeTools}
                         getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                         isOptionEqualToValue={(option, value) => option._id === value._id}
                         renderOption={(props, option) => (
@@ -646,7 +563,7 @@ function ToolsInstalledEditForm() {
                     <Button
                       onClick={ handleCompositToolNumberIncrease }
                       fullWidth={ isMobile }
-                      disabled={compositToolNumber >= toolsInstalled.length || compositToolNumber >= CONFIG.COMPOSITE_TOOL_CONFIG_MAX_LENGTH }
+                      disabled={ compositToolNumber >= CONFIG.COMPOSITE_TOOL_CONFIG_MAX_LENGTH }
                       variant="contained"
                       color='primary'
                       startIcon={<Iconify icon="eva:plus-fill" />}
@@ -954,54 +871,35 @@ function ToolsInstalledEditForm() {
                       }}
                       key={index}
                     >
-                      <Controller
-                        name={`engageInstruction_${index}`}
-                        control={control}
-                        defaultValue={compositToolVal[index]?.engage || null}
-                        render={({ field: { ref, ...field }, fieldState: { error } }) => (
                           <Autocomplete
-                            {...field}
+                            value={compositToolVal[index]?.engage || null}
                             id={`engageInstruction_${index}`}
-                            options={toolsInstalled.filter((option)=> !compositToolVal.some((value, someIndex ) => option?.tool?._id === value?.engage?.tool?._id && someIndex !== index ) )}
+                            options={toolsInstalled}
                             getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
                             isOptionEqualToValue={(option, value) => option?.tool?._id === value?.tool?._id}
                             onChange={(event, value) => {
-                              field.onChange(value);
                               setCompositToolVal((prevVal) => {
                                 const updatedVal = [...prevVal];
                                 updatedVal[index] = { engage: value, disengage: updatedVal[index]?.disengage || null };
                                 return updatedVal;
                               });
                             }}
-                            // onChange={(event, value) => field.onChange(value)}
                             renderInput={(params) => (
                               <TextField
                                 {...params}
                                 label={`Engage Instruction ${index + 1}`}
                                 placeholder="Search"
-                                error={!!error}
-                                helperText={error?.message}
-                                inputRef={ref}
                               />
                             )}
                           />
-                        )}
-                      />
 
-                      <Controller
-                        name={`disengageInstruction_${index}`}
-                        control={control}
-                        defaultValue={compositToolVal[index]?.disengage || null}
-                        render={({ field: { ref, ...field }, fieldState: { error } }) => (
                           <Autocomplete
-                            {...field}
+                            value={compositToolVal[index]?.disengage || null}
                             id={`disengageInstruction_${index}`}
-                            options={toolsInstalled.filter((option)=> !compositToolVal.some((value, someIndex ) => option?.tool?._id === value?.disengage?.tool?._id && someIndex !== index ) )}
+                            options={toolsInstalled}
                             getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
                             isOptionEqualToValue={(option, value) => option?.tool?._id === value?.tool?._id}
-                            // onChange={(event, value) => field.onChange(value)}
                             onChange={(event, value) => {
-                              field.onChange(value);
                               setCompositToolVal((prevVal) => {
                                 const updatedVal = [...prevVal];
                                 updatedVal[index] = { disengage: value, engage: updatedVal[index]?.engage || null };
@@ -1013,16 +911,11 @@ function ToolsInstalledEditForm() {
                                 {...params}
                                 label={`Disengage Instruction ${index + 1}`}
                                 placeholder="Search"
-                                error={!!error}
-                                helperText={error?.message}
-                                inputRef={ref}
                               />
                             )}
                           />
-                        )}
-                      />
-                  </Box>
-                  ))}
+                  </Box>)
+                  )}
               
               <RHFSwitch
                   name="isActive"
