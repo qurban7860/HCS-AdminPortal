@@ -25,6 +25,8 @@ import FormProvider, {
 } from '../../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { CONFIG } from '../../../config-global'
+import { checkValuesNotNull } from '../util/index'
+
 // ----------------------------------------------------------------------
 
 function ToolsInstalledAddForm() {
@@ -41,7 +43,7 @@ function ToolsInstalledAddForm() {
   const [compositToolNumber, setCompositToolNumber] = useState(1);
   // console.log("compositToolVal : ", compositToolVal )
   // console.log("toolsInstalled : ",toolsInstalled)
-  const [toolType, setToolType] = useState(toolTypesObj[0]);
+  // const [toolType, setToolType] = useState(toolTypesObj[0]);
 
   useLayoutEffect(() => {
     dispatch(getActiveTools());
@@ -103,7 +105,12 @@ function ToolsInstalledAddForm() {
     })
     .test('no-spaces', 'Operations cannot have spaces', value => !(value && value.toString().includes(' '))),
     
-    // toolType: Yup.string(),
+    toolType: Yup.object().required().test('composit-tool-validation', 'Engage Instrctuion or Disengage Instrctuion is required!', (value) =>{
+      if(value?.name === 'COMPOSIT TOOL' && (compositToolVal.length < 1 || !(compositToolVal.some(checkValuesNotNull)))){
+        return false;
+      }
+      return true;
+    }).nullable().label('Tool Type'),
     isApplyWaste: Yup.boolean(),
     isApplyCrimp: Yup.boolean(),
     isBackToBackPunch: Yup.boolean(),
@@ -168,7 +175,7 @@ function ToolsInstalledAddForm() {
       label: Yup.string()
     }).nullable().label('Moving Punch Condition'),
     // -------------------------------- composite Tool Config --------------------------------
-    // engageInstruction: Yup.object(),
+    // engageInstruction_1: Yup.object().shape().nullable().label('Engage Instructuion').required(),
     // disengageInstruction: Yup.object()
   });
 
@@ -184,7 +191,7 @@ function ToolsInstalledAddForm() {
       isManualSelect: false,
       isAssign: false,
       operations: '',
-      // toolType: null,
+      toolType: { name: 'GENERIC TOOL'} ,
 
       // singleToolConfig {label: 'PASS'} {label: 'NO CONDITION'}
       engageSolenoidLocation: '',
@@ -229,7 +236,7 @@ function ToolsInstalledAddForm() {
     control,
   } = methods
 
-  const { tool, engageOnCondition, engageOffCondition, movingPunchCondition, timeOut, engagingDuration, returningDuration, twoWayCheckDelayTime } = watch();
+  const { tool, engageOnCondition, engageOffCondition, movingPunchCondition, timeOut, engagingDuration, returningDuration, twoWayCheckDelayTime, toolType } = watch();
 
   const onSubmit = async (data) => {
     try {
@@ -241,7 +248,7 @@ function ToolsInstalledAddForm() {
       data.returningDuration = returningDuration;
       data.twoWayCheckDelayTime = twoWayCheckDelayTime;
       data.compositeToolConfig = compositToolVal;
-      // console.log("Data", data);
+      console.log("Data", data);
       await dispatch(addToolInstalled(machine._id, data));
       reset();
       dispatch(setToolInstalledFormVisibility(false));
@@ -437,29 +444,34 @@ function ToolsInstalledAddForm() {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
+              <Controller
+                name="toolType"
+                control={control}
+                defaultValue={toolType || null }
+                render={ ({field: { ref, ...field }, fieldState: { error } }) => (
                 <Autocomplete
-                  name="toolType" 
+                  {...field} 
                   options={toolTypesObj}
                   getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                   isOptionEqualToValue={(option, value) => option.name === value.name}
-                  value={toolType}
-                  onChange={(event, newValue) => {
-                  if (newValue) {
-                    setToolType(newValue);
-                  } else {
-                    setToolType(newValue);
-                  }
-                  }}
+                  onChange={(event, value) => field.onChange(value)}
                   renderInput={(params) => (
                     <TextField 
                       {...params} 
                       name="toolType" 
-                      label="Tool Types"  
-                      />
-                      )}
-                    disableClearable
+                      id="toolType" 
+                      label="Tool Types" 
+                      error={!!error}
+                      helperText={error?.message} 
+                      inputRef={ref}  
+                    />
+                  )}
+                  disableClearable
                 />
-                {toolType.name === 'COMPOSIT TOOL' && (  
+                )}
+              />
+
+                {toolType?.name === 'COMPOSIT TOOL' && (  
                   <Grid display="flex" justifyContent="flex-end">
                     <Button
                       onClick={ handleCompositToolNumberIncrease }
@@ -481,7 +493,7 @@ function ToolsInstalledAddForm() {
                   </Grid>    
                 )}
               </Box>
-              {toolType.name === 'SINGLE TOOL' && 
+              {toolType?.name === 'SINGLE TOOL' && 
               <>
               <Box
                 rowGap={2}
@@ -760,7 +772,7 @@ function ToolsInstalledAddForm() {
               </Box>
               </>}
 
-                  { toolType.name === 'COMPOSIT TOOL' && Array.from({ length: compositToolNumber }).map((_, index) => (
+                  { toolType?.name === 'COMPOSIT TOOL' && Array.from({ length: compositToolNumber }).map((_, index) => (
                     <Box
                       rowGap={2}
                       columnGap={2}

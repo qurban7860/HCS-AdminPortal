@@ -6,9 +6,9 @@ import { setSiteDialog } from '../../../redux/slices/customer/site';
 import DialogLabel from './DialogLabel';
 import ViewFormField from '../ViewForms/ViewFormField';
 
-function SiteDialog({ site, title }) {
+function SiteDialog({ title }) {
     const dispatch = useDispatch();
-    const { siteDialog } = useSelector((state) => state.site);
+    const { siteDialog, site } = useSelector((state) => state.site);
     const handleClose = () => { dispatch(setSiteDialog(false)) }
   return (
 <Dialog
@@ -56,7 +56,6 @@ function SiteDialog({ site, title }) {
 }
 
 SiteDialog.propTypes = {
-  site: PropTypes.object,
   title: PropTypes.string,
 };
 

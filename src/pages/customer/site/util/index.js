@@ -19,3 +19,7 @@ export function isNumberLongitude(str) {
     }
     return regExp.longitudeRegex.test(str);
 }
+
+export function checkValuesNotNull(obj) {
+    return Object.values(obj).some(value => value !== null);
+  }
