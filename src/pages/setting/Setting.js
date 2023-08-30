@@ -42,7 +42,12 @@ export default function Setting() {
   const linkConfigs = () => {
     navigate(PATH_SETTING.configs.list);
   };
-  const shouldShowListItem = true; 
+
+const userRolesString = localStorage.getItem('userRoles');
+const userRoles = userRolesString ? JSON.parse(userRolesString) : [];
+const userModuleRole = userRoles?.some((role) => role.roleType === 'Module');
+// console.log(userRoles);
+
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
@@ -81,7 +86,7 @@ export default function Setting() {
                 icon={ICONS.REGION.icon}
                 content={ICONS.REGION.heading}
               />
-                {shouldShowListItem && (
+                {userModuleRole  &&   (
                <ListItem
                   onClick={linkModules}
                   icon={ICONS.MODULE.icon}
