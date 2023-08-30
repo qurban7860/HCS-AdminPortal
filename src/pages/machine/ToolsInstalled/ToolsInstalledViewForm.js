@@ -4,10 +4,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Box, Card, Grid, Typography } from '@mui/material';
+import { Box, Card, Grid, Typography, Table, TableBody, TableCell, TableHead, TableRow,  Paper, TableContainer,tableCellClasses , styled } from '@mui/material';
 import {
   RHFSwitch,
 } from '../../../components/hook-form';
+import {
+  TableNoData,
+  TableSkeleton
+} from '../../../components/table';
 // redux
 import {
   setToolInstalledFormVisibility,
@@ -43,7 +47,7 @@ function ToolsInstalledViewForm({ currentTool = null }) {
     toolInstalled,
     formVisibility,
   } = useSelector((state) => state.toolInstalled);
-  // console.log('currentTool : ',currentTool)
+  console.log('currentTool : ',currentTool)
   const { machine } = useSelector((state) => state.machine);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -55,7 +59,16 @@ function ToolsInstalledViewForm({ currentTool = null }) {
 
   const [disableDeleteButton, setDisableDeleteButton] = useState(false);
   const [disableEditButton, setDisableEditButton] = useState(false);
-
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.primary.dark,
+      color: theme.palette.primary.contrastText,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14,
+    },
+  }));
+  
   useLayoutEffect(() => {
     if (machine.transferredMachine) {
       setDisableDeleteButton(true);
@@ -201,8 +214,25 @@ function ToolsInstalledViewForm({ currentTool = null }) {
 
         {currentTool?.toolType === 'COMPOSIT TOOL'  && ( 
           <>
-            <ViewFormField sm={12} heading="Engage Instruction" toolType={currentTool?.compositeToolConfig?.engageInstruction} />
-            <ViewFormField sm={12} heading="Disengage Instruction" toolType={currentTool?.compositeToolConfig?.disengageInstruction} />
+          <TableContainer component={Paper} sx={{ my:3 }}>
+              <Table sx={{ minWidth: 300 }} size="small" aria-label="a dense table">
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell align="left" >Engage Instruction</StyledTableCell>
+                    <StyledTableCell align="left" >Disengage Instruction</StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody >
+                  {currentTool?.compositeToolConfig.length > 0 && currentTool?.compositeToolConfig?.map((row) => (
+                    <TableRow hover key={row?._id}>
+                      <TableCell align="left">{row?.engageInstruction?.tool?.name}</TableCell>
+                      <TableCell align="left">{row?.disengageInstruction?.tool?.name}</TableCell>
+                    </TableRow>
+                  )) }
+                </TableBody>
+              </Table>
+                {/* {currentTool?.compositeToolConfig?.length < 1 && <Grid item md={12} ><TableNoData isNotFound={currentTool?.compositeToolConfig.length < 1 } /></Grid>} */}
+            </TableContainer>
           </>
         )}
 

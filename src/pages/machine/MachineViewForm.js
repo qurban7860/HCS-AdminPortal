@@ -16,7 +16,7 @@ import {
   setMachineVerification,
 } from '../../redux/slices/products/machine';
 import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
-import { setSiteDialog } from '../../redux/slices/customer/site';
+import { getSite, resetSite, setSiteDialog } from '../../redux/slices/customer/site';
 
 import { setToolInstalledFormVisibility, setToolInstalledEditFormVisibility } from '../../redux/slices/products/toolInstalled';
 // hooks
@@ -58,9 +58,9 @@ export default function MachineViewForm() {
   const [disableDeleteButton, setDisableDeleteButton] = useState(false);
   const [hasValidLatLong, setHasValidLatLong] = useState(false);
   const isMobile = useResponsive('down', 'sm');
-  const handleSiteDialog = () =>{ dispatch(setSiteDialog(true))}
+  const handleInstallationSiteDialog = () =>{ dispatch(resetSite()); dispatch(getSite(machine?.customer?._id, machine?.instalationSite?._id)); dispatch(setSiteDialog(true))}
+  const handleBillingSiteDialog = () =>{ dispatch(resetSite()); dispatch(getSite(machine?.customer?._id, machine?.billingSite?._id)); dispatch(setSiteDialog(true))}
 
-  // function to check whether the lat long params exist or not
   const hasValidArray = (array) =>
     array.some((obj) => {
       const lat = obj?.lat;
@@ -293,7 +293,7 @@ export default function MachineViewForm() {
               heading="Installation Site"
               node={
                 defaultValues.instalationSite && (
-                  <Link onClick={ handleSiteDialog } href="#" underline="none">
+                  <Link onClick={ handleInstallationSiteDialog } href="#" underline="none">
                     {defaultValues.instalationSite?.name}
                   </Link>
                 )
@@ -304,7 +304,7 @@ export default function MachineViewForm() {
               heading="Billing Site"
               node={
                 defaultValues.billingSite && (
-                  <Link onClick={ handleSiteDialog } href="#" underline="none">
+                  <Link onClick={ handleBillingSiteDialog } href="#" underline="none">
                     {defaultValues.billingSite?.name}
                   </Link>
                 )

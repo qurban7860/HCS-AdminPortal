@@ -46,6 +46,7 @@ export default function MachineListTableRow({
         param={serialNo}
         isVerified={verifications?.length > 0}
       />
+      
       {  useScreenSize('lg') && <TableCell >{name || ''}</TableCell>}
       {  useScreenSize('sm') && <TableCell >{machineModel?.name || ''}</TableCell>}
       {  useScreenSize('sm') && <TableCell sx={{color: status?.slug === 'transferred' ? 'red' : 'inherit' }} >{status?.name || ''}</TableCell>}
