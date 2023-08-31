@@ -283,8 +283,8 @@ const rootReducer = combineReducers({
   drawing: persistReducer(drawingPersistConfig, drawingReducer),
   config: persistReducer(configPersistConfig, configReducer),
   userConfig: persistReducer(userConfigPersistConfig, userConfigReducer),
-  machineServiceParam: persistReducer(machineServiceParamPersistConfig, machineServiceParamReducer)
   serviceRecordConfig: persistReducer(serviceRecordConfigPersistConfig, serviceRecordConfigReducer),
+  machineServiceParam: persistReducer(machineServiceParamPersistConfig, machineServiceParamReducer)
 
 });
 
