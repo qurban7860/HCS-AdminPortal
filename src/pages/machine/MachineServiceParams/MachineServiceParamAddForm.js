@@ -72,11 +72,10 @@ export default function MachineServiceParamAddForm() {
 
   const onSubmit = async (data) => {
     try {
-      console.log("firstSubmit", data);
       await dispatch(addMachineServiceParam(data));
       reset();
       enqueueSnackbar(Snacks.machineServiceParamAdd);
-      // navigate();
+      navigate(PATH_MACHINE.machines.settings.machineServiceParams.list);
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.error(error);
