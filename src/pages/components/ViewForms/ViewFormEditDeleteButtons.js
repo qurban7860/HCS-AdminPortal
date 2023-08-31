@@ -70,9 +70,7 @@ export default function ViewFormEditDeleteButtons({
   };
 
   const handleAWSInviteConfirm = () => {
-    console.log('aaaaaa')
     handleAWSInvite();
-    // handleCloseConfirm('AWSInvite');
   };
 
   const { isMobile } = useResponsive('down', 'sm');
