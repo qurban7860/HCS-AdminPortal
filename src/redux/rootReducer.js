@@ -239,6 +239,10 @@ export const drawingPersistConfig={
 }
 export const machineServiceParamPersistConfig={
   key: 'machineServiceParam',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
 export const serviceRecordConfigPersistConfig={
   key: 'serviceRecordConfig',
   storage,
