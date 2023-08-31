@@ -221,7 +221,7 @@ export default function TechParamList() {
           <Cover
             name="Technical Parameter Categories"
             icon="material-symbols:list-alt-outline"
-            setting="enable"
+            setting
           />
         </StyledCardContainer>
         <TableCard>

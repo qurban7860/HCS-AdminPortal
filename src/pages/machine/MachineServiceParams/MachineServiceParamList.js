@@ -1,90 +1,81 @@
+import debounce from 'lodash/debounce';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Grid, Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
+import {
+  Card,
+  Table,
+  Button,
+  Tooltip,
+  TableBody,
+  Container,
+  IconButton,
+  TableContainer,
+} from '@mui/material';
 // redux
-import { useDispatch, useSelector } from 'react-redux';
-import debounce from 'lodash/debounce';
+import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { getTools, getTool, deleteTool,
-  ChangeRowsPerPage,
-  ChangePage,
-  setFilterBy
- } from '../../../redux/slices/products/tools';
-import { PATH_MACHINE } from '../../../routes/paths';
+import { PATH_MACHINE, PATH_SETTING } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../../components/snackbar';
-import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
+  TableSelectedAction,
   TablePaginationCustom,
 } from '../../../components/table';
+import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
-import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
+import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
-import ToolListTableRow from './ToolListTableRow';
-import ToolListTableToolbar from './ToolListTableToolbar';
+import MachineServiceParamListTableRow from './MachineServiceParamListTableRow';
+import MachineServiceParamListTableToolbar from './MachineServiceParamListTableToolbar';
+import {
+  getMachineServiceParams,
+  ChangeRowsPerPage,
+  ChangePage,
+  setFilterBy
+} from '../../../redux/slices/products/machineServiceParams';
 import { Cover } from '../../components/Defaults/Cover';
-import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
-// constants
-import { FORMLABELS, DIALOGS, BUTTONS } from '../../../constants/default-constants';
 import TableCard from '../../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'isDisabled', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
-];
-
-const STATUS_OPTIONS = [
-  // { id: '1', value: 'Order Received' },
-  // { id: '2', value: 'In Progress' },
-  // { id: '3', value: 'Ready For Transport' },
-  // { id: '4', value: 'In Freight' },
-  // { id: '5', value: 'Deployed' },
-  // { id: '6', value: 'Archived' },
+  { id: 'printName', label: 'Print Name', align: 'left' },
+  // { id: 'xs2', label: 'Help Hint', align: 'center' },
+  // { id: 'xs3', label: 'Link To User Manual', align: 'center' },
+  { id: 'xs4', label: 'Required', align: 'center' },
+  { id: 'xs5', label: 'Input Type', align: 'left' },
+  // { id: 'sm1', label: 'Unit Type', align: 'left' },
+  // { id: 'sm2', label: 'Min Validation', align: 'center' },
+  // { id: 'sm3', label: 'Max Validation', align: 'center' },
+  { id: 'active', label: 'Active', align: 'center' },
+  { id: 'created_at', label: 'Created At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function ToolList() {
+export default function MachineServiceParamList() {
   const {
-    dense,
-    // page,
     order,
     orderBy,
-    // rowsPerPage,
     setPage,
     //
     selected,
     setSelected,
     onSelectRow,
+    onSelectAllRows,
     //
     onSort,
-    onChangeDense,
-    // onChangePage,
-    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'name',
   });
 
-  const dispatch = useDispatch();
-  const { themeStretch } = useSettingsContext();
-  const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
-  const [filterName, setFilterName] = useState('');
-  const [tableData, setTableData] = useState([]);
-  const [filterStatus, setFilterStatus] = useState([]);
-  const [openConfirm, setOpenConfirm] = useState(false);
-  const { tools, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector((state) => state.tool);
-  
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
@@ -92,17 +83,30 @@ export default function ToolList() {
 
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+
+  const [filterName, setFilterName] = useState('');
+
+  const [tableData, setTableData] = useState([]);
+
+  const [filterStatus, setFilterStatus] = useState([]);
+
+  const [openConfirm, setOpenConfirm] = useState(false);
+
+  const { machineServiceParams, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceParam);
+
   useLayoutEffect(() => {
-    // console.log('Testing done')
-    dispatch(getTools());
+    dispatch(getMachineServiceParams()); 
   }, [dispatch]);
 
   useEffect(() => {
     if (initial) {
-      setTableData(tools);
+      setTableData(machineServiceParams);
     }
-  }, [tools, error, responseMessage, enqueueSnackbar, initial]);
-
+  }, [machineServiceParams, initial]);
+  
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
@@ -111,8 +115,11 @@ export default function ToolList() {
   });
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-  const denseHeight = dense ? 60 : 80;
+
+  const denseHeight = 60;
+
   const isFiltered = filterName !== '' || !!filterStatus.length;
+
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   const handleOpenConfirm = () => {
@@ -122,7 +129,6 @@ export default function ToolList() {
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
   };
-
 
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
@@ -149,36 +155,8 @@ export default function ToolList() {
     setFilterStatus(event.target.value);
   };
 
-  const handleDeleteRow = async (id) => {
-    await dispatch(deleteTool(id));
-    try {
-      // console.log(id);
-      // await dispatch(deleteSupplier(id));
-      dispatch(getTools());
-      setSelected([]);
-
-      if (page > 0) {
-        if (dataInPage.length < 2) {
-          setPage(page - 1);
-        }
-      }
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
-
-  const handleEditRow = async (id) => {
-    // console.log(id);
-    // dispatch(getTool(id));
-    await dispatch(getTool(id));
-    navigate(PATH_MACHINE.machines.settings.tool.edit(id));
-  };
-
-  const handleViewRow = async (id) => {
-    // console.log(id,PATH_MACHINE.supplier.view(id));
-    // console.log(id)
-    await dispatch(getTool(id));
-    navigate(PATH_MACHINE.machines.settings.tool.view(id));
+  const handleViewRow = (id) => {
+    navigate(PATH_MACHINE.machines.settings.machineServiceParams.view(id));
   };
 
   const handleResetFilter = () => {
@@ -189,20 +167,25 @@ export default function ToolList() {
   return (
     <>
       <Container maxWidth={false}>
-        <StyledCardContainer>
-          <Cover name={FORMLABELS.COVER.TOOLS} setting />
-        </StyledCardContainer>
-
+        <Card
+          sx={{
+            mb: 3,
+            height: 160,
+            position: 'relative',
+          }}
+        >
+          <Cover name="Machine Service Parameters" icon="carbon:parameter" setting />
+        </Card>
         <TableCard>
-          <ToolListTableToolbar
+          <MachineServiceParamListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
             onFilterStatus={handleFilterStatus}
-            statusOptions={STATUS_OPTIONS}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
+
           {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
@@ -210,7 +193,26 @@ export default function ToolList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
+
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+            <TableSelectedAction
+              numSelected={selected.length}
+              rowCount={tableData.length}
+              onSelectAllRows={(checked) =>
+                onSelectAllRows(
+                  checked,
+                  tableData.map((row) => row._id)
+                )
+              }
+              action={
+                <Tooltip title="Delete">
+                  <IconButton color="primary" onClick={handleOpenConfirm}>
+                    <Iconify icon="eva:trash-2-outline" />
+                  </IconButton>
+                </Tooltip>
+              }
+            />
+
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
                 <TableHeadCustom
@@ -225,14 +227,11 @@ export default function ToolList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <ToolListTableRow
+                        <MachineServiceParamListTableRow
                           key={row._id}
                           row={row}
-                          selected={selected.includes(row._id)}
-                          onSelectRow={() => onSelectRow(row._id)}
-                          onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
+                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -242,6 +241,7 @@ export default function ToolList() {
               </Table>
             </Scrollbar>
           </TableContainer>
+        <TableNoData isNotFound={isNotFound} />
 
           {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
@@ -251,28 +251,8 @@ export default function ToolList() {
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
         </TableCard>
+
       </Container>
-      <Grid item lg={12}>
-        <TableNoData isNotFound={isNotFound} />
-      </Grid>
-      <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title={DIALOGS.DELETE.title}
-        content={DIALOGS.DELETE.content}
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              // handleDeleteRows(selected);
-              handleCloseConfirm();
-            }}
-          >
-            {BUTTONS.DELETE}
-          </Button>
-        }
-      />
     </>
   );
 }
@@ -280,8 +260,7 @@ export default function ToolList() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
-  const stabilizedThis = inputData ? inputData?.map((el, index) => [el, index]) : [];
-
+  const stabilizedThis = inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -289,13 +268,14 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
+  // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
 
   if (filterName) {
     inputData = inputData.filter(
-      (filtertool) =>
-        filtertool?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (filtertool?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-        fDate(filtertool?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+      (docCategory) =>
+        docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // (docCategory?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(docCategory?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 

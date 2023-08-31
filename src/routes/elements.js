@@ -90,15 +90,15 @@ export const SupplierAddForm = Loadable(
 );
 export const SupplierList = Loadable(lazy(() => import('../pages/machine/Supplier/SupplierList')));
 export const SupplierView = Loadable(lazy(() => import('../pages/machine/Supplier/SupplierView')));
-export const SupplierViewForm = Loadable(
-  lazy(() => import('../pages/machine/Supplier/SupplierViewForm'))
-);
+export const SupplierViewForm = Loadable(lazy(() => import('../pages/machine/Supplier/SupplierViewForm')));
 export const SupplierEdit = Loadable(lazy(() => import('../pages/machine/Supplier/SupplierEdit')));
-export const SupplierEditForm = Loadable(
-  lazy(() => import('../pages/machine/Supplier/SupplierEditForm'))
-);
+export const SupplierEditForm = Loadable(lazy(() => import('../pages/machine/Supplier/SupplierEditForm')));
 export const SForm = Loadable(lazy(() => import('../pages/machine/Supplier/SupplierEditForm')));
 
+export const MachineServiceParamList     = Loadable(lazy(() => import('../pages/machine/MachineServiceParams/MachineServiceParamList')));
+export const MachineServiceParamViewForm = Loadable(lazy(() => import('../pages/machine/MachineServiceParams/MachineServiceParamView')));
+export const MachineServiceParamEditForm = Loadable(lazy(() => import('../pages/machine/MachineServiceParams/MachineServiceParamEditForm')));
+export const MachineServiceParamAddForm  = Loadable(lazy(() => import('../pages/machine/MachineServiceParams/MachineServiceParamAddForm')));
 // Signin Logs
 export const SignInLogList = Loadable(lazy(() => import('../pages/user/signInLog/SignInLogList')));
 
