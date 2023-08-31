@@ -25,7 +25,9 @@ const initialState = {
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
+  verifyInviteStatus:false,
 };
+
 
 const slice = createSlice({
   name: 'user',
@@ -125,6 +127,13 @@ const slice = createSlice({
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
+    },
+
+    // Get Verify Invite
+    getVerifyInviteStatus(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.verifyInviteStatus = action.payload;
     },
     // Set FilterBy
     setFilterBy(state, action) {
@@ -296,7 +305,7 @@ export function getLoggedInSecurityUser(id) {
 
 // ----------------------------------------------------------------------
 
-export function deleteSecurityUser(id) {
+export async function deleteSecurityUser(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{
@@ -354,6 +363,61 @@ export function getSignInLogs(id) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
       throw error;
+    }
+  };
+}
+
+export async function sendUserInvite(Id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/sendUserInvite/${Id}`);
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.setResponseMessage(response.data));
+      }
+      return response; // eslint-disable-line
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
+      console.error(error);
+      throw error;
+    }
+  };
+}
+
+export function verifyUserInvite(Id,code) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/verifyInviteCode/${Id}/${code}`);
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.getVerifyInviteStatus(response.data));
+      }
+      return response; // eslint-disable-line
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
+      console.error(error);
+      throw error;
+    }
+  };
+}
+
+
+export function updatePasswordUserInvite(data, Id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try{
+
+      const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/updatePasswordUserInvite/${Id}`,
+        data
+      );
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.setResponseMessage(response.data));
+      }
+      return response; // eslint-disable-line
+    } catch (error) {
+      console.error(error);
+      throw error;
+      // dispatch(slice.actions.hasError(error.Message));
     }
   };
 }

@@ -26,6 +26,7 @@ export const PATH_AUTH = {
   resetPassword: path(ROOTS_AUTH, '/reset-password'),
   newpassword: (token, userId) => path(ROOTS_AUTH, `/new-password/${token}/${userId}`),
   authenticate: path(ROOTS_AUTH, '/authenticate'),
+
   // newPassword: path(ROOTS_AUTH, '/new-password/${id}/asset/${userId}/edit'),
 };
 
@@ -36,12 +37,13 @@ export const PATH_PAGE = {
   page404: '/404',
   page500: '/500',
   components: '/components',
+  invalidErrorPage:'/InvalidErrorPage',
+  expiredErrorPage:'/ExpiredErrorPage'
 };
 
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
   permissionDenied: path(ROOTS_DASHBOARD, '/permission-denied'),
-  // blank: path(ROOTS_DASHBOARD, '/blank'),
   blank: path(ROOTS_AUTH, '/login'),
   general: {
     app: path(ROOTS_DASHBOARD, '/app'),

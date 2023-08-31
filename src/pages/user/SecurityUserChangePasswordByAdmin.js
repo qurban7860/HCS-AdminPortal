@@ -30,6 +30,7 @@ export default function SecurityUserChangePassword() {
   const ChangePassWordSchema = Yup.object().shape({
     newPassword: Yup.string()
       .min(6, 'Password must be at least 6 characters')
+      .max(18, 'Password must be less than 18 characters')
       .required('New Password is required'),
     confirmNewPassword: Yup.string().oneOf([Yup.ref('newPassword'), null], 'Passwords must match'),
   });

@@ -1,5 +1,6 @@
 import { Navigate, useRoutes } from 'react-router-dom';
 // auth
+import ErrorPage from '../pages/ErrorPage';
 import AuthGuard from '../auth/AuthGuard';
 import GuestGuard from '../auth/GuestGuard';
 // layouts
@@ -44,9 +45,9 @@ import {
   SupplierAddForm,
   SupplierList,
   SupplierView,
-  SupplierViewForm,
+  // SupplierViewForm,
   SupplierEdit,
-  SupplierEditForm,
+  // SupplierEditForm,
   // License
   // MachineLicenses,
   // LicenseList,
@@ -181,11 +182,13 @@ import {
   Page404,
   ComingSoonPage,
   MaintenancePage,
+  UserInviteLanding,
   
   
 
   //
 } from './elements';
+import LoginLayout from '../layouts/login/LoginLayout';
 
 // ----------------------------------------------------------------------
 
@@ -561,6 +564,7 @@ export default function Router() {
     {
       element: <SimpleLayout />,
       children: [
+        // { path: 'ErrorPage/:status', element: <ErrorPage />}
       ],
     },
     {
@@ -571,8 +575,22 @@ export default function Router() {
         { path: '500', element: <Page500 /> },
         { path: '404', element: <Page404 /> },
         { path: '403', element: <Page403 /> },
-      ],
+        { path: 'InvalidErrorPage', element: <ErrorPage title="Invalid Link"/>},
+        { path: 'ExpiredErrorPage', element: <ErrorPage title="Link Expired"/>},
+      ], 
     },
+    {
+      path: 'invite',
+      children:[
+        { path: ':id/:code/:expiry', element:(
+        <LoginLayout title="User Invitation">
+          <UserInviteLanding />
+        </LoginLayout>
+        ) }
+
+      ]
+    },
+    // { path: 'ErrorPage/:status', element: (<LoginLayout title="AWS Invitation"><ErrorPage /></LoginLayout>)},
     { path: '*', element: <Navigate to="/404" replace /> },
   ]);
 }

@@ -12,6 +12,7 @@ import {
   getSecurityUsers,
   deleteSecurityUser,
   setSecurityUserEditFormVisibility,
+  sendUserInvite,
 } from '../../redux/slices/securityUser/securityUser';
 import { getCustomer } from '../../redux/slices/customer/customer';
 import { getContact } from '../../redux/slices/customer/contact';
@@ -28,14 +29,12 @@ import FormLabel from '../components/DocumentForms/FormLabel';
 // ----------------------------------------------------------------------
 
 export default function SecurityUserViewForm() {
-  const [disableEditButton, setDisableEditButton] = useState(false);
-  // const [isSuperAdmin, setSuperAdmin] = useState(false);
-
+ 
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
   const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
 
-  const { securityUser, loggedInUser } = useSelector((state) => state.user);
+  const { securityUser } = useSelector((state) => state.user);
   const { customer } = useSelector((state) => state.customer);
   const { contact } = useSelector((state) => state.contact);
 
@@ -62,17 +61,6 @@ export default function SecurityUserViewForm() {
   }, [id, dispatch]);
 
   useEffect(() => {
-    if (loggedInUser) {
-      // disable edit button
-      if (isSuperAdmin || loggedInUser._id === id) {
-        setDisableEditButton(false);
-      } else {
-        setDisableEditButton(true);
-      }
-    }
-  }, [id, loggedInUser, isSuperAdmin]);
-  // disableDeleteButton, setDisableDeleteButton
-  useEffect(() => {
     batch(() => {
       if (securityUser && securityUser?.customer && securityUser?.customer?._id) {
         dispatch(getCustomer(securityUser?.customer?._id));
@@ -96,9 +84,27 @@ export default function SecurityUserViewForm() {
     navigate(PATH_SECURITY.users.userPassword);
   };
 
+  const handleAWSInvite = async () => {
+    if (securityUser._id) {
+      try {
+        await dispatch(await sendUserInvite(securityUser._id));
+        enqueueSnackbar('Invite sent successfully!');
+      } catch (error) {
+        if (error.Message) {
+          enqueueSnackbar(error.Message, { variant: `error` });
+        } else if (error.message) {
+          enqueueSnackbar(error.message, { variant: `error` });
+        } else {
+          enqueueSnackbar('Something went wrong!', { variant: `error` });
+        }
+        console.log('Error:', error);
+      }
+    }
+  };
+
   const onDelete = async () => {
     try {
-      await dispatch(deleteSecurityUser(id));
+      dispatch(await deleteSecurityUser(id));
       dispatch(getSecurityUsers());
       navigate(PATH_SECURITY.users.list);
     } catch (error) {
@@ -143,12 +149,11 @@ export default function SecurityUserViewForm() {
         </Card>
         <Card sx={{ p: 3 }}>
           <ViewFormEditDeleteButtons
+            handleAWSInvite={handleAWSInvite}
             handleEdit={handleEdit}
             handleUpdatePassword={handleUpdatePassword}
             onDelete={onDelete}
-            disablePasswordButton={!isSuperAdmin}
-            disableDeleteButton={!isSuperAdmin}
-            disableEditButton={disableEditButton}
+            isSuperAdmin={!isSuperAdmin}
           />
           <ConfirmDialog
             open={openConfirm}
