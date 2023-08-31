@@ -218,7 +218,6 @@ export function addMachineServiceParam(params) {
           isRequired:       params?.isRequired || false, 
           isActive:         params?.isActive || true,
         };
-        console.log('data : ',data)
         const response = await axios.post(`${CONFIG.SERVER_URL}products/serviceParams`, data);
         dispatch(slice.actions.getMachineServiceParamSuccess(response.data.MachineTool));
       } catch (error) {
@@ -251,10 +250,7 @@ export function updateMachineServiceParam(id, params) {
         isActive:         params?.isActive || true,
       };
      /* eslint-enable */
-
-      await axios.patch(`${CONFIG.SERVER_URL}products/serviceParams/${id}`,
-        data
-      );
+      await axios.patch(`${CONFIG.SERVER_URL}products/serviceParams/${id}`,data);
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
