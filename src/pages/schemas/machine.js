@@ -38,3 +38,17 @@ export const AddMachineDocumentSchema = Yup.object().shape({
     .nullable(true),
   isActive: Yup.boolean(),
 });
+
+export const MachineTechParamsSchema = Yup.object().shape({
+  name: Yup.string().max(50),
+  printName: Yup.string().max(50),
+  description: Yup.string().max(50),
+  helpHint: Yup.string().max(50),
+  linkToUserManual: Yup.string().max(50),
+  isRequired: Yup.boolean(),
+  inputType: Yup.string().max(50).required(),
+  unitType: Yup.string().max(50),    
+  minValidation: Yup.string().max(50),
+  maxValidation: Yup.string().max(50),
+  isActive: Yup.boolean(),
+})

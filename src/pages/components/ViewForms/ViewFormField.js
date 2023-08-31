@@ -19,6 +19,7 @@ function ViewFormField({
   numberParam,
   sm,
   isActive,
+  isRequired,
   deleteDisabled,
   customerVerificationCount,
   machineVerificationCount,
@@ -81,6 +82,7 @@ function ViewFormField({
       >
         <IconPopover isActive={isActive} />
         {deleteDisabled !== undefined && <IconPopover deleteDisabled={deleteDisabled} />}
+        {isRequired !== undefined && <IconPopover isRequired={isRequired} />}
         {(customerVerificationCount || machineVerificationCount > 0) && verified > 0 && (
           <IconPopover
             customerVerificationCount={customerVerificationCount}
@@ -224,6 +226,7 @@ ViewFormField.propTypes = {
   secondObjectParam: PropTypes.object,
   sm: PropTypes.number,
   isActive: PropTypes.bool,
+  isRequired: PropTypes.bool,
   deleteDisabled: PropTypes.bool,
   customerVerificationCount: PropTypes.number,
   machineVerificationCount: PropTypes.number,

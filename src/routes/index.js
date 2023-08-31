@@ -47,10 +47,17 @@ import {
   SupplierViewForm,
   SupplierEdit,
   SupplierEditForm,
+
+  MachineServiceParamList, 
+  MachineServiceParamViewForm,
+  MachineServiceParamEditForm,
+  MachineServiceParamAddForm,
+
   // License
   // MachineLicenses,
   // LicenseList,
   // Categories
+
   CategoryAddForm,
   CategoryList,
   CategoryView,
@@ -73,6 +80,7 @@ import {
   ToolViewForm,
   ToolEdit,
   ToolEditForm,
+
   // MachineTechParamCategory
   TechParamCategoryAddForm,
   TechParamList,
@@ -80,6 +88,7 @@ import {
   TechParamCategoryView,
   TechParamCategoryEdit,
   TechParamCategoryEditForm,
+
   // Status
   StatusAddForm,
   StatusViewForm,
@@ -87,6 +96,7 @@ import {
   StatusEdit,
   StatusEditForm,
   StatusList,
+
   // Model
   ModelAddForm,
   ModelList,
@@ -94,26 +104,31 @@ import {
   ModelView,
   ModelEdit,
   ModelEditForm,
+
   // Role
   RoleList,
   RoleAdd,
   RoleView,
   RoleEdit,
+
   // USER CONFIG
   UserConfigList,
   UserConfigAddForm,
   UserConfigEditForm,
   UserConfigViewForm,
+
   // Site
   SiteList,
   SiteAdd,
   SiteEdit,
   SiteView,
+
   // Contact
   ContactList,
   ContactAdd,
   ContactEdit,
   ContactView,
+
   // Note
   NoteList,
   NoteAdd,
@@ -125,39 +140,31 @@ import {
   DocumentNameList     ,
   DocumentNameViewForm ,
   DocumentNameEditForm ,
+
 // File Category
   DocumentCategoryAddForm  ,
   DocumentCategoryList     ,
   DocumentCategoryView ,
   DocumentCategoryEditForm ,
 
-// Customer document 
-  // CustomerDocumentAddForm  ,
-  // CustomerDocumentList     ,
-  // CustomerDocumentViewForm ,
-  // CustomerDocumentEditForm ,
-//  machine document
-  // MachineDocumentAddForm  ,
-  // MachineDocumentList     ,
-  // MachineDocumentViewForm ,
-  // MachineDocumentEditForm ,
-
   // DocumentDashboard    
   DocumentList, 
   DocumentAddForm, 
   DocumentEditForm, 
   DocumentViewForm, 
-  // CustomerDocumentView,
+  
   // MachineDocumentView,
   MachineDrawings,
   MachineDrawingsAddForm,
   MachineDrawingsViewForm,
-// Setting
 
+  // Setting
   Setting,
+  // Email 
   Email,
   Emailviewform,
-// Reports
+
+  // Reports
   Reports,
   SignInLogList,
 
@@ -172,6 +179,7 @@ import {
   ConfigAdd,
   ConfigView,
   ConfigEdit,
+
 //   
   BlankPage,
   PermissionDeniedPage,
@@ -182,9 +190,6 @@ import {
   ComingSoonPage,
   MaintenancePage,
   
-  
-
-  //
 } from './elements';
 
 // ----------------------------------------------------------------------
@@ -366,6 +371,15 @@ export default function Router() {
                   {path: ':id/view', element: <TechParamCategoryView/>},
                   {path: ':id/edit', element: <TechParamCategoryEdit/>}, 
                   {path: 'editform', element: <TechParamCategoryEditForm/>},
+                ]
+              },
+              {
+                path: 'machineServiceParams',
+                children:[
+                  {path: 'new', element: <MachineServiceParamAddForm/>},
+                  {path: 'list', element: <MachineServiceParamList/>},
+                  {path: ':id/view', element: <MachineServiceParamViewForm/>},
+                  {path: ':id/edit', element: <MachineServiceParamEditForm/>},
                 ]
               },
               {

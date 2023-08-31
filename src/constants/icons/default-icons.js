@@ -20,6 +20,18 @@ export const ICONS = {
     color: 'red',
     heading: 'Inactive',
   },
+
+  REQUIRED: {
+    icon: 'mdi:required-circle',
+    color: 'green',
+    heading: 'Required',
+  },
+  NOTREQUIRED: {
+    icon: 'mdi:required-circle',
+    color: 'red',
+    heading: 'Not Required',
+  },
+
   // ------------------------------------------------------------
   // deleteDisabled
   DELETE_DISABLED: {
@@ -129,6 +141,10 @@ export const ICONS = {
   PARAMETERS: {
     icon: 'mdi:abacus',
     heading: 'Parameters',
+  },
+  MACHINE_SERVICE_PARAMETERS: {
+    icon: 'carbon:parameter',
+    heading: 'Machine Service Parameters',
   },
   // tools information
   TOOLS: {

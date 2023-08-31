@@ -239,7 +239,7 @@ export default function StatusList() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Status" icon="material-symbols:list-alt-outline" setting="enable" />
+          <Cover name="Status" icon="material-symbols:list-alt-outline" setting />
         </StyledCardContainer>
         <TableCard>
           <StatusListTableToolbar

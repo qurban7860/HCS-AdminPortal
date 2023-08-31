@@ -240,7 +240,7 @@ export default function SupplierList() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Suppliers" icon="material-symbols:list-alt-outline" setting="enable" />
+          <Cover name="Suppliers" icon="material-symbols:list-alt-outline" setting />
         </StyledCardContainer>
 
         <TableCard>

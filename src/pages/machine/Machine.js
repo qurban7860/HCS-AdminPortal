@@ -39,6 +39,9 @@ export default function Machine() {
   const linkTool = () => {
     navigate(PATH_MACHINE.machines.settings.tool.list);
   };
+  const machineServiceParams = () => {
+    navigate(PATH_MACHINE.machines.settings.machineServiceParams.list);
+  }
 
   return (
     <Container maxWidth={false}>
@@ -92,6 +95,11 @@ export default function Machine() {
                   onClick={linkTechParam}
                   icon={ICONS.PARAMETERS.icon}
                   content={ICONS.PARAMETERS.heading}
+                />
+                <ListItem
+                  onClick={machineServiceParams}
+                  icon={ICONS.MACHINE_SERVICE_PARAMETERS.icon}
+                  content={ICONS.MACHINE_SERVICE_PARAMETERS.heading}
                 />
               </List>
               <List
