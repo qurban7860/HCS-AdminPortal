@@ -151,6 +151,11 @@ export const ICONS = {
     icon: 'mdi:tools',
     heading: 'Tools',
   },
+  // service information
+  MACHINE_SERVICE_RECORD_CONFIG: {
+    icon: 'mdi:tools',
+    heading: 'Machine Service Record Configs',
+  },
 
   // @root - Settings - settings
   // document settings

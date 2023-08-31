@@ -202,6 +202,26 @@ export const ModelView = Loadable(lazy(() => import('../pages/machine/Model/Mode
 export const ModelEditForm = Loadable(lazy(() => import('../pages/machine/Model/ModelEditForm')));
 export const ModelEdit = Loadable(lazy(() => import('../pages/machine/Model/ModelEdit')));
 
+// Machine Service Record Config
+export const ServiceRecordConfigAddForm = Loadable(
+  lazy(() => import('../pages/machine/ServiceRecordConfig/ServiceRecordConfigAddForm'))
+);
+export const ServiceRecordConfigList = Loadable(
+  lazy(() => import('../pages/machine/ServiceRecordConfig/ServiceRecordConfigList'))
+);
+export const ServiceRecordConfigView = Loadable(
+  lazy(() => import('../pages/machine/ServiceRecordConfig/ServiceRecordConfigView'))
+);
+export const ServiceRecordConfigViewForm = Loadable(
+  lazy(() => import('../pages/machine/ServiceRecordConfig/ServiceRecordConfigViewForm'))
+);
+export const ServiceRecordConfigEdit = Loadable(
+  lazy(() => import('../pages/machine/ServiceRecordConfig/ServiceRecordConfigEdit'))
+);
+export const ServiceRecordConfigEditForm = Loadable(
+  lazy(() => import('../pages/machine/ServiceRecordConfig/ServiceRecordConfigEditForm'))
+);
+
 // Document dashboard
 export const DocumentList = Loadable(
   lazy(() => import('../pages/document/documents/GlobalDocument'))

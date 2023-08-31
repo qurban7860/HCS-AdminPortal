@@ -185,6 +185,13 @@ export const PATH_MACHINE = {
         tooledit: (id) => path(ROOTS_MACHINE, `/machines/settings/tool/${id}/edit`),
         edit: (id) => path(ROOTS_MACHINE, `/machines/settings/tool/${id}/edit`),
       },
+      serviceRecordConfigs: {
+        new: (ROOTS_MACHINE, '/products/machines/settings/serviceRecordConfigs/new'),
+        list: (ROOTS_MACHINE, '/products/machines/settings/serviceRecordConfigs/list'),
+        view: (id) => path(ROOTS_MACHINE, `/machines/settings/serviceRecordConfigs/${id}/view`),
+        servicerecordconfigedit: (id) => path(ROOTS_MACHINE, `/machines/settings/serviceRecordConfigs/${id}/edit`),
+        edit: (id) => path(ROOTS_MACHINE, `/machines/settings/serviceRecordConfigs/${id}/edit`),
+      },
     },
   },
 };

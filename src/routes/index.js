@@ -146,6 +146,13 @@ import {
   DocumentCategoryList     ,
   DocumentCategoryView ,
   DocumentCategoryEditForm ,
+  // Service Record Config
+  ServiceRecordConfigAddForm,
+  ServiceRecordConfigList,
+  ServiceRecordConfigView,
+  ServiceRecordConfigViewForm,
+  ServiceRecordConfigEditForm,
+  ServiceRecordConfigEdit,
 
   // DocumentDashboard    
   DocumentList, 
@@ -327,6 +334,17 @@ export default function Router() {
                   {path: 'viewform', element: <CategoryViewForm/>},
                   {path: ':id/edit', element: <CategoryEdit/>}, 
                   {path: 'editform', element: <CategoryEditForm/>},
+                ]
+              },
+              {
+                path: 'serviceRecordConfigs',
+                children:[
+                  {path: 'new', element: <ServiceRecordConfigAddForm/>},
+                  {path: 'list', element: <ServiceRecordConfigList/>},
+                  {path: ':id/view', element: <ServiceRecordConfigView/>},
+                  {path: 'viewform', element: <ServiceRecordConfigViewForm/>},
+                  {path: ':id/edit', element: <ServiceRecordConfigEdit/>}, 
+                  {path: 'editform', element: <ServiceRecordConfigEditForm/>},
                 ]
               },
               {

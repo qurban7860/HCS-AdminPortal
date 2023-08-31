@@ -58,6 +58,8 @@ export const FORMLABELS = {
   COMMON_SETTINGS: 'Common Settings',
   TECHNICAL_SETTINGS: 'Technical Settings',
   TOOLS_INFO: ' Tools Information',
+  SERVICE: ' Service Settings',
+
 
   // @root - Settings
   DOCUMENT_SETTINGS: 'Document Settings',

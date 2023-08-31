@@ -34,6 +34,7 @@ import regionReducer from './slices/region/region';
 import drawingReducer from './slices/products/drawing';
 import configReducer from './slices/config/config';
 import machineServiceParamReducer from './slices/products/machineServiceParams'
+import serviceRecordConfigReducer from './slices/products/serviceRecordConfig';
 
 // ----------------------------------------------------------------------
 
@@ -238,11 +239,12 @@ export const drawingPersistConfig={
 }
 export const machineServiceParamPersistConfig={
   key: 'machineServiceParam',
+export const serviceRecordConfigPersistConfig={
+  key: 'serviceRecordConfig',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
-
 
 
 const rootReducer = combineReducers({
@@ -278,6 +280,8 @@ const rootReducer = combineReducers({
   config: persistReducer(configPersistConfig, configReducer),
   userConfig: persistReducer(userConfigPersistConfig, userConfigReducer),
   machineServiceParam: persistReducer(machineServiceParamPersistConfig, machineServiceParamReducer)
+  serviceRecordConfig: persistReducer(serviceRecordConfigPersistConfig, serviceRecordConfigReducer),
+
 });
 
 export default rootReducer;
