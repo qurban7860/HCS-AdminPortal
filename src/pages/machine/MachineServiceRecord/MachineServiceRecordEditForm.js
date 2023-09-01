@@ -43,22 +43,22 @@ export default function MachineServiceRecordEditForm() {
 
   const defaultValues = useMemo(
     () => ({
-      recordType: machineServiceRecord?.recordType || null,
-      serviceRecordConfig: machineServiceRecord?.serviceRecordConfig || null,
-      serviceDate: machineServiceRecord?.serviceDate || null,
-      customer: machineServiceRecord?.customer || null, 
-      site: machineServiceRecord?.site || null,
-      machine: machineServiceRecord?.machine || null,
-      decoiler: machineServiceRecord?.decoiler || null,
-      technician: machineServiceRecord?.technician || null,
-      // checkParams:
-      serviceNote: machineServiceRecord?.serviceNote || '',
-      maintenanceRecommendation: machineServiceRecord?.maintenanceRecommendation || '',
-      suggestedSpares: machineServiceRecord?.suggestedSpares || '',
+      recordType:                 machineServiceRecord?.recordType || null,
+      serviceRecordConfig:        machineServiceRecord?.serviceRecordConfig || null,
+      serviceDate:                machineServiceRecord?.serviceDate || null,
+      customer:                   machineServiceRecord?.customer || null, 
+      site:                       machineServiceRecord?.site || null,
+      machine:                    machineServiceRecord?.machine || null,
+      decoiler:                   machineServiceRecord?.decoiler || null,
+      technician:                 machineServiceRecord?.technician || null,
+      // checkParams:     
+      serviceNote:                machineServiceRecord?.serviceNote || '',
+      maintenanceRecommendation:  machineServiceRecord?.maintenanceRecommendation || '',
+      suggestedSpares:            machineServiceRecord?.suggestedSpares || '',
       // files: machineServiceRecord?.files || [],
-      operator: machineServiceRecord?.operator || null,
-      operatorRemarks: machineServiceRecord?.operatorRemarks || '',
-      isActive: machineServiceRecord?.isActive,
+      operator:                   machineServiceRecord?.operator || null,
+      operatorRemarks:            machineServiceRecord?.operatorRemarks || '',
+      isActive:                   machineServiceRecord?.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [machineServiceRecord, machine]
@@ -99,7 +99,6 @@ export default function MachineServiceRecordEditForm() {
 
 
   return (
-    <Container maxWidth={false}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
           <Grid item xs={18} md={12}>
@@ -132,6 +131,5 @@ export default function MachineServiceRecordEditForm() {
           </Grid>
         </Grid>
       </FormProvider>
-    </Container>
   );
 }

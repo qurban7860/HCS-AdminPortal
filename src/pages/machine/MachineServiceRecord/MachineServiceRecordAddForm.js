@@ -78,22 +78,24 @@ export default function MachineServiceRecordAddForm() {
   };
 
   return (
-    <Container maxWidth={false}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 <FormHeading heading={FORMLABELS.COVER.MACHINE_SERVICE_RECORD_ADD} />
+                
                 <Box
                     rowGap={2}
                     columnGap={2}
                     display="grid"
                     gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                   >
-                  <RHFTextField name="name" label="Name" />
+                  <RHFTextField name="maintenanceRecommendation" label="Maintenance Recommendation" />
+                  <RHFTextField name="suggestedSpares" label="Suggested Spares" />
+                  <RHFTextField name="operatorRemarks" label="Operator Remarks" />
                 </Box>
-                  <RHFTextField name="description" label="Description" minRows={7} multiline />
+                  <RHFTextField name="serviceNote" label="Service Note" minRows={3} multiline/>
                 <Grid container display="flex">
                   <RHFSwitch
                     name="isActive"
@@ -112,6 +114,5 @@ export default function MachineServiceRecordAddForm() {
           </Grid>
         </Grid>
       </FormProvider>
-    </Container>
   );
 }

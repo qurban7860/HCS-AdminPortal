@@ -43,14 +43,28 @@ export default function MachineServiceParamViewForm() {
 
   const defaultValues = useMemo(
     () => ({
-      name:               machineServiceRecord?.name || '',
-      isActive:           machineServiceRecord?.isActive,
-      createdAt:          machineServiceRecord?.createdAt || '',
-      createdByFullName:  machineServiceRecord?.createdBy?.name || '',
-      createdIP:          machineServiceRecord?.createdIP || '',
-      updatedAt:          machineServiceRecord?.updatedAt || '',
-      updatedByFullName:  machineServiceRecord?.updatedBy?.name || '',
-      updatedIP:          machineServiceRecord?.updatedIP || '',
+      recordType:                 machineServiceRecord?.recordType || null,
+      serviceRecordConfig:        machineServiceRecord?.serviceRecordConfig || null,
+      serviceDate:                machineServiceRecord?.serviceDate || null,
+      customer:                   machineServiceRecord?.customer || null, 
+      site:                       machineServiceRecord?.site || null,
+      machine:                    machineServiceRecord?.machine || null,
+      decoiler:                   machineServiceRecord?.decoiler || null,
+      technician:                 machineServiceRecord?.technician || null,
+      // checkParams:
+      serviceNote:                machineServiceRecord?.serviceNote || '',
+      maintenanceRecommendation:  machineServiceRecord?.maintenanceRecommendation || '',
+      suggestedSpares:            machineServiceRecord?.suggestedSpares || '',
+      files:                      machineServiceRecord?.files || [],
+      operator:                   machineServiceRecord?.operator || null,
+      operatorRemarks:            machineServiceRecord?.operatorRemarks ||'',
+      isActive:                   machineServiceRecord?.isActive,
+      createdAt:                  machineServiceRecord?.createdAt || '',
+      createdByFullName:          machineServiceRecord?.createdBy?.name || '',
+      createdIP:                  machineServiceRecord?.createdIP || '',
+      updatedAt:                  machineServiceRecord?.updatedAt || '',
+      updatedByFullName:          machineServiceRecord?.updatedBy?.name || '',
+      updatedIP:                  machineServiceRecord?.updatedIP || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [ machineServiceRecord]

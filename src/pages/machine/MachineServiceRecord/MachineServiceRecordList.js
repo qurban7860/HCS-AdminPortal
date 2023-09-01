@@ -42,20 +42,16 @@ import TableCard from '../../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 
+
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', align: 'left' },
-  { id: 'printName', label: 'Print Name', align: 'left' },
-  // { id: 'xs2', label: 'Help Hint', align: 'center' },
-  // { id: 'xs3', label: 'Link To User Manual', align: 'center' },
-  { id: 'xs4', label: 'Required', align: 'center' },
-  { id: 'xs5', label: 'Input Type', align: 'left' },
-  // { id: 'sm1', label: 'Unit Type', align: 'left' },
-  // { id: 'sm2', label: 'Min Validation', align: 'center' },
-  // { id: 'sm3', label: 'Max Validation', align: 'center' },
+  { id: 'printName', label: 'Customer', align: 'left' },
+  { id: 'xs2', label: 'Site', align: 'left' },
+  { id: 'xs4', label: 'Decoiler', align: 'left' },
+  { id: 'xs5', label: 'technician', align: 'left' },
+  { id: 'serviceDate', label: 'Service Date', align: 'left' },
   { id: 'active', label: 'Active', align: 'center' },
   { id: 'created_at', label: 'Created At', align: 'right' },
 ];
-
 // ----------------------------------------------------------------------
 
 export default function MachineServiceRecordList() {

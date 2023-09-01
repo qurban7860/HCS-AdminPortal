@@ -59,7 +59,7 @@ export default function MachineServiceRecordListTableRow({
   onViewRow,
 }) {
 
-  const { name, isActive, createdAt } = row;
+  const { customer, site, decoiler, technician, serviceDate, isActive, createdAt } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -86,7 +86,11 @@ export default function MachineServiceRecordListTableRow({
   return (
     <>
       <StyledTableRow hover selected={selected}>
-        <LinkTableCell align="left" onClick={onViewRow} param={name} />
+        <LinkTableCell align="left" onClick={onViewRow} param={customer?.name} />
+        <TableCell align="left">{site?.name}</TableCell>
+        <TableCell align="left">{decoiler?.name}</TableCell>
+        <TableCell align="left">{technician?.name}</TableCell>
+        <TableCell align="center">{fDate(serviceDate)}</TableCell>
         <TableCell align="center">
           {' '}
           <Switch checked={isActive} disabled size="small" />{' '}
