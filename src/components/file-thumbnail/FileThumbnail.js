@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Box, Tooltip, Stack , CardContent, CardMedia } from '@mui/material';
+import { Box, Tooltip, Stack } from '@mui/material';
 //
 import { fileData, fileFormat, fileThumb } from './utils';
 import DownloadButton from './DownloadButton';

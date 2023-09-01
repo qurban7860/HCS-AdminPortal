@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Stack, AppBar, Toolbar, IconButton, Grid, Typography } from '@mui/material';
+import { Stack, AppBar, Toolbar, IconButton, } from '@mui/material';
 // utils
 import { bgBlur } from '../../../utils/cssStyles';
 
@@ -9,16 +9,16 @@ import { bgBlur } from '../../../utils/cssStyles';
 import useOffSetTop from '../../../hooks/useOffSetTop';
 import useResponsive from '../../../hooks/useResponsive';
 // config
-import { HEADER, NAV,CONFIG } from '../../../config-global';
+import { HEADER, NAV } from '../../../config-global';
 // components
 import Logo from '../../../components/logo';
 import Iconify from '../../../components/iconify';
 import { useSettingsContext } from '../../../components/settings';
 //
-import Searchbar from './Searchbar';
+// import Searchbar from './Searchbar';
 import AccountPopover from './AccountPopover';
-import LanguagePopover from './LanguagePopover';
-import ContactsPopover from './ContactsPopover';
+// import LanguagePopover from './LanguagePopover';
+// import ContactsPopover from './ContactsPopover';
 import NotificationsPopover from './NotificationsPopover';
 
 // ----------------------------------------------------------------------
@@ -40,7 +40,7 @@ export default function Header({ onOpenNav }) {
 
   const isOffset = useOffSetTop(HEADER.H_DASHBOARD_DESKTOP) && !isNavHorizontal;
 
-  const bgcolor = CONFIG.Background_Color
+  // const bgcolor = CONFIG.Background_Color
   const renderContent = (
     <>
       {isDesktop && isNavHorizontal && <Logo sx={{ mr: 2.5 }} />}

@@ -26,6 +26,7 @@ export const PATH_AUTH = {
   resetPassword: path(ROOTS_AUTH, '/reset-password'),
   newpassword: (token, userId) => path(ROOTS_AUTH, `/new-password/${token}/${userId}`),
   authenticate: path(ROOTS_AUTH, '/authenticate'),
+
   // newPassword: path(ROOTS_AUTH, '/new-password/${id}/asset/${userId}/edit'),
 };
 
@@ -36,12 +37,13 @@ export const PATH_PAGE = {
   page404: '/404',
   page500: '/500',
   components: '/components',
+  invalidErrorPage:'/InvalidErrorPage',
+  expiredErrorPage:'/ExpiredErrorPage'
 };
 
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
   permissionDenied: path(ROOTS_DASHBOARD, '/permission-denied'),
-  // blank: path(ROOTS_DASHBOARD, '/blank'),
   blank: path(ROOTS_AUTH, '/login'),
   general: {
     app: path(ROOTS_DASHBOARD, '/app'),
@@ -185,6 +187,13 @@ export const PATH_MACHINE = {
         tooledit: (id) => path(ROOTS_MACHINE, `/machines/settings/tool/${id}/edit`),
         edit: (id) => path(ROOTS_MACHINE, `/machines/settings/tool/${id}/edit`),
       },
+      serviceRecordConfigs: {
+        new: (ROOTS_MACHINE, '/products/machines/settings/serviceRecordConfigs/new'),
+        list: (ROOTS_MACHINE, '/products/machines/settings/serviceRecordConfigs/list'),
+        view: (id) => path(ROOTS_MACHINE, `/machines/settings/serviceRecordConfigs/${id}/view`),
+        servicerecordconfigedit: (id) => path(ROOTS_MACHINE, `/machines/settings/serviceRecordConfigs/${id}/edit`),
+        edit: (id) => path(ROOTS_MACHINE, `/machines/settings/serviceRecordConfigs/${id}/edit`),
+      },
     },
   },
 };
@@ -251,6 +260,12 @@ export const PATH_SETTING = {
     new: path(ROOTS_SETTING, '/regions/new'),
     view: (id) => path(ROOTS_SETTING, `/regions/${id}/view`),
     edit: (id) => path(ROOTS_SETTING, `/regions/${id}/edit`)
+  },
+  modules: {
+    list: path(ROOTS_SETTING, '/modules/list'),
+    new: path(ROOTS_SETTING, '/modules/new'),
+    view: (id) => path(ROOTS_SETTING, `/modules/${id}/view`),
+    edit: (id) => path(ROOTS_SETTING, `/modules/${id}/edit`)
   },
   configs: {
     list: path(ROOTS_SETTING, '/configs/list'),

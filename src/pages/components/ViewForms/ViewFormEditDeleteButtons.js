@@ -1,32 +1,26 @@
 import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
 import { useDispatch, useSelector } from 'react-redux';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { Button, Typography, IconButton } from '@mui/material';
 import { green } from '@mui/material/colors';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { StyledStack } from '../../../theme/styles/default-styles';
 import ConfirmDialog from '../../../components/confirm-dialog';
-import Iconify from '../../../components/iconify';
 import useResponsive from '../../../hooks/useResponsive';
 import { setTransferDialogBoxVisibility } from '../../../redux/slices/products/machine';
 import IconPopover from '../Icons/IconPopover';
 import IconTooltip from '../Icons/IconTooltip';
 
 export default function ViewFormEditDeleteButtons({
+  isSuperAdmin=false,
   disableTransferButton = false,
-  disableDeleteButton = false,
-  disablePasswordButton = false,
-  disableEditButton = false,
-  isVerified,
-  handleVerification,
   onDelete,
   handleEdit,
   handleTransfer,
   handleUpdatePassword,
-  type,
+  handleAWSInvite,
   sites,
   mainSite,
   handleMap,
@@ -36,40 +30,24 @@ export default function ViewFormEditDeleteButtons({
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
   const { isLoading, transferDialogBoxVisibility } = useSelector((state) => state.machine);
-  const { site } = useSelector((state) => state.site);
-  const { customer } = useSelector((state) => state.customer);
+  
   const dispatch = useDispatch();
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const [openVerificationConfirm, setOpenVerificationConfirm] = useState(false);
+  const [openAWSInviteConfirm, setOpenAWSInviteConfirm] = useState(false);
   const theme = createTheme({
     palette: {
       success: green,
     },
   });
-  // const [openTransferConfirm, setOpenTransferConfirm] = useState(false);
-  const [openPopover, setOpenPopover] = useState(null);
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const [deleteButtonColor, setDeleteButtonColor] = useState('error.main');
-  const [deleteButtonHoverColor, setDeleteButtonHoverColor] = useState('error.dark');
+
   const disableDelete = userRoles.some((role) => role?.disableDelete === true);
 
-  // useEffect(() => {
-  //   if (disableDelete) {
-  //     setDeleteButtonColor('text.secondary');
-  //     setDeleteButtonHoverColor('text.secondary.dark');
-  //   }
-  // }, [disableDelete]);
-
-  if (disableDelete) {
-    disableDeleteButton = true;
-  }
-
   const handleOpenConfirm = (dialogType) => {
-    if (dialogType === 'Verification' && !isVerified) {
-      setOpenVerificationConfirm(true);
+    if (dialogType === 'AWSInvite' && !isSuperAdmin) {
+      setOpenAWSInviteConfirm(true);
     }
-    if (dialogType === 'delete' && !disableDeleteButton) {
+    if (dialogType === 'delete' && !isSuperAdmin) {
       setOpenConfirm(true);
     }
     if (dialogType === 'transfer') {
@@ -78,9 +56,9 @@ export default function ViewFormEditDeleteButtons({
   };
 
   const handleCloseConfirm = (dialogType) => {
-    if (dialogType === 'Verification') {
+    if (dialogType === 'AWSInvite') {
       reset();
-      setOpenVerificationConfirm(false);
+      setOpenAWSInviteConfirm(false);
     }
     if (dialogType === 'delete') {
       reset();
@@ -91,45 +69,22 @@ export default function ViewFormEditDeleteButtons({
     }
   };
 
-  const handleVerificationConfirm = () => {
-    handleVerification();
-    handleCloseConfirm('Verification');
-  };
-  const handlePopoverOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-    setIsPopoverOpen(true);
-  };
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-    setIsPopoverOpen(false);
+  const handleAWSInviteConfirm = () => {
+    handleAWSInvite();
   };
 
-  const [anchorEl, setAnchorEl] = useState(null);
   const { isMobile } = useResponsive('down', 'sm');
-
   const methods = useForm();
 
   const {
     reset,
-    setError,
     handleSubmit,
-    formState: { errors, isSubmitting, isSubmitSuccessful },
+    formState: { isSubmitting, isSubmitSuccessful },
   } = methods;
+
   return (
     <>
       <StyledStack>
-        {handleVerification && !isVerified && (
-          <IconTooltip
-            title={isVerified ? 'Verified' : 'Verify'}
-            // disabled={disableTransferButton}
-            onClick={() => {
-              handleOpenConfirm('Verification');
-            }}
-            color={theme.palette.primary.main}
-            icon="ic:round-verified-user"
-          />
-        )}
-
         {/* map toggle button on mobile */}
         {sites && !isMobile && <IconPopover onMapClick={() => handleMap()} sites={sites} />}
 
@@ -146,11 +101,25 @@ export default function ViewFormEditDeleteButtons({
           />
         )}
 
+        {/* AWS Invitation */}
+        {handleAWSInvite && (
+          <IconTooltip 
+          title="Invite AWS"
+          disabled={isSuperAdmin}
+          color={theme.palette.secondary.main}
+          icon="mdi:aws"
+          onClick={() => {
+            handleOpenConfirm('AWSInvite');
+          }}
+
+          />
+        )}
+
         {/* change password for users */}
         {handleUpdatePassword && (
           <IconTooltip
             title="Change Password"
-            disabled={disablePasswordButton}
+            disabled={isSuperAdmin}
             onClick={() => {
               handleUpdatePassword();
             }}
@@ -162,7 +131,7 @@ export default function ViewFormEditDeleteButtons({
         {/* edit button */}
         <IconTooltip
           title="Edit"
-          disabled={disableEditButton}
+          disabled={isSuperAdmin || userId === id}
           onClick={() => {
             handleEdit();
           }}
@@ -174,7 +143,7 @@ export default function ViewFormEditDeleteButtons({
         {id !== userId  && !mainSite && onDelete && (
           <IconTooltip
             title="Delete"
-            disabled={disableDeleteButton}
+            disabled={!isSuperAdmin && disableDelete}
             onClick={() => {
               handleOpenConfirm('delete');
             }}
@@ -184,23 +153,23 @@ export default function ViewFormEditDeleteButtons({
         )}
       </StyledStack>
 
+
       <ConfirmDialog
-        open={openVerificationConfirm}
+        open={openAWSInviteConfirm}
         onClose={() => {
-          handleCloseConfirm('Verification');
+          handleCloseConfirm('AWSInvite');
         }}
-        title="Verification"
-        content="Are you sure you want to Verify Machine Informaton?"
+        title="AWS Invitation"
+        content="Are you sure you want send AWS Invitation?"
         action={
           <LoadingButton
             variant="contained"
             color="primary"
             loading={(isSubmitSuccessful || isSubmitting) && isLoading}
             disabled={isSubmitting}
-            onClick={handleSubmit(handleVerificationConfirm)}
-            // onClick={()=> {handleVerification(); handleCloseConfirm('Verification');}}
+            onClick={handleSubmit(handleAWSInviteConfirm)}
           >
-            Verify
+            Send
           </LoadingButton>
         }
       />
@@ -247,18 +216,14 @@ export default function ViewFormEditDeleteButtons({
 }
 
 ViewFormEditDeleteButtons.propTypes = {
-  handleVerification: PropTypes.func,
-  isVerified: PropTypes.bool,
   handleTransfer: PropTypes.func,
   handleUpdatePassword: PropTypes.func,
+  handleAWSInvite: PropTypes.func,
   handleEdit: PropTypes.func,
   onDelete: PropTypes.func,
-  type: PropTypes.string,
   sites: PropTypes.bool,
   mainSite: PropTypes.bool,
+  isSuperAdmin:PropTypes.bool,
   disableTransferButton: PropTypes.bool,
-  disablePasswordButton: PropTypes.bool,
-  disableDeleteButton: PropTypes.bool,
-  disableEditButton: PropTypes.bool,
   handleMap: PropTypes.func,
 };

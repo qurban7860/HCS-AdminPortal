@@ -151,6 +151,11 @@ export const ICONS = {
     icon: 'mdi:tools',
     heading: 'Tools',
   },
+  // service information
+  MACHINE_SERVICE_RECORD_CONFIG: {
+    icon: 'mdi:tools',
+    heading: 'Machine Service Record Configs',
+  },
 
   // @root - Settings - settings
   // document settings
@@ -178,6 +183,10 @@ export const ICONS = {
   REGION: {
     icon: 'mdi:map-marker-circle',
     heading: 'Regions',
+  },
+  MODULE: {
+    icon: 'ic:round-view-module',
+    heading: 'Module',
   },
   CONFIG: {
     icon: 'icon-park-outline:setting-config',

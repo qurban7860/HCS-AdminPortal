@@ -33,12 +33,20 @@ export default function Setting() {
   const linkRegions = () => {
     navigate(PATH_SETTING.regions.list);
   };
+  const linkModules = () => {
+    navigate(PATH_SETTING.modules.list);
+  };
   const linkUserConfig = () => {
     navigate(PATH_SETTING.userConfig.list);
   }
   const linkConfigs = () => {
     navigate(PATH_SETTING.configs.list);
   };
+
+const userRolesString = localStorage.getItem('userRoles');
+const userRoles = userRolesString ? JSON.parse(userRolesString) : [];
+const userModuleRole = userRoles?.some((role) => role.roleType === 'Module');
+// console.log(userRoles);
 
   return (
     <Container maxWidth={false}>
@@ -78,6 +86,13 @@ export default function Setting() {
                 icon={ICONS.REGION.icon}
                 content={ICONS.REGION.heading}
               />
+                { userModuleRole  &&   (
+               <ListItem
+                  onClick={linkModules}
+                  icon={ICONS.MODULE.icon}
+                  content={ICONS.MODULE.heading}
+               />
+              )}
               <ListItem
                 onClick={linkConfigs}
                 icon={ICONS.CONFIG.icon}

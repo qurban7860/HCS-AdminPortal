@@ -202,6 +202,26 @@ export const ModelView = Loadable(lazy(() => import('../pages/machine/Model/Mode
 export const ModelEditForm = Loadable(lazy(() => import('../pages/machine/Model/ModelEditForm')));
 export const ModelEdit = Loadable(lazy(() => import('../pages/machine/Model/ModelEdit')));
 
+// Machine Service Record Config
+export const ServiceRecordConfigAddForm = Loadable(
+  lazy(() => import('../pages/machine/ServiceRecordConfig/ServiceRecordConfigAddForm'))
+);
+export const ServiceRecordConfigList = Loadable(
+  lazy(() => import('../pages/machine/ServiceRecordConfig/ServiceRecordConfigList'))
+);
+export const ServiceRecordConfigView = Loadable(
+  lazy(() => import('../pages/machine/ServiceRecordConfig/ServiceRecordConfigView'))
+);
+export const ServiceRecordConfigViewForm = Loadable(
+  lazy(() => import('../pages/machine/ServiceRecordConfig/ServiceRecordConfigViewForm'))
+);
+export const ServiceRecordConfigEdit = Loadable(
+  lazy(() => import('../pages/machine/ServiceRecordConfig/ServiceRecordConfigEdit'))
+);
+export const ServiceRecordConfigEditForm = Loadable(
+  lazy(() => import('../pages/machine/ServiceRecordConfig/ServiceRecordConfigEditForm'))
+);
+
 // Document dashboard
 export const DocumentList = Loadable(
   lazy(() => import('../pages/document/documents/GlobalDocument'))
@@ -308,7 +328,26 @@ export const RegionView = Loadable(
   lazy(() => import('../pages/region/RegionView'))
 );
 
+
+// Configs 
+
+export const ModuleAdd = Loadable(  
+  lazy(() => import('../pages/module/ModuleAdd'))
+  );
+export const ModuleList = Loadable( 
+   lazy(() => import('../pages/module/ModuleList'))
+);
+export const ModuleEdit = Loadable(
+  lazy(() => import('../pages/module/ModuleEdit'))
+);
+export const ModuleView = Loadable(
+  lazy(() => import('../pages/module/ModuleView'))
+);
+
+
+
 // Configs
+
 export const ConfigAdd = Loadable(
   lazy(() => import('../pages/config/ConfigAdd'))
 );
@@ -352,6 +391,8 @@ export const HomePage = Loadable(lazy(() => import('../pages/HomePage')));
 export const ComingSoonPage = Loadable(lazy(() => import('../pages/ComingSoonPage')));
 export const MaintenancePage = Loadable(lazy(() => import('../pages/MaintenancePage')));
 
+export const UserInviteLanding = Loadable(lazy(() => import('../pages/UserInviteLanding')));
+export const errorPage = Loadable(lazy(() => import('../pages/ErrorPage')));
 export const ComponentsOverviewPage = Loadable(
   lazy(() => import('../pages/components/Defaults/ComponentsOverviewPage'))
 );

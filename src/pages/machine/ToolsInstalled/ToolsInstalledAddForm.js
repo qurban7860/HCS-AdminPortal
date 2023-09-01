@@ -177,6 +177,9 @@ function ToolsInstalledAddForm() {
     // -------------------------------- composite Tool Config --------------------------------
     // engageInstruction_1: Yup.object().shape().nullable().label('Engage Instructuion').required(),
     // disengageInstruction: Yup.object()
+    engagingDuration: Yup.number(),
+    returningDuration: Yup.number(),
+    twoWayCheckDelayTime: Yup.number(),
   });
 
   const defaultValues = useMemo(
@@ -199,9 +202,6 @@ function ToolsInstalledAddForm() {
       engageOnCondition: { name: 'NO CONDITION'},
       engageOffCondition: { name: 'PASS'},
       timeOut: null,
-      engagingDuration: null,
-      returningDuration: null,
-      twoWayCheckDelayTime: null,
       homeProximitySensorLocation: '',
       engagedProximitySensorLocation: '',
       pressureTarget: '',
@@ -244,7 +244,7 @@ function ToolsInstalledAddForm() {
         data.toolType = toolType;
       }
       data.timeOut = timeOut;
-      data.engagingDuration = engagingDuration;
+      // data.engagingDuration = engagingDuration;
       data.returningDuration = returningDuration;
       data.twoWayCheckDelayTime = twoWayCheckDelayTime;
       data.compositeToolConfig = compositToolVal;
@@ -476,7 +476,7 @@ function ToolsInstalledAddForm() {
                     <Button
                       onClick={ handleCompositToolNumberIncrease }
                       fullWidth={ isMobile }
-                      disabled={compositToolNumber >= toolsInstalled.length || compositToolNumber >= CONFIG.COMPOSITE_TOOL_CONFIG_MAX_LENGTH }
+                      disabled={ compositToolNumber >= CONFIG.COMPOSITE_TOOL_CONFIG_MAX_LENGTH }
                       variant="contained"
                       color='primary'
                       startIcon={<Iconify icon="eva:plus-fill" />}
@@ -591,21 +591,10 @@ function ToolsInstalledAddForm() {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                  <DatePicker
-                    label="Engaging Duration"
-                    value={engagingDuration}
-                    // disabled={disableInstallationDate}
-                    onChange={(newValue) => setValue('engagingDuration',newValue)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
+               
+                  <RHFTextField label="Engaging Duration" name="engagingDuration" />
 
-                  <DatePicker
-                    label="Returning Duration"
-                    value={returningDuration}
-                    // disabled={disableInstallationDate}
-                    onChange={(newValue) => setValue('returningDuration',newValue)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
+                  <RHFTextField label="Returning Duration" name="returningDuration" />
                 </Box>
                 <Box
                   rowGap={2}
@@ -616,13 +605,7 @@ function ToolsInstalledAddForm() {
                     sm: 'repeat(2, 1fr)',
                   }}
                 >
-                  <DatePicker
-                    label="Two-way Check Delay Time"
-                    value={twoWayCheckDelayTime}
-                    // disabled={disableInstallationDate}
-                    onChange={(newValue) => setValue('twoWayCheckDelayTime',newValue)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
+                  <RHFTextField label="Two-way Check Delay Time" name="twoWayCheckDelayTime" />
                 </Box>
               <Box
                 rowGap={2}
@@ -791,7 +774,7 @@ function ToolsInstalledAddForm() {
                           <Autocomplete
                             {...field}
                             id={`engageInstruction_${index}`}
-                            options={toolsInstalled.filter((option)=> !compositToolVal.some((value, someIndex ) => option?.tool?._id === value?.engage?.tool?._id && someIndex !== index ) )}
+                            options={toolsInstalled}
                             getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
                             isOptionEqualToValue={(option, value) => option?.tool?._id === value?.tool?._id}
                             onChange={(event, value) => {
@@ -825,7 +808,7 @@ function ToolsInstalledAddForm() {
                           <Autocomplete
                             {...field}
                             id={`disengageInstruction_${index}`}
-                            options={toolsInstalled.filter((option)=> !compositToolVal.some((value, someIndex ) => option?.tool?._id === value?.disengage?.tool?._id && someIndex !== index ) )}
+                            options={toolsInstalled}
                             getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
                             isOptionEqualToValue={(option, value) => option?.tool?._id === value?.tool?._id}
                             // onChange={(event, value) => field.onChange(value)}

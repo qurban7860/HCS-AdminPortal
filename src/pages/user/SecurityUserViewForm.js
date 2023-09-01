@@ -28,12 +28,15 @@ import ContactDialog from '../components/Dialog/ContactDialog';
 // ----------------------------------------------------------------------
 
 export default function SecurityUserViewForm() {
+
   const [disableEditButton, setDisableEditButton] = useState(false);
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
   const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
 
   const { securityUser, loggedInUser } = useSelector((state) => state.user);
+  const { customer } = useSelector((state) => state.customer);
+  const { contact } = useSelector((state) => state.contact);
 
   const [openConfirm, setOpenConfirm] = useState(false);
   const handleCloseConfirm = () => setOpenConfirm(false);

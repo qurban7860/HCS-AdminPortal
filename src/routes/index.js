@@ -146,6 +146,13 @@ import {
   DocumentCategoryList     ,
   DocumentCategoryView ,
   DocumentCategoryEditForm ,
+  // Service Record Config
+  ServiceRecordConfigAddForm,
+  ServiceRecordConfigList,
+  ServiceRecordConfigView,
+  ServiceRecordConfigViewForm,
+  ServiceRecordConfigEditForm,
+  ServiceRecordConfigEdit,
 
   // DocumentDashboard    
   DocumentList, 
@@ -173,6 +180,12 @@ import {
   RegionAdd,
   RegionView,
   RegionEdit,
+
+   // modules
+   ModuleList,
+   ModuleAdd,
+   ModuleEdit,
+   ModuleView,
 
   // Configs
   ConfigList,
@@ -327,6 +340,17 @@ export default function Router() {
                   {path: 'viewform', element: <CategoryViewForm/>},
                   {path: ':id/edit', element: <CategoryEdit/>}, 
                   {path: 'editform', element: <CategoryEditForm/>},
+                ]
+              },
+              {
+                path: 'serviceRecordConfigs',
+                children:[
+                  {path: 'new', element: <ServiceRecordConfigAddForm/>},
+                  {path: 'list', element: <ServiceRecordConfigList/>},
+                  {path: ':id/view', element: <ServiceRecordConfigView/>},
+                  {path: 'viewform', element: <ServiceRecordConfigViewForm/>},
+                  {path: ':id/edit', element: <ServiceRecordConfigEdit/>}, 
+                  {path: 'editform', element: <ServiceRecordConfigEditForm/>},
                 ]
               },
               {
@@ -504,6 +528,15 @@ export default function Router() {
             { path: 'new', element: <RegionAdd /> },
             { path: ':id/view', element: <RegionView /> },
             { path: ':id/edit', element: <RegionEdit /> }
+          ],
+        },
+        {
+          path: 'modules',
+          children: [
+            { path: 'list', element: <ModuleList /> },
+            { path: 'new', element: <ModuleAdd /> },
+            { path: ':id/view', element: <ModuleView /> },
+            { path: ':id/edit', element: <ModuleEdit /> }
           ],
         },
         {
