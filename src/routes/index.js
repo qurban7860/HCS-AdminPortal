@@ -181,6 +181,12 @@ import {
   RegionView,
   RegionEdit,
 
+   // modules
+   ModuleList,
+   ModuleAdd,
+   ModuleEdit,
+   ModuleView,
+
   // Configs
   ConfigList,
   ConfigAdd,
@@ -522,6 +528,15 @@ export default function Router() {
             { path: 'new', element: <RegionAdd /> },
             { path: ':id/view', element: <RegionView /> },
             { path: ':id/edit', element: <RegionEdit /> }
+          ],
+        },
+        {
+          path: 'modules',
+          children: [
+            { path: 'list', element: <ModuleList /> },
+            { path: 'new', element: <ModuleAdd /> },
+            { path: ':id/view', element: <ModuleView /> },
+            { path: ':id/edit', element: <ModuleEdit /> }
           ],
         },
         {

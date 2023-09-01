@@ -20,6 +20,7 @@ const initialState = {
     Manager: 'Manager',
     Support: 'Support',
     Email: 'Email',
+    Module:'Module',
   },
   filterBy: '',
   page: 0,

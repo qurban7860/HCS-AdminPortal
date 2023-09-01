@@ -179,6 +179,8 @@ export const BUTTONS = {
 
   // region
   ADDREGION: 'Add Region',
+  // module
+  ADDMODULE: 'Add Module',
 
   // CONFIG
   ADDCONFIG: 'Add Config',

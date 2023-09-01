@@ -259,6 +259,12 @@ export const PATH_SETTING = {
     view: (id) => path(ROOTS_SETTING, `/regions/${id}/view`),
     edit: (id) => path(ROOTS_SETTING, `/regions/${id}/edit`)
   },
+  modules: {
+    list: path(ROOTS_SETTING, '/modules/list'),
+    new: path(ROOTS_SETTING, '/modules/new'),
+    view: (id) => path(ROOTS_SETTING, `/modules/${id}/view`),
+    edit: (id) => path(ROOTS_SETTING, `/modules/${id}/edit`)
+  },
   configs: {
     list: path(ROOTS_SETTING, '/configs/list'),
     new: path(ROOTS_SETTING, '/configs/new'),
