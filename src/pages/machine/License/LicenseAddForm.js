@@ -1,38 +1,29 @@
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Typography } from '@mui/material';
+import { Autocomplete, Box, Card, Grid, TextField } from '@mui/material';
 // slice
-import { setLicenseFormVisibility } from '../../../redux/slices/products/license';
+import { DatePicker } from '@mui/x-date-pickers';
+import { LicenseTypes, addLicense, setLicenseFormVisibility } from '../../../redux/slices/products/license';
 // schema
-import { AddLicenseSchema } from './schemas/AddLicenseSchema';
+import { LicenseSchema } from './schemas/LicenseSchema';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import Iconify from '../../../components/iconify/Iconify';
 // assets
-import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
+import FormProvider, { RHFTextField } from '../../../components/hook-form';
 // constants
 import { Snacks } from '../../../constants/machine-constants';
-import { FORMLABELS, TITLES } from '../../../constants/default-constants';
+import { FORMLABELS} from '../../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
 export default function LicenseAddForm() {
-  const [underDevelopment, setUnderDevelopment] = useState(true);
-  // const {
-  //   initial,
-  //   error,
-  //   responseMessage,
-  //   licenseEditFormVisibility,
-  //   licenses,
-  //   license,
-  //   formVisibility,
-  // } = useSelector((state) => state.license);
+
   const { machine } = useSelector((state) => state.machine);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -44,7 +35,14 @@ export default function LicenseAddForm() {
   const defaultValues = useMemo(
     () => ({
       licenseKey: '',
-      licenseDetail: '',
+      version:'',
+      type:null,
+      deviceName:'',
+      deviceGUID:'',
+      production:'',
+      waste:'',
+      extensionTime:null,
+      requestTime:null,
       isActive: true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -52,91 +50,115 @@ export default function LicenseAddForm() {
   );
 
   const methods = useForm({
-    resolver: yupResolver(AddLicenseSchema),
+    resolver: yupResolver(LicenseSchema),
     defaultValues,
   });
 
   const {
     reset,
     handleSubmit,
+    setValue,
     formState: { isSubmitting },
   } = methods;
 
+  const [extensionTime, setExtensionTime] = useState(''); // State to store the selected date
+  const [extensionTimeError, setExtensionTimeError] = useState(''); // State to manage the error message
+
+  const [requestTime, setRequestTime] = useState(''); // State to store the selected date
+  const [requestTimeError, setRequestTimeError] = useState(''); // State to manage the error message
+
+  // Function to handle date change
+  const handleExtensionTimeChange = newValue => {
+    setValue('extensionTime',newValue)
+    setExtensionTime(newValue);
+    setExtensionTimeError(''); // Clear the error when a date is selected
+  };
+
+  // Function to handle date change
+  const handleRequestTimeChange = newValue => {
+    setRequestTime(newValue);
+    setValue('requestTime',newValue)
+    setRequestTimeError(''); // Clear the error when a date is selected
+  };
+
+
+  // Handle Type
+  const handleTypeChange = (event, newValue) => {
+    setValue('type', newValue);
+  };
+ 
   const onSubmit = async (data) => {
-    try {
-      console.log('licenseDetail : ', data);
-      // await dispatch(saveLicense(machine._id,data));
-      enqueueSnackbar(Snacks.licenseAdded);
-      reset();
-    } catch (err) {
-      enqueueSnackbar(Snacks.failedAddLicense, { variant: `error` });
-      console.error(err.message);
+
+    if (!extensionTime) {
+      setExtensionTimeError('Extension Time is required');
+    }else if (!requestTime) {
+      setRequestTimeError('Request Time is required');
+    }else {
+      try {
+        const responsePromise = dispatch(addLicense(machine._id, data));
+        console.log(responsePromise)
+        responsePromise.then(response => {
+          enqueueSnackbar(Snacks.licenseAdded);
+        }).catch(error => {
+          console.log(error.message)
+          enqueueSnackbar(Snacks.failedAddLicense, { variant:'error' });
+        });
+      } catch (err) {
+        enqueueSnackbar(Snacks.failedAddLicense, { variant: 'error' });
+        console.error(err.message);
+      }
     }
   };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} mb={5}>
-      {underDevelopment && (
-        <Box sx={{ mb: 3 }}>
-          <Typography
-            variant="h1"
-            sx={{
-              color: 'text.secondary',
-              position: 'absolute',
-              top: 200,
-              left: 500,
-              zIndex: 9,
-            }}
-          >
-            <Iconify icon="mdi:alert-outline" width="30px" />
-            {TITLES.UNDERDEVELOPMENT}
-          </Typography>
-        </Box>
-      )}
       <Grid
         container
-        spacing={4}
-        sx={{
-          opacity: underDevelopment ? 0.3 : 1,
-        }}
-      >
+        spacing={4}>
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
-            <Stack spacing={1}>
-              <Typography variant="h2" sx={{ color: 'text.secondary' }}>
-                {TITLES.NEWLICENSE}
-              </Typography>
-            </Stack>
-            <Box
-              rowGap={3}
-              columnGap={3}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(1, 1fr)',
-              }}
-            >
-              <RHFTextField
-                name={FORMLABELS.LICENSE_KEY.name}
-                label={FORMLABELS.LICENSE_KEY.label}
-                minRows={8}
-                multiline
-                disabled={underDevelopment}
-              />
-              <RHFTextField
-                name={FORMLABELS.LICENSE_DETAILS.name}
-                label={FORMLABELS.LICENSE_DETAILS.label}
-                minRows={8}
-                multiline
-                disabled={underDevelopment}
-              />
-              <ToggleButtons isMachine name={FORMLABELS.isACTIVE.name} disabled />
-            </Box>
-            <AddFormButtons
-              isSubmitting={!underDevelopment && isSubmitting}
-              toggleCancel={toggleCancel}
-              disabled={underDevelopment}
-            />
+              <Box
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
+                  <RHFTextField name='licenseKey' label='License Key' inputProps={{ maxLength: 50 }}/>
+                  <RHFTextField name="version" label="Version" inputProps={{ maxLength: 20 }}/>
+                  <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    name="type"
+                    options={LicenseTypes}
+                    onChange={handleTypeChange}
+                    renderInput={(params) => <TextField {...params} label="Type" />}
+                  />
+                  <RHFTextField name="deviceName" label="Device Name" inputProps={{ maxLength: 50 }}/>
+                  <RHFTextField name="deviceGUID" label="Device GUID" inputProps={{ maxLength: 50 }}/>
+                  <RHFTextField type="number" name="production" label="Production" inputProps={{ maxLength: 20 }}/>
+                  <RHFTextField type="number" name="waste" label="Waste" inputProps={{ maxLength: 20 }}/>
+
+                  <DatePicker
+                    label="Extension Time"
+                    name="extensionTime"
+                    value={extensionTime}
+                    onChange={handleExtensionTimeChange}
+                    renderInput={params => <TextField {...params} error={!!extensionTimeError} helperText={extensionTimeError} />}
+                  />
+
+                  <DatePicker
+                    label="Request Time"
+                    name="requestTime"
+                    value={requestTime}
+                    onChange={handleRequestTimeChange}
+                    renderInput={params => <TextField {...params} error={!!requestTimeError} helperText={requestTimeError} />}
+                  />
+                  <ToggleButtons isMachine name={FORMLABELS.isACTIVE.name} />
+              </Box>
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>
         </Grid>
       </Grid>

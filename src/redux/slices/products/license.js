@@ -5,8 +5,9 @@ import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
 const initialState = {
-  intial: false,
-  formVisibility: false,
+  initial: false,
+  licenseFormVisibility: false,
+  licenseViewFormVisibility: false,
   licenseEditFormVisibility: false,
   responseMessage: null,
   success: false,
@@ -28,14 +29,19 @@ const slice = createSlice({
       state.isLoading = true;
     },
 
-    // SET TOGGLE
+    // SET ADD FORM TOGGLE
+    setLicenseFormVisibility(state, action){
+      state.licenseFormVisibility = action.payload;
+    },
+
+    // SET EDIT FORM TOGGLE
     setLicenseEditFormVisibility(state, action){
       state.licenseEditFormVisibility = action.payload;
     },
-    
-    // SET TOGGLE
-    setLicenseFormVisibility(state, action){
-      state.formVisibility = action.payload;
+
+    // SET VIEW TOGGLE
+    setLicenseViewFormVisibility(state, action){
+      state.licenseViewFormVisibility = action.payload;
     },
 
     // HAS ERROR
@@ -113,8 +119,9 @@ export default slice.reducer;
 
 // Actions
 export const {
-  setLicenseEditFormVisibility,
   setLicenseFormVisibility,
+  setLicenseEditFormVisibility,
+  setLicenseViewFormVisibility,
   resetLicense,
   resetLicenses,
   setResponseMessage,
@@ -123,17 +130,34 @@ export const {
   ChangePage,
 } = slice.actions;
 
+export const LicenseTypes = [ 'Type 1','Type 2','Type 3','Type 4']
 
 // ----------------------------------------------------------------------
 
-export function addLicense (machineId, supplyData){
+export function addLicense (machineId, params){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses`,supplyData);
+      // License Key and Machine ID
+      const data = {};
+      // data.machine=`${machineId}`;
+      data.licenseKey=params?.licenseKey;
+      
+      // License Details
+      data.licenseDetail={};
+      data.licenseDetail.version= params?.version;
+      data.licenseDetail.type= params?.type;
+      data.licenseDetail.deviceName= params?.deviceName;
+      data.licenseDetail.deviceGUID= params?.deviceGUID;
+      data.licenseDetail.production= params?.production;
+      data.licenseDetail.waste= params?.waste;
+      data.licenseDetail.extensionTime= params?.extensionTime;
+      data.licenseDetail.requestTime= params?.requestTime;
+      
+      await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses`,data);
+      await dispatch(setLicenseFormVisibility(false));
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
       throw error;
     }
   }
@@ -152,6 +176,7 @@ export function getLicenses (machineId){
           isArchived: false
         }
       });
+
       dispatch(slice.actions.getLicensesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Licenses loaded successfully'));
     } catch (error) {
@@ -164,12 +189,12 @@ export function getLicenses (machineId){
 
 // ----------------------------------------------------------------------
 
-export function getLicense(machineId, id) {
+export function getLicense(machineId, Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses/${id}`);
-      dispatch(slice.actions.getLicensesSuccess(response.data));
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses/${Id}`);
+      dispatch(slice.actions.getLicenseSuccess(response.data));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -180,11 +205,12 @@ export function getLicense(machineId, id) {
 
 // ----------------------------------------------------------------------
 
-export function deleteLicense(machineId, id) {
+export function deleteLicense(machineId, Id) {
+
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses/${id}`, {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses/${Id}`, {
         isArchived: true, 
       });
      
@@ -200,28 +226,32 @@ export function deleteLicense(machineId, id) {
 
 // --------------------------------------------------------------------------
 
-export function updateLicense(params,Id) {
-  return async (dispatch) => {
+export function updateLicense(machineId,Id,params) {
+
+  return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
-    try {
-      const data = {
-        serialNo: params.serialNo,
-        isDisabled: params.isDisabled,
-      };
-     /* eslint-enable */
-      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${Id}`,
-        data
-      );
-      dispatch(getLicense(Id));
-      dispatch(slice.actions.setLicenseEditFormVisibility(false));
-
-      // this.updateCustomerSuccess(response);
-
+    try{
+      // License Key
+      const data = {};
+      data.licenseKey=params?.licenseKey;
+      
+      // License Details
+      data.licenseDetail={};
+      data.licenseDetail.version= params?.version;
+      data.licenseDetail.type= params?.type;
+      data.licenseDetail.deviceName= params?.deviceName;
+      data.licenseDetail.deviceGUID= params?.deviceGUID;
+      data.licenseDetail.production= params?.production;
+      data.licenseDetail.waste= params?.waste;
+      data.licenseDetail.extensionTime= params?.extensionTime;
+      data.licenseDetail.requestTime= params?.requestTime;
+      
+      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses/${Id}`,data);
+      await dispatch(setLicenseEditFormVisibility(false));
     } catch (error) {
-      console.error(error);
+      console.log(error);
       dispatch(slice.actions.hasError(error.Message));
       throw error;
     }
-  };
-
+  }
 }

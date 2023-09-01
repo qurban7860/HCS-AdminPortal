@@ -7,10 +7,8 @@ import { CONFIG } from '../../config-global';
 
 export default function Login(){
 return (
-  <LoginLayout title={CONFIG.MESSAGE_LOGIN_USER}>
-    
+  <LoginLayout title="CLOUD SERVICES">
     <AuthLoginForm />
-
   </LoginLayout>
 );
 }

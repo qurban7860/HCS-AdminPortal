@@ -391,6 +391,8 @@ export const HomePage = Loadable(lazy(() => import('../pages/HomePage')));
 export const ComingSoonPage = Loadable(lazy(() => import('../pages/ComingSoonPage')));
 export const MaintenancePage = Loadable(lazy(() => import('../pages/MaintenancePage')));
 
+export const UserInviteLanding = Loadable(lazy(() => import('../pages/UserInviteLanding')));
+export const errorPage = Loadable(lazy(() => import('../pages/ErrorPage')));
 export const ComponentsOverviewPage = Loadable(
   lazy(() => import('../pages/components/Defaults/ComponentsOverviewPage'))
 );

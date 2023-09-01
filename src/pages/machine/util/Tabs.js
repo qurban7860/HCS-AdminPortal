@@ -5,6 +5,7 @@ import MachineSettingList from '../MachineSettingList';
 import DocumentTagPage from '../../document/documents/DocumentTagPage';
 import MachineDrawings from '../Drawing/MachineDrawings';
 import MachineToolsInstalledList from '../MachineToolsInstalledList';
+import MachineLicenses from '../License/MachineLicenses';
 
 
 export const TABS = (currentComponent, showDevTabs, disableTab) => [
@@ -49,16 +50,17 @@ export const TABS = (currentComponent, showDevTabs, disableTab) => [
     icon: <Iconify icon="mdi:folder-open" />,
     component: <DocumentTagPage customerPage={false} machinePage />,
   },
+  {
+    disabled: disableTab,
+    value: 'license',
+    label: 'License',
+    icon: <Iconify icon="mdi:book-cog-outline" />,
+    component: <MachineLicenses />,
+  },
  
   ...(showDevTabs
     ? [
-        {
-          disabled: disableTab,
-          value: 'license',
-          label: 'License',
-          icon: <Iconify icon="mdi:book-cog-outline" />,
-          // component: <MachineLicenseList />,
-        },
+        
         {
           disabled: disableTab,
           value: 'repairHistory',
