@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, memo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Grid,Switch} from '@mui/material';
-import { is } from 'date-fns/locale';
 
 ViewFormSWitch.propTypes = {
   sm: PropTypes.number,
@@ -19,7 +18,7 @@ ViewFormSWitch.propTypes = {
   isMultiFactorAuthenticationVal:PropTypes.bool,
 };
 
-    export default function ViewFormSWitch({sm, isActiveHeading, isActive, isMultiFactorAuthentication, isMultiFactorAuthenticationVal, customerAccessHeading, customerAccess, customer, customerHeading, machine, machineHeading, drawing, drawingHeading}) {
+function ViewFormSWitch({sm, isActiveHeading, isActive, isMultiFactorAuthentication, isMultiFactorAuthenticationVal, customerAccessHeading, customerAccess, customer, customerHeading, machine, machineHeading, drawing, drawingHeading}) {
     const [isActiveVal, setIsActiveVal] = useState(isActive);
     const [customerAccessVal, setCustomerAccessVal] = useState(customerAccess);
     const [multiFactorAuthenticationVal, setIsMultiFactorAuthenticationVal] = useState(isMultiFactorAuthenticationVal)
@@ -146,3 +145,5 @@ ViewFormSWitch.propTypes = {
       </Grid>
     );
 }
+
+export default memo(ViewFormSWitch)

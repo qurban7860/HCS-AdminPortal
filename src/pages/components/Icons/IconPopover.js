@@ -8,6 +8,7 @@ import { ICONS } from '../../../constants/icons/default-icons';
 
 export default function IconPopover({
   isActive,
+  isRequired,
   deleteDisabled,
   customerVerificationCount,
   machineVerificationCount,
@@ -18,6 +19,7 @@ export default function IconPopover({
   sites,
   onMapClick,
   multiAuth,
+  currentEmp
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const isPopoverOpen = Boolean(anchorEl);
@@ -66,6 +68,44 @@ export default function IconPopover({
               color={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color}
             >
               {isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading}
+            </Typography>
+          </StyledPopover>
+        </>
+      )}
+
+      {isRequired !== undefined && (
+        <>
+          <IconButton
+            aria-label={isRequired ? ICONS.REQUIRED.heading : ICONS.NOTREQUIRED.heading}
+            onMouseEnter={handlePopoverOpen}
+            onMouseLeave={handlePopoverClose}
+          >
+            <Iconify
+              heading={isRequired ? ICONS.REQUIRED.heading : ICONS.NOTREQUIRED.heading}
+              icon={isRequired ? ICONS.REQUIRED.icon : ICONS.NOTREQUIRED.icon}
+              style={{ color: isRequired ? ICONS.REQUIRED.color : ICONS.NOTREQUIRED.color }}
+              width={ICONS.size}
+            />
+          </IconButton>
+          <StyledPopover
+            open={isPopoverOpen}
+            anchorEl={anchorEl}
+            onClose={handlePopoverClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
+            transformOrigin={{
+              vertical: 'center',
+              horizontal: 'center',
+            }}
+            id="mouse-over-popover"
+          >
+            <Typography
+              variant={ICONS.variant}
+              color={isRequired ? ICONS.REQUIRED.color : ICONS.NOTREQUIRED.color}
+            >
+              {isRequired ? ICONS.REQUIRED.heading : ICONS.NOTREQUIRED.heading}
             </Typography>
           </StyledPopover>
         </>
@@ -295,6 +335,55 @@ export default function IconPopover({
         </>
       )}
 
+       {/* currentEmp icon */}
+       {currentEmp !== undefined && (
+        <>
+          <IconButton
+            aria-label={
+              currentEmp ? ICONS.CURR_EMP_ACTIVE.heading : ICONS.CURR_EMP_INACTIVE.heading
+            }
+            onClick={handlePopoverOpen}
+            onMouseEnter={handlePopoverOpen}
+            onMouseLeave={handlePopoverClose}
+          >
+            <Iconify
+              heading={
+                currentEmp ? ICONS.CURR_EMP_ACTIVE.heading : ICONS.CURR_EMP_INACTIVE.heading
+              }
+              icon={currentEmp ? ICONS.CURR_EMP_ACTIVE.icon : ICONS.CURR_EMP_INACTIVE.icon}
+              style={{
+                color: currentEmp
+                  ? ICONS.CURR_EMP_ACTIVE.color
+                  : ICONS.CURR_EMP_INACTIVE.color,
+              }}
+              width={ICONS.size}
+            />
+          </IconButton>
+
+          <StyledPopover
+            open={isPopoverOpen}
+            anchorEl={anchorEl}
+            onClose={handlePopoverClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
+            transformOrigin={{
+              vertical: 'center',
+              horizontal: 'center',
+            }}
+            id="mouse-over-popover"
+          >
+            <Typography
+              variant={ICONS.variant}
+              color={currentEmp ? ICONS.CURR_EMP_ACTIVE.color : ICONS.CURR_EMP_INACTIVE.color}
+            >
+              {currentEmp ? ICONS.CURR_EMP_ACTIVE.heading : ICONS.CURR_EMP_INACTIVE.heading}
+            </Typography>
+          </StyledPopover>
+        </>
+      )}
+
       {/* customerAccess icon */}
       {customerAccess !== undefined && (
         <>
@@ -377,6 +466,7 @@ export default function IconPopover({
 
 IconPopover.propTypes = {
   isActive: PropTypes.bool,
+  isRequired: PropTypes.bool,
   deleteDisabled: PropTypes.bool,
   customerVerificationCount: PropTypes.number,
   machineVerificationCount: PropTypes.number,
@@ -387,4 +477,5 @@ IconPopover.propTypes = {
   sites: PropTypes.array,
   onMapClick: PropTypes.func,
   multiAuth:PropTypes.bool,
+  currentEmp:PropTypes.bool
 };

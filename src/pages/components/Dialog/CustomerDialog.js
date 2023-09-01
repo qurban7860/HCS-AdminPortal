@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Typography, Link, DialogActions, Button, Dialog } from '@mui/material';
+import { setCustomerDialog } from '../../../redux/slices/customer/customer';
 import Iconify from '../../../components/iconify';
 import { PATH_CUSTOMER } from '../../../routes/paths';
 import DialogLink from './DialogLink';
@@ -10,20 +11,21 @@ import DialogLabel from './DialogLabel';
 import ViewFormField from '../ViewForms/ViewFormField';
 import FormLabel from '../DocumentForms/FormLabel';
 
-function CustomerDialog({ openCustomer, handleCloseCustomer }) {
+function CustomerDialog() {
   const navigate = useNavigate();
-  const { customer } = useSelector((state) => state.customer);
-
+  const dispatch = useDispatch();
+  const { customer, customerDialog } = useSelector((state) => state.customer);
+  const handleCustomerDialog = () => { dispatch(setCustomerDialog(false))  }
   return (
     <Dialog
       disableEnforceFocus
       maxWidth="lg"
-      open={openCustomer}
-      onClose={handleCloseCustomer}
+      open={customerDialog}
+      onClose={handleCustomerDialog}
       keepMounted
       aria-describedby="alert-dialog-slide-description"
     >
-      <DialogLabel onClick={handleCloseCustomer} content="Customer" />
+      <DialogLabel onClick={handleCustomerDialog} content="Customer" />
       <Grid item container sx={{ px: 2, pt: 2 }}>
         <ViewFormField sm={12} heading="Name" param={customer?.name} />
         <ViewFormField sm={12} heading="Trading Name" chips={customer?.tradingName} />
@@ -84,9 +86,5 @@ function CustomerDialog({ openCustomer, handleCloseCustomer }) {
   );
 }
 
-CustomerDialog.propTypes = {
-  openCustomer: PropTypes.bool,
-  handleCloseCustomer: PropTypes.func,
-};
 
 export default CustomerDialog;

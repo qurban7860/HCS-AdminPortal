@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector, batch } from 'react-redux';
 // @mui
-import { Card, Grid, Link, Dialog, Button } from '@mui/material';
+import { Card, Grid, Link, Button } from '@mui/material';
 import ConfirmDialog from '../../components/confirm-dialog';
 // routes
 import { PATH_SECURITY } from '../../routes/paths';
@@ -12,39 +12,31 @@ import {
   getSecurityUsers,
   deleteSecurityUser,
   setSecurityUserEditFormVisibility,
-  sendUserInvite,
 } from '../../redux/slices/securityUser/securityUser';
-import { getCustomer } from '../../redux/slices/customer/customer';
-import { getContact } from '../../redux/slices/customer/contact';
+import { getCustomer , setCustomerDialog } from '../../redux/slices/customer/customer';
+import { getContact , setContactDialog } from '../../redux/slices/customer/contact';
 import ViewFormField from '../components/ViewForms/ViewFormField';
 import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
 import { Cover } from '../components/Defaults/Cover';
 import { useSnackbar } from '../../components/snackbar';
-import DialogLabel from '../components/Dialog/DialogLabel';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
-import FormLabel from '../components/DocumentForms/FormLabel';
+import CustomerDialog from '../components/Dialog/CustomerDialog';
+import ContactDialog from '../components/Dialog/ContactDialog';
 
 // ----------------------------------------------------------------------
 
 export default function SecurityUserViewForm() {
- 
+
+  const [disableEditButton, setDisableEditButton] = useState(false);
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
   const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
 
-  const { securityUser } = useSelector((state) => state.user);
+  const { securityUser, loggedInUser } = useSelector((state) => state.user);
   const { customer } = useSelector((state) => state.customer);
   const { contact } = useSelector((state) => state.contact);
-
-  const [openContact, setOpenContact] = useState(false);
-  const handleOpenContact = () => setOpenContact(true);
-  const handleCloseContact = () => setOpenContact(false);
-
-  const [openCustomer, setOpenCustomer] = useState(false);
-  const handleOpenCustomer = () => setOpenCustomer(true);
-  const handleCloseCustomer = () => setOpenCustomer(false);
 
   const [openConfirm, setOpenConfirm] = useState(false);
   const handleCloseConfirm = () => setOpenConfirm(false);
@@ -55,11 +47,24 @@ export default function SecurityUserViewForm() {
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
+    dispatch(setCustomerDialog(false))
+    dispatch(setContactDialog(false))
     if (id) {
       dispatch(getSecurityUser(id));
     }
   }, [id, dispatch]);
 
+  useEffect(() => {
+    if (loggedInUser) {
+      // disable edit button
+      if (isSuperAdmin || loggedInUser._id === id) {
+        setDisableEditButton(false);
+      } else {
+        setDisableEditButton(true);
+      }
+    }
+  }, [id, loggedInUser, isSuperAdmin]);
+  // disableDeleteButton, setDisableDeleteButton
   useEffect(() => {
     batch(() => {
       if (securityUser && securityUser?.customer && securityUser?.customer?._id) {
@@ -79,32 +84,17 @@ export default function SecurityUserViewForm() {
     dispatch(setSecurityUserEditFormVisibility(true));
     navigate(PATH_SECURITY.users.edit(securityUser._id));
   };
+  const handleCustomerDialog = () =>{dispatch(setCustomerDialog(true))}
+  const handleContactDialog = () =>{dispatch(setContactDialog(true))}
+
 
   const handleUpdatePassword = () => {
     navigate(PATH_SECURITY.users.userPassword);
   };
 
-  const handleAWSInvite = async () => {
-    if (securityUser._id) {
-      try {
-        await dispatch(await sendUserInvite(securityUser._id));
-        enqueueSnackbar('Invite sent successfully!');
-      } catch (error) {
-        if (error.Message) {
-          enqueueSnackbar(error.Message, { variant: `error` });
-        } else if (error.message) {
-          enqueueSnackbar(error.message, { variant: `error` });
-        } else {
-          enqueueSnackbar('Something went wrong!', { variant: `error` });
-        }
-        console.log('Error:', error);
-      }
-    }
-  };
-
   const onDelete = async () => {
     try {
-      dispatch(await deleteSecurityUser(id));
+      await dispatch(deleteSecurityUser(id));
       dispatch(getSecurityUsers());
       navigate(PATH_SECURITY.users.list);
     } catch (error) {
@@ -127,6 +117,7 @@ export default function SecurityUserViewForm() {
       customers: securityUser?.customers || [],
       machines: securityUser?.machines || [],
       isActive: securityUser?.isActive,
+      currentEmployee: securityUser?.currentEmployee || false,
       multiFactorAuthentication: securityUser?.multiFactorAuthentication,
       createdByFullName: securityUser?.createdBy?.name,
       createdAt: securityUser?.createdAt,
@@ -149,11 +140,12 @@ export default function SecurityUserViewForm() {
         </Card>
         <Card sx={{ p: 3 }}>
           <ViewFormEditDeleteButtons
-            handleAWSInvite={handleAWSInvite}
             handleEdit={handleEdit}
             handleUpdatePassword={handleUpdatePassword}
             onDelete={onDelete}
-            isSuperAdmin={!isSuperAdmin}
+            disablePasswordButton={!isSuperAdmin}
+            disableDeleteButton={!isSuperAdmin}
+            disableEditButton={disableEditButton}
           />
           <ConfirmDialog
             open={openConfirm}
@@ -167,13 +159,13 @@ export default function SecurityUserViewForm() {
             }
           />
           <Grid container>
-            <ViewFormField sm={12} isActive={defaultValues.isActive} multiAuth={defaultValues?.multiFactorAuthentication} />
+            <ViewFormField sm={12} isActive={defaultValues.isActive} multiAuth={defaultValues?.multiFactorAuthentication} currentEmp={defaultValues?.currentEmployee}  />
             <ViewFormField
               sm={6}
               heading="Customer"
               objectParam={
                 defaultValues?.customer && (
-                  <Link onClick={handleOpenCustomer} href="#" underline="none">
+                  <Link onClick={handleCustomerDialog} href="#" underline="none">
                     {defaultValues?.customer}
                   </Link>
                 )
@@ -184,7 +176,7 @@ export default function SecurityUserViewForm() {
               heading="Contact"
               objectParam={
                 defaultValues?.contact && (
-                  <Link onClick={handleOpenContact} href="#" underline="none">
+                  <Link onClick={handleContactDialog} href="#" underline="none">
                     {defaultValues?.contact}
                   </Link>
                 )
@@ -194,6 +186,7 @@ export default function SecurityUserViewForm() {
             <ViewFormField sm={6} heading="Phone" param={defaultValues?.phone} />
             <ViewFormField sm={12} heading="email" param={defaultValues?.email} />
             <ViewFormField sm={6} heading="Login" param={defaultValues?.login} />
+            
             <ViewFormField
               sm={6}
               heading="Roles"
@@ -227,128 +220,11 @@ export default function SecurityUserViewForm() {
           </Grid>
         </Card>
       </Grid>
-      <Dialog
-        maxWidth="lg"
-        open={openCustomer}
-        onClose={handleCloseCustomer}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
-      >
-        <DialogLabel content="Customer" onClick={() => handleCloseCustomer()} />
-        <Grid container sx={{ p: 2 }}>
-          <ViewFormField sm={12} heading="Name" param={customer?.name} />
-          <ViewFormField sm={6} heading="Trading Name" param={customer?.tradingName} />
-          <ViewFormField sm={6} heading="Phone" param={customer?.mainSite?.phone} />
-          <ViewFormField sm={6} heading="Fax" param={customer?.mainSite?.fax} />
-          <ViewFormField sm={6} heading="Email" param={customer?.mainSite?.email} />
-          <ViewFormField sm={6} heading="Site Name" param={customer?.mainSite?.name} />
-          <FormLabel content="Address Information" />
-          <ViewFormField sm={6} heading="Street" param={customer?.mainSite?.address?.street} />
-          <ViewFormField sm={6} heading="Suburb" param={customer?.mainSite?.address?.suburb} />
-          <ViewFormField sm={6} heading="City" param={customer?.mainSite?.address?.city} />
-          <ViewFormField sm={6} heading="Region" param={customer?.mainSite?.address?.region} />
-          <ViewFormField sm={6} heading="Post Code" param={customer?.mainSite?.address?.postcode} />
-          <ViewFormField sm={12} heading="Country" param={customer?.mainSite?.address?.country} />
-          <ViewFormField
-            sm={6}
-            heading="Primary Biling Contact"
-            param={
-              customer?.primaryBillingContact &&
-              `${customer?.primaryBillingContact?.firstName} ${customer?.primaryBillingContact?.lastName}`
-            }
-          />
-          <ViewFormField
-            sm={6}
-            heading="Primary Technical Contact"
-            param={
-              customer?.primaryTechnicalContact &&
-              `${customer?.primaryTechnicalContact?.firstName} ${customer?.primaryTechnicalContact?.lastName}`
-            }
-          />
-        </Grid>
-        <Grid container sx={{ px: 2, pb: 3 }}>
-          <FormLabel content="Howick Resources" />
-          <ViewFormField
-            sm={6}
-            heading="Account Manager"
-            param={customer?.accountManager?.firstName}
-            secondParam={customer?.accountManager?.lastName}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Project Manager"
-            param={customer?.projectManager?.firstName}
-            secondParam={customer?.projectManager?.lastName}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Suppport Manager"
-            param={customer?.supportManager?.firstName}
-            secondParam={customer?.supportManager?.lastName}
-          />
-        </Grid>
-      </Dialog>
-      <Dialog
-        maxWidth="lg"
-        open={openContact}
-        onClose={handleCloseContact}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
-      >
-        <DialogLabel content="Contact" onClick={() => handleCloseContact()} />
-        <Grid container sx={{ px: 2, py: 2 }}>
-          <ViewFormField
-            sm={6}
-            heading="First Name"
-            param={contact?.firstName && contact?.firstName}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Last Name"
-            param={contact?.lastName && contact?.lastName}
-          />
-          <ViewFormField sm={6} heading="Title" param={contact?.title && contact?.title} />
-          <ViewFormField
-            sm={6}
-            heading="Contact Types"
-            param={contact?.contactTypes && contact?.contactTypes.toString()}
-          />
-          <ViewFormField sm={6} heading="Phone" param={contact?.phone && contact?.phone} />
-          <ViewFormField sm={6} heading="Email" param={contact?.email && contact?.email} />
-          <FormLabel content="Address Information" />
-          <ViewFormField
-            sm={6}
-            heading="Street"
-            param={contact?.address?.street && contact?.address?.street}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Suburb"
-            param={contact?.address?.suburb && contact?.address?.suburb}
-          />
-          <ViewFormField
-            sm={6}
-            heading="City"
-            param={contact?.address?.city && contact?.address?.city}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Region"
-            param={contact?.address?.region && contact?.address?.region}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Post Code"
-            param={contact?.address?.postcode && contact?.address?.postcode}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Country"
-            param={contact?.address?.country && contact?.address?.country}
-          />
-          <ViewFormField />
-        </Grid>
-      </Dialog>
+      
+      <CustomerDialog />
+
+      <ContactDialog />
+      
     </>
   );
 }

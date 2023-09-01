@@ -39,6 +39,12 @@ export default function Machine() {
   const linkTool = () => {
     navigate(PATH_MACHINE.machines.settings.tool.list);
   };
+  const machineServiceParams = () => {
+    navigate(PATH_MACHINE.machines.settings.machineServiceParams.list);
+  }
+  const linkServiceRecordConfig = () => {
+    navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.list);
+  };
 
   return (
     <Container maxWidth={false}>
@@ -93,6 +99,11 @@ export default function Machine() {
                   icon={ICONS.PARAMETERS.icon}
                   content={ICONS.PARAMETERS.heading}
                 />
+                <ListItem
+                  onClick={machineServiceParams}
+                  icon={ICONS.MACHINE_SERVICE_PARAMETERS.icon}
+                  content={ICONS.MACHINE_SERVICE_PARAMETERS.heading}
+                />
               </List>
               <List
                 sx={{ fontSize: '0.7em' }}
@@ -104,6 +115,18 @@ export default function Machine() {
                   onClick={linkTool}
                   icon={ICONS.TOOLS.icon}
                   content={ICONS.TOOLS.heading}
+                />
+              </List>
+              <List
+                sx={{ fontSize: '0.7em' }}
+                component="nav"
+                aria-labelledby="nested-list-subheader"
+                subheader={<ListItemsHeader header={FORMLABELS.SERVICE} />}
+              >
+                <ListItem
+                  onClick={linkServiceRecordConfig}
+                  icon={ICONS.TOOLS.icon}
+                  content={ICONS.MACHINE_SERVICE_RECORD_CONFIG.heading}
                 />
               </List>
             </StyledSettingsCardContainer>

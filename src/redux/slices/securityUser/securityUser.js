@@ -21,6 +21,7 @@ const initialState = {
   userLogin: null,
   userDisplayName: null,
   userRoles: [],
+  assignedUsers: [],
   signInLogs: [],
   filterBy: '',
   page: 0,
@@ -86,6 +87,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.securityUser = action.payload;
+      state.initial = true;
+    },
+
+    // GET user
+    getAssignedSecurityUserSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.assignedUsers = action.payload;
       state.initial = true;
     },
 
@@ -182,6 +191,7 @@ export function addSecurityUser(param) {
       roles: param.roles,
       login: param.email,
       isActive: param.isActive,
+      currentEmployee: param.currentEmployee,
       multiFactorAuthentication: param.multiFactorAuthentication,
       regions: param.selectedRegions
       }
@@ -215,6 +225,7 @@ export function updateSecurityUser(param,id) {
         login: param.loginEmail,
         roles: param.roles,
         isActive: param.isActive,
+        currentEmployee: param.currentEmployee,
         multiFactorAuthentication: param.multiFactorAuthentication,
         regions: param.selectedRegions
         }
@@ -258,6 +269,28 @@ export function getSecurityUsers() {
   }
 }
 
+// ----------------------------------------------------------------------
+
+export function getAssignedSecurityUsers(roleId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try{ 
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users`,
+      {
+        params: {
+          isArchived: false,
+          roles: roleId,
+        }
+      }
+      );
+        dispatch(slice.actions.getAssignedSecurityUserSuccess(response.data));
+      return response;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+}
 // ----------------------------------------------------------------------
 
 export function getSecurityUser(id) {

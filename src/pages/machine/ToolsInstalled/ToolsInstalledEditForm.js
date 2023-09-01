@@ -15,6 +15,7 @@ import {
   Typography,
   Autocomplete,
   TextField,
+  Button,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 // global
@@ -24,73 +25,35 @@ import {
 } from '../../../redux/slices/products/toolInstalled';
 // routes
 import { useSnackbar } from '../../../components/snackbar';
+import useResponsive from '../../../hooks/useResponsive';
+import Iconify from '../../../components/iconify';
+
 import FormProvider, {
   RHFTextField,
   RHFSwitch,
 } from '../../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import { CONFIG } from '../../../config-global'
+import { checkValuesNotNull } from '../util/index'
+
 
 // ----------------------------------------------------------------------
 
 function ToolsInstalledEditForm() {
   const { toolsInstalled, toolInstalled, toolTypesObj,movingPunchConditions, engageOnConditions, engageOffConditions} = useSelector((state) => state.toolInstalled);
-  const [toolType, setToolType] = useState(toolTypesObj[0]);
+  console.log("toolInstalled : ", toolInstalled)
   const { activeTools } = useSelector((state) => state.tool);
   const { machine } = useSelector((state) => state.machine);
-  // const [singleTool, setSingleTool] = useState(false);
-  // const [compositeTool, setCompositeTool] = useState(false);
- 
-  // const [timeOut, setTimeOut] = useState(null);
-  // const [engagingDuration, setEngagingDuration] = useState(null);
-  // const [returningDuration, setReturningDuration] = useState(null);
-  // const [twoWayCheckDelayTime, setTwoWayCheckDelayTime] = useState(null);
+
+  const [compositToolVal, setCompositToolVal] = useState([]);
+  console.log("compositToolVal : ",compositToolVal)
+  const [compositToolNumber, setCompositToolNumber] = useState(1);
+
   const [toolsVal, setToolsVal] = useState([]);
 
-  useLayoutEffect(() => {
-    const filterTool = [];
-    toolsInstalled.map((toolInstall) => filterTool.push(toolInstall?.tool?._id));
-    const filteredTool = activeTools.filter((item) => !filterTool.includes(item._id));
-    filteredTool.sort((a, b) => {
-      const nameA = a.name.toUpperCase();
-      const nameB = b.name.toUpperCase();
-      if (nameA < nameB) {
-        return -1;
-      }
-      if (nameA > nameB) {
-        return 1;
-      }
-      return 0;
-    });
-    setToolsVal(filteredTool);
-  }, [activeTools, toolsInstalled, machine]);
-
   const dispatch = useDispatch();
-
+  const isMobile = useResponsive('down', 'sm');
   const { enqueueSnackbar } = useSnackbar();
-
-  // useLayoutEffect(() => {
-  //   setToolVal(toolInstalled.tool);
-  //   setToolType(toolInstalled.toolType);
-  //   if(toolInstalled?.singleToolConfig?.engagingDuration){
-  //     setEngagingDuration(toolInstalled?.singleToolConfig?.engagingDuration);
-  //   }
-  //   if(toolInstalled?.singleToolConfig?.timeOut){
-  //     setTimeOut(toolInstalled?.singleToolConfig?.timeOut);
-  //   }
-  //   if(toolInstalled?.singleToolConfig?.returningDuration){
-  //     setReturningDuration(toolInstalled?.singleToolConfig?.returningDuration);
-  //   }
-  //   if(toolInstalled?.singleToolConfig?.twoWayCheckDelayTime){
-  //     setTwoWayCheckDelayTime(toolInstalled?.singleToolConfig?.twoWayCheckDelayTime);
-  //   }
-  //   if(toolInstalled?.toolType === 'SINGLE TOOL'){
-  //     setSingleTool(true);
-  //   }
-  //   if(toolInstalled?.toolType === 'COMPOSITE TOOL'){
-  //     setCompositeTool(true);
-  //   }
-  //   dispatch(getTools());
-  // }, [dispatch, toolInstalled]);
 
   const EditSettingSchema = Yup.object().shape({
     tool: Yup.object().shape({
@@ -149,7 +112,12 @@ function ToolsInstalledEditForm() {
   .test('no-spaces', 'Operations cannot have spaces', value =>
     !(value && value.toString().includes(' '))
   ),
-    // toolType: Yup.string(),
+    toolType: Yup.object().required().test('composit-tool-validation', 'Engage Instrctuion or Disengage Instrctuion is required!', (value) =>{
+      if(value?.name === 'COMPOSIT TOOL' && (compositToolVal.length < 1 || !(compositToolVal.some(checkValuesNotNull)))){
+        return false;
+      }
+      return true;
+    }).nullable().label('Tool Type'),
     isApplyWaste: Yup.boolean(),
     isApplyCrimp: Yup.boolean(),
     isBackToBackPunch: Yup.boolean(),
@@ -254,49 +222,6 @@ function ToolsInstalledEditForm() {
     // disengageInstruction: Yup.object()
   });
 
-  // const defaultValues = useMemo(
-  //   () => ({
-  //     tool: toolInstalled?.tool || null,
-  //     offset: toolInstalled?.offset || '',
-  //     isApplyWaste: toolInstalled?.isApplyWaste || false,
-  //     wasteTriggerDistance: toolInstalled?.wasteTriggerDistance || '',
-  //     isApplyCrimp: toolInstalled?.isApplyCrimp || false,
-  //     crimpTriggerDistance: toolInstalled?.crimpTriggerDistance || '',
-  //     isBackToBackPunch: toolInstalled?.isBackToBackPunch || false,
-  //     isManualSelect: toolInstalled?.isManualSelect || false,
-  //     isAssign: toolInstalled?.isAssign || false,
-  //     operations: toolInstalled?.operations || '',
-  //     // toolType: null,
-
-  //     // singleToolConfig {label: 'PASS'} {label: 'NO CONDITION'}
-  //     engageSolenoidLocation: toolInstalled?.singleToolConfig?.engageSolenoidLocation || '',
-  //     returnSolenoidLocation: toolInstalled?.singleToolConfig?.returnSolenoidLocation || '',
-  //     engageOnCondition: null,
-  //     engageOffCondition: null,
-  //     timeOut: toolInstalled?.singleToolConfig?.timeOut || null,
-  //     engagingDuration: toolInstalled?.singleToolConfig?.engagingDuration || null,
-  //     returningDuration: toolInstalled?.singleToolConfig?.returningDuration || null,
-  //     twoWayCheckDelayTime: toolInstalled?.singleToolConfig?.twoWayCheckDelayTime || null,
-  //     homeProximitySensorLocation: toolInstalled?.singleToolConfig?.homeProximitySensorLocation || '',
-  //     engagedProximitySensorLocation: toolInstalled?.singleToolConfig?.engagedProximitySensorLocation || '',
-  //     pressureTarget: toolInstalled?.singleToolConfig?.pressureTarget ||'',
-  //     distanceSensorLocation: toolInstalled?.singleToolConfig?.distanceSensorLocation ||'',
-  //     distanceSensorTarget: toolInstalled?.singleToolConfig?.distanceSensorTarget ||'',
-  //     isHasTwoWayCheck: toolInstalled?.singleToolConfig?.isHasTwoWayCheck ||false,
-  //     isEngagingHasEnable: toolInstalled?.singleToolConfig?.isEngagingHasEnable ||true,
-  //     isReturningHasEnable: toolInstalled?.singleToolConfig?.isReturningHasEnable ||false,
-  //     movingPunchCondition: null,
-
-  //     // compositeToolConfig  
-  //     engageInstruction: toolInstalled?.compositeToolConfig?.engageInstruction || '',
-  //     disengageInstruction: toolInstalled?.compositeToolConfig?.disengageInstruction || '',
-
-  //     isActive: toolInstalled?.isActive,
-  //   }),
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   []
-  // );
-  // console.log("defaultValues  : ",defaultValues)
   const methods = useForm({
     resolver: yupResolver(EditSettingSchema),
     defaultValues:{
@@ -310,7 +235,7 @@ function ToolsInstalledEditForm() {
       isManualSelect: toolInstalled?.isManualSelect ,
       isAssign: toolInstalled?.isAssign,
       operations: toolInstalled?.operations || '',
-      // toolType: null,
+      toolType: { name: 'GENERIC TOOL'} ,
 
       // singleToolConfig {label: 'PASS'} {label: 'NO CONDITION'}
       engageSolenoidLocation: toolInstalled?.singleToolConfig?.engageSolenoidLocation || '',
@@ -332,8 +257,8 @@ function ToolsInstalledEditForm() {
       movingPunchCondition: null,
 
       // compositeToolConfig  
-      engageInstruction: toolInstalled?.compositeToolConfig?.engageInstruction || '',
-      disengageInstruction: toolInstalled?.compositeToolConfig?.disengageInstruction || '',
+      // engageInstruction: toolInstalled?.compositeToolConfig?.engageInstruction || '',
+      // disengageInstruction: toolInstalled?.compositeToolConfig?.disengageInstruction || '',
 
       isActive: toolInstalled?.isActive,
     }
@@ -350,6 +275,7 @@ function ToolsInstalledEditForm() {
 
   const { 
     tool, 
+    toolType,
     offset,
     engageOnCondition, 
     engageOffCondition, 
@@ -387,13 +313,15 @@ function ToolsInstalledEditForm() {
     }else{
       setValue('engageOffCondition',engageOffConditions[0])
     }
-    setToolType({name: toolInstalled?.toolType})
+    setValue('toolType',{name: toolInstalled?.toolType})
+    setCompositToolNumber(toolInstalled?.compositeToolConfig.length)
+    const comToolVal = toolInstalled?.compositeToolConfig.map((value) => ({engage: value.engageInstruction, disengage: value.disengageInstruction}))
+    setCompositToolVal(comToolVal || [])
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolInstalled]);
 
-  const toggleCancel = () => {
-    dispatch(setToolInstalledEditFormVisibility(false));
-  };
+  const toggleCancel = () => { dispatch(setToolInstalledEditFormVisibility(false));};
+  const handleCompositToolNumberIncrease = () => { setCompositToolNumber(compositToolNumber + 1); };
 
   const onSubmit = async (data) => {
     data.offset= offset
@@ -407,6 +335,8 @@ function ToolsInstalledEditForm() {
     data.pressureTarget = pressureTarget
     data.distanceSensorLocation = distanceSensorLocation
     data.distanceSensorTarget = distanceSensorTarget
+    data.compositeToolConfig = compositToolVal;
+    console.log("tool install edit data : ", data);
     try {
       data.toolType = toolType;
       await dispatch(updateToolInstalled(machine._id, toolInstalled._id, data));
@@ -447,7 +377,7 @@ function ToolsInstalledEditForm() {
                       <Autocomplete
                         {...field}
                         disabled
-                        options={toolsVal}
+                        options={activeTools}
                         getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                         isOptionEqualToValue={(option, value) => option._id === value._id}
                         renderOption={(props, option) => (
@@ -602,28 +532,53 @@ function ToolsInstalledEditForm() {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <Autocomplete
-                  name="toolType" 
-                  options={toolTypesObj}
-                  getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                  value={toolType}
-                  isOptionEqualToValue={(option, value) => option.name === value.name}
-                  onChange={(event, newValue) => {
-                  if (newValue) {
-                    setToolType(newValue);
-                  } else {
-                    setToolType(newValue);
-                  }
-                  }}
-                  renderInput={(params) => (
-                    <TextField 
-                      {...params} 
-                      name="toolType" 
-                      label="Tool Types"  
+                <Controller
+                  name="toolType"
+                  control={control}
+                  defaultValue={toolType || null }
+                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
+                  <Autocomplete
+                    {...field} 
+                    options={toolTypesObj}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    isOptionEqualToValue={(option, value) => option.name === value.name}
+                    onChange={(event, value) => field.onChange(value)}
+                    renderInput={(params) => (
+                      <TextField 
+                        {...params} 
+                        name="toolType" 
+                        id="toolType" 
+                        label="Tool Types" 
+                        error={!!error}
+                        helperText={error?.message} 
+                        inputRef={ref}  
                       />
-                      )}
+                    )}
                     disableClearable
+                  />
+                  )}
                 />
+                {toolType?.name === 'COMPOSIT TOOL' && (  
+                  <Grid display="flex" justifyContent="flex-end">
+                    <Button
+                      onClick={ handleCompositToolNumberIncrease }
+                      fullWidth={ isMobile }
+                      disabled={ compositToolNumber >= CONFIG.COMPOSITE_TOOL_CONFIG_MAX_LENGTH }
+                      variant="contained"
+                      color='primary'
+                      startIcon={<Iconify icon="eva:plus-fill" />}
+                      sx={{
+                        // width: {xs: '100%' ,md: '50%'},
+                        // mb: { xs: 0, md: 2 },
+                        // my: { xs: 1 },
+                        ...(isMobile && { width: '100%' }),
+                        // opacity: isCustomer ? 0 : 1,
+                        // display: isMobile ? 'none' : 'flex',
+                      }}
+                    >Add more
+                    </Button>
+                  </Grid>    
+                )}
               </Box>
               {toolType.name === 'SINGLE TOOL' && 
               <>
@@ -905,77 +860,62 @@ function ToolsInstalledEditForm() {
               </Box>
               </>}
 
-              {toolType.name === 'COMPOSIT TOOL' && <Box
-                rowGap={2}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(1, 1fr)',
-                }}
-              >
-                <Controller
-                  name="engageInstruction"
-                  control={control}
-                  defaultValue={ engageInstruction || null}
-                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                  <Autocomplete
-                    multiple
-                    {...field}
-                    name="engageInstruction"
-                    id="tags-outlined"
-                    options={toolsInstalled}
-                    getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
-                    isOptionEqualToValue={(option, value) => option?.tool?.name === value?.tool?.name }
-                    filterSelectedOptions
-                    onChange={(event, value) => field.onChange(value)}
-                    renderInput={(params) => (
-                      <TextField 
-                        {...params} 
-                        name="engageInstruction"
-                        id="engageInstruction"
-                        label="Engage Instruction*"
-                        placeholder="Search" 
-                        error={!!error}
-                        helperText={error?.message} 
-                        inputRef={ref}
-                        />
-                    )}
-                  />
+              { toolType?.name === 'COMPOSIT TOOL' && Array.from({ length: compositToolNumber }).map((_, index) => (
+                    <Box
+                      rowGap={2}
+                      columnGap={2}
+                      display="grid"
+                      gridTemplateColumns={{
+                        xs: 'repeat(1, 1fr)',
+                        sm: 'repeat(2, 1fr)',
+                      }}
+                      key={index}
+                    >
+                          <Autocomplete
+                            value={compositToolVal[index]?.engage || null}
+                            id={`engageInstruction_${index}`}
+                            options={toolsInstalled}
+                            getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
+                            isOptionEqualToValue={(option, value) => option?.tool?._id === value?.tool?._id}
+                            onChange={(event, value) => {
+                              setCompositToolVal((prevVal) => {
+                                const updatedVal = [...prevVal];
+                                updatedVal[index] = { engage: value, disengage: updatedVal[index]?.disengage || null };
+                                return updatedVal;
+                              });
+                            }}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                label={`Engage Instruction ${index + 1}`}
+                                placeholder="Search"
+                              />
+                            )}
+                          />
+
+                          <Autocomplete
+                            value={compositToolVal[index]?.disengage || null}
+                            id={`disengageInstruction_${index}`}
+                            options={toolsInstalled}
+                            getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
+                            isOptionEqualToValue={(option, value) => option?.tool?._id === value?.tool?._id}
+                            onChange={(event, value) => {
+                              setCompositToolVal((prevVal) => {
+                                const updatedVal = [...prevVal];
+                                updatedVal[index] = { disengage: value, engage: updatedVal[index]?.engage || null };
+                                return updatedVal;
+                              });
+                            }}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                label={`Disengage Instruction ${index + 1}`}
+                                placeholder="Search"
+                              />
+                            )}
+                          />
+                  </Box>)
                   )}
-                />
-                
-                 <Controller
-                  name="disengageInstruction"
-                  control={control}
-                  defaultValue={ disengageInstruction || null}
-                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                  <Autocomplete
-                    multiple
-                    {...field}
-                    name="disengageInstruction"
-                    id="tags-outlined"
-                    options={toolsInstalled}
-                    getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
-                    isOptionEqualToValue={(option, value) => option?.tool?.name === value?.tool?.name }
-                    filterSelectedOptions
-                    onChange={(event, value) => field.onChange(value)}
-                    renderInput={(params) => (
-                      <TextField 
-                        {...params} 
-                        name="disengageInstruction"
-                        id="disengageInstruction"
-                        label="Disengage Instruction*"
-                        placeholder="Search" 
-                        error={!!error}
-                        helperText={error?.message} 
-                        inputRef={ref}
-                        />
-                    )}
-                  />
-                  )}
-                />
-              </Box>}
               
               <RHFSwitch
                   name="isActive"

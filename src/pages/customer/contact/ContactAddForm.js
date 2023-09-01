@@ -50,7 +50,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
 
   const defaultValues = useMemo(
     () => ({
-      customer: customer._id,
+      customer: customer?._id,
       firstName: '',
       lastName: '',
       title: '',
@@ -91,8 +91,10 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
   }, [dispatch]);
 
   const handlePhoneChange = (newValue) => {
-    matchIsValidTel(newValue);
+    matchIsValidTel(newValue)
+    if(newValue.length < 17){
       setPhone(newValue);
+    }
   };
 
   const onSubmit = async (data) => {

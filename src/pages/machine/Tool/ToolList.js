@@ -190,7 +190,7 @@ export default function ToolList() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name={FORMLABELS.COVER.TOOLS} setting="enable" />
+          <Cover name={FORMLABELS.COVER.TOOLS} setting />
         </StyledCardContainer>
 
         <TableCard>

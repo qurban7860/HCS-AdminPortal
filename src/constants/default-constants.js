@@ -38,9 +38,12 @@ export const FORMLABELS = {
     ADD_DOCUMENTS: 'Add Documents',
     MACHINE_DRAWINGS: 'Machine Drawings',
     ADD_MACHINE_DRAWINGSS: 'New Machine Drawing',
-
+    MACHINE_SERVICE_PARAMS: 'Machine Service Parameters',
+    MACHINE_SERVICE_PARAM_ADD: 'New Machine Service Parameter',
+    MACHINE_SERVICE_PARAM_EDIT: 'Edit Machine Service Parameter',
     EDIT_DOCUMENT: 'Edit Document',
   },
+
   // @root FormLabels
   HOWICK: 'Howick Resources',
   ADDRESS: 'Address Information',
@@ -55,6 +58,8 @@ export const FORMLABELS = {
   COMMON_SETTINGS: 'Common Settings',
   TECHNICAL_SETTINGS: 'Technical Settings',
   TOOLS_INFO: ' Tools Information',
+  SERVICE: ' Service Settings',
+
 
   // @root - Settings
   DOCUMENT_SETTINGS: 'Document Settings',
@@ -174,9 +179,14 @@ export const BUTTONS = {
 
   // region
   ADDREGION: 'Add Region',
+  // module
+  ADDMODULE: 'Add Module',
 
   // CONFIG
   ADDCONFIG: 'Add Config',
+
+  // MACHINE SETTINGS
+  ADD_MACHINE_SERVICE_PARAM: 'Add Parameter',
 
 };
 

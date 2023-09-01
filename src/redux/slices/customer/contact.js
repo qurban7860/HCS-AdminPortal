@@ -16,6 +16,7 @@ const initialState = {
   activeContacts: [],
   spContacts: [],
   activeSpContact:[],
+  contactDialog:false,
   contact: null,
   filterBy: '',
   page: 0,
@@ -48,6 +49,11 @@ const slice = createSlice({
     // SET TOGGLE
     setContactEditFormVisibility(state, action){
       state.contactEditFormVisibility = action.payload;
+    },
+
+    // SET TOGGLE
+    setContactDialog(state, action){
+      state.contactDialog = action.payload;
     },
 
     // RESET CONTACT
@@ -156,6 +162,7 @@ export const {
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,
+  setContactDialog,
 } = slice.actions;
 
 // ----------------------------------------------------------------------

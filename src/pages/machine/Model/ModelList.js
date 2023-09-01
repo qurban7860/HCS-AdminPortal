@@ -239,7 +239,7 @@ export default function ModelList() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Models" icon="material-symbols:list-alt-outline" setting="enable" />
+          <Cover name="Models" icon="material-symbols:list-alt-outline" setting />
         </StyledCardContainer>
         <TableCard>
           <ModelListTableToolbar

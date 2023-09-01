@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Grid, Chip, Link } from '@mui/material';
 import IconPopover from '../Icons/IconPopover';
@@ -6,7 +6,7 @@ import ViewFormMenuPopover from './ViewFormMenuPopover';
 import Iconify from '../../../components/iconify';
 
 
-export default function ViewFormField({
+function ViewFormField({
   heading,
   param,
   node,
@@ -19,6 +19,7 @@ export default function ViewFormField({
   numberParam,
   sm,
   isActive,
+  isRequired,
   deleteDisabled,
   customerVerificationCount,
   machineVerificationCount,
@@ -29,6 +30,7 @@ export default function ViewFormField({
   customerAccess,
   documentIsActive,
   multiAuth,
+  currentEmp,
   chips,
   userRolesChips,
   NewVersion,
@@ -80,6 +82,7 @@ export default function ViewFormField({
       >
         <IconPopover isActive={isActive} />
         {deleteDisabled !== undefined && <IconPopover deleteDisabled={deleteDisabled} />}
+        {isRequired !== undefined && <IconPopover isRequired={isRequired} />}
         {(customerVerificationCount || machineVerificationCount > 0) && verified > 0 && (
           <IconPopover
             customerVerificationCount={customerVerificationCount}
@@ -91,6 +94,7 @@ export default function ViewFormField({
         {/* input fields params */}
         {documentIsActive !== undefined && <IconPopover documentIsActive={documentIsActive} />}
         {multiAuth !== undefined && <IconPopover multiAuth={multiAuth} />}
+        {currentEmp !== undefined && <IconPopover currentEmp={currentEmp} />}
         {customerAccess !== undefined && <IconPopover customerAccess={customerAccess} />}
         {param && typeof param === 'string' && param.trim().length > 0 && param}
         {param &&
@@ -208,7 +212,7 @@ export default function ViewFormField({
     </Grid>
   );
 }
-
+export default memo(ViewFormField) 
 ViewFormField.propTypes = {
   heading: PropTypes.string,
   node: PropTypes.node,
@@ -222,6 +226,7 @@ ViewFormField.propTypes = {
   secondObjectParam: PropTypes.object,
   sm: PropTypes.number,
   isActive: PropTypes.bool,
+  isRequired: PropTypes.bool,
   deleteDisabled: PropTypes.bool,
   customerVerificationCount: PropTypes.number,
   machineVerificationCount: PropTypes.number,
@@ -231,6 +236,7 @@ ViewFormField.propTypes = {
   customerAccess: PropTypes.bool,
   documentIsActive: PropTypes.bool,
   multiAuth: PropTypes.bool,
+  currentEmp: PropTypes.bool,
   chipDialogArrayParam: PropTypes.array,
   chips: PropTypes.any,
   userRolesChips: PropTypes.array,

@@ -219,7 +219,7 @@ export default function StatusList() {
           <Cover
             name="Technical Parameters"
             icon="material-symbols:list-alt-outline"
-            setting="enable"
+            setting
           />
         </StyledCardContainer>
         <TableCard>

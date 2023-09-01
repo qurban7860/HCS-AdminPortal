@@ -114,6 +114,7 @@ export const PATH_MACHINE = {
     edit: (id) => path(ROOTS_MACHINE, `/machines/${id}/edit`),
     settings: {
       app: path(ROOTS_MACHINE, '/machines/settings/app'),
+
       categories: {
         new: (ROOTS_MACHINE, '/products/machines/settings/categories/new'),
         list: (ROOTS_MACHINE, '/products/machines/settings/categories/list'),
@@ -121,6 +122,7 @@ export const PATH_MACHINE = {
         categoryedit: (id) => path(ROOTS_MACHINE, `/machines/settings/categories/${id}/edit`),
         edit: (id) => path(ROOTS_MACHINE, `/machines/settings/categories/${id}/edit`),
       },
+
       model: {
         root: path(ROOTS_MACHINE, '/products/machines/settings'),
         new: (ROOTS_MACHINE, '/products/machines/settings/model/new'),
@@ -129,6 +131,7 @@ export const PATH_MACHINE = {
         modeledit: (id) => path(ROOTS_MACHINE, `/machines/settings/model/${id}/edit`),
         edit: (id) => path(ROOTS_MACHINE, `/machines/settings/model/${id}/edit`),
       },
+
       supplier: {
         root: path(ROOTS_MACHINE, '/products/machines/settings'),
         new: (ROOTS_MACHINE, '/products/machines/settings/supplier/new'),
@@ -137,6 +140,7 @@ export const PATH_MACHINE = {
         supplieredit: (id) => path(ROOTS_MACHINE, `/machines/settings/supplier/${id}/edit`),
         edit: (id) => path(ROOTS_MACHINE, `/machines/settings/supplier/${id}/edit`),
       },
+
       status: {
         root: path(ROOTS_MACHINE, '/products/machines/settings'),
         new: (ROOTS_MACHINE, '/products/machines/settings/status/new'),
@@ -145,6 +149,7 @@ export const PATH_MACHINE = {
         statusedit: (id) => path(ROOTS_MACHINE, `/machines/settings/status/${id}/edit`),
         edit: (id) => path(ROOTS_MACHINE, `/machines/settings/status/${id}/edit`),
       },
+      
       technicalParameterCategories: {
         root: path(ROOTS_MACHINE, '/products/machines/settings'),
         new: (ROOTS_MACHINE, '/products/machines/settings/technicalParameterCategories/new'),
@@ -157,6 +162,14 @@ export const PATH_MACHINE = {
         edit: (id) =>
           path(ROOTS_MACHINE, `/machines/settings/technicalParameterCategories/${id}/edit`),
       },
+
+      machineServiceParams:{
+        new: (ROOTS_MACHINE, '/products/machines/settings/machineServiceParams/new'),
+        list:(ROOTS_MACHINE, '/products/machines/settings/machineServiceParams/list'),
+        view: (id) => path(ROOTS_MACHINE, `/machines/settings/machineServiceParams/${id}/view`),
+        edit: (id) => path(ROOTS_MACHINE, `/machines/settings/machineServiceParams/${id}/edit`),
+      },
+
       parameters: {
         root: path(ROOTS_MACHINE, '/products/machines/settings'),
         new: (ROOTS_MACHINE, '/products/machines/settings/parameters/new'),
@@ -173,6 +186,13 @@ export const PATH_MACHINE = {
         view: (id) => path(ROOTS_MACHINE, `/machines/settings/tool/${id}/view`),
         tooledit: (id) => path(ROOTS_MACHINE, `/machines/settings/tool/${id}/edit`),
         edit: (id) => path(ROOTS_MACHINE, `/machines/settings/tool/${id}/edit`),
+      },
+      serviceRecordConfigs: {
+        new: (ROOTS_MACHINE, '/products/machines/settings/serviceRecordConfigs/new'),
+        list: (ROOTS_MACHINE, '/products/machines/settings/serviceRecordConfigs/list'),
+        view: (id) => path(ROOTS_MACHINE, `/machines/settings/serviceRecordConfigs/${id}/view`),
+        servicerecordconfigedit: (id) => path(ROOTS_MACHINE, `/machines/settings/serviceRecordConfigs/${id}/edit`),
+        edit: (id) => path(ROOTS_MACHINE, `/machines/settings/serviceRecordConfigs/${id}/edit`),
       },
     },
   },
@@ -240,6 +260,12 @@ export const PATH_SETTING = {
     new: path(ROOTS_SETTING, '/regions/new'),
     view: (id) => path(ROOTS_SETTING, `/regions/${id}/view`),
     edit: (id) => path(ROOTS_SETTING, `/regions/${id}/edit`)
+  },
+  modules: {
+    list: path(ROOTS_SETTING, '/modules/list'),
+    new: path(ROOTS_SETTING, '/modules/new'),
+    view: (id) => path(ROOTS_SETTING, `/modules/${id}/view`),
+    edit: (id) => path(ROOTS_SETTING, `/modules/${id}/edit`)
   },
   configs: {
     list: path(ROOTS_SETTING, '/configs/list'),

@@ -81,7 +81,7 @@ export default function MachineView({ editPage }) {
           }}
           serialNo={machine?.serialNo ? machine?.serialNo : 'Serial Number'}
           icon="et:gears"
-          setting="enable"
+          setting
         />
         <TabContainer
           tabsClasses={tabsClasses.scrollButtons}

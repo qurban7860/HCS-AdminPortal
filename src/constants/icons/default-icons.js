@@ -20,6 +20,18 @@ export const ICONS = {
     color: 'red',
     heading: 'Inactive',
   },
+
+  REQUIRED: {
+    icon: 'mdi:required-circle',
+    color: 'green',
+    heading: 'Required',
+  },
+  NOTREQUIRED: {
+    icon: 'mdi:required-circle',
+    color: 'red',
+    heading: 'Not Required',
+  },
+
   // ------------------------------------------------------------
   // deleteDisabled
   DELETE_DISABLED: {
@@ -68,6 +80,20 @@ export const ICONS = {
     color: 'red',
     heading: 'Inactive',
   },
+
+  // ------------------------------------------------------------
+  // CURRENT EMPLOYEE
+  CURR_EMP_ACTIVE: {
+    icon: 'raphael:employee',
+    color: 'green',
+    heading: 'Employee',
+  },
+  CURR_EMP_INACTIVE: {
+    icon: 'clarity:employee-line',
+    color: 'red',
+    heading: 'Not Employee',
+  },
+
   // ------------------------------------------------------------
   // customerAccess
   ALLOWED: {
@@ -116,10 +142,19 @@ export const ICONS = {
     icon: 'mdi:abacus',
     heading: 'Parameters',
   },
+  MACHINE_SERVICE_PARAMETERS: {
+    icon: 'carbon:parameter',
+    heading: 'Machine Service Parameters',
+  },
   // tools information
   TOOLS: {
     icon: 'mdi:tools',
     heading: 'Tools',
+  },
+  // service information
+  MACHINE_SERVICE_RECORD_CONFIG: {
+    icon: 'mdi:tools',
+    heading: 'Machine Service Record Configs',
   },
 
   // @root - Settings - settings
@@ -148,6 +183,10 @@ export const ICONS = {
   REGION: {
     icon: 'mdi:map-marker-circle',
     heading: 'Regions',
+  },
+  MODULE: {
+    icon: 'ic:round-view-module',
+    heading: 'Module',
   },
   CONFIG: {
     icon: 'icon-park-outline:setting-config',

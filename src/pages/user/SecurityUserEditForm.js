@@ -146,6 +146,7 @@ export default function SecurityUserEditForm() {
     roles: Yup.array().required('Role is required').nullable(),
     isActive: Yup.boolean(),
     multiFactorAuthentication: Yup.boolean(),
+    currentEmployee: Yup.boolean()
   });
 
   const defaultValues = useMemo(
@@ -157,6 +158,7 @@ export default function SecurityUserEditForm() {
       loginEmail: securityUser?.login,
       isActive: securityUser?.isActive,
       multiFactorAuthentication: securityUser?.multiFactorAuthentication,
+      currentEmployee: securityUser?.currentEmployee
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [securityUser]
@@ -382,7 +384,7 @@ export default function SecurityUserEditForm() {
                 value={customerVal || null}
                 options={spCustomers}
                 getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
+                isOptionEqualToValue={(option, value) => option._id === value._id}
                 onChange={(event, newValue) => {
                   if (newValue) {
                     setCustomerVal(newValue);
@@ -413,7 +415,7 @@ export default function SecurityUserEditForm() {
                 value={contactVal || null}
                 options={activeContacts}
                 getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
+                isOptionEqualToValue={(option, value) => option._id === value._id}
                 onChange={(event, newValue) => {
                   if (newValue) {
                     setContactVal(newValue);
@@ -510,7 +512,7 @@ export default function SecurityUserEditForm() {
                 value={selectedRegions || null}
                 options={activeRegions}
                 getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
+                isOptionEqualToValue={(option, value) => option._id === value._id}
                 onChange={(event, newValue) => {
                   if (newValue) {                    
                     setSelectedRegions(newValue);
@@ -543,7 +545,7 @@ export default function SecurityUserEditForm() {
                 value={customersArr || null}
                 options={allCustomers}
                 getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
+                isOptionEqualToValue={(option, value) => option._id === value._id}
                 onChange={(event, newValue) => {
                   if (newValue) {                    
                     setCustomerArr(newValue);
@@ -576,7 +578,7 @@ export default function SecurityUserEditForm() {
                 value={machinesArr || null}
                 options={allMachines}
                 getOptionLabel={(option) => `${option.serialNo} ${option.name ? '-' : ''} ${option.name ? option.name : ''}`}
-                isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
+                isOptionEqualToValue={(option, value) => option._id === value._id}
                 onChange={(event, newValue) => {
                   if (newValue) {
                     setMachineArr(newValue);
@@ -624,7 +626,29 @@ export default function SecurityUserEditForm() {
                   </Typography>
                 }
               />
+
+              <RHFSwitch
+                name="currentEmployee"
+                labelPlacement="start"
+                label={
+                  <Typography
+                    variant="subtitle2"
+                    sx={{
+                      mx: 0,
+                      width: 1,
+                      justifyContent: 'space-between',
+                      mb: 0.5,
+                      color: 'text.secondary',
+                    }}
+                  >
+                    {' '}
+                    Current Employee
+                  </Typography>
+                }
+              />
+
             </Grid>
+
             <Stack sx={{ mt: 3 }}>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Stack>

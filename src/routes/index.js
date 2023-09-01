@@ -1,6 +1,5 @@
 import { Navigate, useRoutes } from 'react-router-dom';
 // auth
-import ErrorPage from '../pages/ErrorPage';
 import AuthGuard from '../auth/AuthGuard';
 import GuestGuard from '../auth/GuestGuard';
 // layouts
@@ -45,13 +44,20 @@ import {
   SupplierAddForm,
   SupplierList,
   SupplierView,
-  // SupplierViewForm,
+  SupplierViewForm,
   SupplierEdit,
-  // SupplierEditForm,
+  SupplierEditForm,
+
+  MachineServiceParamList, 
+  MachineServiceParamViewForm,
+  MachineServiceParamEditForm,
+  MachineServiceParamAddForm,
+
   // License
   // MachineLicenses,
   // LicenseList,
   // Categories
+
   CategoryAddForm,
   CategoryList,
   CategoryView,
@@ -74,6 +80,7 @@ import {
   ToolViewForm,
   ToolEdit,
   ToolEditForm,
+
   // MachineTechParamCategory
   TechParamCategoryAddForm,
   TechParamList,
@@ -81,6 +88,7 @@ import {
   TechParamCategoryView,
   TechParamCategoryEdit,
   TechParamCategoryEditForm,
+
   // Status
   StatusAddForm,
   StatusViewForm,
@@ -88,6 +96,7 @@ import {
   StatusEdit,
   StatusEditForm,
   StatusList,
+
   // Model
   ModelAddForm,
   ModelList,
@@ -95,26 +104,31 @@ import {
   ModelView,
   ModelEdit,
   ModelEditForm,
+
   // Role
   RoleList,
   RoleAdd,
   RoleView,
   RoleEdit,
+
   // USER CONFIG
   UserConfigList,
   UserConfigAddForm,
   UserConfigEditForm,
   UserConfigViewForm,
+
   // Site
   SiteList,
   SiteAdd,
   SiteEdit,
   SiteView,
+
   // Contact
   ContactList,
   ContactAdd,
   ContactEdit,
   ContactView,
+
   // Note
   NoteList,
   NoteAdd,
@@ -126,39 +140,38 @@ import {
   DocumentNameList     ,
   DocumentNameViewForm ,
   DocumentNameEditForm ,
+
 // File Category
   DocumentCategoryAddForm  ,
   DocumentCategoryList     ,
   DocumentCategoryView ,
   DocumentCategoryEditForm ,
-
-// Customer document 
-  // CustomerDocumentAddForm  ,
-  // CustomerDocumentList     ,
-  // CustomerDocumentViewForm ,
-  // CustomerDocumentEditForm ,
-//  machine document
-  // MachineDocumentAddForm  ,
-  // MachineDocumentList     ,
-  // MachineDocumentViewForm ,
-  // MachineDocumentEditForm ,
+  // Service Record Config
+  ServiceRecordConfigAddForm,
+  ServiceRecordConfigList,
+  ServiceRecordConfigView,
+  ServiceRecordConfigViewForm,
+  ServiceRecordConfigEditForm,
+  ServiceRecordConfigEdit,
 
   // DocumentDashboard    
   DocumentList, 
   DocumentAddForm, 
   DocumentEditForm, 
   DocumentViewForm, 
-  // CustomerDocumentView,
+  
   // MachineDocumentView,
   MachineDrawings,
   MachineDrawingsAddForm,
   MachineDrawingsViewForm,
-// Setting
 
+  // Setting
   Setting,
+  // Email 
   Email,
   Emailviewform,
-// Reports
+
+  // Reports
   Reports,
   SignInLogList,
 
@@ -168,11 +181,18 @@ import {
   RegionView,
   RegionEdit,
 
+   // modules
+   ModuleList,
+   ModuleAdd,
+   ModuleEdit,
+   ModuleView,
+
   // Configs
   ConfigList,
   ConfigAdd,
   ConfigView,
   ConfigEdit,
+
 //   
   BlankPage,
   PermissionDeniedPage,
@@ -182,13 +202,8 @@ import {
   Page404,
   ComingSoonPage,
   MaintenancePage,
-  UserInviteLanding,
   
-  
-
-  //
 } from './elements';
-import LoginLayout from '../layouts/login/LoginLayout';
 
 // ----------------------------------------------------------------------
 
@@ -328,6 +343,17 @@ export default function Router() {
                 ]
               },
               {
+                path: 'serviceRecordConfigs',
+                children:[
+                  {path: 'new', element: <ServiceRecordConfigAddForm/>},
+                  {path: 'list', element: <ServiceRecordConfigList/>},
+                  {path: ':id/view', element: <ServiceRecordConfigView/>},
+                  {path: 'viewform', element: <ServiceRecordConfigViewForm/>},
+                  {path: ':id/edit', element: <ServiceRecordConfigEdit/>}, 
+                  {path: 'editform', element: <ServiceRecordConfigEditForm/>},
+                ]
+              },
+              {
                 path: 'model',
                 children:[
                   {path: 'new', element: <ModelAddForm/>},
@@ -369,6 +395,15 @@ export default function Router() {
                   {path: ':id/view', element: <TechParamCategoryView/>},
                   {path: ':id/edit', element: <TechParamCategoryEdit/>}, 
                   {path: 'editform', element: <TechParamCategoryEditForm/>},
+                ]
+              },
+              {
+                path: 'machineServiceParams',
+                children:[
+                  {path: 'new', element: <MachineServiceParamAddForm/>},
+                  {path: 'list', element: <MachineServiceParamList/>},
+                  {path: ':id/view', element: <MachineServiceParamViewForm/>},
+                  {path: ':id/edit', element: <MachineServiceParamEditForm/>},
                 ]
               },
               {
@@ -496,6 +531,15 @@ export default function Router() {
           ],
         },
         {
+          path: 'modules',
+          children: [
+            { path: 'list', element: <ModuleList /> },
+            { path: 'new', element: <ModuleAdd /> },
+            { path: ':id/view', element: <ModuleView /> },
+            { path: ':id/edit', element: <ModuleEdit /> }
+          ],
+        },
+        {
           path: 'configs',
           children: [
             { path: 'list', element: <ConfigList /> },
@@ -564,7 +608,6 @@ export default function Router() {
     {
       element: <SimpleLayout />,
       children: [
-        // { path: 'ErrorPage/:status', element: <ErrorPage />}
       ],
     },
     {
@@ -575,22 +618,8 @@ export default function Router() {
         { path: '500', element: <Page500 /> },
         { path: '404', element: <Page404 /> },
         { path: '403', element: <Page403 /> },
-        { path: 'InvalidErrorPage', element: <ErrorPage title="Invalid Link"/>},
-        { path: 'ExpiredErrorPage', element: <ErrorPage title="Link Expired"/>},
-      ], 
+      ],
     },
-    {
-      path: 'invite',
-      children:[
-        { path: ':id/:code/:expiry', element:(
-        <LoginLayout title="User Invitation">
-          <UserInviteLanding />
-        </LoginLayout>
-        ) }
-
-      ]
-    },
-    // { path: 'ErrorPage/:status', element: (<LoginLayout title="AWS Invitation"><ErrorPage /></LoginLayout>)},
     { path: '*', element: <Navigate to="/404" replace /> },
   ]);
 }

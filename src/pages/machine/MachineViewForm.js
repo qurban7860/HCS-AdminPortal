@@ -2,9 +2,9 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Grid, Link, Dialog, Tooltip, Breadcrumbs, Chip } from '@mui/material';
+import { Card, Grid, Link, Tooltip, Breadcrumbs, Chip } from '@mui/material';
 // routes
-import { PATH_MACHINE, PATH_CUSTOMER } from '../../routes/paths';
+import { PATH_MACHINE } from '../../routes/paths';
 // slices
 import {
   getConnntedMachine,
@@ -15,7 +15,9 @@ import {
   transferMachine,
   setMachineVerification,
 } from '../../redux/slices/products/machine';
-import { getCustomer } from '../../redux/slices/customer/customer';
+import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
+import { getSite, resetSite, setSiteDialog } from '../../redux/slices/customer/site';
+
 import { setToolInstalledFormVisibility, setToolInstalledEditFormVisibility } from '../../redux/slices/products/toolInstalled';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
@@ -26,20 +28,21 @@ import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoord
 import ViewFormField from '../components/ViewForms/ViewFormField';
 import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
-import DialogLabel from '../components/Dialog/DialogLabel';
-import DialogLink from '../components/Dialog/DialogLink';
 import FormLabel from '../components/DocumentForms/FormLabel';
 import NothingProvided from '../components/Defaults/NothingProvided';
 import GoogleMaps from '../../assets/GoogleMaps';
 // constants
-import { DIALOGS, BREADCRUMBS, TITLES, FORMLABELS } from '../../constants/default-constants';
+import { BREADCRUMBS, TITLES, FORMLABELS } from '../../constants/default-constants';
 import { Snacks } from '../../constants/machine-constants';
 // utils
 import { fDate } from '../../utils/formatTime';
 // dialog
 import MachineDialog from '../components/Dialog/MachineDialog'
+import CustomerDialog from '../components/Dialog/CustomerDialog';
+import SiteDialog from '../components/Dialog/SiteDialog';
 
 // ----------------------------------------------------------------------
+
 export default function MachineViewForm() {
   const userId = localStorage.getItem('userId');
   const userRolesString = localStorage.getItem('userRoles');
@@ -50,15 +53,14 @@ export default function MachineViewForm() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { machine, transferMachineFlag } = useSelector((state) => state.machine);
-  // console.log("machine : ",machine)
-  const { customer } = useSelector((state) => state.customer);
   const [disableTransferButton, setDisableTransferButton] = useState(true);
   const [disableEditButton, setDisableEditButton] = useState(false);
   const [disableDeleteButton, setDisableDeleteButton] = useState(false);
   const [hasValidLatLong, setHasValidLatLong] = useState(false);
   const isMobile = useResponsive('down', 'sm');
+  const handleInstallationSiteDialog = () =>{ dispatch(resetSite()); dispatch(getSite(machine?.customer?._id, machine?.instalationSite?._id)); dispatch(setSiteDialog(true))}
+  const handleBillingSiteDialog = () =>{ dispatch(resetSite()); dispatch(getSite(machine?.customer?._id, machine?.billingSite?._id)); dispatch(setSiteDialog(true))}
 
-  // function to check whether the lat long params exist or not
   const hasValidArray = (array) =>
     array.some((obj) => {
       const lat = obj?.lat;
@@ -81,9 +83,8 @@ export default function MachineViewForm() {
   );
 
   useEffect(() => {
-    setOpenCustomer(false);
-    setOpenInstallationSite(false);
-    setOpenBilingSite(false);
+    dispatch(setSiteDialog(false))
+    dispatch(setCustomerDialog(false));
     setOpenMachineConnection(false);
     dispatch(setToolInstalledEditFormVisibility(false));
     dispatch(setToolInstalledFormVisibility(false));
@@ -118,7 +119,6 @@ export default function MachineViewForm() {
     try {
       const response = await dispatch(transferMachine(machine));
       const machineId = response.data.Machine._id;
-      // window.open(`${baseUrl}/products/machines/${machineId}/view`);
       navigate(PATH_MACHINE.machines.view(machineId));
       enqueueSnackbar(Snacks.machineTransferSuccess);
     } catch (error) {
@@ -133,9 +133,6 @@ export default function MachineViewForm() {
     }
   };
 
-  const handleViewCustomer = (id) => {
-    navigate(PATH_CUSTOMER.view(id));
-  };
   const onDelete = async () => {
     try {
       await dispatch(deleteMachine(machine._id));
@@ -156,18 +153,10 @@ export default function MachineViewForm() {
       enqueueSnackbar(Snacks.machineFailedVerification, { variant: 'error' });
     }
   };
-  const [openCustomer, setOpenCustomer] = useState(false);
-  const [openInstallationSite, setOpenInstallationSite] = useState(false);
-  const [openBilingSite, setOpenBilingSite] = useState(false);
   const [openMachineConnection, setOpenMachineConnection] = useState(false);
 
 
-  const handleOpenCustomer = () => setOpenCustomer(true);
-  const handleCloseCustomer = () => setOpenCustomer(false);
-  const handleOpenInstallationSite = () => setOpenInstallationSite(true);
-  const handleCloseInstallationSite = () => setOpenInstallationSite(false);
-  const handleOpenBillingSite = () => setOpenBilingSite(true);
-  const handleCloseBillingSite = () => setOpenBilingSite(false);
+  const handleCustomerDialog = () => dispatch(setCustomerDialog(true));
   const handleOpenMachineConnection = async (id) => {
     try {
       await dispatch(getConnntedMachine(id));
@@ -277,7 +266,7 @@ export default function MachineViewForm() {
                     heading="Customer"
                     node={
                       defaultValues.customer && (
-                        <Link onClick={handleOpenCustomer} href="#" underline="none">
+                        <Link onClick={handleCustomerDialog} href="#" underline="none">
                           {defaultValues.customer?.name}
                         </Link>
                       )
@@ -304,7 +293,7 @@ export default function MachineViewForm() {
               heading="Installation Site"
               node={
                 defaultValues.instalationSite && (
-                  <Link onClick={handleOpenInstallationSite} href="#" underline="none">
+                  <Link onClick={ handleInstallationSiteDialog } href="#" underline="none">
                     {defaultValues.instalationSite?.name}
                   </Link>
                 )
@@ -315,7 +304,7 @@ export default function MachineViewForm() {
               heading="Billing Site"
               node={
                 defaultValues.billingSite && (
-                  <Link onClick={handleOpenBillingSite} href="#" underline="none">
+                  <Link onClick={ handleBillingSiteDialog } href="#" underline="none">
                     {defaultValues.billingSite?.name}
                   </Link>
                 )
@@ -385,159 +374,17 @@ export default function MachineViewForm() {
         handleConnectedMachine={openMachineConnection}
       />
 
-      {/* // primary billing dialog */}
-      <Dialog
-        maxWidth="lg"
-        open={openCustomer}
-        onClose={handleCloseCustomer}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
-      >
-        <DialogLabel content="Customer" onClick={() => handleCloseCustomer()} />
-        <Grid item container sx={{ px: 2, pt: 2 }}>
-          <ViewFormField sm={12} heading="Name" param={customer?.name} />
-          <ViewFormField sm={12} heading="Trading Name" chips={customer?.tradingName} />
-          <ViewFormField sm={6} heading="Phone" param={customer?.mainSite?.phone} />
-          <ViewFormField sm={6} heading="Fax" param={customer?.mainSite?.fax} />
-          <ViewFormField sm={6} heading="Email" param={customer?.mainSite?.email} />
-          <ViewFormField sm={6} heading="Site Name" param={customer?.mainSite?.name} />
-          <FormLabel content="Address Information" />
-          <ViewFormField sm={6} heading="Street" param={customer?.mainSite?.address?.street} />
-          <ViewFormField sm={6} heading="Suburb" param={customer?.mainSite?.address?.suburb} />
-          <ViewFormField sm={6} heading="City" param={customer?.mainSite?.address?.city} />
-          <ViewFormField sm={6} heading="Region" param={customer?.mainSite?.address?.region} />
-          <ViewFormField sm={6} heading="Post Code" param={customer?.mainSite?.address?.postcode} />
-          <ViewFormField sm={12} heading="Country" param={customer?.mainSite?.address?.country} />
-          <ViewFormField
-            sm={6}
-            heading="Primary Biling Contact"
-            param={
-              customer?.primaryBillingContact &&
-              `${customer?.primaryBillingContact?.firstName} ${customer?.primaryBillingContact?.lastName}`
-            }
-          />
-          <ViewFormField
-            sm={6}
-            heading="Primary Technical Contact"
-            param={
-              customer?.primaryTechnicalContact &&
-              `${customer?.primaryTechnicalContact?.firstName} ${customer?.primaryTechnicalContact?.lastName}`
-            }
-          />
-        </Grid>
-        <Grid item container sx={{ px: 2, pb: 3 }}>
-          <FormLabel content="Howick Resources" />
-          <ViewFormField
-            sm={6}
-            heading="Account Manager"
-            param={customer?.accountManager?.firstName}
-            secondParam={customer?.accountManager?.lastName}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Project Manager"
-            param={customer?.projectManager?.firstName}
-            secondParam={customer?.projectManager?.lastName}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Suppport Manager"
-            param={customer?.supportManager?.firstName}
-            secondParam={customer?.supportManager?.lastName}
-          />
-        </Grid>
-        <DialogLink content={DIALOGS.CUSTOMER} onClick={() => handleViewCustomer(customer._id)} />
-      </Dialog>
+      <CustomerDialog />
 
-      {/* installation site dialog */}
-      <Dialog
-        open={openInstallationSite}
-        onClose={handleCloseInstallationSite}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
-      >
-        <DialogLabel content="Installation Site" onClick={() => handleCloseInstallationSite()} />
-        <Grid item container sx={{ p: 2 }}>
-          <ViewFormField sm={12} heading="Name" param={defaultValues?.instalationSite?.name} />
-          <ViewFormField sm={6} heading="Phone" param={defaultValues?.instalationSite?.phone} />
-          <ViewFormField sm={6} heading="Fax" param={defaultValues?.instalationSite?.fax} />
-          <ViewFormField sm={6} heading="Email" param={defaultValues?.instalationSite?.email} />
-          <ViewFormField sm={6} heading="Website" param={defaultValues?.instalationSite?.website} />
-          <ViewFormField
-            sm={6}
-            heading="Street"
-            param={defaultValues?.instalationSite?.address?.street}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Suburb"
-            param={defaultValues?.instalationSite?.address?.suburb}
-          />
-          <ViewFormField
-            sm={6}
-            heading="City"
-            param={defaultValues?.instalationSite?.address?.city}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Region"
-            param={defaultValues?.instalationSite?.address?.region}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Post Code"
-            param={defaultValues?.instalationSite?.address?.postcode}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Country"
-            param={defaultValues.instalationSite?.address?.country}
-          />
-        </Grid>
-      </Dialog>
+      <SiteDialog
+        site={defaultValues?.instalationSite}
+        title="Installation Site"
+      />
 
-      {/* Billing site dialog */}
-      <Dialog
-        open={openBilingSite}
-        onClose={handleCloseBillingSite}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
-      >
-        <DialogLabel content="Billing Site" onClick={() => handleCloseBillingSite()} />
-        <Grid item container sx={{ p: 2 }}>
-          <ViewFormField sm={12} heading="Name" param={defaultValues?.billingSite?.name} />
-          <ViewFormField sm={6} heading="Phone" param={defaultValues?.billingSite?.phone} />
-          <ViewFormField sm={6} heading="Fax" param={defaultValues?.billingSite?.fax} />
-          <ViewFormField sm={6} heading="Email" param={defaultValues?.billingSite?.email} />
-          <ViewFormField sm={6} heading="Website" param={defaultValues?.billingSite?.website} />
-          <ViewFormField
-            sm={6}
-            heading="Street"
-            param={defaultValues.billingSite?.address?.street}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Suburb"
-            param={defaultValues.billingSite?.address?.suburb}
-          />
-          <ViewFormField sm={6} heading="City" param={defaultValues?.billingSite?.address?.city} />
-          <ViewFormField
-            sm={6}
-            heading="Region"
-            param={defaultValues?.billingSite?.address?.region}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Post Code"
-            param={defaultValues?.billingSite?.address?.postcode}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Country"
-            param={defaultValues?.billingSite?.address?.country}
-          />
-        </Grid>
-      </Dialog>
+      <SiteDialog
+        site={defaultValues?.billingSite}
+        title="Billing Site"
+      />
     </>
   );
 }

@@ -268,7 +268,7 @@ export function deleteRegion(id) {
       if(regEx.test(response.status)){
         dispatch(slice.actions.setResponseMessage(response.data));
         dispatch(resetRegion())
-      }
+     } 
       return response;
     } catch (error) {
       console.error(error);

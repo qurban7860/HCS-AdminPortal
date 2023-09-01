@@ -215,7 +215,7 @@ export default function CategoryList() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Categories" icon="material-symbols:list-alt-outline" setting="enable" />
+          <Cover name="Categories" icon="material-symbols:list-alt-outline" setting />
         </StyledCardContainer>
 
         <TableCard>

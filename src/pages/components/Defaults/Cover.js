@@ -21,7 +21,7 @@ Cover.propTypes = {
   cover: PropTypes.string,
   name: PropTypes.string,
   role: PropTypes.string,
-  setting: PropTypes.string,
+  setting: PropTypes.bool,
   photoURL: PropTypes.object,
   icon: PropTypes.string,
   serialNo: PropTypes.string,
