@@ -86,7 +86,7 @@ const userModuleRole = userRoles?.some((role) => role.roleType === 'Module');
                 icon={ICONS.REGION.icon}
                 content={ICONS.REGION.heading}
               />
-                {userModuleRole  &&   (
+                { userModuleRole  &&   (
                <ListItem
                   onClick={linkModules}
                   icon={ICONS.MODULE.icon}

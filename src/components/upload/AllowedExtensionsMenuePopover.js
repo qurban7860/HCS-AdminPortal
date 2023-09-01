@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Box, Divider, Grid, Typography } from '@mui/material';
+import { Box, Divider,Typography } from '@mui/material';
 import MenuPopover from '../menu-popover/MenuPopover';
 import FormatsChip from '../../pages/components/Defaults/FormatsChip';
 

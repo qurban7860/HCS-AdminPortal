@@ -1,4 +1,3 @@
-import { Helmet } from 'react-helmet-async';
 // @mui
 import { Container, Typography } from '@mui/material';
 // components
@@ -9,10 +8,8 @@ export default function BlankPage() {
   const { themeStretch } = useSettingsContext();
 
   return (
-    <>
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Typography variant="h6"> Blank </Typography>
       </Container>
-    </>
   );
 }

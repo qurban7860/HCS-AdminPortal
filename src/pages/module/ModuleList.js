@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from '../../redux/store';
 // routes
 import { PATH_SETTING } from '../../routes/paths';
 // components
-import { useSnackbar } from '../../components/snackbar';
+// import { useSnackbar } from '../../components/snackbar';
 import Scrollbar from '../../components/scrollbar';
 import ConfirmDialog from '../../components/confirm-dialog';
 import { Cover } from '../components/Defaults/Cover';
@@ -56,7 +56,6 @@ export default function ModuleList() {
     setPage,
     //
     selected,
-    setSelected,
     onSelectRow,
     //
     onSort,
@@ -78,20 +77,18 @@ export default function ModuleList() {
   const {
     modules,
     filterBy, page, rowsPerPage,
-    responseMessage,
-    initial,
     moduleEditFormVisibility,
     moduleAddFormVisibility,
   } = useSelector((state) => state.module);
   // console.log("modules", modules);
 
-  const { enqueueSnackbar } = useSnackbar();
+  // const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [tableData, setTableData] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [filterName, setFilterName] = useState('');
   const [filterRole, setFilterRole] = useState('all');
-  const [filterStatus, setFilterStatus] = useState('all');
+  const [filterStatus] = useState('all');
 
   useLayoutEffect(() => {
     dispatch(getModules());
@@ -123,7 +120,7 @@ export default function ModuleList() {
     filterStatus,
   });
 
-  const dataInPage = dataFiltered?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  // const dataInPage = dataFiltered?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   const isFiltered = filterName !== '' || filterRole !== 'all' || filterStatus !== 'all';
   const isNotFound =
   (!dataFiltered || !dataFiltered.length && !!filterName) ||

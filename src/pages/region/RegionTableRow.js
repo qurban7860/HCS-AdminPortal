@@ -2,17 +2,17 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 // @mui
 import {
-  Link,
+  // Link,
   Switch,
   Stack,
-  Avatar,
+  // Avatar,
   Button,
-  Checkbox,
+  // Checkbox,
   TableRow,
   MenuItem,
   TableCell,
-  IconButton,
-  Typography,
+  // IconButton,
+  // Typography,
   Chip
 } from '@mui/material';
 // components
@@ -57,9 +57,9 @@ export default function RegionTableRow({
     setOpenConfirm(false);
   };
 
-  const handleOpenPopover = (event) => {
-    setOpenPopover(event.currentTarget);
-  };
+  // const handleOpenPopover = (event) => {
+  // setOpenPopover(event.currentTarget);
+  // };
 
   const handleClosePopover = () => {
     setOpenPopover(null);
