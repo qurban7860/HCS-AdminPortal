@@ -61,6 +61,7 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function MachineServiceParamList() {
+  const { machineServiceParams, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceParam);
   const {
     order,
     orderBy,
@@ -95,7 +96,6 @@ export default function MachineServiceParamList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { machineServiceParams, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceParam);
 
   useLayoutEffect(() => {
     dispatch(getMachineServiceParams()); 

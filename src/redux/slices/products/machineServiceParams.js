@@ -215,8 +215,8 @@ export function addMachineServiceParam(params) {
           minValidation:    params?.minValidation,
           maxValidation:    params?.maxValidation,
           description:      params?.description,
-          isRequired:       params?.isRequired || false, 
-          isActive:         params?.isActive || true,
+          isRequired:       params?.isRequired, 
+          isActive:         params?.isActive,
         };
         const response = await axios.post(`${CONFIG.SERVER_URL}products/serviceParams`, data);
         dispatch(slice.actions.getMachineServiceParamSuccess(response.data.MachineTool));
@@ -246,8 +246,8 @@ export function updateMachineServiceParam(id, params) {
         minValidation:    params?.minValidation,
         maxValidation:    params?.maxValidation,
         description:      params?.description,
-        isRequired:       params?.isRequired || false, 
-        isActive:         params?.isActive || true,
+        isRequired:       params?.isRequired, 
+        isActive:         params?.isActive,
       };
      /* eslint-enable */
       await axios.patch(`${CONFIG.SERVER_URL}products/serviceParams/${id}`,data);
