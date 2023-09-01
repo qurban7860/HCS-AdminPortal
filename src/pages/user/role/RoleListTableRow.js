@@ -1,30 +1,30 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
-import { sentenceCase } from 'change-case';
+// import { useState } from 'react';
+// import { sentenceCase } from 'change-case';
 // @mui
 import {
   Switch,
-  Stack,
-  Button,
+  // Stack,
+  // Button,
   TableRow,
-  Checkbox,
-  MenuItem,
+  // Checkbox,
+  // MenuItem,
   TableCell,
-  IconButton,
-  Link,
+  // IconButton,
+  // Link,
 } from '@mui/material';
 // utils
 import { styled } from '@mui/system';
 import { fDate } from '../../../utils/formatTime';
-import { fCurrency } from '../../../utils/formatNumber';
+// import { fCurrency } from '../../../utils/formatNumber';
 // components
-import Iconify from '../../../components/iconify';
-import MenuPopover from '../../../components/menu-popover';
-import ConfirmDialog from '../../../components/confirm-dialog';
-import Label from '../../../components/label';
+// import Iconify from '../../../components/iconify';
+// import MenuPopover from '../../../components/menu-popover';
+// import ConfirmDialog from '../../../components/confirm-dialog';
+// import Label from '../../../components/label';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
-import { useSelector } from '../../../redux/store';
-import { useScreenSize } from '../../../hooks/useResponsive';
+// import { useSelector } from '../../../redux/store';
+import { useWidth } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -56,29 +56,29 @@ export default function RoleListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, description, roleType, isActive, createdAt } = row;
+  const { name, roleType, isActive, createdAt } = row;
 
-  const [openConfirm, setOpenConfirm] = useState(false);
+  // const [openConfirm, setOpenConfirm] = useState(false);
 
-  const [openPopover, setOpenPopover] = useState(null);
+  // const [openPopover, setOpenPopover] = useState(null);
 
-  const smScreen = useScreenSize('sm')
+  const width = useWidth();
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
+  // const handleOpenConfirm = () => {
+  //   setOpenConfirm(true);
+  // };
 
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
+  // const handleCloseConfirm = () => {
+  //   setOpenConfirm(false);
+  // };
 
-  const handleOpenPopover = (event) => {
-    setOpenPopover(event.currentTarget);
-  };
+  // const handleOpenPopover = (event) => {
+  //   setOpenPopover(event.currentTarget);
+  // };
 
-  const handleClosePopover = () => {
-    setOpenPopover(null);
-  };
+  // const handleClosePopover = () => {
+  //   setOpenPopover(null);
+  // };
 
   return (
     <>
@@ -88,7 +88,7 @@ export default function RoleListTableRow({
         </TableCell> */}
         {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
         <LinkTableCell align="left" onClick={onViewRow} param={name} />
-        { smScreen &&  <TableCell align="left"> {roleType} </TableCell>}
+        {( width === 'lg' || width === 'xl' ) &&  <TableCell align="left"> {roleType} </TableCell>}
         <TableCell align="center">
           {' '}
           <Switch checked={isActive} disabled size="small" />{' '}

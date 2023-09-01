@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -23,7 +23,7 @@ import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 
 export default function ModuleEditForm() {
   const { module } = useSelector((state) => state.module);
-  const [selected, setSelected] = useState([]);
+  // const [selected, setSelected] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -44,21 +44,26 @@ export default function ModuleEditForm() {
     isActive: Yup.boolean(),
   });
 
-  const defaultValues = useMemo(
-    () => ({
-      name: module?.name || '',
-      description: module?.description || '',
-      isActive: module?.isActive || false,
-    }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
+  // const defaultValues = useMemo(
+  //   () => ({
+  //     name: module?.name || '',
+  //     description: module?.description || '',
+  //     isActive: module?.isActive || false,
+  //   }),
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  //   []
+  // );
+
+  // const methods = useForm({
+  //   resolver: yupResolver(EditModuleSchema),
+  //   defaultValues:defaultValues,
+  // });
 
   const methods = useForm({
     resolver: yupResolver(EditModuleSchema),
     defaultValues:module,
   });
-
+  
   const {
     reset,
     watch,
@@ -86,9 +91,9 @@ export default function ModuleEditForm() {
     }
   };
 
-  const handleChange = (event, selectedOptions) => {
-    setSelected(selectedOptions);
-  };
+  // const handleChange = (event, selectedOptions) => {
+  //   setSelected(selectedOptions);
+  // };
  
   //  const getModule = (moduleId) => {
   //   // Implementation of your getModule logic here

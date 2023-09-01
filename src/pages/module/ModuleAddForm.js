@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState, useLayoutEffect } from 'react';
+import { useMemo, useState, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -13,7 +13,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { getValues } from '@mui/system';
+// import { getValues } from '@mui/system';
 // routes
 import { PATH_SETTING } from '../../routes/paths'; 
 // components
@@ -29,7 +29,7 @@ import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 export default function ModuleAddForm() {
 
 
-  const [selectedValues, setSelectedValues] = useState([]);
+  const [selectedValues] = useState([]);
   const { roles } = useSelector((state) => state.role);
   // const { value } = useSelector((state) => state.Value);
   // eslint-disable-next-line
@@ -71,7 +71,6 @@ export default function ModuleAddForm() {
 
   const {
     reset,
-    control,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;

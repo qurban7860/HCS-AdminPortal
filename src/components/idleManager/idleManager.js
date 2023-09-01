@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect} from 'react';
+import { useState, useEffect} from 'react';
 import { LoadingButton } from '@mui/lab';
 
 import { useAuthContext } from '../../auth/useAuthContext';
@@ -62,7 +62,6 @@ const IdleManager = () => {
   }
 
   return (    
-    <>
       <ConfirmDialog
         open={openModal}
         onClose={handleLogout}
@@ -79,7 +78,6 @@ const IdleManager = () => {
           ) : null
         }
       />
-    </>
   );
 }
 

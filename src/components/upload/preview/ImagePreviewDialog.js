@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Typography ,Dialog, DialogActions, Grid, Link, CardContent, CardMedia, Stack, Button, Avatar} from '@mui/material';
+import { Typography ,Dialog, DialogActions, Grid, CardContent, CardMedia, Button,} from '@mui/material';
 import Iconify from '../../iconify';
-import Image from '../../image';
+// import Image from '../../image';
 
 // ----------------------------------------------------------------------
 

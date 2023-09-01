@@ -14,7 +14,7 @@ import { defaultSettings } from '../config-setting';
 import { useSettingsContext } from '../SettingsContext';
 import Block from './Block';
 import BadgeDot from './BadgeDot';
-import ToggleButton from './ToggleButton';
+// import ToggleButton from './ToggleButton';
 import ModeOptions from './ModeOptions';
 import LayoutOptions from './LayoutOptions';
 import StretchOptions from './StretchOptions';
@@ -42,9 +42,9 @@ export default function SettingsDrawer() {
 
   const [open, setOpen] = useState(false);
 
-  const handleToggle = () => {
-    setOpen(!open);
-  };
+  // const handleToggle = () => {
+  //   setOpen(!open);
+  // };
 
   const handleClose = () => {
     setOpen(false);

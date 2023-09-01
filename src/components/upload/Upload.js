@@ -13,7 +13,7 @@ import RejectionFiles from './errors/RejectionFiles';
 import MultiFilePreview from './preview/MultiFilePreview';
 import SingleFilePreview from './preview/SingleFilePreview';
 import AllowedExtensionsMenuePopover from './AllowedExtensionsMenuePopover';
-import FormatsChip from '../../pages/components/Defaults/FormatsChip';
+// import FormatsChip from '../../pages/components/Defaults/FormatsChip';
 import {
   allowedImageExtensions,
   allowedDocumentExtension,
@@ -285,7 +285,6 @@ Placeholder.propTypes = {
 
 function Placeholder({ sx, ...other }) {
   return (
-    <>
       <Stack
         spacing={5}
         alignItems="center"
@@ -325,6 +324,5 @@ function Placeholder({ sx, ...other }) {
           </Typography>
         </div>
       </Stack>
-    </>
   );
 }
