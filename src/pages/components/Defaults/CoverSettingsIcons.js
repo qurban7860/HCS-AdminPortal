@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 import { Grid, Link } from '@mui/material';
 import { useNavigate } from 'react-router';
 import Iconify from '../../../components/iconify/Iconify';
-import { PATH_DASHBOARD, PATH_DOCUMENT, } from '../../../routes/paths';
+import { PATH_DOCUMENT, } from '../../../routes/paths';
 import { setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
+import { setLicenseViewFormVisibility } from '../../../redux/slices/products/license';
 
 function CoverSettingsIcons({
   setting,
@@ -19,6 +20,7 @@ function CoverSettingsIcons({
 }) {
   const { documentViewFormVisibility, documentHistoryViewFormVisibility } = useSelector((state) => state.document);
   const { drawingViewFormVisibility } = useSelector((state) => state.drawing );
+  const { licenseViewFormVisibility } = useSelector((state) => state.license );
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const navigateTo= (path)=>{ navigate(path) }
@@ -79,16 +81,22 @@ function CoverSettingsIcons({
       {handleBackLinks && drawingViewFormVisibility && (
         <Link
           title="Go Back"
-          sx={{
-            ml: 'auto',
-            mr: 1,
-            mt: 'auto',
-            mb: 1,
-            color: 'common.white',
-          }}
+          sx={{ ml: 'auto', mr: 1, mt: 'auto', mb: 1, color: 'common.white',}}
           component="button"
           variant="body2"
           onClick={()=> dispatch(setDrawingViewFormVisibility(false))}
+        >
+          <Iconify icon="material-symbols:arrow-back-rounded" />
+        </Link>
+      )}
+
+      {handleBackLinks && licenseViewFormVisibility && (
+        <Link
+          title="Go Back"
+          sx={{ ml: 'auto', mr: 1, mt: 'auto', mb: 1, color: 'common.white',}}
+          component="button"
+          variant="body2"
+          onClick={()=> dispatch(setLicenseViewFormVisibility(false))}
         >
           <Iconify icon="material-symbols:arrow-back-rounded" />
         </Link>

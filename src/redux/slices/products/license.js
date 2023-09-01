@@ -142,7 +142,8 @@ export function addLicense (machineId, params){
       const data = {};
       // data.machine=`${machineId}`;
       data.licenseKey=params?.licenseKey;
-      
+      data.isActive=params?.isActive;
+
       // License Details
       data.licenseDetail={};
       data.licenseDetail.version= params?.version;
@@ -226,7 +227,7 @@ export function deleteLicense(machineId, Id) {
 
 // --------------------------------------------------------------------------
 
-export function updateLicense(machineId,Id,params) {
+export async function updateLicense(machineId,Id,params) {
 
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
@@ -234,6 +235,7 @@ export function updateLicense(machineId,Id,params) {
       // License Key
       const data = {};
       data.licenseKey=params?.licenseKey;
+      data.isActive=params?.isActive;
       
       // License Details
       data.licenseDetail={};
