@@ -1,28 +1,24 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { sentenceCase } from 'change-case';
+// import { sentenceCase } from 'change-case';
 // @mui
 import {
   Switch,
-  Stack,
   Button,
   TableRow,
-  Checkbox,
   MenuItem,
   TableCell,
-  IconButton,
-  Link,
 } from '@mui/material';
 // utils
-import { fData, fCurrency } from '../../../utils/formatNumber';
+// import { fData, fCurrency } from '../../../utils/formatNumber';
 // components
 import Iconify from '../../../components/iconify/Iconify';
 import MenuPopover from '../../../components/menu-popover/MenuPopover';
 import ConfirmDialog from '../../../components/confirm-dialog';
-import Label from '../../../components/label';
+// import Label from '../../../components/label';
 import { fDate } from '../../../utils/formatTime';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
-import { useSelector } from '../../../redux/store';
+// import { useSelector } from '../../../redux/store';
 import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
@@ -60,9 +56,9 @@ export default function ModelListTableRow({
     setOpenConfirm(false);
   };
 
-  const handleOpenPopover = (event) => {
-    setOpenPopover(event.currentTarget);
-  };
+  // const handleOpenPopover = (event) => {
+  //   setOpenPopover(event.currentTarget);
+  // };
 
   const handleClosePopover = () => {
     setOpenPopover(null);

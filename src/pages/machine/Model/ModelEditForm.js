@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { useEffect, useMemo, useState, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -6,11 +6,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { TextField, Autocomplete, Box, Card, Grid, Stack, Typography } from '@mui/material';
+import { TextField, Autocomplete, Box, Card, Grid, Stack } from '@mui/material';
 // slice
 import { updateMachineModel } from '../../../redux/slices/products/model';
 import { getActiveCategories } from '../../../redux/slices/products/category';
-import { useSettingsContext } from '../../../components/settings';
+// import { useSettingsContext } from '../../../components/settings';
 // schema
 import { EditModelSchema } from './schemas/EditModelSchema';
 // routes
@@ -62,7 +62,7 @@ export default function ModelEditForm() {
     [machineModel]
   );
 
-  const { themeStretch } = useSettingsContext();
+  // const { themeStretch } = useSettingsContext();
 
   const methods = useForm({
     resolver: yupResolver(EditModelSchema),
@@ -71,13 +71,11 @@ export default function ModelEditForm() {
 
   const {
     reset,
-    watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const values = watch();
+  // const values = watch();
 
   const toggleCancel = () => {
     navigate(PATH_MACHINE.machines.settings.model.view(id));

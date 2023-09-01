@@ -1,24 +1,19 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
+// import { Helmet } from 'react-helmet-async';
+// import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as  useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
 import {
-  Grid,
-  Card,
   Table,
   Button,
-  Tooltip,
   TableBody,
   Container,
-  IconButton,
   TableContainer,
-  Stack,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
-import { getMachine } from '../../../redux/slices/products/machine';
+// import { getMachine } from '../../../redux/slices/products/machine';
 // routes
 import {
   getMachineModels,
@@ -31,26 +26,26 @@ import {
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import { useSettingsContext } from '../../../components/settings';
+// import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
-  emptyRows,
+  // emptyRows,
   TableNoData,
   TableSkeleton,
-  TableEmptyRows,
+  // TableEmptyRows,
   TableHeadCustom,
-  TableSelectedAction,
+  // TableSelectedAction,
   TablePaginationCustom,
 } from '../../../components/table';
-import Iconify from '../../../components/iconify/Iconify';
+// import Iconify from '../../../components/iconify/Iconify';
 import Scrollbar from '../../../components/scrollbar';
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
+// import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 // sections
 import ModelListTableRow from './ModelListTableRow';
 import ModelListTableToolbar from './ModelListTableToolbar';
-import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
+// import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
@@ -89,10 +84,10 @@ export default function ModelList() {
     selected,
     setSelected,
     onSelectRow,
-    onSelectAllRows,
+    // onSelectAllRows,
     //
     onSort,
-    onChangeDense,
+    // onChangeDense,
     // onChangePage,
     // onChangeRowsPerPage,
   } = useTable({
@@ -101,7 +96,7 @@ export default function ModelList() {
 
   const dispatch = useDispatch();
 
-  const { themeStretch } = useSettingsContext();
+  // const { themeStretch } = useSettingsContext();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -151,9 +146,9 @@ export default function ModelList() {
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
+  // const handleOpenConfirm = () => {
+  //   setOpenConfirm(true);
+  // };
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
