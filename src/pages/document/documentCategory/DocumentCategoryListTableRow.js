@@ -1,30 +1,15 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
-import { sentenceCase } from 'change-case';
 // @mui
 import {
   Switch,
-  Stack,
-  Button,
   TableRow,
-  Checkbox,
-  MenuItem,
   TableCell,
-  IconButton,
-  Link,
   Chip
 } from '@mui/material';
 // utils
 import { styled } from '@mui/system';
 import { fDate } from '../../../utils/formatTime';
-import { fCurrency } from '../../../utils/formatNumber';
 // components
-import Iconify from '../../../components/iconify';
-import MenuPopover from '../../../components/menu-popover';
-import ConfirmDialog from '../../../components/confirm-dialog';
-import Label from '../../../components/label';
-
-import { useSelector } from '../../../redux/store';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import { useScreenSize } from '../../../hooks/useResponsive';
 
@@ -58,27 +43,9 @@ export default function DocumentCategoryListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, customer, machine, drawing, description, customerAccess, isActive, createdAt } = row;
+  const { name, customer, machine, drawing,  customerAccess, isActive, createdAt } = row;
 
-  const [openConfirm, setOpenConfirm] = useState(false);
 
-  const [openPopover, setOpenPopover] = useState(null);
-
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
-
-  const handleOpenPopover = (event) => {
-    setOpenPopover(event.currentTarget);
-  };
-
-  const handleClosePopover = () => {
-    setOpenPopover(null);
-  };
  const smScreen = useScreenSize('sm')
   return (
     <>

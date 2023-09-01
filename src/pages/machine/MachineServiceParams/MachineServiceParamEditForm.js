@@ -1,16 +1,16 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Card, Grid, Box, Stack, Typography, Container, FormControl, RadioGroup, Radio, FormControlLabel } from '@mui/material';
+import { Card, Grid, Box, Stack, Typography, Container } from '@mui/material';
 // hooks
 import { useForm } from 'react-hook-form';
 import { useSnackbar } from '../../../components/snackbar';
 // schema
-import { MachineTechParamsSchema } from '../../schemas/machine';
+import { MachineServiceParamsSchema } from '../../schemas/machine';
 // routes
-import { PATH_MACHINE, PATH_SETTING } from '../../../routes/paths';
+import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
 import {
@@ -19,7 +19,6 @@ import {
 } from '../../../redux/slices/products/machineServiceParams';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import FormHeading from '../../components/DocumentForms/FormHeading';
-import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import { Cover } from '../../components/Defaults/Cover';
 // styles
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
@@ -56,19 +55,15 @@ export default function DocumentCategoryeEditForm() {
   );
 
   const methods = useForm({
-    resolver: yupResolver(MachineTechParamsSchema),
+    resolver: yupResolver(MachineServiceParamsSchema),
     defaultValues,
   });
 
   const {
     reset,
-    watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
-  const values = watch();
 
   const toggleCancel = () => {
     navigate(PATH_MACHINE.machines.settings.machineServiceParams.view(machineServiceParam._id));
