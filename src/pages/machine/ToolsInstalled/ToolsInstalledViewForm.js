@@ -197,9 +197,9 @@ function ToolsInstalledViewForm({ currentTool = null }) {
             <ViewFormField sm={6} heading="Engage On Condition" param={currentTool?.singleToolConfig?.engageOnCondition} />
             <ViewFormField sm={6} heading="Engage Off Condition" param={currentTool?.singleToolConfig?.engageOffCondition} />
             <ViewFormField sm={12} heading="Time Out" param={fDateTime(currentTool?.singleToolConfig?.timeOut)} />
-            <ViewFormField sm={6} heading="Engaging Duration" param={fDateTime(currentTool?.singleToolConfig?.engagingDuration)} />
-            <ViewFormField sm={6} heading="Returning Duration" param={fDateTime(currentTool?.singleToolConfig?.returningDuration)} />
-            <ViewFormField sm={12} heading="Two Way Check Delay Time" param={fDateTime(currentTool?.singleToolConfig?.twoWayCheckDelayTime)} />
+            <ViewFormField sm={6} heading="Engaging Duration" param={currentTool?.singleToolConfig?.engagingDuration} />
+            <ViewFormField sm={6} heading="Returning Duration" param={currentTool?.singleToolConfig?.returningDuration} />
+            <ViewFormField sm={12} heading="Two Way Check Delay Time" param={currentTool?.singleToolConfig?.twoWayCheckDelayTime} />
             <ViewFormField sm={6} heading="Home Proximity Sensor Location" param={currentTool?.singleToolConfig?.homeProximitySensorLocation} />
             <ViewFormField sm={6} heading="Engaged Proximity Sensor Location" param={currentTool?.singleToolConfig?.engagedProximitySensorLocation} />
             <ViewFormField sm={12} heading="Pressure Target" param={currentTool?.singleToolConfig?.pressureTarget} />
