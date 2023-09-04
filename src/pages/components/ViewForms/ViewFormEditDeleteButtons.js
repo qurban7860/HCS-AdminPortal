@@ -131,7 +131,7 @@ export default function ViewFormEditDeleteButtons({
         {/* edit button */}
         <IconTooltip
           title="Edit"
-          disabled={isSuperAdmin || userId === id}
+          disabled={isSuperAdmin}
           onClick={() => {
             handleEdit();
           }}
