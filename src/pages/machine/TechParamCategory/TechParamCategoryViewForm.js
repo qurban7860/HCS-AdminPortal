@@ -1,18 +1,18 @@
 import PropTypes from 'prop-types';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Switch, Card, Grid, Stack, Typography, Button } from '@mui/material';
+import {  Card, Grid } from '@mui/material';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 // Iconify
 import { deleteTechparamcategory } from '../../../redux/slices/products/machineTechParamCategory';
-import { fDate } from '../../../utils/formatTime';
-import Iconify from '../../../components/iconify/Iconify';
+// import { fDate } from '../../../utils/formatTime';
+// import Iconify from '../../../components/iconify/Iconify';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
