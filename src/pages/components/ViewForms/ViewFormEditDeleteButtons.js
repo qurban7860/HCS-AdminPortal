@@ -134,10 +134,10 @@ export default function ViewFormEditDeleteButtons({
           />
         )}
 
-        {/* AWS Invitation */}
+        {/* User Invitation */}
         {handleUserInvite && id!==userId &&(
           <IconTooltip 
-          title="Invite AWS"
+          title="User Invite"
           disabled={disableDeleteButton}
           color={theme.palette.secondary.main}
           icon="mdi:person-add"
@@ -205,8 +205,8 @@ export default function ViewFormEditDeleteButtons({
       <ConfirmDialog
         open={openUserInviteConfirm}
         onClose={() => { handleCloseConfirm('UserInvite'); }}
-        title="AWS Invitation"
-        content="Are you sure you want send AWS Invitation?"
+        title="User Invitation"
+        content="Are you sure you want send User Invitation?"
         action={
           <LoadingButton
             variant="contained"
