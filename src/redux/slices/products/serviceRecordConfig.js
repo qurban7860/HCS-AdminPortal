@@ -146,7 +146,7 @@ export function getActiveServiceRecordConfigs (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/serviceRecordsConfigs`, 
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/serviceRecordsConfig`, 
       {
         params: {
           isArchived: false,

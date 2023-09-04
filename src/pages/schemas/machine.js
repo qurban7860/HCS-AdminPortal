@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 import { Snacks } from '../../constants/machine-constants';
 import { allowedExtensions, fileTypesMessage } from '../../constants/document-constants';
+import { validateFileType } from '../document/documents/Utills/Util'
 
 export const EditMachineSchema = Yup.object().shape({
   serialNo: Yup.string().required(Snacks.serialNoRequired).max(6),
@@ -54,20 +55,34 @@ export const MachineServiceParamsSchema = Yup.object().shape({
 })
 
 export const MachineServiceRecordSchema = Yup.object().shape({
-  recordType:Yup.date().label('Record Type'),
-  serviceRecordConfig: Yup.object().label('Service Record Configuration'),
-  serviceDate: Yup.date().label('Service Date'),
+  // recordType:Yup.date().label('Record Type'),
+  // serviceRecordConfig: Yup.object().label('Service Record Configuration'),
+  // serviceDate: Yup.date().label('Service Date'),
   customer: Yup.object().label('Customer'), 
-  site: Yup.object().label('Site'),
-  machine: Yup.object().label('Machine'),
-  decoiler: Yup.object().label('Decoiler'),
-  technician: Yup.object().label('Technician'),
+  // site: Yup.object().label('Site'),
+  // machine: Yup.object().label('Machine'),
+  // decoiler: Yup.object().label('Decoiler'),
+  // technician: Yup.object().label('Technician'),
   // checkParams:
   serviceNote: Yup.string().label('Service Note'),
   maintenanceRecommendation: Yup.string().label('Maintenance Recommendation'),
   suggestedSpares: Yup.string().label('Suggested Spares'),
-  files: Yup.array().label('Files'),
-  operator: Yup.object().label('Operator'),
+  
+  files: Yup.mixed()
+  .test(
+    'fileType',
+    'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
+    validateFileType
+  ).nullable(true),
+
+  checkParamFiles: Yup.mixed()
+  .test(
+    'fileType',
+    'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
+    validateFileType
+  ).nullable(true),
+
+  // operator: Yup.object().label('Operator'),
   operatorRemarks: Yup.string().label('Operator Remarks'),
   isActive: Yup.boolean(),
 })
