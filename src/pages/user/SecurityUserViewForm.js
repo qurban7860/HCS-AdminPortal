@@ -11,6 +11,7 @@ import {
   getSecurityUser,
   getSecurityUsers,
   deleteSecurityUser,
+  sendUserInvite,
   setSecurityUserEditFormVisibility,
 } from '../../redux/slices/securityUser/securityUser';
 import { getCustomer , setCustomerDialog } from '../../redux/slices/customer/customer';
@@ -28,15 +29,12 @@ import ContactDialog from '../components/Dialog/ContactDialog';
 // ----------------------------------------------------------------------
 
 export default function SecurityUserViewForm() {
-
   const [disableEditButton, setDisableEditButton] = useState(false);
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
   const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
 
   const { securityUser, loggedInUser } = useSelector((state) => state.user);
-  const { customer } = useSelector((state) => state.customer);
-  const { contact } = useSelector((state) => state.contact);
 
   const [openConfirm, setOpenConfirm] = useState(false);
   const handleCloseConfirm = () => setOpenConfirm(false);
@@ -87,9 +85,26 @@ export default function SecurityUserViewForm() {
   const handleCustomerDialog = () =>{dispatch(setCustomerDialog(true))}
   const handleContactDialog = () =>{dispatch(setContactDialog(true))}
 
-
   const handleUpdatePassword = () => {
     navigate(PATH_SECURITY.users.userPassword);
+  };
+
+  const handleUserInvite = async () => {
+    if (securityUser._id) {
+      try {
+        dispatch(await sendUserInvite(securityUser._id));
+        enqueueSnackbar('Invite sent successfully!');
+      } catch (error) {
+        if (error.Message) {
+          enqueueSnackbar(error.Message, { variant: `error` });
+        } else if (error.message) {
+          enqueueSnackbar(error.message, { variant: `error` });
+        } else {
+          enqueueSnackbar('Something went wrong!', { variant: `error` });
+        }
+        console.log('Error:', error);
+      }
+    }
   };
 
   const onDelete = async () => {
@@ -141,6 +156,7 @@ export default function SecurityUserViewForm() {
         <Card sx={{ p: 3 }}>
           <ViewFormEditDeleteButtons
             handleEdit={handleEdit}
+            handleUserInvite={handleUserInvite}
             handleUpdatePassword={handleUpdatePassword}
             onDelete={onDelete}
             disablePasswordButton={!isSuperAdmin}

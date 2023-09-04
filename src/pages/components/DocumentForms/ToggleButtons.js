@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Switch, FormControlLabel, FormControl, FormLabel, FormGroup, FormHelperText } from '@mui/material';
+import { Grid, Switch } from '@mui/material';
 import { StyledToggleButtonLabel } from '../../../theme/styles/document-styles';
 import RHFSwitch from '../../../components/hook-form/RHFSwitch';
 import { TOGGLE } from '../../../constants/default-constants';
