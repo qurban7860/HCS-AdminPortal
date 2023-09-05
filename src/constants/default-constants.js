@@ -41,6 +41,9 @@ export const FORMLABELS = {
     MACHINE_SERVICE_PARAMS: 'Machine Service Parameters',
     MACHINE_SERVICE_PARAM_ADD: 'New Machine Service Parameter',
     MACHINE_SERVICE_PARAM_EDIT: 'Edit Machine Service Parameter',
+    MACHINE_SERVICE_CONFIGS: 'Machine Service Configurations',
+    MACHINE_SERVICE_CONFIGS_ADD: 'New Machine Service Configurations',
+    MACHINE_SERVICE_CONFIGS_EDIT: 'Edit Machine Service Configurations',
     EDIT_DOCUMENT: 'Edit Document',
   },
 
@@ -187,6 +190,7 @@ export const BUTTONS = {
 
   // MACHINE SETTINGS
   ADD_MACHINE_SERVICE_PARAM: 'Add Parameter',
+  ADD_MACHINE_SERVICE_CONFIG: 'Add Service Config',
 
 };
 

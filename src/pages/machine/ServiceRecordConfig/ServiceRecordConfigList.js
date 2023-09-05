@@ -1,5 +1,5 @@
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { Link as  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
 import {  Table, Button, TableBody, Container, TableContainer } from '@mui/material';
@@ -27,6 +27,8 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 import ServiceRecordConfigListTableRow from './ServiceRecordConfigListTableRow';
 import ServiceRecordConfigListTableToolbar from './ServiceRecordConfigListTableToolbar';
 import { Cover } from '../../components/Defaults/Cover';
+import { FORMLABELS } from '../../../constants/default-constants';
+
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
@@ -214,7 +216,7 @@ export default function ServiceRecordConfigList() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Categories" icon="material-symbols:list-alt-outline" setting="enable" />
+          <Cover name={FORMLABELS.COVER.MACHINE_SERVICE_CONFIGS} icon="material-symbols:list-alt-outline" setting="enable" />
         </StyledCardContainer>
 
         <TableCard>
