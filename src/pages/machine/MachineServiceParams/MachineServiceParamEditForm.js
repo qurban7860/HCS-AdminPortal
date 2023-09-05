@@ -76,6 +76,7 @@ export default function DocumentCategoryeEditForm() {
 
   const onSubmit = async (data) => {
     try {
+      console.log("data : ", data);
       await dispatch(updateMachineServiceParam(machineServiceParam._id, data));
       dispatch(getMachineServiceParam(machineServiceParam._id))
       navigate(PATH_MACHINE.machines.settings.machineServiceParams.view(machineServiceParam._id));
@@ -116,8 +117,8 @@ export default function DocumentCategoryeEditForm() {
                   <RHFTextField name="unitType" label="Unit Type" />
                   <RHFTextField name="minValidation" label="Minimum Validation" />
                   <RHFTextField name="maxValidation" label="Maximum Validation" />
-                  <RHFTextField name="description" label="Description" />
                 </Box>
+                  <RHFTextField name="description" label="Description" minRows={7} multiline />
                 <Grid container display="flex">
                   <RHFSwitch
                     name="isRequired"

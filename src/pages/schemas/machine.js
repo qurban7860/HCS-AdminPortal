@@ -40,15 +40,15 @@ export const AddMachineDocumentSchema = Yup.object().shape({
 });
 
 export const MachineTechParamsSchema = Yup.object().shape({
-  name: Yup.string().max(50),
-  printName: Yup.string().max(50),
-  description: Yup.string().max(50),
-  helpHint: Yup.string().max(50),
-  linkToUserManual: Yup.string().max(50),
+  name: Yup.string().required().max(50).label('Name'),
+  printName: Yup.string().max(50).label('Print Name'),
+  description: Yup.string().max(5000).label('Description'),
+  helpHint: Yup.string().max(50).label('Help Hint'),
+  linkToUserManual: Yup.string().max(50).label('Link To User Manual'),
   isRequired: Yup.boolean(),
-  inputType: Yup.string().max(50).required(),
-  unitType: Yup.string().max(50),    
-  minValidation: Yup.string().max(50),
-  maxValidation: Yup.string().max(50),
+  inputType: Yup.string().max(50).required().label('Input Type'),
+  unitType: Yup.string().max(50).label('Unit Type'),    
+  minValidation: Yup.string().max(50).label('Minimum Validation'),
+  maxValidation: Yup.string().max(50).label('Max Validation'),
   isActive: Yup.boolean(),
 })

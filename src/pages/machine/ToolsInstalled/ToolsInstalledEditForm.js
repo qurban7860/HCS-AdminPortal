@@ -243,9 +243,9 @@ function ToolsInstalledEditForm() {
       engageOnCondition: null,
       engageOffCondition: null,
       timeOut: toolInstalled?.singleToolConfig?.timeOut || null,
-      engagingDuration: toolInstalled?.singleToolConfig?.engagingDuration || null,
-      returningDuration: toolInstalled?.singleToolConfig?.returningDuration || null,
-      twoWayCheckDelayTime: toolInstalled?.singleToolConfig?.twoWayCheckDelayTime || null,
+      engagingDuration: toolInstalled?.singleToolConfig?.engagingDuration || '',
+      returningDuration: toolInstalled?.singleToolConfig?.returningDuration || '',
+      twoWayCheckDelayTime: toolInstalled?.singleToolConfig?.twoWayCheckDelayTime || '',
       homeProximitySensorLocation: toolInstalled?.singleToolConfig?.homeProximitySensorLocation || '',
       engagedProximitySensorLocation: toolInstalled?.singleToolConfig?.engagedProximitySensorLocation || '',
       pressureTarget: toolInstalled?.singleToolConfig?.pressureTarget ||'',
@@ -280,7 +280,7 @@ function ToolsInstalledEditForm() {
     engageOnCondition, 
     engageOffCondition, 
     movingPunchCondition, 
-    timeOut, 
+    timeOut,
     engagingDuration, 
     returningDuration, 
     twoWayCheckDelayTime, 
@@ -324,6 +324,9 @@ function ToolsInstalledEditForm() {
   const onSubmit = async (data) => {
     data.offset= offset
     data.operations= operations
+    data.engagingDuration = engagingDuration
+    data.returningDuration = returningDuration
+    data.twoWayCheckDelayTime = twoWayCheckDelayTime
     data.wasteTriggerDistance = wasteTriggerDistance
     data.crimpTriggerDistance = crimpTriggerDistance
     data.engageSolenoidLocation = engageSolenoidLocation
@@ -677,21 +680,9 @@ function ToolsInstalledEditForm() {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                  <DatePicker
-                    label="Engaging Duration"
-                    value={engagingDuration}
-                    // disabled={disableInstallationDate}
-                    onChange={(newValue) => setValue('engagingDuration',newValue)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
+                  <RHFTextField label="Engaging Duration" name="engagingDuration" />
 
-                  <DatePicker
-                    label="Returning Duration"
-                    value={returningDuration}
-                    // disabled={disableInstallationDate}
-                    onChange={(newValue) => setValue('returningDuration',newValue)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
+                  <RHFTextField label="Returning Duration" name="returningDuration" />
               </Box>
               <Box
                 rowGap={2}
@@ -702,13 +693,7 @@ function ToolsInstalledEditForm() {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                  <DatePicker
-                    label="Two-way Check Delay Time"
-                    value={twoWayCheckDelayTime}
-                    // disabled={disableInstallationDate}
-                    onChange={(newValue) => setValue('twoWayCheckDelayTime',newValue)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
+                  <RHFTextField label="Two-way Check Delay Time" name="twoWayCheckDelayTime" />
               </Box>
               <Box
                 rowGap={2}

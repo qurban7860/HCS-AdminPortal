@@ -5,12 +5,10 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
-import { Box, Card, Grid, Autocomplete, TextField } from '@mui/material';
+import { Box, Card, Grid, Autocomplete, TextField, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
-import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFTextField } from '../../../components/hook-form';
 import { 
   setLicenseEditFormVisibility, 
   updateLicense,
@@ -19,8 +17,8 @@ import {
   getLicense
 } from '../../../redux/slices/products/license';
 import { LicenseSchema } from './schemas/LicenseSchema';
+import FormProvider, { RHFSwitch, RHFTextField } from '../../../components/hook-form';
 import { Snacks } from '../../../constants/machine-constants';
-import { FORMLABELS} from '../../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -43,7 +41,7 @@ export default function LicenseEditForm() {
       waste:license?.licenseDetail?.waste ||'',
       extensionTime:license?.licenseDetail?.extensionTime ||'',
       requestTime:license?.licenseDetail?.requestTime ||'',
-      isActive: license?.isActive ||'',
+      isActive: license?.isActive || false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -98,15 +96,11 @@ export default function LicenseEditForm() {
       setRequestTimeError('Request Time is required');
     }else {
       try {
-        const responsePromise = dispatch(updateLicense( machine._id,license._id,data));
-        responsePromise.then(response => {
-          enqueueSnackbar(Snacks.licenseUpdated);
-          dispatch(setLicenseViewFormVisibility(true));
-          dispatch(getLicense(machine._id, license._id));
-        }).catch(error => {
-          console.log(error.message)
-          enqueueSnackbar(Snacks.failedUpdateLicense, { variant:'error' });
-        });
+        dispatch(await updateLicense(machine._id, license._id, data));
+        reset();
+        enqueueSnackbar(Snacks.licenseUpdated);
+        dispatch(setLicenseViewFormVisibility(true));
+        dispatch(getLicense(machine._id, license._id));
       } catch (err) {
         enqueueSnackbar(Snacks.failedUpdateLicense, { variant: 'error' });
         console.error(err.message);
@@ -130,8 +124,10 @@ export default function LicenseEditForm() {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                  <RHFTextField name='licenseKey' label='License Key' inputProps={{ maxLength: 50 }}/>
+                  <RHFTextField name='licenseKey' label='License Key' inputProps={{ maxLength: 60 }}/>
                   <RHFTextField name="version" label="Version" inputProps={{ maxLength: 20 }}/>
+                  <RHFTextField name="deviceGUID" label="Device GUID" inputProps={{ maxLength: 50 }}/>
+                  <RHFTextField name="deviceName" label="Device Name" inputProps={{ maxLength: 50 }}/>
                   <Autocomplete
                     disablePortal
                     id="combo-box-demo"
@@ -141,10 +137,19 @@ export default function LicenseEditForm() {
                     onChange={handleTypeChange}
                     renderInput={(params) => <TextField {...params} label="Type" />}
                   />
-                  <RHFTextField name="deviceName" label="Device Name" inputProps={{ maxLength: 50 }}/>
-                  <RHFTextField name="deviceGUID" label="Device GUID" inputProps={{ maxLength: 50 }}/>
-                  <RHFTextField type="number" name="production" label="Production" inputProps={{ maxLength: 20 }}/>
-                  <RHFTextField type="number" name="waste" label="Waste" inputProps={{ maxLength: 20 }}/>
+              </Box>
+              <Box
+                sx={{marginTop:2}}
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
+                  <RHFTextField name="production" label="Production" inputProps={{ maxLength: 20 }}/>
+                  <RHFTextField name="waste" label="Waste" inputProps={{ maxLength: 20 }}/>
 
                   <DatePicker
                     label="Extension Time"
@@ -161,7 +166,13 @@ export default function LicenseEditForm() {
                     onChange={handleRequestTimeChange}
                     renderInput={params => <TextField {...params} error={!!requestTimeError} helperText={requestTimeError} />}
                   />
-                  <ToggleButtons isMachine name={FORMLABELS.isACTIVE.name} />
+                  <RHFSwitch name="isActive" labelPlacement="start"
+                    label={
+                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
+                        Active
+                      </Typography>
+                    }
+                  />
               </Box>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>

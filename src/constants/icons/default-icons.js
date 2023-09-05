@@ -73,12 +73,12 @@ export const ICONS = {
   MULTIAUTH_ACTIVE: {
     icon: 'mdi:password-outline',
     color: 'green',
-    heading: 'Active',
+    heading: 'MFA Enabled',
   },
   MULTIAUTH_INACTIVE: {
     icon: 'mdi:password-off-outline',
     color: 'red',
-    heading: 'Inactive',
+    heading: 'MFA Disabled',
   },
 
   // ------------------------------------------------------------

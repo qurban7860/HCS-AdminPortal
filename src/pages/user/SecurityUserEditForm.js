@@ -234,9 +234,9 @@ export default function SecurityUserEditForm() {
     }
 
     data.roles = submitSecurityUserRoles;
-    console.log("Security User data.....", data,)
+    // console.log("Security User data.....", data,)
     try {
-      await dispatch(updateSecurityUser(data, securityUser._id));
+      dispatch(updateSecurityUser(data, securityUser._id));
       navigate(PATH_SECURITY.users.view(securityUser._id));
     } catch (error) {
       if (error.Message) {
