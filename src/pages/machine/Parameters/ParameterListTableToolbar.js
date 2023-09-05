@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
-import { sentenceCase } from 'change-case';
 // @mui
 import { Stack } from '@mui/material';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as  useNavigate } from 'react-router-dom';
 // components
 import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 // routes

@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { memo, useLayoutEffect, useMemo, useState } from 'react';
+import { memo, useLayoutEffect, useMemo, useState } from 'react'; 
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm, Controller } from 'react-hook-form';
@@ -7,16 +7,16 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { DatePicker } from '@mui/x-date-pickers';
 import { Box, Card, Grid, Stack, Typography, Autocomplete, TextField, Button } from '@mui/material';
-import useResponsive from '../../../hooks/useResponsive';
+import useResponsive from '../../../hooks/useResponsive'; 
 // slice
 import {
-  setToolInstalledFormVisibility,
+  setToolInstalledFormVisibility, 
   addToolInstalled,
   getToolsInstalled,
-} from '../../../redux/slices/products/toolInstalled';
-import { getActiveTools } from '../../../redux/slices/products/tools';
+} from '../../../redux/slices/products/toolInstalled';  
+import { getActiveTools } from '../../../redux/slices/products/tools'; 
 // components
-import { useSnackbar } from '../../../components/snackbar';
+import { useSnackbar } from '../../../components/snackbar'; 
 import Iconify from '../../../components/iconify';
 // assets
 import FormProvider, {
@@ -236,7 +236,7 @@ function ToolsInstalledAddForm() {
     control,
   } = methods
 
-  const { tool, engageOnCondition, engageOffCondition, movingPunchCondition, timeOut, engagingDuration, returningDuration, twoWayCheckDelayTime, toolType } = watch();
+  const { tool, engageOnCondition, engageOffCondition, movingPunchCondition, timeOut,returningDuration, twoWayCheckDelayTime, toolType } = watch();
 
   const onSubmit = async (data) => {
     try {

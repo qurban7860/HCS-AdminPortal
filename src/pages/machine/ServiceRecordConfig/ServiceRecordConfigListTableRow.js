@@ -42,9 +42,9 @@ export default function ServiceRecordConfigListTableRow({
     setOpenConfirm(false);
   };
 
-  const handleOpenPopover = (event) => {
-    setOpenPopover(event.currentTarget);
-  };
+  // const handleOpenPopover = (event) => {
+  //   setOpenPopover(event.currentTarget);
+  // };
 
   const handleClosePopover = () => {
     setOpenPopover(null);

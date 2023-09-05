@@ -1,4 +1,3 @@
-// import PropTypes from 'prop-types';
 import { useEffect, useMemo, useState, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
