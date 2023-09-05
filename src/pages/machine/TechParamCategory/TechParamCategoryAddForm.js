@@ -6,14 +6,14 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Typography, Container } from '@mui/material';
+import { Box, Card, Grid, Stack, Container } from '@mui/material';
 // slice
 import { addTechparamcategory } from '../../../redux/slices/products/machineTechParamCategory';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
+import FormProvider, { RHFTextField } from '../../../components/hook-form';
 // util
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
@@ -55,8 +55,6 @@ export default function TechParamCategoryAddForm() {
 
   const {
     reset,
-    watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;

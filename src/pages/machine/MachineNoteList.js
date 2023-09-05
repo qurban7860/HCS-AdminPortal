@@ -45,9 +45,9 @@ export default function MachineNoteList() {
 
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const [filterName, setFilterName] = useState('');
+  // const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
-  const [filterStatus, setFilterStatus] = useState([]);
+  // const [filterStatus, setFilterStatus] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
   const { machine } = useSelector((state) => state.machine);
@@ -77,8 +77,8 @@ export default function MachineNoteList() {
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
-    filterName,
-    filterStatus,
+    // filterName,
+    // filterStatus,
   });
 
   //  -----------------------------------------------------------------------
@@ -104,7 +104,7 @@ export default function MachineNoteList() {
   };
 
 
-  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length) && !formVisibility && !noteEditFormVisibility;
+  // const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length) && !formVisibility && !noteEditFormVisibility;
 
   return (
     <>
@@ -177,7 +177,7 @@ export default function MachineNoteList() {
           })}
       </Card>
       <Grid item md={12}>
-        <TableNoData isNotFound={isNotFound} />
+        {/* <TableNoData isNotFound={isNotFound} /> */}
       </Grid>
     </>
   );

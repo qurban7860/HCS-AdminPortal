@@ -1,38 +1,30 @@
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import {  useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
+import TextField from '@mui/material/TextField';
 // @mui
-import { LoadingButton } from '@mui/lab';
-import { Switch, Box, Card, Grid, Stack, Typography, Button, TextField } from '@mui/material';
+// import { LoadingButton } from '@mui/lab';
+import {  Box, Card, Grid, Stack, Typography } from '@mui/material';
 import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
 // global
 import FormProvider, {
-  RHFSelect,
   RHFAutocomplete,
   RHFTextField,
   RHFSwitch,
-  RHFMultiSelect,
-  RHFEditor,
-  RHFUpload,
 } from '../../../components/hook-form';
-import { CONFIG } from '../../../config-global';
+// import { CONFIG } from '../../../config-global';
 // slice
 import {
   updateSupplier,
-  setSupplierEditFormVisibility,
-  getSuppliers,
   getSupplier,
 } from '../../../redux/slices/products/supplier';
-import { useSettingsContext } from '../../../components/settings';
+// import { useSettingsContext } from '../../../components/settings';
 // routes
-import { PATH_MACHINE, PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { countries } from '../../../assets/data';
@@ -89,7 +81,7 @@ export default function SupplierEditForm() {
     [supplier]
   );
 
-  const { themeStretch } = useSettingsContext();
+  // const { themeStretch } = useSettingsContext();
 
   const methods = useForm({
     resolver: yupResolver(EditCategorySchema),
@@ -98,8 +90,6 @@ export default function SupplierEditForm() {
 
   const {
     reset,
-    watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;

@@ -1,20 +1,13 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
 import {
-  Grid,
-  Card,
   Table,
   Button,
-  Tooltip,
   TableBody,
   Container,
-  IconButton,
   TableContainer,
-  Stack,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
@@ -30,19 +23,16 @@ import {
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import { useSettingsContext } from '../../../components/settings';
+// import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
-  emptyRows,
   TableNoData,
   TableSkeleton,
-  TableEmptyRows,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from '../../../components/table';
-import Iconify from '../../../components/iconify/Iconify';
+// import Iconify from '../../../components/iconify/Iconify';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 // sections
@@ -85,10 +75,8 @@ export default function StatusList() {
     selected,
     setSelected,
     onSelectRow,
-    onSelectAllRows,
     //
     onSort,
-    onChangeDense,
     // onChangePage,
     // onChangeRowsPerPage,
   } = useTable({
@@ -98,7 +86,7 @@ export default function StatusList() {
 
   const dispatch = useDispatch();
 
-  const { themeStretch } = useSettingsContext();
+  // const { themeStretch } = useSettingsContext();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -153,9 +141,9 @@ export default function StatusList() {
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
+  // const handleOpenConfirm = () => {
+  //   setOpenConfirm(true);
+  // };
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
@@ -202,28 +190,28 @@ export default function StatusList() {
     }
   };
 
-  const handleDeleteRows = async (selectedRows, handleClose) => {
-    // console.log(selectedRows)
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-    setSelected([]);
-    setTableData(deleteRows);
-    if (page > 0) {
-      if (selectedRows.length === dataInPage.length) {
-        setPage(page - 1);
-      } else if (selectedRows.length === dataFiltered.length) {
-        setPage(0);
-      } else if (selectedRows.length > dataInPage.length) {
-        const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-        setPage(newPage);
-      }
-    }
-    handleClose();
-  };
+  // const handleDeleteRows = async (selectedRows, handleClose) => {
+  //   // console.log(selectedRows)
+  //   const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
+  //   setSelected([]);
+  //   setTableData(deleteRows);
+  //   if (page > 0) {
+  //     if (selectedRows.length === dataInPage.length) {
+  //       setPage(page - 1);
+  //     } else if (selectedRows.length === dataFiltered.length) {
+  //       setPage(0);
+  //     } else if (selectedRows.length > dataInPage.length) {
+  //       const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
+  //       setPage(newPage);
+  //     }
+  //   }
+  //   handleClose();
+  // };
 
-  const handleEditRow = async (id) => {
-    await dispatch(getMachineStatus(id));
-    navigate(PATH_MACHINE.machines.settings.status.edit(id));
-  };
+  // const handleEditRow = async (id) => {
+  //   await dispatch(getMachineStatus(id));
+  //   navigate(PATH_MACHINE.machines.settings.status.edit(id));
+  // };
 
   const handleViewRow = async (id) => {
     await dispatch(getMachineStatus(id));

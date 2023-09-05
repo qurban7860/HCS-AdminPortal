@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import {  useEffect, useMemo, useState, useLayoutEffect, memo } from 'react';
+import {  useEffect, useState, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // form
@@ -49,7 +49,7 @@ function ToolsInstalledEditForm() {
   console.log("compositToolVal : ",compositToolVal)
   const [compositToolNumber, setCompositToolNumber] = useState(1);
 
-  const [toolsVal, setToolsVal] = useState([]);
+  // const [toolsVal, setToolsVal] = useState([]);
 
   const dispatch = useDispatch();
   const isMobile = useResponsive('down', 'sm');
@@ -284,8 +284,6 @@ function ToolsInstalledEditForm() {
     engagingDuration, 
     returningDuration, 
     twoWayCheckDelayTime, 
-    engageInstruction, 
-    disengageInstruction,
     wasteTriggerDistance,
     crimpTriggerDistance,
     operations,

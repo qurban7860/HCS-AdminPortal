@@ -1,14 +1,13 @@
 import PropTypes from 'prop-types';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Switch, Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Card, Grid} from '@mui/material';
 // redux
 import {
-  getTool,
-  setToolEditFormVisibility,
+
   deleteTool,
 } from '../../../redux/slices/products/tools';
 // paths
@@ -18,11 +17,11 @@ import { useSnackbar } from '../../../components/snackbar';
 
 // Iconify
 
-import { fDate } from '../../../utils/formatTime';
+// import { fDate } from '../../../utils/formatTime';
 
-import ToolEditForm from './ToolEditForm';
+// import ToolEditForm from './ToolEditForm';
 
-import Iconify from '../../../components/iconify/Iconify';
+// import Iconify from '../../../components/iconify/Iconify';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
@@ -36,7 +35,7 @@ ToolViewForm.propTypes = {
 // ----------------------------------------------------------------------
 
 export default function ToolViewForm({ currentTool = null }) {
-  const [editFlag, setEditFlag] = useState(false);
+  // const [editFlag, setEditFlag] = useState(false);
 
   const handleEdit = () => {
     // dispatch(setToolEditFormVisibility(true));

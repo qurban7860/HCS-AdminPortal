@@ -6,8 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography } from '@mui/material';
 // slice
 import { updateMachinestatus, getMachineStatus } from '../../../redux/slices/products/statuses';
 // routes
@@ -22,7 +21,7 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
 export default function StatusEditForm() {
-  const { error, machinestatus } = useSelector((state) => state.machinestatus);
+  const {  machinestatus } = useSelector((state) => state.machinestatus);
 
   const dispatch = useDispatch();
 
@@ -61,8 +60,6 @@ export default function StatusEditForm() {
 
   const {
     reset,
-    watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;

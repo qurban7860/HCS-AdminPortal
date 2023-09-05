@@ -1,7 +1,7 @@
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Grid, Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
+import { Grid, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 import debounce from 'lodash/debounce';
@@ -14,7 +14,7 @@ import { getTools, getTool, deleteTool,
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import { useSettingsContext } from '../../../components/settings';
+// import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -68,7 +68,6 @@ export default function ToolList() {
     onSelectRow,
     //
     onSort,
-    onChangeDense,
     // onChangePage,
     // onChangeRowsPerPage,
   } = useTable({
@@ -76,7 +75,7 @@ export default function ToolList() {
   });
 
   const dispatch = useDispatch();
-  const { themeStretch } = useSettingsContext();
+  // const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
@@ -115,9 +114,9 @@ export default function ToolList() {
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
+  // const handleOpenConfirm = () => {
+  //   setOpenConfirm(true);
+  // };
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
@@ -167,12 +166,12 @@ export default function ToolList() {
     }
   };
 
-  const handleEditRow = async (id) => {
-    // console.log(id);
-    // dispatch(getTool(id));
-    await dispatch(getTool(id));
-    navigate(PATH_MACHINE.machines.settings.tool.edit(id));
-  };
+  // const handleEditRow = async (id) => {
+  //   // console.log(id);
+  //   // dispatch(getTool(id));
+  //   await dispatch(getTool(id));
+  //   navigate(PATH_MACHINE.machines.settings.tool.edit(id));
+  // };
 
   const handleViewRow = async (id) => {
     // console.log(id,PATH_MACHINE.supplier.view(id));

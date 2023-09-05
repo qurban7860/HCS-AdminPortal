@@ -1,33 +1,33 @@
-import { Helmet } from 'react-helmet-async';
-import { useState, useEffect, useLayoutEffect } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+// import { Helmet } from 'react-helmet-async';
+import { useEffect } from 'react';
+import { useNavigate,  } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { Container, Grid, Card } from '@mui/material';
 import List from '@mui/material/List';
 import ListSubheader from '@mui/material/ListSubheader';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import CategoryIcon from '@mui/icons-material/Category';
-import ModelTrainingIcon from '@mui/icons-material/ModelTraining';
-import InventoryIcon from '@mui/icons-material/Inventory';
-import Diversity1Icon from '@mui/icons-material/Diversity1';
-import FlareIcon from '@mui/icons-material/Flare';
-import ClassIcon from '@mui/icons-material/Class';
-import BuildCircleIcon from '@mui/icons-material/BuildCircle';
-import { PATH_MACHINE, PATH_DOCUMENT } from '../../routes/paths';
-import { searchSites } from '../../redux/slices/customer/site';
+// import ListItemButton from '@mui/material/ListItemButton';
+// import ListItemIcon from '@mui/material/ListItemIcon';
+// import ListItemText from '@mui/material/ListItemText';
+// import CategoryIcon from '@mui/icons-material/Category';
+// import ModelTrainingIcon from '@mui/icons-material/ModelTraining';
+// import InventoryIcon from '@mui/icons-material/Inventory';
+// import Diversity1Icon from '@mui/icons-material/Diversity1';
+// import FlareIcon from '@mui/icons-material/Flare';
+// import ClassIcon from '@mui/icons-material/Class';
+// import BuildCircleIcon from '@mui/icons-material/BuildCircle';
+import {  PATH_DOCUMENT } from '../../routes/paths';
+// import { searchSites } from '../../redux/slices/customer/site';
 import { getMachineLatLongData } from '../../redux/slices/products/machine';
 import { useDispatch, useSelector } from '../../redux/store';
 import { Cover } from '../components/Defaults/Cover';
-import Iconify from '../../components/iconify';
+// import Iconify from '../../components/iconify';
 import GoogleMaps from '../../assets/GoogleMaps';
 
 // ----------------------------------------------------------------------
 
 export default function Reports() {
   const dispatch = useDispatch();
-  const theme = useTheme();
+  // const theme = useTheme();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function Reports() {
 
   const { machineLatLongCoordinates } = useSelector((state) => state.machine);
   // Functions to navigate to different pages
-  const linkDocumentName = () => {
+  const DocumentName = () => {
     navigate(PATH_DOCUMENT.documentName.list);
   };
   const linkFileCategory = () => {
