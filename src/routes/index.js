@@ -202,6 +202,8 @@ import {
   Page404,
   ComingSoonPage,
   MaintenancePage,
+  ErrorPage,
+  UserInviteLanding
   
 } from './elements';
 
@@ -608,6 +610,7 @@ export default function Router() {
     {
       element: <SimpleLayout />,
       children: [
+        { path: 'invite/:id/:code/:expiry', element: <UserInviteLanding /> },
       ],
     },
     {
@@ -618,6 +621,8 @@ export default function Router() {
         { path: '500', element: <Page500 /> },
         { path: '404', element: <Page404 /> },
         { path: '403', element: <Page403 /> },
+        { path: 'invalidErrorPage', element: <ErrorPage title='Invalid Code' /> },
+        { path: 'expiredErrorPage', element: <ErrorPage title='Invitation Expired' /> },
       ],
     },
     { path: '*', element: <Navigate to="/404" replace /> },

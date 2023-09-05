@@ -37,6 +37,7 @@ export const PATH_PAGE = {
   page404: '/404',
   page500: '/500',
   components: '/components',
+  userInviteLanding: (id, code, expiry) => path(`/invite/${id}/{$code}/{$expiry}`),
   invalidErrorPage:'/InvalidErrorPage',
   expiredErrorPage:'/ExpiredErrorPage'
 };
