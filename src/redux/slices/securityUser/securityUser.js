@@ -338,7 +338,7 @@ export function getLoggedInSecurityUser(id) {
 
 // ----------------------------------------------------------------------
 
-export async function deleteSecurityUser(id) {
+export function deleteSecurityUser(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{
@@ -427,8 +427,7 @@ export function verifyUserInvite(Id,code) {
       }
       return response; // eslint-disable-line
     } catch (error) {
-      dispatch(slice.actions.hasError(error.Message));
-      console.error(error);
+      dispatch(slice.actions.hasError(error));
       throw error;
     }
   };
