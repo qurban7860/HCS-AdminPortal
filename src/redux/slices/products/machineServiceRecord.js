@@ -1,4 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
+import FormData from 'form-data';
+
 // utils
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
@@ -232,22 +234,21 @@ export function addMachineServiceRecord(params) {
       dispatch(slice.actions.startLoading());
       try {
         const formData = new FormData();
-        formData.append('recordType', params?.recordType?.name)
-        formData.append('serviceRecordConfig', params?.serviceRecordConfig)
-        formData.append('serviceDate',params?.params?.serviceDate)
-        formData.append('customer',params?.customer?._id)
-        formData.append('site',params?.site?._id)
-        formData.append('machine',params?.machine?._id)
-        formData.append('decoiler',params?.decoiler?._id)
+        formData.append('serviceRecordConfig', params?.serviceRecordConfig?._id)
+        formData.append('serviceDate',params?.serviceDate)
+        formData.append('customer',params?.customer)
+        formData.append('site',params?.site)
+        formData.append('machine',params?.machine)
+        formData.append('decoiler',params?.decoiler)
         formData.append('technician',params?.technician?._id)
         formData.append('serviceNote',params?.serviceNote)
         formData.append('maintenanceRecommendation',params?.maintenanceRecommendation)
         formData.append('suggestedSpares',params?.suggestedSpares)
-        formData.append('files',params?.files)
         formData.append('operator',params?.operator?._id)
         formData.append('operatorRemarks',params?.operatorRemarks)
+        params?.files?.forEach((file, index) => {formData.append(`files`, file);})
         formData.append('isActive',params?.isActive)
-
+        console.log("formData : ",formData)
         /* eslint-disable */
         // let data = {
         //   recordType:                 params?.recordType?.name,

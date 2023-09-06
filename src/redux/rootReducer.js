@@ -37,6 +37,8 @@ import configReducer from './slices/config/config';
 import machineServiceParamReducer from './slices/products/machineServiceParams'
 import machineServiceRecordReducer from './slices/products/machineServiceRecord';
 import serviceRecordConfigReducer from './slices/products/serviceRecordConfig';
+import serviceCategoryReducer from './slices/products/serviceCategory';
+
 
 // ----------------------------------------------------------------------
 
@@ -263,7 +265,12 @@ export const serviceRecordConfigPersistConfig={
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
-
+export const serviceCategoryPersistConfig={
+  key: 'serviceCategory',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
 
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
@@ -300,8 +307,8 @@ const rootReducer = combineReducers({
   userConfig: persistReducer(userConfigPersistConfig, userConfigReducer),
   serviceRecordConfig: persistReducer(serviceRecordConfigPersistConfig, serviceRecordConfigReducer),
   machineServiceParam: persistReducer(machineServiceParamPersistConfig, machineServiceParamReducer),
-  machineServiceRecord: persistReducer(machineServiceRecordPersistConfig, machineServiceRecordReducer)
-  
+  machineServiceRecord: persistReducer(machineServiceRecordPersistConfig, machineServiceRecordReducer),
+  serviceCategory: persistReducer(serviceCategoryPersistConfig, serviceCategoryReducer)
 
 });
 

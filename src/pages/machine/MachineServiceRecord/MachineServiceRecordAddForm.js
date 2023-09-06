@@ -41,8 +41,9 @@ function MachineServiceRecordAddForm() {
   const { activeSites } = useSelector((state) => state.site);
   const { activeContacts } = useSelector((state) => state.contact);
   const { activeServiceRecordConfigs } = useSelector((state) => state.serviceRecordConfig);
+  // console.log("activeServiceRecordConfigs  : ",activeServiceRecordConfigs)
   const { machineConnections } = useSelector((state) => state.machineConnections);
-  console.log("machineConnections : ",machineConnections)
+  // console.log("machineConnections : ",machineConnections)
   const { activeMachineServiceParams } = useSelector((state) => state.machineServiceParam);
   const { recordTypes } = useSelector((state) => state.machineServiceRecord);
   const [activeIndex, setActiveIndex] = useState(null);
@@ -123,7 +124,7 @@ function MachineServiceRecordAddForm() {
   useEffect(()=>{
     setValue('decoiler',machineConnections)
   },[setValue, machineConnections])
-
+console.log("decoiler : ",decoiler)
   // console.log("additionalFields : ",{...checkParamFiles})
   // for (let index = 1; index <= checkParamNumber; index += 1) {
   //   checkParamFiles[`checkParamFiles${index}`] = watch(`checkParamFiles${index}`);
@@ -135,6 +136,7 @@ function MachineServiceRecordAddForm() {
       console.log("data : ",data)
       data.machine = machine?._id
       data.customer = machine?.customer?._id
+      data.site = machine?.instalationSite?._id
       await dispatch(addMachineServiceRecord(data));
       reset();
       dispatch(setMachineServiceRecordAddFormVisibility(false))
@@ -221,10 +223,10 @@ function MachineServiceRecordAddForm() {
                     name="serviceRecordConfig"
                     label="Service Record Configuration"
                     options={activeServiceRecordConfigs}
-                    getOptionLabel={(option) => `${option.recordType ? option.recordType :   ''}`}
+                    getOptionLabel={(option) => `${option?.docTitle ?? ''} ${option?.docTitle ? '-' : '' } ${option.recordType ? option.recordType :   ''}`}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     renderOption={(props, option) => (
-                    <li {...props} key={option._id}>{`${option.recordType ? option.recordType : ''}`}</li>
+                    <li {...props} key={option._id}>{`${option?.docTitle ?? ''} ${option?.docTitle ? '-' : '' } ${option.recordType ? option.recordType : ''}`}</li>
                     )}
                   />
 
@@ -279,8 +281,6 @@ function MachineServiceRecordAddForm() {
                       <Autocomplete
                         multiple
                         {...field}
-                        disabled
-                        freeSolo
                         name="decoiler"
                         id="tags-outlined"
                         options={machineConnections}

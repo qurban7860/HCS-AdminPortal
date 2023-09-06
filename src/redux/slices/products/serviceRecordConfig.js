@@ -23,6 +23,10 @@ const initialState = {
     { _id:2 , name: 'Repair'},
     { _id:3 , name: 'Training'},
     { _id:4 , name: 'Install'},
+  ],
+  headerFooterTypes: [
+    { _id:1 , name: 'Text'},
+    { _id:2 , name: 'Image'},
   ]
 };
 
@@ -218,7 +222,7 @@ export function addServiceRecordConfig(params) {
 
         /* eslint-disable */
         let data = {
-          recordType: params.recordType,
+          recordType: params.recordType?.name,
           header: {},
           footer: {},
           checkParams: [],
@@ -226,7 +230,7 @@ export function addServiceRecordConfig(params) {
         };
         /* eslint-enable */
         if(params.machineModel){
-          data.machineModel = params.machineModel;
+          data.machineModel = params.machineModel?._id;
         }
         if(params.docTitle){
           data.docTitle = params.docTitle;
@@ -236,9 +240,6 @@ export function addServiceRecordConfig(params) {
         }
         if(params.textAfterFields){
           data.textAfterFields = params.textAfterFields;
-        }
-        if(params.machineModel){
-          data.machineModel = params.machineModel;
         }
         if(params.isOperatorSignatureRequired){
           data.isOperatorSignatureRequired = params.isOperatorSignatureRequired;
@@ -254,7 +255,7 @@ export function addServiceRecordConfig(params) {
         }
         // header
         if(params.headerType){
-          data.header.type = params.headerType;
+          data.header.type = params.headerType?.name;
         }
         if(params.headerLeftText){
           data.header.leftText = params.headerLeftText;
@@ -267,7 +268,7 @@ export function addServiceRecordConfig(params) {
         }
         // footer
         if(params.footerType){
-          data.footer.type = params.footerType;
+          data.footer.type = params.footerType?.name;
         }
         if(params.footerLeftText){
           data.footer.leftText = params.footerLeftText;
@@ -285,6 +286,7 @@ export function addServiceRecordConfig(params) {
         if(params.paramList){
           data.checkParams.push({paramList: params.paramList});
         }
+        console.log("data : ",data)
         const response = await axios.post(`${CONFIG.SERVER_URL}products/serviceRecordsConfig`, data);
         dispatch(slice.actions.setResponseMessage(response.data.ServiceRecordConfig));
       } catch (error) {
