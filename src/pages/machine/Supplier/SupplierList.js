@@ -1,6 +1,6 @@
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
-import { Link as useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import {
   Table,
