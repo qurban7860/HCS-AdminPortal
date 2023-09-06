@@ -18,6 +18,12 @@ const initialState = {
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
+  recordTypes: [
+    { _id:1 , name: 'Service'},
+    { _id:2 , name: 'Repair'},
+    { _id:3 , name: 'Training'},
+    { _id:4 , name: 'Install'},
+  ]
 };
 
 export const recordType = [ 'Service','Repair','Training','Install']
@@ -212,14 +218,73 @@ export function addServiceRecordConfig(params) {
 
         /* eslint-disable */
         let data = {
-          name: params.name,
+          recordType: params.recordType,
+          header: {},
+          footer: {},
+          checkParams: [],
           isActive: params.isActive,
-          connections: params.connections
         };
         /* eslint-enable */
-        if(params.description){
-            data.description = params.description;
-          }
+        if(params.machineModel){
+          data.machineModel = params.machineModel;
+        }
+        if(params.docTitle){
+          data.docTitle = params.docTitle;
+        }
+        if(params.textBeforeParams){
+          data.textBeforeParams = params.textBeforeParams;
+        }
+        if(params.textAfterFields){
+          data.textAfterFields = params.textAfterFields;
+        }
+        if(params.machineModel){
+          data.machineModel = params.machineModel;
+        }
+        if(params.isOperatorSignatureRequired){
+          data.isOperatorSignatureRequired = params.isOperatorSignatureRequired;
+        }
+        if(params.enableServiceNote){
+          data.enableServiceNote = params.enableServiceNote;
+        }
+        if(params.enableMaintenanceRecommendations){
+          data.enableMaintenanceRecommendations = params.enableMaintenanceRecommendations;
+        }
+        if(params.enableSuggestedSpares){
+          data.enableSuggestedSpares = params.enableSuggestedSpares;
+        }
+        // header
+        if(params.headerType){
+          data.header.type = params.headerType;
+        }
+        if(params.headerLeftText){
+          data.header.leftText = params.headerLeftText;
+        }
+        if(params.headerCenterText){
+          data.header.centerText = params.headerCenterText;
+        }
+        if(params.headerRightText){
+          data.header.rightText = params.headerRightText;
+        }
+        // footer
+        if(params.footerType){
+          data.footer.type = params.footerType;
+        }
+        if(params.footerLeftText){
+          data.footer.leftText = params.footerLeftText;
+        }
+        if(params.footerCenterText){
+          data.footer.centerText = params.footerCenterText;
+        }
+        if(params.footerRightText){
+          data.footer.rightText = params.footerRightText;
+        }
+        // checkParams
+        if(params.paramListTitle){
+          data.checkParams.push({paramListTitle: params.paramListTitle});
+        }
+        if(params.paramList){
+          data.checkParams.push({paramList: params.paramList});
+        }
         const response = await axios.post(`${CONFIG.SERVER_URL}products/serviceRecordsConfig`, data);
         dispatch(slice.actions.setResponseMessage(response.data.ServiceRecordConfig));
       } catch (error) {
@@ -237,13 +302,74 @@ export function updateServiceRecordConfig(params,Id) {
     dispatch(slice.actions.startLoading());
     try {
       /* eslint-disable */
-      const data = {
-        name: params.name,
+      let data = {
+        recordType: params.recordType,
+        header: {},
+        footer: {},
+        checkParams: [],
         isActive: params.isActive,
-        description: params.description,
-        connections: params.connections
       };
-     /* eslint-enable */
+      /* eslint-enable */
+      if(params.machineModel){
+        data.machineModel = params.machineModel;
+      }
+      if(params.docTitle){
+        data.docTitle = params.docTitle;
+      }
+      if(params.textBeforeParams){
+        data.textBeforeParams = params.textBeforeParams;
+      }
+      if(params.textAfterFields){
+        data.textAfterFields = params.textAfterFields;
+      }
+      if(params.machineModel){
+        data.machineModel = params.machineModel;
+      }
+      if(params.isOperatorSignatureRequired){
+        data.isOperatorSignatureRequired = params.isOperatorSignatureRequired;
+      }
+      if(params.enableServiceNote){
+        data.enableServiceNote = params.enableServiceNote;
+      }
+      if(params.enableMaintenanceRecommendations){
+        data.enableMaintenanceRecommendations = params.enableMaintenanceRecommendations;
+      }
+      if(params.enableSuggestedSpares){
+        data.enableSuggestedSpares = params.enableSuggestedSpares;
+      }
+      // header
+      if(params.headerType){
+        data.header.type = params.headerType;
+      }
+      if(params.headerLeftText){
+        data.header.leftText = params.headerLeftText;
+      }
+      if(params.headerCenterText){
+        data.header.centerText = params.headerCenterText;
+      }
+      if(params.headerRightText){
+        data.header.rightText = params.headerRightText;
+      }
+      // footer
+      if(params.footerType){
+        data.footer.type = params.footerType;
+      }
+      if(params.footerLeftText){
+        data.footer.leftText = params.footerLeftText;
+      }
+      if(params.footerCenterText){
+        data.footer.centerText = params.footerCenterText;
+      }
+      if(params.footerRightText){
+        data.footer.rightText = params.footerRightText;
+      }
+      // checkParams
+      if(params.paramListTitle){
+        data.checkParams.push({paramListTitle: params.paramListTitle});
+      }
+      if(params.paramList){
+        data.checkParams.push({paramList: params.paramList});
+      }
       await axios.patch(`${CONFIG.SERVER_URL}products/serviceRecordsConfig/${Id}`,
         data
       );

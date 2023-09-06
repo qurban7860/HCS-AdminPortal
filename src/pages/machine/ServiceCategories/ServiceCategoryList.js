@@ -8,9 +8,9 @@ import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 // routes
-import { getServiceRecordConfigs, deleteServiceRecordConfig,   ChangeRowsPerPage,
+import { getServiceCategories, deleteServiceCategory, ChangeRowsPerPage,
   ChangePage,
-  setFilterBy, } from '../../../redux/slices/products/serviceRecordConfig';
+  setFilterBy, } from '../../../redux/slices/products/serviceCategory';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -26,8 +26,8 @@ import {
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 // sections
-import ServiceRecordConfigListTableRow from './ServiceRecordConfigListTableRow';
-import ServiceRecordConfigListTableToolbar from './ServiceRecordConfigListTableToolbar';
+import ListTableRow from './ServiceCategoryListTableRow';
+import ListTableToolbar from './ServiceCategoryListTableToolbar';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
@@ -35,40 +35,23 @@ import TableCard from '../../components/ListTableTools/TableCard';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'recordType', label: 'Record Type', align: 'left' },
-  // { id: 'machineModel', label: 'Machine Model', align: 'left' },
-  // { id: 'docTitle', label: 'Document Title', align: 'center' },
+  { id: 'name', label: 'Name', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
-const STATUS_OPTIONS = [
-  // { id: '1', value: 'Order Received' },
-  // { id: '2', value: 'In Progress' },
-  // { id: '3', value: 'Ready For Transport' },
-  // { id: '4', value: 'In Freight' },
-  // { id: '5', value: 'Deployed' },
-  // { id: '6', value: 'Archived' },
-];
-
 // ----------------------------------------------------------------------
 
-export default function ServiceRecordConfigList() {
+export default function ServiceCategoryList() {
   const {
     dense,
-    // page,
     order,
     orderBy,
-    // rowsPerPage,
     setPage,
-    //
     selected,
     setSelected,
     onSelectRow,
-    //
     onSort,
-    // onChangePage,
-    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'name',
   });
@@ -81,8 +64,8 @@ export default function ServiceRecordConfigList() {
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
-  const { serviceRecordConfigs, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector(
-    (state) => state.serviceRecordConfig
+  const { serviceCategories, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector(
+    (state) => state.serviceCategory
   );
 
     
@@ -93,20 +76,15 @@ export default function ServiceRecordConfigList() {
 
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
-  // useLayoutEffect(() => {
-  //   dispatch(getCustomers());
-  // }, [dispatch]);
-
   useLayoutEffect(() => {
-    // console.log('Testing done')
-    dispatch(getServiceRecordConfigs());
+    dispatch(getServiceCategories());
   }, [dispatch]);
 
   useEffect(() => {
     if (initial) {
-      setTableData(serviceRecordConfigs);
+      setTableData(serviceCategories);
     }
-  }, [serviceRecordConfigs, error, responseMessage, enqueueSnackbar, initial]);
+  }, [serviceCategories, error, responseMessage, enqueueSnackbar, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -116,11 +94,8 @@ export default function ServiceRecordConfigList() {
   });
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
   const denseHeight = dense ? 60 : 80;
-
   const isFiltered = filterName !== '' || !!filterStatus.length;
-
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   const handleOpenConfirm = () => {
@@ -149,8 +124,7 @@ export default function ServiceRecordConfigList() {
   
   useEffect(()=>{
       setFilterName(filterBy)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+  },[filterBy])
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -158,11 +132,9 @@ export default function ServiceRecordConfigList() {
   };
 
   const handleDeleteRow = async (id) => {
-    await dispatch(deleteServiceRecordConfig(id));
+    await dispatch(deleteServiceCategory(id));
     try {
-      // console.log(id);
-      // await dispatch(deleteSupplier(id));
-      dispatch(getServiceRecordConfigs());
+      dispatch(getServiceCategories());
       setSelected([]);
 
       if (page > 0) {
@@ -176,7 +148,6 @@ export default function ServiceRecordConfigList() {
   };
 
   const handleDeleteRows = async (selectedRows, handleClose) => {
-    // console.log(selectedRows)
     const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
     setSelected([]);
     setTableData(deleteRows);
@@ -192,19 +163,15 @@ export default function ServiceRecordConfigList() {
       }
     }
 
-    // dispatch delete supplier
-    // await dispatch(deleteSuppliers(selectedRows));
-    // await dispatch(getServiceRecordConfigss())
     handleClose();
   };
 
   const handleEditRow = (id) => {
-    // console.log(id);
-    navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.edit(id));
+    navigate(PATH_MACHINE.machines.settings.serviceCategories.edit(id));
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.view(id));
+    navigate(PATH_MACHINE.machines.settings.serviceCategories.view(id));
   };
 
   const handleResetFilter = () => {
@@ -216,16 +183,15 @@ export default function ServiceRecordConfigList() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Machine Service Record Config" icon="material-symbols:list-alt-outline" setting="enable" />
+          <Cover name="Service Categories" icon="material-symbols:list-alt-outline" setting />
         </StyledCardContainer>
 
         <TableCard>
-          <ServiceRecordConfigListTableToolbar
+          <ListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
             onFilterStatus={handleFilterStatus}
-            statusOptions={STATUS_OPTIONS}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
@@ -237,25 +203,6 @@ export default function ServiceRecordConfigList() {
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            {/* <TableSelectedAction
-
-              numSelected={selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row._id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            /> */}
-
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
                 <TableHeadCustom
@@ -270,7 +217,7 @@ export default function ServiceRecordConfigList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <ServiceRecordConfigListTableRow
+                        <ListTableRow
                           key={row._id}
                           row={row}
                           selected={selected.includes(row._id)}

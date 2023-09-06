@@ -27,9 +27,9 @@ export default function ServiceRecordConfigView({ editPage }) {
     <Container maxWidth={false}>
       <StyledCardContainer>
         <Cover
-          name={serviceRecordConfig?.name}
+          name={serviceRecordConfig?.recordType}
           setting="setting"
-          backLink={PATH_MACHINE.machines.settings.categories.list}
+          backLink={PATH_MACHINE.machines.settings.serviceRecordConfigs.list}
         />
       </StyledCardContainer>
       <ServiceRecordConfigViewForm />

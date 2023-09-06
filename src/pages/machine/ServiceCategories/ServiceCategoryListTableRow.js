@@ -13,7 +13,7 @@ import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
-ServiceRecordConfigListTableRow.propTypes = {
+ListTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
@@ -22,7 +22,7 @@ ServiceRecordConfigListTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
-export default function ServiceRecordConfigListTableRow({
+export default function ListTableRow({
   row,
   selected,
   onSelectRow,
@@ -30,7 +30,7 @@ export default function ServiceRecordConfigListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { recordType, isActive, createdAt } = row;
+  const { name, isActive, connections, createdAt } = row;
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
 
@@ -42,24 +42,18 @@ export default function ServiceRecordConfigListTableRow({
     setOpenConfirm(false);
   };
 
-  // const handleOpenPopover = (event) => {
-  //   setOpenPopover(event.currentTarget);
-  // };
+  const handleOpenPopover = (event) => {
+    setOpenPopover(event.currentTarget);
+  };
 
   const handleClosePopover = () => {
     setOpenPopover(null);
   };
 
-  const smScreen = useScreenSize('sm')
-
   return (
     <>
       <TableRow hover selected={selected}>
-        <LinkTableCell align="left" onClick={onViewRow} param={recordType} />
-
-      {/* {  useScreenSize('lg') && <TableCell >{name || ''}</TableCell>} */}
-      {/* {  useScreenSize('lg') && <TableCell >{name || ''}</TableCell>} */}
-
+        <LinkTableCell align="left" onClick={onViewRow} param={name} />
         <TableCell align="center">
           <Switch checked={isActive} disabled sx={{ my: -1 }} />{' '}
         </TableCell>

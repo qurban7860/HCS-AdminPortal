@@ -115,24 +115,21 @@ export const UserConfigViewForm = Loadable(lazy(() => import('../pages/user/conf
 // export const LicenseList = Loadable(lazy(()=> import('../pages/machine/License/LicenseList')));
 
 // Machine Categories
-export const CategoryAddForm = Loadable(
-  lazy(() => import('../pages/machine/Categories/CategoryAddForm'))
-);
-export const CategoryList = Loadable(
-  lazy(() => import('../pages/machine/Categories/CategoryList'))
-);
-export const CategoryView = Loadable(
-  lazy(() => import('../pages/machine/Categories/CategoryView'))
-);
-export const CategoryViewForm = Loadable(
-  lazy(() => import('../pages/machine/Categories/CategoryViewForm'))
-);
-export const CategoryEdit = Loadable(
-  lazy(() => import('../pages/machine/Categories/CategoryEdit'))
-);
-export const CategoryEditForm = Loadable(
-  lazy(() => import('../pages/machine/Categories/CategoryEditForm'))
-);
+export const CategoryAddForm = Loadable(lazy(() => import('../pages/machine/Categories/CategoryAddForm')));
+export const CategoryList = Loadable(lazy(() => import('../pages/machine/Categories/CategoryList')));
+export const CategoryView = Loadable(lazy(() => import('../pages/machine/Categories/CategoryView')));
+export const CategoryViewForm = Loadable(lazy(() => import('../pages/machine/Categories/CategoryViewForm')));
+export const CategoryEdit = Loadable(lazy(() => import('../pages/machine/Categories/CategoryEdit')));
+export const CategoryEditForm = Loadable(lazy(() => import('../pages/machine/Categories/CategoryEditForm')));
+
+// Machine Service Categories
+export const ServiceCategoryAddForm = Loadable(lazy(() => import('../pages/machine/ServiceCategories/ServiceCategoryAddForm')));
+export const ServiceCategoryList = Loadable(lazy(() => import('../pages/machine/ServiceCategories/ServiceCategoryList')));
+export const ServiceCategoryView = Loadable(lazy(() => import('../pages/machine/ServiceCategories/ServiceCategoryView')));
+export const ServiceCategoryViewForm = Loadable(lazy(() => import('../pages/machine/ServiceCategories/ServiceCategoryViewForm')));
+export const ServiceCategoryEdit = Loadable(lazy(() => import('../pages/machine/ServiceCategories/ServiceCategoryEdit')));
+export const ServiceCategoryEditForm = Loadable(lazy(() => import('../pages/machine/ServiceCategories/ServiceCategoryEditForm')));
+
 
 // Machine Parameters
 export const ParameterAddForm = Loadable(
