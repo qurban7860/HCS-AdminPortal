@@ -14,6 +14,7 @@ import {
 } from '../../../redux/slices/products/serviceRecordConfig';
 import { getActiveMachineModels } from '../../../redux/slices/products/model';
 import { getMachineServiceParams } from '../../../redux/slices/products/machineServiceParams';
+import { getActiveServiceCategories } from '../../../redux/slices/products/serviceCategory';
 
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
@@ -44,6 +45,7 @@ export default function ServiceRecordConfigEditForm() {
   const EditServiceRecordConfigSchema = Yup.object().shape({
     recordType: Yup.object().label('Record Type').nullable(),
     machineModel: Yup.object().label('Model').nullable(),
+    category: Yup.object().label('Category').nullable(),
     docTitle: Yup.string(),
     textBeforeParams: Yup.string(),
     // Check Params
@@ -75,6 +77,7 @@ export default function ServiceRecordConfigEditForm() {
     () => ({
     recordType: serviceRecordConfig?.recordType || '',
     machineModel: serviceRecordConfig?.machineModel || '',
+    category: serviceRecordConfig?.category || '',
     docTitle: serviceRecordConfig?.docTitle || '',
     textBeforeParams: serviceRecordConfig?.textBeforeParams || '',
 
@@ -122,6 +125,7 @@ export default function ServiceRecordConfigEditForm() {
   const values = watch();
 
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
+  const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
 
 
   /* eslint-disable */
@@ -129,6 +133,7 @@ export default function ServiceRecordConfigEditForm() {
     dispatch(getServiceRecordConfig(id));
     dispatch(getActiveMachineModels())
     dispatch(getMachineServiceParams());
+    dispatch(getActiveServiceCategories());
 
     const selectedRecordTypeName = recordTypes.find((recordType) => recordType.name === serviceRecordConfig.recordType);
     if(selectedRecordTypeName){
@@ -174,8 +179,8 @@ export default function ServiceRecordConfigEditForm() {
   };
   const onSubmit = async (data) => {
     try {
-      console.log(data);
-      data.recordType = selectedRecordType;
+      // console.log(data);
+      data.recordType = selectedRecordType.name;
       await dispatch(updateServiceRecordConfig(data, id));
       reset();
       dispatch(setServiceRecordConfigEditFormVisibility(false));
@@ -236,6 +241,16 @@ export default function ServiceRecordConfigEditForm() {
                     ChipProps={{ size: 'small' }}
                   />
                   <RHFAutocomplete 
+                    name="category"
+                    label="Category"
+                    options={activeServiceCategories}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                    )}
+                  />
+                  <RHFAutocomplete 
                     name="machineModel"
                     label="Model"
                     options={activeMachineModels}
@@ -245,7 +260,6 @@ export default function ServiceRecordConfigEditForm() {
                       <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
                   />
-                  {/* <RHFTextField name="machineModel" label="Machine Model" /> */}
                   <RHFTextField name="docTitle" label="Doc Title" />
                   <RHFTextField name="textBeforeParams" label="Text Before Params" />
                 </Box>

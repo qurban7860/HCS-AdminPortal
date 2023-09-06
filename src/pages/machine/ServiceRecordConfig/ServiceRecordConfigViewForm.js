@@ -53,6 +53,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
   const defaultValues = useMemo(
     () => ({
       recordType: serviceRecordConfig?.recordType || '',
+      category: serviceRecordConfig?.category?.name || '',
       machineModel: serviceRecordConfig?.machineModel?.name || '',
       docTitle: serviceRecordConfig?.docTitle || '',
       textBeforeParams: serviceRecordConfig?.textBeforeParams || '',
@@ -95,6 +96,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
       <Grid container>
         <ViewFormField sm={12} isActive={defaultValues.isActive} />
         <ViewFormField sm={6} heading="Record Type" param={defaultValues?.recordType} />
+        <ViewFormField sm={6} heading="Category" param={defaultValues?.category} />
         <ViewFormField sm={6} heading="Machine Model" param={defaultValues?.machineModel} />
         <ViewFormField sm={12} heading="Document Title" param={defaultValues?.docTitle} />
         <ViewFormField sm={6} heading="Text Befor Params" param={defaultValues?.textBeforeParams} />
@@ -107,7 +109,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
           (
             <Grid container>
               <ViewFormField sm={6} heading="Param List Title" param={row?.paramListTitle} />
-              <ViewFormField sm={6} heading="Param List" param={row?.paramList.join(' , ')} />
+              <ViewFormField sm={6} heading="Param List" serviceParam={row?.paramList} />
             </Grid>
           ))
         )}

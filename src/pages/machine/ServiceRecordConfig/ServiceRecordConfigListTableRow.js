@@ -30,7 +30,7 @@ export default function ServiceRecordConfigListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { recordType, docTitle, machineModel, isActive, createdAt } = row;
+  const { recordType, category, docTitle, machineModel, isActive, createdAt } = row;
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
 
@@ -58,6 +58,7 @@ export default function ServiceRecordConfigListTableRow({
         <LinkTableCell align="left" onClick={onViewRow} param={recordType} />
 
       { useScreenSize('lg') && <TableCell >{docTitle || ''}</TableCell>}
+      { useScreenSize('lg') && <TableCell >{category?.name || ''}</TableCell>}
       { useScreenSize('lg') && <TableCell >{machineModel?.name || ''}</TableCell>}
 
         <TableCell align="center">
