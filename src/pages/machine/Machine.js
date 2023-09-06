@@ -46,6 +46,10 @@ export default function Machine() {
     navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.list);
   };
 
+  const linkServiceCategory = () => {
+    navigate(PATH_MACHINE.machines.settings.serviceCategories.list);
+  };
+
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
@@ -127,6 +131,12 @@ export default function Machine() {
                   onClick={linkServiceRecordConfig}
                   icon={ICONS.TOOLS.icon}
                   content={ICONS.MACHINE_SERVICE_RECORD_CONFIG.heading}
+                />
+
+                <ListItem
+                  onClick={linkServiceCategory}
+                  icon={ICONS.MACHINE_SERVICE_SETTING.icon}
+                  content={ICONS.MACHINE_SERVICE_SETTING.heading}
                 />
               </List>
             </StyledSettingsCardContainer>
