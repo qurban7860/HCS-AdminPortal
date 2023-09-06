@@ -1,18 +1,17 @@
-import { Helmet } from 'react-helmet-async';
 import { useLayoutEffect } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
-import { useDispatch,useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Container } from '@mui/material';
 import { getServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 import CategoryEditForm from './ServiceRecordConfigEditForm';
 // redux
 
 // routes
-import { PATH_MACHINE } from '../../../routes/paths';
-// components
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
-import { useSettingsContext } from '../../../components/settings';
+// import { PATH_MACHINE } from '../../../routes/paths';
+// // components
+// import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
+// import { useSettingsContext } from '../../../components/settings';
 // sections
 
 
@@ -20,7 +19,7 @@ import { useSettingsContext } from '../../../components/settings';
 // ----------------------------------------------------------------------
 
 export default function CategoryEdit() {
-  const { themeStretch } = useSettingsContext();
+  // const { themeStretch } = useSettingsContext();
 
   const dispatch = useDispatch();
 
@@ -28,7 +27,7 @@ export default function CategoryEdit() {
   // console.log(id);
 
   
-  const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
+  // const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
 
   useLayoutEffect(() => {
     dispatch(getServiceRecordConfig(id));
@@ -36,10 +35,8 @@ export default function CategoryEdit() {
 
   
   return (
-    <>
       <Container maxWidth={false }>
         <CategoryEditForm/>
       </Container>
-    </>
   );
 }

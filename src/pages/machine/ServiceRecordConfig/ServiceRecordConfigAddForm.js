@@ -1,5 +1,5 @@
 // import * as Yup from 'yup';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -33,7 +33,7 @@ import { FORMLABELS } from '../../../constants/default-constants';
 // ----------------------------------------------------------------------
 
 export default function ServiceRecordConfigAddForm() {
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
