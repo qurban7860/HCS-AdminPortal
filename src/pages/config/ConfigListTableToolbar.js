@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Link as useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import { Stack } from '@mui/material';
 // redux
