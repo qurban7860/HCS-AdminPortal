@@ -52,8 +52,8 @@ export default function ServiceRecordConfigAddForm() {
 
   
   const AddMachineServiceRecordConfigSchema = Yup.object().shape({
-    recordType: Yup.object().label('Record Type').required().nullable(),
-    machineModel: Yup.object().label('Model').required().nullable(),
+    recordType: Yup.object().label('Record Type').nullable(),
+    machineModel: Yup.object().label('Model').nullable(),
     docTitle: Yup.string(),
     textBeforeParams: Yup.string(),
     // Check Params

@@ -216,7 +216,7 @@ export default function ServiceRecordConfigList() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Machine Service Record Config" icon="material-symbols:list-alt-outline" setting="enable" />
+          <Cover name="Service Record Config" icon="material-symbols:list-alt-outline" setting="enable" />
         </StyledCardContainer>
 
         <TableCard>

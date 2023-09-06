@@ -12,11 +12,14 @@ import {
   setServiceRecordConfigEditFormVisibility,
   getServiceRecordConfig,
 } from '../../../redux/slices/products/serviceRecordConfig';
+import { getActiveMachineModels } from '../../../redux/slices/products/model';
+import { getMachineServiceParams } from '../../../redux/slices/products/machineServiceParams';
+
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFSwitch, RHFMultiSelect } from '../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFMultiSelect, RHFAutocomplete } from '../../../components/hook-form';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
@@ -26,23 +29,23 @@ import { FORMLABELS } from '../../../constants/default-constants';
 // ----------------------------------------------------------------------
 
 export default function ServiceRecordConfigEditForm() {
-  const { error, serviceRecordConfig, recordTypes } = useSelector((state) => state.serviceRecordConfig);
+  const { error, serviceRecordConfig, recordTypes, headerFooterTypes } = useSelector((state) => state.serviceRecordConfig);
   const { machineServiceParams } = useSelector((state) => state.machineServiceParam);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
   const [sortedMachineServiceParams, setSortedMachineSerivceParams] = useState([]);
   const [selectedRecordType, setRecordType] = useState('');
+  const [selectedHeaderType, setHeaderType] = useState('');
+  const [selectedFooterType, setFooterType] = useState('');
 
 
   const EditServiceRecordConfigSchema = Yup.object().shape({
-    recordType: Yup.string(),
-    machineModel: Yup.string(),
+    recordType: Yup.object().label('Record Type').nullable(),
+    machineModel: Yup.object().label('Model').nullable(),
     docTitle: Yup.string(),
     textBeforeParams: Yup.string(),
-
     // Check Params
     paramListTitle: Yup.string(),
     paramList : Yup.array(),
@@ -54,13 +57,13 @@ export default function ServiceRecordConfigEditForm() {
     enableSuggestedSpares: Yup.boolean(),
 
     // header
-    headerType: Yup.string(),
+    headerType: Yup.object().label('Header Type').required().nullable(),
     headerLeftText: Yup.string(),
     headerCenterText: Yup.string(),
     headerRightText: Yup.string(),
 
     // footer
-    footerType: Yup.string(),
+    footerType: Yup.object().label('Footer Type').required().nullable(),
     footerLeftText: Yup.string(),
     footerCenterText: Yup.string(),
     footerRightText: Yup.string(),
@@ -86,13 +89,13 @@ export default function ServiceRecordConfigEditForm() {
     enableSuggestedSpares: serviceRecordConfig?.enableSuggestedSpares || false,
 
     // header
-    headerType: serviceRecordConfig?.header?.type || '',
+    headerType: serviceRecordConfig?.header || '',
     headerLeftText: serviceRecordConfig?.header?.leftText || '',
     headerCenterText: serviceRecordConfig?.header?.centerText || '',
     headerRightText: serviceRecordConfig?.header?.rightText || '',
 
     // footer
-    footerType: serviceRecordConfig?.footer?.type || '',
+    footerType: serviceRecordConfig?.footer || '',
     footerLeftText: serviceRecordConfig?.footer?.leftText || '',
     footerCenterText: serviceRecordConfig?.footer?.centerText || '',
     footerRightText: serviceRecordConfig?.footer?.rightText || '',
@@ -118,12 +121,29 @@ export default function ServiceRecordConfigEditForm() {
 
   const values = watch();
 
+  const { activeMachineModels } = useSelector((state) => state.machinemodel);
+
+
   /* eslint-disable */
   useLayoutEffect(() => {
     dispatch(getServiceRecordConfig(id));
+    dispatch(getActiveMachineModels())
+    dispatch(getMachineServiceParams());
+
     const selectedRecordTypeName = recordTypes.find((recordType) => recordType.name === serviceRecordConfig.recordType);
-    console.log('selectedRecordTypeName-------->', selectedRecordTypeName);
-    // setRecordType(selectedRecordType);
+    if(selectedRecordTypeName){
+      setRecordType(selectedRecordTypeName);
+    }
+
+    const selectedHeaderTypeName = headerFooterTypes.find((headerFooterType) => headerFooterType.name === serviceRecordConfig.header.type);
+    if(selectedHeaderTypeName){
+      setHeaderType(selectedHeaderTypeName);
+    }
+
+    const selectedFooterTypeName = headerFooterTypes.find((headerFooterType) => headerFooterType.name === serviceRecordConfig.footer.type);
+    if(selectedFooterTypeName){
+      setFooterType(selectedFooterTypeName);
+    }
   }, [dispatch, id]);
   /* eslint-enable */
 
@@ -154,6 +174,8 @@ export default function ServiceRecordConfigEditForm() {
   };
   const onSubmit = async (data) => {
     try {
+      console.log(data);
+      data.recordType = selectedRecordType;
       await dispatch(updateServiceRecordConfig(data, id));
       reset();
       dispatch(setServiceRecordConfigEditFormVisibility(false));
@@ -168,7 +190,7 @@ export default function ServiceRecordConfigEditForm() {
     <Container maxWidth={false}>
       <StyledCardContainer>
         <Cover
-          name="Edit Machine Service Record Config"
+          name="Edit Service Record Config"
           icon="material-symbols:category-outline"
           url={PATH_MACHINE.machines.settings.serviceRecordConfigs.list}
         />
@@ -187,65 +209,42 @@ export default function ServiceRecordConfigEditForm() {
                     sm: 'repeat(2, 1fr)',
                   }}
                 >
-                  {/* <Autocomplete
-                    // freeSolo
-                    required
-                    value={recordType || null}
+                  <Autocomplete
                     options={recordTypes}
-                    // isOptionEqualToValue={(option) => toolTypes.indexOf(option)}
+                    value={selectedRecordType}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                    )}
                     onChange={(event, newValue) => {
                       if (newValue) {
-                        setRecordType(newValue);
+                        setRecordType(newValue.name);
                       } else {
                         setRecordType('');
                       }
                     }}
-                    id="controllable-states-demo"
-                    renderOption={(props, option) => (
-                      <li {...props} key={option}>
-                        {option}
-                      </li>
-                    )}
                     renderInput={(params) => (
-                      <RHFTextField {...params} name="recordTypes" label="Record Types" />
+                      <TextField 
+                      {...params} 
+                      name="recordType"
+                      id="recordType"
+                      label="Record Type"  
+                      
+                      />
                     )}
                     ChipProps={{ size: 'small' }}
-                  >
-                    {(option) => (
-                      <div key={option}>
-                        <span>{option}</span>
-                      </div>
+                  />
+                  <RHFAutocomplete 
+                    name="machineModel"
+                    label="Model"
+                    options={activeMachineModels}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
-                  </Autocomplete> */}
-                  <Autocomplete
-                        // {...field}
-                        // id="controllable-states-demo"
-                        options={recordTypes}
-                        isOptionEqualToValue={(option, value) => option._id === value._id}
-                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                        renderOption={(props, option) => (
-                          <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                        )}
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            setRecordType(newValue.name);
-                          } else {
-                            setRecordType('');
-                          }
-                        }}
-                        renderInput={(params) => (
-                          <TextField 
-                          {...params} 
-                          name="recordType"
-                          id="recordType"
-                          label="Record Type"  
-                          // error={!!error}
-                          // helperText={error?.message} 
-                          // inputRef={ref} 
-                          />
-                        )}
-                        ChipProps={{ size: 'small' }}
-                      />
+                  />
                   {/* <RHFTextField name="machineModel" label="Machine Model" /> */}
                   <RHFTextField name="docTitle" label="Doc Title" />
                   <RHFTextField name="textBeforeParams" label="Text Before Params" />
@@ -276,7 +275,7 @@ export default function ServiceRecordConfigEditForm() {
                     labelPlacement="start"
                     label={
                       <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
-                        isOperatorSignatureRequired
+                        Is Operator Signature Required
                       </Typography>
                     }
                   />
@@ -285,7 +284,7 @@ export default function ServiceRecordConfigEditForm() {
                     labelPlacement="start"
                     label={
                       <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
-                        enableServiceNote
+                        Enable Service Note
                       </Typography>
                     }
                   />
@@ -294,7 +293,7 @@ export default function ServiceRecordConfigEditForm() {
                     labelPlacement="start"
                     label={
                       <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
-                        enableMaintenanceRecommendations
+                        Enable Maintenance Recommendations
                       </Typography>
                     }
                   />
@@ -303,7 +302,7 @@ export default function ServiceRecordConfigEditForm() {
                     labelPlacement="start"
                     label={
                       <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
-                        enableSuggestedSpares
+                        Enable Suggested Spares
                       </Typography>
                     }
                   /> 
@@ -341,8 +340,16 @@ export default function ServiceRecordConfigEditForm() {
                     sm: 'repeat(2, 1fr)',
                   }}
                 >
-                  {/* <RHFTextField name="header" label="Header" /> */}
-                  <RHFTextField name="headerType" label="Header Type" />
+                  <RHFAutocomplete 
+                    name="headerType" label="Header Type"
+                    options={headerFooterTypes}
+                    value={selectedHeaderType}
+                    isOptionEqualToValue={(option, value) => option.name === value.name}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                    )}
+                  />
                   <RHFTextField name="headerLeftText" label="Header Left Text" />
                   <RHFTextField name="headerCenterText" label="Header Center Text" />
                   <RHFTextField name="headerRightText" label="Header Right Text" />
@@ -359,31 +366,22 @@ export default function ServiceRecordConfigEditForm() {
                     sm: 'repeat(2, 1fr)',
                   }}
                 >
-                  {/* <RHFTextField name="footer" label="Footer" /> */}
-                  <RHFTextField name="footerType" label="Footer Type" />
+                  <RHFAutocomplete 
+                    name="footerType" 
+                    label="Footer Type"
+                    options={headerFooterTypes}
+                    value={selectedFooterType}
+
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                    )}
+                  />
                   <RHFTextField name="footerLeftText" label="Footer Left Text" />
                   <RHFTextField name="footerCenterText" label="Footer Center Text" />
                   <RHFTextField name="footerRightText" label="Footer Right Text" />
                 </Box>
-              {/* </Stack> */}
-            {/* </Card> */}
-            {/* <Card sx={{ p: 3, mb: 3 }}> */}
-              {/* <Stack spacing={3}> */}
-                {/* <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
-                  Address Information
-                </Typography>
-                <Box
-                  rowGap={3}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{
-                    xs: 'repeat(1, 1fr)',
-                    sm: 'repeat(2, 1fr)',
-                  }}
-                >
-                  
-                </Box> */}
-
 
                   <RHFSwitch
                     name="isActive"
