@@ -24,7 +24,7 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
 export default function ServiceRecordConfigEditForm() {
-  const { error, serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
+  const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -55,13 +55,11 @@ export default function ServiceRecordConfigEditForm() {
 
   const {
     reset,
-    watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const values = watch();
+  // const values = watch();
 
   useLayoutEffect(() => {
     dispatch(getServiceRecordConfig(id));

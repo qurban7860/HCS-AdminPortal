@@ -6,14 +6,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography } from '@mui/material';
 // slice
 import {
   updateTechparamcategory,
   getTechparamcategory,
 } from '../../../redux/slices/products/machineTechParamCategory';
-import { useSettingsContext } from '../../../components/settings';
+// import { useSettingsContext } from '../../../components/settings';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
@@ -26,7 +25,7 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
 export default function TechParamCategoryEditForm() {
-  const { error, techparamcategory } = useSelector((state) => state.techparamcategory);
+  const { techparamcategory } = useSelector((state) => state.techparamcategory);
 
   const dispatch = useDispatch();
 
@@ -57,8 +56,6 @@ export default function TechParamCategoryEditForm() {
 
   const {
     reset,
-    watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;

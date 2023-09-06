@@ -1,7 +1,7 @@
 import { useLayoutEffect } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
-import { useDispatch,useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Container } from '@mui/material';
 import { getMachineStatus} from '../../../redux/slices/products/statuses';
 import StatusEditForm from './StatusEditForm';

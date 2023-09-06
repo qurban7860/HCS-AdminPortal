@@ -1,5 +1,4 @@
-import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useMemo } from 'react';
 // @mui
 import { Card, Grid, Tooltip } from '@mui/material';
 // hooks
@@ -52,12 +51,12 @@ export default function LicenseViewForm() {
       licenseDetail: {
         version : license?.licenseDetail?.version || '',
         deviceName : license?.licenseDetail?.deviceName || '',
+        deviceGUID : license?.licenseDetail?.deviceGUID || '',
         type : license?.licenseDetail?.type || '',
         extensionTime : license?.licenseDetail?.extensionTime || '',
         requestTime : license?.licenseDetail?.requestTime || '',
-        production : license?.licenseDetail?.production || '0',
-        waste : license?.licenseDetail?.waste || '0',
-
+        production : license?.licenseDetail?.production || '',
+        waste : license?.licenseDetail?.waste || '',
       },
       isActive: license?.isActive || '',
       createdByFullName: license?.createdBy?.name || '',
@@ -72,6 +71,9 @@ export default function LicenseViewForm() {
   );
   return (
     // needs cleanup
+    <>
+    {/* <DocumentCover content={defaultValues?.displayName} backLink="true"  generalSettings /> */}
+    <Grid item md={12} mt={2}>
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
       <Grid display="inline-flex">
@@ -82,8 +84,9 @@ export default function LicenseViewForm() {
       <Grid container>
         <ViewFormField sm={6} heading="License Key" param={defaultValues.licenseKey} />
         <ViewFormField sm={6} heading="Version" param={defaultValues.licenseDetail.version} />
+        <ViewFormField sm={6} heading="Device GUID" param={defaultValues.licenseDetail.deviceGUID} />
         <ViewFormField sm={6} heading="Device Name" param={defaultValues.licenseDetail.deviceName} />
-        <ViewFormField sm={6} heading="Type" param={defaultValues.licenseDetail.type} />
+        <ViewFormField sm={12} heading="Type" param={defaultValues.licenseDetail.type} />
         <ViewFormField sm={6} heading="Production" param={defaultValues.licenseDetail.production} />
         <ViewFormField sm={6} heading="Waste" param={defaultValues.licenseDetail.waste} />
         <ViewFormField sm={6} heading="Extension Time" param={fDate(defaultValues.licenseDetail.extensionTime)} />
@@ -91,5 +94,7 @@ export default function LicenseViewForm() {
         <ViewFormAudit defaultValues={defaultValues} /> 
       </Grid>
     </Card>
+    </Grid>
+    </>
   );
 }

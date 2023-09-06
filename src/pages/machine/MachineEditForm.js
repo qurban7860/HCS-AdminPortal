@@ -1,11 +1,10 @@
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import {  useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, TextField, Autocomplete, Typography } from '@mui/material';
+import { Box, Card, Grid, Stack, TextField, Autocomplete } from '@mui/material';
 import { MuiChipsInput } from 'mui-chips-input';
 import { DatePicker } from '@mui/x-date-pickers';
 // hook
@@ -15,13 +14,13 @@ import useResponsive from '../../hooks/useResponsive';
 import { PATH_MACHINE } from '../../routes/paths';
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
-import { getCustomers, getActiveCustomers } from '../../redux/slices/customer/customer';
-import { getSites, getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
-import { getMachinestatuses, getActiveMachineStatuses } from '../../redux/slices/products/statuses';
-import { getMachineModels, getActiveMachineModels } from '../../redux/slices/products/model';
-import { getSuppliers, getActiveSuppliers } from '../../redux/slices/products/supplier';
+import {  getActiveCustomers } from '../../redux/slices/customer/customer';
+import {  getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
+import {  getActiveMachineStatuses } from '../../redux/slices/products/statuses';
+import {  getActiveMachineModels } from '../../redux/slices/products/model';
+import {  getActiveSuppliers } from '../../redux/slices/products/supplier';
 // global
-import { CONFIG } from '../../config-global';
+// import { CONFIG } from '../../config-global';
 // slice
 import {
   getActiveMachines,
@@ -33,23 +32,23 @@ import { getMachineConnections, resetMachineConnections } from '../../redux/slic
 // hooks
 import { useSnackbar } from '../../components/snackbar';
 // components
-import FormProvider, { RHFTextField, RHFSwitch } from '../../components/hook-form';
+import FormProvider, { RHFTextField } from '../../components/hook-form';
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
 import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
 import ToggleButtons from '../components/DocumentForms/ToggleButtons';
 // styles
-import { ListItem } from '../../theme/styles/default-styles';
+// import { ListItem } from '../../theme/styles/default-styles';
 // schema
-import { EditMachineSchema } from '../schemas/machine';
+// import { EditMachineSchema } from '../schemas/machine';
 // constants
 import { BREADCRUMBS, FORMLABELS } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
 export default function MachineEditForm() {
-  const { users } = useSelector((state) => state.user);
+  // const { users } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -62,24 +61,24 @@ export default function MachineEditForm() {
   const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
   const { spContacts } = useSelector((state) => state.contact);
   const { machineConnections } = useSelector((state) => state.machineConnections);
-  const [parMachineVal, setParMachineVal] = useState('');
-  const [parMachSerVal, setParMachSerVal] = useState('');
-  const [supplierVal, setSupplierVal] = useState('');
-  const [statusVal, setStatusVal] = useState('');
-  const [modelVal, setModelVal] = useState('');
-  const [customerVal, setCustomerVal] = useState('');
-  const [installVal, setInstallVal] = useState('');
-  const [billingVal, setBillingVal] = useState('');
+  // const [parMachineVal, setParMachineVal] = useState('');
+  // const [parMachSerVal, setParMachSerVal] = useState('');
+  // const [supplierVal, setSupplierVal] = useState('');
+  // const [statusVal, setStatusVal] = useState('');
+  // const [modelVal, setModelVal] = useState('');
+  // const [customerVal, setCustomerVal] = useState('');
+  // const [installVal, setInstallVal] = useState('');
+  // const [billingVal, setBillingVal] = useState('');
   const [shippingDate, setShippingDate] = useState(null);
   const [installationDate, setInstallationDate] = useState(null);
-  const [disableInstallationDate, setInstallationDateToggle] = useState(true);
-  const [disableShippingDate, setShippingDateToggle] = useState(true);
-  const [accoVal, setAccoManVal] = useState('');
-  const [projVal, setProjManVal] = useState('');
-  const [suppVal, setSuppManVal] = useState('');
-  const [currTag, setCurrTag] = useState('');
+  // const [disableInstallationDate, setInstallationDateToggle] = useState(true);
+  // const [disableShippingDate, setShippingDateToggle] = useState(true);
+  // const [accoVal, setAccoManVal] = useState('');
+  // const [projVal, setProjManVal] = useState('');
+  // const [suppVal, setSuppManVal] = useState('');
+  // const [currTag, setCurrTag] = useState('');
   const [chipData, setChipData] = useState([]);
-  const [connections, setConnections] = useState([]);
+  // const [connections, setConnections] = useState([]);
   const [chips, setChips] = useState([]);
   const isMobile = useResponsive('sm', 'down');
   
@@ -163,28 +162,28 @@ export default function MachineEditForm() {
   } = methods
 
   const {
-    serialNo,
-    name,
-    previousMachine,
+    // serialNo,
+    // name,
+    // previousMachine,
     parentSerialNo,
     supplier,
-    model,
+    // model,
     status,
-    connection,
-    workOrderRef,
+    // connection,
+    // workOrderRef,
     customer,
     instalationSite,
-    billingSite,
+    // billingSite,
     machineConnectionVal,
     // installationDate,
     // shippingDate,
-    siteMilestone,
+    // siteMilestone,
     accountManager,
     projectManager,
     supportManager,
-    customerTags,
-    description,
-    isActive,
+    // customerTags,
+    // description,
+    // isActive,
   } = watch();
 
   useLayoutEffect(() => {
@@ -275,9 +274,9 @@ export default function MachineEditForm() {
   //   }
   // };
 
-  const handleChange = (e) => {
-    setCurrTag(e.target.value);
-  };
+  // const handleChange = (e) => {
+  //   setCurrTag(e.target.value);
+  // };
 
   const handleChipChange = (newChips) => {
     const array = [...new Set(newChips)]

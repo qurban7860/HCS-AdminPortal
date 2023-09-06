@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useMemo } from 'react';
 import { useDispatch } from 'react-redux';
@@ -61,8 +61,6 @@ export default function StatusAddForm() {
 
   const {
     reset,
-    watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;

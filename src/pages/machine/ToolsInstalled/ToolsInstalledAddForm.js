@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { memo, useLayoutEffect, useMemo, useState } from 'react';
+import { memo, useLayoutEffect, useMemo, useState } from 'react'; 
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm, Controller } from 'react-hook-form';
@@ -7,16 +7,16 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { DatePicker } from '@mui/x-date-pickers';
 import { Box, Card, Grid, Stack, Typography, Autocomplete, TextField, Button } from '@mui/material';
-import useResponsive from '../../../hooks/useResponsive';
+import useResponsive from '../../../hooks/useResponsive'; 
 // slice
 import {
-  setToolInstalledFormVisibility,
+  setToolInstalledFormVisibility, 
   addToolInstalled,
   getToolsInstalled,
-} from '../../../redux/slices/products/toolInstalled';
-import { getActiveTools } from '../../../redux/slices/products/tools';
+} from '../../../redux/slices/products/toolInstalled';  
+import { getActiveTools } from '../../../redux/slices/products/tools'; 
 // components
-import { useSnackbar } from '../../../components/snackbar';
+import { useSnackbar } from '../../../components/snackbar'; 
 import Iconify from '../../../components/iconify';
 // assets
 import FormProvider, {
@@ -177,9 +177,25 @@ function ToolsInstalledAddForm() {
     // -------------------------------- composite Tool Config --------------------------------
     // engageInstruction_1: Yup.object().shape().nullable().label('Engage Instructuion').required(),
     // disengageInstruction: Yup.object()
-    engagingDuration: Yup.number(),
-    returningDuration: Yup.number(),
-    twoWayCheckDelayTime: Yup.number(),
+    engagingDuration: Yup.number()
+    .typeError('Engaging Duration must be a number')
+      .transform((value, originalValue) => {
+      if (originalValue.trim() === '') return undefined;
+      return parseFloat(value);
+      }).test('no-spaces', 'Engaging Duration cannot have spaces', value => !(value && value.toString().includes(' '))),
+    returningDuration: Yup.number()
+    .typeError('Returning Duration must be a number')
+      .transform((value, originalValue) => {
+      if (originalValue.trim() === '') return undefined;
+      return parseFloat(value);
+      }).test('no-spaces', 'Returning Duration cannot have spaces', value => !(value && value.toString().includes(' '))),
+    twoWayCheckDelayTime: Yup.number()
+    .typeError('Two-Way Check Delay Time must be a number')
+      .transform((value, originalValue) => {
+      if (originalValue.trim() === '') return undefined;
+      return parseFloat(value);
+      }).test('no-spaces', 'Two Way Check Delay Time cannot have spaces', value => !(value && value.toString().includes(' '))),
+
   });
 
   const defaultValues = useMemo(
@@ -236,7 +252,7 @@ function ToolsInstalledAddForm() {
     control,
   } = methods
 
-  const { tool, engageOnCondition, engageOffCondition, movingPunchCondition, timeOut, engagingDuration, returningDuration, twoWayCheckDelayTime, toolType } = watch();
+  const { tool, engageOnCondition, engageOffCondition, movingPunchCondition, timeOut,returningDuration, twoWayCheckDelayTime, toolType } = watch();
 
   const onSubmit = async (data) => {
     try {

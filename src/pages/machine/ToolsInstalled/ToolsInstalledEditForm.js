@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import {  useEffect, useMemo, useState, useLayoutEffect, memo } from 'react';
+import {  useEffect, useState, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // form
@@ -49,7 +49,7 @@ function ToolsInstalledEditForm() {
   console.log("compositToolVal : ",compositToolVal)
   const [compositToolNumber, setCompositToolNumber] = useState(1);
 
-  const [toolsVal, setToolsVal] = useState([]);
+  // const [toolsVal, setToolsVal] = useState([]);
 
   const dispatch = useDispatch();
   const isMobile = useResponsive('down', 'sm');
@@ -210,7 +210,25 @@ function ToolsInstalledEditForm() {
         }
         return parseFloat(value);
       })
-      .test('no-spaces', 'Distance Sensor Target cannot have spaces', value => !(value && value.toString().includes(' '))),    
+      .test('no-spaces', 'Distance Sensor Target cannot have spaces', value => !(value && value.toString().includes(' '))), 
+      engagingDuration: Yup.number()
+    .typeError('Engaging Duration must be a number')
+      .transform((value, originalValue) => {
+      if (originalValue.trim() === '') return undefined;
+      return parseFloat(value);
+      }).test('no-spaces', 'Engaging Duration cannot have spaces', value => !(value && value.toString().includes(' '))),
+    returningDuration: Yup.number()
+    .typeError('Returning Duration must be a number')
+      .transform((value, originalValue) => {
+      if (originalValue.trim() === '') return undefined;
+      return parseFloat(value);
+      }).test('no-spaces', 'Returning Duration cannot have spaces', value => !(value && value.toString().includes(' '))),
+    twoWayCheckDelayTime: Yup.number()
+    .typeError('Two-Way Check Delay Time must be a number')
+      .transform((value, originalValue) => {
+      if (originalValue.trim() === '') return undefined;
+      return parseFloat(value);
+      }).test('no-spaces', 'Two Way Check Delay Time cannot have spaces', value => !(value && value.toString().includes(' '))),   
     isHasTwoWayCheck: Yup.boolean(),
     isEngagingHasEnable: Yup.boolean(),
     isReturningHasEnable: Yup.boolean(),
@@ -284,8 +302,6 @@ function ToolsInstalledEditForm() {
     engagingDuration, 
     returningDuration, 
     twoWayCheckDelayTime, 
-    engageInstruction, 
-    disengageInstruction,
     wasteTriggerDistance,
     crimpTriggerDistance,
     operations,

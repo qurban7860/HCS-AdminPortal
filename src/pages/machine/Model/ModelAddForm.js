@@ -1,15 +1,15 @@
 import * as Yup from 'yup';
-import { useLayoutEffect, useMemo, useCallback, useState, useEffect } from 'react';
+import { useLayoutEffect, useMemo, useState, useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { Helmet } from 'react-helmet-async';
+// import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 // form
 // import Select from "react-select";
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { LoadingButton } from '@mui/lab';
+// import { LoadingButton } from '@mui/lab';
 import {
   TextField,
   Autocomplete,
@@ -24,13 +24,13 @@ import {
 import { addMachineModel } from '../../../redux/slices/products/model';
 import { getActiveCategories } from '../../../redux/slices/products/category';
 // routes
-import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
-import { useSettingsContext } from '../../../components/settings';
+import { PATH_MACHINE } from '../../../routes/paths';
+// import { useSettingsContext } from '../../../components/settings';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
 // auth
-import { useAuthContext } from '../../../auth/useAuthContext';
+// import { useAuthContext } from '../../../auth/useAuthContext';
 // util
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
@@ -39,7 +39,7 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
 export default function ModelAddForm() {
-  const { userId, user } = useAuthContext();
+  // const { userId, user } = useAuthContext();
 
   const { activeCategories } = useSelector((state) => state.category);
 
@@ -75,12 +75,12 @@ export default function ModelAddForm() {
 
   const {
     reset,
-    watch,
     setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-  const values = watch();
+
+  // const values = watch();
 
   useLayoutEffect(() => {
     dispatch(getActiveCategories());
@@ -115,7 +115,8 @@ export default function ModelAddForm() {
     navigate(PATH_MACHINE.machines.settings.model.list);
   };
 
-  const { themeStretch } = useSettingsContext();
+  // const { themeStretch } = useSettingsContext();
+  
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>

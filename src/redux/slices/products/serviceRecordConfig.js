@@ -20,6 +20,8 @@ const initialState = {
   rowsPerPage: 100,
 };
 
+export const recordType = [ 'Service','Repair','Training','Install']
+
 const slice = createSlice({
   name: 'serviceRecordConfig',
   initialState,

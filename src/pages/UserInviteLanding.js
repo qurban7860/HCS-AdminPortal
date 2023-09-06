@@ -16,13 +16,10 @@ import Iconify from '../components/iconify';
 
 import { PATH_AUTH, PATH_PAGE } from '../routes/paths';
 
-
 import {
   updatePasswordUserInvite,
   verifyUserInvite,
 } from '../redux/slices/securityUser/securityUser';
-
-
 
 // ----------------------------------------------------------------------
 
@@ -32,9 +29,9 @@ export default function UserInviteLanding() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { verifyInviteStatus } = useSelector((state) => state.user);
   const { enqueueSnackbar } = useSnackbar();
   const expired = new Date(parseInt(expiry,10))>new Date();
+  const verifyInviteStatus = useSelector((state) => state.verifyInviteStatus);
   
   const ChangePassWordSchema = Yup.object().shape({
     password: Yup.string()
@@ -55,15 +52,24 @@ export default function UserInviteLanding() {
   });
 
   useEffect(() => {
+
+    console.log(id, code, expired)
+    
     if(expired){
       navigate(PATH_PAGE.expiredErrorPage);
     }else if (id && code) {
-      dispatch(verifyUserInvite(id,code));
+      const responsePromise = dispatch(verifyUserInvite(id,code));
+      responsePromise.catch(error => {
+        navigate(PATH_PAGE.invalidErrorPage);
+      });
     }else{
       navigate(PATH_PAGE.invalidErrorPage);
     }
   }, [id, code, expired, navigate, dispatch]);
 
+  console.log(id, code, expired)
+  console.log(verifyInviteStatus)
+  
   const {
     reset,
     handleSubmit,
@@ -71,7 +77,7 @@ export default function UserInviteLanding() {
   } = methods;
 
   const onSubmit = async (data) => {
-    if (id && verifyInviteStatus.valid) {
+    if (id) {
       try {
         await dispatch(updatePasswordUserInvite(data, id));
         enqueueSnackbar('Password has been updated Successfully!');

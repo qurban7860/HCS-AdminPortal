@@ -1,28 +1,23 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
+// import { Helmet } from 'react-helmet-async';
+// import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as  useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
 import {
-  Grid,
-  Card,
   Table,
   Button,
-  Tooltip,
   TableBody,
   Container,
-  IconButton,
   TableContainer,
-  Stack,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
-import { getMachine } from '../../../redux/slices/products/machine';
+// import { getMachine } from '../../../redux/slices/products/machine';
 // routes
 import {
   getMachineModels,
-  getMachineModel,
+  // getMachineModel,
   deleteMachineModel,
   ChangeRowsPerPage,
   ChangePage,
@@ -31,26 +26,26 @@ import {
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import { useSettingsContext } from '../../../components/settings';
+// import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
-  emptyRows,
+  // emptyRows,
   TableNoData,
   TableSkeleton,
-  TableEmptyRows,
+  // TableEmptyRows,
   TableHeadCustom,
-  TableSelectedAction,
+  // TableSelectedAction,
   TablePaginationCustom,
 } from '../../../components/table';
-import Iconify from '../../../components/iconify/Iconify';
+// import Iconify from '../../../components/iconify/Iconify';
 import Scrollbar from '../../../components/scrollbar';
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
+// import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 // sections
 import ModelListTableRow from './ModelListTableRow';
 import ModelListTableToolbar from './ModelListTableToolbar';
-import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
+// import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
@@ -89,10 +84,10 @@ export default function ModelList() {
     selected,
     setSelected,
     onSelectRow,
-    onSelectAllRows,
+    // onSelectAllRows,
     //
     onSort,
-    onChangeDense,
+    // onChangeDense,
     // onChangePage,
     // onChangeRowsPerPage,
   } = useTable({
@@ -101,7 +96,7 @@ export default function ModelList() {
 
   const dispatch = useDispatch();
 
-  const { themeStretch } = useSettingsContext();
+  // const { themeStretch } = useSettingsContext();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -151,9 +146,9 @@ export default function ModelList() {
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
+  // const handleOpenConfirm = () => {
+  //   setOpenConfirm(true);
+  // };
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
@@ -200,31 +195,31 @@ export default function ModelList() {
     }
   };
 
-  const handleDeleteRows = async (selectedRows, handleClose) => {
-    // console.log(selectedRows)
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-    setSelected([]);
-    setTableData(deleteRows);
+  // const handleDeleteRows = async (selectedRows, handleClose) => {
+  //   // console.log(selectedRows)
+  //   const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
+  //   setSelected([]);
+  //   setTableData(deleteRows);
 
-    if (page > 0) {
-      if (selectedRows.length === dataInPage.length) {
-        setPage(page - 1);
-      } else if (selectedRows.length === dataFiltered.length) {
-        setPage(0);
-      } else if (selectedRows.length > dataInPage.length) {
-        const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-        setPage(newPage);
-      }
-    }
-    handleClose();
-  };
+  //   if (page > 0) {
+  //     if (selectedRows.length === dataInPage.length) {
+  //       setPage(page - 1);
+  //     } else if (selectedRows.length === dataFiltered.length) {
+  //       setPage(0);
+  //     } else if (selectedRows.length > dataInPage.length) {
+  //       const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
+  //       setPage(newPage);
+  //     }
+  //   }
+  //   handleClose();
+  // };
 
-  const handleEditRow = async (id) => {
-    // console.log(id);
+  // const handleEditRow = async (id) => {
+  //   // console.log(id);
 
-    await dispatch(getMachineModel(id));
-    navigate(PATH_MACHINE.machines.settings.model.edit(id));
-  };
+  //   await dispatch(getMachineModel(id));
+  //   navigate(PATH_MACHINE.machines.settings.model.edit(id));
+  // };
 
   const handleViewRow = async (id) => {
       navigate(PATH_MACHINE.machines.settings.model.view(id));

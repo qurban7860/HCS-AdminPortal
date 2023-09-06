@@ -1,7 +1,7 @@
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState, useLayoutEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useMemo } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
@@ -55,12 +55,12 @@ export default function ConfigAddForm() {
 
   const {
     reset,
-    watch,
-    control,
-    setValue,
+    // watch,
+    // control,
+    // setValue,
     handleSubmit,
     formState: { isSubmitting },
-    trigger,
+    // trigger,
   } = methods;
 
   const onSubmit = async (data) => {

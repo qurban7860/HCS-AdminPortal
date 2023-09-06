@@ -4,10 +4,7 @@ import debounce from 'lodash/debounce';
 import {
   Grid,
   Table,
-  Button,
-  Tooltip,
   TableBody,
-  IconButton,
   TableContainer,
 } from '@mui/material';
 // redux
@@ -21,12 +18,9 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from '../../../components/table';
-import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
-import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import LicenseListTableRow from './LicenseListTableRow';
 import LicenseListTableToolbar from './LicenseListTableToolbar';
@@ -43,18 +37,10 @@ import TableCard from '../../components/ListTableTools/TableCard';
 
 export default function LicenseList() {
   const {
-    // page,
     order,
     orderBy,
-    // rowsPerPage,
     setPage,
-    //
-    selected,
-    onSelectAllRows,
-    //
     onSort,
-    // onChangePage,
-    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: '-createdAt',
   });
@@ -64,15 +50,14 @@ export default function LicenseList() {
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  const [openConfirm, setOpenConfirm] = useState(false);
   const { machine } = useSelector((state) => state.machine);
 
   const { licenses, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.license );
   const TABLE_HEAD = [
     { id: 'licenseKey', label: 'License Key', align: 'left' },
-    { id: 'licenseDetail.version', label: 'Version', align: 'left' },
-    { id: 'licenseDetail.type', label: 'Type', align: 'left' },
-    { id: 'licenseDetail.extensionTime', label: 'Extension Time', align: 'right' },
+    { id: 'xs1', label: 'Version', align: 'left' },
+    { id: 'xs2', label: 'Type', align: 'left' },
+    { id: 'extensionTime', label: 'Extension Time', align: 'right' },
     { id: 'createdAt', label: 'Created At', align: 'right' },
   ];
 
@@ -103,8 +88,6 @@ export default function LicenseList() {
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
-  const handleOpenConfirm = () => setOpenConfirm(true);
-  const handleCloseConfirm = () => setOpenConfirm(false);
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
     dispatch(setFilterBy(value))
@@ -142,7 +125,6 @@ export default function LicenseList() {
   };
 
   return (
-    <>
       <TableCard>
         <LicenseListTableToolbar
           filterName={filterName}
@@ -160,24 +142,6 @@ export default function LicenseList() {
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <TableSelectedAction
-            numSelected={selected.length}
-            rowCount={tableData.length}
-            onSelectAllRows={(checked) =>
-              onSelectAllRows(
-                checked,
-                tableData.map((row) => row._id)
-              )
-            }
-            action={
-              <Tooltip title="Delete">
-                <IconButton color="primary" onClick={handleOpenConfirm}>
-                  <Iconify icon="eva:trash-2-outline" />
-                </IconButton>
-              </Tooltip>
-            }
-          />
-
           <Scrollbar>
             <Table size="small" sx={{ minWidth: 360 }}>
               <TableHeadCustom
@@ -218,29 +182,6 @@ export default function LicenseList() {
           <TableNoData isNotFound={isNotFound} />
         </Grid>
       </TableCard>
-
-      <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleCloseConfirm();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      />
-    </>
   );
 }
 

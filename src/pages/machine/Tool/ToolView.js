@@ -1,25 +1,24 @@
-import { Helmet } from 'react-helmet-async';
 import PropTypes from 'prop-types';
 import { useEffect, useLayoutEffect, useState } from 'react';
-import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
+import { Link as useParams } from 'react-router-dom';
 // @mui
-import { Tab, Card, Tabs, Container, Box, Button, Grid, Stack } from '@mui/material';
+import { Container } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 
-import { getTool, getTools, setToolEditFormVisibility } from '../../../redux/slices/products/tools';
+import {  setToolEditFormVisibility } from '../../../redux/slices/products/tools';
 // auth
-import { useAuthContext } from '../../../auth/useAuthContext';
+// import { useAuthContext } from '../../../auth/useAuthContext';
 // components
 
-import Iconify from '../../../components/iconify/Iconify';
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
+// import Iconify from '../../../components/iconify/Iconify';
+// import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
 // sections
 
-import ToolList from './ToolList';
+// import ToolList from './ToolList';
 import ToolViewForm from './ToolViewForm';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';

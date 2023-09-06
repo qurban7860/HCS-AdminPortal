@@ -11,8 +11,8 @@ import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
 // slice
 import { addSupplier } from '../../../redux/slices/products/supplier';
 // routes
-import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
-import { useSettingsContext } from '../../../components/settings';
+import { PATH_MACHINE } from '../../../routes/paths';
+// import { useSettingsContext } from '../../../components/settings';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, {
@@ -21,7 +21,7 @@ import FormProvider, {
   RHFSwitch,
 } from '../../../components/hook-form';
 // auth
-import { useAuthContext } from '../../../auth/useAuthContext';
+// import { useAuthContext } from '../../../auth/useAuthContext';
 // asset
 import { countries } from '../../../assets/data';
 // util
@@ -82,8 +82,6 @@ export default function StatusAddForm() {
 
   const {
     reset,
-    watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -129,7 +127,7 @@ export default function StatusAddForm() {
     }
   };
 
-  const { themeStretch } = useSettingsContext();
+  // const { themeStretch } = useSettingsContext();
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 // @mui
-import { Switch, Stack, Button, TableRow, MenuItem, TableCell, Link } from '@mui/material';
+import { Switch, Button, TableRow, MenuItem, TableCell } from '@mui/material';
 // components
 import Iconify from '../../../components/iconify/Iconify';
 import MenuPopover from '../../../components/menu-popover/MenuPopover';
@@ -42,9 +42,9 @@ export default function TechParamListTableRow({
     setOpenConfirm(false);
   };
 
-  const handleOpenPopover = (event) => {
-    setOpenPopover(event.currentTarget);
-  };
+  // const handleOpenPopover = (event) => {
+  //   setOpenPopover(event.currentTarget);
+  // };
 
   const handleClosePopover = () => {
     setOpenPopover(null);

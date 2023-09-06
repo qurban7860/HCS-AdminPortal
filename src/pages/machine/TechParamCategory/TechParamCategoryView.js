@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Card, Container } from '@mui/material';
+import { Container } from '@mui/material';
 import { useSelector } from 'react-redux';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';

@@ -1,14 +1,12 @@
 import PropTypes from 'prop-types';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Switch, Card, Grid, Stack, Typography, Button } from '@mui/material';
+import {  Card, Grid } from '@mui/material';
 // redux
 import {
   getSupplier,
-  getSuppliers,
-  setSupplierEditFormVisibility,
   deleteSupplier,
 } from '../../../redux/slices/products/supplier';
 // paths
@@ -16,9 +14,9 @@ import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 // Iconify
-import { fDate } from '../../../utils/formatTime';
-import SupplierEditForm from './SupplierEditForm';
-import Iconify from '../../../components/iconify/Iconify';
+// import { fDate } from '../../../utils/formatTime';
+// import SupplierEditForm from './SupplierEditForm';
+// import Iconify from '../../../components/iconify/Iconify';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
@@ -34,7 +32,7 @@ SupplierViewForm.propTypes = {
 export default function SupplierViewForm({ currentSupplier = null }) {
   // const { suppliers } = useSelector((state) => state.supplier);
 
-  const [editFlag, setEditFlag] = useState(false);
+  // const [editFlag, setEditFlag] = useState(false);
 
   const toggleEdit = () => {
     // dispatch(setSupplierEditFormVisibility(true));
