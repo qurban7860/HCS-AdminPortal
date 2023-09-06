@@ -232,6 +232,10 @@ export function addServiceRecordConfig(params) {
         if(params.machineModel){
           data.machineModel = params.machineModel?._id;
         }
+
+        if(params.category){
+          data.category = params.category?._id;
+        }
         if(params.docTitle){
           data.docTitle = params.docTitle;
         }
@@ -281,10 +285,11 @@ export function addServiceRecordConfig(params) {
         }
         // checkParams
         if(params.paramListTitle){
-          data.checkParams.push({paramListTitle: params.paramListTitle});
-        }
-        if(params.paramList){
-          data.checkParams.push({paramList: params.paramList});
+        
+          data.checkParams.push({
+            paramListTitle: params.paramListTitle,
+            paramList: params.paramList
+          });
         }
         console.log("data : ",data)
         const response = await axios.post(`${CONFIG.SERVER_URL}products/serviceRecordsConfig`, data);
@@ -303,6 +308,7 @@ export function updateServiceRecordConfig(params,Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
+
       /* eslint-disable */
       let data = {
         recordType: params.recordType,
@@ -313,7 +319,11 @@ export function updateServiceRecordConfig(params,Id) {
       };
       /* eslint-enable */
       if(params.machineModel){
-        data.machineModel = params.machineModel;
+        data.machineModel = params.machineModel._id;
+      }
+
+      if(params.category){
+        data.category = params.category._id;
       }
       if(params.docTitle){
         data.docTitle = params.docTitle;
@@ -324,9 +334,7 @@ export function updateServiceRecordConfig(params,Id) {
       if(params.textAfterFields){
         data.textAfterFields = params.textAfterFields;
       }
-      if(params.machineModel){
-        data.machineModel = params.machineModel;
-      }
+
       if(params.isOperatorSignatureRequired){
         data.isOperatorSignatureRequired = params.isOperatorSignatureRequired;
       }
@@ -341,7 +349,7 @@ export function updateServiceRecordConfig(params,Id) {
       }
       // header
       if(params.headerType){
-        data.header.type = params.headerType;
+        data.header.type = params.headerType.type;
       }
       if(params.headerLeftText){
         data.header.leftText = params.headerLeftText;
@@ -354,7 +362,7 @@ export function updateServiceRecordConfig(params,Id) {
       }
       // footer
       if(params.footerType){
-        data.footer.type = params.footerType;
+        data.footer.type = params.footerType.type;
       }
       if(params.footerLeftText){
         data.footer.leftText = params.footerLeftText;
@@ -367,10 +375,11 @@ export function updateServiceRecordConfig(params,Id) {
       }
       // checkParams
       if(params.paramListTitle){
-        data.checkParams.push({paramListTitle: params.paramListTitle});
-      }
-      if(params.paramList){
-        data.checkParams.push({paramList: params.paramList});
+        
+        data.checkParams.push({
+          paramListTitle: params.paramListTitle,
+          paramList: params.paramList
+        });
       }
       await axios.patch(`${CONFIG.SERVER_URL}products/serviceRecordsConfig/${Id}`,
         data

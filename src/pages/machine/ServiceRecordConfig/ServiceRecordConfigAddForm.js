@@ -12,6 +12,8 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { addServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 import { getMachineServiceParams } from '../../../redux/slices/products/machineServiceParams';
 import { getActiveMachineModels } from '../../../redux/slices/products/model';
+import { getActiveServiceCategories } from '../../../redux/slices/products/serviceCategory';
+
 // schema
 import { AddMachineSchema } from '../../schemas/document';
 // routes
@@ -44,16 +46,20 @@ export default function ServiceRecordConfigAddForm() {
   const { recordTypes, headerFooterTypes } = useSelector((state) => state.serviceRecordConfig);
   const { machineServiceParams } = useSelector((state) => state.machineServiceParam);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
+  const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
   
   useLayoutEffect(() => {
     dispatch(getMachineServiceParams());
     dispatch(getActiveMachineModels())
+    dispatch(getActiveServiceCategories());
+
   }, [dispatch]);
 
   
   const AddMachineServiceRecordConfigSchema = Yup.object().shape({
-    recordType: Yup.object().label('Record Type').required().nullable(),
-    machineModel: Yup.object().label('Model').required().nullable(),
+    recordType: Yup.object().label('Record Type').nullable(),
+    machineModel: Yup.object().label('Model').nullable(),
+    category: Yup.object().label('Category').nullable(),
     docTitle: Yup.string(),
     textBeforeParams: Yup.string(),
     // Check Params
@@ -85,6 +91,7 @@ export default function ServiceRecordConfigAddForm() {
     () => ({
       recordType: null,
       machineModel: null,
+      category: null,
       docTitle: '',
       textBeforeParams: '',
 
@@ -130,6 +137,7 @@ export default function ServiceRecordConfigAddForm() {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+
 
   useEffect(() => {
     const mappedMachineServiceParams = machineServiceParams.map((serviceParam) => ({
@@ -195,7 +203,16 @@ export default function ServiceRecordConfigAddForm() {
                       <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
                   />
-
+                  <RHFAutocomplete 
+                    name="category"
+                    label="Category"
+                    options={activeServiceCategories}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                    )}
+                  />
                   <RHFAutocomplete 
                     name="machineModel"
                     label="Model"

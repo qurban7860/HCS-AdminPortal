@@ -37,6 +37,7 @@ import TableCard from '../../components/ListTableTools/TableCard';
 const TABLE_HEAD = [
   { id: 'recordType', label: 'Record Type', align: 'left' },
   { id: 'docTitle', label: 'Document Title', align: 'left' },
+  { id: 'category', label: 'Category', align: 'left' },
   { id: 'machineModel', label: 'Machine Model', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
@@ -216,7 +217,7 @@ export default function ServiceRecordConfigList() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Machine Service Record Config" icon="material-symbols:list-alt-outline" setting="enable" />
+          <Cover name="Service Record Config" icon="material-symbols:list-alt-outline" setting="enable" />
         </StyledCardContainer>
 
         <TableCard>
