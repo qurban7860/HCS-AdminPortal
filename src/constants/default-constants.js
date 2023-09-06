@@ -46,7 +46,7 @@ export const FORMLABELS = {
     MACHINE_SERVICE_CONFIGS_EDIT: 'Edit Machine Service Configurations',
     MACHINE_SERVICE_RECORDS: 'Machine Service Records',
     MACHINE_SERVICE_RECORD_ADD: 'New Machine Service Record',
-    MACHINE_SERVICE_CHECK_PARAM_RECORD_ADD: 'New Machine Service Check Parameter',
+    MACHINE_SERVICE_CHECK_PARAM_RECORD_ADD: 'New Service Check Parameter',
     MACHINE_SERVICE_RECORD_EDIT: 'Edit Machine Service Record',
     EDIT_DOCUMENT: 'Edit Document',
   },

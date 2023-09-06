@@ -231,44 +231,44 @@ export function addMachineServiceRecord(params) {
     return async (dispatch) => {
       dispatch(slice.actions.startLoading());
       try {
-        // const formData = new FormData();
-        // formData.append('recordType',params?.recordType?.name)
-        // formData.append('serviceRecordConfig',params)
-        // formData.append('',params)
-        // formData.append('',params)
-        // formData.append('',params)
-        // formData.append('',params)
-        // formData.append('',params)
-        // formData.append('',params)
-        // formData.append('',params)
-        // formData.append('',params)
-        // formData.append('',params)
-        // formData.append('',params)
-        // formData.append('',params)
-        // formData.append('',params)
-        // formData.append('',params)
+        const formData = new FormData();
+        formData.append('recordType', params?.recordType?.name)
+        formData.append('serviceRecordConfig', params?.serviceRecordConfig)
+        formData.append('serviceDate',params?.params?.serviceDate)
+        formData.append('customer',params?.customer?._id)
+        formData.append('site',params?.site?._id)
+        formData.append('machine',params?.machine?._id)
+        formData.append('decoiler',params?.decoiler?._id)
+        formData.append('technician',params?.technician?._id)
+        formData.append('serviceNote',params?.serviceNote)
+        formData.append('maintenanceRecommendation',params?.maintenanceRecommendation)
+        formData.append('suggestedSpares',params?.suggestedSpares)
+        formData.append('files',params?.files)
+        formData.append('operator',params?.operator?._id)
+        formData.append('operatorRemarks',params?.operatorRemarks)
+        formData.append('isActive',params?.isActive)
 
         /* eslint-disable */
-        let data = {
-          recordType:                 params?.recordType?.name,
-          serviceRecordConfig:        params?.serviceRecordConfig,
-          serviceDate:                params?.serviceDate,
-          customer:                   params?.customer, 
-          site:                       params?.site?._id,
-          machine:                    params?.machine,
-          decoiler:                   params?.decoiler?._id,
-          technician:                 params?.technician?._id,
-          // checkParams:     
-          serviceNote:                params?.serviceNote,
-          maintenanceRecommendation:  params?.maintenanceRecommendation,
-          suggestedSpares:            params?.suggestedSpares,
-          files:                      params?.files,
-          // checkParamFiles: [],
-          operator:                   params?.operator?._id,
-          operatorRemarks:            params?.operatorRemarks,
-          isActive:                   params?.isActive,
-        };
-        const response = await axios.post(`${CONFIG.SERVER_URL}products/serviceRecords`, data);
+        // let data = {
+        //   recordType:                 params?.recordType?.name,
+        //   serviceRecordConfig:        params?.serviceRecordConfig,
+        //   serviceDate:                params?.serviceDate,
+        //   customer:                   params?.customer, 
+        //   site:                       params?.site?._id,
+        //   machine:                    params?.machine,
+        //   decoiler:                   params?.decoiler?._id,
+        //   technician:                 params?.technician?._id,
+        //   // checkParams:     
+        //   serviceNote:                params?.serviceNote,
+        //   maintenanceRecommendation:  params?.maintenanceRecommendation,
+        //   suggestedSpares:            params?.suggestedSpares,
+        //   files:                      params?.files,
+        //   // checkParamFiles: [],
+        //   operator:                   params?.operator?._id,
+        //   operatorRemarks:            params?.operatorRemarks,
+        //   isActive:                   params?.isActive,
+        // };
+        const response = await axios.post(`${CONFIG.SERVER_URL}products/serviceRecords`, formData );
         dispatch(slice.actions.getMachineServiceRecordSuccess(response.data.MachineTool));
       } catch (error) {
         console.error(error);

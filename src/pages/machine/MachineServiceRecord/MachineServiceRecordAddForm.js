@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { DatePicker } from '@mui/x-date-pickers';
-import { Box, Card, Grid, Stack, Typography, Button, TextField, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Button, TextField, Accordion, AccordionSummary, AccordionDetails, Autocomplete } from '@mui/material';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import FormHeading from '../../components/DocumentForms/FormHeading';
 import { FORMLABELS } from '../../../constants/default-constants';
@@ -37,10 +37,12 @@ function MachineServiceRecordAddForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { machine } = useSelector((state) => state.machine)
+  console.log("machine : " , machine)
   const { activeSites } = useSelector((state) => state.site);
   const { activeContacts } = useSelector((state) => state.contact);
   const { activeServiceRecordConfigs } = useSelector((state) => state.serviceRecordConfig);
   const { machineConnections } = useSelector((state) => state.machineConnections);
+  console.log("machineConnections : ",machineConnections)
   const { activeMachineServiceParams } = useSelector((state) => state.machineServiceParam);
   const { recordTypes } = useSelector((state) => state.machineServiceRecord);
   const [activeIndex, setActiveIndex] = useState(null);
@@ -49,13 +51,14 @@ function MachineServiceRecordAddForm() {
   const [checkParam, setCheckParam] = useState([]);
   const isMobile = useResponsive('down', 'sm');
 
-  useEffect(()=>{
+  useEffect( ()=>{
     dispatch(getMachineConnections(machine?.customer?._id))
     dispatch(getActiveServiceRecordConfigs())
     dispatch(getActiveSites(machine?.customer?._id))
     dispatch(getActiveContacts(machine?.customer?._id))
     dispatch(getActiveMachineServiceParams())
   },[dispatch, machine])
+
 
   const filesSchema = {};
 
@@ -72,13 +75,12 @@ function MachineServiceRecordAddForm() {
   const defaultValues = useMemo(
     () => {
       const initialValues = {
-      recordType: null,
       serviceRecordConfig: null,
-      serviceDate: null,
+      serviceDate: new Date(),
       customer: null, 
       site: null,
       machine: null,
-      decoiler: null,
+      decoiler: [],
       technician: null,
       // checkParams:
       serviceNote: '',
@@ -112,12 +114,16 @@ function MachineServiceRecordAddForm() {
     watch,
     handleSubmit,
     formState: { isSubmitting },
+    control,
   } = methods;
 
-  const { recordType, serviceDate, files, checkParamFiles0, checkParamFiles1, checkParamFiles2, checkParamFiles3, checkParamFiles4, checkParamFiles5, checkParamFiles6, checkParamFiles7, checkParamFiles8, checkParamFiles9, checkParamFiles10, checkParamFiles11, checkParamFiles12, checkParamFiles13, checkParamFiles14, checkParamFiles15 } = watch()
+  const { recordType, serviceDate, files, decoiler, checkParamFiles0, checkParamFiles1, checkParamFiles2, checkParamFiles3, checkParamFiles4, checkParamFiles5, checkParamFiles6, checkParamFiles7, checkParamFiles8, checkParamFiles9, checkParamFiles10, checkParamFiles11, checkParamFiles12, checkParamFiles13, checkParamFiles14, checkParamFiles15 } = watch()
 
   
-  
+  useEffect(()=>{
+    setValue('decoiler',machineConnections)
+  },[setValue, machineConnections])
+
   // console.log("additionalFields : ",{...checkParamFiles})
   // for (let index = 1; index <= checkParamNumber; index += 1) {
   //   checkParamFiles[`checkParamFiles${index}`] = watch(`checkParamFiles${index}`);
@@ -212,17 +218,6 @@ function MachineServiceRecordAddForm() {
                   >
 
                   <RHFAutocomplete
-                    name="recordType"
-                    label="Record Type"
-                    options={recordTypes}
-                    getOptionLabel={(option) => option.name || ''}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
-                    renderOption={(props, option) => (
-                    <li {...props} key={option._id}>{option.name || ''}</li>
-                    )}
-                  />
-
-                  <RHFAutocomplete
                     name="serviceRecordConfig"
                     label="Service Record Configuration"
                     options={activeServiceRecordConfigs}
@@ -237,11 +232,19 @@ function MachineServiceRecordAddForm() {
                     name="serviceDate"
                     label="Service Date"
                     value={serviceDate}
+                    slotProps={{
+                      textField: {
+                        helperText: 'MM/DD/YYYY',
+                      },
+                    }}
+                    views={['day', 'month','year']}
+                    // format="DD-MM-YYYY"
+                    format="LL"
                     onChange={handleServiceDateChange}
                     renderInput={params => <TextField {...params}  />}
                   />
 
-                  <RHFAutocomplete
+                  {/* <RHFAutocomplete
                     name="site"
                     label="Site"
                     options={activeSites}
@@ -250,19 +253,62 @@ function MachineServiceRecordAddForm() {
                     renderOption={(props, option) => (
                       <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
-                  />
+                  /> */}
 
-                  <RHFAutocomplete
+                  {/* <RHFAutocomplete
+                    multiline
                     name="decoiler"
                     label="Decoiler"
-                    options={machineConnections}
-                    getOptionLabel={(option) => `${option?.serialNo ? option?.serialNo : ''} ${option?.name ? '-' : ''} ${option?.name ? option?.name : ''}`}
+                    value={machine?.machineConnections}
+                    options={machine?.machineConnections}
+                    getOptionLabel={(option) => `${option?.connectedMachine?.serialNo ? option?.connectedMachine?.serialNo : ''} ${option?.name ? '-' : ''} ${option?.name ? option?.name : ''}`}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option.serialNo ? option.serialNo : ''}  ${option?.name ? '-' : ''} ${option?.name ? option?.name : ''} `}</li>
+                      <li {...props} key={option._id}>{`${option?.connectedMachine?.serialNo ? option?.connectedMachine?.serialNo : ''}  ${option?.name ? '-' : ''} ${option?.name ? option?.name : ''} `}</li>
                     )}
-                  />
+                    ChipProps={{ size: 'small' }}
+                  /> */}
 
+                  </Box>
+
+                    <Controller
+                      name="decoiler"
+                      control={control}
+                      defaultValue={ decoiler || []}
+                      render={ ({field: { ref, ...field }, fieldState: { error } }) => (
+                      <Autocomplete
+                        multiple
+                        {...field}
+                        disabled
+                        freeSolo
+                        name="decoiler"
+                        id="tags-outlined"
+                        options={machineConnections}
+                        getOptionLabel={(option) => `${option.serialNo ? option.serialNo : ''} ${option.name ? '-' : ''} ${option.name ? option.name : ''}`}
+                        isOptionEqualToValue={(option, value) => option._id === value._id}
+                        onChange={(event, value) => field.onChange(value)}
+                        
+                        renderInput={(params) => (
+                          <TextField 
+                            {...params} 
+                            name="decoiler"
+                            id="decoiler"  
+                            label="Decoilers"  
+                            error={!!error}
+                            helperText={error?.message} 
+                            inputRef={ref}
+                            />
+                        )}
+                      />
+                      )}
+                    />
+
+                  <Box
+                    rowGap={2}
+                    columnGap={2}
+                    display="grid"
+                    gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                  >
                   <RHFAutocomplete
                     name="technician"
                     label="Technician"
@@ -273,24 +319,15 @@ function MachineServiceRecordAddForm() {
                     <li {...props} key={option._id}>{`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName :   ''}`}</li>
                   )}
                   />
+                </Box>
 
-                  <RHFTextField name="maintenanceRecommendation" label="Maintenance Recommendation" />
 
-                  <RHFTextField name="suggestedSpares" label="Suggested Spares" />
-                  
-                  <RHFAutocomplete
-                    name="operator"
-                    label="Operator"
-                    options={activeContacts}
-                    getOptionLabel={(option) => `${option.firstName ? option.firstName :   ''} ${option.lastName ? option.lastName :   ''}`}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
-                    renderOption={(props, option) => (
-                    <li {...props} key={option._id}>{`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName :   ''}`}</li>
-                  )}
-                  />
-
-                  <RHFTextField name="operatorRemarks" label="Operator Remarks" />
-
+                <Box
+                    rowGap={2}
+                    columnGap={2}
+                    display="grid"
+                    gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                  >
                 <FormHeading heading={FORMLABELS.COVER.MACHINE_SERVICE_CHECK_PARAM_RECORD_ADD} />
                 <Grid display="flex" justifyContent="flex-end">
                     <Button
@@ -348,7 +385,7 @@ function MachineServiceRecordAddForm() {
                             <RHFTextField name="value" label="Value" />
                           </Box>
                             <RHFTextField name="comments" label="Comments" minRows={3} multiline />
-                            <Grid item xs={12} md={6} lg={12}>
+                            {/* <Grid item xs={12} md={6} lg={12}>
                               <RHFUpload
                                 multiple
                                 thumbnail
@@ -366,7 +403,7 @@ function MachineServiceRecordAddForm() {
                                 }
                                 onRemoveAll={() => setValue(`checkParamFiles${index}`, '', { shouldValidate: true })}
                               />
-                            </Grid>
+                            </Grid> */}
                             </Stack>
                         </AccordionDetails>
                       </Accordion>
@@ -375,7 +412,22 @@ function MachineServiceRecordAddForm() {
                     </Card>
                   
 
+                    <RHFTextField name="maintenanceRecommendation" label="Maintenance Recommendation" minRows={3} multiline/>
 
+                    <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/>
+
+                    <RHFAutocomplete
+                      name="operator"
+                      label="Operator"
+                      options={activeContacts}
+                      getOptionLabel={(option) => `${option.firstName ? option.firstName :   ''} ${option.lastName ? option.lastName :   ''}`}
+                      isOptionEqualToValue={(option, value) => option._id === value._id}
+                      renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName :   ''}`}</li>
+                    )}
+                    />
+
+                    <RHFTextField name="operatorRemarks" label="Operator Remarks" minRows={3} multiline/>
                   <RHFTextField name="serviceNote" label="Service Note" minRows={3} multiline/>
                   <Grid item xs={12} md={6} lg={12}>
                     <RHFUpload
