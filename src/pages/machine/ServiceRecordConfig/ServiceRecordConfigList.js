@@ -1,8 +1,10 @@
+import { Helmet } from 'react-helmet-async';
+import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
-import {  Table, Button, TableBody, Container, TableContainer } from '@mui/material';
+import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 // routes
@@ -12,7 +14,7 @@ import { getServiceRecordConfigs, deleteServiceRecordConfig,   ChangeRowsPerPage
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-// import { useSettingsContext } from '../../../components/settings';
+import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -27,8 +29,6 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 import ServiceRecordConfigListTableRow from './ServiceRecordConfigListTableRow';
 import ServiceRecordConfigListTableToolbar from './ServiceRecordConfigListTableToolbar';
 import { Cover } from '../../components/Defaults/Cover';
-import { FORMLABELS } from '../../../constants/default-constants';
-
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
@@ -36,9 +36,9 @@ import TableCard from '../../components/ListTableTools/TableCard';
 
 const TABLE_HEAD = [
   { id: 'recordType', label: 'Record Type', align: 'left' },
-  { id: 'machineModel', label: 'Machine Model', align: 'left' },
-  { id: 'docTitle', label: 'Document Title', align: 'center' },
-  { id: 'isActive', label: 'Active', align: 'right' },
+  // { id: 'machineModel', label: 'Machine Model', align: 'left' },
+  // { id: 'docTitle', label: 'Document Title', align: 'center' },
+  { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
@@ -74,7 +74,7 @@ export default function ServiceRecordConfigList() {
   });
 
   const dispatch = useDispatch();
-  // const { themeStretch } = useSettingsContext();
+  const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
@@ -123,9 +123,9 @@ export default function ServiceRecordConfigList() {
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
-  // const handleOpenConfirm = () => {
-  //   setOpenConfirm(true);
-  // };
+  const handleOpenConfirm = () => {
+    setOpenConfirm(true);
+  };
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
@@ -175,33 +175,33 @@ export default function ServiceRecordConfigList() {
     }
   };
 
-  // const handleDeleteRows = async (selectedRows, handleClose) => {
-  //   // console.log(selectedRows)
-  //   const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-  //   setSelected([]);
-  //   setTableData(deleteRows);
+  const handleDeleteRows = async (selectedRows, handleClose) => {
+    // console.log(selectedRows)
+    const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
+    setSelected([]);
+    setTableData(deleteRows);
 
-  //   if (page > 0) {
-  //     if (selectedRows.length === dataInPage.length) {
-  //       setPage(page - 1);
-  //     } else if (selectedRows.length === dataFiltered.length) {
-  //       setPage(0);
-  //     } else if (selectedRows.length > dataInPage.length) {
-  //       const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-  //       setPage(newPage);
-  //     }
-  //   }
+    if (page > 0) {
+      if (selectedRows.length === dataInPage.length) {
+        setPage(page - 1);
+      } else if (selectedRows.length === dataFiltered.length) {
+        setPage(0);
+      } else if (selectedRows.length > dataInPage.length) {
+        const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
+        setPage(newPage);
+      }
+    }
 
-  //   // dispatch delete supplier
-  //   // await dispatch(deleteSuppliers(selectedRows));
-  //   // await dispatch(getServiceRecordConfigss())
-  //   handleClose();
-  // };
+    // dispatch delete supplier
+    // await dispatch(deleteSuppliers(selectedRows));
+    // await dispatch(getServiceRecordConfigss())
+    handleClose();
+  };
 
-  // const handleEditRow = (id) => {
-  //   // console.log(id);
-  //   navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.edit(id));
-  // };
+  const handleEditRow = (id) => {
+    // console.log(id);
+    navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.edit(id));
+  };
 
   const handleViewRow = (id) => {
     navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.view(id));
@@ -216,7 +216,7 @@ export default function ServiceRecordConfigList() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name={FORMLABELS.COVER.MACHINE_SERVICE_CONFIGS} icon="material-symbols:list-alt-outline" setting="enable" />
+          <Cover name="Machine Service Record Config" icon="material-symbols:list-alt-outline" setting="enable" />
         </StyledCardContainer>
 
         <TableCard>
