@@ -103,11 +103,6 @@ export default function Machine() {
                   icon={ICONS.PARAMETERS.icon}
                   content={ICONS.PARAMETERS.heading}
                 />
-                <ListItem
-                  onClick={machineServiceParams}
-                  icon={ICONS.MACHINE_SERVICE_PARAMETERS.icon}
-                  content={ICONS.MACHINE_SERVICE_PARAMETERS.heading}
-                />
               </List>
               <List
                 sx={{ fontSize: '0.7em' }}
@@ -132,7 +127,11 @@ export default function Machine() {
                   icon={ICONS.MACHINE_SERVICE_CATEGORY.icon}
                   content={ICONS.MACHINE_SERVICE_CATEGORY.heading}
                 />
-                
+                <ListItem
+                  onClick={machineServiceParams}
+                  icon={ICONS.MACHINE_SERVICE_PARAMETERS.icon}
+                  content={ICONS.MACHINE_SERVICE_PARAMETERS.heading}
+                />
                 <ListItem
                   onClick={linkServiceRecordConfig}
                   icon={ICONS.TOOLS.icon}

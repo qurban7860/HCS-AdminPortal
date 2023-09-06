@@ -28,38 +28,34 @@ import {
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 // sections
-import MachineServiceParamListTableRow from './MachineServiceParamListTableRow';
-import MachineServiceParamListTableToolbar from './MachineServiceParamListTableToolbar';
+import MachineServiceRecordListTableRow from './MachineServiceRecordListTableRow';
+import MachineServiceRecordListTableToolbar from './MachineServiceRecordListTableToolbar';
 import {
-  getMachineServiceParams,
+  getMachineServiceRecords,
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy
-} from '../../../redux/slices/products/machineServiceParams';
+} from '../../../redux/slices/products/machineServiceRecord';
 import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 
+
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', align: 'left' },
-  { id: 'printName', label: 'Print Name', align: 'left' },
-  // { id: 'xs2', label: 'Help Hint', align: 'center' },
-  // { id: 'xs3', label: 'Link To User Manual', align: 'center' },
-  { id: 'xs4', label: 'Required', align: 'center' },
-  { id: 'xs5', label: 'Input Type', align: 'left' },
-  // { id: 'sm1', label: 'Unit Type', align: 'left' },
-  // { id: 'sm2', label: 'Min Validation', align: 'center' },
-  // { id: 'sm3', label: 'Max Validation', align: 'center' },
+  { id: 'printName', label: 'Customer', align: 'left' },
+  { id: 'xs2', label: 'Site', align: 'left' },
+  { id: 'xs4', label: 'Decoiler', align: 'left' },
+  { id: 'xs5', label: 'technician', align: 'left' },
+  { id: 'serviceDate', label: 'Service Date', align: 'left' },
   { id: 'active', label: 'Active', align: 'center' },
   { id: 'created_at', label: 'Created At', align: 'right' },
 ];
-
 // ----------------------------------------------------------------------
 
-export default function MachineServiceParamList() {
-  const { machineServiceParams, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceParam);
+export default function MachineServiceRecordList() {
+  const { machineServiceRecords, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceRecord);
   const {
     order,
     orderBy,
@@ -92,14 +88,14 @@ export default function MachineServiceParamList() {
 
 
   useLayoutEffect(() => {
-    dispatch(getMachineServiceParams()); 
+    dispatch(getMachineServiceRecords()); 
   }, [dispatch]);
 
   useEffect(() => {
     if (initial) {
-      setTableData(machineServiceParams);
+      setTableData(machineServiceRecords);
     }
-  }, [machineServiceParams, initial]);
+  }, [machineServiceRecords, initial]);
   
 
   const dataFiltered = applyFilter({
@@ -149,18 +145,8 @@ export default function MachineServiceParamList() {
   };
 
   return (
-      <Container maxWidth={false}>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-          }}
-        >
-          <Cover name="Machine Service Parameters" icon="carbon:parameter" setting />
-        </Card>
         <TableCard>
-          <MachineServiceParamListTableToolbar
+          <MachineServiceRecordListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -210,7 +196,7 @@ export default function MachineServiceParamList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <MachineServiceParamListTableRow
+                        <MachineServiceRecordListTableRow
                           key={row._id}
                           row={row}
                           onViewRow={() => handleViewRow(row._id)}
@@ -234,8 +220,6 @@ export default function MachineServiceParamList() {
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
         </TableCard>
-
-      </Container>
   );
 }
 
@@ -256,8 +240,6 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
     inputData = inputData.filter(
       (docCategory) =>
         docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        docCategory?.printName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        docCategory?.inputType?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // (docCategory?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(docCategory?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );

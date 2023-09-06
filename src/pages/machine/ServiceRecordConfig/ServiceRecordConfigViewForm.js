@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
 // @mui
-import { Card, Grid } from '@mui/material';
+import { Card, Grid, Typography } from '@mui/material';
 // import { RHFSwitch } from '../../../components/hook-form';
 // redux
 import {
@@ -89,11 +89,38 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
       <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} />
       <Grid container>
         <ViewFormField sm={12} isActive={defaultValues.isActive} />
-        <ViewFormField sm={12} heading="ServiceRecordConfig Name" param={defaultValues?.name} />
-        <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
-        <ViewFormSwitch sm={12} isActiveHeading='Connect as a child' isActive={defaultValues.connection} />
-        <ViewFormAudit defaultValues={defaultValues} />
+        <ViewFormField sm={6} heading="Record Type" param={defaultValues?.name} />
+        <ViewFormField sm={6} heading="Machine Model" param={defaultValues?.name} />
+        <ViewFormField sm={12} heading="Document Title" param={defaultValues?.name} />
+        <ViewFormField sm={6} heading="Text Befor Params" param={defaultValues?.name} />
+        <ViewFormField sm={6} heading="Text After Fields" param={defaultValues?.name} />
       </Grid>
+        <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
+          Check Params
+        </Typography>
+      <Grid container>
+        <ViewFormField sm={6} heading="Param List Title" param={defaultValues?.name} />
+        <ViewFormField sm={6} heading="Param List" param={defaultValues?.name} />
+      </Grid>
+        <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
+          Header
+        </Typography>
+      <Grid container>
+        <ViewFormField sm={6} heading="Header Type" param={defaultValues?.name} />
+        <ViewFormField sm={6} heading="Header Left Text" param={defaultValues?.name} />
+        <ViewFormField sm={6} heading="Header Center Text" param={defaultValues?.name} />
+        <ViewFormField sm={6} heading="Header Right Text" param={defaultValues?.name} />
+        </Grid>
+        <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
+          Footer
+        </Typography>
+      <Grid container>
+        <ViewFormField sm={6} heading="Footer Type" param={defaultValues?.name} />
+        <ViewFormField sm={6} heading="Footer Left Text" param={defaultValues?.name} />
+        <ViewFormField sm={6} heading="Footer Center Text" param={defaultValues?.name} />
+        <ViewFormField sm={6} heading="Footer Right Text" param={defaultValues?.name} />
+      </Grid>
+        <ViewFormAudit defaultValues={defaultValues} />
     </Card>
   );
 }

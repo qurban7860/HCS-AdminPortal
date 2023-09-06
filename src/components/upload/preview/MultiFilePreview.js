@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { m, AnimatePresence } from 'framer-motion';
 // @mui
 import { alpha } from '@mui/material/styles';
@@ -22,7 +22,7 @@ MultiFilePreview.propTypes = {
   thumbnail: PropTypes.bool,
 };
 
-export default function MultiFilePreview({ thumbnail, files, onRemove, sx }) {
+function MultiFilePreview({ thumbnail, files, onRemove, sx }) {
   const [ preview, setPreview] = useState(false)
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -40,7 +40,7 @@ export default function MultiFilePreview({ thumbnail, files, onRemove, sx }) {
     <AnimatePresence initial={false}>
       {files.map((file) => {
         const { key, name = '', size = 0 } = fileData(file);
-        const fileType = file.type.split('/').pop();
+        const fileType = file?.type?.split('/').pop();
         const isNotFormatFile = typeof file === 'string';
 
         if (thumbnail) {
@@ -157,3 +157,4 @@ export default function MultiFilePreview({ thumbnail, files, onRemove, sx }) {
     </AnimatePresence>
   );
 }
+export default memo(MultiFilePreview)
