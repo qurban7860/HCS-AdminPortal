@@ -1,15 +1,17 @@
 import * as Yup from 'yup';
 import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
+
 import { useNavigate } from 'react-router-dom';
 // form
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Typography, Container } from '@mui/material';
+import { Autocomplete, Box, Card, Grid, Stack, Typography, Container, TextField } from '@mui/material';
 // slice
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import { addServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
+import { addServiceRecordConfig, recordType} from '../../../redux/slices/products/serviceRecordConfig';
 // schema
 import { AddMachineSchema } from '../../schemas/document';
 // routes
@@ -30,6 +32,8 @@ import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { Snacks, FORMLABELS as formLABELS } from '../../../constants/document-constants';
 
+
+
 // ----------------------------------------------------------------------
 
 export default function ServiceRecordConfigAddForm() {
@@ -37,6 +41,7 @@ export default function ServiceRecordConfigAddForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const { activeMachineModels } = useSelector((state) => state.machinemodel);
 
   const defaultValues = useMemo(
     () => ({
@@ -51,7 +56,7 @@ export default function ServiceRecordConfigAddForm() {
 
   const methods = useForm({
     resolver: yupResolver(AddMachineSchema),
-    defaultValues,
+    defaultValues
   });
 
   const {
@@ -59,6 +64,7 @@ export default function ServiceRecordConfigAddForm() {
     watch,
     setValue,
     handleSubmit,
+    control,
     formState: { isSubmitting },
   } = methods;
 
@@ -79,6 +85,12 @@ export default function ServiceRecordConfigAddForm() {
       console.error(error);
     }
   };
+
+  // Handle Type
+  const handleTypeChange = (event, newValue) => {
+    setValue('recordType', newValue);
+  };
+
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
@@ -102,8 +114,138 @@ export default function ServiceRecordConfigAddForm() {
                     sm: 'repeat(1, 1fr)',
                   }}
                 >
-                  <RHFTextField name="name" label="Name*" />
-                  <RHFTextField name="description" label="Description" minRows={7} multiline />
+                  
+                  <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    name="recordType"
+                    options={recordType}
+                    onChange={handleTypeChange}
+                    renderInput={(params) => <TextField {...params} label="Record Type" />}
+                  />
+
+                  <Controller
+                    name="model"
+                    control={control}
+                    defaultValue={null}
+                    render={ ({field: { ref, ...field }, fieldState: { error } }) => (
+                      <Autocomplete
+                        {...field}
+                        id="controllable-states-demo"
+                        options={activeMachineModels}
+                        isOptionEqualToValue={(option, value) => option._id === value._id}
+                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                        renderOption={(props, option) => (
+                          <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                        )}
+                        onChange={(event, value) => field.onChange(value)}
+                        renderInput={(params) => (
+                          <TextField 
+                          {...params} 
+                          name="model"
+                          id="model"
+                          label="Model"  
+                          error={!!error}
+                          helperText={error?.message} 
+                          inputRef={ref} 
+                          />
+                        )}
+                        ChipProps={{ size: 'small' }}
+                      />
+                    )}
+                  />
+
+
+                    <RHFTextField name="docTitle" label="Document Title" />
+                    <RHFTextField name="textBeforeParams" label="Text Before Params" />
+
+
+
+                    <RHFTextField name="textAfterFields" label="Text After Fields" />
+                    
+
+                    <RHFSwitch
+                      name="isOperatorSignatureRequired"
+                      labelPlacement="start"
+                      label={
+                        <Typography
+                          variant="subtitle2"
+                          sx={{
+                            mx: 0,
+                            width: 1,
+                            justifyContent: 'space-between',
+                            mb: 0.5,
+                            color: 'text.secondary',
+                          }}
+                        >
+                          {' '}
+                          Is Operator Signature Required
+                        </Typography>
+                      }
+                    />
+
+                    <RHFSwitch
+                      name="enableServiceNote"
+                      labelPlacement="start"
+                      label={
+                        <Typography
+                          variant="subtitle2"
+                          sx={{
+                            mx: 0,
+                            width: 1,
+                            justifyContent: 'space-between',
+                            mb: 0.5,
+                            color: 'text.secondary',
+                          }}
+                        >
+                          {' '}
+                          Enable Service Note
+                        </Typography>
+                      }
+                    />
+
+                    <RHFSwitch
+                      name="enableMaintenanceRecommendations"
+                      labelPlacement="start"
+                      label={
+                        <Typography
+                          variant="subtitle2"
+                          sx={{
+                            mx: 0,
+                            width: 1,
+                            justifyContent: 'space-between',
+                            mb: 0.5,
+                            color: 'text.secondary',
+                          }}
+                        >
+                          {' '}
+                          Enable Maintenance Recommendations
+                        </Typography>
+                      }
+                    />
+
+                    <RHFSwitch
+                      name="enableSuggestedSpares"
+                      labelPlacement="start"
+                      label={
+                        <Typography
+                          variant="subtitle2"
+                          sx={{
+                            mx: 0,
+                            width: 1,
+                            justifyContent: 'space-between',
+                            mb: 0.5,
+                            color: 'text.secondary',
+                          }}
+                        >
+                          {' '}
+                          Enable Suggested Spares
+                        </Typography>
+                      }
+                    />
+
+				  
+			
                 </Box>
 
                 <ToggleButtons
