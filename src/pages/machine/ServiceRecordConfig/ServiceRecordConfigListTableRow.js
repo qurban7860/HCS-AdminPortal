@@ -30,7 +30,7 @@ export default function ServiceRecordConfigListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, isActive, connections, createdAt } = row;
+  const { recordType, isActive, createdAt } = row;
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
 
@@ -55,15 +55,14 @@ export default function ServiceRecordConfigListTableRow({
   return (
     <>
       <TableRow hover selected={selected}>
-        <LinkTableCell align="left" onClick={onViewRow} param={name} />
+        <LinkTableCell align="left" onClick={onViewRow} param={recordType} />
+
+      {/* {  useScreenSize('lg') && <TableCell >{name || ''}</TableCell>} */}
+      {/* {  useScreenSize('lg') && <TableCell >{name || ''}</TableCell>} */}
 
         <TableCell align="center">
           <Switch checked={isActive} disabled sx={{ my: -1 }} />{' '}
         </TableCell>
-
-        { smScreen && <TableCell align="center">
-          <Switch checked={connections || false} disabled sx={{ my: -1 }} />{' '}
-        </TableCell>}
 
         <TableCell align="right">{fDate(createdAt)}</TableCell>
       </TableRow>

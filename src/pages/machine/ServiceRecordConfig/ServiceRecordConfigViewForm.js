@@ -35,7 +35,7 @@ ServiceRecordConfigViewForm.propTypes = {
 export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig = null }) {
   const toggleEdit = () => {
     dispatch(setServiceRecordConfigEditFormVisibility(true));
-    navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.serviceRecordConfigedit(id));
+    navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.edit(id));
   };
   const { enqueueSnackbar } = useSnackbar();
 

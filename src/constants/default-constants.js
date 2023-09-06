@@ -168,6 +168,8 @@ export const BUTTONS = {
   ADDSUPPLIER: 'Add Supplier',
   ADDSTATUS: 'Add Status',
   ADDTECHPARAM: 'Add Technical Parameter',
+  ADDSERVICERECORDCONFIG: 'Add Record Config',
+
 
   // documents
   ADDDOCUMENT: 'Add Document',
