@@ -169,6 +169,9 @@ export const BUTTONS = {
   ADDSTATUS: 'Add Status',
   ADDTECHPARAM: 'Add Technical Parameter',
   ADDSERVICECATEGORY: 'Add Service Category',
+  ADDSERVICERECORDCONFIG: 'Add Record Config',
+
+
   // documents
   ADDDOCUMENT: 'Add Document',
   ADDDRAWING: 'Add Drawing',
