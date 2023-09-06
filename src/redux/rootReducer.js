@@ -36,6 +36,8 @@ import drawingReducer from './slices/products/drawing';
 import configReducer from './slices/config/config';
 import machineServiceParamReducer from './slices/products/machineServiceParams'
 import serviceRecordConfigReducer from './slices/products/serviceRecordConfig';
+import serviceCategoryReducer from './slices/products/serviceCategory';
+
 
 // ----------------------------------------------------------------------
 
@@ -256,6 +258,12 @@ export const serviceRecordConfigPersistConfig={
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
+export const serviceCategoryPersistConfig={
+  key: 'serviceCategory',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
 
 
 const rootReducer = combineReducers({
@@ -292,7 +300,8 @@ const rootReducer = combineReducers({
   config: persistReducer(configPersistConfig, configReducer),
   userConfig: persistReducer(userConfigPersistConfig, userConfigReducer),
   serviceRecordConfig: persistReducer(serviceRecordConfigPersistConfig, serviceRecordConfigReducer),
-  machineServiceParam: persistReducer(machineServiceParamPersistConfig, machineServiceParamReducer)
+  machineServiceParam: persistReducer(machineServiceParamPersistConfig, machineServiceParamReducer),
+  serviceCategory: persistReducer(serviceCategoryPersistConfig, serviceCategoryReducer)
 
 });
 
