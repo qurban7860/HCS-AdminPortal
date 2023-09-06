@@ -18,7 +18,7 @@ HowickWidgets.propTypes = {
   total: PropTypes.number,
   notVerifiedTitle: PropTypes.string,
   notVerifiedCount: PropTypes.number,
-  connectableTitle: PropTypes.number,
+  connectableTitle: PropTypes.string,
   connectableCount: PropTypes.number,
   icon: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
 };
@@ -83,12 +83,12 @@ export default function HowickWidgets({
       <Chart type="polarArea" series={[0.00]} options={chartOptions} width={86} height={86} />
 
       <Box sx={{ ml: 3 }}>
-        <Typography variant="h4"> {fNumber(total)}</Typography>
+        <Typography variant="h4"> {connectableCount?fNumber(total-connectableCount):fNumber(total)}</Typography>
         <Typography variant="body1" sx={{ opacity: 0.72 }}>
           {title}
         </Typography>
-        {notVerifiedTitle && notVerifiedCount && <Typography variant="body2" sx={{ opacity: 0.72 }}>{notVerifiedTitle} : {notVerifiedCount}</Typography>}
-        {connectableTitle && connectableCount && <Typography variant="body2" sx={{ opacity: 0.72 }}>{connectableTitle} : {connectableCount}</Typography>}
+        {notVerifiedTitle && notVerifiedCount && <Typography variant="body2" sx={{ opacity: 0.72, position:'absolute', right:'10px', bottom:'1px' }}>{notVerifiedTitle} : {notVerifiedCount}</Typography>}
+        {connectableTitle && connectableCount && <Typography variant="body2" sx={{ opacity: 0.72, position:'absolute', left:'10px', bottom:'1px' }}>{connectableTitle} : {connectableCount}</Typography>}
       </Box>
 
       <Iconify

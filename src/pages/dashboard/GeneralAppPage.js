@@ -1,6 +1,6 @@
-import { useLayoutEffect } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 // @mui
-import { Typography, Grid, Stack, Card, Divider } from '@mui/material';
+import { Typography, Grid, Stack, Card, Divider, TextField, Autocomplete, CardHeader } from '@mui/material';
 import { StyledBg, StyledContainer, StyledGlobalCard } from '../../theme/styles/default-styles';
 // sections
 import HowickWelcome from '../components/DashboardWidgets/HowickWelcome';
@@ -22,14 +22,26 @@ import { varFade } from '../../components/animate';
 
 // config-global
 import { CONFIG } from '../../config-global';
-
+import {  getActiveMachineModels } from '../../redux/slices/products/model';
+import { countries } from '../../assets/data';
 // ----------------------------------------------------------------------
-
+ 
 export default function GeneralAppPage() {
+  
   const dispatch = useDispatch();
   const { count, isLoading, error, initial, responseMessage } = useSelector((state) => state.count);
+  const { activeMachineModels } = useSelector((state) => state.machinemodel);
   const enviroment = CONFIG.ENV.toLowerCase();
   const showDevGraphs = enviroment !== 'live';
+
+  const [year1, setYear1] = useState(null);
+  const [year2, setYear2] = useState(null);
+  
+  const [model1, setModel1] = useState(null);
+  const [model2, setModel2] = useState(null);
+  
+  const [country1, setCountry1] = useState(null);
+  const [country2, setCountry2] = useState(null);
 
   const modelWiseMachineNumber = [];
   const yearWiseMachinesYear = [];
@@ -40,6 +52,9 @@ export default function GeneralAppPage() {
   const countryWiseSiteCountNumber = [];
   const countryWiseSiteCountCountries = [];
   const yearWiseMachines = [];
+
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: currentYear - 1999 }, (_, index) => 2000 + index);
 
   if (count && count?.modelWiseMachineCount) {
     count.modelWiseMachineCount.map((model) => {
@@ -73,10 +88,44 @@ export default function GeneralAppPage() {
     });
   }
 
+  useEffect(() => {
+    // Check if model1 has a value, and if so, call handleChange
+    if (model1 !== null || year1 !==null) {
+      handleCountryChart(model1, year1);
+    }
+
+    if (country1 !== null || year2 !==null) {
+      handleModelChart(year2, country1);
+    }
+
+    if (country2 !== null || model2 !==null) {
+      handleYearChart(model2, country2);
+    }
+
+  }, [model1, model2, year1, year2, country1, country2]);
+
+  const handleCountryChart = (model, year) => {
+      console.log("model:",model)
+      console.log("year:",year)
+  };
+  
+  const handleModelChart = (year, country) => {
+    console.log("year:",year)
+    console.log("country:",country)
+  };
+
+  const handleYearChart = (model, country) => {
+    console.log("model:",model)
+    console.log("country:",country)
+  };
+
+
   useLayoutEffect(() => {
+    dispatch(getActiveMachineModels());
     dispatch(getCount());
   }, [dispatch]);
 
+  
   return (
     <StyledContainer maxWidth={false} p={0}>
       <Grid container item sx={{ justifyContent: 'center' }}>
@@ -130,7 +179,7 @@ export default function GeneralAppPage() {
                 total={count?.machineCount || 0}
                 notVerifiedTitle="Not Verified"
                 notVerifiedCount={count?.nonVerifiedMachineCount}
-                connectableTitle="Connectables" 
+                connectableTitle="Decoilers / Kits" 
                 connectableCount={count?.connectAbleMachinesCount}
                 icon="mdi:window-shutter-settings"
                 color="info"
@@ -156,10 +205,32 @@ export default function GeneralAppPage() {
           <Grid container item xs={12} md={16} spacing={3} mt={2}>
             <Grid item xs={12} md={6} lg={6}>
               <StyledGlobalCard variants={varFade().inDown}>
-                <Stack sx={{ pt: 2 }}>
-                  <Typography variant="h6">Machine by Countries</Typography>
-                </Stack>
-                <Divider />
+                <CardHeader
+                  sx={{padding:"15px 0px 0px"}}
+                  title="Machine by Countries"
+                  action={
+                    <>
+                      <Autocomplete
+                          sx={{width:'120px', float:'right'}}
+                          options={activeMachineModels}
+                          isOptionEqualToValue={(option, value) => option._id === value._id}
+                          getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                          renderOption={(props, option) => (<li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>)}
+                          renderInput={(params) => (<TextField {...params} label="Model" size="small" />)}
+                          onChange={(event, newValue) =>setModel1(newValue?._id)}
+                        />
+
+                      <Autocomplete
+                        sx={{ width: '130px', float: 'right', paddingRight:1 }}
+                        options={years}
+                        getOptionLabel={(option) => option.toString()}
+                        renderInput={(params) => <TextField {...params} label="Year" size="small" />}
+                        onChange={(event, newValue) =>setYear1(newValue)}
+                      />
+                    </>
+                  }
+                />
+                <Divider sx={{paddingTop:2}} />
                 <ChartBar
                   optionsData={countryWiseMachineCountCountries}
                   seriesData={countryWiseMachineCountNumber}
@@ -177,10 +248,31 @@ export default function GeneralAppPage() {
                 sx={{ px: 3, mb: 3, backgroundColor: 'transparent' }}
                 variants={varFade().inDown}
               >
-                <Stack sx={{ pt: 2 }}>
-                  <Typography variant="h6">Machine by Models</Typography>
-                </Stack>
-                <Divider />
+                <CardHeader
+                  sx={{padding:"15px 0px 0px"}}
+                  title="Machine by  Models"
+                  action={
+                    <>
+                      <Autocomplete
+                        sx={{ width: '130px', float: 'right', paddingRight:1 }}
+                        options={countries}
+                        isOptionEqualToValue={(option, value) => option.code === value.code}
+                        getOptionLabel={(option) => `${option.label ? option.label : ''}`}
+                        renderInput={(params) => <TextField {...params} label="Country" size="small" />}
+                        onChange={(event, newValue) =>setCountry1(newValue?.code)}
+                      />
+
+                      <Autocomplete
+                        sx={{ width: '130px', float: 'right', paddingRight:1 }}
+                        options={years}
+                        getOptionLabel={(option) => option.toString()}
+                        renderInput={(params) => <TextField {...params} label="Year" size="small" />}
+                        onChange={(event, newValue) =>setYear2(newValue)}
+                      />
+                    </>
+                  }
+                />
+                <Divider sx={{paddingTop:2}} />
                 <ChartBar
                   optionsData={modelWiseMachineModel}
                   seriesData={modelWiseMachineNumber}
@@ -196,10 +288,33 @@ export default function GeneralAppPage() {
                 sx={{ px: 3, mb: 3, backgroundColor: 'transparent' }}
                 variants={varFade().inDown}
               >
-                <Stack sx={{ pt: 2 }}>
-                  <Typography variant="h6">Machine by Years</Typography>
-                </Stack>
-                <Divider />
+                <CardHeader
+                  sx={{padding:"15px 0px 0px"}}
+                  title="Machine by Years"
+                  action={
+                    <>
+                      <Autocomplete
+                          sx={{width:'120px', float:'right'}}
+                          options={activeMachineModels}
+                          isOptionEqualToValue={(option, value) => option._id === value._id}
+                          getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                          renderOption={(props, option) => (<li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>)}
+                          renderInput={(params) => (<TextField {...params} label="Model" size="small" />)}
+                          onChange={(event, newValue) =>setModel2(newValue?._id)}
+                        />
+
+                      <Autocomplete
+                        sx={{ width: '130px', float: 'right', paddingRight:1 }}
+                        options={countries}
+                        isOptionEqualToValue={(option, value) => option.code === value.code}
+                        getOptionLabel={(option) => `${option.label ? option.label : ''}`}
+                        renderInput={(params) => <TextField {...params} label="Country" size="small" />}
+                        onChange={(event, newValue) =>setCountry2(newValue?.code)}
+                      />
+                    </>
+                  }
+                />
+                <Divider sx={{paddingTop:2}} />
                 <ChartBar
                   optionsData={yearWiseMachinesYear}
                   seriesData={yearWiseMachinesNumber}

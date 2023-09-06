@@ -66,8 +66,8 @@ export function getCount() {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}dashboard/`);
+      console.log(response.data)
       dispatch(slice.actions.getCountSuccess(response.data));
-    //   dispatch(slice.actions.setResponseMessage('Counts loaded successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
