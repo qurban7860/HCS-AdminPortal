@@ -1,21 +1,21 @@
 import PropTypes from 'prop-types';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect } from 'react';
 // @mui
-import { Tab, Card, Container } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
+import { Container } from '@mui/material';
+import {  useSelector } from 'react-redux';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 
-import { setTechparamEditFormVisibility } from '../../../redux/slices/products/machineTechParam';
+// import { setTechparamEditFormVisibility } from '../../../redux/slices/products/machineTechParam';
 
 // sections
 
-import ParameterList from './ParameterList';
+// import ParameterList from './ParameterList';
 import ParameterViewForm from './ParameterViewForm';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
-import ParameterEditForm from './ParameterEditForm';
+// import ParameterEditForm from './ParameterEditForm';
 
 ParameterViewPage.propTypes = {
   editPage: PropTypes.bool,
@@ -24,28 +24,28 @@ ParameterViewPage.propTypes = {
 // ----------------------------------------------------------------------
 
 export default function ParameterViewPage({ editPage }) {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const { techparamEditFormFlag } = useSelector((state) => state.techparam);
 
-  const [editFlag, setEditFlag] = useState(false);
-  const toggleEditFlag = () => setEditFlag((value) => !value);
+  // const [editFlag, setEditFlag] = useState(false);
+  // const toggleEditFlag = () => setEditFlag((value) => !value);
 
-  const [currentComponent, setCurrentComponent] = useState(<ParameterViewForm />);
+  // const [currentComponent, setCurrentComponent] = useState(<ParameterViewForm />);
 
-  const [techparamFlag, setTechparamFlag] = useState(true);
+  // const [techparamFlag, setTechparamFlag] = useState(true);
   const { techparam } = useSelector((state) => state.techparam);
 
-  useLayoutEffect(() => {
-    dispatch(setTechparamEditFormVisibility(editFlag));
-  }, [dispatch, editFlag]);
+  // useLayoutEffect(() => {
+  //   dispatch(setTechparamEditFormVisibility(editFlag));
+  // }, [dispatch, editFlag]);
 
   useEffect(() => {
     if (techparamEditFormFlag) {
-      setCurrentComponent(<ParameterEditForm />);
+      // setCurrentComponent(<ParameterEditForm />);
     } else {
-      setTechparamFlag(false);
-      setCurrentComponent(<ParameterViewForm />);
+      // setTechparamFlag(false);
+      // setCurrentComponent(<ParameterViewForm />);
     }
   }, [editPage, techparamEditFormFlag, techparam]);
 

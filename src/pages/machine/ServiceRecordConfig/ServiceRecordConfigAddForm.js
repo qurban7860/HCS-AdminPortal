@@ -1,38 +1,34 @@
-import * as Yup from 'yup';
+// import * as Yup from 'yup';
 import { useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
-
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Autocomplete, Box, Card, Grid, Stack, Typography, Container, TextField } from '@mui/material';
+import { Box, Card, Grid, Stack,Container } from '@mui/material';
 // slice
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import { addServiceRecordConfig, recordType} from '../../../redux/slices/products/serviceRecordConfig';
+import { addServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 // schema
 import { AddMachineSchema } from '../../schemas/document';
 // routes
-import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
-import { useSettingsContext } from '../../../components/settings';
+import { PATH_MACHINE } from '../../../routes/paths';
+// import { useSettingsContext } from '../../../components/settings';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
+import FormProvider, { RHFTextField } from '../../../components/hook-form';
 // auth
-import { useAuthContext } from '../../../auth/useAuthContext';
-// asset
-import { countries } from '../../../assets/data';
+// import { useAuthContext } from '../../../auth/useAuthContext';
+// // asset
+// import { countries } from '../../../assets/data';
 // util
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 // constants
 import { FORMLABELS } from '../../../constants/default-constants';
-import { Snacks, FORMLABELS as formLABELS } from '../../../constants/document-constants';
-
-
+// import { Snacks, FORMLABELS as formLABELS } from '../../../constants/document-constants';
 
 // ----------------------------------------------------------------------
 
@@ -41,7 +37,6 @@ export default function ServiceRecordConfigAddForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { activeMachineModels } = useSelector((state) => state.machinemodel);
 
   const defaultValues = useMemo(
     () => ({
@@ -56,15 +51,12 @@ export default function ServiceRecordConfigAddForm() {
 
   const methods = useForm({
     resolver: yupResolver(AddMachineSchema),
-    defaultValues
+    defaultValues,
   });
 
   const {
     reset,
-    watch,
-    setValue,
     handleSubmit,
-    control,
     formState: { isSubmitting },
   } = methods;
 
@@ -85,12 +77,6 @@ export default function ServiceRecordConfigAddForm() {
       console.error(error);
     }
   };
-
-  // Handle Type
-  const handleTypeChange = (event, newValue) => {
-    setValue('recordType', newValue);
-  };
-
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
@@ -114,138 +100,8 @@ export default function ServiceRecordConfigAddForm() {
                     sm: 'repeat(1, 1fr)',
                   }}
                 >
-                  
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    name="recordType"
-                    options={recordType}
-                    onChange={handleTypeChange}
-                    renderInput={(params) => <TextField {...params} label="Record Type" />}
-                  />
-
-                  <Controller
-                    name="model"
-                    control={control}
-                    defaultValue={null}
-                    render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                      <Autocomplete
-                        {...field}
-                        id="controllable-states-demo"
-                        options={activeMachineModels}
-                        isOptionEqualToValue={(option, value) => option._id === value._id}
-                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                        renderOption={(props, option) => (
-                          <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                        )}
-                        onChange={(event, value) => field.onChange(value)}
-                        renderInput={(params) => (
-                          <TextField 
-                          {...params} 
-                          name="model"
-                          id="model"
-                          label="Model"  
-                          error={!!error}
-                          helperText={error?.message} 
-                          inputRef={ref} 
-                          />
-                        )}
-                        ChipProps={{ size: 'small' }}
-                      />
-                    )}
-                  />
-
-
-                    <RHFTextField name="docTitle" label="Document Title" />
-                    <RHFTextField name="textBeforeParams" label="Text Before Params" />
-
-
-
-                    <RHFTextField name="textAfterFields" label="Text After Fields" />
-                    
-
-                    <RHFSwitch
-                      name="isOperatorSignatureRequired"
-                      labelPlacement="start"
-                      label={
-                        <Typography
-                          variant="subtitle2"
-                          sx={{
-                            mx: 0,
-                            width: 1,
-                            justifyContent: 'space-between',
-                            mb: 0.5,
-                            color: 'text.secondary',
-                          }}
-                        >
-                          {' '}
-                          Is Operator Signature Required
-                        </Typography>
-                      }
-                    />
-
-                    <RHFSwitch
-                      name="enableServiceNote"
-                      labelPlacement="start"
-                      label={
-                        <Typography
-                          variant="subtitle2"
-                          sx={{
-                            mx: 0,
-                            width: 1,
-                            justifyContent: 'space-between',
-                            mb: 0.5,
-                            color: 'text.secondary',
-                          }}
-                        >
-                          {' '}
-                          Enable Service Note
-                        </Typography>
-                      }
-                    />
-
-                    <RHFSwitch
-                      name="enableMaintenanceRecommendations"
-                      labelPlacement="start"
-                      label={
-                        <Typography
-                          variant="subtitle2"
-                          sx={{
-                            mx: 0,
-                            width: 1,
-                            justifyContent: 'space-between',
-                            mb: 0.5,
-                            color: 'text.secondary',
-                          }}
-                        >
-                          {' '}
-                          Enable Maintenance Recommendations
-                        </Typography>
-                      }
-                    />
-
-                    <RHFSwitch
-                      name="enableSuggestedSpares"
-                      labelPlacement="start"
-                      label={
-                        <Typography
-                          variant="subtitle2"
-                          sx={{
-                            mx: 0,
-                            width: 1,
-                            justifyContent: 'space-between',
-                            mb: 0.5,
-                            color: 'text.secondary',
-                          }}
-                        >
-                          {' '}
-                          Enable Suggested Spares
-                        </Typography>
-                      }
-                    />
-
-				  
-			
+                  <RHFTextField name="name" label="Name*" />
+                  <RHFTextField name="description" label="Description" minRows={7} multiline />
                 </Box>
 
                 <ToggleButtons

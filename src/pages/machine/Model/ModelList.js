@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // routes
 import {
   getMachineModels,
-  getMachineModel,
+  // getMachineModel,
   deleteMachineModel,
   ChangeRowsPerPage,
   ChangePage,
@@ -195,31 +195,31 @@ export default function ModelList() {
     }
   };
 
-  const handleDeleteRows = async (selectedRows, handleClose) => {
-    // console.log(selectedRows)
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-    setSelected([]);
-    setTableData(deleteRows);
+  // const handleDeleteRows = async (selectedRows, handleClose) => {
+  //   // console.log(selectedRows)
+  //   const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
+  //   setSelected([]);
+  //   setTableData(deleteRows);
 
-    if (page > 0) {
-      if (selectedRows.length === dataInPage.length) {
-        setPage(page - 1);
-      } else if (selectedRows.length === dataFiltered.length) {
-        setPage(0);
-      } else if (selectedRows.length > dataInPage.length) {
-        const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-        setPage(newPage);
-      }
-    }
-    handleClose();
-  };
+  //   if (page > 0) {
+  //     if (selectedRows.length === dataInPage.length) {
+  //       setPage(page - 1);
+  //     } else if (selectedRows.length === dataFiltered.length) {
+  //       setPage(0);
+  //     } else if (selectedRows.length > dataInPage.length) {
+  //       const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
+  //       setPage(newPage);
+  //     }
+  //   }
+  //   handleClose();
+  // };
 
-  const handleEditRow = async (id) => {
-    // console.log(id);
+  // const handleEditRow = async (id) => {
+  //   // console.log(id);
 
-    await dispatch(getMachineModel(id));
-    navigate(PATH_MACHINE.machines.settings.model.edit(id));
-  };
+  //   await dispatch(getMachineModel(id));
+  //   navigate(PATH_MACHINE.machines.settings.model.edit(id));
+  // };
 
   const handleViewRow = async (id) => {
       navigate(PATH_MACHINE.machines.settings.model.view(id));

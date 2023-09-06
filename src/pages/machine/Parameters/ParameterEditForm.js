@@ -1,8 +1,6 @@
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect,  useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
 
@@ -10,44 +8,31 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
-import { LoadingButton } from '@mui/lab';
 import {
-  Switch,
   TextField,
   Autocomplete,
   Box,
   Card,
-  Container,
   Grid,
   Stack,
   Typography,
-  Button,
-  DialogTitle,
-  Dialog,
-  InputAdornment,
-  Link,
 } from '@mui/material';
 // global
 
 // slice
 import { updateTechparam } from '../../../redux/slices/products/machineTechParam';
 
-import { useSettingsContext } from '../../../components/settings';
-import { CONFIG } from '../../../config-global';
+// import { useSettingsContext } from '../../../components/settings';
+// import { CONFIG } from '../../../config-global';
 // routes
-import { PATH_MACHINE, PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import Iconify from '../../../components/iconify/Iconify';
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
+// import Iconify from '../../../components/iconify/Iconify';
+// import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import FormProvider, {
-  RHFSelect,
-  RHFAutocomplete,
   RHFTextField,
   RHFSwitch,
-  RHFMultiSelect,
-  RHFEditor,
-  RHFUpload,
 } from '../../../components/hook-form';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
@@ -56,9 +41,9 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
 export default function ParameterEditForm() {
-  const { techparam, error } = useSelector((state) => state.techparam);
+  const { techparam } = useSelector((state) => state.techparam);
 
-  const { techparamcategories, activeTechParamCategories } = useSelector((state) => state.techparamcategory);
+  const { techparamcategories } = useSelector((state) => state.techparamcategory);
 
   const [paramVal, setParamVal] = useState(null);
 
@@ -86,7 +71,7 @@ export default function ParameterEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [techparam]
   );
-  const { themeStretch } = useSettingsContext();
+  // const { themeStretch } = useSettingsContext();
   const methods = useForm({
     resolver: yupResolver(ParameterEditSchema),
     defaultValues,
@@ -94,13 +79,11 @@ export default function ParameterEditForm() {
 
   const {
     reset,
-    watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const values = watch();
+  // const values = watch();
 
   // useLayoutEffect(() => {
   //   dispatch(getTechparam(id));
