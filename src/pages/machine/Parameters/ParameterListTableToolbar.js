@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 // @mui
 import { Stack } from '@mui/material';
-import { Link as  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // components
 import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 // routes
