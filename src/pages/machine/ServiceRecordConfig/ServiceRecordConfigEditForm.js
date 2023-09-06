@@ -46,7 +46,7 @@ export default function ServiceRecordConfigEditForm() {
     recordType: Yup.object().label('Record Type').nullable(),
     machineModel: Yup.object().label('Model').nullable(),
     category: Yup.object().label('Category').nullable(),
-    docTitle: Yup.string(),
+    docTitle: Yup.string().required(),
     textBeforeParams: Yup.string(),
     // Check Params
     paramListTitle: Yup.string(),
@@ -59,13 +59,13 @@ export default function ServiceRecordConfigEditForm() {
     enableSuggestedSpares: Yup.boolean(),
 
     // header
-    headerType: Yup.object().label('Header Type').required().nullable(),
+    headerType: Yup.object().label('Header Type').nullable(),
     headerLeftText: Yup.string(),
     headerCenterText: Yup.string(),
     headerRightText: Yup.string(),
 
     // footer
-    footerType: Yup.object().label('Footer Type').required().nullable(),
+    footerType: Yup.object().label('Footer Type').nullable(),
     footerLeftText: Yup.string(),
     footerCenterText: Yup.string(),
     footerRightText: Yup.string(),
