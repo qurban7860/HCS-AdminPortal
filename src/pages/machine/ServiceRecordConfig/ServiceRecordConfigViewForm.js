@@ -96,9 +96,13 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
       <Grid container>
         <ViewFormField sm={12} isActive={defaultValues.isActive} />
         <ViewFormField sm={6} heading="Record Type" param={defaultValues?.recordType} />
+      </Grid>
+      <Grid container>
         <ViewFormField sm={6} heading="Category" param={defaultValues?.category} />
         <ViewFormField sm={6} heading="Machine Model" param={defaultValues?.machineModel} />
         <ViewFormField sm={12} heading="Document Title" param={defaultValues?.docTitle} />
+      </Grid>
+      <Grid container>  
         <ViewFormField sm={6} heading="Text Befor Params" param={defaultValues?.textBeforeParams} />
         <ViewFormField sm={6} heading="Text After Fields" param={defaultValues?.textAfterFields} />
       </Grid>

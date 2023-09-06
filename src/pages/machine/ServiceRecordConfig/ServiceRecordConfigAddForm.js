@@ -60,7 +60,7 @@ export default function ServiceRecordConfigAddForm() {
     recordType: Yup.object().label('Record Type').nullable(),
     machineModel: Yup.object().label('Model').nullable(),
     category: Yup.object().label('Category').nullable(),
-    docTitle: Yup.string(),
+    docTitle: Yup.string().required(),
     textBeforeParams: Yup.string(),
     // Check Params
     paramListTitle: Yup.string(),
@@ -73,13 +73,13 @@ export default function ServiceRecordConfigAddForm() {
     enableSuggestedSpares: Yup.boolean(),
 
     // header
-    headerType: Yup.object().label('Header Type').required().nullable(),
+    headerType: Yup.object().label('Header Type').nullable(),
     headerLeftText: Yup.string(),
     headerCenterText: Yup.string(),
     headerRightText: Yup.string(),
 
     // footer
-    footerType: Yup.object().label('Footer Type').required().nullable(),
+    footerType: Yup.object().label('Footer Type').nullable(),
     footerLeftText: Yup.string(),
     footerCenterText: Yup.string(),
     footerRightText: Yup.string(),
@@ -203,6 +203,16 @@ export default function ServiceRecordConfigAddForm() {
                       <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
                   />
+                </Box>
+                <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{
+                    xs: 'repeat(1, 1fr)',
+                    sm: 'repeat(2, 1fr)',
+                  }}
+                >
                   <RHFAutocomplete 
                     name="category"
                     label="Category"
