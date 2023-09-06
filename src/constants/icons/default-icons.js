@@ -157,9 +157,9 @@ export const ICONS = {
     heading: 'Machine Service Record Configs',
   },
 
-  MACHINE_SERVICE_SETTING: {
+  MACHINE_SERVICE_CATEGORY: {
     icon: 'mdi:cog',
-    heading: 'Service Setting',
+    heading: 'Service Category',
   },
 
   // @root - Settings - settings

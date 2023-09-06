@@ -74,7 +74,7 @@ export default function ServiceCategoryAddForm() {
     try {
       await dispatch(addServiceCategory(data));
       reset();
-      enqueueSnackbar('Create success!');
+      enqueueSnackbar('Service Category Added Successfully!');
       navigate(PATH_MACHINE.machines.settings.serviceCategories.list);
     } catch (error) {
       enqueueSnackbar(error?.message, { variant: `error` });

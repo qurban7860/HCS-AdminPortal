@@ -82,7 +82,7 @@ export default function ServiceCategoryEditForm() {
       await dispatch(updateServiceCategory(data, id));
       reset();
       dispatch(setServiceCategoryEditFormVisibility(false));
-      enqueueSnackbar('Update success!');
+      enqueueSnackbar('Service Category Updated Successfully!');
       navigate(PATH_MACHINE.machines.settings.serviceCategories.view(id));
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
