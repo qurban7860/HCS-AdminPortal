@@ -19,6 +19,12 @@ const initialState = {
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
+  recordTypes: [
+    { _id:1 , name: 'Service'},
+    { _id:2 , name: 'Repair'},
+    { _id:3 , name: 'Training'},
+    { _id:4 , name: 'Install'},
+  ],
 };
 
 const slice = createSlice({
@@ -225,20 +231,42 @@ export function addMachineServiceRecord(params) {
     return async (dispatch) => {
       dispatch(slice.actions.startLoading());
       try {
-        
+        // const formData = new FormData();
+        // formData.append('recordType',params?.recordType?.name)
+        // formData.append('serviceRecordConfig',params)
+        // formData.append('',params)
+        // formData.append('',params)
+        // formData.append('',params)
+        // formData.append('',params)
+        // formData.append('',params)
+        // formData.append('',params)
+        // formData.append('',params)
+        // formData.append('',params)
+        // formData.append('',params)
+        // formData.append('',params)
+        // formData.append('',params)
+        // formData.append('',params)
+        // formData.append('',params)
+
         /* eslint-disable */
         let data = {
-          name:             params?.name,
-          printName:        params?.printName,
-          helpHint:         params?.helpHint,
-          linkToUserManual: params?.linkToUserManual,
-          inputType:        params?.inputType,
-          unitType:         params?.unitType,    
-          minValidation:    params?.minValidation,
-          maxValidation:    params?.maxValidation,
-          description:      params?.description,
-          isRequired:       params?.isRequired, 
-          isActive:         params?.isActive,
+          recordType:                 params?.recordType?.name,
+          serviceRecordConfig:        params?.serviceRecordConfig,
+          serviceDate:                params?.serviceDate,
+          customer:                   params?.customer, 
+          site:                       params?.site?._id,
+          machine:                    params?.machine,
+          decoiler:                   params?.decoiler?._id,
+          technician:                 params?.technician?._id,
+          // checkParams:     
+          serviceNote:                params?.serviceNote,
+          maintenanceRecommendation:  params?.maintenanceRecommendation,
+          suggestedSpares:            params?.suggestedSpares,
+          files:                      params?.files,
+          // checkParamFiles: [],
+          operator:                   params?.operator?._id,
+          operatorRemarks:            params?.operatorRemarks,
+          isActive:                   params?.isActive,
         };
         const response = await axios.post(`${CONFIG.SERVER_URL}products/serviceRecords`, data);
         dispatch(slice.actions.getMachineServiceRecordSuccess(response.data.MachineTool));
