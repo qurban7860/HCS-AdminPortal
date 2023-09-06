@@ -128,16 +128,18 @@ export default function Machine() {
                 subheader={<ListItemsHeader header={FORMLABELS.SERVICE} />}
               >
                 <ListItem
+                  onClick={linkServiceCategory}
+                  icon={ICONS.MACHINE_SERVICE_CATEGORY.icon}
+                  content={ICONS.MACHINE_SERVICE_CATEGORY.heading}
+                />
+                
+                <ListItem
                   onClick={linkServiceRecordConfig}
                   icon={ICONS.TOOLS.icon}
                   content={ICONS.MACHINE_SERVICE_RECORD_CONFIG.heading}
                 />
 
-                <ListItem
-                  onClick={linkServiceCategory}
-                  icon={ICONS.MACHINE_SERVICE_SETTING.icon}
-                  content={ICONS.MACHINE_SERVICE_SETTING.heading}
-                />
+                
               </List>
             </StyledSettingsCardContainer>
           </Grid>
