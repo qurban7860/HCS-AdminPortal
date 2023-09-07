@@ -283,15 +283,16 @@ export function addServiceRecordConfig(params) {
         if(params.footerRightText){
           data.footer.rightText = params.footerRightText;
         }
-        // checkParams
-        if(params.paramListTitle){
-        
-          data.checkParams.push({
-            paramListTitle: params.paramListTitle,
-            paramList: params.paramList
-          });
+        if(params?.checkParam){
+          data.checkParams = (params?.checkParam || [])
+          .map((param) => ({
+            paramListTitle: param.paramListTitle || '', 
+            paramList: (param.paramList || [])
+              .map((paramlist) => (paramlist?._id || null))
+              .filter((item) => item !== null), 
+          }))
+          .filter((param) => param.paramList.length > 0);
         }
-        console.log("data : ",data)
         const response = await axios.post(`${CONFIG.SERVER_URL}products/serviceRecordsConfig`, data);
         dispatch(slice.actions.setResponseMessage(response.data.ServiceRecordConfig));
       } catch (error) {

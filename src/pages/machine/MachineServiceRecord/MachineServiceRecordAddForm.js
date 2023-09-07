@@ -63,13 +63,13 @@ function MachineServiceRecordAddForm() {
 
   const filesSchema = {};
 
-  for (let index = 1; index <= checkParamNumber; index += 1 ) {
-    filesSchema[`checkParamFiles${index}`] = Yup.mixed().test(
-      'fileType',
-      'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
-      NotRequiredValidateFileType
-    ).nullable(true)
-  }
+  // for (let index = 1; index <= checkParamNumber; index += 1 ) {
+  //   filesSchema[`checkParamFiles${index}`] = Yup.mixed().test(
+  //     'fileType',
+  //     'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
+  //     NotRequiredValidateFileType
+  //   ).nullable(true)
+  // }
 
   const validateFilesSchema = Yup.object().shape(filesSchema);
 
@@ -124,7 +124,7 @@ function MachineServiceRecordAddForm() {
   useEffect(()=>{
     setValue('decoiler',machineConnections)
   },[setValue, machineConnections])
-console.log("decoiler : ",decoiler)
+// console.log("decoiler : ",decoiler)
   // console.log("additionalFields : ",{...checkParamFiles})
   // for (let index = 1; index <= checkParamNumber; index += 1) {
   //   checkParamFiles[`checkParamFiles${index}`] = watch(`checkParamFiles${index}`);
@@ -133,7 +133,7 @@ console.log("decoiler : ",decoiler)
 
   const onSubmit = async (data) => {
     try {
-      console.log("data : ",data)
+      // console.log("data : ",data)
       data.machine = machine?._id
       data.customer = machine?.customer?._id
       data.site = machine?.instalationSite?._id
@@ -158,7 +158,6 @@ console.log("decoiler : ",decoiler)
   };
 
   const handleChange = (panel) => (event, isExpanded) => {setExpanded(isExpanded ? panel : false)};
-  const handleCheckParamNumberIncrease = () => { setCheckParamNumber(checkParamNumber + 1); };
   const handleRecordTypeChange = (newValue) => setValue("recordType", newValue)
   const handleServiceDateChange = (newValue) => setValue("serviceDate", newValue)
 
@@ -331,7 +330,7 @@ console.log("decoiler : ",decoiler)
                 <FormHeading heading={FORMLABELS.COVER.MACHINE_SERVICE_CHECK_PARAM_RECORD_ADD} />
                 <Grid display="flex" justifyContent="flex-end">
                     <Button
-                      onClick={ handleCheckParamNumberIncrease }
+                      onClick={ () => setCheckParamNumber(prevCheckParamNumber => prevCheckParamNumber + 1)}
                       fullWidth={ isMobile }
                       // disabled={ compositToolNumber >= CONFIG.COMPOSITE_TOOL_CONFIG_MAX_LENGTH }
                       variant="contained" color='primary' startIcon={<Iconify icon="eva:plus-fill" />} sx={{ ...(isMobile && { width: '100%' })}}

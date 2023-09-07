@@ -59,7 +59,7 @@ export default function MachineServiceParamListTableRow({
   onViewRow,
 }) {
 
-  const { name, printName, description, helpHint, linkToUserManual, isRequired, inputType, unitType, minValidation, maxValidation, isActive, createdAt } = row;
+  const { name, printName, description, helpHint, linkToUserManual, isRequired, inputType, category, unitType, minValidation, maxValidation, isActive, createdAt } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -90,11 +90,12 @@ export default function MachineServiceParamListTableRow({
         <TableCell align="left">{printName}</TableCell>
         {/* <TableCell align="left">{helpHint}</TableCell> */}
         {/* <TableCell align="left">{linkToUserManual}</TableCell> */}
+        {smScreen && <TableCell align="left">{inputType}</TableCell>}
+        {smScreen && <TableCell align="left">{category?.name}</TableCell>}
         {smScreen && <TableCell align="center">
           {' '}
           <Switch checked={isRequired} disabled size="small" />{' '}
         </TableCell>}
-        {smScreen && <TableCell align="left">{inputType}</TableCell>}
         {/* <TableCell align="left">{unitType}</TableCell> */}
         {/* <TableCell align="left">{minValidation}</TableCell> */}
         {/* <TableCell align="left">{maxValidation}</TableCell> */}

@@ -6,11 +6,11 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Typography, Container, Autocomplete, TextField } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Container, Autocomplete, TextField, Button } from '@mui/material';
 // slice
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { addServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
-import { getMachineServiceParams } from '../../../redux/slices/products/machineServiceParams';
+import { getActiveMachineServiceParams } from '../../../redux/slices/products/machineServiceParams';
 import { getActiveMachineModels } from '../../../redux/slices/products/model';
 import { getActiveServiceCategories } from '../../../redux/slices/products/serviceCategory';
 
@@ -31,8 +31,10 @@ import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 // constants
+import Iconify from '../../../components/iconify';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { Snacks, FORMLABELS as formLABELS } from '../../../constants/document-constants';
+import useResponsive from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -42,17 +44,19 @@ export default function ServiceRecordConfigAddForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-
+  const isMobile = useResponsive('down', 'sm');
+  
   const { recordTypes, headerFooterTypes } = useSelector((state) => state.serviceRecordConfig);
-  const { machineServiceParams } = useSelector((state) => state.machineServiceParam);
+  const { activeMachineServiceParams } = useSelector((state) => state.machineServiceParam);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
   const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
+  const [checkParamNumber, setCheckParamNumber]= useState(1);
+  const [checkParam, setCheckParam] = useState([]);
   
   useLayoutEffect(() => {
-    dispatch(getMachineServiceParams());
+    dispatch(getActiveMachineServiceParams());
     dispatch(getActiveMachineModels())
     dispatch(getActiveServiceCategories());
-
   }, [dispatch]);
 
   
@@ -123,8 +127,6 @@ export default function ServiceRecordConfigAddForm() {
     []
   );
 
-  
-
   const methods = useForm({
     resolver: yupResolver(AddMachineServiceRecordConfigSchema),
     defaultValues,
@@ -139,26 +141,39 @@ export default function ServiceRecordConfigAddForm() {
   } = methods;
 
 
-  useEffect(() => {
-    const mappedMachineServiceParams = machineServiceParams.map((serviceParam) => ({
-      value: serviceParam?._id,
-      label: serviceParam.name,
-    }));
+  // useEffect(() => {
+  //   const mappedMachineServiceParams = machineServiceParams.map((serviceParam) => ({
+  //     value: serviceParam?._id,
+  //     label: serviceParam.name,
+  //   }));
 
-    const sortedMachineServiceParamsTemp = [...mappedMachineServiceParams].sort((a, b) => {
-      const nameA = a.label.toUpperCase();
-      const nameB = b.label.toUpperCase();
-      return nameA.localeCompare(nameB);
-    });
-    setSortedMachineSerivceParams(sortedMachineServiceParamsTemp);
-  }, [machineServiceParams]);
+  //   const sortedMachineServiceParamsTemp = [...mappedMachineServiceParams].sort((a, b) => {
+  //     const nameA = a.label.toUpperCase();
+  //     const nameB = b.label.toUpperCase();
+  //     return nameA.localeCompare(nameB);
+  //   });
+  //   setSortedMachineSerivceParams(sortedMachineServiceParamsTemp);
+  // }, [machineServiceParams]);
 
   const toggleCancel = () => {
     navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.list);
   };
 
+  const handleInputChange = (event, index) => {
+    const { name, value } = event.target;
+    const updatedCheckParam = [...checkParam];
+  
+    updatedCheckParam[index] = {
+      ...updatedCheckParam[index],
+      [name]: value,
+    };
+  
+    setCheckParam(updatedCheckParam);
+  };
+
   const onSubmit = async (data) => {
     try {
+      data.checkParam = checkParam
       await dispatch(addServiceRecordConfig(data));
       reset();
       enqueueSnackbar('Create success!');
@@ -174,7 +189,7 @@ export default function ServiceRecordConfigAddForm() {
     <Container maxWidth={false}>
       <StyledCardContainer>
         <Cover
-          name="New Machine Service Record Config"
+          name="New Service Record Config"
           icon="material-symbols:category-outline"
           url={PATH_MACHINE.machines.settings.serviceRecordConfigs.list}
         />
@@ -295,9 +310,6 @@ export default function ServiceRecordConfigAddForm() {
                     }
                   /> 
                 </Box>
-                <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
-                  Check Params
-                </Typography>
                 <Box
                   rowGap={2}
                   columnGap={2}
@@ -307,15 +319,52 @@ export default function ServiceRecordConfigAddForm() {
                     sm: 'repeat(2, 1fr)',
                   }}
                 >
-                  <RHFTextField name="paramListTitle" label="Param List Title" />
-                  <RHFMultiSelect
-                    chip
-                    checkbox
+                <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
+                  Check Params
+                </Typography>
+                  <Grid display="flex" justifyContent="flex-end">
+                    <Button
+                      onClick={ () => setCheckParamNumber(prevCheckParamNumber => prevCheckParamNumber + 1) }
+                      fullWidth={ isMobile }
+                      // disabled={ compositToolNumber >= CONFIG.COMPOSITE_TOOL_CONFIG_MAX_LENGTH }
+                      variant="contained" color='primary' startIcon={<Iconify icon="eva:plus-fill" />} sx={{ ...(isMobile && { width: '100%' })}}
+                    >Add more
+                    </Button>
+                  </Grid> 
+                </Box>
+                {Array.from({ length: checkParamNumber }).map((note, index) => (
+                <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{
+                    xs: 'repeat(1, 1fr)',
+                    sm: 'repeat(2, 1fr)',
+                  }}
+                >
+                  <RHFTextField name="paramListTitle" label="Param List Title" 
+                    value={checkParam[index]?.paramListTitle || ''}
+                    onChange={(event) => handleInputChange(event, index)} 
+                  />
+
+                  <RHFAutocomplete
+                    multiple
                     name="paramList"
                     label="Param List"
-                    options={sortedMachineServiceParams}
-                  />                
+                    value={checkParam[index]?.paramList || []}
+                    options={activeMachineServiceParams}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                    )}
+                    onChange={(event, newValue) => {
+                      const updatedEvent ={target: { name: "paramList", value: newValue }};
+                      handleInputChange(updatedEvent, index);
+                    }}
+                  />  
                 </Box>
+                ))}
                 <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
                   Header
                 </Typography>
