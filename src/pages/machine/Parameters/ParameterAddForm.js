@@ -21,12 +21,12 @@ import {
 import { addTechparam } from '../../../redux/slices/products/machineTechParam';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
-import { useSettingsContext } from '../../../components/settings';
+// import { useSettingsContext } from '../../../components/settings';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
 // auth
-import { useAuthContext } from '../../../auth/useAuthContext';
+// import { useAuthContext } from '../../../auth/useAuthContext';
 // util
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
@@ -70,13 +70,11 @@ export default function ParameterAddForm() {
 
   const {
     reset,
-    watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const values = watch();
+  // const values = watch();
 
   const onSubmit = async (data) => {
     try {
@@ -96,7 +94,6 @@ export default function ParameterAddForm() {
     navigate(PATH_MACHINE.machines.settings.parameters.list);
   };
   return (
-    <>
       <Container maxWidth={false}>
         <StyledCardContainer>
           <Cover name="New Parameter" icon="ic:round-flare" />
@@ -168,6 +165,5 @@ export default function ParameterAddForm() {
           </Grid>
         </FormProvider>
       </Container>
-    </>
   );
 }

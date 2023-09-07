@@ -44,9 +44,8 @@ import {
   SupplierAddForm,
   SupplierList,
   SupplierView,
-  SupplierViewForm,
   SupplierEdit,
-  SupplierEditForm,
+  // SupplierEditForm,
 
   MachineServiceParamList, 
   MachineServiceParamViewForm,

@@ -1,16 +1,13 @@
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import axios from 'axios';
-import { useLayoutEffect, useMemo, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Helmet } from 'react-helmet-async';
+import { useMemo } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
-import { LoadingButton } from '@mui/lab';
+// import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Card,
@@ -18,21 +15,21 @@ import {
   Stack,
   Typography,
   Container,
-  Checkbox,
-  DialogTitle,
-  Dialog,
-  InputAdornment,
+  // Checkbox,
+  // DialogTitle,
+  // Dialog,
+  // InputAdornment,
 } from '@mui/material';
 // slice
 import { addTool } from '../../../redux/slices/products/tools';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
-import { useSettingsContext } from '../../../components/settings';
+// import { useSettingsContext } from '../../../components/settings';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
 // auth
-import { useAuthContext } from '../../../auth/useAuthContext';
+// import { useAuthContext } from '../../../auth/useAuthContext';
 // util
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
@@ -40,7 +37,7 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
 export default function ToolAddForm() {
-  const { userId, user } = useAuthContext();
+  // const { userId, user } = useAuthContext();
 
   const dispatch = useDispatch();
 
@@ -72,13 +69,11 @@ export default function ToolAddForm() {
 
   const {
     reset,
-    watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const values = watch();
+  // const values = watch();
 
   // useLayoutEffect(() => {
   //   dispatch(getSPContacts());
@@ -102,9 +97,8 @@ export default function ToolAddForm() {
     navigate(PATH_MACHINE.machines.settings.tool.list);
   };
 
-  const { themeStretch } = useSettingsContext();
+  // const { themeStretch } = useSettingsContext();
   return (
-    <>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Container maxWidth={false}>
           <StyledCardContainer>
@@ -129,7 +123,6 @@ export default function ToolAddForm() {
                       name="isActive"
                       labelPlacement="start"
                       label={
-                        <>
                           <Typography
                             variant="subtitle2"
                             sx={{
@@ -142,7 +135,6 @@ export default function ToolAddForm() {
                           >
                             Active
                           </Typography>
-                        </>
                       }
                     />
                   </Box>
@@ -154,6 +146,5 @@ export default function ToolAddForm() {
           </Grid>
         </Container>
       </FormProvider>
-    </>
   );
 }
