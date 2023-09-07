@@ -210,7 +210,8 @@ import {
   ComingSoonPage,
   MaintenancePage,
   ErrorPage,
-  UserInviteLanding
+  UserInviteLanding,
+  SecurityUserInvite
   
 } from './elements';
 
@@ -489,6 +490,7 @@ export default function Router() {
             { path: 'changePassword', element: <SecurityUserChangePasswordByAdmin/> },
             { path: 'list', element: <SecurityUserList /> },
             { path: 'new', element: <SecurityUserAdd /> },
+            { path: 'invite', element: <SecurityUserAdd isInvite /> },
             { path: ':id/edit', element: <SecurityUserEdit /> },
             { path: ':id/view', element: <SecurityUserViewForm /> },
           ],
