@@ -1,18 +1,19 @@
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 // @mui
 import { Stack } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+// routes
+import { setMachineServiceRecordAddFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
 // components
 import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
-// routes
-import { PATH_MACHINE } from '../../../routes/paths';
 // constants
 import { BUTTONS } from '../../../constants/default-constants';
 // styles
 import { options } from '../../../theme/styles/default-styles';
+
 // ----------------------------------------------------------------------
 
-ParameterListTableToolbar.propTypes = {
+MachineServiceRecordListTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
@@ -22,7 +23,7 @@ ParameterListTableToolbar.propTypes = {
   statusOptions: PropTypes.array,
 };
 
-export default function ParameterListTableToolbar({
+export default function MachineServiceRecordListTableToolbar({
   isFiltered,
   filterName,
   filterStatus,
@@ -31,10 +32,12 @@ export default function ParameterListTableToolbar({
   onResetFilter,
   onFilterStatus,
 }) {
-  const navigate = useNavigate();
+  const dispatch = useDispatch()
+
   const toggleAdd = () => {
-    navigate(PATH_MACHINE.machines.settings.parameters.new);
+    dispatch(setMachineServiceRecordAddFormVisibility(true))
   };
+
   return (
     <Stack {...options}>
       <SearchBarCombo
@@ -43,7 +46,7 @@ export default function ParameterListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        addButton={BUTTONS.ADDTECHPARAM}
+        addButton={BUTTONS.ADD_MACHINE_SERVICE_RECORD}
       />
     </Stack>
   );

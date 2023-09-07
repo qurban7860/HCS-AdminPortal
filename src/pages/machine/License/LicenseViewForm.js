@@ -51,6 +51,7 @@ export default function LicenseViewForm() {
       licenseDetail: {
         version : license?.licenseDetail?.version || '',
         deviceName : license?.licenseDetail?.deviceName || '',
+        deviceGUID : license?.licenseDetail?.deviceGUID || '',
         type : license?.licenseDetail?.type || '',
         extensionTime : license?.licenseDetail?.extensionTime || '',
         requestTime : license?.licenseDetail?.requestTime || '',

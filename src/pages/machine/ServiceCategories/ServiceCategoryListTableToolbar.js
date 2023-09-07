@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Stack } from '@mui/material';
+import { Stack, Button, TextField, InputAdornment, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 // components
 import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
@@ -8,11 +8,10 @@ import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 import { PATH_MACHINE } from '../../../routes/paths';
 // constants
 import { BUTTONS } from '../../../constants/default-constants';
-// styles
 import { options } from '../../../theme/styles/default-styles';
 // ----------------------------------------------------------------------
 
-ParameterListTableToolbar.propTypes = {
+ListTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
@@ -22,7 +21,7 @@ ParameterListTableToolbar.propTypes = {
   statusOptions: PropTypes.array,
 };
 
-export default function ParameterListTableToolbar({
+export default function ListTableToolbar({
   isFiltered,
   filterName,
   filterStatus,
@@ -33,7 +32,7 @@ export default function ParameterListTableToolbar({
 }) {
   const navigate = useNavigate();
   const toggleAdd = () => {
-    navigate(PATH_MACHINE.machines.settings.parameters.new);
+    navigate(PATH_MACHINE.machines.settings.serviceCategories.new);
   };
   return (
     <Stack {...options}>
@@ -43,7 +42,7 @@ export default function ParameterListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        addButton={BUTTONS.ADDTECHPARAM}
+        addButton={BUTTONS.ADDSERVICECATEGORY}
       />
     </Stack>
   );

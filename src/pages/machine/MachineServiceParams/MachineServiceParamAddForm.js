@@ -1,30 +1,27 @@
-import PropTypes from 'prop-types';
-import * as Yup from 'yup';
-import { useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useMemo } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Card, Grid, Box, Stack, Typography, Container, FormControl, RadioGroup, Radio, FormControlLabel, FormLabel, FormGroup, Switch, FormHelperText} from '@mui/material';
+import { Card, Grid, Box, Stack, Typography, Container } from '@mui/material';
 // hooks
 import { useForm } from 'react-hook-form';
 import { useSnackbar } from '../../../components/snackbar';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 import FormHeading from '../../components/DocumentForms/FormHeading';
+import { FORMLABELS } from '../../../constants/default-constants';
 // schema
-import { MachineTechParamsSchema } from '../../schemas/machine';
+import { MachineServiceParamsSchema } from '../../schemas/machine';
 // slice
 import { addMachineServiceParam } from '../../../redux/slices/products/machineServiceParams';
 // components
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { Cover } from '../../components/Defaults/Cover';
-import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 // styles
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 // constants
-import { FORMLABELS } from '../../../constants/default-constants';
 import { Snacks } from '../../../constants/machine-constants';
 
 // ----------------------------------------------------------------------
@@ -53,14 +50,12 @@ export default function MachineServiceParamAddForm() {
   );
 
   const methods = useForm({
-    resolver: yupResolver(MachineTechParamsSchema),
+    resolver: yupResolver(MachineServiceParamsSchema),
     defaultValues,
   });
 
   const {
     reset,
-    watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;

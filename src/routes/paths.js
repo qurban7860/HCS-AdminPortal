@@ -37,6 +37,7 @@ export const PATH_PAGE = {
   page404: '/404',
   page500: '/500',
   components: '/components',
+  userInviteLanding: (id, code, expiry) => path(`/invite/${id}/{$code}/{$expiry}`),
   invalidErrorPage:'/InvalidErrorPage',
   expiredErrorPage:'/ExpiredErrorPage'
 };
@@ -193,6 +194,12 @@ export const PATH_MACHINE = {
         view: (id) => path(ROOTS_MACHINE, `/machines/settings/serviceRecordConfigs/${id}/view`),
         servicerecordconfigedit: (id) => path(ROOTS_MACHINE, `/machines/settings/serviceRecordConfigs/${id}/edit`),
         edit: (id) => path(ROOTS_MACHINE, `/machines/settings/serviceRecordConfigs/${id}/edit`),
+      },
+      serviceCategories: {
+        new: (ROOTS_MACHINE, '/products/machines/settings/serviceCategories/new'),
+        list: (ROOTS_MACHINE, '/products/machines/settings/serviceCategories/list'),
+        view: (id) => path(ROOTS_MACHINE, `/machines/settings/serviceCategories/${id}/view`),
+        edit: (id) => path(ROOTS_MACHINE, `/machines/settings/serviceCategories/${id}/edit`),
       },
     },
   },

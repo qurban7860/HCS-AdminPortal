@@ -60,14 +60,8 @@ export default function NoteViewForm({ currentNote = null }) {
       await dispatch(deleteNote(machine._id, currentNote._id));
       handleCloseConfirm();
       dispatch(getNotes(machine._id));
+      enqueueSnackbar('Note Deleted Successfully!');
     } catch (err) {
-      // if(err.Message){
-      //   enqueueSnackbar(err.Message,{ variant: `error` })
-      // }else if(err.message){
-      //   enqueueSnackbar(err.message,{ variant: `error` })
-      // }else{
-      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
-      // }
       enqueueSnackbar('Note delete failed!', { variant: `error` });
       console.log('Error:', err);
     }

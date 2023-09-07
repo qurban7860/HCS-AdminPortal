@@ -153,6 +153,14 @@ import {
   ServiceRecordConfigEditForm,
   ServiceRecordConfigEdit,
 
+  // Servivce Categories
+  ServiceCategoryAddForm,
+  ServiceCategoryList,
+  ServiceCategoryView,
+  ServiceCategoryViewForm,
+  ServiceCategoryEditForm,
+  ServiceCategoryEdit,
+
   // DocumentDashboard    
   DocumentList, 
   DocumentAddForm, 
@@ -201,6 +209,8 @@ import {
   Page404,
   ComingSoonPage,
   MaintenancePage,
+  ErrorPage,
+  UserInviteLanding
   
 } from './elements';
 
@@ -339,6 +349,17 @@ export default function Router() {
                   {path: 'viewform', element: <CategoryViewForm/>},
                   {path: ':id/edit', element: <CategoryEdit/>}, 
                   {path: 'editform', element: <CategoryEditForm/>},
+                ]
+              },
+              {
+                path: 'serviceCategories',
+                children:[
+                  {path: 'new', element: <ServiceCategoryAddForm/>},
+                  {path: 'list', element: <ServiceCategoryList/>},
+                  {path: ':id/view', element: <ServiceCategoryView/>},
+                  {path: 'viewform', element: <ServiceCategoryViewForm/>},
+                  {path: ':id/edit', element: <ServiceCategoryEdit/>}, 
+                  {path: 'editform', element: <ServiceCategoryEditForm/>},
                 ]
               },
               {
@@ -607,6 +628,7 @@ export default function Router() {
     {
       element: <SimpleLayout />,
       children: [
+        { path: 'invite/:id/:code/:expiry', element: <UserInviteLanding /> },
       ],
     },
     {
@@ -617,6 +639,8 @@ export default function Router() {
         { path: '500', element: <Page500 /> },
         { path: '404', element: <Page404 /> },
         { path: '403', element: <Page403 /> },
+        { path: 'invalidErrorPage', element: <ErrorPage title='Invalid Code' /> },
+        { path: 'expiredErrorPage', element: <ErrorPage title='Invitation Expired' /> },
       ],
     },
     { path: '*', element: <Navigate to="/404" replace /> },
