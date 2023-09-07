@@ -1,4 +1,4 @@
-import { useMemo} from 'react';
+import { useMemo, useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -12,11 +12,12 @@ import { MachineServiceParamsSchema } from '../../schemas/machine';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
-import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete } from '../../../components/hook-form';
 import {
   getMachineServiceParam,
   updateMachineServiceParam,
 } from '../../../redux/slices/products/machineServiceParams';
+import { getActiveServiceCategories } from '../../../redux/slices/products/serviceCategory';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import FormHeading from '../../components/DocumentForms/FormHeading';
 import { Cover } from '../../components/Defaults/Cover';
@@ -30,22 +31,27 @@ import { Snacks } from '../../../constants/machine-constants';
 
 export default function DocumentCategoryeEditForm() {
   const { machineServiceParam } = useSelector((state) => state.machineServiceParam);
-
+  const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
+  const { inputTypes, unitTypes } = useSelector((state) => state.machineServiceParam);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
+  useEffect(()=>{
+    dispatch(getActiveServiceCategories())
+  },[dispatch])
 
   const defaultValues = useMemo(
     () => ({
       name:             machineServiceParam?.name || '',
+      serviceCategory:  machineServiceParam?.category || null,
       printName:        machineServiceParam?.printName || '',
       description:      machineServiceParam?.description || '',
       helpHint:         machineServiceParam?.helpHint || '',
       linkToUserManual: machineServiceParam?.linkToUserManual || '',
       isRequired:       machineServiceParam?.isRequired, 
-      inputType:        machineServiceParam?.inputType || '',
-      unitType:         machineServiceParam?.unitType || '',    
+      inputType:        {name: machineServiceParam?.inputType} || null,
+      unitType:         {name: machineServiceParam?.unitType} || null,    
       minValidation:    machineServiceParam?.minValidation || '',
       maxValidation:    machineServiceParam?.maxValidation || '',
       isActive:         machineServiceParam?.isActive,
@@ -105,11 +111,45 @@ export default function DocumentCategoryeEditForm() {
                     gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                   >
                   <RHFTextField name="name" label="Name" />
+                  <RHFAutocomplete 
+                      name="serviceCategory"
+                      label="Service Category"
+                      options={activeServiceCategories}
+                      isOptionEqualToValue={(option, value) => option._id === value._id}
+                      getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                      renderOption={(props, option) => (
+                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                      )}
+                    />
                   <RHFTextField name="printName" label="Print Name" />
+                  </Box>
                   <RHFTextField name="helpHint" label="Help Hint" />
                   <RHFTextField name="linkToUserManual" label="Link To User Manual" />
-                  <RHFTextField name="inputType" label="Input Type" />
-                  <RHFTextField name="unitType" label="Unit Type" />
+                  <Box
+                    rowGap={2}
+                    columnGap={2}
+                    display="grid"
+                    gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                  >
+                  <RHFAutocomplete 
+                      name="inputType" label="Input Type"
+                      options={inputTypes}
+                      isOptionEqualToValue={(option, value) => option.name === value.name}
+                      getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                      renderOption={(props, option) => (
+                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                      )}
+                    />
+
+                    <RHFAutocomplete 
+                      name="unitType" label="Unit Type"
+                      options={unitTypes}
+                      isOptionEqualToValue={(option, value) => option.name === value.name}
+                      getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                      renderOption={(props, option) => (
+                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                      )}
+                    />
                   <RHFTextField name="minValidation" label="Minimum Validation" />
                   <RHFTextField name="maxValidation" label="Maximum Validation" />
                 </Box>
