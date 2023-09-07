@@ -42,15 +42,16 @@ export const AddMachineDocumentSchema = Yup.object().shape({
 
 export const MachineServiceParamsSchema = Yup.object().shape({
   name: Yup.string().required().max(50).label('Name'),
+  serviceCategory: Yup.object().label('Service Category').nullable(),
   printName: Yup.string().max(50).label('Print Name'),
   description: Yup.string().max(5000).label('Description'),
   helpHint: Yup.string().max(50).label('Help Hint'),
   linkToUserManual: Yup.string().max(50).label('Link To User Manual'),
   isRequired: Yup.boolean(),
-  inputType: Yup.string().max(50).required().label('Input Type'),
-  unitType: Yup.string().max(50).label('Unit Type'),    
-  minValidation: Yup.string().max(50).label('Minimum Validation'),
-  maxValidation: Yup.string().max(50).label('Max Validation'),
+  inputType: Yup.object().required().label('Input Type').nullable(),
+  unitType: Yup.object().label('Unit Type').nullable(),
+  // minValidation: Yup.number().min(0).max(100).label('Minimum Validation').nullable(),
+  // maxValidation: Yup.number().min(0).max(100).label('Max Validation').nullable(),
   isActive: Yup.boolean(),
 })
 

@@ -17,6 +17,18 @@ const initialState = {
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
+  inputTypes: [
+    { _id:1 , name: 'Number'},
+    { _id:2 , name: 'String'},
+    { _id:3 , name: 'Date'},
+    { _id:4 , name: 'Boolean'},
+  ],
+  unitTypes: [
+    { _id:1 , name: 'Milimeter'},
+    { _id:2 , name: 'Meter'},
+    { _id:3 , name: 'Inches'},
+    { _id:4 , name: 'Feet'},
+  ],
 };
 
 const slice = createSlice({
@@ -207,11 +219,12 @@ export function addMachineServiceParam(params) {
         /* eslint-disable */
         let data = {
           name:             params?.name,
+          category:         params?.serviceCategory?._id,
           printName:        params?.printName,
           helpHint:         params?.helpHint,
           linkToUserManual: params?.linkToUserManual,
-          inputType:        params?.inputType,
-          unitType:         params?.unitType,    
+          inputType:        params?.inputType?.name,
+          unitType:         params?.unitType?.name,    
           minValidation:    params?.minValidation,
           maxValidation:    params?.maxValidation,
           description:      params?.description,
@@ -238,11 +251,12 @@ export function updateMachineServiceParam(id, params) {
       /* eslint-disable */
       let data = {
         name:             params?.name,
+        category:         params?.serviceCategory?._id || null,
         printName:        params?.printName,
         helpHint:         params?.helpHint,
         linkToUserManual: params?.linkToUserManual,
-        inputType:        params?.inputType,
-        unitType:         params?.unitType,    
+        inputType:        params?.inputType?.name || '',
+        unitType:         params?.unitType?.name || '',    
         minValidation:    params?.minValidation,
         maxValidation:    params?.maxValidation,
         description:      params?.description,

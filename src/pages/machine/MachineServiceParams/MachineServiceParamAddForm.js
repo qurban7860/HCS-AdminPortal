@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
@@ -15,8 +15,9 @@ import { FORMLABELS } from '../../../constants/default-constants';
 import { MachineServiceParamsSchema } from '../../schemas/machine';
 // slice
 import { addMachineServiceParam } from '../../../redux/slices/products/machineServiceParams';
+import { getActiveServiceCategories } from '../../../redux/slices/products/serviceCategory';
 // components
-import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete } from '../../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { Cover } from '../../components/Defaults/Cover';
 // styles
@@ -30,10 +31,16 @@ export default function MachineServiceParamAddForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  const { inputTypes, unitTypes } = useSelector((state) => state.machineServiceParam);
+  const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
 
+  useEffect(()=>{
+    dispatch(getActiveServiceCategories())
+  },[dispatch])
   const defaultValues = useMemo(
     () => ({
       name:             '',
+      serviceCategory: null,
       printName:        '',
       description:      '',
       helpHint:         '',
@@ -80,6 +87,7 @@ export default function MachineServiceParamAddForm() {
   const toggleCancel = () => {
     navigate(PATH_MACHINE.machines.settings.machineServiceParams.list);
   };
+  
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
@@ -91,26 +99,66 @@ export default function MachineServiceParamAddForm() {
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
-          <Grid item xs={18} md={12}>
+          <Grid item md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 <FormHeading heading={FORMLABELS.COVER.MACHINE_SERVICE_PARAM_ADD} />
-                <Box
+                  <Box
+                        rowGap={2}
+                        columnGap={2}
+                        display="grid"
+                        gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                      >
+                    <RHFTextField name="name" label="Name" />
+                    <RHFAutocomplete 
+                      name="serviceCategory"
+                      label="Service Category"
+                      options={activeServiceCategories}
+                      isOptionEqualToValue={(option, value) => option._id === value._id}
+                      getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                      renderOption={(props, option) => (
+                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                      )}
+                    />
+                    <RHFTextField name="printName" label="Print Name" />
+                  </Box>
+
+                  <RHFTextField name="helpHint" label="Help Hint" />
+                  <RHFTextField name="linkToUserManual" label="Link To User Manual" />
+
+                  <Box
                     rowGap={2}
                     columnGap={2}
                     display="grid"
                     gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                   >
-                  <RHFTextField name="name" label="Name" />
-                  <RHFTextField name="printName" label="Print Name" />
-                  <RHFTextField name="helpHint" label="Help Hint" />
-                  <RHFTextField name="linkToUserManual" label="Link To User Manual" />
-                  <RHFTextField name="inputType" label="Input Type" />
-                  <RHFTextField name="unitType" label="Unit Type" />
-                  <RHFTextField name="minValidation" label="Minimum Validation" />
-                  <RHFTextField name="maxValidation" label="Maximum Validation" />
-                </Box>
+
+                    <RHFAutocomplete 
+                      name="inputType" label="Input Type"
+                      options={inputTypes}
+                      isOptionEqualToValue={(option, value) => option._id === value._id}
+                      getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                      renderOption={(props, option) => (
+                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                      )}
+                    />
+
+                    <RHFAutocomplete 
+                      name="unitType" label="Unit Type"
+                      options={unitTypes}
+                      isOptionEqualToValue={(option, value) => option._id === value._id}
+                      getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                      renderOption={(props, option) => (
+                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                      )}
+                    />
+
+                    <RHFTextField name="minValidation" label="Minimum Validation" />
+                    <RHFTextField name="maxValidation" label="Maximum Validation" />
+                    
+                  </Box>
                   <RHFTextField name="description" label="Description" minRows={7} multiline />
+
                 <Grid container display="flex">
                   <RHFSwitch
                     name="isRequired"

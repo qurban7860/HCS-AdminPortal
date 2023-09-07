@@ -11,8 +11,8 @@ import { Box, Card, Grid, Stack, Typography, Container, Autocomplete, TextField,
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { addServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 import { getActiveMachineServiceParams } from '../../../redux/slices/products/machineServiceParams';
-import { getActiveMachineModels } from '../../../redux/slices/products/model';
-import { getActiveServiceCategories } from '../../../redux/slices/products/serviceCategory';
+import { getActiveMachineModels, resetActiveMachineModels } from '../../../redux/slices/products/model';
+import { getActiveCategories } from '../../../redux/slices/products/category';
 
 // schema
 import { AddMachineSchema } from '../../schemas/document';
@@ -49,22 +49,22 @@ export default function ServiceRecordConfigAddForm() {
   const { recordTypes, headerFooterTypes } = useSelector((state) => state.serviceRecordConfig);
   const { activeMachineServiceParams } = useSelector((state) => state.machineServiceParam);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
-  const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
+  const { activeCategories } = useSelector((state) => state.category);
   const [checkParamNumber, setCheckParamNumber]= useState(1);
   const [checkParam, setCheckParam] = useState([]);
   
   useLayoutEffect(() => {
     dispatch(getActiveMachineServiceParams());
-    dispatch(getActiveMachineModels())
-    dispatch(getActiveServiceCategories());
+    dispatch(getActiveCategories());
   }, [dispatch]);
+
 
   
   const AddMachineServiceRecordConfigSchema = Yup.object().shape({
-    recordType: Yup.object().label('Record Type').nullable(),
+    recordType: Yup.object().label('Record Type').nullable().required(),
     machineModel: Yup.object().label('Model').nullable(),
     category: Yup.object().label('Category').nullable(),
-    docTitle: Yup.string().required(),
+    docTitle: Yup.string().max(40).label('Document Title'),
     textBeforeParams: Yup.string(),
     // Check Params
     paramListTitle: Yup.string(),
@@ -140,20 +140,16 @@ export default function ServiceRecordConfigAddForm() {
     formState: { isSubmitting },
   } = methods;
 
-
-  // useEffect(() => {
-  //   const mappedMachineServiceParams = machineServiceParams.map((serviceParam) => ({
-  //     value: serviceParam?._id,
-  //     label: serviceParam.name,
-  //   }));
-
-  //   const sortedMachineServiceParamsTemp = [...mappedMachineServiceParams].sort((a, b) => {
-  //     const nameA = a.label.toUpperCase();
-  //     const nameB = b.label.toUpperCase();
-  //     return nameA.localeCompare(nameB);
-  //   });
-  //   setSortedMachineSerivceParams(sortedMachineServiceParamsTemp);
-  // }, [machineServiceParams]);
+  const { category, machineModel } = watch();
+  console.log("category: " , category)
+  useEffect(() => {
+    if(category === null){
+      dispatch(resetActiveMachineModels())
+      setValue('machineModel',null);
+    }else{
+      dispatch(getActiveMachineModels(category?._id));
+    }
+  },[dispatch, category,setValue]);
 
   const toggleCancel = () => {
     navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.list);
@@ -231,7 +227,7 @@ export default function ServiceRecordConfigAddForm() {
                   <RHFAutocomplete 
                     name="category"
                     label="Category"
-                    options={activeServiceCategories}
+                    options={activeCategories}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     renderOption={(props, option) => (
@@ -251,7 +247,7 @@ export default function ServiceRecordConfigAddForm() {
 
                   <RHFTextField name="docTitle" label="Document Title" />
                 </Box>
-                <Box
+                {/* <Box
                   rowGap={2}
                   columnGap={2}
                   display="grid"
@@ -260,9 +256,9 @@ export default function ServiceRecordConfigAddForm() {
                     sm: 'repeat(2, 1fr)',
                   }}
                 >
-                  <RHFTextField name="textBeforeParams" label="Text Before Params" />
-                  <RHFTextField name="textAfterFields" label="Text After Fields" />
-                </Box>            
+                </Box>             */}
+                  <RHFTextField name="textBeforeParams" label="Text Before Params" minRows={3} multiline />
+                  <RHFTextField name="textAfterFields" label="Text After Fields" minRows={3} multiline />
                 
                 <Box
                   rowGap={2}
@@ -339,7 +335,7 @@ export default function ServiceRecordConfigAddForm() {
                   display="grid"
                   gridTemplateColumns={{
                     xs: 'repeat(1, 1fr)',
-                    sm: 'repeat(2, 1fr)',
+                    sm: 'repeat(1, 1fr)',
                   }}
                 >
                   <RHFTextField name="paramListTitle" label="Param List Title" 

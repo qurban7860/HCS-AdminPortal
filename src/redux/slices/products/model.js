@@ -152,7 +152,7 @@ export function getMachineModels (){
 
 // ------------------------- get Active Machine Models ---------------------------------------------
 
-export function getActiveMachineModels (){
+export function getActiveMachineModels(categoryId){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
@@ -160,7 +160,8 @@ export function getActiveMachineModels (){
       {
         params: {
           isActive: true,
-          isArchived: false
+          isArchived: false,
+          category:categoryId
         }
       });
       if(regEx.test(response.status)){

@@ -88,6 +88,12 @@ const slice = createSlice({
       state.success = false;
       state.isLoading = false;
     },
+    resetActiveCategories(state){
+      state.activeCategories = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
     // Set FilterBy
     setFilterBy(state, action) {
       state.filterBy = action.payload;
@@ -111,6 +117,7 @@ export const {
   setCategoryEditFormVisibility,
   resetCategory,
   resetCategories,
+  resetActiveCategories,
   setResponseMessage,
   setFilterBy,
   ChangeRowsPerPage,
