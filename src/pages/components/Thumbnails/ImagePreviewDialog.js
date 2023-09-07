@@ -4,14 +4,12 @@ import {
   Dialog,
   DialogActions,
   Grid,
-  Link,
   IconButton,
-  Box,
   CardContent,
   CardMedia,
   Button,
 } from '@mui/material';
-import { styled, alpha, useTheme } from '@mui/material/styles';
+import {alpha, useTheme } from '@mui/material/styles';
 import Iconify from '../../../components/iconify';
 import { CloseButton } from '../Defaults/CloseButton';
 // import Image from '../../../components/image';

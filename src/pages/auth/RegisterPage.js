@@ -1,9 +1,9 @@
-import { Helmet } from 'react-helmet-async';
+// import { Helmet } from 'react-helmet-async';
 // sections
 import Register from '../../sections/auth/Register';
 
 // ----------------------------------------------------------------------
-import { CONFIG } from '../../config-global';
+// import { CONFIG } from '../../config-global';
 
 export default function RegisterPage() {
   return (

@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MuiTelInput } from 'mui-tel-input';
-import { LoadingButton } from '@mui/lab';
+// import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Card,
@@ -18,12 +18,8 @@ import {
   Stack,
   Typography,
   Checkbox,
-  Container,
   FormControlLabel,
   Autocomplete,
-  DialogTitle,
-  Dialog,
-  InputAdornment,
   TextField,
 } from '@mui/material';
 import { MuiChipsInput } from 'mui-chips-input'
@@ -32,12 +28,11 @@ import { MuiChipsInput } from 'mui-chips-input'
 import { addCustomer } from '../../redux/slices/customer/customer';
 import { getSPContacts } from '../../redux/slices/customer/contact';
 // routes
-import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, {
   RHFSwitch,
-  RHFSelect,
   RHFAutocomplete,
   RHFTextField,
 } from '../../components/hook-form';
@@ -49,7 +44,7 @@ import { countries } from '../../assets/data';
 // util
 import { Cover } from '../components/Defaults/Cover';
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
-import { StyledCardContainer } from '../../theme/styles/default-styles';
+// import { StyledCardContainer } from '../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -75,7 +70,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const numberRegExp = /^[0-9]+$/;
+  // const numberRegExp = /^[0-9]+$/;
 
   const [phone, setPhone] = useState('');
   const [fax, setFaxVal] = useState('');
@@ -162,12 +157,11 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const {
     reset,
     watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const values = watch();
+    watch();
 
   useLayoutEffect(() => {
     dispatch(getSPContacts());

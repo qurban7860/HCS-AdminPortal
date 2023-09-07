@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 // @mui
 import { Card, Grid, Typography, Accordion, AccordionSummary, Link, Stack } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_CUSTOMER, PATH_MACHINE } from '../../routes/paths';
+import { PATH_CUSTOMER } from '../../routes/paths';
 // hooks
 import { TableNoData } from '../../components/table';
 // components
@@ -29,7 +29,7 @@ export default function CustomerContactList() {
   // hooks
   const address = {};
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   // --------------------------hooks--------------------------------------
   useEffect(() => {
@@ -44,9 +44,9 @@ export default function CustomerContactList() {
   }
 
   const isNotFound = !customerMachines.length;
-  const handleViewMachine = (id) => {
-    navigate(PATH_MACHINE.machines.view(id));
-  };
+  // const handleViewMachine = (id) => {
+  //   navigate(PATH_MACHINE.machines.view(id));
+  // };
 
   return (
     <>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+// import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import { Stack, Grid, Link, CardActionArea } from '@mui/material';
 import {
@@ -40,20 +40,20 @@ import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
 export default function CustomerContactList(currentContact = null) {
   const { order, orderBy } = useTable({ defaultOrderBy: '-createdAt' });
   const { customer } = useSelector((state) => state.customer);
-  const [openContact, setOpenContact] = useState(false);
+  const [ setOpenContact] = useState(false);
   const dispatch = useDispatch();
   const {
     contact: currentContactData,
     contacts,
     error,
-    initial,
+    // initial,
     responseMessage,
     contactEditFormVisibility,
     formVisibility,
   } = useSelector((state) => state.contact);
   const [checked, setChecked] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
-  const [activeIndex, setActiveIndex] = useState(null);
+  const [activeIndex] = useState(null);
   const [activeCardIndex, setCardActiveIndex] = useState(null);
   // for filtering contacts -------------------------------------
   const [isExpanded, setIsExpanded] = useState(false);
@@ -222,6 +222,7 @@ export default function CustomerContactList(currentContact = null) {
                             width: { xs: '100%', lg: '100%' },
                           }}
                         >
+                          
                           <StyledCardWrapper
                             condition1={activeCardIndex !== contact._id}
                             condition2={activeCardIndex === contact._id}
@@ -252,6 +253,7 @@ export default function CustomerContactList(currentContact = null) {
                                   }
                                 }}
                               >
+
                                 <Grid
                                   container
                                   direction="row"

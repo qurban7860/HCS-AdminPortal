@@ -1,24 +1,23 @@
-import { Helmet } from 'react-helmet-async';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
-import { Tab, Card, Tabs, Container, Box, Button } from '@mui/material';
+import { Tab, Card, Tabs, Container, Box } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-import { getContacts, getContact } from '../../../redux/slices/customer/contact';
+import { getContact } from '../../../redux/slices/customer/contact';
 
 // auth
-import { useAuthContext } from '../../../auth/useAuthContext';
+// import { useAuthContext } from '../../../auth/useAuthContext';
 // _mock_
-import {
-  _userAbout,
-  _userFeeds,
-  _userFriends,
-  _userGallery,
-  _userFollowers,
-} from '../../../_mock/arrays';
+// import {
+//   _userAbout,
+//   _userFeeds,
+//   _userFriends,
+//   _userGallery,
+//   _userFollowers,
+// } from '../../../_mock/arrays';
 // components
 import Iconify from '../../../components/iconify';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
@@ -73,7 +72,6 @@ export default function ContactViewPage() {
   ];
 
   return (
-    <>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Contact View"
@@ -138,6 +136,5 @@ export default function ContactViewPage() {
         )}
         
       </Container>
-    </>
   );
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { CardContent, CardMedia, Stack } from '@mui/material';
+import { CardContent,Stack } from '@mui/material';
 import {
   GridBaseCard1,
   CustomAvatarBase,
