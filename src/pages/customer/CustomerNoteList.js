@@ -1,7 +1,7 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
+// import { Helmet } from 'react-helmet-async';
+// import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+// import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
   Card,
@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from '../../redux/store';
 import { PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import { useSettingsContext } from '../../components/settings';
+// import { useSettingsContext } from '../../components/settings';
 import { useTable, getComparator, TableNoData } from '../../components/table';
 import Iconify from '../../components/iconify';
 import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
@@ -59,12 +59,12 @@ export default function CustomerNoteList() {
     defaultOrderBy: '-createdAt',
   });
   const dispatch = useDispatch();
-  const { themeStretch } = useSettingsContext();
+  // const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
-  const [filterName, setFilterName] = useState('');
+  // const navigate = useNavigate();
+  const [filterName] = useState('');
   const [tableData, setTableData] = useState([]);
-  const [filterStatus, setFilterStatus] = useState([]);
+  const [filterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [activeIndex, setActiveIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
@@ -80,7 +80,6 @@ export default function CustomerNoteList() {
 
   const {
     notes,
-    isLoading,
     error,
     initial,
     responseMessage,
@@ -88,7 +87,7 @@ export default function CustomerNoteList() {
     formVisibility,
   } = useSelector((state) => state.note);
 
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+   dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   const isNotFound = !notes.length && !noteEditFormVisibility && !formVisibility;
 
   // -----------------------------hooks-------------------------------

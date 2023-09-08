@@ -1,10 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { useNavigate, useParams } from 'react-router-dom';
+// import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Grid, Typography, Link, DialogActions, Button, Dialog } from '@mui/material';
+import { Grid, Dialog } from '@mui/material';
 import { setCustomerDialog } from '../../../redux/slices/customer/customer';
-import Iconify from '../../../components/iconify';
+// import Iconify from '../../../components/iconify';
 import { PATH_CUSTOMER } from '../../../routes/paths';
 import DialogLink from './DialogLink';
 import DialogLabel from './DialogLabel';

@@ -1,4 +1,3 @@
-import { Helmet } from 'react-helmet-async';
 import { useLayoutEffect } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
@@ -12,7 +11,7 @@ import { getSites } from '../../../redux/slices/customer/site';
 import { getContacts } from '../../../redux/slices/customer/contact';
 
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+// import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
@@ -32,7 +31,7 @@ export default function NoteEdit() {
   // console.log(id);
 
 
-  const { note } = useSelector((state) => state.note);
+  // const { note } = useSelector((state) => state.note);
 
   useLayoutEffect(() => {
     dispatch(getNote(id));
@@ -42,7 +41,6 @@ export default function NoteEdit() {
   }, [dispatch, id, customer._id]);
 
   return (
-    <>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           // heading="Edit Note"
@@ -58,6 +56,5 @@ export default function NoteEdit() {
 
         <NoteEditForm/>
       </Container>
-    </>
   );
 }

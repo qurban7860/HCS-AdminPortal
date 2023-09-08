@@ -11,7 +11,7 @@ import {
   ThumbnailCardMediaIcon,
   ThumbnailGrid,
   ThumbnailNameGrid,
-  ThumbnailIconify,
+  // ThumbnailIconify,
 } from '../../../theme/styles/document-styles';
 import DeleteIconButton, { ThumbnailIconButtonDefault } from './ThumbnailIconButtonsDefault';
 import ImagePreviewDialog from './ImagePreviewDialog';
@@ -20,7 +20,7 @@ import {
   getDocumentDownload,
   deleteDocumentFile,
 } from '../../../redux/slices/document/documentFile';
-import { document } from '../../../constants/document-constants';
+// import { document } from '../../../constants/document-constants';
 import { fileThumb } from '../../../components/file-thumbnail/utils';
 
 export function Thumbnail({

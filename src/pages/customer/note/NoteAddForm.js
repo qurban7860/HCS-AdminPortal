@@ -2,18 +2,18 @@ import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { LoadingButton } from '@mui/lab';
-import { Box, Button, Card, Grid, Stack, Typography, TextField, Autocomplete } from '@mui/material';
+// import { LoadingButton } from '@mui/lab';
+import { Box,Card, Grid, Stack, Typography, TextField, Autocomplete } from '@mui/material';
 // slice
 import { addNote, setNoteFormVisibility } from '../../../redux/slices/customer/note';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFSwitch, RHFSelect, RHFTextField } from '../../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFTextField } from '../../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
@@ -32,7 +32,7 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
   const [siteVal, setSiteVal] = useState('');
   const [contactVal, setContactVal] = useState('');
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
   // a note can be archived. An archived
@@ -66,12 +66,11 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
   const {
     reset,
     watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const values = watch();
+   watch();
 
   // useLayoutEffect(() => {
   //   // dispatch(getUsers(customer._id));

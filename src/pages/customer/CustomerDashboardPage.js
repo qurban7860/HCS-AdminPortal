@@ -1,5 +1,5 @@
-import { Helmet } from 'react-helmet-async';
-import { useState, useEffect, useLayoutEffect } from 'react';
+// import { Helmet } from 'react-helmet-async';
+// import { useState, useEffect, useLayoutEffect } from 'react';
 
 // @mui
 
@@ -10,7 +10,7 @@ import { Container, Grid } from '@mui/material';
 
 import { _appInvoices, _appManagers } from '../../_mock/arrays';
 // components
-import { useSettingsContext } from '../../components/settings';
+// import { useSettingsContext } from '../../components/settings';
 // sections
 import {
   AppNewInvoice,
@@ -19,22 +19,22 @@ import {
   AppCurrentDownload,
 } from '../../sections/@dashboard/general/app';
 // assets
-import { SeoIllustration } from '../../assets/illustrations';
+// import { SeoIllustration } from '../../assets/illustrations';
 
-import { useDispatch } from '../../redux/store';
+// import { useDispatch } from '../../redux/store';
 
-import CustomerWidget from './util/CustomerWidget';
-import Iconify from '../../components/iconify';
+// import CustomerWidget from './util/CustomerWidget';
+// import Iconify from '../../components/iconify';
 
-import { PATH_DASHBOARD } from '../../routes/paths';
+// import { PATH_DASHBOARD } from '../../routes/paths';
 
 import CustomerDashboardNavbar from './util/CustomerDashboardNavbar';
-import CustomerView from './CustomerAddForm';
+// import CustomerView from './CustomerAddForm';
 
 // ----------------------------------------------------------------------
 
 export default function CustomerDashboardPage() {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const MACHINES = [
     {
@@ -71,7 +71,7 @@ export default function CustomerDashboardPage() {
 
   const theme = useTheme();
 
-  const { themeStretch } = useSettingsContext();
+  // const { themeStretch } = useSettingsContext();
 
   return (
     <Container maxWidth={false}>
