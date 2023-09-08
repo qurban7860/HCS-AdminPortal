@@ -210,9 +210,7 @@ import {
   ComingSoonPage,
   MaintenancePage,
   ErrorPage,
-  UserInviteLanding,
-  SecurityUserInvite
-  
+  UserInviteLanding
 } from './elements';
 
 // ----------------------------------------------------------------------
