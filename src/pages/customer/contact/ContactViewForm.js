@@ -1,19 +1,18 @@
 import PropTypes from 'prop-types';
-import * as Yup from 'yup';
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import {  useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 // @mui
-import { LoadingButton } from '@mui/lab';
+// import { LoadingButton } from '@mui/lab';
 import { Grid } from '@mui/material';
 // global
-import { CONFIG } from '../../../config-global';
+// import { CONFIG } from '../../../config-global';
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+// import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import ConfirmDialog from '../../../components/confirm-dialog';
+// import ConfirmDialog from '../../../components/confirm-dialog';
 
 import {
   getContacts,
@@ -22,8 +21,8 @@ import {
   deleteContact,
 } from '../../../redux/slices/customer/contact';
 // Iconify
-import Iconify from '../../../components/iconify';
-import { fDate, fDateTime } from '../../../utils/formatTime';
+// import Iconify from '../../../components/iconify';
+// import { fDate, fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
@@ -44,22 +43,22 @@ export default function ContactViewForm({
   const { contact } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const [openConfirm, setOpenConfirm] = useState(false);
-  const [openPopover, setOpenPopover] = useState(null);
+  // const [openConfirm, setOpenConfirm] = useState(false);
+  // const [openPopover, setOpenPopover] = useState(null);
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
+  // const handleOpenConfirm = () => {
+  //   setOpenConfirm(true);
+  // };
 
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
+  // const handleCloseConfirm = () => {
+  //   setOpenConfirm(false);
+  // };
 
-  const handleClosePopover = () => {
-    setOpenPopover(null);
-  };
+  // const handleClosePopover = () => {
+  //   setOpenPopover(null);
+  // };
 
   const handleEdit = async () => {
     await dispatch(getContact(customer?._id, contact?._id));

@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import { TableCell, Link } from '@mui/material';
 import { alpha } from '@mui/material/styles';
-import { StyledTooltip } from '../../../theme/styles/default-styles';
+// import { StyledTooltip } from '../../../theme/styles/default-styles';
 import VerificationIcon from '../Icons/VerificationIcon';
-import Iconify from '../../../components/iconify';
+// import Iconify from '../../../components/iconify';
 
 export default function LinkTableCellWithIcon({ align, onClick, param, isVerified }) {
   return (

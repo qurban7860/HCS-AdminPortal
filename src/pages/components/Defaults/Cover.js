@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import { StyledRoot, StyledInfo } from '../../../theme/styles/default-styles';
 // utils
-import { PATH_DASHBOARD, PATH_MACHINE, PATH_SETTING } from '../../../routes/paths';
+import { PATH_MACHINE, PATH_SETTING } from '../../../routes/paths';
 // auth
-import { useAuthContext } from '../../../auth/useAuthContext';
+// import { useAuthContext } from '../../../auth/useAuthContext';
 // components
-import Image from '../../../components/image';
+// import Image from '../../../components/image';
 import CoverCustomAvatar from './CoverCustomAvatar';
 import CoverSettingsIcons from './CoverSettingsIcons';
 import CoverTitles from './CoverTitles';
