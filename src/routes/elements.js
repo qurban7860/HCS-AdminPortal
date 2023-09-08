@@ -53,21 +53,13 @@ export const NoteEdit = Loadable(lazy(() => import('../pages/customer/note/NoteE
 export const NoteView = Loadable(lazy(() => import('../pages/customer/note/NoteView')));
 
 // DASHBOARD: USER
-export const SecurityUserProfile = Loadable(
-  lazy(() => import('../pages/user/SecurityUserProfile'))
-);
-export const SecurityUserChangePassword = Loadable(
-  lazy(() => import('../pages/user/SecurityUserChangePassword'))
-);
-export const SecurityUserChangePasswordByAdmin = Loadable(
-  lazy(() => import('../pages/user/SecurityUserChangePasswordByAdmin'))
-);
+export const SecurityUserProfile = Loadable(lazy(() => import('../pages/user/SecurityUserProfile')));
+export const SecurityUserChangePassword = Loadable(lazy(() => import('../pages/user/SecurityUserChangePassword')));
+export const SecurityUserChangePasswordByAdmin = Loadable(lazy(() => import('../pages/user/SecurityUserChangePasswordByAdmin')));
 export const SecurityUserList = Loadable(lazy(() => import('../pages/user/SecurityUserList')));
 export const SecurityUserAdd = Loadable(lazy(() => import('../pages/user/SecurityUserAdd')));
 export const SecurityUserEdit = Loadable(lazy(() => import('../pages/user/SecurityUserEdit')));
-export const SecurityUserViewForm = Loadable(
-  lazy(() => import('../pages/user/SecurityUserViewForm'))
-);
+export const SecurityUserViewForm = Loadable(lazy(() => import('../pages/user/SecurityUserViewForm')));
 
 // SECURITY USERS ROLES
 export const RoleList = Loadable(lazy(() => import('../pages/user/role/RoleList')));

@@ -197,6 +197,7 @@ export function addSecurityUser(param) {
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}security/users`, data);
       if(regEx.test(response.status)){
+        await axios.get(`${CONFIG.SERVER_URL}security/users/sendUserInvite/${response?.data?.user?._id}`);
         dispatch(setSecurityUserFormVisibility(false))
         dispatch(getSecurityUsers());
       }

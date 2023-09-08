@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 import { Snacks } from '../../../../constants/machine-constants';
 
 export const LicenseSchema = Yup.object().shape({
-  licenseKey: Yup.string().max(1000).required(Snacks.licenseKeyRequired),
+  licenseKey: Yup.string().max(2000).required(Snacks.licenseKeyRequired),
   production: Yup.number().typeError('Production must be a number').transform((value, originalValue) => {
     if (typeof originalValue === 'string' && originalValue.trim() === '') return undefined;
     return parseFloat(value);

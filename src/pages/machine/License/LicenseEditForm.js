@@ -35,8 +35,8 @@ export default function LicenseEditForm() {
       licenseKey: license?.licenseKey ||'',
       version:license?.licenseDetail?.version ||'',
       type:license?.licenseDetail?.type||null,
-      deviceName:license?.licenseDetail?.deviceName ||'',
       deviceGUID:license?.licenseDetail?.deviceGUID ||'',
+      deviceName:license?.licenseDetail?.deviceName ||'',
       production:license?.licenseDetail?.production ||'',
       waste:license?.licenseDetail?.waste ||'',
       extensionTime:license?.licenseDetail?.extensionTime ||'',
@@ -114,67 +114,48 @@ export default function LicenseEditForm() {
         container
         spacing={4}>
         <Grid item xs={18} md={12}>
-          <Card sx={{ p: 3 }}>
-              <Box
-                rowGap={2}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
-              >
-                  <RHFTextField name='licenseKey' label='License Key' inputProps={{ maxLength: 60 }}/>
-                  <RHFTextField name="version" label="Version" inputProps={{ maxLength: 20 }}/>
-                  <RHFTextField name="deviceGUID" label="Device GUID" inputProps={{ maxLength: 50 }}/>
-                  <RHFTextField name="deviceName" label="Device Name" inputProps={{ maxLength: 50 }}/>
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    name="type"
-                    defaultValue={defaultValues?.type}
-                    options={LicenseTypes}
-                    onChange={handleTypeChange}
-                    renderInput={(params) => <TextField {...params} label="Type" />}
-                  />
-              </Box>
-              <Box
-                sx={{marginTop:2}}
-                rowGap={2}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
-              >
-                  <RHFTextField name="production" label="Production" inputProps={{ maxLength: 20 }}/>
-                  <RHFTextField name="waste" label="Waste" inputProps={{ maxLength: 20 }}/>
+        <Card sx={{ p: 3 }}>
+            <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}>
+              <RHFTextField name="deviceGUID" label="Device GUID" inputProps={{ maxLength: 50 }} disabled/>
+              <RHFTextField name="deviceName" label="Device Name" inputProps={{ maxLength: 50 }} disabled/>
+              <Autocomplete disablePortal id="combo-box-demo" name="type"
+                defaultValue={defaultValues?.type}
+                options={LicenseTypes} onChange={handleTypeChange}
+                renderInput={(params) => <TextField {...params} label="Type" />}
+              />
+              <RHFTextField name="version" label="Version" inputProps={{ maxLength: 20 }}/>
+            </Box>
+            <Box sx={{marginTop:2}} rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)',}}>
+                <RHFTextField name='licenseKey' label='License Key' minRows={5} multiline/>
+            </Box>
+            <Box sx={{marginTop:2}} rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}>
+              <RHFTextField name="production" label="Production" inputProps={{ maxLength: 20 }}/>
+              <RHFTextField name="waste" label="Waste" inputProps={{ maxLength: 20 }}/>
+              <DatePicker
+                label="Extension Time"
+                name="extensionTime"
+                value={extensionTime}
+                onChange={handleExtensionTimeChange}
+                renderInput={params => <TextField {...params} error={!!extensionTimeError} helperText={extensionTimeError} />}
+              />
 
-                  <DatePicker
-                    label="Extension Time"
-                    name="extensionTime"
-                    value={extensionTime}
-                    onChange={handleExtensionTimeChange}
-                    renderInput={params => <TextField {...params} error={!!extensionTimeError} helperText={extensionTimeError} />}
-                  />
+              <DatePicker
+                label="Request Time"
+                name="requestTime"
+                value={requestTime}
+                onChange={handleRequestTimeChange}
+                renderInput={params => <TextField {...params} error={!!requestTimeError} helperText={requestTimeError} />}
+              />
 
-                  <DatePicker
-                    label="Request Time"
-                    name="requestTime"
-                    value={requestTime}
-                    onChange={handleRequestTimeChange}
-                    renderInput={params => <TextField {...params} error={!!requestTimeError} helperText={requestTimeError} />}
-                  />
-                  <RHFSwitch name="isActive" labelPlacement="start"
-                    label={
-                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
-                        Active
-                      </Typography>
-                    }
-                  />
-              </Box>
-              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              <RHFSwitch name="isActive" labelPlacement="start"
+                label={
+                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
+                    Active
+                  </Typography>
+                }
+              />
+            </Box>
+            <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>
         </Grid>
       </Grid>
