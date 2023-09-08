@@ -287,6 +287,10 @@ export const PATH_SETTING = {
     view: (id) => path(ROOTS_SETTING, `/userConfig/${id}/view`),
     edit: (id) => path(ROOTS_SETTING, `/userConfig/${id}/edit`)
   },
+  invite: {
+    list: path(ROOTS_SETTING, '/invite/list'),
+    view: (id) => path(ROOTS_SETTING, `/invite/${id}/view`)
+  },
 };
 
 export const PATH_SITEMAP = {

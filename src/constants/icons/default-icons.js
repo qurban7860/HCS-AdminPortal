@@ -157,9 +157,9 @@ export const ICONS = {
     heading: 'Machine Service Record Configs',
   },
 
-  MACHINE_SERVICE_CATEGORY: {
+  MACHINE_SERVICE_CATEGORIES: {
     icon: 'mdi:cog',
-    heading: 'Service Category',
+    heading: 'Service Categories',
   },
 
   // @root - Settings - settings
@@ -184,6 +184,10 @@ export const ICONS = {
   USER_CONFIG: {
     icon: 'mdi:account-settings-variant',
     heading: 'User Configurations',
+  },
+  USER_INVITE: {
+    icon: 'mdi:person-add',
+    heading: 'User Invites',
   },
   REGION: {
     icon: 'mdi:map-marker-circle',

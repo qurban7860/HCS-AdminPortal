@@ -200,6 +200,10 @@ import {
   ConfigView,
   ConfigEdit,
 
+   // User Invite
+   UserInvitationList,
+   UserInvitationView,
+
 //   
   BlankPage,
   PermissionDeniedPage,
@@ -576,6 +580,13 @@ export default function Router() {
             { path: ':id/view', element: <UserConfigViewForm /> },
             { path: ':id/edit', element: <UserConfigEditForm /> }
 
+          ],
+        },
+        {
+          path: 'invite',
+          children: [
+            { path: 'list', element: <UserInvitationList /> },
+            { path: ':id/view', element: <UserInvitationView /> },
           ],
         },
       ],
