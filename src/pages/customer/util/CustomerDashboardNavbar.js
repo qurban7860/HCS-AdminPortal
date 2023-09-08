@@ -1,6 +1,6 @@
 // @mui
 import { Grid } from '@mui/material';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // _mock_
 import CustomerWidget from './CustomerWidget';
 

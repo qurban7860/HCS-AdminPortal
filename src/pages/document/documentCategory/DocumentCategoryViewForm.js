@@ -1,17 +1,17 @@
-import PropTypes from 'prop-types';
-import { useMemo, useState } from 'react';
+// import PropTypes from 'prop-types';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Switch, Card, Grid, Stack, Typography, Button, Tooltip } from '@mui/material';
+import { Card, Grid, Tooltip } from '@mui/material';
 // redux
 import { deleteDocumentCategory } from '../../../redux/slices/document/documentCategory';
 // paths
-import { PATH_DASHBOARD, PATH_DOCUMENT, PATH_SETTING } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import { fDate, fDateTime } from '../../../utils/formatTime';
+// import { fDate, fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';

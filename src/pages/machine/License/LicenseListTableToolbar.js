@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
-import { sentenceCase } from 'change-case';
+// import { sentenceCase } from 'change-case';
 // @mui
 import { Stack, Button, TextField, InputAdornment, Grid } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { useDispatch } from '../../../redux/store';
 // components
 import Iconify from '../../../components/iconify';
-import { PATH_DOCUMENT } from '../../../routes/paths';
+// import { PATH_DOCUMENT } from '../../../routes/paths';
 import { setLicenseFormVisibility } from '../../../redux/slices/products/license';
 
 // ----------------------------------------------------------------------
@@ -30,7 +30,7 @@ export default function LicenseListTableToolbar({
   onResetFilter,
   onFilterStatus,
 }) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const dispatch = useDispatch();
   const toggleAdd = () => dispatch(setLicenseFormVisibility(true));
   return (

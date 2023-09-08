@@ -27,7 +27,7 @@ import { CONFIG } from '../../config-global';
 
 export default function GeneralAppPage() {
   const dispatch = useDispatch();
-  const { count, isLoading, error, initial, responseMessage } = useSelector((state) => state.count);
+  const { count} = useSelector((state) => state.count);
   const enviroment = CONFIG.ENV.toLowerCase();
   const showDevGraphs = enviroment !== 'live';
 
@@ -39,7 +39,7 @@ export default function GeneralAppPage() {
   const countryWiseMachineCountCountries = [];
   const countryWiseSiteCountNumber = [];
   const countryWiseSiteCountCountries = [];
-  const yearWiseMachines = [];
+  // const yearWiseMachines = [];
 
   if (count && count?.modelWiseMachineCount) {
     count.modelWiseMachineCount.map((model) => {

@@ -9,9 +9,9 @@ import {
   Badge,
   Button,
   Avatar,
-  Tooltip,
+  // Tooltip,
   Divider,
-  IconButton,
+  // IconButton,
   Typography,
   ListItemText,
   ListSubheader,
@@ -21,7 +21,7 @@ import {
 // utils
 import { fToNow } from '../../../utils/formatTime';
 // _mock_
-import { _notifications } from '../../../_mock/arrays';
+// import { _notifications } from '../../../_mock/arrays';
 // components
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
@@ -33,7 +33,7 @@ import { IconButtonAnimate } from '../../../components/animate';
 export default function NotificationsPopover() {
   const [openPopover, setOpenPopover] = useState(null);
 
-  const [notifications, setNotifications] = useState(null);
+  const [notifications] = useState(null);
 
   // const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
 
@@ -45,14 +45,14 @@ export default function NotificationsPopover() {
     setOpenPopover(null);
   };
 
-  const handleMarkAllAsRead = () => {
-    setNotifications(
-      // notifications.map((notification) => ({
-      //   ...notification,
-      //   isUnRead: false,
-      // }))
-    );
-  };
+  // const handleMarkAllAsRead = () => {
+  //   setNotifications(
+  //     // notifications.map((notification) => ({
+  //     //   ...notification,
+  //     //   isUnRead: false,
+  //     // }))
+  //   );
+  // };
 
   return (
     <>

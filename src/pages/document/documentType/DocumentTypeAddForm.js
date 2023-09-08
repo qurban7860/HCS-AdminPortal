@@ -1,14 +1,14 @@
 import PropTypes from 'prop-types';
-import * as Yup from 'yup';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+// import * as Yup from 'yup';
+import { useEffect,  useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { LoadingButton } from '@mui/lab';
-import { Card, Grid, Stack, Typography, Autocomplete, TextField, Container } from '@mui/material';
+// import { LoadingButton } from '@mui/lab';
+import { Card, Grid, Stack, Autocomplete, TextField, Container } from '@mui/material';
 // routes
 import { PATH_SETTING } from '../../../routes/paths';
 // schema
@@ -23,7 +23,7 @@ import { setCustomerDocumentFormVisibility } from '../../../redux/slices/documen
 import { getActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
+import FormProvider, { RHFTextField } from '../../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import { Cover } from '../../components/Defaults/Cover';
@@ -64,8 +64,8 @@ export default function DocumentTypeAddForm({ currentDocument }) {
 
   const {
     reset,
-    watch,
-    setValue,
+    // watch,
+    // setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -81,7 +81,7 @@ export default function DocumentTypeAddForm({ currentDocument }) {
       if (documentCategoryVal) {
         data.docCategory = documentCategoryVal._id;
       }
-      const response = await dispatch(addDocumentType(data));
+  await dispatch(addDocumentType(data));
       reset();
       enqueueSnackbar(Snacks.docSaved);
       navigate(PATH_SETTING.documentType.list);
