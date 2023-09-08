@@ -101,6 +101,11 @@ export const UserConfigEditForm = Loadable(lazy(() => import('../pages/user/conf
 export const UserConfigViewForm = Loadable(lazy(() => import('../pages/user/config/ConfigView')));
 
 
+// User Invitations List
+export const UserInvitationList = Loadable(lazy(() => import('../pages/user/invite/UserInviteList')));
+export const UserInvitationView = Loadable(lazy(() => import('../pages/user/invite/UserInviteViewForm')));
+
+
 
 // License
 // export const MachineLicenses = Loadable(lazy(()=> import('../pages/machine/License/MachineLicenses')));
@@ -337,18 +342,10 @@ export const ModuleView = Loadable(
 
 // Configs
 
-export const ConfigAdd = Loadable(
-  lazy(() => import('../pages/config/ConfigAdd'))
-);
-export const ConfigList = Loadable(
-  lazy(() => import('../pages/config/ConfigList'))
-);
-export const ConfigEdit = Loadable(
-  lazy(() => import('../pages/config/ConfigEdit'))
-);
-export const ConfigView = Loadable(
-  lazy(() => import('../pages/config/ConfigView'))
-);
+export const ConfigAdd = Loadable(lazy(() => import('../pages/config/ConfigAdd')));
+export const ConfigList = Loadable(lazy(() => import('../pages/config/ConfigList')));
+export const ConfigEdit = Loadable(lazy(() => import('../pages/config/ConfigEdit')));
+export const ConfigView = Loadable(lazy(() => import('../pages/config/ConfigView')));
 // export const machineDocumentView = Loadable(lazy(()=>     import('../pages/')));
 // export const machineDocumentEdit = Loadable(lazy(()=>     import('../pages/')));
 
