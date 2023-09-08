@@ -113,7 +113,7 @@ export function getUserInvites (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}security/userInvitations/`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/invites/`);
       dispatch(slice.actions.getUserInvitesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('User Invites loaded successfully'));
     } catch (error) {
@@ -130,7 +130,7 @@ export function getUserInvite(Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}security/userInvitations/${Id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/invites/${Id}`);
       dispatch(slice.actions.getUserInviteSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('User Invite loaded successfully'));
     } catch (error) {

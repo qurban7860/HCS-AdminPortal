@@ -27,6 +27,7 @@ export default function ViewFormEditDeleteButtons({
   handleTransfer,
   handleUpdatePassword,
   handleUserInvite,
+  isInviteLoading,
   type,
   sites,
   mainSite,
@@ -210,8 +211,8 @@ export default function ViewFormEditDeleteButtons({
           <LoadingButton
             variant="contained"
             color="primary"
-            loading={(isSubmitSuccessful || isSubmitting) && isLoading}
-            disabled={isSubmitting}
+            loading={isInviteLoading}
+            disabled={isInviteLoading}
             onClick={()=>{setOpenUserInviteConfirm(false); handleUserInvite()}}
           >
             Send
@@ -230,7 +231,7 @@ export default function ViewFormEditDeleteButtons({
           <LoadingButton
             variant="contained"
             color="primary"
-            loading={(isSubmitSuccessful || isSubmitting) && isLoading}
+            loading={isLoading}
             disabled={isSubmitting}
             onClick={handleSubmit(handleVerificationConfirm)}
             // onClick={()=> {handleVerification(); handleCloseConfirm('Verification');}}
@@ -287,6 +288,7 @@ ViewFormEditDeleteButtons.propTypes = {
   handleTransfer: PropTypes.func,
   handleUpdatePassword: PropTypes.func,
   handleUserInvite: PropTypes.func,
+  isInviteLoading:PropTypes.bool,
   handleEdit: PropTypes.func,
   onDelete: PropTypes.func,
   type: PropTypes.string,
