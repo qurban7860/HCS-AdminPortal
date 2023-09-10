@@ -5,7 +5,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, Typography, Container, Autocomplete, TextField } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Container, Autocomplete, TextField, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Button, CardContent } from '@mui/material';
+import { createTheme } from '@mui/material/styles';
 // slice
 import {
   updateServiceRecordConfig,
@@ -13,7 +14,7 @@ import {
   getServiceRecordConfig,
 } from '../../../redux/slices/products/serviceRecordConfig';
 import { getActiveMachineModels } from '../../../redux/slices/products/model';
-import { getMachineServiceParams } from '../../../redux/slices/products/machineServiceParams';
+import { getActiveMachineServiceParams } from '../../../redux/slices/products/machineServiceParams';
 import { getActiveServiceCategories } from '../../../redux/slices/products/serviceCategory';
 
 // routes
@@ -27,20 +28,25 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 // constants
 import { FORMLABELS } from '../../../constants/default-constants';
+import useResponsive from '../../../hooks/useResponsive';
+import  IconTooltip  from '../../components/Icons/IconTooltip'
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+
 // ----------------------------------------------------------------------
 
 export default function ServiceRecordConfigEditForm() {
-  const { error, serviceRecordConfig, recordTypes, headerFooterTypes } = useSelector((state) => state.serviceRecordConfig);
-  const { machineServiceParams } = useSelector((state) => state.machineServiceParam);
+  const { serviceRecordConfig, recordTypes, headerFooterTypes } = useSelector((state) => state.serviceRecordConfig);
+  const { activeMachineServiceParams } = useSelector((state) => state.machineServiceParam);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
-  const [sortedMachineServiceParams, setSortedMachineSerivceParams] = useState([]);
-  const [selectedRecordType, setRecordType] = useState('');
-  const [selectedHeaderType, setHeaderType] = useState('');
-  const [selectedFooterType, setFooterType] = useState('');
+  const isMobile = useResponsive('down', 'sm');
+  const theme = createTheme();
 
+  const [checkParamNumber, setCheckParamNumber]= useState(0);
+  const [checkParam, setCheckParam] = useState([]);
 
   const EditServiceRecordConfigSchema = Yup.object().shape({
     recordType: Yup.object().label('Record Type').nullable(),
@@ -49,8 +55,8 @@ export default function ServiceRecordConfigEditForm() {
     docTitle: Yup.string().required(),
     textBeforeParams: Yup.string(),
     // Check Params
-    paramListTitle: Yup.string(),
-    paramList : Yup.array(),
+    // paramListTitle: Yup.string(),
+    // paramList : Yup.array(),
 
     textAfterFields: Yup.string(),
     isOperatorSignatureRequired: Yup.boolean(),
@@ -75,30 +81,28 @@ export default function ServiceRecordConfigEditForm() {
 
   const defaultValues = useMemo(
     () => ({
-    recordType: serviceRecordConfig?.recordType || '',
-    machineModel: serviceRecordConfig?.machineModel || '',
-    category: serviceRecordConfig?.category || '',
+    recordType: {name: serviceRecordConfig?.recordType} || null,
+    machineModel: serviceRecordConfig?.machineModel || null,
+    category: serviceRecordConfig?.category || null,
     docTitle: serviceRecordConfig?.docTitle || '',
     textBeforeParams: serviceRecordConfig?.textBeforeParams || '',
 
-    // Check Params
-    paramListTitle: serviceRecordConfig?.checkParams[0]?.paramListTitle || '',
-    paramList : serviceRecordConfig?.checkParams[0]?.paramList || [],
+    // // Check Params
+    // paramListTitle: serviceRecordConfig?.checkParams[0]?.paramListTitle || '',
+    // paramList : serviceRecordConfig?.checkParams[0]?.paramList || [],
 
     textAfterFields: serviceRecordConfig?.textAfterFields || '',
     isOperatorSignatureRequired: serviceRecordConfig?.isOperatorSignatureRequired || false,
     enableServiceNote: serviceRecordConfig?.enableServiceNote || false,
     enableMaintenanceRecommendations: serviceRecordConfig?.enableMaintenanceRecommendations || false,
     enableSuggestedSpares: serviceRecordConfig?.enableSuggestedSpares || false,
-
     // header
-    headerType: serviceRecordConfig?.header || '',
+    headerType: { name: serviceRecordConfig?.header?.type } || null,
     headerLeftText: serviceRecordConfig?.header?.leftText || '',
     headerCenterText: serviceRecordConfig?.header?.centerText || '',
     headerRightText: serviceRecordConfig?.header?.rightText || '',
-
     // footer
-    footerType: serviceRecordConfig?.footer || '',
+    footerType: { name: serviceRecordConfig?.footer?.type } || null,
     footerLeftText: serviceRecordConfig?.footer?.leftText || '',
     footerCenterText: serviceRecordConfig?.footer?.centerText || '',
     footerRightText: serviceRecordConfig?.footer?.rightText || '',
@@ -122,7 +126,7 @@ export default function ServiceRecordConfigEditForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const values = watch();
+  const { recordType, machineModel } = watch();
 
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
   const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
@@ -132,25 +136,13 @@ export default function ServiceRecordConfigEditForm() {
   useLayoutEffect(() => {
     dispatch(getServiceRecordConfig(id));
     dispatch(getActiveMachineModels())
-    dispatch(getMachineServiceParams());
+    dispatch(getActiveMachineServiceParams());
     dispatch(getActiveServiceCategories());
-
-    const selectedRecordTypeName = recordTypes.find((recordType) => recordType.name === serviceRecordConfig.recordType);
-    if(selectedRecordTypeName){
-      setRecordType(selectedRecordTypeName);
-    }
-
-    const selectedHeaderTypeName = headerFooterTypes.find((headerFooterType) => headerFooterType.name === serviceRecordConfig.header.type);
-    if(selectedHeaderTypeName){
-      setHeaderType(selectedHeaderTypeName);
-    }
-
-    const selectedFooterTypeName = headerFooterTypes.find((headerFooterType) => headerFooterType.name === serviceRecordConfig.footer.type);
-    if(selectedFooterTypeName){
-      setFooterType(selectedFooterTypeName);
-    }
   }, [dispatch, id]);
   /* eslint-enable */
+  useEffect(() => {
+    setCheckParam(serviceRecordConfig?.checkParams)
+  }, [serviceRecordConfig]);
 
   useEffect(() => {
     if (serviceRecordConfig) {
@@ -158,20 +150,6 @@ export default function ServiceRecordConfigEditForm() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [serviceRecordConfig]);
-  
-  useEffect(() => {
-    const mappedMachineServiceParams = machineServiceParams.map((serviceParam) => ({
-      value: serviceParam?._id,
-      label: serviceParam.name,
-    }));
-
-    const sortedMachineServiceParamsTemp = [...mappedMachineServiceParams].sort((a, b) => {
-      const nameA = a.label.toUpperCase();
-      const nameB = b.label.toUpperCase();
-      return nameA.localeCompare(nameB);
-    });
-    setSortedMachineSerivceParams(sortedMachineServiceParamsTemp);
-  }, [machineServiceParams]);
 
   const toggleCancel = () => {
     dispatch(setServiceRecordConfigEditFormVisibility(false));
@@ -179,8 +157,7 @@ export default function ServiceRecordConfigEditForm() {
   };
   const onSubmit = async (data) => {
     try {
-      // console.log(data);
-      data.recordType = selectedRecordType.name;
+      console.log(data);
       await dispatch(updateServiceRecordConfig(data, id));
       reset();
       dispatch(setServiceRecordConfigEditFormVisibility(false));
@@ -191,6 +168,63 @@ export default function ServiceRecordConfigEditForm() {
       console.error(err.message);
     }
   };
+
+  const handleInputChange = (event, index) => {
+    const { name, value } = event.target;
+    const updatedCheckParam = [...checkParam];
+    updatedCheckParam[index] = {
+      ...updatedCheckParam[index],
+      [name]: value,
+    };
+    setCheckParam(updatedCheckParam);
+  };
+
+  const handleDragStart = (e, index) => {
+    e.dataTransfer.setData('index', index);
+  };
+
+  const handleListDrop = (e, index) => {
+    const draggedIndex = e.dataTransfer.getData('index');
+    const updatedCheckParam = [...checkParam];
+    const [draggedRow] = updatedCheckParam.splice(draggedIndex, 1);
+    updatedCheckParam.splice(index, 0, draggedRow);
+    setCheckParam(updatedCheckParam); 
+    if(draggedIndex > checkParamNumber && index <= checkParamNumber ){
+      setCheckParamNumber(prevCheckParamNumber => prevCheckParamNumber + 1)
+    }else if(draggedIndex < checkParamNumber && index >= checkParamNumber){
+      setCheckParamNumber(prevCheckParamNumber => prevCheckParamNumber - 1)
+    }else if(Number(draggedIndex) === checkParamNumber && index > checkParamNumber){
+      setCheckParamNumber(prevCheckParamNumber => prevCheckParamNumber + 1)
+    }else if(Number(draggedIndex) === checkParamNumber && index < checkParamNumber){
+      setCheckParamNumber(prevCheckParamNumber => prevCheckParamNumber - 1)
+    }
+  };
+
+  const handleListDragStart = (e, index) => {
+    e.dataTransfer.setData('index', index);
+  };
+
+  const handleDrop = (e, index) => {
+    const draggedIndex = e.dataTransfer.getData('index');
+    const updatedCheckParam = [...checkParam]; // Clone the state
+    const [draggedRow] = updatedCheckParam[checkParamNumber].paramList.splice(draggedIndex, 1);
+    updatedCheckParam[checkParamNumber].paramList.splice(index, 0, draggedRow);
+    setCheckParam(updatedCheckParam); // Set the state with the updated value
+  };
+
+  const handleRowDelete = (index) => {
+    const updatedRows = [...checkParam];
+    updatedRows[checkParamNumber].paramList.splice(index, 1);
+    setCheckParam(updatedRows);
+  };
+  
+  const toggleEdit = (index) => {setCheckParamNumber(index)};
+
+  const onDelete = (indexToRemove) => {
+    const newArray =  checkParam.filter((_, index) => index !== indexToRemove);
+      setCheckParam(newArray);
+  };
+
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
@@ -214,7 +248,7 @@ export default function ServiceRecordConfigEditForm() {
                     sm: 'repeat(2, 1fr)',
                   }}
                 >
-                  <Autocomplete
+                  {/* <Autocomplete
                     options={recordTypes}
                     value={selectedRecordType}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
@@ -239,6 +273,17 @@ export default function ServiceRecordConfigEditForm() {
                       />
                     )}
                     ChipProps={{ size: 'small' }}
+                  /> */}
+                  <RHFAutocomplete 
+                    name="recordType"
+                    label="Record Type"
+                    value={recordType}
+                    options={recordTypes}
+                    isOptionEqualToValue={(option, value) => option.name === value.name}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                    )}
                   />
                   <RHFAutocomplete 
                     name="category"
@@ -321,27 +366,107 @@ export default function ServiceRecordConfigEditForm() {
                     }
                   /> 
                 </Box>
-                <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
-                  Check Params
-                </Typography>
-                <Box
-                  rowGap={2}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{
-                    xs: 'repeat(1, 1fr)',
-                    sm: 'repeat(2, 1fr)',
-                  }}
-                >
-                  <RHFTextField name="paramListTitle" label="Param List Title" />
-                  <RHFMultiSelect
-                    chip
-                    checkbox
-                    name="paramList"
-                    label="Param List"
-                    options={sortedMachineServiceParams}
-                  />                
-                </Box>
+                <Card sx={{ p: 3 }}>
+                    <Stack spacing={2}>
+                    <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
+                      Check Items
+                    </Typography>
+                    <RHFTextField name="paramListTitle" label="Item List Title" 
+                        value={checkParam[checkParamNumber]?.paramListTitle || ''}
+                        onChange={(event) => handleInputChange(event, checkParamNumber)} 
+                      />
+                    <Box rowGap={2} columnGap={2} display="grid"
+                      gridTemplateColumns={{
+                        xs: 'repeat(1, 1fr)',
+                        sm: 'repeat(2, 1fr)',
+                      }}
+                    >
+                      <RHFAutocomplete
+                        multiple
+                        name="paramList"
+                        label="Item List"
+                        value={checkParam[checkParamNumber]?.paramList || []}
+                        options={activeMachineServiceParams}
+                        isOptionEqualToValue={(option, value) => option._id === value._id}
+                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                        renderOption={(props, option) => (
+                          <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                        )}
+                        onChange={(event, newValue) => {
+                          const updatedEvent = { target: { name: "paramList", value: newValue }};
+                          handleInputChange(updatedEvent, checkParamNumber);
+                          event.preventDefault();
+                        }}
+                        renderTags={(value, getTagProps) => `${value.length} Items Selected!`}
+                      /> 
+                    </Box>
+                  <Grid container item md={12} >
+                    <Card sx={{ minWidth: 360, width: '100%', minHeight:260 , my:3, border:'1px solid'}}>
+                    <TableContainer component={Paper}  >
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>No.</TableCell>
+                              <TableCell>Checked Items</TableCell>
+                              <TableCell>Action</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {checkParam[checkParamNumber]?.paramList?.map((row, index) => (
+                              <TableRow
+                                key={row.id}
+                                draggable
+                                onDragStart={(e) => handleDragStart(e, index)}
+                                onDragOver={(e) => e.preventDefault()}
+                                onDrop={(e) => handleDrop(e, index)}
+                              >
+                                <TableCell>{index+1}</TableCell>
+                                <TableCell>{row.name}</TableCell>
+                                <TableCell>
+                                  <IconTooltip
+                                    title='Delete'
+                                    color={theme.palette.error.light}
+                                    icon="mdi:trash-can-outline"
+                                    onClick={() => handleRowDelete(index)}
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                      </Card>
+                      <Grid display="flex" justifyContent="flex-end" sx={{width: '100%'}}>
+                        <Button
+                          disabled={!checkParam[checkParamNumber]?.paramList?.length > 0}
+                          onClick={ () => setCheckParamNumber(prevCheckParamNumber => prevCheckParamNumber + 1) }
+                          fullWidth={ isMobile }
+                          variant="contained" color='primary' sx={{ ...(isMobile && { width: '100%' })}}
+                        >Next
+                        </Button>
+                      </Grid>
+                    </Grid>
+                    <Grid>
+                      <Grid container justifyContent="flex-start" gap={1}>
+                      {checkParam.map((value, index) =>( typeof value?.paramList?.length === 'number' &&
+                        <TableRow
+                                draggable
+                                onDragStart={(e) => handleListDragStart(e, index)}
+                                onDragOver={(e) => e.preventDefault()}
+                                onDrop={(e) => handleListDrop(e, index)}
+                              >
+                        <Card sx={{p:2, width:'125px' ,border:'1px solid'}}>
+                          <CardContent sx={{ mt:-3, mr:-5, mb:1,display:'flex', justifyContent:'flex-end'}} >
+                              <ViewFormEditDeleteButtons handleEdit={()=>toggleEdit(index)} onDelete={()=>onDelete(index)} />
+                          </CardContent>
+                          <Typography variant='overline' sx={{ ml:1}}  >Items: {`${value?.paramList?.length}`}</Typography>
+                        </Card>
+                        </TableRow>
+                      ))}
+                      </Grid>
+                    </Grid>
+                    </Stack>
+                  </Card>
                 <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
                   Header
                 </Typography>
@@ -357,7 +482,7 @@ export default function ServiceRecordConfigEditForm() {
                   <RHFAutocomplete 
                     name="headerType" label="Header Type"
                     options={headerFooterTypes}
-                    value={selectedHeaderType}
+                    // value={headerType}
                     isOptionEqualToValue={(option, value) => option.name === value.name}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     renderOption={(props, option) => (
@@ -384,9 +509,8 @@ export default function ServiceRecordConfigEditForm() {
                     name="footerType" 
                     label="Footer Type"
                     options={headerFooterTypes}
-                    value={selectedFooterType}
-
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    // value={footerTyname
+                    isOptionEqualToValue={(option, value) => option.name === value.name}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     renderOption={(props, option) => (
                       <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
