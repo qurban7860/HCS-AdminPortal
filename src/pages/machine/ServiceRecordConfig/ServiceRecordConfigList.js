@@ -32,6 +32,8 @@ import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
+import { FORMLABELS } from '../../../constants/default-constants';
+
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -217,7 +219,7 @@ export default function ServiceRecordConfigList() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Service Record Config" icon="material-symbols:list-alt-outline" setting="enable" />
+          <Cover name={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_CONFIGS} icon="material-symbols:list-alt-outline" setting="enable" />
         </StyledCardContainer>
 
         <TableCard>
@@ -341,10 +343,12 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (category) =>
-        category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (category.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-        fDate(category?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+      (serviceConfig) =>
+        serviceConfig?.recordType?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        serviceConfig?.docTitle?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        serviceConfig?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        serviceConfig?.machineModel?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(serviceConfig?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 

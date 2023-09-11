@@ -140,13 +140,16 @@ function ToolsInstalledViewForm({ currentTool = null }) {
   );
 
   return (
-    <Grid  sx={{ pr: '2rem' }}>
+    <Grid  >
+    <Grid sx={{ pr: '2rem', mb:-5 }}>
+
         <ViewFormEditDeleteButtons
           // disableDeleteButton={disableDeleteButton}
           // disableEditButton={disableEditButton}
           handleEdit={handleEdit}
           onDelete={onDelete}
         />
+    </Grid>
       <Grid container item sm={12}>
         <ViewFormField sm={12} isActive={defaultValues.isActive} />
         <ViewFormField

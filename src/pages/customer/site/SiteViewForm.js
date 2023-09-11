@@ -103,7 +103,7 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
 
   return (
     <Grid>
-      <Grid container justifyContent="flex-end" sx={{ pr: '1rem' }}>
+      <Grid container justifyContent="flex-end" >
         <ViewFormEditDeleteButtons
           handleEdit={handleEdit}
           onDelete={onDelete}

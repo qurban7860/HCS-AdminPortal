@@ -91,7 +91,7 @@ export default function ServiceCategoryEditForm() {
   };
   return (
     <>
-      <StyledCardContainer><Cover name="Edit Service Category"/></StyledCardContainer>
+      <StyledCardContainer><Cover name={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_CATEGORY_EDIT}/></StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container>
           <Grid item xs={18} md={12}>

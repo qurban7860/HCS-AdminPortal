@@ -76,7 +76,7 @@ export default function MachineServiceParamViewForm() {
         </Grid>
         <Grid container>
           <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
-          <ViewFormField sm={6} heading="Category" param={defaultValues.category} />
+          <ViewFormField sm={6} heading="Item Category" param={defaultValues.category} />
           <ViewFormField sm={12} heading="Print Name" param={defaultValues.printName} />
           <ViewFormField sm={12} heading="Help Hint" param={defaultValues.helpHint} />
           <ViewFormField sm={12} heading="Link To User Manual" param={defaultValues.linkToUserManual} />
