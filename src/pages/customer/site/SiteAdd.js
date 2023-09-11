@@ -1,4 +1,4 @@
-import { Helmet } from 'react-helmet-async';
+// import { Helmet } from 'react-helmet-async';
 // @mui
 import { Container } from '@mui/material';
 // routes
@@ -15,7 +15,6 @@ export default function SiteAdd() {
   const { themeStretch } = useSettingsContext();
 
   return (
-    <>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Create a new Site"
@@ -30,6 +29,5 @@ export default function SiteAdd() {
         />
         <SiteAddForm />
       </Container>
-    </>
   );
 }

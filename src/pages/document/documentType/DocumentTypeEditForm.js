@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
-import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState, useLayoutEffect } from 'react';
+// import PropTypes from 'prop-types';
+// import * as Yup from 'yup';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
@@ -9,18 +9,17 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
-import { LoadingButton } from '@mui/lab';
+// import { LoadingButton } from '@mui/lab';
 import {
-  Box,
   Card,
   Grid,
   Stack,
-  Typography,
-  Button,
-  DialogTitle,
-  Dialog,
-  InputAdornment,
-  Link,
+  // Typography,
+  // Button,
+  // DialogTitle,
+  // Dialog,
+  // InputAdornment,
+  // Link,
   Autocomplete,
   TextField,
   Container,
@@ -79,12 +78,11 @@ export default function DocumentTypeEditForm() {
   const {
     reset,
     watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const values = watch();
+  watch();
 
   const toggleCancel = () => {
     navigate(PATH_SETTING.documentType.view(documentType._id));

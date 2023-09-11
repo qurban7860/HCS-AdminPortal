@@ -20,7 +20,7 @@ import { PATH_MACHINE } from '../../routes/paths';
 // hooks
 import { useSnackbar } from '../../components/snackbar';
 // components
-import { useTable, getComparator, TableNoData } from '../../components/table';
+import { useTable, getComparator } from '../../components/table';
 import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import Iconify from '../../components/iconify';
@@ -56,7 +56,6 @@ export default function MachineNoteList() {
   const [checked, setChecked] = useState(false);
   const {
     notes,
-    isLoading,
     error,
     initial,
     responseMessage,
@@ -76,7 +75,8 @@ export default function MachineNoteList() {
     }
   }, [notes, error, checked, machine, responseMessage, enqueueSnackbar, initial]);
 
-  const dataFiltered = applyFilter({
+
+         applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     // filterName,

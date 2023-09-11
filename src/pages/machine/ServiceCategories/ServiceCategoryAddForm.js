@@ -1,39 +1,39 @@
 import * as Yup from 'yup';
-import { useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useMemo } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Typography, Container } from '@mui/material';
+import { Box, Card, Grid, Stack, Container } from '@mui/material';
 // slice
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { addServiceCategory } from '../../../redux/slices/products/serviceCategory';
 // schema
-import { AddMachineSchema } from '../../schemas/document';
+// import { AddMachineSchema } from '../../schemas/document';
 // routes
-import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
-import { useSettingsContext } from '../../../components/settings';
+import { PATH_MACHINE } from '../../../routes/paths';
+// import { useSettingsContext } from '../../../components/settings';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
+import FormProvider, { RHFTextField } from '../../../components/hook-form';
 // auth
-import { useAuthContext } from '../../../auth/useAuthContext';
-// asset
-import { countries } from '../../../assets/data';
+// import { useAuthContext } from '../../../auth/useAuthContext';
+// // asset
+// import { countries } from '../../../assets/data';
 // util
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 // constants
 import { FORMLABELS } from '../../../constants/default-constants';
-import { Snacks } from '../../../constants/document-constants';
+// import { Snacks } from '../../../constants/document-constants';
 
 // ----------------------------------------------------------------------
 
 export default function ServiceCategoryAddForm() {
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -60,8 +60,6 @@ export default function ServiceCategoryAddForm() {
 
   const {
     reset,
-    watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;

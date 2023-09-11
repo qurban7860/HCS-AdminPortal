@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 // slice
-import { getDrawings, resetDrawings, setDrawingFormVisibility, setDrawingEditFormVisibility, setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
+import {  resetDrawings, setDrawingFormVisibility,setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
 // components
 import DrawingList from './DrawingList'
 import DrawingAddForm from './DrawingAddForm'

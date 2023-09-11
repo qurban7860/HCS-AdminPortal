@@ -3,11 +3,9 @@ import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import {
-  Card,
   Table,
   Tooltip,
   TableBody,
-  Container,
   IconButton,
   TableContainer,
 } from '@mui/material';
@@ -36,7 +34,7 @@ import {
   ChangePage,
   setFilterBy
 } from '../../../redux/slices/products/machineServiceRecord';
-import { Cover } from '../../components/Defaults/Cover';
+// import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
 

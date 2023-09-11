@@ -155,9 +155,11 @@ export default function ModuleList() {
     setPage(0);
     setFilterRole(event.target.value);
   };
+
   const handleViewRow = (id) => {
     navigate(PATH_SETTING.modules.view(id));
   };
+  
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');

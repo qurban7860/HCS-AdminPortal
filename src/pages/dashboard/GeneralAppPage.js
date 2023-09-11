@@ -51,7 +51,7 @@ export default function GeneralAppPage() {
   const countryWiseMachineCountCountries = [];
   const countryWiseSiteCountNumber = [];
   const countryWiseSiteCountCountries = [];
-  const yearWiseMachines = [];
+  // const yearWiseMachines = [];
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: currentYear - 1999 }, (_, index) => 2000 + index);

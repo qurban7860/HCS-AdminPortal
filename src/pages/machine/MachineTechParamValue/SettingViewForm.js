@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useMemo, useState, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 // @mui
 import { Grid } from '@mui/material';
@@ -14,9 +14,9 @@ import {
   getSetting,
 } from '../../../redux/slices/products/machineTechParamValue';
 // paths
-import { PATH_DASHBOARD } from '../../../routes/paths';
+// import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import { fDate, fDateTime } from '../../../utils/formatTime';
+// import { fDate, fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
@@ -29,10 +29,10 @@ SettingViewForm.propTypes = {
 
 export default function SettingViewForm({ currentSetting = null }) {
   const { machine } = useSelector((state) => state.machine);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [openConfirm, setOpenConfirm] = useState(false);
-  const [openPopover, setOpenPopover] = useState(null);
+  const [ setOpenConfirm] = useState(false);
+  // const [ setOpenPopover] = useState(null);
   const { enqueueSnackbar } = useSnackbar();
   const [disableDeleteButton, setDisableDeleteButton] = useState(false);
   const [disableEditButton, setDisableEditButton] = useState(false);
@@ -47,17 +47,17 @@ export default function SettingViewForm({ currentSetting = null }) {
     }
   }, [machine]);
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
+  // const handleOpenConfirm = () => {
+  //   setOpenConfirm(true);
+  // };
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
   };
 
-  const handleClosePopover = () => {
-    setOpenPopover(null);
-  };
+  // const handleClosePopover = () => {
+  //   setOpenPopover(null);
+  // };
 
   const onDelete = async () => {
     try {

@@ -1,25 +1,15 @@
 import PropTypes from 'prop-types';
 // import * as Yup from 'yup';
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // import { useNavigate } from 'react-router-dom';
 
 // @mui
 // import { LoadingButton } from '@mui/lab';
 import {
-  Switch,
-  Box,
-  Card,
   Grid,
-  Stack,
-  Typography,
-  Button,
-  DialogTitle,
-  Dialog,
-  InputAdornment,
-  Link,
 } from '@mui/material';
-import { fDate, fDateTime } from '../../../utils/formatTime';
+// import { fDate, fDateTime } from '../../../utils/formatTime';
 
 // global
 // import { CONFIG } from '../../config-global';
@@ -33,8 +23,8 @@ import {
   getNote,
   setNoteEditFormVisibility,
 } from '../../../redux/slices/customer/note';
-import ConfirmDialog from '../../../components/confirm-dialog';
-import Iconify from '../../../components/iconify';
+// import ConfirmDialog from '../../../components/confirm-dialog';
+// import Iconify from '../../../components/iconify';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
@@ -44,7 +34,7 @@ NoteViewForm.propTypes = {
   currentNote: PropTypes.object,
 };
 export default function NoteViewForm({ currentNote = null }) {
-  const { note } = useSelector((state) => state.note);
+  // const { note } = useSelector((state) => state.note);
   const dispatch = useDispatch();
   const { customer } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
@@ -54,21 +44,21 @@ export default function NoteViewForm({ currentNote = null }) {
     dispatch(setNoteEditFormVisibility(true));
   };
 
-  const [openConfirm, setOpenConfirm] = useState(false);
+  const [ setOpenConfirm] = useState(false);
 
-  const [openPopover, setOpenPopover] = useState(null);
+  // const [ setOpenPopover] = useState(null);
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
+  // const handleOpenConfirm = () => {
+  //   setOpenConfirm(true);
+  // };
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
   };
 
-  const handleClosePopover = () => {
-    setOpenPopover(null);
-  };
+  // const handleClosePopover = () => {
+  //   setOpenPopover(null);
+  // };
 
   const onDelete = async () => {
     try {
