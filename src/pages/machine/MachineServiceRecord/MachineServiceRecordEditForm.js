@@ -1,25 +1,21 @@
-import PropTypes from 'prop-types';
-import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo } from 'react';
+import {  useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link, Container } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography } from '@mui/material';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // global
-import { CONFIG } from '../../../config-global';
+// import { CONFIG } from '../../../config-global';
 // slice
 import { updateMachineServiceRecord, setAllFlagsFalse } from '../../../redux/slices/products/machineServiceRecord';
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+// import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import Iconify from '../../../components/iconify';
+// import Iconify from '../../../components/iconify';
 import FormHeading from '../../components/DocumentForms/FormHeading';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { MachineServiceRecordSchema } from '../../schemas/machine';
@@ -29,7 +25,7 @@ import FormProvider, {
 
 } from '../../../components/hook-form';
 
-import { countries } from '../../../assets/data';
+// import { countries } from '../../../assets/data';
 
 // ----------------------------------------------------------------------
 

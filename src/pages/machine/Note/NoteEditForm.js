@@ -15,7 +15,7 @@ import FormHeading from '../../components/DocumentForms/FormHeading';
 
 // ----------------------------------------------------------------------
 export default function NoteEditForm() {
-  const { note, error } = useSelector((state) => state.machinenote);
+  const { note } = useSelector((state) => state.machinenote);
   const dispatch = useDispatch();
   const { machine } = useSelector((state) => state.machine);
   const { enqueueSnackbar } = useSnackbar();
@@ -37,8 +37,6 @@ export default function NoteEditForm() {
   });
   const {
     reset,
-    watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;

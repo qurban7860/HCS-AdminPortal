@@ -1,4 +1,3 @@
-import { Helmet } from 'react-helmet-async';
 import { useLayoutEffect } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
@@ -9,10 +8,10 @@ import ModelEditForm from './ModelEditForm';
 // redux
 
 // routes
-import { PATH_MACHINE } from '../../../routes/paths';
+// import { PATH_MACHINE } from '../../../routes/paths';
 // components
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
-import { useSettingsContext } from '../../../components/settings';
+// import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
+// import { useSettingsContext } from '../../../components/settings';
 // sections
 
 
@@ -20,15 +19,14 @@ import { useSettingsContext } from '../../../components/settings';
 // ----------------------------------------------------------------------
 
 export default function ModelEdit() {
-  const { themeStretch } = useSettingsContext();
+  // const { themeStretch } = useSettingsContext();
 
   const dispatch = useDispatch();
 
   const { id } = useParams(); 
   // console.log(id);
 
-  
-  const { machinemodel } = useSelector((state) => state.machinemodel);
+   useSelector((state) => state.machinemodel);
 
   useLayoutEffect(() => {
      dispatch(getMachineModel(id));
@@ -36,11 +34,9 @@ export default function ModelEdit() {
 
   
   return (
-    <>
 
       <Container maxWidth={false }>
         <ModelEditForm/>
       </Container>
-    </>
   );
 }

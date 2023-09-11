@@ -61,9 +61,9 @@ function MachineToolsInstalledList() {
   } = useSelector((state) => state.toolInstalled);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const [filterName, setFilterName] = useState('');
+  const [filterName] = useState('');
   const [tableData, setTableData] = useState([]);
-  const [filterStatus, setFilterStatus] = useState([]);
+  const [filterStatus] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
 
@@ -95,7 +95,7 @@ function MachineToolsInstalledList() {
     }
   }, [toolsInstalled, error, responseMessage, enqueueSnackbar, initial,dispatch]);
 
-  const dataFiltered = applyFilter({
+  applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,

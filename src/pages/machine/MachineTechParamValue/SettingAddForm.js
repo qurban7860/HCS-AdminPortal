@@ -1,11 +1,10 @@
-import * as Yup from 'yup';
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Autocomplete, TextField } from '@mui/material';
+import { Box, Card, Grid, Autocomplete, TextField } from '@mui/material';
 // slice
 import { addSetting, setSettingFormVisibility } from '../../../redux/slices/products/machineTechParamValue';
 import { getActiveTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
@@ -27,12 +26,12 @@ import { AddSettingSchema } from './schemas/AddSettingSchema';
 // ----------------------------------------------------------------------
 
 export default function SettingAddForm() {
-  const { initial, error, responseMessage, settings, settingEditFormVisibility, formVisibility } = useSelector((state) => state.machineSetting);
+  const { settings } = useSelector((state) => state.machineSetting);
   const { techparamsByCategory} = useSelector((state) => state.techparam);
   const { activeTechParamCategories } = useSelector((state) => state.techparamcategory);
   const [category, setCategory] = useState('');
   const [techParamVal, setTechParamVal] = useState('');
-  const [paramData, setparamData] = useState([]);
+  // const [paramData, setparamData] = useState([]);
   const { machine } = useSelector((state) => state.machine);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();

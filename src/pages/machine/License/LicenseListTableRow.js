@@ -35,10 +35,13 @@ export default function LicenseListTableRow({
   const {
     licenseKey,
     createdAt,
+    licenseDetail: {
+      version,
+      type,
+      exTime,
+    },
   } = row;
-  const version = row.licenseDetail.version;
-  const type =  row.licenseDetail.type;
-  const exTime =  row.licenseDetail.extensionTime;
+  // const exTime =  row.licenseDetail.extensionTime;
   const smScreen = useScreenSize('sm')
 
   return (

@@ -1,19 +1,18 @@
-import PropTypes from 'prop-types';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 // @mui
-import { Switch, Card, Grid, Stack, Typography, Button, Tooltip } from '@mui/material';
+import {  Card, Grid, Tooltip } from '@mui/material';
 // redux
 import { deleteMachineServiceRecord, setAllFlagsFalse, setMachineServiceRecordEditFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
 // paths
-import { PATH_MACHINE, PATH_SETTING } from '../../../routes/paths';
+// import { PATH_MACHINE, PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import { fDate, fDateTime } from '../../../utils/formatTime';
+// import { fDate, fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
-import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';
+// import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
@@ -21,7 +20,7 @@ import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDe
 export default function MachineServiceParamViewForm() {
   const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
