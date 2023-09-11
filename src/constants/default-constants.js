@@ -38,9 +38,16 @@ export const FORMLABELS = {
     ADD_DOCUMENTS: 'Add Documents',
     MACHINE_DRAWINGS: 'Machine Drawings',
     ADD_MACHINE_DRAWINGSS: 'New Machine Drawing',
-    MACHINE_SERVICE_PARAMS: 'Machine Service Parameters',
-    MACHINE_SERVICE_PARAM_ADD: 'New Machine Service Parameter',
-    MACHINE_SERVICE_PARAM_EDIT: 'Edit Machine Service Parameter',
+    MACHINE_SERVICE_PARAMS: 'Service Parameters',
+    MACHINE_SERVICE_PARAM_ADD: 'New  Service Parameter',
+    MACHINE_SERVICE_PARAM_EDIT: 'Edit Service Parameter',
+    MACHINE_SERVICE_CONFIGS: 'Service Configurations',
+    MACHINE_SERVICE_CONFIGS_ADD: 'New Service Configurations',
+    MACHINE_SERVICE_CONFIGS_EDIT: 'Edit Service Configurations',
+    MACHINE_SERVICE_RECORDS: 'Service Records',
+    MACHINE_SERVICE_RECORD_ADD: 'New Service Record',
+    MACHINE_SERVICE_CHECK_PARAM_RECORD_ADD: 'New Service Check Parameter',
+    MACHINE_SERVICE_RECORD_EDIT: 'Edit Service Record',
     EDIT_DOCUMENT: 'Edit Document',
   },
 
@@ -158,6 +165,7 @@ export const BUTTONS = {
   ADDCUSTOMER: 'Add Customer',
   ADDMACHINE: 'Add Machine',
   ADDUSER: 'Add User',
+  INVITEUSER: 'Invite User',
   ADDSITE: 'Add Site',
   // settings
   ADDCATEGORY: 'Add Category',
@@ -187,6 +195,8 @@ export const BUTTONS = {
 
   // MACHINE SETTINGS
   ADD_MACHINE_SERVICE_PARAM: 'Add Parameter',
+  ADD_MACHINE_SERVICE_CONFIG: 'Add Service Config',
+  ADD_MACHINE_SERVICE_RECORD: 'Add Record',
 
 };
 

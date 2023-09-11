@@ -195,6 +195,12 @@ export const PATH_MACHINE = {
         servicerecordconfigedit: (id) => path(ROOTS_MACHINE, `/machines/settings/serviceRecordConfigs/${id}/edit`),
         edit: (id) => path(ROOTS_MACHINE, `/machines/settings/serviceRecordConfigs/${id}/edit`),
       },
+      serviceCategories: {
+        new: (ROOTS_MACHINE, '/products/machines/settings/serviceCategories/new'),
+        list: (ROOTS_MACHINE, '/products/machines/settings/serviceCategories/list'),
+        view: (id) => path(ROOTS_MACHINE, `/machines/settings/serviceCategories/${id}/view`),
+        edit: (id) => path(ROOTS_MACHINE, `/machines/settings/serviceCategories/${id}/edit`),
+      },
     },
   },
 };
@@ -214,7 +220,8 @@ export const PATH_SECURITY = {
   permissionDenied: path(ROOTS_SECURITY, '/permission-denied'),
   users: {
     root: path(ROOTS_SECURITY, '/users'),
-    new: path(ROOTS_SECURITY, '/users/new'),
+    new: path(ROOTS_SECURITY, `/users/new/`),
+    invite: path(ROOTS_SECURITY, `/users/invite/`),
     list: path(ROOTS_SECURITY, '/users/list'),
     cards: path(ROOTS_SECURITY, '/users/cards'),
     profile: path(ROOTS_SECURITY, '/users/profile'),
@@ -279,6 +286,10 @@ export const PATH_SETTING = {
     new: path(ROOTS_SETTING, '/userConfig/new'),
     view: (id) => path(ROOTS_SETTING, `/userConfig/${id}/view`),
     edit: (id) => path(ROOTS_SETTING, `/userConfig/${id}/edit`)
+  },
+  invite: {
+    list: path(ROOTS_SETTING, '/invite/list'),
+    view: (id) => path(ROOTS_SETTING, `/invite/${id}/view`)
   },
 };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Typography, Link, DialogActions, Button } from '@mui/material';
+import { Grid, Typography, DialogActions, Button } from '@mui/material';
 import Iconify from '../../../components/iconify';
 
 function DialogLabel({ onClick, content }) {

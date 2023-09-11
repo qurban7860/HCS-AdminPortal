@@ -1,15 +1,15 @@
 import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
 import { useDispatch, useSelector } from 'react-redux';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { Button, Typography, IconButton } from '@mui/material';
+// import { Button, Typography, IconButton } from '@mui/material';
 import { green } from '@mui/material/colors';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { StyledStack } from '../../../theme/styles/default-styles';
 import ConfirmDialog from '../../../components/confirm-dialog';
-import Iconify from '../../../components/iconify';
+// import Iconify from '../../../components/iconify';
 import useResponsive from '../../../hooks/useResponsive';
 import { setTransferDialogBoxVisibility } from '../../../redux/slices/products/machine';
 import IconPopover from '../Icons/IconPopover';
@@ -27,6 +27,7 @@ export default function ViewFormEditDeleteButtons({
   handleTransfer,
   handleUpdatePassword,
   handleUserInvite,
+  isInviteLoading,
   type,
   sites,
   mainSite,
@@ -37,8 +38,8 @@ export default function ViewFormEditDeleteButtons({
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
   const { isLoading, transferDialogBoxVisibility } = useSelector((state) => state.machine);
-  const { site } = useSelector((state) => state.site);
-  const { customer } = useSelector((state) => state.customer);
+  // const { site } = useSelector((state) => state.site);
+  // const { customer } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openUserInviteConfirm, setOpenUserInviteConfirm] = useState(false);
@@ -50,10 +51,10 @@ export default function ViewFormEditDeleteButtons({
     },
   });
   // const [openTransferConfirm, setOpenTransferConfirm] = useState(false);
-  const [openPopover, setOpenPopover] = useState(null);
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const [deleteButtonColor, setDeleteButtonColor] = useState('error.main');
-  const [deleteButtonHoverColor, setDeleteButtonHoverColor] = useState('error.dark');
+  // const [openPopover, setOpenPopover] = useState(null);
+  // const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  // const [deleteButtonColor, setDeleteButtonColor] = useState('error.main');
+  // const [deleteButtonHoverColor, setDeleteButtonHoverColor] = useState('error.dark');
   const disableDelete = userRoles.some((role) => role?.disableDelete === true);
 
   if (disableDelete) {
@@ -99,25 +100,24 @@ export default function ViewFormEditDeleteButtons({
     handleVerification();
     handleCloseConfirm('Verification');
   };
-  const handlePopoverOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-    setIsPopoverOpen(true);
-  };
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-    setIsPopoverOpen(false);
-  };
+  // const handlePopoverOpen = (event) => {
+  //   setAnchorEl(event.currentTarget);
+  //   setIsPopoverOpen(true);
+  // };
+  // const handlePopoverClose = () => {
+  //   setAnchorEl(null);
+  //   setIsPopoverOpen(false);
+  // };
 
-  const [anchorEl, setAnchorEl] = useState(null);
+  // const [anchorEl, setAnchorEl] = useState(null);
   const { isMobile } = useResponsive('down', 'sm');
 
   const methods = useForm();
 
   const {
     reset,
-    setError,
     handleSubmit,
-    formState: { errors, isSubmitting, isSubmitSuccessful },
+    formState: { isSubmitting, isSubmitSuccessful },
   } = methods;
   return (
     <>
@@ -211,8 +211,8 @@ export default function ViewFormEditDeleteButtons({
           <LoadingButton
             variant="contained"
             color="primary"
-            loading={(isSubmitSuccessful || isSubmitting) && isLoading}
-            disabled={isSubmitting}
+            loading={isInviteLoading}
+            disabled={isInviteLoading}
             onClick={()=>{setOpenUserInviteConfirm(false); handleUserInvite()}}
           >
             Send
@@ -231,7 +231,7 @@ export default function ViewFormEditDeleteButtons({
           <LoadingButton
             variant="contained"
             color="primary"
-            loading={(isSubmitSuccessful || isSubmitting) && isLoading}
+            loading={isLoading}
             disabled={isSubmitting}
             onClick={handleSubmit(handleVerificationConfirm)}
             // onClick={()=> {handleVerification(); handleCloseConfirm('Verification');}}
@@ -288,6 +288,7 @@ ViewFormEditDeleteButtons.propTypes = {
   handleTransfer: PropTypes.func,
   handleUpdatePassword: PropTypes.func,
   handleUserInvite: PropTypes.func,
+  isInviteLoading:PropTypes.bool,
   handleEdit: PropTypes.func,
   onDelete: PropTypes.func,
   type: PropTypes.string,

@@ -13,7 +13,7 @@ import {
   IconButton,
 } from '@mui/material';
 // routes
-import { PATH_AUTH, PATH_SECURITY } from '../../../routes/paths';
+// import { PATH_AUTH, PATH_SECURITY } from '../../../routes/paths';
 import { clearAllPersistedStates } from '../../../redux/slices/auth/clearPersistStates';
 import { useDispatch } from '../../../redux/store';
 import { NAV } from '../../../config-global';

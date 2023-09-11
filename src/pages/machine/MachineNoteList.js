@@ -200,7 +200,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
       (note) => note.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
-  if (filterStatus.length) {
+  if (filterStatus?.length) {
     inputData = inputData.filter((note) => filterStatus.includes(note.status));
   }
   return inputData;

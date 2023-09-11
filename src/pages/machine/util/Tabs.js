@@ -6,7 +6,8 @@ import DocumentTagPage from '../../document/documents/DocumentTagPage';
 import MachineDrawings from '../Drawing/MachineDrawings';
 import MachineToolsInstalledList from '../MachineToolsInstalledList';
 import MachineLicenses from '../License/MachineLicenses';
-
+import MachineServiceRecordList from '../MachineServiceRecordList';
+import MachineProfiles from '../Profile/MachineProfiles';
 
 export const TABS = (currentComponent, showDevTabs, disableTab) => [
   {
@@ -57,21 +58,29 @@ export const TABS = (currentComponent, showDevTabs, disableTab) => [
     icon: <Iconify icon="mdi:book-cog-outline" />,
     component: <MachineLicenses />,
   },
+  {
+    disabled: disableTab,
+    value: 'profile',
+    label: 'Profile',
+    icon: <Iconify icon="mdi:person" />,
+    component: <MachineProfiles />,
+  },
  
   ...(showDevTabs
     ? [
         
-        {
-          disabled: disableTab,
-          value: 'repairHistory',
-          label: 'Repair History',
-          icon: <Iconify icon="ic:round-manage-history" />,
-        },
+        // {
+        //   disabled: disableTab,
+        //   value: 'repairHistory',
+        //   label: 'Repair History',
+        //   icon: <Iconify icon="ic:round-manage-history" />,
+        // },
         {
           disabled: disableTab,
           value: 'serviceHistory',
           label: 'Service History',
           icon: <Iconify icon="mdi:clipboard-text-clock" />,
+          component : <MachineServiceRecordList />,
         },
       ]
     : []),

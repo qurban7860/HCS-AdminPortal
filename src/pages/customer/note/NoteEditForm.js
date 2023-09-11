@@ -1,6 +1,5 @@
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // form
@@ -8,29 +7,26 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
-import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Button, TextField, Autocomplete } from '@mui/material';
+// import { LoadingButton } from '@mui/lab';
+import { Box, Card, Grid, Stack, Typography,TextField, Autocomplete } from '@mui/material';
 
 // global
-import { CONFIG } from '../../../config-global';
+// import { CONFIG } from '../../../config-global';
 // slice
 import {
-  getNotes,
-  deleteNote,
-  getNote,
   updateNote,
   setNoteEditFormVisibility,
 } from '../../../redux/slices/customer/note';
 
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+// import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import Iconify from '../../../components/iconify';
+// import Iconify from '../../../components/iconify';
 
 import FormProvider, {
-  RHFSelect,
-  RHFEditor,
+  // RHFSelect,
+  // RHFEditor,
   RHFTextField,
   RHFSwitch,
 } from '../../../components/hook-form';
@@ -40,8 +36,8 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
 export default function NoteEditForm() {
-  const { error, note } = useSelector((state) => state.note);
-  const { users } = useSelector((state) => state.user);
+  const { note } = useSelector((state) => state.note);
+  // const { users } = useSelector((state) => state.user);
 
   const { sites } = useSelector((state) => state.site);
 
@@ -94,12 +90,11 @@ export default function NoteEditForm() {
   const {
     reset,
     watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const values = watch();
+  watch();
 
   useEffect(() => {
     if (note) {

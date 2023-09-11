@@ -1,13 +1,13 @@
 import { m } from 'framer-motion';
-import { Helmet } from 'react-helmet-async';
-import { Link as RouterLink } from 'react-router-dom';
+// import { Helmet } from 'react-helmet-async';
+// import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { Button, Typography , Grid } from '@mui/material';
 // components
 import { MotionContainer, varBounce } from '../components/animate';
 // assets
 import { SeverErrorIllustration } from '../assets/illustrations';
-import { CONFIG } from '../config-global';
+// import { CONFIG } from '../config-global';
 
 // ----------------------------------------------------------------------
 

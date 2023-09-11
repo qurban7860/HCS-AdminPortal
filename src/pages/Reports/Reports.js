@@ -1,7 +1,7 @@
 // import { Helmet } from 'react-helmet-async';
 import { useEffect } from 'react';
-import { useNavigate,  } from 'react-router-dom';
-import { useTheme } from '@mui/material/styles';
+// import { useNavigate,  } from 'react-router-dom';
+// import { useTheme } from '@mui/material/styles';
 import { Container, Grid, Card } from '@mui/material';
 import List from '@mui/material/List';
 import ListSubheader from '@mui/material/ListSubheader';
@@ -15,7 +15,7 @@ import ListSubheader from '@mui/material/ListSubheader';
 // import FlareIcon from '@mui/icons-material/Flare';
 // import ClassIcon from '@mui/icons-material/Class';
 // import BuildCircleIcon from '@mui/icons-material/BuildCircle';
-import {  PATH_DOCUMENT } from '../../routes/paths';
+// import {  PATH_DOCUMENT } from '../../routes/paths';
 // import { searchSites } from '../../redux/slices/customer/site';
 import { getMachineLatLongData } from '../../redux/slices/products/machine';
 import { useDispatch, useSelector } from '../../redux/store';
@@ -28,7 +28,7 @@ import GoogleMaps from '../../assets/GoogleMaps';
 export default function Reports() {
   const dispatch = useDispatch();
   // const theme = useTheme();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getMachineLatLongData());
@@ -36,12 +36,12 @@ export default function Reports() {
 
   const { machineLatLongCoordinates } = useSelector((state) => state.machine);
   // Functions to navigate to different pages
-  const DocumentName = () => {
-    navigate(PATH_DOCUMENT.documentName.list);
-  };
-  const linkFileCategory = () => {
-    navigate(PATH_DOCUMENT.fileCategory.list);
-  };
+//  const DocumentName = () => {
+//     navigate(PATH_DOCUMENT.documentName.list);
+//   };
+//   const linkFileCategory = () => {
+//     navigate(PATH_DOCUMENT.fileCategory.list);
+//   }; 
 
   return (
     <Container maxWidth={false}>

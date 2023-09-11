@@ -7,7 +7,6 @@ import {
   Grid,
   Container,
   Link,
-  Dialog,
   Tabs,
 } from '@mui/material';
 // routes
@@ -25,9 +24,9 @@ import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
 import { getCustomer , setCustomerDialog } from '../../redux/slices/customer/customer';
 import { getContact , setContactDialog } from '../../redux/slices/customer/contact';
 import { Cover } from '../components/Defaults/Cover';
-import DialogLabel from '../components/Dialog/DialogLabel';
-import DialogLink from '../components/Dialog/DialogLink';
-import FormLabel from '../components/DocumentForms/FormLabel';
+// import DialogLabel from '../components/Dialog/DialogLabel';
+// import DialogLink from '../components/Dialog/DialogLink';
+// import FormLabel from '../components/DocumentForms/FormLabel';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
@@ -37,8 +36,8 @@ import ContactDialog from '../components/Dialog/ContactDialog';
 // ----------------------------------------------------------------------
 
 export default function SecurityUserProfile() {
-  const { customer } = useSelector((state) => state.customer);
-  const { contact } = useSelector((state) => state.contact);
+  // const { customer } = useSelector((state) => state.customer);
+  // const { contact } = useSelector((state) => state.contact);
   const { securityUser, initial } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -64,9 +63,9 @@ export default function SecurityUserProfile() {
     });
   }, [dispatch, userId, securityUser]);
 
-  const handleViewCustomer = (id) => {
-    navigate(PATH_SECURITY.users.view(id));
-  };
+  // const handleViewCustomer = (id) => {
+  //   navigate(PATH_SECURITY.users.view(id));
+  // };
 
   const handleCustomerDialog = () =>{dispatch(setCustomerDialog(true))}
   const handleContactDialog = () =>{dispatch(setContactDialog(true))}

@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // @mui
-import { Stack, InputAdornment, TextField, MenuItem, Button, Grid } from '@mui/material';
+import { Stack } from '@mui/material';
 // redux
-import { useDispatch } from '../../redux/store';
+// import { useDispatch } from '../../redux/store';
 // components
 import SearchBarCombo from '../components/ListTableTools/SearchBarCombo';
-import Iconify from '../../components/iconify';
+// import Iconify from '../../components/iconify';
 import { PATH_SETTING } from '../../routes/paths';
 import { BUTTONS } from '../../constants/default-constants';
 import { options } from '../../theme/styles/default-styles';
@@ -33,7 +33,7 @@ export default function ConfigListTableToolbar({
   onResetFilter,
 }) {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const linkTo = () => {
     navigate(PATH_SETTING.configs.new);
   };

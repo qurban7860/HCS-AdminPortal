@@ -44,9 +44,8 @@ import {
   SupplierAddForm,
   SupplierList,
   SupplierView,
-  SupplierViewForm,
   SupplierEdit,
-  SupplierEditForm,
+  // SupplierEditForm,
 
   MachineServiceParamList, 
   MachineServiceParamViewForm,
@@ -154,6 +153,14 @@ import {
   ServiceRecordConfigEditForm,
   ServiceRecordConfigEdit,
 
+  // Servivce Categories
+  ServiceCategoryAddForm,
+  ServiceCategoryList,
+  ServiceCategoryView,
+  ServiceCategoryViewForm,
+  ServiceCategoryEditForm,
+  ServiceCategoryEdit,
+
   // DocumentDashboard    
   DocumentList, 
   DocumentAddForm, 
@@ -193,6 +200,10 @@ import {
   ConfigView,
   ConfigEdit,
 
+   // User Invite
+   UserInvitationList,
+   UserInvitationView,
+
 //   
   BlankPage,
   PermissionDeniedPage,
@@ -204,7 +215,6 @@ import {
   MaintenancePage,
   ErrorPage,
   UserInviteLanding
-  
 } from './elements';
 
 // ----------------------------------------------------------------------
@@ -345,6 +355,17 @@ export default function Router() {
                 ]
               },
               {
+                path: 'serviceCategories',
+                children:[
+                  {path: 'new', element: <ServiceCategoryAddForm/>},
+                  {path: 'list', element: <ServiceCategoryList/>},
+                  {path: ':id/view', element: <ServiceCategoryView/>},
+                  {path: 'viewform', element: <ServiceCategoryViewForm/>},
+                  {path: ':id/edit', element: <ServiceCategoryEdit/>}, 
+                  {path: 'editform', element: <ServiceCategoryEditForm/>},
+                ]
+              },
+              {
                 path: 'serviceRecordConfigs',
                 children:[
                   {path: 'new', element: <ServiceRecordConfigAddForm/>},
@@ -471,6 +492,7 @@ export default function Router() {
             { path: 'changePassword', element: <SecurityUserChangePasswordByAdmin/> },
             { path: 'list', element: <SecurityUserList /> },
             { path: 'new', element: <SecurityUserAdd /> },
+            { path: 'invite', element: <SecurityUserAdd isInvite /> },
             { path: ':id/edit', element: <SecurityUserEdit /> },
             { path: ':id/view', element: <SecurityUserViewForm /> },
           ],
@@ -558,6 +580,13 @@ export default function Router() {
             { path: ':id/view', element: <UserConfigViewForm /> },
             { path: ':id/edit', element: <UserConfigEditForm /> }
 
+          ],
+        },
+        {
+          path: 'invite',
+          children: [
+            { path: 'list', element: <UserInvitationList /> },
+            { path: ':id/view', element: <UserInvitationView /> },
           ],
         },
       ],

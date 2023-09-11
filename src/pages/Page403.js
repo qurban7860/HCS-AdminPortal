@@ -1,5 +1,5 @@
 import { m } from 'framer-motion';
-import { Helmet } from 'react-helmet-async';
+// import { Helmet } from 'react-helmet-async';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { Button, Typography } from '@mui/material';
@@ -7,7 +7,7 @@ import { Button, Typography } from '@mui/material';
 import { MotionContainer, varBounce } from '../components/animate';
 // assets
 import { ForbiddenIllustration } from '../assets/illustrations';
-import { CONFIG } from '../config-global';
+// import { CONFIG } from '../config-global';
 
 // ----------------------------------------------------------------------
 

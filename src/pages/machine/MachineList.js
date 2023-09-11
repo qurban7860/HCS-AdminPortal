@@ -129,11 +129,10 @@ export default function MachineList() {
     filterStatus,
   });
 
-
-  const denseHeight = 80 ;
-
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+
+  const denseHeight = 60;
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);

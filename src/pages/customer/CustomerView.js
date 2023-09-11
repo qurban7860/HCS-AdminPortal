@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { Tab, Card, Tabs, Container, Box, tabsClasses } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer/customer';
+import { getCustomer } from '../../redux/slices/customer/customer';
 import {
   setDocumentViewFormVisibility,
   setDocumentHistoryViewFormVisibility,
@@ -20,7 +20,7 @@ import { Cover } from '../components/Defaults/Cover';
 
 import CustomerNoteList from './CustomerNoteList';
 import CustomerViewForm from './CustomerViewForm';
-import useResponsive from '../../hooks/useResponsive';
+// import useResponsive from '../../hooks/useResponsive';
 import UnderDevelopment from '../boundaries/UnderDevelopment';
 import CustomerEditForm from './CustomerEditForm';
 // import CustomerSiteList from './CustomerSiteList';
@@ -31,7 +31,7 @@ import CustomerMachineList from './CustomerMachineList';
 import DocumentTagPage from '../document/documents/DocumentTagPage';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
-import { StyledCardContainer } from '../../theme/styles/default-styles';
+// import { StyledCardContainer } from '../../theme/styles/default-styles';
 
 CustomerView.propTypes = {
   editPage: PropTypes.bool,
@@ -41,15 +41,15 @@ export default function CustomerView({ editPage }) {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { customer, customerEditFormFlag } = useSelector((state) => state.customer);
-  const { site, siteEditFormVisibility } = useSelector((state) => state.site);
+  const { siteEditFormVisibility } = useSelector((state) => state.site);
   const { contactEditFormVisibility } = useSelector((state) => state.contact);
   const { noteEditFormVisibility } = useSelector((state) => state.note);
   const [currentTab, setCurrentTab] = useState('customer-info');
-  const [editFlag, setEditFlag] = useState(false);
-  const toggleEditFlag = () => setEditFlag((value) => !value);
+  // const [editFlag, setEditFlag] = useState(false);
+  // const toggleEditFlag = () => setEditFlag((value) => !value);
   const [currentComponent, setCurrentComponent] = useState(<CustomerViewForm />);
-  const [customerFlag, setCustomerFlag] = useState(true);
-  const isMobile = useResponsive('down', 'sm');
+  // const [customerFlag, setCustomerFlag] = useState(true);
+  // const isMobile = useResponsive('down', 'sm');
 
   useEffect(() => {
     dispatch(setDocumentViewFormVisibility(false));
@@ -66,7 +66,7 @@ export default function CustomerView({ editPage }) {
     if (customerEditFormFlag) {
       setCurrentComponent(<CustomerEditForm />);
     } else {
-      setCustomerFlag(false);
+      // setCustomerFlag(false);
       setCurrentComponent(<CustomerViewForm />);
     }
   }, [dispatch, customerEditFormFlag, customer, id]);

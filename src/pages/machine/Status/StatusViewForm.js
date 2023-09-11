@@ -1,17 +1,17 @@
 import PropTypes from 'prop-types';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import {  useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Switch, Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Card, Grid } from '@mui/material';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { deleteMachinestatus } from '../../../redux/slices/products/statuses';
 // Iconify
-import Iconify from '../../../components/iconify/Iconify';
+// import Iconify from '../../../components/iconify/Iconify';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
@@ -25,7 +25,7 @@ StatusViewForm.propTypes = {
 // ----------------------------------------------------------------------
 
 export default function StatusViewForm({ currentMachinestatus = null }) {
-  const [editFlag, setEditFlag] = useState(false);
+  // const [editFlag, setEditFlag] = useState(false);
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();

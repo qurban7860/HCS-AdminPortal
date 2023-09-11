@@ -44,6 +44,7 @@ export default function MachineServiceParamViewForm() {
   const defaultValues = useMemo(
     () => ({
       name:               machineServiceParam?.name,
+      category:           machineServiceParam?.category?.name,
       printName:          machineServiceParam?.printName,
       helpHint:           machineServiceParam?.helpHint,
       linkToUserManual:   machineServiceParam?.linkToUserManual,
@@ -68,20 +69,21 @@ export default function MachineServiceParamViewForm() {
     <Card sx={{ p: 2 }}>
       <Grid>
         <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
-        <Grid sm={12} display="flex">
+        <Grid item sm={12} display="flex">
           <Tooltip>
             <ViewFormField isActive={defaultValues.isActive} isRequired={defaultValues.isRequired}/>
           </Tooltip>
         </Grid>
         <Grid container>
           <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
-          <ViewFormField sm={6} heading="Print Name" param={defaultValues.printName} />
-          <ViewFormField sm={6} heading="Help Hint" param={defaultValues.helpHint} />
-          <ViewFormField sm={6} heading="Link To User Manual" param={defaultValues.linkToUserManual} />
+          <ViewFormField sm={6} heading="Category" param={defaultValues.category} />
+          <ViewFormField sm={12} heading="Print Name" param={defaultValues.printName} />
+          <ViewFormField sm={12} heading="Help Hint" param={defaultValues.helpHint} />
+          <ViewFormField sm={12} heading="Link To User Manual" param={defaultValues.linkToUserManual} />
           <ViewFormField sm={6} heading="Input Type" param={defaultValues.inputType} />
           <ViewFormField sm={6} heading="Unit Type" param={defaultValues.unitType} />
-          <ViewFormField sm={6} heading="Min Validation" param={defaultValues.minValidation} />
-          <ViewFormField sm={6} heading="Max Validation" param={defaultValues.maxValidation} />
+          <ViewFormField sm={6} heading="Minimum Validation" param={defaultValues.minValidation} />
+          <ViewFormField sm={6} heading="Maximum Validation" param={defaultValues.maxValidation} />
           <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

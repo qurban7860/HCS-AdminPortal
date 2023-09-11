@@ -197,6 +197,7 @@ export function addSecurityUser(param) {
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}security/users`, data);
       if(regEx.test(response.status)){
+        await axios.get(`${CONFIG.SERVER_URL}security/invites/sendUserInvite/${response?.data?.user?._id}`);
         dispatch(setSecurityUserFormVisibility(false))
         dispatch(getSecurityUsers());
       }
@@ -400,14 +401,12 @@ export function getSignInLogs(id) {
   };
 }
 
-export async function sendUserInvite(Id) {
+export function sendUserInvite(Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/sendUserInvite/${Id}`);
-      if(regEx.test(response.status)){
-        dispatch(slice.actions.setResponseMessage(response.data));
-      }
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/invites/sendUserInvite/${Id}`);
+      dispatch(slice.actions.setResponseMessage(response.data));
       return response; // eslint-disable-line
     } catch (error) {
       dispatch(slice.actions.hasError(error.Message));
@@ -421,7 +420,7 @@ export function verifyUserInvite(Id,code) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/verifyInviteCode/${Id}/${code}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/invites/verifyInviteCode/${Id}/${code}`);
       if(regEx.test(response.status)){
         dispatch(slice.actions.getVerifyInviteStatus(response.data));
       }
@@ -433,13 +432,12 @@ export function verifyUserInvite(Id,code) {
   };
 }
 
-
 export function updatePasswordUserInvite(data, Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{
 
-      const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/updatePasswordUserInvite/${Id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}security/invites/updatePasswordUserInvite/${Id}`,
         data
       );
       if(regEx.test(response.status)){

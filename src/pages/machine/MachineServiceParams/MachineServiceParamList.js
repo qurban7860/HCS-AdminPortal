@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import {
   Card,
   Table,
-  Button,
   Tooltip,
   TableBody,
   Container,
@@ -15,7 +14,7 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_MACHINE, PATH_SETTING } from '../../../routes/paths';
+import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import {
   useTable,
@@ -28,7 +27,6 @@ import {
 } from '../../../components/table';
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
-import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import MachineServiceParamListTableRow from './MachineServiceParamListTableRow';
 import MachineServiceParamListTableToolbar from './MachineServiceParamListTableToolbar';
@@ -49,8 +47,9 @@ const TABLE_HEAD = [
   { id: 'printName', label: 'Print Name', align: 'left' },
   // { id: 'xs2', label: 'Help Hint', align: 'center' },
   // { id: 'xs3', label: 'Link To User Manual', align: 'center' },
-  { id: 'xs4', label: 'Required', align: 'center' },
   { id: 'xs5', label: 'Input Type', align: 'left' },
+  { id: 'xs3', label: 'Category', align: 'left' },
+  { id: 'xs4', label: 'Required', align: 'center' },
   // { id: 'sm1', label: 'Unit Type', align: 'left' },
   // { id: 'sm2', label: 'Min Validation', align: 'center' },
   // { id: 'sm3', label: 'Max Validation', align: 'center' },
@@ -68,8 +67,6 @@ export default function MachineServiceParamList() {
     setPage,
     //
     selected,
-    setSelected,
-    onSelectRow,
     onSelectAllRows,
     //
     onSort,
@@ -94,8 +91,6 @@ export default function MachineServiceParamList() {
 
   const [filterStatus, setFilterStatus] = useState([]);
 
-  const [openConfirm, setOpenConfirm] = useState(false);
-
 
   useLayoutEffect(() => {
     dispatch(getMachineServiceParams()); 
@@ -107,6 +102,7 @@ export default function MachineServiceParamList() {
     }
   }, [machineServiceParams, initial]);
   
+
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
@@ -114,21 +110,10 @@ export default function MachineServiceParamList() {
     filterStatus,
   });
 
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
-  const denseHeight = 60;
-
   const isFiltered = filterName !== '' || !!filterStatus.length;
-
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
+  const denseHeight = 60;
 
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
@@ -165,7 +150,6 @@ export default function MachineServiceParamList() {
   };
 
   return (
-    <>
       <Container maxWidth={false}>
         <Card
           sx={{
@@ -206,7 +190,7 @@ export default function MachineServiceParamList() {
               }
               action={
                 <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
+                  <IconButton color="primary" >
                     <Iconify icon="eva:trash-2-outline" />
                   </IconButton>
                 </Tooltip>
@@ -253,7 +237,6 @@ export default function MachineServiceParamList() {
         </TableCard>
 
       </Container>
-    </>
   );
 }
 

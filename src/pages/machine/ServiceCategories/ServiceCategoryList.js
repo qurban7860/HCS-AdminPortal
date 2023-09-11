@@ -1,118 +1,90 @@
 import { Helmet } from 'react-helmet-async';
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { paramCase } from 'change-case';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import debounce from 'lodash/debounce';
 // @mui
-import {
-  Grid,
-  Card,
-  Table,
-  Button,
-  Tooltip,
-  TableBody,
-  Container,
-  IconButton,
-  TableContainer,
-} from '@mui/material';
+import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from '../../../redux/store';
+import { useDispatch, useSelector } from 'react-redux';
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { getServiceCategories, deleteServiceCategory, ChangeRowsPerPage,
+  ChangePage,
+  setFilterBy, } from '../../../redux/slices/products/serviceCategory';
+import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
-  emptyRows,
   TableNoData,
   TableSkeleton,
-  TableEmptyRows,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from '../../../components/table';
-import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
-import ConfirmDialog from '../../../components/confirm-dialog';
+import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 // sections
-import SiteListTableRow from './ServiceHistoryListTableRow';
-import SiteListTableToolbar from './ServiceHistoryListTableToolbar';
-import { getSites, deleteSite } from '../../../redux/slices/customer/site';
-import CustomerDashboardNavbar from '../util/CustomerDashboardNavbar';
-
-
+import ListTableRow from './ServiceCategoryListTableRow';
+import ListTableToolbar from './ServiceCategoryListTableToolbar';
+import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
+import { fDate } from '../../../utils/formatTime';
+import TableCard from '../../components/ListTableTools/TableCard';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Site', align: 'left' },
-  { id: 'email', label: 'Email', align: 'left' },
-  { id: 'website', label: 'Website', align: 'left' },
-  { id: 'isverified', label: 'Disabled', align: 'left' },
-  { id: 'created_at', label: 'Created At', align: 'left' },
-  { id: 'action', label: 'Actions', align: 'left' },
-
-];
-
-const STATUS_OPTIONS = [
-  // { id: '1', value: 'Order Received' },
-  // { id: '2', value: 'In Progress' },
-  // { id: '3', value: 'Ready For Transport' },
-  // { id: '4', value: 'In Freight' },
-  // { id: '5', value: 'Deployed' },
-  // { id: '6', value: 'Archived' },
+  { id: 'name', label: 'Name', align: 'left' },
+  { id: 'isActive', label: 'Active', align: 'center' },
+  { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function SiteList() {
+export default function ServiceCategoryList() {
   const {
     dense,
-    page,
     order,
     orderBy,
-    rowsPerPage,
     setPage,
-    //
     selected,
     setSelected,
     onSelectRow,
-    onSelectAllRows,
-    //
     onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'createdAt',
+    defaultOrderBy: 'name',
   });
 
   const dispatch = useDispatch();
-
   const { themeStretch } = useSettingsContext();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const navigate = useNavigate();
-
   const [filterName, setFilterName] = useState('');
-
   const [tableData, setTableData] = useState([]);
-
   const [filterStatus, setFilterStatus] = useState([]);
-
   const [openConfirm, setOpenConfirm] = useState(false);
+  const { serviceCategories, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector(
+    (state) => state.serviceCategory
+  );
 
-  const { sites, isLoading, error, initial, responseMessage } = useSelector((state) => state.site);
+    
+  const onChangeRowsPerPage = (event) => {
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+  };
+
+  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useLayoutEffect(() => {
-    dispatch(getSites());
+    dispatch(getServiceCategories());
   }, [dispatch]);
 
   useEffect(() => {
     if (initial) {
-      setTableData(sites);
+      setTableData(serviceCategories);
     }
-  }, [sites, error, responseMessage, enqueueSnackbar, initial]);
+  }, [serviceCategories, error, responseMessage, enqueueSnackbar, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -122,11 +94,8 @@ export default function SiteList() {
   });
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
   const denseHeight = dense ? 60 : 80;
-
   const isFiltered = filterName !== '' || !!filterStatus.length;
-
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   const handleOpenConfirm = () => {
@@ -137,10 +106,25 @@ export default function SiteList() {
     setOpenConfirm(false);
   };
 
+
+  const debouncedSearch = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setFilterBy(value))
+  }, 500))
+
   const handleFilterName = (event) => {
+    debouncedSearch.current(event.target.value);
+    setFilterName(event.target.value)
     setPage(0);
-    setFilterName(event.target.value);
   };
+  
+  useEffect(() => {
+      debouncedSearch.current.cancel();
+  }, [debouncedSearch]);
+  
+  useEffect(()=>{
+      setFilterName(filterBy)
+  },[filterBy])
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -148,10 +132,9 @@ export default function SiteList() {
   };
 
   const handleDeleteRow = async (id) => {
+    await dispatch(deleteServiceCategory(id));
     try {
-      console.log(id);
-      await dispatch(deleteSite(id));
-      dispatch(getSites());
+      dispatch(getServiceCategories());
       setSelected([]);
 
       if (page > 0) {
@@ -164,7 +147,7 @@ export default function SiteList() {
     }
   };
 
-  const handleDeleteRows = (selectedRows) => {
+  const handleDeleteRows = async (selectedRows, handleClose) => {
     const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
     setSelected([]);
     setTableData(deleteRows);
@@ -179,76 +162,54 @@ export default function SiteList() {
         setPage(newPage);
       }
     }
+
+    handleClose();
   };
 
   const handleEditRow = (id) => {
-    console.log(id);
-    navigate(PATH_DASHBOARD.site.edit(id));
+    navigate(PATH_MACHINE.machines.settings.serviceCategories.edit(id));
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_DASHBOARD.site.view(id));
+    navigate(PATH_MACHINE.machines.settings.serviceCategories.view(id));
   };
 
   const handleResetFilter = () => {
+    dispatch(setFilterBy(''))
     setFilterName('');
-    setFilterStatus([]);
   };
 
   return (
     <>
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        
+      <Container maxWidth={false}>
+        <StyledCardContainer>
+          <Cover name="Service Categories" icon="material-symbols:list-alt-outline" setting />
+        </StyledCardContainer>
 
-        <Grid container spacing={3}>
-          <CustomerDashboardNavbar/>
-          </Grid>
-        <Card>
-          <SiteListTableToolbar
+        <TableCard>
+          <ListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
             onFilterStatus={handleFilterStatus}
-            statusOptions={STATUS_OPTIONS}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
-
+          {!isNotFound && <TablePaginationCustom
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
-              
-              numSelected={selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row._id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            />
-
             <Scrollbar>
-              <Table size='small' sx={{ minWidth: 960 }}>
+              <Table size="small" sx={{ minWidth: 360 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  // rowCount={tableData.length}
-                  // numSelected={selected.length}
                   onSort={onSort}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row._id)
-                    )
-                  }
                 />
 
                 <TableBody>
@@ -256,13 +217,13 @@ export default function SiteList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <SiteListTableRow
+                        <ListTableRow
                           key={row._id}
                           row={row}
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          onEditRow={() => handleEditRow(row._id)}
+                          // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                         />
                       ) : (
@@ -275,17 +236,15 @@ export default function SiteList() {
             </Scrollbar>
           </TableContainer>
 
-          <TablePaginationCustom
+          {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            
-          />
-        </Card>
+          />}
+        </TableCard>
       </Container>
-
       <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
@@ -300,7 +259,7 @@ export default function SiteList() {
             variant="contained"
             color="error"
             onClick={() => {
-              handleDeleteRows(selected);
+              handleDeleteRow(selected);
               handleCloseConfirm();
             }}
           >
@@ -315,11 +274,12 @@ export default function SiteList() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
+  const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
+
     return a[1] - b[1];
   });
 
@@ -327,12 +287,15 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (site) => site.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (category) =>
+        category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // (category.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(category?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 
   if (filterStatus.length) {
-    inputData = inputData.filter((site) => filterStatus.includes(site.status));
+    inputData = inputData.filter((customer) => filterStatus.includes(customer.status));
   }
 
   return inputData;

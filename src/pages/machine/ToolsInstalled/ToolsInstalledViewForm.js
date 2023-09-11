@@ -1,32 +1,32 @@
 import PropTypes from 'prop-types';
-import { useMemo, useState, useLayoutEffect,memo } from 'react';
+import { useMemo,  useLayoutEffect,memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Box, Card, Grid, Typography, Table, TableBody, TableCell, TableHead, TableRow,  Paper, TableContainer,tableCellClasses , styled } from '@mui/material';
-import {
-  RHFSwitch,
-} from '../../../components/hook-form';
-import {
-  TableNoData,
-  TableSkeleton
-} from '../../../components/table';
+import {  Grid,  Table, TableBody, TableCell, TableHead, TableRow,  Paper, TableContainer,tableCellClasses , styled } from '@mui/material';
+// import {
+//   RHFSwitch,
+// } from '../../../components/hook-form';
+// import {
+//   TableNoData,
+//   TableSkeleton
+// } from '../../../components/table';
 // redux
 import {
-  setToolInstalledFormVisibility,
+  // setToolInstalledFormVisibility,
   setToolInstalledEditFormVisibility,
-  updateToolInstalled,
+  // updateToolInstalled,
   deleteToolInstalled,
   getToolsInstalled,
   getToolInstalled,
 } from '../../../redux/slices/products/toolInstalled';
 // paths
-import { PATH_DASHBOARD } from '../../../routes/paths';
+// import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import Iconify from '../../../components/iconify';
-import ConfirmDialog from '../../../components/confirm-dialog';
-import { fDate, fDateTime } from '../../../utils/formatTime';
+// import Iconify from '../../../components/iconify';
+// import ConfirmDialog from '../../../components/confirm-dialog';
+import { fDateTime } from '../../../utils/formatTime';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
@@ -38,27 +38,27 @@ ToolsInstalledViewForm.propTypes = {
   currentTool: PropTypes.object,
 };
 function ToolsInstalledViewForm({ currentTool = null }) {
-  const {
-    initial,
-    error,
-    responseMessage,
-    toolInstalledEditFormVisibility,
-    toolsInstalled,
-    toolInstalled,
-    formVisibility,
-  } = useSelector((state) => state.toolInstalled);
+  // const {
+  //   initial,
+  //   error,
+  //   responseMessage,
+  //   toolInstalledEditFormVisibility,
+  //   toolsInstalled,
+  //   toolInstalled,
+  //   formVisibility,
+  // } = useSelector((state) => state.toolInstalled);
   console.log('currentTool : ',currentTool)
   const { machine } = useSelector((state) => state.machine);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [openConfirm, setOpenConfirm] = useState(false);
+  // const [openConfirm, setOpenConfirm] = useState(false);
 
-  const [openPopover, setOpenPopover] = useState(null);
+  // const [openPopover, setOpenPopover] = useState(null);
 
-  const [disableDeleteButton, setDisableDeleteButton] = useState(false);
-  const [disableEditButton, setDisableEditButton] = useState(false);
+  // const [disableDeleteButton, setDisableDeleteButton] = useState(false);
+  // const [disableEditButton, setDisableEditButton] = useState(false);
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: theme.palette.primary.dark,
@@ -71,25 +71,25 @@ function ToolsInstalledViewForm({ currentTool = null }) {
   
   useLayoutEffect(() => {
     if (machine.transferredMachine) {
-      setDisableDeleteButton(true);
-      setDisableEditButton(true);
+      // setDisableDeleteButton(true);
+      // setDisableEditButton(true);
     } else {
-      setDisableDeleteButton(false);
-      setDisableEditButton(false);
+      // setDisableDeleteButton(false);
+      // setDisableEditButton(false);
     }
   }, [machine]);
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
+  // const handleOpenConfirm = () => {
+  //   setOpenConfirm(true);
+  // };
 
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
+  // const handleCloseConfirm = () => {
+  //   setOpenConfirm(false);
+  // };
 
-  const handleClosePopover = () => {
-    setOpenPopover(null);
-  };
+  // const handleClosePopover = () => {
+  //   setOpenPopover(null);
+  // };
 
   const onDelete = async () => {
     try {
@@ -213,7 +213,6 @@ function ToolsInstalledViewForm({ currentTool = null }) {
         )}
 
         {currentTool?.toolType === 'COMPOSIT TOOL'  && ( 
-          <>
           <TableContainer component={Paper} sx={{ my:3 }}>
               <Table sx={{ minWidth: 300 }} size="small" aria-label="a dense table">
                 <TableHead>
@@ -233,7 +232,6 @@ function ToolsInstalledViewForm({ currentTool = null }) {
               </Table>
                 {/* {currentTool?.compositeToolConfig?.length < 1 && <Grid item md={12} ><TableNoData isNotFound={currentTool?.compositeToolConfig.length < 1 } /></Grid>} */}
             </TableContainer>
-          </>
         )}
 
 

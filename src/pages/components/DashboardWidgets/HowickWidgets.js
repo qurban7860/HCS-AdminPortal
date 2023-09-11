@@ -38,7 +38,7 @@ export default function HowickWidgets({
 }) {
   const theme = useTheme();
 
-  const { series, options } = chart;
+  // const { series, options } = chart;
 
   const chartOptions = useChart({
     colors: [theme.palette[color].light],

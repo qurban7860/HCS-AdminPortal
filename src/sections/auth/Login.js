@@ -2,7 +2,7 @@
 import LoginLayout from '../../layouts/login';
 //
 import AuthLoginForm from './AuthLoginForm';
-import { CONFIG } from '../../config-global';
+// import { CONFIG } from '../../config-global';
 // ----------------------------------------------------------------------
 
 export default function Login(){

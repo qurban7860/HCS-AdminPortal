@@ -41,11 +41,11 @@ import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 SecurityUserAddForm.propTypes = {
   isEdit: PropTypes.bool,
   currentUser: PropTypes.object,
+  isInvite: PropTypes.bool,
 };
 
-export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
+export default function SecurityUserAddForm({ isEdit = false, currentUser, isInvite }) {
   const userRolesString = localStorage.getItem('userRoles');
-  // const userRoles = JSON.parse(userRolesString);
 
   // eslint-disable-next-line
   const [userRoles, setUserRoles] = useState(JSON.parse(userRolesString));
@@ -137,8 +137,8 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required!').max(40, 'Name must not exceed 40 characters!'),
     // email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    password: Yup.string().required('Password is required').min(6),
-    passwordConfirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
+    password: !isInvite && Yup.string().required('Password is required').min(6),
+    passwordConfirmation: !isInvite && Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
     roles: Yup.array().required('Roles are required'),
     isActive: Yup.boolean(),
     multiFactorAuthentication: Yup.boolean(),
@@ -195,6 +195,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   };
 
   const onSubmit = async (data) => {
+
     if (phone && phone.length > 4) {
       data.phone = phone;
     }
@@ -227,12 +228,21 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
       const selectedRegionsIDs = selectedRegions.map((region) => region._id);
       data.selectedRegions = selectedRegionsIDs;
     }
-// console.log(data)
+
     try {
-      const response = await dispatch(addSecurityUser(data));
+      const message = !isInvite?"User Added Successfully":"User Invite Sent Successfulllfy";
+      if(isInvite){
+        data.password = "sjhreywuidfsajchfdsgfkdfgsljhffjklgdhsg";
+        data.passwordConfirmation = "sjhreywuidfsajchfdsgfkdfgsljhffjklgdhsg";
+        data.isActive = true;
+        data.isInvite = true;
+       }
+      
+      const response = await dispatch(addSecurityUser(data));      
       await dispatch(resetContacts());
       reset();
       navigate(PATH_SECURITY.users.view(response.data.user._id));
+      enqueueSnackbar(message);
     } catch (error) {
       if (error.Message) {
         enqueueSnackbar(error.Message, { variant: `error` });
@@ -395,7 +405,10 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                 required
               />
             </Box>
-            <Box
+            {(!isInvite &&(
+              <>
+              <Box
+              sx={{ mb: 3 }}
               rowGap={3}
               columnGap={2}
               display="grid"
@@ -443,104 +456,102 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
               />
             </Box>
             <Box
-              rowGap={3}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(1, 1fr)',
-              }}
+            rowGap={3}
+            columnGap={2}
+            display="grid"
+            gridTemplateColumns={{
+              xs: 'repeat(1, 1fr)',
+              sm: 'repeat(1, 1fr)',
+            }}
             >
-              <Autocomplete
-                  sx={{ mt: 3 }}
-                  multiple
-                  id="regions-autocomplete"
-                  options={activeRegions.length > 0 ? activeRegions : [] }
-                  value={selectedRegions}
-                  onChange={(event, newValue) => {
-                    if (newValue) {                    
-                      setSelectedRegions(newValue);
-                    } else {
-                      setSelectedRegions('');
-                    }
-                  }}                  getOptionLabel={(option) => option.name}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      variant="outlined"
-                      label="Regions"
-                      placeholder="Select Regions"
-                    />
-                  )}
-                />
-
-              <Autocomplete
-                // freeSolo
+            <Autocomplete
                 multiple
-                required
-                value={customersArr || null}
-                options={allCustomers.length > 0 ? allCustomers : [] }
-                getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
+                id="regions-autocomplete"
+                options={activeRegions.length > 0 ? activeRegions : [] }
+                value={selectedRegions}
                 onChange={(event, newValue) => {
                   if (newValue) {                    
-                    setCustomerArr(newValue);
+                    setSelectedRegions(newValue);
                   } else {
-                    setCustomerArr('');
+                    setSelectedRegions('');
                   }
-                }}                id="controllable-states-demo"
-                renderOption={(props, option) => (
-                  <li {...props} key={option.id}>
-                    {option.name}
-                  </li>
-                )}
+                }}                  getOptionLabel={(option) => option.name}
                 renderInput={(params) => (
-                  <TextField {...params} name="customers" label="Customers"/>
+                  <TextField
+                    {...params}
+                    variant="outlined"
+                    label="Regions"
+                    placeholder="Select Regions"
+                  />
                 )}
-                ChipProps={{ size: 'small' }}
-              >
-                {(option) => (
-                  <div key={option._id}>
-                    <span>{option.name}</span>
-                  </div>
-                )}
-              </Autocomplete>
+              />
 
-              <Autocomplete
-                // freeSolo
-                multiple
-                required
-                value={machinesArr || null}
-                options={allMachines.length > 0 ? allMachines : [] }
-                getOptionLabel={(option) => `${option.serialNo} ${option.name ? '-' : ''} ${option.name ? option.name : ''}`}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-                onChange={(event, newValue) => {
-                  if (newValue) {
-                    setMachineArr(newValue);
-                  } else {
-                    setMachineArr([]);
-                  }
-                }}
-                id="machine"
-                renderOption={(props, option) => (
-                  <li {...props} key={option.id}>
-                    {`${option.serialNo ? option.serialNo : ''} ${option.name ? '-' : ''} ${option.name ? option.name : ''}`}
-                  </li>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} name="machines" label="Machines" />
-                )}
-                ChipProps={{ size: 'small' }}
-              >
-                {(option) => (
-                  <div key={option._id}>
-                    <span>{option.name}</span>
-                  </div>
-                )}
-              </Autocomplete>
+            <Autocomplete
+              // freeSolo
+              multiple
+              required
+              value={customersArr || null}
+              options={allCustomers.length > 0 ? allCustomers : [] }
+              getOptionLabel={(option) => option.name}
+              isOptionEqualToValue={(option, value) => option._id === value._id}
+              onChange={(event, newValue) => {
+                if (newValue) {                    
+                  setCustomerArr(newValue);
+                } else {
+                  setCustomerArr('');
+                }
+              }}                id="controllable-states-demo"
+              renderOption={(props, option) => (
+                <li {...props} key={option.id}>
+                  {option.name}
+                </li>
+              )}
+              renderInput={(params) => (
+                <TextField {...params} name="customers" label="Customers"/>
+              )}
+              ChipProps={{ size: 'small' }}
+            >
+              {(option) => (
+                <div key={option._id}>
+                  <span>{option.name}</span>
+                </div>
+              )}
+            </Autocomplete>
 
+            <Autocomplete
+              // freeSolo
+              multiple
+              required
+              value={machinesArr || null}
+              options={allMachines.length > 0 ? allMachines : [] }
+              getOptionLabel={(option) => `${option.serialNo} ${option.name ? '-' : ''} ${option.name ? option.name : ''}`}
+              isOptionEqualToValue={(option, value) => option._id === value._id}
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setMachineArr(newValue);
+                } else {
+                  setMachineArr([]);
+                }
+              }}
+              id="machine"
+              renderOption={(props, option) => (
+                <li {...props} key={option.id}>
+                  {`${option.serialNo ? option.serialNo : ''} ${option.name ? '-' : ''} ${option.name ? option.name : ''}`}
+                </li>
+              )}
+              renderInput={(params) => (
+                <TextField {...params} name="machines" label="Machines" />
+              )}
+              ChipProps={{ size: 'small' }}
+            >
+              {(option) => (
+                <div key={option._id}>
+                  <span>{option.name}</span>
+                </div>
+              )}
+            </Autocomplete>
             </Box>
-            <Grid item md={12} display="flex">
+             <Grid item md={12} display="flex">
               <RHFSwitch
                 name="isActive"
                 labelPlacement="start"
@@ -601,6 +612,8 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                 }
               />
             </Grid>
+            </>
+            ))}
             <Stack sx={{ mt: 3 }}>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Stack>

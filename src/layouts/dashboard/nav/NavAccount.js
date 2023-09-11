@@ -1,28 +1,28 @@
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
-import { styled, alpha } from '@mui/material/styles';
-import { Box, Link, Typography } from '@mui/material';
+// import { styled, alpha } from '@mui/material/styles';
+import { Link } from '@mui/material';
 // auth
-import { useAuthContext } from '../../../auth/useAuthContext';
+// import { useAuthContext } from '../../../auth/useAuthContext';
 // routes
-import { PATH_DASHBOARD, PATH_SECURITY } from '../../../routes/paths';
+import { PATH_SECURITY } from '../../../routes/paths';
 // components
-import { CustomAvatar } from '../../../components/custom-avatar';
+// import { CustomAvatar } from '../../../components/custom-avatar';
 
 // ----------------------------------------------------------------------
 
-const StyledRoot = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  padding: theme.spacing(2, 2.5),
-  borderRadius: Number(theme.shape.borderRadius) * 1.5,
-  backgroundColor: alpha(theme.palette.grey[500], 0.12),
-}));
+// const StyledRoot = styled('div')(({ theme }) => ({
+//   display: 'flex',
+//   alignItems: 'center',
+//   padding: theme.spacing(2, 2.5),
+//   borderRadius: Number(theme.shape.borderRadius) * 1.5,
+//   backgroundColor: alpha(theme.palette.grey[500], 0.12),
+// }));
 
 // ----------------------------------------------------------------------
 
 export default function NavAccount() {
-  const { user } = useAuthContext();
+  // const { user } = useAuthContext();
 
   return (
     <Link component={RouterLink} to={PATH_SECURITY.users.account} underline="none" color="inherit">

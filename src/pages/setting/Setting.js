@@ -43,6 +43,10 @@ export default function Setting() {
     navigate(PATH_SETTING.configs.list);
   };
 
+  const linkUserInvites = () => {
+    navigate(PATH_SETTING.invite.list);
+  }
+
 const userRolesString = localStorage.getItem('userRoles');
 const userRoles = userRolesString ? JSON.parse(userRolesString) : [];
 const userModuleRole = userRoles?.some((role) => role.roleType === 'Module');
@@ -112,6 +116,11 @@ const userModuleRole = userRoles?.some((role) => role.roleType === 'Module');
                 onClick={linkUserConfig}
                 icon={ICONS.USER_CONFIG.icon}
                 content={ICONS.USER_CONFIG.heading}
+              /> 
+              <ListItem
+                onClick={linkUserInvites}
+                icon={ICONS.USER_INVITE.icon}
+                content={ICONS.USER_INVITE.heading}
               />             
             </List>
           </StyledSettingsCardContainer>
