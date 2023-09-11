@@ -1,16 +1,9 @@
 import PropTypes from 'prop-types';
-import { sentenceCase } from 'change-case';
 // @mui
 import {
   Stack,
   Button,
-  Select,
-  MenuItem,
-  Checkbox,
   TextField,
-  InputLabel,
-  FormControl,
-  OutlinedInput,
   InputAdornment,
 } from '@mui/material';
 // components

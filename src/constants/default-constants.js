@@ -168,6 +168,7 @@ export const BUTTONS = {
   ADDCUSTOMER: 'Add Customer',
   ADDMACHINE: 'Add Machine',
   ADDUSER: 'Add User',
+  INVITEUSER: 'Invite User',
   ADDSITE: 'Add Site',
   // settings
   ADDCATEGORY: 'Add Category',

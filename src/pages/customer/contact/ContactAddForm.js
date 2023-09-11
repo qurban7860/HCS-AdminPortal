@@ -1,14 +1,13 @@
 import PropTypes from 'prop-types';
-import * as Yup from 'yup';
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
-import { Box, Card, Grid, Stack, Typography, TextField } from '@mui/material';
+import { Box, Card, Grid, Stack,TextField } from '@mui/material';
 // schema
 import { AddContactSchema } from './schemas/AddContactSchema';
 // slice
@@ -42,9 +41,9 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
   const { customer } = useSelector((state) => state.customer);
   const { userId, user } = useAuthContext();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const numberRegExp = /^[0-9]+$/;
+  // const numberRegExp = /^[0-9]+$/;
   const [phone, setPhone] = useState('');
   const [country, setCountryVal] = useState('');
 
@@ -75,12 +74,12 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
   const {
     reset,
     watch,
-    setValue,
+    // setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const values = watch();
+   watch();
 
   useEffect(() => {
     reset(defaultValues);

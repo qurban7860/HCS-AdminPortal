@@ -1,5 +1,3 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
@@ -38,7 +36,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import NoteListTableRow from './NoteListTableRow';
 import NoteListTableToolbar from './NoteListTableToolbar';
-import { getNotes, deleteNote, getNote } from '../../../redux/slices/customer/note';
+import { getNotes, deleteNote } from '../../../redux/slices/customer/note';
 
 
 // ----------------------------------------------------------------------
@@ -85,7 +83,7 @@ export default function NoteList() {
     onSelectAllRows,
     //
     onSort,
-    onChangeDense,
+    // onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({

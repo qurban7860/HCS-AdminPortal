@@ -31,7 +31,7 @@ export default function SecurityUserEditForm() {
   const userRolesString = localStorage.getItem('userRoles');
   const ROLES = [];
   // const userRoles = JSON.parse(userRolesString);
-  const [userRoles, setUserRoles] = useState(JSON.parse(userRolesString));
+  const [userRoles] = useState(JSON.parse(userRolesString));
   const { roles } = useSelector((state) => state.role);
   const { securityUser } = useSelector((state) => state.user);
   const { activeRegions } = useSelector((state) => state.region);

@@ -18,7 +18,7 @@ import { getActiveSites } from '../../../redux/slices/customer/site';
 import { getActiveContacts } from '../../../redux/slices/customer/contact';
 
 // components
-import { NotRequiredValidateFileType } from '../../document/documents/Utills/Util'
+// import { NotRequiredValidateFileType } from '../../document/documents/Utills/Util'
 import Iconify from '../../../components/iconify';
 import { useSnackbar } from '../../../components/snackbar';
 import { MachineServiceRecordSchema } from '../../schemas/machine';
@@ -38,14 +38,14 @@ function MachineServiceRecordAddForm() {
   const { enqueueSnackbar } = useSnackbar();
   const { machine } = useSelector((state) => state.machine)
   console.log("machine : " , machine)
-  const { activeSites } = useSelector((state) => state.site);
+  // const { activeSites } = useSelector((state) => state.site);
   const { activeContacts } = useSelector((state) => state.contact);
   const { activeServiceRecordConfigs } = useSelector((state) => state.serviceRecordConfig);
   // console.log("activeServiceRecordConfigs  : ",activeServiceRecordConfigs)
   const { machineConnections } = useSelector((state) => state.machineConnections);
   // console.log("machineConnections : ",machineConnections)
   const { activeMachineServiceParams } = useSelector((state) => state.machineServiceParam);
-  const { recordTypes } = useSelector((state) => state.machineServiceRecord);
+  // const { recordTypes } = useSelector((state) => state.machineServiceRecord);
   const [activeIndex, setActiveIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
   const [checkParamNumber, setCheckParamNumber]= useState(1);
@@ -71,7 +71,7 @@ function MachineServiceRecordAddForm() {
   //   ).nullable(true)
   // }
 
-  const validateFilesSchema = Yup.object().shape(filesSchema);
+  Yup.object().shape(filesSchema);
 
   const defaultValues = useMemo(
     () => {
@@ -118,7 +118,7 @@ function MachineServiceRecordAddForm() {
     control,
   } = methods;
 
-  const { recordType, serviceDate, files, decoiler, checkParamFiles0, checkParamFiles1, checkParamFiles2, checkParamFiles3, checkParamFiles4, checkParamFiles5, checkParamFiles6, checkParamFiles7, checkParamFiles8, checkParamFiles9, checkParamFiles10, checkParamFiles11, checkParamFiles12, checkParamFiles13, checkParamFiles14, checkParamFiles15 } = watch()
+  const {  serviceDate, files, decoiler } = watch()
 
   
   useEffect(()=>{
@@ -158,7 +158,7 @@ function MachineServiceRecordAddForm() {
   };
 
   const handleChange = (panel) => (event, isExpanded) => {setExpanded(isExpanded ? panel : false)};
-  const handleRecordTypeChange = (newValue) => setValue("recordType", newValue)
+  // const handleRecordTypeChange = (newValue) => setValue("recordType", newValue)
   const handleServiceDateChange = (newValue) => setValue("serviceDate", newValue)
 
   const handleDropMultiFile = useCallback(
@@ -174,7 +174,7 @@ function MachineServiceRecordAddForm() {
     [setValue, files ]
   );
 
-  const handleDropMultiCheckParamFile = useCallback(
+   useCallback(
     (index,acceptedFiles) => {
       console.log(" acceptedFiles : ", acceptedFiles)
       const docFiles =  [];

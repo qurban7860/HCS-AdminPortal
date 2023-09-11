@@ -30,7 +30,7 @@ import { Snacks, FORMLABELS as formLABELS } from '../../constants/customer-const
 // ----------------------------------------------------------------------
 
 export default function CustomerViewForm() {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [setIsExpanded] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isMobile = useResponsive('down', 'sm');

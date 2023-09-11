@@ -34,10 +34,16 @@ export default function SecurityUserTableToolbar({
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const formVisibleToggle = () => {
+  const formNewVisibleToggle = () => {
     dispatch(setSecurityUserFormVisibility(true));
     navigate(PATH_SECURITY.users.new);
   };
+
+  const formInviteVisibleToggle = () => {
+    dispatch(setSecurityUserFormVisibility(true));
+    navigate(PATH_SECURITY.users.invite);
+  };
+
   return (
     <Stack {...options}>
       <SearchBarCombo
@@ -45,8 +51,10 @@ export default function SecurityUserTableToolbar({
         value={filterName}
         onChange={onFilterName}
         onClick={onResetFilter}
-        SubOnClick={formVisibleToggle}
+        SubOnClick={formNewVisibleToggle}
+        inviteOnClick={formInviteVisibleToggle}
         addButton={BUTTONS.ADDUSER}
+        inviteButton={BUTTONS.INVITEUSER}
       />
     </Stack>
   );

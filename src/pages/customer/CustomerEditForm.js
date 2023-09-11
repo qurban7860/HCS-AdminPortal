@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Box, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
+import { Box, Card, Grid, Stack, Autocomplete, TextField } from '@mui/material';
 import { MuiChipsInput } from 'mui-chips-input';
 // hooks
 import { useForm } from 'react-hook-form';
@@ -34,9 +34,9 @@ import { EditCustomerSchema } from '../schemas/customer';
 // ----------------------------------------------------------------------
 
 export default function CustomerEditForm() {
-  const { error, customer, customerEditFormVisibility } = useSelector((state) => state.customer);
+  const {  customer } = useSelector((state) => state.customer);
   const { sites } = useSelector((state) => state.site);
-  const { contacts, spContacts, activeContacts } = useSelector((state) => state.contact);
+  const {  spContacts, activeContacts } = useSelector((state) => state.contact);
   const filteredContacts = spContacts.filter((contact) => contact.isActive === true);
   const [accountManVal, setAccountManVal] = useState('');
   const [supportManVal, setSupportManVal] = useState('');
@@ -79,7 +79,7 @@ export default function CustomerEditForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const values = watch();
+    watch();
 
   useLayoutEffect(() => {
     // window.history.pushState({}, null, `/customers/${customer._id}/edit`);

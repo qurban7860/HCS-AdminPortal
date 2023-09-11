@@ -1,31 +1,24 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { sentenceCase } from 'change-case';
+// import { useState } from 'react';
+// import { useDispatch } from 'react-redux';
 // @mui
 import {
   Switch,
-  Stack,
-  Button,
   TableRow,
-  Checkbox,
-  MenuItem,
   TableCell,
-  IconButton,
-  Link,
 } from '@mui/material';
 // utils
-import { styled, alpha, useTheme } from '@mui/material/styles';
+import { styled, } from '@mui/material/styles';
 import { fDate } from '../../../utils/formatTime';
-import { fCurrency } from '../../../utils/formatNumber';
+// import { fCurrency } from '../../../utils/formatNumber';
 // components
-import Iconify from '../../../components/iconify';
-import MenuPopover from '../../../components/menu-popover';
-import ConfirmDialog from '../../../components/confirm-dialog';
-import Label from '../../../components/label';
+// import Iconify from '../../../components/iconify';
+// import MenuPopover from '../../../components/menu-popover';
+// import ConfirmDialog from '../../../components/confirm-dialog';
+// import Label from '../../../components/label';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
-import { setCustomerDocumentViewFormVisibility } from '../../../redux/slices/document/customerDocument';
-import { setMachineDocumentFormVisibility } from '../../../redux/slices/document/machineDocument';
+// import { setCustomerDocumentViewFormVisibility } from '../../../redux/slices/document/customerDocument';
+// import { setMachineDocumentFormVisibility } from '../../../redux/slices/document/machineDocument';
 import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
@@ -64,36 +57,36 @@ export default function DrawingListTableRow({
     isActive,
     createdAt,
   } = row;
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const smScreen = useScreenSize('sm')
 
-  const [openConfirm, setOpenConfirm] = useState(false);
+  // const [openConfirm, setOpenConfirm] = useState(false);
 
-  const [openPopover, setOpenPopover] = useState(null);
+  // const [openPopover, setOpenPopover] = useState(null);
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
+  // const handleOpenConfirm = () => {
+  //   setOpenConfirm(true);
+  // };
 
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
+  // const handleCloseConfirm = () => {
+  //   setOpenConfirm(false);
+  // };
 
-  const handleOpenPopover = (event) => {
-    setOpenPopover(event.currentTarget);
-  };
+  // const handleOpenPopover = (event) => {
+  //   setOpenPopover(event.currentTarget);
+  // };
 
-  const handleClosePopover = () => {
-    setOpenPopover(null);
-  };
+  // const handleClosePopover = () => {
+  //   setOpenPopover(null);
+  // };
 
-  const handleViewCustomerFormVisibility = () => {
-    dispatch(setCustomerDocumentViewFormVisibility(false));
-  };
-  const handleViewMachineFormVisibility = () => {
-    dispatch(setCustomerDocumentViewFormVisibility(false));
-  };
+  // const handleViewCustomerFormVisibility = () => {
+  //   dispatch(setCustomerDocumentViewFormVisibility(false));
+  // };
+  // const handleViewMachineFormVisibility = () => {
+  //   dispatch(setCustomerDocumentViewFormVisibility(false));
+  // };
 
   return (
     <>

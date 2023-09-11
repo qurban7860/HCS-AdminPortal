@@ -5,7 +5,7 @@ import {
   TableCell,
 } from '@mui/material';
 // utils
-import { styled, alpha, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { fDate } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
@@ -34,16 +34,17 @@ export default function LicenseListTableRow({
 }) {
   const {
     licenseKey,
-    isActive,
     createdAt,
+    licenseDetail: {
+      version,
+      type,
+      exTime,
+    },
   } = row;
-  const version = row.licenseDetail.version;
-  const type =  row.licenseDetail.type;
-  const exTime =  row.licenseDetail.extensionTime;
+  // const exTime =  row.licenseDetail.extensionTime;
   const smScreen = useScreenSize('sm')
 
   return (
-    <>
       <StyledTableRow hover selected={selected}>
         
         <LinkTableCell align="left" param={licenseKey} onClick={onViewRow} />
@@ -54,6 +55,5 @@ export default function LicenseListTableRow({
   
       </StyledTableRow>
 
-    </>
   );
 }

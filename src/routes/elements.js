@@ -53,21 +53,13 @@ export const NoteEdit = Loadable(lazy(() => import('../pages/customer/note/NoteE
 export const NoteView = Loadable(lazy(() => import('../pages/customer/note/NoteView')));
 
 // DASHBOARD: USER
-export const SecurityUserProfile = Loadable(
-  lazy(() => import('../pages/user/SecurityUserProfile'))
-);
-export const SecurityUserChangePassword = Loadable(
-  lazy(() => import('../pages/user/SecurityUserChangePassword'))
-);
-export const SecurityUserChangePasswordByAdmin = Loadable(
-  lazy(() => import('../pages/user/SecurityUserChangePasswordByAdmin'))
-);
+export const SecurityUserProfile = Loadable(lazy(() => import('../pages/user/SecurityUserProfile')));
+export const SecurityUserChangePassword = Loadable(lazy(() => import('../pages/user/SecurityUserChangePassword')));
+export const SecurityUserChangePasswordByAdmin = Loadable(lazy(() => import('../pages/user/SecurityUserChangePasswordByAdmin')));
 export const SecurityUserList = Loadable(lazy(() => import('../pages/user/SecurityUserList')));
 export const SecurityUserAdd = Loadable(lazy(() => import('../pages/user/SecurityUserAdd')));
 export const SecurityUserEdit = Loadable(lazy(() => import('../pages/user/SecurityUserEdit')));
-export const SecurityUserViewForm = Loadable(
-  lazy(() => import('../pages/user/SecurityUserViewForm'))
-);
+export const SecurityUserViewForm = Loadable(lazy(() => import('../pages/user/SecurityUserViewForm')));
 
 // SECURITY USERS ROLES
 export const RoleList = Loadable(lazy(() => import('../pages/user/role/RoleList')));
@@ -107,6 +99,11 @@ export const UserConfigList = Loadable(lazy(() => import('../pages/user/config/C
 export const UserConfigAddForm = Loadable(lazy(() => import('../pages/user/config/ConfigAddForm')));
 export const UserConfigEditForm = Loadable(lazy(() => import('../pages/user/config/ConfigEditForm')));
 export const UserConfigViewForm = Loadable(lazy(() => import('../pages/user/config/ConfigView')));
+
+
+// User Invitations List
+export const UserInvitationList = Loadable(lazy(() => import('../pages/user/invite/UserInviteList')));
+export const UserInvitationView = Loadable(lazy(() => import('../pages/user/invite/UserInviteViewForm')));
 
 
 
@@ -345,18 +342,10 @@ export const ModuleView = Loadable(
 
 // Configs
 
-export const ConfigAdd = Loadable(
-  lazy(() => import('../pages/config/ConfigAdd'))
-);
-export const ConfigList = Loadable(
-  lazy(() => import('../pages/config/ConfigList'))
-);
-export const ConfigEdit = Loadable(
-  lazy(() => import('../pages/config/ConfigEdit'))
-);
-export const ConfigView = Loadable(
-  lazy(() => import('../pages/config/ConfigView'))
-);
+export const ConfigAdd = Loadable(lazy(() => import('../pages/config/ConfigAdd')));
+export const ConfigList = Loadable(lazy(() => import('../pages/config/ConfigList')));
+export const ConfigEdit = Loadable(lazy(() => import('../pages/config/ConfigEdit')));
+export const ConfigView = Loadable(lazy(() => import('../pages/config/ConfigView')));
 // export const machineDocumentView = Loadable(lazy(()=>     import('../pages/')));
 // export const machineDocumentEdit = Loadable(lazy(()=>     import('../pages/')));
 

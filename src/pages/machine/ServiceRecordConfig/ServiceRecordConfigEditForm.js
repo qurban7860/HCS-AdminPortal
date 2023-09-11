@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, Typography, Container, Autocomplete, TextField, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Button, CardContent } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Container,  TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Button, CardContent } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 // slice
 import {
@@ -21,16 +21,17 @@ import { getActiveServiceCategories } from '../../../redux/slices/products/servi
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFSwitch, RHFMultiSelect, RHFAutocomplete } from '../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete } from '../../../components/hook-form';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
+// import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 // constants
-import { FORMLABELS } from '../../../constants/default-constants';
+// import { FORMLABELS } from '../../../constants/default-constants';
 import useResponsive from '../../../hooks/useResponsive';
 import  IconTooltip  from '../../components/Icons/IconTooltip'
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import { FORMLABELS } from '../../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -121,12 +122,11 @@ export default function ServiceRecordConfigEditForm() {
   const {
     reset,
     watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const { recordType, machineModel } = watch();
+  const { recordType } = watch();
 
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
   const { activeServiceCategories } = useSelector((state) => state.serviceCategory);

@@ -10,6 +10,7 @@ import noteReducer from './slices/customer/note';
 import machineReducer from './slices/products/machine';
 import supplierReducer from './slices/products/supplier';
 import licenseReducer from './slices/products/license';
+import profileReducer from './slices/products/profile';
 import categoryReducer from './slices/products/category';
 import toolReducer from './slices/products/tools';
 import techparamcategoryReducer from './slices/products/machineTechParamCategory';
@@ -38,7 +39,7 @@ import machineServiceParamReducer from './slices/products/machineServiceParams'
 import machineServiceRecordReducer from './slices/products/machineServiceRecord';
 import serviceRecordConfigReducer from './slices/products/serviceRecordConfig';
 import serviceCategoryReducer from './slices/products/serviceCategory';
-
+import userInviteReducer from './slices/securityUser/invite';
 
 // ----------------------------------------------------------------------
 
@@ -105,6 +106,12 @@ export const suppplierPersistConfig = {
 };
 export const licensePersistConfig = {
   key: 'license',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+export const profilePersistConfig = {
+  key: 'profile',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
@@ -272,6 +279,13 @@ export const serviceCategoryPersistConfig={
   blacklist: ['error', 'initial', 'responseMessage']
 }
 
+export const userInvitePersistConfig={
+  key: 'userInvite',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
   customer: persistReducer(customerPersistConfig, customerReducer),
@@ -281,6 +295,7 @@ const rootReducer = combineReducers({
   machine: persistReducer(machinePersistConfig, machineReducer),
   supplier: persistReducer(suppplierPersistConfig,supplierReducer),
   license: persistReducer(licensePersistConfig,licenseReducer),
+  profile: persistReducer(profilePersistConfig,profileReducer),
   category: persistReducer(categoryPersistConfig,categoryReducer),
   tool: persistReducer(toolPersistConfig,toolReducer),
   techparamcategory: persistReducer(techparamcategoryPersistConfig,techparamcategoryReducer),
@@ -308,7 +323,8 @@ const rootReducer = combineReducers({
   serviceRecordConfig: persistReducer(serviceRecordConfigPersistConfig, serviceRecordConfigReducer),
   machineServiceParam: persistReducer(machineServiceParamPersistConfig, machineServiceParamReducer),
   machineServiceRecord: persistReducer(machineServiceRecordPersistConfig, machineServiceRecordReducer),
-  serviceCategory: persistReducer(serviceCategoryPersistConfig, serviceCategoryReducer)
+  serviceCategory: persistReducer(serviceCategoryPersistConfig, serviceCategoryReducer),
+  userInvite: persistReducer(userInvitePersistConfig, userInviteReducer)
 
 });
 

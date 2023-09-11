@@ -1,29 +1,22 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
-import { sentenceCase } from 'change-case';
+// import { useState } from 'react';
 // @mui
 import {
   Switch,
-  Stack,
-  Button,
   TableRow,
-  Checkbox,
-  MenuItem,
   TableCell,
-  IconButton,
-  Link,
 } from '@mui/material';
 // utils
 import { styled } from '@mui/system';
 import { fDate } from '../../../utils/formatTime';
-import { fCurrency } from '../../../utils/formatNumber';
+// import { fCurrency } from '../../../utils/formatNumber';
 // components
-import Iconify from '../../../components/iconify';
-import MenuPopover from '../../../components/menu-popover';
-import ConfirmDialog from '../../../components/confirm-dialog';
-import Label from '../../../components/label';
+// import Iconify from '../../../components/iconify';
+// import MenuPopover from '../../../components/menu-popover';
+// import ConfirmDialog from '../../../components/confirm-dialog';
+// import Label from '../../../components/label';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
-import { useSelector } from '../../../redux/store';
+// import { useSelector } from '../../../redux/store';
 import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
@@ -56,27 +49,27 @@ export default function DocumentTypeListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, docCategory, description, customerAccess, isActive, createdAt } = row;
+  const { name, docCategory, customerAccess, isActive, createdAt } = row;
 
-  const [openConfirm, setOpenConfirm] = useState(false);
+  // const [ setOpenConfirm] = useState(false);
 
-  const [openPopover, setOpenPopover] = useState(null);
+  // const [ setOpenPopover] = useState(null);
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
+  // const handleOpenConfirm = () => {
+  //   setOpenConfirm(true);
+  // };
 
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
+  // const handleCloseConfirm = () => {
+  //   setOpenConfirm(false);
+  // };
 
-  const handleOpenPopover = (event) => {
-    setOpenPopover(event.currentTarget);
-  };
+  // const handleOpenPopover = (event) => {
+  //   setOpenPopover(event.currentTarget);
+  // };
 
-  const handleClosePopover = () => {
-    setOpenPopover(null);
-  };
+  // const handleClosePopover = () => {
+  //   setOpenPopover(null);
+  // };
  const smScreen = useScreenSize('sm')
   return (
     <>

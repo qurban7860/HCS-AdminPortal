@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 // @mui
-import { Stack, Card, CardMedia, Grid, CardActionArea, Link, Breadcrumbs } from '@mui/material';
+import { Stack, Card, CardMedia, Grid, CardActionArea, Link } from '@mui/material';
 import {
   CardBase,
   GridBaseViewForm,
@@ -20,8 +20,8 @@ import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import GoogleMaps from '../../assets/GoogleMaps';
 import useResponsive from '../../hooks/useResponsive';
-import { getSites, getSite, setSiteFormVisibility, setSiteEditFormVisibility } from '../../redux/slices/customer/site';
-import { getActiveContacts } from '../../redux/slices/customer/contact';
+import { getSites, getSite, setSiteFormVisibility } from '../../redux/slices/customer/site';
+// import { getActiveContacts } from '../../redux/slices/customer/contact';
 import NothingProvided from '../components/Defaults/NothingProvided';
 import SiteAddForm from './site/SiteAddForm';
 import SiteEditForm from './site/SiteEditForm';
@@ -37,11 +37,11 @@ import { BUTTONS, BREADCRUMBS, TITLES } from '../../constants/default-constants'
 
 export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   const { order, orderBy } = useTable({ defaultOrderBy: '-createdAt' });
-  const [checked, setChecked] = useState(false);
-  const [openSite, setOpenSite] = useState(false);
+  const [ setChecked] = useState(false);
+  const [ setOpenSite] = useState(false);
   const { site } = useSelector((state) => state.site);
   const { enqueueSnackbar } = useSnackbar();
-  const [activeIndex, setActiveIndex] = useState(null);
+  const [activeIndex] = useState(null);
   const [activeCardIndex, setCardActiveIndex] = useState(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [filterName, setFilterName] = useState('');

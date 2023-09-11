@@ -200,6 +200,10 @@ import {
   ConfigView,
   ConfigEdit,
 
+   // User Invite
+   UserInvitationList,
+   UserInvitationView,
+
 //   
   BlankPage,
   PermissionDeniedPage,
@@ -211,7 +215,6 @@ import {
   MaintenancePage,
   ErrorPage,
   UserInviteLanding
-  
 } from './elements';
 
 // ----------------------------------------------------------------------
@@ -489,6 +492,7 @@ export default function Router() {
             { path: 'changePassword', element: <SecurityUserChangePasswordByAdmin/> },
             { path: 'list', element: <SecurityUserList /> },
             { path: 'new', element: <SecurityUserAdd /> },
+            { path: 'invite', element: <SecurityUserAdd isInvite /> },
             { path: ':id/edit', element: <SecurityUserEdit /> },
             { path: ':id/view', element: <SecurityUserViewForm /> },
           ],
@@ -576,6 +580,13 @@ export default function Router() {
             { path: ':id/view', element: <UserConfigViewForm /> },
             { path: ':id/edit', element: <UserConfigEditForm /> }
 
+          ],
+        },
+        {
+          path: 'invite',
+          children: [
+            { path: 'list', element: <UserInvitationList /> },
+            { path: ':id/view', element: <UserInvitationView /> },
           ],
         },
       ],

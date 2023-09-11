@@ -82,11 +82,11 @@ export default function LicenseViewForm() {
         </Tooltip>
       </Grid>
       <Grid container>
-        <ViewFormField sm={6} heading="License Key" param={defaultValues.licenseKey} />
-        <ViewFormField sm={6} heading="Version" param={defaultValues.licenseDetail.version} />
         <ViewFormField sm={6} heading="Device GUID" param={defaultValues.licenseDetail.deviceGUID} />
         <ViewFormField sm={6} heading="Device Name" param={defaultValues.licenseDetail.deviceName} />
-        <ViewFormField sm={12} heading="Type" param={defaultValues.licenseDetail.type} />
+        <ViewFormField sm={6} heading="Type" param={defaultValues.licenseDetail.type} />
+        <ViewFormField sm={6} heading="Version" param={defaultValues.licenseDetail.version} />
+        <ViewFormField heading="License Key" param={defaultValues.licenseKey} />
         <ViewFormField sm={6} heading="Production" param={defaultValues.licenseDetail.production} />
         <ViewFormField sm={6} heading="Waste" param={defaultValues.licenseDetail.waste} />
         <ViewFormField sm={6} heading="Extension Time" param={fDate(defaultValues.licenseDetail.extensionTime)} />

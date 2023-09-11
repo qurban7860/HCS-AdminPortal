@@ -20,7 +20,7 @@ import { PATH_MACHINE } from '../../../routes/paths';
 //  components
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
-import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
+// import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 // import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 

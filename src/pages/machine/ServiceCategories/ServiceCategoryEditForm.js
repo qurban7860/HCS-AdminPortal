@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, Typography } from '@mui/material';
+import { Box, Card, Grid, Stack } from '@mui/material';
 // slice
 import {
   updateServiceCategory,
@@ -16,7 +16,7 @@ import {
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
+import FormProvider, { RHFTextField } from '../../../components/hook-form';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
@@ -25,7 +25,7 @@ import { FORMLABELS } from '../../../constants/default-constants';
 // ----------------------------------------------------------------------
 
 export default function ServiceCategoryEditForm() {
-  const { error, serviceCategory } = useSelector((state) => state.serviceCategory);
+  const { serviceCategory } = useSelector((state) => state.serviceCategory);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -56,12 +56,11 @@ export default function ServiceCategoryEditForm() {
   const {
     reset,
     watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const values = watch();
+    watch();
 
   useLayoutEffect(() => {
     dispatch(getServiceCategory(id));

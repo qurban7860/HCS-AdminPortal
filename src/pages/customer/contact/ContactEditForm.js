@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import * as Yup from 'yup';
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
@@ -7,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
-import { Box, Card, Grid, Stack, Typography, TextField } from '@mui/material';
+import { Box, Card, Grid, Stack,TextField } from '@mui/material';
 // slice
 import {
   updateContact,
@@ -22,7 +21,6 @@ import FormProvider, {
   RHFAutocomplete,
   RHFMultiSelect,
   RHFTextField,
-  RHFSwitch,
 } from '../../../components/hook-form';
 import { AddFormLabel } from '../../components/DocumentForms/FormLabel';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
@@ -44,7 +42,7 @@ ContactEditForm.propTypes = {
 };
 
 export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
-  const { contact, isLoading, error } = useSelector((state) => state.contact);
+  const { contact } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -86,7 +84,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
     formState: { isSubmitting },
   } = methods;
 
-  const values = watch();
+   watch();
 
   function filtter(data, input) {
     const filteredOutput = data.filter((obj) =>

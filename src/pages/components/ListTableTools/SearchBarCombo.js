@@ -12,13 +12,15 @@ function SearchBarCombo({
   onClick,
   SubOnClick,
   addButton,
+  inviteOnClick,
+  inviteButton,
   buttonIcon,
   ...other
 }) {
   const isMobile = useResponsive('sm', 'down');
   return (
     <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-      <Grid item xs={12} sm={9} sx={{ display: 'inline-flex' }}>
+      <Grid item xs={12} sm={8} sx={{ display: 'inline-flex' }}>
         <TextField
           fullWidth={isMobile}
           size="small"
@@ -47,7 +49,20 @@ function SearchBarCombo({
           </Button>
         )}
       </Grid>
-      {addButton && <Grid item xs={12} sm={3}>
+      {inviteButton && <Grid item xs={12} sm={2}>
+        <Stack alignItems="flex-end">
+          <Button
+            fullWidth
+            sx={{ p: 1, width: '100%' }}
+            onClick={inviteOnClick}
+            variant="contained"
+            startIcon={<Iconify icon={buttonIcon || 'eva:plus-fill'} />}
+          >
+            {inviteButton}
+          </Button>
+        </Stack>
+      </Grid>}
+      {addButton && <Grid item xs={12} sm={2}>
         <Stack alignItems="flex-end">
           <Button
             fullWidth
@@ -71,6 +86,8 @@ SearchBarCombo.propTypes = {
   value: PropTypes.string,
   SubOnClick: PropTypes.func,
   addButton: PropTypes.string,
+  inviteOnClick: PropTypes.func,
+  inviteButton: PropTypes.string,
   buttonIcon: PropTypes.string,
 };
 

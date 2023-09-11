@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { TableCell, Link } from '@mui/material';
-import { styled, alpha, useTheme } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
 
 export default function LinkTableCell({ align, onClick, param }) {
   return (
