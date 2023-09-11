@@ -34,7 +34,7 @@ export default function SecurityUserViewForm() {
   const userRoles = JSON.parse(userRolesString);
   const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
 
-  const { securityUser, loggedInUser } = useSelector((state) => state.user);
+  const { securityUser, loggedInUser, isLoading} = useSelector((state) => state.user);
 
   const [openConfirm, setOpenConfirm] = useState(false);
   const handleCloseConfirm = () => setOpenConfirm(false);
@@ -90,10 +90,10 @@ export default function SecurityUserViewForm() {
   };
 
   const handleUserInvite = async () => {
-    if (securityUser._id) {
+    if (securityUser?._id) {
       try {
-        dispatch(await sendUserInvite(securityUser._id));
-        enqueueSnackbar('Invite sent successfully!');
+        await dispatch(sendUserInvite(securityUser._id));
+        enqueueSnackbar('Invitation sent successfully!');
       } catch (error) {
         if (error.Message) {
           enqueueSnackbar(error.Message, { variant: `error` });
@@ -159,6 +159,7 @@ export default function SecurityUserViewForm() {
             handleUserInvite={handleUserInvite}
             handleUpdatePassword={handleUpdatePassword}
             onDelete={onDelete}
+            isInviteLoading={isLoading}
             disablePasswordButton={!isSuperAdmin}
             disableDeleteButton={!isSuperAdmin}
             disableEditButton={disableEditButton}

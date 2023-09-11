@@ -177,9 +177,25 @@ function ToolsInstalledAddForm() {
     // -------------------------------- composite Tool Config --------------------------------
     // engageInstruction_1: Yup.object().shape().nullable().label('Engage Instructuion').required(),
     // disengageInstruction: Yup.object()
-    engagingDuration: Yup.number(),
-    returningDuration: Yup.number(),
-    twoWayCheckDelayTime: Yup.number(),
+    engagingDuration: Yup.number()
+    .typeError('Engaging Duration must be a number')
+      .transform((value, originalValue) => {
+      if (originalValue.trim() === '') return undefined;
+      return parseFloat(value);
+      }).test('no-spaces', 'Engaging Duration cannot have spaces', value => !(value && value.toString().includes(' '))),
+    returningDuration: Yup.number()
+    .typeError('Returning Duration must be a number')
+      .transform((value, originalValue) => {
+      if (originalValue.trim() === '') return undefined;
+      return parseFloat(value);
+      }).test('no-spaces', 'Returning Duration cannot have spaces', value => !(value && value.toString().includes(' '))),
+    twoWayCheckDelayTime: Yup.number()
+    .typeError('Two-Way Check Delay Time must be a number')
+      .transform((value, originalValue) => {
+      if (originalValue.trim() === '') return undefined;
+      return parseFloat(value);
+      }).test('no-spaces', 'Two Way Check Delay Time cannot have spaces', value => !(value && value.toString().includes(' '))),
+
   });
 
   const defaultValues = useMemo(

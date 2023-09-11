@@ -35,7 +35,10 @@ import moduleReducer from './slices/module/module';
 import drawingReducer from './slices/products/drawing';
 import configReducer from './slices/config/config';
 import machineServiceParamReducer from './slices/products/machineServiceParams'
+import machineServiceRecordReducer from './slices/products/machineServiceRecord';
 import serviceRecordConfigReducer from './slices/products/serviceRecordConfig';
+import serviceCategoryReducer from './slices/products/serviceCategory';
+import userInviteReducer from './slices/securityUser/invite';
 
 // ----------------------------------------------------------------------
 
@@ -250,13 +253,31 @@ export const machineServiceParamPersistConfig={
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
+export const machineServiceRecordPersistConfig={
+  key: 'machineServiceRecord',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
 export const serviceRecordConfigPersistConfig={
   key: 'serviceRecordConfig',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
+export const serviceCategoryPersistConfig={
+  key: 'serviceCategory',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
 
+export const userInvitePersistConfig={
+  key: 'userInvite',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
 
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
@@ -292,7 +313,10 @@ const rootReducer = combineReducers({
   config: persistReducer(configPersistConfig, configReducer),
   userConfig: persistReducer(userConfigPersistConfig, userConfigReducer),
   serviceRecordConfig: persistReducer(serviceRecordConfigPersistConfig, serviceRecordConfigReducer),
-  machineServiceParam: persistReducer(machineServiceParamPersistConfig, machineServiceParamReducer)
+  machineServiceParam: persistReducer(machineServiceParamPersistConfig, machineServiceParamReducer),
+  machineServiceRecord: persistReducer(machineServiceRecordPersistConfig, machineServiceRecordReducer),
+  serviceCategory: persistReducer(serviceCategoryPersistConfig, serviceCategoryReducer),
+  userInvite: persistReducer(userInvitePersistConfig, userInviteReducer)
 
 });
 

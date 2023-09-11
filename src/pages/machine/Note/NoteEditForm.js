@@ -55,8 +55,8 @@ export default function NoteEditForm() {
     try {
       await dispatch(updateNote(machine._id, note._id, data));
       reset();
+      enqueueSnackbar('Note Updated Successfully!');
       dispatch(setNoteEditFormVisibility(false));
-      // navigate(PATH_DASHBOARD.note.list);
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);

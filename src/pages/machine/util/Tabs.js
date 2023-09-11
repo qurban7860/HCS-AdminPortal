@@ -6,6 +6,8 @@ import DocumentTagPage from '../../document/documents/DocumentTagPage';
 import MachineDrawings from '../Drawing/MachineDrawings';
 import MachineToolsInstalledList from '../MachineToolsInstalledList';
 import MachineLicenses from '../License/MachineLicenses';
+import MachineServiceRecordList from '../MachineServiceRecordList';
+
 
 
 export const TABS = (currentComponent, showDevTabs, disableTab) => [
@@ -72,6 +74,7 @@ export const TABS = (currentComponent, showDevTabs, disableTab) => [
           value: 'serviceHistory',
           label: 'Service History',
           icon: <Iconify icon="mdi:clipboard-text-clock" />,
+          component : <MachineServiceRecordList />,
         },
       ]
     : []),

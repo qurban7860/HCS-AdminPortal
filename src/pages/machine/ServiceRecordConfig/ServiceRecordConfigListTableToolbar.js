@@ -42,7 +42,7 @@ export default function ServiceRecordConfigListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        addButton={BUTTONS.ADDCATEGORY}
+        addButton={BUTTONS.ADD_MACHINE_SERVICE_CONFIG}
       />
     </Stack>
   );

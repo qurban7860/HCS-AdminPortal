@@ -52,6 +52,9 @@ export default function UserInviteLanding() {
   });
 
   useEffect(() => {
+
+    console.log(id, code, expired)
+    
     if(expired){
       navigate(PATH_PAGE.expiredErrorPage);
     }else if (id && code) {

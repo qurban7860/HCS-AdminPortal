@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useEffect, useLayoutEffect, useState } from 'react';
-import { Link as useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 // @mui
 import { Container } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';

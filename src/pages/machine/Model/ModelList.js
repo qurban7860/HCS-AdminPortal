@@ -1,7 +1,7 @@
 // import { Helmet } from 'react-helmet-async';
 // import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { Link as  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
 import {

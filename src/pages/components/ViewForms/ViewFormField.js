@@ -33,6 +33,7 @@ function ViewFormField({
   currentEmp,
   chips,
   userRolesChips,
+  serviceParam,
   NewVersion,
   handleNewVersion,
   ViewAllVersions,
@@ -202,6 +203,19 @@ function ViewFormField({
           userRolesChips && typeof userRolesChips === 'string' && userRolesChips.trim().length > 0 && <Chip label={userRolesChips} />
         )}
 
+        {serviceParam && typeof serviceParam === 'object' && serviceParam?.length > 0 ? (
+          <Grid container sx={{my:-2,
+              display: 'flex',
+              alignItems: 'center',
+              whiteSpace: 'pre-line',
+              wordBreak: 'break-word',
+              }} >
+            {serviceParam?.map((obj, index) => ( <Chip key={index} label={obj?.name} sx={{mx:0.3}} />))}
+          </Grid>
+        ) : (
+          serviceParam && typeof serviceParam === 'string' && serviceParam.trim().length > 0 && <Chip label={serviceParam} />
+        )}
+
       {/* popover for verification list */}
       <ViewFormMenuPopover
         open={verifiedAnchorEl}
@@ -240,6 +254,7 @@ ViewFormField.propTypes = {
   chipDialogArrayParam: PropTypes.array,
   chips: PropTypes.any,
   userRolesChips: PropTypes.array,
+  serviceParam: PropTypes.array,
   NewVersion: PropTypes.bool,
   handleNewVersion: PropTypes.func,
   ViewAllVersions: PropTypes.bool,
