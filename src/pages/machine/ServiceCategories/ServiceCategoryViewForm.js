@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
 // @mui
-import { Card, Grid, Stack, Typography, Button, Switch } from '@mui/material';
-import { RHFSwitch } from '../../../components/hook-form';
+import { Card, Grid } from '@mui/material';
+// import { RHFSwitch } from '../../../components/hook-form';
 // redux
 import {
   getServiceCategory,
@@ -16,13 +16,13 @@ import { useSnackbar } from '../../../components/snackbar';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // Iconify
-import Iconify from '../../../components/iconify/Iconify';
+// import Iconify from '../../../components/iconify/Iconify';
 //  components
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
-import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
+// import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
+// import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 
 // ----------------------------------------------------------------------
 

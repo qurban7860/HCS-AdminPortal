@@ -1,22 +1,16 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import {
-  Box,
-  Button,
   Card,
   Grid,
   Stack,
   Typography,
-  DialogTitle,
-  Dialog,
-  InputAdornment,
-  TextField,
 } from '@mui/material';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // slice
@@ -58,8 +52,6 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
 
   const {
     reset,
-    watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;

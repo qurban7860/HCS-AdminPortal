@@ -1,13 +1,13 @@
 import * as Yup from 'yup';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect,useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
-import { LoadingButton } from '@mui/lab';
-import { Box, Button, Card, Grid, Stack, Typography, TextField, Autocomplete } from '@mui/material';
+// import { LoadingButton } from '@mui/lab';
+import { Box,Card, Grid, Stack, Typography, TextField, Autocomplete } from '@mui/material';
 // slice
 import { addSite, setSiteFormVisibility } from '../../../redux/slices/customer/site';
 // components
@@ -15,11 +15,11 @@ import { useSnackbar } from '../../../components/snackbar';
 // assets
 import { countries } from '../../../assets/data';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import GoogleMaps from '../../../assets/GoogleMaps';
+// import GoogleMaps from '../../../assets/GoogleMaps';
 import { isNumberLatitude , isNumberLongitude } from './util/index'
 import FormProvider, {
   RHFSwitch,
-  RHFSelect,
+  // RHFSelect,
   RHFTextField,
   RHFAutocomplete,
 } from '../../../components/hook-form';
@@ -27,11 +27,11 @@ import FormProvider, {
 // ----------------------------------------------------------------------
 
 export default function SiteAddForm() {
-  const { siteAddFormVisibility } = useSelector((state) => state.site);
+  // const { siteAddFormVisibility } = useSelector((state) => state.site);
 
   const { customer } = useSelector((state) => state.customer);
 
-  const { contacts, activeContacts } = useSelector((state) => state.contact);
+  const { contacts } = useSelector((state) => state.contact);
 
   const dispatch = useDispatch();
 
@@ -126,10 +126,10 @@ export default function SiteAddForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
-  const onChange = (event) => {
-    const value = event.target.value;
-    // console.log('value----->',value);
-  };
+  // const onChange = (event) => {
+  //   const value = event.target.value;
+  //   // console.log('value----->',value);
+  // };
 
   const handlePhoneChange = (newValue) => {
     matchIsValidTel(newValue)

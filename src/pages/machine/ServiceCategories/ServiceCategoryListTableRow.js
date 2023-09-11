@@ -9,7 +9,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // utils
 import Iconify from '../../../components/iconify/Iconify';
 import { fDate } from '../../../utils/formatTime';
-import { useScreenSize } from '../../../hooks/useResponsive';
+// import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -30,7 +30,7 @@ export default function ListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, isActive, connections, createdAt } = row;
+  const { name, isActive, createdAt } = row;
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
 
@@ -42,9 +42,9 @@ export default function ListTableRow({
     setOpenConfirm(false);
   };
 
-  const handleOpenPopover = (event) => {
-    setOpenPopover(event.currentTarget);
-  };
+  // const handleOpenPopover = (event) => {
+  //   setOpenPopover(event.currentTarget);
+  // };
 
   const handleClosePopover = () => {
     setOpenPopover(null);

@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types';
-import * as Yup from 'yup';
 import { useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Card, Grid, Stack, Typography, Container, FormControl, RadioGroup, Radio, FormControlLabel, FormLabel, FormGroup, Switch, FormHelperText} from '@mui/material';
+import { Card, Grid, Stack, Container} from '@mui/material';
 // hooks
 import { useForm } from 'react-hook-form';
 import { useSnackbar } from '../../../components/snackbar';
@@ -16,12 +15,12 @@ import { AddDocumentCategorySchema } from '../../schemas/document';
 // slice
 import { addDocumentCategory } from '../../../redux/slices/document/documentCategory';
 // components
-import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
+import FormProvider, { RHFTextField } from '../../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { Cover } from '../../components/Defaults/Cover';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 // assets
-import { countries } from '../../../assets/data';
+// import { countries } from '../../../assets/data';
 // styles
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 // constants
@@ -45,7 +44,7 @@ export default function DocumentCategoryAddForm({ currentDocument }) {
 
   const handleChangeType = (event) => {
     if (event.target.name === "all" && event.target.checked === true) {
-      const allValue = event.target.checked;
+      // const allValue = event.target.checked;
       setState({
         customer: true,
         machine: true,
@@ -101,8 +100,6 @@ console.log("state : ", state);
 
   const {
     reset,
-    watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;

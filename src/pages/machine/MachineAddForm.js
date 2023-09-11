@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect,useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -12,26 +12,23 @@ import {
   Card,
   styled,
   Grid,
-  Container,
   Stack,
   TextField,
   Autocomplete,
-  Typography,
-  Chip
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { MuiChipsInput } from 'mui-chips-input';
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
-import { getActiveSites, resetSites, resetActiveSites } from '../../redux/slices/customer/site';
-import machine, { addMachine, getActiveMachines } from '../../redux/slices/products/machine';
+import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
+import  { addMachine, getActiveMachines } from '../../redux/slices/products/machine';
 import { getActiveMachineStatuses } from '../../redux/slices/products/statuses';
 import { getActiveMachineModels } from '../../redux/slices/products/model';
-import { getSuppliers, getActiveSuppliers } from '../../redux/slices/products/supplier';
-import { getMachineConnections, resetMachineConnections } from '../../redux/slices/products/machineConnections';
+import { getActiveSuppliers } from '../../redux/slices/products/supplier';
+import { getMachineConnections } from '../../redux/slices/products/machineConnections';
 import { Cover } from '../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 
@@ -39,10 +36,10 @@ import { StyledCardContainer } from '../../theme/styles/default-styles';
 import { PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, { RHFTextField, RHFSwitch } from '../../components/hook-form';
+import FormProvider, { RHFTextField } from '../../components/hook-form';
 // auth
-import { useAuthContext } from '../../auth/useAuthContext';
-import { useSettingsContext } from '../../components/settings';
+// import { useAuthContext } from '../../auth/useAuthContext';
+// import { useSettingsContext } from '../../components/settings';
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 import ToggleButtons from '../components/DocumentForms/ToggleButtons';
 import { FORMLABELS } from '../../constants/default-constants';
@@ -54,10 +51,10 @@ MachineAddForm.propTypes = {
 };
 
 export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
-  const { userId, user } = useAuthContext();
+  // const { userId, user } = useAuthContext();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { activeMachines } = useSelector((state) => state.machine);
+  // const { activeMachines } = useSelector((state) => state.machine);
   const { activeSuppliers } = useSelector((state) => state.supplier);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
   const { activeCustomers } = useSelector((state) => state.customer);
@@ -67,24 +64,24 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const { machineConnections } = useSelector((state) => state.machineConnections);
 
   const { enqueueSnackbar } = useSnackbar();
-  const [parMachineVal, setParMachineVal] = useState('');
-  const [parMachSerVal, setParMachSerVal] = useState('');
-  const [supplierVal, setSupplierVal] = useState('');
-  const [statusVal, setStatusVal] = useState('');
-  const [modelVal, setModelVal] = useState('');
-  const [customerVal, setCustomerVal] = useState('');
-  const [installVal, setInstallVal] = useState('');
-  const [billingVal, setBillingVal] = useState('');
-  const [accoVal, setAccoManVal] = useState('');
-  const [projVal, setProjManVal] = useState('');
-  const [suppVal, setSuppManVal] = useState('');
-  const [currTag, setCurrTag] = useState('');
+  // const [parMachineVal, setParMachineVal] = useState('');
+  // const [parMachSerVal, setParMachSerVal] = useState('');
+  // const [supplierVal, setSupplierVal] = useState('');
+  // const [statusVal, setStatusVal] = useState('');
+  // const [modelVal, setModelVal] = useState('');
+  // const [customerVal, setCustomerVal] = useState('');
+  // const [installVal, setInstallVal] = useState('');
+  // const [billingVal, setBillingVal] = useState('');
+  // const [accoVal, setAccoManVal] = useState('');
+  // const [projVal, setProjManVal] = useState('');
+  // const [suppVal, setSuppManVal] = useState('');
+  // const [currTag, setCurrTag] = useState('');
   const [shippingDate, setShippingDate] = useState(null);
   const [installationDate, setInstallationDate] = useState(null);
-  const [disableInstallationDate, setInstallationDateToggle] = useState(true);
-  const [disableShippingDate, setShippingDateToggle] = useState(true);
+  // const [disableInstallationDate, setInstallationDateToggle] = useState(true);
+  // const [disableShippingDate, setShippingDateToggle] = useState(true);
 
-  const [chipData, setChipData] = useState([]);
+  // const [chipData, setChipData] = useState([]);
   const [chips, setChips] = useState([]);
 
 
@@ -178,28 +175,17 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   } = methods
 
   const {
-    serialNo,
-    name,
-    previousMachine,
     parentSerialNo,
     supplier,
-    model,
     status,
-    connection,
-    workOrderRef,
     customer,
     instalationSite,
-    billingSite,
     machineConnectionVal,
     // installationDate,
     // shippingDate,
-    siteMilestone,
     accountManager,
     projectManager,
     supportManager,
-    customerTags,
-    description,
-    isActive,
   } = watch();
 
   useEffect(() => {
@@ -207,11 +193,11 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       dispatch(getActiveSites(customer._id));
   dispatch(getMachineConnections(customer._id));
     }
-    setInstallVal(null);
-    setBillingVal(null);
+    // setInstallVal(null);
+    // setBillingVal(null);
   }, [dispatch, customer]);
 
-  const ListItem = styled('li')(({ theme }) => ({
+ styled('li')(({ theme }) => ({
     margin: theme.spacing(0.5),
   }));
   const onSubmit = async (data) => {
@@ -258,9 +244,9 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   //   }
   // };
 
-  const handleChange = (e) => {
-    setCurrTag(e.target.value);
-  };
+  // const handleChange = (e) => {
+  //   setCurrTag(e.target.value);
+  // };
 
   const toggleCancel = () => {
     navigate(PATH_MACHINE.machines.list);
@@ -269,10 +255,9 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     const array = [...new Set(newChips)]
     setChips(array);
   };
-  const { themeStretch } = useSettingsContext();
+  // const { themeStretch } = useSettingsContext();
 
   return (
-    <>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <StyledCardContainer>
           <Cover name="New Machine" icon="material-symbols:list-alt-outline" setting="enable" />
@@ -814,6 +799,5 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
           </Grid>
         </Grid>
       </FormProvider>
-    </>
   );
 }
