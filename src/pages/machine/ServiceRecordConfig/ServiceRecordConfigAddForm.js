@@ -51,7 +51,6 @@ export default function ServiceRecordConfigAddForm() {
   const { activeCategories } = useSelector((state) => state.category);
   const [checkParamNumber, setCheckParamNumber]= useState(0);
   const [checkParam, setCheckParam] = useState([]);
-  console.log("checkParam : ",checkParam)
   
   useLayoutEffect(() => {
     dispatch(getActiveMachineServiceParams());
@@ -157,12 +156,10 @@ export default function ServiceRecordConfigAddForm() {
   const handleInputChange = (event, index) => {
     const { name, value } = event.target;
     const updatedCheckParam = [...checkParam];
-  
     updatedCheckParam[index] = {
       ...updatedCheckParam[index],
       [name]: value,
     };
-  
     setCheckParam(updatedCheckParam);
   };
 
@@ -187,18 +184,25 @@ export default function ServiceRecordConfigAddForm() {
 
 
   const handleListDrop = (e, index) => {
-
     const draggedIndex = e.dataTransfer.getData('index');
-    const updatedCheckParam = [...checkParam]; // Clone the state
+    const updatedCheckParam = [...checkParam];
     const [draggedRow] = updatedCheckParam.splice(draggedIndex, 1);
     updatedCheckParam.splice(index, 0, draggedRow);
     setCheckParam(updatedCheckParam); 
+    if(draggedIndex > checkParamNumber && index <= checkParamNumber ){
+      setCheckParamNumber(prevCheckParamNumber => prevCheckParamNumber + 1)
+    }else if(draggedIndex < checkParamNumber && index >= checkParamNumber){
+      setCheckParamNumber(prevCheckParamNumber => prevCheckParamNumber - 1)
+    }else if(Number(draggedIndex) === checkParamNumber && index > checkParamNumber){
+      setCheckParamNumber(prevCheckParamNumber => prevCheckParamNumber + 1)
+    }else if(Number(draggedIndex) === checkParamNumber && index < checkParamNumber){
+      setCheckParamNumber(prevCheckParamNumber => prevCheckParamNumber - 1)
+    }
   };
 
   const handleListDragStart = (e, index) => {
     e.dataTransfer.setData('index', index);
   };
-
 
   const handleDrop = (e, index) => {
     const draggedIndex = e.dataTransfer.getData('index');
@@ -426,7 +430,7 @@ export default function ServiceRecordConfigAddForm() {
                     </Grid>
                     <Grid>
                       <Grid container justifyContent="flex-start" gap={1}>
-                      {checkParam.map((value, index) =>( value &&
+                      {checkParam.map((value, index) =>( typeof value?.paramList?.length === 'number' &&
                         <TableRow
                                 draggable
                                 onDragStart={(e) => handleListDragStart(e, index)}
