@@ -149,7 +149,7 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
   }
   }
   return (
-    <Card sx={{ p: 3 }}>
+    <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
       <Grid display="inline-flex">
         <Tooltip>

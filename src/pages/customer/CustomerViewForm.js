@@ -114,7 +114,7 @@ export default function CustomerViewForm() {
       {/* customer view form */}
       <Grid container direction="row" mt={isMobile && 2}>
         <Grid item md={12}>
-          <Card sx={{ p: 3 }}>
+          <Card sx={{ p: 2 }}>
             <ViewFormEditDeleteButtons
               isVerified={customer?.verifications?.some((verified) => verified?.verifiedBy?._id === userId)}
               handleVerification={handleVerification}

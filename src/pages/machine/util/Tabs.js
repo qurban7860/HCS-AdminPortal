@@ -77,8 +77,8 @@ export const TABS = (currentComponent, showDevTabs, disableTab) => [
         // },
         {
           disabled: disableTab,
-          value: 'serviceHistory',
-          label: 'Service History',
+          value: 'checkItemRecords',
+          label: 'Check Item Records',
           icon: <Iconify icon="mdi:clipboard-text-clock" />,
           component : <MachineServiceRecordList />,
         },

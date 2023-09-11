@@ -103,7 +103,7 @@ export default function SettingViewForm({ currentSetting = null }) {
 
   return (
     <Grid>
-      <Grid container justifyContent="flex-end" sx={{ pr: '2rem' }}>
+      <Grid container justifyContent="flex-end" sx={{ pr: '2rem', mb:-5 }}>
         <ViewFormEditDeleteButtons
           disableDeleteButton={disableDeleteButton}
           disableEditButton={disableEditButton}

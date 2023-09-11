@@ -41,7 +41,7 @@ export const AddMachineDocumentSchema = Yup.object().shape({
 });
 
 export const MachineServiceParamsSchema = Yup.object().shape({
-  name: Yup.string().required().max(50).label('Name'),
+  name: Yup.string().required().max(200).label('Name'),
   serviceCategory: Yup.object().label('Service Category').nullable(),
   printName: Yup.string().max(50).label('Print Name'),
   description: Yup.string().max(5000).label('Description'),

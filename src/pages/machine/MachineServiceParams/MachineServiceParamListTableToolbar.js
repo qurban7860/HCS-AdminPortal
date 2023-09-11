@@ -45,7 +45,7 @@ export default function MachineServiceParamListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        addButton={BUTTONS.ADD_MACHINE_SERVICE_PARAM}
+        addButton={BUTTONS.ADD_SERVICE_CHECK_ITEM}
       />
     </Stack>
   );

@@ -142,24 +142,24 @@ export const ICONS = {
     icon: 'mdi:abacus',
     heading: 'Parameters',
   },
-  MACHINE_SERVICE_PARAMETERS: {
-    icon: 'carbon:parameter',
-    heading: 'Machine Service Parameters',
-  },
   // tools information
   TOOLS: {
     icon: 'mdi:tools',
     heading: 'Tools',
   },
   // service information
+
+  MACHINE_SERVICE_CATEGORY: {
+    icon: 'mdi:cog',
+    heading: 'Check Item Categories',
+  },
+  MACHINE_SERVICE_PARAMETERS: {
+    icon: 'carbon:parameter',
+    heading: 'Check Items',
+  },
   MACHINE_SERVICE_RECORD_CONFIG: {
     icon: 'mdi:tools',
-    heading: 'Machine Service Record Configs',
-  },
-
-  MACHINE_SERVICE_CATEGORIES: {
-    icon: 'mdi:cog',
-    heading: 'Service Categories',
+    heading: 'Service Record Configurations',
   },
 
   // @root - Settings - settings
@@ -184,10 +184,6 @@ export const ICONS = {
   USER_CONFIG: {
     icon: 'mdi:account-settings-variant',
     heading: 'User Configurations',
-  },
-  USER_INVITE: {
-    icon: 'mdi:person-add',
-    heading: 'User Invites',
   },
   REGION: {
     icon: 'mdi:map-marker-circle',
