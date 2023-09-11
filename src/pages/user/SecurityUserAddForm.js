@@ -75,18 +75,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
 
   // eslint-disable-next-line
   const [roleVal, setRoleVal] = useState('');
-  // roles.sort((a, b) => a > b);
-  // roles.sort((a, b) =>{
-  //   const nameA = a.name.toUpperCase();
-  //   const nameB = b.name.toUpperCase();
-  //   if (nameA < nameB) {
-  //     return -1;
-  //   }
-  //   if (nameA > nameB) {
-  //     return 1;
-  //   }
-  //   return 0;
-  // })
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -406,17 +394,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
               />
             </Box>
             {(!isInvite &&(
-              <>
-              <Box
-              sx={{ mb: 3 }}
-              rowGap={3}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-              }}
-            >
+            <Box sx={{ mb: 3 }} rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}>
               <RHFTextField
                 name="password"
                 label="Password"
@@ -445,7 +423,9 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
                   ),
                 }}
               />
-
+            </Box>
+            ))}
+            <Box sx={{ mb: 3 }} rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}>
               <RHFMultiSelect
                 disabled={roleTypesDisabled}
                 chip
@@ -475,7 +455,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
                   } else {
                     setSelectedRegions('');
                   }
-                }}                  getOptionLabel={(option) => option.name}
+                }} getOptionLabel={(option) => option.name}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -552,45 +532,49 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
             </Autocomplete>
             </Box>
              <Grid item md={12} display="flex">
-              <RHFSwitch
-                name="isActive"
-                labelPlacement="start"
-                label={
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      mx: 0,
-                      width: 1,
-                      justifyContent: 'space-between',
-                      mb: 0.5,
-                      color: 'text.secondary',
-                    }}
-                  >
-                    {' '}
-                    Active
-                  </Typography>
-                }
-              />
-              <RHFSwitch
-                name="multiFactorAuthentication"
-                labelPlacement="start"
-                label={
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      mx: 0,
-                      width: 1,
-                      justifyContent: 'space-between',
-                      mb: 0.5,
-                      color: 'text.secondary',
-                    }}
-                  >
-                    {' '}
-                    Multi-Factor Authentication
-                  </Typography>
-                }
-              />
-
+                {(!isInvite &&(
+                  <>
+                  <RHFSwitch
+                    name="isActive"
+                    labelPlacement="start"
+                    label={
+                      <Typography
+                        variant="subtitle2"
+                        sx={{
+                          mx: 0,
+                          width: 1,
+                          justifyContent: 'space-between',
+                          mb: 0.5,
+                          color: 'text.secondary',
+                        }}
+                      >
+                        {' '}
+                        Active
+                      </Typography>
+                    }
+                  />
+                
+                  <RHFSwitch
+                    name="multiFactorAuthentication"
+                    labelPlacement="start"
+                    label={
+                      <Typography
+                        variant="subtitle2"
+                        sx={{
+                          mx: 0,
+                          width: 1,
+                          justifyContent: 'space-between',
+                          mb: 0.5,
+                          color: 'text.secondary',
+                        }}
+                      >
+                        {' '}
+                        Multi-Factor Authentication
+                      </Typography>
+                    }
+                  />
+                  </>
+               ))}
 
               <RHFSwitch
                 name="currentEmployee"
@@ -612,8 +596,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
                 }
               />
             </Grid>
-            </>
-            ))}
             <Stack sx={{ mt: 3 }}>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Stack>
