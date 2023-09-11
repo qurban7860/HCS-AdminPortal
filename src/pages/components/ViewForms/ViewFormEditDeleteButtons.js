@@ -137,7 +137,7 @@ export default function ViewFormEditDeleteButtons({
         {/* User Invitation */}
         {handleUserInvite && id!==userId &&(
           <IconTooltip 
-          title="User Invite"
+          title="Resend Invitation"
           disabled={disableDeleteButton}
           color={theme.palette.secondary.main}
           icon="mdi:person-add"
@@ -205,8 +205,8 @@ export default function ViewFormEditDeleteButtons({
       <ConfirmDialog
         open={openUserInviteConfirm}
         onClose={() => { handleCloseConfirm('UserInvite'); }}
-        title="User Invitation"
-        content="Are you sure you want send User Invitation?"
+        title="Resend User Invitation"
+        content="Are you sure you want resend invitation?"
         action={
           <LoadingButton
             variant="contained"
