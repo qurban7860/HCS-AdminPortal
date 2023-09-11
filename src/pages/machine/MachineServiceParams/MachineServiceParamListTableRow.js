@@ -1,30 +1,22 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
-import { sentenceCase } from 'change-case';
+// import { useState } from 'react';
 // @mui
 import {
   Switch,
-  Stack,
-  Button,
   TableRow,
-  Checkbox,
-  MenuItem,
   TableCell,
-  IconButton,
-  Link,
-  Chip
 } from '@mui/material';
 // utils
 import { styled } from '@mui/system';
 import { fDate } from '../../../utils/formatTime';
-import { fCurrency } from '../../../utils/formatNumber';
-// components
-import Iconify from '../../../components/iconify';
-import MenuPopover from '../../../components/menu-popover';
-import ConfirmDialog from '../../../components/confirm-dialog';
-import Label from '../../../components/label';
+// import { fCurrency } from '../../../utils/formatNumber';
+// // components
+// import Iconify from '../../../components/iconify';
+// import MenuPopover from '../../../components/menu-popover';
+// import ConfirmDialog from '../../../components/confirm-dialog';
+// import Label from '../../../components/label';
 
-import { useSelector } from '../../../redux/store';
+// import { useSelector } from '../../../redux/store';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import { useScreenSize } from '../../../hooks/useResponsive';
 
@@ -59,32 +51,31 @@ export default function MachineServiceParamListTableRow({
   onViewRow,
 }) {
 
-  const { name, printName, description, helpHint, linkToUserManual, isRequired, inputType, category, unitType, minValidation, maxValidation, isActive, createdAt } = row;
+  const { name, printName, isRequired, inputType, category,  isActive, createdAt } = row;
 
-  const [openConfirm, setOpenConfirm] = useState(false);
+  // const [openConfirm, setOpenConfirm] = useState(false);
 
-  const [openPopover, setOpenPopover] = useState(null);
+  // const [openPopover, setOpenPopover] = useState(null);
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
+  // const handleOpenConfirm = () => {
+  //   setOpenConfirm(true);
+  // };
 
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
+  // const handleCloseConfirm = () => {
+  //   setOpenConfirm(false);
+  // };
 
-  const handleOpenPopover = (event) => {
-    setOpenPopover(event.currentTarget);
-  };
+  // const handleOpenPopover = (event) => {
+  //   setOpenPopover(event.currentTarget);
+  // };
 
-  const handleClosePopover = () => {
-    setOpenPopover(null);
-  };
+  // const handleClosePopover = () => {
+  //   setOpenPopover(null);
+  // };
 
  const smScreen = useScreenSize('sm')
 
   return (
-    <>
       <StyledTableRow hover selected={selected}>
         <LinkTableCell align="left" onClick={onViewRow} param={name} />
         <TableCell align="left">{printName}</TableCell>
@@ -106,6 +97,5 @@ export default function MachineServiceParamListTableRow({
         <TableCell align="right">{fDate(createdAt)}</TableCell>
       </StyledTableRow>
 
-    </>
   );
 }

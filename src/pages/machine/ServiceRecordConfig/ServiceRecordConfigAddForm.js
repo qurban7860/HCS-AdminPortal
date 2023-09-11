@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Typography, Container, Autocomplete, TextField, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CardContent } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Container, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CardContent } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 // slice
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
@@ -16,21 +16,21 @@ import { getActiveMachineModels, resetActiveMachineModels } from '../../../redux
 import { getActiveCategories } from '../../../redux/slices/products/category';
 
 // schema
-import { AddMachineSchema } from '../../schemas/document';
+// import { AddMachineSchema } from '../../schemas/document';
 // routes
-import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
-import { useSettingsContext } from '../../../components/settings';
+import {  PATH_MACHINE } from '../../../routes/paths';
+// import { useSettingsContext } from '../../../components/settings';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFSwitch, RHFMultiSelect , RHFAutocomplete} from '../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete} from '../../../components/hook-form';
 // util
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
-import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
-// constants
-import Iconify from '../../../components/iconify';
-import { FORMLABELS } from '../../../constants/default-constants';
-import { Snacks, FORMLABELS as formLABELS } from '../../../constants/document-constants';
+// import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
+// // constants
+// import Iconify from '../../../components/iconify';
+// import { FORMLABELS } from '../../../constants/default-constants';
+// import { Snacks, FORMLABELS as formLABELS } from '../../../constants/document-constants';
 import useResponsive from '../../../hooks/useResponsive';
 import  IconTooltip  from '../../components/Icons/IconTooltip'
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
@@ -38,8 +38,8 @@ import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDe
 // ----------------------------------------------------------------------
 
 export default function ServiceRecordConfigAddForm() {
-  const [open, setOpen] = useState(false);
-  const [sortedMachineServiceParams, setSortedMachineSerivceParams] = useState([]);
+  // const [open, setOpen] = useState(false);
+  // const [sortedMachineServiceParams, setSortedMachineSerivceParams] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -139,7 +139,7 @@ export default function ServiceRecordConfigAddForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const { category, machineModel } = watch();
+  const { category } = watch();
   useEffect(() => {
     if(category === null){
       dispatch(resetActiveMachineModels())

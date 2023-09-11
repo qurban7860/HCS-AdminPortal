@@ -1,4 +1,3 @@
-import { Helmet } from 'react-helmet-async';
 import { useState } from 'react';
 // @mui
 import {
@@ -32,7 +31,7 @@ export default function PermissionDeniedPage() {
   };
 
   return (
-    <>
+  
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Permission Denied"
@@ -79,6 +78,5 @@ export default function PermissionDeniedPage() {
           </Box>
         </RoleBasedGuard>
       </Container>
-    </>
   );
 }

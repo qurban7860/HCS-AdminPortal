@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Card, Grid, Stack, Typography, Container, FormControl, RadioGroup, Radio, FormControlLabel } from '@mui/material';
+import { Card, Grid, Stack,Container } from '@mui/material';
 // hooks
 import { useForm } from 'react-hook-form';
 import { useSnackbar } from '../../../components/snackbar';
@@ -12,7 +12,7 @@ import { EditDocumentNameSchema } from '../../schemas/document';
 // routes
 import { PATH_SETTING } from '../../../routes/paths';
 // components
-import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
+import FormProvider, { RHFTextField } from '../../../components/hook-form';
 import {
   getDocumentCategory,
   updateDocumentCategory,
@@ -43,7 +43,7 @@ export default function DocumentCategoryeEditForm() {
 
   const handleChangeType = (event) => {
     if (event.target.name === "all" && event.target.checked === true) {
-      const allValue = event.target.checked;
+      // const allValue = event.target.checked;
       setState({
         customer: true,
         machine: true,
@@ -108,12 +108,11 @@ export default function DocumentCategoryeEditForm() {
   const {
     reset,
     watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const values = watch();
+    watch();
 
   const toggleCancel = () => {
     navigate(PATH_SETTING.documentCategory.view(documentCategory._id));

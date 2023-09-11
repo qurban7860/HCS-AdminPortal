@@ -1,20 +1,20 @@
 import * as Yup from 'yup';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { LoadingButton } from '@mui/lab';
+// import { LoadingButton } from '@mui/lab';
 import { TextField, Autocomplete, Box, Card, Grid, Stack, Typography } from '@mui/material';
 // slice
-import { updateDrawing, setDrawingFormVisibility, setDrawingEditFormVisibility } from '../../../redux/slices/products/drawing';
-import { getActiveDocumentCategories , resetActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
-import { getActiveDocumentTypesWithCategory, resetActiveDocumentTypes } from '../../../redux/slices/document/documentType';
-import { getMachineDrawingsDocuments, resetActiveDocuments } from '../../../redux/slices/document/document';
+import { updateDrawing } from '../../../redux/slices/products/drawing';
+import { getActiveDocumentCategories  } from '../../../redux/slices/document/documentCategory';
+import {  resetActiveDocumentTypes } from '../../../redux/slices/document/documentType';
+import {  resetActiveDocuments } from '../../../redux/slices/document/document';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
+import FormProvider, { RHFSwitch } from '../../../components/hook-form';
 // util
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 
@@ -25,10 +25,10 @@ export default function DrawingEditForm() {
     const { activeDocumentTypes } = useSelector((state) => state.documentType);
     const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
     const { activeDocuments } = useSelector((state) => state.document);
-    const { drawing } = useSelector((state) => state.drawing );
+    useSelector((state) => state.drawing );
 
     const dispatch = useDispatch();
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
@@ -65,7 +65,7 @@ export default function DrawingEditForm() {
     const onSubmit = async (data) => {
         try {
             data.machine = machine._id;
-            const response = await dispatch(updateDrawing(data));
+             await dispatch(updateDrawing(data));
             reset();
             enqueueSnackbar('Create success!');
         } catch (error) {

@@ -50,7 +50,7 @@ export default function ServiceRecordConfigListTableRow({
     setOpenPopover(null);
   };
 
-  const smScreen = useScreenSize('sm')
+  // const smScreen = useScreenSize('sm')
 
   return (
     <>

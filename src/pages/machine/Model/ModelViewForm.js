@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, Stack, Typography, Button, Switch } from '@mui/material';
+import { Card, Grid } from '@mui/material';
 // redux
 import {
   setMachinemodelsEditFormVisibility,
@@ -27,7 +27,7 @@ ModelViewForm.propTypes = {
 // ----------------------------------------------------------------------
 
 export default function ModelViewForm({ currentMachinemodel = null }) {
-  const [editFlag, setEditFlag] = useState(false);
+  // const [editFlag, setEditFlag] = useState(false);
 
   const toggleEdit = () => {
     dispatch(setMachinemodelsEditFormVisibility(true));

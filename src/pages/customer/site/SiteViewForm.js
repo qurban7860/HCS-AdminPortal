@@ -2,10 +2,10 @@ import PropTypes from 'prop-types';
 import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Grid, Button, Dialog } from '@mui/material';
+import { Grid,Dialog } from '@mui/material';
 // redux
 import {
   deleteSite,
@@ -16,9 +16,9 @@ import {
 import { useSnackbar } from '../../../components/snackbar';
 
 // paths
-import { PATH_DASHBOARD } from '../../../routes/paths';
+// import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import ConfirmDialog from '../../../components/confirm-dialog';
+// import ConfirmDialog from '../../../components/confirm-dialog';
 import GoogleMaps from '../../../assets/GoogleMaps';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
@@ -35,17 +35,17 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
   const { site } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [openConfirm, setOpenConfirm] = useState(false);
+  // const [ setOpenConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
+  // const handleOpenConfirm = () => {
+  //   setOpenConfirm(true);
+  // };
 
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
+  // const handleCloseConfirm = () => {
+  //   setOpenConfirm(false);
+  // };
 
   const handleClosePopover = () => {
     setOpenPopover(null);

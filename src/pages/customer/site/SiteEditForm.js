@@ -1,49 +1,41 @@
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
-import { LoadingButton } from '@mui/lab';
+// import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Card,
   Grid,
   Stack,
   Typography,
-  Button,
-  DialogTitle,
-  Dialog,
-  InputAdornment,
-  Link,
   TextField,
   Autocomplete,
 } from '@mui/material';
 // global
-import { CONFIG } from '../../../config-global';
+// import { CONFIG } from '../../../config-global';
 // slice
 import {
   updateSite,
   setSiteEditFormVisibility,
   getSite,
-  getSites,
 } from '../../../redux/slices/customer/site';
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+// import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import GoogleMaps from '../../../assets/GoogleMaps';
+// import GoogleMaps from '../../../assets/GoogleMaps';
 import { useSnackbar } from '../../../components/snackbar';
-import Iconify from '../../../components/iconify';
+// import Iconify from '../../../components/iconify';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import FormProvider, {
   RHFSwitch,
-  RHFSelect,
   RHFTextField,
   RHFAutocomplete,
 } from '../../../components/hook-form';
@@ -56,7 +48,7 @@ export default function SiteEditForm() {
   const { site } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
 
-  const { contacts, activeContacts } = useSelector((state) => state.contact);
+  const { activeContacts } = useSelector((state) => state.contact);
   const [countryVal, setCountryVal] = useState('');
   const dispatch = useDispatch();
 
@@ -161,12 +153,11 @@ export default function SiteEditForm() {
   const {
     reset,
     watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const values = watch();
+    watch(); 
 
   useEffect(() => {
     if (site) {

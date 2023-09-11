@@ -24,7 +24,7 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
 export default function CategoryEditForm() {
-  const { error, category } = useSelector((state) => state.category);
+  const { category } = useSelector((state) => state.category);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -56,12 +56,11 @@ export default function CategoryEditForm() {
   const {
     reset,
     watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const values = watch();
+   watch();
 
   useLayoutEffect(() => {
     dispatch(getCategory(id));

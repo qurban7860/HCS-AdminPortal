@@ -77,7 +77,7 @@ export default function MachineEditForm() {
   // const [projVal, setProjManVal] = useState('');
   // const [suppVal, setSuppManVal] = useState('');
   // const [currTag, setCurrTag] = useState('');
-  const [chipData, setChipData] = useState([]);
+  // const [chipData, setChipData] = useState([]);
   // const [connections, setConnections] = useState([]);
   const [chips, setChips] = useState([]);
   const isMobile = useResponsive('sm', 'down');
@@ -256,11 +256,11 @@ export default function MachineEditForm() {
   };
 
   // ----------------------handle functions----------------------
-  const handleDelete = (data, index) => {
-    const arr = [...chipData];
-    arr.splice(index, 1);
-    setChipData(arr);
-  };
+  // const handleDelete = (data, index) => {
+  //   const arr = [...chipData];
+  //   arr.splice(index, 1);
+  //   setChipData(arr);
+  // };
 
   // const handleKeyPress = (e) => {
   //   setCurrTag(currTag.trim());
