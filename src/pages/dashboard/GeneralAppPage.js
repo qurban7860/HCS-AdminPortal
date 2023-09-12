@@ -7,7 +7,7 @@ import HowickWelcome from '../components/DashboardWidgets/HowickWelcome';
 import HowickWidgets from '../components/DashboardWidgets/HowickWidgets';
 // assets & hooks
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCount } from '../../redux/slices/dashboard/count';
+import { getCount, getMachinesByCountry, getMachinesByModel, getMachinesByYear } from '../../redux/slices/dashboard/count';
 // components
 import ChartBar from '../components/Charts/ChartBar';
 import ProductionLog from '../components/Charts/ProductionLog';
@@ -29,20 +29,21 @@ import { countries } from '../../assets/data';
 export default function GeneralAppPage() {
   
   const dispatch = useDispatch();
-  const { count, isLoading, error, initial, responseMessage } = useSelector((state) => state.count);
+  const { count, isLoading, error, initial, responseMessage, machinesByCountry, machinesByYear, machinesByModel } = useSelector((state) => state.count);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
+  // const { machineByCountries } = useSelector((state) => state.machineByCountries);
   const enviroment = CONFIG.ENV.toLowerCase();
   const showDevGraphs = enviroment !== 'live';
 
-  const [year1, setYear1] = useState(null);
-  const [year2, setYear2] = useState(null);
+  const [MBCYear, setMBCYear] = useState(null);
+  const [MBCModel, setMBCModel] = useState(null);
   
-  const [model1, setModel1] = useState(null);
-  const [model2, setModel2] = useState(null);
+  const [MBMYear, setMBMYear] = useState(null);
+  const [MBMCountry, setMBMCountry] = useState(null);
   
-  const [country1, setCountry1] = useState(null);
-  const [country2, setCountry2] = useState(null);
-
+  const [MBYCountry, setMBYCountry] = useState(null);
+  const [MBYModel, setMBYModel] = useState(null);
+  
   const modelWiseMachineNumber = [];
   const yearWiseMachinesYear = [];
   const modelWiseMachineModel = [];
@@ -71,9 +72,9 @@ export default function GeneralAppPage() {
       return null;
     });
   }
-
-  if (count && count.countryWiseMachineCount) {
-    count.countryWiseMachineCount.map((customer) => {
+  
+  if (machinesByCountry) {
+    machinesByCountry.countryWiseMachineCount.map((customer) => {
       countryWiseMachineCountNumber.push(customer.count);
       countryWiseMachineCountCountries.push(customer._id);
       return null;
@@ -89,40 +90,24 @@ export default function GeneralAppPage() {
   }
 
   useEffect(() => {
-    // Check if model1 has a value, and if so, call handleChange
-    if (model1 !== null || year1 !==null) {
-      handleCountryChart(model1, year1);
+    // Check if MBCModel has a value
+    if (MBCModel !== null || MBCYear !==null) {
+      dispatch(getMachinesByCountry(MBCYear, MBCModel))
     }
 
-    if (country1 !== null || year2 !==null) {
-      handleModelChart(year2, country1);
+    if (MBMCountry !== null || MBMYear !==null) {
+      dispatch(getMachinesByModel(MBMYear, MBMCountry))
     }
 
-    if (country2 !== null || model2 !==null) {
-      handleYearChart(model2, country2);
+    if (MBYCountry !== null || MBYModel !==null) {
+      dispatch(getMachinesByYear(MBYCountry, MBYModel))
     }
-
-  }, [model1, model2, year1, year2, country1, country2]);
-
-  const handleCountryChart = (model, year) => {
-      console.log("model:",model)
-      console.log("year:",year)
-  };
-  
-  const handleModelChart = (year, country) => {
-    console.log("year:",year)
-    console.log("country:",country)
-  };
-
-  const handleYearChart = (model, country) => {
-    console.log("model:",model)
-    console.log("country:",country)
-  };
-
+  }, [MBCModel, MBYModel, MBCYear, MBMYear, MBMCountry, MBYCountry, dispatch]);
 
   useLayoutEffect(() => {
     dispatch(getActiveMachineModels());
     dispatch(getCount());
+    dispatch(getMachinesByCountry());
   }, [dispatch]);
 
   
@@ -217,7 +202,7 @@ export default function GeneralAppPage() {
                           getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                           renderOption={(props, option) => (<li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>)}
                           renderInput={(params) => (<TextField {...params} label="Model" size="small" />)}
-                          onChange={(event, newValue) =>setModel1(newValue?._id)}
+                          onChange={(event, newValue) =>setMBCModel(newValue?._id)}
                         />
 
                       <Autocomplete
@@ -225,7 +210,7 @@ export default function GeneralAppPage() {
                         options={years}
                         getOptionLabel={(option) => option.toString()}
                         renderInput={(params) => <TextField {...params} label="Year" size="small" />}
-                        onChange={(event, newValue) =>setYear1(newValue)}
+                        onChange={(event, newValue) =>setMBCYear(newValue)}
                       />
                     </>
                   }
@@ -259,7 +244,7 @@ export default function GeneralAppPage() {
                         isOptionEqualToValue={(option, value) => option.code === value.code}
                         getOptionLabel={(option) => `${option.label ? option.label : ''}`}
                         renderInput={(params) => <TextField {...params} label="Country" size="small" />}
-                        onChange={(event, newValue) =>setCountry1(newValue?.code)}
+                        onChange={(event, newValue) =>setMBMCountry(newValue?.code)}
                       />
 
                       <Autocomplete
@@ -267,7 +252,7 @@ export default function GeneralAppPage() {
                         options={years}
                         getOptionLabel={(option) => option.toString()}
                         renderInput={(params) => <TextField {...params} label="Year" size="small" />}
-                        onChange={(event, newValue) =>setYear2(newValue)}
+                        onChange={(event, newValue) =>setMBMYear(newValue)}
                       />
                     </>
                   }
@@ -300,7 +285,7 @@ export default function GeneralAppPage() {
                           getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                           renderOption={(props, option) => (<li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>)}
                           renderInput={(params) => (<TextField {...params} label="Model" size="small" />)}
-                          onChange={(event, newValue) =>setModel2(newValue?._id)}
+                          onChange={(event, newValue) =>setMBYModel(newValue?._id)}
                         />
 
                       <Autocomplete
@@ -309,7 +294,7 @@ export default function GeneralAppPage() {
                         isOptionEqualToValue={(option, value) => option.code === value.code}
                         getOptionLabel={(option) => `${option.label ? option.label : ''}`}
                         renderInput={(params) => <TextField {...params} label="Country" size="small" />}
-                        onChange={(event, newValue) =>setCountry2(newValue?.code)}
+                        onChange={(event, newValue) =>setMBYCountry(newValue?.code)}
                       />
                     </>
                   }

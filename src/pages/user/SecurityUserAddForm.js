@@ -226,7 +226,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
         data.isInvite = true;
        }
       
-      const response = await dispatch(addSecurityUser(data));      
+      const response = await dispatch(addSecurityUser(data, isInvite));      
       await dispatch(resetContacts());
       reset();
       navigate(PATH_SECURITY.users.view(response.data.user._id));
