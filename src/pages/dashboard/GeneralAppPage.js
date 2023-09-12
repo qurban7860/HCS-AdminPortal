@@ -89,16 +89,24 @@ export default function GeneralAppPage() {
     });
   }
 
-  useEffect(() => {
-      dispatch(getMachinesByCountry(MBCYear, MBCModel))
-      dispatch(getMachinesByModel(MBMYear, MBMCountry))
-      dispatch(getMachinesByYear(MBYCountry, MBYModel))
-  }, [MBCModel, MBYModel, MBCYear, MBMYear, MBMCountry, MBYCountry, dispatch]);
+  const handleGraphCountry = (year, model) => {
+    dispatch(getMachinesByCountry(year, model));
+  };
+
+  const handleGraphModel = (year, country) => {
+    dispatch(getMachinesByModel(year, country));
+  };
+
+  const handleGraphYear = (model, country) => {
+    dispatch(getMachinesByYear(model, country));
+  };
 
   useLayoutEffect(() => {
     dispatch(getActiveMachineModels());
     dispatch(getCount());
     dispatch(getMachinesByCountry());
+    dispatch(getMachinesByModel());
+    dispatch(getMachinesByYear());
   }, [dispatch]);
 
   
@@ -193,7 +201,7 @@ export default function GeneralAppPage() {
                           getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                           renderOption={(props, option) => (<li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>)}
                           renderInput={(params) => (<TextField {...params} label="Model" size="small" />)}
-                          onChange={(event, newValue) =>setMBCModel(newValue?._id)}
+                          onChange={(event, newValue) =>{setMBCModel(newValue?._id); handleGraphCountry(MBCYear,newValue?._id)}}
                         />
 
                       <Autocomplete
@@ -201,7 +209,7 @@ export default function GeneralAppPage() {
                         options={years}
                         getOptionLabel={(option) => option.toString()}
                         renderInput={(params) => <TextField {...params} label="Year" size="small" />}
-                        onChange={(event, newValue) =>setMBCYear(newValue)}
+                        onChange={(event, newValue) =>{setMBCYear(newValue); ; handleGraphCountry(newValue,MBCModel)}}
                       />
                     </>
                   }
@@ -235,7 +243,7 @@ export default function GeneralAppPage() {
                         isOptionEqualToValue={(option, value) => option.code === value.code}
                         getOptionLabel={(option) => `${option.label ? option.label : ''}`}
                         renderInput={(params) => <TextField {...params} label="Country" size="small" />}
-                        onChange={(event, newValue) =>setMBMCountry(newValue?.code)}
+                        onChange={(event, newValue) =>{setMBMCountry(newValue?.code);handleGraphModel(MBMYear,newValue?.code)}}
                       />
 
                       <Autocomplete
@@ -243,7 +251,7 @@ export default function GeneralAppPage() {
                         options={years}
                         getOptionLabel={(option) => option.toString()}
                         renderInput={(params) => <TextField {...params} label="Year" size="small" />}
-                        onChange={(event, newValue) =>setMBMYear(newValue)}
+                        onChange={(event, newValue) =>{setMBMYear(newValue);handleGraphModel(newValue,MBMCountry)}}
                       />
                     </>
                   }
@@ -276,7 +284,7 @@ export default function GeneralAppPage() {
                           getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                           renderOption={(props, option) => (<li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>)}
                           renderInput={(params) => (<TextField {...params} label="Model" size="small" />)}
-                          onChange={(event, newValue) =>setMBYModel(newValue?._id)}
+                          onChange={(event, newValue) =>{setMBYModel(newValue?._id);handleGraphYear(newValue?._id,MBYCountry)}}
                         />
 
                       <Autocomplete
@@ -285,7 +293,7 @@ export default function GeneralAppPage() {
                         isOptionEqualToValue={(option, value) => option.code === value.code}
                         getOptionLabel={(option) => `${option.label ? option.label : ''}`}
                         renderInput={(params) => <TextField {...params} label="Country" size="small" />}
-                        onChange={(event, newValue) =>setMBYCountry(newValue?.code)}
+                        onChange={(event, newValue) =>{setMBYCountry(newValue?.code);handleGraphYear(MBYModel,newValue?.code)}}
                       />
                     </>
                   }

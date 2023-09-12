@@ -66,9 +66,6 @@ export default function UserInviteLanding() {
       navigate(PATH_PAGE.invalidErrorPage);
     }
   }, [id, code, expired, navigate, dispatch]);
-
-  console.log(id, code, expired)
-  console.log(verifyInviteStatus)
   
   const {
     reset,

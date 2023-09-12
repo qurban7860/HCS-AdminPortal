@@ -46,7 +46,7 @@ export default function ProfileViewForm() {
   const defaultValues = useMemo(
     () => ({
       defaultName: profile?.defaultName || '',
-      names:profile?.names?.join(', ') || '',
+      names:profile?.names || [],
       height:profile?.height || '',
       width:profile?.width || '',
       isActive: profile?.isActive || '',
@@ -75,8 +75,8 @@ export default function ProfileViewForm() {
       </Grid>
       <Grid container>
         <ViewFormField heading="Default Name" param={defaultValues.defaultName} />
-        <ViewFormField heading="Other Names" param={defaultValues.names} />
-        <ViewFormField sm={6} heading="Height X Width" param={`${defaultValues.height}X${defaultValues.width}`} />
+        <ViewFormField heading="Other Names" chips={defaultValues.names} />
+        <ViewFormField sm={6} heading="Height X Width" param={`${defaultValues?.height}${(defaultValues.height && defaultValues.width)? "X":""}${defaultValues?.width}`} />
         <ViewFormAudit defaultValues={defaultValues} /> 
       </Grid>
     </Card>

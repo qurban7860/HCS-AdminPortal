@@ -62,7 +62,7 @@ export const TABS = (currentComponent, showDevTabs, disableTab) => [
     disabled: disableTab,
     value: 'profile',
     label: 'Profile',
-    icon: <Iconify icon="mdi:person" />,
+    icon: <Iconify icon="mdi:window-open-variant" />,
     component: <MachineProfiles />,
   },
  
