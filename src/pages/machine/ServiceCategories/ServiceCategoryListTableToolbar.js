@@ -42,7 +42,7 @@ export default function ListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        addButton="New Categroy"
+        addButton="Add Item Categroy"
       />
     </Stack>
   );
