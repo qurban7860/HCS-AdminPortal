@@ -148,10 +148,9 @@ export const ICONS = {
     heading: 'Tools',
   },
   // service information
-
-  MACHINE_SERVICE_CATEGORY: {
+  MACHINE_SERVICE_CATEGORIES: {
     icon: 'mdi:cog',
-    heading: 'Check Item Categories',
+    heading: 'Service Categories',
   },
   MACHINE_SERVICE_PARAMETERS: {
     icon: 'carbon:parameter',
@@ -184,6 +183,10 @@ export const ICONS = {
   USER_CONFIG: {
     icon: 'mdi:account-settings-variant',
     heading: 'User Configurations',
+  },
+  USER_INVITE: {
+    icon: 'mdi:person-add',
+    heading: 'User Invites',
   },
   REGION: {
     icon: 'mdi:map-marker-circle',

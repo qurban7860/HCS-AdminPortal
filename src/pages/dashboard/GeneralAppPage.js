@@ -57,23 +57,23 @@ export default function GeneralAppPage() {
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: currentYear - 1999 }, (_, index) => 2000 + index);
 
-  if (count && count?.modelWiseMachineCount) {
-    count.modelWiseMachineCount.map((model) => {
+  if (machinesByModel.length !== 0) {
+    machinesByModel.modelWiseMachineCount.map((model) => {
       modelWiseMachineNumber.push(model.count);
       modelWiseMachineModel.push(model._id);
       return null;
     });
   }
 
-  if (count && count?.yearWiseMachines) {
-    count.yearWiseMachines.map((model) => {
+  if (machinesByYear.length !== 0) {
+    machinesByYear.yearWiseMachines.map((model) => {
       yearWiseMachinesYear.push(model._id.year);
       yearWiseMachinesNumber.push(model.yearWiseMachines);
       return null;
     });
   }
   
-  if (machinesByCountry) {
+  if (machinesByCountry.length !== 0) {
     machinesByCountry.countryWiseMachineCount.map((customer) => {
       countryWiseMachineCountNumber.push(customer.count);
       countryWiseMachineCountCountries.push(customer._id);
@@ -90,18 +90,9 @@ export default function GeneralAppPage() {
   }
 
   useEffect(() => {
-    // Check if MBCModel has a value
-    if (MBCModel !== null || MBCYear !==null) {
       dispatch(getMachinesByCountry(MBCYear, MBCModel))
-    }
-
-    if (MBMCountry !== null || MBMYear !==null) {
       dispatch(getMachinesByModel(MBMYear, MBMCountry))
-    }
-
-    if (MBYCountry !== null || MBYModel !==null) {
       dispatch(getMachinesByYear(MBYCountry, MBYModel))
-    }
   }, [MBCModel, MBYModel, MBCYear, MBMYear, MBMCountry, MBYCountry, dispatch]);
 
   useLayoutEffect(() => {
