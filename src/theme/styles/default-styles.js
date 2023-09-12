@@ -72,10 +72,10 @@ export const StyledStack = styled(Stack)(({ theme }) => ({
   justifyContent: 'flex-end',
   flexDirection: 'row',
   '& > :not(style) + :not(style)': {
-    marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing(1),
   },
-  marginBottom: theme.spacing(-5),
-  marginRight: theme.spacing(3),
+  // marginBottom: theme.spacing(-5),
+  // marginRight: theme.spacing(3),
   '& .MuiButton-root': {
     minWidth: '32px',
     width: '32px',

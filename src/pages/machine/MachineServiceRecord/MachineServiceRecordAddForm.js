@@ -209,7 +209,7 @@ function MachineServiceRecordAddForm() {
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
-                <FormHeading heading={FORMLABELS.COVER.MACHINE_SERVICE_RECORD_ADD} />
+                <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_RECORD_ADD} />
                 
                 <Box
                     rowGap={2}

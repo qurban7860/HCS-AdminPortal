@@ -178,7 +178,7 @@ export default function ViewFormEditDeleteButtons({
         )}
 
         {/* edit button */}
-        <IconTooltip
+        {handleEdit && <IconTooltip
           title="Edit"
           disabled={disableEditButton}
           onClick={() => {
@@ -186,7 +186,7 @@ export default function ViewFormEditDeleteButtons({
           }}
           color={theme.palette.primary.main}
           icon="mdi:pencil"
-        />
+        />}
 
         {/* delete button */}
         {id !== userId  && !mainSite && onDelete && (

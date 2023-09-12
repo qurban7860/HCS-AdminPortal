@@ -124,8 +124,8 @@ export default function Machine() {
               >
                 <ListItem
                   onClick={linkServiceCategory}
-                  icon={ICONS.MACHINE_SERVICE_CATEGORIES.icon}
-                  content={ICONS.MACHINE_SERVICE_CATEGORIES.heading}
+                  icon={ICONS.MACHINE_SERVICE_CATEGORY.icon}
+                  content={ICONS.MACHINE_SERVICE_CATEGORY.heading}
                 />
                 <ListItem
                   onClick={machineServiceParams}

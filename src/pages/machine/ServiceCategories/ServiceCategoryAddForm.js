@@ -81,7 +81,7 @@ export default function ServiceCategoryAddForm() {
   };
   return (
     <Container maxWidth={false}>
-      <StyledCardContainer><Cover name="New Service Category"/></StyledCardContainer>
+      <StyledCardContainer><Cover name={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_CATEGORY_ADD}/></StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container>
           <Grid item xs={18} md={12} sx={{ mt: 3 }}>

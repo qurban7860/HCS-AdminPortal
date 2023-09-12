@@ -96,15 +96,14 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
       <Grid container>
         <ViewFormField sm={12} isActive={defaultValues.isActive} />
         <ViewFormField sm={6} heading="Record Type" param={defaultValues?.recordType} />
+        <ViewFormField sm={6} heading="Document Title" param={defaultValues?.docTitle} />
       </Grid>
       <Grid container>
-        <ViewFormField sm={6} heading="Category" param={defaultValues?.category} />
+        <ViewFormField sm={6} heading="Machine Category" param={defaultValues?.category} />
         <ViewFormField sm={6} heading="Machine Model" param={defaultValues?.machineModel} />
-        <ViewFormField sm={12} heading="Document Title" param={defaultValues?.docTitle} />
       </Grid>
       <Grid container>  
-        <ViewFormField sm={6} heading="Text Befor Params" param={defaultValues?.textBeforeParams} />
-        <ViewFormField sm={6} heading="Text After Fields" param={defaultValues?.textAfterFields} />
+        <ViewFormField sm={6} heading="Text Befor Check Items" param={defaultValues?.textBeforeParams} />
       </Grid>
         <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
           Check Params
@@ -117,6 +116,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
             </Grid>
           ))
         )}
+      <ViewFormField sm={6} heading="Text After Check Items" param={defaultValues?.textAfterFields} />
 
       
       <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>

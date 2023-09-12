@@ -31,6 +31,7 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import useResponsive from '../../../hooks/useResponsive';
 import  IconTooltip  from '../../components/Icons/IconTooltip'
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import { FORMLABELS } from '../../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -53,12 +54,12 @@ export default function ServiceRecordConfigEditForm() {
     machineModel: Yup.object().label('Model').nullable(),
     category: Yup.object().label('Category').nullable(),
     docTitle: Yup.string().required(),
-    textBeforeParams: Yup.string(),
+    textBeforeCheckItems: Yup.string().max(4000),
     // Check Params
     // paramListTitle: Yup.string(),
     // paramList : Yup.array(),
 
-    textAfterFields: Yup.string(),
+    textAfterCheckItems: Yup.string().max(4000),
     isOperatorSignatureRequired: Yup.boolean(),
     enableServiceNote: Yup.boolean(),
     enableMaintenanceRecommendations: Yup.boolean(),
@@ -85,13 +86,13 @@ export default function ServiceRecordConfigEditForm() {
     machineModel: serviceRecordConfig?.machineModel || null,
     category: serviceRecordConfig?.category || null,
     docTitle: serviceRecordConfig?.docTitle || '',
-    textBeforeParams: serviceRecordConfig?.textBeforeParams || '',
+    textBeforeCheckItems: serviceRecordConfig?.textBeforeCheckItems || '',
 
     // // Check Params
     // paramListTitle: serviceRecordConfig?.checkParams[0]?.paramListTitle || '',
     // paramList : serviceRecordConfig?.checkParams[0]?.paramList || [],
 
-    textAfterFields: serviceRecordConfig?.textAfterFields || '',
+    textAfterCheckItems: serviceRecordConfig?.textAfterCheckItems || '',
     isOperatorSignatureRequired: serviceRecordConfig?.isOperatorSignatureRequired || false,
     enableServiceNote: serviceRecordConfig?.enableServiceNote || false,
     enableMaintenanceRecommendations: serviceRecordConfig?.enableMaintenanceRecommendations || false,
@@ -135,9 +136,14 @@ export default function ServiceRecordConfigEditForm() {
   useLayoutEffect(() => {
     dispatch(getServiceRecordConfig(id));
     dispatch(getActiveMachineModels())
-    dispatch(getActiveMachineServiceParams());
     dispatch(getActiveServiceCategories());
   }, [dispatch, id]);
+
+  useEffect(() => {
+    if(serviceRecordConfig?.category?._id){
+      dispatch(getActiveMachineServiceParams(serviceRecordConfig?.category?._id));
+    }
+  },[serviceRecordConfig, dispatch])
   /* eslint-enable */
   useEffect(() => {
     setCheckParam(serviceRecordConfig?.checkParams)
@@ -156,6 +162,7 @@ export default function ServiceRecordConfigEditForm() {
   };
   const onSubmit = async (data) => {
     try {
+      data.checkParam = checkParam
       console.log(data);
       await dispatch(updateServiceRecordConfig(data, id));
       reset();
@@ -228,7 +235,7 @@ export default function ServiceRecordConfigEditForm() {
     <Container maxWidth={false}>
       <StyledCardContainer>
         <Cover
-          name="Edit Service Record Config"
+          name={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_CONFIGS_EDIT}
           icon="material-symbols:category-outline"
           url={PATH_MACHINE.machines.settings.serviceRecordConfigs.list}
         />
@@ -284,9 +291,12 @@ export default function ServiceRecordConfigEditForm() {
                       <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
                   />
+
+                  <RHFTextField name="docTitle" label="Document Title" />
+
                   <RHFAutocomplete 
                     name="category"
-                    label="Category"
+                    label="Machine Category"
                     options={activeServiceCategories}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
@@ -296,7 +306,7 @@ export default function ServiceRecordConfigEditForm() {
                   />
                   <RHFAutocomplete 
                     name="machineModel"
-                    label="Model"
+                    label="Machine Model"
                     options={activeMachineModels}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
@@ -304,20 +314,107 @@ export default function ServiceRecordConfigEditForm() {
                       <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
                   />
-                  <RHFTextField name="docTitle" label="Doc Title" />
-                  <RHFTextField name="textBeforeParams" label="Text Before Params" />
-                </Box>
-                <Box
-                  rowGap={2}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{
-                    xs: 'repeat(1, 1fr)',
-                    sm: 'repeat(2, 1fr)',
-                  }}
-                >
-                  <RHFTextField name="textAfterFields" label="Text After Fields" />
-                </Box>            
+                </Box>     
+                
+                  <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline />
+              
+                <Card sx={{ p: 3 }}>
+                    <Stack spacing={2}>
+                    <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
+                      Check Items
+                    </Typography>
+                    <RHFTextField name="paramListTitle" label="Item List Title" 
+                        value={checkParam[checkParamNumber]?.paramListTitle || ''}
+                        onChange={(event) => handleInputChange(event, checkParamNumber)} 
+                      />
+
+                      <RHFAutocomplete
+                        multiple
+                        name="paramList"
+                        label="Item List"
+                        value={checkParam[checkParamNumber]?.paramList || []}
+                        options={activeMachineServiceParams}
+                        isOptionEqualToValue={(option, value) => option._id === value._id}
+                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                        renderOption={(props, option) => (
+                          <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                        )}
+                        onChange={(event, newValue) => {
+                          const updatedEvent = { target: { name: "paramList", value: newValue }};
+                          handleInputChange(updatedEvent, checkParamNumber);
+                          event.preventDefault();
+                        }}
+                        renderTags={(value, getTagProps) => `${value.length} Items Selected!`}
+                      /> 
+
+                  <Grid container item md={12} >
+                    <Card sx={{ minWidth: 360, width: '100%', minHeight:260 , my:3, border:'1px solid'}}>
+                    <TableContainer component={Paper}  >
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell size='small' >No.</TableCell>
+                              <TableCell size='small' >Checked Items</TableCell>
+                              <TableCell size='small' >Action</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {checkParam[checkParamNumber]?.paramList?.map((row, index) => (
+                              <TableRow
+                                key={row.id}
+                                draggable
+                                onDragStart={(e) => handleDragStart(e, index)}
+                                onDragOver={(e) => e.preventDefault()}
+                                onDrop={(e) => handleDrop(e, index)}
+                              >
+                                <TableCell size='small'>{index+1}</TableCell>
+                                <TableCell size='small'>{row.name}</TableCell>
+                                <TableCell size='small' >
+                                  <IconTooltip
+                                    title='Delete'
+                                    color={theme.palette.error.light}
+                                    icon="mdi:trash-can-outline"
+                                    onClick={() => handleRowDelete(index)}
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                      </Card>
+                      <Grid display="flex" justifyContent="flex-end" sx={{width: '100%'}}>
+                        <Button
+                          disabled={!checkParam[checkParamNumber]?.paramList?.length > 0}
+                          onClick={ () => setCheckParamNumber(prevCheckParamNumber => prevCheckParamNumber + 1) }
+                          fullWidth={ isMobile }
+                          variant="contained" color='primary' sx={{ ...(isMobile && { width: '100%' })}}
+                        >Next
+                        </Button>
+                      </Grid>
+                    </Grid>
+                    <Grid>
+                      <Grid container justifyContent="flex-start" gap={1}>
+                      {checkParam.map((value, index) =>( typeof value?.paramList?.length === 'number' &&
+                        <TableRow
+                                draggable
+                                onDragStart={(e) => handleListDragStart(e, index)}
+                                onDragOver={(e) => e.preventDefault()}
+                                onDrop={(e) => handleListDrop(e, index)}
+                              >
+                        <Card sx={{p:2, width:'125px' ,border:'1px solid'}}>
+                          <CardContent sx={{ mt:-3, mr:-5, mb:1,display:'flex', justifyContent:'flex-end'}} >
+                              <ViewFormEditDeleteButtons handleEdit={()=>toggleEdit(index)} onDelete={()=>onDelete(index)} />
+                          </CardContent>
+                          <Typography variant='overline' sx={{ ml:1}}  >Items: {`${value?.paramList?.length}`}</Typography>
+                        </Card>
+                        </TableRow>
+                      ))}
+                      </Grid>
+                    </Grid>
+                    </Stack>
+                  </Card>
+                  <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline />          
                 
                 <Box
                   rowGap={2}
@@ -365,107 +462,6 @@ export default function ServiceRecordConfigEditForm() {
                     }
                   /> 
                 </Box>
-                <Card sx={{ p: 3 }}>
-                    <Stack spacing={2}>
-                    <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
-                      Check Items
-                    </Typography>
-                    <RHFTextField name="paramListTitle" label="Item List Title" 
-                        value={checkParam[checkParamNumber]?.paramListTitle || ''}
-                        onChange={(event) => handleInputChange(event, checkParamNumber)} 
-                      />
-                    <Box rowGap={2} columnGap={2} display="grid"
-                      gridTemplateColumns={{
-                        xs: 'repeat(1, 1fr)',
-                        sm: 'repeat(2, 1fr)',
-                      }}
-                    >
-                      <RHFAutocomplete
-                        multiple
-                        name="paramList"
-                        label="Item List"
-                        value={checkParam[checkParamNumber]?.paramList || []}
-                        options={activeMachineServiceParams}
-                        isOptionEqualToValue={(option, value) => option._id === value._id}
-                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                        renderOption={(props, option) => (
-                          <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                        )}
-                        onChange={(event, newValue) => {
-                          const updatedEvent = { target: { name: "paramList", value: newValue }};
-                          handleInputChange(updatedEvent, checkParamNumber);
-                          event.preventDefault();
-                        }}
-                        renderTags={(value, getTagProps) => `${value.length} Items Selected!`}
-                      /> 
-                    </Box>
-                  <Grid container item md={12} >
-                    <Card sx={{ minWidth: 360, width: '100%', minHeight:260 , my:3, border:'1px solid'}}>
-                    <TableContainer component={Paper}  >
-                        <Table>
-                          <TableHead>
-                            <TableRow>
-                              <TableCell>No.</TableCell>
-                              <TableCell>Checked Items</TableCell>
-                              <TableCell>Action</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {checkParam[checkParamNumber]?.paramList?.map((row, index) => (
-                              <TableRow
-                                key={row.id}
-                                draggable
-                                onDragStart={(e) => handleDragStart(e, index)}
-                                onDragOver={(e) => e.preventDefault()}
-                                onDrop={(e) => handleDrop(e, index)}
-                              >
-                                <TableCell>{index+1}</TableCell>
-                                <TableCell>{row.name}</TableCell>
-                                <TableCell>
-                                  <IconTooltip
-                                    title='Delete'
-                                    color={theme.palette.error.light}
-                                    icon="mdi:trash-can-outline"
-                                    onClick={() => handleRowDelete(index)}
-                                  />
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                      </Card>
-                      <Grid display="flex" justifyContent="flex-end" sx={{width: '100%'}}>
-                        <Button
-                          disabled={!checkParam[checkParamNumber]?.paramList?.length > 0}
-                          onClick={ () => setCheckParamNumber(prevCheckParamNumber => prevCheckParamNumber + 1) }
-                          fullWidth={ isMobile }
-                          variant="contained" color='primary' sx={{ ...(isMobile && { width: '100%' })}}
-                        >Next
-                        </Button>
-                      </Grid>
-                    </Grid>
-                    <Grid>
-                      <Grid container justifyContent="flex-start" gap={1}>
-                      {checkParam.map((value, index) =>( typeof value?.paramList?.length === 'number' &&
-                        <TableRow
-                                draggable
-                                onDragStart={(e) => handleListDragStart(e, index)}
-                                onDragOver={(e) => e.preventDefault()}
-                                onDrop={(e) => handleListDrop(e, index)}
-                              >
-                        <Card sx={{p:2, width:'125px' ,border:'1px solid'}}>
-                          <CardContent sx={{ mt:-3, mr:-5, mb:1,display:'flex', justifyContent:'flex-end'}} >
-                              <ViewFormEditDeleteButtons handleEdit={()=>toggleEdit(index)} onDelete={()=>onDelete(index)} />
-                          </CardContent>
-                          <Typography variant='overline' sx={{ ml:1}}  >Items: {`${value?.paramList?.length}`}</Typography>
-                        </Card>
-                        </TableRow>
-                      ))}
-                      </Grid>
-                    </Grid>
-                    </Stack>
-                  </Card>
                 <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
                   Header
                 </Typography>

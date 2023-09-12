@@ -92,7 +92,7 @@ export default function MachineServiceParamAddForm() {
     <Container maxWidth={false}>
       <StyledCardContainer>
         <Cover
-          name={FORMLABELS.COVER.MACHINE_SERVICE_PARAMS}
+          name={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAM_ADD}
           setting
           backLink={PATH_MACHINE.machines.settings.machineServiceParams.list}
         />
@@ -112,7 +112,7 @@ export default function MachineServiceParamAddForm() {
                     <RHFTextField name="name" label="Name" />
                     <RHFAutocomplete 
                       name="serviceCategory"
-                      label="Service Category"
+                      label="Item Category"
                       options={activeServiceCategories}
                       isOptionEqualToValue={(option, value) => option._id === value._id}
                       getOptionLabel={(option) => `${option.name ? option.name : ''}`}
