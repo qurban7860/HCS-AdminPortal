@@ -5,8 +5,8 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
-import { Box, Card, Grid, Autocomplete, TextField, Typography } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers';
+import { Box, Card, Grid, Typography } from '@mui/material';
+// import { DatePicker } from '@mui/x-date-pickers';
 import { MuiChipsInput } from 'mui-chips-input';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { useSnackbar } from '../../../components/snackbar';
@@ -18,7 +18,7 @@ import {
 } from '../../../redux/slices/products/profile';
 import { ProfileSchema } from './schemas/ProfileSchema';
 import FormProvider, { RHFSwitch, RHFTextField } from '../../../components/hook-form';
-import { Snacks } from '../../../constants/machine-constants';
+// import { Snacks } from '../../../constants/machine-constants';
 
 // ----------------------------------------------------------------------
 
