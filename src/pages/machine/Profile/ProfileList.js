@@ -55,7 +55,7 @@ export default function ProfileList() {
   const { profiles, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.profile );
   const TABLE_HEAD = [
     { id: 'deafultName', label: 'Deafult Name', align: 'left' },
-    { id: 'names', label: 'Names', align: 'left' },
+    { id: 'xs1', label: 'Names', align: 'left' },
     { id: 'heightXwidth', label: 'Height X Width', align: 'left' },
     { id: 'createdAt', label: 'Created At', align: 'right' },
   ];
@@ -200,7 +200,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
       (profileg) =>
         profileg?.defaultName?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         profileg?.names?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        profileg?.height?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        (`${profileg?.height}X${profileg?.width}`.toLowerCase()).indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(profileg?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   TableRow,
   TableCell,
+  Chip,
 } from '@mui/material';
 // utils
 import { styled } from '@mui/material/styles';
@@ -10,6 +11,7 @@ import { fDate } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import { useScreenSize } from '../../../hooks/useResponsive';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
 
 // ----------------------------------------------------------------------
 
@@ -46,8 +48,17 @@ export default function ProfileListTableRow({
   return (
       <StyledTableRow hover selected={selected}>
         <LinkTableCell align="left" param={defaultName} onClick={onViewRow} />
-        { smScreen && <TableCell align="left">{profilesString}</TableCell>}
-        { smScreen && <TableCell align="left">{height}X{width}</TableCell>}
+        { smScreen && 
+          <TableCell sx={{maxWidth:"400px"}}>
+          {names.map((value, index) =>
+            typeof value === 'string'
+              ? value.trim() !== '' && <Chip key={index} label={value} sx={{ m: 0.2 }} />
+              : ''
+          )}
+          </TableCell>
+        }
+
+        <TableCell align="left">{height}{height&&width?"X":""}{width}</TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>
   
       </StyledTableRow>
