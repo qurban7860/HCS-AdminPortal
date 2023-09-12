@@ -156,7 +156,7 @@ export const ICONS = {
   // service information
   MACHINE_SERVICE_CATEGORY: {
     icon: 'mdi:cog',
-    heading: 'Service Category',
+    heading: 'Item Categories',
   },
 
 
