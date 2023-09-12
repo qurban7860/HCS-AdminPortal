@@ -1,4 +1,3 @@
-import * as Yup from 'yup';
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -6,44 +5,36 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Typography, Container, Autocomplete, TextField, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CardContent, Link } from '@mui/material';
-import { createTheme } from '@mui/material/styles';
+import { Box, Card, Grid, Stack, Typography, Container, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 // slice
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { addServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 import { getActiveMachineServiceParams } from '../../../redux/slices/products/machineServiceParams';
 import { getActiveMachineModels, resetActiveMachineModels } from '../../../redux/slices/products/model';
 import { getActiveCategories } from '../../../redux/slices/products/category';
-
 // schema
-import { AddMachineSchema } from '../../schemas/document';
+import { ServiceRecordConfigSchema } from '../../schemas/machine';
 // routes
-import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
-import { useSettingsContext } from '../../../components/settings';
+import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFSwitch, RHFMultiSelect , RHFAutocomplete} from '../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete} from '../../../components/hook-form';
 // util
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
-import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 // constants
-import Iconify from '../../../components/iconify';
 import { FORMLABELS } from '../../../constants/default-constants';
-import { Snacks, FORMLABELS as formLABELS } from '../../../constants/document-constants';
 import useResponsive from '../../../hooks/useResponsive';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import CollapsibleCheckedItemRow from '../../../components/table/CollapsibleCheckedItemRow'
 
 // ----------------------------------------------------------------------
 
 export default function ServiceRecordConfigAddForm() {
-  const [open, setOpen] = useState(false);
-  const [sortedMachineServiceParams, setSortedMachineSerivceParams] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const isMobile = useResponsive('down', 'sm');
-  const theme = createTheme();
   const { recordTypes, headerFooterTypes } = useSelector((state) => state.serviceRecordConfig);
   const { activeMachineServiceParams } = useSelector((state) => state.machineServiceParam);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
@@ -51,44 +42,12 @@ export default function ServiceRecordConfigAddForm() {
   const [checkParamNumber, setCheckParamNumber]= useState(0);
   const [checkParam, setCheckParam] = useState({});
   const [checkParams, setCheckParams] = useState([]);
+
   
   useLayoutEffect(() => {
     dispatch(getActiveMachineServiceParams());
     dispatch(getActiveCategories());
   }, [dispatch]);
-
-
-  
-  const AddMachineServiceRecordConfigSchema = Yup.object().shape({
-    recordType: Yup.object().label('Record Type').nullable().required(),
-    machineModel: Yup.object().label('Model').nullable(),
-    category: Yup.object().label('Category').nullable(),
-    docTitle: Yup.string().max(40).label('Document Title'),
-    textBeforeCheckItems: Yup.string().max(4000),
-    // Check Params
-    paramListTitle: Yup.string(),
-    paramList : Yup.array(),
-
-    textAfterCheckItems: Yup.string().max(4000),
-    isOperatorSignatureRequired: Yup.boolean(),
-    enableServiceNote: Yup.boolean(),
-    enableMaintenanceRecommendations: Yup.boolean(),
-    enableSuggestedSpares: Yup.boolean(),
-
-    // header
-    headerType: Yup.object().label('Header Type').nullable(),
-    headerLeftText: Yup.string(),
-    headerCenterText: Yup.string(),
-    headerRightText: Yup.string(),
-
-    // footer
-    footerType: Yup.object().label('Footer Type').nullable(),
-    footerLeftText: Yup.string(),
-    footerCenterText: Yup.string(),
-    footerRightText: Yup.string(),
-
-    isActive: Yup.boolean()
-  });
 
   const defaultValues = useMemo(
     () => ({
@@ -127,7 +86,7 @@ export default function ServiceRecordConfigAddForm() {
   );
 
   const methods = useForm({
-    resolver: yupResolver(AddMachineServiceRecordConfigSchema),
+    resolver: yupResolver(ServiceRecordConfigSchema),
     defaultValues,
   });
 
@@ -139,15 +98,19 @@ export default function ServiceRecordConfigAddForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const { category, machineModel } = watch();
+  const { category, machineModel, paramListTitle } = watch();
+
   useEffect(() => {
     if(category === null){
       dispatch(resetActiveMachineModels())
       setValue('machineModel',null);
-    }else{
+    }else if(category?._id === machineModel?.category?._id){
       dispatch(getActiveMachineModels(category?._id));
+    }else if(category?._id !== machineModel?.category?._id){
+      dispatch(getActiveMachineModels(category?._id));
+      setValue('machineModel',null);
     }
-  },[dispatch, category,setValue]);
+  },[dispatch, category,setValue,machineModel]);
 
   const toggleCancel = () => {
     navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.list);
@@ -211,34 +174,62 @@ export default function ServiceRecordConfigAddForm() {
   };
 
   const handleRowDelete = (index) => {
-    const updatedRows = [...checkParams];
-    updatedRows[checkParamNumber].paramList.splice(index, 1);
-    setCheckParams(updatedRows);
-  };
-  const toggleEdit = (index) => {setCheckParam(checkParams[index]); setCheckParamNumber(index); };
-  const deleteIndex = (indexToRemove) => {
-    const newArray =  checkParams.filter((_, index) => index !== indexToRemove);
-    setCheckParams(newArray);
-    
-  };
-  const saveCheckParam = (prevCheckParamNumber) =>{
-    const updatedCheckParam = [...checkParams]; 
-    if(prevCheckParamNumber > checkParams.length-1) {
-      updatedCheckParam.splice(prevCheckParamNumber, 0, checkParam);
-      setCheckParams(updatedCheckParam);
-      setCheckParamNumber(() => prevCheckParamNumber + 1) 
-    }else if(prevCheckParamNumber < checkParams.length-1){
-      updatedCheckParam[prevCheckParamNumber]= checkParam;
-      setCheckParams(updatedCheckParam);
+    try {
+      setCheckParam((prevCheckParam) => {
+        const updatedRow = {...prevCheckParam};
+        updatedRow.paramList.splice(index, 1);
+        enqueueSnackbar('Deleted success!');
+        return updatedRow;
+      });
+    } catch (err) {
+      enqueueSnackbar('Delete failed!', { variant: 'error' });
+      console.error(err.message);
     }
-    else if(prevCheckParamNumber === checkParams.length-1){
-      updatedCheckParam[prevCheckParamNumber]= checkParam;
-      setCheckParams(updatedCheckParam);
-      setCheckParamNumber(() => prevCheckParamNumber + 1) 
-    }
+  };
 
-    setCheckParam({})
+  const toggleEdit = (index) => {setCheckParam(checkParams[index]); setCheckParamNumber(index); setValue('paramListTitle',checkParams[index]?.paramListTitle) };
+
+  const deleteIndex = (indexToRemove) => {
+    try {
+      const newArray =  checkParams.filter((_, index) => index !== indexToRemove);
+      setCheckParams(newArray);
+      enqueueSnackbar('Deleted success!');
+    } catch (err) {
+      enqueueSnackbar('Delete failed!', { variant: `error` });
+      console.error(err.message);
+    }
+  };
+
+  const saveCheckParam = (prevCheckParamNumber) =>{
+
+    try {
+      checkParam.paramListTitle = paramListTitle
+      setValue('paramListTitle','')
+      const updatedCheckParam = [...checkParams]; 
+      if(prevCheckParamNumber > checkParams.length-1) {
+        updatedCheckParam.splice(prevCheckParamNumber, 0, checkParam);
+        setCheckParams(updatedCheckParam);
+        setCheckParamNumber(() => prevCheckParamNumber + 1) 
+      enqueueSnackbar('Saved success!');
+      }else if(prevCheckParamNumber < checkParams.length-1){
+        updatedCheckParam[prevCheckParamNumber]= checkParam;
+        setCheckParams(updatedCheckParam);
+        setCheckParamNumber(checkParams.length) 
+        enqueueSnackbar('Updated success!');
+      }
+      else if(prevCheckParamNumber === checkParams.length-1){
+        updatedCheckParam[prevCheckParamNumber]= checkParam;
+        setCheckParams(updatedCheckParam);
+        setCheckParamNumber(checkParams.length) 
+        enqueueSnackbar('Updated success!');
+      }
+      setCheckParam({})
+    } catch (err) {
+      enqueueSnackbar('Save failed!', { variant: `error` });
+      console.error(err.message);
+    }
   }
+
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
@@ -264,7 +255,7 @@ export default function ServiceRecordConfigAddForm() {
                 >
                   <RHFAutocomplete 
                     name="recordType"
-                    label="Record Type"
+                    label="Record Type*"
                     options={recordTypes}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
@@ -273,7 +264,7 @@ export default function ServiceRecordConfigAddForm() {
                     )}
                   />
 
-                  <RHFTextField name="docTitle" label="Document Title" />
+                  <RHFTextField name="docTitle" label="Document Title*" />
 
                   <RHFAutocomplete 
                     name="category"
@@ -298,15 +289,12 @@ export default function ServiceRecordConfigAddForm() {
                 </Box>
                   <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline />
                 
-                <Card sx={{ p: 3 }}>
+                  <Card sx={{ p: 3 }}>
                     <Stack spacing={2}>
                     <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
                       Check Items
                     </Typography>
-                    <RHFTextField name="paramListTitle" label="Item List Title" 
-                        value={checkParam?.paramListTitle || ''}
-                        onChange={(event) => handleInputChange(event, checkParamNumber)} 
-                      />
+                    <RHFTextField name="paramListTitle" label="Item List Title*" />
                       <RHFAutocomplete
                         multiple
                         name="paramList"
@@ -325,8 +313,8 @@ export default function ServiceRecordConfigAddForm() {
                         }}
                         renderTags={(value, getTagProps) => ''}
                       /> 
-                  <Grid container item md={12} >
-                    <Card sx={{ minWidth: 250, width: '100%', minHeight:260 , my:3, border:'1px solid'}}>
+                      <Grid container item md={12} >
+                      <Card sx={{ minWidth: 250, width: '100%', minHeight:75 , my:3, border:'1px solid'}}>
                         <Table>
                           <TableHead>
                             <TableRow>
@@ -335,7 +323,7 @@ export default function ServiceRecordConfigAddForm() {
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {checkParam?.paramList?.map((row, index) => (
+                            {checkParam?.paramList?.length > 0 && (checkParam?.paramList?.map((row, index) => (
                               <TableRow
                                 key={row.id}
                                 draggable
@@ -345,49 +333,31 @@ export default function ServiceRecordConfigAddForm() {
                               >
                                 <TableCell size='small' align='left' ><b>{`${index+1}). `}</b>{`${row.name}`}</TableCell>
                                 <TableCell size='small' align='right'>
-                                <ViewFormEditDeleteButtons onDelete={() => handleRowDelete(index)} />
+                                <ViewFormEditDeleteButtons onDelete={() => handleRowDelete(index)} sm/>
                                 </TableCell>
                               </TableRow>
-                            ))}
+                            ))) }
                           </TableBody>
                         </Table>
+                        <Grid item md={12} display='flex' justifyContent='center' >
+                            {checkParam?.paramList?.length === 0 && (<Typography variant="subtitle2" sx={{ mt:0.7}}>No Checked Items selected</Typography>)}
+                          </Grid>
                       </Card>
                       <Grid display="flex" justifyContent="flex-end" sx={{width: '100%'}}>
                         <Button
-                          disabled={!checkParam?.paramList?.length > 0}
+                          disabled={checkParam?.paramList?.length === 0 || (!paramListTitle ?? '') }
                           onClick={()=>saveCheckParam(checkParamNumber)}
                           fullWidth={ isMobile }
                           variant="contained" color='primary' sx={{ ...(isMobile && { width: '100%' })}}
                         >Save</Button>
                       </Grid>
                     </Grid>
-                    <Stack sx={{ minWidth: 250,  minHeight:260 , my:3}}>
-
+                    <Stack sx={{ minWidth: 250,  minHeight:75 }}>
                     <TableContainer >
                       <Table>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell size='small' align='left'>Check Item Title</TableCell>
-                            <TableCell size='small' align='center'>Items</TableCell>
-                            <TableCell size='small' align='right'>{`  `}</TableCell>
-                          </TableRow>
-                        </TableHead>
                         <TableBody>
                           {checkParams.map((value, index) =>( typeof value?.paramList?.length === 'number' &&
-                          <TableRow
-                                  key={index}
-                                  draggable
-                                  onDragStart={(e) => handleListDragStart(e, index)}
-                                  onDragOver={(e) => e.preventDefault()}
-                                  onDrop={(e) => handleListDrop(e, index)}
-                                  // sx={{border:'1px solid', borderRadius:'10px',my:1}}
-                                >
-                                <TableCell size='small' align='left' >{typeof value?.paramListTitle === 'string' && value?.paramListTitle || ''}</TableCell>
-                                <TableCell size='small' align='center' >{`${value?.paramList?.length}`}</TableCell>
-                                <TableCell size='small' align='right' >
-                                    <ViewFormEditDeleteButtons handleEdit={()=>toggleEdit(index)} onDelete={()=>deleteIndex(index)} />
-                                </TableCell>
-                          </TableRow>
+                          <CollapsibleCheckedItemRow value={value} index={index} toggleEdit={toggleEdit} deleteIndex={deleteIndex} handleListDragStart={handleListDragStart} handleListDrop={handleListDrop} />
                           ))}
                       </TableBody>
                       </Table>
@@ -448,16 +418,7 @@ export default function ServiceRecordConfigAddForm() {
                 <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
                   Header
                 </Typography>
-                <Box
-                  rowGap={2}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{
-                    xs: 'repeat(1, 1fr)',
-                    sm: 'repeat(2, 1fr)',
-                  }}
-                >
-                  <RHFAutocomplete 
+                <RHFAutocomplete 
                     name="headerType" label="Header Type"
                     options={headerFooterTypes}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
@@ -466,6 +427,16 @@ export default function ServiceRecordConfigAddForm() {
                       <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
                   />
+                <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{
+                    xs: 'repeat(1, 1fr)',
+                    sm: 'repeat(3, 1fr)',
+                  }}
+                >
+
                   <RHFTextField name="headerLeftText" label="Header Left Text" />
                   <RHFTextField name="headerCenterText" label="Header Center Text" />
                   <RHFTextField name="headerRightText" label="Header Right Text" />
@@ -473,16 +444,7 @@ export default function ServiceRecordConfigAddForm() {
                 <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
                   Footer
                 </Typography>
-                <Box
-                  rowGap={2}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{
-                    xs: 'repeat(1, 1fr)',
-                    sm: 'repeat(2, 1fr)',
-                  }}
-                >
-                  <RHFAutocomplete 
+                <RHFAutocomplete 
                     name="footerType" 
                     label="Footer Type"
                     options={headerFooterTypes}
@@ -492,6 +454,15 @@ export default function ServiceRecordConfigAddForm() {
                       <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
                   />
+                <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{
+                    xs: 'repeat(1, 1fr)',
+                    sm: 'repeat(3, 1fr)',
+                  }}
+                >
                   <RHFTextField name="footerLeftText" label="Footer Left Text" />
                   <RHFTextField name="footerCenterText" label="Footer Center Text" />
                   <RHFTextField name="footerRightText" label="Footer Right Text" />

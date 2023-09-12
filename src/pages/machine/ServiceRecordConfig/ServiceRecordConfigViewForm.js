@@ -20,7 +20,7 @@ import { PATH_MACHINE } from '../../../routes/paths';
 //  components
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
-// import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
+import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 // import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 
@@ -56,9 +56,13 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
       category: serviceRecordConfig?.category?.name || '',
       machineModel: serviceRecordConfig?.machineModel?.name || '',
       docTitle: serviceRecordConfig?.docTitle || '',
-      textBeforeParams: serviceRecordConfig?.textBeforeParams || '',
-      textAfterFields: serviceRecordConfig?.textAfterFields || '',
+      textBeforeCheckItems: serviceRecordConfig?.textBeforeCheckItems || '',
       checkParams: serviceRecordConfig?.checkParams || [],
+      textAfterCheckItems: serviceRecordConfig?.textAfterCheckItems || '',
+      isOperatorSignatureRequired: serviceRecordConfig?.isOperatorSignatureRequired,
+      enableServiceNote: serviceRecordConfig?.enableServiceNote,
+      enableMaintenanceRecommendations: serviceRecordConfig?.enableMaintenanceRecommendations,
+      enableSuggestedSpares: serviceRecordConfig?.enableSuggestedSpares,
       header: serviceRecordConfig?.header || {},
       footer: serviceRecordConfig?.footer || {},
       isActive: serviceRecordConfig?.isActive|| false,
@@ -103,39 +107,45 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
         <ViewFormField sm={6} heading="Machine Model" param={defaultValues?.machineModel} />
       </Grid>
       <Grid container>  
-        <ViewFormField sm={6} heading="Text Befor Check Items" param={defaultValues?.textBeforeParams} />
+        <ViewFormField sm={12} heading="Text Befor Check Items" param={defaultValues?.textBeforeCheckItems} />
       </Grid>
         <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
           Check Params
         </Typography>
-        {(defaultValues?.checkParams.map((row, index) =>
+        {defaultValues?.checkParams.length > 0 ? (defaultValues?.checkParams.map((row, index) =>
           (
             <Grid container>
               <ViewFormField sm={6} heading="Param List Title" param={row?.paramListTitle} />
               <ViewFormField sm={6} heading="Param List" serviceParam={row?.paramList} />
             </Grid>
           ))
-        )}
-      <ViewFormField sm={6} heading="Text After Check Items" param={defaultValues?.textAfterFields} />
-
+        ) : <ViewFormField />
+        }
+      <ViewFormField sm={12} heading="Text After Check Items" param={defaultValues?.textAfterCheckItems} />
+        <Grid container>
+      <ViewFormSwitch sm={6} isActiveHeading='Is Operator Signature Required' isActive={defaultValues?.isOperatorSignatureRequired} />
+      <ViewFormSwitch sm={6} isActiveHeading='Enable Service Note' isActive={defaultValues?.enableServiceNote} />
+      <ViewFormSwitch sm={6} isActiveHeading='Enable Maintenance Recommendations	' isActive={defaultValues?.enableMaintenanceRecommendations} />
+      <ViewFormSwitch sm={6} isActiveHeading='Enable Suggested Spares' isActive={defaultValues?.enableSuggestedSpares} />
+        </Grid>
       
       <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
         Header
       </Typography>
       <Grid container>
-        <ViewFormField sm={6} heading="Header Type" param={defaultValues?.header?.type} />
-        <ViewFormField sm={6} heading="Header Left Text" param={defaultValues?.header?.leftText} />
-        <ViewFormField sm={6} heading="Header Center Text" param={defaultValues?.header?.centerText} />
-        <ViewFormField sm={6} heading="Header Right Text" param={defaultValues?.header?.rightText} />
+        <ViewFormField sm={12} heading="Header Type" param={defaultValues?.header?.type} />
+        <ViewFormField sm={4} heading="Header Left Text" param={defaultValues?.header?.leftText} />
+        <ViewFormField sm={4} heading="Header Center Text" param={defaultValues?.header?.centerText} />
+        <ViewFormField sm={4} heading="Header Right Text" param={defaultValues?.header?.rightText} />
       </Grid>
       <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
         Footer
       </Typography>
       <Grid container>
-        <ViewFormField sm={6} heading="Footer Type" param={defaultValues?.footer?.type} />
-        <ViewFormField sm={6} heading="Footer Left Text" param={defaultValues?.footer?.leftText} />
-        <ViewFormField sm={6} heading="Footer Center Text" param={defaultValues?.footer?.centerText} />
-        <ViewFormField sm={6} heading="Footer Right Text" param={defaultValues?.footer?.rightText} />
+        <ViewFormField sm={12} heading="Footer Type" param={defaultValues?.footer?.type} />
+        <ViewFormField sm={4} heading="Footer Left Text" param={defaultValues?.footer?.leftText} />
+        <ViewFormField sm={4} heading="Footer Center Text" param={defaultValues?.footer?.centerText} />
+        <ViewFormField sm={4} heading="Footer Right Text" param={defaultValues?.footer?.rightText} />
       </Grid>
         <ViewFormAudit defaultValues={defaultValues} />
     </Card>

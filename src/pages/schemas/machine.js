@@ -175,3 +175,34 @@ export const MachineServiceRecordSchema = Yup.object().shape({
   operatorRemarks: Yup.string().label('Operator Remarks'),
   isActive: Yup.boolean(),
 })
+
+export const ServiceRecordConfigSchema = Yup.object().shape({
+  recordType: Yup.object().label('Record Type').required().nullable(),
+  docTitle: Yup.string().max(200).required().label('Document Title'),
+  machineModel: Yup.object().label('Model').nullable(),
+  category: Yup.object().label('Category').nullable(),
+  textBeforeCheckItems: Yup.string().max(4000),
+  // Check Params
+  paramListTitle: Yup.string().max(200).label('Item List Title'),
+  // paramList : Yup.array(),
+
+  textAfterCheckItems: Yup.string().max(4000),
+  isOperatorSignatureRequired: Yup.boolean(),
+  enableServiceNote: Yup.boolean(),
+  enableMaintenanceRecommendations: Yup.boolean(),
+  enableSuggestedSpares: Yup.boolean(),
+
+  // header
+  headerType: Yup.object().label('Header Type').nullable(),
+  headerLeftText: Yup.string(),
+  headerCenterText: Yup.string(),
+  headerRightText: Yup.string(),
+
+  // footer
+  footerType: Yup.object().label('Footer Type').nullable(),
+  footerLeftText: Yup.string(),
+  footerCenterText: Yup.string(),
+  footerRightText: Yup.string(),
+
+  isActive: Yup.boolean()
+});

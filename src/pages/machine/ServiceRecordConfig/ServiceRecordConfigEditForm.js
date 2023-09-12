@@ -1,22 +1,20 @@
-import * as Yup from 'yup';
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, Typography, Container,  TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Button, CardContent } from '@mui/material';
-import { createTheme } from '@mui/material/styles';
+import { Box, Card, Grid, Stack, Typography, Container,  TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Button} from '@mui/material';
 // slice
 import {
   updateServiceRecordConfig,
   setServiceRecordConfigEditFormVisibility,
   getServiceRecordConfig,
 } from '../../../redux/slices/products/serviceRecordConfig';
-import { getActiveMachineModels } from '../../../redux/slices/products/model';
+import { getActiveMachineModels, resetActiveMachineModels } from '../../../redux/slices/products/model';
 import { getActiveMachineServiceParams } from '../../../redux/slices/products/machineServiceParams';
-import { getActiveServiceCategories } from '../../../redux/slices/products/serviceCategory';
-
+import { getActiveCategories } from '../../../redux/slices/products/category';
+import { ServiceRecordConfigSchema } from '../../schemas/machine';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
@@ -29,56 +27,28 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // constants
 // import { FORMLABELS } from '../../../constants/default-constants';
 import useResponsive from '../../../hooks/useResponsive';
-import  IconTooltip  from '../../components/Icons/IconTooltip'
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import { FORMLABELS } from '../../../constants/default-constants';
+import CollapsibleCheckedItemRow from '../../../components/table/CollapsibleCheckedItemRow';
+
 
 // ----------------------------------------------------------------------
 
 export default function ServiceRecordConfigEditForm() {
   const { serviceRecordConfig, recordTypes, headerFooterTypes } = useSelector((state) => state.serviceRecordConfig);
   const { activeMachineServiceParams } = useSelector((state) => state.machineServiceParam);
+  const { activeMachineModels } = useSelector((state) => state.machinemodel);
+  const { activeCategories } = useSelector((state) => state.category);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
   const isMobile = useResponsive('down', 'sm');
-  const theme = createTheme();
 
   const [checkParamNumber, setCheckParamNumber]= useState(0);
-  const [checkParam, setCheckParam] = useState([]);
-
-  const EditServiceRecordConfigSchema = Yup.object().shape({
-    recordType: Yup.object().label('Record Type').nullable(),
-    machineModel: Yup.object().label('Model').nullable(),
-    category: Yup.object().label('Category').nullable(),
-    docTitle: Yup.string().required(),
-    textBeforeCheckItems: Yup.string().max(4000),
-    // Check Params
-    // paramListTitle: Yup.string(),
-    // paramList : Yup.array(),
-
-    textAfterCheckItems: Yup.string().max(4000),
-    isOperatorSignatureRequired: Yup.boolean(),
-    enableServiceNote: Yup.boolean(),
-    enableMaintenanceRecommendations: Yup.boolean(),
-    enableSuggestedSpares: Yup.boolean(),
-
-    // header
-    headerType: Yup.object().label('Header Type').nullable(),
-    headerLeftText: Yup.string(),
-    headerCenterText: Yup.string(),
-    headerRightText: Yup.string(),
-
-    // footer
-    footerType: Yup.object().label('Footer Type').nullable(),
-    footerLeftText: Yup.string(),
-    footerCenterText: Yup.string(),
-    footerRightText: Yup.string(),
-
-    isActive: Yup.boolean()
-  });
+  const [checkParam, setCheckParam] = useState({});
+  const [checkParams, setCheckParams] = useState([]);
 
   const defaultValues = useMemo(
     () => ({
@@ -89,7 +59,7 @@ export default function ServiceRecordConfigEditForm() {
     textBeforeCheckItems: serviceRecordConfig?.textBeforeCheckItems || '',
 
     // // Check Params
-    // paramListTitle: serviceRecordConfig?.checkParams[0]?.paramListTitle || '',
+    paramListTitle: checkParam.paramListTitle || '',
     // paramList : serviceRecordConfig?.checkParams[0]?.paramList || [],
 
     textAfterCheckItems: serviceRecordConfig?.textAfterCheckItems || '',
@@ -115,28 +85,39 @@ export default function ServiceRecordConfigEditForm() {
   );
 
   const methods = useForm({
-    resolver: yupResolver(EditServiceRecordConfigSchema),
+    resolver: yupResolver(ServiceRecordConfigSchema),
     defaultValues,
   });
 
   const {
     reset,
     watch,
+    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const { recordType } = watch();
+  const { recordType, paramListTitle, category, machineModel, } = watch();
 
-  const { activeMachineModels } = useSelector((state) => state.machinemodel);
-  const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
+  useEffect(() => {
+    if(category === null){
+      dispatch(resetActiveMachineModels())
+      setValue('machineModel',null);
+    }else if(category?._id === machineModel?.category?._id){
+      dispatch(getActiveMachineModels(category?._id));
+    }else if(category?._id !== machineModel?.category?._id){
+      dispatch(getActiveMachineModels(category?._id));
+      setValue('machineModel',null);
+    }
+  },[dispatch, category,setValue,machineModel]);
+
 
 
   /* eslint-disable */
   useLayoutEffect(() => {
     dispatch(getServiceRecordConfig(id));
     dispatch(getActiveMachineModels())
-    dispatch(getActiveServiceCategories());
+    dispatch(getActiveCategories());
   }, [dispatch, id]);
 
   useEffect(() => {
@@ -146,7 +127,7 @@ export default function ServiceRecordConfigEditForm() {
   },[serviceRecordConfig, dispatch])
   /* eslint-enable */
   useEffect(() => {
-    setCheckParam(serviceRecordConfig?.checkParams)
+    setCheckParams(serviceRecordConfig?.checkParams)
   }, [serviceRecordConfig]);
 
   useEffect(() => {
@@ -175,11 +156,10 @@ export default function ServiceRecordConfigEditForm() {
     }
   };
 
-  const handleInputChange = (event, index) => {
+  const handleInputChange = (event) => {
     const { name, value } = event.target;
-    const updatedCheckParam = [...checkParam];
-    updatedCheckParam[index] = {
-      ...updatedCheckParam[index],
+    const updatedCheckParam = {
+      ...checkParam,
       [name]: value,
     };
     setCheckParam(updatedCheckParam);
@@ -191,10 +171,10 @@ export default function ServiceRecordConfigEditForm() {
 
   const handleListDrop = (e, index) => {
     const draggedIndex = e.dataTransfer.getData('index');
-    const updatedCheckParam = [...checkParam];
+    const updatedCheckParam = [...checkParams];
     const [draggedRow] = updatedCheckParam.splice(draggedIndex, 1);
     updatedCheckParam.splice(index, 0, draggedRow);
-    setCheckParam(updatedCheckParam); 
+    setCheckParams(updatedCheckParam); 
     if(draggedIndex > checkParamNumber && index <= checkParamNumber ){
       setCheckParamNumber(prevCheckParamNumber => prevCheckParamNumber + 1)
     }else if(draggedIndex < checkParamNumber && index >= checkParamNumber){
@@ -212,24 +192,75 @@ export default function ServiceRecordConfigEditForm() {
 
   const handleDrop = (e, index) => {
     const draggedIndex = e.dataTransfer.getData('index');
-    const updatedCheckParam = [...checkParam]; // Clone the state
+    const updatedCheckParam = [...checkParams];
     const [draggedRow] = updatedCheckParam[checkParamNumber].paramList.splice(draggedIndex, 1);
     updatedCheckParam[checkParamNumber].paramList.splice(index, 0, draggedRow);
-    setCheckParam(updatedCheckParam); // Set the state with the updated value
+    setCheckParams(updatedCheckParam); 
   };
 
   const handleRowDelete = (index) => {
-    const updatedRows = [...checkParam];
-    updatedRows[checkParamNumber].paramList.splice(index, 1);
-    setCheckParam(updatedRows);
+    try {
+      setCheckParam((prevCheckParam) => {
+        const updatedRow = {
+          paramListTitle: prevCheckParam?.paramListTitle,
+          paramList: [...prevCheckParam.paramList],
+        };
+        updatedRow.paramList.splice(index, 1);
+        enqueueSnackbar('Deleted success!');
+        return updatedRow;
+      });
+    } catch (err) {
+      enqueueSnackbar('Delete failed!', { variant: 'error' });
+      console.error(err.message);
+    }
   };
-  
-  const toggleEdit = (index) => {setCheckParamNumber(index)};
 
-  const onDelete = (indexToRemove) => {
-    const newArray =  checkParam.filter((_, index) => index !== indexToRemove);
-      setCheckParam(newArray);
+  const toggleEdit = (index) => {
+    setCheckParam({...checkParams[index]}); 
+    setCheckParamNumber(index); 
+    setValue('paramListTitle',checkParams[index]?.paramListTitle) };
+
+  const deleteIndex = (indexToRemove) => {
+    try {
+      const newArray =  checkParams.filter((_, index) => index !== indexToRemove);
+      setCheckParams(newArray);
+      enqueueSnackbar('Deleted success!');
+    } catch (err) {
+      enqueueSnackbar('Delete failed!', { variant: `error` });
+      console.error(err.message);
+    }
   };
+
+  const saveCheckParam = (prevCheckParamNumber) =>{
+
+    try {
+      checkParam.paramListTitle = paramListTitle
+      setValue('paramListTitle','')
+      const updatedCheckParam = [...checkParams]; 
+      if(prevCheckParamNumber > checkParams.length-1) {
+        updatedCheckParam.splice(prevCheckParamNumber, 0, checkParam);
+        setCheckParams(updatedCheckParam);
+        setCheckParamNumber(() => prevCheckParamNumber + 1) 
+      enqueueSnackbar('Saved success!');
+      }else if(prevCheckParamNumber < checkParams.length-1){
+        updatedCheckParam[prevCheckParamNumber]= checkParam;
+        setCheckParams(updatedCheckParam);
+        setCheckParamNumber(checkParams.length) 
+      enqueueSnackbar('Updated success!');
+      }
+      else if(prevCheckParamNumber === checkParams.length-1){
+        updatedCheckParam[prevCheckParamNumber]= checkParam;
+        setCheckParams(updatedCheckParam); 
+        setCheckParamNumber(checkParams.length) 
+
+      enqueueSnackbar('Updated success!');
+      }
+      setCheckParam({})
+    } catch (err) {
+      enqueueSnackbar('Save failed!', { variant: `error` });
+      console.error(err.message);
+    }
+  }
 
   return (
     <Container maxWidth={false}>
@@ -254,32 +285,7 @@ export default function ServiceRecordConfigEditForm() {
                     sm: 'repeat(2, 1fr)',
                   }}
                 >
-                  {/* <Autocomplete
-                    options={recordTypes}
-                    value={selectedRecordType}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
-                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                    )}
-                    onChange={(event, newValue) => {
-                      if (newValue) {
-                        setRecordType(newValue.name);
-                      } else {
-                        setRecordType('');
-                      }
-                    }}
-                    renderInput={(params) => (
-                      <TextField 
-                      {...params} 
-                      name="recordType"
-                      id="recordType"
-                      label="Record Type"  
-                      
-                      />
-                    )}
-                    ChipProps={{ size: 'small' }}
-                  /> */}
+
                   <RHFAutocomplete 
                     name="recordType"
                     label="Record Type"
@@ -297,7 +303,7 @@ export default function ServiceRecordConfigEditForm() {
                   <RHFAutocomplete 
                     name="category"
                     label="Machine Category"
-                    options={activeServiceCategories}
+                    options={activeCategories}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     renderOption={(props, option) => (
@@ -317,22 +323,18 @@ export default function ServiceRecordConfigEditForm() {
                 </Box>     
                 
                   <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline />
-              
-                <Card sx={{ p: 3 }}>
+
+                  <Card sx={{ p: 3 }}>
                     <Stack spacing={2}>
                     <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
                       Check Items
                     </Typography>
-                    <RHFTextField name="paramListTitle" label="Item List Title" 
-                        value={checkParam[checkParamNumber]?.paramListTitle || ''}
-                        onChange={(event) => handleInputChange(event, checkParamNumber)} 
-                      />
-
+                    <RHFTextField name="paramListTitle" label="Item List Title*" />
                       <RHFAutocomplete
                         multiple
                         name="paramList"
-                        label="Item List"
-                        value={checkParam[checkParamNumber]?.paramList || []}
+                        label="Select Items"
+                        value={checkParam?.paramList || []}
                         options={activeMachineServiceParams}
                         isOptionEqualToValue={(option, value) => option._id === value._id}
                         getOptionLabel={(option) => `${option.name ? option.name : ''}`}
@@ -344,22 +346,19 @@ export default function ServiceRecordConfigEditForm() {
                           handleInputChange(updatedEvent, checkParamNumber);
                           event.preventDefault();
                         }}
-                        renderTags={(value, getTagProps) => `${value.length} Items Selected!`}
+                        renderTags={(value, getTagProps) => ''}
                       /> 
-
-                  <Grid container item md={12} >
-                    <Card sx={{ minWidth: 360, width: '100%', minHeight:260 , my:3, border:'1px solid'}}>
-                    <TableContainer component={Paper}  >
+                      <Grid container item md={12} >
+                      <Card sx={{ minWidth: 250, width: '100%', minHeight:75 , my:3, border:'1px solid'}}>
                         <Table>
                           <TableHead>
                             <TableRow>
-                              <TableCell size='small' >No.</TableCell>
-                              <TableCell size='small' >Checked Items</TableCell>
-                              <TableCell size='small' >Action</TableCell>
+                              <TableCell size='small' align='left'>Checked Items</TableCell>
+                              <TableCell size='small' align='right'>{`  `}</TableCell>
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {checkParam[checkParamNumber]?.paramList?.map((row, index) => (
+                            {checkParam?.paramList?.length > 0 && (checkParam?.paramList?.map((row, index) => (
                               <TableRow
                                 key={row.id}
                                 draggable
@@ -367,53 +366,41 @@ export default function ServiceRecordConfigEditForm() {
                                 onDragOver={(e) => e.preventDefault()}
                                 onDrop={(e) => handleDrop(e, index)}
                               >
-                                <TableCell size='small'>{index+1}</TableCell>
-                                <TableCell size='small'>{row.name}</TableCell>
-                                <TableCell size='small' >
-                                  <IconTooltip
-                                    title='Delete'
-                                    color={theme.palette.error.light}
-                                    icon="mdi:trash-can-outline"
-                                    onClick={() => handleRowDelete(index)}
-                                  />
+                                <TableCell size='small' align='left' ><b>{`${index+1}). `}</b>{`${row.name}`}</TableCell>
+                                <TableCell size='small' align='right'>
+                                <ViewFormEditDeleteButtons onDelete={() => handleRowDelete(index)} sm/>
                                 </TableCell>
                               </TableRow>
-                            ))}
+                            ))) }
                           </TableBody>
                         </Table>
-                      </TableContainer>
+                        <Grid item md={12} display='flex' justifyContent='center' >
+                            {checkParam?.paramList?.length === 0 && (<Typography variant="subtitle2" sx={{ mt:0.7}}>No Checked Items selected</Typography>)}
+                          </Grid>
                       </Card>
                       <Grid display="flex" justifyContent="flex-end" sx={{width: '100%'}}>
                         <Button
-                          disabled={!checkParam[checkParamNumber]?.paramList?.length > 0}
-                          onClick={ () => setCheckParamNumber(prevCheckParamNumber => prevCheckParamNumber + 1) }
+                          disabled={checkParam?.paramList?.length === 0 || (!paramListTitle ?? '') }
+                          onClick={()=>saveCheckParam(checkParamNumber)}
                           fullWidth={ isMobile }
                           variant="contained" color='primary' sx={{ ...(isMobile && { width: '100%' })}}
-                        >Next
-                        </Button>
+                        >Save</Button>
                       </Grid>
                     </Grid>
-                    <Grid>
-                      <Grid container justifyContent="flex-start" gap={1}>
-                      {checkParam.map((value, index) =>( typeof value?.paramList?.length === 'number' &&
-                        <TableRow
-                                draggable
-                                onDragStart={(e) => handleListDragStart(e, index)}
-                                onDragOver={(e) => e.preventDefault()}
-                                onDrop={(e) => handleListDrop(e, index)}
-                              >
-                        <Card sx={{p:2, width:'125px' ,border:'1px solid'}}>
-                          <CardContent sx={{ mt:-3, mr:-5, mb:1,display:'flex', justifyContent:'flex-end'}} >
-                              <ViewFormEditDeleteButtons handleEdit={()=>toggleEdit(index)} onDelete={()=>onDelete(index)} />
-                          </CardContent>
-                          <Typography variant='overline' sx={{ ml:1}}  >Items: {`${value?.paramList?.length}`}</Typography>
-                        </Card>
-                        </TableRow>
-                      ))}
-                      </Grid>
-                    </Grid>
+                    <Stack sx={{ minWidth: 250,  minHeight:75 }}>
+                    <TableContainer >
+                      <Table>
+                        <TableBody>
+                          {checkParams.map((value, index) =>( typeof value?.paramList?.length === 'number' &&
+                          <CollapsibleCheckedItemRow value={value} index={index} toggleEdit={toggleEdit} deleteIndex={deleteIndex} handleListDragStart={handleListDragStart} handleListDrop={handleListDrop} />
+                          ))}
+                      </TableBody>
+                      </Table>
+                      </TableContainer>
+                      </Stack>
                     </Stack>
                   </Card>
+
                   <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline />          
                 
                 <Box
