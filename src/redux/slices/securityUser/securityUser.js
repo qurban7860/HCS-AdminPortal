@@ -174,7 +174,7 @@ export const {
 } = slice.actions;
 // ----------------------------------------------------------------------
 
-export function addSecurityUser(param) {
+export function addSecurityUser(param, isInvite) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     dispatch(resetSecurityUser());
@@ -196,7 +196,7 @@ export function addSecurityUser(param) {
       regions: param.selectedRegions
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}security/users`, data);
-      if(regEx.test(response.status)){
+      if(regEx.test(response.status) && isInvite){
         await axios.get(`${CONFIG.SERVER_URL}security/invites/sendUserInvite/${response?.data?.user?._id}`);
         dispatch(setSecurityUserFormVisibility(false))
         dispatch(getSecurityUsers());

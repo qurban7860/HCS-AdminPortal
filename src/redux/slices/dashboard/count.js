@@ -11,6 +11,9 @@ const initialState = {
   isLoading: false,
   error: null,
   count: {},
+  machinesByCountry:[],
+  machinesByModel:[],
+  machinesByYear:[],
 };
 
 const slice = createSlice({
@@ -41,6 +44,31 @@ const slice = createSlice({
       state.count = action.payload;
       state.initial = true;
     },
+
+    // GET Machine by Countries Success
+    getMachinesByCountrySuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.machinesByCountry = action.payload;
+      state.initial = true;
+    },
+
+    // GET Machine by Models Success
+    getMachinesByModelSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.machinesByModel = action.payload;
+      state.initial = true;
+    },
+
+    // GET Machine by Years Success
+    getMachinesByYearSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.machinesByYear = action.payload;
+      state.initial = true;
+    },
+
     // SET RES MESSAGE
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
@@ -67,7 +95,45 @@ export function getCount() {
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}dashboard/`);
       dispatch(slice.actions.getCountSuccess(response.data));
-    //   dispatch(slice.actions.setResponseMessage('Counts loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
+export function getMachinesByCountry(year, model) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}dashboard/machineCountries?year=${year}&model=${model}`);
+      dispatch(slice.actions.getMachinesByCountrySuccess(response.data));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
+export function getMachinesByModel(year, country) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}dashboard/machineModel?year=${year}&country=${country}`);
+      dispatch(slice.actions.getMachinesByModelSuccess(response.data));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
+export function getMachinesByYear(model, country) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}dashboard/machineYear?model=${model}&country=${country}`);
+      dispatch(slice.actions.getMachinesByYearSuccess(response.data));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));

@@ -1,13 +1,13 @@
-import { useLayoutEffect } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 // @mui
-import { Typography, Grid, Stack, Card, Divider } from '@mui/material';
+import { Typography, Grid, Stack, Card, Divider, TextField, Autocomplete, CardHeader } from '@mui/material';
 import { StyledBg, StyledContainer, StyledGlobalCard } from '../../theme/styles/default-styles';
 // sections
 import HowickWelcome from '../components/DashboardWidgets/HowickWelcome';
 import HowickWidgets from '../components/DashboardWidgets/HowickWidgets';
 // assets & hooks
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCount } from '../../redux/slices/dashboard/count';
+import { getCount, getMachinesByCountry, getMachinesByModel, getMachinesByYear } from '../../redux/slices/dashboard/count';
 // components
 import ChartBar from '../components/Charts/ChartBar';
 import ProductionLog from '../components/Charts/ProductionLog';
@@ -22,15 +22,28 @@ import { varFade } from '../../components/animate';
 
 // config-global
 import { CONFIG } from '../../config-global';
-
+import {  getActiveMachineModels } from '../../redux/slices/products/model';
+import { countries } from '../../assets/data';
 // ----------------------------------------------------------------------
-
+ 
 export default function GeneralAppPage() {
+  
   const dispatch = useDispatch();
-  const { count} = useSelector((state) => state.count);
+  const { count, isLoading, error, initial, responseMessage, machinesByCountry, machinesByYear, machinesByModel } = useSelector((state) => state.count);
+  const { activeMachineModels } = useSelector((state) => state.machinemodel);
+  // const { machineByCountries } = useSelector((state) => state.machineByCountries);
   const enviroment = CONFIG.ENV.toLowerCase();
   const showDevGraphs = enviroment !== 'live';
 
+  const [MBCYear, setMBCYear] = useState(null);
+  const [MBCModel, setMBCModel] = useState(null);
+  
+  const [MBMYear, setMBMYear] = useState(null);
+  const [MBMCountry, setMBMCountry] = useState(null);
+  
+  const [MBYCountry, setMBYCountry] = useState(null);
+  const [MBYModel, setMBYModel] = useState(null);
+  
   const modelWiseMachineNumber = [];
   const yearWiseMachinesYear = [];
   const modelWiseMachineModel = [];
@@ -40,6 +53,9 @@ export default function GeneralAppPage() {
   const countryWiseSiteCountNumber = [];
   const countryWiseSiteCountCountries = [];
   // const yearWiseMachines = [];
+
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: currentYear - 1999 }, (_, index) => 2000 + index);
 
   if (count && count?.modelWiseMachineCount) {
     count.modelWiseMachineCount.map((model) => {
@@ -56,9 +72,9 @@ export default function GeneralAppPage() {
       return null;
     });
   }
-
-  if (count && count.countryWiseMachineCount) {
-    count.countryWiseMachineCount.map((customer) => {
+  
+  if (machinesByCountry) {
+    machinesByCountry.countryWiseMachineCount.map((customer) => {
       countryWiseMachineCountNumber.push(customer.count);
       countryWiseMachineCountCountries.push(customer._id);
       return null;
@@ -73,10 +89,28 @@ export default function GeneralAppPage() {
     });
   }
 
+  useEffect(() => {
+    // Check if MBCModel has a value
+    if (MBCModel !== null || MBCYear !==null) {
+      dispatch(getMachinesByCountry(MBCYear, MBCModel))
+    }
+
+    if (MBMCountry !== null || MBMYear !==null) {
+      dispatch(getMachinesByModel(MBMYear, MBMCountry))
+    }
+
+    if (MBYCountry !== null || MBYModel !==null) {
+      dispatch(getMachinesByYear(MBYCountry, MBYModel))
+    }
+  }, [MBCModel, MBYModel, MBCYear, MBMYear, MBMCountry, MBYCountry, dispatch]);
+
   useLayoutEffect(() => {
+    dispatch(getActiveMachineModels());
     dispatch(getCount());
+    dispatch(getMachinesByCountry());
   }, [dispatch]);
 
+  
   return (
     <StyledContainer maxWidth={false} p={0}>
       <Grid container item sx={{ justifyContent: 'center' }}>
@@ -130,7 +164,7 @@ export default function GeneralAppPage() {
                 total={count?.machineCount || 0}
                 notVerifiedTitle="Not Verified"
                 notVerifiedCount={count?.nonVerifiedMachineCount}
-                connectableTitle="Connectables" 
+                connectableTitle="Decoilers / Kits" 
                 connectableCount={count?.connectAbleMachinesCount}
                 icon="mdi:window-shutter-settings"
                 color="info"
@@ -156,10 +190,32 @@ export default function GeneralAppPage() {
           <Grid container item xs={12} md={16} spacing={3} mt={2}>
             <Grid item xs={12} md={6} lg={6}>
               <StyledGlobalCard variants={varFade().inDown}>
-                <Stack sx={{ pt: 2 }}>
-                  <Typography variant="h6">Machine by Countries</Typography>
-                </Stack>
-                <Divider />
+                <CardHeader
+                  sx={{padding:"15px 0px 0px"}}
+                  title="Machine by Countries"
+                  action={
+                    <>
+                      <Autocomplete
+                          sx={{width:'120px', float:'right'}}
+                          options={activeMachineModels}
+                          isOptionEqualToValue={(option, value) => option._id === value._id}
+                          getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                          renderOption={(props, option) => (<li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>)}
+                          renderInput={(params) => (<TextField {...params} label="Model" size="small" />)}
+                          onChange={(event, newValue) =>setMBCModel(newValue?._id)}
+                        />
+
+                      <Autocomplete
+                        sx={{ width: '130px', float: 'right', paddingRight:1 }}
+                        options={years}
+                        getOptionLabel={(option) => option.toString()}
+                        renderInput={(params) => <TextField {...params} label="Year" size="small" />}
+                        onChange={(event, newValue) =>setMBCYear(newValue)}
+                      />
+                    </>
+                  }
+                />
+                <Divider sx={{paddingTop:2}} />
                 <ChartBar
                   optionsData={countryWiseMachineCountCountries}
                   seriesData={countryWiseMachineCountNumber}
@@ -177,10 +233,31 @@ export default function GeneralAppPage() {
                 sx={{ px: 3, mb: 3, backgroundColor: 'transparent' }}
                 variants={varFade().inDown}
               >
-                <Stack sx={{ pt: 2 }}>
-                  <Typography variant="h6">Machine by Models</Typography>
-                </Stack>
-                <Divider />
+                <CardHeader
+                  sx={{padding:"15px 0px 0px"}}
+                  title="Machine by  Models"
+                  action={
+                    <>
+                      <Autocomplete
+                        sx={{ width: '130px', float: 'right', paddingRight:1 }}
+                        options={countries}
+                        isOptionEqualToValue={(option, value) => option.code === value.code}
+                        getOptionLabel={(option) => `${option.label ? option.label : ''}`}
+                        renderInput={(params) => <TextField {...params} label="Country" size="small" />}
+                        onChange={(event, newValue) =>setMBMCountry(newValue?.code)}
+                      />
+
+                      <Autocomplete
+                        sx={{ width: '130px', float: 'right', paddingRight:1 }}
+                        options={years}
+                        getOptionLabel={(option) => option.toString()}
+                        renderInput={(params) => <TextField {...params} label="Year" size="small" />}
+                        onChange={(event, newValue) =>setMBMYear(newValue)}
+                      />
+                    </>
+                  }
+                />
+                <Divider sx={{paddingTop:2}} />
                 <ChartBar
                   optionsData={modelWiseMachineModel}
                   seriesData={modelWiseMachineNumber}
@@ -196,10 +273,33 @@ export default function GeneralAppPage() {
                 sx={{ px: 3, mb: 3, backgroundColor: 'transparent' }}
                 variants={varFade().inDown}
               >
-                <Stack sx={{ pt: 2 }}>
-                  <Typography variant="h6">Machine by Years</Typography>
-                </Stack>
-                <Divider />
+                <CardHeader
+                  sx={{padding:"15px 0px 0px"}}
+                  title="Machine by Years"
+                  action={
+                    <>
+                      <Autocomplete
+                          sx={{width:'120px', float:'right'}}
+                          options={activeMachineModels}
+                          isOptionEqualToValue={(option, value) => option._id === value._id}
+                          getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                          renderOption={(props, option) => (<li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>)}
+                          renderInput={(params) => (<TextField {...params} label="Model" size="small" />)}
+                          onChange={(event, newValue) =>setMBYModel(newValue?._id)}
+                        />
+
+                      <Autocomplete
+                        sx={{ width: '130px', float: 'right', paddingRight:1 }}
+                        options={countries}
+                        isOptionEqualToValue={(option, value) => option.code === value.code}
+                        getOptionLabel={(option) => `${option.label ? option.label : ''}`}
+                        renderInput={(params) => <TextField {...params} label="Country" size="small" />}
+                        onChange={(event, newValue) =>setMBYCountry(newValue?.code)}
+                      />
+                    </>
+                  }
+                />
+                <Divider sx={{paddingTop:2}} />
                 <ChartBar
                   optionsData={yearWiseMachinesYear}
                   seriesData={yearWiseMachinesNumber}

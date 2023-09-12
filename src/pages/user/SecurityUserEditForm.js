@@ -107,31 +107,31 @@ export default function SecurityUserEditForm() {
 
   /* eslint-disable */
   useLayoutEffect(() => {
-    if (securityUser.customer !== undefined && securityUser.customer !== null) {
+    if (securityUser?.customer !== undefined && securityUser?.customer !== null) {
       setCustomerVal(securityUser?.customer);
     }
-    if (securityUser.contact !== undefined && securityUser.contact !== null) {
+    if (securityUser?.contact !== undefined && securityUser?.contact !== null) {
       setContactVal(securityUser?.contact);
     }
-    if (securityUser.phone !== undefined && securityUser.phone !== null) {
+    if (securityUser?.phone !== undefined && securityUser?.phone !== null) {
       setPhone(securityUser?.phone);
     }
-    if (securityUser.name !== undefined && securityUser.name !== null) {
+    if (securityUser?.name !== undefined && securityUser?.name !== null) {
       handleNameChange(securityUser?.name);
     }
-    if (securityUser.email !== undefined && securityUser.email !== null) {
+    if (securityUser?.email !== undefined && securityUser?.email !== null) {
       setEmail(securityUser?.email);
     }
-    if (securityUser.customers !== undefined && securityUser.customers.length > 0) {
+    if (securityUser?.customers !== undefined && securityUser?.customers.length > 0) {
       const selectedCustomerIds = securityUser?.customers.map((customer) => customer._id);
       setCustomerArr(allCustomers.filter((customer) => selectedCustomerIds.includes(customer._id)));
     }
-    if (securityUser.machines !== undefined && securityUser.machines.length > 0) {
+    if (securityUser?.machines !== undefined && securityUser?.machines.length > 0) {
       const selectedMachineIds = securityUser?.machines.map((machine) => machine._id);
       setMachineArr(allMachines.filter((machine) => selectedMachineIds.includes(machine._id)));
 
     }
-    if (securityUser.regions !== undefined && securityUser.regions.length > 0) {
+    if (securityUser?.regions !== undefined && securityUser?.regions.length > 0) {
       const selectedRegionIds = securityUser?.regions.map((region) => region._id);
       setSelectedRegions(activeRegions.filter((region) => selectedRegionIds.includes(region._id)));
     }
