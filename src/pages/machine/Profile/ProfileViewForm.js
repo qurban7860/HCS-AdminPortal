@@ -49,6 +49,7 @@ export default function ProfileViewForm() {
       names:profile?.names || [],
       height:profile?.height || '',
       width:profile?.width || '',
+      type:profile?.type || '',
       isActive: profile?.isActive || '',
       createdByFullName: profile?.createdBy?.name || '',
       createdAt: profile?.createdAt || '',
@@ -76,7 +77,8 @@ export default function ProfileViewForm() {
       <Grid container>
         <ViewFormField heading="Default Name" param={defaultValues.defaultName} />
         <ViewFormField heading="Other Names" chips={defaultValues.names} />
-        <ViewFormField sm={6} heading="Height X Width" param={`${defaultValues?.height}${(defaultValues.height && defaultValues.width)? "X":""}${defaultValues?.width}`} />
+        <ViewFormField sm={6} heading="Type" param={defaultValues?.type} />
+        <ViewFormField sm={6} heading="Web X Flang" param={`${defaultValues?.height}${(defaultValues.height && defaultValues.width)? "X":""}${defaultValues?.width}`} />
         <ViewFormAudit defaultValues={defaultValues} /> 
       </Grid>
     </Card>

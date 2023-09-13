@@ -102,11 +102,11 @@ export function getCount() {
   };
 }
 
-export function getMachinesByCountry(year, model) {
+export function getMachinesByCountry(category, year, model) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}dashboard/machineCountries?year=${year}&model=${model}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}dashboard/machineCountries?category=${category}&year=${year}&model=${model}`);
       dispatch(slice.actions.getMachinesByCountrySuccess(response.data));
     } catch (error) {
       console.log(error);
@@ -115,11 +115,11 @@ export function getMachinesByCountry(year, model) {
   };
 }
 
-export function getMachinesByModel(year, country) {
+export function getMachinesByModel(category, year, country) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}dashboard/machineModel?year=${year}&country=${country}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}dashboard/machineModel?category=${category}&year=${year}&country=${country}`);
       dispatch(slice.actions.getMachinesByModelSuccess(response.data));
     } catch (error) {
       console.log(error);
@@ -128,11 +128,11 @@ export function getMachinesByModel(year, country) {
   };
 }
 
-export function getMachinesByYear(model, country) {
+export function getMachinesByYear(category, model, country) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}dashboard/machineYear?model=${model}&country=${country}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}dashboard/machineYear?category=${category}&model=${model}&country=${country}`);
       dispatch(slice.actions.getMachinesByYearSuccess(response.data));
     } catch (error) {
       console.log(error);

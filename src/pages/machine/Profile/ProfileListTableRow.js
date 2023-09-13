@@ -39,6 +39,7 @@ export default function ProfileListTableRow({
     names,
     height,
     width,
+    type,
     createdAt,
   } = row;
 
@@ -57,7 +58,7 @@ export default function ProfileListTableRow({
           )}
           </TableCell>
         }
-
+        { smScreen && <TableCell align="left">{type==="MANUFACTURER"?<Chip label={type} sx={{m:0.2}} color='secondary' />:<Chip label={type} sx={{m:0.2}}  />}</TableCell>}
         <TableCell align="left">{height}{height&&width?"X":""}{width}</TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>
   
