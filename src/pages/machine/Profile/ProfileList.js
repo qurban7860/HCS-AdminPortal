@@ -55,7 +55,7 @@ export default function ProfileList() {
   const { profiles, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.profile );
   const TABLE_HEAD = [
     { id: 'deafultName', label: 'Deafult Name', align: 'left' },
-    { id: 'xs1', label: 'Names', align: 'left' },
+    { id: 'xs1', label: 'Other Names', align: 'left' },
     { id: 'xs2', label: 'Type', align: 'left' },
     { id: 'heightXwidth', label: 'Web X Flang', align: 'left' },
     { id: 'createdAt', label: 'Created At', align: 'right' },
