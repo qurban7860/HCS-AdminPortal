@@ -380,7 +380,7 @@ export default function ServiceRecordConfigEditForm() {
                       </Card>
                       <Grid display="flex" justifyContent="flex-end" sx={{width: '100%'}}>
                         <Button
-                          disabled={checkParam?.paramList?.length === 0 || (!paramListTitle ?? '') }
+                          disabled={(!checkParam?.paramList?.length ?? 0) || (!paramListTitle ?? '') }
                           onClick={()=>saveCheckParam(checkParamNumber)}
                           fullWidth={ isMobile }
                           variant="contained" color='primary' sx={{ ...(isMobile && { width: '100%' })}}
