@@ -70,8 +70,7 @@ export default function ProfileAddForm() {
           enqueueSnackbar('Profile added successfully');
           dispatch(setProfileFormVisibility(false));
     } catch (err) {
-      enqueueSnackbar('Failed to add profile', { variant: 'error' });
-      console.error(err.message);
+      enqueueSnackbar(err, { variant: 'error' });
     }
   };
 

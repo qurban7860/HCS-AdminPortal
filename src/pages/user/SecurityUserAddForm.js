@@ -425,7 +425,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
               />
             </Box>
             ))}
-            <Box sx={{ mb: 3 }} rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}>
+            {/* <Box sx={{ mb: 3 }} rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}>
               <RHFMultiSelect
                 disabled={roleTypesDisabled}
                 chip
@@ -434,7 +434,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
                 label="Roles"
                 options={sortedRoles}
               />
-            </Box>
+            </Box> */}
             <Box
             rowGap={3}
             columnGap={2}
@@ -444,6 +444,15 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
               sm: 'repeat(1, 1fr)',
             }}
             >
+
+              <RHFMultiSelect
+                disabled={roleTypesDisabled}
+                chip
+                checkbox
+                name="roles"
+                label="Roles"
+                options={sortedRoles}
+              />
             <Autocomplete
                 multiple
                 id="regions-autocomplete"
