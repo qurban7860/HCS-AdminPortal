@@ -167,10 +167,10 @@ export default function ServiceRecordConfigAddForm() {
 
   const handleDrop = (e, index) => {
     const draggedIndex = e.dataTransfer.getData('index');
-    const updatedCheckParam = [...checkParams]; // Clone the state
-    const [draggedRow] = updatedCheckParam[checkParamNumber].paramList.splice(draggedIndex, 1);
-    updatedCheckParam[checkParamNumber].paramList.splice(index, 0, draggedRow);
-    setCheckParams(updatedCheckParam); // Set the state with the updated value
+    const updatedCheckParam = {...checkParam};
+    const [draggedRow] = updatedCheckParam.paramList.splice(draggedIndex, 1);
+    updatedCheckParam.paramList.splice(index, 0, draggedRow);
+    setCheckParam(updatedCheckParam); 
   };
 
   const handleRowDelete = (index) => {
