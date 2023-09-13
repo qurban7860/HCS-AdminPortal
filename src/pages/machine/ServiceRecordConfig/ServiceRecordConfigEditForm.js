@@ -192,10 +192,13 @@ export default function ServiceRecordConfigEditForm() {
 
   const handleDrop = (e, index) => {
     const draggedIndex = e.dataTransfer.getData('index');
-    const updatedCheckParam = [...checkParams];
-    const [draggedRow] = updatedCheckParam[checkParamNumber].paramList.splice(draggedIndex, 1);
-    updatedCheckParam[checkParamNumber].paramList.splice(index, 0, draggedRow);
-    setCheckParams(updatedCheckParam); 
+    const updatedCheckParam = {
+      paramListTitle: checkParam.paramListTitle,
+      paramList: [...checkParam.paramList],
+    };
+    const [draggedRow] = updatedCheckParam.paramList.splice(draggedIndex, 1);
+    updatedCheckParam.paramList.splice(index, 0, draggedRow);
+    setCheckParam(updatedCheckParam); 
   };
 
   const handleRowDelete = (index) => {
@@ -232,7 +235,6 @@ export default function ServiceRecordConfigEditForm() {
   };
 
   const saveCheckParam = (prevCheckParamNumber) =>{
-
     try {
       checkParam.paramListTitle = paramListTitle
       setValue('paramListTitle','')
