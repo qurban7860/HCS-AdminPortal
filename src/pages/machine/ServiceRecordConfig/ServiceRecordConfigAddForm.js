@@ -229,7 +229,6 @@ export default function ServiceRecordConfigAddForm() {
       console.error(err.message);
     }
   }
-
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
@@ -276,6 +275,7 @@ export default function ServiceRecordConfigAddForm() {
                       <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
                   />
+
                   <RHFAutocomplete 
                     name="machineModel"
                     label="Machine Model"
@@ -286,6 +286,7 @@ export default function ServiceRecordConfigAddForm() {
                       <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
                   />
+                  
                 </Box>
                   <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline />
                 
@@ -345,7 +346,7 @@ export default function ServiceRecordConfigAddForm() {
                       </Card>
                       <Grid display="flex" justifyContent="flex-end" sx={{width: '100%'}}>
                         <Button
-                          disabled={checkParam?.paramList?.length === 0 || (!paramListTitle ?? '') }
+                          disabled={(!checkParam?.paramList?.length ?? 0) || (!paramListTitle ?? '') }
                           onClick={()=>saveCheckParam(checkParamNumber)}
                           fullWidth={ isMobile }
                           variant="contained" color='primary' sx={{ ...(isMobile && { width: '100%' })}}
