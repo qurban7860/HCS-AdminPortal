@@ -37,8 +37,8 @@ export default function ProfileAddForm() {
     () => ({
       defaultName: '',
       names:[],
-      height:'',
-      width:'',
+      web:'',
+      flange:'',
       type:'',
       isActive: true,
     }),
@@ -97,12 +97,12 @@ export default function ProfileAddForm() {
                 options={ProfileTypes} onChange={handleTypeChange}
                 renderInput={(params) => <TextField {...params} label="Type" />}
               />
-              <RHFTextField name="height" label="Web"/>
-              <RHFTextField name="width" label="Flang"/>
+              <RHFTextField name="web" label="Web"/>
+              <RHFTextField name="flange" label="Flange"/>
               
               <RHFSwitch name="isActive" labelPlacement="start"
                 label={
-                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
+                  <Typography variant="subtitle2" sx={{ mx: 0, flange: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
                     Active
                   </Typography>
                 }

@@ -57,7 +57,7 @@ export default function ProfileList() {
     { id: 'deafultName', label: 'Deafult Name', align: 'left' },
     { id: 'xs1', label: 'Other Names', align: 'left' },
     { id: 'xs2', label: 'Type', align: 'left' },
-    { id: 'heightXwidth', label: 'Web X Flang', align: 'left' },
+    { id: 'WebxFlange', label: 'Web X Flang', align: 'left' },
     { id: 'createdAt', label: 'Created At', align: 'right' },
   ];
 
@@ -201,7 +201,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
       (profileg) =>
         profileg?.defaultName?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         profileg?.names?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        (`${profileg?.height}X${profileg?.width}`.toLowerCase()).indexOf(filterName.toLowerCase()) >= 0 ||
+        (`${profileg?.web}X${profileg?.flang}`.toLowerCase()).indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(profileg?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
