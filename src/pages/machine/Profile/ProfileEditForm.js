@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
-import { Box, Card, Grid, Typography } from '@mui/material';
+import { Autocomplete, Box, Card, Grid, TextField, Typography } from '@mui/material';
 // import { DatePicker } from '@mui/x-date-pickers';
 import { MuiChipsInput } from 'mui-chips-input';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
@@ -14,7 +14,8 @@ import {
   setProfileEditFormVisibility, 
   updateProfile,
   setProfileViewFormVisibility,
-  getProfile
+  getProfile,
+  ProfileTypes
 } from '../../../redux/slices/products/profile';
 import { ProfileSchema } from './schemas/ProfileSchema';
 import FormProvider, { RHFSwitch, RHFTextField } from '../../../components/hook-form';
@@ -36,6 +37,7 @@ export default function ProfileEditForm() {
       names:profile?.names ||[],
       height:profile?.height || '',
       width:profile?.width ||'',
+      type:profile?.type ||'',
       isActive: profile?.isActive || false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -50,6 +52,7 @@ export default function ProfileEditForm() {
   const {
     reset,
     handleSubmit,
+    setValue,
     formState: { isSubmitting },
   } = methods;
 
@@ -62,6 +65,11 @@ export default function ProfileEditForm() {
   const toggleCancel = async() => {
     dispatch(setProfileEditFormVisibility (false));
     dispatch(setProfileViewFormVisibility(true));
+  };
+
+   // Handle Type
+   const handleTypeChange = (event, newValue) => {
+    setValue('type', newValue);
   };
 
   const onSubmit = async (data) => {
@@ -87,11 +95,16 @@ export default function ProfileEditForm() {
           <Card sx={{ p: 3 }}>
             <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)',}}>
               <RHFTextField name="defaultName" label="Default Name"/>
-              <MuiChipsInput name="names" label="Other Name" value={chips} onChange={handleChipChange} />
+              <MuiChipsInput name="names" label="Other Names" value={chips} onChange={handleChipChange} />
             </Box>  
-            <Box sx={{marginTop:2}} rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}>
-              <RHFTextField name="height" label="Height"/>
-              <RHFTextField name="width" label="Width"/>
+            <Box sx={{marginTop:2}} rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)',}}>
+              <Autocomplete disablePortal id="combo-box-demo" name="type"
+                options={ProfileTypes} onChange={handleTypeChange}
+                defaultValue={defaultValues?.type}
+                renderInput={(params) => <TextField {...params} label="Type" />}
+              />
+              <RHFTextField name="height" label="Web"/>
+              <RHFTextField name="width" label="Flang"/>
               
               <RHFSwitch name="isActive" labelPlacement="start"
                 label={
