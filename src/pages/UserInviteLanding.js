@@ -35,9 +35,8 @@ export default function UserInviteLanding() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const [phone, setPhone] = useState('');
-  const expired = new Date(parseInt(expiry,10))>new Date();
+  const expired = parseInt(expiry,10) < new Date().getTime();
   const { securityUser, verifiedInvite} = useSelector((state) => state.user);
-  
   const ChangePassWordSchema = Yup.object().shape({
     fullName:Yup.string().trim().max(25, 'Name must be less than 25 characters').required('Name is required'),
     password: Yup.string().trim()
