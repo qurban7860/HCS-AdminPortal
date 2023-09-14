@@ -48,11 +48,12 @@ export default function AddFormButtons({
                 {saveButtonName || BUTTONS.SAVE}
               </LoadingButton>
             </Grid>
-            <Grid item sm={6}>
+
+            {toggleCancel && <Grid item sm={6}>
               <Button onClick={handleOpenConfirm} fullWidth variant="outlined" size="large">
                 {cancelButtonName || BUTTONS.CANCEL}
               </Button>
-            </Grid>
+            </Grid>}
           </Stack>
         </Grid>
       </Stack>

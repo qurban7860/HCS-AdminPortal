@@ -2,9 +2,9 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, Typography, Container,  TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Button} from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Container,  TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Button, Autocomplete, TextField} from '@mui/material';
 // slice
 import {
   updateServiceRecordConfig,
@@ -29,7 +29,7 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import useResponsive from '../../../hooks/useResponsive';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import { FORMLABELS } from '../../../constants/default-constants';
-import CollapsibleCheckedItemRow from '../../../components/table/CollapsibleCheckedItemRow';
+import CollapsibleCheckedItemRow from './CollapsibleCheckedItemRow';
 
 
 // ----------------------------------------------------------------------
@@ -46,10 +46,11 @@ export default function ServiceRecordConfigEditForm() {
   const { id } = useParams();
   const isMobile = useResponsive('down', 'sm');
 
-  const [checkParamNumber, setCheckParamNumber]= useState(0);
+  const [checkParamNumber, setCheckParamNumber]= useState(serviceRecordConfig.checkParams.length);
   const [checkParam, setCheckParam] = useState({});
   const [checkParams, setCheckParams] = useState([]);
-
+console.log("checkParams : ", checkParams)
+console.log("serviceRecordConfig : ",serviceRecordConfig)
   const defaultValues = useMemo(
     () => ({
     recordType: {name: serviceRecordConfig?.recordType} || null,
@@ -93,30 +94,20 @@ export default function ServiceRecordConfigEditForm() {
     reset,
     watch,
     setValue,
+    control,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
   const { recordType, paramListTitle, category, machineModel, } = watch();
 
-  useEffect(() => {
-    if(category === null){
-      dispatch(resetActiveMachineModels())
-      setValue('machineModel',null);
-    }else if(category?._id === machineModel?.category?._id){
-      dispatch(getActiveMachineModels(category?._id));
-    }else if(category?._id !== machineModel?.category?._id){
-      dispatch(getActiveMachineModels(category?._id));
-      setValue('machineModel',null);
-    }
-  },[dispatch, category,setValue,machineModel]);
 
 
 
   /* eslint-disable */
   useLayoutEffect(() => {
     dispatch(getServiceRecordConfig(id));
-    dispatch(getActiveMachineModels())
+    // dispatch(getActiveMachineModels())
     dispatch(getActiveCategories());
   }, [dispatch, id]);
 
@@ -143,8 +134,8 @@ export default function ServiceRecordConfigEditForm() {
   };
   const onSubmit = async (data) => {
     try {
-      data.checkParam = checkParam
-      console.log(data);
+      data.checkParam = checkParams
+      // console.log(data);
       await dispatch(updateServiceRecordConfig(data, id));
       reset();
       dispatch(setServiceRecordConfigEditFormVisibility(false));
@@ -201,17 +192,20 @@ export default function ServiceRecordConfigEditForm() {
     setCheckParam(updatedCheckParam); 
   };
 
+
   const handleRowDelete = (index) => {
     try {
-      setCheckParam((prevCheckParam) => {
-        const updatedRow = {
-          paramListTitle: prevCheckParam?.paramListTitle,
-          paramList: [...prevCheckParam.paramList],
-        };
-        updatedRow.paramList.splice(index, 1);
-        enqueueSnackbar('Deleted success!');
-        return updatedRow;
-      });
+      const updatedList = [...checkParam.paramList]; // Create a copy of the paramList
+      updatedList.splice(index, 1); // Modify the copy
+      
+      const updatedRow = {
+        paramListTitle: checkParam.paramListTitle,
+        paramList: updatedList, // Use the modified copy
+      };
+      
+      enqueueSnackbar('Deleted success!');
+      setCheckParam(updatedRow); // Update the state with the modified copy
+      
     } catch (err) {
       enqueueSnackbar('Delete failed!', { variant: 'error' });
       console.error(err.message);
@@ -287,6 +281,7 @@ export default function ServiceRecordConfigEditForm() {
                     sm: 'repeat(2, 1fr)',
                   }}
                 >
+                  <RHFTextField name="docTitle" label="Document Title" />
 
                   <RHFAutocomplete 
                     name="recordType"
@@ -300,16 +295,52 @@ export default function ServiceRecordConfigEditForm() {
                     )}
                   />
 
-                  <RHFTextField name="docTitle" label="Document Title" />
-
-                  <RHFAutocomplete 
+  {/* 
+  // useEffect(() => {
+  //   if(category === null){
+  //     dispatch(resetActiveMachineModels())
+  //     setValue('machineModel',null);
+  //   }else if(category?._id === machineModel?.category?._id){
+  //     dispatch(getActiveMachineModels(category?._id));
+  //   }else if(category?._id !== machineModel?.category){
+  //     dispatch(getActiveMachineModels(category?._id));
+  //     setValue('machineModel',null);
+  //   }
+  // },[dispatch, category,setValue,machineModel]); 
+  */}
+                  <Controller
                     name="category"
-                    label="Machine Category"
-                    options={activeCategories}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
-                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                    control={control}
+                    defaultValue={category || null}
+                    render={ ({field: { ref, ...field }, fieldState: { error } }) => (
+                      <Autocomplete
+                        {...field}
+                        options={activeCategories}
+                        isOptionEqualToValue={(option, value) => option._id === value._id}
+                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                        renderOption={(props, option) => (
+                          <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                        )}
+                        onChange={async (event, newValue) => {
+                          if (newValue) {
+                            field.onChange(newValue);
+                            if(newValue?._id !== machineModel?.category) {
+                              setValue('machineModel',null)
+                              await dispatch(resetActiveMachineModels())
+                              await dispatch(getActiveMachineModels(newValue?._id))
+                            }
+                          } else {
+                            field.onChange(null);
+                            setValue('machineModel',null)
+                              dispatch(resetActiveMachineModels())
+                          }
+                        }}
+                        renderInput={(params) => (<TextField {...params} name="category" label="Machine Category" 
+                          error={!!error}
+                          helperText={error?.message} 
+                          inputRef={ref} 
+                        />)}
+                    />
                     )}
                   />
                   <RHFAutocomplete 

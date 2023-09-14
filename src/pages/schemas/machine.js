@@ -183,7 +183,7 @@ export const ServiceRecordConfigSchema = Yup.object().shape({
   category: Yup.object().label('Category').nullable(),
   textBeforeCheckItems: Yup.string().max(4000),
   // Check Params
-  paramListTitle: Yup.string().max(200).label('Item List Title'),
+  // paramListTitle: Yup.string().max(200).label('Item List Title'),
   // paramList : Yup.array(),
 
   textAfterCheckItems: Yup.string().max(4000),
@@ -205,4 +205,13 @@ export const ServiceRecordConfigSchema = Yup.object().shape({
   footerRightText: Yup.string(),
 
   isActive: Yup.boolean()
+});
+
+
+export const CheckParamSchema = Yup.object().shape({
+
+  // Check Params
+  paramListTitle: Yup.string().max(200).label('Item List Title'),
+  paramList : Yup.array(),
+
 });
