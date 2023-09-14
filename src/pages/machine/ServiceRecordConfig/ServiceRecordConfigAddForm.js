@@ -26,7 +26,7 @@ import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { FORMLABELS } from '../../../constants/default-constants';
 import useResponsive from '../../../hooks/useResponsive';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-import CollapsibleCheckedItemRow from '../../../components/table/CollapsibleCheckedItemRow'
+import CollapsibleCheckedItemRow from './CollapsibleCheckedItemRow'
 
 // ----------------------------------------------------------------------
 
