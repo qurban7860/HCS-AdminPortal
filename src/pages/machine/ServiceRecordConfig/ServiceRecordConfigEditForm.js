@@ -48,8 +48,6 @@ export default function ServiceRecordConfigEditForm() {
   const [checkParamNumber, setCheckParamNumber]= useState(serviceRecordConfig.checkParams.length);
   const [checkParam, setCheckParam] = useState({});
   const [checkParams, setCheckParams] = useState([]);
-console.log("checkParams : ", checkParams)
-console.log("serviceRecordConfig : ",serviceRecordConfig)
   const defaultValues = useMemo(
     () => ({
     recordType: {name: serviceRecordConfig?.recordType} || null,
@@ -418,16 +416,7 @@ console.log("serviceRecordConfig : ",serviceRecordConfig)
                     sm: 'repeat(2, 1fr)',
                   }}
                 >
-                  <RHFAutocomplete 
-                    name="headerType" label="Header Type"
-                    options={headerFooterTypes}
-                    // value={headerType}
-                    isOptionEqualToValue={(option, value) => option.name === value.name}
-                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                    )}
-                  />
+                  
                   <RHFTextField name="headerLeftText" label="Header Left Text" />
                   <RHFTextField name="headerCenterText" label="Header Center Text" />
                   <RHFTextField name="headerRightText" label="Header Right Text" />
@@ -444,17 +433,7 @@ console.log("serviceRecordConfig : ",serviceRecordConfig)
                     sm: 'repeat(2, 1fr)',
                   }}
                 >
-                  <RHFAutocomplete 
-                    name="footerType" 
-                    label="Footer Type"
-                    options={headerFooterTypes}
-                    // value={footerTyname
-                    isOptionEqualToValue={(option, value) => option.name === value.name}
-                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                    )}
-                  />
+                  
                   <RHFTextField name="footerLeftText" label="Footer Left Text" />
                   <RHFTextField name="footerCenterText" label="Footer Center Text" />
                   <RHFTextField name="footerRightText" label="Footer Right Text" />

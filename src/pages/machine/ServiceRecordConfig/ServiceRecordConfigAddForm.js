@@ -240,15 +240,7 @@ const CheckParamSchema = Yup.object().shape({
                 <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
                   Header
                 </Typography>
-                <RHFAutocomplete 
-                    name="headerType" label="Header Type"
-                    options={headerFooterTypes}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
-                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                    )}
-                  />
+            
                 <Box
                   rowGap={2}
                   columnGap={2}
@@ -266,16 +258,7 @@ const CheckParamSchema = Yup.object().shape({
                 <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
                   Footer
                 </Typography>
-                <RHFAutocomplete 
-                    name="footerType" 
-                    label="Footer Type"
-                    options={headerFooterTypes}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
-                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                    )}
-                  />
+        
                 <Box
                   rowGap={2}
                   columnGap={2}
