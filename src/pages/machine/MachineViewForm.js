@@ -182,6 +182,7 @@ export default function MachineViewForm() {
       supplier: machine?.supplier?.name || '',
       workOrderRef: machine?.workOrderRef || '',
       machineModel: machine?.machineModel?.name || '',
+      machineProfile: machine?.machineProfile?.defaultName || '',
       status: machine?.status?.name || '',
       customer: machine?.customer || '',
       siteMilestone: machine?.siteMilestone || '',
@@ -255,14 +256,14 @@ export default function MachineViewForm() {
             <Grid container>
               <Card sx={{ width: '100%', p: '1rem' }}>
                 <Grid container>
-                  <ViewFormField sm={4} heading="Serial No" param={defaultValues?.serialNo} />
+                  <ViewFormField sm={2} heading="Serial No" param={defaultValues?.serialNo} />
                   <ViewFormField
-                    sm={4}
+                    sm={3}
                     heading="Machine Model"
                     param={defaultValues?.machineModel}
                   />
                   <ViewFormField
-                    sm={4}
+                    sm={3}
                     heading="Customer"
                     node={
                       defaultValues.customer && (
@@ -271,6 +272,11 @@ export default function MachineViewForm() {
                         </Link>
                       )
                     }
+                  />
+                   <ViewFormField
+                    sm={3}
+                    heading="Profile"
+                    param={defaultValues?.machineProfile}
                   />
                 </Grid>
               </Card>
