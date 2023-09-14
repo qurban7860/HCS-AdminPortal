@@ -4,7 +4,6 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-
 const initialState = {
   intial: false,
   responseMessage: null,
@@ -13,8 +12,9 @@ const initialState = {
   error: null,
   notes: [],
   note: null,
-  noteParams: {
-  }
+  filterBy: '',
+  page: 0,
+  rowsPerPage: 100,
 };
 
 const slice = createSlice({
@@ -25,8 +25,8 @@ const slice = createSlice({
     startLoading(state) {
       state.isLoading = true;
       state.error = null;
-
     },
+
     // SET TOGGLE
     setNoteFormVisibility(state, action){
       state.formVisibility = action.payload;
@@ -36,6 +36,7 @@ const slice = createSlice({
     setNoteEditFormVisibility(state, action){
       state.noteEditFormVisibility = action.payload;
     },
+
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -66,12 +67,33 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+
+    // RESET NOTE
+    resetNote(state){
+      state.note = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+    // RESET NOTES
+    resetNotes(state){
+      state.notes = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+        // Set FilterBy
+    setFilterBy(state, action) {
+      state.filterBy = action.payload;
+    },
+    // Set PageRowCount
+    ChangeRowsPerPage(state, action) {
+      state.rowsPerPage = action.payload;
+    },
+    // Set PageNo
+    ChangePage(state, action) {
+      state.page = action.payload;
     },
   },
 });
@@ -83,12 +105,12 @@ export default slice.reducer;
 export const {
   setNoteFormVisibility,
   setNoteEditFormVisibility,
-  getCart,
-  addToCart,
+  resetNote,
+  resetNotes,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
+  setFilterBy,
+  ChangeRowsPerPage,
+  ChangePage,
 } = slice.actions;
 
 // ----------------------------Save Note------------------------------------------
@@ -104,12 +126,13 @@ export function addNote(machineId,params) {
             if(params.user){
                 data.user =    params.user;
             }
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/`, data);
+      await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/`, data);
       dispatch(slice.actions.setNoteFormVisibility(false));
       dispatch(slice.actions.setResponseMessage('Note saved successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -124,12 +147,13 @@ export function updateNote(machineId,noteId,params) {
         note:     params.note,
         isActive: params.isActive,
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/${noteId}`, data, );
+      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/${noteId}`, data, );
       dispatch(slice.actions.setResponseMessage('Note updated successfully'));
 
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -143,7 +167,10 @@ export function getNotes(id) {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}/notes` , 
       {
         params: {
-          isArchived: false
+          isArchived: false,
+          orderBy : {
+            createdAt:-1
+          }
         }
       }
       );
@@ -152,6 +179,7 @@ export function getNotes(id) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -167,6 +195,7 @@ export function getNote(machineId,noteId) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -185,6 +214,7 @@ export function deleteNote(machineId,id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }

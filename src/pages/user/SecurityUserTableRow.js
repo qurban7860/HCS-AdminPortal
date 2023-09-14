@@ -1,13 +1,23 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 // @mui
-import { Link, Switch, Stack, Avatar, Button, Checkbox, TableRow, MenuItem, TableCell, IconButton, Typography, } from '@mui/material';
+import {
+  Switch,
+  Stack,
+  Button,
+  TableRow,
+  MenuItem,
+  TableCell,
+  Chip
+} from '@mui/material';
 // components
 import Iconify from '../../components/iconify';
 import MenuPopover from '../../components/menu-popover';
 import ConfirmDialog from '../../components/confirm-dialog';
 import { fDate } from '../../utils/formatTime';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
+import LinkTableCell from '../components/ListTableTools/LinkTableCell';
+import { useScreenSize } from '../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -20,12 +30,22 @@ SecurityUserTableRow.propTypes = {
   onViewRow: PropTypes.func,
 };
 
-export default function SecurityUserTableRow({ row, selected, onEditRow, onViewRow, onSelectRow, onDeleteRow }) {
-  const { email, name, roles, phone, status, image , createdAt ,isActive} = row;
-  const names = roles.map((a) => a.name);
+export default function SecurityUserTableRow({
+  row,
+  selected,
+  onEditRow,
+  onViewRow,
+  onSelectRow,
+  onDeleteRow,
+}) {
+  const { email, name, roles, phone, createdAt, currentEmployee, isActive } = row;
+
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openPopover, setOpenPopover] = useState(null);
+
+  const smScreen = useScreenSize('sm')
+  const lgScreen = useScreenSize('lg')
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -35,56 +55,37 @@ export default function SecurityUserTableRow({ row, selected, onEditRow, onViewR
     setOpenConfirm(false);
   };
 
-  const handleOpenPopover = (event) => {
-    setOpenPopover(event.currentTarget);
-  };
-
   const handleClosePopover = () => {
     setOpenPopover(null);
   };
   const onDelete = () => {
-    onDeleteRow()
+    onDeleteRow();
     setOpenConfirm(false);
   };
 
   return (
     <>
       <TableRow hover selected={selected}>
-        {/* <TableCell padding="checkbox">
-          <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell> */}
+        <Stack direction="row" alignItems="center">
+          <CustomAvatar
+            name={name}
+            alt={name}
+            sx={{ ml: 1, my: 0.5, width: '30px', height: '30px' }}
+          />
+          <LinkTableCell align="left" onClick={onViewRow} param={name} />
+        </Stack>
 
-        <TableCell>
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Link
-              noWrap
-              color="inherit"
-              variant="body1"
-              onClick={onViewRow}
-              sx={{
-                cursor: 'pointer',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <CustomAvatar name={name} alt={name} sx={{ mr: 1 }} />
-              <Typography variant="body1" noWrap>
-                {`${name}`}
-              </Typography>
-            </Link>
-          </Stack>
-        </TableCell>
-
-        <TableCell align="left">{email}</TableCell>
-
-        <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+        { smScreen && <TableCell align="left">{email}</TableCell>}
+        { smScreen && <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
           {phone || ''}
-        </TableCell>
+        </TableCell>}
 
-        <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-          {roles.map((obj) => obj.name).join(', ')}
-          {/* { roles ? Object.values(roles?.name)?.join(", ") : ""} */}
+        { lgScreen && <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+        {roles.map((obj) => (obj.roleType === 'SuperAdmin' ? <Chip label={obj.name} sx={{m:0.2}} color='secondary' /> : <Chip label={obj.name} sx={{mx:0.3}} />))}
+        </TableCell>}
+        <TableCell align="center">
+          {' '}
+          <Switch checked={currentEmployee} disabled size="small" />{' '}
         </TableCell>
         <TableCell align="center">
           {' '}

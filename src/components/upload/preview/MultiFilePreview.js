@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { useState, memo } from 'react';
 import { m, AnimatePresence } from 'framer-motion';
 // @mui
 import { alpha } from '@mui/material/styles';
@@ -9,6 +10,7 @@ import { fData } from '../../../utils/formatNumber';
 import Iconify from '../../iconify';
 import { varFade } from '../../animate';
 import FileThumbnail, { fileData } from '../../file-thumbnail';
+import ImagePreviewDialog from './ImagePreviewDialog'
 
 // ----------------------------------------------------------------------
 
@@ -16,19 +18,29 @@ MultiFilePreview.propTypes = {
   sx: PropTypes.object,
   files: PropTypes.array,
   onRemove: PropTypes.func,
+  onPreview: PropTypes.func,
   thumbnail: PropTypes.bool,
 };
 
-export default function MultiFilePreview({ thumbnail, files, onRemove, sx }) {
+function MultiFilePreview({ thumbnail, files, onRemove, sx }) {
+  const [ preview, setPreview] = useState(false)
+  const [selectedFile, setSelectedFile] = useState(null);
+
   if (!files?.length) {
     return null;
   }
+  const previewHandle = (file) => {
+    setPreview(true);
+    setSelectedFile(file);
+  };
+  const handleClosePreview = () => { setPreview(false);setSelectedFile(null); };
+  const FORMAT_IMG_VISIBBLE = ['jpg', 'jpeg', 'gif', 'bmp', 'png', 'svg', 'webp', 'ico', 'jpe'];
 
   return (
     <AnimatePresence initial={false}>
       {files.map((file) => {
         const { key, name = '', size = 0 } = fileData(file);
-
+        const fileType = file?.type?.split('/').pop();
         const isNotFormatFile = typeof file === 'string';
 
         if (thumbnail) {
@@ -42,8 +54,8 @@ export default function MultiFilePreview({ thumbnail, files, onRemove, sx }) {
               justifyContent="center"
               sx={{
                 m: 0.5,
-                width: 80,
-                height: 80,
+                width: 100,
+                height:100,
                 borderRadius: 1.25,
                 overflow: 'hidden',
                 position: 'relative',
@@ -68,8 +80,8 @@ export default function MultiFilePreview({ thumbnail, files, onRemove, sx }) {
                     right: 4,
                     p: '1px',
                     position: 'absolute',
-                    color: (theme) => alpha(theme.palette.common.white, 0.72),
-                    bgcolor: (theme) => alpha(theme.palette.grey[900], 0.48),
+                    color: (theme) => alpha(theme.palette.common.white, 0.7),
+                    bgcolor: (theme) => alpha(theme.palette.grey[900], 0.38),
                     '&:hover': {
                       bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
                     },
@@ -77,6 +89,26 @@ export default function MultiFilePreview({ thumbnail, files, onRemove, sx }) {
                 >
                   <Iconify icon="eva:close-fill" width={16} />
                 </IconButton>
+              )}
+
+              {FORMAT_IMG_VISIBBLE.some(format => fileType.match(format))  && (
+                  <IconButton
+                    size="small"
+                    onClick={()=>previewHandle(file)}
+                    sx={{
+                      top: 4,
+                      right: 25,
+                      p: '1px',
+                      position: 'absolute',
+                      color: (theme) => alpha(theme.palette.common.white, 0.7),
+                      bgcolor: (theme) => alpha(theme.palette.grey[900], 0.38),
+                      '&:hover': {
+                        bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
+                      },
+                    }}
+                  >
+                    <Iconify icon="icon-park-outline:preview-open" width={18} />
+                  </IconButton>
               )}
             </Stack>
           );
@@ -119,6 +151,10 @@ export default function MultiFilePreview({ thumbnail, files, onRemove, sx }) {
           </Stack>
         );
       })}
+      {selectedFile && (
+      <ImagePreviewDialog file={selectedFile} preview={preview} closePreview={handleClosePreview} />
+      )}
     </AnimatePresence>
   );
 }
+export default memo(MultiFilePreview)

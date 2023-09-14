@@ -1,464 +1,390 @@
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Divider, Switch, Card, Grid, Typography, Modal , Fade, Box , Link ,Dialog,  DialogTitle, Stack} from '@mui/material';
+import { Card, Grid, Link, Tooltip, Breadcrumbs, Chip } from '@mui/material';
 // routes
-import { PATH_MACHINE , PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_MACHINE } from '../../routes/paths';
 // slices
-import { getMachines, getMachine, deleteMachine, setMachineEditFormVisibility } from '../../redux/slices/products/machine';
-import { getCustomer } from '../../redux/slices/customer/customer';
-import { getSite } from '../../redux/slices/customer/site';
-import Iconify from '../../components/iconify';
-import ViewFormSubtitle from '../components/ViewFormSubtitle';
-import ViewFormField from '../components/ViewFormField';
-import ViewFormAudit from '../components/ViewFormAudit';
-import ViewFormSwitch from '../components/ViewFormSwitch';
-import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
+import {
+  getConnntedMachine,
+  getMachines,
+  getMachine,
+  deleteMachine,
+  setMachineEditFormVisibility,
+  transferMachine,
+  setMachineVerification,
+} from '../../redux/slices/products/machine';
+import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
+import { getSite, resetSite, setSiteDialog } from '../../redux/slices/customer/site';
+
+import { setToolInstalledFormVisibility, setToolInstalledEditFormVisibility } from '../../redux/slices/products/toolInstalled';
+// hooks
+import useResponsive from '../../hooks/useResponsive';
+import { useSnackbar } from '../../components/snackbar';
+// components
+import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
+import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
+import ViewFormField from '../components/ViewForms/ViewFormField';
+import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
+import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
+import FormLabel from '../components/DocumentForms/FormLabel';
+import NothingProvided from '../components/Defaults/NothingProvided';
+import GoogleMaps from '../../assets/GoogleMaps';
+// constants
+import { BREADCRUMBS, TITLES, FORMLABELS } from '../../constants/default-constants';
+import { Snacks } from '../../constants/machine-constants';
+// utils
+import { fDate } from '../../utils/formatTime';
+// dialog
+import MachineDialog from '../components/Dialog/MachineDialog'
+import CustomerDialog from '../components/Dialog/CustomerDialog';
+import SiteDialog from '../components/Dialog/SiteDialog';
 
 // ----------------------------------------------------------------------
+
 export default function MachineViewForm() {
+  const userId = localStorage.getItem('userId');
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
+  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { machine , machineEditFormFlag } = useSelector((state) => state.machine);
-  const { customer } = useSelector((state) => state.customer);
-  const { site } = useSelector((state) => state.site);
+  const { enqueueSnackbar } = useSnackbar();
+  const { machine, transferMachineFlag } = useSelector((state) => state.machine);
+  const [disableTransferButton, setDisableTransferButton] = useState(true);
+  const [disableEditButton, setDisableEditButton] = useState(false);
+  const [disableDeleteButton, setDisableDeleteButton] = useState(false);
+  const [hasValidLatLong, setHasValidLatLong] = useState(false);
+  const isMobile = useResponsive('down', 'sm');
+  const handleInstallationSiteDialog = () =>{ dispatch(resetSite()); dispatch(getSite(machine?.customer?._id, machine?.instalationSite?._id)); dispatch(setSiteDialog(true))}
+  const handleBillingSiteDialog = () =>{ dispatch(resetSite()); dispatch(getSite(machine?.customer?._id, machine?.billingSite?._id)); dispatch(setSiteDialog(true))}
+
+  const hasValidArray = (array) =>
+    array.some((obj) => {
+      const lat = obj?.lat;
+      const long = obj?.long;
+      return lat !== undefined && long !== undefined && lat !== '' && long !== '';
+    });
+
+  const latLongValues = useMemo(
+    () => [
+      {
+        lat: machine?.instalationSite?.lat || '',
+        long: machine?.instalationSite?.long || '',
+      },
+      {
+        lat: machine?.billingSite?.lat || '',
+        long: machine?.billingSite?.long || '',
+      },
+    ],
+    [machine]
+  );
+
+  useEffect(() => {
+    dispatch(setSiteDialog(false))
+    dispatch(setCustomerDialog(false));
+    setOpenMachineConnection(false);
+    dispatch(setToolInstalledEditFormVisibility(false));
+    dispatch(setToolInstalledFormVisibility(false));
+    const isValid = hasValidArray(latLongValues);
+    setHasValidLatLong(isValid);
+  }, [machine, latLongValues, setHasValidLatLong, dispatch ]);
 
   useLayoutEffect(() => {
-    dispatch(setMachineEditFormVisibility(false))
-    if(machine?.customer){
-      dispatch(getCustomer(machine?.customer?._id))
+    dispatch(setMachineEditFormVisibility(false));
+    if (machine.transferredMachine || !machine.isActive || !isSuperAdmin) {
+      setDisableTransferButton(true);
+    } else {
+      setDisableTransferButton(false);
     }
-  }, [ dispatch ,machine ])
+    if (machine.transferredMachine) {
+      setDisableEditButton(true);
+      setDisableDeleteButton(true);
+    } else {
+      setDisableEditButton(false);
+      setDisableDeleteButton(false);
+    }
+    if (machine?.customer) {
+      dispatch(getCustomer(machine?.customer?._id));
+    }
+  }, [dispatch, machine, transferMachineFlag, userId, isSuperAdmin]);
+
   const handleEdit = () => {
     dispatch(setMachineEditFormVisibility(true));
-  }
-  const handleViewCustomer = (id) => {
-    navigate(PATH_DASHBOARD.customer.view(id));
   };
+
+  const handleTransfer = async () => {
+    try {
+      const response = await dispatch(transferMachine(machine));
+      const machineId = response.data.Machine._id;
+      navigate(PATH_MACHINE.machines.view(machineId));
+      enqueueSnackbar(Snacks.machineTransferSuccess);
+    } catch (error) {
+      if (error?.Message) {
+        enqueueSnackbar(error?.Message, { variant: `error` });
+      } else if (error?.message) {
+        enqueueSnackbar(error?.message, { variant: `error` });
+      } else {
+        enqueueSnackbar(Snacks.machineFailedTransfer, { variant: `error` });
+      }
+      console.error(error);
+    }
+  };
+
   const onDelete = async () => {
-    await dispatch(deleteMachine(machine._id));
-    dispatch(getMachines());
-    navigate(PATH_MACHINE.machine.list)
+    try {
+      await dispatch(deleteMachine(machine._id));
+      dispatch(getMachines());
+      navigate(PATH_MACHINE.machines.list);
+    } catch (err) {
+      enqueueSnackbar(Snacks.machineFailedDelete, { variant: `error` });
+      console.log('Error:', err);
+    }
   };
-  const [openCustomer, setOpenCustomer] = useState(false);
-  const [openInstallationSite, setOpenInstallationSite] = useState(false);
-  const [openBilingSite, setOpenBilingSite] = useState(false);
+  const handleVerification = async () => {
+    try {
+      await dispatch(setMachineVerification(machine._id, machine?.isVerified));
+      dispatch(getMachine(machine._id));
+      enqueueSnackbar(Snacks.machineVerifiedSuccess);
+    } catch (error) {
+      console.log(error);
+      enqueueSnackbar(Snacks.machineFailedVerification, { variant: 'error' });
+    }
+  };
+  const [openMachineConnection, setOpenMachineConnection] = useState(false);
 
-  const handleOpenCustomer = () => setOpenCustomer(true);
-  const handleCloseCustomer = () => setOpenCustomer(false);
-  const handleOpenInstallationSite = () => setOpenInstallationSite(true);
-  const handleCloseInstallationSite = () => setOpenInstallationSite(false);
-  const handleOpenBillingSite = () => setOpenBilingSite(true);
-  const handleCloseBillingSite = () => setOpenBilingSite(false);
 
+  const handleCustomerDialog = () => dispatch(setCustomerDialog(true));
+  const handleOpenMachineConnection = async (id) => {
+    try {
+      await dispatch(getConnntedMachine(id));
+      setOpenMachineConnection(true);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  const handleCloseMachineConnection = () => setOpenMachineConnection(false);
+
+  const linkedMachines = machine?.machineConnections?.map((machineConnection, index) => (
+    <Chip sx={{m:0.2}} onClick={() => handleOpenMachineConnection(machineConnection.connectedMachine._id)} label={machineConnection.connectedMachine.serialNo ? machineConnection.connectedMachine.serialNo : 'NA'} />
+  ));
 
   const defaultValues = useMemo(
     () => ({
-      id:                       machine?._id || "",
-      name:                     machine?.name || "",
-      serialNo:                 machine?.serialNo || "",
-      parentMachine:            machine?.parentMachine?.name || "",
-      parentSerialNo:           machine?.parentMachine?.serialNo || "",
-      supplier:                 machine?.supplier?.name || "",
-      workOrderRef:             machine?.workOrderRef || "",
-      machineModel:             machine?.machineModel?.name || "",
-      status:                   machine?.status?.name || "",
-      customer:                 machine?.customer || "",
-      instalationSite:          machine?.instalationSite || "",
-      siteMilestone:            machine?.siteMilestone || "",
-      billingSite:              machine?.billingSite|| "",
-      description:              machine?.description || "",
-      customerTags:             machine?.customerTags || "",
-      accountManager:           machine?.accountManager || "",
-      projectManager:           machine?.projectManager || "",
-      supportManager:           machine?.supportManager || "",
-      isActive:                 machine?.isActive,
-      createdByFullName:        machine?.createdBy?.name ,
-      createdAt:                machine?.createdAt ,
-      createdIP:                machine?.createdIP ,
-      updatedByFullName:        machine?.updatedBy?.name ,
-      updatedAt:                machine?.updatedAt ,
-      updatedIP:                machine?.updatedIP ,
-    }
-    ),
+      id: machine?._id || '',
+      name: machine?.name || '',
+      serialNo: machine?.serialNo || '',
+      parentMachine: machine?.parentMachine?.name || '',
+      alias: machine?.alias || '',
+      parentSerialNo: machine?.parentMachine?.serialNo || '',
+      supplier: machine?.supplier?.name || '',
+      workOrderRef: machine?.workOrderRef || '',
+      machineModel: machine?.machineModel?.name || '',
+      status: machine?.status?.name || '',
+      customer: machine?.customer || '',
+      siteMilestone: machine?.siteMilestone || '',
+      instalationSite: machine?.instalationSite || '',
+      billingSite: machine?.billingSite || '',
+      installationDate: machine?.installationDate || '',
+      shippingDate: machine?.shippingDate || '',
+      description: machine?.description || '',
+      customerTags: machine?.customerTags || '',
+      accountManager: machine?.accountManager || '',
+      projectManager: machine?.projectManager || '',
+      supportManager: machine?.supportManager || '',
+      isActive: machine?.isActive,
+      createdByFullName: machine?.createdBy?.name,
+      createdAt: machine?.createdAt,
+      createdIP: machine?.createdIP,
+      updatedByFullName: machine?.updatedBy?.name,
+      updatedAt: machine?.updatedAt,
+      updatedIP: machine?.updatedIP,
+    }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [machine]
   );
 
   return (
-    <Card sx={{ p: 3 }}>
-      <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
-      <Grid container>
-        <ViewFormField
-          sm={6}
-          heading="Serial No"
-          param={defaultValues?.serialNo}
-          isActive={defaultValues.isActive}
-        />
-        <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
-        <ViewFormField
-          sm={6}
-          heading="Previous Machine Serial No"
-          param={defaultValues?.parentSerialNo}
-        />
-        <ViewFormField sm={6} heading="Previous Machine" param={defaultValues?.parentMachine} />
-        <ViewFormField sm={6} heading="Supplier" param={defaultValues?.supplier} />
-        <ViewFormField sm={6} heading="Machine Model" param={defaultValues?.machineModel} />
-        <ViewFormField sm={6} heading="Status" param={defaultValues?.status} />
-        <ViewFormField
-          sm={6}
-          heading="Work Order / Perchase Order"
-          param={defaultValues?.workOrderRef}
-        />
-        <ViewFormField
-          sm={12}
-          heading="Customer"
-          objectParam={
-            defaultValues.customer ? (
-              <Link onClick={handleOpenCustomer} href="#" underline="none">
-                {defaultValues.customer?.name}
-              </Link>
-            ) : (
-              ''
-            )
-          }
-        />
-        <ViewFormField
-          sm={6}
-          heading="Installation Site"
-          objectParam={
-            defaultValues.instalationSite ? (
-              <Link onClick={handleOpenInstallationSite} href="#" underline="none">
-                {defaultValues.instalationSite?.name}
-              </Link>
-            ) : (
-              ''
-            )
-          }
-        />
-        <ViewFormField
-          sm={6}
-          heading="Billing Site"
-          objectParam={
-            defaultValues.billingSite ? (
-              <Link onClick={handleOpenBillingSite} href="#" underline="none">
-                {defaultValues.billingSite?.name}
-              </Link>
-            ) : (
-              ''
-            )
-          }
-        />
-        <ViewFormField sm={12} heading="Nearby Milestone" param={defaultValues?.siteMilestone} />
-        <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
-        {/* <ViewFormField sm={6} heading="Tags" param={defaultValues?.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
-      </Grid>
-      <Grid container>
-        <Grid item container sx={{ py: '2rem' }}>
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            sx={{
-              backgroundImage: (theme) =>
-                `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
-            }}
-            >
-            <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>
-              Howick Resources
-            </Typography>
-          </Grid>
-        </Grid>
-
-        <ViewFormField
-          sm={6}
-          heading="Account Manager"
-          param={defaultValues?.accountManager?.firstName}
-          secondParam={defaultValues?.accountManager?.lastName}
-        />
-        <ViewFormField
-          sm={6}
-          heading="Project Manager"
-          param={defaultValues?.projectManager?.firstName}
-          secondParam={defaultValues?.projectManager?.lastName}
-        />
-        <ViewFormField
-          sm={6}
-          heading="Suppport Manager"
-          param={defaultValues?.supportManager?.firstName}
-          secondParam={defaultValues?.supportManager?.lastName}
-        />
-        <ViewFormSwitch isActive={defaultValues.isActive} />
-      </Grid>
-      <Grid container>
-        <ViewFormAudit defaultValues={defaultValues} />
-      </Grid>
-
-      <Dialog
-        open={openCustomer}
-        onClose={handleCloseCustomer}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
-        >
-        <Grid
-          container
-          item
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            bgcolor: 'primary.main',
-            color: 'primary.contrastText',
-            padding: '10px',
-          }}
-        >
-          <Typography variant="h4" sx={{ px: 2 }}>
-            Customer{' '}
-          </Typography>{' '}
-          <Link onClick={() => handleCloseCustomer()} href="#" underline="none" sx={{ ml: 'auto' }}>
-            {' '}
-            <Iconify icon="mdi:close-box-outline" />
-          </Link>
-        </Grid>
-        <Grid item container sx={{ px: 2, pt: 2 }}>
-          <ViewFormField sm={12} heading="Name" param={customer?.name} />
-          <ViewFormField sm={6} heading="Trading Name" param={customer?.tradingName} />
-          <ViewFormField sm={6} heading="Phone" param={customer?.mainSite?.phone} />
-          <ViewFormField sm={6} heading="Fax" param={customer?.mainSite?.fax} />
-          <ViewFormField sm={6} heading="Email" param={customer?.mainSite?.email} />
-          <ViewFormField sm={6} heading="Site Name" param={customer?.mainSite?.name} />
-          <Grid item container sx={{ py: '2rem' }}>
-            <Grid
-              item
-              xs={12}
-              sm={12}
-              sx={{
-                backgroundImage: (theme) =>
-                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
-              }}
-            >
-              <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>
-                Address Information
-              </Typography>
-            </Grid>
-          </Grid>
-          <ViewFormField sm={6} heading="Street" param={customer?.mainSite?.address?.street} />
-          <ViewFormField sm={6} heading="Suburb" param={customer?.mainSite?.address?.suburb} />
-          <ViewFormField sm={6} heading="City" param={customer?.mainSite?.address?.city} />
-          <ViewFormField sm={6} heading="Region" param={customer?.mainSite?.address?.region} />
-          <ViewFormField sm={6} heading="Post Code" param={customer?.mainSite?.address?.postcode} />
-          <ViewFormField sm={12} heading="Country" param={customer?.mainSite?.address?.country} />
-          <ViewFormField
-            sm={6}
-            heading="Primary Biling Contact"
-            param={
-              customer?.primaryBillingContact
-                ? `${customer?.primaryBillingContact?.firstName} ${customer?.primaryBillingContact?.lastName}`
-                : ''
-            }
-          />
-          <ViewFormField
-            sm={6}
-            heading="Primary Technical Contact"
-            param={
-              customer?.primaryTechnicalContact
-                ? `${customer?.primaryTechnicalContact?.firstName} ${customer?.primaryTechnicalContact?.lastName}`
-                : ''
-            }
-          />
-        </Grid>
-        <Grid item container sx={{ px: 2, pb: 3 }}>
-          <Grid item container sx={{ py: '2rem' }}>
-            <Grid
-              item
-              xs={12}
-              sm={12}
-              sx={{
-                backgroundImage: (theme) =>
-                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
-              }}
-            >
-              <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
-                Howick Resources{' '}
-              </Typography>
-            </Grid>
-          </Grid>
-          <ViewFormField
-            sm={6}
-            heading="Account Manager"
-            param={customer?.accountManager?.firstName}
-            secondParam={customer?.accountManager?.lastName}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Project Manager"
-            param={customer?.projectManager?.firstName}
-            secondParam={customer?.projectManager?.lastName}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Suppport Manager"
-            param={customer?.supportManager?.firstName}
-            secondParam={customer?.supportManager?.lastName}
-          />
-        </Grid>
-        <Grid item sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} sm={12}>
-          <Link
-            onClick={() => handleViewCustomer(customer._id)}
-            href="#"
-            underline="none"
-            sx={{
-              ml: 'auto',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              px: 3,
-              pb: 3,
-            }}
+    <>
+      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+        <Grid item xs={12} md={6}>
+          <Breadcrumbs
+            aria-label="breadcrumb"
+            separator="›"
+            sx={{ fontSize: '12px', color: 'text.disabled' }}
           >
-            {' '}
-            <Typography variant="body" sx={{ px: 2 }}>
-              Go to customer
-            </Typography>
-            <Iconify icon="mdi:share" />
-          </Link>
+            <BreadcrumbsLink to={PATH_MACHINE.machines.list} name={BREADCRUMBS.MACHINES} />
+            <BreadcrumbsLink to={PATH_MACHINE.machines.view(machine._id)} name={machine.serialNo} />
+          </Breadcrumbs>
         </Grid>
-      </Dialog>
+        {!isMobile && <AddButtonAboveAccordion isCustomer />}
+      </Grid>
+      <Grid container direction="row" mt={isMobile && 2}>
+        <Card sx={{ p: 3 }}>
+          <ViewFormEditDeleteButtons
+            sx={{ pt: 5 }}
+            verificationCount={machine?.verifications?.length}
+            isVerified={machine?.verifications?.some((verified) => verified.verifiedBy?._id === userId)}
+            handleVerification={handleVerification}
+            disableTransferButton={disableTransferButton}
+            disableEditButton={disableEditButton}
+            disableDeleteButton={disableDeleteButton }
+            handleEdit={handleEdit}
+            onDelete={onDelete}
+            handleTransfer={handleTransfer}
+          />
 
-      <Dialog
-        open={openInstallationSite}
-        onClose={handleCloseInstallationSite}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
-        >
-        <Grid item
-          container
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            bgcolor: 'primary.main',
-            color: 'primary.contrastText',
-            padding: '10px',
-          }}
-        >
-          <Typography variant="h4" sx={{ px: 2 }}>
-            Installation Site{' '}
-          </Typography>{' '}
-          <Link
-            onClick={() => handleCloseInstallationSite()}
-            href="#"
-            underline="none"
-            sx={{ ml: 'auto' }}
-            >
-            {' '}
-            <Iconify icon="mdi:close-box-outline" />
-          </Link>
-        </Grid>
-        <Grid item container sx={{ p: 2 }}>
-          <ViewFormField sm={12} heading="Name" param={defaultValues?.instalationSite?.name} />
-          <ViewFormField sm={6} heading="Phone" param={defaultValues?.instalationSite?.phone} />
-          <ViewFormField sm={6} heading="Fax" param={defaultValues?.instalationSite?.fax} />
-          <ViewFormField sm={6} heading="Email" param={defaultValues?.instalationSite?.email} />
-          <ViewFormField sm={6} heading="Website" param={defaultValues?.instalationSite?.website} />
-          <ViewFormField
-            sm={6}
-            heading="Street"
-            param={defaultValues?.instalationSite?.address?.street}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Suburb"
-            param={defaultValues?.instalationSite?.address?.suburb}
-          />
-          <ViewFormField
-            sm={6}
-            heading="City"
-            param={defaultValues?.instalationSite?.address?.city}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Region"
-            param={defaultValues?.instalationSite?.address?.region}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Post Code"
-            param={defaultValues?.instalationSite?.address?.postcode}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Country"
-            param={defaultValues.instalationSite?.address?.country}
-          />
-        </Grid>
-      </Dialog>
+          <Grid display="inline-flex">
+            <Tooltip title="Active">
+              <ViewFormField sm={12} isActive={defaultValues.isActive} />
+            </Tooltip>
+            <Tooltip title="Verified By">
+              <ViewFormField
+                sm={12}
+                machineVerificationCount={machine?.verifications?.length}
+                verified
+                machineVerifiedBy={machine?.verifications}
+              />
+            </Tooltip>
+          </Grid>
 
-      <Dialog
-        open={openBilingSite}
-        onClose={handleCloseBillingSite}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
-        >
-        <Grid
-          container
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            bgcolor: 'primary.main',
-            color: 'primary.contrastText',
-            padding: '10px',
-          }}
-          >
-          <Typography variant="h4" sx={{ px: 2 }}>
-            Billing Site{' '}
-          </Typography>{' '}
-          <Link
-            onClick={() => handleCloseBillingSite()}
-            href="#"
-            underline="none"
-            sx={{ ml: 'auto' }}
-            >
-            {' '}
-            <Iconify icon="mdi:close-box-outline" />
-          </Link>
-        </Grid>
-        <Grid item container sx={{ p: 2 }}>
-          <ViewFormField sm={12} heading="Name" param={defaultValues?.billingSite?.name} />
-          <ViewFormField sm={6} heading="Phone" param={defaultValues?.billingSite?.phone} />
-          <ViewFormField sm={6} heading="Fax" param={defaultValues?.billingSite?.fax} />
-          <ViewFormField sm={6} heading="Email" param={defaultValues?.billingSite?.email} />
-          <ViewFormField sm={6} heading="Website" param={defaultValues?.billingSite?.website} />
-          <ViewFormField
-            sm={6}
-            heading="Street"
-            param={defaultValues.billingSite?.address?.street}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Suburb"
-            param={defaultValues.billingSite?.address?.suburb}
-          />
-          <ViewFormField sm={6} heading="City" param={defaultValues?.billingSite?.address?.city} />
-          <ViewFormField
-            sm={6}
-            heading="Region"
-            param={defaultValues?.billingSite?.address?.region}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Post Code"
-            param={defaultValues?.billingSite?.address?.postcode}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Country"
-            param={defaultValues?.billingSite?.address?.country}
-          />
-        </Grid>
-      </Dialog>
-    </Card>
+          <Grid container>
+            <FormLabel content={FORMLABELS.KEYDETAILS} />
+            <Grid container>
+              <Card sx={{ width: '100%', p: '1rem' }}>
+                <Grid container>
+                  <ViewFormField sm={4} heading="Serial No" param={defaultValues?.serialNo} />
+                  <ViewFormField
+                    sm={4}
+                    heading="Machine Model"
+                    param={defaultValues?.machineModel}
+                  />
+                  <ViewFormField
+                    sm={4}
+                    heading="Customer"
+                    node={
+                      defaultValues.customer && (
+                        <Link onClick={handleCustomerDialog} href="#" underline="none">
+                          {defaultValues.customer?.name}
+                        </Link>
+                      )
+                    }
+                  />
+                </Grid>
+              </Card>
+            </Grid>
+
+            <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
+            { defaultValues?.parentSerialNo ? <ViewFormField sm={6} heading="Previous Machine" param={defaultValues?.parentSerialNo} /> : ''}
+            <ViewFormField sm={12} heading="Alias" chips={defaultValues?.alias} />
+            <ViewFormField sm={6} heading="Supplier" param={defaultValues?.supplier} />
+            <ViewFormField sm={6} heading="Status" param={defaultValues?.status} />
+            <ViewFormField sm={12} heading="Connected Machiness" chipDialogArrayParam={linkedMachines} />
+
+            <ViewFormField
+              sm={12}
+              heading="Work Order / Purchase Order"
+              param={defaultValues?.workOrderRef}
+            />
+            <ViewFormField
+              sm={6}
+              heading="Installation Site"
+              node={
+                defaultValues.instalationSite && (
+                  <Link onClick={ handleInstallationSiteDialog } href="#" underline="none">
+                    {defaultValues.instalationSite?.name}
+                  </Link>
+                )
+              }
+            />
+            <ViewFormField
+              sm={6}
+              heading="Billing Site"
+              node={
+                defaultValues.billingSite && (
+                  <Link onClick={ handleBillingSiteDialog } href="#" underline="none">
+                    {defaultValues.billingSite?.name}
+                  </Link>
+                )
+              }
+            />
+            <ViewFormField
+              sm={6}
+              heading="Installation Date"
+              param={fDate(defaultValues?.installationDate)}
+            />
+            <ViewFormField
+              sm={6}
+              heading="Shipping Date"
+              param={fDate(defaultValues?.shippingDate)}
+            />
+            <ViewFormField
+              sm={12}
+              heading="Nearby Milestone"
+              param={defaultValues?.siteMilestone}
+            />
+            <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
+            {/* <ViewFormField sm={6} heading="Tags" param={defaultValues?.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
+          </Grid>
+
+          <Grid container>
+            <FormLabel content={FORMLABELS.HOWICK} />
+            <ViewFormField
+              sm={6}
+              heading="Account Manager"
+              param={defaultValues?.accountManager?.firstName}
+              secondParam={defaultValues?.accountManager?.lastName}
+            />
+            <ViewFormField
+              sm={6}
+              heading="Project Manager"
+              param={defaultValues?.projectManager?.firstName}
+              secondParam={defaultValues?.projectManager?.lastName}
+            />
+            <ViewFormField
+              sm={6}
+              heading="Suppport Manager"
+              param={defaultValues?.supportManager?.firstName}
+              secondParam={defaultValues?.supportManager?.lastName}
+            />
+            <ViewFormField />
+          </Grid>
+
+          <Grid container>
+            <FormLabel content={FORMLABELS.SITELOC} />
+            {hasValidLatLong ? (
+              <GoogleMaps machineView latlongArr={latLongValues} mapHeight="500px" />
+            ) : (
+              <NothingProvided content={TITLES.NO_SITELOC} />
+            )}
+          </Grid>
+
+          <Grid container sx={{ mt: 2 }}>
+            <ViewFormAudit defaultValues={defaultValues} />
+          </Grid>
+        </Card>
+      </Grid>
+
+      {/* connected machine dialog */}      
+      <MachineDialog 
+        openMachine={openMachineConnection}
+        handleCloseMachine={handleCloseMachineConnection}
+        handleConnectedMachine={openMachineConnection}
+      />
+
+      <CustomerDialog />
+
+      <SiteDialog
+        site={defaultValues?.instalationSite}
+        title="Installation Site"
+      />
+
+      <SiteDialog
+        site={defaultValues?.billingSite}
+        title="Billing Site"
+      />
+    </>
   );
 }

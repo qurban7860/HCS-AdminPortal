@@ -1,23 +1,29 @@
-import sum from 'lodash/sum';
-import uniq from 'lodash/uniq';
-import uniqBy from 'lodash/uniqBy';
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-
 const initialState = {
   intial: false,
   machineEditFormFlag: false,
+  transferMachineFlag: false,
   responseMessage: null,
   success: false,
   isLoading: false,
   error: null,
   machine: {},
+  machineDialog: false,
   machines: [],
+  connectedMachine: {},
+  activeMachines: [],
+  allMachines:[],
   customerMachines:[],
+  machineLatLongCoordinates: [],
+  transferDialogBoxVisibility: false,
+  filterBy: '',
+  page: 0,
+  rowsPerPage: 100,
 };
 
 const slice = createSlice({
@@ -30,19 +36,30 @@ const slice = createSlice({
       state.isLoading = true;
     },
 
-    // SET TOGGLE
-    setMachineEditFormVisibility(state, action){
-      state.machineEditFormFlag = action.payload;
-    },
-    
-    // RESET Machine
-    resetMachine(state){
-      state.machine = {};
-      state.responseMessage = null;
-      state.success = false;
+    // STOP LOADING
+    stopLoading(state) {
       state.isLoading = false;
     },
 
+    // SET DIALOGBOX VISIBILITY
+    setTransferDialogBoxVisibility(state, action) {
+      state.transferDialogBoxVisibility = action.payload;
+    },
+
+    // SET TOGGLE648ac5b7418fc12b70794fe4
+    setMachineEditFormVisibility(state, action){
+      state.machineEditFormFlag = action.payload;
+    },
+
+    // SET TOGGLE
+    setTransferMachineFlag(state, action){
+      state.transferMachineFlag = action.payload;
+    },
+    // SET TOGGLE
+    setMachineDialog(state, action){
+      state.machineDialog = action.payload;
+    },
+    
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -57,6 +74,28 @@ const slice = createSlice({
       state.machines = action.payload;
       state.initial = true;
     },
+    // GET Active Machines
+    getActiveMachinesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeMachines = action.payload;
+      state.initial = true;
+    },
+    // GET All Machines
+    getAllMachinesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.allMachines = action.payload;
+      state.initial = true;
+    },
+
+     // GET Connected Machine
+     getConnectedMachineSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.connectedMachine = action.payload;
+      state.initial = true;
+    },
 
     // GET Customer Machines
     getCustomerMachinesSuccess(state, action) {
@@ -66,12 +105,13 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // Reset Customer Machines
-    resetCustomerMachines(state){
-      state.customerMachines = [];
-      state.responseMessage = null;
-      state.success = false;
+
+    // GET Machine LatLong Coordinates
+    getMachineLatLongCoordinatesSuccess(state, action) {
       state.isLoading = false;
+      state.success = true;
+      state.machineLatLongCoordinates = action.payload;
+      state.initial = true;
     },
         
     // GET Machine
@@ -90,13 +130,48 @@ const slice = createSlice({
       state.initial = true;
     },
 
-
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+    // RESET MACHINE
+    resetMachine(state){
+      state.machine = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+    // RESET MACHINE
+    resetMachines(state){
+      state.machines = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
+    // RESET Active MACHINE
+    resetActiveMachines(state){
+      state.activeMachines = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
+    // Reset Customer Machines
+    resetCustomerMachines(state){
+      state.customerMachines = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+    // Set FilterBy
+    setFilterBy(state, action) {
+      state.filterBy = action.payload;
+    },
+    // Set PageRowCount
+    ChangeRowsPerPage(state, action) {
+      state.rowsPerPage = action.payload;
+    },
+    // Set PageNo
+    ChangePage(state, action) {
+      state.page = action.payload;
     },
   },
 });
@@ -107,15 +182,18 @@ export default slice.reducer;
 // Actions
 export const {
   setMachineEditFormVisibility,
+  stopLoading,
+  setTransferMachineFlag,
   resetCustomerMachines,
   resetMachine,
-  getCart,
-  addToCart,
+  resetMachines,
+  resetActiveMachines,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
-
+  setTransferDialogBoxVisibility,
+  setFilterBy,
+  ChangeRowsPerPage,
+  ChangePage,
+  setMachineDialog,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -127,7 +205,10 @@ export function getMachines() {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, 
       {
         params: {
-          isArchived: false
+          isArchived: false,
+          orderBy : {
+            createdAt:-1
+          }
         }
       });
       dispatch(slice.actions.getMachinesSuccess(response.data));
@@ -135,10 +216,117 @@ export function getMachines() {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
 
+
+// ----------------------------get Active Machines------------------------------------------
+
+export function getActiveMachines() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, 
+      {
+        params: {
+          isActive: true,
+          isArchived: false
+        }
+      });
+      dispatch(slice.actions.getActiveMachinesSuccess(response.data));
+      // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// ----------------------------get All Machines------------------------------------------
+
+export function getAllMachines() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, 
+      {
+        params: {
+          unfiltered: true,
+          isActive: true,
+          isArchived: false
+        }
+      });
+      dispatch(slice.actions.getAllMachinesSuccess(response.data));
+      // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// ----------------------------get Connected Machines------------------------------------------
+
+export function getConnntedMachine(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}`);
+      dispatch(slice.actions.getConnectedMachineSuccess(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+};
+
+// -------------------------Machine Verification---------------------------------------
+
+export function setMachineVerification(Id, verificationValue) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${Id}`, 
+      {
+          isVerified: !verificationValue,
+      });
+      dispatch(slice.actions.getActiveMachinesSuccess(response.data));
+      // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// ----------------------------get Active Model Machines------------------------------------------
+
+export function getActiveModelMachines(modelId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, 
+      {
+        params: {
+          isActive: true,
+          isArchived: false,
+          machineModel: modelId
+        }
+      });
+      dispatch(slice.actions.getActiveMachinesSuccess(response.data));
+      // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
 
 // ----------------------------------------------------------------------
 
@@ -149,15 +337,63 @@ export function getCustomerMachines(customerId) {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, 
       {
         params: {
-          isArchived: false,
           customer: customerId
         }
       });
       dispatch(slice.actions.getCustomerMachinesSuccess(response.data));
+      return response.data;
       // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+
+// ----------------------------------------------------------------------
+
+export function getCustomerArrayMachines(customerArr) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, 
+      {
+        params: {
+          isActive: true,
+          isArchived: false,
+          customerArr
+        }
+      });
+      dispatch(slice.actions.getCustomerMachinesSuccess(response.data));
+      return response.data;
+      // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// ------------------------------------------------------------------------------------
+
+export function getMachinesAgainstCountries(countries) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/getMachinesAgainstCountries`,
+      {
+        params: {
+          countries
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -172,6 +408,24 @@ export function getMachine(id) {
       dispatch(slice.actions.getMachineSuccess(response.data));
     } catch (error) {
       console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+
+// ----------------------------get Active Model Machines------------------------------------------
+
+export function getMachineLatLongData() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/machineCoordinates`);
+      dispatch(slice.actions.getMachineLatLongCoordinatesSuccess(response.data));
+      // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
+    } catch (error) {
+      console.log(error);
       dispatch(slice.actions.hasError(error.Message));
     }
   };
@@ -192,6 +446,7 @@ export function deleteMachine(id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -205,50 +460,65 @@ export function addMachine(params) {
       try {
         /* eslint-disable */
         let data = {
-          name: params.name,
           isActive: params.isActive,
-          siteMilestone: params.siteMilestone
         };
         /* eslint-enable */
-        
+        if(params.name){
+          data.name = params.name
+        }
+        if(params.siteMilestone){
+          data.siteMilestone = params.siteMilestone
+        }
+        if(params.machineConnectionVal){
+          data.machineConnections = params.machineConnectionVal.map(obj => obj._id);
+        }
+        if(params.alias){
+          data.alias = params.alias;        
+        }
         if(params.serialNo){
           data.serialNo = params.serialNo;        
         }
-        if(params.parentMachine){
-          data.parentMachine = params.parentMachine;        
+        if(params.parentSerialNo){
+          data.parentMachine = params.parentSerialNo._id;        
         }
         if(params.parentSerialNo){
-          data.parentSerialNo = params.parentSerialNo;        
+          data.parentSerialNo = params.parentSerialNo.serialNo;        
         }
         if(params.status){
-          data.status = params.status;        
+          data.status = params.status._id;        
         }
         if(params.supplier){
-          data.supplier = params.supplier;        
+          data.supplier = params.supplier._id;        
         }
-        if(params.machineModel){
-            data.machineModel = params.machineModel;        
+        if(params.model){
+            data.machineModel = params.model._id;        
         }
         if(params.workOrderRef){
           data.workOrderRef = params.workOrderRef;        
         }
         if(params.customer){
-          data.customer = params.customer;        
+          data.customer = params.customer._id;        
         }
         if(params.billingSite){
-          data.billingSite = params.billingSite;        
+          data.billingSite = params.billingSite._id;        
         }
         if(params.instalationSite){
-          data.instalationSite = params.instalationSite;        
+          data.instalationSite = params.instalationSite._id; 
         }
+        if(params.installationDate){
+          data.installationDate = params.installationDate;
+        } 
+        if(params.shippingDate){
+          data.shippingDate = params.shippingDate;
+        }    
         if(params.accountManager){
-          data.accountManager = params.accountManager;        
+          data.accountManager = params.accountManager._id;        
         }
         if(params.projectManager){
-            data.projectManager = params.projectManager;        
+            data.projectManager = params.projectManager._id;        
         }
         if(params.supportManager){
-            data.supportManager = params.supportManager;        
+            data.supportManager = params.supportManager._id;        
         }
         if(params.description){
           data.description = params.description;        
@@ -262,6 +532,7 @@ export function addMachine(params) {
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
+        throw error;
       }
     };
 
@@ -269,45 +540,147 @@ export function addMachine(params) {
 
 // --------------------------------------------------------------------------
 
-export function updateMachine(params) {
+export function updateMachine(machineId, params) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    console.log("params: " , params);
+    const machineConVal = params?.machineConnectionVal.map(obj => obj._id)
+    console.log(" machineConVal : " , machineConVal)
+    try {
+      const data = {
+        serialNo: params?.serialNo,
+        name: params?.name,
+        alias: params?.alias,
+        parentSerialNo: params?.parentSerialNo?.serialNo,
+        parentMachine: params?.parentSerialNo?.name,
+        supplier: params?.supplier?._id || null,
+        machineModel: params?.model?._id || null,
+        customer: params?.customer?._id || null,
+        status: params?.status?._id || null,
+        workOrderRef: params?.workOrderRef,
+        instalationSite: params?.instalationSite?._id || null,
+        billingSite: params?.billingSite?._id || null,
+        installationDate: params?.installationDate,
+        shippingDate: params?.shippingDate,
+        siteMilestone: params?.siteMilestone,
+        accountManager: params?.accountManager?._id || null,
+        projectManager: params?.projectManager?._id || null,
+        supportManager: params?.supportManager?._id || null,
+        description: params?.description,
+        customerTags: params?.customerTags,
+        machineConnections: params?.machineConnectionVal.map(obj => obj._id),
+        isActive: params?.isActive,
+      };
+      console.log("data ready for dispach : ", data);
+      // if(params?.serialNo){
+      //   data.serialNo = params.serialNo
+      // }
+      // if(params.name){
+      //   data.name = params.name 
+      // }
+      // if(params?.parentSerialNo?.serialNo){
+      //   data.parentSerialNo =params.parentSerialNo.serialNo
+      // }
+      // if(params?.parentSerialNo?.name){
+      //   data.parentMachine =params.parentSerialNo._id
+      // }
+      // if(params?.alias){
+      //   data.alias =  params.alias
+      // }
+      // if(params?.supplier?._id){
+      //   data.supplier = params.supplier._id
+      // }
+      // if(params?.model?._id){
+      //   data.machineModel = params.model._id
+      // }
+      // if(params?.customer?._id){
+      //   data.customer = params.customer._id
+      // }
+      // if(params?.status?._id){
+      //   data.status = params.status._id
+      // }
+      // if(params?.workOrderRef){
+      //   data.workOrderRef = params.workOrderRef
+      // }
+      // if(params?.instalationSite?._id){
+      //   data.instalationSite = params.instalationSite._id
+      // }
+      // if(params?.billingSite?._id){
+      //   data.billingSite = params.billingSite._id
+      // }
+      // if(params?.installationDate){
+      //   data.installationDate = params.installationDate
+      // }
+      // if(params?.shippingDate){
+      //   data.shippingDate = params.shippingDate
+      // }
+      // if(params?.siteMilestone){
+      //   data.siteMilestone = params.siteMilestone
+      // }
+      // if(params?.accountManager?._id){
+      //   data.accountManager = params.accountManager._id
+      // }
+      // if(params?.projectManager?._id){
+      //   data.projectManager = params.projectManager._id
+      // }
+      // if(params?.supportManager?._id){
+      //   data.supportManager = params.supportManager._id
+      // }
+      // if(params?.description){
+      //   data.description = params.description
+      // }
+
+      // if(params.machineConnectionVal){
+      //   data.machineConnections = params.machineConnectionVal.map(obj => obj._id);
+      // }
+     /* eslint-enable */
+      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}`,
+        data
+      );
+
+      dispatch(getMachine(machineId));
+      dispatch(slice.actions.setMachineEditFormVisibility(false));
+      // this.updateCustomerSuccess(response);
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+
+}
+
+// --------------------------------------------------------------------------
+
+export function transferMachine(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const formData = new FormData();
-
       const data = {
-        serialNo: params.serialNo,
+        machine: params._id,
         name: params.name,
-        parentSerialNo: params.parentSerialNo,
-        parentMachine: params.parentMachine,
-        status: params.status,
         supplier: params.supplier,
-        machineModel: params.machineModel,
         workOrderRef: params.workOrderRef,
-        customer: params.customer,
-        billingSite: params.billingSite,
-        instalationSite: params.instalationSite,
         siteMilestone: params.siteMilestone,
         accountManager: params.accountManager,
         projectManager: params.projectManager,
         supportManager: params.supportManager,
         description: params.description,
         customerTags: params.customerTags,
-        isActive: params.isActive,
       };
      /* eslint-enable */
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${params.id}`,
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/transferMachine`,
         data
       );
-
-      dispatch(getMachine(params.id));
-      dispatch(slice.actions.setMachineEditFormVisibility(false));
-
-      // this.updateCustomerSuccess(response);
+      dispatch(setTransferDialogBoxVisibility(false));
+      dispatch(getMachine(response.data.Machine.parentMachineID));
+      return response; // eslint-disable-line
 
     } catch (error) {
+      dispatch(slice.actions.stopLoading());
       console.error(error);
-      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+      // dispatch(slice.actions.hasError(error.Message));
     }
   };
 

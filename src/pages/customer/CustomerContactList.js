@@ -3,79 +3,48 @@ import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
-import { Stack, Card, Grid, Table, Button, Tooltip, TableBody, Container, IconButton, TableContainer, DialogTitle, Dialog,  Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import {
+  Stack,
+  Card,
+  Grid,
+  Button,
+  Typography,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+} from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-// routes
-import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
-import { useTable, getComparator, emptyRows, TableNoData, TableSkeleton, TableEmptyRows, TableHeadCustom, TableSelectedAction, TablePaginationCustom, } from '../../components/table';
+import { useTable, getComparator, TableNoData } from '../../components/table';
 import Iconify from '../../components/iconify';
 // sections
 import { getContacts, setContactFormVisibility } from '../../redux/slices/customer/contact';
 import ContactAddForm from './contact/ContactAddForm';
 import ContactEditForm from './contact/ContactEditForm';
 import ContactViewForm from './contact/ContactViewForm';
-import _mock from '../../_mock';
-import EmptyContent from '../../components/empty-content';
-
-// ----------------------------------------------------------------------
-
-const TABLE_HEAD = [
-  { id: 'name', label: 'Site', align: 'left' },
-  { id: 'email', label: 'Email', align: 'left' },
-  { id: 'website', label: 'Website', align: 'left' },
-  { id: 'isverified', label: 'Disabled', align: 'left' },
-  { id: 'created_at', label: 'Created At', align: 'left' },
-  { id: 'action', label: 'Actions', align: 'left' },
-];
-
-const _accordions = [...Array(8)].map((_, index) => ({
-  id: _mock.id(index),
-  value: `panel${index + 1}`,
-  heading: `Site ${index + 1}`,
-  subHeading: _mock.text.title(index),
-  detail: _mock.text.description(index),
-}));
 
 // ----------------------------------------------------------------------
 
 export default function CustomerContactList() {
-  const {
-    dense,
-    page,
-    order,
-    orderBy,
-    rowsPerPage,
-    setPage,
-    //
-    selected,
-    setSelected,
-    onSelectRow,
-    onSelectAllRows,
-    //
-    onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
-  } = useTable({
-    defaultOrderBy: 'createdAt',
+  const { dense, page, order, orderBy, rowsPerPage } = useTable({
+    defaultOrderBy: '-createdAt',
   });
   const [controlled, setControlled] = useState(false);
   const handleChangeControlled = (panel) => (event, isExpanded) => {
     setControlled(isExpanded ? panel : false);
   };
   const dispatch = useDispatch();
-  const { contacts, error, initial, responseMessage, contactEditFormVisibility, formVisibility } = useSelector((state) => state.contact);
+  const { contacts, error, initial, responseMessage, contactEditFormVisibility, formVisibility } =
+    useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
   const [checked, setChecked] = useState(false);
-  const toggleChecked = () =>
-    {
-      setChecked(value => !value);
-      dispatch(setContactFormVisibility(!formVisibility));
-    };
+  const toggleChecked = () => {
+    setChecked((value) => !value);
+    dispatch(setContactFormVisibility(!formVisibility));
+  };
   const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
@@ -86,11 +55,11 @@ export default function CustomerContactList() {
   const [expanded, setExpanded] = useState(false);
 
   const handleAccordianClick = (accordianIndex) => {
-   if(accordianIndex === activeIndex ){
-    setActiveIndex(null)
-   }else{
-    setActiveIndex(accordianIndex)
-   }
+    if (accordianIndex === activeIndex) {
+      setActiveIndex(null);
+    } else {
+      setActiveIndex(accordianIndex);
+    }
   };
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -99,18 +68,18 @@ export default function CustomerContactList() {
   };
   useLayoutEffect(() => {
     // dispatch(setFormVisibility(checked));
-    if(!formVisibility && !contactEditFormVisibility){
+    if (!formVisibility && !contactEditFormVisibility) {
       dispatch(getContacts(customer._id));
     }
   }, [dispatch, checked, customer, formVisibility, contactEditFormVisibility]);
 
   useEffect(() => {
     if (initial) {
-      if (contacts && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
+      // if (contacts && !error) {
+      //   enqueueSnackbar(responseMessage);
+      // } else {
+      //   enqueueSnackbar(error, { variant: `error` });
+      // }
       setTableData(contacts);
     }
   }, [contacts, error, responseMessage, enqueueSnackbar, initial]);
@@ -166,10 +135,10 @@ export default function CustomerContactList() {
                         {contact?.firstName} {contact.lastName}{' '}
                       </Grid>
                       <Grid item xs={12} sm={6} md={3}>
-                        {contact?.email && <Typography >{contact.email}</Typography>}
+                        {contact?.email && <Typography>{contact.email}</Typography>}
                       </Grid>
                       <Grid item xs={12} sm={9} md={2} display={{ sm: 'none', md: 'block' }}>
-                        {contact?.phone && <Typography >{contact.phone}</Typography>}
+                        {contact?.phone && <Typography>{contact.phone}</Typography>}
                       </Grid>
                       <Grid
                         item
@@ -178,7 +147,7 @@ export default function CustomerContactList() {
                         md={2}
                         display={{ sm: 'none', md: 'none', lg: 'block' }}
                       >
-                        {contact?.title && <Typography >{contact.title}</Typography>}
+                        {contact?.title && <Typography>{contact.title}</Typography>}
                       </Grid>
                       <Grid
                         item
@@ -188,9 +157,7 @@ export default function CustomerContactList() {
                         display={{ sm: 'none', md: 'none', lg: 'block' }}
                       >
                         {contact?.contactTypes && (
-                          <Typography >
-                            {Object.values(contact.contactTypes)?.join(', ')}
-                          </Typography>
+                          <Typography>{Object.values(contact.contactTypes)?.join(', ')}</Typography>
                         )}
                       </Grid>
                     </Grid>

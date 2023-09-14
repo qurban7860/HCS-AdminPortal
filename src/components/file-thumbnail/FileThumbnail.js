@@ -17,30 +17,31 @@ FileThumbnail.propTypes = {
 };
 
 export default function FileThumbnail({ file, tooltip, imageView, onDownload, sx, imgSx }) {
+
   const { name = '', path = '', preview = '' } = fileData(file);
 
   const format = fileFormat(path || preview);
 
   const renderContent =
-    format === 'image' && imageView ? (
-      <Box
+    format === 'images' && imageView ? (
+           <Box
         component="img"
         src={preview}
         sx={{
-          width: 1,
-          height: 1,
-          flexShrink: 0,
-          objectFit: 'cover',
-          ...imgSx,
-        }}
+              width: 1,
+              height: 1,
+              flexShrink: 0,
+              objectFit: 'cover',
+              ...imgSx,
+            }}
       />
     ) : (
       <Box
         component="img"
-        src={fileThumb(format)}
+        src={fileThumb(format.toLowerCase())}
         sx={{
-          width: 32,
-          height: 32,
+          width: 62,
+          height: 62,
           flexShrink: 0,
           ...sx,
         }}

@@ -82,7 +82,12 @@ export function RHFUpload({ name, multiple, helperText, ...other }) {
         multiple ? (
           <Upload
             multiple
-            accept={{ '': [] }}
+            accept=".png, .jpeg, .jpg, .gif, .bmp, .webp, 
+            .djvu, .heic, .heif, .ico, .jfif, .jp2, .jpe, .jpeg, .jpg,
+            .jps, .mng, .nef, .nrw, .orf, .pam, .pbm, .pcd, .pcx, .pef, 
+            .pes, .pfm, .pgm, .picon, .pict, .png, .pnm, .ppm, .psd, .raf, .ras,
+            .rw2, .sfw, .sgi, .svg, .tga, .tiff, .psd, .jxr, .wbmp, .x3f, .xbm, .xcf, .xpm,
+            .xwd, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .csv, .txt, .odp, .ods, .odt, .ott, .rtf"
             files={field.value}
             error={!!error}
             helperText={

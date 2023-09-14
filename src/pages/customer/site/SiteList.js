@@ -1,6 +1,5 @@
-import { Helmet } from 'react-helmet-async';
 import { useState, useEffect, useLayoutEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 // @mui
 import {
   Grid,
@@ -79,7 +78,6 @@ export default function SiteList() {
     onSelectAllRows,
     //
     onSort,
-    onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
@@ -102,11 +100,11 @@ export default function SiteList() {
 
   useEffect(() => {
     if (initial) {
-      if (sites && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
+      // if (sites && !error) {
+      //   enqueueSnackbar(responseMessage);
+      // } else {
+      //   enqueueSnackbar(error, { variant: `error` });
+      // }
       setTableData(sites);
     }
   }, [sites, error, responseMessage, enqueueSnackbar, initial]);
@@ -159,7 +157,7 @@ export default function SiteList() {
   };
 
   const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
+    const deleteRows = tableData.filter((row) => !selectedRows.includes(row?._id));
     setSelected([]);
     setTableData(deleteRows);
 
@@ -214,7 +212,7 @@ export default function SiteList() {
               onSelectAllRows={(checked) =>
                 onSelectAllRows(
                   checked,
-                  tableData.map((row) => row._id)
+                  tableData.map((row) => row?._id)
                 )
               }
               action={
@@ -238,7 +236,7 @@ export default function SiteList() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row._id)
+                      tableData.map((row) => row?._id)
                     )
                   }
                 />
@@ -249,24 +247,22 @@ export default function SiteList() {
                     .map((row, index) =>
                       row ? (
                         <SiteListTableRow
-                          key={row._id}
+                          key={row?._id}
                           row={row}
-                          selected={selected.includes(row._id)}
-                          onSelectRow={() => onSelectRow(row._id)}
-                          onDeleteRow={() => handleDeleteRow(row._id)}
-                          onEditRow={() => handleEditRow(row._id)}
-                          onViewRow={() => handleViewRow(row._id)}
+                          selected={selected.includes(row?._id)}
+                          onSelectRow={() => onSelectRow(row?._id)}
+                          onDeleteRow={() => handleDeleteRow(row?._id)}
+                          onEditRow={() => handleEditRow(row?._id)}
+                          onViewRow={() => handleViewRow(row?._id)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
-
                   <TableEmptyRows
                     height={denseHeight}
                     emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
                   />
-
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>

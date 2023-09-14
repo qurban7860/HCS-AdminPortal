@@ -6,7 +6,6 @@ import { CONFIG } from '../../../config-global';
 const _ = require('lodash');
 
 // ---------------------------------------------------------------------
-
 const initialState = {
   intial: false,
   customerEditFormFlag: false,
@@ -15,10 +14,14 @@ const initialState = {
   isLoading: false,
   error: null,
   customers: [],
+  activeCustomers: [],
+  allCustomers: [],
+  spCustomers: [],
   customer: {},
-  customerParams: {
-
-  }
+  customerDialog: false,
+  filterBy: '',
+  page: 0,
+  rowsPerPage: 100,
 };
 
 const slice = createSlice({
@@ -29,28 +32,20 @@ const slice = createSlice({
     startLoading(state) {
       state.isLoading = true;
     },
+    // STOP LOADING
+    stopLoading(state) {
+      state.isLoading = false;
+    },
 
     // SET TOGGLE
     setCustomerEditFormVisibility(state, action){
       state.customerEditFormFlag = action.payload;
     },
-    
-    // RESET CUSTOMER
-    resetCustomer(state){
-      state.customer = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
 
-    // RESET CUSTOMERS
-    resetCustomers(state){
-      state.customers = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
+    // SET TOGGLE
+    setCustomerDialog(state, action){
+      state.customerDialog = action.payload;
     },
-
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -66,6 +61,30 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // GET Active Customers
+    getActiveCustomersSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeCustomers = action.payload;
+      state.initial = true;
+    },
+
+    // GET Active Customers
+    getAllCustomersSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.allCustomers = action.payload;
+      state.initial = true;
+    },
+
+    // GET Active Customers
+    getActiveSPCustomersSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.spCustomers = action.payload;
+      state.initial = true;
+    },
+
     // GET Customer
     getCustomerSuccess(state, action) {
       state.isLoading = false;
@@ -74,7 +93,6 @@ const slice = createSlice({
       state.initial = true;
     },
 
-
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
       state.isLoading = false;
@@ -82,13 +100,40 @@ const slice = createSlice({
       state.initial = true;
     },
 
-
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+    // RESET CUSTOMER
+    resetCustomer(state){
+      state.customer = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+    // RESET CUSTOMERS
+    resetCustomers(state){
+      state.customers = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+    // RESET Active CUSTOMERS
+    resetActiveCustomers(state){
+      state.activeCustomers = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
+    // Set FilterBy
+    setFilterBy(state, action) {
+      state.filterBy = action.payload;
+    },
+    // Set PageRowCount
+    ChangeRowsPerPage(state, action) {
+      state.rowsPerPage = action.payload;
+    },
+    // Set PageNo
+    ChangePage(state, action) {
+      state.page = action.payload;
     },
   },
 });
@@ -101,13 +146,12 @@ export const {
   setCustomerEditFormVisibility,
   resetCustomer,
   resetCustomers,
-  getCart,
-  addToCart,
+  resetActiveCustomers,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
-
+  setFilterBy,
+  ChangeRowsPerPage,
+  ChangePage,
+  setCustomerDialog,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -119,7 +163,10 @@ export function getCustomers() {
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers`,
       {
         params: {
-          isArchived: false
+          isArchived: false,
+          orderBy : {
+            createdAt:-1
+          }
         }
       });
       dispatch(slice.actions.getCustomersSuccess(response.data));
@@ -127,6 +174,104 @@ export function getCustomers() {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// ---------------------------- get Active Customers------------------------------------------
+
+export function getActiveCustomers() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers`,
+      {
+        params: {
+          isActive: true,
+          isArchived: false
+        }
+      });
+      dispatch(slice.actions.getActiveCustomersSuccess(response.data));
+      // dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+
+// ---------------------------- get Active Customers------------------------------------------
+
+export function getAllCustomers() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers`,
+      {
+        params: {
+          unfiltered: true,
+          isActive: true,
+          isArchived: false
+        }
+      });
+      dispatch(slice.actions.getAllCustomersSuccess(response.data));
+      // dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// ---------------------------- get Active Customers------------------------------------------
+
+export function getCustomersAgainstCountries(countries) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/getCustomersAgainstCountries`,
+      {
+        params: {
+          isActive: true,
+          isArchived:false,
+          type: 'SP',
+          countries
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+
+// ---------------------------- get Active SP Customers------------------------------------------
+
+export function getActiveSPCustomers() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers`,
+      {
+        params: {
+          isActive: true,
+          isArchived: false,
+          type: 'SP'
+        }
+      });
+      dispatch(slice.actions.getActiveSPCustomersSuccess(response.data));
+      // dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -140,7 +285,6 @@ export function getCustomer(id) {
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${id}` ,
       {
         params: {
-          isArchived: false,
           flag: 'basic',
         }
       }
@@ -149,6 +293,7 @@ export function getCustomer(id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -161,13 +306,14 @@ export function deleteCustomer(id) {
     try {
       const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${id}`,
       {
-        isArchived: true, 
+        isArchived: true,
       });
       dispatch(slice.actions.setResponseMessage(response.data));
       // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -179,7 +325,6 @@ export function addCustomer(params) {
       dispatch(slice.actions.resetCustomer());
       dispatch(slice.actions.startLoading());
       try {
-        console.log('params------>', params);
         /* eslint-disable */
         let data = {
           name: params.name,
@@ -198,60 +343,60 @@ export function addCustomer(params) {
         // params.accountManager ? data.accountManager = params.accountManager : '';
 
         if(params.accountManager !== "null" && params.accountManager !== "undefined") {
-          data.accountManager = params.accountManager;        
+          data.accountManager = params.accountManager;
         }
 
         // params.projectManager ? data.projectManager = params.projectManager : '';
         if(params.projectManager !== "null" && params.projectManager !== "undefined"){
-          data.projectManager = params.projectManager;        
+          data.projectManager = params.projectManager;
         }
 
         // params.supportManager ? data.supportManager = params.supportManager : '';
         if(params.supportManager !== "null" && params.supportManager !== "undefined"){
-          data.supportManager = params.supportManager;        
+          data.supportManager = params.supportManager;
         }
 
         // params.phone ? data.phone = params.supportManager : '';
         if(params.phone){
-          data.mainSite.phone = params.phone;        
+          data.mainSite.phone = params.phone;
         }
 
         // params.email ? data.email = params.email : '';
         if(params.email){
-          data.mainSite.email = params.email;        
+          data.mainSite.email = params.email;
         }
 
         if(params.fax){
-          data.mainSite.fax = params.fax;        
+          data.mainSite.fax = params.fax;
         }
 
         if(params.website){
-          data.mainSite.website = params.website;        
+          data.mainSite.website = params.website;
         }
 
         if(params.street){
-          data.mainSite.address.street = params.street;        
+          data.mainSite.address.street = params.street;
         }
 
         if(params.suburb){
-          data.mainSite.address.suburb = params.suburb;        
+          data.mainSite.address.suburb = params.suburb;
         }
 
         if(params.city){
-          data.mainSite.address.city = params.city;        
+          data.mainSite.address.city = params.city;
         }
 
         if(params.postcode){
-          data.mainSite.address.postcode = params.postcode;        
+          data.mainSite.address.postcode = params.postcode;
         }
 
         if(params.region){
-          data.mainSite.address.region = params.region;        
+          data.mainSite.address.region = params.region;
         }
 
         if(params.country){
-          data.mainSite.address.country = params.country;        
-        }        
+          data.mainSite.address.country = params.country;
+        }
 
         // Billing Contact Information Start
         if(params.billingFirstName){
@@ -294,26 +439,45 @@ export function addCustomer(params) {
           technicalContact.email = params.technicalContactEmail;
         }
         // Technical Contact Information End
-        
+
         if(!_.isEmpty(billingContact)){
           data.billingContact = billingContact;
           if(params.sameContactFlag){
-            console.log('same contact');
             data.technicalContact = billingContact;
           }
-        }    
-        
+        }
+
         if(!params.sameContactFlag && !_.isEmpty(technicalContact)){
           data.technicalContact = technicalContact;
         }
 
         const response = await axios.post(`${CONFIG.SERVER_URL}crm/customers`, data);
-        dispatch(slice.actions.getCustomerSuccess(response.data.Customer));
+        return response
+        // dispatch(slice.actions.getCustomerSuccess(response.data.Customer));
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
+        throw error;
       }
     };
+
+}
+// ------------------------ Customer Verification ----------------------------------------
+
+export function setCustomerVerification(customerId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}`,{
+        isVerified: true,
+      });
+      dispatch(getCustomer(customerId));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
 
 }
 
@@ -323,7 +487,6 @@ export function updateCustomer(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const formData = new FormData();
       /* eslint-disable */
       let data = {
         id: params.id,
@@ -338,9 +501,9 @@ export function updateCustomer(params) {
         data.mainSite = null;
       }
       if(params.accountManager !== "null" && params.accountManager !== null){
-        data.accountManager = params.accountManager;       
+        data.accountManager = params.accountManager;
       }else{
-        data.accountManager = null;        
+        data.accountManager = null;
       }
       if(params.projectManager !== "null" && params.projectManager !== null){
         data.projectManager = params.projectManager;
@@ -353,16 +516,16 @@ export function updateCustomer(params) {
         data.supportManager = null;
       }
       if(params.primaryBillingContact !== "null" && params.primaryBillingContact !== null){
-        data.primaryBillingContact = params.primaryBillingContact;        
+        data.primaryBillingContact = params.primaryBillingContact;
       }else{
-        data.primaryBillingContact = null;   
+        data.primaryBillingContact = null;
       }
       if(params.primaryTechnicalContact !== "null" && params.primaryTechnicalContact !== null){
-        data.primaryTechnicalContact = params.primaryTechnicalContact;        
+        data.primaryTechnicalContact = params.primaryTechnicalContact;
       }else{
-        data.primaryTechnicalContact = null;  
+        data.primaryTechnicalContact = null;
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${params.id}`,
+      await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${params.id}`,
         data
       );
 
@@ -372,8 +535,10 @@ export function updateCustomer(params) {
       // this.updateCustomerSuccess(response);
 
     } catch (error) {
+      dispatch(slice.actions.stopLoading());
       console.error(error);
-      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+      // dispatch(slice.actions.hasError(error.Message));
     }
   };
 

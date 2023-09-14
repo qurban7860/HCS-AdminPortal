@@ -1,92 +1,75 @@
-import { Helmet } from 'react-helmet-async';
 import PropTypes from 'prop-types';
-import { useEffect, useLayoutEffect, useState } from 'react';
-import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
-
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 // @mui
-import { Tab, Card, Tabs, Container, Box, Button, Grid, Stack, Typography,tabsClasses } from '@mui/material';
-// routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { Tab, Card, Tabs, Container, Box, tabsClasses } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import {  getCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer/customer';
-import { getSites } from '../../redux/slices/customer/site';
-import { getContacts } from '../../redux/slices/customer/contact';
-
-// auth
-import { useAuthContext } from '../../auth/useAuthContext';
-// mock
+import { getCustomer } from '../../redux/slices/customer/customer';
 import {
-  _userAbout,
-  _userFeeds,
-  _userFriends,
-  _userGallery,
-  _userFollowers,
-} from '../../_mock/arrays';
+  setDocumentViewFormVisibility,
+  setDocumentHistoryViewFormVisibility,
+} from '../../redux/slices/document/document';
+
+import { getSites } from '../../redux/slices/customer/site';
+import { getActiveContacts } from '../../redux/slices/customer/contact';
 // components
 import Iconify from '../../components/iconify';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
-import { useSettingsContext } from '../../components/settings';
 // sections
-import { Cover } from '../components/Cover';
+import { Cover } from '../components/Defaults/Cover';
 
 import CustomerNoteList from './CustomerNoteList';
 import CustomerViewForm from './CustomerViewForm';
-import useResponsive from '../../hooks/useResponsive';
-
-
+// import useResponsive from '../../hooks/useResponsive';
+import UnderDevelopment from '../boundaries/UnderDevelopment';
 import CustomerEditForm from './CustomerEditForm';
-import CustomerSiteList from './CustomerSiteList';
-import CustomerContactList from './CustomerContactList';
+// import CustomerSiteList from './CustomerSiteList';
+import CustomerSiteDynamicList from './CustomerSiteDynamicList';
+// import CustomerContactList from './CustomerContactList';
+import CustomerContactDynamicList from './CustomerContactDynamicList';
 import CustomerMachineList from './CustomerMachineList';
-import DocumentList from '../document/customer/DocumentList';
+import DocumentTagPage from '../document/documents/DocumentTagPage';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
+// import { StyledCardContainer } from '../../theme/styles/default-styles';
 
 CustomerView.propTypes = {
   editPage: PropTypes.bool,
 };
 
-export default function CustomerView({editPage}) {
-
+export default function CustomerView({ editPage }) {
   const { id } = useParams();
-
   const dispatch = useDispatch();
-
   const { customer, customerEditFormFlag } = useSelector((state) => state.customer);
-
-  const { site, siteEditFormVisibility } = useSelector((state) => state.site);
-
+  const { siteEditFormVisibility } = useSelector((state) => state.site);
   const { contactEditFormVisibility } = useSelector((state) => state.contact);
-  const { noteEditFormVisibility} = useSelector((state) => state.note);
+  const { noteEditFormVisibility } = useSelector((state) => state.note);
   const [currentTab, setCurrentTab] = useState('customer-info');
-
-  const [editFlag, setEditFlag] = useState(false);
-  const toggleEditFlag = () => setEditFlag(value => !value);
-
-
-  const [currentComponent, setCurrentComponent] = useState(<CustomerViewForm/>);
-
-  const [customerFlag, setCustomerFlag] = useState(true);
-
-  const isMobile = useResponsive('down', 'sm');
+  // const [editFlag, setEditFlag] = useState(false);
+  // const toggleEditFlag = () => setEditFlag((value) => !value);
+  const [currentComponent, setCurrentComponent] = useState(<CustomerViewForm />);
+  // const [customerFlag, setCustomerFlag] = useState(true);
+  // const isMobile = useResponsive('down', 'sm');
 
   useEffect(() => {
-    if(id !== 'null'){
+    dispatch(setDocumentViewFormVisibility(false));
+    dispatch(setDocumentHistoryViewFormVisibility(false));
+
+    if (id !== 'null') {
       dispatch(getCustomer(id));
       dispatch(getSites(id));
-      dispatch(getContacts(id));
+      dispatch(getActiveContacts(id));
     }
   }, [dispatch, id]);
 
   useEffect(() => {
-    if(customerEditFormFlag){
-      setCurrentComponent(<CustomerEditForm/>);
-    }else{
-      setCustomerFlag(false);
-      setCurrentComponent(<CustomerViewForm/>);
+    if (customerEditFormFlag) {
+      setCurrentComponent(<CustomerEditForm />);
+    } else {
+      // setCustomerFlag(false);
+      setCurrentComponent(<CustomerViewForm />);
     }
-  }, [dispatch, customerEditFormFlag, customer]);
+  }, [dispatch, customerEditFormFlag, customer, id]);
 
   const TABS = [
     {
@@ -94,51 +77,55 @@ export default function CustomerView({editPage}) {
       value: 'customer-info',
       label: 'Customer Info',
       icon: <Iconify icon="mdi:badge-account" />,
-      component: currentComponent
+      component: currentComponent,
     },
     {
       disabled: customerEditFormFlag || contactEditFormVisibility || noteEditFormVisibility,
       value: 'sites',
       label: 'Sites',
       icon: <Iconify icon="mdi:map-legend" />,
-      component: <CustomerSiteList/>,
+      component: <CustomerSiteDynamicList />,
     },
     {
       disabled: customerEditFormFlag || siteEditFormVisibility || noteEditFormVisibility,
       value: 'contacts',
       label: 'Contacts',
       icon: <Iconify icon="mdi:account-multiple" />,
-      component: <CustomerContactList/>,
+      component: <CustomerContactDynamicList />,
     },
     {
       disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility,
       value: 'notes',
       label: 'Notes',
       icon: <Iconify icon="mdi:note-multiple" />,
-      component: <CustomerNoteList/>
+      component: <CustomerNoteList />,
     },
     {
-      disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility || noteEditFormVisibility,
+      disabled:
+        customerEditFormFlag ||
+        siteEditFormVisibility ||
+        contactEditFormVisibility ||
+        noteEditFormVisibility,
       value: 'documents',
       label: 'Documents',
       icon: <Iconify icon="mdi:folder-open" />,
-      component: <DocumentList/>
+      component: <DocumentTagPage customerPage />,
     },
     {
-      disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility || noteEditFormVisibility,
+      disabled:
+        customerEditFormFlag ||
+        siteEditFormVisibility ||
+        contactEditFormVisibility ||
+        noteEditFormVisibility,
       value: 'machines',
       label: 'Machines',
       icon: <Iconify icon="mdi:greenhouse" />,
-      component: <CustomerMachineList />
-    }
-
+      component: <CustomerMachineList />,
+    },
   ];
 
   return (
     <Container maxWidth={false}>
-      {/* <CustomBreadcrumbs
-          heading="Customer View"
-        /> */}
       <Card
         sx={{
           mb: 3,
@@ -147,14 +134,19 @@ export default function CustomerView({editPage}) {
         }}
       >
         <Cover
+          handleBackLinks={() => {
+            dispatch(setDocumentViewFormVisibility(false));
+            dispatch(setDocumentHistoryViewFormVisibility(false));
+          }}
           name={customer ? customer.name : 'New Customer'}
           photoURL={customer.name === 'HOWICK LTD.' ? <LogoAvatar /> : <CustomAvatar />}
           icon="ph:users-light"
         />
-
         <Tabs
           value={currentTab}
-          onChange={(event, newValue) => setCurrentTab(newValue)}
+          onChange={(event, newValue) => {
+            setCurrentTab(newValue);
+          }}
           variant="scrollable"
           aria-label="visible arrows tabs example"
           sx={{
@@ -188,50 +180,8 @@ export default function CustomerView({editPage}) {
       {TABS.map(
         (tab) =>
           tab.value === currentTab && (
-            <Box key={tab.value} height='100vh'>
-              {' '}
-              {tab.component ? (
-                tab.component
-              ) : (
-                <Grid container sx={{ justifyContent: 'center' }}>
-                  <Grid
-                    item
-                    sx={{
-                      opacity: '30%',
-                      marginTop: '50px',
-                      height: '40vh',
-                      display: 'flex',
-                    }}
-                  >
-                    <img
-                      src="/assets/illustrations/characters/character_5.png"
-                      alt="UNDER CONSTRUCTION"
-                    />
-                  </Grid>
-                  <Grid
-                    item
-                    sx={{
-                      display: 'block',
-                      justifyContent: 'center',
-                      textAlign: 'center',
-                      width: '50%',
-                      height: '40vh',
-                      opacity: '30%',
-                      position: 'relative',
-                      margin: '20px',
-                    }}
-                  >
-                    <Typography variant="h1">UNDER DEVELOPMENT..</Typography>
-                    <Typography variant="body1" >
-                      While we are still working on completing our website, we invite you to check
-                      back soon for updates. In the meantime, please feel free to contact us
-                      directly if you have any questions or concerns. We appreciate your patience
-                      and understanding during this time, and we look forward to serving you better
-                      through our new website. Thank you for your interest in our company.
-                    </Typography>
-                  </Grid>
-                </Grid>
-              )}{' '}
+            <Box key={tab.value} height="100vh">
+              {tab.component ? tab.component : <UnderDevelopment />}
             </Box>
           )
       )}

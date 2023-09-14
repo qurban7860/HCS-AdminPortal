@@ -1,154 +1,59 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
-import { sentenceCase } from 'change-case';
 // @mui
 import {
-  Stack,
-  Button,
   TableRow,
-  Checkbox,
-  MenuItem,
   TableCell,
-  IconButton,
-  Link,
 } from '@mui/material';
 // utils
+import { styled } from '@mui/material/styles';
 import { fDate } from '../../../utils/formatTime';
-import { fCurrency } from '../../../utils/formatNumber';
 // components
-import Iconify from '../../../components/iconify';
-import MenuPopover from '../../../components/menu-popover';
-import ConfirmDialog from '../../../components/confirm-dialog';
-import Label from '../../../components/label';
-
-import { useSelector } from '../../../redux/store';
-
+import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
+import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
-SiteListTableRow.propTypes = {
+LicenseListTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
-  onEditRow: PropTypes.func,
   onViewRow: PropTypes.func,
-  onSelectRow: PropTypes.func,
-  onDeleteRow: PropTypes.func,
 };
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: 'white',
+  },
+  '&:nth-of-type(even)': {
+    backgroundColor: '#f4f6f866',
+  },
+}));
 
 export default function LicenseListTableRow({
   row,
   selected,
-  onSelectRow,
-  onDeleteRow,
-  onEditRow,
   onViewRow,
 }) {
-  const { name, email, website, isDisabled, createdAt } = row;
-
-  const [openConfirm, setOpenConfirm] = useState(false);
-
-  const [openPopover, setOpenPopover] = useState(null);
-
-  // console.log('dep', departmentName);
-
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
-
-  const handleOpenPopover = (event) => {
-    setOpenPopover(event.currentTarget);
-  };
-
-  const handleClosePopover = () => {
-    setOpenPopover(null);
-  };
+  const {
+    licenseKey,
+    createdAt,
+    licenseDetail: {
+      version,
+      type,
+      exTime,
+    },
+  } = row;
+  // const exTime =  row.licenseDetail.extensionTime;
+  const smScreen = useScreenSize('sm')
 
   return (
-    <>
-      <TableRow hover selected={selected}>
-        {/* <TableCell padding="checkbox">
-          <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell> */}
+      <StyledTableRow hover selected={selected}>
+        
+        <LinkTableCell align="left" param={licenseKey} onClick={onViewRow} />
+        { smScreen && <TableCell align="left">{version}</TableCell>}
+        { smScreen && <TableCell align="left">{type}</TableCell>}
+        <TableCell align="right">{fDate(exTime)}</TableCell>
+        <TableCell align="right">{fDate(createdAt)}</TableCell>
+  
+      </StyledTableRow>
 
-        <TableCell>
-          <Stack direction="row" alignItems="center" spacing={2}>
-
-            <Link
-              noWrap
-              color="inherit"
-              variant="subtitle2"
-              onClick={onViewRow}
-              sx={{ cursor: 'pointer' }}
-            >
-              {name}
-            </Link>
-          </Stack>
-        </TableCell>
-
-        <TableCell>{email}</TableCell>
-
-        <TableCell>{website}</TableCell>
-
-        <TableCell align="false">
-          <Label
-            variant="soft"
-            color={(isDisabled === true && 'error') || 'success'}
-            sx={{ textTransform: 'capitalize' }}
-          >
-            {isDisabled === false ? 'false' : true}
-          </Label>
-        </TableCell>
-
-        <TableCell>{fDate(createdAt)}</TableCell>
-
-        <TableCell align="center">
-         <Switch  checked = { isDisabled } disabled  sx={{my:-1}}/>
-        </TableCell>
-      </TableRow>
-
-      <MenuPopover
-        open={openPopover}
-        onClose={handleClosePopover}
-        arrow="right-top"
-        sx={{ width: 140 }}
-      >
-        <MenuItem
-          onClick={() => {
-            handleOpenConfirm();
-            handleClosePopover();
-          }}
-          sx={{ color: 'error.main' }}
-        >
-          <Iconify icon="eva:trash-2-outline" />
-          Delete
-        </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            onEditRow();
-            handleClosePopover();
-          }}
-        >
-          <Iconify icon="eva:edit-fill" />
-          Edit
-        </MenuItem>
-      </MenuPopover>
-
-      <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content="Are you sure want to delete?"
-        action={
-          <Button variant="contained" color="error" onClick={onDeleteRow}>
-            Delete
-          </Button>
-        }
-      />
-    </>
   );
 }

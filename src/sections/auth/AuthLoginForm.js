@@ -1,24 +1,27 @@
 import { useState, useEffect } from 'react';
 import * as Yup from 'yup';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Link, Stack, Alert, IconButton, InputAdornment, Checkbox, FormControlLabel } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+
 // routes
 import { PATH_AUTH } from '../../routes/paths';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
+
 // components
 import Iconify from '../../components/iconify';
-import FormProvider, { RHFTextField, RHFCheckbox} from '../../components/hook-form';
-import theme from '../../theme';
+import FormProvider, { RHFTextField} from '../../components/hook-form';
+
 
 // ----------------------------------------------------------------------
 
 export default function AuthLoginForm() {
+  const navigate = useNavigate();
   const { login } = useAuthContext();
   const regEx = /^[4][0-9][0-9]$/
   const [showPassword, setShowPassword] = useState(false);
@@ -26,11 +29,12 @@ export default function AuthLoginForm() {
   const [upassword, setPassword] = useState("");
   const [uremember, setRemember] = useState(false);
   
+  
   useEffect(() => {
-    const storedEmail =       localStorage.getItem("email");
-    const storedPassword =    localStorage.getItem("password");
+    const storedEmail =       localStorage.getItem("UserEmail");
+    const storedPassword =    localStorage.getItem("UserPassword");
     const storedRemember =    localStorage.getItem("remember");
-    if (storedEmail && storedPassword) {
+    if (storedEmail && storedPassword && storedRemember) {
       setEmail(storedEmail);
       setPassword(storedPassword);
       setRemember(true);
@@ -68,15 +72,20 @@ export default function AuthLoginForm() {
     }
     try {
       if (uremember) {
-        localStorage.setItem("email", data.email);
-        localStorage.setItem("password", data.password);
-        localStorage.setItem("remember", data.remember);
+        localStorage.setItem("UserEmail", data.email);
+        localStorage.setItem("UserPassword", data.password);
+        localStorage.setItem("remember", uremember);
       } else {
-        localStorage.removeItem("email");
-        localStorage.removeItem("password");
+        localStorage.removeItem("UserEmail");
+        localStorage.removeItem("UserPassword");
         localStorage.removeItem("remember");
       }
-    const response =   await login(data.email, data.password);
+      await login(data.email, data.password);
+
+      if(localStorage.getItem("MFA")) {
+        navigate(PATH_AUTH.authenticate);
+        localStorage.removeItem("MFA");
+      }
     } catch (error) {
       console.error("error : ",error);
       if(regEx.test(error.MessageCode)){
@@ -85,12 +94,12 @@ export default function AuthLoginForm() {
           ...error,
           message: error.Message,
         });
-    }else{
-      setError('afterSubmit', {
-        ...error,
-        message: "Something went wrong",
-      });
-    }
+      }else{
+        setError('afterSubmit', {
+          ...error,
+          message: "Something went wrong",
+        });
+      }
     }
   };
 
@@ -99,7 +108,7 @@ export default function AuthLoginForm() {
       <Stack spacing={3} sx={{ mt: 1 }}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
           
-        <RHFTextField type="email" name="email" value={uemail}  onChange={(e) => setEmail(e.target.value)} label="Email address"  autoComplete="username" required/>
+        <RHFTextField type="email" name="email" value={uemail}  onChange={(e) => setEmail(e.target.value)} label="Login/Email address"  autoComplete="username" required/>
 
         <RHFTextField
           name="password"

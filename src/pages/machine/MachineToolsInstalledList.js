@@ -1,158 +1,89 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
-import { useState, useEffect, useLayoutEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useState, useEffect, memo } from 'react';
 // @mui
 import {
   Stack,
+  Breadcrumbs,
   Card,
   Grid,
-  Table,
-  Button,
-  Tooltip,
-  TableBody,
-  Container,
-  IconButton,
-  TableContainer,
-  DialogTitle,
-  Dialog,
   Typography,
-  Accordion, AccordionSummary, AccordionDetails
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
+
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
-// components
+import { PATH_MACHINE } from '../../routes/paths';
+// hooks
 import { useSnackbar } from '../../components/snackbar';
-import { useSettingsContext } from '../../components/settings';
-import {
-  useTable,
-  getComparator,
-  emptyRows,
-  TableNoData,
-  TableSkeleton,
-  TableEmptyRows,
-  TableHeadCustom,
-  TableSelectedAction,
-  TablePaginationCustom,
-} from '../../components/table';
+// components
+import { useTable, getComparator, TableNoData } from '../../components/table';
+import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
+import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
 import Iconify from '../../components/iconify';
-import Scrollbar from '../../components/scrollbar';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
-import ConfirmDialog from '../../components/confirm-dialog';
 // sections
-import { setToolInstalledEditFormVisibility , setToolInstalledFormVisibility , updateToolInstalled , getToolsInstalled , getToolInstalled } from '../../redux/slices/products/toolInstalled';
-import { getTools } from '../../redux/slices/products/tools';
-
-import ToolsInstalledAddForm from './ToolsInstalled/ToolsInstalledAddForm'
+import {
+  setToolInstalledFormVisibility,
+  getToolsInstalled,
+} from '../../redux/slices/products/toolInstalled';
+import ToolsInstalledAddForm from './ToolsInstalled/ToolsInstalledAddForm';
 import ToolsInstalledEditForm from './ToolsInstalled/ToolsInstalledEditForm';
 import ToolsInstalledViewForm from './ToolsInstalled/ToolsInstalledViewForm';
+import { fDate } from '../../utils/formatTime';
+// constants
+import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
 
-import _mock from '../../_mock';
-import EmptyContent from '../../components/empty-content';
-import { fDate,fDateTime } from '../../utils/formatTime';
+// ----------------------------------------------------------------------;
 
-
-
-// ----------------------------------------------------------------------
-
-// const TABLE_HEAD = [
-//   { id: 'name', label: 'Site', align: 'left' },
-//   { id: 'email', label: 'Email', align: 'left' },
-//   { id: 'website', label: 'Website', align: 'left' },
-//   { id: 'isverified', label: 'Disabled', align: 'left' },
-//   { id: 'created_at', label: 'Created At', align: 'left' },
-//   { id: 'action', label: 'Actions', align: 'left' },
-
-// ];
-
-const STATUS_OPTIONS = [
-  // { id: '1', value: 'Order Received' },
-  // { id: '2', value: 'In Progress' },
-  // { id: '3', value: 'Ready For Transport' },
-  // { id: '4', value: 'In Freight' },
-  // { id: '5', value: 'Deployed' },
-  // { id: '6', value: 'Archived' },
-];
-
-// const STATUS_OPTIONS = [
-//   { value: 'all_sites', label: 'All Sites' },
-//   { value: 'deployable', label: 'All Deployable' },
-//   { value: 'pending', label: 'All Pending' },
-//   { value: 'archived', label: 'All Archived' },
-//   { value: 'undeployable', label: 'All Undeployable' }
-// ];
-
-const _accordions = [...Array(8)].map((_, index) => ({
-  id: _mock.id(index),
-  value: `panel${index + 1}`,
-  heading: `Site ${index + 1}`,
-  subHeading: _mock.text.title(index),
-  detail: _mock.text.description(index),
-}));
+// const _accordions = [...Array(8)].map((_, index) => ({
+//   id: _mock.id(index),
+//   value: `panel${index + 1}`,
+//   heading: `Site ${index + 1}`,
+//   subHeading: _mock.text.title(index),
+//   detail: _mock.text.description(index),
+// }));
 
 // ----------------------------------------------------------------------
 
-export default function MachineToolsInstalledList() {
-  const {
-    dense,
-    page,
-    order,
-    orderBy,
-    rowsPerPage,
-    setPage,
-    //
-    selected,
-    setSelected,
-    onSelectRow,
-    onSelectAllRows,
-    //
-    onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
-  } = useTable({
+function MachineToolsInstalledList() {
+  const { order, orderBy} = useTable({
     defaultOrderBy: 'createdAt',
   });
-
-
-  const [controlled, setControlled] = useState(false);
-
-  const handleChangeControlled = (panel) => (event, isExpanded) => {
-    setControlled(isExpanded ? panel : false);
-  };
-  const dispatch = useDispatch();
-
-  const { tools } = useSelector((state) => state.tool);
-  const { initial,error, responseMessage , toolInstalledEditFormVisibility , toolsInstalled, formVisibility } = useSelector((state) => state.toolInstalled);
   const { machine } = useSelector((state) => state.machine);
-  const toggleChecked = async () =>
-    {
-      dispatch(setToolInstalledFormVisibility (!formVisibility));
-    };
-
-  const { themeStretch } = useSettingsContext();
+  const {
+    initial,
+    error,
+    responseMessage,
+    toolInstalledEditFormVisibility,
+    toolsInstalled,
+    formVisibility,
+  } = useSelector((state) => state.toolInstalled);
+  const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const [filterName, setFilterName] = useState('');
+  const [filterName] = useState('');
   const [tableData, setTableData] = useState([]);
-  const [filterStatus, setFilterStatus] = useState([]);
+  const [filterStatus] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
 
-  const handleAccordianClick = (accordianIndex) => {
-   if(accordianIndex === activeIndex ){
-    setActiveIndex(null)
-   }else{
-    setActiveIndex(accordianIndex)
-   }
+  const toggleChecked = async () => {
+    dispatch(setToolInstalledFormVisibility(!formVisibility));
   };
 
-useLayoutEffect(() => {
-  // if(!formVisibility && !toolInstalledEditFormVisibility){
-  dispatch(getToolsInstalled(machine._id));
-  // }
-}, [dispatch, machine._id,toolInstalledEditFormVisibility, formVisibility]);
+  const handleAccordianClick = (accordianIndex) => {
+    if (accordianIndex === activeIndex) {
+      setActiveIndex(null);
+    } else {
+      setActiveIndex(accordianIndex);
+    }
+  };
+
+  useEffect(() => {
+    // if(!formVisibility && !toolInstalledEditFormVisibility){
+    dispatch(getToolsInstalled(machine._id));
+    // }
+  }, [dispatch, machine._id, toolInstalledEditFormVisibility, formVisibility]);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -160,44 +91,60 @@ useLayoutEffect(() => {
 
   useEffect(() => {
     if (initial) {
-      if (toolsInstalled && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
       setTableData(toolsInstalled);
     }
-  }, [toolsInstalled, error, responseMessage, enqueueSnackbar, initial]);
+  }, [toolsInstalled, error, responseMessage, enqueueSnackbar, initial,dispatch]);
 
-  const dataFiltered = applyFilter({
+  applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
     filterStatus,
   });
 
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-  const denseHeight = dense ? 60 : 80;
-  const isFiltered = filterName !== '' || !!filterStatus.length;
+  const toggleCancel = () => {
+    dispatch(setToolInstalledFormVisibility(!formVisibility));
+    // setChecked(false);
+  };
+
   const isNotFound = !toolsInstalled.length && !formVisibility && !toolInstalledEditFormVisibility;
 
   return (
     <>
-      {!toolInstalledEditFormVisibility && (
-        <Stack alignItems="flex-end" sx={{ mb: 3, px: 4 }}>
-          <Button
-            onClick={toggleChecked}
-            variant="contained"
-            startIcon={
-              !formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />
-            }
+      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+        <Grid item xs={12} md={6}>
+          <Breadcrumbs
+            aria-label="breadcrumb"
+            separator="›"
+            sx={{ fontSize: '12px', color: 'text.disabled' }}
           >
-            New Tool
-          </Button>
-        </Stack>
-      )}
+            <BreadcrumbsLink to={PATH_MACHINE.machines.list} name={BREADCRUMBS.MACHINES} />
+            <BreadcrumbsLink to={PATH_MACHINE.machines.view(machine._id)} name={machine.serialNo} />
+            <BreadcrumbsLink
+              to={PATH_MACHINE.machines.settings.tool}
+              name={
+                <Stack>
+                  {!expanded &&
+                    !toolInstalledEditFormVisibility &&
+                    formVisibility &&
+                    BREADCRUMBS.NEWTOOL}
+                  {!formVisibility && !toolInstalledEditFormVisibility && BREADCRUMBS.TOOL}
+                  {toolInstalledEditFormVisibility && BREADCRUMBS.EDITTOOL}
+                </Stack>
+              }
+            />
+          </Breadcrumbs>
+        </Grid>
+        <AddButtonAboveAccordion
+          name={BUTTONS.INSTALLTOOL}
+          toggleChecked={toggleChecked}
+          FormVisibility={formVisibility}
+          toggleCancel={toggleCancel}
+          disabled={toolInstalledEditFormVisibility}
+        />
+      </Grid>
 
-      <Card sx={{ mt: 3 }}>
+      <Card>
         {formVisibility && !toolInstalledEditFormVisibility && <ToolsInstalledAddForm />}
         {toolInstalledEditFormVisibility && <ToolsInstalledEditForm />}
         {!formVisibility &&
@@ -221,13 +168,17 @@ useLayoutEffect(() => {
                         {tool?.tool?.name || ''}
                       </Grid>
 
-                      <Grid item xs={12} sm={6} md={8}>
+                      {/* <Grid item xs={12} sm={6} md={8} sx={{overflowWrap: 'break-word'}} >
                         {tool?.note.length > 100 ? tool?.note.substring(0, 100) : tool?.note}
                         {tool?.note.length > 100 ? '...' : null}
+                      </Grid> * */}
+
+                      <Grid item xs={12} sm={6} md={8} >
+                        {tool?.toolType || ''}
                       </Grid>
 
                       <Grid item xs={12} sm={3} md={2}>
-                        <Typography variant="body2">{fDate(tool?.createdAt || '')}</Typography>
+                        <Typography>{fDate(tool?.createdAt || '')}</Typography>
                       </Grid>
                     </Grid>
                   ) : null}
@@ -238,31 +189,10 @@ useLayoutEffect(() => {
               </Accordion>
             );
           })}
-        <TableNoData isNotFound={isNotFound} />
       </Card>
-
-      {/* <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRows(selected);
-              handleCloseConfirm();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      /> */}
+      <Grid item md={12}>
+        <TableNoData isNotFound={isNotFound} />
+      </Grid>
     </>
   );
 }
@@ -291,3 +221,5 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   return inputData;
 }
+
+export default memo(MachineToolsInstalledList)

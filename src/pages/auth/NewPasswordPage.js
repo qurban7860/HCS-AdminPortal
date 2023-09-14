@@ -1,4 +1,4 @@
-import { Helmet } from 'react-helmet-async';
+// import { Helmet } from 'react-helmet-async';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { Link, Typography } from '@mui/material';
@@ -18,8 +18,8 @@ export default function NewPasswordPage() {
     <>
       <SentIcon sx={{ mb: 5, height: 96 }} />
 
-      <Typography variant="h3" paragraph>
-        Request sent successfully!
+      <Typography variant="h4" paragraph>
+        Please Enter New Password!
       </Typography>
 
       {/* <Typography sx={{ color: 'text.secondary', mb: 5 }}>

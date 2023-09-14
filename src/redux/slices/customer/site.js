@@ -1,13 +1,9 @@
-import sum from 'lodash/sum';
-import uniq from 'lodash/uniq';
-import uniqBy from 'lodash/uniqBy';
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-
 const initialState = {
   intial: false,
   siteAddFormVisibility: false,
@@ -17,10 +13,14 @@ const initialState = {
   isLoading: false,
   error: null,
   sites: [],
+  siteDialog: false,
+  activeSites: [],
   site: null,
-  siteParams: {
-
-  }
+  lat: '',
+  long: '',
+  filterBy: '',
+  page: 0,
+  rowsPerPage: 100,
 };
 
 const slice = createSlice({
@@ -42,7 +42,10 @@ const slice = createSlice({
     setSiteEditFormVisibility(state, action){
       state.siteEditFormVisibility = action.payload;
     },
-
+    // SET TOGGLE
+    setSiteDialog(state, action){
+      state.siteDialog = action.payload;
+    },
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -55,6 +58,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.sites = action.payload;
+      state.initial = true;
+    },
+
+    // GET Active Sites
+    getActiveSitesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeSites = action.payload;
       state.initial = true;
     },
 
@@ -82,6 +93,13 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
+    // RESET Active SITES
+    resetActiveSites(state){
+      state.activeSites = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
       state.isLoading = false;
@@ -89,12 +107,21 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+    setLatLongCoordinates(state, action) {
+      state.lat = action.payload.lat;
+      state.long = action.payload.lng;
     },
-
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+    // Set FilterBy
+    setFilterBy(state, action) {
+      state.filterBy = action.payload;
+    },
+    // Set PageRowCount
+    ChangeRowsPerPage(state, action) {
+      state.rowsPerPage = action.payload;
+    },
+    // Set PageNo
+    ChangePage(state, action) {
+      state.page = action.payload;
     },
   },
 });
@@ -104,15 +131,17 @@ export default slice.reducer;
 
 // Actions
 export const {
+  setLatLongCoordinates,
   setSiteFormVisibility,
   setSiteEditFormVisibility,
   setResponseMessage,
   resetSite,
   resetSites,
-  gotoStep,
-  backStep,
-  nextStep,
-
+  resetActiveSites,
+  setFilterBy,
+  ChangeRowsPerPage,
+  ChangePage,
+  setSiteDialog,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -167,14 +196,14 @@ export function addSite(params) {
         }
         
         await axios.post(`${CONFIG.SERVER_URL}crm/customers/${params.customer}/sites`, data);
-        dispatch(slice.actions.setResponseMessage('Site saved successfully'));
-        dispatch(slice.actions.setSiteFormVisibility(false));
+        // await dispatch(getSites(params.customer))
+        await dispatch(slice.actions.setSiteFormVisibility(false));
 
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
+        throw error;
       }
-
   };
 }
 
@@ -183,7 +212,6 @@ export function addSite(params) {
 export function updateSite(params,customerId,Id) {
   
   return async (dispatch) => {
-    dispatch(slice.actions.setSiteEditFormVisibility(false));
     dispatch(slice.actions.startLoading());
       try {
         /* eslint-disable */
@@ -229,12 +257,14 @@ export function updateSite(params,customerId,Id) {
           data.primaryTechnicalContact = null;        
         }
         console.log("Site Slice data : ",data)
-        const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/sites/${Id}`
+        await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/sites/${Id}`
          , data);
+        dispatch(slice.actions.setSiteEditFormVisibility(false));
 
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
+        throw error;
       }
 
   };
@@ -251,20 +281,77 @@ export function getSites(customerID) {
         response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites` , 
         {
           params: {
-            isArchived: false
+            isArchived: false,
+            orderBy : {
+              createdAt:-1
+            }
           }
         }
         );
         dispatch(slice.actions.getSitesSuccess(response.data));
         dispatch(slice.actions.setResponseMessage('Sites loaded successfully'));
       }
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function getActiveSites(customerID) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      let response = null;
+      if(customerID){
+        response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites` , 
+        {
+          params: {
+            isActive: true,
+            isArchived: false
+          }
+        }
+        );
+        dispatch(slice.actions.getActiveSitesSuccess(response.data));
+        dispatch(slice.actions.setResponseMessage('Sites loaded successfully'));
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function searchSites() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      let response = null;
+      response = await axios.get(`${CONFIG.SERVER_URL}crm/sites/search` , 
+      {
+        params: {
+          isArchived: false,
+          lat: { $exists: true },
+          long: { $exists: true }
+        }
+      }
+      );
+      dispatch(slice.actions.getSitesSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Sites loaded successfully'));
       // else{
-        //   response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/sites/search`);
-        // }
+      //   response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/sites/search`);
+      // }
 
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -281,6 +368,7 @@ export function getSite(customerID, id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -301,6 +389,7 @@ export function deleteSite(customerID, id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }

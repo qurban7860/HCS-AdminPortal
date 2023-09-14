@@ -1,25 +1,22 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { sentenceCase } from 'change-case';
 // @mui
 import {
   Stack,
   Button,
   TableRow,
-  Checkbox,
   MenuItem,
   TableCell,
-  IconButton,
   Link,
 } from '@mui/material';
 // utils
 import { fDate } from '../../../utils/formatTime';
-import { fCurrency } from '../../../utils/formatNumber';
+// import { fCurrency } from '../../../utils/formatNumber';
 // components
 import Iconify from '../../../components/iconify';
 import MenuPopover from '../../../components/menu-popover';
 import ConfirmDialog from '../../../components/confirm-dialog';
-import { useSelector } from '../../../redux/store';
+// import { useSelector } from '../../../redux/store';
 
 
 // ----------------------------------------------------------------------
@@ -57,9 +54,9 @@ export default function ContactListTableRow({
     setOpenConfirm(false);
   };
 
-  const handleOpenPopover = (event) => {
-    setOpenPopover(event.currentTarget);
-  };
+  // const handleOpenPopover = (event) => {
+  //   setOpenPopover(event.currentTarget);
+  // };
 
   const handleClosePopover = () => {
     setOpenPopover(null);
@@ -100,7 +97,7 @@ export default function ContactListTableRow({
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
         </TableCell>   */}
-      </TableRow> 
+      </TableRow>
 
       <MenuPopover
         open={openPopover}

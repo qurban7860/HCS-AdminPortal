@@ -14,9 +14,11 @@ const initialState = {
   isLoading: false,
   error: null,
   machineModels: [],
+  activeMachineModels: [],
   machineModel: {},
-  machinemodelParams: {
-  }
+  filterBy: '',
+  page: 0,
+  rowsPerPage: 100,
 };
 
 const slice = createSlice({
@@ -32,13 +34,6 @@ const slice = createSlice({
       state.machinemodelEditFormFlag = action.payload;
     },
     
-    // RESET CUSTOMER
-    resetMachinemodel(state){
-      state.machine = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
 
     // HAS ERROR
     hasError(state, action) {
@@ -47,7 +42,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customers
+    // GET  MODELS
     getMachineModelsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -55,11 +50,20 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customer
+    // GET  ACTIVE MODELS
+    getActiveMachineModelsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeMachineModels = action.payload;
+      state.initial = true;
+    },
+
+        
+    // GET MODEL
     getMachinemodelSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.machinemodel = action.payload;
+      state.machineModel = action.payload;
       state.initial = true;
     },
 
@@ -69,11 +73,40 @@ const slice = createSlice({
       state.success = true;
       state.initial = true;
     },
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+
+    // RESET 
+    resetMachineModel(state){
+      state.machineModel = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+
+    // RESET 
+    resetMachineModels(state){
+      state.machineModels = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+    // RESET 
+    resetActiveMachineModels(state){
+      state.activeMachineModels = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+        // Set FilterBy
+    setFilterBy(state, action) {
+      state.filterBy = action.payload;
+    },
+    // Set PageRowCount
+    ChangeRowsPerPage(state, action) {
+      state.rowsPerPage = action.payload;
+    },
+    // Set PageNo
+    ChangePage(state, action) {
+      state.page = action.payload;
     },
   },
 });
@@ -85,12 +118,12 @@ export default slice.reducer;
 export const {
   setMachinemodelsEditFormVisibility,
   resetMachineModel,
-  getCart,
-  addToCart,
+  resetMachineModels,
+  resetActiveMachineModels,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
+  setFilterBy,
+  ChangeRowsPerPage,
+  ChangePage,
 } = slice.actions;
 
 
@@ -99,12 +132,46 @@ export const {
 export function getMachineModels (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
-
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/models`);
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/models`, 
+      {
+        params: {
+          isArchived: false
+        }
+      });
       if(regEx.test(response.status)){
         dispatch(slice.actions.getMachineModelsSuccess(response.data));
       }
-      return response;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  }
+}
+
+// ------------------------- get Active Machine Models ---------------------------------------------
+
+export function getActiveMachineModels(categoryId){
+  return async (dispatch) =>{
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/models`,
+      {
+        params: {
+          isActive: true,
+          isArchived: false,
+          category:categoryId
+        }
+      });
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.getActiveMachineModelsSuccess(response.data));
+      }
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
   }
 }
 
@@ -113,12 +180,16 @@ export function getMachineModels (){
 export function getMachineModel(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-
+    try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/models/${id}`);
       if(regEx.test(response.status)){
         dispatch(slice.actions.getMachinemodelSuccess(response.data));
       }
-      return response;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
   };
 }
 //----------------------------------------------------------------
@@ -126,10 +197,16 @@ export function getMachineModel(id) {
 export function deleteMachineModel(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-
-      const response = await axios.delete(`${CONFIG.SERVER_URL}products/models/${id}`);
-
-      return response
+    try{
+      await axios.patch(`${CONFIG.SERVER_URL}products/models/${id}` , 
+      {
+          isArchived: true, 
+      });
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
   };
 }
 
@@ -137,8 +214,8 @@ export function deleteMachineModel(id) {
 
 export function addMachineModel(params) {
     return async (dispatch) => {
-      dispatch(slice.actions.resetMachinemodel());
       dispatch(slice.actions.startLoading());
+      try{
         /* eslint-disable */
         let data = {
           name: params.name,
@@ -152,10 +229,12 @@ export function addMachineModel(params) {
             data.category = null
           }
         const response = await axios.post(`${CONFIG.SERVER_URL}products/models`, data);
-      if(regEx.test(response.status)){
-        dispatch(slice.actions.getMachineModelsSuccess(response.data.Machinemodel));
-      }
-     return response
+          return response
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
     };
 }
 
@@ -164,7 +243,7 @@ export function addMachineModel(params) {
 export function updateMachineModel(params,Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    
+    try{
       /* eslint-disable */
       let data = {
         name: params.name,
@@ -184,6 +263,10 @@ export function updateMachineModel(params,Id) {
         dispatch(getMachineModel(Id));
         dispatch(slice.actions.setMachinemodelsEditFormVisibility(false));
       }
-    return response;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
   };
 }

@@ -1,37 +1,24 @@
 import PropTypes from 'prop-types';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useNavigate,useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, Stack, Typography, Button, Switch } from '@mui/material';
+import { Card, Grid } from '@mui/material';
 // redux
-import { setMachinemodelsEditFormVisibility, deleteMachineModel} from '../../../redux/slices/products/model';
+import {
+  setMachinemodelsEditFormVisibility,
+  deleteMachineModel,
+  getMachineModel 
+} from '../../../redux/slices/products/model';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-
-// Iconify
-
-import { fDate } from '../../../utils/formatTime';
-import ModelEditForm from './ModelEditForm';
-
-import Iconify from '../../../components/iconify/Iconify';
-import FormProvider, {
-    RHFSelect,
-    RHFAutocomplete,
-    RHFTextField,
-    RHFSwitch,
-  } from '../../../components/hook-form';
-  import ViewFormAudit from '../../components/ViewFormAudit';
-  import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
-  import ViewFormField from '../../components/ViewFormField';
-  import ViewFormSWitch from '../../components/ViewFormSwitch';
-
-
+import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
 // ----------------------------------------------------------------------
-
 
 ModelViewForm.propTypes = {
   currentMachinemodel: PropTypes.object,
@@ -40,60 +27,69 @@ ModelViewForm.propTypes = {
 // ----------------------------------------------------------------------
 
 export default function ModelViewForm({ currentMachinemodel = null }) {
-
-
-  const [editFlag, setEditFlag] = useState(false);
+  // const [editFlag, setEditFlag] = useState(false);
 
   const toggleEdit = () => {
     dispatch(setMachinemodelsEditFormVisibility(true));
-    navigate(PATH_MACHINE.machineModel.modeledit(id));
-  }
+    navigate(PATH_MACHINE.machines.settings.model.modeledit(id));
+  };
 
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { machinemodel } = useSelector((state) => state.machinemodel);
-// console.log("machinemodel : ", machinemodel)
+  const { machineModel } = useSelector((state) => state.machinemodel);
+  console.log('machinemodel : ', machineModel);
   const { id } = useParams();
 
-  const dispatch = useDispatch()
-
-
+  const dispatch = useDispatch();
+useEffect(()=>{
+ dispatch(getMachineModel(id));
+},[dispatch, id])
   const defaultValues = useMemo(
-    () => (
-      {
-        name:                     machinemodel?.name || '',
-        description:              machinemodel?.description || '',
-        displayOrderNo:           machinemodel?.displayOrderNo || '',
-        category:                 machinemodel?.category || '',
-        isActive:                 machinemodel?.isActive,
-        createdByFullName:        machinemodel?.createdBy?.name || "",
-        createdAt:                machinemodel?.createdAt || "",
-        createdIP:                machinemodel?.createdIP || "",
-        updatedByFullName:        machinemodel?.updatedBy?.name || "",
-        updatedAt:                machinemodel?.updatedAt || "",
-        updatedIP:                machinemodel?.updatedIP || "",
-      }),
+    () => ({
+      name: machineModel?.name || '',
+      description: machineModel?.description || '',
+      displayOrderNo: machineModel?.displayOrderNo || '',
+      category: machineModel?.category || '',
+      isActive: machineModel?.isActive,
+      createdByFullName: machineModel?.createdBy?.name || '',
+      createdAt: machineModel?.createdAt || '',
+      createdIP: machineModel?.createdIP || '',
+      updatedByFullName: machineModel?.updatedBy?.name || '',
+      updatedAt: machineModel?.updatedAt || '',
+      updatedIP: machineModel?.updatedIP || '',
+    }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentMachinemodel, machinemodel]
-    );
+    [currentMachinemodel, machineModel]
+  );
 
-    const onDelete = () => {
-      dispatch(deleteMachineModel(id))
-      navigate(PATH_MACHINE.machineModel.list)
+  const onDelete = () => {
+    try {
+      dispatch(deleteMachineModel(id));
+      navigate(PATH_MACHINE.machines.settings.model.list);
+    } catch (err) {
+      // if(err.Message){
+      //   enqueueSnackbar(err.Message,{ variant: `error` })
+      // }else if(err.message){
+      //   enqueueSnackbar(err.message,{ variant: `error` })
+      // }else{
+      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      // }
+
+      enqueueSnackbar('Model delete failed!', { variant: `error` });
+      console.log('Error:', err);
     }
+  };
   return (
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} />
       <Grid container>
-        <ViewFormField sm={6}   heading='Category Name'        param={defaultValues?.category?.name} isActive={defaultValues.isActive}/>
-        <ViewFormField sm={6}   heading='Name'                 param={defaultValues?.name}/>
-        <ViewFormField sm={6}   heading='Description'          param={defaultValues?.description}/>
-        <ViewFormSWitch  isActive={defaultValues.isActive} />
-        <Grid container>
-          <ViewFormAudit defaultValues={defaultValues}/>
-        </Grid>
+        <ViewFormField sm={12} isActive={defaultValues.isActive} />
+        <ViewFormField sm={12} heading="Model Name" param={defaultValues?.name} />
+        <ViewFormField sm={12} heading="Category Name" param={defaultValues?.category?.name} />
+        <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
+        <ViewFormAudit defaultValues={defaultValues} />
       </Grid>
     </Card>
   );

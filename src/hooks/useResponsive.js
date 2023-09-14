@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -46,3 +47,48 @@ export function useWidth() {
     }, null) || 'xs'
   );
 }
+
+export function useWindowWidth() {
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return windowWidth;
+}
+
+
+export const useScreenSize = (size) => {
+  const width = useWidth()
+  const [isSize, setIsSize] = useState(false);
+
+  const checkSize = () => {
+    switch (size) {
+      case 'sm':
+        setIsSize( width === 'sm' || width === 'md' || width === 'lg' || width === 'xl' );
+        break;
+      case 'md':
+        setIsSize( width === 'md' || width === 'lg' || width === 'xl' );
+        break;
+      case 'lg':
+        setIsSize( width === 'lg' || width === 'xl' );
+        break;
+      case 'xl':
+        setIsSize( width === 'xl');
+        break;
+      default:
+        setIsSize(false);
+        break;
+    }
+  }
+  useEffect(() => {
+    checkSize();
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [width]);
+
+  return isSize;
+}
+

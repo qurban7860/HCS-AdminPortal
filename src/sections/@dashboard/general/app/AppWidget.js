@@ -22,7 +22,7 @@ AppWidget.propTypes = {
 export default function AppWidget({ title, total, icon, color = 'primary', chart, sx, ...other }) {
   const theme = useTheme();
 
-  const { series, options } = chart;
+  const { series } = chart;
 
   const chartOptions = useChart({
     colors: [theme.palette[color].light],
@@ -35,26 +35,16 @@ export default function AppWidget({ title, total, icon, color = 'primary', chart
       show: false,
     },
     plotOptions: {
-      radialBar: {
-        hollow: {
-          size: '78%',
-        },
-        track: {
-          margin: 0,
-        },
-        dataLabels: {
-          name: {
+      pie: {
+        expandOnClick: false,
+        donut: {
+          size: '85%',
+          labels: {
             show: false,
-          },
-          value: {
-            offsetY: 6,
-            color: theme.palette.common.white,
-            fontSize: theme.typography.subtitle2.fontSize,
           },
         },
       },
     },
-    ...options,
   });
 
   return (
@@ -66,18 +56,17 @@ export default function AppWidget({ title, total, icon, color = 'primary', chart
         borderRadius: 2,
         overflow: 'hidden',
         position: 'relative',
-        color: 'common.white',
-        bgcolor: `${color}.dark`,
+        color: 'primary.main',
+        bgcolor: 'grey.200',
         ...sx,
       }}
       {...other}
     >
-      <Chart type="radialBar" series={[series]} options={chartOptions} width={86} height={86} />
+      <Chart type="polarArea" series={[series]} options={chartOptions} width={86} height={86} />
 
       <Box sx={{ ml: 3 }}>
         <Typography variant="h4"> {fNumber(total)}</Typography>
-
-        <Typography variant="body2" sx={{ opacity: 0.72 }}>
+        <Typography variant="body1" sx={{ opacity: 0.72 }}>
           {title}
         </Typography>
       </Box>

@@ -4,20 +4,20 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-
 const initialState = {
-  intial: false,
-  formVisibility: false,
+  initial: false,
+  licenseFormVisibility: false,
+  licenseViewFormVisibility: false,
   licenseEditFormVisibility: false,
   responseMessage: null,
   success: false,
   isLoading: false,
   error: null,
-  licenses: [],
   license: {},
-  licenseParams: {
-
-  }
+  licenses: [],
+  filterBy: '',
+  page: 0,
+  rowsPerPage: 100,
 };
 
 const slice = createSlice({
@@ -29,22 +29,19 @@ const slice = createSlice({
       state.isLoading = true;
     },
 
-    // SET TOGGLE
+    // SET ADD FORM TOGGLE
+    setLicenseFormVisibility(state, action){
+      state.licenseFormVisibility = action.payload;
+    },
+
+    // SET EDIT FORM TOGGLE
     setLicenseEditFormVisibility(state, action){
       state.licenseEditFormVisibility = action.payload;
     },
-    
-    // SET TOGGLE
-    setLicenseFormVisibility(state, action){
-      state.formVisibility = action.payload;
-    },
 
-    // RESET License
-    resetLicense(state){
-      state.license = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
+    // SET VIEW TOGGLE
+    setLicenseViewFormVisibility(state, action){
+      state.licenseViewFormVisibility = action.payload;
     },
 
     // HAS ERROR
@@ -77,12 +74,42 @@ const slice = createSlice({
       state.initial = true;
     },
 
+
+    // RESET LICENSE
+    resetLicense(state){
+      state.license = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
+    // RESET LICENSE
+    resetLicenses(state){
+      state.licenses = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
+
     backStep(state) {
       state.checkout.activeStep -= 1;
     },
 
     nextStep(state) {
       state.checkout.activeStep += 1;
+    },
+    // Set FilterBy
+    setFilterBy(state, action) {
+      state.filterBy = action.payload;
+    },
+    // Set PageRowCount
+    ChangeRowsPerPage(state, action) {
+      state.rowsPerPage = action.payload;
+    },
+    // Set PageNo
+    ChangePage(state, action) {
+      state.page = action.payload;
     },
   },
 });
@@ -92,28 +119,47 @@ export default slice.reducer;
 
 // Actions
 export const {
-  setLicenseEditFormVisibility,
   setLicenseFormVisibility,
+  setLicenseEditFormVisibility,
+  setLicenseViewFormVisibility,
   resetLicense,
-  getCart,
-  addToCart,
+  resetLicenses,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
+  setFilterBy,
+  ChangeRowsPerPage,
+  ChangePage,
 } = slice.actions;
 
+export const LicenseTypes = [ 'Type 1','Type 2','Type 3','Type 4']
 
 // ----------------------------------------------------------------------
 
-export function addLicense (machineId, supplyData){
+export function addLicense (machineId, params){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses`,supplyData);
-    } catch (e) {
-      console.log(e);
-      dispatch(slice.actions.hasError(e.Message))
+      // License Key and Machine ID
+      const data = {};
+      // data.machine=`${machineId}`;
+      data.licenseKey=params?.licenseKey;
+      data.isActive=params?.isActive;
+
+      // License Details
+      data.licenseDetail={};
+      data.licenseDetail.version= params?.version;
+      data.licenseDetail.type= params?.type;
+      data.licenseDetail.deviceName= params?.deviceName;
+      data.licenseDetail.deviceGUID= params?.deviceGUID;
+      data.licenseDetail.production= params?.production;
+      data.licenseDetail.waste= params?.waste;
+      data.licenseDetail.extensionTime= params?.extensionTime;
+      data.licenseDetail.requestTime= params?.requestTime;
+      
+      await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses`,data);
+      await dispatch(setLicenseFormVisibility(false));
+    } catch (error) {
+      console.log(error);
+      throw error;
     }
   }
 }
@@ -131,37 +177,41 @@ export function getLicenses (machineId){
           isArchived: false
         }
       });
+
       dispatch(slice.actions.getLicensesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Licenses loaded successfully'));
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error.Message))
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   }
 }
 
 // ----------------------------------------------------------------------
 
-export function getLicense(machineId, id) {
+export function getLicense(machineId, Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses/${id}`);
-      dispatch(slice.actions.getLicensesSuccess(response.data));
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses/${Id}`);
+      dispatch(slice.actions.getLicenseSuccess(response.data));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
 
 // ----------------------------------------------------------------------
 
-export function deleteLicense(machineId, id) {
+export function deleteLicense(machineId, Id) {
+
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses/${id}`, {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses/${Id}`, {
         isArchived: true, 
       });
      
@@ -170,33 +220,40 @@ export function deleteLicense(machineId, id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
 
 // --------------------------------------------------------------------------
 
-export function updateLicense(params,Id) {
-  return async (dispatch) => {
+export async function updateLicense(machineId,Id,params) {
+
+  return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
-    try {
-      const data = {
-        serialNo: params.serialNo,
-        isDisabled: params.isDisabled,
-      };
-     /* eslint-enable */
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${Id}`,
-        data
-      );
-      dispatch(getLicense(Id));
-      dispatch(slice.actions.setLicenseEditFormVisibility(false));
-
-      // this.updateCustomerSuccess(response);
-
+    try{
+      // License Key
+      const data = {};
+      data.licenseKey=params?.licenseKey;
+      data.isActive=params?.isActive;
+      
+      // License Details
+      data.licenseDetail={};
+      data.licenseDetail.version= params?.version;
+      data.licenseDetail.type= params?.type;
+      data.licenseDetail.deviceName= params?.deviceName;
+      data.licenseDetail.deviceGUID= params?.deviceGUID;
+      data.licenseDetail.production= params?.production;
+      data.licenseDetail.waste= params?.waste;
+      data.licenseDetail.extensionTime= params?.extensionTime;
+      data.licenseDetail.requestTime= params?.requestTime;
+      
+      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses/${Id}`,data);
+      await dispatch(setLicenseEditFormVisibility(false));
     } catch (error) {
-      console.error(error);
+      console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
-  };
-
+  }
 }

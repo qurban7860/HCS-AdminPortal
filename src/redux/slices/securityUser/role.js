@@ -4,7 +4,7 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-
+const regEx = /^[^2]*/
 const initialState = {
   formVisibility: false,
   editFormVisibility: false,
@@ -15,8 +15,16 @@ const initialState = {
   error: null,
   roles: [],
   role: null,
-  roleParams: {
-  }
+  userRoleTypes: {
+    SuperAdmin: 'Super Admin',
+    Manager: 'Manager',
+    Support: 'Support',
+    Email: 'Email',
+    Module:'Module',
+  },
+  filterBy: '',
+  page: 0,
+  rowsPerPage: 100,
 };
 
 const slice = createSlice({
@@ -45,21 +53,7 @@ const slice = createSlice({
       state.editFormVisibility = action.payload;
     },
 
-    // RESET USERS
-    resetRoles(state){
-      state.roles = [];
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
-    // RESET USER
-    resetRole(state){
-      state.role = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
-    // GET users
+    // GET  Role
     getRolesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -67,8 +61,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-
-    // GET user
+    // GET Role
     getRoleSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -84,12 +77,32 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+    // RESET ROLE
+    resetRole(state){
+      state.role = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+    // RESET ROLES
+    resetRoles(state){
+      state.roles = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+        // Set FilterBy
+    setFilterBy(state, action) {
+      state.filterBy = action.payload;
+    },
+    // Set PageRowCount
+    ChangeRowsPerPage(state, action) {
+      state.rowsPerPage = action.payload;
+    },
+    // Set PageNo
+    ChangePage(state, action) {
+      state.page = action.payload;
     },
   },
 });
@@ -103,9 +116,9 @@ export const {
   setEditFormVisibility,
   resetRoles,
   resetRole,
-  gotoStep,
-  backStep,
-  nextStep,
+  setFilterBy,
+  ChangeRowsPerPage,
+  ChangePage,
 } = slice.actions;
 // ----------------------------------------------------------------------
 
@@ -113,30 +126,46 @@ export function addRole(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      // const data = {
-      // }
-      const response = await axios.post(`${CONFIG.SERVER_URL}security/roles`, params);
+      const data = {
+        name: params.name,
+        roleType: params.roleType,
+        description: params.description,
+        // allModules:  params.allModules,
+        // allWriteAccess: params.allWriteAccess,
+        disableDelete: params.disableDelete,
+        isActive: params.isActive,
+      }
+      const response = await axios.post(`${CONFIG.SERVER_URL}security/roles`, data);
       dispatch(slice.actions.setResponseMessage('Role Saved successfully'));
+      return response;
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+      // dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
 // ----------------------------------------------------------------------
 
-export function updateRole(param,id) {
+export function updateRole(id, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}security/roles/${id}`, data);
+        name: params.name,
+        roleType: params.roleType,
+        description: params.description,
+        // allModules:  params.allModules,
+        // allWriteAccess: params.allWriteAccess,
+        disableDelete: params.disableDelete,
+        isActive: params.isActive,
+      }
+      await axios.patch(`${CONFIG.SERVER_URL}security/roles/${id}`, data);
       dispatch(slice.actions.setResponseMessage('Role updated successfully'));
-
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+      // dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -159,6 +188,7 @@ export function getRoles() {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -175,6 +205,7 @@ export function getRole(id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -184,13 +215,21 @@ export function getRole(id) {
 export function deleteRole(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.delete(`${CONFIG.SERVER_URL}security/roles/${id}`);
-      dispatch(slice.actions.setResponseMessage(response.data));
+    try{
+      const response = await axios.patch(`${CONFIG.SERVER_URL}security/roles/${id}`,
+      {
+        isArchived: true, 
+      }
+      );
       // state.responseMessage = response.data;
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.setResponseMessage(response.data));
+        dispatch(resetRole());
+      }
+      return response;
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }

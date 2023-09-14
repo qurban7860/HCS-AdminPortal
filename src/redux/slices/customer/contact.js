@@ -1,13 +1,9 @@
-import sum from 'lodash/sum';
-import uniq from 'lodash/uniq';
-import uniqBy from 'lodash/uniqBy';
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-
 const initialState = {
   intial: false,
   formVisibility: false,
@@ -17,11 +13,14 @@ const initialState = {
   isLoading: false,
   error: null,
   contacts: [],
+  activeContacts: [],
   spContacts: [],
+  activeSpContact:[],
+  contactDialog:false,
   contact: null,
-  contactParams: {
-
-  }
+  filterBy: '',
+  page: 0,
+  rowsPerPage: 100,
 };
 
 const slice = createSlice({
@@ -52,6 +51,11 @@ const slice = createSlice({
       state.contactEditFormVisibility = action.payload;
     },
 
+    // SET TOGGLE
+    setContactDialog(state, action){
+      state.contactDialog = action.payload;
+    },
+
     // RESET CONTACT
     resetContact(state){
       state.contact = null;
@@ -68,6 +72,13 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
+    // RESET ACTIVE CONTACTS
+    resetActiveContacts(state){
+      state.activeContacts = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
       
     // GET Contacts
     getContactsSuccess(state, action) {
@@ -77,11 +88,26 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // GET Contacts
+    getActiveContactsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeContacts = action.payload;
+      state.initial = true;
+    },
+
     // GET SP Contacts
     getSPContactsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
       state.spContacts = action.payload;
+      state.initial = true;
+    },
+
+    getActiveSPContactsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeSpContacts = action.payload;
       state.initial = true;
     },
 
@@ -101,13 +127,23 @@ const slice = createSlice({
       state.initial = true;
     },
 
-
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+    resetActiveSPContacts(state){
+      state.activeSpContacts = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
-
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+    // Set FilterBy
+    setFilterBy(state, action) {
+      state.filterBy = action.payload;
+    },
+    // Set PageRowCount
+    ChangeRowsPerPage(state, action) {
+      state.rowsPerPage = action.payload;
+    },
+    // Set PageNo
+    ChangePage(state, action) {
+      state.page = action.payload;
     },
   },
 });
@@ -121,13 +157,12 @@ export const {
   setContactEditFormVisibility,
   resetContact,
   resetContacts,
-  getCart,
-  addToCart,
+  resetActiveContacts,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
-
+  setFilterBy,
+  ChangeRowsPerPage,
+  ChangePage,
+  setContactDialog,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -171,7 +206,7 @@ export function addContact(params) {
         data.address.country = params.country;        
       }
 
-      const response = await axios.post(`${CONFIG.SERVER_URL}crm/customers/${params.customer}/contacts`,
+      await axios.post(`${CONFIG.SERVER_URL}crm/customers/${params.customer}/contacts`,
         data,
       );
 
@@ -181,6 +216,7 @@ export function addContact(params) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -228,7 +264,7 @@ export function updateContact(customerId,params) {
         data.address.country = params.country;        
       }
 
-      const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/contacts/${params.id}`,
+      await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/contacts/${params.id}`,
         data
       );
       dispatch(slice.actions.setResponseMessage('Contact updated successfully'));
@@ -236,6 +272,7 @@ export function updateContact(customerId,params) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -246,13 +283,21 @@ export function getSPContacts() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}crm/sp/contacts`)
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/sp/contacts`,
+      {
+        params: {
+          isArchived: false,
+          isActive: true
+        }
+      }
+      );
       dispatch(slice.actions.getSPContactsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
 
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -266,7 +311,10 @@ export function getContacts(customerID ) {
        const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts` , 
         {
           params: {
-            isArchived: false
+            isArchived: false,
+            orderBy : {
+              createdAt:-1
+            }
           }
         }
         );
@@ -275,6 +323,81 @@ export function getContacts(customerID ) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// ------------------------------ get Active Contacts ----------------------------------------
+
+export function getActiveSPContacts() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+       const response = await axios.get(`${CONFIG.SERVER_URL}crm/sp/contacts`,
+        {
+          params: {
+            isActive: true,
+            isArchived: false
+          }
+        }
+        );
+      dispatch(slice.actions.getActiveSPContactsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// ------------------------------ get Active Contacts ----------------------------------------
+
+export function getActiveContacts(customerID ) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts` , 
+        {
+          params: {
+            isActive: true,
+            isArchived: false
+          }
+        }
+        );
+      dispatch(slice.actions.getActiveContactsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+
+// ------------------------------ get Contacts against CustomerArray ----------------------------------------
+
+export function getCustomerArrayActiveContacts(customerArr) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+       const response = await axios.get(`${CONFIG.SERVER_URL}crm/contacts/search` , 
+        {
+          params: {
+            isActive: true,
+            isArchived: false,
+            customerArr
+          }
+        }
+        );
+      dispatch(slice.actions.getActiveContactsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -291,6 +414,7 @@ export function getContact(customerID, id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -311,6 +435,7 @@ export function deleteContact(customerID, id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }

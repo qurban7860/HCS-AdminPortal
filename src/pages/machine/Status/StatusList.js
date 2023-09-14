@@ -1,42 +1,53 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import debounce from 'lodash/debounce';
 // @mui
 import {
-  Grid,
-  Card,
   Table,
   Button,
-  Tooltip,
   TableBody,
   Container,
-  IconButton,
   TableContainer,
-  Stack,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 // routes
-import { getMachinestatuses, getMachineStatus, deleteMachinestatus } from '../../../redux/slices/products/statuses';
+import {
+  getMachinestatuses,
+  getMachineStatus,
+  deleteMachinestatus,
+  ChangeRowsPerPage,
+  ChangePage,
+  setFilterBy,
+} from '../../../redux/slices/products/statuses';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import { useSettingsContext } from '../../../components/settings';
-import { useTable, getComparator, emptyRows, TableNoData, TableSkeleton, TableEmptyRows, TableHeadCustom, TableSelectedAction, TablePaginationCustom, } from '../../../components/table';
-import Iconify from '../../../components/iconify/Iconify';
+// import { useSettingsContext } from '../../../components/settings';
+import {
+  useTable,
+  getComparator,
+  TableNoData,
+  TableSkeleton,
+  TableHeadCustom,
+  TablePaginationCustom,
+} from '../../../components/table';
+// import Iconify from '../../../components/iconify/Iconify';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 // sections
 import StatusListTableRow from './StatusListTableRow';
 import StatusListTableToolbar from './StatusListTableToolbar';
-import { Cover } from '../../components/Cover';
+import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
+import TableCard from '../../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
+  { id: 'xs1', label: 'Slug', align: 'left' },
   { id: 'isDisabled', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
@@ -50,36 +61,32 @@ const STATUS_OPTIONS = [
   // { id: '6', value: 'Archived' },
 ];
 
-
 // ----------------------------------------------------------------------
-
-
 
 export default function StatusList() {
   const {
     dense,
-    page,
+    // page,
     order,
     orderBy,
-    rowsPerPage,
+    // rowsPerPage,
     setPage,
     //
     selected,
     setSelected,
     onSelectRow,
-    onSelectAllRows,
     //
     onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
+    // onChangePage,
+    // onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'createdAt',
+    defaultOrderBy: 'name',
   });
+
 
   const dispatch = useDispatch();
 
-  const { themeStretch } = useSettingsContext();
+  // const { themeStretch } = useSettingsContext();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -93,22 +100,26 @@ export default function StatusList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { machinestatuses, isLoading, error, initial, responseMessage } = useSelector((state) => state.machinestatus);
+  const { machinestatuses, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector(
+    (state) => state.machinestatus
+  );
 
-  
+    
+  const onChangeRowsPerPage = (event) => {
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+  };
 
-  useLayoutEffect( () => {
+  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
+
+// console.log("machinestatuses : ", machinestatuses)
+  useLayoutEffect(() => {
     // console.log('Testing done')
-     dispatch(getMachinestatuses());
+    dispatch(getMachinestatuses());
   }, [dispatch]);
 
   useEffect(() => {
     if (initial) {
-      if (machinestatuses && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
       setTableData(machinestatuses);
     }
   }, [machinestatuses, error, responseMessage, enqueueSnackbar, initial]);
@@ -130,18 +141,34 @@ export default function StatusList() {
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
+  // const handleOpenConfirm = () => {
+  //   setOpenConfirm(true);
+  // };
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
   };
 
+
+  const debouncedSearch = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setFilterBy(value))
+  }, 500))
+
   const handleFilterName = (event) => {
+    debouncedSearch.current(event.target.value);
+    setFilterName(event.target.value)
     setPage(0);
-    setFilterName(event.target.value);
   };
+  
+  useEffect(() => {
+      debouncedSearch.current.cancel();
+  }, [debouncedSearch]);
+  
+  useEffect(()=>{
+      setFilterName(filterBy)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -163,46 +190,46 @@ export default function StatusList() {
     }
   };
 
-  const handleDeleteRows = async (selectedRows,handleClose) => {
-    // console.log(selectedRows)
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-      setSelected([]);
-      setTableData(deleteRows);
-    if (page > 0) {
-      if (selectedRows.length === dataInPage.length) {
-        setPage(page - 1);
-      } else if (selectedRows.length === dataFiltered.length) {
-        setPage(0);
-      } else if (selectedRows.length > dataInPage.length) {
-        const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-        setPage(newPage);
-      }
-    }
-    handleClose()
-  };
+  // const handleDeleteRows = async (selectedRows, handleClose) => {
+  //   // console.log(selectedRows)
+  //   const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
+  //   setSelected([]);
+  //   setTableData(deleteRows);
+  //   if (page > 0) {
+  //     if (selectedRows.length === dataInPage.length) {
+  //       setPage(page - 1);
+  //     } else if (selectedRows.length === dataFiltered.length) {
+  //       setPage(0);
+  //     } else if (selectedRows.length > dataInPage.length) {
+  //       const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
+  //       setPage(newPage);
+  //     }
+  //   }
+  //   handleClose();
+  // };
 
-  const handleEditRow = async (id) => {
-    await dispatch(getMachineStatus(id));
-    navigate(PATH_MACHINE.machineStatus.edit(id));
-  };
+  // const handleEditRow = async (id) => {
+  //   await dispatch(getMachineStatus(id));
+  //   navigate(PATH_MACHINE.machines.settings.status.edit(id));
+  // };
 
   const handleViewRow = async (id) => {
     await dispatch(getMachineStatus(id));
-    navigate(PATH_MACHINE.machineStatus.view(id));
+    navigate(PATH_MACHINE.machines.settings.status.view(id));
   };
 
   const handleResetFilter = () => {
+    dispatch(setFilterBy(''))
     setFilterName('');
-    setFilterStatus([]);
   };
 
   return (
     <>
       <Container maxWidth={false}>
-        <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
-          <Cover name='Status List' icon='material-symbols:list-alt-outline' setting="enable" />
-        </Card>
-        <Card sx={{ mt: 3 }}>
+        <StyledCardContainer>
+          <Cover name="Status" icon="material-symbols:list-alt-outline" setting />
+        </StyledCardContainer>
+        <TableCard>
           <StatusListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -212,7 +239,13 @@ export default function StatusList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
-
+          {!isNotFound && <TablePaginationCustom
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {/* <TableSelectedAction
               numSelected={selected.length}
@@ -233,7 +266,7 @@ export default function StatusList() {
             /> */}
 
             <Scrollbar>
-              <Table size='small'sx={{ minWidth: 960 }}>
+              <Table size="small" sx={{ minWidth: 360 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -260,7 +293,7 @@ export default function StatusList() {
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)} 
+                          // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                         />
                       ) : (
@@ -273,8 +306,14 @@ export default function StatusList() {
             </Scrollbar>
           </TableContainer>
 
-          <TablePaginationCustom count={dataFiltered.length} page={page} rowsPerPage={rowsPerPage} onPageChange={onChangePage} onRowsPerPageChange={onChangeRowsPerPage} />
-        </Card>
+          {!isNotFound && <TablePaginationCustom
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
+        </TableCard>
       </Container>
 
       <ConfirmDialog
@@ -317,9 +356,12 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter( (filterstatus) => filterstatus?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||  
-    // (filterstatus?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    fDate(filterstatus?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
+    inputData = inputData.filter(
+      (filterstatus) =>
+        filterstatus?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // (filterstatus?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(filterstatus?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    );
   }
 
   if (filterStatus.length) {

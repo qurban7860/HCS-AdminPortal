@@ -4,7 +4,6 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-
 const initialState = {
   intial: false,
   supplierEditFormFlag: false,
@@ -13,9 +12,11 @@ const initialState = {
   isLoading: false,
   error: null,
   suppliers: [],
+  activeSuppliers: [],
   supplier: {},
-  supplierParams: {
-  }
+  filterBy: '',
+  page: 0,
+  rowsPerPage: 100,
 };
 
 const slice = createSlice({
@@ -31,14 +32,6 @@ const slice = createSlice({
     setSupplierEditFormVisibility(state, action){
       state.supplierEditFormFlag = action.payload;
     },
-    
-    // RESET CUSTOMER
-    resetSupplier(state){
-      state.machine = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
 
     // HAS ERROR
     hasError(state, action) {
@@ -47,7 +40,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customers
+    // GET Supplier
     getSuppliersSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -55,7 +48,15 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customer
+    // GET Active Supplier
+    getActiveSuppliersSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeSuppliers = action.payload;
+      state.initial = true;
+    },
+
+    // GET Supplier
     getSupplierSuccess(state, action) {
       
       state.isLoading = false;
@@ -71,11 +72,32 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+    // RESET SUPPLIERS
+    resetSupplier(state){
+      state.supplier = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+
+    // RESET SUPPLIERS
+    resetSuppliers(state){
+      state.suppliers = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+    // Set FilterBy
+    setFilterBy(state, action) {
+      state.filterBy = action.payload;
+    },
+    // Set PageRowCount
+    ChangeRowsPerPage(state, action) {
+      state.rowsPerPage = action.payload;
+    },
+    // Set PageNo
+    ChangePage(state, action) {
+      state.page = action.payload;
     },
   },
 });
@@ -87,13 +109,11 @@ export default slice.reducer;
 export const {
   setSupplierEditFormVisibility,
   resetSupplier,
-  getCart,
-  addToCart,
+  resetSuppliers,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
-
+  setFilterBy,
+  ChangeRowsPerPage,
+  ChangePage,
 } = slice.actions;
 
 //------------------------------------------------------------------------------
@@ -102,15 +122,45 @@ export function getSuppliers (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/suppliers`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/suppliers`, 
+      {
+        params: {
+          isArchived: false
+        }
+      });
       dispatch(slice.actions.getSuppliersSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Suppliers loaded successfully'));
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error.Message))
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   }
 }
+
+//------------------------------------------------------------------------------
+
+export function getActiveSuppliers (){
+  return async (dispatch) =>{
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/suppliers`, 
+      {
+        params: {
+          isArchived: false,
+          isActive: true
+        }
+      });
+      dispatch(slice.actions.getActiveSuppliersSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Suppliers loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  }
+}
+
 // ----------------------------------------------------------------------
 
 export function getSupplier(id) {
@@ -122,6 +172,7 @@ export function getSupplier(id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -131,11 +182,15 @@ export function deleteSupplier(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.delete(`${CONFIG.SERVER_URL}products/suppliers/${id}`);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/suppliers/${id}` , 
+      {
+          isArchived: true, 
+      });
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -198,6 +253,7 @@ export function addSupplier(params) {
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
+        throw error;
       }
     };
 
@@ -230,13 +286,14 @@ export function updateSupplier(params,Id) {
         }
       };
      /* eslint-enable */
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/suppliers/${Id}`,
+      await axios.patch(`${CONFIG.SERVER_URL}products/suppliers/${Id}`,
         data
       );
       dispatch(getSupplier(Id));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }

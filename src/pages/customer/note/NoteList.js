@@ -1,5 +1,3 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
@@ -38,7 +36,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import NoteListTableRow from './NoteListTableRow';
 import NoteListTableToolbar from './NoteListTableToolbar';
-import { getNotes, deleteNote, getNote } from '../../../redux/slices/customer/note';
+import { getNotes, deleteNote } from '../../../redux/slices/customer/note';
 
 
 // ----------------------------------------------------------------------
@@ -85,7 +83,7 @@ export default function NoteList() {
     onSelectAllRows,
     //
     onSort,
-    onChangeDense,
+    // onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
@@ -118,11 +116,11 @@ export default function NoteList() {
 
   useEffect(() => {
     if (initial) {
-      if (notes && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
+      // if (notes && !error) {
+      //   enqueueSnackbar(responseMessage);
+      // } else {
+      //   enqueueSnackbar(error, { variant: `error` });
+      // }
       setTableData(notes);
     }
   }, [notes, error, responseMessage, enqueueSnackbar, initial]);
@@ -247,7 +245,6 @@ export default function NoteList() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
-             
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -305,7 +302,6 @@ export default function NoteList() {
                     height={denseHeight}
                     emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
                   />
-
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
@@ -318,7 +314,7 @@ export default function NoteList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            
+
           />
         </Card>
       </Container>

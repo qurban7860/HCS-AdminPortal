@@ -4,7 +4,6 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-
 const initialState = {
   intial: false,
   toolEditFormFlag: false,
@@ -13,9 +12,12 @@ const initialState = {
   isLoading: false,
   error: null,
   tools: [],
+  activeTools: [],
   tool: {},
-  toolParams: {
-  }
+  toolParams: {},
+  filterBy: '',
+  page: 0,
+  rowsPerPage: 100,
 };
 
 const slice = createSlice({
@@ -32,14 +34,6 @@ const slice = createSlice({
       state.toolEditFormFlag = action.payload;
     },
     
-    // RESET CUSTOMER
-    resetTool(state){
-      state.tool = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
-
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -47,7 +41,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customers
+    // GET  TOOLS
     getToolsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -55,7 +49,15 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customer
+    // GET ACTIVE TOOLS
+    getActiveToolsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeTools = action.payload;
+      state.initial = true;
+    },
+
+    // GET TOOLS
     getToolSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -70,12 +72,33 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+
+    // RESET TOOLS
+    resetTool(state){
+      state.tool = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+    // RESET TOOLS
+    resetTools(state){
+      state.tools = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+    // Set FilterBy
+    setFilterBy(state, action) {
+      state.filterBy = action.payload;
+    },
+    // Set PageRowCount
+    ChangeRowsPerPage(state, action) {
+      state.rowsPerPage = action.payload;
+    },
+    // Set PageNo
+    ChangePage(state, action) {
+      state.page = action.payload;
     },
   },
 });
@@ -87,12 +110,11 @@ export default slice.reducer;
 export const {
   setToolEditFormVisibility,
   resetTool,
-  getCart,
-  addToCart,
+  resetTools,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
+  setFilterBy,
+  ChangeRowsPerPage,
+  ChangePage,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -101,12 +123,41 @@ export function getTools (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/tools`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/tools`, 
+      {
+        params: {
+          isArchived: false
+        }
+      });
       dispatch(slice.actions.getToolsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('tools loaded successfully'));
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error.Message))
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  }
+}
+
+// ----------------------------------------------------------------------
+
+export function getActiveTools (){
+  return async (dispatch) =>{
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/tools`, 
+      {
+        params: {
+          isArchived: false,
+          isActive: true
+        }
+      });
+      dispatch(slice.actions.getActiveToolsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('tools loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   }
 }
@@ -119,8 +170,9 @@ export function getTool(id) {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/tools/${id}`);
       dispatch(slice.actions.getToolSuccess(response.data));
     } catch (error) {
-      console.error(error,"Slice Error");
+      console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -129,11 +181,15 @@ export function deleteTool(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.delete(`${CONFIG.SERVER_URL}products/tools/${id}`);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/tools/${id}` , 
+      {
+          isArchived: true, 
+      });
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -157,6 +213,7 @@ export function addTool(params) {
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
+        throw error;
       }
     };
 }
@@ -168,7 +225,6 @@ export function updateTool(params) {
     dispatch(slice.actions.startLoading());
     try {
 
-      const formData = new FormData();
       /* eslint-disable */
       let data = {
         id: params.id,
@@ -177,13 +233,14 @@ export function updateTool(params) {
         description: params.description,
       };
      /* eslint-enable */
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/tools/${params.id}`,
+      await axios.patch(`${CONFIG.SERVER_URL}products/tools/${params.id}`,
         data
       );
       dispatch(getTool(params.id));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 

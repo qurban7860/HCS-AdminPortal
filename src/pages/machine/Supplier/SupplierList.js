@@ -1,60 +1,54 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
-import { useState, useEffect, useLayoutEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import debounce from 'lodash/debounce';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import {
-  Grid,
-  Card,
   Table,
   Button,
-  Tooltip,
   TableBody,
   Container,
-  IconButton,
   TableContainer,
-  Stack,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 // routes
-import { getSuppliers, deleteSupplier } from '../../../redux/slices/products/supplier';
+import { getSuppliers, deleteSupplier,   ChangeRowsPerPage,
+  ChangePage,
+  setFilterBy, } from '../../../redux/slices/products/supplier';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import { useSettingsContext } from '../../../components/settings';
+// import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
-  emptyRows,
   TableNoData,
   TableSkeleton,
-  TableEmptyRows,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from '../../../components/table';
-import Iconify from '../../../components/iconify/Iconify';
+// import Iconify from '../../../components/iconify/Iconify';
 import Scrollbar from '../../../components/scrollbar';
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
+// import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 // sections
 import SupplierListTableRow from './SupplierListTableRow';
 import SupplierListTableToolbar from './SupplierListTableToolbar';
-import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-import { Cover } from '../../components/Cover';
+// import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
+import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
+import TableCard from '../../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'ContactName', label: 'ContactName', align: 'left' },
-  { id: 'city', label: 'City', align: 'left' },
-  { id: 'country', label: 'Country', align: 'left' },
+  { id: 'xs1', label: 'Contact Name', align: 'left' },
+  { id: 'md1', label: 'City', align: 'left' },
+  { id: 'xs2', label: 'Country', align: 'left' },
   { id: 'isDisabled', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
-
 ];
 
 const STATUS_OPTIONS = [
@@ -66,35 +60,30 @@ const STATUS_OPTIONS = [
   // { id: '6', value: 'Archived' },
 ];
 
-
-
-
 export default function SupplierList() {
   const [tableData, setTableData] = useState([]);
   const {
     dense,
-    page,
+    // page,
     order,
     orderBy,
-    rowsPerPage,
+    // rowsPerPage,
     setPage,
     //
     selected,
     setSelected,
     onSelectRow,
-    onSelectAllRows,
     //
     onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
+    // onChangePage,
+    // onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'createdAt',
+    defaultOrderBy: 'name',
   });
 
   const dispatch = useDispatch();
 
-  const { themeStretch } = useSettingsContext();
+  // const { themeStretch } = useSettingsContext();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -102,38 +91,41 @@ export default function SupplierList() {
 
   const [filterName, setFilterName] = useState('');
 
-
   const [filterStatus, setFilterStatus] = useState([]);
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { suppliers, isLoading, error, initial, responseMessage } = useSelector((state) => state.supplier);
+  const { suppliers, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector(
+    (state) => state.supplier
+  );
 
+    
+  const onChangeRowsPerPage = (event) => {
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+  };
 
-  useLayoutEffect( () => {
+  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
+
+  useLayoutEffect(() => {
     // console.log('Testing done')
-      dispatch(getSuppliers());
+    dispatch(getSuppliers());
   }, [dispatch]);
   useEffect(() => {
     if (initial) {
-      // if (suppliers && !error) {
-      //   enqueueSnackbar(responseMessage);
-      // }
-      // else {
-      //   enqueueSnackbar(error, { variant: `error` });
-      // }
-      if (suppliers && !error) {
         setTableData(suppliers);
-      }
     }
   }, [suppliers, error, responseMessage, enqueueSnackbar, initial]);
 
-  const dataFiltered = applyFilter({
-    inputData: tableData,
-    comparator: getComparator(order, orderBy),
-    filterName,
-    filterStatus,
-  },[suppliers]);
+  const dataFiltered = applyFilter(
+    {
+      inputData: tableData,
+      comparator: getComparator(order, orderBy),
+      filterName,
+      filterStatus,
+    },
+    [suppliers]
+  );
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
@@ -143,18 +135,33 @@ export default function SupplierList() {
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
+  // const handleOpenConfirm = () => {
+  //   setOpenConfirm(true);
+  // };
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
   };
 
+  const debouncedSearch = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setFilterBy(value))
+  }, 500))
+
   const handleFilterName = (event) => {
+    debouncedSearch.current(event.target.value);
+    setFilterName(event.target.value)
     setPage(0);
-    setFilterName(event.target.value);
   };
+  
+  useEffect(() => {
+      debouncedSearch.current.cancel();
+  }, [debouncedSearch]);
+  
+  useEffect(()=>{
+      setFilterName(filterBy)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -179,59 +186,52 @@ export default function SupplierList() {
     }
   };
 
-  const handleDeleteRows = async (selectedRows,handleClose) => {
-    // console.log(selectedRows)
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-    setSelected([]);
-    setTableData(deleteRows);
+  // const handleDeleteRows = async (selectedRows, handleClose) => {
+  //   // console.log(selectedRows)
+  //   const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
+  //   setSelected([]);
+  //   setTableData(deleteRows);
 
-    if (page > 0) {
-      if (selectedRows.length === dataInPage.length) {
-        setPage(page - 1);
-      } else if (selectedRows.length === dataFiltered.length) {
-        setPage(0);
-      } else if (selectedRows.length > dataInPage.length) {
-        const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-        setPage(newPage);
-      }
-    }
+  //   if (page > 0) {
+  //     if (selectedRows.length === dataInPage.length) {
+  //       setPage(page - 1);
+  //     } else if (selectedRows.length === dataFiltered.length) {
+  //       setPage(0);
+  //     } else if (selectedRows.length > dataInPage.length) {
+  //       const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
+  //       setPage(newPage);
+  //     }
+  //   }
 
-    // dispatch delete supplier
-    // await dispatch(deleteSuppliers(selectedRows));
-    // await dispatch(getSuppliers())
-    handleClose()
-  };
+  //   // dispatch delete supplier
+  //   // await dispatch(deleteSuppliers(selectedRows));
+  //   // await dispatch(getSuppliers())
+  //   handleClose();
+  // };
 
-  const handleEditRow = (id) => {
-    // console.log(id);
-    navigate(PATH_MACHINE.supplier.edit(id));
-  };
+  // const handleEditRow = (id) => {
+  //   // console.log(id);
+  //   navigate(PATH_MACHINE.machines.settings.supplier.edit(id));
+  // };
 
   const handleViewRow = (id) => {
     // console.log(id,PATH_MACHINE.supplier.view(id));
-    navigate(PATH_MACHINE.supplier.view(id));
+    navigate(PATH_MACHINE.machines.settings.supplier.view(id));
   };
 
   const handleResetFilter = () => {
+    dispatch(setFilterBy(''))
     setFilterName('');
-    setFilterStatus([]);
   };
 
   return (
     <>
       <Container maxWidth={false}>
-      <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            // mt: '24px',
-          }}
-        >
-          <Cover name='Suppliers' icon='material-symbols:list-alt-outline' setting="enable" />
-        </Card>
+        <StyledCardContainer>
+          <Cover name="Suppliers" icon="material-symbols:list-alt-outline" setting />
+        </StyledCardContainer>
 
-        <Card sx={{ mt: 3 }}>
+        <TableCard>
           <SupplierListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -241,7 +241,13 @@ export default function SupplierList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
-
+          {!isNotFound && <TablePaginationCustom
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {/* <TableSelectedAction
 
@@ -263,7 +269,7 @@ export default function SupplierList() {
             /> */}
 
             <Scrollbar>
-              <Table size='small' sx={{ minWidth: 960 }}>
+              <Table size="small" sx={{ minWidth: 360 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -303,16 +309,14 @@ export default function SupplierList() {
             </Scrollbar>
           </TableContainer>
 
-          <TablePaginationCustom
+          {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-
-          />
-        </Card>
-
+          />}
+        </TableCard>
       </Container>
 
       <ConfirmDialog
@@ -344,7 +348,7 @@ export default function SupplierList() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
-    const stabilizedThis = inputData?.map((el, index) => [el, index]);
+  const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -355,14 +359,16 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter( (filterSupplier) => filterSupplier?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    filterSupplier?.contactName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-    filterSupplier?.address?.city?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  ||
-    filterSupplier?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    // (product?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    fDate(filterSupplier?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
+    inputData = inputData.filter(
+      (filterSupplier) =>
+        filterSupplier?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        filterSupplier?.contactName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        filterSupplier?.address?.city?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        filterSupplier?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // (product?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(filterSupplier?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    );
   }
-
 
   return inputData;
 }

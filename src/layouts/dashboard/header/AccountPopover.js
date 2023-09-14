@@ -13,9 +13,10 @@ import {
   IconButton,
 } from '@mui/material';
 // routes
-import { PATH_DASHBOARD, PATH_AUTH } from '../../../routes/paths';
+// import { PATH_AUTH, PATH_SECURITY } from '../../../routes/paths';
+import { clearAllPersistedStates } from '../../../redux/slices/auth/clearPersistStates';
+import { useDispatch } from '../../../redux/store';
 import { NAV } from '../../../config-global';
-
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
 // components
@@ -24,7 +25,6 @@ import { useSnackbar } from '../../../components/snackbar';
 import MenuPopover from '../../../components/menu-popover';
 import { IconButtonAnimate } from '../../../components/animate';
 // import Drawer
-import ToggleButton from '../../../components/settings/drawer/ToggleButton';
 import SettingsDrawer from '../../../components/settings/drawer';
 import LayoutOptions from '../../../components/settings/drawer/LayoutOptions';
 import Block from '../../../components/settings/drawer/Block';
@@ -39,37 +39,11 @@ import { useSettingsContext } from '../../../components/settings';
 import { defaultSettings } from '../../../components/settings/config-setting';
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
-// import Drawer from '../../../components/settings/drawer/SettingsDrawer';
+import { TITLES } from '../../../constants/default-constants';
+import { OPTIONS } from './util/OptionsListItems';
 
 // ----------------------------------------------------------------------
 const SPACING = 2.5;
-const OPTIONS = [
-  {
-    label: 'Home',
-    linkTo: '/',
-  },
-  {
-    label: 'Profile',
-    linkTo: PATH_DASHBOARD.user.profile,
-  },
-  // {
-  //   label: 'Settings',
-  //   linkTo: PATH_DASHBOARD.user.account,
-  // },
-  {
-    label: 'Change Password',
-    linkTo: PATH_DASHBOARD.user.password,
-  },
-  // {
-  //   label: 'Change User Password',
-  //   linkTo: PATH_DASHBOARD.user.userPassword,
-  // },
-  // {
-  //   label: 'Customize',
-  //   // link to settings drawer
-
-  // },
-];
 
 // ----------------------------------------------------------------------
 
@@ -78,21 +52,23 @@ export default function AccountPopover() {
   const navigate = useNavigate();
   const { user, logout } = useAuthContext();
   // console.log("user : ",user)
+  const email = localStorage.getItem('email')
+  const displayName = localStorage.getItem('name')
 
   const { enqueueSnackbar } = useSnackbar();
 
   const [openPopover, setOpenPopover] = useState(null);
 
   const {
-     themeMode,
-     themeLayout,
-     themeStretch,
-     themeContrast,
-     themeDirection,
-     themeColorPresets,
-     onResetSetting,
-   } = useSettingsContext();
-
+    themeMode,
+    themeLayout,
+    themeStretch,
+    themeContrast,
+    themeDirection,
+    themeColorPresets,
+    onResetSetting,
+  } = useSettingsContext();
+  const dispatch = useDispatch();
   const handleOpenPopover = (event) => {
     setOpenPopover(event.currentTarget);
   };
@@ -104,7 +80,9 @@ export default function AccountPopover() {
   const handleLogout = async () => {
     try {
       logout();
-      navigate(PATH_AUTH.login, { replace: true });
+      await dispatch(clearAllPersistedStates)
+      // navigate(PATH_AUTH.login, { replace: true });
+      // window.location.href('/auth/login');
       handleClosePopover();
     } catch (error) {
       console.error(error);
@@ -112,7 +90,7 @@ export default function AccountPopover() {
     }
   };
 
-// for settings drawer
+  // for settings drawer
   const [open, setOpen] = useState(false);
 
   const handleToggle = () => {
@@ -129,13 +107,13 @@ export default function AccountPopover() {
     navigate(path || setOpen(!open));
   };
 
-    const notDefault =
-      themeMode !== defaultSettings.themeMode ||
-      themeLayout !== defaultSettings.themeLayout ||
-      themeStretch !== defaultSettings.themeStretch ||
-      themeContrast !== defaultSettings.themeContrast ||
-      themeDirection !== defaultSettings.themeDirection ||
-      themeColorPresets !== defaultSettings.themeColorPresets;
+  const notDefault =
+    themeMode !== defaultSettings.themeMode ||
+    themeLayout !== defaultSettings.themeLayout ||
+    themeStretch !== defaultSettings.themeStretch ||
+    themeContrast !== defaultSettings.themeContrast ||
+    themeDirection !== defaultSettings.themeDirection ||
+    themeColorPresets !== defaultSettings.themeColorPresets;
 
   return (
     <>
@@ -162,16 +140,13 @@ export default function AccountPopover() {
       <MenuPopover open={openPopover} onClose={handleClosePopover} sx={{ width: 200, p: 0 }}>
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {user?.displayName}
+            {user?.displayName || displayName}
           </Typography>
-
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {user?.email}
+            {user?.login || email }
           </Typography>
         </Box>
-
         <Divider sx={{ borderStyle: 'solid' }} />
-
         <Stack sx={{ p: 1 }}>
           {OPTIONS.map((option) => (
             <MenuItem key={option.label} onClick={() => handleClickItem(option.linkTo)}>
@@ -186,7 +161,7 @@ export default function AccountPopover() {
             onClose={handleClose}
           >
             <Typography variant="body2" noWrap>
-              Customize
+              {TITLES.CUSTOMIZE}
             </Typography>
           </MenuItem>
         </Stack>
@@ -194,7 +169,7 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: 'solid' }} />
 
         <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
-          Logout
+          {TITLES.LOGOUT}
         </MenuItem>
       </MenuPopover>
       <>
@@ -225,7 +200,7 @@ export default function AccountPopover() {
             sx={{ py: 2, pr: 1, pl: SPACING }}
           >
             <Typography variant="subtitle1" sx={{ flexGrow: 1 }}>
-              Settings
+              {TITLES.SETTINGS}
             </Typography>
 
             <Tooltip title="Reset">
@@ -244,27 +219,27 @@ export default function AccountPopover() {
           <Divider sx={{ borderStyle: 'solid' }} />
 
           <Scrollbar sx={{ p: SPACING, pb: 0 }}>
-            <Block title="Mode">
+            <Block title={TITLES.MODE}>
               <ModeOptions />
             </Block>
 
-            <Block title="Contrast">
+            <Block title={TITLES.CONTRAST}>
               <ContrastOptions />
             </Block>
 
-            <Block title="Direction">
+            <Block title={TITLES.DIRECTION}>
               <DirectionOptions />
             </Block>
 
-            <Block title="Layout">
+            <Block title={TITLES.LAYOUT}>
               <LayoutOptions />
             </Block>
 
-            <Block title="Stretch" tooltip="Only available at large resolutions > 1600px (xl)">
+            <Block title={TITLES.STRETCH.label} tooltip={TITLES.STRETCH.tooltip}>
               <StretchOptions />
             </Block>
 
-            <Block title="Presets">
+            <Block title={TITLES.PRESETS}>
               <ColorPresetsOptions />
             </Block>
           </Scrollbar>

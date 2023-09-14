@@ -1,12 +1,14 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 // @mui
-import { Switch, Stack, Button, TableRow,  MenuItem, TableCell, Link, } from '@mui/material';
+import { Switch, Button, TableRow, MenuItem, TableCell } from '@mui/material';
 // components
 import Iconify from '../../../components/iconify/Iconify';
 import MenuPopover from '../../../components/menu-popover/MenuPopover';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import { fDate } from '../../../utils/formatTime';
+import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
+import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +29,10 @@ export default function StatusListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, isActive, createdAt} = row;
+
+  const smScreen = useScreenSize('sm')
+
+  const { name, slug, isActive, createdAt } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -41,9 +46,9 @@ export default function StatusListTableRow({
     setOpenConfirm(false);
   };
 
-  const handleOpenPopover = (event) => {
-    setOpenPopover(event.currentTarget);
-  };
+  // const handleOpenPopover = (event) => {
+  //   setOpenPopover(event.currentTarget);
+  // };
 
   const handleClosePopover = () => {
     setOpenPopover(null);
@@ -52,21 +57,11 @@ export default function StatusListTableRow({
   return (
     <>
       <TableRow hover selected={selected}>
-        <TableCell>
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Link
-              noWrap
-              color="inherit"
-              variant="body1"
-              onClick={onViewRow}
-              sx={{ cursor: 'pointer' }}
-            >
-              {name}
-            </Link>
-          </Stack>
-        </TableCell>
+        <LinkTableCell onClick={onViewRow} align="left" param={name} />
+        { smScreen &&<TableCell align="left" >
+          {slug}
+        </TableCell>}
         <TableCell align="center">
-          {' '}
           <Switch checked={isActive} disabled size="small" sx={{ my: -1 }} />{' '}
         </TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>

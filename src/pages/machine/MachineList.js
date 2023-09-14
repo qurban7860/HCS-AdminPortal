@@ -1,40 +1,53 @@
-import PropTypes from 'prop-types';
-import * as Yup from 'yup';
-import { useLayoutEffect, useMemo, useCallback, useState, useEffect } from 'react';
+import { useLayoutEffect, useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import debounce from 'lodash/debounce';
 // form
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid,Container, Stack, Typography, DialogTitle, Dialog, InputAdornment , Table, Button, Tooltip, TableBody, IconButton, TableContainer,} from '@mui/material';
-import {useTable,getComparator,emptyRows,TableNoData,TableSkeleton,TableEmptyRows,TableHeadCustom,TableSelectedAction,TablePaginationCustom} from '../../components/table';
-import Iconify from '../../components/iconify';
+import { Grid, Container, Table, TableBody, TableContainer , Tooltip, IconButton} from '@mui/material';
+import {
+  useTable,
+  getComparator,
+  TableNoData,
+  TableSkeleton,
+  TableHeadCustom,
+  TableSelectedAction,
+  TablePaginationCustom,
+} from '../../components/table';
 import Scrollbar from '../../components/scrollbar';
-import ConfirmDialog from '../../components/confirm-dialog';
+import Iconify from '../../components/iconify';
 import MachineListTableRow from './MachineListTableRow';
 import MachineListTableToolbar from './MachineListTableToolbar';
-import { Cover } from '../components/Cover';
+
+import { Cover } from '../components/Defaults/Cover';
+import { StyledCardContainer } from '../../theme/styles/default-styles';
+
 // slice
-// import { getSPContacts } from '../../redux/slices/contact';
-import machine, { getMachines, deleteMachine } from '../../redux/slices/products/machine';
+import {
+  getMachines,
+  resetMachine,
+  ChangeRowsPerPage,
+  ChangePage,
+  setFilterBy
+} from '../../redux/slices/products/machine';
+import { resetToolInstalled, resetToolsInstalled } from '../../redux/slices/products/toolInstalled';
+import { resetSetting, resetSettings } from '../../redux/slices/products/machineTechParamValue';
+import { resetLicense, resetLicenses } from '../../redux/slices/products/license';
+import { resetNote, resetNotes } from '../../redux/slices/products/machineNote';
+import {
+  resetMachineDocument,
+  resetMachineDocuments,
+} from '../../redux/slices/document/machineDocument';
 
 // routes
-import { PATH_DASHBOARD , PATH_MACHINE } from '../../routes/paths';
+import { PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, { RHFSelect, RHFAutocomplete, RHFTextField, RHFMultiSelect, RHFEditor, RHFUpload, } from '../../components/hook-form';
 // auth
-import { useAuthContext } from '../../auth/useAuthContext';
 // asset
 // util
-import MachineDashboardNavbar from './util/MachineDashboardNavbar';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
-
-import { useSettingsContext } from '../../components/settings';
+import TableCard from '../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
-
 
 // ----------------------------------------------------------------------
 const STATUS_OPTIONS = [
@@ -47,42 +60,64 @@ const STATUS_OPTIONS = [
 ];
 
 const TABLE_HEAD = [
-  { id: 'havePrevious', label: '', align: 'center', width: 1.5 },
+  // { id: 'havePrevious', label: '', align: 'center', width: 1.5 },
   { id: 'serialNumber', label: 'Serial Number', align: 'left' },
   // { id: 'previousMachine', label: 'Previous Machine', align: 'left' },
-  { id: 'machineName', label: 'Name', align: 'left' },
-  { id: 'model', label: 'Model', align: 'left' },
-  { id: 'status', label: 'Status', align: 'left' },
-  { id: 'customer', label: 'Customer', align: 'left' },
-  { id: 'instalationSite', label: 'Installation Site', align: 'left' },
+  { id: 'md1', label: 'Name', align: 'left' },
+  { id: 'xs1', label: 'Model', align: 'left' },
+  { id: 'xs2', label: 'Status', align: 'left' },
+  { id: 'md2', label: 'Customer', align: 'left' },
+  { id: 'md3', label: 'Installation Site', align: 'left' },
   { id: 'active', label: 'Active', align: 'center' },
   { id: 'created_at', label: 'Created At', align: 'left' },
 ];
 
 export default function MachineList() {
-  const {dense,page,order,orderBy,rowsPerPage,setPage,selected,setSelected,onSelectRow,onSelectAllRows,onSort,onChangeDense,onChangePage,onChangeRowsPerPage,} = useTable({ defaultOrderBy: 'createdAt', });
-  const { userId, user } = useAuthContext();
+  const {
+    order,
+    orderBy,
+    setPage,
+    selected,
+    onSelectRow,
+    onSelectAllRows,
+    onSort,
+  } = useTable({ defaultOrderBy: '-createdAt' });
+
+  const onChangeRowsPerPage = (event) => {
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+  };
+
+  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
+
+  // const { userId, user } = useAuthContext();
   const [tableData, setTableData] = useState([]);
   const dispatch = useDispatch();
-  const { machines, isLoading, error, initial, responseMessage } = useSelector((state) => state.machine);
+  const { machines, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector( (state) => state.machine );
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+
   useLayoutEffect(() => {
     dispatch(getMachines());
+    dispatch(resetMachine());
+    dispatch(resetToolInstalled());
+    dispatch(resetToolsInstalled());
+    dispatch(resetSetting());
+    dispatch(resetSettings());
+    dispatch(resetLicense());
+    dispatch(resetLicenses());
+    dispatch(resetNote());
+    dispatch(resetNotes());
+    dispatch(resetMachineDocument());
+    dispatch(resetMachineDocuments());
   }, [dispatch]);
-  const { themeStretch } = useSettingsContext();
+
   const [filterName, setFilterName] = useState('');
   const [filterStatus, setFilterStatus] = useState([]);
-  const [openConfirm, setOpenConfirm] = useState(false);
+  const [setOpenConfirm] = useState(false);
 
   useEffect(() => {
     if (initial) {
-      // if (machines && !error) {
-      //   enqueueSnackbar(responseMessage);
-      // }
-      // else {
-      //   enqueueSnackbar(error, { variant: `error` });
-      // }
       setTableData(machines);
     }
   }, [machines, error, responseMessage, enqueueSnackbar, initial]);
@@ -94,93 +129,59 @@ export default function MachineList() {
     filterStatus,
   });
 
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
-  const denseHeight = dense ? 60 : 80;
-
   const isFiltered = filterName !== '' || !!filterStatus.length;
-
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+
+  const denseHeight = 60;
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
   };
 
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
+
+  const debouncedSearch = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setFilterBy(value))
+  }, 500))
 
   const handleFilterName = (event) => {
+    debouncedSearch.current(event.target.value);
+    setFilterName(event.target.value)
     setPage(0);
-    setFilterName(event.target.value);
   };
+  
+  useEffect(() => {
+      debouncedSearch.current.cancel();
+  }, [debouncedSearch]);
+  
+  useEffect(()=>{
+      setFilterName(filterBy)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
   const handleFilterStatus = (event) => {
     setPage(0);
     setFilterStatus(event.target.value);
   };
 
-  const handleDeleteRow = async (id) => {
-    try {
-      await dispatch(deleteMachine(id));
-      dispatch(getMachines());
-      setSelected([]);
-      if (page > 0) {
-        if (dataInPage.length < 2) {
-          setPage(page - 1);
-        }
-      }
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
 
-  const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-    setSelected([]);
-    setTableData(deleteRows);
 
-    if (page > 0) {
-      if (selectedRows.length === dataInPage.length) {
-        setPage(page - 1);
-      } else if (selectedRows.length === dataFiltered.length) {
-        setPage(0);
-      } else if (selectedRows.length > dataInPage.length) {
-        const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-        setPage(newPage);
-      }
-    }
-  };
-
-  // const handleEditRow = (id) => {
-  //   navigate(PATH_MACHINE.machine.edit(id));
-  // };
   const handleViewRow = (id) => {
-    navigate(PATH_MACHINE.machine.view(id));
+    navigate(PATH_MACHINE.machines.view(id));
   };
 
   const handleResetFilter = () => {
+    dispatch(setFilterBy(''))
     setFilterName('');
     setFilterStatus([]);
   };
 
   return (
-    <>
-      <Container maxWidth={false}>
-        <Grid container spacing={3}>
-          {/* <MachineDashboardNavbar/> */}
-        </Grid>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            mt: '24px',
-          }}
-        >
-          <Cover title="Machines" name="Machines" icon="arcticons:materialistic" setting="enable" />
-        </Card>
-        <Card sx={{ mt: 3 }}>
+    <Container maxWidth={false} sx={{mb:3}}>
+        <StyledCardContainer>
+          <Cover title="Machines" name="Machines" icon="arcticons:materialistic" setting />
+        </StyledCardContainer>
+        <TableCard>
           <MachineListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -190,8 +191,16 @@ export default function MachineList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
+
+          {!isNotFound && <TablePaginationCustom
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            {/* {selected.length > 1 ? "" :
+            {selected.length > 1 ? "" :
 
             <TableSelectedAction
 
@@ -211,9 +220,9 @@ export default function MachineList() {
                 </Tooltip>
               }
             />
-          } */}
+          }
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 960 }}>
+              <Table size="small" sx={{ minWidth: 360 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -229,69 +238,48 @@ export default function MachineList() {
                   // }
                 />
 
-                <TableBody>
-                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) =>
-                      row ? (
-                        <MachineListTableRow
-                          key={row._id}
-                          row={row}
-                          // selected={selected.includes(row._id)}
-                          // onSelectRow={() => onSelectRow(row._id)}
-                          // onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)}
-                          onViewRow={() => handleViewRow(row._id)}
-                        />
-                      ) : (
-                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                      )
-                    )}
+              <TableBody>
+                {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) =>
+                    row ? (
+                      <MachineListTableRow
+                        key={row._id}
+                        row={row}
+                        selected={selected.includes(row._id)}
+                        onSelectRow={() => onSelectRow(row._id)}
+                        // onDeleteRow={() => handleDeleteRow(row._id)}
+                        // onEditRow={() => handleEditRow(row._id)}
+                        onViewRow={() => handleViewRow(row._id)}
+                        style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                      />
+                    ) : (
+                      !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                    )
+                  )}
 
-                  {/* <TableEmptyRows
+                {/* <TableEmptyRows
                     height={denseHeight}
                     emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
                   /> */}
-                </TableBody>
+
+              </TableBody>
               </Table>
             </Scrollbar>
-            <TableNoData isNotFound={isNotFound} />
           </TableContainer>
 
-          <TablePaginationCustom
+          {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            //
-          />
-        </Card>
-      </Container>
-
-      <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRow(selected);
-              handleCloseConfirm();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      />
-    </>
+          />}
+        </TableCard>
+        <Grid item md={12}>
+          <TableNoData isNotFound={isNotFound} />
+        </Grid>
+    </Container>
   );
 }
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
@@ -306,14 +294,17 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter( (product) => product?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    product?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-    product?.machineModel?.name?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  ||
-    product?.status?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    product?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    product?.instalationSite?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    // (product?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    fDate(product?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
+    inputData = inputData.filter(
+      (product) =>
+        product?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        product?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        product?.machineModel?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        product?.status?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        product?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        product?.instalationSite?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // (product?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(product?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    );
   }
   return inputData;
 }

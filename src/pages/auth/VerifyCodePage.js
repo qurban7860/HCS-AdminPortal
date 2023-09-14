@@ -1,4 +1,4 @@
-import { Helmet } from 'react-helmet-async';
+// import { Helmet } from 'react-helmet-async';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { Link, Typography } from '@mui/material';
@@ -10,7 +10,7 @@ import Iconify from '../../components/iconify';
 import AuthVerifyCodeForm from '../../sections/auth/AuthVerifyCodeForm';
 // assets
 import { EmailInboxIcon } from '../../assets/icons';
-import { CONFIG } from '../../config-global';
+// import { CONFIG } from '../../config-global';
 
 // ----------------------------------------------------------------------
 

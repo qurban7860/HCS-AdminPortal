@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useMemo,useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -7,26 +7,30 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, Grid, Stack, Typography, Container, TextField } from '@mui/material';
-import { MuiTelInput, matchIsValidTel } from 'mui-tel-input'
+import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
 // slice
 import { addSupplier } from '../../../redux/slices/products/supplier';
 // routes
-import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
-import { useSettingsContext } from '../../../components/settings';
+import { PATH_MACHINE } from '../../../routes/paths';
+// import { useSettingsContext } from '../../../components/settings';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFAutocomplete, RHFTextField, RHFSwitch } from '../../../components/hook-form';
+import FormProvider, {
+  RHFAutocomplete,
+  RHFTextField,
+  RHFSwitch,
+} from '../../../components/hook-form';
 // auth
-import { useAuthContext } from '../../../auth/useAuthContext';
+// import { useAuthContext } from '../../../auth/useAuthContext';
 // asset
 import { countries } from '../../../assets/data';
 // util
-import {Cover} from '../../components/Cover';
-import AddFormButtons from '../../components/AddFormButtons';
+import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
 export default function StatusAddForm() {
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -34,25 +38,25 @@ export default function StatusAddForm() {
   const [phone, setPhone] = useState('');
   const [fax, setFaxVal] = useState('');
   const AddMachineSchema = Yup.object().shape({
-    name: Yup.string().max(50).required('Name is required')  ,
-    isActive : Yup.boolean(),
-    contactName: Yup.string(),
-    contactTitle: Yup.string(),
+    name: Yup.string().max(50).required('Name is required'),
+    isActive: Yup.boolean(),
+    contactName: Yup.string().max(50),
+    contactTitle: Yup.string().max(50),
     // phone: Yup.string().nullable(),
     // fax: Yup.string().nullable(),
     email: Yup.string().email(),
     website: Yup.string(),
-    street: Yup.string(),
-    suburb: Yup.string(),
-    region: Yup.string(),
+    street: Yup.string().max(50),
+    suburb: Yup.string().max(50),
+    region: Yup.string().max(50),
     // country: Yup.string(),
-    city: Yup.string(),
-    postcode: Yup.string(),
+    city: Yup.string().max(50),
+    postcode: Yup.string().max(20),
   });
 
   const defaultValues = useMemo(
     () => ({
-      name: ''  ,
+      name: '',
       contactName: '',
       contactTitle: '',
       // phone: '',
@@ -64,7 +68,7 @@ export default function StatusAddForm() {
       region: '',
       // country: '',
       city: '',
-      postcode: '' ,
+      postcode: '',
       isActive: true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -78,101 +82,129 @@ export default function StatusAddForm() {
 
   const {
     reset,
-    watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const toggleCancel = () => 
-  {
-    navigate(PATH_MACHINE.supplier.list);
+  const toggleCancel = () => {
+    navigate(PATH_MACHINE.machines.settings.supplier.list);
   };
 
   const handlePhoneChange = (newValue) => {
-    matchIsValidTel(newValue)
-    if(newValue.length < 20){
-      setPhone(newValue)
+    matchIsValidTel(newValue);
+    if (newValue.length < 20) {
+      setPhone(newValue);
     }
-  }
+  };
 
   const handleFaxChange = (newValue) => {
-    matchIsValidTel(newValue)
-    if(newValue.length < 20){
-      setFaxVal(newValue)
+    matchIsValidTel(newValue);
+    if (newValue.length < 20) {
+      setFaxVal(newValue);
     }
-  }
+  };
 
   const onSubmit = async (data) => {
-    try{ 
-      if(phone && phone.length > 7){
-        data.phone = phone ;
+    try {
+      if (phone && phone.length > 4) {
+        data.phone = phone;
       }
-      if(fax && fax.length > 7){
-        data.fax = fax
+      if (fax && fax.length > 4) {
+        data.fax = fax;
       }
-      if(country){
-        data.country = country.label
+      if (country) {
+        data.country = country.label;
       }
       console.log(data);
       await dispatch(addSupplier(data));
       reset();
       enqueueSnackbar('Create success!');
-      navigate(PATH_MACHINE.supplier.list); 
-    } catch(error){
+      navigate(PATH_MACHINE.machines.settings.supplier.list);
+    } catch (error) {
       // enqueueSnackbar('Saving failed!');
-      enqueueSnackbar(error?.message)
+      enqueueSnackbar(error, { variant: `error` });
       console.error(error);
     }
-};
+  };
 
-  const { themeStretch } = useSettingsContext();
+  // const { themeStretch } = useSettingsContext();
   return (
-      <Container maxWidth={ false }>
-        <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
-          <Cover name='New Supplier' icon='material-symbols:inventory-2-rounded' />
-        </Card>
-        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <Grid item xs={18} md={12} sx={{mt: 3}}>
-            <Card sx={{ p: 3, mt: 3}}>
-              <Stack spacing={3}>
-                <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} >
-                <RHFTextField name="name" label="Name of Supplier"  />
-                </Box>
-              </Stack>
-            </Card>
-            <Card sx={{ p: 3, mt: 3}}>
-              <Stack spacing={3}>
-                <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
-                  Contact Information
-                </Typography>
-                <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)', }} >
-                  <RHFTextField name="contactName" label="Contact Name"/>
-                  <RHFTextField name="contactTitle" label="Contact Title"/>
-                  {/* <RHFTextField name="phone" label="Phone" /> */}
-                  <MuiTelInput value={phone} name='phone' label="Phone Number" flagSize="medium"  onChange={handlePhoneChange}  forceCallingCode defaultCountry="NZ"/>
-                  {/* <RHFTextField name="fax" label="Fax" /> */}
-                  <MuiTelInput value={fax} name='fax' label="Fax" flagSize="medium"  onChange={handleFaxChange} forceCallingCode defaultCountry="NZ"/>
-                  <RHFTextField name="email" label="Email"/>
-                  <RHFTextField name="website" label="Website"/>
-                </Box>
-              </Stack>
-            </Card>
-            <Grid container spacing={3}>
+    <Container maxWidth={false}>
+      <StyledCardContainer>
+        <Cover name="New Supplier" icon="material-symbols:inventory-2-rounded" />
+      </StyledCardContainer>
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <Grid item xs={18} md={12} sx={{ mt: 3 }}>
+          <Card sx={{ p: 3, mt: 3 }}>
+            <Stack spacing={3}>
+              <Box
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
+              >
+                <RHFTextField name="name" label="Name*" />
+              </Box>
+            </Stack>
+          </Card>
+          <Card sx={{ p: 3, mt: 3 }}>
+            <Stack spacing={3}>
+              <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
+                Contact Information
+              </Typography>
+              <Box
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
+              >
+                <RHFTextField name="contactName" label="Contact Name" />
+                <RHFTextField name="contactTitle" label="Contact Title" />
+                {/* <RHFTextField name="phone" label="Phone" /> */}
+                <MuiTelInput
+                  value={phone}
+                  name="phone"
+                  label="Phone Number"
+                  flagSize="medium"
+                  onChange={handlePhoneChange}
+                  forceCallingCode
+                  defaultCountry="NZ"
+                />
+                {/* <RHFTextField name="fax" label="Fax" /> */}
+                <MuiTelInput
+                  value={fax}
+                  name="fax"
+                  label="Fax"
+                  flagSize="medium"
+                  onChange={handleFaxChange}
+                  forceCallingCode
+                  defaultCountry="NZ"
+                />
+                <RHFTextField name="email" label="Email" />
+                <RHFTextField name="website" label="Website" />
+              </Box>
+            </Stack>
+          </Card>
+          <Grid container spacing={3}>
             <Grid item xs={18} md={12}>
-            <Card sx={{ p: 3, mt: 3}}>
-              <Stack spacing={3}>
-                <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
-                  Address Information
-                </Typography>
-                <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)', }} >
-                  <RHFTextField name="street" label="Street"/>
-                  <RHFTextField name="suburb" label="Suburb" />
-                  <RHFTextField name="city" label="City" />
-                  <RHFTextField name="postcode" label="Post Code" />
-                  <RHFTextField name="region" label="Region" />
-                  <RHFAutocomplete
-                     id="country-select-demo"
+              <Card sx={{ p: 3, mt: 3 }}>
+                <Stack spacing={3}>
+                  <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
+                    Address Information
+                  </Typography>
+                  <Box
+                    rowGap={2}
+                    columnGap={2}
+                    display="grid"
+                    gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
+                  >
+                    <RHFTextField name="street" label="Street" />
+                    <RHFTextField name="suburb" label="Suburb" />
+                    <RHFTextField name="city" label="City" />
+                    <RHFTextField name="region" label="Region" />
+                    <RHFTextField name="postcode" label="Post Code" />
+                    <RHFAutocomplete
+                      id="country-select-demo"
                       options={countries}
                       value={country || null}
                       name="country"
@@ -180,11 +212,10 @@ export default function StatusAddForm() {
                       autoHighlight
                       isOptionEqualToValue={(option, value) => option.lable === value.lable}
                       onChange={(event, newValue) => {
-                        if(newValue){
-                        setCountryVal(newValue);
-                        }
-                        else{ 
-                        setCountryVal("");
+                        if (newValue) {
+                          setCountryVal(newValue);
+                        } else {
+                          setCountryVal('');
                         }
                       }}
                       getOptionLabel={(option) => `${option.label} (${option.code}) `}
@@ -200,22 +231,34 @@ export default function StatusAddForm() {
                           {option.label} ({option.code}) +{option.phone}
                         </Box>
                       )}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Choose a country"
-                        />
-                      )}
+                      renderInput={(params) => <TextField {...params} label="Choose a country" />}
+                    />
+                  </Box>
+                  <RHFSwitch
+                    name="isActive"
+                    labelPlacement="start"
+                    label={
+                      <Typography
+                        variant="subtitle2"
+                        sx={{
+                          mx: 0,
+                          width: 1,
+                          justifyContent: 'space-between',
+                          mb: 0.5,
+                          color: 'text.secondary',
+                        }}
+                      >
+                        Active
+                      </Typography>
+                    }
                   />
-                </Box>
-                <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>Active</Typography>} />
-                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
-              </Stack>
-            </Card>
-            </Grid>
+                  <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+                </Stack>
+              </Card>
             </Grid>
           </Grid>
-        </FormProvider>
-      </Container>
+        </Grid>
+      </FormProvider>
+    </Container>
   );
 }

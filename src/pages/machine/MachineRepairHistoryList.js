@@ -164,11 +164,11 @@ export default function MachineRepairHistoryList() {
 
   useEffect(() => {
     if (initial) {
-      if (sites && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }   
+      // if (sites && !error) {
+      //   enqueueSnackbar(responseMessage);
+      // } else {
+      //   enqueueSnackbar(error, { variant: `error` });
+      // }   
       setTableData(sites);
     }
   }, [sites, error, responseMessage, enqueueSnackbar, initial]);

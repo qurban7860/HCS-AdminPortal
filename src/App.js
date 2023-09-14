@@ -3,7 +3,6 @@ import './locales/i18n';
 
 // scroll bar
 import 'simplebar/src/simplebar.css';
-
 // lightbox
 /* eslint-disable import/no-unresolved */
 import 'yet-another-react-lightbox/styles.css';
@@ -32,6 +31,9 @@ import { PersistGate } from 'redux-persist/lib/integration/react';
 // @mui
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers';
+// Error Boundry
+import ErrorBoundary from './utils/ErrorBoundary'
+
 // redux
 import { store, persistor } from './redux/store';
 // routes
@@ -46,6 +48,7 @@ import SnackbarProvider from './components/snackbar';
 import ScrollToTop from './components/scroll-to-top';
 import { MotionLazyContainer } from './components/animate';
 import { ThemeSettings, SettingsProvider } from './components/settings';
+import IdleManager from './components/idleManager';
 
 // Check our docs
 // https://docs.minimals.cc/authentication/js-version
@@ -54,37 +57,41 @@ import { AuthProvider } from './auth/JwtContext';
 // import { AuthProvider } from './auth/Auth0Context';
 // import { AuthProvider } from './auth/FirebaseContext';
 // import { AuthProvider } from './auth/AwsCognitoContext';
+import Page500 from './pages/Page500';
 
 // ----------------------------------------------------------------------
 
 export default function App() {
   return (
     <AuthProvider>
-      <HelmetProvider>
-        <ReduxProvider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <SettingsProvider>
-                <BrowserRouter>
-                  <ScrollToTop />
-                  <MotionLazyContainer>
-                    <ThemeProvider>
-                      <ThemeSettings>
-                        <ThemeLocalization>
-                          <SnackbarProvider>
-                            <StyledChart />
-                            <Router />
-                          </SnackbarProvider>
-                        </ThemeLocalization>
-                      </ThemeSettings>
-                    </ThemeProvider>
-                  </MotionLazyContainer>
-                </BrowserRouter>
-              </SettingsProvider>
-            </LocalizationProvider>
-          </PersistGate>
-        </ReduxProvider>
-      </HelmetProvider>
-    </AuthProvider>
+        <HelmetProvider>
+          <ReduxProvider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <SettingsProvider>
+                  <BrowserRouter>
+                    <ErrorBoundary fallback={<Page500 /> } >
+                      <ScrollToTop />
+                      <MotionLazyContainer>
+                        <ThemeProvider>
+                          <ThemeSettings>
+                            <ThemeLocalization>
+                              <SnackbarProvider>
+                                <StyledChart />
+                                <IdleManager/>
+                                  <Router />
+                              </SnackbarProvider>
+                            </ThemeLocalization>
+                          </ThemeSettings>
+                        </ThemeProvider>
+                      </MotionLazyContainer>
+                   </ErrorBoundary>
+                  </BrowserRouter>
+                </SettingsProvider>
+              </LocalizationProvider>
+            </PersistGate>
+          </ReduxProvider>
+        </HelmetProvider>
+      </AuthProvider>
   );
 }

@@ -1,29 +1,24 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { sentenceCase } from 'change-case';
 // @mui
 import {
   Switch,
-  Stack,
   Button,
   TableRow,
-  Checkbox,
   MenuItem,
   TableCell,
-  IconButton,
-  Link,
 } from '@mui/material';
 // utils
-import { fData,fCurrency } from '../../../utils/formatNumber';
+// import { fData, fCurrency } from '../../../utils/formatNumber';
 // components
 import Iconify from '../../../components/iconify/Iconify';
 import MenuPopover from '../../../components/menu-popover/MenuPopover';
 import ConfirmDialog from '../../../components/confirm-dialog';
-import Label from '../../../components/label';
+// import Label from '../../../components/label';
 import { fDate } from '../../../utils/formatTime';
-
-import { useSelector } from '../../../redux/store';
-
+import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
+// import { useSelector } from '../../../redux/store';
+import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -44,12 +39,13 @@ export default function ParameterListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, category, isActive, createdAt} = row;
+  const { name, category, isActive, createdAt } = row;
+
+  const smScreen = useScreenSize('sm')
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openPopover, setOpenPopover] = useState(null);
-
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -59,14 +55,13 @@ export default function ParameterListTableRow({
     setOpenConfirm(false);
   };
 
-  const handleOpenPopover = (event) => {
-    setOpenPopover(event.currentTarget);
-  };
+  // const handleOpenPopover = (event) => {
+  //   setOpenPopover(event.currentTarget);
+  // };
 
   const handleClosePopover = () => {
     setOpenPopover(null);
   };
-
 
   return (
     <>
@@ -75,20 +70,8 @@ export default function ParameterListTableRow({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
 
-        <TableCell>
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Link
-              noWrap
-              color="inherit"
-              variant="body1"
-              onClick={onViewRow}
-              sx={{ cursor: 'pointer' }}
-            >
-              {name}
-            </Link>
-          </Stack>
-        </TableCell>
-        <TableCell>{category?.name || ''}</TableCell>
+        <LinkTableCell onClick={onViewRow} align="left" param={name} />
+        { smScreen && <TableCell>{category?.name || ''}</TableCell>}
         {/* <TableCell>category</TableCell> */}
         <TableCell align="center">
           {' '}

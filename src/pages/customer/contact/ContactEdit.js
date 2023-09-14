@@ -1,4 +1,3 @@
-import { Helmet } from 'react-helmet-async';
 import { useLayoutEffect } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
@@ -21,7 +20,7 @@ export default function ContactEdit() {
 
   const dispatch = useDispatch();
 
-  const { id } = useParams(); 
+  const { id } = useParams();
   // console.log(id);
 
 
@@ -34,7 +33,6 @@ export default function ContactEdit() {
 
 
   return (
-    <>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Edit Contact"
@@ -47,9 +45,7 @@ export default function ContactEdit() {
             { name: contact?.name },
           ]}
         />
-
         <ContactEditForm/>
       </Container>
-    </>
   );
 }

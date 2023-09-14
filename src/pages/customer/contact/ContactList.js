@@ -1,7 +1,5 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 // @mui
 import {
   Grid,
@@ -20,7 +18,7 @@ import { useDispatch, useSelector } from '../../../redux/store';
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import { useSettingsContext } from '../../../components/settings';
+// import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -39,9 +37,9 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import ContactListTableRow from './ContactListTableRow';
 import ContactListTableToolbar from './ContactListTableToolbar';
-import { getContacts, deleteContact, getContact } from '../../../redux/slices/customer/contact';
+import { getContacts, deleteContact } from '../../../redux/slices/customer/contact';
 import CustomerDashboardNavbar from '../util/CustomerDashboardNavbar';
-import CustomerViewPage from '../CustomerView';
+// import CustomerViewPage from '../CustomerView';
 
 // ----------------------------------------------------------------------
 
@@ -82,7 +80,7 @@ export default function ContactList() {
     onSelectAllRows,
     //
     onSort,
-    onChangeDense,
+    // onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
@@ -90,7 +88,7 @@ export default function ContactList() {
   });
 
   const dispatch = useDispatch();
-  const { themeStretch } = useSettingsContext();
+  // const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
@@ -162,7 +160,7 @@ export default function ContactList() {
   };
 
   const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
+    const deleteRows = tableData.filter((row) => !selectedRows.includes(row?._id));
     setSelected([]);
     setTableData(deleteRows);
 
@@ -219,7 +217,7 @@ export default function ContactList() {
               onSelectAllRows={(checked) =>
                 onSelectAllRows(
                   checked,
-                  tableData.map((row) => row._id)
+                  tableData.map((row) => row?._id)
                 )
               }
               action={
@@ -242,7 +240,7 @@ export default function ContactList() {
                   // onSelectAllRows={(checked) =>
                   //   onSelectAllRows(
                   //     checked,
-                  //     tableData.map((row) => row._id)
+                  //     tableData.map((row) => row?._id)
                   //   )
                   // }
                 />
@@ -253,13 +251,13 @@ export default function ContactList() {
                     .map((row, index) =>
                       row ? (
                         <ContactListTableRow
-                          key={row._id}
+                          key={row?._id}
                           row={row}
-                          selected={selected.includes(row._id)}
-                          onSelectRow={() => onSelectRow(row._id)}
-                          onDeleteRow={() => handleDeleteRow(row._id)}
-                          onEditRow={() => handleEditRow(row.customer, row._id)}
-                          onViewRow={() => handleViewRow(row.customer._id, row._id)}
+                          selected={selected.includes(row?._id)}
+                          onSelectRow={() => onSelectRow(row?._id)}
+                          onDeleteRow={() => handleDeleteRow(row?._id)}
+                          onEditRow={() => handleEditRow(row?.customer, row?._id)}
+                          onViewRow={() => handleViewRow(row?.customer?._id, row?._id)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

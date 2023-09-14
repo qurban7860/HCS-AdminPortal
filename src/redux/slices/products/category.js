@@ -4,7 +4,6 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-
 const initialState = {
   intial: false,
   categoryFormVisibility: false,
@@ -14,9 +13,11 @@ const initialState = {
   isLoading: false,
   error: null,
   categories: [],
+  activeCategories: [],
   category: {},
-  categoryParams: {
-  }
+  filterBy: '',
+  page: 0,
+  rowsPerPage: 100,
 };
 
 const slice = createSlice({
@@ -35,20 +36,7 @@ const slice = createSlice({
     setCategoryFormVisibility(state, action){
       state.categoryFormVisibility = action.payload;
     },
-    // RESET Category
-    resetCategory(state){
-      state.category = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
-    // RESET Categories
-    resetCategories(state){
-      state.category = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
+  
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -60,6 +48,13 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.categories = action.payload;
+      state.initial = true;
+    },
+    // GET Active Categories
+    getActiveCategoriesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeCategories = action.payload;
       state.initial = true;
     },
     // GET Category
@@ -77,6 +72,40 @@ const slice = createSlice({
       state.success = true;
       state.initial = true;
     },
+
+    // RESET CATEGORIES
+    resetCategory(state){
+      state.category = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
+    // RESET CATEGORIES
+    resetCategories(state){
+      state.categories = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+    resetActiveCategories(state){
+      state.activeCategories = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+    // Set FilterBy
+    setFilterBy(state, action) {
+      state.filterBy = action.payload;
+    },
+    // Set PageRowCount
+    ChangeRowsPerPage(state, action) {
+      state.rowsPerPage = action.payload;
+    },
+    // Set PageNo
+    ChangePage(state, action) {
+      state.page = action.payload;
+    },
   },
 });
 
@@ -88,7 +117,11 @@ export const {
   setCategoryEditFormVisibility,
   resetCategory,
   resetCategories,
+  resetActiveCategories,
   setResponseMessage,
+  setFilterBy,
+  ChangeRowsPerPage,
+  ChangePage,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -97,13 +130,43 @@ export function getCategories (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/categories`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/categories`, 
+      {
+        params: {
+          isArchived: false
+        }
+      });
       dispatch(slice.actions.getCategoriesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Categories loaded successfully'));
       // dispatch(slice.actions)
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error.Message))
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  }
+}
+
+// ----------------------------------------------------------------------
+
+export function getActiveCategories (){
+  return async (dispatch) =>{
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/categories`, 
+      {
+        params: {
+          isArchived: false,
+          isActive: true
+        }
+      });
+      dispatch(slice.actions.getActiveCategoriesSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Categories loaded successfully'));
+      // dispatch(slice.actions)
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   }
 }
@@ -119,6 +182,7 @@ export function getCategory(id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -129,12 +193,16 @@ export function deleteCategory(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.delete(`${CONFIG.SERVER_URL}products/categories/${id}`);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/categories/${id}`,
+      {
+        isArchived: true, 
+      });
       dispatch(slice.actions.setResponseMessage(response.data));
       // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -151,6 +219,7 @@ export function addCategory(params) {
         let data = {
           name: params.name,
           isActive: params.isActive,
+          connections: params.connections
         };
         /* eslint-enable */
         if(params.description){
@@ -161,6 +230,7 @@ export function addCategory(params) {
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
+        throw error;
       }
     };
 }
@@ -176,16 +246,17 @@ export function updateCategory(params,Id) {
         name: params.name,
         isActive: params.isActive,
         description: params.description,
+        connections: params.connections
       };
      /* eslint-enable */
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/categories/${Id}`,
+      await axios.patch(`${CONFIG.SERVER_URL}products/categories/${Id}`,
         data
       );
       dispatch(getCategories(params.id));
-      dispatch(slice.actions.setEditFormVisibility(false));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }

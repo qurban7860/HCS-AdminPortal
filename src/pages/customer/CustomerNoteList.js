@@ -1,173 +1,75 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
+// import { Helmet } from 'react-helmet-async';
+// import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+// import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
-  Stack,
   Card,
-  Item,
   Grid,
-  Box,
-  Table,
   Button,
-  Tooltip,
-  TableBody,
-  Container,
-  IconButton,
-  TableContainer,
   Typography,
   Accordion,
   AccordionSummary,
-  AccordionDetails
+  AccordionDetails,
 } from '@mui/material';
-import { fDate,fDateTime } from '../../utils/formatTime';
-
+import { fDateTime } from '../../utils/formatTime';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import { useSettingsContext } from '../../components/settings';
-import {
-  useTable,
-  getComparator,
-  emptyRows,
-  TableNoData,
-  TableSkeleton,
-  TableEmptyRows,
-  TableHeadCustom,
-  TableSelectedAction,
-  TablePaginationCustom,
-} from '../../components/table';
+// import { useSettingsContext } from '../../components/settings';
+import { useTable, getComparator, TableNoData } from '../../components/table';
 import Iconify from '../../components/iconify';
-import Scrollbar from '../../components/scrollbar';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
-import EmptyContent from '../../components/empty-content';
-
+import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
+import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
+import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
 import NotesViewForm from './note/NotesViewForm';
-import NoteStatistics from './note/NoteStatistics';
 import NoteEditForm from './note/NoteEditForm';
 import NoteAddForm from './note/NoteAddForm';
-
-
-
-import { getNotes, deleteNote, getNote ,updateNote,setNoteFormVisibility} from '../../redux/slices/customer/note';
-import { getSites } from '../../redux/slices/customer/site';
-import { getContacts } from '../../redux/slices/customer/contact';
-
-
-
+import { getNotes, deleteNote, setNoteFormVisibility } from '../../redux/slices/customer/note';
+import { getActiveSites } from '../../redux/slices/customer/site';
+import { getActiveContacts } from '../../redux/slices/customer/contact';
+import { BUTTONS, BREADCRUMBS, DIALOGS } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'note', label: 'Note', align: "left"},
-  { id: 'isDisabled', label: 'Disabled', align: "left"},
-  { id: 'created_at', label: 'Created At', align: "left"},
-  { id: 'action', label: 'Actions', align: "left"},
-
+  { id: 'note', label: 'Note', align: 'left' },
+  { id: 'isDisabled', label: 'Disabled', align: 'left' },
+  { id: 'created_at', label: 'Created At', align: 'left' },
+  { id: 'action', label: 'Actions', align: 'left' },
 ];
-
-const STATUS_OPTIONS = [
-  // { id: '1', value: 'Order Received' },
-  // { id: '2', value: 'In Progress' },
-  // { id: '3', value: 'Ready For Transport' },
-  // { id: '4', value: 'In Freight' },
-  // { id: '5', value: 'Deployed' },
-  // { id: '6', value: 'Archived' },
-];
-
-// const STATUS_OPTIONS = [
-//   { value: 'all_notes', label: 'All Note' },
-//   { value: 'deployable', label: 'All Deployable' },
-//   { value: 'pending', label: 'All Pending' },
-//   { value: 'archived', label: 'All Archived' },
-//   { value: 'undeployable', label: 'All Undeployable' }
-// ];
 
 // ----------------------------------------------------------------------
 
 export default function CustomerNoteList() {
   const {
-    dense,
     page,
     order,
     orderBy,
     rowsPerPage,
-    setPage,
     //
     selected,
     setSelected,
-    onSelectRow,
-    onSelectAllRows,
-    //
-    onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'createdAt',
+    defaultOrderBy: '-createdAt',
   });
-
   const dispatch = useDispatch();
-
-  const { themeStretch } = useSettingsContext();
-
+  // const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
-
-  const navigate = useNavigate();
-
-  const [filterName, setFilterName] = useState('');
+  // const navigate = useNavigate();
+  const [filterName] = useState('');
   const [tableData, setTableData] = useState([]);
-  const [filterStatus, setFilterStatus] = useState([]);
-
+  const [filterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
-
-
   const [activeIndex, setActiveIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
-
-  const handleAccordianClick = (accordianIndex) => {
-   if(accordianIndex === activeIndex ){
-    setActiveIndex(null)
-   }else{
-    setActiveIndex(accordianIndex)
-   }
-  };
-
-  const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-    // console.log("Expended : ",expanded)
-  };
-
-
-  const { notes, isLoading, error, initial, responseMessage ,noteEditFormVisibility, formVisibility} = useSelector((state) => state.note);
   const { customer } = useSelector((state) => state.customer);
   const [checked, setChecked] = useState(false);
-// console.log("noteEditFormVisibility: " , noteEditFormVisibility)
-
-  useLayoutEffect(() => {
-    if(!formVisibility && !noteEditFormVisibility){
-    dispatch(getNotes(customer._id));
-    dispatch(getContacts(customer._id));
-    dispatch(getSites(customer._id));
-    }
-  }, [dispatch, customer._id, noteEditFormVisibility, formVisibility ]);
-// console.log(customer._id)
-  useEffect(() => {
-    if (initial) {
-      if (notes && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
-      setTableData(notes);
-    }
-  }, [notes, error,checked, customer, responseMessage, enqueueSnackbar, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -176,53 +78,56 @@ export default function CustomerNoteList() {
     filterStatus,
   });
 
+  const {
+    notes,
+    error,
+    initial,
+    responseMessage,
+    noteEditFormVisibility,
+    formVisibility,
+  } = useSelector((state) => state.note);
 
-//  -----------------------------------------------------------------------
+   dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const isNotFound = !notes.length && !noteEditFormVisibility && !formVisibility;
 
+  // -----------------------------hooks-------------------------------
 
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  useLayoutEffect(() => {
+    if (!formVisibility && !noteEditFormVisibility) {
+      dispatch(getNotes(customer._id));
+      dispatch(getActiveContacts(customer._id));
+      dispatch(getActiveSites(customer._id));
+    }
+  }, [dispatch, customer._id, noteEditFormVisibility, formVisibility]);
+  // console.log(customer._id)
+  useEffect(() => {
+    if (initial) {
+      setTableData(notes);
+    }
+  }, [notes, error, checked, customer, responseMessage, enqueueSnackbar, initial]);
 
-//   const denseHeight = dense ? 60 : 80;
+  // -----------------------------handle functions---------------------------------
 
-//   const isFiltered = filterName !== '' || !!filterStatus.length;
+  const handleAccordianClick = (accordianIndex) => {
+    if (accordianIndex === activeIndex) {
+      setActiveIndex(null);
+    } else {
+      setActiveIndex(accordianIndex);
+    }
+  };
 
-  const isNotFound = (!notes.length && !noteEditFormVisibility && !formVisibility);
-
-//   const handleOpenConfirm = () => {
-//     setOpenConfirm(true);
-//   };
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+    // console.log("Expended : ",expanded)
+  };
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
   };
-
-//   const handleFilterName = (event) => {
-//     setPage(0);
-//     setFilterName(event.target.value);
-//   };
-
-//   const handleFilterStatus = (event) => {
-//     setPage(0);
-//     setFilterStatus(event.target.value);
-//   };
-
-// const showHide = ()=>{
-//   if(this.state.showHide === 'hide') {
-//       this.setState({
-//           showHide: 'show'
-//       ))};
-//   } else {
-//       this.setState({
-//           showHide: 'hide'
-//       });
-//   }
-
-// }
-const toggleChecked = () =>
-    {
-      setChecked(value => !value);
-      dispatch(setNoteFormVisibility(!formVisibility));
-    };
+  const toggleChecked = () => {
+    setChecked((value) => !value);
+    dispatch(setNoteFormVisibility(!formVisibility));
+  };
 
   const handleDeleteRow = async (id) => {
     try {
@@ -231,113 +136,109 @@ const toggleChecked = () =>
       setExpanded(false);
       dispatch(getNotes());
       setSelected([]);
-
-      // if (page > 0) {
-      //   if (dataInPage.length < 2) {
-      //     setPage(page - 1);
-      //   }
-      // }
     } catch (err) {
       console.log(err.message);
     }
   };
 
-  // const handleDeleteRows = (selectedRows) => {
-  //   const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-  //   setSelected([]);
-  //   setTableData(deleteRows);
-
-  //   if (page > 0) {
-  //     if (selectedRows.length === dataInPage.length) {
-  //       setPage(page - 1);
-  //     } else if (selectedRows.length === dataFiltered.length) {
-  //       setPage(0);
-  //     } else if (selectedRows.length > dataInPage.length) {
-  //       const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-  //       setPage(newPage);
-  //     }
-  //   }
-  // };
-
-//   const handleEditRow = (id) => {
-//     console.log(id);
-//     navigate(PATH_DASHBOARD.note.edit(id));
-//   };
-
-//   const handleViewRow = (id) => {
-//     navigate(PATH_DASHBOARD.note.view(id));
-//   };
-
-//   const handleResetFilter = () => {
-//     setFilterName('');
-//     setFilterStatus([]);
-//   };
-// ------------------------------------------------------------------------------------
-
+  const toggleCancel = () => {
+    dispatch(setNoteFormVisibility(!formVisibility));
+    setChecked(false);
+  };
 
   return (
     <>
-        {!noteEditFormVisibility &&
-            <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
-                <Button
-                    onClick={toggleChecked}
-                    variant="contained"
-                    startIcon={!formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}
-                    >
-                    New Note
-                </Button>
-            </Stack>
-        }
-        <Card>
-          {noteEditFormVisibility && <NoteEditForm/> }
-          {formVisibility && !noteEditFormVisibility && <NoteAddForm/>}
-          {!formVisibility && !noteEditFormVisibility && notes.map((note, index) =>{
-            const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
-            return(
-            <Accordion key={note._id} expanded={expanded === index} onChange={handleChange(index)}  sx={{borderTop: borderTopVal}}>
-              <AccordionSummary   expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
-            { index !==  activeIndex ?
-              <Grid container spacing={1}>
-                <Grid item xs={12} sm={9} md={10} sx={{ overflowWrap: "break-word", }}>
-                  <Typography > {note.note.length > 100 ? note.note.substring(0, 150) :note.note} {note.note.length > 100 ? "..." :null} </Typography>
-                  {/* <Typography  display={{ xs:"none", sm:"none", md:"block", }} > {note.note.length > 70 ? note.note.substring(0, 70) :note.note} {note.note.length > 70 ? "..." :null} </Typography> */}
-                  {/* <Typography  display={{ xs:"none", sm:"block",}} > {note.note.length > 50 ? note.note.substring(0, 50) :note.note} {note.note.length > 50 ? "..." :null} </Typography> */}
-                  {/* <Typography  display={{ xs:"block" }} > {note.note.length > 20 ? note.note.substring(0, 20) :note.note} {note.note.length > 20 ? "..." :null} </Typography> */}
-                </Grid>
-                <Grid item xs={12} sm={3} md={2} sx={{ overflowWrap: "break-word", }} > <Typography > {fDateTime(note.createdAt)} </Typography> </Grid>
-                
-              </Grid>
-            : null }
-              </AccordionSummary>
-              <AccordionDetails sx={{ mt:-5 }}>
-                <NotesViewForm currentNote={note} />
-              </AccordionDetails>
-            </Accordion>
-          )})}
-          {isNotFound  && <EmptyContent title="No saved notes" sx={{color: '#DFDFDF'}}/>}
-        </Card>
-        <ConfirmDialog
-          open={openConfirm}
-          onClose={handleCloseConfirm}
-          title="Delete"
-          content={
-            <>
-              Are you sure want to delete <strong> {selected.length} </strong> items?
-            </>
-          }
-          action={
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => {
-                handleDeleteRow(selected);
-                handleCloseConfirm();
-              }}
-            >
-              Delete
-            </Button>
-          }
+      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+        <Grid item xs={12} md={6}>
+          <BreadcrumbsProvider>
+            <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
+            <BreadcrumbsLink to={PATH_CUSTOMER.view} name={customer.name} />
+            <BreadcrumbsLink to={PATH_CUSTOMER.notes} name="Notes" />
+          </BreadcrumbsProvider>
+        </Grid>
+        <AddButtonAboveAccordion
+          name={BUTTONS.NEWNOTE}
+          toggleChecked={toggleChecked}
+          FormVisibility={formVisibility}
+          toggleCancel={toggleCancel}
+          disabled={noteEditFormVisibility}
         />
+      </Grid>
+      <Grid container mt={1}>
+        <Grid item xs={12} md={12}>
+          <Card>
+            {noteEditFormVisibility && <NoteEditForm />}
+            {formVisibility && !noteEditFormVisibility && <NoteAddForm />}
+            {!formVisibility &&
+              !noteEditFormVisibility &&
+              notes.map((note, index) => {
+                const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
+                return (
+                  <Accordion
+                    key={note._id}
+                    expanded={expanded === index}
+                    onChange={handleChange(index)}
+                    sx={{ borderTop: borderTopVal }}
+                  >
+                    <AccordionSummary
+                      mt={1}
+                      expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
+                      onClick={() => handleAccordianClick(index)}
+                    >
+                      {index !== activeIndex ? (
+                        <Grid container spacing={1}>
+                          <Grid item xs={12} sm={9} md={10} >
+                            <Typography 
+                            sx={{
+                              textOverflow: 'ellipsis',
+                              overflow: 'hidden',
+                              whiteSpace: 'nowrap',
+                              width: '100%',
+                              '@media (min-width: 300px)': { 
+                                width: '300px', 
+                              },
+                            }}
+                            >
+                              {note.note}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={12} sm={3} md={2} sx={{ overflowWrap: 'break-word' }}>
+                            <Typography> {fDateTime(note.createdAt)} </Typography>{' '}
+                          </Grid>
+                        </Grid>
+                      ) : null}
+                    </AccordionSummary>
+                    <AccordionDetails sx={{ mt: -5 }}>
+                      <NotesViewForm currentNote={note} />
+                    </AccordionDetails>
+                  </Accordion>
+                );
+              })}
+          </Card>
+        </Grid>
+      </Grid>
+      <Grid item lg={12}>
+        <TableNoData isNotFound={isNotFound} />
+      </Grid>
+
+      <ConfirmDialog
+        open={openConfirm}
+        onClose={handleCloseConfirm}
+        title={DIALOGS.DELETE.title}
+        content={DIALOGS.DELETE.content}
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              handleDeleteRow(selected);
+              handleCloseConfirm();
+            }}
+          >
+            {BUTTONS.DELETE}
+          </Button>
+        }
+      />
     </>
   );
 }

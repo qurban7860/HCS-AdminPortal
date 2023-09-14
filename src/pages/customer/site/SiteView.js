@@ -1,4 +1,3 @@
-import { Helmet } from 'react-helmet-async';
 import { useLayoutEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
@@ -24,12 +23,12 @@ export default function SiteViewPage() {
 
   const dispatch = useDispatch();
 
-  const { id } = useParams(); 
+  const { id } = useParams();
 
   useLayoutEffect(() => {
     dispatch(getSite(id));
   }, [dispatch, id]);
-  // 
+  //
 
   const { site } = useSelector((state) => state.site);
 
@@ -62,7 +61,6 @@ export default function SiteViewPage() {
   ];
 
   return (
-    <>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Site View"
@@ -106,16 +104,14 @@ export default function SiteViewPage() {
               <Tab key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
             ))}
           </Tabs>
-          
+
         </Card>
-        
+
         {TABS.map(
-          (tab) => tab.value === currentTab && <Box key={tab.value}> {tab.component ? 
+          (tab) => tab.value === currentTab && <Box key={tab.value}> {tab.component ?
             tab.component : <img src="/assets/background/construction.jpg" alt="UNDER CONSTRUCTION" />
           } </Box>
         )}
-        
       </Container>
-    </>
   );
 }

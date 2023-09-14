@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 // @mui
-import { Box, Stack, Drawer, Slide , Typography,Grid} from '@mui/material'
+import { Box, Stack, Drawer,Typography, Grid} from '@mui/material'
 // hooks
-import { useSettingsContext } from '../../../components/settings';
+// import { useSettingsContext } from '../../../components/settings';
 import useResponsive from '../../../hooks/useResponsive';
 // config
 import { CONFIG, NAV  } from '../../../config-global';
@@ -27,7 +27,7 @@ NavVertical.propTypes = {
 
 export default function NavVertical({ openNav, onCloseNav }) {
   const { pathname } = useLocation();
-  const { themeLayout } = useSettingsContext();
+  // const { themeLayout } = useSettingsContext();
   const isDesktop = useResponsive('up', 'lg');
 
   useEffect(() => {
@@ -59,8 +59,8 @@ export default function NavVertical({ openNav, onCloseNav }) {
         <Logo sx={{ width: '70%', margin: '0 auto', mt: '-30px' }} />
         <Grid sx={{ margin: '0 auto', mt: -2, mb: 1 }}>
           <Typography
-              variant="body2"
-              sx={{ margin: '0 auto', mt: -1, mb: 3, color: '#897A69' }}
+              // variant="body2"
+              sx={{ margin: '0 auto', mt: -1, mb: 3, color: '#897A69', fontSize:'10px' }}
               >
            {CONFIG.Version}
           </Typography>

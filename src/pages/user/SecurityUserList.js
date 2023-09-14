@@ -1,45 +1,57 @@
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import debounce from 'lodash/debounce';
 // @mui
-import { Card, Table, Button, TableBody, Container, TableContainer, } from '@mui/material';
+import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_SECURITY } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import Scrollbar from '../../components/scrollbar';
 import ConfirmDialog from '../../components/confirm-dialog';
-import {Cover} from '../components/Cover';
-import { useTable, getComparator, TableNoData, TableHeadCustom, TableSelectedAction, TablePaginationCustom, } from '../../components/table';
+import { Cover } from '../components/Defaults/Cover';
+import {
+  useTable,
+  getComparator,
+  TableNoData,
+  TableHeadCustom,
+  TableSelectedAction,
+  TablePaginationCustom,
+} from '../../components/table';
 // sections
-import UserTableToolbar from './SecurityUserTableToolbar';
-import  UserTableRow  from './SecurityUserTableRow';
-import { getSecurityUsers, deleteSecurityUser , setSecurityUserEditFormVisibility } from '../../redux/slices/securityUser/securityUser';
+import SecurityUserTableToolbar from './SecurityUserTableToolbar';
+import UserTableRow from './SecurityUserTableRow';
+import {
+  getSecurityUsers,
+  deleteSecurityUser,
+  setSecurityUserEditFormVisibility,
+  ChangeRowsPerPage,
+  ChangePage,
+  setFilterBy
+} from '../../redux/slices/securityUser/securityUser';
 import { fDate } from '../../utils/formatTime';
-import { dispatchReq, dispatchReqAddAndView, dispatchReqNavToList, dispatchReqNoMsg } from '../asset/dispatchRequests';
+// constants
+import { DIALOGS } from '../../constants/default-constants';
+import TableCard from '../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 
 // const STATUS_OPTIONS = ['all', 'active', 'banned'];
 
-const ROLE_OPTIONS = [
-  'Administrator',
-  'Normal User',
-  'Guest User',
-  'Restriced User',
-];
+const ROLE_OPTIONS = ['Administrator', 'Normal User', 'Guest User', 'Restriced User'];
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'email', label: 'Email', align: 'left' },
-  { id: 'phone', label: 'Phone Number', align: 'left' },
-  { id: 'role', label: 'Role', align: 'left' },
+  { id: 'xs1', label: 'Email', align: 'left' },
+  { id: 'xs2', label: 'Phone Number', align: 'left' },
+  { id: 'md1', label: 'Roles', align: 'left' },
+  { id: 'employed', label: 'Employeed', align: 'center' },
   { id: 'isActive', label: 'Active', align: 'center' },
   // { id: 'isVerified', label: 'Verified', align: 'center' },
   // { id: 'status', label: 'Status', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
-  // { id: '' },
 ];
 
 // ----------------------------------------------------------------------
@@ -47,10 +59,10 @@ const TABLE_HEAD = [
 export default function SecurityUserList() {
   const {
     dense,
-    page,
+    // page,
     order,
     orderBy,
-    rowsPerPage,
+    // rowsPerPage,
     setPage,
     //
     selected,
@@ -58,46 +70,54 @@ export default function SecurityUserList() {
     onSelectRow,
     //
     onSort,
-    onChangePage,
-    onChangeRowsPerPage,
-  } = useTable();
+    // onChangePage,
+    // onChangeRowsPerPage,
+  } = useTable({
+    defaultOrderBy: '-createdAt',
+  });
 
   const dispatch = useDispatch();
 
-  const { securityUsers, error, responseMessage, initial,securityUserEditFormVisibility,securityUserFormVisibility} = useSelector((state) => state.user);
-// console.log("securityUsers", securityUsers);
+  const {
+    securityUsers,
+    error,
+    responseMessage,
+    initial,
+    securityUserEditFormVisibility,
+    securityUserFormVisibility,
+    filterBy, page, rowsPerPage,
+  } = useSelector((state) => state.user);
 
+  const onChangeRowsPerPage = (event) => {
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+  };
+  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
+  
   const { enqueueSnackbar } = useSnackbar();
-
   const navigate = useNavigate();
-
   const [tableData, setTableData] = useState([]);
-
   const [openConfirm, setOpenConfirm] = useState(false);
-
   const [filterName, setFilterName] = useState('');
-
   const [filterRole, setFilterRole] = useState('all');
-
   const [filterStatus, setFilterStatus] = useState('all');
 
   useLayoutEffect(() => {
-    dispatchReqNoMsg(dispatch,getSecurityUsers(),enqueueSnackbar);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch,securityUserEditFormVisibility,securityUserFormVisibility]);
+    dispatch(getSecurityUsers());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, securityUserEditFormVisibility, securityUserFormVisibility]);
 
   useEffect(() => {
     if (initial) {
-    //   if (users && !error) {
-    //     enqueueSnackbar(responseMessage);
-    //   }
+      //   if (users && !error) {
+      //     enqueueSnackbar(responseMessage);
+      //   }
       // if(error) {
       //   enqueueSnackbar(error, { variant: `error` });
       // }
       setTableData(securityUsers);
     }
   }, [securityUsers, error, enqueueSnackbar, responseMessage, initial]);
-
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -118,10 +138,25 @@ export default function SecurityUserList() {
     setOpenConfirm(false);
   };
 
-  const handleFilterName = (event) => {
-    setPage(0);
-    setFilterName(event.target.value);
-  };
+  const debouncedSearch = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setFilterBy(value))
+  }, 500))
+
+const handleFilterName = (event) => {
+  debouncedSearch.current(event.target.value);
+  setFilterName(event.target.value)
+  setPage(0);
+};
+
+useEffect(() => {
+    debouncedSearch.current.cancel();
+}, [debouncedSearch]);
+
+useEffect(()=>{
+    setFilterName(filterBy)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+},[])
 
   const handleFilterRole = (event) => {
     setPage(0);
@@ -143,8 +178,6 @@ export default function SecurityUserList() {
       } catch (err) {
         console.log(err);
       }
-
-
     } catch (err) {
       console.log(err.message);
     }
@@ -170,14 +203,15 @@ export default function SecurityUserList() {
   const handleEditRow = (id) => {
     // console.log('id', id);
     // console.log('edit');
-    dispatch(setSecurityUserEditFormVisibility(true))
-    navigate(PATH_DASHBOARD.user.edit(id));
+    dispatch(setSecurityUserEditFormVisibility(true));
+    navigate(PATH_SECURITY.users.edit(id));
   };
   const handleViewRow = (id) => {
-    navigate(PATH_DASHBOARD.user.view(id));
+    navigate(PATH_SECURITY.users.view(id));
   };
 
   const handleResetFilter = () => {
+    dispatch(setFilterBy(''))
     setFilterName('');
     setFilterRole('all');
     setFilterStatus('all');
@@ -186,44 +220,11 @@ export default function SecurityUserList() {
   return (
     <>
       <Container maxWidth={false}>
-        {/* <CustomBreadcrumbs
-          heading="User List"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.user.root },
-            { name: 'List' },
-          ]}
-          action={
-            <Button
-              component={RouterLink}
-              to={PATH_DASHBOARD.user.new}
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-            >
-              New User
-            </Button>
-          }
-        /> */}
-        <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+        <Card sx={{ height: 160, position: 'relative' }}>
           <Cover name="Users" icon="ph:users-light" />
         </Card>
-        <Card>
-          {/* <Tabs
-            value={filterStatus}
-            onChange={handleFilterStatus}
-            sx={{
-              px: 2,
-              bgcolor: 'background.neutral',
-            }}
-          >
-            {STATUS_OPTIONS.map((tab) => (
-              <Tab key={tab} label={tab} value={tab} />
-            ))}
-          </Tabs>
-
-          <Divider /> */}
-
-          <UserTableToolbar
+        <TableCard>
+          <SecurityUserTableToolbar
             isFiltered={isFiltered}
             filterName={filterName}
             filterRole={filterRole}
@@ -233,41 +234,27 @@ export default function SecurityUserList() {
             onResetFilter={handleResetFilter}
           />
 
+        {!isNotFound && <TablePaginationCustom
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
               dense={dense}
               numSelected={selected.length}
               rowCount={tableData.length}
-              // onSelectAllRows={(checked) =>
-              //   onSelectAllRows(
-              //     checked,
-              //     tableData.map((row) => row._id)
-              //   )
-              // }
-              // action={
-              //   <Tooltip title="Delete">
-              //     <IconButton color="primary" onClick={handleOpenConfirm}>
-              //       <Iconify icon="eva:trash-2-outline" />
-              //     </IconButton>
-              //   </Tooltip>
-              // }
             />
 
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 800 }}>
+              <Table size="small" sx={{ minWidth: 360 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  // rowCount={tableData.length}
-                  // numSelected={selected.length}
                   onSort={onSort}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row) => row._id)
-                  //   )
-                  // }
                 />
 
                 <TableBody>
@@ -284,35 +271,27 @@ export default function SecurityUserList() {
                         onViewRow={() => handleViewRow(row._id)}
                       />
                     ))}
-
                 </TableBody>
               </Table>
             </Scrollbar>
             <TableNoData isNotFound={isNotFound} />
           </TableContainer>
 
-          <TablePaginationCustom
+          {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            //
-            // dense={dense}
-            // onChangeDense={onChangeDense}
-          />
-        </Card>
+          />}
+        </TableCard>
       </Container>
 
       <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
-          </>
-        }
+        title={DIALOGS.DELETE.title}
+        content={DIALOGS.DELETE.content}
         action={
           <Button
             variant="contained"
@@ -322,7 +301,7 @@ export default function SecurityUserList() {
               handleCloseConfirm();
             }}
           >
-            Delete
+            {DIALOGS.DELETE.title}
           </Button>
         }
       />
@@ -344,12 +323,19 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRo
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter( (securityUser) => securityUser?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    securityUser?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-    securityUser?.phone?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  ||
-    securityUser?.roles?.map((obj) => obj.name).join(', ').toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    // (securityUser?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    fDate(securityUser?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
+    inputData = inputData.filter(
+      (securityUser) =>
+        securityUser?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        securityUser?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        securityUser?.phone?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        securityUser?.roles
+          ?.map((obj) => obj.name)
+          .join(', ')
+          .toLowerCase()
+          .indexOf(filterName.toLowerCase()) >= 0 ||
+        // (securityUser?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(securityUser?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    );
   }
 
   if (filterStatus !== 'all') {

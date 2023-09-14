@@ -4,7 +4,6 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-
 const initialState = {
   formVisibility: false,
   settingEditFormVisibility: false,
@@ -15,8 +14,9 @@ const initialState = {
   error: null,
   settings: [],
   setting: null,
-  settingParams: {
-  }
+  filterBy: '',
+  page: 0,
+  rowsPerPage: 100,
 };
 
 const slice = createSlice({
@@ -67,12 +67,32 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+    // RESET SETTING
+    resetSetting(state){
+      state.setting = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+    // RESET SETTING
+    resetSettings(state){
+      state.settings = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+        // Set FilterBy
+    setFilterBy(state, action) {
+      state.filterBy = action.payload;
+    },
+    // Set PageRowCount
+    ChangeRowsPerPage(state, action) {
+      state.rowsPerPage = action.payload;
+    },
+    // Set PageNo
+    ChangePage(state, action) {
+      state.page = action.payload;
     },
   },
 });
@@ -84,54 +104,53 @@ export default slice.reducer;
 export const {
   setSettingFormVisibility,
   setSettingEditFormVisibility,
-  getCart,
-  addToCart,
+  resetSetting,
+  resetSettings,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
-
+  setFilterBy,
+  ChangeRowsPerPage,
+  ChangePage,
 } = slice.actions;
 
-// ----------------------------Add Note------------------------------------------
+// ----------------------------Add Setting------------------------------------------
 
 export function addSetting(machineId,params) {
-    return async (dispatch) => {
-        dispatch(slice.actions.startLoading());
-        try {
-            const data = {
-                techParam: params.techParam,
-                techParamValue: params.techParamValue,
-                isActive: params.isActive,
-            }
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/`, data);
-    //   dispatch(slice.actions.setSettingFormVisibility(false));
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const data = {
+          techParam: params.techParam,
+          techParamValue: params.techParamValue,
+          isActive: params.isActive,
+      }
+      await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/`, data);
       dispatch(slice.actions.setResponseMessage('Setting saved successfully'));
       dispatch(getSettings(machineId));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
 
-// ---------------------------------Update Note-------------------------------------
+// ---------------------------------Update Setting-------------------------------------
 
 export function updateSetting(machineId,settingId,params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        techParam: params.techParam,
         techParamValue: params.techParamValue,
         isActive: params.isActive,
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${settingId}`, data, );
+      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${settingId}`, data, );
       dispatch(slice.actions.setResponseMessage('Setting updated successfully'));
       dispatch(setSettingEditFormVisibility (false));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -145,7 +164,10 @@ export function getSettings(id) {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}/techparamvalues` , 
       {
         params: {
-          isArchived: false
+          isArchived: false,
+          orderBy : {
+            createdAt:-1
+          }
         }
       }
       );
@@ -154,6 +176,7 @@ export function getSettings(id) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -170,11 +193,12 @@ export function getSetting(machineId,settingId) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
 
-// ---------------------------------archive Note-------------------------------------
+// ---------------------------------archive Setting-------------------------------------
 
 export function deleteSetting(machineId,id) {
   return async (dispatch) => {
@@ -190,6 +214,7 @@ export function deleteSetting(machineId,id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }

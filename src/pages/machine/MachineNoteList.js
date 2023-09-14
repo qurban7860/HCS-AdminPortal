@@ -1,127 +1,104 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+
+
 // @mui
 import {
-  Stack,
   Card,
-  Item,
   Grid,
-  Box,
-  Table,
-  Button,
-  Tooltip,
-  TableBody,
-  Container,
-  IconButton,
-  TableContainer,
+  Stack,
   Typography,
   Accordion,
   AccordionSummary,
-  AccordionDetails
+  AccordionDetails,
 } from '@mui/material';
-import { fDate,fDateTime } from '../../utils/formatTime';
+import { fDate } from '../../utils/formatTime';
 
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
-// components
+import { PATH_MACHINE } from '../../routes/paths';
+// hooks
 import { useSnackbar } from '../../components/snackbar';
-import { useSettingsContext } from '../../components/settings';
-import {
-  useTable,
-  getComparator,
-  emptyRows,
-  TableNoData,
-  TableSkeleton,
-  TableEmptyRows,
-  TableHeadCustom,
-  TableSelectedAction,
-  TablePaginationCustom,
-} from '../../components/table';
+// components
+import { useTable, getComparator } from '../../components/table';
+import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
+import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import Iconify from '../../components/iconify';
-import Scrollbar from '../../components/scrollbar';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
-import EmptyContent from '../../components/empty-content';
-
-import ConfirmDialog from '../../components/confirm-dialog';
 // sections
-import NotesViewForm from './note/NotesViewForm';
-import NoteEditForm from './note/NoteEditForm';
-import NoteAddForm from './note/NoteAddForm';
-import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
-import { getNotes, deleteNote, getNote ,updateNote,setNoteFormVisibility} from '../../redux/slices/products/machineNote';
+import NotesViewForm from './Note/NotesViewForm';
+import NoteEditForm from './Note/NoteEditForm';
+import NoteAddForm from './Note/NoteAddForm';
+import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
+import {
+  getNotes,
+  setNoteFormVisibility,
+} from '../../redux/slices/products/machineNote';
+// constants
+import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
-
-const TABLE_HEAD = [
-  { id: 'note', label: 'Note', align: "left"},
-  { id: 'isDisabled', label: 'Disabled', align: "left"},
-  { id: 'created_at', label: 'Created At', align: "left"},
-  { id: 'action', label: 'Actions', align: "left"},
-
-];
-
-const STATUS_OPTIONS = [
-  // { id: '1', value: 'Order Received' },
-  // { id: '2', value: 'In Progress' },
-  // { id: '3', value: 'Ready For Transport' },
-  // { id: '4', value: 'In Freight' },
-  // { id: '5', value: 'Deployed' },
-  // { id: '6', value: 'Archived' },
-];
-
-// const STATUS_OPTIONS = [
-//   { value: 'all_notes', label: 'All Note' },
-//   { value: 'deployable', label: 'All Deployable' },
-//   { value: 'pending', label: 'All Pending' },
-//   { value: 'archived', label: 'All Archived' },
-//   { value: 'undeployable', label: 'All Undeployable' }
-// ];
 
 // ----------------------------------------------------------------------
 
 export default function MachineNoteList() {
-  const {
-    dense,
-    page,
-    order,
-    orderBy,
-    rowsPerPage,
-    setPage,
-    //
-    selected,
-    setSelected,
-    onSelectRow,
-    onSelectAllRows,
-    //
-    onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
-  } = useTable({
+  const { order, orderBy,  } = useTable({
     defaultOrderBy: 'createdAt',
   });
 
   const dispatch = useDispatch();
-  const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
-  const [filterName, setFilterName] = useState('');
+  // const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
-  const [filterStatus, setFilterStatus] = useState([]);
-  const [openConfirm, setOpenConfirm] = useState(false);
+  // const [filterStatus, setFilterStatus] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
+  const { machine } = useSelector((state) => state.machine);
+  const [checked, setChecked] = useState(false);
+  const {
+    notes,
+    error,
+    initial,
+    responseMessage,
+    noteEditFormVisibility,
+    formVisibility,
+  } = useSelector((state) => state.machinenote);
+
+  useLayoutEffect(() => {
+    if (!formVisibility && !noteEditFormVisibility) {
+      dispatch(getNotes(machine?._id));
+    }
+  }, [dispatch, machine._id, noteEditFormVisibility, formVisibility]);
+
+  useEffect(() => {
+    if (initial) {
+      setTableData(notes);
+    }
+  }, [notes, error, checked, machine, responseMessage, enqueueSnackbar, initial]);
+
+
+         applyFilter({
+    inputData: tableData,
+    comparator: getComparator(order, orderBy),
+    // filterName,
+    // filterStatus,
+  });
+
+  //  -----------------------------------------------------------------------
+  const toggleChecked = () => {
+    setChecked((value) => !value);
+    dispatch(setNoteFormVisibility(!formVisibility));
+  };
+
+  const toggleCancel = () => {
+    dispatch(setNoteFormVisibility(false));
+  };
 
   const handleAccordianClick = (accordianIndex) => {
-   if(accordianIndex === activeIndex ){
-    setActiveIndex(null)
-   }else{
-    setActiveIndex(accordianIndex)
-   }
+    if (accordianIndex === activeIndex) {
+      setActiveIndex(null);
+    } else {
+      setActiveIndex(accordianIndex);
+    }
   };
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -129,139 +106,42 @@ export default function MachineNoteList() {
   };
 
 
-  const { notes, isLoading, error, initial, responseMessage ,noteEditFormVisibility, formVisibility} = useSelector((state) => state.machinenote);
-  const { machine } = useSelector((state) => state.machine);
-  const [checked, setChecked] = useState(false);
-  useLayoutEffect(() => {
-    if(!formVisibility && !noteEditFormVisibility){
-    dispatch(getNotes(machine._id));
-    }
-  }, [dispatch, machine._id, noteEditFormVisibility, formVisibility ]);
-
-  useEffect(() => {
-    if (initial) {
-      if (notes && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
-      setTableData(notes);
-    }
-  }, [notes, error,checked, machine, responseMessage, enqueueSnackbar, initial]);
-
-  const dataFiltered = applyFilter({
-    inputData: tableData,
-    comparator: getComparator(order, orderBy),
-    filterName,
-    filterStatus,
-  });
-
-//  -----------------------------------------------------------------------
-
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
-//   const denseHeight = dense ? 60 : 80;
-
-//   const isFiltered = filterName !== '' || !!filterStatus.length;
-
-  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
-
-//   const handleOpenConfirm = () => {
-//     setOpenConfirm(true);
-//   };
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
-
-//   const handleFilterName = (event) => {
-//     setPage(0);
-//     setFilterName(event.target.value);
-//   };
-
-//   const handleFilterStatus = (event) => {
-//     setPage(0);
-//     setFilterStatus(event.target.value);
-//   };
-
-// const showHide = ()=>{
-//   if(this.state.showHide === 'hide') {
-//       this.setState({
-//           showHide: 'show'
-//       ))};
-//   } else {
-//       this.setState({
-//           showHide: 'hide'
-//       });
-//   }
-
-// }
-const toggleChecked = () =>
-    {
-      setChecked(value => !value);
-      dispatch(setNoteFormVisibility(!formVisibility));
-    };
-// console.log("screen Width : ",window.innerWidth)
-  const handleDeleteRow = async (id) => {
-    try {
-      await dispatch(deleteNote(id));
-      setExpanded(false);
-      dispatch(getNotes(machine._id));
-      setSelected([]);
-
-      // if (page > 0) {
-      //   if (dataInPage.length < 2) {
-      //     setPage(page - 1);
-      //   }
-      // }
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
-
-  // const handleDeleteRows = (selectedRows) => {
-  //   const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-  //   setSelected([]);
-  //   setTableData(deleteRows);
-  //   if (page > 0) {
-  //     if (selectedRows.length === dataInPage.length) {
-  //       setPage(page - 1);
-  //     } else if (selectedRows.length === dataFiltered.length) {
-  //       setPage(0);
-  //     } else if (selectedRows.length > dataInPage.length) {
-  //       const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-  //       setPage(newPage);
-  //     }
-  //   }
-  // };
-
-//   const handleEditRow = (id) => {
-//     console.log(id);
-//     navigate(PATH_DASHBOARD.note.edit(id));
-//   };
-
-//   const handleViewRow = (id) => {
-//     navigate(PATH_DASHBOARD.note.view(id));
-//   };
-
-//   const handleResetFilter = () => {
-//     setFilterName('');
-//     setFilterStatus([]);
-//   };
-// ------------------------------------------------------------------------------------
+  // const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length) && !formVisibility && !noteEditFormVisibility;
 
   return (
     <>
-      {!noteEditFormVisibility && (
+      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+        <Grid item xs={12} md={6}>
+          <BreadcrumbsProvider>
+            <BreadcrumbsLink to={PATH_MACHINE.machines.list} name={BREADCRUMBS.MACHINES} />
+            <BreadcrumbsLink to={PATH_MACHINE.machines.view(machine._id)} name={machine.serialNo} />
+            <BreadcrumbsLink
+              to={PATH_MACHINE.machines.settings}
+              name={
+                <Stack>
+                  {!expanded &&
+                    !noteEditFormVisibility &&
+                    formVisibility &&
+                    BREADCRUMBS.MACHINE_NEWNOTE}
+                  {!formVisibility && !noteEditFormVisibility && BREADCRUMBS.MACHINE_NOTE}
+                  {noteEditFormVisibility && BREADCRUMBS.MACHINE_EDITNOTE}
+                </Stack>
+              }
+            />
+          </BreadcrumbsProvider>
+        </Grid>
         <AddButtonAboveAccordion
-          name="New Note"
+          name={BUTTONS.NEWNOTE}
           toggleChecked={toggleChecked}
           FormVisibility={formVisibility}
+          toggleCancel={toggleCancel}
+          disabled={noteEditFormVisibility}
         />
-      )}
+      </Grid>
+      
       <Card>
         {noteEditFormVisibility && <NoteEditForm />}
-        {formVisibility && !noteEditFormVisibility && <NoteAddForm />}
+        {formVisibility && !noteEditFormVisibility && <NoteAddForm/>}
         {!formVisibility &&
           !noteEditFormVisibility &&
           notes.map((note, index) => {
@@ -280,13 +160,13 @@ const toggleChecked = () =>
                   {index !== activeIndex ? (
                     <Grid container spacing={0}>
                       <Grid item xs={12} sm={9} md={10}>
-                        <Typography variant="body2">
+                        <Typography>
                           {window.innerWidth > 1200 ? note.note.substring(0, 100) : note.note}
                           {note.note.length > 50 ? '...' : null}
                         </Typography>
                       </Grid>
                       <Grid item xs={12} sm={3} md={2}>
-                        <Typography variant="body2">{fDate(note.createdAt)}</Typography>
+                        <Typography>{fDate(note.createdAt)}</Typography>
                       </Grid>
                     </Grid>
                   ) : null}
@@ -297,8 +177,10 @@ const toggleChecked = () =>
               </Accordion>
             );
           })}
-        <TableNoData isNotFound={isNotFound} />
       </Card>
+      <Grid item md={12}>
+        {/* <TableNoData isNotFound={isNotFound} /> */}
+      </Grid>
     </>
   );
 }
@@ -318,7 +200,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
       (note) => note.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
-  if (filterStatus.length) {
+  if (filterStatus?.length) {
     inputData = inputData.filter((note) => filterStatus.includes(note.status));
   }
   return inputData;

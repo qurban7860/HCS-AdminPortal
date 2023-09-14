@@ -10,6 +10,7 @@ import noteReducer from './slices/customer/note';
 import machineReducer from './slices/products/machine';
 import supplierReducer from './slices/products/supplier';
 import licenseReducer from './slices/products/license';
+import profileReducer from './slices/products/profile';
 import categoryReducer from './slices/products/category';
 import toolReducer from './slices/products/tools';
 import techparamcategoryReducer from './slices/products/machineTechParamCategory';
@@ -20,13 +21,25 @@ import techparamReducer from './slices/products/machineTechParam';
 import machineSettingReducer from './slices/products/machineTechParamValue';
 import toolInstalledReducer from './slices/products/toolInstalled';
 import roleReducer from './slices/securityUser/role';
+import userConfigReducer from './slices/securityUser/config';
 import countReducer from './slices/dashboard/count';
-import documentNameReducer from './slices/document/documentName';
-import fileCategoryReducer from './slices/document/fileCategory';
+import documentTypeReducer from './slices/document/documentType';
+import documentCategoryReducer from './slices/document/documentCategory';
 import customerDocumentReducer from './slices/document/customerDocument';
 import machineDocumentReducer from './slices/document/machineDocument';
-
-
+import documentReducer from './slices/document/document';
+import documentFileReducer from './slices/document/documentFile';
+import machineConnectionsReducer from './slices/products/machineConnections';
+import documentVersionReducer from './slices/document/documentVersion';
+import regionReducer from './slices/region/region';
+import moduleReducer from './slices/module/module';
+import drawingReducer from './slices/products/drawing';
+import configReducer from './slices/config/config';
+import machineServiceParamReducer from './slices/products/machineServiceParams'
+import machineServiceRecordReducer from './slices/products/machineServiceRecord';
+import serviceRecordConfigReducer from './slices/products/serviceRecordConfig';
+import serviceCategoryReducer from './slices/products/serviceCategory';
+import userInviteReducer from './slices/securityUser/invite';
 
 // ----------------------------------------------------------------------
 
@@ -97,6 +110,12 @@ export const licensePersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
+export const profilePersistConfig = {
+  key: 'profile',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
 export const categoryPersistConfig = {
   key: 'category',
   storage,
@@ -149,6 +168,18 @@ export const userRolesPersistConfig = {
   key: 'role',
   storage,
   keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage', 'userRoleTypes']
+};
+export const configPersistConfig = {
+  key: 'config',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+export const userConfigPersistConfig = {
+  key: 'userConfig',
+  storage,
+  keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
 export const countPersistConfig = {
@@ -157,14 +188,14 @@ export const countPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
-export const documentNamePersistConfig = {
-  key: 'documentName',
+export const documentTypePersistConfig = {
+  key: 'documentType',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
-export const fileCategoryPersistConfig = {
-  key: 'fileCategory',
+export const documentCategoryPersistConfig = {
+  key: 'documentCategory',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
@@ -175,12 +206,85 @@ export const machineDocumentPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
+export const documentPersistConfig = {
+  key: 'document',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
 export const customerDocumentPersistConfig = {
   key: 'customerDocument',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
+export const documentFilePersistConfig = {
+  key: 'documentFile',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+export const machineConnectionsPersistConfig={
+  key: 'machineConnections',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+export const documentVersionPersistConfig={
+  key: 'documentVersion',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+export const regionPersistConfig={
+  key: 'region',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+export const modulePersistConfig={
+  key: 'module',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+export const drawingPersistConfig={
+  key: 'drawing',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+export const machineServiceParamPersistConfig={
+  key: 'machineServiceParam',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+export const machineServiceRecordPersistConfig={
+  key: 'machineServiceRecord',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+export const serviceRecordConfigPersistConfig={
+  key: 'serviceRecordConfig',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+export const serviceCategoryPersistConfig={
+  key: 'serviceCategory',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+
+export const userInvitePersistConfig={
+  key: 'userInvite',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
 
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
@@ -191,6 +295,7 @@ const rootReducer = combineReducers({
   machine: persistReducer(machinePersistConfig, machineReducer),
   supplier: persistReducer(suppplierPersistConfig,supplierReducer),
   license: persistReducer(licensePersistConfig,licenseReducer),
+  profile: persistReducer(profilePersistConfig,profileReducer),
   category: persistReducer(categoryPersistConfig,categoryReducer),
   tool: persistReducer(toolPersistConfig,toolReducer),
   techparamcategory: persistReducer(techparamcategoryPersistConfig,techparamcategoryReducer),
@@ -202,10 +307,25 @@ const rootReducer = combineReducers({
   toolInstalled: persistReducer(machineToolInstalledPersistConfig, toolInstalledReducer),
   role: persistReducer(userRolesPersistConfig, roleReducer),
   count: persistReducer(countPersistConfig, countReducer),
-  documentName: persistReducer(documentNamePersistConfig, documentNameReducer),
-  fileCategory: persistReducer(fileCategoryPersistConfig, fileCategoryReducer),
+  documentType: persistReducer(documentTypePersistConfig, documentTypeReducer),
+  documentCategory: persistReducer(documentCategoryPersistConfig, documentCategoryReducer),
   customerDocument: persistReducer(customerDocumentPersistConfig, customerDocumentReducer),
   machineDocument: persistReducer(machineDocumentPersistConfig, machineDocumentReducer),
+  document: persistReducer(documentPersistConfig, documentReducer),
+  documentFile: persistReducer(documentFilePersistConfig, documentFileReducer),
+  machineConnections: persistReducer(machineConnectionsPersistConfig, machineConnectionsReducer),
+  documentVersion: persistReducer(documentVersionPersistConfig, documentVersionReducer),
+  region: persistReducer(regionPersistConfig, regionReducer),
+  module: persistReducer(modulePersistConfig, moduleReducer),
+  drawing: persistReducer(drawingPersistConfig, drawingReducer),
+  config: persistReducer(configPersistConfig, configReducer),
+  userConfig: persistReducer(userConfigPersistConfig, userConfigReducer),
+  serviceRecordConfig: persistReducer(serviceRecordConfigPersistConfig, serviceRecordConfigReducer),
+  machineServiceParam: persistReducer(machineServiceParamPersistConfig, machineServiceParamReducer),
+  machineServiceRecord: persistReducer(machineServiceRecordPersistConfig, machineServiceRecordReducer),
+  serviceCategory: persistReducer(serviceCategoryPersistConfig, serviceCategoryReducer),
+  userInvite: persistReducer(userInvitePersistConfig, userInviteReducer)
+
 });
 
 export default rootReducer;

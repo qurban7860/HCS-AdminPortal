@@ -1,23 +1,15 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
   Stack,
   Card,
   Grid,
-  Table,
   Button,
-  Tooltip,
-  TableBody,
-  Container,
-  IconButton,
-  TableContainer,
-  DialogTitle,
-  Dialog,
   Typography,
-  Accordion, AccordionSummary, AccordionDetails
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -26,31 +18,13 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
-import {
-  useTable,
-  getComparator,
-  emptyRows,
-  TableNoData,
-  TableSkeleton,
-  TableEmptyRows,
-  TableHeadCustom,
-  TableSelectedAction,
-  TablePaginationCustom,
-} from '../../components/table';
+import { useTable, getComparator, TableNoData } from '../../components/table';
 import Iconify from '../../components/iconify';
-import Scrollbar from '../../components/scrollbar';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
-import ConfirmDialog from '../../components/confirm-dialog';
-// sections
-import SiteListTableRow from './site/SiteListTableRow';
-import SiteListTableToolbar from './site/SiteListTableToolbar';
-import { getSites, deleteSite, getSite,setSiteFormVisibility, setSiteEditFormVisibility } from '../../redux/slices/customer/site';
+import { getSites, setSiteFormVisibility } from '../../redux/slices/customer/site';
 import SiteAddForm from './site/SiteAddForm';
 import SiteEditForm from './site/SiteEditForm';
-import CommaJoinField from '../components/CommaJoinField';
 import _mock from '../../_mock';
 import SiteViewForm from './site/SiteViewForm';
-import EmptyContent from '../../components/empty-content';
 
 // ----------------------------------------------------------------------
 
@@ -61,7 +35,6 @@ const TABLE_HEAD = [
   { id: 'isverified', label: 'Disabled', align: 'left' },
   { id: 'created_at', label: 'Created At', align: 'left' },
   { id: 'action', label: 'Actions', align: 'left' },
-
 ];
 
 const STATUS_OPTIONS = [
@@ -110,7 +83,7 @@ export default function CustomerSiteList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'createdAt',
+    defaultOrderBy: '-createdAt',
   });
 
   const [controlled, setControlled] = useState(false);
@@ -118,13 +91,20 @@ export default function CustomerSiteList() {
     setControlled(isExpanded ? panel : false);
   };
   const dispatch = useDispatch();
-  const { sites, isLoading, error, initial, responseMessage, siteEditFormVisibility, siteAddFormVisibility } = useSelector((state) => state.site);
+  const {
+    sites,
+    isLoading,
+    error,
+    initial,
+    responseMessage,
+    siteEditFormVisibility,
+    siteAddFormVisibility,
+  } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
 
-  const toggleChecked = async () =>
-    {
-      dispatch(setSiteFormVisibility(!siteAddFormVisibility));
-    };
+  const toggleChecked = async () => {
+    dispatch(setSiteFormVisibility(!siteAddFormVisibility));
+  };
 
   const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
@@ -134,11 +114,11 @@ export default function CustomerSiteList() {
   const [activeIndex, setActiveIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
   const handleAccordianClick = (accordianIndex) => {
-   if(accordianIndex === activeIndex ){
-    setActiveIndex(null)
-   }else{
-    setActiveIndex(accordianIndex)
-   }
+    if (accordianIndex === activeIndex) {
+      setActiveIndex(null);
+    } else {
+      setActiveIndex(accordianIndex);
+    }
   };
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -147,22 +127,22 @@ export default function CustomerSiteList() {
   };
 
   useEffect(() => {
-    if(!siteAddFormVisibility && !siteEditFormVisibility){
+    if (!siteAddFormVisibility && !siteEditFormVisibility) {
       dispatch(getSites(customer._id));
     }
   }, [dispatch, customer, siteAddFormVisibility, siteEditFormVisibility]); // checked is also included
 
   useEffect(() => {
     if (initial) {
-      if (sites && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
+      // if (sites && !error) {
+      //   enqueueSnackbar(responseMessage);
+      // } else {
+      //   enqueueSnackbar(error, { variant: `error` });
+      // }
       setTableData(sites);
     }
   }, [sites, error, responseMessage, enqueueSnackbar, initial]);
-// console.log("sites", sites);
+  // console.log("sites", sites);
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
@@ -190,7 +170,7 @@ export default function CustomerSiteList() {
                 <Iconify icon="eva:minus-fill" />
               )
             }
-            >
+          >
             New Site
           </Button>
         </Stack>
@@ -209,33 +189,35 @@ export default function CustomerSiteList() {
                 expanded={expanded === index}
                 onChange={handleChange(index)}
                 sx={{
-                  borderTop: borderTopVal
-                  }}
-                >
+                  borderTop: borderTopVal,
+                }}
+              >
                 <AccordionSummary
                   expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
                   onClick={() => handleAccordianClick(index)}
-                  >
+                >
                   {index !== activeIndex ? (
                     <Grid container spacing={0}>
                       <Grid item xs={12} sm={8} md={4}>
                         {' '}
-                        <Typography variant="body1"> {site.name} </Typography>{' '}
+                        <Typography> {site.name} </Typography>{' '}
                       </Grid>
                       {/* <CommaJoinField sm={8} objectParam={site.address} /> */}
                     </Grid>
                   ) : null}
                 </AccordionSummary>
-                <AccordionDetails sx={{
-                  mt: -5
-                  }}>
+                <AccordionDetails
+                  sx={{
+                    mt: -5,
+                  }}
+                >
                   <SiteViewForm currentSite={site} />
                 </AccordionDetails>
               </Accordion>
             );
           })}
         <TableNoData isNotFound={isNotFound} />
-{/*
+        {/*
         {!siteAddFormVisibility &&
           !siteEditFormVisibility &&
           sites.map((site, index) => {

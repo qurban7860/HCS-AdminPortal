@@ -2,19 +2,18 @@
 
 // Define more types here
 const FORMAT_PDF = ['pdf'];
-const FORMAT_TEXT = ['txt'];
-const FORMAT_PHOTOSHOP = ['psd'];
+const FORMAT_TEXT = ['txt', 'odt', 'ott', 'rtf', 'csv'];
+const FORMAT_PHOTOSHOP = [ 'psd', 'psb', 'ai', 'tiff'];
 const FORMAT_WORD = ['doc', 'docx'];
-const FORMAT_EXCEL = ['xls', 'xlsx'];
+const FORMAT_EXCEL = ['xls', 'xlsx', 'ods'];
 const FORMAT_ZIP = ['zip', 'rar', 'iso'];
 const FORMAT_ILLUSTRATOR = ['ai', 'esp'];
-const FORMAT_POWERPOINT = ['ppt', 'pptx'];
+const FORMAT_POWERPOINT = ['ppt', 'pptx', 'odp'];
 const FORMAT_AUDIO = ['wav', 'aif', 'mp3', 'aac'];
-const FORMAT_IMG = ['jpg', 'jpeg', 'gif', 'bmp', 'png', 'svg'];
+const FORMAT_IMG_VISIBBLE = ['png','jpg', 'jpeg', 'gif', 'bmp', 'svg', 'webp', 'ico', 'jpe'];
+const FORMAT_IMG = [ 'exr', 'hdr', 'pbm', 'pfm', 'pgm', 'pict', 'ppm', 'sgi', 'tga', 'dds', 'cr2', 'dng', 'heic', 'heif', 'jp2', 'nef', 'orf', 'pef', 'raf', 'rw2',];
 const FORMAT_VIDEO = ['m4v', 'avi', 'mpg', 'mp4', 'webm'];
-
 const iconUrl = (icon) => `/assets/icons/files/${icon}.svg`;
-
 // ----------------------------------------------------------------------
 
 export function fileFormat(fileUrl) {
@@ -29,6 +28,9 @@ export function fileFormat(fileUrl) {
       break;
     case FORMAT_AUDIO.includes(fileTypeByUrl(fileUrl)):
       format = 'audio';
+      break;
+    case FORMAT_IMG_VISIBBLE.includes(fileTypeByUrl(fileUrl)):
+      format = 'images';
       break;
     case FORMAT_IMG.includes(fileTypeByUrl(fileUrl)):
       format = 'image';
@@ -71,6 +73,9 @@ export function fileThumb(fileUrl) {
       thumb = iconUrl('ic_folder');
       break;
     case 'txt':
+      thumb = iconUrl('ic_txt');
+      break;
+    case 'csv':
       thumb = iconUrl('ic_txt');
       break;
     case 'zip':

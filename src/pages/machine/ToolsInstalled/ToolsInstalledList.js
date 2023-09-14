@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async';
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import debounce from 'lodash/debounce';
 // @mui
 import {
   Grid,
@@ -37,9 +38,11 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import SiteListTableRow from './ToolsInstalledListTableRow';
 import SiteListTableToolbar from './ToolsInstalledListTableToolbar';
-import { getSites, deleteSite } from '../../../redux/slices/customer/site';
-import Cover from '../../components/Cover';
-
+import { getSites, deleteSite,   ChangeRowsPerPage,
+  ChangePage,
+  setFilterBy, } from '../../../redux/slices/customer/site';
+import Cover from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -50,7 +53,6 @@ const TABLE_HEAD = [
   { id: 'isverified', label: 'Disabled', align: 'left' },
   { id: 'created_at', label: 'Created At', align: 'left' },
   { id: 'action', label: 'Actions', align: 'left' },
-
 ];
 
 const STATUS_OPTIONS = [
@@ -67,10 +69,10 @@ const STATUS_OPTIONS = [
 export default function ToolsInstalledList() {
   const {
     dense,
-    page,
+    // page,
     order,
     orderBy,
-    rowsPerPage,
+    // rowsPerPage,
     setPage,
     //
     selected,
@@ -80,8 +82,8 @@ export default function ToolsInstalledList() {
     //
     onSort,
     onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
+    // onChangePage,
+    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'createdAt',
   });
@@ -102,7 +104,14 @@ export default function ToolsInstalledList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  // const { sites, isLoading, error, initial, responseMessage } = useSelector((state) => state.site);
+  // const { sites, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector((state) => state.site);
+  
+  const onChangeRowsPerPage = (event) => {
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+  };
+
+  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useLayoutEffect(() => {
     dispatch(getSites());
@@ -110,11 +119,6 @@ export default function ToolsInstalledList() {
 
   useEffect(() => {
     if (initial) {
-      if (sites && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
       setTableData(sites);
     }
   }, [sites, error, responseMessage, enqueueSnackbar, initial]);
@@ -142,10 +146,25 @@ export default function ToolsInstalledList() {
     setOpenConfirm(false);
   };
 
+  const debouncedSearch = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setFilterBy(value))
+  }, 500))
+
   const handleFilterName = (event) => {
+    debouncedSearch.current(event.target.value);
+    setFilterName(event.target.value)
     setPage(0);
-    setFilterName(event.target.value);
   };
+  
+  useEffect(() => {
+      debouncedSearch.current.cancel();
+  }, [debouncedSearch]);
+  
+  useEffect(()=>{
+      setFilterName(filterBy)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -195,16 +214,16 @@ export default function ToolsInstalledList() {
   };
 
   const handleResetFilter = () => {
+    dispatch(setFilterBy(''))
     setFilterName('');
-    setFilterStatus([]);
   };
 
   return (
     <>
-      <Container maxWidth={ false }>
+      <Container maxWidth={false}>
         <Grid container spacing={3}>
-          <Cover name="Setting List" icon='material-symbols:list-alt-outline' setting="enable" />
-          </Grid>
+          <Cover name="Setting List" icon="material-symbols:list-alt-outline" setting="enable" />
+        </Grid>
         <Card>
           <SiteListTableToolbar
             filterName={filterName}
@@ -215,10 +234,16 @@ export default function ToolsInstalledList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
-
+          {!isNotFound && <TablePaginationCustom
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {/* <TableSelectedAction
-              
+
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -237,7 +262,7 @@ export default function ToolsInstalledList() {
             /> */}
 
             <Scrollbar>
-              <Table size='small' sx={{ minWidth: 960 }}>
+              <Table size="small" sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -277,14 +302,13 @@ export default function ToolsInstalledList() {
             </Scrollbar>
           </TableContainer>
 
-          <TablePaginationCustom
+          {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            
-          />
+          />}
         </Card>
       </Container>
 

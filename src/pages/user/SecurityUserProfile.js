@@ -2,96 +2,102 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector, batch } from 'react-redux';
 // @mui
-import { Switch, Card, Grid, Container, Typography, Link ,Dialog, Stack,Button, Tabs} from '@mui/material';
+import {
+  Card,
+  Grid,
+  Container,
+  Link,
+  Tabs,
+} from '@mui/material';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_SECURITY } from '../../routes/paths';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // _mock_
-import { _userAbout} from '../../_mock/arrays';
-import Iconify from '../../components/iconify';
-// Redux Slice
-import { getSecurityUser, setSecurityUserEditFormVisibility } from '../../redux/slices/securityUser/securityUser';
+import {
+  getSecurityUser,
+  setSecurityUserEditFormVisibility,
+} from '../../redux/slices/securityUser/securityUser';
 // components
-// import { ProfileCover} from '../../sections/@dashboard/user/profile';
-import { useSnackbar } from '../../components/snackbar';
-import ViewFormField from '../components/ViewFormField';
-import ViewFormAudit from '../components/ViewFormAudit';
-import { getCustomer } from '../../redux/slices/customer/customer';
-import { getContact } from '../../redux/slices/customer/contact';
-import { Cover } from '../components/Cover'
-import { dispatchReq, dispatchReqAddAndView, dispatchReqNavToList, dispatchReqNoMsg } from '../asset/dispatchRequests';
+import ViewFormField from '../components/ViewForms/ViewFormField';
+import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
+import { getCustomer , setCustomerDialog } from '../../redux/slices/customer/customer';
+import { getContact , setContactDialog } from '../../redux/slices/customer/contact';
+import { Cover } from '../components/Defaults/Cover';
+// import DialogLabel from '../components/Dialog/DialogLabel';
+// import DialogLink from '../components/Dialog/DialogLink';
+// import FormLabel from '../components/DocumentForms/FormLabel';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
-import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
-import ViewFormSWitch from '../components/ViewFormSwitch';
+import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
+import CustomerDialog from '../components/Dialog/CustomerDialog';
+import ContactDialog from '../components/Dialog/ContactDialog';
+
 // ----------------------------------------------------------------------
 
 export default function SecurityUserProfile() {
-  const { customer } = useSelector((state) => state.customer);
-  const { contact } = useSelector((state) => state.contact);
-  const { securityUser , initial} = useSelector((state) => state.user);
-  // console.log("securityUser : ",securityUser," contact : ", contact , " customer  : ", customer  )
+  // const { customer } = useSelector((state) => state.customer);
+  // const { contact } = useSelector((state) => state.contact);
+  const { securityUser, initial } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
   const { user } = useAuthContext();
-  const userId = localStorage.getItem("userId");
+  const userId = localStorage.getItem('userId');
   const [currentTab, setCurrentTab] = useState('profile');
-  const [openCustomer, setOpenCustomer] = useState(false);
-  const handleOpenCustomer = () => setOpenCustomer(true);
-  const handleCloseCustomer = () => setOpenCustomer(false);
-  const [openContact, setOpenContact] = useState(false);
-  const handleOpenContact = () => setOpenContact(true);
-  const handleCloseContact = () => setOpenContact(false);
 
-    useEffect(()=> {
-      if(userId ){
-        dispatchReqNoMsg(dispatch,getSecurityUser(userId),enqueueSnackbar)
-        // dispatch(getSecurityUser(userId))
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[dispatch,userId, initial])
-
-    useEffect(()=> {
-      batch(() => {
-        if(userId && securityUser?.customer?._id){
-          dispatch(getCustomer(securityUser?.customer?._id))
-        }
-        if(userId && securityUser?.contact?._id){
-          dispatch(getContact(securityUser?.customer?._id,securityUser?.contact?._id))
-        }
-        });
-      },[dispatch,userId,securityUser])
-
-      const handleViewCustomer = (id) => {
-        navigate(PATH_DASHBOARD.customer.view(id));
-      };
-
-    const handleEdit = () => {
-      dispatch(setSecurityUserEditFormVisibility(true));
-      navigate(PATH_DASHBOARD.user.edit(securityUser?._id));
+  useEffect(() => {
+    if (userId) {
+      dispatch(getSecurityUser(userId));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, userId, initial]);
 
-    const defaultValues = useMemo(
-      () => ({
-        customer:                 securityUser?.customer?.name || "",
-        contact:                  securityUser?.contact?.firstName || "",
-        name:                     securityUser?.name || "",
-        phone:                    securityUser?.phone || "",
-        email:                    securityUser?.email || "",
-        login:                    securityUser?.login || "",
-        roles:                    securityUser?.roles || [] ,
-        isActive:                 securityUser?.isActive || false,
-        createdByFullName:        securityUser?.createdBy?.name || "",
-        createdAt:                securityUser?.createdAt || "",
-        createdIP:                securityUser?.createdIP || "",
-        updatedByFullName:        securityUser?.updatedBy?.name || "",
-        updatedAt:                securityUser?.updatedAt || "",
-        updatedIP:                securityUser?.updatedIP || "",
+  useEffect(() => {
+    batch(() => {
+      if (userId && securityUser?.customer?._id) {
+        dispatch(getCustomer(securityUser?.customer?._id));
       }
-      ),
-      [securityUser] );
+      if (userId && securityUser?.contact?._id) {
+        dispatch(getContact(securityUser?.customer?._id, securityUser?.contact?._id));
+      }
+    });
+  }, [dispatch, userId, securityUser]);
+
+  // const handleViewCustomer = (id) => {
+  //   navigate(PATH_SECURITY.users.view(id));
+  // };
+
+  const handleCustomerDialog = () =>{dispatch(setCustomerDialog(true))}
+  const handleContactDialog = () =>{dispatch(setContactDialog(true))}
+
+  const handleEdit = () => {
+    dispatch(setSecurityUserEditFormVisibility(true));
+    navigate(PATH_SECURITY.users.edit(securityUser?._id));
+  };
+
+  const defaultValues = useMemo(
+    () => ({
+      customer: securityUser?.customer?.name || '',
+      contact: securityUser?.contact?.firstName || '',
+      name: securityUser?.name || '',
+      phone: securityUser?.phone || '',
+      email: securityUser?.email || '',
+      login: securityUser?.login || '',
+      roles: securityUser?.roles || [],
+      regions: securityUser?.regions || [],
+      countries: securityUser?.regions ? securityUser.regions.flatMap(region => region.countries) : [],
+      customers: securityUser?.customers || [],
+      machines: securityUser?.machines || [],
+      isActive: securityUser?.isActive || false,
+      createdByFullName: securityUser?.createdBy?.name || '',
+      createdAt: securityUser?.createdAt || '',
+      createdIP: securityUser?.createdIP || '',
+      updatedByFullName: securityUser?.updatedBy?.name || '',
+      updatedAt: securityUser?.updatedAt || '',
+      updatedIP: securityUser?.updatedIP || '',
+    }),
+    [securityUser]
+  );
   return (
     <>
       <Container maxWidth={false}>
@@ -138,12 +144,10 @@ export default function SecurityUserProfile() {
               sm={6}
               heading="Customer"
               objectParam={
-                defaultValues?.customer ? (
-                  <Link onClick={handleOpenCustomer} href="#" underline="none">
+                defaultValues?.customer && (
+                  <Link onClick={ handleCustomerDialog } href="#" underline="none">
                     {defaultValues?.customer}
                   </Link>
-                ) : (
-                  ''
                 )
               }
             />
@@ -151,12 +155,10 @@ export default function SecurityUserProfile() {
               sm={6}
               heading="Contact"
               objectParam={
-                defaultValues?.contact ? (
-                  <Link onClick={handleOpenContact} href="#" underline="none">
+                defaultValues?.contact && (
+                  <Link onClick={ handleContactDialog } href="#" underline="none">
                     {defaultValues?.contact}
                   </Link>
-                ) : (
-                  ''
                 )
               }
             />
@@ -167,7 +169,28 @@ export default function SecurityUserProfile() {
             <ViewFormField
               sm={6}
               heading="Roles"
-              param={defaultValues?.roles?.map((obj) => obj?.name).join(', ')}
+              userRolesChips={defaultValues?.roles}
+            />
+            <ViewFormField
+              sm={12}
+              heading="Regions"
+              arrayParam={defaultValues?.regions}
+            />
+            <ViewFormField
+              sm={12}
+              heading="Countries"
+              chipLabel='country_name'
+              arrayParam={defaultValues?.countries}
+            />
+            <ViewFormField
+              sm={12}
+              heading="Customers"
+              arrayParam={defaultValues?.customers}
+            />
+            <ViewFormField
+              sm={12}
+              heading="Machines"
+              arrayParam={defaultValues?.machines}
             />
           </Grid>
           <ViewFormField />
@@ -176,240 +199,10 @@ export default function SecurityUserProfile() {
           </Grid>
         </Card>
       </Container>
-      <Dialog
-        open={openCustomer}
-        onClose={handleCloseCustomer}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
-      >
-        <Grid
-          container
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            bgcolor: 'primary.main',
-            color: 'primary.contrastText',
-            padding: '10px',
-          }}
-        >
-          <Typography variant="h4" sx={{ px: 2 }}>
-            Customer{' '}
-          </Typography>{' '}
-          <Link onClick={() => handleCloseCustomer()} href="#" underline="none" sx={{ ml: 'auto' }}>
-            {' '}
-            <Iconify icon="mdi:close-box-outline" />
-          </Link>
-        </Grid>
-        <Grid container sx={{ p: 2 }}>
-          <ViewFormField sm={12} heading="Name" param={customer?.name} />
-          <ViewFormField sm={6} heading="Trading Name" param={customer?.tradingName} />
-          <ViewFormField sm={6} heading="Phone" param={customer?.mainSite?.phone} />
-          <ViewFormField sm={6} heading="Fax" param={customer?.mainSite?.fax} />
-          <ViewFormField sm={6} heading="Email" param={customer?.mainSite?.email} />
-          <ViewFormField sm={6} heading="Site Name" param={customer?.mainSite?.name} />
-          <Grid container sx={{ pt: '2rem' }}>
-            <Grid
-              item
-              xs={12}
-              sm={12}
-              sx={{
-                backgroundImage: (theme) =>
-                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
-              }}
-            >
-              <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
-                Address Information
-              </Typography>
-            </Grid>
-          </Grid>
-          <ViewFormField sm={6} heading="Street" param={customer?.mainSite?.address?.street} />
-          <ViewFormField sm={6} heading="Suburb" param={customer?.mainSite?.address?.suburb} />
-          <ViewFormField sm={6} heading="City" param={customer?.mainSite?.address?.city} />
-          <ViewFormField sm={6} heading="Region" param={customer?.mainSite?.address?.region} />
-          <ViewFormField sm={6} heading="Post Code" param={customer?.mainSite?.address?.postcode} />
-          <ViewFormField sm={12} heading="Country" param={customer?.mainSite?.address?.country} />
-          <ViewFormField
-            sm={6}
-            heading="Primary Biling Contact"
-            param={
-              customer?.primaryBillingContact
-                ? `${customer?.primaryBillingContact?.firstName} ${customer?.primaryBillingContact?.lastName}`
-                : ''
-            }
-          />
-          <ViewFormField
-            sm={6}
-            heading="Primary Technical Contact"
-            param={
-              customer?.primaryTechnicalContact
-                ? `${customer?.primaryTechnicalContact?.firstName} ${customer?.primaryTechnicalContact?.lastName}`
-                : ''
-            }
-          />
-        </Grid>
-        <Grid container sx={{ px: 2, pb: 3 }}>
-          <Grid container sx={{ py: '2rem' }}>
-            <Grid
-              item
-              xs={12}
-              sm={12}
-              sx={{
-                backgroundImage: (theme) =>
-                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
-              }}
-            >
-              <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
-                Howick Resources
-              </Typography>
-            </Grid>
-          </Grid>
-          <ViewFormField
-            sm={6}
-            heading="Account Manager"
-            param={customer?.accountManager?.firstName}
-            secondParam={customer?.accountManager?.lastName}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Project Manager"
-            param={customer?.projectManager?.firstName}
-            secondParam={customer?.projectManager?.lastName}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Suppport Manager"
-            param={customer?.supportManager?.firstName}
-            secondParam={customer?.supportManager?.lastName}
-          />
-        </Grid>
-        <Grid item sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} sm={12}>
-          <Link
-            onClick={() => handleViewCustomer(customer._id)}
-            href="#"
-            underline="none"
-            sx={{
-              ml: 'auto',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              px: 3,
-              pb: 3,
-            }}
-          >
-            {' '}
-            <Typography variant="body" sx={{ px: 2 }}>
-              Go to customer
-            </Typography>
-            <Iconify icon="mdi:share" />
-          </Link>
-        </Grid>
-      </Dialog>
 
-      <Dialog
-        open={openContact}
-        onClose={handleCloseContact}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
-      >
-        <Grid
-          container
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            bgcolor: 'primary.main',
-            color: 'primary.contrastText',
-            padding: '10px',
-          }}
-        >
-          <Typography variant="h4" sx={{ px: 2 }}>
-            Contact{' '}
-          </Typography>{' '}
-          <Link onClick={() => handleCloseCustomer()} href="#" underline="none" sx={{ ml: 'auto' }}>
-            {' '}
-            <Iconify icon="mdi:close-box-outline" />
-          </Link>
-        </Grid>
-        <Grid container sx={{ px: 2, py: 2 }}>
-          <ViewFormField
-            sm={6}
-            heading="First Name"
-            param={contact?.firstName ? contact?.firstName : ''}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Last Name"
-            param={contact?.lastName ? contact?.lastName : ''}
-          />
-          <ViewFormField sm={6} heading="Title" param={contact?.title ? contact?.title : ''} />
-          <ViewFormField
-            sm={6}
-            heading="Contact Types"
-            param={contact?.contactTypes ? contact?.contactTypes.toString() : ''}
-          />
-          <ViewFormField sm={6} heading="Phone" param={contact?.phone ? contact?.phone : ''} />
-          <ViewFormField sm={6} heading="Email" param={contact?.email ? contact?.email : ''} />
-          <Grid container sx={{ pt: '2rem' }}>
-            <Grid
-              item
-              xs={12}
-              sm={12}
-              sx={{
-                backgroundImage: (theme) =>
-                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
-              }}
-            >
-              <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>
-                Address Information
-              </Typography>
-            </Grid>
-          </Grid>
-          <ViewFormField
-            sm={6}
-            heading="Street"
-            param={contact?.address?.street ? contact?.address?.street : ''}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Suburb"
-            param={contact?.address?.suburb ? contact?.address?.suburb : ''}
-          />
-          <ViewFormField
-            sm={6}
-            heading="City"
-            param={contact?.address?.city ? contact?.address?.city : ''}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Region"
-            param={contact?.address?.region ? contact?.address?.region : ''}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Post Code"
-            param={contact?.address?.postcode ? contact?.address?.postcode : ''}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Country"
-            param={contact?.address?.country ? contact?.address?.country : ''}
-          />
-          <ViewFormField />
-        </Grid>
-        {/* <ViewFormField sm={6} heading='First Name'    param={contact?.firstName }/>
-          <ViewFormField sm={6} heading='Last Name'     param={contact?.lastName  }/>
-          <ViewFormField sm={6} heading='Title'         param={contact?.title }/>
-          <ViewFormField sm={6} heading='Contact Types' param={contact?.contactTypes}/>
-          <ViewFormField sm={6} heading='Phone'         param={contact?.phone }/>
-          <ViewFormField sm={6} heading='Email'         param={contact?.email }/>
-          <ViewFormField sm={6} heading='Street'        param={contact?.address?.street}/>
-          <ViewFormField sm={6} heading='Suburb'        param={contact?.address?.suburb}/>
-          <ViewFormField sm={6} heading='City'          param={contact?.address?.city}/>
-          <ViewFormField sm={6} heading='Region'        param={contact?.address?.region}/>
-          <ViewFormField sm={6} heading='Post Code'     param={contact?.address?.postcode}/>
-          <ViewFormField sm={6} heading='Country'       param={contact?.address?.country}/> */}
-      </Dialog>
+      <CustomerDialog />
+      <ContactDialog />
+
     </>
   );
 }

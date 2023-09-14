@@ -4,7 +4,6 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-
 const initialState = {
   intial: false,
   techparamEditFormFlag: false,
@@ -12,9 +11,12 @@ const initialState = {
   success: false,
   isLoading: false,
   error: null,
-  techparamcategories: [],
   techparamcategory: {},
-  techparamcategoryParams: {}
+  techparamcategories: [],
+  activeTechParamCategories: [],
+  filterBy: '',
+  page: 0,
+  rowsPerPage: 100,
 };
 
 const slice = createSlice({
@@ -30,15 +32,6 @@ const slice = createSlice({
     setTechparamcategoryEditFormVisibility(state, action){
       state.techparamEditFormFlag = action.payload;
     },
-    
-    // RESET CUSTOMER
-    resetTechparamcategory(state){
-      state.techparamcategory = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-
-    },
 
     // HAS ERROR
     hasError(state, action) {
@@ -47,7 +40,15 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customers
+    // GET ACTIVE TECH PARAM CATEGORY
+    getActiveTechparamcategoriesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeTechParamCategories = action.payload;
+      state.initial = true;
+    },
+
+    // GET TECH PARAM CATEGORY
     getTechparamcategoriesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -55,7 +56,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customer
+    // GET  TECH PARAM CATEGORY
     getTechparamcategorySuccess(state, action) {
       
       state.isLoading = false;
@@ -72,13 +73,32 @@ const slice = createSlice({
       state.initial = true;
     },
 
-
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+    // RESET TECH PARAM CATEGORY
+    resetTechParamCategory(state){
+      state.techparamcategory = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+    // RESET TECH PARAM CATEGORIES
+    resetTechParamCategories(state){
+      state.techparamcategories = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+    // Set FilterBy
+    setFilterBy(state, action) {
+      state.filterBy = action.payload;
+    },
+    // Set PageRowCount
+    ChangeRowsPerPage(state, action) {
+      state.rowsPerPage = action.payload;
+    },
+    // Set PageNo
+    ChangePage(state, action) {
+      state.page = action.payload;
     },
   },
 });
@@ -88,20 +108,19 @@ export default slice.reducer;
 
 // Actions
 export const {
+  getActiveTechparamcategoriesSuccess,
   setTecparamEditFormVisibility,
-  resetTechparamcategory,
-  getCart,
-  addToCart,
+  resetTechParamCategory,
+  resetTechParamCategories,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
-
+  setFilterBy,
+  ChangeRowsPerPage,
+  ChangePage,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
 
-export function getTechparamcategories (){
+export function getTechparamcategories(){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
@@ -118,7 +137,34 @@ export function getTechparamcategories (){
       // dispatch(slice.actions)
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error.Message))
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  }
+}
+
+// ----------------------------------------------------------------------
+
+export function getActiveTechparamcategories(){
+  return async (dispatch) =>{
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/techparamcategories`, 
+        {
+          params: {
+            isArchived: false,
+            isActive: true
+          }
+        }
+      );
+      
+      dispatch(slice.actions.getActiveTechparamcategoriesSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('techparamcategories loaded successfully'));
+      // dispatch(slice.actions)
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   }
 }
@@ -132,6 +178,7 @@ export function getTechparamcategory(id) {
       dispatch(slice.actions.getTechparamcategorySuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -140,7 +187,10 @@ export function deleteTechparamcategory(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.delete(`${CONFIG.SERVER_URL}products/techparamcategories/${id}`);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/techparamcategories/${id}` , 
+      {
+          isArchived: true, 
+      });
       // const response = await axios.delete(`${CONFIG.SERVER_URL}machines/suppliers`,ids);
       dispatch(slice.actions.setResponseMessage(response.data));
       // get again suppliers //search
@@ -148,6 +198,7 @@ export function deleteTechparamcategory(id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -156,7 +207,6 @@ export function deleteTechparamcategory(id) {
 
 export function addTechparamcategory(params) {
     return async (dispatch) => {
-      dispatch(slice.actions.resetTechparamcategory());
       dispatch(slice.actions.startLoading());
       try {
         /* eslint-disable */
@@ -176,9 +226,11 @@ export function addTechparamcategory(params) {
         const response = await axios.post(`${CONFIG.SERVER_URL}products/techparamcategories`, data);
 
         dispatch(slice.actions.getTechparamcategoriesSuccess(response.data.Techparamcategory));
+        dispatch(getTechparamcategories())
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
+        throw error;
       }
     };
 
@@ -198,7 +250,7 @@ export function updateTechparamcategory(params,Id) {
         // tradingName: params.tradingName
       };
      /* eslint-enable */
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/techparamcategories/${Id}`,
+      await axios.patch(`${CONFIG.SERVER_URL}products/techparamcategories/${Id}`,
         data
       );
       dispatch(getTechparamcategory(Id));
@@ -206,6 +258,7 @@ export function updateTechparamcategory(params,Id) {
 
     } catch (error) {
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 

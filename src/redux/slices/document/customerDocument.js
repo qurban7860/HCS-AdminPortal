@@ -5,17 +5,21 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-
+const regEx = /^[^2]*/
 const initialState = {
   customerDocumentFormVisibility: false,
   customerDocumentEditFormVisibility: false,
+  customerDocumentViewFormVisibility: false,
+  customerDocumentHistoryViewFormVisibility: false,
   customerDocumentEdit: false,
-  intial: false,
+  customerDocumentIntial: false,
   responseMessage: null,
   success: false,
   isLoading: false,
   error: null,
   customerDocuments: [],
+  activeCustomerDocuments: [],
+  customerDocumentHistory: [],
   customerDocument: null,
 };
 
@@ -28,6 +32,11 @@ const slice = createSlice({
       state.isLoading = true;
       state.error = null;
     },
+
+    // STOP LOADING
+    stopLoading(state) {
+      state.isLoading = false;
+        },
     // SET TOGGLE
     setCustomerDocumentFormVisibility(state, action){
       state.customerDocumentFormVisibility = action.payload;
@@ -36,6 +45,14 @@ const slice = createSlice({
     // SET TOGGLE
     setCustomerDocumentEditFormVisibility(state, action){
       state.customerDocumentEditFormVisibility = action.payload;
+    },
+    // SET TOGGLE
+    setCustomerDocumentViewFormVisibility(state, action){
+      state.customerDocumentViewFormVisibility = action.payload;
+    },    
+    // SET TOGGLE
+    setCustomerDocumentHistoryViewFormVisibility(state, action){
+      state.customerDocumentHistoryViewFormVisibility = action.payload;
     },
     setCustomerDocumentEdit(state, action){
       state.customerDocumentEdit = action.payload;
@@ -52,6 +69,22 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.customerDocuments = action.payload;
+      state.initial = true;
+    },
+
+    // GET Active Customer Documents
+    getActiveCustomerDocumentsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeCustomerDocuments = action.payload;
+      state.initial = true;
+    },
+
+    // GET Customer Documents
+    getCustomerDocumentHistorySuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.customerDocumentHistory = action.payload;
       state.initial = true;
     },
 
@@ -86,13 +119,6 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
-    backStep(state) {
-      state.checkout.activeStep -= 1;
-    },
-
-    nextStep(state) {
-      state.checkout.activeStep += 1;
-    },
   },
 });
 
@@ -103,16 +129,12 @@ export default slice.reducer;
 export const {
   setCustomerDocumentFormVisibility,
   setCustomerDocumentEditFormVisibility,
+  setCustomerDocumentViewFormVisibility,
+  setCustomerDocumentHistoryViewFormVisibility,
   setCustomerDocumentEdit,
   resetCustomerDocument,
   resetCustomerDocuments,
-  getCart,
-  addToCart,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
-
 } = slice.actions;
 
 
@@ -122,112 +144,173 @@ export function addCustomerDocument(customerId,params) {
     return async (dispatch) => {
         dispatch(slice.actions.startLoading());
         try {
-
           const formData = new FormData();
           formData.append('customer', customerId);
           // if(params?.customerAccess){
             formData.append('customerAccess', params.customerAccess);
+            formData.append('isActive', params?.isActive);
           // }
-          if(params?.name){
-            formData.append('name', params?.name);
+          if(params?.displayName){
+            formData.append('displayName', params?.displayName);
+            formData.append('name', params?.displayName);
           }
           if(params?.description){
             formData.append('description', params?.description);
           }
-          if(params?.category){
-            formData.append('category', params?.category);
+          if(params?.documentCategory){
+            formData.append('documentCategory', params?.documentCategory);
           }
-          if(params?.documentName){
-            formData.append('documentName', params?.documentName);
+          if(params?.documentType){
+            formData.append('documentType', params?.documentType);
+            formData.append('doctype', params?.documentType);
           }
-          if(params?.image){
-            formData.append('image', params?.image);
+          if(params?.images){
+            formData.append('images', params?.images);
           }
-          if(params?.isActive){
-            formData.append('isActive', params?.isActive);
-          }
-
-// console.log("formData : ",params?.image);
-      const response = await axios.post(`${CONFIG.SERVER_URL}filemanager/files`, formData,{
+      await axios.post(`${CONFIG.SERVER_URL}documents/document/`, formData,{
         headers: {
           'Content-Type':"multupart/form-data"
         }
       });
-
-      dispatch(slice.actions.setResponseMessage('Document saved successfully'));
-      dispatch(getCustomerDocuments(customerId));
+      // if(RegExp.test(response.status)){
+        dispatch(getCustomerDocuments(customerId))
+        dispatch(setCustomerDocumentFormVisibility(false));
+      // }
+      console.log("add customer document try block!")
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      console.log("add customer document catch block!")
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
 
 // ---------------------------------Update Customer Document-------------------------------------
 
-export function updateCustomerDocument(customerDocumentId,params) {
+export function updateCustomerDocument(customerDocumentId,params,customerId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = { 
-                    name: params?.name,
-                    customerAccess: params.customerAccess,
-                    isActive: params.isActive,
-                    description: params.description,
-                  };
-
-          // if(params?.name){
-          //   formData.append('name', params?.name);
-          // }
-          // if(params?.description){
-          //   formData.append('description', params?.description);
-          // }
-          if(params?.category){
-            data.category = params?.category
-          }
-          if(params?.documentName){
-            data.documentName = params?.documentName
-          }
-          // if(params?.image){
-          //   formData.append('image', params?.image);
-          // }
-          // if(params?.isActive){
-          //   formData.append('isActive', params?.isActive);
-          // }
-          console.log("Payload : ",params);
-      const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/files/${customerDocumentId}`, data);
-      // dispatch(getCustomerDocuments())
-      await dispatch(getCustomerDocuments(customerDocumentId));
-      dispatch(slice.actions.setResponseMessage('Customer Document updated successfully'));
-      dispatch(setCustomerDocumentEditFormVisibility (false));
+      const formData = new FormData();
+      // if(params?.customerAccess){
+        formData.append('customerAccess', params.customerAccess);
+      // }
+      formData.append('customer', customerId);
+        formData.append('isActive', params?.isActive);
+      if(params.newVersion){
+        formData.append('newVersion', params.newVersion);
+      }
+      // if(params?.displayName){
+        formData.append('displayName', params?.displayName);
+        formData.append('name', params?.name);
+      // }
+      if(params?.description){
+        formData.append('description', params?.description);
+      }
+      if(params?.documentCategory){
+        formData.append('documentCategory', params?.documentCategory);
+      }
+      if(params?.documentType){
+        formData.append('documentType', params?.documentType);
+        formData.append('doctype', params?.documentType);
+      }
+      if(params?.images){
+        formData.append('images', params?.images);
+      }
+      await axios.patch(`${CONFIG.SERVER_URL}documents/document/${customerDocumentId}`, formData);
+      // if(regEx.test(response.status)){
+        dispatch(setCustomerDocumentEditFormVisibility(false));
+        dispatch(setCustomerDocumentFormVisibility(false));
+        dispatch(getCustomerDocuments(customerId))
+      // }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
 
-// -----------------------------------Get Customer Document-----------------------------------
+// -----------------------------------Get Customer Documents-----------------------------------
 
 export function getCustomerDocuments(customerId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      
-      const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/files` , 
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` , 
       {
         params: {
           isArchived: false,
-          customer:customerId
+          customer:customerId,
+          machine: null,
+          orderBy : {
+            createdAt:-1
+          }
+          // basic: true
         }
       }
       );
-      console.log("response : ", response);
-      dispatch(slice.actions.getCustomerDocumentsSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Customer Document loaded successfully'));
+      // console.log("response : ", response);
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.getCustomerDocumentsSuccess(response.data));
+      }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// -----------------------------------Get Active Customer Documents-----------------------------------
+
+export function getActiveCustomerDocuments(customerId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` , 
+      {
+        params: {
+          isActive: true,
+          isArchived: false,
+          customer:customerId,
+          machine: null,
+        }
+      }
+      );
+      // console.log("response : ", response);
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.getActiveCustomerDocumentsSuccess(response.data));
+      }
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+
+// -----------------------------------Get Customer Document History-----------------------------------
+
+export function getCustomerDocumentHistory(customerDocumentId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/${customerDocumentId}`,
+      {
+        params: {
+          historical : true
+        }
+      }
+      );
+      dispatch(slice.actions.getCustomerDocumentHistorySuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Customer Document Loaded Successfuly'));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -237,13 +320,14 @@ export function getCustomerDocuments(customerId) {
 export function getCustomerDocument(customerDocumentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/files/${customerDocumentId}`);
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/${customerDocumentId}`);
       dispatch(slice.actions.getCustomerDocumentSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Customer Document Loaded Successfuly'));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -254,14 +338,17 @@ export function deleteCustomerDocument(customerDocumentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/files/${customerDocumentId}` , 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${customerDocumentId}` , 
       {
           isArchived: true, 
       });
       dispatch(slice.actions.setResponseMessage(response.data));
+    dispatch(slice.actions.stopLoading());
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      dispatch(slice.actions.stopLoading());
+      throw error;
     }
   };
 }

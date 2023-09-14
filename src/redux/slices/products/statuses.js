@@ -4,7 +4,6 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-
 const initialState = {
   intial: false,
   machinestatusEditFormFlag: false,
@@ -12,10 +11,12 @@ const initialState = {
   success: false,
   isLoading: false,
   error: null,
-  machinestatuses: [],
   machinestatus: {},
-  machinestatusParams: {
-  }
+  machinestatuses: [],
+  activeMachineStatuses:[],
+  filterBy: '',
+  page: 0,
+  rowsPerPage: 100,
 };
 
 const slice = createSlice({
@@ -31,15 +32,6 @@ const slice = createSlice({
     setMachinestatusesEditFormVisibility(state, action){
       state.machinestatusEditFormFlag = action.payload;
     },
-    
-    // RESET CUSTOMER
-    resetMachinestatus(state){
-      state.machine = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-
-    },
 
     // HAS ERROR
     hasError(state, action) {
@@ -48,7 +40,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customers
+    // GET  STATUSES
     getMachinestatusesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -56,7 +48,15 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customer
+    // GET Active STATUSES
+    getActiveMachineStatusesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeMachineStatuses = action.payload;
+      state.initial = true;
+    },
+
+    // GET STATUS
     getMachinestatusSuccess(state, action) {
       
       state.isLoading = false;
@@ -73,13 +73,32 @@ const slice = createSlice({
       state.initial = true;
     },
 
-
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+    // RESET 
+    resetMachineStatus(state){
+      state.machinestatus = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+    // RESET 
+    resetMachineStatuses(state){
+      state.machinestatuses = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+        // Set FilterBy
+    setFilterBy(state, action) {
+      state.filterBy = action.payload;
+    },
+    // Set PageRowCount
+    ChangeRowsPerPage(state, action) {
+      state.rowsPerPage = action.payload;
+    },
+    // Set PageNo
+    ChangePage(state, action) {
+      state.page = action.payload;
     },
   },
 });
@@ -91,34 +110,63 @@ export default slice.reducer;
 export const {
   setMachinestatusesEditFormVisibility,
   resetMachineStatus,
-  getCart,
-  addToCart,
+  resetMachineStatuses,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
-
+  setFilterBy,
+  ChangeRowsPerPage,
+  ChangePage,
 } = slice.actions;
 
 
 // ----------------------------------------------------------------------
 
-
 export function getMachinestatuses (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/statuses`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/statuses`, 
+      {
+        params: {
+          isArchived: false
+        }
+      });
 
       dispatch(slice.actions.getMachinestatusesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('statuses loaded successfully'));
       // dispatch(slice.actions)
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error.Message))
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   }
 }
+
+// ----------------------------------------------------------------------
+
+export function getActiveMachineStatuses (){
+  return async (dispatch) =>{
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/statuses`, 
+      {
+        params: {
+          isArchived: false,
+          isActive: true
+        }
+      });
+
+      dispatch(slice.actions.getActiveMachineStatusesSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('statuses loaded successfully'));
+      // dispatch(slice.actions)
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  }
+}
+
 // ----------------------------------------------------------------------
  
 export function getMachineStatus(id) {
@@ -128,8 +176,9 @@ export function getMachineStatus(id) {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/statuses/${id}`);
       dispatch(slice.actions.getMachinestatusSuccess(response.data));
     } catch (error) {
-      console.error(error,"Slice Error");
+      console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -140,11 +189,15 @@ export function deleteMachinestatus(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.delete(`${CONFIG.SERVER_URL}products/statuses/${id}`);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/statuses/${id}` , 
+      {
+          isArchived: true, 
+      });
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -153,7 +206,7 @@ export function deleteMachinestatus(id) {
 
 export function addMachineStatus(params) {
     return async (dispatch) => {
-      dispatch(slice.actions.resetMachinestatus());
+      dispatch(slice.actions.resetMachineStatus());
       dispatch(slice.actions.startLoading());
       try {
         /* eslint-disable */
@@ -162,6 +215,7 @@ export function addMachineStatus(params) {
           description: params.description,
           displayOrderNo: params.displayOrderNo,
           isActive: params.isActive,
+          slug: params.slug,
         };
         /* eslint-enable */
         const response = await axios.post(`${CONFIG.SERVER_URL}products/statuses`, data);
@@ -169,6 +223,7 @@ export function addMachineStatus(params) {
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
+        throw error;
       }
     };
 
@@ -181,23 +236,24 @@ export function updateMachinestatus(params,Id) {
     dispatch(slice.actions.startLoading());
     try {
 
-      const formData = new FormData();
       /* eslint-disable */
       let data = {
         name: params.name,
         displayOrderNo: params.displayOrderNo,
         description: params.description,
-        isActive: params.isActive
+        isActive: params.isActive,
+        slug: params.slug,
       };
      /* eslint-enable */
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/statuses/${Id}`,
+      await axios.patch(`${CONFIG.SERVER_URL}products/statuses/${Id}`,
         data
       );
       dispatch(getMachineStatus(Id));
       dispatch(slice.actions.setMachinestatusesEditFormVisibility(false));
     } catch (error) {
-      console.error(error,"from statuses");
+      console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 

@@ -15,7 +15,20 @@ const initialState = {
   error: null,
   securityUsers: [],
   securityUser: null,
+  user: null,
+  userId: null,
+  userEmail: null,
+  userLogin: null,
+  userDisplayName: null,
+  userRoles: [],
+  assignedUsers: [],
+  signInLogs: [],
+  filterBy: '',
+  page: 0,
+  rowsPerPage: 100,
+  verifiedInvite:null,
 };
+
 
 const slice = createSlice({
   name: 'user',
@@ -43,25 +56,28 @@ const slice = createSlice({
       state.editFormVisibility = action.payload;
     },
 
-    // RESET USERS
-    resetSecurityUsers(state){
-      state.users = [];
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
+    // SET USER PROPERTIES
+    setSecurityUserProperties(state, userData){
+      const {UserId, User} = userData;
+      state.userId = UserId;
+      state.userEmail = User.email;
+      state.userLogin = User.login;
+      state.userDisplayName = User.displayName;
+      state.userRoles = User.roles;
     },
-    // RESET USER
-    resetSecurityUser(state){
-      state.securityUser = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
+
     // GET users
     getSecurityUsersSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
       state.securityUsers = action.payload;
+      state.initial = true;
+    },
+
+    getLoggedInSecurityUserSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.loggedInUser = action.payload;
       state.initial = true;
     },
 
@@ -74,6 +90,22 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // GET user
+    getAssignedSecurityUserSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.assignedUsers = action.payload;
+      state.initial = true;
+    },
+
+    // GET Active Sign in Logs
+    getSignInLogsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.signInLogs = action.payload;
+      state.initial = true;
+    },
+
     // SET RES MESSAGE
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
@@ -82,12 +114,47 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+    // RESET SECURITY USER
+    resetSecurityUser(state){
+      state.securityUser = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+    // RESET SECURITY USERS
+    resetSecurityUsers(state){
+      state.securityUsers = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
+    // RESET SIGNINLOGS
+    resetSignInLogs(state){
+      state.signInLogs = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
+    // Get Verify Invite
+    getVerifyInvite(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.verifiedInvite = action.payload;
+    },
+    // Set FilterBy
+    setFilterBy(state, action) {
+      state.filterBy = action.payload;
+    },
+    // Set PageRowCount
+    ChangeRowsPerPage(state, action) {
+      state.rowsPerPage = action.payload;
+    },
+    // Set PageNo
+    ChangePage(state, action) {
+      state.page = action.payload;
     },
   },
 });
@@ -101,18 +168,21 @@ export const {
   setSecurityUserEditFormVisibility,
   resetSecurityUsers,
   resetSecurityUser,
-  gotoStep,
-  backStep,
-  nextStep,
+  setFilterBy,
+  ChangeRowsPerPage,
+  ChangePage,
 } = slice.actions;
 // ----------------------------------------------------------------------
 
-export function addSecurityUser(param) {
+export function addSecurityUser(param, isInvite) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    dispatch(resetSecurityUser())
+    dispatch(resetSecurityUser());
+    try{
       const data = {
       customer: param.customer,
+      customers: param.customers,
+      machines: param.machines,
       contact: param.contact,
       name: param.name,
       email: param.email,
@@ -121,13 +191,21 @@ export function addSecurityUser(param) {
       roles: param.roles,
       login: param.email,
       isActive: param.isActive,
+      currentEmployee: param.currentEmployee,
+      multiFactorAuthentication: param.multiFactorAuthentication,
+      regions: param.selectedRegions
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}security/users`, data);
-      if(regEx.test(response.status)){
+      if(regEx.test(response.status) && isInvite){
+        await axios.get(`${CONFIG.SERVER_URL}security/invites/sendUserInvite/${response?.data?.user?._id}`);
         dispatch(setSecurityUserFormVisibility(false))
         dispatch(getSecurityUsers());
       }
-    return response;
+      return response;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 }
 
@@ -135,26 +213,36 @@ export function addSecurityUser(param) {
 
 export function updateSecurityUser(param,id) {
   return async (dispatch) => {
-    dispatch(resetSecurityUser())
     dispatch(slice.actions.startLoading());
+    try{
       const data = {
         customer: param.customer,
+        customers: param.customers,
+        machines: param.machines,
         contact: param.contact,
         name: param.name,
         email: param.email,
         phone:  param.phone,
         login: param.loginEmail,
         roles: param.roles,
-        isActive: param.isActive
+        isActive: param.isActive,
+        currentEmployee: param.currentEmployee,
+        multiFactorAuthentication: param.multiFactorAuthentication,
+        regions: param.selectedRegions
         }
         if(param.password !== ""){
             data.password = param.password 
         }
       const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/${id}`, data);
-      if(regEx.test(response.status)){
-        dispatch(getSecurityUsers());
-      }
+      dispatch(resetSecurityUser());
+      // if(regEx.test(response.status)){
+      //   dispatch(getSecurityUsers());
+      // }
       return response;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 }
 
@@ -163,6 +251,7 @@ export function updateSecurityUser(param,id) {
 export function getSecurityUsers() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
+    try{ 
       const response = await axios.get(`${CONFIG.SERVER_URL}security/users`,
       {
         params: {
@@ -174,20 +263,77 @@ export function getSecurityUsers() {
         dispatch(slice.actions.getSecurityUsersSuccess(response.data));
       }
       return response;
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
+  }
 }
 
+// ----------------------------------------------------------------------
+
+export function getAssignedSecurityUsers(roleId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try{ 
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users`,
+      {
+        params: {
+          isArchived: false,
+          roles: roleId,
+        }
+      }
+      );
+        dispatch(slice.actions.getAssignedSecurityUserSuccess(response.data));
+      return response;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+}
 // ----------------------------------------------------------------------
 
 export function getSecurityUser(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
+    try{
       const response = await axios.get(`${CONFIG.SERVER_URL}security/users/${id}`);
-      // console.log("response: " ,response);
       if(regEx.test(response.status)){
         dispatch(slice.actions.getSecurityUserSuccess(response.data));
       }
       return response;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+}
+
+// ---------------------------SET LoginUser Data -------------------------------------------
+
+export function setLoginUser(userId,User) {
+  return async (dispatch) => {
+        dispatch(slice.actions.setSecurityUserProperties({userId, User}));
+      }
+}
+
+// ----------------------------------------------------------------------
+
+export function getLoggedInSecurityUser(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try{  
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/${id}`);
+        // console.log("response: " ,response);
+        if(regEx.test(response.status)){
+          dispatch(slice.actions.getLoggedInSecurityUserSuccess(response.data));
+        }
+        return response;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
   };
 }
 
@@ -196,6 +342,7 @@ export function getSecurityUser(id) {
 export function deleteSecurityUser(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
+    try{
       const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/${id}`,
       {
         isArchived: true, 
@@ -207,19 +354,96 @@ export function deleteSecurityUser(id) {
         dispatch(resetSecurityUser())
       }
       return response;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 }
 //------------------------------------------------------------------------------
 
-export function SecurityUserPasswordUpdate(data,id) {
+export function SecurityUserPasswordUpdate(data, Id, isAdmin) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-      const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/updatePassword/${id}`,
-      data
+    try{
+      if(isAdmin){
+        data.isAdmin = true
+      };
+
+      const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/updatePassword/${Id}`,
+        data
       );
       if(regEx.test(response.status)){
         dispatch(slice.actions.setResponseMessage(response.data));
       }
-      return response;
+      return response; // eslint-disable-line
+    } catch (error) {
+      console.error(error);
+      throw error;
+      // dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function getSignInLogs(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/${id}/signinlogs/`);
+      dispatch(slice.actions.getSignInLogsSuccess(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+export function sendUserInvite(Id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/invites/sendUserInvite/${Id}`);
+      dispatch(slice.actions.setResponseMessage(response.data));
+      return response; // eslint-disable-line
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
+      console.error(error);
+      throw error;
+    }
+  };
+}
+
+export function verifyUserInvite(Id,code) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/invites/verifyInviteCode/${Id}/${code}`);
+      dispatch(slice.actions.getVerifyInvite(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      throw error;
+    }
+  };
+}
+
+export function updateInvitedUser(data, Id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.patch(`${CONFIG.SERVER_URL}security/invites/updatePasswordUserInvite/${Id}`,
+        data
+      );
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.setResponseMessage(response.data));
+      }
+      return response; // eslint-disable-line
+    } catch (error) {
+      console.error(error);
+      throw error;
+      // dispatch(slice.actions.hasError(error.Message));
+    }
   };
 }

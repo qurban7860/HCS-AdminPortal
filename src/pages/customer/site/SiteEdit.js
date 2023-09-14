@@ -1,4 +1,3 @@
-import { Helmet } from 'react-helmet-async';
 import { useLayoutEffect } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
@@ -34,7 +33,6 @@ export default function SiteEdit() {
 
 
   return (
-    <>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Edit Site"
@@ -50,6 +48,5 @@ export default function SiteEdit() {
 
         <SiteEditForm />
       </Container>
-    </>
   );
 }

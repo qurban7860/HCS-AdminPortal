@@ -11,17 +11,17 @@ export default function useChart(options) {
     show: true,
     label: 'Total',
     color: theme.palette.text.secondary,
-    fontSize: theme.typography.subtitle2.fontSize,
+    fontSize: theme.typography.overline.fontSize,
     fontWeight: theme.typography.subtitle2.fontWeight,
     lineHeight: theme.typography.subtitle2.lineHeight,
   };
 
   const LABEL_VALUE = {
-    offsetY: 8,
-    color: theme.palette.text.primary,
-    fontSize: theme.typography.h3.fontSize,
-    fontWeight: theme.typography.h3.fontWeight,
-    lineHeight: theme.typography.h3.lineHeight,
+    offsetY: 10,
+    color: theme.palette.text.secondary,
+    fontSize: theme.typography.h1.fontSize,
+    fontWeight: theme.typography.h1.fontWeight,
+    lineHeight: theme.typography.h1.lineHeight,
   };
 
   const baseOptions = {
@@ -150,7 +150,7 @@ export default function useChart(options) {
       // Radialbar
       radialBar: {
         track: {
-          strokeWidth: '100%',
+          strokeWidth: '50%',
           background: alpha(theme.palette.grey[500], 0.16),
         },
         dataLabels: {

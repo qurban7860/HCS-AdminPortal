@@ -11,13 +11,16 @@ import Chart, { useChart } from '../../../../components/chart';
 AppAreaInstalled.propTypes = {
   chart: PropTypes.object,
   title: PropTypes.string,
-  subheader: PropTypes.string,
+  subheader: PropTypes.func,
 };
 
 export default function AppAreaInstalled({ title, subheader, chart, ...other }) {
   const { colors, categories, series, options } = chart;
+  const [seriesData, setSeriesData] = useState('28-June-2023');
 
-  const [seriesData, setSeriesData] = useState('2019');
+  // let LNFT =  total number produced in a day;
+  // let Minutes = total minutes in a day;
+  // let LFNTPerMin = LNFT / Minutes;
 
   const chartOptions = useChart({
     colors,
@@ -31,15 +34,16 @@ export default function AppAreaInstalled({ title, subheader, chart, ...other }) 
     <Card {...other}>
       <CardHeader
         title={title}
-        subheader={subheader}
+        subheader="
+          Operator 1 - LFNT/Min: 0.017543859649122806"
         action={
           <CustomSmallSelect
             value={seriesData}
             onChange={(event) => setSeriesData(event.target.value)}
           >
             {series.map((option) => (
-              <option key={option.year} value={option.year}>
-                {option.year}
+              <option key={option.day} value={option.day}>
+                {option.day}
               </option>
             ))}
           </CustomSmallSelect>
@@ -47,8 +51,8 @@ export default function AppAreaInstalled({ title, subheader, chart, ...other }) 
       />
 
       {series.map((item) => (
-        <Box key={item.year} sx={{ mt: 3, mx: 3 }} dir="ltr">
-          {item.year === seriesData && (
+        <Box key={item.day} sx={{ mt: 3, mx: 3 }} dir="ltr">
+          {item.day === seriesData && (
             <Chart type="line" series={item.data} options={chartOptions} height={364} />
           )}
         </Box>
