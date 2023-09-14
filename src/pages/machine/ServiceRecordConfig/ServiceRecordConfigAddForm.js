@@ -110,8 +110,7 @@ const CheckParamSchema = Yup.object().shape({
     navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.list);
   };
 
-  const onSubmit = async (event, data) => {
-    event.preventDefault();
+  const onSubmit = async (data) => {
     try {
       data.checkParam = checkParams
       await dispatch(addServiceRecordConfig(data));
