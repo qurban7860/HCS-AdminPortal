@@ -35,8 +35,8 @@ import { FORMLABELS } from '../../../constants/default-constants';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'recordType', label: 'Record Type', align: 'left' },
   { id: 'docTitle', label: 'Document Title', align: 'left' },
+  { id: 'recordType', label: 'Record Type', align: 'left' },
   // { id: 'category', label: 'Category', align: 'left' },
   { id: 'machineModel', label: 'Machine Model', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
@@ -70,9 +70,7 @@ export default function ServiceRecordConfigList() {
     onSort,
     // onChangePage,
     // onChangeRowsPerPage,
-  } = useTable({
-    defaultOrderBy: 'name',
-  });
+  } = useTable({ });
 
   const dispatch = useDispatch();
   // const { themeStretch } = useSettingsContext();
