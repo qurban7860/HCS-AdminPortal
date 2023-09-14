@@ -260,7 +260,7 @@ export default function GeneralAppPage() {
                           getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                           renderOption={(props, option) => (<li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>)}
                           renderInput={(params) => (<TextField {...params} label="Categories" size="small" />)}
-                          onChange={(event, newValue) =>{setMBMCategory(newValue?._id); handleGraphCountry(newValue?._id, MBMYear,MBMCountry)}}
+                          onChange={(event, newValue) =>{setMBMCategory(newValue?._id); handleGraphModel(newValue?._id, MBMYear,MBMCountry)}}
                         />
                         <Autocomplete
                           sx={{ width: '130px',paddingRight:1 }}
