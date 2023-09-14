@@ -135,7 +135,6 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
         Header
       </Typography>
       <Grid container>
-        <ViewFormField sm={12} heading="Header Type" param={defaultValues?.header?.type} />
         <ViewFormField sm={4} heading="Header Left Text" param={defaultValues?.header?.leftText} />
         <ViewFormField sm={4} heading="Header Center Text" param={defaultValues?.header?.centerText} />
         <ViewFormField sm={4} heading="Header Right Text" param={defaultValues?.header?.rightText} />
@@ -144,7 +143,6 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
         Footer
       </Typography>
       <Grid container>
-        <ViewFormField sm={12} heading="Footer Type" param={defaultValues?.footer?.type} />
         <ViewFormField sm={4} heading="Footer Left Text" param={defaultValues?.footer?.leftText} />
         <ViewFormField sm={4} heading="Footer Center Text" param={defaultValues?.footer?.centerText} />
         <ViewFormField sm={4} heading="Footer Right Text" param={defaultValues?.footer?.rightText} />
