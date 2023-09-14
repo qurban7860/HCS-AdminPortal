@@ -10,9 +10,10 @@ RHFAutocomplete.propTypes = {
   name: PropTypes.string,
   label: PropTypes.string,
   helperText: PropTypes.node,
+  Error: PropTypes.bool,
 };
 
-export default function RHFAutocomplete({ name, label, helperText, ...other }) {
+export default function RHFAutocomplete({ name, label, helperText, Error, ...other }) {
   const { control, setValue } = useFormContext();
 
   return (
@@ -26,7 +27,7 @@ export default function RHFAutocomplete({ name, label, helperText, ...other }) {
           renderInput={(params) => (
             <TextField
               label={label}
-              error={!!error}
+              error={!!error || !!Error}
               helperText={error ? error?.message : helperText}
               {...params}
             />

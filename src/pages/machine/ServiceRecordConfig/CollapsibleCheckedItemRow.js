@@ -27,7 +27,7 @@ const CollapsibleCheckedItemRow = ({value, index, toggleEdit, deleteIndex, handl
                 </IconButton>
                 </TableCell>
               <TableCell size='small' align='right' >
-                  <ViewFormEditDeleteButtons handleEdit={()=>toggleEdit(index)} onDelete={()=>deleteIndex(index)} />
+                  {toggleEdit && <ViewFormEditDeleteButtons handleEdit={()=>toggleEdit(index)} onDelete={()=>deleteIndex(index)} /> }
               </TableCell>
         </TableRow>
         <TableRow key={value._id}>
@@ -35,11 +35,7 @@ const CollapsibleCheckedItemRow = ({value, index, toggleEdit, deleteIndex, handl
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
                 <Table size="small" aria-label="purchases">
-                  {/* <TableHead>
-                    <TableRow>
-                      <TableCell>Item List</TableCell>
-                    </TableRow>
-                  </TableHead> */}
+
                   <TableBody>
                     {value?.paramList.map((childRow,childIndex) => (
                       <TableRow key={childRow._id}>

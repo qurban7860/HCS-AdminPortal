@@ -29,8 +29,7 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import useResponsive from '../../../hooks/useResponsive';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import { FORMLABELS } from '../../../constants/default-constants';
-import CollapsibleCheckedItemRow from './CollapsibleCheckedItemRow';
-
+import CheckItemTable from './CheckItemTable';
 
 // ----------------------------------------------------------------------
 
@@ -357,82 +356,7 @@ console.log("serviceRecordConfig : ",serviceRecordConfig)
                 
                   <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline />
 
-                  <Card sx={{ p: 3 }}>
-                    <Stack spacing={2}>
-                    <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
-                      Check Items
-                    </Typography>
-                    <RHFTextField name="paramListTitle" label="Item List Title*" />
-                      <RHFAutocomplete
-                        multiple
-                        name="paramList"
-                        label="Select Items"
-                        value={checkParam?.paramList || []}
-                        options={activeMachineServiceParams}
-                        isOptionEqualToValue={(option, value) => option._id === value._id}
-                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                        renderOption={(props, option) => (
-                          <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                        )}
-                        onChange={(event, newValue) => {
-                          const updatedEvent = { target: { name: "paramList", value: newValue }};
-                          handleInputChange(updatedEvent, checkParamNumber);
-                          event.preventDefault();
-                        }}
-                        renderTags={(value, getTagProps) => ''}
-                      /> 
-                      <Grid container item md={12} >
-                      <Card sx={{ minWidth: 250, width: '100%', minHeight:75 , my:3, border:'1px solid'}}>
-                        <Table>
-                          <TableHead>
-                            <TableRow>
-                              <TableCell size='small' align='left'>Checked Items</TableCell>
-                              <TableCell size='small' align='right'>{`  `}</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {checkParam?.paramList?.length > 0 && (checkParam?.paramList?.map((row, index) => (
-                              <TableRow
-                                key={row.id}
-                                draggable
-                                onDragStart={(e) => handleDragStart(e, index)}
-                                onDragOver={(e) => e.preventDefault()}
-                                onDrop={(e) => handleDrop(e, index)}
-                              >
-                                <TableCell size='small' align='left' ><b>{`${index+1}). `}</b>{`${row.name}`}</TableCell>
-                                <TableCell size='small' align='right'>
-                                <ViewFormEditDeleteButtons onDelete={() => handleRowDelete(index)} sm/>
-                                </TableCell>
-                              </TableRow>
-                            ))) }
-                          </TableBody>
-                        </Table>
-                        <Grid item md={12} display='flex' justifyContent='center' >
-                            {checkParam?.paramList?.length === 0 && (<Typography variant="subtitle2" sx={{ mt:0.7}}>No Checked Items selected</Typography>)}
-                          </Grid>
-                      </Card>
-                      <Grid display="flex" justifyContent="flex-end" sx={{width: '100%'}}>
-                        <Button
-                          disabled={(!checkParam?.paramList?.length ?? 0) || (!paramListTitle ?? '') }
-                          onClick={()=>saveCheckParam(checkParamNumber)}
-                          fullWidth={ isMobile }
-                          variant="contained" color='primary' sx={{ ...(isMobile && { width: '100%' })}}
-                        >Save</Button>
-                      </Grid>
-                    </Grid>
-                    <Stack sx={{ minWidth: 250,  minHeight:75 }}>
-                    <TableContainer >
-                      <Table>
-                        <TableBody>
-                          {checkParams.map((value, index) =>( typeof value?.paramList?.length === 'number' &&
-                          <CollapsibleCheckedItemRow value={value} index={index} toggleEdit={toggleEdit} deleteIndex={deleteIndex} handleListDragStart={handleListDragStart} handleListDrop={handleListDrop} />
-                          ))}
-                      </TableBody>
-                      </Table>
-                      </TableContainer>
-                      </Stack>
-                    </Stack>
-                  </Card>
+                  <CheckItemTable setCheckParams={setCheckParams} checkParams={checkParams} paramListTitle={paramListTitle} setValue={setValue}/>
 
                   <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline />          
                 
