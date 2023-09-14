@@ -639,9 +639,9 @@ export default function Router() {
     {
       element: <SimpleLayout />,
       children: [
-        { path: 'invite/:id/:code/:expiry', element: <UserInviteLanding /> },
       ],
     },
+    { path: 'invite/:id/:code/:expiry', element: <UserInviteLanding /> },
     {
       element: <CompactLayout />,
       children: [

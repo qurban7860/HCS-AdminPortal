@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useState, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 // form
@@ -9,17 +9,21 @@ import { useDispatch, useSelector } from 'react-redux';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Alert, IconButton, InputAdornment, Stack } from '@mui/material';
+import { Alert, Box, IconButton, InputAdornment, Stack, Typography, Grid, MenuItem, Autocomplete, TextField } from '@mui/material';
 import { useSnackbar } from 'notistack';
+import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
+import { StyledRoot, StyledContent } from '../layouts/login/styles';
 import FormProvider, { RHFTextField} from '../components/hook-form';
 import Iconify from '../components/iconify';
-
+import Logo from '../components/logo';
+//
+import { CONFIG } from '../config-global';
 import { PATH_AUTH, PATH_PAGE } from '../routes/paths';
-
 import {
-  updatePasswordUserInvite,
+  updateInvitedUser,
   verifyUserInvite,
 } from '../redux/slices/securityUser/securityUser';
+import LoginLayout from '../layouts/login/LoginLayout';
 
 // ----------------------------------------------------------------------
 
@@ -30,36 +34,42 @@ export default function UserInviteLanding() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+  const [phone, setPhone] = useState('');
   const expired = new Date(parseInt(expiry,10))>new Date();
-  const verifyInviteStatus = useSelector((state) => state.verifyInviteStatus);
+  const { securityUser, verifiedInvite} = useSelector((state) => state.user);
   
   const ChangePassWordSchema = Yup.object().shape({
-    password: Yup.string()
-      .min(6, 'Password must be at least 6 characters')
-      .max(18, 'Password must be less than 18 characters')
-      .required('Password is required'),
-      confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
+    fullName:Yup.string().trim().max(25, 'Name must be less than 25 characters').required('Name is required'),
+    password: Yup.string().trim()
+      .min(6, 'Password must be at least 6 characters').max(18, 'Password must be less than 18 characters').required('Password is required'),
+    confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match').required('Please confirm password'),
   });
 
-  const defaultValues = {
-    password: '',
-    confirmPassword: '',
-  };
+  const defaultValues = useMemo(
+    () => ({
+      customerName: verifiedInvite?.customerName ||'',
+      contactName:verifiedInvite?.contactName ||'',
+      fullName:verifiedInvite?.fullName || '',
+      phone:verifiedInvite?.phone ||'',
+      email:verifiedInvite?.email ||'',
+      password:'',
+      confirmPassword:'',
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   const methods = useForm({
     resolver: yupResolver(ChangePassWordSchema),
     defaultValues,
   });
-
+  
   useEffect(() => {
-
-    console.log(id, code, expired)
-    
     if(expired){
       navigate(PATH_PAGE.expiredErrorPage);
     }else if (id && code) {
-      const responsePromise = dispatch(verifyUserInvite(id,code));
-      responsePromise.catch(error => {
+      const response = dispatch(verifyUserInvite(id,code));
+      response.catch(error => {
         navigate(PATH_PAGE.invalidErrorPage);
       });
     }else{
@@ -73,10 +83,17 @@ export default function UserInviteLanding() {
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = methods;
 
+  const handlePhoneChange = (newValue) => {
+    matchIsValidTel(newValue);
+    if (newValue.length < 20) {
+      setPhone(newValue);
+    }
+  };
+
   const onSubmit = async (data) => {
     if (id) {
       try {
-        await dispatch(updatePasswordUserInvite(data, id));
+        await dispatch(updateInvitedUser(data, id));
         enqueueSnackbar('Password has been updated Successfully!');
         reset();
         navigate(PATH_AUTH.login);
@@ -97,50 +114,65 @@ export default function UserInviteLanding() {
 
   return (
     
-    
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Stack spacing={3} sx={{mb:3}}>
-        {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
-        <RHFTextField name="password" id="password" label="Password"
-          type={showPassword ? 'text' : 'password'}
-          InputProps={{
-            
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                  <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
-                </IconButton>
-              </InputAdornment>
-            ),maxLength: 10,
-          }} required
-        />
+    <StyledRoot sx={{width:900, margin:"0 auto"}}>
+      <StyledContent>
+        <Grid sx={{ display: 'flex', justifyContent: 'center'}} >
+          <Grid item>
+            <Logo sx={{ width: '100%', p: 1, pointerEvents: 'none', }}/>
+            <Stack sx={{ alignItems: 'center' }} >
+              <Typography variant="h2" sx={{ mt:-2, mb: 6 }}>User Invitation</Typography>
+            </Stack>
+          </Grid>
+        </Grid>
+        <Stack sx={{ width: '100%'}}>
+        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)'}}>
+          {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
+        
+            <RHFTextField name="customerName" label="Customer" disabled/>
+            <RHFTextField name="contactName" label="Contact" disabled/>
+            <RHFTextField name="fullName" label="Full Name*"/>
+            <MuiTelInput name="phone" value={phone} label="Phone Number" flagSize="medium"
+              defaultCountry="NZ" onChange={handlePhoneChange}
+              forceCallingCode
+            />
 
-        <RHFTextField name="confirmPassword" id="confirmPassword"  label="Confirm Password" 
-          type={showConfirmPassword ? 'text' : 'password'} 
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)} edge="end">
-                  <Iconify icon={showConfirmPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }} required
-        />
+            <RHFTextField name="password" id="password" label="Password"
+              type={showPassword ? 'text' : 'password'}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                      <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                    </IconButton>
+                  </InputAdornment>
+                ),maxLength: 10,
+              }} required
+            />
 
-        <LoadingButton
-                fullWidth
-                color="inherit"
-                size="large"
-                type="submit"
-                variant="contained"
-                loading={isSubmitSuccessful || isSubmitting}
-                sx={{ bgcolor: '#10079F', color: 'white', '&:hover': { bgcolor: '#FFA200' }}}
-              >
-                Save Password
-        </LoadingButton>
-      </Stack>
-    </FormProvider>
+            <RHFTextField name="confirmPassword" id="confirmPassword"  label="Confirm Password" 
+              type={showConfirmPassword ? 'text' : 'password'} 
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)} edge="end">
+                      <Iconify icon={showConfirmPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }} 
+            />
+          </Box>
+          <Box sx={{mt:3, display:'flex', justifyContent:"end"}}>
+            <LoadingButton size="large" type="submit" variant="contained" loading={isSubmitSuccessful || isSubmitting}
+                    sx={{ bgcolor: '#10079F', color: 'white', '&:hover': { bgcolor: '#FFA200' }}} >Save
+            </LoadingButton>
+          </Box>
+        </FormProvider>
+
+        </Stack>
+      </StyledContent>
+    </StyledRoot>
   );
 
 }
