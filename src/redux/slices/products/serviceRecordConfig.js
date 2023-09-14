@@ -139,9 +139,6 @@ export function getServiceRecordConfigs (){
       {
         params: {
           isArchived: false,
-          orderBy : {
-            createdAt:-1
-          }
         }
       });
       dispatch(slice.actions.getServiceRecordConfigsSuccess(response.data));
