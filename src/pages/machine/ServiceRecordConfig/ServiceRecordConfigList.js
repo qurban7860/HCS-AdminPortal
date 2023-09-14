@@ -37,7 +37,7 @@ import { FORMLABELS } from '../../../constants/default-constants';
 const TABLE_HEAD = [
   { id: 'recordType', label: 'Record Type', align: 'left' },
   { id: 'docTitle', label: 'Document Title', align: 'left' },
-  { id: 'category', label: 'Category', align: 'left' },
+  // { id: 'category', label: 'Category', align: 'left' },
   { id: 'machineModel', label: 'Machine Model', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },

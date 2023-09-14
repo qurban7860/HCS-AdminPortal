@@ -1,8 +1,8 @@
 import { useState, memo } from 'react'
 import PropTypes from 'prop-types';
 import { Box, Card, Grid, Stack, Typography, Container, Autocomplete, TextField, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CardContent, Link, IconButton, Collapse } from '@mui/material';
-import Iconify from '../iconify';
-import ViewFormEditDeleteButtons from '../../pages/components/ViewForms/ViewFormEditDeleteButtons'
+import Iconify from '../../../components/iconify';
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons'
 
 const CollapsibleCheckedItemRow = ({value, index, toggleEdit, deleteIndex, handleListDragStart, handleListDrop }) => {
   const [open, setOpen] = useState(false);
@@ -16,15 +16,16 @@ const CollapsibleCheckedItemRow = ({value, index, toggleEdit, deleteIndex, handl
                 onDrop={(e) => handleListDrop(e, index)}
               >
               <TableCell size='small' align='left' >
+                <b>{`${index+1}). `}</b>{typeof value?.paramListTitle === 'string' && value?.paramListTitle || ''}{' (Checked Items: '}<b>{`${value?.paramList?.length}`}</b>{') '}
                 <IconButton
                   aria-label="expand row"
                   size="small"
                   color={open ? 'default' :  'primary'}
                   onClick={() => setOpen(!open)}
                 >
-                  {open ? <Iconify icon="eva:minus-fill" /> : <Iconify icon="eva:plus-fill" /> }
+                  {open ? <Iconify icon="mingcute:up-line" /> : <Iconify icon="mingcute:down-line" /> }
                 </IconButton>
-                <b>{`${index+1}). `}</b>{typeof value?.paramListTitle === 'string' && value?.paramListTitle || ''}{' (Checked Items: '}<b>{`${value?.paramList?.length}`}</b>{') '}</TableCell>
+                </TableCell>
               <TableCell size='small' align='right' >
                   <ViewFormEditDeleteButtons handleEdit={()=>toggleEdit(index)} onDelete={()=>deleteIndex(index)} />
               </TableCell>

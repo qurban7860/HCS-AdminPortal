@@ -138,7 +138,10 @@ export function getServiceRecordConfigs (){
       const response = await axios.get(`${CONFIG.SERVER_URL}products/serviceRecordsConfig`, 
       {
         params: {
-          isArchived: false
+          isArchived: false,
+          orderBy : {
+            createdAt:-1
+          }
         }
       });
       dispatch(slice.actions.getServiceRecordConfigsSuccess(response.data));
@@ -330,7 +333,7 @@ export function updateServiceRecordConfig(params,Id) {
 
       // header
       data.header = {
-        type: params?.headerType?.type,
+        type: params?.headerType?.name,
         leftText: params?.headerLeftText,
         centerText: params?.headerCenterText,
         rightText: params?.headerRightText,
@@ -338,7 +341,7 @@ export function updateServiceRecordConfig(params,Id) {
 
       // footer
       data.footer = {
-        type: params?.footerType?.type,
+        type: params?.footerType?.name,
         leftText: params?.footerLeftText,
         centerText: params.footerCenterText,
         rightText: params.footerRightText,
@@ -357,7 +360,7 @@ export function updateServiceRecordConfig(params,Id) {
       }else{
         data.checkParams = [];
       }
-
+      console.log("data : ", data)
       await axios.patch(`${CONFIG.SERVER_URL}products/serviceRecordsConfig/${Id}`,
         data
       );
