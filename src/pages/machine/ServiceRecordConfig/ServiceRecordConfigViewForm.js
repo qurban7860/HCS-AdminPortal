@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
 // @mui
 import { Card, Grid, Typography } from '@mui/material';
@@ -22,6 +23,8 @@ import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import CollapsibleCheckedItemRow from './CollapsibleCheckedItemRow';
+
 // import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 
 // ----------------------------------------------------------------------
@@ -112,15 +115,14 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
         <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
           Check Params
         </Typography>
-        {defaultValues?.checkParams.length > 0 ? (defaultValues?.checkParams.map((row, index) =>
-          (
-            <Grid container>
-              <ViewFormField sm={6} heading="Param List Title" param={row?.paramListTitle} />
-              <ViewFormField sm={6} heading="Param List" serviceParam={row?.paramList} />
-            </Grid>
+        <Grid item md={12}> 
+        {defaultValues?.checkParams?.length > 0 ? (defaultValues?.checkParams.map((row, index) =>
+          ( typeof row?.paramList?.length === 'number' &&
+                          <CollapsibleCheckedItemRow key={uuidv4()} value={row} index={index} />
           ))
         ) : <ViewFormField />
         }
+        </Grid>
       <ViewFormField sm={12} heading="Text After Check Items" param={defaultValues?.textAfterCheckItems} />
         <Grid container>
       <ViewFormSwitch sm={6} isActiveHeading='Is Operator Signature Required' isActive={defaultValues?.isOperatorSignatureRequired} />

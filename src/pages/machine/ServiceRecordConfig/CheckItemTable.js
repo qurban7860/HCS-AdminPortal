@@ -4,17 +4,16 @@ import { Box, Card, Grid, Stack, Typography, Container, Button, Table, TableBody
 import { useDispatch, useSelector } from 'react-redux';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
-
+import { v4 as uuidv4 } from 'uuid';
 import { getActiveMachineServiceParams } from '../../../redux/slices/products/machineServiceParams';
 import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete} from '../../../components/hook-form';
 import useResponsive from '../../../hooks/useResponsive';
 import { useSnackbar } from '../../../components/snackbar';
-import { CheckParamSchema } from '../../schemas/machine';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import CollapsibleCheckedItemRow from './CollapsibleCheckedItemRow'
 
-const CheckItemTable = ({ checkParams, setCheckParams, onSubmitTable }) => {
+const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue }) => {
 
     const isMobile = useResponsive('down', 'sm');
     const dispatch = useDispatch();
@@ -23,46 +22,26 @@ const CheckItemTable = ({ checkParams, setCheckParams, onSubmitTable }) => {
     const { activeMachineServiceParams } = useSelector((state) => state.machineServiceParam);
     const [checkParamNumber, setCheckParamNumber]= useState(0);
     const [checkParam, setCheckParam] = useState({});
+    const [checkItemList, setCheckItemList] = useState([]);
+    const [checkItemListTitleError, setItemListTitleError] = useState('');
+    const [checkItemListError, setItemListError] = useState('');
+
 
     useEffect(() => {
         dispatch(getActiveMachineServiceParams());
       }, [dispatch]);
 
-      const defaultValues = useMemo(
-        () => ({
-
-          // Check Params
-          paramListTitle: '',
-          paramList : [],
-
-        }),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        []
-      );
-
-      const methods = useForm({
-        resolver: yupResolver(CheckParamSchema),
-        defaultValues,
-      });
-
-      const {
-        reset,
-        watch,
-        setValue,
-        handleSubmit,
-        formState: { isSubmitting },
-      } = methods;
-
-      const { paramListTitle } = watch();
+      console.log("paramListTitle : ",paramListTitle)
 
 
       const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        const updatedCheckParam = {
-          ...checkParam,
-          [name]: value,
-        };
-        setCheckParam(updatedCheckParam);
+        const { value } = event.target;
+        // console.log(value)
+        // const updatedCheckParamList = [
+        //   ...checkItemList,
+        //   ...value, 
+        // ];
+        setCheckItemList(value);
       };
 
 
@@ -94,27 +73,24 @@ const CheckItemTable = ({ checkParams, setCheckParams, onSubmitTable }) => {
 
   const handleDrop = (e, index) => {
     const draggedIndex = e.dataTransfer.getData('index');
-    const updatedCheckParam = {...checkParam};
-    const [draggedRow] = updatedCheckParam.paramList.splice(draggedIndex, 1);
-    updatedCheckParam.paramList.splice(index, 0, draggedRow);
-    setCheckParam(updatedCheckParam); 
+    const updatedCheckParam = [...checkItemList];
+    const [draggedRow] = updatedCheckParam.splice(draggedIndex, 1);
+    updatedCheckParam.splice(index, 0, draggedRow);
+    setCheckItemList(updatedCheckParam); 
   };
 
-  const handleRowDelete = (index) => {
+  const handleRowDelete = (indexToRemove) => {
     try {
-      setCheckParam((prevCheckParam) => {
-        const updatedRow = {...prevCheckParam};
-        updatedRow.paramList.splice(index, 1);
-        enqueueSnackbar('Deleted success!');
-        return updatedRow;
-      });
+      const newArray =  checkItemList.filter((_, index) => index !== indexToRemove);
+      setCheckItemList(newArray);
+      enqueueSnackbar('Deleted success!');
     } catch (err) {
       enqueueSnackbar('Delete failed!', { variant: 'error' });
       console.error(err.message);
     }
   };
 
-  const toggleEdit = (index) => {setCheckParam(checkParams[index]); setCheckParamNumber(index); setValue('paramListTitle',checkParams[index]?.paramListTitle) };
+  const toggleEdit = (index) => {setCheckItemList(checkParams[index]?.paramList); setCheckParamNumber(index); setValue('paramListTitle',checkParams[index]?.paramListTitle) };
 
   const deleteIndex = (indexToRemove) => {
     try {
@@ -126,34 +102,58 @@ const CheckItemTable = ({ checkParams, setCheckParams, onSubmitTable }) => {
       console.error(err.message);
     }
   };
+useEffect(()=>{
+  if(paramListTitle?.length > 200){
+    setItemListTitleError('Item List Title is too long')
+  }else{
+    setItemListTitleError('')
+  }
+
+  if(checkItemList && checkItemList?.length > 100){
+    setItemListError('Check Item limit exceeded!')
+  }else{
+    setItemListError('')
+  }
+},[checkItemList, paramListTitle ])
 
   const saveCheckParam = (prevCheckParamNumber) =>{
+          if(typeof paramListTitle !== 'string' || paramListTitle && paramListTitle?.length === 0 ){
+            setItemListTitleError('Item List Title is Required!')
+          }
 
-    try {
-      checkParam.paramListTitle = paramListTitle
-      setValue('paramListTitle','')
-      const updatedCheckParam = [...checkParams]; 
-      if(prevCheckParamNumber > checkParams.length-1) {
-        updatedCheckParam.splice(prevCheckParamNumber, 0, checkParam);
-        setCheckParams(updatedCheckParam);
-        setCheckParamNumber(() => prevCheckParamNumber + 1) 
-      enqueueSnackbar('Saved success!');
-      }else if(prevCheckParamNumber < checkParams.length-1){
-        updatedCheckParam[prevCheckParamNumber]= checkParam;
-        setCheckParams(updatedCheckParam);
-        setCheckParamNumber(checkParams.length) 
-        enqueueSnackbar('Updated success!');
+          if(checkItemList && checkItemList?.length === 0){
+            setItemListError('Please select Check Item!')
+          }
+          console.log("!checkItemListError && !checkItemListTitleError : ",!checkItemListError.trim() , !checkItemListTitleError.trim() )
+          if( !checkItemListError.trim() && !checkItemListTitleError.trim() ){
+      // console.log("string tested")
+      try {
+        checkParam.paramListTitle = paramListTitle
+        const updatedCheckParam = [...checkParams]; 
+        const checkItemObject= { paramListTitle, paramList: checkItemList }
+        if(prevCheckParamNumber > checkParams.length-1) {
+          updatedCheckParam.splice(prevCheckParamNumber, 0, checkItemObject);
+          setCheckParams(updatedCheckParam);
+          setCheckParamNumber(() => prevCheckParamNumber + 1) 
+        enqueueSnackbar('Saved success!');
+        }else if(prevCheckParamNumber < checkParams.length-1){
+          updatedCheckParam[prevCheckParamNumber]= checkItemObject;
+          setCheckParams(updatedCheckParam);
+          setCheckParamNumber(checkParams.length) 
+          enqueueSnackbar('Updated success!');
+        }
+        else if(prevCheckParamNumber === checkParams.length-1){
+          updatedCheckParam[prevCheckParamNumber]= checkItemObject;
+          setCheckParams(updatedCheckParam);
+          setCheckParamNumber(checkParams.length) 
+          enqueueSnackbar('Updated success!');
+        }
+        setValue('paramListTitle','')
+        setCheckItemList([])
+      } catch (err) {
+        enqueueSnackbar('Save failed!', { variant: `error` });
+        console.error(err.message);
       }
-      else if(prevCheckParamNumber === checkParams.length-1){
-        updatedCheckParam[prevCheckParamNumber]= checkParam;
-        setCheckParams(updatedCheckParam);
-        setCheckParamNumber(checkParams.length) 
-        enqueueSnackbar('Updated success!');
-      }
-      setCheckParam({})
-    } catch (err) {
-      enqueueSnackbar('Save failed!', { variant: `error` });
-      console.error(err.message);
     }
   }
 
@@ -163,27 +163,29 @@ const CheckItemTable = ({ checkParams, setCheckParams, onSubmitTable }) => {
                     <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
                       Check Items
                     </Typography>
-                {/* <FormProvider methods={methods} onSubmit={handleSubmit(onSubmitTable)}> */}
-                <form onSubmit={handleSubmit(onSubmitTable)}>
-                    <RHFTextField name="paramListTitle" label="Item List Title*" />
+                    <RHFTextField name="paramListTitle" label="Item List Title*" Error={!!checkItemListTitleError} helperText={checkItemListTitleError} />
+
                       <RHFAutocomplete
                         multiple
                         name="paramList"
                         label="Select Items"
-                        value={checkParam?.paramList || []}
+                        value={checkItemList || []}
                         options={activeMachineServiceParams}
                         isOptionEqualToValue={(option, value) => option._id === value._id}
                         getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                         renderOption={(props, option) => (
                           <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                         )}
+                        // filterSelectedOptions
                         onChange={(event, newValue) => {
                           const updatedEvent = { target: { name: "paramList", value: newValue }};
                           handleInputChange(updatedEvent, checkParamNumber);
                           event.preventDefault();
                         }}
                         renderTags={(value, getTagProps) => ''}
+                        Error={!!checkItemListError} helperText={checkItemListError}
                       /> 
+
                       <Grid item md={12} >
                       <Card sx={{ minWidth: 250, width: '100%', minHeight:75 , my:3, border:'1px solid'}}>
                         <Table>
@@ -194,9 +196,9 @@ const CheckItemTable = ({ checkParams, setCheckParams, onSubmitTable }) => {
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {checkParam?.paramList?.length > 0 && (checkParam?.paramList?.map((row, index) => (
+                            {checkItemList?.length > 0 && (checkItemList?.map((row, index) => (
                               <TableRow
-                                key={row.id}
+                                key={row._id}
                                 draggable
                                 onDragStart={(e) => handleDragStart(e, index)}
                                 onDragOver={(e) => e.preventDefault()}
@@ -214,25 +216,21 @@ const CheckItemTable = ({ checkParams, setCheckParams, onSubmitTable }) => {
                             {checkParam?.paramList?.length === 0 && (<Typography variant="subtitle2" sx={{ mt:0.7}}>No Checked Items selected</Typography>)}
                           </Grid>
                       </Card>
-                      {/* <Grid item md={12} display="flex" justifyContent="flex-end" > */}
-                            <AddFormButtons isSubmitting={isSubmitting} />
-                        {/* <Button
-                          disabled={(!checkParam?.paramList?.length ?? 0) || (!paramListTitle ?? '') }
+                      <Grid item md={12} display="flex" justifyContent="flex-end" >
+                        <Button
+                          disabled={(!checkItemList?.length ?? 0) || (!paramListTitle ?? '') }
                           onClick={()=>saveCheckParam(checkParamNumber)}
                           fullWidth={ isMobile }
                           variant="contained" color='primary' sx={{ ...(isMobile && { width: '100%' })}}
-                        >Save</Button> */}
+                        >Save</Button>
                       </Grid>
-</form>
-
-                    {/* </Grid> */}
-      {/* </FormProvider> */}
+                    </Grid>
                     <Stack sx={{ minWidth: 250,  minHeight:75 }}>
                     <TableContainer >
                       <Table>
                         <TableBody>
-                          {checkParams.map((value, index) =>( typeof value?.paramList?.length === 'number' &&
-                          <CollapsibleCheckedItemRow value={value} index={index} toggleEdit={toggleEdit} deleteIndex={deleteIndex} handleListDragStart={handleListDragStart} handleListDrop={handleListDrop} />
+                          {checkParams.map((value, checkParamsIndex) =>( typeof value?.paramList?.length === 'number' &&
+                          <CollapsibleCheckedItemRow key={uuidv4()} value={value} index={checkParamsIndex} toggleEdit={toggleEdit} deleteIndex={deleteIndex} handleListDragStart={handleListDragStart} handleListDrop={handleListDrop} />
                           ))}
                       </TableBody>
                       </Table>
@@ -243,10 +241,11 @@ const CheckItemTable = ({ checkParams, setCheckParams, onSubmitTable }) => {
   )
 }
 
-export default memo(CheckItemTable)
+export default CheckItemTable
 
 CheckItemTable.propTypes = {
     checkParams: PropTypes.array.isRequired,
     setCheckParams: PropTypes.func.isRequired,
-    onSubmitTable: PropTypes.func.isRequired,
+    paramListTitle: PropTypes.string,
+    setValue: PropTypes.func.isRequired,
 };
