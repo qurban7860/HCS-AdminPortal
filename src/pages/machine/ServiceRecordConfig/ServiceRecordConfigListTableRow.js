@@ -55,8 +55,8 @@ export default function ServiceRecordConfigListTableRow({
   return (
     <>
       <TableRow hover selected={selected}>
-        <LinkTableCell align="left" onClick={onViewRow} param={recordType} />
         <LinkTableCell align="left" onClick={onViewRow} param={docTitle} />
+        <LinkTableCell align="left" onClick={onViewRow} param={recordType} />
 
       {/* { useScreenSize('lg') && <TableCell >{docTitle || ''}</TableCell>} */}
       { useScreenSize('lg') && <TableCell >{(!category && !machineModel && (`./.`)) ||  
