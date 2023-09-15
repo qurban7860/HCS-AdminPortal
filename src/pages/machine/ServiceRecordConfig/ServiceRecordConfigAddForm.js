@@ -32,11 +32,10 @@ export default function ServiceRecordConfigAddForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const { recordTypes, headerFooterTypes } = useSelector((state) => state.serviceRecordConfig);
+  const { recordTypes } = useSelector((state) => state.serviceRecordConfig);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
   const { activeCategories } = useSelector((state) => state.category);
   const [checkParams, setCheckParams] = useState([]);
-
   
   useLayoutEffect(() => {
     dispatch(getActiveCategories());
@@ -93,7 +92,6 @@ const CheckParamSchema = Yup.object().shape({
   } = methods;
 
   const { category, machineModel, paramListTitle } = watch();
-// console.log("paramListTitle : ",paramListTitle)
   useEffect(() => {
     if(category === null){
       dispatch(resetActiveMachineModels())
@@ -255,6 +253,7 @@ const CheckParamSchema = Yup.object().shape({
                   <RHFTextField name="headerCenterText" label="Header Center Text" />
                   <RHFTextField name="headerRightText" label="Header Right Text" />
                 </Box>
+
                 <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
                   Footer
                 </Typography>
@@ -272,26 +271,7 @@ const CheckParamSchema = Yup.object().shape({
                   <RHFTextField name="footerCenterText" label="Footer Center Text" />
                   <RHFTextField name="footerRightText" label="Footer Right Text" />
                 </Box>
-              {/* </Stack> */}
-            {/* </Card> */}
-            {/* <Card sx={{ p: 3, mb: 3 }}> */}
-              {/* <Stack spacing={3}> */}
-                {/* <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
-                  Address Information
-                </Typography>
-                <Box
-                  rowGap={3}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{
-                    xs: 'repeat(1, 1fr)',
-                    sm: 'repeat(2, 1fr)',
-                  }}
-                >
-                  
-                </Box> */}
-
-
+                
                   <RHFSwitch
                     name="isActive"
                     labelPlacement="start"

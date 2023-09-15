@@ -5,9 +5,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 // @mui
-import { Card, Grid, Typography } from '@mui/material';
-// import { RHFSwitch } from '../../../components/hook-form';
-// redux
+import { Card, Grid, Typography, TableBody, Table, TableContainer } from '@mui/material';
+
 import {
   getServiceRecordConfig,
   setServiceRecordConfigEditFormVisibility,
@@ -24,8 +23,6 @@ import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import CollapsibleCheckedItemRow from './CollapsibleCheckedItemRow';
-
-// import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 
 // ----------------------------------------------------------------------
 
@@ -44,7 +41,6 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
 
   const navigate = useNavigate();
   const { serviceRecordConfig, editFormVisibility } = useSelector((state) => state.serviceRecordConfig);
-  // console.log("serviceRecordConfig : ", serviceRecordConfig)
   const { id } = useParams();
 
   const dispatch = useDispatch();
@@ -115,14 +111,20 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
         <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
           Check Params
         </Typography>
-        <Grid item md={12}> 
+        {/* <Grid item md={12}>  */}
         {defaultValues?.checkParams?.length > 0 ? (defaultValues?.checkParams.map((row, index) =>
           ( typeof row?.paramList?.length === 'number' &&
-                          <CollapsibleCheckedItemRow key={uuidv4()} value={row} index={index} />
+            <TableContainer >
+                <Table>
+                    <TableBody>
+                        <CollapsibleCheckedItemRow key={uuidv4()} value={row} index={index} />
+                    </TableBody>
+                </Table>
+            </TableContainer>
           ))
         ) : <ViewFormField />
         }
-        </Grid>
+        {/* </Grid> */}
       <ViewFormField sm={12} heading="Text After Check Items" param={defaultValues?.textAfterCheckItems} />
         <Grid container>
       <ViewFormSwitch sm={6} isActiveHeading='Is Operator Signature Required' isActive={defaultValues?.isOperatorSignatureRequired} />
