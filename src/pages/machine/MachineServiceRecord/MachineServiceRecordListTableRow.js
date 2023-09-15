@@ -78,8 +78,6 @@ export default function MachineServiceRecordListTableRow({
   return (
       <StyledTableRow hover selected={selected}>
         <LinkTableCell align="left" onClick={onViewRow} param={customer?.name} />
-        <TableCell align="left">{site?.name}</TableCell>
-        <TableCell align="left">{decoiler?.name}</TableCell>
         <TableCell align="left">{technician?.name}</TableCell>
         <TableCell align="center">{fDate(serviceDate)}</TableCell>
         <TableCell align="center">

@@ -236,9 +236,6 @@ export function addMachineServiceRecord(params) {
         const formData = new FormData();
         formData.append('serviceRecordConfig', params?.serviceRecordConfig?._id)
         formData.append('serviceDate',params?.serviceDate)
-        formData.append('customer',params?.customer)
-        formData.append('site',params?.site)
-        formData.append('machine',params?.machine)
         formData.append('decoiler',params?.decoiler)
         formData.append('technician',params?.technician?._id)
         formData.append('serviceNote',params?.serviceNote)
@@ -246,7 +243,7 @@ export function addMachineServiceRecord(params) {
         formData.append('suggestedSpares',params?.suggestedSpares)
         formData.append('operator',params?.operator?._id)
         formData.append('operatorRemarks',params?.operatorRemarks)
-        params?.files?.forEach((file, index) => {formData.append(`files`, file);})
+        // params?.files?.forEach((file, index) => {formData.append(`files`, file);})
         formData.append('isActive',params?.isActive)
         console.log("formData : ",formData)
         /* eslint-disable */
