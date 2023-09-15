@@ -57,7 +57,7 @@ export default function ProfileList() {
     { id: 'deafultName', label: 'Deafult Name', align: 'left' },
     { id: 'xs1', label: 'Other Names', align: 'left' },
     { id: 'xs2', label: 'Type', align: 'left' },
-    { id: 'WebxFlange', label: 'Web X Flang', align: 'left' },
+    { id: 'WebxFlange', label: 'Web X Flange', align: 'left' },
     { id: 'createdAt', label: 'Created At', align: 'right' },
   ];
 

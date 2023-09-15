@@ -34,11 +34,11 @@ export default function UserInviteLanding() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
-  const [phone, setPhone] = useState('');
-  const expired = parseInt(expiry,10) < new Date().getTime();
+  const expired = new Date(expiry).getTime() > new Date().getTime();
   const { securityUser, verifiedInvite} = useSelector((state) => state.user);
+  const [phone, setPhone] = useState(verifiedInvite?.phone);
   const ChangePassWordSchema = Yup.object().shape({
-    fullName:Yup.string().trim().max(25, 'Name must be less than 25 characters').required('Name is required'),
+    fullName:Yup.string().trim().max(50, 'Name must be less than 50 characters').required('Name is required'),
     password: Yup.string().trim()
       .min(6, 'Password must be at least 6 characters').max(18, 'Password must be less than 18 characters').required('Password is required'),
     confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match').required('Please confirm password'),
@@ -71,6 +71,7 @@ export default function UserInviteLanding() {
       response.catch(error => {
         navigate(PATH_PAGE.invalidErrorPage);
       });
+      
     }else{
       navigate(PATH_PAGE.invalidErrorPage);
     }
@@ -79,7 +80,7 @@ export default function UserInviteLanding() {
   const {
     reset,
     handleSubmit,
-    formState: { errors, isSubmitting, isSubmitSuccessful },
+    formState: { errors, isSubmitting, isSubmitSuccessful},
   } = methods;
 
   const handlePhoneChange = (newValue) => {
@@ -146,7 +147,7 @@ export default function UserInviteLanding() {
                     </IconButton>
                   </InputAdornment>
                 ),maxLength: 10,
-              }} required
+              }}
             />
 
             <RHFTextField name="confirmPassword" id="confirmPassword"  label="Confirm Password" 
