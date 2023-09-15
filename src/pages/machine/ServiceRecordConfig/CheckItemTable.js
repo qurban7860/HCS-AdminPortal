@@ -1,16 +1,13 @@
-import { memo, useState, useEffect, useMemo } from 'react'
+import { memo, useState, useEffect } from 'react'
 import PropTypes from 'prop-types';
-import { Box, Card, Grid, Stack, Typography, Container, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Card, Grid, Stack, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
 import { getActiveMachineServiceParams } from '../../../redux/slices/products/machineServiceParams';
-import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete} from '../../../components/hook-form';
+import { RHFTextField, RHFAutocomplete} from '../../../components/hook-form';
 import useResponsive from '../../../hooks/useResponsive';
 import { useSnackbar } from '../../../components/snackbar';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import CollapsibleCheckedItemRow from './CollapsibleCheckedItemRow'
 
 const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue }) => {
@@ -18,29 +15,23 @@ const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue 
     const isMobile = useResponsive('down', 'sm');
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
-
+    const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
     const { activeMachineServiceParams } = useSelector((state) => state.machineServiceParam);
-    const [checkParamNumber, setCheckParamNumber]= useState(0);
-    const [checkParam, setCheckParam] = useState({});
+    const [checkParamNumber, setCheckParamNumber]= useState(serviceRecordConfig.checkParams.length);
     const [checkItemList, setCheckItemList] = useState([]);
     const [checkItemListTitleError, setItemListTitleError] = useState('');
     const [checkItemListError, setItemListError] = useState('');
 
+    // useEffect(() => {
+    //   setCheckParamNumber()
+    // },[checkParams])
 
     useEffect(() => {
         dispatch(getActiveMachineServiceParams());
       }, [dispatch]);
 
-      console.log("paramListTitle : ",paramListTitle)
-
-
       const handleInputChange = (event) => {
         const { value } = event.target;
-        // console.log(value)
-        // const updatedCheckParamList = [
-        //   ...checkItemList,
-        //   ...value, 
-        // ];
         setCheckItemList(value);
       };
 
@@ -124,11 +115,9 @@ useEffect(()=>{
           if(checkItemList && checkItemList?.length === 0){
             setItemListError('Please select Check Item!')
           }
-          console.log("!checkItemListError && !checkItemListTitleError : ",!checkItemListError.trim() , !checkItemListTitleError.trim() )
+
           if( !checkItemListError.trim() && !checkItemListTitleError.trim() ){
-      // console.log("string tested")
       try {
-        checkParam.paramListTitle = paramListTitle
         const updatedCheckParam = [...checkParams]; 
         const checkItemObject= { paramListTitle, paramList: checkItemList }
         if(prevCheckParamNumber > checkParams.length-1) {
@@ -213,7 +202,7 @@ useEffect(()=>{
                           </TableBody>
                         </Table>
                         <Grid item md={12} display='flex' justifyContent='center' >
-                            {checkParam?.paramList?.length === 0 && (<Typography variant="subtitle2" sx={{ mt:0.7}}>No Checked Items selected</Typography>)}
+                            {checkItemList?.paramList?.length === 0 && (<Typography variant="subtitle2" sx={{ mt:0.7}}>No Checked Items selected</Typography>)}
                           </Grid>
                       </Card>
                       <Grid item md={12} display="flex" justifyContent="flex-end" >
@@ -222,10 +211,10 @@ useEffect(()=>{
                           onClick={()=>saveCheckParam(checkParamNumber)}
                           fullWidth={ isMobile }
                           variant="contained" color='primary' sx={{ ...(isMobile && { width: '100%' })}}
-                        >Save</Button>
+                        >Save List</Button>
                       </Grid>
                     </Grid>
-                    <Stack sx={{ minWidth: 250,  minHeight:75 }}>
+                    {checkParams.length > 0 && <Stack sx={{ minWidth: 250,  minHeight:75 }}>
                     <TableContainer >
                       <Table>
                         <TableBody>
@@ -235,13 +224,13 @@ useEffect(()=>{
                       </TableBody>
                       </Table>
                       </TableContainer>
-                      </Stack>
+                      </Stack>}
                     </Stack>
                   </Card>
   )
 }
 
-export default CheckItemTable
+export default memo(CheckItemTable)
 
 CheckItemTable.propTypes = {
     checkParams: PropTypes.array.isRequired,

@@ -1,6 +1,6 @@
 import { useState, memo } from 'react'
 import PropTypes from 'prop-types';
-import { Box, Card, Grid, Stack, Typography, Container, Autocomplete, TextField, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CardContent, Link, IconButton, Collapse } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableRow,  IconButton, Collapse } from '@mui/material';
 import Iconify from '../../../components/iconify';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons'
 
@@ -11,9 +11,9 @@ const CollapsibleCheckedItemRow = ({value, index, toggleEdit, deleteIndex, handl
         <TableRow
                 key={index}
                 draggable
-                onDragStart={(e) => handleListDragStart(e, index)}
+                onDragStart={handleListDragStart && ((e) => handleListDragStart(e, index))}
                 onDragOver={(e) => e.preventDefault()}
-                onDrop={(e) => handleListDrop(e, index)}
+                onDrop={handleListDrop && ((e) => handleListDrop(e, index))}
               >
               <TableCell size='small' align='left' >
                 <b>{`${index+1}). `}</b>{typeof value?.paramListTitle === 'string' && value?.paramListTitle || ''}{' (Checked Items: '}<b>{`${value?.paramList?.length}`}</b>{') '}
