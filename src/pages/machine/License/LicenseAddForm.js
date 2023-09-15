@@ -111,21 +111,21 @@ export default function LicenseAddForm() {
           <Card sx={{ p: 3 }}>
             
             <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}>
-              <RHFTextField name="deviceGUID" label="Device GUID" inputProps={{ maxLength: 50 }} disabled/>
-              <RHFTextField name="deviceName" label="Device Name" inputProps={{ maxLength: 50 }} disabled/>
+              <RHFTextField name="deviceGUID" label="Device GUID" disabled/>
+              <RHFTextField name="deviceName" label="Device Name" disabled/>
               <Autocomplete disablePortal id="combo-box-demo" name="type"
                 options={LicenseTypes} onChange={handleTypeChange}
                 renderInput={(params) => <TextField {...params} label="Type" />}
               />
-              <RHFTextField name="version" label="Version" inputProps={{ maxLength: 20 }}/>
+              <RHFTextField name="version" label="Version"/>
               </Box>
               <Box sx={{marginTop:2}}  rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)',}}>
                 <RHFTextField name='licenseKey' label='License Key' minRows={5} multiline/>
             </Box>
             <Box sx={{marginTop:2}} rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}>
            
-              <RHFTextField name="production" label="Production" inputProps={{ maxLength: 20 }}/>
-              <RHFTextField name="waste" label="Waste" inputProps={{ maxLength: 20 }}/>
+              <RHFTextField name="production" label="Production"/>
+              <RHFTextField name="waste" label="Waste"/>
               <DatePicker
                 label="Extension Time"
                 name="extensionTime"

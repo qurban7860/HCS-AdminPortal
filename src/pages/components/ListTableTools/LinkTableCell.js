@@ -5,18 +5,17 @@ import { alpha } from '@mui/material/styles';
 
 export default function LinkTableCell({ align, onClick, param }) {
   return (
-        <TableCell onClick={onClick} align={align}
-          width='300px'
+        <TableCell className='ellipsis-cell' onClick={onClick} align={align}
           color="inherit"
           sx={{
             cursor: 'pointer',
             textDecoration: 'underline',
             textDecorationStyle: 'dotted',
             fontWeight: 'bold',
-            // whiteSpace: 'nowrap',      // Prevent text from wrapping
-            // overflow: 'hidden',       // Hide any overflow
-            // textOverflow: 'ellipsis', // Add ellipsis for overflowed text
-            // maxWidth: '30%',   
+            whiteSpace: 'nowrap',      // Prevent text from wrapping
+            overflow: 'hidden',       // Hide any overflow
+            textOverflow: 'ellipsis', // Add ellipsis for overflowed text
+            maxWidth: '400px',   
             '&:hover': {
               color: (theme) => alpha(theme.palette.info.main, 0.98),
             },
