@@ -42,11 +42,9 @@ import TableCard from '../../components/ListTableTools/TableCard';
 
 
 const TABLE_HEAD = [
-  { id: 'printName', label: 'Customer', align: 'left' },
-  { id: 'xs2', label: 'Site', align: 'left' },
-  { id: 'xs4', label: 'Decoiler', align: 'left' },
-  { id: 'xs5', label: 'technician', align: 'left' },
-  { id: 'serviceDate', label: 'Service Date', align: 'left' },
+  { id: 'printName', label: 'Service Configuration', align: 'left' },
+  { id: 'xs5', label: 'Technician', align: 'left' },
+  { id: 'serviceDate', label: 'Service Date', align: 'center' },
   { id: 'active', label: 'Active', align: 'center' },
   { id: 'created_at', label: 'Created At', align: 'right' },
 ];
@@ -54,6 +52,7 @@ const TABLE_HEAD = [
 
 export default function MachineServiceRecordList() {
   const { machineServiceRecords, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceRecord);
+  console.log('machineServiceRecords : ',machineServiceRecords)
   const {
     order,
     orderBy,

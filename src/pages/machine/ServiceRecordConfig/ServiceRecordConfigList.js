@@ -336,14 +336,19 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-
-  if (filterName) {
+// console.log(!'.*/.* '.includes(filterName))
+  if (filterName.includes('.*') ){
+    inputData = inputData.filter(
+      (serviceConfig) =>
+    (serviceConfig?.category?.name === null || serviceConfig?.category?.name === undefined) || 
+    (serviceConfig?.machineModel?.name === null || serviceConfig?.machineModel?.name === undefined))
+  }else {
     inputData = inputData.filter(
       (serviceConfig) =>
         serviceConfig?.recordType?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         serviceConfig?.docTitle?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         serviceConfig?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        serviceConfig?.machineModel?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        serviceConfig?.machineModel?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
         fDate(serviceConfig?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
