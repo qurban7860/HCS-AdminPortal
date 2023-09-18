@@ -118,6 +118,7 @@ export default function ProfileEditForm() {
                   value={selectedValue}
                   label="Type"
                   onChange={handleChange}
+                  disabled
                   >
                 {profileTypes.map((option, index) => (
                   <MenuItem key={index} value={option}>
