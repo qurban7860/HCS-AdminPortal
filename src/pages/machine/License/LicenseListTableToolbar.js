@@ -68,7 +68,7 @@ export default function LicenseListTableToolbar({
           )}
         </Grid>
         <Grid item xs={8} sm={3}>
-          <Stack alignItems="flex-end">
+          <Stack alignItems="flex-start">
             <Button
               sx={{ p: 2 }}
               onClick={toggleAdd}
