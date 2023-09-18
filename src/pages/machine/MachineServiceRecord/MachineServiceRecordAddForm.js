@@ -14,7 +14,7 @@ import { FORMLABELS } from '../../../constants/default-constants';
 import { addMachineServiceRecord, setMachineServiceRecordAddFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
 import { getMachineConnections } from '../../../redux/slices/products/machineConnections';
 import { getActiveServiceRecordConfigs } from '../../../redux/slices/products/serviceRecordConfig';
-
+import { getActiveContacts } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { MachineServiceRecordSchema } from '../../schemas/machine';
@@ -32,6 +32,7 @@ function MachineServiceRecordAddForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { machine } = useSelector((state) => state.machine)
+  console.log("machine: " , machine)
   // const { activeSites } = useSelector((state) => state.site);
   const { activeContacts } = useSelector((state) => state.contact);
   const { activeServiceRecordConfigs } = useSelector((state) => state.serviceRecordConfig);
@@ -41,6 +42,7 @@ function MachineServiceRecordAddForm() {
   useEffect( ()=>{
     dispatch(getMachineConnections(machine?.customer?._id))
     dispatch(getActiveServiceRecordConfigs())
+    dispatch(getActiveContacts(machine?.customer?._id))
   },[dispatch, machine])
 
 
@@ -87,12 +89,11 @@ function MachineServiceRecordAddForm() {
 
   const {  serviceDate, files, decoiler, serviceRecordConfig } = watch()
 
-// console.log("serviceRecordConfig  : ",serviceRecordConfig )
-console.log(' decoiler : ',decoiler)
+console.log("serviceRecordConfig  : ",serviceRecordConfig )
 
   const onSubmit = async (data) => {
     try {
-      data.decoiler = decoiler.map((dec)=> dec._id)
+      data.decoiler = decoiler
       console.log("data : ",data)
       await dispatch(addMachineServiceRecord(machine?._id,data));
       reset();

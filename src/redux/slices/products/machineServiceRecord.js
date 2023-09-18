@@ -236,7 +236,7 @@ export function addMachineServiceRecord(machineId,params) {
         const formData = new FormData();
         formData.append('serviceRecordConfig', params?.serviceRecordConfig?._id)
         formData.append('serviceDate',params?.serviceDate)
-        formData.append('decoilers',params?.decoiler)
+        formData.append('decoilers',params?.decoiler.map((dec)=> dec._id))
         formData.append('technician',params?.technician?._id)
         formData.append('serviceNote',params?.serviceNote)
         formData.append('maintenanceRecommendation',params?.maintenanceRecommendation)
