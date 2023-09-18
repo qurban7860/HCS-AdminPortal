@@ -17,7 +17,7 @@ const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue 
     const { enqueueSnackbar } = useSnackbar();
     const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
     const { activeMachineServiceParams } = useSelector((state) => state.machineServiceParam);
-    const [checkParamNumber, setCheckParamNumber]= useState(serviceRecordConfig.checkParams.length);
+    const [checkParamNumber, setCheckParamNumber]= useState(serviceRecordConfig?.checkParams?.length || 0);
     const [checkItemList, setCheckItemList] = useState([]);
     const [checkItemListTitleError, setItemListTitleError] = useState('');
     const [checkItemListError, setItemListError] = useState('');
