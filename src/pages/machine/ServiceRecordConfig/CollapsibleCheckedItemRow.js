@@ -16,7 +16,7 @@ const CollapsibleCheckedItemRow = ({value, index, toggleEdit, deleteIndex, handl
                 onDrop={handleListDrop && ((e) => handleListDrop(e, index))}
               >
               <TableCell size='small' align='left' >
-                <b>{`${index+1}). `}</b>{typeof value?.paramListTitle === 'string' && value?.paramListTitle || ''}{' (Checked Items: '}<b>{`${value?.paramList?.length}`}</b>{') '}
+                <b>{`${index+1}). `}</b>{typeof value?.paramListTitle === 'string' && value?.paramListTitle || ''}{' ( Items: '}<b>{`${value?.paramList?.length}`}</b>{' ) '}
                 <IconButton
                   aria-label="expand row"
                   size="small"
