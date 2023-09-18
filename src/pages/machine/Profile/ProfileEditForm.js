@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
-import { Autocomplete, Box, Card, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Box, Card, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 // import { DatePicker } from '@mui/x-date-pickers';
 import { MuiChipsInput } from 'mui-chips-input';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
@@ -109,12 +109,6 @@ export default function ProfileEditForm() {
               <MuiChipsInput name="names" label="Other Names" value={chips} onChange={handleChipChange} />
             </Box>  
             <Box sx={{marginTop:2}} rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)',}}>
-              {/* <Autocomplete disablePortal id="combo-box-demo" name="type"
-                options={profileTypes} onChange={handleTypeChange}
-                defaultValue={defaultValues?.type}
-                renderInput={(params) => <TextField {...params} label="Type" />}
-              /> */}
-
               <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">Type</InputLabel>
                 <Select
