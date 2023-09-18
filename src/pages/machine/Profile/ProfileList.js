@@ -42,7 +42,7 @@ export default function ProfileList() {
     setPage,
     onSort,
   } = useTable({
-    defaultOrderBy: 'deafultName',
+    defaultOrderBy: 'createdAt',
   });
 
   const dispatch = useDispatch();
