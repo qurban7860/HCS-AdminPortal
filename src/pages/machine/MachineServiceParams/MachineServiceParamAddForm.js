@@ -79,7 +79,7 @@ export default function MachineServiceParamAddForm() {
       enqueueSnackbar(Snacks.machineServiceParamAdd);
       navigate(PATH_MACHINE.machines.settings.machineServiceParams.list);
     } catch (error) {
-      enqueueSnackbar(error, { variant: `error` });
+      enqueueSnackbar(error?.message, { variant: `error` });
       console.error(error);
     }
   };
@@ -120,8 +120,9 @@ export default function MachineServiceParamAddForm() {
                         <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
                     />
-                    <RHFTextField name="printName" label="Print Name" />
                   </Box>
+
+                  <RHFTextField name="printName" label="Print Name" minRows={3} multiline/>
 
                   <RHFTextField name="helpHint" label="Help Hint" />
                   <RHFTextField name="linkToUserManual" label="Link To User Manual" />

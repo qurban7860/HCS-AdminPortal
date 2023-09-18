@@ -59,7 +59,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
       checkParams: serviceRecordConfig?.checkParams || [],
       textAfterCheckItems: serviceRecordConfig?.textAfterCheckItems || '',
       isOperatorSignatureRequired: serviceRecordConfig?.isOperatorSignatureRequired,
-      enableServiceNote: serviceRecordConfig?.enableServiceNote,
+      enableNote: serviceRecordConfig?.enableNote,
       enableMaintenanceRecommendations: serviceRecordConfig?.enableMaintenanceRecommendations,
       enableSuggestedSpares: serviceRecordConfig?.enableSuggestedSpares,
       header: serviceRecordConfig?.header || {},
@@ -127,9 +127,9 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
         {/* </Grid> */}
       <ViewFormField sm={12} heading="Text After Check Items" param={defaultValues?.textAfterCheckItems} />
         <Grid container>
-      <ViewFormSwitch sm={6} isActiveHeading='Is Operator Signature Required' isActive={defaultValues?.isOperatorSignatureRequired} />
-      <ViewFormSwitch sm={6} isActiveHeading='Enable Service Note' isActive={defaultValues?.enableServiceNote} />
+      <ViewFormSwitch sm={6} isActiveHeading='Enable Note' isActive={defaultValues?.enableNote} />
       <ViewFormSwitch sm={6} isActiveHeading='Enable Maintenance Recommendations	' isActive={defaultValues?.enableMaintenanceRecommendations} />
+      <ViewFormSwitch sm={6} isActiveHeading='Is Operator Signature Required' isActive={defaultValues?.isOperatorSignatureRequired} />
       <ViewFormSwitch sm={6} isActiveHeading='Enable Suggested Spares' isActive={defaultValues?.enableSuggestedSpares} />
         </Grid>
       

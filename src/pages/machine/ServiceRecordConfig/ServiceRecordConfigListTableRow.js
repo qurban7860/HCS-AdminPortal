@@ -59,8 +59,8 @@ export default function ServiceRecordConfigListTableRow({
         <LinkTableCell align="left" onClick={onViewRow} param={recordType} />
 
       {/* { useScreenSize('lg') && <TableCell >{docTitle || ''}</TableCell>} */}
-      { useScreenSize('lg') && <TableCell >{(!category && !machineModel && (`.*/.*`)) ||  
-      (category && !machineModel && `${category?.name}/.* `) ||   
+      { useScreenSize('lg') && <TableCell >{(!category && !machineModel && (`*/*`)) ||  
+      (category && !machineModel && `${category?.name}/* `) ||   
       (machineModel?.name)  }</TableCell>}
 
         <TableCell align="center">
