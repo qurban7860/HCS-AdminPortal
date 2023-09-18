@@ -41,7 +41,7 @@ export default function ProfileAddForm() {
       names:[],
       web:'',
       flange:'',
-      type:'',
+      type:'CUSTOMER',
       isActive: true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -81,6 +81,7 @@ export default function ProfileAddForm() {
 
   const onSubmit = async (data) => {
     data.names = chips;
+    console.log(data)
     try {
           await dispatch(addProfile(machine._id, data));
           reset();
