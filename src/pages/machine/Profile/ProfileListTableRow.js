@@ -11,7 +11,6 @@ import { fDate } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import { useScreenSize } from '../../../hooks/useResponsive';
-import ViewFormField from '../../components/ViewForms/ViewFormField';
 
 // ----------------------------------------------------------------------
 
@@ -37,13 +36,12 @@ export default function ProfileListTableRow({
   const {
     defaultName,
     names,
-    height,
-    width,
+    web,
+    flange,
     type,
     createdAt,
   } = row;
 
-  const profilesString = names.join(', ');
   const smScreen = useScreenSize('sm')
 
   return (
@@ -59,7 +57,7 @@ export default function ProfileListTableRow({
           </TableCell>
         }
         { smScreen && <TableCell align="left">{type==="MANUFACTURER"?<Chip label={type} sx={{m:0.2}} color='secondary' />:<Chip label={type} sx={{m:0.2}}  />}</TableCell>}
-        <TableCell align="left">{height}{height&&width?"X":""}{width}</TableCell>
+        <TableCell align="left">{web}{web&&flange?"X":""}{flange}</TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>
   
       </StyledTableRow>
