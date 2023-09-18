@@ -161,9 +161,9 @@ useEffect(()=>{
                         value={checkItemList || []}
                         options={activeMachineServiceParams}
                         isOptionEqualToValue={(option, value) => option._id === value._id}
-                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                        getOptionLabel={(option) => `${option.name ? option.name : ''} ${option?.category?.name ? '-' : ''} ${option?.category?.name ? option?.category?.name : ''} ${option?.inputType ? '-' : '' } ${option?.inputType ? option?.inputType : '' }`}
                         renderOption={(props, option) => (
-                          <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                          <li {...props} key={option._id}>{`${option.name ? option.name : ''} ${option?.category?.name ? '-' : ''} ${option?.category?.name ? option?.category?.name : ''} ${option?.inputType ? '-' : '' } ${option?.inputType ? option?.inputType : '' }`}</li>
                         )}
                         // filterSelectedOptions
                         onChange={(event, newValue) => {

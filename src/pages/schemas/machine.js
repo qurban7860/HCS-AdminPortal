@@ -43,7 +43,7 @@ export const AddMachineDocumentSchema = Yup.object().shape({
 export const MachineServiceParamsSchema = Yup.object().shape({
   name: Yup.string().required().max(200).label('Name'),
   serviceCategory: Yup.object().label('Service Category').nullable(),
-  printName: Yup.string().max(50).label('Print Name'),
+  printName: Yup.string().max(1000).label('Print Name'),
   description: Yup.string().max(5000).label('Description'),
   helpHint: Yup.string().max(50).label('Help Hint'),
   linkToUserManual: Yup.string().max(50).label('Link To User Manual'),
@@ -188,21 +188,21 @@ export const ServiceRecordConfigSchema = Yup.object().shape({
 
   textAfterCheckItems: Yup.string().max(4000),
   isOperatorSignatureRequired: Yup.boolean(),
-  enableServiceNote: Yup.boolean(),
+  enableNote: Yup.boolean(),
   enableMaintenanceRecommendations: Yup.boolean(),
   enableSuggestedSpares: Yup.boolean(),
 
   // header
   headerType: Yup.object().label('Header Type').nullable(),
-  headerLeftText: Yup.string(),
-  headerCenterText: Yup.string(),
-  headerRightText: Yup.string(),
+  headerLeftText: Yup.string().max(200),
+  headerCenterText: Yup.string().max(200),
+  headerRightText: Yup.string().max(200),
 
   // footer
   footerType: Yup.object().label('Footer Type').nullable(),
-  footerLeftText: Yup.string(),
-  footerCenterText: Yup.string(),
-  footerRightText: Yup.string(),
+  footerLeftText: Yup.string().max(200),
+  footerCenterText: Yup.string().max(200),
+  footerRightText: Yup.string().max(200),
 
   isActive: Yup.boolean()
 });

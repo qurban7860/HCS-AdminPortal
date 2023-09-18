@@ -54,7 +54,7 @@ export default function ServiceRecordConfigEditForm() {
 
     textAfterCheckItems: serviceRecordConfig?.textAfterCheckItems || '',
     isOperatorSignatureRequired: serviceRecordConfig?.isOperatorSignatureRequired || false,
-    enableServiceNote: serviceRecordConfig?.enableServiceNote || false,
+    enableNote: serviceRecordConfig?.enableNote || false,
     enableMaintenanceRecommendations: serviceRecordConfig?.enableMaintenanceRecommendations || false,
     enableSuggestedSpares: serviceRecordConfig?.enableSuggestedSpares || false,
     // header
@@ -235,21 +235,13 @@ export default function ServiceRecordConfigEditForm() {
                     sm: 'repeat(2, 1fr)',
                   }}
                 >
+                  
                   <RHFSwitch
-                    name="isOperatorSignatureRequired"
+                    name="enableNote"
                     labelPlacement="start"
                     label={
                       <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
-                        Is Operator Signature Required
-                      </Typography>
-                    }
-                  />
-                  <RHFSwitch
-                    name="enableServiceNote"
-                    labelPlacement="start"
-                    label={
-                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
-                        Enable Service Note
+                        Enable Note
                       </Typography>
                     }
                   />
@@ -259,6 +251,15 @@ export default function ServiceRecordConfigEditForm() {
                     label={
                       <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
                         Enable Maintenance Recommendations
+                      </Typography>
+                    }
+                  />
+                  <RHFSwitch
+                    name="isOperatorSignatureRequired"
+                    labelPlacement="start"
+                    label={
+                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
+                        Is Operator Signature Required
                       </Typography>
                     }
                   />
