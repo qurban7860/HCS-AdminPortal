@@ -151,11 +151,11 @@ export const {
 } = slice.actions;
 
 // ----------------------------------------------------------------------
-export function getActiveMachineServiceRecords (){
+export function getActiveMachineServiceRecords (machineId){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/serviceRecords`, 
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords`, 
       {
         params: {
           isArchived: false,
@@ -174,11 +174,11 @@ export function getActiveMachineServiceRecords (){
 
 // ------------------------------------------------------------------------------------------------
 
-export function getMachineServiceRecords (){
+export function getMachineServiceRecords (machineId){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/serviceRecords`, 
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords`, 
       {
         params: {
           isArchived: false
@@ -196,11 +196,11 @@ export function getMachineServiceRecords (){
 
 
 // ----------------------------------------------------------------------
-export function getMachineServiceRecord(id) {
+export function getMachineServiceRecord(machineId, id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/serviceRecords/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`);
       dispatch(slice.actions.getMachineServiceRecordSuccess(response.data));
     } catch (error) {
       console.error(error);
@@ -210,11 +210,11 @@ export function getMachineServiceRecord(id) {
   };
 }
 
-export function deleteMachineServiceRecord(id) {
+export function deleteMachineServiceRecord(machineId, id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/serviceRecords/${id}` , 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}` , 
       {
           isArchived: true, 
       });
@@ -229,47 +229,26 @@ export function deleteMachineServiceRecord(id) {
 
 // --------------------------------------------------------------------------
 
-export function addMachineServiceRecord(params) {
+export function addMachineServiceRecord(machineId,params) {
     return async (dispatch) => {
       dispatch(slice.actions.startLoading());
       try {
         const formData = new FormData();
         formData.append('serviceRecordConfig', params?.serviceRecordConfig?._id)
         formData.append('serviceDate',params?.serviceDate)
-        formData.append('customer',params?.customer)
-        formData.append('site',params?.site)
-        formData.append('machine',params?.machine)
-        formData.append('decoiler',params?.decoiler)
+        formData.append('decoilers',params?.decoiler.map((dec)=> dec._id))
         formData.append('technician',params?.technician?._id)
         formData.append('serviceNote',params?.serviceNote)
         formData.append('maintenanceRecommendation',params?.maintenanceRecommendation)
         formData.append('suggestedSpares',params?.suggestedSpares)
         formData.append('operator',params?.operator?._id)
         formData.append('operatorRemarks',params?.operatorRemarks)
-        params?.files?.forEach((file, index) => {formData.append(`files`, file);})
+        // params?.files?.forEach((file, index) => {formData.append(`files`, file);})
         formData.append('isActive',params?.isActive)
         console.log("formData : ",formData)
         /* eslint-disable */
-        // let data = {
-        //   recordType:                 params?.recordType?.name,
-        //   serviceRecordConfig:        params?.serviceRecordConfig,
-        //   serviceDate:                params?.serviceDate,
-        //   customer:                   params?.customer, 
-        //   site:                       params?.site?._id,
-        //   machine:                    params?.machine,
-        //   decoiler:                   params?.decoiler?._id,
-        //   technician:                 params?.technician?._id,
-        //   // checkParams:     
-        //   serviceNote:                params?.serviceNote,
-        //   maintenanceRecommendation:  params?.maintenanceRecommendation,
-        //   suggestedSpares:            params?.suggestedSpares,
-        //   files:                      params?.files,
-        //   // checkParamFiles: [],
-        //   operator:                   params?.operator?._id,
-        //   operatorRemarks:            params?.operatorRemarks,
-        //   isActive:                   params?.isActive,
-        // };
-        const response = await axios.post(`${CONFIG.SERVER_URL}products/serviceRecords`, formData );
+
+        const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords`, formData );
         dispatch(slice.actions.getMachineServiceRecordSuccess(response.data.MachineTool));
       } catch (error) {
         console.error(error);
@@ -282,7 +261,7 @@ export function addMachineServiceRecord(params) {
 
 // --------------------------------------------------------------------------
 
-export function updateMachineServiceRecord(id, params) {
+export function updateMachineServiceRecord(machineId,id, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -301,7 +280,7 @@ export function updateMachineServiceRecord(id, params) {
         isActive:         params?.isActive,
       };
      /* eslint-enable */
-      await axios.patch(`${CONFIG.SERVER_URL}products/serviceRecords/${id}`,data);
+      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`,data);
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

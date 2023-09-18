@@ -26,7 +26,7 @@ const initialState = {
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
-  verifyInviteStatus:false,
+  verifiedInvite:null,
 };
 
 
@@ -139,10 +139,10 @@ const slice = createSlice({
     },
 
     // Get Verify Invite
-    getVerifyInviteStatus(state, action) {
+    getVerifyInvite(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.verifyInviteStatus = action.payload;
+      state.verifiedInvite = action.payload;
     },
     // Set FilterBy
     setFilterBy(state, action) {
@@ -174,7 +174,7 @@ export const {
 } = slice.actions;
 // ----------------------------------------------------------------------
 
-export function addSecurityUser(param) {
+export function addSecurityUser(param, isInvite) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     dispatch(resetSecurityUser());
@@ -196,7 +196,7 @@ export function addSecurityUser(param) {
       regions: param.selectedRegions
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}security/users`, data);
-      if(regEx.test(response.status)){
+      if(regEx.test(response.status) && isInvite){
         await axios.get(`${CONFIG.SERVER_URL}security/invites/sendUserInvite/${response?.data?.user?._id}`);
         dispatch(setSecurityUserFormVisibility(false))
         dispatch(getSecurityUsers());
@@ -421,10 +421,7 @@ export function verifyUserInvite(Id,code) {
     dispatch(slice.actions.startLoading());
     try{
       const response = await axios.get(`${CONFIG.SERVER_URL}security/invites/verifyInviteCode/${Id}/${code}`);
-      if(regEx.test(response.status)){
-        dispatch(slice.actions.getVerifyInviteStatus(response.data));
-      }
-      return response; // eslint-disable-line
+      dispatch(slice.actions.getVerifyInvite(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
       throw error;
@@ -432,11 +429,10 @@ export function verifyUserInvite(Id,code) {
   };
 }
 
-export function updatePasswordUserInvite(data, Id) {
+export function updateInvitedUser(data, Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{
-
       const response = await axios.patch(`${CONFIG.SERVER_URL}security/invites/updatePasswordUserInvite/${Id}`,
         data
       );

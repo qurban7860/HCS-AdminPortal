@@ -39,6 +39,7 @@ import {
 import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
+import { FORMLABELS } from '../../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -48,7 +49,7 @@ const TABLE_HEAD = [
   // { id: 'xs2', label: 'Help Hint', align: 'center' },
   // { id: 'xs3', label: 'Link To User Manual', align: 'center' },
   { id: 'xs5', label: 'Input Type', align: 'left' },
-  { id: 'xs3', label: 'Category', align: 'left' },
+  { id: 'xs3', label: 'Item Category', align: 'left' },
   { id: 'xs4', label: 'Required', align: 'center' },
   // { id: 'sm1', label: 'Unit Type', align: 'left' },
   // { id: 'sm2', label: 'Min Validation', align: 'center' },
@@ -158,7 +159,7 @@ export default function MachineServiceParamList() {
             position: 'relative',
           }}
         >
-          <Cover name="Machine Service Parameters" icon="carbon:parameter" setting />
+          <Cover name={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} icon="carbon:parameter" setting />
         </Card>
         <TableCard>
           <MachineServiceParamListTableToolbar
@@ -259,6 +260,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
         docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         docCategory?.printName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         docCategory?.inputType?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        docCategory?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // (docCategory?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(docCategory?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );

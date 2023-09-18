@@ -51,36 +51,12 @@ export default function MachineServiceRecordListTableRow({
   onViewRow,
 }) {
 
-  const { customer, site, decoiler, technician, serviceDate, isActive, createdAt } = row;
-
-  // const [openConfirm, setOpenConfirm] = useState(false);
-
-  // const [openPopover, setOpenPopover] = useState(null);
-
-  // const handleOpenConfirm = () => {
-  //   setOpenConfirm(true);
-  // };
-
-  // const handleCloseConfirm = () => {
-  //   setOpenConfirm(false);
-  // };
-
-  // const handleOpenPopover = (event) => {
-  //   setOpenPopover(event.currentTarget);
-  // };
-
-  // const handleClosePopover = () => {
-  //   setOpenPopover(null);
-  // };
-
-//  const smScreen = useScreenSize('sm')
+  const { serviceRecordConfig, technician, serviceDate, isActive, createdAt } = row;
 
   return (
       <StyledTableRow hover selected={selected}>
-        <LinkTableCell align="left" onClick={onViewRow} param={customer?.name} />
-        <TableCell align="left">{site?.name}</TableCell>
-        <TableCell align="left">{decoiler?.name}</TableCell>
-        <TableCell align="left">{technician?.name}</TableCell>
+        <LinkTableCell align="left" onClick={onViewRow} param={`${serviceRecordConfig?.docTitle ? serviceRecordConfig?.docTitle	: ''	} ${serviceRecordConfig?.recordType ? ' - ' : ''} ${serviceRecordConfig?.recordType ? serviceRecordConfig?.recordType : ''}`} />
+        <TableCell align="left">{`${technician?.firstName ? technician?.firstName : ''} ${technician?.lastName ? technician?.lastName : ''}`}</TableCell>
         <TableCell align="center">{fDate(serviceDate)}</TableCell>
         <TableCell align="center">
           {' '}

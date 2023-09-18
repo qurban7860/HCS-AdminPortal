@@ -54,15 +54,15 @@ export const TABS = (currentComponent, showDevTabs, disableTab) => [
   {
     disabled: disableTab,
     value: 'license',
-    label: 'License',
+    label: 'Licenses',
     icon: <Iconify icon="mdi:book-cog-outline" />,
     component: <MachineLicenses />,
   },
   {
     disabled: disableTab,
     value: 'profile',
-    label: 'Profile',
-    icon: <Iconify icon="mdi:person" />,
+    label: 'Profiles',
+    icon: <Iconify icon="mdi:window-open-variant" />,
     component: <MachineProfiles />,
   },
  
@@ -77,8 +77,8 @@ export const TABS = (currentComponent, showDevTabs, disableTab) => [
         // },
         {
           disabled: disableTab,
-          value: 'serviceHistory',
-          label: 'Service History',
+          value: 'checkItemRecords',
+          label: 'Service Records',
           icon: <Iconify icon="mdi:clipboard-text-clock" />,
           component : <MachineServiceRecordList />,
         },

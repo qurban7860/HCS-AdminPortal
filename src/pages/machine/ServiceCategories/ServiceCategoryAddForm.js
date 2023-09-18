@@ -48,7 +48,7 @@ export default function ServiceCategoryAddForm() {
   );
 
   const ServiceCategorySchema = Yup.object().shape({
-    name: Yup.string().min(2).max(50).required('Name is required').trim(),
+    name: Yup.string().min(2, 'Name must be at least 2 characters long').max(50).required('Name is required').trim(),
     description: Yup.string().max(2000).trim(),
     isActive: Yup.boolean(),
   });
@@ -81,7 +81,7 @@ export default function ServiceCategoryAddForm() {
   };
   return (
     <Container maxWidth={false}>
-      <StyledCardContainer><Cover name="New Service Category"/></StyledCardContainer>
+      <StyledCardContainer><Cover name={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_CATEGORY_ADD}/></StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container>
           <Grid item xs={18} md={12} sx={{ mt: 3 }}>

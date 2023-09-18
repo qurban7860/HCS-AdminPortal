@@ -47,6 +47,7 @@ const TABLE_HEAD = [
   { id: 'xs1', label: 'Email', align: 'left' },
   { id: 'xs2', label: 'Phone Number', align: 'left' },
   { id: 'md1', label: 'Roles', align: 'left' },
+  { id: 'employed', label: 'Employeed', align: 'center' },
   { id: 'isActive', label: 'Active', align: 'center' },
   // { id: 'isVerified', label: 'Verified', align: 'center' },
   // { id: 'status', label: 'Status', align: 'left' },

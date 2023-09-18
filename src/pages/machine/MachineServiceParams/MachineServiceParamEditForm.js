@@ -93,7 +93,7 @@ export default function DocumentCategoryeEditForm() {
     <Container maxWidth={false}>
       <StyledCardContainer>
         <Cover
-          name={machineServiceParam?.name}
+          name={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAM_EDIT}
           setting
           backLink={PATH_MACHINE.machines.settings.machineServiceParams.view(machineServiceParam?._id)}
         />
@@ -113,7 +113,7 @@ export default function DocumentCategoryeEditForm() {
                   <RHFTextField name="name" label="Name" />
                   <RHFAutocomplete 
                       name="serviceCategory"
-                      label="Service Category"
+                      label="Item Category"
                       options={activeServiceCategories}
                       isOptionEqualToValue={(option, value) => option._id === value._id}
                       getOptionLabel={(option) => `${option.name ? option.name : ''}`}
@@ -121,8 +121,8 @@ export default function DocumentCategoryeEditForm() {
                         <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
                     />
-                  <RHFTextField name="printName" label="Print Name" />
                   </Box>
+                  <RHFTextField name="printName" label="Print Name" minRows={3} multiline />
                   <RHFTextField name="helpHint" label="Help Hint" />
                   <RHFTextField name="linkToUserManual" label="Link To User Manual" />
                   <Box

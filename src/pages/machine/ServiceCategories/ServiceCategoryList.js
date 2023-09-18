@@ -30,6 +30,8 @@ import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
+import { FORMLABELS } from '../../../constants/default-constants';
+
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -181,7 +183,7 @@ export default function ServiceCategoryList() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Service Categories" icon="material-symbols:list-alt-outline" setting />
+          <Cover name={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_CATEGORIES} icon="material-symbols:list-alt-outline" setting />
         </StyledCardContainer>
 
         <TableCard>

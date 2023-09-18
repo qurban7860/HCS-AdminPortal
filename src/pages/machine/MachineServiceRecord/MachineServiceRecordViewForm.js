@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // import { useNavigate } from 'react-router-dom';
 // @mui
@@ -17,7 +17,7 @@ import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDe
 
 // ----------------------------------------------------------------------
 
-export default function MachineServiceParamViewForm() {
+function MachineServiceParamViewForm() {
   const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
 
   // const navigate = useNavigate();
@@ -85,3 +85,5 @@ export default function MachineServiceParamViewForm() {
     </Card>
   );
 }
+
+export default memo(MachineServiceParamViewForm)

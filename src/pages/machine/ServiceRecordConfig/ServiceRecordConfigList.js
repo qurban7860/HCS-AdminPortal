@@ -30,12 +30,14 @@ import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
+import { FORMLABELS } from '../../../constants/default-constants';
+
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'recordType', label: 'Record Type', align: 'left' },
   { id: 'docTitle', label: 'Document Title', align: 'left' },
-  { id: 'category', label: 'Category', align: 'left' },
+  { id: 'recordType', label: 'Record Type', align: 'left' },
+  // { id: 'category', label: 'Category', align: 'left' },
   { id: 'machineModel', label: 'Machine Model', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
@@ -68,9 +70,7 @@ export default function ServiceRecordConfigList() {
     onSort,
     // onChangePage,
     // onChangeRowsPerPage,
-  } = useTable({
-    defaultOrderBy: 'name',
-  });
+  } = useTable({ });
 
   const dispatch = useDispatch();
   // const { themeStretch } = useSettingsContext();
@@ -215,7 +215,7 @@ export default function ServiceRecordConfigList() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Service Record Config" icon="material-symbols:list-alt-outline" setting="enable" />
+          <Cover name={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_CONFIGS} icon="material-symbols:list-alt-outline" setting="enable" />
         </StyledCardContainer>
 
         <TableCard>
@@ -336,13 +336,20 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-
-  if (filterName) {
+// console.log(!'.*/.* '.includes(filterName))
+  if (filterName.includes('.*') ){
     inputData = inputData.filter(
-      (category) =>
-        category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (category.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-        fDate(category?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+      (serviceConfig) =>
+    (serviceConfig?.category?.name === null || serviceConfig?.category?.name === undefined) || 
+    (serviceConfig?.machineModel?.name === null || serviceConfig?.machineModel?.name === undefined))
+  }else {
+    inputData = inputData.filter(
+      (serviceConfig) =>
+        serviceConfig?.recordType?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        serviceConfig?.docTitle?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        serviceConfig?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        serviceConfig?.machineModel?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
+        fDate(serviceConfig?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 

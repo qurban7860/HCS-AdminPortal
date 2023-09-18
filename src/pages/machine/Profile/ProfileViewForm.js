@@ -14,6 +14,7 @@ import {
   getProfile,
   deleteProfile,
   setProfileViewFormVisibility,
+  getProfiles,
 } from '../../../redux/slices/products/profile';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 // constants
@@ -30,6 +31,7 @@ export default function ProfileViewForm() {
     try {
       dispatch(deleteProfile(machine._id, profile._id));
       enqueueSnackbar("Profile deleted successfully");
+      dispatch(getProfiles(machine._id))
       dispatch(setProfileViewFormVisibility(false));
     } catch (err) {
       enqueueSnackbar("Failed to delete profile", { variant: `error` });
@@ -46,9 +48,10 @@ export default function ProfileViewForm() {
   const defaultValues = useMemo(
     () => ({
       defaultName: profile?.defaultName || '',
-      names:profile?.names?.join(', ') || '',
-      height:profile?.height || '',
-      width:profile?.width || '',
+      names:profile?.names || [],
+      web:profile?.web || '',
+      flange:profile?.flange || '',
+      type:profile?.type || '',
       isActive: profile?.isActive || '',
       createdByFullName: profile?.createdBy?.name || '',
       createdAt: profile?.createdAt || '',
@@ -75,8 +78,9 @@ export default function ProfileViewForm() {
       </Grid>
       <Grid container>
         <ViewFormField heading="Default Name" param={defaultValues.defaultName} />
-        <ViewFormField heading="Other Names" param={defaultValues.names} />
-        <ViewFormField sm={6} heading="Height X Width" param={`${defaultValues.height}X${defaultValues.width}`} />
+        <ViewFormField heading="Other Names" chips={defaultValues.names} />
+        <ViewFormField sm={6} heading="Type" param={defaultValues?.type} />
+        <ViewFormField sm={6} heading="Web x Flange" param={`${defaultValues?.web}${(defaultValues.web && defaultValues.flange)? " x ":""}${defaultValues?.flange}`} />
         <ViewFormAudit defaultValues={defaultValues} /> 
       </Grid>
     </Card>

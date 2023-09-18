@@ -212,7 +212,7 @@ function ViewFormField({
               whiteSpace: 'pre-line',
               wordBreak: 'break-word',
               }} >
-            {serviceParam?.map((obj, index) => ( <Chip key={index} label={obj?.name} sx={{mx:0.3}} />))}
+            {serviceParam?.map((obj, index) => ( <Chip key={index} label={obj?.name} sx={{m:0.2}} />))}
           </Grid>
         ) : (
           serviceParam && typeof serviceParam === 'string' && serviceParam.trim().length > 0 && <Chip label={serviceParam} />

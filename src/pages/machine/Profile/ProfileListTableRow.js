@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   TableRow,
   TableCell,
+  Chip,
 } from '@mui/material';
 // utils
 import { styled } from '@mui/material/styles';
@@ -35,19 +36,28 @@ export default function ProfileListTableRow({
   const {
     defaultName,
     names,
-    height,
-    width,
+    web,
+    flange,
+    type,
     createdAt,
   } = row;
 
-  const profilesString = names.join(', ');
   const smScreen = useScreenSize('sm')
 
   return (
       <StyledTableRow hover selected={selected}>
         <LinkTableCell align="left" param={defaultName} onClick={onViewRow} />
-        { smScreen && <TableCell align="left">{profilesString}</TableCell>}
-        { smScreen && <TableCell align="left">{height}X{width}</TableCell>}
+        { smScreen && 
+          <TableCell sx={{maxWidth:"400px"}}>
+          {names.map((value, index) =>
+            typeof value === 'string'
+              ? value.trim() !== '' && <Chip key={index} label={value} sx={{ m: 0.2 }} />
+              : ''
+          )}
+          </TableCell>
+        }
+        { smScreen && <TableCell align="left">{type==="MANUFACTURER"?<Chip label={type} sx={{m:0.2}} color='secondary' />:<Chip label={type} sx={{m:0.2}}  />}</TableCell>}
+        <TableCell align="left">{web}{web&&flange?"X":""}{flange}</TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>
   
       </StyledTableRow>

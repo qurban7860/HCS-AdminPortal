@@ -1,4 +1,4 @@
-import {  useEffect, useMemo } from 'react';
+import {  useEffect, useMemo, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // form
@@ -29,7 +29,7 @@ import FormProvider, {
 
 // ----------------------------------------------------------------------
 
-export default function MachineServiceRecordEditForm() {
+function MachineServiceRecordEditForm() {
 
   const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine);
@@ -100,7 +100,7 @@ export default function MachineServiceRecordEditForm() {
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
-                <FormHeading heading={FORMLABELS.COVER.MACHINE_SERVICE_PARAM_ADD} />
+                <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_RECORD_EDIT} />
                 <Box
                     rowGap={2}
                     columnGap={2}
@@ -129,3 +129,5 @@ export default function MachineServiceRecordEditForm() {
       </FormProvider>
   );
 }
+
+export default memo(MachineServiceRecordEditForm)

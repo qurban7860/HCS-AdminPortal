@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
@@ -123,8 +123,8 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
   }, [roles]);
 
   const NewUserSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required!').max(40, 'Name must not exceed 40 characters!'),
-    // email: Yup.string().required('Email is required').email('Email must be a valid email address'),
+    customer: Yup.object().shape({name: Yup.string()}).nullable().required("Customer Is Required!"),
+    name: !isInvite && Yup.string().required('Name is required!').max(40, 'Name must not exceed 40 characters!'),
     password: !isInvite && Yup.string().required('Password is required').min(6),
     passwordConfirmation: !isInvite && Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
     roles: Yup.array().required('Roles are required'),
@@ -156,6 +156,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
     setValue,
     handleSubmit,
     formState: { isSubmitting },
+    control,
     trigger,
   } = methods;
 
@@ -218,7 +219,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
     }
 
     try {
-      const message = !isInvite?"User Added Successfully":"User Invite Sent Successfulllfy";
+      const message = !isInvite?"User Added Successfully":"User Invitation Sent Successfulllfy";
       if(isInvite){
         data.password = "sjhreywuidfsajchfdsgfkdfgsljhffjklgdhsg";
         data.passwordConfirmation = "sjhreywuidfsajchfdsgfkdfgsljhffjklgdhsg";
@@ -226,12 +227,14 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
         data.isInvite = true;
        }
       
-      const response = await dispatch(addSecurityUser(data));      
+      const response = await dispatch(addSecurityUser(data, isInvite));      
       await dispatch(resetContacts());
       reset();
       navigate(PATH_SECURITY.users.view(response.data.user._id));
       enqueueSnackbar(message);
     } catch (error) {
+      console.log(error.MessageCode)
+      if(error.MessageCode===409) error.Message="Can't send invitation user already registered";
       if (error.Message) {
         enqueueSnackbar(error.Message, { variant: `error` });
       } else if (error.message) {
@@ -283,44 +286,49 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <Autocomplete
-                // freeSolo
-                required
-                value={customerVal || null}
-                options={spCustomers}
-                getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-                onChange={(event, newValue) => {
-                  if (newValue) {
-                    dispatch(resetContacts());
-                    setCustomerVal(newValue);
-                    setContactVal('');
-                  } else {
-                    setCustomerVal('');
-                    dispatch(resetContacts());
-                    setContactVal('');
-                    handleNameChange('');
-                    setPhone('');
-                    setEmail('');
-                  }
-                }}
-                id="controllable-states-demo"
-                renderOption={(props, option) => (
-                  <li {...props} key={option.id}>
-                    {option.name}
-                  </li>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} name="customer" label="Customer" required />
-                )}
-                ChipProps={{ size: 'small' }}
-              >
-                {(option) => (
-                  <div key={option._id}>
-                    <span>{option.name}</span>
-                  </div>
-                )}
-              </Autocomplete>
+
+                  <Controller
+                    name="customer"
+                    control={control}
+                    defaultValue={customerVal || null}
+                    render={ ({field: { ref, ...field }, fieldState: { error } }) => (
+                      <Autocomplete
+                        {...field}
+                        id="controllable-states-demo"
+                        options={spCustomers}
+                        getOptionLabel={(option) => option.name}
+                        isOptionEqualToValue={(option, value) => option._id === value._id}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            field.onChange(newValue);
+                            dispatch(resetContacts());
+                            setCustomerVal(newValue);
+                            setContactVal('');
+                          } else {
+                            field.onChange(null);
+                            setCustomerVal('');
+                            dispatch(resetContacts());
+                            setContactVal('');
+                            handleNameChange('');
+                            setPhone('');
+                            setEmail('');
+                          }
+                        }}
+                        renderOption={(props, option) => (
+                          <li {...props} key={option.id}>
+                            {option.name}
+                          </li>
+                        )}
+                        renderInput={(params) => (
+                          <TextField {...params} name="customer" id="customer" label="Customer*" 
+                          error={!!error} helperText={error?.message} 
+                          inputRef={ref} 
+                          />
+                        )}
+                        ChipProps={{ size: 'small' }}
+                      />
+                    )}
+                  />
 
               <Autocomplete
                 // freeSolo
@@ -359,7 +367,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
 
               <RHFTextField
                 name="name"
-                label="Full Name*"
+                label={isInvite?"Full Name":"Full Name*"}
                 onChange={(e) => handleNameChange(e.target.value)}
                 value={name}
               />
@@ -425,7 +433,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
               />
             </Box>
             ))}
-            <Box sx={{ mb: 3 }} rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}>
+            {/* <Box sx={{ mb: 3 }} rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}>
               <RHFMultiSelect
                 disabled={roleTypesDisabled}
                 chip
@@ -434,7 +442,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
                 label="Roles"
                 options={sortedRoles}
               />
-            </Box>
+            </Box> */}
             <Box
             rowGap={3}
             columnGap={2}
@@ -444,6 +452,15 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
               sm: 'repeat(1, 1fr)',
             }}
             >
+
+              <RHFMultiSelect
+                disabled={roleTypesDisabled}
+                chip
+                checkbox
+                name="roles"
+                label="Roles"
+                options={sortedRoles}
+              />
             <Autocomplete
                 multiple
                 id="regions-autocomplete"
@@ -597,7 +614,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
               />
             </Grid>
             <Stack sx={{ mt: 3 }}>
-              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              <AddFormButtons saveButtonName={isInvite?"Invite":"Save"} isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Stack>
           </Card>
         </Grid>
