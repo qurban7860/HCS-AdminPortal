@@ -14,6 +14,7 @@ const initialState = {
   isLoading: false,
   error: null,
   securityUsers: [],
+  activeSecurityUsers: [],
   securityUser: null,
   user: null,
   userId: null,
@@ -58,7 +59,7 @@ const slice = createSlice({
 
     // SET USER PROPERTIES
     setSecurityUserProperties(state, userData){
-      const {UserId, User} = userData;
+      const { UserId, User } = userData;
       state.userId = UserId;
       state.userEmail = User.email;
       state.userLogin = User.login;
@@ -74,6 +75,14 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // GET Active users
+    getActiveSecurityUsersSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeSecurityUsers = action.payload;
+      state.initial = true;
+    },
+    
     getLoggedInSecurityUserSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -166,6 +175,7 @@ export default slice.reducer;
 export const {
   setSecurityUserFormVisibility,
   setSecurityUserEditFormVisibility,
+  setSecurityUserProperties,
   resetSecurityUsers,
   resetSecurityUser,
   setFilterBy,
@@ -245,6 +255,32 @@ export function updateSecurityUser(param,id) {
     }
   };
 }
+
+// -----------------------------Active Security Users-----------------------------------------
+
+export function getActiveSecurityUsers() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try{ 
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users`,
+      {
+        params: {
+          isArchived: false,
+          isActive: true,
+        }
+      }
+      );
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.getActiveSecurityUsersSuccess(response.data));
+      }
+      return response;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+}
+
 
 // ----------------------------------------------------------------------
 
