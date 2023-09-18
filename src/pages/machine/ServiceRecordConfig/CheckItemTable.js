@@ -147,8 +147,7 @@ useEffect(()=>{
   }
 
   return (
-      <Card sx={{ p: 3 }}>
-                    <Stack spacing={2}>
+                  <Stack spacing={2}>
                     <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
                       Check Items
                     </Typography>
@@ -176,7 +175,7 @@ useEffect(()=>{
                       /> 
 
                       <Grid item md={12} >
-                      <Card sx={{ minWidth: 250, width: '100%', minHeight:75 , my:3, border:'1px solid'}}>
+                      <Grid sx={{ minWidth: 250, width: '100%', minHeight:75 , my:3, borderRadius:'10px' }}>
                         <Table>
                           <TableHead>
                             <TableRow>
@@ -201,10 +200,12 @@ useEffect(()=>{
                             ))) }
                           </TableBody>
                         </Table>
-                        <Grid item md={12} display='flex' justifyContent='center' >
-                            {checkItemList?.paramList?.length === 0 && (<Typography variant="subtitle2" sx={{ mt:0.7}}>No Checked Items selected</Typography>)}
-                          </Grid>
-                      </Card>
+                            {checkItemList?.paramList?.length === 0 && (
+                              <Grid item md={12} display='flex' justifyContent='center' >
+                                <Typography variant="subtitle2" sx={{ mt:0.7}}>No Checked Items selected</Typography>
+                              </Grid>
+                              )}
+                      </Grid>
                       <Grid item md={12} display="flex" justifyContent="flex-end" >
                         <Button
                           disabled={(!checkItemList?.length ?? 0) || (!paramListTitle ?? '') }
@@ -225,8 +226,7 @@ useEffect(()=>{
                       </Table>
                       </TableContainer>
                       </Stack>}
-                    </Stack>
-                  </Card>
+                </Stack>
   )
 }
 

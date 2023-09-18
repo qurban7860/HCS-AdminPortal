@@ -11,6 +11,7 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import FormHeading from '../../components/DocumentForms/FormHeading';
 import { FORMLABELS } from '../../../constants/default-constants';
 // slice
+import { getActiveSecurityUsers } from '../../../redux/slices/securityUser/securityUser';
 import { addMachineServiceRecord, setMachineServiceRecordAddFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
 import { getMachineConnections } from '../../../redux/slices/products/machineConnections';
 import { getActiveServiceRecordConfigs } from '../../../redux/slices/products/serviceRecordConfig';
@@ -37,25 +38,25 @@ function MachineServiceRecordAddForm() {
   const { activeContacts } = useSelector((state) => state.contact);
   const { activeServiceRecordConfigs } = useSelector((state) => state.serviceRecordConfig);
   const { machineConnections } = useSelector((state) => state.machineConnections);
+  const { activeSecurityUsers } = useSelector((state) => state.user);
+  const _id = localStorage.getItem('userId');
+  const name = localStorage.getItem('name');
+  const loginUser = { _id, name }
   const [checkParam, setCheckParam] = useState([]);
 
   useEffect( ()=>{
     dispatch(getMachineConnections(machine?.customer?._id))
     dispatch(getActiveServiceRecordConfigs())
     dispatch(getActiveContacts(machine?.customer?._id))
+    dispatch(getActiveSecurityUsers())
   },[dispatch, machine])
-
-
-  const filesSchema = {};
-
-  Yup.object().shape(filesSchema);
 
   const defaultValues = useMemo(
     () => {
       const initialValues = {
       serviceRecordConfig: null,
       serviceDate: new Date(),
-      technician: null,
+      technician:  loginUser || null,
       decoiler: [],
       serviceNote: '',
       maintenanceRecommendation: '',
@@ -88,8 +89,6 @@ function MachineServiceRecordAddForm() {
   } = methods;
 
   const {  serviceDate, files, decoiler, serviceRecordConfig } = watch()
-
-console.log("serviceRecordConfig  : ",serviceRecordConfig )
 
   const onSubmit = async (data) => {
     try {
@@ -150,7 +149,9 @@ console.log("serviceRecordConfig  : ",serviceRecordConfig )
     },
     [setValue, checkParam]
   );
-  console.log("machineConnections : ", machineConnections)
+
+  console.log("serviceDate : ",serviceDate)
+
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
@@ -206,43 +207,28 @@ console.log("serviceRecordConfig  : ",serviceRecordConfig )
                     renderInput={params => <TextField {...params}  />}
                   />
 
-                  {/* <RHFAutocomplete
-                    name="site"
-                    label="Site"
-                    options={activeSites}
-                    getOptionLabel={(option) => `${option.name ? option.name :   ''}`}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                    )}
-                  /> */}
-
                   <RHFAutocomplete
                     name="technician"
                     label="Technician"
-                    options={activeContacts}
-                    getOptionLabel={(option) => `${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName :   ''}`}
+                    options={activeSecurityUsers}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     renderOption={(props, option) => (
-                    <li {...props} key={option._id}>{`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName :   ''}`}</li>
+                    <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                   )}
                   />
                   </Box>
-
-                  {/* <RHFAutocomplete
-                    multiline
-                    name="decoiler"
-                    label="Decoiler"
-                    value={decoiler || []}
-                    options={machineConnections}
-                    getOptionLabel={(option) => `${option?.serialNo ? option?.serialNo : ''} ${option?.name ? '-' : ''} ${option?.name ? option?.name : ''}`}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option?.serialNo ? option?.serialNo : ''}  ${option?.name ? '-' : ''} ${option?.name ? option?.name : ''} `}</li>
-                    )}
-                    renderTags={(value, getTagProps) => <Chip label={`${value?.serialNo ? value?.serialNo : ''}  ${value?.name ? '-' : ''} ${value?.name ? value?.name : ''} `}/>}
-                  /> */}
-
+                  <Box
+                    rowGap={2}
+                    columnGap={2}
+                    display="grid"
+                    gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                  >
+                    <RHFTextField name="machine" label="Machine" value={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} disabled/>
+                    <RHFTextField name="machine" label="Machine Model" value={machine?.machineModel?.name} disabled/>
+                    <RHFTextField name="machine" label="Machine Model Category" value={machine?.machineModel?.category?.name} disabled/>
+                    <RHFTextField name="customer" label="Customer" value={`${machine?.customer?.name}`} disabled/>
+                  </Box>
 
                     <Controller
                       name="decoiler"
@@ -275,11 +261,13 @@ console.log("serviceRecordConfig  : ",serviceRecordConfig )
                     />
 
 
+                    { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label="Note" minRows={3} multiline/> }
 
-                    <RHFTextField name="maintenanceRecommendation" label="Maintenance Recommendation" minRows={3} multiline/>
+                    { serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="maintenanceRecommendation" label="Maintenance Recommendation" minRows={3} multiline/> }
 
-                    <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/>
+                    { serviceRecordConfig?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }
 
+                    
                     <RHFAutocomplete
                       name="operator"
                       label="Operator"
@@ -291,8 +279,8 @@ console.log("serviceRecordConfig  : ",serviceRecordConfig )
                     )}
                     />
 
-                    <RHFTextField name="operatorRemarks" label="Operator Remarks" minRows={3} multiline/>
-                  <RHFTextField name="serviceNote" label="Service Note" minRows={3} multiline/>
+                    <RHFTextField name="operatorRemarks" label="Operator Remarks" minRows={3} multiline/> 
+
                   {/* <Grid item xs={12} md={6} lg={12}>
                     <RHFUpload
                       multiple

@@ -156,7 +156,7 @@ export default function ServiceRecordConfigEditForm() {
                   display="grid"
                   gridTemplateColumns={{
                     xs: 'repeat(1, 1fr)',
-                    sm: 'repeat(2, 1fr)',
+                    sm: 'repeat(3, 1fr)',
                   }}
                 >
 
@@ -254,15 +254,7 @@ export default function ServiceRecordConfigEditForm() {
                       </Typography>
                     }
                   />
-                  <RHFSwitch
-                    name="isOperatorSignatureRequired"
-                    labelPlacement="start"
-                    label={
-                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
-                        Is Operator Signature Required
-                      </Typography>
-                    }
-                  />
+
                   <RHFSwitch
                     name="enableSuggestedSpares"
                     labelPlacement="start"
@@ -272,6 +264,17 @@ export default function ServiceRecordConfigEditForm() {
                       </Typography>
                     }
                   /> 
+
+                  <RHFSwitch
+                    name="isOperatorSignatureRequired"
+                    labelPlacement="start"
+                    label={
+                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
+                        Is Operator Signature Required
+                      </Typography>
+                    }
+                  />
+
                 </Box>
                 <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
                   Header

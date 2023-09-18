@@ -79,7 +79,7 @@ const CheckParamSchema = Yup.object().shape({
   );
 
   const methods = useForm({
-    resolver: yupResolver(ServiceRecordConfigSchema,CheckParamSchema),
+    resolver: yupResolver(ServiceRecordConfigSchema),
     defaultValues,
   });
 
@@ -194,7 +194,7 @@ const CheckParamSchema = Yup.object().shape({
                   display="grid"
                   gridTemplateColumns={{
                     xs: 'repeat(1, 1fr)',
-                    sm: 'repeat(2, 1fr)',
+                    sm: 'repeat(3, 1fr)',
                   }}
                 >
 
@@ -216,16 +216,8 @@ const CheckParamSchema = Yup.object().shape({
                       </Typography>
                     }
                   />
-                  <RHFSwitch
-                    name="isOperatorSignatureRequired"
-                    labelPlacement="start"
-                    label={
-                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
-                        Is Operator Signature Required
-                      </Typography>
-                    }
-                  />
-                  
+
+
                   <RHFSwitch
                     name="enableSuggestedSpares"
                     labelPlacement="start"
@@ -235,6 +227,16 @@ const CheckParamSchema = Yup.object().shape({
                       </Typography>
                     }
                   /> 
+                  
+                  <RHFSwitch
+                    name="isOperatorSignatureRequired"
+                    labelPlacement="start"
+                    label={
+                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
+                        Is Operator Signature Required
+                      </Typography>
+                    }
+                  />
                   
                 </Box>
                   

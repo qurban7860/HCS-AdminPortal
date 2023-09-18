@@ -165,6 +165,7 @@ export default function MachineViewForm() {
       console.log(error);
     }
   }
+  
   const handleCloseMachineConnection = () => setOpenMachineConnection(false);
 
   const linkedMachines = machine?.machineConnections?.map((machineConnection, index) => (
