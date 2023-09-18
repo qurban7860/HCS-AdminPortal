@@ -1,6 +1,5 @@
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 // @mui
 import {
   Table,
@@ -11,8 +10,6 @@ import {
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-// routes
-import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import {
   useTable,
@@ -30,11 +27,12 @@ import MachineServiceRecordListTableRow from './MachineServiceRecordListTableRow
 import MachineServiceRecordListTableToolbar from './MachineServiceRecordListTableToolbar';
 import {
   getMachineServiceRecords,
+  getMachineServiceRecord,
+  setMachineServiceRecordViewFormVisibility,
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy
 } from '../../../redux/slices/products/machineServiceRecord';
-// import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
 
@@ -52,6 +50,8 @@ const TABLE_HEAD = [
 
 export default function MachineServiceRecordList() {
   const { machineServiceRecords, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceRecord);
+  const { machine } = useSelector((state) => state.machine);
+
   console.log('machineServiceRecords : ',machineServiceRecords)
   const {
     order,
@@ -75,8 +75,6 @@ export default function MachineServiceRecordList() {
 
   const dispatch = useDispatch();
 
-  const navigate = useNavigate();
-
   const [filterName, setFilterName] = useState('');
 
   const [tableData, setTableData] = useState([]);
@@ -85,15 +83,14 @@ export default function MachineServiceRecordList() {
 
 
   useLayoutEffect(() => {
-    dispatch(getMachineServiceRecords()); 
-  }, [dispatch]);
+    dispatch(getMachineServiceRecords(machine?._id)); 
+  }, [dispatch, machine?._id]);
 
   useEffect(() => {
     if (initial) {
       setTableData(machineServiceRecords);
     }
   }, [machineServiceRecords, initial]);
-  
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -133,7 +130,8 @@ export default function MachineServiceRecordList() {
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_MACHINE.machines.settings.machineServiceParams.view(id));
+    dispatch(setMachineServiceRecordViewFormVisibility(true));
+    dispatch(getMachineServiceRecord(machine._id, id));
   };
 
   const handleResetFilter = () => {

@@ -51,29 +51,7 @@ export default function MachineServiceRecordListTableRow({
   onViewRow,
 }) {
 
-  const { customer, site, decoiler, technician, serviceDate, isActive, createdAt } = row;
-
-  // const [openConfirm, setOpenConfirm] = useState(false);
-
-  // const [openPopover, setOpenPopover] = useState(null);
-
-  // const handleOpenConfirm = () => {
-  //   setOpenConfirm(true);
-  // };
-
-  // const handleCloseConfirm = () => {
-  //   setOpenConfirm(false);
-  // };
-
-  // const handleOpenPopover = (event) => {
-  //   setOpenPopover(event.currentTarget);
-  // };
-
-  // const handleClosePopover = () => {
-  //   setOpenPopover(null);
-  // };
-
-//  const smScreen = useScreenSize('sm')
+  const { customer, technician, serviceDate, isActive, createdAt } = row;
 
   return (
       <StyledTableRow hover selected={selected}>

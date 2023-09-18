@@ -1,4 +1,4 @@
-import {  useEffect, useMemo } from 'react';
+import {  useEffect, useMemo, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // form
@@ -29,7 +29,7 @@ import FormProvider, {
 
 // ----------------------------------------------------------------------
 
-export default function MachineServiceRecordEditForm() {
+function MachineServiceRecordEditForm() {
 
   const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine);
@@ -129,3 +129,5 @@ export default function MachineServiceRecordEditForm() {
       </FormProvider>
   );
 }
+
+export default memo(MachineServiceRecordEditForm)

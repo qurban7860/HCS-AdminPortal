@@ -6,24 +6,18 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { DatePicker } from '@mui/x-date-pickers';
 import { v4 as uuidv4 } from 'uuid';
-import { Box, Card, Grid, Stack, Typography, Button, TextField, Accordion, AccordionSummary, AccordionDetails, TableBody, Table, TableContainer, Autocomplete } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography,  TextField, TableBody, Table, TableContainer, Autocomplete } from '@mui/material';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import FormHeading from '../../components/DocumentForms/FormHeading';
 import { FORMLABELS } from '../../../constants/default-constants';
 // slice
 import { addMachineServiceRecord, setMachineServiceRecordAddFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
 import { getMachineConnections } from '../../../redux/slices/products/machineConnections';
-import { getActiveMachineServiceParams } from '../../../redux/slices/products/machineServiceParams';
 import { getActiveServiceRecordConfigs } from '../../../redux/slices/products/serviceRecordConfig';
-import { getActiveSites } from '../../../redux/slices/customer/site';
-import { getActiveContacts } from '../../../redux/slices/customer/contact';
 
 // components
-// import { NotRequiredValidateFileType } from '../../document/documents/Utills/Util'
-import Iconify from '../../../components/iconify';
 import { useSnackbar } from '../../../components/snackbar';
 import { MachineServiceRecordSchema } from '../../schemas/machine';
-import useResponsive from '../../../hooks/useResponsive';
 import FormProvider, {
   RHFTextField,
   RHFAutocomplete,
@@ -42,11 +36,7 @@ function MachineServiceRecordAddForm() {
   const { activeContacts } = useSelector((state) => state.contact);
   const { activeServiceRecordConfigs } = useSelector((state) => state.serviceRecordConfig);
   const { machineConnections } = useSelector((state) => state.machineConnections);
-  const [activeIndex, setActiveIndex] = useState(null);
-  const [expanded, setExpanded] = useState(false);
-  const [checkParamNumber, setCheckParamNumber]= useState(1);
   const [checkParam, setCheckParam] = useState([]);
-  const isMobile = useResponsive('down', 'sm');
 
   useEffect( ()=>{
     dispatch(getMachineConnections(machine?.customer?._id))
@@ -55,14 +45,6 @@ function MachineServiceRecordAddForm() {
 
 
   const filesSchema = {};
-
-  // for (let index = 1; index <= checkParamNumber; index += 1 ) {
-  //   filesSchema[`checkParamFiles${index}`] = Yup.mixed().test(
-  //     'fileType',
-  //     'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
-  //     NotRequiredValidateFileType
-  //   ).nullable(true)
-  // }
 
   Yup.object().shape(filesSchema);
 
@@ -81,10 +63,6 @@ function MachineServiceRecordAddForm() {
       operator: null,
       operatorRemarks: '',
       isActive: true,
-    }
-
-    for (let index = 0; index < checkParamNumber; index += 1) {
-      initialValues[`checkParamFiles${index}`] = [];
     }
 
     return initialValues;
@@ -116,7 +94,7 @@ console.log(' decoiler : ',decoiler)
     try {
       data.decoiler = decoiler.map((dec)=> dec._id)
       console.log("data : ",data)
-      await dispatch(addMachineServiceRecord(data));
+      await dispatch(addMachineServiceRecord(machine?._id,data));
       reset();
       dispatch(setMachineServiceRecordAddFormVisibility(false))
     } catch (err) {
@@ -128,16 +106,6 @@ console.log(' decoiler : ',decoiler)
 
   const toggleCancel = () => { dispatch(setMachineServiceRecordAddFormVisibility(false)) };
 
-  const handleAccordianClick = (accordianIndex) => {
-    if (accordianIndex === activeIndex) {
-      setActiveIndex(null);
-    } else {
-      setActiveIndex(accordianIndex);
-    }
-  };
-
-  const handleChange = (panel) => (event, isExpanded) => {setExpanded(isExpanded ? panel : false)};
-  // const handleRecordTypeChange = (newValue) => setValue("recordType", newValue)
   const handleServiceDateChange = (newValue) => setValue("serviceDate", newValue)
 
   const handleDropMultiFile = useCallback(
