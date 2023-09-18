@@ -67,7 +67,7 @@ export default function DrawingListTableToolbar({
           )}
         </Grid>
         <Grid item xs={8} sm={3}>
-          <Stack alignItems="flex-start">
+          <Stack alignItems="flex-end">
             <Button
               sx={{ p: 2 }}
               onClick={toggleAdd}
