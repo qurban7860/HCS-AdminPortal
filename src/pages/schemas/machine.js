@@ -206,12 +206,3 @@ export const ServiceRecordConfigSchema = Yup.object().shape({
 
   isActive: Yup.boolean()
 });
-
-
-export const CheckParamSchema = Yup.object().shape({
-
-  // Check Params
-  paramListTitle: Yup.string().max(200).label('Item List Title'),
-  paramList : Yup.array(),
-
-});

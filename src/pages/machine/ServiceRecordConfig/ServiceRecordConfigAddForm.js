@@ -41,11 +41,6 @@ export default function ServiceRecordConfigAddForm() {
     dispatch(getActiveCategories());
   }, [dispatch]);
 
-const CheckParamSchema = Yup.object().shape({
-  paramListTitle: Yup.string().max(200).label('Item List Title').required(),
-  paramList : Yup.array(),
-})
-
   const defaultValues = useMemo(
     () => ({
       recordType: null,
