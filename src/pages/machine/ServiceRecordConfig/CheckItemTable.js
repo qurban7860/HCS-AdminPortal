@@ -21,7 +21,7 @@ const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue 
     const [checkItemList, setCheckItemList] = useState([]);
     const [checkItemListTitleError, setItemListTitleError] = useState('');
     const [checkItemListError, setItemListError] = useState('');
-
+console.log("checkItemList : ", checkItemList)
     // useEffect(() => {
     //   setCheckParamNumber()
     // },[checkParams])
@@ -30,9 +30,10 @@ const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue 
         dispatch(getActiveMachineServiceParams());
       }, [dispatch]);
 
-      const handleInputChange = (event) => {
-        const { value } = event.target;
-        setCheckItemList(value);
+      const handleInputChange = (value) => {
+        if (value) {
+          setCheckItemList((checkItems) => [...checkItems, value[0]]);
+        }
       };
 
 
@@ -157,7 +158,7 @@ useEffect(()=>{
                         multiple
                         name="paramList"
                         label="Select Items"
-                        value={checkItemList || []}
+                        value={[]}
                         options={activeMachineServiceParams}
                         isOptionEqualToValue={(option, value) => option._id === value._id}
                         getOptionLabel={(option) => `${option.name ? option.name : ''} ${option?.category?.name ? '-' : ''} ${option?.category?.name ? option?.category?.name : ''} ${option?.inputType ? '-' : '' } ${option?.inputType ? option?.inputType : '' }`}
@@ -166,9 +167,12 @@ useEffect(()=>{
                         )}
                         // filterSelectedOptions
                         onChange={(event, newValue) => {
-                          const updatedEvent = { target: { name: "paramList", value: newValue }};
-                          handleInputChange(updatedEvent, checkParamNumber);
-                          event.preventDefault();
+                          if(newValue){
+                            handleInputChange(newValue)
+                          }
+                          // const updatedEvent = { target: { name: "paramList", value: newValue }};
+                          // handleInputChange(updatedEvent, checkParamNumber);
+                          // event.preventDefault();
                         }}
                         renderTags={(value, getTagProps) => ''}
                         Error={!!checkItemListError} helperText={checkItemListError}
@@ -186,7 +190,7 @@ useEffect(()=>{
                           <TableBody>
                             {checkItemList?.length > 0 && (checkItemList?.map((row, index) => (
                               <TableRow
-                                key={row._id}
+                                key={uuidv4()}
                                 draggable
                                 onDragStart={(e) => handleDragStart(e, index)}
                                 onDragOver={(e) => e.preventDefault()}
