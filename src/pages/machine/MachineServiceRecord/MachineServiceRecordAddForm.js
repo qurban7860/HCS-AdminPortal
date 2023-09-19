@@ -148,7 +148,6 @@ function MachineServiceRecordAddForm() {
     [setValue, checkParam]
   );
 
-  console.log("serviceDate : ",serviceDate)
 
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

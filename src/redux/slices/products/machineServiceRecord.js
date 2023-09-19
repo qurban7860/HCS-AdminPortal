@@ -266,21 +266,21 @@ export function updateMachineServiceRecord(machineId,id, params) {
     dispatch(slice.actions.startLoading());
     try {
       /* eslint-disable */
-      let data = {
-        name:             params?.name,
-        printName:        params?.printName,
-        helpHint:         params?.helpHint,
-        linkToUserManual: params?.linkToUserManual,
-        inputType:        params?.inputType,
-        unitType:         params?.unitType,    
-        minValidation:    params?.minValidation,
-        maxValidation:    params?.maxValidation,
-        description:      params?.description,
-        isRequired:       params?.isRequired, 
-        isActive:         params?.isActive,
-      };
+      const formData = new FormData();
+        formData.append('serviceRecordConfig', params?.serviceRecordConfig?._id)
+        formData.append('serviceDate',params?.serviceDate)
+        formData.append('decoilers',params?.decoiler.map((dec)=> dec._id))
+        formData.append('technician',params?.technician?._id)
+        formData.append('serviceNote',params?.serviceNote)
+        formData.append('maintenanceRecommendation',params?.maintenanceRecommendation)
+        formData.append('suggestedSpares',params?.suggestedSpares)
+        formData.append('operator',params?.operator?._id)
+        formData.append('operatorRemarks',params?.operatorRemarks)
+        // params?.files?.forEach((file, index) => {formData.append(`files`, file);})
+        formData.append('isActive',params?.isActive)
+        console.log("formData : ",formData)
      /* eslint-enable */
-      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`,data);
+      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`,formData);
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
