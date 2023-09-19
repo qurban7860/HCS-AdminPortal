@@ -20,8 +20,7 @@ import { fDate } from '../../../utils/formatTime';
 
 function MachineServiceParamViewForm() {
   const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
-
-  // const navigate = useNavigate();
+  const { machine } = useSelector((state) => state.machine)
 
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -50,7 +49,7 @@ function MachineServiceParamViewForm() {
       customer:                             machineServiceRecord?.customer || null, 
       site:                                 machineServiceRecord?.site || null,
       machine:                              machineServiceRecord?.machine || null,
-      decoiler:                             machineServiceRecord?.decoiler || null,
+      decoilers:                             machineServiceRecord?.decoilers || [],
       technician:                           machineServiceRecord?.technician || null,
       // checkParams:         
       serviceNote:                          machineServiceRecord?.serviceNote || '',
@@ -84,13 +83,20 @@ function MachineServiceParamViewForm() {
           <ViewFormField sm={12} heading="Service Record Configuration" param={`${defaultValues.serviceRecordConfig} ${defaultValues.serviceRecordConfigRecordType ? '-' : ''} ${defaultValues.serviceRecordConfigRecordType ? defaultValues.serviceRecordConfigRecordType : ''}`} />
           <ViewFormField sm={6} heading="Service Date" param={fDate(defaultValues.serviceDate)} />
           <ViewFormField sm={6} heading="Technician"  param={defaultValues?.technician?.name} />
+          <ViewFormField sm={6} heading="Machine"  param={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} />
+          <ViewFormField sm={6} heading="Machine Model"  param={machine?.machineModel?.name || ''} />
+          <ViewFormField sm={6} heading="Model Category"  param={machine?.machineModel?.category?.name || ''} />
+          <ViewFormField sm={6} heading="Customer"  param={`${machine?.customer?.name ? machine?.customer?.name : ''}`} />
           <ViewFormField sm={12} heading="Decoilers" 
-              chipLabel='serialNo'
-              arrayParam={defaultValues?.decoiler}
+              // chipLabel='serialNo'
+              // arrayParam={defaultValues?.decoilers}
+              arrayParam={defaultValues?.decoilers?.map((decoilerMachine) => ({
+  name: `${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`,
+}))}
           />
-          <ViewFormField sm={12} heading="Note" param={defaultValues.serviceNote} />
-          <ViewFormField sm={12} heading="Maintenance Recommendation" param={defaultValues.maintenanceRecommendation} />
-          <ViewFormField sm={12} heading="Suggested Spares" param={defaultValues.suggestedSpares} />
+          {machineServiceRecord?.serviceRecordConfig?.enableNote && <ViewFormField sm={12} heading="Note" param={defaultValues.serviceNote} />}
+          {machineServiceRecord?.serviceRecordConfig?.enableMaintenanceRecommendations && <ViewFormField sm={12} heading="Maintenance Recommendation" param={defaultValues.maintenanceRecommendation} />}
+          {machineServiceRecord?.serviceRecordConfig?.enableSuggestedSpares && <ViewFormField sm={12} heading="Suggested Spares" param={defaultValues.suggestedSpares} />}
           <ViewFormField sm={12} heading="Operator" param={`${defaultValues.operator?.firstName} ${defaultValues.operator?.lastName ? defaultValues.operator?.lastName : ''}`} />
           <ViewFormField sm={12} heading="Operator Remarks" param={defaultValues.operatorRemarks} />
 

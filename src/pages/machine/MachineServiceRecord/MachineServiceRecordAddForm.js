@@ -33,8 +33,6 @@ function MachineServiceRecordAddForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { machine } = useSelector((state) => state.machine)
-  console.log("machine: " , machine)
-  // const { activeSites } = useSelector((state) => state.site);
   const { activeContacts } = useSelector((state) => state.contact);
   const { activeServiceRecordConfigs } = useSelector((state) => state.serviceRecordConfig);
   const { machineConnections } = useSelector((state) => state.machineConnections);
@@ -225,9 +223,9 @@ function MachineServiceRecordAddForm() {
                     gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                   >
                     <RHFTextField name="machine" label="Machine" value={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} disabled/>
-                    <RHFTextField name="machine" label="Machine Model" value={machine?.machineModel?.name} disabled/>
-                    <RHFTextField name="machine" label="Machine Model Category" value={machine?.machineModel?.category?.name} disabled/>
-                    <RHFTextField name="customer" label="Customer" value={`${machine?.customer?.name}`} disabled/>
+                    <RHFTextField name="machine" label="Machine Model" value={machine?.machineModel?.name || ''} disabled/>
+                    <RHFTextField name="machine" label="Machine Model Category" value={machine?.machineModel?.category?.name || ''} disabled/>
+                    <RHFTextField name="customer" label="Customer" value={`${machine?.customer?.name ? machine?.customer?.name : ''}`} disabled/>
                   </Box>
 
                     <Controller
