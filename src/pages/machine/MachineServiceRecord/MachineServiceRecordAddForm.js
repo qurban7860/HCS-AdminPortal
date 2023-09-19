@@ -11,10 +11,10 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import FormHeading from '../../components/DocumentForms/FormHeading';
 import { FORMLABELS } from '../../../constants/default-constants';
 // slice
-import { getActiveSecurityUsers } from '../../../redux/slices/securityUser/securityUser';
 import { addMachineServiceRecord, setMachineServiceRecordAddFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
 import { getMachineConnections } from '../../../redux/slices/products/machineConnections';
 import { getActiveServiceRecordConfigs } from '../../../redux/slices/products/serviceRecordConfig';
+import { getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
 import { getActiveContacts } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -33,28 +33,28 @@ function MachineServiceRecordAddForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { machine } = useSelector((state) => state.machine)
+  const { securityUser } = useSelector((state) => state.user);
   const { activeContacts } = useSelector((state) => state.contact);
   const { activeServiceRecordConfigs } = useSelector((state) => state.serviceRecordConfig);
   const { machineConnections } = useSelector((state) => state.machineConnections);
-  const { activeSecurityUsers } = useSelector((state) => state.user);
-  const _id = localStorage.getItem('userId');
-  const name = localStorage.getItem('name');
-  const loginUser = { _id, name }
   const [checkParam, setCheckParam] = useState([]);
-
+  const _id = localStorage.getItem('userId');
   useEffect( ()=>{
     dispatch(getMachineConnections(machine?.customer?._id))
     dispatch(getActiveServiceRecordConfigs())
     dispatch(getActiveContacts(machine?.customer?._id))
-    dispatch(getActiveSecurityUsers())
   },[dispatch, machine])
+
+  useEffect(()=>{
+    dispatch(getSecurityUser(_id))
+  },[_id, dispatch])
 
   const defaultValues = useMemo(
     () => {
       const initialValues = {
       serviceRecordConfig: null,
       serviceDate: new Date(),
-      technician:  loginUser || null,
+      technician:   securityUser?.contact || null,
       decoiler: [],
       serviceNote: '',
       maintenanceRecommendation: '',
@@ -148,7 +148,6 @@ function MachineServiceRecordAddForm() {
     [setValue, checkParam]
   );
 
-  console.log("serviceDate : ",serviceDate)
 
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -208,12 +207,12 @@ function MachineServiceRecordAddForm() {
                   <RHFAutocomplete
                     name="technician"
                     label="Technician"
-                    options={activeSecurityUsers}
-                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    options={activeContacts}
+                    getOptionLabel={(option) => `${option.firstName ? option.firstName :   ''} ${option.lastName ? option.lastName :   ''}`}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     renderOption={(props, option) => (
-                    <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                  )}
+                    <li {...props} key={option._id}>{`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName :   ''}`}</li>
+                    )}
                   />
                   </Box>
                   <Box

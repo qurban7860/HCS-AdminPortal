@@ -49,7 +49,7 @@ function MachineServiceParamViewForm() {
       customer:                             machineServiceRecord?.customer || null, 
       site:                                 machineServiceRecord?.site || null,
       machine:                              machineServiceRecord?.machine || null,
-      decoilers:                             machineServiceRecord?.decoilers || [],
+      decoilers:                            machineServiceRecord?.decoilers ,
       technician:                           machineServiceRecord?.technician || null,
       // checkParams:         
       serviceNote:                          machineServiceRecord?.serviceNote || '',
@@ -69,7 +69,8 @@ function MachineServiceParamViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [ machineServiceRecord]
   );
-  console.log("defaultValues?.decoiler, ", defaultValues?.decoiler)
+  // const deco = defaultValues?.decoilers?.map((decoilerMachine) => ({ name: `${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`}))
+  // console.log("defaultValues decoiler, ", deco, defaultValues?.decoilers)
   return (
     <Card sx={{ p: 2 }}>
       <Grid>
@@ -90,9 +91,7 @@ function MachineServiceParamViewForm() {
           <ViewFormField sm={12} heading="Decoilers" 
               // chipLabel='serialNo'
               // arrayParam={defaultValues?.decoilers}
-              arrayParam={defaultValues?.decoilers?.map((decoilerMachine) => ({
-  name: `${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`,
-}))}
+              arrayParam={defaultValues?.decoilers?.map((decoilerMachine) => ({ name: `${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`}))}
           />
           {machineServiceRecord?.serviceRecordConfig?.enableNote && <ViewFormField sm={12} heading="Note" param={defaultValues.serviceNote} />}
           {machineServiceRecord?.serviceRecordConfig?.enableMaintenanceRecommendations && <ViewFormField sm={12} heading="Maintenance Recommendation" param={defaultValues.maintenanceRecommendation} />}
