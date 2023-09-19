@@ -17,6 +17,7 @@ import {
   getProfiles,
 } from '../../../redux/slices/products/profile';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import { getMachine } from '../../../redux/slices/products/machine';
 // constants
 // import { Snacks } from '../../../constants/machine-constants';
 
@@ -29,10 +30,11 @@ export default function ProfileViewForm() {
   const dispatch = useDispatch();
   const onDelete = async () => {
     try {
-      dispatch(deleteProfile(machine._id, profile._id));
+      await dispatch(deleteProfile(machine._id, profile._id));
       enqueueSnackbar("Profile deleted successfully");
       dispatch(getProfiles(machine._id))
       dispatch(setProfileViewFormVisibility(false));
+      dispatch(getMachine(machine._id))
     } catch (err) {
       enqueueSnackbar("Failed to delete profile", { variant: `error` });
       console.log('Error:', err);

@@ -17,6 +17,7 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 
 // assets
 import FormProvider, { RHFSwitch, RHFTextField } from '../../../components/hook-form';
+import { getMachine } from '../../../redux/slices/products/machine';
 // constants
 // import { Snacks } from '../../../constants/machine-constants';
 
@@ -87,6 +88,7 @@ export default function ProfileAddForm() {
           reset();
           enqueueSnackbar('Profile added successfully');
           dispatch(setProfileFormVisibility(false));
+          dispatch(getMachine(machine._id))
     } catch (err) {
       enqueueSnackbar(err, { variant: 'error' });
     }
