@@ -10,7 +10,6 @@ import { v4 as uuidv4 } from 'uuid';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // slice
 import { updateMachineServiceRecord, setMachineServiceRecordViewFormVisibility, getMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
-import { getActiveSecurityUsers } from '../../../redux/slices/securityUser/securityUser';
 import { getMachineConnections } from '../../../redux/slices/products/machineConnections';
 import { getActiveServiceRecordConfigs } from '../../../redux/slices/products/serviceRecordConfig';
 import { getActiveContacts } from '../../../redux/slices/customer/contact';
@@ -37,7 +36,6 @@ function MachineServiceRecordEditForm() {
   const { activeContacts } = useSelector((state) => state.contact);
   const { activeServiceRecordConfigs } = useSelector((state) => state.serviceRecordConfig);
   const { machineConnections } = useSelector((state) => state.machineConnections);
-  const { activeSecurityUsers } = useSelector((state) => state.user);
   const { machine } = useSelector((state) => state.machine);
   const [checkParam, setCheckParam] = useState([]);
 
@@ -48,7 +46,6 @@ function MachineServiceRecordEditForm() {
     dispatch(getMachineConnections(machine?.customer?._id))
     dispatch(getActiveServiceRecordConfigs())
     dispatch(getActiveContacts(machine?.customer?._id))
-    dispatch(getActiveSecurityUsers())
   },[dispatch, machine])
 
   const defaultValues = useMemo(
@@ -216,11 +213,11 @@ function MachineServiceRecordEditForm() {
               <RHFAutocomplete
                 name="technician"
                 label="Technician"
-                options={activeSecurityUsers}
-                getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => (
-                <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                options={activeContacts}
+                getOptionLabel={(option) => `${option.firstName ? option.firstName :   ''} ${option.lastName ? option.lastName :   ''}`}
+                  isOptionEqualToValue={(option, value) => option._id === value._id}
+                  renderOption={(props, option) => (
+                  <li {...props} key={option._id}>{`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName :   ''}`}</li>
               )}
               />
               </Box>
