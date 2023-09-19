@@ -78,7 +78,7 @@ export default function MachineServiceParamListTableRow({
   return (
       <StyledTableRow hover selected={selected}>
         <LinkTableCell align="left" onClick={onViewRow} param={name} />
-        <TableCell align="left">{printName}</TableCell>
+        {/* <TableCell align="left">{printName}</TableCell> */}
         {/* <TableCell align="left">{helpHint}</TableCell> */}
         {/* <TableCell align="left">{linkToUserManual}</TableCell> */}
         {smScreen && <TableCell align="left">{inputType}</TableCell>}

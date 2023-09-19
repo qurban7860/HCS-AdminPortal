@@ -25,7 +25,8 @@ import FormProvider, {
   RHFSwitch,
   RHFUpload,
 } from '../../../components/hook-form';
-import CollapsibleCheckedItemRow from '../ServiceRecordConfig/CollapsibleCheckedItemRow'
+import CollapsibleCheckedItemInputRow from './CollapsibleCheckedItemInputRow'
+
 // ----------------------------------------------------------------------
 
 function MachineServiceRecordAddForm() {
@@ -175,7 +176,7 @@ function MachineServiceRecordAddForm() {
                             <TableBody>
                   {serviceRecordConfig?.checkParams.map((row, index) =>
                   ( typeof row?.paramList?.length === 'number' &&
-                                <CollapsibleCheckedItemRow key={uuidv4()} value={row} index={index} />
+                                <CollapsibleCheckedItemInputRow key={uuidv4()} value={row} index={index} />
                   ))}
                             </TableBody>
                         </Table>

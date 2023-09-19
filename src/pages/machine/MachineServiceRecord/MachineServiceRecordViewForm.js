@@ -2,7 +2,8 @@ import { useMemo, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // import { useNavigate } from 'react-router-dom';
 // @mui
-import {  Card, Grid, Tooltip } from '@mui/material';
+import {  Card, Grid, Tooltip, TableContainer, Table, TableBody, Typography } from '@mui/material';
+import { v4 as uuidv4 } from 'uuid';
 // redux
 import { deleteMachineServiceRecord, setAllFlagsFalse, setMachineServiceRecordEditFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
 // paths
@@ -15,6 +16,7 @@ import ViewFormField from '../../components/ViewForms/ViewFormField';
 // import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import { fDate } from '../../../utils/formatTime';
+import ReadableCollapsibleCheckedItemRow from './ReadableCollapsibleCheckedItemRow'
 
 // ----------------------------------------------------------------------
 
@@ -82,6 +84,21 @@ function MachineServiceParamViewForm() {
         </Grid>
         <Grid container>
           <ViewFormField sm={12} heading="Service Record Configuration" param={`${defaultValues.serviceRecordConfig} ${defaultValues.serviceRecordConfigRecordType ? '-' : ''} ${defaultValues.serviceRecordConfigRecordType ? defaultValues.serviceRecordConfigRecordType : ''}`} />
+          <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
+            Check Items
+          </Typography>
+          {machineServiceRecord?.serviceRecordConfig?.checkParams?.length > 0 ? (machineServiceRecord?.serviceRecordConfig?.checkParams.map((row, index) =>
+          ( typeof row?.paramList?.length === 'number' &&
+            <TableContainer >
+                <Table>
+                    <TableBody>
+                        <ReadableCollapsibleCheckedItemRow key={uuidv4()} value={row} index={index} />
+                    </TableBody>
+                </Table>
+            </TableContainer>
+          ))
+        ) : <ViewFormField />
+        }
           <ViewFormField sm={6} heading="Service Date" param={fDate(defaultValues.serviceDate)} />
           <ViewFormField sm={6} heading="Technician"  param={defaultValues?.technician?.name} />
           <ViewFormField sm={6} heading="Machine"  param={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} />
