@@ -45,7 +45,6 @@ import { FORMLABELS } from '../../../constants/default-constants';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'printName', label: 'Print Name', align: 'left' },
   // { id: 'xs2', label: 'Help Hint', align: 'center' },
   // { id: 'xs3', label: 'Link To User Manual', align: 'center' },
   { id: 'xs5', label: 'Input Type', align: 'left' },
