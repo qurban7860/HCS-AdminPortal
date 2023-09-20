@@ -1,10 +1,10 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Autocomplete, Box, Card, Grid, TextField, Typography } from '@mui/material';
+import { Box, Card, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 // import { DatePicker } from '@mui/x-date-pickers';
 import { MuiChipsInput } from 'mui-chips-input';
 // slice
@@ -17,6 +17,7 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 
 // assets
 import FormProvider, { RHFSwitch, RHFTextField } from '../../../components/hook-form';
+import { getMachine } from '../../../redux/slices/products/machine';
 // constants
 // import { Snacks } from '../../../constants/machine-constants';
 
@@ -26,8 +27,10 @@ import FormProvider, { RHFSwitch, RHFTextField } from '../../../components/hook-
 export default function ProfileAddForm() {
 
   const { machine } = useSelector((state) => state.machine);
+  const { profiles } = useSelector((state) => state.profile);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  const [profileTypes, setProfileTypes] = useState([]);
 
   const toggleCancel = () => {
     dispatch(setProfileFormVisibility(false));
@@ -37,9 +40,9 @@ export default function ProfileAddForm() {
     () => ({
       defaultName: '',
       names:[],
-      height:'',
-      width:'',
-      type:'',
+      web:'',
+      flange:'',
+      type:'CUSTOMER',
       isActive: true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -63,19 +66,29 @@ export default function ProfileAddForm() {
     const array = [...new Set(newChips)]
     setChips(array)
   }
+  
+  useEffect(() => {
+    const hasManufacturer = profiles.some((profile) => profile.type === 'MANUFACTURER');
+    const updatedProfileTypes = hasManufacturer?ProfileTypes.filter((type) => type !== 'MANUFACTURER'): ProfileTypes;
+    setProfileTypes(updatedProfileTypes);
+  }, [profiles]);
 
   // Handle Type
-  const handleTypeChange = (event, newValue) => {
-    setValue('type', newValue);
+  const [selectedValue, setSelectedValue] = useState('CUSTOMER');
+  const handleChange = (event) => {
+    setSelectedValue(event.target.value);
+    setValue('type',event.target.value);
   };
 
   const onSubmit = async (data) => {
     data.names = chips;
+    console.log(data)
     try {
           await dispatch(addProfile(machine._id, data));
           reset();
           enqueueSnackbar('Profile added successfully');
           dispatch(setProfileFormVisibility(false));
+          dispatch(getMachine(machine._id))
     } catch (err) {
       enqueueSnackbar(err, { variant: 'error' });
     }
@@ -93,16 +106,30 @@ export default function ProfileAddForm() {
               <MuiChipsInput name="names" label="Other Names"  value={chips} onChange={handleChipChange} />
             </Box>  
             <Box sx={{marginTop:2}} rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)',}}>
-              <Autocomplete disablePortal id="combo-box-demo" name="type"
-                options={ProfileTypes} onChange={handleTypeChange}
-                renderInput={(params) => <TextField {...params} label="Type" />}
-              />
-              <RHFTextField name="height" label="Web"/>
-              <RHFTextField name="width" label="Flang"/>
+              <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Type</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                name="type"
+                value={selectedValue}
+                label="Type"
+                onChange={handleChange}
+              >
+                {profileTypes.map((option, index) => (
+                  <MenuItem key={index} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+                </Select>
+              </FormControl>
+
+              <RHFTextField name="web" label="Web"/>
+              <RHFTextField name="flange" label="Flange"/>
               
               <RHFSwitch name="isActive" labelPlacement="start"
                 label={
-                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
+                  <Typography variant="subtitle2" sx={{ mx: 0, flange: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
                     Active
                   </Typography>
                 }

@@ -37,8 +37,8 @@ import { BUTTONS, BREADCRUMBS, TITLES } from '../../constants/default-constants'
 
 export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   const { order, orderBy } = useTable({ defaultOrderBy: '-createdAt' });
-  const [ setChecked] = useState(false);
-  const [ setOpenSite] = useState(false);
+  // const [ setChecked] = useState(false);
+  // const [ setOpenSite] = useState(false);
   const { site } = useSelector((state) => state.site);
   const { enqueueSnackbar } = useSnackbar();
   const [activeIndex] = useState(null);
@@ -57,7 +57,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   const isFiltered = filterName !== '' || !!filterStatus.length;
 
   const toggleChecked = async () => {
-    setChecked((value) => !value);
+    // setChecked((value) => !value);
     if (siteEditFormVisibility) {
       dispatch(setSiteFormVisibility(false));
       enqueueSnackbar(Snacks.SITE_CLOSE_CONFIRM, {
@@ -98,7 +98,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
 
   const toggleCancel = () => {
     dispatch(setSiteFormVisibility(false));
-    setChecked(false);
+    // setChecked(false);
   };
 
   const handleGoogleMapsVisibility = () => {
@@ -224,7 +224,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                                 disabled={siteEditFormVisibility || siteAddFormVisibility}
                                 onClick={async () => {
                                   await dispatch(getSite(customer._id, Site._id));
-                                  setOpenSite(true);
+                                  // setOpenSite(true);
                                   if (!isExpanded && !siteAddFormVisibility) {
                                     handleActiveCard(!isExpanded ? index : null);
                                     handleExpand(index);

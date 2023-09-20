@@ -111,6 +111,16 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     customer: Yup.object().shape({
       name: Yup.string()
     }).nullable().required("Customer Is Required!"),
+  // ConnectedMachines: Yup.object().shape({
+  //   machineConnectionVal: Yup.string()
+  //     .test(
+  //       'max-length',
+  //       'Machine name cannot exceed 40 characters',
+  //       (value) => !value || value.length <= 40
+  //     )
+  //     .nullable()
+  //     .required("Connected Machine Is Required!"),
+  // }),    
     status: Yup.object().shape({
       name: Yup.string()
     }).nullable(),

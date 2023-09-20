@@ -138,7 +138,6 @@ export default function MachineList() {
     setOpenConfirm(true);
   };
 
-
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
     dispatch(setFilterBy(value))

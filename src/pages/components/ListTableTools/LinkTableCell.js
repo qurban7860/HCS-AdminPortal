@@ -1,26 +1,27 @@
 import PropTypes from 'prop-types';
-import { TableCell, Link } from '@mui/material';
+import { TableCell } from '@mui/material';
 import { alpha } from '@mui/material/styles';
+// import useResponsive from '../../../hooks/useResponsive';
 
 export default function LinkTableCell({ align, onClick, param }) {
   return (
-    <TableCell align={align}>
-      <Link
-        onClick={onClick}
-        color="inherit"
-        sx={{
-          cursor: 'pointer',
-          textDecoration: 'underline',
-          textDecorationStyle: 'dotted',
-          fontWeight: 'bold',
-          // bgcolor: (theme) => alpha(theme.palette.info.dark, 0.92),
-          '&:hover': {
-            color: (theme) => alpha(theme.palette.info.main, 0.98),
-          },
-        }}
-      >
+        <TableCell className='ellipsis-cell' onClick={onClick} align={align}
+          color="inherit"
+          sx={{
+            cursor: 'pointer',
+            textDecoration: 'underline',
+            textDecorationStyle: 'dotted',
+            fontWeight: 'bold',
+            whiteSpace: 'nowrap',      // Prevent text from wrapping
+            overflow: 'hidden',       // Hide any overflow
+            textOverflow: 'ellipsis', // Add ellipsis for overflowed text
+            maxWidth: '400px',   
+            '&:hover': {
+              color: (theme) => alpha(theme.palette.info.main, 0.98),
+            },
+          }}
+        >
         {param}
-      </Link>
     </TableCell>
   );
 }

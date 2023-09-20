@@ -121,8 +121,8 @@ export default function DocumentCategoryeEditForm() {
                         <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
                     />
-                  <RHFTextField name="printName" label="Print Name" />
                   </Box>
+                  <RHFTextField name="printName" label="Print Name" minRows={3} multiline />
                   <RHFTextField name="helpHint" label="Help Hint" />
                   <RHFTextField name="linkToUserManual" label="Link To User Manual" />
                   <Box

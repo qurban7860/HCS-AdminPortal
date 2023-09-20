@@ -248,8 +248,8 @@ export function addServiceRecordConfig(params) {
         if(params.isOperatorSignatureRequired){
           data.isOperatorSignatureRequired = params.isOperatorSignatureRequired;
         }
-        if(params.enableServiceNote){
-          data.enableServiceNote = params.enableServiceNote;
+        if(params.enableNote){
+          data.enableNote = params.enableNote;
         }
         if(params.enableMaintenanceRecommendations){
           data.enableMaintenanceRecommendations = params.enableMaintenanceRecommendations;
@@ -313,15 +313,14 @@ export function updateServiceRecordConfig(params,Id) {
       let data = {
         recordType: params?.recordType?.name,
         docTitle: params?.docTitle,
-        category: params?.category?._id,
-        machineModel: params?.machineModel?._id,
+        category: params?.category?._id || null,
+        machineModel: params?.machineModel?._id || null,
         textBeforeCheckItems: params?.textBeforeCheckItems,
         textAfterCheckItems: params?.textAfterCheckItems,
         isOperatorSignatureRequired: params?.isOperatorSignatureRequired,
-        enableServiceNote: params?.enableServiceNote,
+        enableNote: params?.enableNote,
         enableMaintenanceRecommendations: params?.enableMaintenanceRecommendations,
         enableSuggestedSpares: params?.enableSuggestedSpares,
-
         header: {},
         footer: {},
         checkParams: [],

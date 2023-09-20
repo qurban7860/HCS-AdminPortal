@@ -130,7 +130,8 @@ function ViewFormField({
               (data, index) =>
                 data?.[chipLabel] &&
                 typeof data?.[chipLabel] === 'string' &&
-                data?.[chipLabel].trim().length > 0 && <Chip key={index} label={data?.[chipLabel]} sx={{m:0.2}} />
+                data?.[chipLabel].trim().length > 0 && <Chip key={index} label={data?.[chipLabel    ? `${data?.[chipLabel]?.substring(0, 20)}...`
+                : data?.[chipLabel]]} sx={{m:0.2}} />
             ) : 
             arrayParam.map(
               (data, index) =>

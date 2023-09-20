@@ -38,10 +38,9 @@ export default function LicenseListTableRow({
     licenseDetail: {
       version,
       type,
-      exTime,
+      extensionTime,
     },
   } = row;
-  // const exTime =  row.licenseDetail.extensionTime;
   const smScreen = useScreenSize('sm')
 
   return (
@@ -50,7 +49,7 @@ export default function LicenseListTableRow({
         <LinkTableCell align="left" param={licenseKey} onClick={onViewRow} />
         { smScreen && <TableCell align="left">{version}</TableCell>}
         { smScreen && <TableCell align="left">{type}</TableCell>}
-        <TableCell align="right">{fDate(exTime)}</TableCell>
+        <TableCell align="right">{fDate(extensionTime)}</TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>
   
       </StyledTableRow>

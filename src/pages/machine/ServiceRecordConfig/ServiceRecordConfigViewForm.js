@@ -2,11 +2,11 @@ import PropTypes from 'prop-types';
 import { useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
 // @mui
-import { Card, Grid, Typography } from '@mui/material';
-// import { RHFSwitch } from '../../../components/hook-form';
-// redux
+import { Card, Grid, Typography, TableBody, Table, TableContainer } from '@mui/material';
+
 import {
   getServiceRecordConfig,
   setServiceRecordConfigEditFormVisibility,
@@ -22,7 +22,7 @@ import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-// import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
+import CollapsibleCheckedItemRow from './CollapsibleCheckedItemRow';
 
 // ----------------------------------------------------------------------
 
@@ -41,7 +41,6 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
 
   const navigate = useNavigate();
   const { serviceRecordConfig, editFormVisibility } = useSelector((state) => state.serviceRecordConfig);
-  // console.log("serviceRecordConfig : ", serviceRecordConfig)
   const { id } = useParams();
 
   const dispatch = useDispatch();
@@ -60,7 +59,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
       checkParams: serviceRecordConfig?.checkParams || [],
       textAfterCheckItems: serviceRecordConfig?.textAfterCheckItems || '',
       isOperatorSignatureRequired: serviceRecordConfig?.isOperatorSignatureRequired,
-      enableServiceNote: serviceRecordConfig?.enableServiceNote,
+      enableNote: serviceRecordConfig?.enableNote,
       enableMaintenanceRecommendations: serviceRecordConfig?.enableMaintenanceRecommendations,
       enableSuggestedSpares: serviceRecordConfig?.enableSuggestedSpares,
       header: serviceRecordConfig?.header || {},
@@ -110,22 +109,27 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
         <ViewFormField sm={12} heading="Text Befor Check Items" param={defaultValues?.textBeforeCheckItems} />
       </Grid>
         <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
-          Check Params
+          Check Items
         </Typography>
-        {defaultValues?.checkParams.length > 0 ? (defaultValues?.checkParams.map((row, index) =>
-          (
-            <Grid container>
-              <ViewFormField sm={6} heading="Param List Title" param={row?.paramListTitle} />
-              <ViewFormField sm={6} heading="Param List" serviceParam={row?.paramList} />
-            </Grid>
+        {/* <Grid item md={12}>  */}
+        {defaultValues?.checkParams?.length > 0 ? (defaultValues?.checkParams.map((row, index) =>
+          ( typeof row?.paramList?.length === 'number' &&
+            <TableContainer >
+                <Table>
+                    <TableBody>
+                        <CollapsibleCheckedItemRow key={uuidv4()} value={row} index={index} />
+                    </TableBody>
+                </Table>
+            </TableContainer>
           ))
         ) : <ViewFormField />
         }
+        {/* </Grid> */}
       <ViewFormField sm={12} heading="Text After Check Items" param={defaultValues?.textAfterCheckItems} />
         <Grid container>
-      <ViewFormSwitch sm={6} isActiveHeading='Is Operator Signature Required' isActive={defaultValues?.isOperatorSignatureRequired} />
-      <ViewFormSwitch sm={6} isActiveHeading='Enable Service Note' isActive={defaultValues?.enableServiceNote} />
+      <ViewFormSwitch sm={6} isActiveHeading='Enable Note' isActive={defaultValues?.enableNote} />
       <ViewFormSwitch sm={6} isActiveHeading='Enable Maintenance Recommendations	' isActive={defaultValues?.enableMaintenanceRecommendations} />
+      <ViewFormSwitch sm={6} isActiveHeading='Is Operator Signature Required' isActive={defaultValues?.isOperatorSignatureRequired} />
       <ViewFormSwitch sm={6} isActiveHeading='Enable Suggested Spares' isActive={defaultValues?.enableSuggestedSpares} />
         </Grid>
       
@@ -133,7 +137,6 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
         Header
       </Typography>
       <Grid container>
-        <ViewFormField sm={12} heading="Header Type" param={defaultValues?.header?.type} />
         <ViewFormField sm={4} heading="Header Left Text" param={defaultValues?.header?.leftText} />
         <ViewFormField sm={4} heading="Header Center Text" param={defaultValues?.header?.centerText} />
         <ViewFormField sm={4} heading="Header Right Text" param={defaultValues?.header?.rightText} />
@@ -142,7 +145,6 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
         Footer
       </Typography>
       <Grid container>
-        <ViewFormField sm={12} heading="Footer Type" param={defaultValues?.footer?.type} />
         <ViewFormField sm={4} heading="Footer Left Text" param={defaultValues?.footer?.leftText} />
         <ViewFormField sm={4} heading="Footer Center Text" param={defaultValues?.footer?.centerText} />
         <ViewFormField sm={4} heading="Footer Right Text" param={defaultValues?.footer?.rightText} />

@@ -1,11 +1,11 @@
 import { useState, memo } from 'react'
 import PropTypes from 'prop-types';
-import { v4 as uuidv4 } from 'uuid';
-import { Box, Table, TableBody, TableCell, TableRow,  IconButton, Collapse } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableRow,  IconButton, Collapse, Checkbox } from '@mui/material';
 import Iconify from '../../../components/iconify';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons'
+import {  RHFTextField } from '../../../components/hook-form';
 
-const CollapsibleCheckedItemRow = ({value, index, toggleEdit, deleteIndex, handleListDragStart, handleListDrop }) => {
+const CollapsibleCheckedItemInputRow = ({value, index, toggleEdit, deleteIndex, handleListDragStart, handleListDrop }) => {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -31,28 +31,33 @@ const CollapsibleCheckedItemRow = ({value, index, toggleEdit, deleteIndex, handl
                   {toggleEdit && <ViewFormEditDeleteButtons handleEdit={()=>toggleEdit(index)} onDelete={()=>deleteIndex(index)} /> }
               </TableCell>
         </TableRow>
-        <TableRow key={uuidv4()}>
+        <TableRow key={value._id}>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-            <Collapse in={open} timeout="auto" unmountOnExit>
+            {/* <Collapse in={open} timeout="auto" unmountOnExit> */}
               <Box sx={{ margin: 1 }}>
                 <Table size="small" aria-label="purchases">
 
                   <TableBody>
                     {value?.paramList.map((childRow,childIndex) => (
-                      <TableRow key={childRow._id}>
-                        <TableCell component="th" scope="row"><b>{`${childIndex+1}). `}</b>{`${childRow.name} ${childRow?.category?.name ? '-' : ''} ${childRow?.category?.name ? childRow?.category?.name : ''} ${childRow?.inputType ? '-' : '' } ${childRow?.inputType ? childRow?.inputType : '' }`}</TableCell>
+                      <TableRow key={childRow._id} >
+                        <TableCell component="th" scope="row" >
+                        <b>{`${childIndex+1}). `}</b>
+                        {`${childRow.name}`}
+                        </TableCell>
+                        {( childRow?.inputType === 'String' || childRow?.inputType === 'Number' ) && <RHFTextField label={childRow?.inputType} name={childRow.name} size="small" sx={{m:0.3}} />}
+                        {childRow?.inputType === 'Boolean' && <Checkbox  />}
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
               </Box>   
-            </Collapse>
+            {/* </Collapse> */}
           </TableCell>
         </TableRow>
         </>
   )
 }
-CollapsibleCheckedItemRow.propTypes = {
+CollapsibleCheckedItemInputRow.propTypes = {
     index: PropTypes.number,
     value: PropTypes.object,
     toggleEdit: PropTypes.func,
@@ -61,4 +66,4 @@ CollapsibleCheckedItemRow.propTypes = {
     handleListDrop: PropTypes.func,
   };
 
-export default memo(CollapsibleCheckedItemRow)
+export default memo(CollapsibleCheckedItemInputRow)
