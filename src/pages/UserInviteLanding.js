@@ -55,8 +55,10 @@ export default function UserInviteLanding() {
       confirmPassword:'',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [verifiedInvite]
   );
+
+
 
   const methods = useForm({
     resolver: yupResolver(ChangePassWordSchema),
@@ -76,13 +78,13 @@ export default function UserInviteLanding() {
       navigate(PATH_PAGE.invalidErrorPage);
     }
   }, [id, code, expired, navigate, dispatch]);
-  
+
   const {
     reset,
     handleSubmit,
     formState: { errors, isSubmitting, isSubmitSuccessful},
   } = methods;
-
+  
   const handlePhoneChange = (newValue) => {
     matchIsValidTel(newValue);
     if (newValue.length < 20) {
@@ -129,10 +131,10 @@ export default function UserInviteLanding() {
         <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)'}}>
           {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
         
-            <RHFTextField name="customerName" label="Customer" disabled/>
-            <RHFTextField name="contactName" label="Contact" disabled/>
-            <RHFTextField name="fullName" label="Full Name*"/>
-            <MuiTelInput name="phone" value={phone} label="Phone Number" flagSize="medium"
+            <RHFTextField name="customerName" label="Customer" value={defaultValues?.customerName} disabled/>
+            <RHFTextField name="contactName" label="Contact" value={defaultValues?.contactName} disabled/>
+            <RHFTextField name="fullName" label="Full Name*" value={defaultValues?.fullName}/>
+            <MuiTelInput name="phone" value={phone} label="Phone Number" flagSize="medium" value={defaultValues?.phone}
               defaultCountry="NZ" onChange={handlePhoneChange}
               forceCallingCode
             />
