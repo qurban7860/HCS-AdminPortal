@@ -69,7 +69,7 @@ export function Cover({
   const nameTitle = `${nameNumMaxLength} ${nameNumMaxLength2 || ''}`;
 
   if(name?.length>30){
-    name = name.substring(0,30)
+    name = `${name.substring(0,30)}...`;
   }
 
   return (
