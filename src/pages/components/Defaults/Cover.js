@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router';
+import { alpha } from '@mui/system';
 // import { useSelector } from 'react-redux';
 import { StyledRoot, StyledInfo } from '../../../theme/styles/default-styles';
 // utils
@@ -13,6 +14,7 @@ import CoverSettingsIcons from './CoverSettingsIcons';
 import CoverTitles from './CoverTitles';
 import LogoAvatar from '../../../components/logo-avatar/LogoAvatar';
 import useResponsive from '../../../hooks/useResponsive';
+
 
 // ----------------------------------------------------------------------
 
@@ -66,6 +68,10 @@ export function Cover({
   const nameNumMaxLength2 = name?.split(' ')[1]?.substring(0, 10);
   const nameTitle = `${nameNumMaxLength} ${nameNumMaxLength2 || ''}`;
 
+  if(name?.length>30){
+    name = name.substring(0,30)
+  }
+
   return (
     <StyledRoot style={{ p: { xs: 0, md: 0 } }}>
       <StyledInfo
@@ -77,7 +83,13 @@ export function Cover({
             {name !== 'HOWICK LTD.' ? null : <LogoAvatar />}
           </CoverCustomAvatar>
         )}
-        <CoverTitles
+        <CoverTitles sx={{whiteSpace: 'nowrap',      // Prevent text from wrapping
+            overflow: 'hidden',       // Hide any overflow
+            textOverflow: 'ellipsis', // Add ellipsis for overflowed text
+            maxWidth: '400px',   
+            '&:hover': {
+              color: (theme) => alpha(theme.palette.info.main, 0.98),
+            },}}
           name={name}
           nameTitle={nameTitle}
           serialNo={serialNo}
