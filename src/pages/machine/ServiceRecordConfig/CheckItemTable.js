@@ -21,7 +21,6 @@ const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue 
     const [checkItemList, setCheckItemList] = useState([]);
     const [checkItemListTitleError, setItemListTitleError] = useState('');
     const [checkItemListError, setItemListError] = useState('');
-console.log("checkItemList : ", checkItemList)
     // useEffect(() => {
     //   setCheckParamNumber()
     // },[checkParams])
@@ -196,7 +195,7 @@ useEffect(()=>{
                                 onDragOver={(e) => e.preventDefault()}
                                 onDrop={(e) => handleDrop(e, index)}
                               >
-                                <TableCell size='small' align='left' ><b>{`${index+1}). `}</b>{`${row.name}`}</TableCell>
+                                <TableCell size='small' align='left' ><b>{`${index+1}). `}</b>{`${row.name}  ${row?.category?.name ? '-' : ''} ${row?.category?.name ? row?.category?.name : ''} ${row?.inputType ? '-' : '' } ${row?.inputType ? row?.inputType : '' }`}</TableCell>
                                 <TableCell size='small' align='right'>
                                 <ViewFormEditDeleteButtons onDelete={() => handleRowDelete(index)} sm/>
                                 </TableCell>
