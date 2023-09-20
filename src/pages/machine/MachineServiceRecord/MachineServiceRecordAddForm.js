@@ -40,6 +40,8 @@ function MachineServiceRecordAddForm() {
   const { activeServiceRecordConfigs } = useSelector((state) => state.serviceRecordConfig);
   const { machineConnections } = useSelector((state) => state.machineConnections);
   const [checkParam, setCheckParam] = useState([]);
+  const [checkParams, setCheckParams] = useState([]);
+
   const [serviceDateError, setServiceDateError] = useState('');
 
   const _id = localStorage.getItem('userId');
@@ -48,10 +50,6 @@ function MachineServiceRecordAddForm() {
     dispatch(getActiveServiceRecordConfigs())
     dispatch(getActiveContacts(machine?.customer?._id))
   },[dispatch, machine])
-
-  useEffect(()=>{
-    dispatch(getSecurityUser(_id))
-  },[_id, dispatch])
 
   const defaultValues = useMemo(
     () => {
@@ -91,6 +89,10 @@ function MachineServiceRecordAddForm() {
   } = methods;
 
   const {  files, decoiler, serviceRecordConfig } = watch()
+
+  useEffect(()=>{
+    setCheckParams(serviceRecordConfig?.checkParams)
+  },[serviceRecordConfig])
 
   const onSubmit = async (data) => {
     try {
@@ -172,14 +174,14 @@ function MachineServiceRecordAddForm() {
                     )}
                   />
 
-                  {serviceRecordConfig?.checkParams?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS_CONSTRCTUION} />}
+                  {checkParams?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS_CONSTRCTUION} />}
 
                     <TableContainer >
                         <Table>
                             <TableBody>
-                  {serviceRecordConfig?.checkParams.map((row, index) =>
+                  {checkParams?.map((row, index) =>
                   ( typeof row?.paramList?.length === 'number' &&
-                                <CollapsibleCheckedItemInputRow key={uuidv4()} value={row} index={index} />
+                                <CollapsibleCheckedItemInputRow key={uuidv4()} value={row} index={index} checkParams={checkParams} setCheckParams={setCheckParams} />
                   ))}
                             </TableBody>
                         </Table>

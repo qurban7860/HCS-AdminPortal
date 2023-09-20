@@ -25,6 +25,7 @@ import FormProvider, {
   RHFSwitch,
   RHFTextField,
   RHFAutocomplete,
+  RHFDatePicker,
 } from '../../../components/hook-form';
 import CollapsibleCheckedItemRow from '../ServiceRecordConfig/CollapsibleCheckedItemRow'
 
@@ -183,21 +184,7 @@ function MachineServiceRecordEditForm() {
                 gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
               >
 
-              <DatePicker
-                name="serviceDate"
-                label="Service Date"
-                value={serviceDate}
-                slotProps={{
-                  textField: {
-                    helperText: 'MM/DD/YYYY',
-                  },
-                }}
-                views={['day', 'month','year']}
-                // format="DD-MM-YYYY"
-                format="LL"
-                onChange={handleServiceDateChange}
-                renderInput={params => <TextField {...params}  />}
-              />
+              <RHFDatePicker name="serviceDate" label="Service Date" />
 
               <RHFAutocomplete
                 name="technician"
