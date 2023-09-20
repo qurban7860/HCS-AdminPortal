@@ -54,8 +54,7 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
   const onDelete = async () => {
     try {
       await dispatch(deleteSite(customer?._id, currentSite?._id));
-      // handleCloseConfirm();
-      dispatch(getSites(customer?._id));
+      await dispatch(getSites(customer?._id));
       enqueueSnackbar('Site deleted Successfully!');
       setIsExpanded(false);
     } catch (err) {
