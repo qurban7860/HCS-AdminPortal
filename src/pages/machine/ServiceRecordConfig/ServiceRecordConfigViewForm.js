@@ -106,7 +106,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
         <ViewFormField sm={6} heading="Machine Model" param={defaultValues?.machineModel} />
       </Grid>
       <Grid container>  
-        <ViewFormField sm={12} heading="Text Befor Check Items" param={defaultValues?.textBeforeCheckItems} />
+        <ViewFormField sm={12} heading="Text Before Check Items" param={defaultValues?.textBeforeCheckItems} />
       </Grid>
         <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
           Check Items

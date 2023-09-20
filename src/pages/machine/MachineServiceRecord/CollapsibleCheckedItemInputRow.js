@@ -6,16 +6,16 @@ import Iconify from '../../../components/iconify';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons'
 import {  RHFTextField, RHFCheckbox, RHFDatePicker } from '../../../components/hook-form';
 
-const CollapsibleCheckedItemInputRow = ({value, index, toggleEdit, deleteIndex, checkParams, setCheckParams, handleListDragStart, handleListDrop }) => {
+const CollapsibleCheckedItemInputRow = ({value, index, toggleEdit, deleteIndex, checkParams, setValue, handleListDragStart, handleListDrop }) => {
   console.log("checkParams : ",checkParams)
 
   const handleChangeCheckItemListValue = (childIndex, event) => {
-    console.log("parentIndex,childIndex, val : ",index,childIndex, event)
+    console.log(" val : ",index,childIndex, event)
     const updateCheckParams = [...checkParams]
     const updateCheckParamObject = updateCheckParams[index].paramList[childIndex]
           updateCheckParamObject.value = event.target.value
     updateCheckParams[index]?.paramList.splice(childIndex, 1, updateCheckParamObject);
-    setCheckParams(updateCheckParams)
+    setValue('checkParams',updateCheckParams)
 
   }
   return (
@@ -66,7 +66,7 @@ CollapsibleCheckedItemInputRow.propTypes = {
     index: PropTypes.number,
     value: PropTypes.object,
     checkParams: PropTypes.array,
-    setCheckParams: PropTypes.func,
+    setValue: PropTypes.func,
     toggleEdit: PropTypes.func,
     deleteIndex: PropTypes.func,
     handleListDragStart: PropTypes.func,
