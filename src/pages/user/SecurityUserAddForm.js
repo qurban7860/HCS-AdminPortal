@@ -61,7 +61,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
   // const [filteredMachines, setFilteredMachines] = useState(allMachines);
   const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
   const [customerVal, setCustomerVal] = useState('');
   const [customersArr, setCustomerArr] = useState([]);
   const [machinesArr, setMachineArr] = useState([]);
@@ -123,8 +122,13 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
   }, [roles]);
 
   const NewUserSchema = Yup.object().shape({
-    customer: Yup.object().shape({name: Yup.string()}).nullable().required("Customer Is Required!"),
+    customer: Yup.object().when( {
+      is: () => customerVal === "",
+      then: Yup.object().nullable().required('Customer is required!'),
+      otherwise: Yup.object().nullable(),
+    }),
     name: !isInvite && Yup.string().required('Name is required!').max(40, 'Name must not exceed 40 characters!'),
+    email: Yup.string().email('Invalid email format').required('Email is required'),
     password: !isInvite && Yup.string().required('Password is required').min(6),
     passwordConfirmation: !isInvite && Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
     roles: Yup.array().required('Roles are required'),
@@ -135,7 +139,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
   const defaultValues = useMemo(
     () => ({
       name: name || '',
-      email: email || '',
+      email: '',
       password: '',
       passwordConfirmation: '',
       isActive: true,
@@ -167,6 +171,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
     if (!isEdit) {
       reset(defaultValues);
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, currentUser]);
 
@@ -182,6 +187,8 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
     setValue('name', event || '');
     trigger('name');
   };
+
+  // console.log(customerVal);
 
   const onSubmit = async (data) => {
 
@@ -204,10 +211,10 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
     }
     if (name) {
       data.name = name;
+    }else{
+      data.name = data.email;
     }
-    if (email) {
-      data.email = email;
-    }
+
     if (roleVal) {
       const roleId = [];
       roleVal.map((role) => roleId.push(role?._id));
@@ -226,14 +233,13 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
         data.isActive = true;
         data.isInvite = true;
        }
-      
-      const response = await dispatch(addSecurityUser(data, isInvite));      
+
+      const response = await dispatch(addSecurityUser(data, isInvite));
       await dispatch(resetContacts());
       reset();
       navigate(PATH_SECURITY.users.view(response.data.user._id));
       enqueueSnackbar(message);
     } catch (error) {
-      console.log(error.MessageCode)
       if(error.MessageCode===409) error.Message="Can't send invitation user already registered";
       if (error.Message) {
         enqueueSnackbar(error.Message, { variant: `error` });
@@ -311,7 +317,8 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
                             setContactVal('');
                             handleNameChange('');
                             setPhone('');
-                            setEmail('');
+                            setValue('email','')
+                            trigger('email');
                           }
                         }}
                         renderOption={(props, option) => (
@@ -320,9 +327,9 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
                           </li>
                         )}
                         renderInput={(params) => (
-                          <TextField {...params} name="customer" id="customer" label="Customer*" 
-                          error={!!error} helperText={error?.message} 
-                          inputRef={ref} 
+                          <TextField {...params} name="customer" id="customer" label="Customer*"
+                          error={!!error} helperText={error?.message}
+                          inputRef={ref}
                           />
                         )}
                         ChipProps={{ size: 'small' }}
@@ -341,12 +348,14 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
                     setContactVal(newValue);
                     handleNameChange(`${newValue.firstName} ${newValue.lastName}`);
                     setPhone(newValue.phone);
-                    setEmail(newValue.email);
+                    setValue('email',newValue.email)
+                    trigger('email');
                   } else {
                     setContactVal('');
                     handleNameChange('');
                     setPhone('');
-                    setEmail('');
+                    setValue('email','')
+                    trigger('email');
                   }
                 }}
                 id="controllable-states-demo"
@@ -396,9 +405,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
                 type="email"
                 label="Login/Email Address"
                 sx={{ my: 3 }}
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
-                required
               />
             </Box>
             {(!isInvite &&(
@@ -467,7 +473,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
                 options={activeRegions.length > 0 ? activeRegions : [] }
                 value={selectedRegions}
                 onChange={(event, newValue) => {
-                  if (newValue) {                    
+                  if (newValue) {
                     setSelectedRegions(newValue);
                   } else {
                     setSelectedRegions('');
@@ -492,7 +498,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
               getOptionLabel={(option) => option.name}
               isOptionEqualToValue={(option, value) => option._id === value._id}
               onChange={(event, newValue) => {
-                if (newValue) {                    
+                if (newValue) {
                   setCustomerArr(newValue);
                 } else {
                   setCustomerArr('');
@@ -570,7 +576,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
                       </Typography>
                     }
                   />
-                
+
                   <RHFSwitch
                     name="multiFactorAuthentication"
                     labelPlacement="start"

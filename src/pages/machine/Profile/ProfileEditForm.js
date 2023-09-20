@@ -20,8 +20,7 @@ import {
 } from '../../../redux/slices/products/profile';
 import { ProfileSchema } from './schemas/ProfileSchema';
 import FormProvider, { RHFSwitch, RHFTextField } from '../../../components/hook-form';
-// import { Snacks } from '../../../constants/machine-constants';
-
+import { getMachine } from '../../../redux/slices/products/machine';
 // ----------------------------------------------------------------------
 
 export default function ProfileEditForm() {
@@ -68,13 +67,12 @@ export default function ProfileEditForm() {
   };
 
   const [profileTypes, setProfileTypes] = useState([]);
-  
+
   useEffect(() => {
-    dispatch(getProfiles(machine?._id))
     const hasManufacturer = profiles.some((p) => p.type === 'MANUFACTURER');
-    const updatedProfileTypes = hasManufacturer&&profile?.type!=='MANUFACTURER'?ProfileTypes.filter((type) => type !== 'MANUFACTURER'): ProfileTypes;
+    const updatedProfileTypes = hasManufacturer?ProfileTypes.filter((type) => type !== 'MANUFACTURER'): ProfileTypes;
     setProfileTypes(updatedProfileTypes);
-  }, [profiles,profile, dispatch, machine]);
+  }, [profiles]);
 
    // Handle Type
   const [selectedValue, setSelectedValue] = useState(defaultValues?.type);
@@ -86,11 +84,12 @@ export default function ProfileEditForm() {
   const onSubmit = async (data) => {
     data.names = chips;
     try {
-      dispatch(await updateProfile(machine._id, profile._id, data));
+      await dispatch(await updateProfile(machine._id, profile._id, data));
       reset();
       enqueueSnackbar("Profile updated successfully");
       dispatch(setProfileViewFormVisibility(true));
       dispatch(getProfile(machine._id, profile._id));
+      dispatch(getMachine(machine._id))
     } catch (err) {
       enqueueSnackbar("Failed to update profile", { variant: 'error' });
       console.error(err.message);
