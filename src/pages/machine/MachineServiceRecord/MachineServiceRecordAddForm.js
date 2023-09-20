@@ -24,6 +24,7 @@ import FormProvider, {
   RHFAutocomplete,
   RHFSwitch,
   RHFUpload,
+  RHFDatePicker,
 } from '../../../components/hook-form';
 import CollapsibleCheckedItemInputRow from './CollapsibleCheckedItemInputRow'
 
@@ -39,6 +40,8 @@ function MachineServiceRecordAddForm() {
   const { activeServiceRecordConfigs } = useSelector((state) => state.serviceRecordConfig);
   const { machineConnections } = useSelector((state) => state.machineConnections);
   const [checkParam, setCheckParam] = useState([]);
+  const [serviceDateError, setServiceDateError] = useState('');
+
   const _id = localStorage.getItem('userId');
   useEffect( ()=>{
     dispatch(getMachineConnections(machine?.customer?._id))
@@ -87,7 +90,7 @@ function MachineServiceRecordAddForm() {
     control,
   } = methods;
 
-  const {  serviceDate, files, decoiler, serviceRecordConfig } = watch()
+  const {  files, decoiler, serviceRecordConfig } = watch()
 
   const onSubmit = async (data) => {
     try {
@@ -189,7 +192,8 @@ function MachineServiceRecordAddForm() {
                     gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                   >
 
-                  <DatePicker
+                  <RHFDatePicker name="serviceDate" label="Service Date" />
+                  {/* <DatePicker
                     name="serviceDate"
                     label="Service Date"
                     value={serviceDate}
@@ -203,7 +207,7 @@ function MachineServiceRecordAddForm() {
                     format="LL"
                     onChange={handleServiceDateChange}
                     renderInput={params => <TextField {...params}  />}
-                  />
+                  /> */}
 
                   <RHFAutocomplete
                     name="technician"

@@ -93,6 +93,7 @@ const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue 
       console.error(err.message);
     }
   };
+  
 useEffect(()=>{
   if(paramListTitle?.length > 200){
     setItemListTitleError('Item List Title must be at most 200 characters')
