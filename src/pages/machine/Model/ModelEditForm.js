@@ -122,6 +122,7 @@ export default function ModelEditForm() {
                 }}
               >
                 <Autocomplete
+                  disabled
                   value={category || null}
                   options={activeCategories}
                   isOptionEqualToValue={(option, value) => option._id === value._id}

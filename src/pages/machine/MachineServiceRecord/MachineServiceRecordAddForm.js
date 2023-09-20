@@ -169,7 +169,7 @@ function MachineServiceRecordAddForm() {
                     )}
                   />
 
-                  {serviceRecordConfig?.checkParams?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
+                  {serviceRecordConfig?.checkParams?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS_CONSTRCTUION} />}
 
                     <TableContainer >
                         <Table>

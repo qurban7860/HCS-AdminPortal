@@ -15,7 +15,7 @@ import {
   setDocumentViewFormVisibility,
   setDocumentHistoryViewFormVisibility,
 } from '../../redux/slices/document/document';
-
+import { setAllFlagsFalse } from '../../redux/slices/products/machineServiceRecord';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // components
@@ -78,6 +78,7 @@ export default function MachineView({ editPage }) {
           handleBackLinks={() => {
             dispatch(setDocumentViewFormVisibility(false));
             dispatch(setDocumentHistoryViewFormVisibility(false));
+            dispatch(setAllFlagsFalse(false));
           }}
           serialNo={machine?.serialNo ? machine?.serialNo : 'Serial Number'}
           icon="et:gears"

@@ -21,7 +21,6 @@ const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue 
     const [checkItemList, setCheckItemList] = useState([]);
     const [checkItemListTitleError, setItemListTitleError] = useState('');
     const [checkItemListError, setItemListError] = useState('');
-console.log("checkItemList : ", checkItemList)
     // useEffect(() => {
     //   setCheckParamNumber()
     // },[checkParams])
@@ -96,13 +95,13 @@ console.log("checkItemList : ", checkItemList)
   };
 useEffect(()=>{
   if(paramListTitle?.length > 200){
-    setItemListTitleError('Item List Title is too long')
+    setItemListTitleError('Item List Title must be at most 200 characters')
   }else{
     setItemListTitleError('')
   }
 
   if(checkItemList && checkItemList?.length > 100){
-    setItemListError('Check Item limit exceeded!')
+    setItemListError('Check Items must be at most 99!')
   }else{
     setItemListError('')
   }
@@ -170,9 +169,6 @@ useEffect(()=>{
                           if(newValue){
                             handleInputChange(newValue)
                           }
-                          // const updatedEvent = { target: { name: "paramList", value: newValue }};
-                          // handleInputChange(updatedEvent, checkParamNumber);
-                          // event.preventDefault();
                         }}
                         renderTags={(value, getTagProps) => ''}
                         Error={!!checkItemListError} helperText={checkItemListError}
@@ -196,7 +192,7 @@ useEffect(()=>{
                                 onDragOver={(e) => e.preventDefault()}
                                 onDrop={(e) => handleDrop(e, index)}
                               >
-                                <TableCell size='small' align='left' ><b>{`${index+1}). `}</b>{`${row.name}`}</TableCell>
+                                <TableCell size='small' align='left' ><b>{`${index+1}). `}</b>{`${row.name}  ${row?.category?.name ? '-' : ''} ${row?.category?.name ? row?.category?.name : ''} ${row?.inputType ? '-' : '' } ${row?.inputType ? row?.inputType : '' }`}</TableCell>
                                 <TableCell size='small' align='right'>
                                 <ViewFormEditDeleteButtons onDelete={() => handleRowDelete(index)} sm/>
                                 </TableCell>

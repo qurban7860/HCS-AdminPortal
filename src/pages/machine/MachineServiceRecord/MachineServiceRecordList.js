@@ -29,6 +29,7 @@ import {
   getMachineServiceRecords,
   getMachineServiceRecord,
   setMachineServiceRecordViewFormVisibility,
+  resetMachineServiceRecord,
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy
@@ -129,9 +130,10 @@ export default function MachineServiceRecordList() {
     setFilterStatus(event.target.value);
   };
 
-  const handleViewRow = (id) => {
-    dispatch(setMachineServiceRecordViewFormVisibility(true));
-    dispatch(getMachineServiceRecord(machine._id, id));
+  const handleViewRow = async (id) => {
+    await dispatch(setMachineServiceRecordViewFormVisibility(true));
+    await dispatch(resetMachineServiceRecord())
+    await dispatch(getMachineServiceRecord(machine._id, id));
   };
 
   const handleResetFilter = () => {

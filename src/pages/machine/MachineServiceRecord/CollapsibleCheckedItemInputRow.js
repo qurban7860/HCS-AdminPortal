@@ -33,7 +33,7 @@ const CollapsibleCheckedItemInputRow = ({value, index, toggleEdit, deleteIndex, 
         </TableRow>
         <TableRow key={value._id}>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-            <Collapse in={open} timeout="auto" unmountOnExit>
+            {/* <Collapse in={open} timeout="auto" unmountOnExit> */}
               <Box sx={{ margin: 1 }}>
                 <Table size="small" aria-label="purchases">
 
@@ -51,7 +51,7 @@ const CollapsibleCheckedItemInputRow = ({value, index, toggleEdit, deleteIndex, 
                   </TableBody>
                 </Table>
               </Box>   
-            </Collapse>
+            {/* </Collapse> */}
           </TableCell>
         </TableRow>
         </>
