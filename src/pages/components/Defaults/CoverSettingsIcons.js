@@ -8,6 +8,7 @@ import { PATH_DOCUMENT, } from '../../../routes/paths';
 import { setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
 import { setLicenseViewFormVisibility } from '../../../redux/slices/products/license';
 import { setProfileViewFormVisibility } from '../../../redux/slices/products/profile';
+import { setAllFlagsFalse } from '../../../redux/slices/products/machineServiceRecord';
 
 function CoverSettingsIcons({
   setting,
@@ -20,6 +21,7 @@ function CoverSettingsIcons({
   handleSettingsNavigate,
 }) {
   const { documentViewFormVisibility, documentHistoryViewFormVisibility } = useSelector((state) => state.document);
+  const { machineServiceRecordViewFormFlag } = useSelector((state) => state.machineServiceRecord);
   const { drawingViewFormVisibility } = useSelector((state) => state.drawing );
   const { licenseViewFormVisibility } = useSelector((state) => state.license );
   const { profileViewFormVisibility } = useSelector((state) => state.profile );
@@ -76,6 +78,23 @@ function CoverSettingsIcons({
           component="button"
           variant="body2"
           onClick={handleBackLinks}
+        >
+          <Iconify icon="material-symbols:arrow-back-rounded" />
+        </Link>
+      )}
+      {handleBackLinks && machineServiceRecordViewFormFlag && (
+        <Link
+          title="Go Back"
+          sx={{
+            ml: 'auto',
+            mr: 1,
+            mt: 'auto',
+            mb: 1,
+            color: 'common.white',
+          }}
+          component="button"
+          variant="body2"
+          onClick={()=>dispatch(setAllFlagsFalse())}
         >
           <Iconify icon="material-symbols:arrow-back-rounded" />
         </Link>

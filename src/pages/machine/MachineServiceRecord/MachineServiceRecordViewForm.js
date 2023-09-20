@@ -1,4 +1,4 @@
-import { useMemo, memo } from 'react';
+import { useMemo, memo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // import { useNavigate } from 'react-router-dom';
 // @mui
@@ -77,7 +77,7 @@ function MachineServiceParamViewForm() {
     <Card sx={{ p: 2 }}>
       <Grid>
         <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
-        <Grid sm={12} display="flex">
+        <Grid item sm={12} display="flex">
           <Tooltip>
             <ViewFormField isActive={defaultValues.isActive} isRequired={defaultValues.isRequired}/>
           </Tooltip>
@@ -85,7 +85,7 @@ function MachineServiceParamViewForm() {
         <Grid container>
           <ViewFormField sm={12} heading="Service Record Configuration" param={`${defaultValues.serviceRecordConfig} ${defaultValues.serviceRecordConfigRecordType ? '-' : ''} ${defaultValues.serviceRecordConfigRecordType ? defaultValues.serviceRecordConfigRecordType : ''}`} />
           <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
-            Check Items
+            Check Items (Under Construction)
           </Typography>
           {machineServiceRecord?.serviceRecordConfig?.checkParams?.length > 0 ? (machineServiceRecord?.serviceRecordConfig?.checkParams.map((row, index) =>
           ( typeof row?.paramList?.length === 'number' &&

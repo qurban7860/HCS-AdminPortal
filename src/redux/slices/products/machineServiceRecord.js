@@ -103,7 +103,7 @@ const slice = createSlice({
 
 
     // RESET MACHINE TECH PARAM
-    resetMachineServiceParam(state){
+    resetMachineServiceRecord(state){
       state.machineServiceRecord = {};
       state.responseMessage = null;
       state.success = false;
@@ -111,7 +111,7 @@ const slice = createSlice({
     },
 
     // RESET MACHINE TECH PARAM
-    resetMachineServiceParams(state){
+    resetMachineServiceRecords(state){
       state.machineServiceRecords = [];
       state.responseMessage = null;
       state.success = false;
