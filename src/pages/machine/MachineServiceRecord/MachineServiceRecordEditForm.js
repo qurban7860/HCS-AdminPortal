@@ -38,6 +38,7 @@ function MachineServiceRecordEditForm() {
   const { machineConnections } = useSelector((state) => state.machineConnections);
   const { machine } = useSelector((state) => state.machine);
   const [checkParam, setCheckParam] = useState([]);
+  const [serviceDateError, setServiceDateError] = useState('');
 
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -50,18 +51,6 @@ function MachineServiceRecordEditForm() {
 
   const defaultValues = useMemo(
     () => ({
-      // serviceRecordConfig:        machineServiceRecord || null,
-      // serviceDate:                new Date(),
-      // technician:                 machineServiceRecord?.technician || null,
-      // decoiler:                   machineServiceRecord?.decoilers || [],
-      // serviceNote:                machineServiceRecord?.serviceNote || '',
-      // maintenanceRecommendation: '',
-      // suggestedSpares: '',
-      // files: [],
-      // // checkParamFiles: [],
-      // operator: null,
-      // operatorRemarks: '',
-      // isActive: true,
 
       recordType:                 machineServiceRecord?.recordType || null,
       serviceRecordConfig:        machineServiceRecord?.serviceRecordConfig || null,

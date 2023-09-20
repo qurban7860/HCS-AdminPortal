@@ -58,7 +58,10 @@ export const MachineServiceParamsSchema = Yup.object().shape({
 export const MachineServiceRecordSchema = Yup.object().shape({
   recordType:Yup.object().label('Record Type').nullable(),
   serviceRecordConfig: Yup.object().label('Service Record Configuration').nullable().required(),
-  // serviceDate: Yup.object().label('Service Date').nullable(),
+  // serviceDate: Yup.date().label('Service Date').nullable().required,
+  serviceDate: Yup.date()
+  .max(new Date()).nullable()
+  .required(),
   // customer: Yup.object().label('Customer'), 
   site: Yup.object().label('Site').nullable(),
   // machine: Yup.object().label('Machine'),
