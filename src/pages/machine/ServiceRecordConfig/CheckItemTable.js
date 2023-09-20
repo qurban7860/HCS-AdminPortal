@@ -95,13 +95,13 @@ const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue 
   };
 useEffect(()=>{
   if(paramListTitle?.length > 200){
-    setItemListTitleError('Item List Title is too long')
+    setItemListTitleError('Item List Title must be at most 200 characters')
   }else{
     setItemListTitleError('')
   }
 
   if(checkItemList && checkItemList?.length > 100){
-    setItemListError('Check Item limit exceeded!')
+    setItemListError('Check Items must be at most 99!')
   }else{
     setItemListError('')
   }
@@ -169,9 +169,6 @@ useEffect(()=>{
                           if(newValue){
                             handleInputChange(newValue)
                           }
-                          // const updatedEvent = { target: { name: "paramList", value: newValue }};
-                          // handleInputChange(updatedEvent, checkParamNumber);
-                          // event.preventDefault();
                         }}
                         renderTags={(value, getTagProps) => ''}
                         Error={!!checkItemListError} helperText={checkItemListError}

@@ -100,7 +100,7 @@ function MachineServiceParamViewForm() {
         ) : <ViewFormField />
         }
           <ViewFormField sm={6} heading="Service Date" param={fDate(defaultValues.serviceDate)} />
-          <ViewFormField sm={6} heading="Technician"  param={defaultValues?.technician?.name} />
+          <ViewFormField sm={6} heading="Technician"  param={`${defaultValues?.technician?.firstName ? defaultValues?.technician?.firstName : ''} ${defaultValues?.technician?.lastName ? defaultValues?.technician?.lastName : ''}`} />
           <ViewFormField sm={6} heading="Machine"  param={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} />
           <ViewFormField sm={6} heading="Machine Model"  param={machine?.machineModel?.name || ''} />
           <ViewFormField sm={6} heading="Model Category"  param={machine?.machineModel?.category?.name || ''} />
