@@ -256,7 +256,6 @@ export function updateSite(params,customerId,Id) {
         }else{
           data.primaryTechnicalContact = null;        
         }
-        console.log("Site Slice data : ",data)
         await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/sites/${Id}`
          , data);
         dispatch(slice.actions.setSiteEditFormVisibility(false));
