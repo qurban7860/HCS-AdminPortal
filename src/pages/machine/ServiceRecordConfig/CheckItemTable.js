@@ -1,9 +1,9 @@
 import { memo, useState, useEffect } from 'react'
 import PropTypes from 'prop-types';
-import { Card, Grid, Stack, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Grid, Stack, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
-import { getActiveMachineServiceParams } from '../../../redux/slices/products/machineServiceParams';
+import { getActiveCheckItems } from '../../../redux/slices/products/machineCheckItems';
 import { RHFTextField, RHFAutocomplete} from '../../../components/hook-form';
 import useResponsive from '../../../hooks/useResponsive';
 import { useSnackbar } from '../../../components/snackbar';
@@ -16,7 +16,7 @@ const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue 
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
-    const { activeMachineServiceParams } = useSelector((state) => state.machineServiceParam);
+    const { activeCheckItems } = useSelector((state) => state.checkItems);
     const [checkParamNumber, setCheckParamNumber]= useState(serviceRecordConfig?.checkParams?.length || 0);
     const [checkItemList, setCheckItemList] = useState([]);
     const [checkItemListTitleError, setItemListTitleError] = useState('');
@@ -26,7 +26,7 @@ const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue 
     // },[checkParams])
 
     useEffect(() => {
-        dispatch(getActiveMachineServiceParams());
+        dispatch(getActiveCheckItems());
       }, [dispatch]);
 
       const handleInputChange = (value) => {
@@ -159,7 +159,7 @@ useEffect(()=>{
                         name="paramList"
                         label="Select Items"
                         value={[]}
-                        options={activeMachineServiceParams}
+                        options={activeCheckItems}
                         isOptionEqualToValue={(option, value) => option._id === value._id}
                         getOptionLabel={(option) => `${option.name ? option.name : ''} ${option?.category?.name ? '-' : ''} ${option?.category?.name ? option?.category?.name : ''} ${option?.inputType ? '-' : '' } ${option?.inputType ? option?.inputType : '' }`}
                         renderOption={(props, option) => (

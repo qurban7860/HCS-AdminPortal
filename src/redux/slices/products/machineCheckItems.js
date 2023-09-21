@@ -6,14 +6,14 @@ import { CONFIG } from '../../../config-global';
 // ----------------------------------------------------------------------
 const initialState = {
   intial: false,
-  machineServiceParamEditFormFlag: false,
+  checkItemEditFormFlag: false,
   responseMessage: null,
   success: false,
   isLoading: false,
   error: null,
-  machineServiceParam: {},
-  machineServiceParams: [],
-  activeMachineServiceParams: [],
+  checkItem: {},
+  checkItems: [],
+  activeCheckItems: [],
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
@@ -32,7 +32,7 @@ const initialState = {
 };
 
 const slice = createSlice({
-  name: 'machineServiceParam',
+  name: 'checkItems',
   initialState,
   reducers: {
 
@@ -42,7 +42,7 @@ const slice = createSlice({
     },
 
     // SET TOGGLE
-    setMachineServiceParamEditFormVisibility(state, action){
+    setCheckItemEditFormVisibility(state, action){
       state.techparamEditFormFlag = action.payload;
     },
 
@@ -54,25 +54,25 @@ const slice = createSlice({
     },
 
     // GET MACHINE SERVICE PARAM
-    getMachineServiceParamsSuccess(state, action) {
+    getCheckItemsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.machineServiceParams = action.payload;
+      state.checkItems = action.payload;
       state.initial = true;
     },
     // GET MACHINE SERVICE PARAM
-    getMachineServiceParamSuccess(state, action) {
+    getCheckItemSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.machineServiceParam = action.payload;
+      state.checkItem = action.payload;
       state.initial = true;
     },
 
     // GET MACHINE Active SERVICE PARAM
-    getActiveMachineServiceParamsSuccess(state, action) {
+    getActiveCheckItemsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.activeMachineServiceParams = action.payload;
+      state.activeCheckItems = action.payload;
       state.initial = true;
     },
 
@@ -85,16 +85,16 @@ const slice = createSlice({
 
 
     // RESET MACHINE TECH PARAM
-    resetMachineServiceParam(state){
-      state.machineServiceParam = {};
+    resetCheckItem(state){
+      state.checkItem = {};
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
 
     // RESET MACHINE TECH PARAM
-    resetMachineServiceParams(state){
-      state.machineServiceParams = [];
+    resetCheckItems(state){
+      state.checkItems = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
@@ -120,10 +120,10 @@ export default slice.reducer;
 
 // Actions
 export const {
-  setMachineServiceParamEditFormVisibility,
-  getActiveMachineServiceParamsSuccess,
-  resetMachineServiceParams,
-  resetMachineServiceParam,
+  setCheckItemEditFormVisibility,
+  getActiveCheckItemsSuccess,
+  resetCheckItems,
+  resetCheckItem,
   setResponseMessage,
   setFilterBy,
   ChangeRowsPerPage,
@@ -131,11 +131,11 @@ export const {
 } = slice.actions;
 
 // ----------------------------------------------------------------------
-export function getActiveMachineServiceParams (){
+export function getActiveCheckItems (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/serviceParams`, 
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/checkItems`, 
       {
         params: {
           isArchived: false,
@@ -143,8 +143,8 @@ export function getActiveMachineServiceParams (){
         }
       }
       );
-      dispatch(slice.actions.getActiveMachineServiceParamsSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Techparams loaded successfully'));
+      dispatch(slice.actions.getActiveCheckItemsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Active Check Items loaded successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -155,18 +155,18 @@ export function getActiveMachineServiceParams (){
 
 // ------------------------------------------------------------------------------------------------
 
-export function getMachineServiceParams (){
+export function getCheckItems (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/serviceParams`, 
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/checkItems`, 
       {
         params: {
           isArchived: false
         }
       }
       );
-      dispatch(slice.actions.getMachineServiceParamsSuccess(response.data));
+      dispatch(slice.actions.getCheckItemsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Techparams loaded successfully'));
     } catch (error) {
       console.log(error);
@@ -178,12 +178,12 @@ export function getMachineServiceParams (){
 
 
 // ----------------------------------------------------------------------
-export function getMachineServiceParam(id) {
+export function getCheckItem(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/serviceParams/${id}`);
-      dispatch(slice.actions.getMachineServiceParamSuccess(response.data));
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/checkItems/${id}`);
+      dispatch(slice.actions.getCheckItemSuccess(response.data));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -192,11 +192,11 @@ export function getMachineServiceParam(id) {
   };
 }
 
-export function deleteMachineServiceParam(id) {
+export function deleteCheckItem(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/serviceParams/${id}` , 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/checkItems/${id}` , 
       {
           isArchived: true, 
       });
@@ -211,7 +211,7 @@ export function deleteMachineServiceParam(id) {
 
 // --------------------------------------------------------------------------
 
-export function addMachineServiceParam(params) {
+export function addCheckItem(params) {
     return async (dispatch) => {
       dispatch(slice.actions.startLoading());
       try {
@@ -231,8 +231,8 @@ export function addMachineServiceParam(params) {
           isRequired:       params?.isRequired, 
           isActive:         params?.isActive,
         };
-        const response = await axios.post(`${CONFIG.SERVER_URL}products/serviceParams`, data);
-        dispatch(slice.actions.getMachineServiceParamSuccess(response.data.MachineTool));
+        const response = await axios.post(`${CONFIG.SERVER_URL}products/checkItems`, data);
+        dispatch(slice.actions.getCheckItemSuccess(response.data.MachineTool));
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
@@ -244,7 +244,7 @@ export function addMachineServiceParam(params) {
 
 // --------------------------------------------------------------------------
 
-export function updateMachineServiceParam(id, params) {
+export function updateCheckItem(id, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -264,7 +264,7 @@ export function updateMachineServiceParam(id, params) {
         isActive:         params?.isActive,
       };
      /* eslint-enable */
-      await axios.patch(`${CONFIG.SERVER_URL}products/serviceParams/${id}`,data);
+      await axios.patch(`${CONFIG.SERVER_URL}products/checkItems/${id}`,data);
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

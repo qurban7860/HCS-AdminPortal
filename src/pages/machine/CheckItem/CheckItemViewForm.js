@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import {  Card, Grid, Tooltip } from '@mui/material';
 // redux
-import { deleteMachineServiceParam } from '../../../redux/slices/products/machineServiceParams';
+import { deleteCheckItem } from '../../../redux/slices/products/machineCheckItems';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
@@ -17,8 +17,8 @@ import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDe
 
 // ----------------------------------------------------------------------
 
-export default function MachineServiceParamViewForm() {
-  const { machineServiceParam } = useSelector((state) => state.machineServiceParam);
+export default function CheckItemViewForm() {
+  const { checkItem } = useSelector((state) => state.checkItems);
 
   const navigate = useNavigate();
 
@@ -27,8 +27,8 @@ export default function MachineServiceParamViewForm() {
 
   const onDelete = async () => {
     try {
-      await dispatch(deleteMachineServiceParam(machineServiceParam?._id));
-      navigate(PATH_MACHINE.machines.settings.machineServiceParams.list);
+      await dispatch(deleteCheckItem(checkItem?._id));
+      navigate(PATH_MACHINE.machines.settings.checkItems.list);
       enqueueSnackbar('Machine Service Param deleted Successfully!');
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
@@ -37,32 +37,32 @@ export default function MachineServiceParamViewForm() {
   };
 
   const handleEdit = async () => {
-    navigate(PATH_MACHINE.machines.settings.machineServiceParams.edit(machineServiceParam?._id));
+    navigate(PATH_MACHINE.machines.settings.checkItems.edit(checkItem?._id));
   };
 
   const defaultValues = useMemo(
     () => ({
-      name:               machineServiceParam?.name,
-      category:           machineServiceParam?.category?.name,
-      printName:          machineServiceParam?.printName,
-      helpHint:           machineServiceParam?.helpHint,
-      linkToUserManual:   machineServiceParam?.linkToUserManual,
-      inputType:          machineServiceParam?.inputType,
-      unitType:           machineServiceParam?.unitType,    
-      minValidation:      machineServiceParam?.minValidation,
-      maxValidation:      machineServiceParam?.maxValidation,
-      description:        machineServiceParam?.description,
-      isRequired:         machineServiceParam?.isRequired || false, 
-      isActive:           machineServiceParam?.isActive,
-      createdAt:          machineServiceParam?.createdAt || '',
-      createdByFullName:  machineServiceParam?.createdBy?.name || '',
-      createdIP:          machineServiceParam?.createdIP || '',
-      updatedAt:          machineServiceParam?.updatedAt || '',
-      updatedByFullName:  machineServiceParam?.updatedBy?.name || '',
-      updatedIP:          machineServiceParam?.updatedIP || '',
+      name:               checkItem?.name,
+      category:           checkItem?.category?.name,
+      printName:          checkItem?.printName,
+      helpHint:           checkItem?.helpHint,
+      linkToUserManual:   checkItem?.linkToUserManual,
+      inputType:          checkItem?.inputType,
+      unitType:           checkItem?.unitType,    
+      minValidation:      checkItem?.minValidation,
+      maxValidation:      checkItem?.maxValidation,
+      description:        checkItem?.description,
+      isRequired:         checkItem?.isRequired || false, 
+      isActive:           checkItem?.isActive,
+      createdAt:          checkItem?.createdAt || '',
+      createdByFullName:  checkItem?.createdBy?.name || '',
+      createdIP:          checkItem?.createdIP || '',
+      updatedAt:          checkItem?.updatedAt || '',
+      updatedByFullName:  checkItem?.updatedBy?.name || '',
+      updatedIP:          checkItem?.updatedIP || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [ machineServiceParam ]
+    [ checkItem ]
   );
   return (
     <Card sx={{ p: 2 }}>

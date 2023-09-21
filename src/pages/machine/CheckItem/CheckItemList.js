@@ -28,14 +28,14 @@ import {
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 // sections
-import MachineServiceParamListTableRow from './MachineServiceParamListTableRow';
-import MachineServiceParamListTableToolbar from './MachineServiceParamListTableToolbar';
+import CheckItemListTableRow from './CheckItemListTableRow';
+import CheckItemListTableToolbar from './CheckItemListTableToolbar';
 import {
-  getMachineServiceParams,
+  getCheckItems,
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy
-} from '../../../redux/slices/products/machineServiceParams';
+} from '../../../redux/slices/products/machineCheckItems';
 import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
@@ -59,8 +59,8 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-export default function MachineServiceParamList() {
-  const { machineServiceParams, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceParam);
+export default function CheckItemList() {
+  const { checkItems, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.checkItems);
   const {
     order,
     orderBy,
@@ -93,14 +93,14 @@ export default function MachineServiceParamList() {
 
 
   useLayoutEffect(() => {
-    dispatch(getMachineServiceParams()); 
+    dispatch(getCheckItems()); 
   }, [dispatch]);
 
   useEffect(() => {
     if (initial) {
-      setTableData(machineServiceParams);
+      setTableData(checkItems);
     }
-  }, [machineServiceParams, initial]);
+  }, [checkItems, initial]);
   
 
   const dataFiltered = applyFilter({
@@ -141,7 +141,7 @@ export default function MachineServiceParamList() {
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_MACHINE.machines.settings.machineServiceParams.view(id));
+    navigate(PATH_MACHINE.machines.settings.checkItems.view(id));
   };
 
   const handleResetFilter = () => {
@@ -161,7 +161,7 @@ export default function MachineServiceParamList() {
           <Cover name={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} icon="carbon:parameter" setting />
         </Card>
         <TableCard>
-          <MachineServiceParamListTableToolbar
+          <CheckItemListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -211,7 +211,7 @@ export default function MachineServiceParamList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <MachineServiceParamListTableRow
+                        <CheckItemListTableRow
                           key={row._id}
                           row={row}
                           onViewRow={() => handleViewRow(row._id)}

@@ -40,7 +40,7 @@ export const AddMachineDocumentSchema = Yup.object().shape({
   isActive: Yup.boolean(),
 });
 
-export const MachineServiceParamsSchema = Yup.object().shape({
+export const CheckItemsSchema = Yup.object().shape({
   name: Yup.string().required().max(200).label('Name'),
   serviceCategory: Yup.object().label('Service Category').nullable(),
   printName: Yup.string().max(1000).label('Print Name'),
