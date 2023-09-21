@@ -18,10 +18,10 @@ const initialState = {
   page: 0,
   rowsPerPage: 100,
   inputTypes: [
-    { _id:1 , name: 'Number'},
-    { _id:2 , name: 'String'},
-    { _id:3 , name: 'Date'},
     { _id:4 , name: 'Boolean'},
+    { _id:1 , name: 'Short Text'},
+    { _id:2 , name: 'Long Text'},
+    { _id:3 , name: 'Number'},
   ],
   unitTypes: [
     { _id:1 , name: 'Milimeter'},
