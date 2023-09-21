@@ -4,7 +4,7 @@ import { Stack } from '@mui/material';
 // hooks
 import { useNavigate } from 'react-router-dom';
 // routes
-import { PATH_MACHINE, PATH_SETTING } from '../../../routes/paths';
+import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 // constants
@@ -14,7 +14,7 @@ import { options } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
-MachineServiceParamListTableToolbar.propTypes = {
+CheckItemListTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
@@ -24,7 +24,7 @@ MachineServiceParamListTableToolbar.propTypes = {
   statusOptions: PropTypes.array,
 };
 
-export default function MachineServiceParamListTableToolbar({
+export default function CheckItemListTableToolbar({
   isFiltered,
   filterName,
   filterStatus,
@@ -35,7 +35,7 @@ export default function MachineServiceParamListTableToolbar({
 }) {
   const navigate = useNavigate();
   const toggleAdd = () => {
-    navigate(PATH_MACHINE.machines.settings.machineServiceParams.new);
+    navigate(PATH_MACHINE.machines.settings.checkItems.new);
   };
   return (
     <Stack {...options}>

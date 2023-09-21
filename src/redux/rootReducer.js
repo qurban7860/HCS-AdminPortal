@@ -35,7 +35,7 @@ import regionReducer from './slices/region/region';
 import moduleReducer from './slices/module/module';
 import drawingReducer from './slices/products/drawing';
 import configReducer from './slices/config/config';
-import machineServiceParamReducer from './slices/products/machineServiceParams'
+import checkItemsReducer from './slices/products/machineCheckItems'
 import machineServiceRecordReducer from './slices/products/machineServiceRecord';
 import serviceRecordConfigReducer from './slices/products/serviceRecordConfig';
 import serviceCategoryReducer from './slices/products/serviceCategory';
@@ -254,8 +254,8 @@ export const drawingPersistConfig={
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
-export const machineServiceParamPersistConfig={
-  key: 'machineServiceParam',
+export const checkItemsPersistConfig={
+  key: 'checkItems',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
@@ -321,7 +321,7 @@ const rootReducer = combineReducers({
   config: persistReducer(configPersistConfig, configReducer),
   userConfig: persistReducer(userConfigPersistConfig, userConfigReducer),
   serviceRecordConfig: persistReducer(serviceRecordConfigPersistConfig, serviceRecordConfigReducer),
-  machineServiceParam: persistReducer(machineServiceParamPersistConfig, machineServiceParamReducer),
+  checkItems: persistReducer(checkItemsPersistConfig, checkItemsReducer),
   machineServiceRecord: persistReducer(machineServiceRecordPersistConfig, machineServiceRecordReducer),
   serviceCategory: persistReducer(serviceCategoryPersistConfig, serviceCategoryReducer),
   userInvite: persistReducer(userInvitePersistConfig, userInviteReducer)

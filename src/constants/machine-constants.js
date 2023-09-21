@@ -8,17 +8,14 @@ export const Snacks = {
   machineFailedDelete: 'FAILED to Delete Machine',
   machineTransferSuccess: 'Machine TRANSFERRED',
   machineFailedTransfer: 'FAILED to Transfer Machine',
-
-
-
-
+  
   // @root Machine Service Parameter
-  machineServiceParamAdd: 'Machine Technical Parameter ADDED',
-  machineServiceParamAddFailed: 'FAILED to add Machine Technical Parameter',
-  machineServiceParamUpdate: 'Machine Technical Parameter UPDATED',
-  machineServiceParamUpdateFailed: 'FAILED to Update  Machine Technical Parameter',
-  machineServiceParamDeleteFailed: 'FAILED to Delete  Machine Technical Parameter',
-  machineServiceParamDelete: 'Machine Technical Parameter DELETED',
+  checkItemAdd: 'Machine Check Item Added',
+  checkItemAddFailed: 'FAILED to add Machine Check Item',
+  checkItemUpdate: 'Machine Check Item Update',
+  checkItemUpdateFailed: 'Failed to Update Machine Check Item',
+  checkItemDeleteFailed: 'Failed to Delete Machine Check Item',
+  checkItemDelete: 'Machine Check Item Deleted',
 
 
   // @root - ModelEditForm

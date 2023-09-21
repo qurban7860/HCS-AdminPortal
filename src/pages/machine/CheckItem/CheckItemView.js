@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 // redux
-import { getMachineServiceParam } from '../../../redux/slices/products/machineServiceParams';
+import { getCheckItem } from '../../../redux/slices/products/machineCheckItems';
 // auth
 // import { useAuthContext } from '../../../auth/useAuthContext';
 // components
@@ -15,20 +15,20 @@ import { getMachineServiceParam } from '../../../redux/slices/products/machineSe
 // import { useSettingsContext } from '../../../components/settings';
 // sections
 import { Cover } from '../../components/Defaults/Cover';
-import MachineServiceParamViewForm from './MachineServiceParamViewForm';
+import CheckItemViewForm from './CheckItemViewForm';
 /* eslint-disable */
 
 // ----------------------------------------------------------------------
 
-export default function MachineServiceParamView() {
+export default function CheckItemView() {
   const dispatch = useDispatch();
 
   const { id } = useParams();
   useLayoutEffect(() => {
-    dispatch(getMachineServiceParam(id));
+    dispatch(getCheckItem(id));
   }, [id, dispatch]);
 
-  const { machineServiceParam } = useSelector((state) => state.machineServiceParam);
+  const { checkItem } = useSelector((state) => state.checkItems);
 
   return (
     <>
@@ -42,12 +42,13 @@ export default function MachineServiceParamView() {
           }}
         >
           <Cover
-            name={machineServiceParam?.name}
+            name={checkItem?.name}
             setting
-            backLink={PATH_MACHINE.machines.settings.machineServiceParams.list}
+            backLink={PATH_MACHINE.machines.settings.checkItems.list}
+            titleLength={30}
           />
         </Card>
-        <MachineServiceParamViewForm />
+        <CheckItemViewForm />
       </Container>
     </>
   );

@@ -47,10 +47,11 @@ import {
   SupplierEdit,
   // SupplierEditForm,
 
-  MachineServiceParamList, 
-  MachineServiceParamViewForm,
-  MachineServiceParamEditForm,
-  MachineServiceParamAddForm,
+  // Check Items
+  CheckItemList, 
+  CheckItemViewForm,
+  CheckItemEditForm,
+  CheckItemAddForm,
 
   // License
   // MachineLicenses,
@@ -421,12 +422,12 @@ export default function Router() {
                 ]
               },
               {
-                path: 'machineServiceParams',
+                path: 'checkItems',
                 children:[
-                  {path: 'new', element: <MachineServiceParamAddForm/>},
-                  {path: 'list', element: <MachineServiceParamList/>},
-                  {path: ':id/view', element: <MachineServiceParamViewForm/>},
-                  {path: ':id/edit', element: <MachineServiceParamEditForm/>},
+                  {path: 'new', element: <CheckItemAddForm/>},
+                  {path: 'list', element: <CheckItemList/>},
+                  {path: ':id/view', element: <CheckItemViewForm/>},
+                  {path: ':id/edit', element: <CheckItemEditForm/>},
                 ]
               },
               {

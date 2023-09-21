@@ -22,7 +22,7 @@ import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
-MachineServiceParamListTableRow.propTypes = {
+CheckItemListTableRow.propTypes = {
   row: PropTypes.object,
   style: PropTypes.object,
   selected: PropTypes.bool,
@@ -41,7 +41,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export default function MachineServiceParamListTableRow({
+export default function CheckItemListTableRow({
   row,
   style,
   selected,

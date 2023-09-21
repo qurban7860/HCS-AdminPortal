@@ -12,7 +12,6 @@ import {
   getServiceRecordConfig,
 } from '../../../redux/slices/products/serviceRecordConfig';
 import { getActiveMachineModels, resetActiveMachineModels } from '../../../redux/slices/products/model';
-import { getActiveMachineServiceParams } from '../../../redux/slices/products/machineServiceParams';
 import { getActiveCategories } from '../../../redux/slices/products/category';
 import { ServiceRecordConfigSchema } from '../../schemas/machine';
 // routes
@@ -100,11 +99,6 @@ export default function ServiceRecordConfigEditForm() {
     dispatch(getActiveCategories());
   }, [dispatch, id]);
 
-  useEffect(() => {
-    if(serviceRecordConfig?.category?._id){
-      dispatch(getActiveMachineServiceParams(serviceRecordConfig?.category?._id));
-    }
-  },[serviceRecordConfig, dispatch])
   /* eslint-enable */
   useEffect(() => {
     setCheckParams(serviceRecordConfig?.checkParams)

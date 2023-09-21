@@ -26,6 +26,7 @@ import {
   updateSite,
   setSiteEditFormVisibility,
   getSite,
+  getSites,
 } from '../../../redux/slices/customer/site';
 // routes
 // import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -206,7 +207,7 @@ export default function SiteEditForm() {
       }
       // console.log("Site Data : ",data)
       await dispatch(updateSite(data, customer?._id, site?._id));
-      // await dispatch(getSites(customer?._id));
+      await dispatch(getSites(customer?._id));
       await dispatch(getSite(customer?._id, site?._id));
       enqueueSnackbar('Site saved Successfully!');
       reset();

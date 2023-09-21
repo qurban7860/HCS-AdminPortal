@@ -214,20 +214,35 @@ function ToolsInstalledEditForm() {
       engagingDuration: Yup.number()
     .typeError('Engaging Duration must be a number')
       .transform((value, originalValue) => {
-      if (originalValue.trim() === '') return undefined;
+        if (typeof originalValue !== 'string') {
+          return undefined; // Skip transformation for non-string values
+        }
+        if (originalValue.trim() === '') {
+          return undefined;
+        }
       return parseFloat(value);
       }).test('no-spaces', 'Engaging Duration cannot have spaces', value => !(value && value.toString().includes(' '))),
     returningDuration: Yup.number()
     .typeError('Returning Duration must be a number')
       .transform((value, originalValue) => {
-      if (originalValue.trim() === '') return undefined;
+        if (typeof originalValue !== 'string') {
+          return undefined; // Skip transformation for non-string values
+        }
+        if (originalValue.trim() === '') {
+          return undefined;
+        }
       return parseFloat(value);
       }).test('no-spaces', 'Returning Duration cannot have spaces', value => !(value && value.toString().includes(' '))),
     twoWayCheckDelayTime: Yup.number()
     .typeError('Two-Way Check Delay Time must be a number')
       .transform((value, originalValue) => {
-      if (originalValue.trim() === '') return undefined;
-      return parseFloat(value);
+        if (typeof originalValue !== 'string') {
+          return undefined; // Skip transformation for non-string values
+        }
+        if (originalValue.trim() === '') {
+          return undefined;
+        }
+        return parseFloat(value);
       }).test('no-spaces', 'Two Way Check Delay Time cannot have spaces', value => !(value && value.toString().includes(' '))),   
     isHasTwoWayCheck: Yup.boolean(),
     isEngagingHasEnable: Yup.boolean(),
@@ -331,8 +346,8 @@ function ToolsInstalledEditForm() {
     }
     setValue('toolType',{name: toolInstalled?.toolType})
     setCompositToolNumber(toolInstalled?.compositeToolConfig.length)
-    const comToolVal = toolInstalled?.compositeToolConfig.map((value) => ({engage: value.engageInstruction, disengage: value.disengageInstruction}))
-    setCompositToolVal(comToolVal || [])
+    // const comToolVal = toolInstalled?.compositeToolConfig.map((value) => ({engage: value.engageInstruction, disengage: value.disengageInstruction}))
+    // setCompositToolVal(comToolVal || [])
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolInstalled]);
 
