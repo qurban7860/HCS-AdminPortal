@@ -10,24 +10,26 @@ import { useSnackbar } from '../../../components/snackbar';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import CollapsibleCheckedItemRow from './CollapsibleCheckedItemRow'
 
-const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue }) => {
+const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue, checkItemCategory }) => {
 
     const isMobile = useResponsive('down', 'sm');
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
+    const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
     const { activeCheckItems } = useSelector((state) => state.checkItems);
     const [checkParamNumber, setCheckParamNumber]= useState(serviceRecordConfig?.checkParams?.length || 0);
     const [checkItemList, setCheckItemList] = useState([]);
     const [checkItemListTitleError, setItemListTitleError] = useState('');
     const [checkItemListError, setItemListError] = useState('');
-    // useEffect(() => {
-    //   setCheckParamNumber()
-    // },[checkParams])
 
     useEffect(() => {
-        dispatch(getActiveCheckItems());
-      }, [dispatch]);
+      if(checkItemCategory === null ){
+        dispatch(getActiveCheckItems())
+      }else{
+        dispatch(getActiveCheckItems(checkItemCategory?._id))
+      }
+    },[checkItemCategory, dispatch])
 
       const handleInputChange = (value) => {
         if (value) {
@@ -154,6 +156,17 @@ useEffect(()=>{
                     </Typography>
                     <RHFTextField name="paramListTitle" label="Item List Title*" Error={!!checkItemListTitleError} helperText={checkItemListTitleError} />
 
+                      <RHFAutocomplete 
+                          name="checkItemCategory"
+                          label="Service Category"
+                          options={activeServiceCategories}
+                          isOptionEqualToValue={(option, value) => option._id === value._id}
+                          getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                          renderOption={(props, option) => (
+                            <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                          )}
+                      />
+
                       <RHFAutocomplete
                         multiple
                         name="paramList"
@@ -238,4 +251,5 @@ CheckItemTable.propTypes = {
     setCheckParams: PropTypes.func.isRequired,
     paramListTitle: PropTypes.string,
     setValue: PropTypes.func.isRequired,
+    checkItemCategory: PropTypes.object,
 };

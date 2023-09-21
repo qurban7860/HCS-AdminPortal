@@ -131,7 +131,7 @@ export const {
 } = slice.actions;
 
 // ----------------------------------------------------------------------
-export function getActiveCheckItems (){
+export function getActiveCheckItems (categoryId){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
@@ -139,7 +139,8 @@ export function getActiveCheckItems (){
       {
         params: {
           isArchived: false,
-          isActive: true
+          isActive: true,
+          category: categoryId,
         }
       }
       );
