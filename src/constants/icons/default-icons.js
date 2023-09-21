@@ -160,7 +160,7 @@ export const ICONS = {
   },
 
 
-  MACHINE_SERVICE_PARAMETERS: {
+  MACHINE_CHECK_ITEMS: {
     icon: 'carbon:parameter',
     heading: 'Check Items',
   },

@@ -1,4 +1,4 @@
-import { useMemo, useEffect} from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -7,61 +7,57 @@ import { Card, Grid, Box, Stack, Typography, Container } from '@mui/material';
 // hooks
 import { useForm } from 'react-hook-form';
 import { useSnackbar } from '../../../components/snackbar';
-// schema
-import { MachineServiceParamsSchema } from '../../schemas/machine';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
+import FormHeading from '../../components/DocumentForms/FormHeading';
+import { FORMLABELS } from '../../../constants/default-constants';
+// schema
+import { CheckItemsSchema } from '../../schemas/machine';
+// slice
+import { addCheckItem } from '../../../redux/slices/products/machineCheckItems';
+import { getActiveServiceCategories } from '../../../redux/slices/products/serviceCategory';
 // components
 import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete } from '../../../components/hook-form';
-import {
-  getMachineServiceParam,
-  updateMachineServiceParam,
-} from '../../../redux/slices/products/machineServiceParams';
-import { getActiveServiceCategories } from '../../../redux/slices/products/serviceCategory';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import FormHeading from '../../components/DocumentForms/FormHeading';
 import { Cover } from '../../components/Defaults/Cover';
 // styles
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
-import { FORMLABELS } from '../../../constants/default-constants';
+// constants
 import { Snacks } from '../../../constants/machine-constants';
-
 
 // ----------------------------------------------------------------------
 
-export default function DocumentCategoryeEditForm() {
-  const { machineServiceParam } = useSelector((state) => state.machineServiceParam);
-  const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
-  const { inputTypes, unitTypes } = useSelector((state) => state.machineServiceParam);
+export default function CheckItemAddForm() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
+  const { inputTypes, unitTypes } = useSelector((state) => state.checkItems);
+  const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
 
   useEffect(()=>{
     dispatch(getActiveServiceCategories())
   },[dispatch])
-
   const defaultValues = useMemo(
     () => ({
-      name:             machineServiceParam?.name || '',
-      serviceCategory:  machineServiceParam?.category || null,
-      printName:        machineServiceParam?.printName || '',
-      description:      machineServiceParam?.description || '',
-      helpHint:         machineServiceParam?.helpHint || '',
-      linkToUserManual: machineServiceParam?.linkToUserManual || '',
-      isRequired:       machineServiceParam?.isRequired, 
-      inputType:        {name: machineServiceParam?.inputType} || null,
-      unitType:         {name: machineServiceParam?.unitType} || null,    
-      minValidation:    machineServiceParam?.minValidation || '',
-      maxValidation:    machineServiceParam?.maxValidation || '',
-      isActive:         machineServiceParam?.isActive,
+      name:             '',
+      serviceCategory: null,
+      printName:        '',
+      description:      '',
+      helpHint:         '',
+      linkToUserManual: '',
+      isRequired:       false, 
+      inputType:        '',
+      unitType:         '',    
+      minValidation:    '',
+      maxValidation:    '',
+      isActive:         true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [ machineServiceParam ]
+    []
   );
 
   const methods = useForm({
-    resolver: yupResolver(MachineServiceParamsSchema),
+    resolver: yupResolver(CheckItemsSchema),
     defaultValues,
   });
 
@@ -71,47 +67,50 @@ export default function DocumentCategoryeEditForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const toggleCancel = () => {
-    navigate(PATH_MACHINE.machines.settings.machineServiceParams.view(machineServiceParam._id));
-  };
+  useEffect(() => {
+    reset(defaultValues);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onSubmit = async (data) => {
     try {
-      console.log("data : ", data);
-      await dispatch(updateMachineServiceParam(machineServiceParam._id, data));
-      dispatch(getMachineServiceParam(machineServiceParam._id))
-      navigate(PATH_MACHINE.machines.settings.machineServiceParams.view(machineServiceParam._id));
-      enqueueSnackbar(Snacks.machineServiceParamUpdate, { variant: `success` });
+      await dispatch(addCheckItem(data));
       reset();
+      enqueueSnackbar(Snacks.checkItemAdd);
+      navigate(PATH_MACHINE.machines.settings.checkItems.list);
     } catch (error) {
-      enqueueSnackbar(error, { variant: `error` });
+      enqueueSnackbar(error?.message, { variant: `error` });
       console.error(error);
     }
   };
 
+  const toggleCancel = () => {
+    navigate(PATH_MACHINE.machines.settings.checkItems.list);
+  };
+  
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
         <Cover
-          name={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAM_EDIT}
+          name={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAM_ADD}
           setting
-          backLink={PATH_MACHINE.machines.settings.machineServiceParams.view(machineServiceParam?._id)}
+          backLink={PATH_MACHINE.machines.settings.checkItems.list}
         />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Grid container spacing={4}>
-          <Grid item xs={18} md={12}>
+        <Grid container spacing={3}>
+          <Grid item md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
-                <FormHeading heading={FORMLABELS.COVER.MACHINE_SERVICE_PARAM_EDIT} />
-                <Box
-                    rowGap={2}
-                    columnGap={2}
-                    display="grid"
-                    gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-                  >
-                  <RHFTextField name="name" label="Name" />
-                  <RHFAutocomplete 
+                <FormHeading heading={FORMLABELS.COVER.MACHINE_SERVICE_PARAM_ADD} />
+                  <Box
+                        rowGap={2}
+                        columnGap={2}
+                        display="grid"
+                        gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                      >
+                    <RHFTextField name="name" label="Name" />
+                    <RHFAutocomplete 
                       name="serviceCategory"
                       label="Item Category"
                       options={activeServiceCategories}
@@ -122,19 +121,23 @@ export default function DocumentCategoryeEditForm() {
                       )}
                     />
                   </Box>
-                  <RHFTextField name="printName" label="Print Name" minRows={3} multiline />
+
+                  <RHFTextField name="printName" label="Print Name" minRows={3} multiline/>
+
                   <RHFTextField name="helpHint" label="Help Hint" />
                   <RHFTextField name="linkToUserManual" label="Link To User Manual" />
+
                   <Box
                     rowGap={2}
                     columnGap={2}
                     display="grid"
                     gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                   >
-                  <RHFAutocomplete 
+
+                    <RHFAutocomplete 
                       name="inputType" label="Input Type"
                       options={inputTypes}
-                      isOptionEqualToValue={(option, value) => option.name === value.name}
+                      isOptionEqualToValue={(option, value) => option._id === value._id}
                       getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                       renderOption={(props, option) => (
                         <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
@@ -144,16 +147,19 @@ export default function DocumentCategoryeEditForm() {
                     <RHFAutocomplete 
                       name="unitType" label="Unit Type"
                       options={unitTypes}
-                      isOptionEqualToValue={(option, value) => option.name === value.name}
+                      isOptionEqualToValue={(option, value) => option._id === value._id}
                       getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                       renderOption={(props, option) => (
                         <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
                     />
-                  <RHFTextField name="minValidation" label="Minimum Validation" />
-                  <RHFTextField name="maxValidation" label="Maximum Validation" />
-                </Box>
+
+                    <RHFTextField name="minValidation" label="Minimum Validation" />
+                    <RHFTextField name="maxValidation" label="Maximum Validation" />
+                    
+                  </Box>
                   <RHFTextField name="description" label="Description" minRows={7} multiline />
+
                 <Grid container display="flex">
                   <RHFSwitch
                     name="isRequired"
@@ -175,8 +181,9 @@ export default function DocumentCategoryeEditForm() {
                     }
                   />
                 </Grid>
+
+                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
-              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>
           </Grid>
         </Grid>
