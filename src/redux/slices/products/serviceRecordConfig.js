@@ -154,7 +154,7 @@ export function getServiceRecordConfigs (){
 
 // ----------------------------------------------------------------------
 
-export function getActiveServiceRecordConfigs (){
+export function getActiveServiceRecordConfigs (categoryId, machineModelId ){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
@@ -162,7 +162,8 @@ export function getActiveServiceRecordConfigs (){
       {
         params: {
           isArchived: false,
-          isActive: true
+          isActive: true,
+          machineModel: machineModelId,
         }
       });
       dispatch(slice.actions.getActiveServiceRecordConfigsSuccess(response.data));

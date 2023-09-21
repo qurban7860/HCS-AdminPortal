@@ -46,7 +46,7 @@ export default function ServiceRecordConfigEditForm() {
     category: serviceRecordConfig?.category || null,
     docTitle: serviceRecordConfig?.docTitle || '',
     textBeforeCheckItems: serviceRecordConfig?.textBeforeCheckItems || '',
-
+    checkItemCategory: null,
     // // Check Params
     paramListTitle:  '',
     // paramList : serviceRecordConfig?.checkParams[0]?.paramList || [],
@@ -87,7 +87,7 @@ export default function ServiceRecordConfigEditForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const { recordType, paramListTitle, category, machineModel, } = watch();
+  const { recordType, paramListTitle, category, machineModel, checkItemCategory} = watch();
 
 
 
@@ -153,10 +153,11 @@ export default function ServiceRecordConfigEditForm() {
                     sm: 'repeat(2, 1fr)',
                   }}
                 >
+                  <RHFTextField name="docTitle" label="Document Title" />
 
                   <RHFAutocomplete 
                     name="recordType"
-                    label="Record Type"
+                    label="Document Type"
                     value={recordType}
                     options={recordTypes}
                     isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -165,7 +166,6 @@ export default function ServiceRecordConfigEditForm() {
                       <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
                   />
-                  <RHFTextField name="docTitle" label="Document Title" />
 
                   <Controller
                     name="category"
@@ -202,6 +202,7 @@ export default function ServiceRecordConfigEditForm() {
                     />
                     )}
                   />
+                  
                   <RHFAutocomplete 
                     name="machineModel"
                     label="Machine Model"
@@ -216,7 +217,7 @@ export default function ServiceRecordConfigEditForm() {
                 
                   <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline />
 
-                  <CheckItemTable setCheckParams={setCheckParams} checkParams={checkParams} paramListTitle={paramListTitle} setValue={setValue}/>
+                  <CheckItemTable setCheckParams={setCheckParams} checkParams={checkParams} paramListTitle={paramListTitle} setValue={setValue} checkItemCategory={checkItemCategory} />
 
                   <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline />          
                 

@@ -35,19 +35,18 @@ function MachineServiceRecordAddForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { machine } = useSelector((state) => state.machine)
+  console.log("machine : ",machine)
   const { securityUser } = useSelector((state) => state.user);
   const { activeContacts } = useSelector((state) => state.contact);
   const { activeServiceRecordConfigs } = useSelector((state) => state.serviceRecordConfig);
   const { machineConnections } = useSelector((state) => state.machineConnections);
   const [checkParam, setCheckParam] = useState([]);
-  const [checkParams, setCheckParams] = useState([]);
-
   const [serviceDateError, setServiceDateError] = useState('');
 
   const _id = localStorage.getItem('userId');
   useEffect( ()=>{
     dispatch(getMachineConnections(machine?.customer?._id))
-    dispatch(getActiveServiceRecordConfigs())
+    dispatch(getActiveServiceRecordConfigs(machine?.machineModel?.category?._id, machine?.machineModel?._id))
     dispatch(getActiveContacts(machine?.customer?._id))
   },[dispatch, machine])
 
@@ -88,11 +87,11 @@ function MachineServiceRecordAddForm() {
     control,
   } = methods;
 
-  const {  files, decoiler, serviceRecordConfig } = watch()
+  const {  files, decoiler, serviceRecordConfig, checkParams } = watch()
 
   useEffect(()=>{
-    setCheckParams(serviceRecordConfig?.checkParams)
-  },[serviceRecordConfig])
+    setValue('checkParams',serviceRecordConfig?.checkParams)
+  },[serviceRecordConfig, setValue])
 
   const onSubmit = async (data) => {
     try {
@@ -174,18 +173,7 @@ function MachineServiceRecordAddForm() {
                     )}
                   />
 
-                  {checkParams?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS_CONSTRCTUION} />}
-
-                    <TableContainer >
-                        <Table>
-                            <TableBody>
-                  {checkParams?.map((row, index) =>
-                  ( typeof row?.paramList?.length === 'number' &&
-                                <CollapsibleCheckedItemInputRow key={uuidv4()} value={row} index={index} checkParams={checkParams} setCheckParams={setCheckParams} />
-                  ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                  
                                   
                 <Box
                     rowGap={2}
@@ -195,21 +183,6 @@ function MachineServiceRecordAddForm() {
                   >
 
                   <RHFDatePicker name="serviceDate" label="Service Date" />
-                  {/* <DatePicker
-                    name="serviceDate"
-                    label="Service Date"
-                    value={serviceDate}
-                    slotProps={{
-                      textField: {
-                        helperText: 'MM/DD/YYYY',
-                      },
-                    }}
-                    views={['day', 'month','year']}
-                    // format="DD-MM-YYYY"
-                    format="LL"
-                    onChange={handleServiceDateChange}
-                    renderInput={params => <TextField {...params}  />}
-                  /> */}
 
                   <RHFAutocomplete
                     name="technician"
@@ -222,6 +195,7 @@ function MachineServiceRecordAddForm() {
                     )}
                   />
                   </Box>
+                    <RHFTextField name="operatorRemarks" label="Technican Remarks" minRows={3} multiline/> 
                   <Box
                     rowGap={2}
                     columnGap={2}
@@ -264,7 +238,18 @@ function MachineServiceRecordAddForm() {
                       )}
                     />
 
+                    {checkParams?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS_CONSTRCTUION} />}
 
+                    <TableContainer >
+                        <Table>
+                            <TableBody>
+                              {checkParams?.map((row, index) =>
+                              ( typeof row?.paramList?.length === 'number' &&
+                                  <CollapsibleCheckedItemInputRow key={uuidv4()} value={row} index={index} checkParams={checkParams} setValue={setValue} />
+                              ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                     { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label="Note" minRows={3} multiline/> }
 
                     { serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="maintenanceRecommendation" label="Maintenance Recommendation" minRows={3} multiline/> }
@@ -283,7 +268,6 @@ function MachineServiceRecordAddForm() {
                     )}
                     />
 
-                    <RHFTextField name="operatorRemarks" label="Operator Remarks" minRows={3} multiline/> 
 
                   {/* <Grid item xs={12} md={6} lg={12}>
                     <RHFUpload
