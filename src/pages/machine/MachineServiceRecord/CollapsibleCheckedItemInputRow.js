@@ -16,7 +16,6 @@ const CollapsibleCheckedItemInputRow = ({value, index, toggleEdit, deleteIndex, 
           updateCheckParamObject.value = event.target.value
     updateCheckParams[index]?.paramList.splice(childIndex, 1, updateCheckParamObject);
     setValue('checkParams',updateCheckParams)
-
   }
   return (
     <>

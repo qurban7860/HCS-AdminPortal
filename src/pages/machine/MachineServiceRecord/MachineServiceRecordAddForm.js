@@ -6,14 +6,14 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { DatePicker } from '@mui/x-date-pickers';
 import { v4 as uuidv4 } from 'uuid';
-import { Box, Card, Grid, Stack, Typography,  TextField, TableBody, Table, TableContainer, Autocomplete } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography,  TextField, TableBody, Table, TableContainer, Autocomplete, TableRow, TableCell, } from '@mui/material';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import FormHeading from '../../components/DocumentForms/FormHeading';
 import { FORMLABELS } from '../../../constants/default-constants';
 // slice
 import { addMachineServiceRecord, setMachineServiceRecordAddFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
 import { getMachineConnections } from '../../../redux/slices/products/machineConnections';
-import { getActiveServiceRecordConfigs } from '../../../redux/slices/products/serviceRecordConfig';
+import { getActiveServiceRecordConfigsForRecords } from '../../../redux/slices/products/serviceRecordConfig';
 import { getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
 import { getActiveContacts } from '../../../redux/slices/customer/contact';
 // components
@@ -25,6 +25,7 @@ import FormProvider, {
   RHFSwitch,
   RHFUpload,
   RHFDatePicker,
+  RHFCheckbox
 } from '../../../components/hook-form';
 import CollapsibleCheckedItemInputRow from './CollapsibleCheckedItemInputRow'
 
@@ -35,18 +36,19 @@ function MachineServiceRecordAddForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { machine } = useSelector((state) => state.machine)
-  console.log("machine : ",machine)
   const { securityUser } = useSelector((state) => state.user);
   const { activeContacts } = useSelector((state) => state.contact);
-  const { activeServiceRecordConfigs } = useSelector((state) => state.serviceRecordConfig);
+  const { activeServiceRecordConfigsForRecords } = useSelector((state) => state.serviceRecordConfig);
   const { machineConnections } = useSelector((state) => state.machineConnections);
   const [checkParam, setCheckParam] = useState([]);
+  const [checkParamList, setCheckParamList] = useState([]);
+// console.log("checkParamList : ",checkParamList)
   const [serviceDateError, setServiceDateError] = useState('');
 
   const _id = localStorage.getItem('userId');
   useEffect( ()=>{
     dispatch(getMachineConnections(machine?.customer?._id))
-    dispatch(getActiveServiceRecordConfigs(machine?.machineModel?.category?._id, machine?.machineModel?._id))
+    dispatch(getActiveServiceRecordConfigsForRecords(machine?._id))
     dispatch(getActiveContacts(machine?.customer?._id))
   },[dispatch, machine])
 
@@ -91,6 +93,7 @@ function MachineServiceRecordAddForm() {
 
   useEffect(()=>{
     setValue('checkParams',serviceRecordConfig?.checkParams)
+    setCheckParamList(serviceRecordConfig?.checkParams)
   },[serviceRecordConfig, setValue])
 
   const onSubmit = async (data) => {
@@ -153,7 +156,15 @@ function MachineServiceRecordAddForm() {
     [setValue, checkParam]
   );
 
-
+  const handleChangeCheckItemListValue = (index, childIndex, e) => {
+    e.preventDefault();
+    const updatedCheckParams = [...checkParamList];
+    const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
+    updatedCheckParamObject.value = e.target.value;
+    updatedCheckParams[index].paramList[childIndex] = updatedCheckParamObject;
+    setCheckParamList(updatedCheckParams);
+  }
+  
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
@@ -165,7 +176,7 @@ function MachineServiceRecordAddForm() {
                   <RHFAutocomplete
                     name="serviceRecordConfig"
                     label="Service Record Configuration"
-                    options={activeServiceRecordConfigs}
+                    options={activeServiceRecordConfigsForRecords}
                     getOptionLabel={(option) => `${option?.docTitle ?? ''} ${option?.docTitle ? '-' : '' } ${option.recordType ? option.recordType :   ''}`}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     renderOption={(props, option) => (
@@ -238,24 +249,49 @@ function MachineServiceRecordAddForm() {
                       )}
                     />
 
-                    {checkParams?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS_CONSTRCTUION} />}
+                    {checkParamList?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS_CONSTRCTUION} />}
 
-                    <TableContainer >
-                        <Table>
-                            <TableBody>
-                              {checkParams?.map((row, index) =>
-                              ( typeof row?.paramList?.length === 'number' &&
-                                  <CollapsibleCheckedItemInputRow key={uuidv4()} value={row} index={index} checkParams={checkParams} setValue={setValue} />
-                              ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                    <Grid sx={{display:'flex', flexDirection:'column'}}>
+                          {checkParamList?.map((row, index) =>
+                          ( typeof row?.paramList?.length === 'number' &&
+                          <>
+                        <Grid key={index}  item md={12} >
+                                <Typography variant="body2"><b>{`${index+1}). `}</b>{typeof row?.paramListTitle === 'string' && row?.paramListTitle || ''}{' ( Items: '}<b>{`${row?.paramList?.length}`}</b>{' ) '}</Typography>
+                        </Grid>
+                        <Grid  item md={12} key={uuidv4()}>
+                          {row?.paramList.map((childRow,childIndex) => (
+                            <Box
+                            sx={{pl:3}}
+                              rowGap={2}
+                              columnGap={2}
+                              display="grid"
+                              gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                              key={uuidv4()} >
+                              <Typography variant="body2" ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}</Typography>
+                              {( childRow?.inputType === 'Short Text' || childRow?.inputType === 'Long Text' || childRow?.inputType === 'Number' ) && <RHFTextField 
+                                label={childRow?.inputType} 
+                                name={childRow.name} 
+                                value={checkParamList[index].paramList[childIndex]?.value || ''}
+                                type={childRow?.inputType === 'Number' && childRow?.inputType.toLowerCase()} 
+                                onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e)}
+                                size="small" sx={{m:0.3}} 
+                                minRows={childRow?.inputType === 'Long Text' && 3} multiline={childRow?.inputType === 'Long Text'}
+                                key={uuidv4()}
+                                required={childRow?.isRequired}
+                              />}
+                              {childRow?.inputType === 'Boolean' && <RHFCheckbox name={childRow.name} required={childRow?.isRequired} checked={checkParamList[index].paramList[childIndex]?.value || false} onChange={(val)=>handleChangeCheckItemListValue(index, childIndex, val)} key={uuidv4()} />}
+                            </Box>
+                          ))}
+                        </Grid>
+                        </>
+                          ))}
+                    </Grid>
+                                  {/* <CollapsibleCheckedItemInputRow key={uuidv4()} value={row} index={index} checkParams={checkParams} setValue={setValue} /> */}
                     { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label="Note" minRows={3} multiline/> }
 
                     { serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="maintenanceRecommendation" label="Maintenance Recommendation" minRows={3} multiline/> }
 
                     { serviceRecordConfig?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }
-
                     
                     <RHFAutocomplete
                       name="operator"
@@ -267,7 +303,6 @@ function MachineServiceRecordAddForm() {
                       <li {...props} key={option._id}>{`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName :   ''}`}</li>
                     )}
                     />
-
 
                   {/* <Grid item xs={12} md={6} lg={12}>
                     <RHFUpload
@@ -288,9 +323,7 @@ function MachineServiceRecordAddForm() {
                       onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
                     />
                   </Grid> */}
-
                 <Grid container display="flex">
-
                   <RHFSwitch
                     name="isActive"
                     labelPlacement="start"
@@ -301,7 +334,6 @@ function MachineServiceRecordAddForm() {
                     }
                   />
                 </Grid>
-
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>
@@ -311,4 +343,4 @@ function MachineServiceRecordAddForm() {
   );
 }
 
-export default memo(MachineServiceRecordAddForm) 
+export default memo(MachineServiceRecordAddForm)

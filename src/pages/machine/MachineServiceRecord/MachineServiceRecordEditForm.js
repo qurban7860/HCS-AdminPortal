@@ -26,6 +26,7 @@ import FormProvider, {
   RHFTextField,
   RHFAutocomplete,
   RHFDatePicker,
+  RHFCheckbox,
 } from '../../../components/hook-form';
 import CollapsibleCheckedItemRow from '../ServiceRecordConfig/CollapsibleCheckedItemRow'
 
@@ -40,7 +41,7 @@ function MachineServiceRecordEditForm() {
   const { machine } = useSelector((state) => state.machine);
   const [checkParam, setCheckParam] = useState([]);
   const [serviceDateError, setServiceDateError] = useState('');
-
+  const [checkParamList, setCheckParamList] = useState([]);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -88,7 +89,9 @@ function MachineServiceRecordEditForm() {
     formState: { isSubmitting },
   } = methods;
   const {  serviceDate, files, decoiler, serviceRecordConfig } = watch()
-
+  useEffect(()=>{
+    setCheckParamList(serviceRecordConfig?.checkParams)
+  },[serviceRecordConfig, setValue])
   const handleServiceDateChange = (newValue) => setValue("serviceDate", newValue)
 
   useEffect(() => {
@@ -144,6 +147,15 @@ function MachineServiceRecordEditForm() {
     },
     [setValue, checkParam]
   );
+
+  const handleChangeCheckItemListValue = (index, childIndex, e) => {
+    e.preventDefault();
+    const updatedCheckParams = [...checkParamList];
+    const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
+    updatedCheckParamObject.value = e.target.value;
+    updatedCheckParams[index].paramList[childIndex] = updatedCheckParamObject;
+    setCheckParamList(updatedCheckParams);
+  }
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -228,18 +240,43 @@ function MachineServiceRecordEditForm() {
                   )}
                 />
 
-                {serviceRecordConfig?.checkParams?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
+                {checkParamList?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS_CONSTRCTUION} />}
 
-                <TableContainer >
-                    <Table>
-                        <TableBody>
-                          {serviceRecordConfig?.checkParams.map((row, index) =>
-                          ( typeof row?.paramList?.length === 'number' &&
-                            <CollapsibleCheckedItemRow key={uuidv4()} value={row} index={index} />
-                          ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                <Grid sx={{display:'flex', flexDirection:'column'}}>
+                      {checkParamList?.map((row, index) =>
+                      ( typeof row?.paramList?.length === 'number' &&
+                      <>
+                    <Grid key={index}  item md={12} >
+                            <Typography variant="body2"><b>{`${index+1}). `}</b>{typeof row?.paramListTitle === 'string' && row?.paramListTitle || ''}{' ( Items: '}<b>{`${row?.paramList?.length}`}</b>{' ) '}</Typography>
+                    </Grid>
+                    <Grid  item md={12} key={uuidv4()}>
+                      {row?.paramList.map((childRow,childIndex) => (
+                        <Box
+                        sx={{pl:3}}
+                          rowGap={2}
+                          columnGap={2}
+                          display="grid"
+                          gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                          key={uuidv4()} >
+                          <Typography variant="body2" ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}</Typography>
+                          {( childRow?.inputType === 'Short Text' || childRow?.inputType === 'Long Text' || childRow?.inputType === 'Number' ) && <RHFTextField 
+                            label={childRow?.inputType} 
+                            name={childRow.name} 
+                            value={checkParamList[index].paramList[childIndex]?.value || ''}
+                            type={childRow?.inputType === 'Number' && childRow?.inputType.toLowerCase()} 
+                            onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e)}
+                            size="small" sx={{m:0.3}} 
+                            minRows={childRow?.inputType === 'Long Text' && 3} multiline={childRow?.inputType === 'Long Text'}
+                            key={uuidv4()}
+                            required={childRow?.isRequired}
+                          />}
+                          {childRow?.inputType === 'Boolean' && <RHFCheckbox name={childRow.name} required={childRow?.isRequired} checked={checkParamList[index].paramList[childIndex]?.value || false} onChange={(val)=>handleChangeCheckItemListValue(index, childIndex, val)} key={uuidv4()} />}
+                        </Box>
+                      ))}
+                    </Grid>
+                    </>
+                      ))}
+                </Grid>
 
                 { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label="Note" minRows={3} multiline/> }
 
