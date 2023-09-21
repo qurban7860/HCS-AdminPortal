@@ -331,8 +331,8 @@ function ToolsInstalledEditForm() {
     }
     setValue('toolType',{name: toolInstalled?.toolType})
     setCompositToolNumber(toolInstalled?.compositeToolConfig.length)
-    const comToolVal = toolInstalled?.compositeToolConfig.map((value) => ({engage: value.engageInstruction, disengage: value.disengageInstruction}))
-    setCompositToolVal(comToolVal || [])
+    // const comToolVal = toolInstalled?.compositeToolConfig.map((value) => ({engage: value.engageInstruction, disengage: value.disengageInstruction}))
+    // setCompositToolVal(comToolVal || [])
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolInstalled]);
 
