@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { DatePicker } from '@mui/x-date-pickers';
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
 import { Box, Card, Grid, Stack, Typography,  TextField, TableBody, Table, TableContainer, Autocomplete, TableRow, TableCell, } from '@mui/material';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import FormHeading from '../../components/DocumentForms/FormHeading';
@@ -306,7 +306,7 @@ function MachineServiceRecordAddForm() {
                                 required={childRow?.isRequired} 
                                 checked={checkParamList[index].paramList[childIndex]?.value || false} 
                                 onChange={(val)=>handleChangeCheckItemListValue(index, childIndex, val)} 
-                                key={uuidv4()} 
+                                
                               />}
                             </Box>
                           ))}
@@ -314,7 +314,7 @@ function MachineServiceRecordAddForm() {
                         </>
                           ))}
                     </Grid>
-                                  {/* <CollapsibleCheckedItemInputRow key={uuidv4()} value={row} index={index} checkParams={checkParams} setValue={setValue} /> */}
+                                  {/* <CollapsibleCheckedItemInputRow } value={row} index={index} checkParams={checkParams} setValue={setValue} /> */}
                     { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label="Note" minRows={3} multiline/> }
 
                     { serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="maintenanceRecommendation" label="Maintenance Recommendation" minRows={3} multiline/> }
