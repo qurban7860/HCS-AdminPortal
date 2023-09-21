@@ -56,18 +56,13 @@ CustomerAddForm.propTypes = {
 
 export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const { userId, user } = useAuthContext();
-
   const { spContacts } = useSelector((state) => state.contact);
-
   const [contactFlag, setCheckboxFlag] = useState(false);
   const [chips, setChips] = useState([])
 
   const toggleCheckboxFlag = () => setCheckboxFlag((value) => !value);
-
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
-
   const { enqueueSnackbar } = useSnackbar();
 
   // const numberRegExp = /^[0-9]+$/;
@@ -219,7 +214,15 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       if (supportManVal) {
         data.supportManager = supportManVal._id;
       }
-      // console.log('customer : ', data);
+
+      if(contactFlag){
+        if (billingContactPhone) data.technicalContactPhone = billingContactPhone;
+        data.technicalFirstName = data?.billingFirstName;
+        data.technicalLastName = data?.billingLastName;
+        data.technicalTitle = data?.billingTitle;
+        data.technicalContactEmail = data?.billingContactEmail;
+      }
+
       const response = await dispatch(addCustomer(data));
       
       reset();

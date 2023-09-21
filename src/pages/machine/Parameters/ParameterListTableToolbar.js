@@ -10,6 +10,8 @@ import { PATH_MACHINE } from '../../../routes/paths';
 import { BUTTONS } from '../../../constants/default-constants';
 // styles
 import { options } from '../../../theme/styles/default-styles';
+import { dispatch } from '../../../redux/store';
+import { getActiveCategories } from '../../../redux/slices/products/category';
 // ----------------------------------------------------------------------
 
 ParameterListTableToolbar.propTypes = {
@@ -33,6 +35,7 @@ export default function ParameterListTableToolbar({
 }) {
   const navigate = useNavigate();
   const toggleAdd = () => {
+    dispatch(getActiveCategories())
     navigate(PATH_MACHINE.machines.settings.parameters.new);
   };
   return (
