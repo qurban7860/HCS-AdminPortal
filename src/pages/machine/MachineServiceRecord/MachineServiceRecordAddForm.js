@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { DatePicker } from '@mui/x-date-pickers';
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
 import { Box, Card, Grid, Stack, Typography,  TextField, TableBody, Table, TableContainer, Autocomplete, TableRow, TableCell, } from '@mui/material';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import FormHeading from '../../components/DocumentForms/FormHeading';
@@ -92,12 +92,33 @@ function MachineServiceRecordAddForm() {
   const {  files, decoiler, serviceRecordConfig, checkParams } = watch()
 
   useEffect(()=>{
-    setValue('checkParams',serviceRecordConfig?.checkParams)
     setCheckParamList(serviceRecordConfig?.checkParams)
-  },[serviceRecordConfig, setValue])
+  },[serviceRecordConfig])
 
   const onSubmit = async (data) => {
     try {
+      const checkParams_ = [];
+
+      if(serviceRecordConfig && 
+        Array.isArray(serviceRecordConfig.checkParams) && 
+        serviceRecordConfig.checkParams.length>0) 
+        serviceRecordConfig.checkParams.forEach((checkParam_, index )=>{
+          if(Array.isArray(checkParam_.paramList) && 
+            checkParam_.paramList.length>0) {
+            
+            checkParam_.paramList.forEach((CI,ind)=>{
+
+              checkParams_.push({
+                serviceParam:CI._id,
+                name:CI.name,
+                paramListTitle:checkParam_.paramListTitle,
+                value:CI.value
+              });
+
+            });
+          }
+        });
+      data.checkParams = checkParams_;
       data.decoiler = decoiler
       console.log("data : ",data)
       await dispatch(addMachineServiceRecord(machine?._id,data));
@@ -114,59 +135,57 @@ function MachineServiceRecordAddForm() {
 
   const handleServiceDateChange = (newValue) => setValue("serviceDate", newValue)
 
-  const handleDropMultiFile = useCallback(
-    (acceptedFiles) => {
-      const docFiles = files || [];
-      const newFiles = acceptedFiles.map((file) =>
-        Object.assign(file, {
-          preview: URL.createObjectURL(file),
-        })
-      );
-      setValue('files', [...docFiles, ...newFiles], { shouldValidate: true });
-    },
-    [setValue, files ]
-  );
+  // const handleDropMultiFile = useCallback(
+  //   (acceptedFiles) => {
+  //     const docFiles = files || [];
+  //     const newFiles = acceptedFiles.map((file) =>
+  //       Object.assign(file, {
+  //         preview: URL.createObjectURL(file),
+  //       })
+  //     );
+  //     setValue('files', [...docFiles, ...newFiles], { shouldValidate: true });
+  //   },
+  //   [setValue, files ]
+  // );
 
-   useCallback(
-    (index,acceptedFiles) => {
-      console.log(" acceptedFiles : ", acceptedFiles)
-      const docFiles =  [];
-      const newFiles = acceptedFiles.map((file) =>
-        Object.assign(file, {
-          preview: URL.createObjectURL(file),
-        })
-      );
+  //  useCallback(
+  //   (index,acceptedFiles) => {
+  //     console.log(" acceptedFiles : ", acceptedFiles)
+  //     const docFiles =  [];
+  //     const newFiles = acceptedFiles.map((file) =>
+  //       Object.assign(file, {
+  //         preview: URL.createObjectURL(file),
+  //       })
+  //     );
 
-      setCheckParam((prevVal) => {
-        const updatedVal = [...prevVal];
-        updatedVal[index] = {
-          files: [...(checkParam[index]?.files ?? []), ...newFiles],
-          serviceParam: updatedVal[index]?.serviceParam || null,
-          name: updatedVal[index]?.name || '',
-          paramListTitle: updatedVal[index]?.paramListTitle || '',
-          value: updatedVal[index]?.value || '',
-          comments: updatedVal[index]?.comments || '',
-        };
-        return updatedVal; 
-      });
+  //     setCheckParam((prevVal) => {
+  //       const updatedVal = [...prevVal];
+  //       updatedVal[index] = {
+  //         files: [...(checkParam[index]?.files ?? []), ...newFiles],
+  //         serviceParam: updatedVal[index]?.serviceParam || null,
+  //         name: updatedVal[index]?.name || '',
+  //         paramListTitle: updatedVal[index]?.paramListTitle || '',
+  //         value: updatedVal[index]?.value || '',
+  //         comments: updatedVal[index]?.comments || '',
+  //       };
+  //       return updatedVal; 
+  //     });
 
-      setValue(`checkParamFiles${index}`, [...docFiles, ...newFiles], { shouldValidate: true });
-      console.log(`checkParamFiles${index}`)
-    },
-    [setValue, checkParam]
-  );
+  //     setValue(`checkParamFiles${index}`, [...docFiles, ...newFiles], { shouldValidate: true });
+  //     console.log(`checkParamFiles${index}`)
+  //   },
+  //   [setValue, checkParam]
+  // );
 
   const handleChangeCheckItemListValue = (index, childIndex, e) => {
-    e.preventDefault();
     const updatedCheckParams = [...checkParamList];
     const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
     updatedCheckParamObject.value = e.target.value;
-    updatedCheckParams[index].paramList[childIndex] = updatedCheckParamObject;
     setCheckParamList(updatedCheckParams);
   }
   
   return (
-      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      <FormProvider methods={methods}  onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
@@ -258,7 +277,8 @@ function MachineServiceRecordAddForm() {
                         <Grid key={index}  item md={12} >
                                 <Typography variant="body2"><b>{`${index+1}). `}</b>{typeof row?.paramListTitle === 'string' && row?.paramListTitle || ''}{' ( Items: '}<b>{`${row?.paramList?.length}`}</b>{' ) '}</Typography>
                         </Grid>
-                        <Grid  item md={12} key={uuidv4()}>
+                        <Grid  item md={12} >
+
                           {row?.paramList.map((childRow,childIndex) => (
                             <Box
                             sx={{pl:3}}
@@ -266,27 +286,35 @@ function MachineServiceRecordAddForm() {
                               columnGap={2}
                               display="grid"
                               gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-                              key={uuidv4()} >
+                              >
                               <Typography variant="body2" ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}</Typography>
-                              {( childRow?.inputType === 'Short Text' || childRow?.inputType === 'Long Text' || childRow?.inputType === 'Number' ) && <RHFTextField 
+                              {( childRow?.inputType === 'Short Text' || childRow?.inputType === 'Long Text' || childRow?.inputType === 'Number' ) && 
+                              
+                              <RHFTextField 
                                 label={childRow?.inputType} 
-                                name={childRow.name} 
-                                value={checkParamList[index].paramList[childIndex]?.value || ''}
+                                name={childRow?.name} 
                                 type={childRow?.inputType === 'Number' && childRow?.inputType.toLowerCase()} 
                                 onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e)}
                                 size="small" sx={{m:0.3}} 
+                                value={checkParamList[index]?.paramList[childIndex]?.value}
                                 minRows={childRow?.inputType === 'Long Text' && 3} multiline={childRow?.inputType === 'Long Text'}
-                                key={uuidv4()}
                                 required={childRow?.isRequired}
                               />}
-                              {childRow?.inputType === 'Boolean' && <RHFCheckbox name={childRow.name} required={childRow?.isRequired} checked={checkParamList[index].paramList[childIndex]?.value || false} onChange={(val)=>handleChangeCheckItemListValue(index, childIndex, val)} key={uuidv4()} />}
+                              {childRow?.inputType === 'Boolean' && 
+                              <RHFCheckbox 
+                                name={childRow.name} 
+                                required={childRow?.isRequired} 
+                                checked={checkParamList[index].paramList[childIndex]?.value || false} 
+                                onChange={(val)=>handleChangeCheckItemListValue(index, childIndex, val)} 
+                                
+                              />}
                             </Box>
                           ))}
                         </Grid>
                         </>
                           ))}
                     </Grid>
-                                  {/* <CollapsibleCheckedItemInputRow key={uuidv4()} value={row} index={index} checkParams={checkParams} setValue={setValue} /> */}
+                                  {/* <CollapsibleCheckedItemInputRow } value={row} index={index} checkParams={checkParams} setValue={setValue} /> */}
                     { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label="Note" minRows={3} multiline/> }
 
                     { serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="maintenanceRecommendation" label="Maintenance Recommendation" minRows={3} multiline/> }
