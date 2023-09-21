@@ -46,7 +46,7 @@ function MachineServiceRecordEditForm() {
 
   useEffect( ()=>{
     dispatch(getMachineConnections(machine?.customer?._id))
-    dispatch(getActiveServiceRecordConfigs())
+    dispatch(getActiveServiceRecordConfigs(machine?.machineModel?.category?._id, machine?.machineModel?._id))
     dispatch(getActiveContacts(machine?.customer?._id))
   },[dispatch, machine])
 
@@ -164,19 +164,7 @@ function MachineServiceRecordEditForm() {
                 )}
               />
 
-              {serviceRecordConfig?.checkParams?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
 
-                <TableContainer >
-                    <Table>
-                        <TableBody>
-              {serviceRecordConfig?.checkParams.map((row, index) =>
-              ( typeof row?.paramList?.length === 'number' &&
-                            <CollapsibleCheckedItemRow key={uuidv4()} value={row} index={index} />
-              ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                              
             <Box
                 rowGap={2}
                 columnGap={2}
@@ -197,6 +185,7 @@ function MachineServiceRecordEditForm() {
               )}
               />
               </Box>
+              <RHFTextField name="operatorRemarks" label="Technician Remarks" minRows={3} multiline/> 
               <Box
                 rowGap={2}
                 columnGap={2}
@@ -239,6 +228,18 @@ function MachineServiceRecordEditForm() {
                   )}
                 />
 
+                {serviceRecordConfig?.checkParams?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
+
+                <TableContainer >
+                    <Table>
+                        <TableBody>
+                          {serviceRecordConfig?.checkParams.map((row, index) =>
+                          ( typeof row?.paramList?.length === 'number' &&
+                            <CollapsibleCheckedItemRow key={uuidv4()} value={row} index={index} />
+                          ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
 
                 { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label="Note" minRows={3} multiline/> }
 
@@ -258,7 +259,6 @@ function MachineServiceRecordEditForm() {
                 )}
                 />
 
-                <RHFTextField name="operatorRemarks" label="Operator Remarks" minRows={3} multiline/> 
 
               {/* <Grid item xs={12} md={6} lg={12}>
                 <RHFUpload

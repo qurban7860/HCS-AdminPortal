@@ -18,9 +18,9 @@ const initialState = {
   page: 0,
   rowsPerPage: 100,
   inputTypes: [
-    { _id:1 , name: 'Number'},
-    { _id:2 , name: 'String'},
-    { _id:3 , name: 'Date'},
+    { _id:1 , name: 'Short Text'},
+    { _id:2 , name: 'Long Text'},
+    { _id:3 , name: 'Number'},
     { _id:4 , name: 'Boolean'},
   ],
   unitTypes: [
@@ -131,7 +131,7 @@ export const {
 } = slice.actions;
 
 // ----------------------------------------------------------------------
-export function getActiveMachineServiceParams (){
+export function getActiveMachineServiceParams (categoryId){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
@@ -139,7 +139,8 @@ export function getActiveMachineServiceParams (){
       {
         params: {
           isArchived: false,
-          isActive: true
+          isActive: true,
+          category: categoryId
         }
       }
       );
