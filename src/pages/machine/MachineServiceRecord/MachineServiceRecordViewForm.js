@@ -1,13 +1,10 @@
 import { useMemo, memo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-// import { useNavigate } from 'react-router-dom';
 // @mui
-import {  Card, Grid, Tooltip, TableContainer, Table, TableBody, Typography } from '@mui/material';
+import {  Card, Grid, Tooltip, TableContainer, Table, TableBody, Typography, Box } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 // redux
 import { deleteMachineServiceRecord, setAllFlagsFalse, setMachineServiceRecordEditFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
-// paths
-// import { PATH_MACHINE, PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 // import { fDate, fDateTime } from '../../../utils/formatTime';
@@ -17,6 +14,7 @@ import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import { fDate } from '../../../utils/formatTime';
 import ReadableCollapsibleCheckedItemRow from './ReadableCollapsibleCheckedItemRow'
+import { RHFCheckbox } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -71,8 +69,7 @@ function MachineServiceParamViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [ machineServiceRecord]
   );
-  // const deco = defaultValues?.decoilers?.map((decoilerMachine) => ({ name: `${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`}))
-  // console.log("defaultValues decoiler, ", deco, defaultValues?.decoilers)
+
   return (
     <Card sx={{ p: 2 }}>
       <Grid>
@@ -91,30 +88,57 @@ function MachineServiceParamViewForm() {
           <ViewFormField sm={6} heading="Machine Model"  param={machine?.machineModel?.name || ''} />
           <ViewFormField sm={6} heading="Model Category"  param={machine?.machineModel?.category?.name || ''} />
           <ViewFormField sm={6} heading="Customer"  param={`${machine?.customer?.name ? machine?.customer?.name : ''}`} />
-          <ViewFormField sm={12} heading="Decoilers" 
-              // chipLabel='serialNo'
-              // arrayParam={defaultValues?.decoilers}
-              arrayParam={defaultValues?.decoilers?.map((decoilerMachine) => ({ name: `${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`}))}
-          />
-          <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
-            Check Items (Under Construction)
+          <ViewFormField sm={12} heading="Decoilers" arrayParam={defaultValues?.decoilers?.map((decoilerMachine) => ({ name: `${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`}))} />
+          <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7, pt:1}}>
+            Check Items
           </Typography>
-          {machineServiceRecord?.serviceRecordConfig?.checkParams?.length > 0 ? (machineServiceRecord?.serviceRecordConfig?.checkParams.map((row, index) =>
-            ( typeof row?.paramList?.length === 'number' &&
-              <TableContainer >
-                  <Table>
-                      <TableBody>
-                          <ReadableCollapsibleCheckedItemRow key={uuidv4()} value={row} index={index} />
-                      </TableBody>
-                  </Table>
-              </TableContainer>
-            ))
-          ) : <ViewFormField />
-          }
+          <Grid item md={12} sx={{display:'flex', flexDirection:'column',p:2}}>
+            {machineServiceRecord?.serviceRecordConfig?.checkParams?.length > 0 ? (machineServiceRecord?.serviceRecordConfig?.checkParams.map((row, index) =>
+              <>
+                <Grid key={index}  item md={12} sx={{pb:1}} >
+                  <Typography variant="body2"><b>{`${index+1}). `}</b>{typeof row?.paramListTitle === 'string' && row?.paramListTitle || ''}{' ( Items: '}<b>{`${row?.paramList?.length}`}</b>{' ) '}</Typography>
+                </Grid>
+                <Grid  item md={12} sx={{ pb:1}}>
+                    <Box
+                      sx={{pl:4, backgroundColor:'lightgrey' }}
+                      rowGap={2}
+                      columnGap={2}
+                      display="grid"
+                      gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                      >
+                      <Typography variant="subtitle1" >Checked Item</Typography>
+                      <Typography variant="subtitle1" >Value</Typography>
+                      </Box>
+                  {row?.paramList.map((childRow,childIndex) => 
+                  (<Box
+                      component="form"
+                      noValidate
+                      autoComplete="off"
+                      sx={{pl:4 }}
+                      rowGap={2}
+                      columnGap={2}
+                      display="grid"
+                      gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                      >
+                      <Typography variant="body2" ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}</Typography>
+                      {childRow?.inputType === 'Boolean' ? <RHFCheckbox  checked={machineServiceRecord[index].paramList[childIndex]?.value || false} disabled /> :
+                      <Typography variant="body2" >
+                      {/* {machineServiceRecord[index]?.paramList[childIndex]?.value || ""} */}
+                      {machineServiceRecord?.checkParams?.find((element) =>
+                        element?.serviceParam === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramList[childIndex]?._id
+                        )?.value }
+                      </Typography> }
+                    </Box>
+                  ))}
+                </Grid>
+              </>
+              )) : <ViewFormField /> }
+          </Grid>
+
           {machineServiceRecord?.serviceRecordConfig?.enableNote && <ViewFormField sm={12} heading="Note" param={defaultValues.serviceNote} />}
           {machineServiceRecord?.serviceRecordConfig?.enableMaintenanceRecommendations && <ViewFormField sm={12} heading="Maintenance Recommendation" param={defaultValues.maintenanceRecommendation} />}
           {machineServiceRecord?.serviceRecordConfig?.enableSuggestedSpares && <ViewFormField sm={12} heading="Suggested Spares" param={defaultValues.suggestedSpares} />}
-          <ViewFormField sm={12} heading="Operator" param={`${defaultValues.operator?.firstName} ${defaultValues.operator?.lastName ? defaultValues.operator?.lastName : ''}`} />
+          <ViewFormField sm={12} heading="Operator" param={`${defaultValues.operator?.firstName ? defaultValues.operator?.firstName : ''} ${defaultValues.operator?.lastName ? defaultValues.operator?.lastName : ''}`} />
 
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
