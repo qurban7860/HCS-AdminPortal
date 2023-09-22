@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 // @mui
 import { Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { dispatch } from 'src/redux/store';
 // components
 import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 // routes
@@ -10,6 +11,7 @@ import { PATH_MACHINE } from '../../../routes/paths';
 import { BUTTONS } from '../../../constants/default-constants';
 // styles
 import { options } from '../../../theme/styles/default-styles';
+import {getActiveTechparamcategories} from '../../../redux/slices/products/machineTechParamCategory';
 // ----------------------------------------------------------------------
 
 ParameterListTableToolbar.propTypes = {
@@ -33,6 +35,7 @@ export default function ParameterListTableToolbar({
 }) {
   const navigate = useNavigate();
   const toggleAdd = () => {
+    dispatch(getActiveTechparamcategories());
     navigate(PATH_MACHINE.machines.settings.parameters.new);
   };
   return (
