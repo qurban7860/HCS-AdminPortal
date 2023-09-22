@@ -85,7 +85,8 @@ export default function Machine() {
                   content={ICONS.MACHINE_STATUS.heading}
                 />
               </List>
-
+            </StyledSettingsCardContainer>
+            <StyledSettingsCardContainer>
               <List
                 sx={{ fontSize: '0.7em' }}
                 component="nav"
@@ -119,6 +120,8 @@ export default function Machine() {
                   content={ICONS.TOOLS.heading}
                 />
               </List>
+            </StyledSettingsCardContainer>
+            <StyledSettingsCardContainer>
               <List
                 sx={{ fontSize: '0.7em' }}
                 component="nav"
