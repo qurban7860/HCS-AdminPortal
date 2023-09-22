@@ -11,6 +11,8 @@ import { BUTTONS } from '../../../constants/default-constants';
 // styles
 import { options } from '../../../theme/styles/default-styles';
 import { dispatch } from '../../../redux/store';
+
+import { getActiveTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
 import { getActiveCategories } from '../../../redux/slices/products/category';
 // ----------------------------------------------------------------------
 
@@ -36,6 +38,7 @@ export default function ParameterListTableToolbar({
   const navigate = useNavigate();
   const toggleAdd = () => {
     dispatch(getActiveCategories())
+    dispatch(getActiveTechparamcategories());
     navigate(PATH_MACHINE.machines.settings.parameters.new);
   };
   return (
