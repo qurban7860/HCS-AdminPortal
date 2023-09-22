@@ -51,15 +51,14 @@ export default function Machine() {
   };
 
   return (
+
     <Container maxWidth={false}>
       <StyledCardContainer>
         <Cover name={FORMLABELS.COVER.SETTINGS} />
       </StyledCardContainer>
-      <Grid container spacing={3}>
-        {/* Grid for displaying machine related information */}
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={6} lg={12} sx={{ ml: '22px' }}>
-            <StyledSettingsCardContainer>
+      <Grid container gap={3}>
+        <Grid item xs={12} md={6} lg={4}>
+          <StyledSettingsCardContainer>
               <List
                 component="nav"
                 aria-labelledby="nested-list-subheader"
@@ -86,7 +85,8 @@ export default function Machine() {
                   content={ICONS.MACHINE_STATUS.heading}
                 />
               </List>
-
+            </StyledSettingsCardContainer>
+            <StyledSettingsCardContainer>
               <List
                 sx={{ fontSize: '0.7em' }}
                 component="nav"
@@ -104,6 +104,10 @@ export default function Machine() {
                   content={ICONS.PARAMETERS.heading}
                 />
               </List>
+          </StyledSettingsCardContainer>
+        </Grid>
+        <Grid item xs={12} md={6} lg={4}>
+          <StyledSettingsCardContainer>
               <List
                 sx={{ fontSize: '0.7em' }}
                 component="nav"
@@ -116,6 +120,8 @@ export default function Machine() {
                   content={ICONS.TOOLS.heading}
                 />
               </List>
+            </StyledSettingsCardContainer>
+            <StyledSettingsCardContainer>
               <List
                 sx={{ fontSize: '0.7em' }}
                 component="nav"
@@ -140,10 +146,106 @@ export default function Machine() {
 
                 
               </List>
-            </StyledSettingsCardContainer>
-          </Grid>
+          </StyledSettingsCardContainer>
         </Grid>
       </Grid>
     </Container>
+
+    // <Container maxWidth={false}>
+    //   <StyledCardContainer>
+    //     <Cover name={FORMLABELS.COVER.SETTINGS} />
+    //   </StyledCardContainer>
+    //   <Grid container spacing={3}>
+    //     {/* Grid for displaying machine related information */}
+    //     <Grid container spacing={2}>
+    //       <Grid item xs={12} md={6} lg={12} sx={{ ml: '22px' }}>
+    //         <StyledSettingsCardContainer>
+    //           <List
+    //             component="nav"
+    //             aria-labelledby="nested-list-subheader"
+    //             subheader={<ListItemsHeader header={FORMLABELS.COMMON_SETTINGS} />}
+    //           >
+    //             <ListItem
+    //               onClick={linkCategory}
+    //               icon={ICONS.MACHINE_CATEGORIES.icon}
+    //               content={ICONS.MACHINE_CATEGORIES.heading}
+    //             />
+    //             <ListItem
+    //               onClick={linkModel}
+    //               icon={ICONS.MACHINE_MODELS.icon}
+    //               content={ICONS.MACHINE_MODELS.heading}
+    //             />
+    //             <ListItem
+    //               onClick={linkSupplier}
+    //               icon={ICONS.MACHINE_SUPPLIERS.icon}
+    //               content={ICONS.MACHINE_SUPPLIERS.heading}
+    //             />
+    //             <ListItem
+    //               onClick={linkStatus}
+    //               icon={ICONS.MACHINE_STATUS.icon}
+    //               content={ICONS.MACHINE_STATUS.heading}
+    //             />
+    //           </List>
+
+    //           <List
+    //             sx={{ fontSize: '0.7em' }}
+    //             component="nav"
+    //             aria-labelledby="nested-list-subheader"
+    //             subheader={<ListItemsHeader header={FORMLABELS.TECHNICAL_SETTINGS} />}
+    //           >
+    //             <ListItem
+    //               onClick={linktpCategory}
+    //               icon={ICONS.TECHPARAM_CATEGORIES.icon}
+    //               content={ICONS.TECHPARAM_CATEGORIES.heading}
+    //             />
+    //             <ListItem
+    //               onClick={linkTechParam}
+    //               icon={ICONS.PARAMETERS.icon}
+    //               content={ICONS.PARAMETERS.heading}
+    //             />
+    //           </List>
+    //           </StyledSettingsCardContainer>
+    //           <StyledSettingsCardContainer>
+    //           <List
+    //             sx={{ fontSize: '0.7em' }}
+    //             component="nav"
+    //             aria-labelledby="nested-list-subheader"
+    //             subheader={<ListItemsHeader header={FORMLABELS.TOOLS_INFO} />}
+    //           >
+    //             <ListItem
+    //               onClick={linkTool}
+    //               icon={ICONS.TOOLS.icon}
+    //               content={ICONS.TOOLS.heading}
+    //             />
+    //           </List>
+    //           <List
+    //             sx={{ fontSize: '0.7em' }}
+    //             component="nav"
+    //             aria-labelledby="nested-list-subheader"
+    //             subheader={<ListItemsHeader header={FORMLABELS.SERVICE} />}
+    //           >
+    //             <ListItem
+    //               onClick={linkServiceCategory}
+    //               icon={ICONS.MACHINE_SERVICE_CATEGORY.icon}
+    //               content={ICONS.MACHINE_SERVICE_CATEGORY.heading}
+    //             />
+    //             <ListItem
+    //               onClick={checkItems}
+    //               icon={ICONS.MACHINE_CHECK_ITEMS.icon}
+    //               content={ICONS.MACHINE_CHECK_ITEMS.heading}
+    //             />
+    //             <ListItem
+    //               onClick={linkServiceRecordConfig}
+    //               icon={ICONS.TOOLS.icon}
+    //               content={ICONS.MACHINE_SERVICE_RECORD_CONFIG.heading}
+    //             />
+
+                
+    //           </List>
+    //         </StyledSettingsCardContainer>
+    //       </Grid>
+    //     </Grid>
+    //   </Grid>
+    // </Container>
   );
 }
