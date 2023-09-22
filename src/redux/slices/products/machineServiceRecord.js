@@ -307,6 +307,7 @@ export function updateMachineServiceRecord(machineId,id, params) {
         suggestedSpares:            params?.suggestedSpares,
         operator:                   params?.operator?._id || null,
         operatorRemarks:            params?.operatorRemarks,
+        checkParams:                params?.checkParams || [],
         isActive: params?.isActive
       }
       console.log("data : ",data)

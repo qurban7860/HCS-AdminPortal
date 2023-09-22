@@ -125,7 +125,7 @@ function MachineServiceParamViewForm() {
                       <Typography variant="body2" >
                       {/* {machineServiceRecord[index]?.paramList[childIndex]?.value || ""} */}
                       {machineServiceRecord?.checkParams?.find((element) =>
-                        element?.serviceParam === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramList[childIndex]?._id
+                        element?.paramListTitle === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramListTitle && element?.serviceParam === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramList[childIndex]?._id
                         )?.value }
                       </Typography> }
                     </Box>
