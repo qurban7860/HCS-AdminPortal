@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { v4 as uuidv4 } from 'uuid';
-import { Box, Card, Grid, Stack, Typography, TextField,  Autocomplete, Checkbox } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, TextField,  Autocomplete, Checkbox, InputAdornment } from '@mui/material';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import FormHeading from '../../components/DocumentForms/FormHeading';
 import { FORMLABELS } from '../../../constants/default-constants';
@@ -280,9 +280,6 @@ console.log("checkParamList : ",checkParamList)
 
                           {row?.paramList.map((childRow,childIndex) => (
                             <Box
-                              component="form"
-                              noValidate
-                              autoComplete="off"
                               sx={{pl:4, alignItems: 'center'}}
                               rowGap={2}
                               columnGap={2}
@@ -290,8 +287,9 @@ console.log("checkParamList : ",checkParamList)
                               gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                               >
                               <Typography variant="body2" ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}</Typography>
-
+                              <div>
                               { childRow?.inputType === 'Short Text' && <TextField 
+                                fullWidth
                                 label={childRow?.inputType} 
                                 name={childRow?.name} 
                                 onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e)}
@@ -300,7 +298,8 @@ console.log("checkParamList : ",checkParamList)
                                 required={childRow?.isRequired}
                               />}
 
-                              { childRow?.inputType === 'Long Text' && <TextField 
+                              { childRow?.inputType === 'Long Text' &&<TextField 
+                                fullWidth
                                 label={childRow?.inputType} 
                                 name={childRow?.name} 
                                 onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e)}
@@ -311,29 +310,30 @@ console.log("checkParamList : ",checkParamList)
                               />}
 
                               { childRow?.inputType === 'Number'  && <TextField 
-                                id="filled-number"
+                                fullWidth
+                                id="outlined-number"
                                 label="Number"
                                 name={childRow?.name} 
                                 type="number"
                                 value={checkParamList[index]?.paramList[childIndex]?.value}
                                 onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e)}
-                                InputLabelProps={{
-                                  shrink: true,
+                                InputProps={{
+                                  startAdornment: <InputAdornment position="start">{checkParamList[index]?.paramList[childIndex]?.unitType}</InputAdornment>,
                                 }} 
                                 size="small" sx={{m:0.3}} 
                                 required={childRow?.isRequired}
                               />}
                               
                               {childRow?.inputType === 'Boolean' && 
-                              <div>
+
                               <Checkbox 
                                 name={childRow.name} 
                                 required={childRow?.isRequired} 
                                 checked={checkParamList[index].paramList[childIndex]?.value || false} 
                                 onChange={(val)=>handleChangeCheckItemListCheckBoxValue(index, childIndex, val)} 
                                 
-                              /></div>}
-
+                              />}
+                              </div>
                             </Box>
                           ))}
                         </Grid>
