@@ -258,7 +258,7 @@ export function addMachineServiceRecord(machineId,params) {
           maintenanceRecommendation:  params?.maintenanceRecommendation,
           suggestedSpares:            params?.suggestedSpares,
           operator:                   params?.operator?._id || null,
-          checkParams:                params?.checkParams || null,
+          checkParams:                params?.checkParams || [],
           operatorRemarks:            params?.operatorRemarks,
           isActive: params?.isActive
         }
