@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { v4 as uuidv4 } from 'uuid';
-import { Box, Card, Grid, Stack, Typography, TextField,  Autocomplete } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, TextField,  Autocomplete, Checkbox } from '@mui/material';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import FormHeading from '../../components/DocumentForms/FormHeading';
 import { FORMLABELS } from '../../../constants/default-constants';
@@ -176,6 +176,13 @@ console.log("checkParamList : ",checkParamList)
     setCheckParamList(updatedCheckParams);
   }
   
+  const handleChangeCheckItemListCheckBoxValue = (index, childIndex, e) => {
+    const updatedCheckParams = [...checkParamList];
+    const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
+    updatedCheckParamObject.value =  !updatedCheckParams[index]?.paramList[childIndex]?.value ;
+    setCheckParamList(updatedCheckParams);
+  }
+
   return (
       <FormProvider methods={methods}  onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
@@ -317,13 +324,15 @@ console.log("checkParamList : ",checkParamList)
                                 required={childRow?.isRequired}
                               />}
                               
-                              {childRow?.inputType === 'Boolean' && <RHFCheckbox 
+                              {childRow?.inputType === 'Boolean' && 
+                              <div>
+                              <Checkbox 
                                 name={childRow.name} 
                                 required={childRow?.isRequired} 
                                 checked={checkParamList[index].paramList[childIndex]?.value || false} 
-                                onChange={(val)=>handleChangeCheckItemListValue(index, childIndex, val)} 
+                                onChange={(val)=>handleChangeCheckItemListCheckBoxValue(index, childIndex, val)} 
                                 
-                              />}
+                              /></div>}
 
                             </Box>
                           ))}

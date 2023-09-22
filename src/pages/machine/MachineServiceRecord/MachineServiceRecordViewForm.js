@@ -118,7 +118,7 @@ function MachineServiceParamViewForm() {
                       rowGap={2}
                       columnGap={2}
                       display="grid"
-                      gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                      gridTemplateColumns={{ sm: 'repeat(2, 1fr)', md: 'repeat(2, 1fr)' }}
                       >
                       <Typography variant="body2" ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}</Typography>
                       {childRow?.inputType === 'Boolean' ? 
