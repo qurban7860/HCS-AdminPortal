@@ -40,7 +40,7 @@ export const AddMachineDocumentSchema = Yup.object().shape({
   isActive: Yup.boolean(),
 });
 
-export const MachineServiceParamsSchema = Yup.object().shape({
+export const CheckItemsSchema = Yup.object().shape({
   name: Yup.string().required().max(200).label('Name'),
   serviceCategory: Yup.object().label('Service Category').nullable(),
   printName: Yup.string().max(1000).label('Print Name'),
@@ -54,11 +54,19 @@ export const MachineServiceParamsSchema = Yup.object().shape({
   // maxValidation: Yup.number().min(0).max(100).label('Max Validation').nullable(),
   isActive: Yup.boolean(),
 })
+const currentDate = new Date();
+const day = currentDate.getDate();
+const month = currentDate.getMonth() + 1; // Months are zero-indexed, so add 1
+const year = currentDate.getFullYear();
 
+const dateCheck = `${year}-${month}-${day+1}`;
 export const MachineServiceRecordSchema = Yup.object().shape({
   recordType:Yup.object().label('Record Type').nullable(),
   serviceRecordConfig: Yup.object().label('Service Record Configuration').nullable().required(),
-  // serviceDate: Yup.object().label('Service Date').nullable(),
+  // serviceDate: Yup.date().label('Service Date').nullable().required,
+  serviceDate: Yup.date()
+  .max(dateCheck).nullable()
+  .required().label('Service Date'),
   // customer: Yup.object().label('Customer'), 
   site: Yup.object().label('Site').nullable(),
   // machine: Yup.object().label('Machine'),

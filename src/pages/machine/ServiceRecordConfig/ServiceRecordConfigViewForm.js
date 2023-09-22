@@ -98,15 +98,15 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
       <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} />
       <Grid container>
         <ViewFormField sm={12} isActive={defaultValues.isActive} />
-        <ViewFormField sm={6} heading="Record Type" param={defaultValues?.recordType} />
         <ViewFormField sm={6} heading="Document Title" param={defaultValues?.docTitle} />
+        <ViewFormField sm={6} heading="Document Type" param={defaultValues?.recordType} />
       </Grid>
       <Grid container>
         <ViewFormField sm={6} heading="Machine Category" param={defaultValues?.category} />
         <ViewFormField sm={6} heading="Machine Model" param={defaultValues?.machineModel} />
       </Grid>
       <Grid container>  
-        <ViewFormField sm={12} heading="Text Befor Check Items" param={defaultValues?.textBeforeCheckItems} />
+        <ViewFormField sm={12} heading="Text Before Check Items" param={defaultValues?.textBeforeCheckItems} />
       </Grid>
         <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
           Check Items

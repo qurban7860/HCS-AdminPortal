@@ -39,8 +39,8 @@ export default function Machine() {
   const linkTool = () => {
     navigate(PATH_MACHINE.machines.settings.tool.list);
   };
-  const machineServiceParams = () => {
-    navigate(PATH_MACHINE.machines.settings.machineServiceParams.list);
+  const checkItems = () => {
+    navigate(PATH_MACHINE.machines.settings.checkItems.list);
   }
   const linkServiceRecordConfig = () => {
     navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.list);
@@ -128,9 +128,9 @@ export default function Machine() {
                   content={ICONS.MACHINE_SERVICE_CATEGORY.heading}
                 />
                 <ListItem
-                  onClick={machineServiceParams}
-                  icon={ICONS.MACHINE_SERVICE_PARAMETERS.icon}
-                  content={ICONS.MACHINE_SERVICE_PARAMETERS.heading}
+                  onClick={checkItems}
+                  icon={ICONS.MACHINE_CHECK_ITEMS.icon}
+                  content={ICONS.MACHINE_CHECK_ITEMS.heading}
                 />
                 <ListItem
                   onClick={linkServiceRecordConfig}

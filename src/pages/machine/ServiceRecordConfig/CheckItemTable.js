@@ -1,33 +1,35 @@
 import { memo, useState, useEffect } from 'react'
 import PropTypes from 'prop-types';
-import { Card, Grid, Stack, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Grid, Stack, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
-import { getActiveMachineServiceParams } from '../../../redux/slices/products/machineServiceParams';
+import { getActiveCheckItems } from '../../../redux/slices/products/machineCheckItems';
 import { RHFTextField, RHFAutocomplete} from '../../../components/hook-form';
 import useResponsive from '../../../hooks/useResponsive';
 import { useSnackbar } from '../../../components/snackbar';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import CollapsibleCheckedItemRow from './CollapsibleCheckedItemRow'
 
-const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue }) => {
+const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue, checkItemCategory }) => {
 
     const isMobile = useResponsive('down', 'sm');
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
-    const { activeMachineServiceParams } = useSelector((state) => state.machineServiceParam);
+    const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
+    const { activeCheckItems } = useSelector((state) => state.checkItems);
     const [checkParamNumber, setCheckParamNumber]= useState(serviceRecordConfig?.checkParams?.length || 0);
     const [checkItemList, setCheckItemList] = useState([]);
     const [checkItemListTitleError, setItemListTitleError] = useState('');
     const [checkItemListError, setItemListError] = useState('');
-    // useEffect(() => {
-    //   setCheckParamNumber()
-    // },[checkParams])
 
     useEffect(() => {
-        dispatch(getActiveMachineServiceParams());
-      }, [dispatch]);
+      if(checkItemCategory === null ){
+        dispatch(getActiveCheckItems())
+      }else{
+        dispatch(getActiveCheckItems(checkItemCategory?._id))
+      }
+    },[checkItemCategory, dispatch])
 
       const handleInputChange = (value) => {
         if (value) {
@@ -93,6 +95,7 @@ const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue 
       console.error(err.message);
     }
   };
+  
 useEffect(()=>{
   if(paramListTitle?.length > 200){
     setItemListTitleError('Item List Title must be at most 200 characters')
@@ -153,12 +156,23 @@ useEffect(()=>{
                     </Typography>
                     <RHFTextField name="paramListTitle" label="Item List Title*" Error={!!checkItemListTitleError} helperText={checkItemListTitleError} />
 
+                      <RHFAutocomplete 
+                          name="checkItemCategory"
+                          label="Service Category"
+                          options={activeServiceCategories}
+                          isOptionEqualToValue={(option, value) => option._id === value._id}
+                          getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                          renderOption={(props, option) => (
+                            <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                          )}
+                      />
+
                       <RHFAutocomplete
                         multiple
                         name="paramList"
                         label="Select Items"
                         value={[]}
-                        options={activeMachineServiceParams}
+                        options={activeCheckItems}
                         isOptionEqualToValue={(option, value) => option._id === value._id}
                         getOptionLabel={(option) => `${option.name ? option.name : ''} ${option?.category?.name ? '-' : ''} ${option?.category?.name ? option?.category?.name : ''} ${option?.inputType ? '-' : '' } ${option?.inputType ? option?.inputType : '' }`}
                         renderOption={(props, option) => (
@@ -237,4 +251,5 @@ CheckItemTable.propTypes = {
     setCheckParams: PropTypes.func.isRequired,
     paramListTitle: PropTypes.string,
     setValue: PropTypes.func.isRequired,
+    checkItemCategory: PropTypes.object,
 };

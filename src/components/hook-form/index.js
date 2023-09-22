@@ -13,4 +13,6 @@ export { default as RHFDescription } from './RHFDescription';
 export { default as RHFName } from './RHFName';
 export { default as RHFRadioGroup } from './RHFRadioGroup';
 export { default as RHFAutocomplete } from './RHFAutocomplete';
+export { default as RHFDatePicker } from './RHFDatePicker';
 export { default as RHFAutocompleteLableName } from './RHFAutocomplete';
+

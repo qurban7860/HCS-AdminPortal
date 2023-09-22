@@ -1,11 +1,12 @@
 import { useState, memo } from 'react'
 import PropTypes from 'prop-types';
+import { v4 as uuidv4 } from 'uuid';
 import { Box, Table, TableBody, TableCell, TableRow,  IconButton, Collapse } from '@mui/material';
 import Iconify from '../../../components/iconify';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons'
 
 const CollapsibleCheckedItemRow = ({value, index, toggleEdit, deleteIndex, handleListDragStart, handleListDrop }) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   return (
     <>
         <TableRow
@@ -30,7 +31,7 @@ const CollapsibleCheckedItemRow = ({value, index, toggleEdit, deleteIndex, handl
                   {toggleEdit && <ViewFormEditDeleteButtons handleEdit={()=>toggleEdit(index)} onDelete={()=>deleteIndex(index)} /> }
               </TableCell>
         </TableRow>
-        <TableRow key={value._id}>
+        <TableRow key={uuidv4()}>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>

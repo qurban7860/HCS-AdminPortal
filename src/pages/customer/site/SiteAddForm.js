@@ -9,7 +9,7 @@ import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
 // import { LoadingButton } from '@mui/lab';
 import { Box,Card, Grid, Stack, Typography, TextField, Autocomplete } from '@mui/material';
 // slice
-import { addSite, setSiteFormVisibility } from '../../../redux/slices/customer/site';
+import { addSite, getSites, setSiteFormVisibility } from '../../../redux/slices/customer/site';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 // assets
@@ -163,6 +163,7 @@ export default function SiteAddForm() {
         data.primaryTechnicalContact = technicalContactVal?._id;
       }
       await dispatch(addSite(data));
+      await dispatch(getSites(customer?._id))
       reset();
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });

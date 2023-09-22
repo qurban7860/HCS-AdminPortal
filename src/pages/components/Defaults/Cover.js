@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router';
+import { alpha } from '@mui/system';
 // import { useSelector } from 'react-redux';
 import { StyledRoot, StyledInfo } from '../../../theme/styles/default-styles';
 // utils
@@ -31,6 +32,7 @@ Cover.propTypes = {
   model: PropTypes.string,
   customer: PropTypes.string,
   generalSettings: PropTypes.string,
+  titleLength: PropTypes.number,
 };
 export function Cover({
   tradingName,
@@ -47,6 +49,7 @@ export function Cover({
   model,
   customer,
   generalSettings,
+  titleLength
 }) {
   const navigate = useNavigate();
   const handleNavigate = () => {
@@ -66,6 +69,10 @@ export function Cover({
   const nameNumMaxLength2 = name?.split(' ')[1]?.substring(0, 10);
   const nameTitle = `${nameNumMaxLength} ${nameNumMaxLength2 || ''}`;
 
+  if(titleLength && name?.length>titleLength){
+    name = `${name.substring(0,titleLength)}...`;
+  }
+
   return (
     <StyledRoot style={{ p: { xs: 0, md: 0 } }}>
       <StyledInfo
@@ -77,7 +84,13 @@ export function Cover({
             {name !== 'HOWICK LTD.' ? null : <LogoAvatar />}
           </CoverCustomAvatar>
         )}
-        <CoverTitles
+        <CoverTitles sx={{whiteSpace: 'nowrap',      // Prevent text from wrapping
+            overflow: 'hidden',       // Hide any overflow
+            textOverflow: 'ellipsis', // Add ellipsis for overflowed text
+            maxWidth: '400px',   
+            '&:hover': {
+              color: (theme) => alpha(theme.palette.info.main, 0.98),
+            },}}
           name={name}
           nameTitle={nameTitle}
           serialNo={serialNo}

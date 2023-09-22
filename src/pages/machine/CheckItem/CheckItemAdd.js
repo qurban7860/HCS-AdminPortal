@@ -1,13 +1,13 @@
 // @mui
 import { Container } from '@mui/material';
-import MachineServiceParamAddForm from './MachineServiceParamAddForm';
+import CheckItemAddForm from './CheckItemAddForm';
 
 // ----------------------------------------------------------------------
 
-export default function MachineServiceParamAdd() {
+export default function CheckItemAdd() {
   return (
     <Container maxWidth={false}>
-      <MachineServiceParamAddForm />
+      <CheckItemAddForm />
     </Container>
   );
 }
