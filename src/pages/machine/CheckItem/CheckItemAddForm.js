@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo,useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -33,6 +33,8 @@ export default function CheckItemAddForm() {
   const { enqueueSnackbar } = useSnackbar();
   const { inputTypes, unitTypes } = useSelector((state) => state.checkItems);
   const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
+  const [selectedInputType, setSelectedInputType] = useState(null);
+
 
   useEffect(()=>{
     dispatch(getActiveServiceCategories())
@@ -133,17 +135,22 @@ export default function CheckItemAddForm() {
                     display="grid"
                     gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                   >
-
+                    
                     <RHFAutocomplete 
                       name="inputType" label="Input Type"
                       options={inputTypes}
+                      value={selectedInputType}
                       isOptionEqualToValue={(option, value) => option._id === value._id}
                       getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                       renderOption={(props, option) => (
                         <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
+                      onChange={(event, newValue) => {
+                        setSelectedInputType(newValue)
+                       }}
                     />
 
+                 {selectedInputType && selectedInputType.name === 'Number' && (
                     <RHFAutocomplete 
                       name="unitType" label="Unit Type"
                       options={unitTypes}
@@ -153,6 +160,7 @@ export default function CheckItemAddForm() {
                         <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
                     />
+                    )}
 
                     <RHFTextField name="minValidation" label="Minimum Validation" />
                     <RHFTextField name="maxValidation" label="Maximum Validation" />
