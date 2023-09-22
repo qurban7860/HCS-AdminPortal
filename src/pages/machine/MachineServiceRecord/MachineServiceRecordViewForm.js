@@ -1,7 +1,7 @@
 import { useMemo, memo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
-import {  Card, Grid, Tooltip, TableContainer, Table, TableBody, Typography, Box } from '@mui/material';
+import {  Card, Grid, Tooltip, TableContainer, Table, TableBody, Typography, Box, Checkbox } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 // redux
 import { deleteMachineServiceRecord, setAllFlagsFalse, setMachineServiceRecordEditFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
@@ -118,14 +118,20 @@ function MachineServiceParamViewForm() {
                       rowGap={2}
                       columnGap={2}
                       display="grid"
-                      gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                      gridTemplateColumns={{ sm: 'repeat(2, 1fr)', md: 'repeat(2, 1fr)' }}
                       >
                       <Typography variant="body2" ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}</Typography>
-                      {childRow?.inputType === 'Boolean' ? <RHFCheckbox  checked={machineServiceRecord[index].paramList[childIndex]?.value || false} disabled /> :
+                      {childRow?.inputType === 'Boolean' ? 
+                      <Checkbox  checked={
+                        machineServiceRecord?.checkParams?.find((element) =>
+                        element?.paramListTitle === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramListTitle && element?.serviceParam === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramList[childIndex]?._id
+                        )?.value || false
+                        } disabled sx={{mr:'auto'}}/> 
+                        :
                       <Typography variant="body2" >
                       {/* {machineServiceRecord[index]?.paramList[childIndex]?.value || ""} */}
                       {machineServiceRecord?.checkParams?.find((element) =>
-                        element?.serviceParam === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramList[childIndex]?._id
+                        element?.paramListTitle === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramListTitle && element?.serviceParam === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramList[childIndex]?._id
                         )?.value }
                       </Typography> }
                     </Box>
