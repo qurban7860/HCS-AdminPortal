@@ -295,22 +295,18 @@ console.log("checkParamList : ",checkParamList)
                               <Typography variant="body2" ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}</Typography>
                               <div>
                               { childRow?.inputType === 'Short Text' && <TextField 
-                                fullWidth
+                                type='text'
                                 label={childRow?.inputType} 
                                 name={`${childRow?.name}_${childIndex}_${index}`} 
                                 onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e)}
                                 size="small" sx={{m:0.3}} 
                                 value={checkParamList[index]?.paramList[childIndex]?.value}
                                 required={childRow?.isRequired}
-                                InputProps={{
-                                    inputProps: { 
-                                        max: 50, min: 0 
-                                    }
-                                  }}
+                                InputProps={{ inputProps: { maxLength:50 } }}
                               />}
 
                               { childRow?.inputType === 'Long Text' &&<TextField 
-                                fullWidth
+                                type="text"
                                 label={childRow?.inputType} 
                                 name={`${childRow?.name}_${childIndex}_${index}`} 
                                 onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e)}
@@ -318,11 +314,7 @@ console.log("checkParamList : ",checkParamList)
                                 value={checkParamList[index]?.paramList[childIndex]?.value}
                                 minRows={3} multiline
                                 required={childRow?.isRequired}
-                                InputProps={{
-                                    inputProps: { 
-                                        max: 200, min: 0 
-                                    }
-                                  }}
+                                InputProps={{ inputProps: { maxLength: 200 } }}
                               />}
 
                               { childRow?.inputType === 'Number'  && 
