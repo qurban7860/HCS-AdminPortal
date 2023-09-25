@@ -42,24 +42,25 @@ export default function CheckItemViewForm() {
 
   const defaultValues = useMemo(
     () => ({
-      name:               checkItem?.name,
-      category:           checkItem?.category?.name,
-      printName:          checkItem?.printName,
-      helpHint:           checkItem?.helpHint,
-      linkToUserManual:   checkItem?.linkToUserManual,
-      inputType:          checkItem?.inputType,
-      unitType:           checkItem?.unitType,    
-      minValidation:      checkItem?.minValidation,
-      maxValidation:      checkItem?.maxValidation,
-      description:        checkItem?.description,
-      isRequired:         checkItem?.isRequired || false, 
-      isActive:           checkItem?.isActive,
-      createdAt:          checkItem?.createdAt || '',
-      createdByFullName:  checkItem?.createdBy?.name || '',
-      createdIP:          checkItem?.createdIP || '',
-      updatedAt:          checkItem?.updatedAt || '',
-      updatedByFullName:  checkItem?.updatedBy?.name || '',
-      updatedIP:          checkItem?.updatedIP || '',
+      name:                       checkItem?.name,
+      category:                   checkItem?.category?.name,
+      printName:                  checkItem?.printName,
+      helpHint:                   checkItem?.helpHint,
+      linkToUserManual:           checkItem?.linkToUserManual,
+      inputType:                  checkItem?.inputType,
+      unitType:                   checkItem?.unitType,    
+      minValidation:              checkItem?.minValidation,
+      maxValidation:              checkItem?.maxValidation,
+      description:                checkItem?.description,
+      utlizedInRecordConfigs:     checkItem?.serviceRecordConfigs,
+      isRequired:                 checkItem?.isRequired || false, 
+      isActive:                   checkItem?.isActive,
+      createdAt:                  checkItem?.createdAt || '',
+      createdByFullName:          checkItem?.createdBy?.name || '',
+      createdIP:                  checkItem?.createdIP || '',
+      updatedAt:                  checkItem?.updatedAt || '',
+      updatedByFullName:          checkItem?.updatedBy?.name || '',
+      updatedIP:                  checkItem?.updatedIP || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [ checkItem ]
@@ -84,6 +85,7 @@ export default function CheckItemViewForm() {
           <ViewFormField sm={6} heading="Minimum Validation" param={defaultValues.minValidation} />
           <ViewFormField sm={6} heading="Maximum Validation" param={defaultValues.maxValidation} />
           <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
+          <ViewFormField sm={12} heading="Utlized In Configs" arrayParam={defaultValues.utlizedInRecordConfigs} chipLabel='docTitle'/>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
       </Grid>
