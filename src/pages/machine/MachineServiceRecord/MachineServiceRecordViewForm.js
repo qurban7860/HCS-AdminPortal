@@ -1,8 +1,7 @@
-import { useMemo, memo, useEffect } from 'react';
+import { useMemo, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
-import {  Card, Grid, Tooltip, TableContainer, Table, TableBody, Typography, Box, Checkbox } from '@mui/material';
-import { v4 as uuidv4 } from 'uuid';
+import {  Card, Grid, Tooltip, Typography, Box, Checkbox } from '@mui/material';
 // redux
 import { deleteMachineServiceRecord, setAllFlagsFalse, setMachineServiceRecordEditFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
 // components
@@ -13,10 +12,6 @@ import ViewFormField from '../../components/ViewForms/ViewFormField';
 // import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import { fDate } from '../../../utils/formatTime';
-import ReadableCollapsibleCheckedItemRow from './ReadableCollapsibleCheckedItemRow'
-import { RHFCheckbox } from '../../../components/hook-form';
-
-// ----------------------------------------------------------------------
 
 function MachineServiceParamViewForm() {
   const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
@@ -56,7 +51,7 @@ function MachineServiceParamViewForm() {
       maintenanceRecommendation:            machineServiceRecord?.maintenanceRecommendation || '',
       suggestedSpares:                      machineServiceRecord?.suggestedSpares || '',
       files:                                machineServiceRecord?.files || [],
-      operator:                             machineServiceRecord?.operator || null,
+      operators:                             machineServiceRecord?.operators || [],
       operatorRemarks:                      machineServiceRecord?.operatorRemarks ||'',
       isActive:                             machineServiceRecord?.isActive,
       createdAt:                            machineServiceRecord?.createdAt || '',
@@ -80,14 +75,15 @@ function MachineServiceParamViewForm() {
           </Tooltip>
         </Grid>
         <Grid container>
+          <ViewFormField sm={6} heading="Customer"  param={`${machine?.customer?.name ? machine?.customer?.name : ''}`} />
+          <ViewFormField sm={6} heading="Machine"  param={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} />
+          <ViewFormField sm={6} heading="Model Category"  param={machine?.machineModel?.category?.name || ''} />
+          <ViewFormField sm={6} heading="Machine Model"  param={machine?.machineModel?.name || ''} />
+          
           <ViewFormField sm={12} heading="Service Record Configuration" param={`${defaultValues.serviceRecordConfig} ${defaultValues.serviceRecordConfigRecordType ? '-' : ''} ${defaultValues.serviceRecordConfigRecordType ? defaultValues.serviceRecordConfigRecordType : ''}`} />
           <ViewFormField sm={6} heading="Service Date" param={fDate(defaultValues.serviceDate)} />
           <ViewFormField sm={6} heading="Technician"  param={`${defaultValues?.technician?.firstName ? defaultValues?.technician?.firstName : ''} ${defaultValues?.technician?.lastName ? defaultValues?.technician?.lastName : ''}`} />
           <ViewFormField sm={12} heading="Technician Remarks" param={defaultValues.operatorRemarks} />
-          <ViewFormField sm={6} heading="Machine"  param={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} />
-          <ViewFormField sm={6} heading="Machine Model"  param={machine?.machineModel?.name || ''} />
-          <ViewFormField sm={6} heading="Model Category"  param={machine?.machineModel?.category?.name || ''} />
-          <ViewFormField sm={6} heading="Customer"  param={`${machine?.customer?.name ? machine?.customer?.name : ''}`} />
           <ViewFormField sm={12} heading="Decoilers" arrayParam={defaultValues?.decoilers?.map((decoilerMachine) => ({ name: `${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`}))} />
           <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7, pt:1}}>
             Check Items
@@ -99,22 +95,12 @@ function MachineServiceParamViewForm() {
                   <Typography variant="body2"><b>{`${index+1}). `}</b>{typeof row?.paramListTitle === 'string' && row?.paramListTitle || ''}{' ( Items: '}<b>{`${row?.paramList?.length}`}</b>{' ) '}</Typography>
                 </Grid>
                 <Grid  item md={12} sx={{ pb:1}}>
-                    <Box
-                      sx={{pl:4, backgroundColor:'lightgrey' }}
-                      rowGap={2}
-                      columnGap={2}
-                      display="grid"
-                      gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-                      >
-                      <Typography variant="subtitle1" >Checked Item</Typography>
-                      <Typography variant="subtitle1" >Value</Typography>
-                      </Box>
                   {row?.paramList.map((childRow,childIndex) => 
                   (<Box
                       component="form"
                       noValidate
                       autoComplete="off"
-                      sx={{pl:4 }}
+                      sx={{pl:4, background:(childIndex%2===0?'rgba(145, 158, 171, 0.08)':'')}}
                       rowGap={2}
                       columnGap={2}
                       display="grid"
@@ -144,8 +130,7 @@ function MachineServiceParamViewForm() {
           {machineServiceRecord?.serviceRecordConfig?.enableNote && <ViewFormField sm={12} heading="Note" param={defaultValues.serviceNote} />}
           {machineServiceRecord?.serviceRecordConfig?.enableMaintenanceRecommendations && <ViewFormField sm={12} heading="Maintenance Recommendation" param={defaultValues.maintenanceRecommendation} />}
           {machineServiceRecord?.serviceRecordConfig?.enableSuggestedSpares && <ViewFormField sm={12} heading="Suggested Spares" param={defaultValues.suggestedSpares} />}
-          <ViewFormField sm={12} heading="Operator" param={`${defaultValues.operator?.firstName ? defaultValues.operator?.firstName : ''} ${defaultValues.operator?.lastName ? defaultValues.operator?.lastName : ''}`} />
-
+          <ViewFormField sm={12} heading="Operators" arrayParam={defaultValues?.operators?.map((operator) => ({ name: `${operator?.firstName || ''} ${operator?.lastName || ''}`}))} />
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
       </Grid>

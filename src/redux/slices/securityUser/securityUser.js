@@ -258,18 +258,21 @@ export function updateSecurityUser(param,id) {
 
 // -----------------------------Active Security Users-----------------------------------------
 
-export function getActiveSecurityUsers() {
+export function getActiveSecurityUsers(type) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{ 
-      const response = await axios.get(`${CONFIG.SERVER_URL}security/users`,
-      {
+
+      const query = {
         params: {
           isArchived: false,
-          isActive: true,
+          isActive: true
         }
       }
-      );
+
+      
+      Object.assign(query.params, type)
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users`,query);
       if(regEx.test(response.status)){
         dispatch(slice.actions.getActiveSecurityUsersSuccess(response.data));
       }

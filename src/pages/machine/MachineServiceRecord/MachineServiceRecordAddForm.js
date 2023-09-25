@@ -1,16 +1,15 @@
-import { useEffect, useMemo, useCallback, useState, memo } from 'react';
+import { useEffect, useMemo, useState, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { v4 as uuidv4 } from 'uuid';
 import { Box, Card, Grid, Stack, Typography, TextField,  Autocomplete, Checkbox, InputAdornment } from '@mui/material';
+
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import FormHeading from '../../components/DocumentForms/FormHeading';
 import { FORMLABELS } from '../../../constants/default-constants';
 // slice
 import { addMachineServiceRecord, setMachineServiceRecordAddFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
-import { getMachineConnections } from '../../../redux/slices/products/machineConnections';
 import { getActiveServiceRecordConfigsForRecords } from '../../../redux/slices/products/serviceRecordConfig';
 import { getActiveContacts } from '../../../redux/slices/customer/contact';
 // components
@@ -20,11 +19,9 @@ import FormProvider, {
   RHFTextField,
   RHFAutocomplete,
   RHFSwitch,
-  RHFUpload,
-  RHFDatePicker,
-  RHFCheckbox
+  RHFDatePicker
 } from '../../../components/hook-form';
-// import CollapsibleCheckedItemInputRow from './CollapsibleCheckedItemInputRow'
+import { getActiveSecurityUsers } from '../../../redux/slices/securityUser/securityUser';
 
 // ----------------------------------------------------------------------
 
@@ -36,16 +33,15 @@ function MachineServiceRecordAddForm() {
   const { securityUser } = useSelector((state) => state.user);
   const { activeContacts } = useSelector((state) => state.contact);
   const { activeServiceRecordConfigsForRecords } = useSelector((state) => state.serviceRecordConfig);
-  const { machineConnections } = useSelector((state) => state.machineConnections);
-  // const [checkParam, setCheckParam] = useState([]);
+  const { recordTypes } = useSelector((state) => state.serviceRecordConfig);
   const [checkParamList, setCheckParamList] = useState([]);
-console.log("checkParamList : ",checkParamList)
-
-  const _id = localStorage.getItem('userId');
+  const [docType, setDocType] = useState(null);
+  const { activeSecurityUsers } = useSelector((state) => state.user);
+  
   useEffect( ()=>{
-    dispatch(getMachineConnections(machine?.customer?._id))
     dispatch(getActiveServiceRecordConfigsForRecords(machine?._id))
     dispatch(getActiveContacts(machine?.customer?._id))
+    dispatch(getActiveSecurityUsers({roleType:'Support'}))
   },[dispatch, machine])
 
   const defaultValues = useMemo(
@@ -54,13 +50,13 @@ console.log("checkParamList : ",checkParamList)
       serviceRecordConfig: null,
       serviceDate: new Date(),
       technician:   securityUser?.contact || null,
-      decoiler: [],
+      decoilers: machine?.machineConnections,
       serviceNote: '',
       maintenanceRecommendation: '',
       suggestedSpares: '',
       files: [],
       // checkParamFiles: [],
-      operator: null,
+      operators: [],
       operatorRemarks: '',
       isActive: true,
     }
@@ -78,18 +74,26 @@ console.log("checkParamList : ",checkParamList)
 
   const {
     reset,
-    setValue,
     watch,
+    setValue,
     handleSubmit,
     formState: { isSubmitting },
     control,
   } = methods;
 
-  const {  files, decoiler, serviceRecordConfig } = watch()
+  const { decoilers, operators, serviceRecordConfig } = watch()
 
   useEffect(()=>{
     setCheckParamList(serviceRecordConfig?.checkParams)
   },[serviceRecordConfig])
+
+  const handleTypeChange = (event, newValue) => {
+    if(newValue?._id===3) setDocType(true)
+    else setDocType(false)
+    const recordType = {recordType:newValue?.name}
+    setValue('serviceRecordConfig',null);
+    dispatch(getActiveServiceRecordConfigsForRecords(machine?._id, recordType))
+  }
 
   const onSubmit = async (data) => {
     try {
@@ -111,10 +115,9 @@ console.log("checkParamList : ",checkParamList)
             });
           }
         });
-        console.log("checkParams_ : ",checkParams_)
       data.checkParams = checkParams_;
-      data.decoiler = decoiler
-      console.log("data : ",data)
+      data.decoilers = decoilers;
+      data.operators = operators;
       await dispatch(addMachineServiceRecord(machine?._id,data));
       reset();
       dispatch(setMachineServiceRecordAddFormVisibility(false))
@@ -123,52 +126,8 @@ console.log("checkParamList : ",checkParamList)
       console.error(err.message);
     }
   };
-
-
+  
   const toggleCancel = () => { dispatch(setMachineServiceRecordAddFormVisibility(false)) };
-
-  // const handleDropMultiFile = useCallback(
-  //   (acceptedFiles) => {
-  //     const docFiles = files || [];
-  //     const newFiles = acceptedFiles.map((file) =>
-  //       Object.assign(file, {
-  //         preview: URL.createObjectURL(file),
-  //       })
-  //     );
-  //     setValue('files', [...docFiles, ...newFiles], { shouldValidate: true });
-  //   },
-  //   [setValue, files ]
-  // );
-
-  //  useCallback(
-  //   (index,acceptedFiles) => {
-  //     console.log(" acceptedFiles : ", acceptedFiles)
-  //     const docFiles =  [];
-  //     const newFiles = acceptedFiles.map((file) =>
-  //       Object.assign(file, {
-  //         preview: URL.createObjectURL(file),
-  //       })
-  //     );
-
-  //     setCheckParam((prevVal) => {
-  //       const updatedVal = [...prevVal];
-  //       updatedVal[index] = {
-  //         files: [...(checkParam[index]?.files ?? []), ...newFiles],
-  //         serviceParam: updatedVal[index]?.serviceParam || null,
-  //         name: updatedVal[index]?.name || '',
-  //         paramListTitle: updatedVal[index]?.paramListTitle || '',
-  //         value: updatedVal[index]?.value || '',
-  //         comments: updatedVal[index]?.comments || '',
-  //       };
-  //       return updatedVal; 
-  //     });
-
-  //     setValue(`checkParamFiles${index}`, [...docFiles, ...newFiles], { shouldValidate: true });
-  //     console.log(`checkParamFiles${index}`)
-  //   },
-  //   [setValue, checkParam]
-  // );
-
   const handleChangeCheckItemListValue = (index, childIndex, e) => {
     const updatedCheckParams = [...checkParamList];
     const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
@@ -189,13 +148,37 @@ console.log("checkParamList : ",checkParamList)
       setCheckParamList(updatedCheckParams);
   }
 
+  console.log(machine.machineConnections)
+
   return (
       <FormProvider methods={methods}  onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
-                <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_RECORD_ADD} />
+                <FormHeading heading="New Service Record" />
+                <Box
+                    rowGap={2}
+                    columnGap={2}
+                    display="grid"
+                    gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                  >
+                    <RHFTextField name="customer" label="Customer" value={`${machine?.customer?.name ? machine?.customer?.name : ''}`} disabled/>
+                    <RHFTextField name="machine" label="Machine" value={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} disabled/>
+                    <RHFTextField name="machine" label="Machine Model Category" value={machine?.machineModel?.category?.name || ''} disabled/>
+                    <RHFTextField name="machine" label="Machine Model" value={machine?.machineModel?.name || ''} disabled/>
+                  
+                  <RHFAutocomplete 
+                    name="recordType"
+                    label="Document Type*"
+                    options={recordTypes}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                    )}
+                    onChange={handleTypeChange}
+                  />
 
                   <RHFAutocomplete
                     name="serviceRecordConfig"
@@ -207,9 +190,7 @@ console.log("checkParamList : ",checkParamList)
                     <li {...props} key={option._id}>{`${option?.docTitle ?? ''} ${option?.docTitle ? '-' : '' } ${option.recordType ? option.recordType : ''}`}</li>
                     )}
                   />
-
-                  
-                                  
+                </Box>       
                 <Box
                     rowGap={2}
                     columnGap={2}
@@ -218,64 +199,34 @@ console.log("checkParamList : ",checkParamList)
                   >
 
                   <RHFDatePicker name="serviceDate" label="Service Date" />
-
-                  <RHFAutocomplete
-                    name="technician"
-                    label="Technician"
-                    options={activeContacts}
-                    getOptionLabel={(option) => `${option.firstName ? option.firstName :   ''} ${option.lastName ? option.lastName :   ''}`}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
-                    renderOption={(props, option) => (
-                    <li {...props} key={option._id}>{`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName :   ''}`}</li>
+                  <Autocomplete multiple
+                    name="decoilers" 
+                    defaultValue={defaultValues.decoilers}
+                    id="operator-autocomplete" options={machine?.machineConnections}
+                    onChange={(event, newValue) => setValue('decoilers',newValue)}
+                    getOptionLabel={(option) => option?.name||""}
+                    renderInput={(params) => (
+                      <TextField {...params} variant="outlined" label="Decoilers" placeholder="Select Decoilers"/>
                     )}
                   />
+                  
                   </Box>
+                    
+                    <RHFAutocomplete
+                    name="technician"
+                    label="Technician"
+                    options={activeSecurityUsers}
+                    getOptionLabel={(option) => option.name ? option.name :   ''}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    renderOption={(props, option) => (
+                    <li {...props} key={option._id}>{option.name ? option.name : ''}</li>
+                    )}
+                  />
                     <RHFTextField name="operatorRemarks" label="Technican Remarks" minRows={3} multiline/> 
-                  <Box
-                    rowGap={2}
-                    columnGap={2}
-                    display="grid"
-                    gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-                  >
-                    <RHFTextField name="machine" label="Machine" value={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} disabled/>
-                    <RHFTextField name="machine" label="Machine Model" value={machine?.machineModel?.name || ''} disabled/>
-                    <RHFTextField name="machine" label="Machine Model Category" value={machine?.machineModel?.category?.name || ''} disabled/>
-                    <RHFTextField name="customer" label="Customer" value={`${machine?.customer?.name ? machine?.customer?.name : ''}`} disabled/>
-                  </Box>
-
-                    <Controller
-                      name="decoiler"
-                      control={control}
-                      defaultValue={ decoiler || []}
-                      render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                      <Autocomplete
-                        multiple
-                        {...field}
-                        name="decoiler"
-                        id="tags-outlined"
-                        options={machineConnections}
-                        getOptionLabel={(option) => `${option.serialNo ? option.serialNo : ''} ${option.name ? '-' : ''} ${option.name ? option.name : ''}`}
-                        isOptionEqualToValue={(option, value) => option._id === value._id}
-                        onChange={(event, value) => field.onChange(value)}
-                        
-                        renderInput={(params) => (
-                          <TextField 
-                            {...params} 
-                            name="decoiler"
-                            id="decoiler"  
-                            label="Decoilers"  
-                            error={!!error}
-                            helperText={error?.message} 
-                            inputRef={ref}
-                            />
-                        )}
-                      />
-                      )}
-                    />
-
+                  
                     {checkParamList?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS_CONSTRCTUION} />}
 
-                    <Grid sx={{display:'flex', flexDirection:'column'}}>
+                    <Grid sx={{display:'flex', flexDirection:'column', mt:1}}>
                           {checkParamList?.map((row, index) =>
                           ( typeof row?.paramList?.length === 'number' &&
                           <>
@@ -321,9 +272,9 @@ console.log("checkParamList : ",checkParamList)
                               <TextField 
                                 // fullWidth
                                 id="outlined-number"
-                                label={checkParamList[index]?.paramList[childIndex]?.unitType || 'Number'}
-                                name={`${childRow?.name}_${childIndex}_${index}`}  
-                                type="text"
+                                label={`Measurement (${childRow?.name})`}
+                                name={childRow?.name} 
+                                type="number"
                                 value={checkParamList[index]?.paramList[childIndex]?.value}
                                 onChange={(e) => {
                                   if (/^\d*$/.test(e.target.value)) {
@@ -357,55 +308,33 @@ console.log("checkParamList : ",checkParamList)
                         </>
                           ))}
                     </Grid>
-                                  {/* <CollapsibleCheckedItemInputRow } value={row} index={index} checkParams={checkParams} setValue={setValue} /> */}
                     { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label="Note" minRows={3} multiline/> }
-
                     { serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="maintenanceRecommendation" label="Maintenance Recommendation" minRows={3} multiline/> }
-
                     { serviceRecordConfig?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }
-                    
-                    <RHFAutocomplete
-                      name="operator"
-                      label="Operator"
-                      options={activeContacts}
-                      getOptionLabel={(option) => `${option.firstName ? option.firstName :   ''} ${option.lastName ? option.lastName :   ''}`}
-                      isOptionEqualToValue={(option, value) => option._id === value._id}
-                      renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName :   ''}`}</li>
-                    )}
-                    />
-
-                  {/* <Grid item xs={12} md={6} lg={12}>
-                    <RHFUpload
-                      multiple
-                      thumbnail
-                      name="files"
-                      // maxSize={3145728}
-                      onDrop={handleDropMultiFile}
-                      onRemove={(inputFile) =>
-                        files.length > 1 ?
-                        setValue(
-                          'files',
-                          files &&
-                            files?.filter((file) => file !== inputFile),
-                          { shouldValidate: true }
-                        ): setValue('files', '', { shouldValidate: true })
-                      }
-                      onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
-                    />
-                  </Grid> */}
-                <Grid container display="flex">
-                  <RHFSwitch
-                    name="isActive"
-                    labelPlacement="start"
-                    label={
-                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
-                        Active
-                      </Typography>
+                    {docType &&
+                       <Autocomplete multiple
+                        name="operators" 
+                        defaultValue={defaultValues.operators}
+                        id="operator-autocomplete" options={activeContacts}
+                        onChange={(event, newValue) => setValue('operators',newValue)}
+                        getOptionLabel={(option) => `${option.firstName ? option.firstName :   ''} ${option.lastName ? option.lastName :   ''}`}
+                        renderInput={(params) => (
+                          <TextField {...params} variant="outlined" label="Operators" placeholder="Select Operators"/>
+                        )}
+                      />
                     }
-                  />
-                </Grid>
-                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+                  <Grid container display="flex">
+                    <RHFSwitch
+                      name="isActive"
+                      labelPlacement="start"
+                      label={
+                        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
+                          Active
+                        </Typography>
+                      }
+                    />
+                  </Grid>
+                  <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>
           </Grid>
