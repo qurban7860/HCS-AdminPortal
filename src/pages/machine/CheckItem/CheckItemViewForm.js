@@ -29,7 +29,7 @@ export default function CheckItemViewForm() {
     try {
       await dispatch(deleteCheckItem(checkItem?._id));
       navigate(PATH_MACHINE.machines.settings.checkItems.list);
-      enqueueSnackbar('Machine Service Param deleted Successfully!');
+      enqueueSnackbar('Check item deleted Successfully!');
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.error(error);
