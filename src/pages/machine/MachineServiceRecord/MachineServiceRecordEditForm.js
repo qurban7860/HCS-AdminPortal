@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Typography, TableContainer, Table, TableBody, TextField, Autocomplete, Checkbox } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, TableContainer, Table, TableBody, TextField, Autocomplete, Checkbox,InputAdornment } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { v4 as uuidv4 } from 'uuid';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
@@ -332,19 +332,19 @@ function MachineServiceRecordEditForm() {
                                 required={childRow?.isRequired}
                               />}
 
-                              { childRow?.inputType === 'Number'  && <TextField 
+                              { childRow?.inputType === 'Number'  && <div><TextField 
                                 id="filled-number"
                                 label="Number"
                                 name={childRow?.name} 
                                 type="number"
                                 value={checkParamList[index]?.paramList[childIndex]?.value}
                                 onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e)}
-                                InputLabelProps={{
-                                  shrink: true,
+                                InputProps={{
+                                  startAdornment: <InputAdornment position="start">{checkParamList[index]?.paramList[childIndex]?.unitType}</InputAdornment>,
                                 }} 
                                 size="small" sx={{m:0.3}} 
                                 required={childRow?.isRequired}
-                              />}
+                              /></div>}
                               {childRow?.inputType === 'Boolean' && 
                               <div>
                               <Checkbox 
