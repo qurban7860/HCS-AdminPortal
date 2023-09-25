@@ -183,7 +183,9 @@ export default function MachineViewForm() {
       supplier: machine?.supplier?.name || '',
       workOrderRef: machine?.workOrderRef || '',
       machineModel: machine?.machineModel?.name || '',
-      machineProfile: machine?.machineProfile?.defaultName || '',
+      // machineProfile: machine?.machineProfile?.defaultName || '',
+      machineweb:machine?.machineProfile?.web || '',
+      machineflange:machine?.machineProfile?.flange || '',
       status: machine?.status?.name || '',
       customer: machine?.customer || '',
       siteMilestone: machine?.siteMilestone || '',
@@ -207,6 +209,9 @@ export default function MachineViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [machine]
   );
+
+ 
+  
 
   return (
     <>
@@ -274,11 +279,12 @@ export default function MachineViewForm() {
                       )
                     }
                   />
-                   <ViewFormField
+                  <ViewFormField sm={3} heading="Web x Flange" param={`${defaultValues?.machineweb}${(defaultValues.machineweb && defaultValues.machineflange)? " x ":""}${defaultValues?.machineflange}`} />
+                   {/* <ViewFormField
                     sm={3}
                     heading="Profile"
                     param={defaultValues?.machineProfile}
-                  />
+                  /> */}
                 </Grid>
               </Card>
             </Grid>
