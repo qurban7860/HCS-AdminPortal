@@ -246,7 +246,6 @@ export function addMachineServiceRecord(machineId,params) {
           operatorRemarks:            params?.operatorRemarks,
           isActive: params?.isActive
         }
-        console.log("data : ",data)
         /* eslint-disable */
 
         const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords`, data );

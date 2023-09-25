@@ -95,6 +95,18 @@ function MachineServiceRecordAddForm() {
     dispatch(getActiveServiceRecordConfigsForRecords(machine?._id, recordType))
   }
 
+  const handleParamChange = (event, newValue) => {
+
+    setValue('serviceRecordConfig',newValue)
+    console.log(newValue)
+    if(newValue?.recordType==='Training'){
+      setDocType(true)
+    }else{
+      setDocType(false)
+    }
+  }
+  
+
   const onSubmit = async (data) => {
     try {
       const checkParams_ = [];
@@ -148,12 +160,6 @@ function MachineServiceRecordAddForm() {
       setCheckParamList(updatedCheckParams);
   }
 
-  console.log(machine.machineConnections)
-
-  console.log(machine.machineConnections)
-
-  console.log(machine.machineConnections)
-
   return (
       <FormProvider methods={methods}  onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
@@ -193,6 +199,7 @@ function MachineServiceRecordAddForm() {
                     renderOption={(props, option) => (
                     <li {...props} key={option._id}>{`${option?.docTitle ?? ''} ${option?.docTitle ? '-' : '' } ${option.recordType ? option.recordType : ''}`}</li>
                     )}
+                    onChange={handleParamChange}
                   />
                 </Box>       
                 <Box
@@ -208,7 +215,7 @@ function MachineServiceRecordAddForm() {
                     defaultValue={defaultValues.decoilers}
                     id="operator-autocomplete" options={machine?.machineConnections}
                     onChange={(event, newValue) => setValue('decoilers',newValue)}
-                    getOptionLabel={(option) => option?.name||""}
+                    getOptionLabel={(option) => `${option?.connectedMachine?.name||""} ${option?.connectedMachine?.serialNo||""}`}
                     renderInput={(params) => (
                       <TextField {...params} variant="outlined" label="Decoilers" placeholder="Select Decoilers"/>
                     )}
@@ -274,9 +281,9 @@ function MachineServiceRecordAddForm() {
 
                               { childRow?.inputType === 'Number'  && 
                               <TextField 
-                                // fullWidth
+                                fullWidth
                                 id="outlined-number"
-                                label={`Measurement (${childRow?.name})`}
+                                label={`Measurement (${childRow?.unitType})`}
                                 name={childRow?.name} 
                                 type="number"
                                 value={checkParamList[index]?.paramList[childIndex]?.value}
@@ -290,10 +297,6 @@ function MachineServiceRecordAddForm() {
                                 } 
                                 size="small" sx={{m:0.3}} 
                                 required={childRow?.isRequired}
-                                InputProps={{
-                                    inputProps: { inputMode: 'numeric', pattern: /^-?\d+(?:\.\d+)?$/g, max: 1000000, min: 0 
-                                    }
-                                  }}
                               />}
                               
                               {childRow?.inputType === 'Boolean' && 
