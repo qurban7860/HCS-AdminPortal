@@ -12,7 +12,7 @@ export const Snacks = {
   // @root Machine Service Parameter
   checkItemAdd: 'Machine Check Item Added',
   checkItemAddFailed: 'FAILED to add Machine Check Item',
-  checkItemUpdate: 'Machine Check Item Update',
+  checkItemUpdate: 'Check Item is Updated',
   checkItemUpdateFailed: 'Failed to Update Machine Check Item',
   checkItemDeleteFailed: 'Failed to Delete Machine Check Item',
   checkItemDelete: 'Machine Check Item Deleted',

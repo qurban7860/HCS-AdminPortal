@@ -183,7 +183,7 @@ export default function MachineViewForm() {
       supplier: machine?.supplier?.name || '',
       workOrderRef: machine?.workOrderRef || '',
       machineModel: machine?.machineModel?.name || '',
-      // machineProfile: machine?.machineProfile?.defaultName || '',
+      machineProfile: machine?.machineProfile?.defaultName || '',
       machineweb:machine?.machineProfile?.web || '',
       machineflange:machine?.machineProfile?.flange || '',
       status: machine?.status?.name || '',
@@ -279,12 +279,8 @@ export default function MachineViewForm() {
                       )
                     }
                   />
-                  <ViewFormField sm={3} heading="Web x Flange" param={`${defaultValues?.machineweb}${(defaultValues.machineweb && defaultValues.machineflange)? " x ":""}${defaultValues?.machineflange}`} />
-                   {/* <ViewFormField
-                    sm={3}
-                    heading="Profile"
-                    param={defaultValues?.machineProfile}
-                  /> */}
+                  <ViewFormField sm={3} heading="Profile" param={`${defaultValues?.machineProfile} ${(defaultValues?.machineweb && defaultValues?.machineflange)? `(${defaultValues?.machineweb} X ${defaultValues?.machineflange})` :""}`
+                  } />
                 </Grid>
               </Card>
             </Grid>
