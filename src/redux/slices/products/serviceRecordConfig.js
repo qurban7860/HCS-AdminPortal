@@ -23,7 +23,7 @@ const initialState = {
     { _id:1 , name: 'Service'},
     { _id:2 , name: 'Repair'},
     { _id:3 , name: 'Training'},
-    { _id:4 , name: 'Install'},
+    { _id:4 , name: 'Pre-Install'},
   ],
   headerFooterTypes: [
     { _id:1 , name: 'Text'},

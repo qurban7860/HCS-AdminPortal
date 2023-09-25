@@ -107,7 +107,6 @@ export default function CheckItemList() {
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
-    filterStatus,
   });
 
   const isFiltered = filterName !== '' || !!filterStatus.length;
@@ -264,10 +263,5 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
         fDate(docCategory?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
-
-  if (filterStatus.length) {
-    inputData = inputData.filter((customer) => filterStatus.includes(customer.status));
-  }
-
   return inputData;
 }
