@@ -182,6 +182,12 @@ console.log("checkParamList : ",checkParamList)
     updatedCheckParamObject.value =  !updatedCheckParams[index]?.paramList[childIndex]?.value ;
     setCheckParamList(updatedCheckParams);
   }
+  const handleChangeCheckItemListNumberValue = (index, childIndex, value) => {
+      const updatedCheckParams = [...checkParamList];
+      const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
+      updatedCheckParamObject.value = value;
+      setCheckParamList(updatedCheckParams);
+  }
 
   return (
       <FormProvider methods={methods}  onSubmit={handleSubmit(onSubmit)}>
@@ -291,43 +297,62 @@ console.log("checkParamList : ",checkParamList)
                               { childRow?.inputType === 'Short Text' && <TextField 
                                 fullWidth
                                 label={childRow?.inputType} 
-                                name={childRow?.name} 
+                                name={`${childRow?.name}_${childIndex}_${index}`} 
                                 onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e)}
                                 size="small" sx={{m:0.3}} 
                                 value={checkParamList[index]?.paramList[childIndex]?.value}
                                 required={childRow?.isRequired}
+                                InputProps={{
+                                    inputProps: { 
+                                        max: 50, min: 0 
+                                    }
+                                  }}
                               />}
 
                               { childRow?.inputType === 'Long Text' &&<TextField 
                                 fullWidth
                                 label={childRow?.inputType} 
-                                name={childRow?.name} 
+                                name={`${childRow?.name}_${childIndex}_${index}`} 
                                 onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e)}
                                 size="small" sx={{m:0.3}} 
                                 value={checkParamList[index]?.paramList[childIndex]?.value}
                                 minRows={3} multiline
                                 required={childRow?.isRequired}
+                                InputProps={{
+                                    inputProps: { 
+                                        max: 200, min: 0 
+                                    }
+                                  }}
                               />}
 
-                              { childRow?.inputType === 'Number'  && <TextField 
-                                fullWidth
+                              { childRow?.inputType === 'Number'  && 
+                              <TextField 
+                                // fullWidth
                                 id="outlined-number"
-                                label="Number"
-                                name={childRow?.name} 
-                                type="number"
+                                label={checkParamList[index]?.paramList[childIndex]?.unitType || 'Number'}
+                                name={`${childRow?.name}_${childIndex}_${index}`}  
+                                type="text"
                                 value={checkParamList[index]?.paramList[childIndex]?.value}
-                                onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e)}
-                                InputProps={{
-                                  startAdornment: <InputAdornment position="start">{checkParamList[index]?.paramList[childIndex]?.unitType}</InputAdornment>,
-                                }} 
+                                onChange={(e) => {
+                                  if (/^\d*$/.test(e.target.value)) {
+                                    handleChangeCheckItemListNumberValue(index, childIndex, e.target.value)
+                                    }else{
+                                      handleChangeCheckItemListNumberValue(index, childIndex, checkParamList[index]?.paramList[childIndex].value)
+                                    }
+                                  }
+                                } 
                                 size="small" sx={{m:0.3}} 
                                 required={childRow?.isRequired}
+                                InputProps={{
+                                    inputProps: { inputMode: 'numeric', pattern: /^-?\d+(?:\.\d+)?$/g, max: 1000000, min: 0 
+                                    }
+                                  }}
                               />}
                               
                               {childRow?.inputType === 'Boolean' && 
 
                               <Checkbox 
-                                name={childRow.name} 
+                                name={`${childRow?.name}_${childIndex}_${index}`} 
                                 required={childRow?.isRequired} 
                                 checked={checkParamList[index].paramList[childIndex]?.value || false} 
                                 onChange={(val)=>handleChangeCheckItemListCheckBoxValue(index, childIndex, val)} 
