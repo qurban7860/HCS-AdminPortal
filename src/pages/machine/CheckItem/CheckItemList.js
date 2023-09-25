@@ -48,7 +48,7 @@ const TABLE_HEAD = [
   // { id: 'xs2', label: 'Help Hint', align: 'center' },
   // { id: 'xs3', label: 'Link To User Manual', align: 'center' },
   { id: 'inputType', visibility: 'xs5', label: 'Input Type', align: 'left' },
-  { id: 'category', visibility: 'xs3', label: 'Item Category', align: 'left' },
+  { id: 'category.name', visibility: 'xs3', label: 'Item Category', align: 'left' },
   { id: 'isRequired', visibility: 'xs4', label: 'Required', align: 'center' },
   // { id: 'sm1', label: 'Unit Type', align: 'left' },
   // { id: 'sm2', label: 'Min Validation', align: 'center' },
