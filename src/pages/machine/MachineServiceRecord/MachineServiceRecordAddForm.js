@@ -152,6 +152,8 @@ function MachineServiceRecordAddForm() {
 
   console.log(machine.machineConnections)
 
+  console.log(machine.machineConnections)
+
   return (
       <FormProvider methods={methods}  onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
