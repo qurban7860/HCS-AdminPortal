@@ -5,9 +5,20 @@ export function emptyRows(page, rowsPerPage, arrayLength) {
 }
 
 function ascending(a, b, orderBy) {
-  const aValue = a[orderBy];
-  const bValue = b[orderBy];
+  let aValue = a;
+  let bValue = b;
 
+  if(orderBy.includes('.')){
+
+    const orderByArray = orderBy.split('.');
+    aValue = orderByArray.reduce((obj, prop) => obj && obj[prop], a);
+    bValue = orderByArray.reduce((obj, prop) => obj && obj[prop], b);
+
+  }else{
+    aValue = a[orderBy];
+    bValue = b[orderBy];
+  }
+  
   // Convert values to strings for consistent comparison
   const aValueStr = String(aValue).toLowerCase().trim();
   const bValueStr = String(bValue).toLowerCase().trim();
@@ -22,10 +33,21 @@ function ascending(a, b, orderBy) {
 }
 
 function descending(a, b, orderBy) {
-  const aValue = a[orderBy];
-  const bValue = b[orderBy];
 
-  // Convert values to strings for consistent comparison
+  let aValue = a;
+  let bValue = b;
+
+  if(orderBy.includes('.')){
+
+    const orderByArray = orderBy.split('.');
+    aValue = orderByArray.reduce((obj, prop) => obj && obj[prop], a);
+    bValue = orderByArray.reduce((obj, prop) => obj && obj[prop], b);
+
+  }else{
+    aValue = a[orderBy];
+    bValue = b[orderBy];
+  }
+
   const aValueStr = String(aValue).toLowerCase().trim();
   const bValueStr = String(bValue).toLowerCase().trim();
 
