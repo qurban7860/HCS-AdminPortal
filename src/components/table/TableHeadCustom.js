@@ -67,10 +67,13 @@ export default function TableHeadCustom({
         {headLabel.map((headCell) => {
           if( width === 'md' ) {
             displayHeadIs = mdNone.includes(headCell.id)
+            displayHeadIs = mdNone.includes(headCell.visibility)
           }else if( width === 'sm'){
             displayHeadIs = smNone.includes(headCell.id)
+            displayHeadIs = smNone.includes(headCell.visibility)
           }else if( width === 'xs' ){
             displayHeadIs = xsNone.includes(headCell.id)
+            displayHeadIs = xsNone.includes(headCell.visibility)
           }
           return(
           <TableCell

@@ -47,14 +47,14 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   // { id: 'xs2', label: 'Help Hint', align: 'center' },
   // { id: 'xs3', label: 'Link To User Manual', align: 'center' },
-  { id: 'xs5', label: 'Input Type', align: 'left' },
-  { id: 'xs3', label: 'Item Category', align: 'left' },
-  { id: 'xs4', label: 'Required', align: 'center' },
+  { id: 'inputType', visibility: 'xs5', label: 'Input Type', align: 'left' },
+  { id: 'category', visibility: 'xs3', label: 'Item Category', align: 'left' },
+  { id: 'isRequired', visibility: 'xs4', label: 'Required', align: 'center' },
   // { id: 'sm1', label: 'Unit Type', align: 'left' },
   // { id: 'sm2', label: 'Min Validation', align: 'center' },
   // { id: 'sm3', label: 'Max Validation', align: 'center' },
-  { id: 'active', label: 'Active', align: 'center' },
-  { id: 'created_at', label: 'Created At', align: 'right' },
+  { id: 'isActive', label: 'Active', align: 'center' },
+  { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------

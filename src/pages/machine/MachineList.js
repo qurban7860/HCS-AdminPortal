@@ -63,13 +63,13 @@ const TABLE_HEAD = [
   // { id: 'havePrevious', label: '', align: 'center', width: 1.5 },
   { id: 'serialNo', label: 'Serial Number', align: 'left' },
   // { id: 'previousMachine', label: 'Previous Machine', align: 'left' },
-  { id: 'md1', visibility: 'name',label: 'Name', align: 'left' },
+  { id: 'name', visibility: 'md1',label: 'Name', align: 'left' },
   { id: 'xs1', label: 'Model', align: 'left' },
   { id: 'xs2', label: 'Status', align: 'left' },
   { id: 'md2', label: 'Customer', align: 'left' },
   { id: 'md3', label: 'Installation Site', align: 'left' },
-  { id: 'active', label: 'Active', align: 'center' },
-  { id: 'created_at', label: 'Created At', align: 'left' },
+  { id: 'isActive', visibility: 'md1', label: 'Active', align: 'center' },
+  { id: 'createdAt', visibility: 'md1', label: 'Created At', align: 'left' },
 ];
 
 export default function MachineList() {
