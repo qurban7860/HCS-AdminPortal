@@ -1,4 +1,4 @@
-import { useEffect, useMemo,useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -33,7 +33,6 @@ export default function CheckItemAddForm() {
   const { enqueueSnackbar } = useSnackbar();
   const { inputTypes, unitTypes } = useSelector((state) => state.checkItems);
   const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
-
 
   useEffect(()=>{
     dispatch(getActiveServiceCategories())
@@ -106,30 +105,20 @@ export default function CheckItemAddForm() {
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 <FormHeading heading={FORMLABELS.COVER.MACHINE_SERVICE_PARAM_ADD} />
-                  <Box
-                        rowGap={2}
-                        columnGap={2}
-                        display="grid"
-                        gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-                      >
-                    <RHFTextField name="name" label="Name" />
-                    <RHFAutocomplete 
-                      name="serviceCategory"
-                      label="Item Category"
-                      options={activeServiceCategories}
-                      isOptionEqualToValue={(option, value) => option._id === value._id}
-                      getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                      renderOption={(props, option) => (
-                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                      )}
-                    />
-                  </Box>
-
+                  <RHFAutocomplete 
+                    name="serviceCategory"
+                    label="Item Category"
+                    options={activeServiceCategories}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                    )}
+                  />
+                  <RHFTextField name="name" label="Name" />
                   <RHFTextField name="printName" label="Print Name" minRows={3} multiline/>
-
                   <RHFTextField name="helpHint" label="Help Hint" />
                   <RHFTextField name="linkToUserManual" label="Link To User Manual" />
-
                   <Box
                     rowGap={2}
                     columnGap={2}
@@ -147,7 +136,6 @@ export default function CheckItemAddForm() {
                       )}
                     />
 
-                 {inputType && inputType.name === 'Number' && (
                     <RHFAutocomplete 
                       name="unitType" label="Unit Type"
                       options={unitTypes}
@@ -157,8 +145,6 @@ export default function CheckItemAddForm() {
                         <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
                     />
-                    )}
-
                     <RHFTextField name="minValidation" label="Minimum Validation" />
                     <RHFTextField name="maxValidation" label="Maximum Validation" />
                     

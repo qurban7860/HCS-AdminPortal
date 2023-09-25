@@ -53,7 +53,6 @@ export default function MachineServiceRecordList() {
   const { machineServiceRecords, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine);
 
-  console.log('machineServiceRecords : ',machineServiceRecords)
   const {
     order,
     orderBy,

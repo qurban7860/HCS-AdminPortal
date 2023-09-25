@@ -233,36 +233,19 @@ export function addMachineServiceRecord(machineId,params) {
     return async (dispatch) => {
       dispatch(slice.actions.startLoading());
       try {
-        // const formData = new FormData();
-        // formData.append('serviceRecordConfig', params?.serviceRecordConfig?._id)
-        // formData.append('serviceDate',params?.serviceDate)
-        // if(params?.decoiler.length > 0){
-        //   formData.append('decoilers',params?.decoiler?.map((dec)=> dec._id))
-        // }
-        // formData.append('technician',params?.technician?._id || null)
-        // formData.append('serviceNote',params?.serviceNote)
-        // formData.append('maintenanceRecommendation',params?.maintenanceRecommendation)
-        // formData.append('suggestedSpares',params?.suggestedSpares)
-        // formData.append('operator',params?.operator?._id || null)
-        // formData.append('operatorRemarks',params?.operatorRemarks)
-        // // params?.files?.forEach((file, index) => {formData.append(`files`, file);})
-        // formData.append('isActive',params?.isActive)
-        // console.log("formData : ",formData)
-
         const data = {
           serviceRecordConfig:        params?.serviceRecordConfig?._id,
           serviceDate:                params?.serviceDate,
-          decoilers:                  params?.decoiler?.map((dec)=> dec._id),
+          decoilers:                  params?.decoilers?.map((dec)=> dec?.connectedMachine?._id),
           technician:                 params?.technician?._id || null,
           serviceNote:                params?.serviceNote,
           maintenanceRecommendation:  params?.maintenanceRecommendation,
           suggestedSpares:            params?.suggestedSpares,
-          operator:                   params?.operator?._id || null,
+          operators:                  params?.operators?.map((dec)=> dec._id),
           checkParams:                params?.checkParams || [],
           operatorRemarks:            params?.operatorRemarks,
           isActive: params?.isActive
         }
-        console.log("data : ",data)
         /* eslint-disable */
 
         const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords`, data );
@@ -282,36 +265,21 @@ export function updateMachineServiceRecord(machineId,id, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      /* eslint-disable */
-      // const formData = new FormData();
-      //   formData.append('serviceRecordConfig', params?.serviceRecordConfig?._id)
-      //   formData.append('serviceDate',params?.serviceDate)
-      //   formData.append('decoilers',params?.decoiler.length > 0 ? params?.decoiler?.map((dec)=> dec._id) : [])
-      //   formData.append('technician',params?.technician?._id || null)
-      //   formData.append('serviceNote',params?.serviceNote)
-      //   formData.append('maintenanceRecommendation',params?.maintenanceRecommendation)
-      //   formData.append('suggestedSpares',params?.suggestedSpares)
-      //   formData.append('operator',params?.operator?._id || null)
-      //   formData.append('operatorRemarks',params?.operatorRemarks)
-      //   // params?.files?.forEach((file, index) => {formData.append(`files`, file);})
-      //   formData.append('isActive',params?.isActive)
-      //   console.log("formData : ",formData)
-
       const data = {
         serviceRecordConfig:        params?.serviceRecordConfig?._id,
         serviceDate:                params?.serviceDate,
-        decoilers:                  params?.decoiler?.map((dec)=> dec._id),
+        decoilers:                  params?.decoilers?.map((dec)=> dec?.connectedMachine?._id),
         technician:                 params?.technician?._id || null,
         serviceNote:                params?.serviceNote,
         maintenanceRecommendation:  params?.maintenanceRecommendation,
         suggestedSpares:            params?.suggestedSpares,
-        operator:                   params?.operator?._id || null,
+        operators:                  params?.operators?.map((dec)=> dec._id),
         operatorRemarks:            params?.operatorRemarks,
         checkParams:                params?.checkParams || [],
         isActive: params?.isActive
       }
-      console.log("data : ",data)
-     /* eslint-enable */
+
+      console.log("data when posting:",data)
       await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`,data);
     } catch (error) {
       console.error(error);

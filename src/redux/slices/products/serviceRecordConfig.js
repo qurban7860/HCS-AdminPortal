@@ -188,17 +188,21 @@ export function getActiveServiceRecordConfigs (categoryId, machineModelId ){
 
 // ----------------------------------------------------------------------
 
-export function getActiveServiceRecordConfigsForRecords(machineId){
+export function getActiveServiceRecordConfigsForRecords(machineId, type){
   return async (dispatch) =>{
-    dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.startLoading());    
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordsConfig`, 
-      {
+
+      const query = {
         params: {
           isArchived: false,
-          isActive: true,
+          isActive: true
         }
-      });
+      }
+
+      
+      Object.assign(query.params, type)
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordsConfig`, query);
       dispatch(slice.actions.getActiveServiceRecordConfigsForRecordsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('ServiceRecordConfigs loaded successfully'));
       // dispatch(slice.actions)

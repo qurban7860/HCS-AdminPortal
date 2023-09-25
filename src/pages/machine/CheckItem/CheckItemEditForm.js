@@ -104,13 +104,6 @@ export default function DocumentCategoryeEditForm() {
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 <FormHeading heading={FORMLABELS.COVER.MACHINE_SERVICE_PARAM_EDIT} />
-                <Box
-                    rowGap={2}
-                    columnGap={2}
-                    display="grid"
-                    gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-                  >
-                  <RHFTextField name="name" label="Name" />
                   <RHFAutocomplete 
                       name="serviceCategory"
                       label="Item Category"
@@ -121,7 +114,7 @@ export default function DocumentCategoryeEditForm() {
                         <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
                     />
-                  </Box>
+                  <RHFTextField name="name" label="Name" />
                   <RHFTextField name="printName" label="Print Name" minRows={3} multiline />
                   <RHFTextField name="helpHint" label="Help Hint" />
                   <RHFTextField name="linkToUserManual" label="Link To User Manual" />
