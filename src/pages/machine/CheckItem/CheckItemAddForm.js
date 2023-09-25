@@ -33,7 +33,6 @@ export default function CheckItemAddForm() {
   const { enqueueSnackbar } = useSnackbar();
   const { inputTypes, unitTypes } = useSelector((state) => state.checkItems);
   const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
-  const [selectedInputType, setSelectedInputType] = useState(null);
 
 
   useEffect(()=>{
@@ -65,9 +64,11 @@ export default function CheckItemAddForm() {
 
   const {
     reset,
+    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+  const { inputType } = watch();
 
   useEffect(() => {
     reset(defaultValues);
@@ -139,18 +140,14 @@ export default function CheckItemAddForm() {
                     <RHFAutocomplete 
                       name="inputType" label="Input Type"
                       options={inputTypes}
-                      value={selectedInputType}
                       isOptionEqualToValue={(option, value) => option._id === value._id}
                       getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                       renderOption={(props, option) => (
                         <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
-                      onChange={(event, newValue) => {
-                        setSelectedInputType(newValue)
-                       }}
                     />
 
-                 {selectedInputType && selectedInputType.name === 'Number' && (
+                 {inputType && inputType.name === 'Number' && (
                     <RHFAutocomplete 
                       name="unitType" label="Unit Type"
                       options={unitTypes}
