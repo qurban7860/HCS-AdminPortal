@@ -38,7 +38,7 @@ const TABLE_HEAD = [
   { id: 'docTitle', label: 'Document Title', align: 'left' },
   { id: 'recordType', label: 'Document Type', align: 'left' },
   // { id: 'category', label: 'Category', align: 'left' },
-  { id: 'md1', label: 'Machine Model', align: 'left' },
+  { id: 'machineModel.name', visibility: 'md1', label: 'Machine Model', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
