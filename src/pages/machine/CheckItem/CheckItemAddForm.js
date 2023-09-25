@@ -31,7 +31,7 @@ export default function CheckItemAddForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const { inputTypes, unitTypes } = useSelector((state) => state.checkItems);
+  const { inputTypes, unitTypes, filterBy } = useSelector((state) => state.checkItems);
   const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
 
   useEffect(()=>{
@@ -39,7 +39,7 @@ export default function CheckItemAddForm() {
   },[dispatch])
   const defaultValues = useMemo(
     () => ({
-      name:             '',
+      name:             filterBy,
       serviceCategory: null,
       printName:        '',
       description:      '',
