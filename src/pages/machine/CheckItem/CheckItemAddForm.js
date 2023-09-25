@@ -136,7 +136,6 @@ export default function CheckItemAddForm() {
                       )}
                     />
 
-                 {inputType && inputType.name === 'Number' && (
                     <RHFAutocomplete 
                       name="unitType" label="Unit Type"
                       options={unitTypes}
