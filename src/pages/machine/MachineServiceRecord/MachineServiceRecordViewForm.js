@@ -92,7 +92,7 @@ function MachineServiceParamViewForm() {
             {machineServiceRecord?.serviceRecordConfig?.checkParams?.length > 0 ? (machineServiceRecord?.serviceRecordConfig?.checkParams.map((row, index) =>
               <>
                 <Grid key={index}  item md={12} sx={{pb:1}} >
-                  <Typography variant="body2"><b>{`${index+1}). `}</b>{typeof row?.paramListTitle === 'string' && row?.paramListTitle || ''}{' ( Items: '}<b>{`${row?.paramList?.length}`}</b>{' ) '}</Typography>
+                  <Typography variant="body2" sx={{fontWeight:'bold'}}>{`${index+1}). `} {typeof row?.paramListTitle === 'string' && row?.paramListTitle || ''}{' ( Items: '}{`${row?.paramList?.length}`}{' ) '}</Typography>
                 </Grid>
                 <Grid  item md={12} sx={{ pb:1}}>
                   {row?.paramList.map((childRow,childIndex) => 

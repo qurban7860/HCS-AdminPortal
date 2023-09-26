@@ -33,7 +33,7 @@ const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue,
 
       const handleInputChange = (value) => {
         if (value) {
-          setCheckItemList((checkItems) => [...checkItems, value[0]]);
+          setCheckItemList(value);
         }
       };
 
@@ -171,19 +171,21 @@ useEffect(()=>{
                         multiple
                         name="paramList"
                         label="Select Items"
-                        value={[]}
+                        defaultValue={checkItemList}
+                        // defaultValue={checkItemList}
                         options={activeCheckItems}
                         isOptionEqualToValue={(option, value) => option._id === value._id}
                         getOptionLabel={(option) => `${option.name ? option.name : ''} ${option?.category?.name ? '-' : ''} ${option?.category?.name ? option?.category?.name : ''} ${option?.inputType ? '-' : '' } ${option?.inputType ? option?.inputType : '' }`}
                         renderOption={(props, option) => (
                           <li {...props} key={option._id}>{`${option.name ? option.name : ''} ${option?.category?.name ? '-' : ''} ${option?.category?.name ? option?.category?.name : ''} ${option?.inputType ? '-' : '' } ${option?.inputType ? option?.inputType : '' }`}</li>
                         )}
+                        onChange={(event, newValue) => setCheckItemList(newValue)}
                         // filterSelectedOptions
-                        onChange={(event, newValue) => {
-                          if(newValue){
-                            handleInputChange(newValue)
-                          }
-                        }}
+                        // onChange={(event, newValue) => {
+                        //   if(newValue){
+                        //     handleInputChange(newValue)
+                        //   }
+                        // }}
                         renderTags={(value, getTagProps) => ''}
                         Error={!!checkItemListError} helperText={checkItemListError}
                       /> 

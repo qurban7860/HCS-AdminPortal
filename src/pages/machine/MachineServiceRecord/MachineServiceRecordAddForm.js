@@ -256,7 +256,7 @@ function MachineServiceRecordAddForm() {
                           ( typeof row?.paramList?.length === 'number' &&
                           <>
                         <Grid key={index}  item md={12} >
-                                <Typography variant="body2"><b>{`${index+1}). `}</b>{typeof row?.paramListTitle === 'string' && row?.paramListTitle || ''}{' ( Items: '}<b>{`${row?.paramList?.length}`}</b>{' ) '}</Typography>
+                                <Typography variant="body2" sx={{fontWeight:'bold'}}>{`${index+1}). `}{typeof row?.paramListTitle === 'string' && row?.paramListTitle || ''}{' ( Items: '} {`${row?.paramList?.length}`}{' ) '}</Typography>
                         </Grid>
                         <Grid  item md={12} >
 
@@ -322,7 +322,6 @@ function MachineServiceRecordAddForm() {
 
                               <Checkbox 
                                 name={`${childRow?.name}_${childIndex}_${index}`} 
-                                required={childRow?.isRequired} 
                                 checked={checkParamList[index].paramList[childIndex]?.value || false} 
                                 onChange={(val)=>handleChangeCheckItemListCheckBoxValue(index, childIndex, val)} 
                                 
