@@ -21,7 +21,7 @@ import FormProvider, {
   RHFSwitch,
   RHFDatePicker
 } from '../../../components/hook-form';
-import { getActiveSecurityUsers } from '../../../redux/slices/securityUser/securityUser';
+import { getActiveSecurityUsers, getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
 
 // ----------------------------------------------------------------------
 
@@ -30,26 +30,28 @@ function MachineServiceRecordAddForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { machine } = useSelector((state) => state.machine)
-  const { securityUser } = useSelector((state) => state.user);
+  const { activeSecurityUsers, securityUser } = useSelector((state) => state.user);
   const { activeContacts } = useSelector((state) => state.contact);
   const { activeServiceRecordConfigsForRecords } = useSelector((state) => state.serviceRecordConfig);
   const { recordTypes } = useSelector((state) => state.serviceRecordConfig);
   const [checkParamList, setCheckParamList] = useState([]);
   const [docType, setDocType] = useState(null);
-  const { activeSecurityUsers } = useSelector((state) => state.user);
-  
+  // console.log("activeSecurityUsers : ", securityUser, activeSecurityUsers)
+  const user = { _id: localStorage.getItem('userId'), name: localStorage.getItem('name') };
+
   useEffect( ()=>{
     dispatch(getActiveServiceRecordConfigsForRecords(machine?._id))
     dispatch(getActiveContacts(machine?.customer?._id))
     dispatch(getActiveSecurityUsers({roleType:'Support'}))
-  },[dispatch, machine])
+    dispatch(getSecurityUser(user._id))
+  },[dispatch, machine, user?._id])
 
   const defaultValues = useMemo(
     () => {
       const initialValues = {
       serviceRecordConfig: null,
       serviceDate: new Date(),
-      technician:   securityUser?.contact || null,
+      technician:  null,
       decoilers: machine?.machineConnections,
       serviceNote: '',
       maintenanceRecommendation: '',
@@ -60,7 +62,6 @@ function MachineServiceRecordAddForm() {
       operatorRemarks: '',
       isActive: true,
     }
-
     return initialValues;
   },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -81,7 +82,14 @@ function MachineServiceRecordAddForm() {
     control,
   } = methods;
 
-  const { decoilers, operators, serviceRecordConfig } = watch()
+  const { decoilers, operators, serviceRecordConfig, technician } = watch()
+
+  useEffect(()=>{
+    if(securityUser?.customer?.name === 'Howick' && !!securityUser?.roles?.find((role) => role?.roleType === 'Support')){
+      setValue('technician',user)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[securityUser, setValue, user?._id])
 
   useEffect(()=>{
     setCheckParamList(serviceRecordConfig?.checkParams)
@@ -315,11 +323,12 @@ function MachineServiceRecordAddForm() {
                         </>
                           ))}
                     </Grid>
+
                     { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label="Note" minRows={3} multiline/> }
                     { serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="maintenanceRecommendation" label="Maintenance Recommendation" minRows={3} multiline/> }
                     { serviceRecordConfig?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }
                     {docType &&
-                       <Autocomplete multiple
+                      <Autocomplete multiple
                         name="operators" 
                         defaultValue={defaultValues.operators}
                         id="operator-autocomplete" options={activeContacts}
