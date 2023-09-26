@@ -52,12 +52,6 @@ function MachineServiceRecordAddForm() {
     serialNo: decoiler?.connectedMachine?.serialNo ?? null
   }));
 
-  const machineDecoilers = (machine?.machineConnections || []).map((decoiler) => ({
-    _id: decoiler?.connectedMachine?._id ?? null,
-    name: decoiler?.connectedMachine?.name ?? null,
-    serialNo: decoiler?.connectedMachine?.serialNo ?? null
-  }));
-
   const defaultValues = useMemo(
     () => {
       const initialValues = {
@@ -309,7 +303,7 @@ function MachineServiceRecordAddForm() {
                               <TextField 
                                 fullWidth
                                 id="outlined-number"
-                                label={`Measurement (${childRow?.unitType})`}
+                                label={`Measurement ${childRow?.unitType?`(${childRow?.unitType})`:''}`}
                                 name={childRow?.name} 
                                 type="number"
                                 value={checkParamList[index]?.paramList[childIndex]?.value}
