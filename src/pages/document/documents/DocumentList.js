@@ -145,19 +145,19 @@ const  onChangePage = (event, newPage) => {
 
   const TABLE_HEAD = [
     { id: 'name', label: 'Name', align: 'left' },
-    { id: 'xs1', label: 'Category', align: 'left' },
-    { id: 'xs2', label: 'Type', align: 'left' },
-    { id: 'md1', label: 'Version', align: 'center' },
-    { id: 'md2', label: 'Customer Access', align: 'center' },
-    { id: 'active', label: 'Active', align: 'center' },
-    { id: 'created_at', label: 'Created At', align: 'right' },
+    { id: 'docCategory.name', visibility: 'xs1', label: 'Category', align: 'left' },
+    { id: 'docType.name', visibility: 'xs2', label: 'Type', align: 'left' },
+    { id: 'documentVersions.versionNo.[]', visibility: 'md1', label: 'Version', align: 'center' },
+    { id: 'customerAccess', visibility: 'md2', label: 'Customer Access', align: 'center' },
+    { id: 'isActive', label: 'Active', align: 'center' },
+    { id: 'createdAt', label: 'Created At', align: 'right' },
   ];
   
   if (!customerPage && !machinePage && !machineDrawings) {
     const insertIndex = 1; // Index after which you want to insert the new objects
     TABLE_HEAD.splice(insertIndex, 0, // 0 indicates that we're not removing any elements
-      { id: 'md3', label: 'Customer', align: 'left' },
-      { id: 'md4', label: 'Machine', align: 'left' }
+      { id: 'customer.name', visibility: 'md3', label: 'Customer', align: 'left' },
+      { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left' }
     );
   }
 

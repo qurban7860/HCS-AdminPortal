@@ -55,9 +55,9 @@ export default function LicenseList() {
   const { licenses, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.license );
   const TABLE_HEAD = [
     { id: 'licenseKey', label: 'License Key', align: 'left' },
-    { id: 'xs1', label: 'Version', align: 'left' },
-    { id: 'xs2', label: 'Type', align: 'left' },
-    { id: 'extensionTime', label: 'Extension Time', align: 'right' },
+    { id: 'licenseDetail.version', visibility: 'xs1', label: 'Version', align: 'left' },
+    { id: 'licenseDetail.type', visibility: 'xs2', label: 'Type', align: 'left' },
+    { id: 'licenseDetail.extensionTime', label: 'Extension Time', align: 'right' },
     { id: 'createdAt', label: 'Created At', align: 'right' },
   ];
 
