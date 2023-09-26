@@ -52,6 +52,12 @@ function MachineServiceRecordAddForm() {
     serialNo: decoiler?.connectedMachine?.serialNo ?? null
   }));
 
+  const machineDecoilers = (machine?.machineConnections || []).map((decoiler) => ({
+    _id: decoiler?.connectedMachine?._id ?? null,
+    name: decoiler?.connectedMachine?.name ?? null,
+    serialNo: decoiler?.connectedMachine?.serialNo ?? null
+  }));
+
   const defaultValues = useMemo(
     () => {
       const initialValues = {
