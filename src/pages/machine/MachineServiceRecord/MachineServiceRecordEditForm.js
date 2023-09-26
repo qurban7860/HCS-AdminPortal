@@ -55,10 +55,6 @@ function MachineServiceRecordEditForm() {
 
   useEffect(() => {
 
-
-
-
-
     if (machineServiceRecord) {
       const checkParams = machineServiceRecord?.serviceRecordConfig?.checkParams;
       if (checkParams) {
@@ -88,6 +84,24 @@ function MachineServiceRecordEditForm() {
     }
   }, [machineServiceRecord]);
 
+  const machineDecoilers = (machine?.machineConnections || []).map((decoiler) => ({
+    _id: decoiler?.connectedMachine?._id ?? null,
+    name: decoiler?.connectedMachine?.name ?? null,
+    serialNo: decoiler?.connectedMachine?.serialNo ?? null
+  }));
+
+  const defaultDecoilers = (machineServiceRecord?.decoilers || []).map((decoiler) => ({
+    _id: decoiler?._id ?? null,
+    name: decoiler?.name ?? "",
+    serialNo: decoiler?.serialNo ?? ""
+  }));
+
+  const machineOperators = (activeContacts || []).map((con) => ({
+    _id: con?._id ?? null,
+    firstName: con?.firstName ?? "",
+    lastName: con?.lastName ?? ""
+  }));
+
   const defaultValues = useMemo(
     () => ({
       recordType:                 machineServiceRecord?.serviceRecordConfig?.recordType || null,
@@ -96,12 +110,7 @@ function MachineServiceRecordEditForm() {
       customer:                   machineServiceRecord?.customer || null,
       site:                       machineServiceRecord?.site || null,
       machine:                    machineServiceRecord?.machine || null,
-      decoilers:                  (machineServiceRecord?.decoilers || []).map((decoilerMachine) => (
-        {connectedMachine:{
-        _id: decoilerMachine?._id || null,
-        name: decoilerMachine?.name || null,
-        serialNo: decoilerMachine?.serialNo || null
-      }})),
+      decoilers:                  defaultDecoilers || [],
       technician:                 machineServiceRecord?.technician || null,
       // checkParams:
       serviceNote:                machineServiceRecord?.serviceNote || '',
@@ -115,9 +124,6 @@ function MachineServiceRecordEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [machineServiceRecord, machine]
   );
-
-
-  console.log(machine?.machineConnections)
 
   const methods = useForm({
     resolver: yupResolver(MachineServiceRecordSchema),
@@ -143,7 +149,6 @@ function MachineServiceRecordEditForm() {
   const toggleCancel = () => { dispatch(setMachineServiceRecordViewFormVisibility(true)) };
   const onSubmit = async (data) => {
 
-
     try {
       const checkParams_ = [];
       if(serviceRecordConfig &&
@@ -163,13 +168,9 @@ function MachineServiceRecordEditForm() {
           }
         });
 
-
       data.checkParams = checkParams_;
       data.decoilers = decoilers;
       data.operators = operators;
-
-      console.log(data)
-
       await dispatch(updateMachineServiceRecord(machine?._id ,machineServiceRecord?._id , data));
       reset();
       dispatch(setMachineServiceRecordViewFormVisibility(true));
@@ -263,10 +264,10 @@ function MachineServiceRecordEditForm() {
               <Autocomplete multiple
                   name="decoilers"
                   defaultValue={defaultValues.decoilers}
-                  id="decoilers-autocomplete" options={machine?.machineConnections}
+                  id="decoilers-autocomplete" options={machineDecoilers}
                   onChange={(event, newValue) => setValue('decoilers',newValue)}
-                  getOptionLabel={(option) => `${option?.connectedMachine?.name||""} ${option?.connectedMachine?.serialNo||""}`}
-                  isOptionEqualToValue={(option, value) => option?._id === value?.connectedMachine?._id}
+                  getOptionLabel={(option) => `${option?.name||""} ${option?.serialNo||""}`}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   renderInput={(params) => (
                     <TextField {...params} variant="outlined" label="Decoilers" placeholder="Select Decoilers"/>
                   )}
@@ -275,11 +276,11 @@ function MachineServiceRecordEditForm() {
               <RHFAutocomplete
                 name="technician"
                 label="Technician"
-                options={activeContacts}
-                getOptionLabel={(option) => `${option.firstName ? option.firstName :   ''} ${option.lastName ? option.lastName :   ''}`}
+                options={activeSecurityUsers}
+                getOptionLabel={(option) => `${option?.name || ''}`}
                 isOptionEqualToValue={(option, value) => option._id === value._id}
                 renderOption={(props, option) => (
-                  <li {...props} key={option._id}>{`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName :   ''}`}</li>
+                  <li {...props} key={option._id}>{`${option?.name || ''}`}</li>
                 )}
               />
               <RHFTextField name="operatorRemarks" label="Technician Remarks" minRows={3} multiline/>
@@ -295,7 +296,9 @@ function MachineServiceRecordEditForm() {
                     <Grid  item md={12}>
                       {row?.paramList.map((childRow,childIndex) => (
                         <Box
-                          sx={{pl:4,alignItems: 'center'}}
+                        sx={{pl:4, alignItems: 'center', backgroundColor:(childIndex%2===0?"#f4f6f866":""), 
+                            ":hover": {backgroundColor: "#dbdbdb66"}
+                            }}
                           rowGap={2}
                           columnGap={2}
                           display="grid"
@@ -348,20 +351,17 @@ function MachineServiceRecordEditForm() {
                     </>
                       ))}
                 </Grid>
-
                 { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label="Note" minRows={3} multiline/> }
-
                 { serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="maintenanceRecommendation" label="Maintenance Recommendation" minRows={3} multiline/> }
-
                 { serviceRecordConfig?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }
-
                 {defaultValues?.recordType==='Training' &&
                   <Autocomplete multiple
                   name="operators"
                   defaultValue={defaultValues.operators}
-                  id="operator-autocomplete" options={activeContacts}
+                  id="operator-autocomplete" options={machineOperators}
                   onChange={(event, newValue) => setValue('operators',newValue)}
                   getOptionLabel={(option) => `${option.firstName ? option.firstName :   ''} ${option.lastName ? option.lastName :   ''}`}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   renderInput={(params) => (
                     <TextField {...params} variant="outlined" label="Operators" placeholder="Select Operators"/>
                   )}

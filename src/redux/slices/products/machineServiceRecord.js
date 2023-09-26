@@ -236,7 +236,7 @@ export function addMachineServiceRecord(machineId,params) {
         const data = {
           serviceRecordConfig:        params?.serviceRecordConfig?._id,
           serviceDate:                params?.serviceDate,
-          decoilers:                  params?.decoilers?.map((dec)=> dec?.connectedMachine?._id),
+          decoilers:                  params?.decoilers?.map((dec)=> dec?._id),
           technician:                 params?.technician?._id || null,
           serviceNote:                params?.serviceNote,
           maintenanceRecommendation:  params?.maintenanceRecommendation,
@@ -268,7 +268,7 @@ export function updateMachineServiceRecord(machineId,id, params) {
       const data = {
         serviceRecordConfig:        params?.serviceRecordConfig?._id,
         serviceDate:                params?.serviceDate,
-        decoilers:                  params?.decoilers?.map((dec)=> dec?.connectedMachine?._id),
+        decoilers:                  params?.decoilers?.map((dec)=> dec?._id),
         technician:                 params?.technician?._id || null,
         serviceNote:                params?.serviceNote,
         maintenanceRecommendation:  params?.maintenanceRecommendation,
@@ -278,8 +278,6 @@ export function updateMachineServiceRecord(machineId,id, params) {
         checkParams:                params?.checkParams || [],
         isActive: params?.isActive
       }
-
-      console.log("data when posting:",data)
       await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`,data);
     } catch (error) {
       console.error(error);

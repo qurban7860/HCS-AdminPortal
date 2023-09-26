@@ -205,6 +205,7 @@ useEffect(()=>{
                                 onDragStart={(e) => handleDragStart(e, index)}
                                 onDragOver={(e) => e.preventDefault()}
                                 onDrop={(e) => handleDrop(e, index)}
+                                hover
                               >
                                 <TableCell size='small' align='left' ><b>{`${index+1}). `}</b>{`${row.name}  ${row?.category?.name ? '-' : ''} ${row?.category?.name ? row?.category?.name : ''} ${row?.inputType ? '-' : '' } ${row?.inputType ? row?.inputType : '' }`}</TableCell>
                                 <TableCell size='small' align='right'>
