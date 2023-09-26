@@ -8,7 +8,7 @@ import MachineToolsInstalledList from '../MachineToolsInstalledList';
 import MachineLicenses from '../License/MachineLicenses';
 import MachineServiceRecordList from '../MachineServiceRecordList';
 import MachineProfiles from '../Profile/MachineProfiles';
-import SettingList from '../Setting/SettingList';
+import MachineSetting from '../Setting/MachineSetting';
 
 export const TABS = (currentComponent, showDevTabs, disableTab) => [
   {
@@ -22,7 +22,7 @@ export const TABS = (currentComponent, showDevTabs, disableTab) => [
     value: 'settings',
     label: 'Settings',
     icon: <Iconify icon="mdi:cogs" />,
-    component: <SettingList />,
+    component: <MachineSetting />,
   },
   {
     disabled: disableTab,

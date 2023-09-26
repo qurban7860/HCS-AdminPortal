@@ -1,132 +1,89 @@
-import PropTypes from 'prop-types';
-import { useMemo, useState, useLayoutEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
-// import { useNavigate } from 'react-router-dom';
-
+import { useMemo } from 'react';
 // @mui
-import { Grid } from '@mui/material';
-// redux
+import { Card, Grid, Tooltip } from '@mui/material';
+// hooks
+import { useDispatch, useSelector } from 'react-redux';
+// import { fDate } from 'src/utils/formatTime';
+import { fDate } from '../../../utils/formatTime';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
+import { useSnackbar } from '../../../components/snackbar';
+// components
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import {
   setSettingEditFormVisibility,
-  deleteSetting,
-  getSettings,
   getSetting,
+  deleteSetting,
+  setSettingViewFormVisibility,
 } from '../../../redux/slices/products/machineSetting';
-// paths
-// import { PATH_DASHBOARD } from '../../../routes/paths';
-// components
-// import { fDate, fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
-import ViewFormField from '../../components/ViewForms/ViewFormField';
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-import { useSnackbar } from '../../../components/snackbar';
+// constants
+import { Snacks } from '../../../constants/machine-constants';
 
-// ----------------------------------------------------------------------
-SettingViewForm.propTypes = {
-  currentSetting: PropTypes.object,
-};
-
-export default function SettingViewForm({ currentSetting = null }) {
+export default function SettingViewForm() {
+  const { setting } = useSelector((state) => state.machineSetting);
   const { machine } = useSelector((state) => state.machine);
-  // const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [ setOpenConfirm] = useState(false);
-  // const [ setOpenPopover] = useState(null);
   const { enqueueSnackbar } = useSnackbar();
-  const [disableDeleteButton, setDisableDeleteButton] = useState(false);
-  const [disableEditButton, setDisableEditButton] = useState(false);
-
-  useLayoutEffect(() => {
-    if (machine.transferredMachine) {
-      setDisableDeleteButton(true);
-      setDisableEditButton(true);
-    } else {
-      setDisableDeleteButton(false);
-      setDisableEditButton(false);
-    }
-  }, [machine]);
-
-  // const handleOpenConfirm = () => {
-  //   setOpenConfirm(true);
-  // };
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
-
-  // const handleClosePopover = () => {
-  //   setOpenPopover(null);
-  // };
-
+  
+  const dispatch = useDispatch();
   const onDelete = async () => {
     try {
-      await dispatch(deleteSetting(machine._id, currentSetting._id));
-      handleCloseConfirm();
-      dispatch(getSettings(machine._id));
-      // dispatch(getContacts());
+      dispatch(deleteSetting(machine._id, setting._id));
+      enqueueSnackbar("Setting Deleted");
+      dispatch(setSettingViewFormVisibility(false));
     } catch (err) {
-      // if(err.Message){
-      //   enqueueSnackbar(err.Message,{ variant: `error` })
-      // }else if(err.message){
-      //   enqueueSnackbar(err.message,{ variant: `error` })
-      // }else{
-      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
-      // }
-      enqueueSnackbar('Settings delete failed!', { variant: `error` });
+      enqueueSnackbar(Snacks.failedDeleteSetting, { variant: `error` });
       console.log('Error:', err);
     }
   };
 
   const handleEdit = async () => {
-    await dispatch(getSetting(machine._id, currentSetting._id));
-    dispatch(setSettingEditFormVisibility(true));
+    await dispatch(getSetting(machine._id, setting._id));
+    await dispatch(setSettingViewFormVisibility(false));
+    await dispatch(setSettingEditFormVisibility(true));
   };
 
   const defaultValues = useMemo(
     () => ({
-      techParamCategory: currentSetting?.techParam?.category?.name || '',
-      techParamName: currentSetting?.techParam?.name || '',
-      techParamCode: currentSetting?.techParam?.code || '',
-      techParamValue: currentSetting?.techParamValue || '',
-      isActive: currentSetting?.isActive,
-      createdAt: currentSetting?.createdAt || '',
-      createdByFullName: currentSetting?.createdBy?.name || '',
-      createdIP: currentSetting?.createdIP || '',
-      updatedAt: currentSetting?.updatedAt || '',
-      updatedByFullName: currentSetting?.updatedBy?.name || '',
-      updatedIP: currentSetting?.updatedIP || '',
+      techParamValue: setting?.techParamValue || '',
+      techParam: {
+        code : setting?.techParam?.code || '',
+        name : setting?.techParam?.name || '',
+        description : setting?.techParam?.description || '',
+        category : setting?.techParam?.category || {}
+      },
+      isActive: setting?.isActive || '',
+      createdByFullName: setting?.createdBy?.name || '',
+      createdAt: setting?.createdAt || '',
+      createdIP: setting?.createdIP || '',
+      updatedByFullName: setting?.updatedBy?.name || '',
+      updatedAt: setting?.updatedAt || '',
+      updatedIP: setting?.updatedIP || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentSetting, machine]
+    [setting, machine]
   );
-
   return (
-    <Grid>
-      <Grid container justifyContent="flex-end" sx={{ pr: '2rem', mb:-5 }}>
-        <ViewFormEditDeleteButtons
-          disableDeleteButton={disableDeleteButton}
-          disableEditButton={disableEditButton}
-          handleEdit={handleEdit}
-          onDelete={onDelete}
-        />
+    // needs cleanup
+    <>
+    {/* <DocumentCover content={defaultValues?.displayName} backLink="true"  generalSettings /> */}
+    <Grid item md={12} mt={2}>
+    <Card sx={{ p: 2 }}>
+      <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
+      <Grid display="inline-flex">
+        <Tooltip>
+          <ViewFormField isActive={defaultValues.isActive} />
+        </Tooltip>
       </Grid>
       <Grid container>
-        <ViewFormField sm={12} isActive={defaultValues.isActive} />
-        <ViewFormField sm={6} heading="Category Name" param={defaultValues?.techParamCategory} />
-        <ViewFormField
-          sm={6}
-          heading="Paramter Name"
-          param={defaultValues?.techParamName}
-        />
-        <ViewFormField
-          sm={12}
-          heading="Paramter Value"
-          param={defaultValues?.techParamValue}
-        />
-        <ViewFormField />
-        <ViewFormAudit defaultValues={defaultValues} />
+        <ViewFormField sm={12} heading="Category Name" param={defaultValues.techParam.category.name} />
+        <ViewFormField sm={6} heading="Parameter Code" param={defaultValues.techParam.code} />
+        <ViewFormField sm={6} heading="Parameter Name" param={defaultValues.techParam.name} />
+        <ViewFormField sm={6} heading="Parameter Description" param={defaultValues.techParam.description} />
+        <ViewFormField sm={6} heading="Parameter Value" param={defaultValues.techParamValue} />
+        <ViewFormAudit defaultValues={defaultValues} /> 
       </Grid>
+    </Card>
     </Grid>
+    </>
   );
 }

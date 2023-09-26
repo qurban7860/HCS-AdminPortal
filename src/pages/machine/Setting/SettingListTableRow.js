@@ -33,25 +33,21 @@ export default function SettingListTableRow({
   onViewRow,
 }) {
   const {
-    SettingKey,
-    createdAt,
-    SettingDetail: {
-      version,
-      type,
-      extensionTime,
+    techParam: {
+      name,
+      category,
+      description,
     },
+    techParamValue,
+    createdAt
   } = row;
   const smScreen = useScreenSize('sm')
-
   return (
       <StyledTableRow hover selected={selected}>
-        
-        <LinkTableCell align="left" param={SettingKey} onClick={onViewRow} />
-        { smScreen && <TableCell align="left">{version}</TableCell>}
-        { smScreen && <TableCell align="left">{type}</TableCell>}
-        <TableCell align="right">{fDate(extensionTime)}</TableCell>
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
-  
+        <LinkTableCell align="left" param={category?.name||""} onClick={onViewRow} />
+        <TableCell align="left">{name||""}</TableCell>
+        <TableCell align="left">{techParamValue || ""}</TableCell>
+        { smScreen && <TableCell align="right">{fDate(createdAt)}</TableCell>}
       </StyledTableRow>
 
   );

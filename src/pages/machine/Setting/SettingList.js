@@ -53,11 +53,10 @@ export default function SettingList() {
   const { machine } = useSelector((state) => state.machine);
   const { settings, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.machineSetting );
   const TABLE_HEAD = [
-    { id: 'SettingKey', label: 'Setting Key', align: 'left' },
-    { id: 'SettingDetail.version', visibility: 'xs1', label: 'Version', align: 'left' },
-    { id: 'SettingDetail.type', visibility: 'xs2', label: 'Type', align: 'left' },
-    { id: 'SettingDetail.extensionTime', label: 'Extension Time', align: 'right' },
-    { id: 'createdAt', label: 'Created At', align: 'right' },
+    { id: 'CategoryName', label: 'Category Name', align: 'left' },
+    { id: 'ParameterName', label: 'Parameter Name', align: 'left' },
+    { id: 'ParameterValue', label: 'Parameter Value', align: 'left' },
+    { id: 'createdAt', visibility: 'xs1',  label: 'Created At', align: 'right' },
   ];
 
   const onChangeRowsPerPage = (event) => {
@@ -67,15 +66,16 @@ export default function SettingList() {
 
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
-  useLayoutEffect(() => {
-    dispatch(getSettings(machine._id));
-  }, [dispatch, machine._id, settingEditFormVisibility]);
-  
+  useEffect(() => {
+    if(machine?._id){
+      dispatch(getSettings(machine?._id));
+    }
+  }, [dispatch, machine]);
 
   useEffect(() => {
-    setTableData(Settings);
-  }, [Settings]);
-
+    setTableData(settings);
+  }, [settings]);
+  
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
@@ -111,10 +111,9 @@ export default function SettingList() {
     setFilterStatus(event.target.value);
   };
 
-
-  const handleViewRow = (Settingid) => {
-      dispatch(getSetting(machine._id,Settingid));
-      dispatch(setSettingViewFormVisibility(true));
+  const handleViewRow = (id) => {
+    dispatch(getSetting(machine._id,id));
+    dispatch(setSettingViewFormVisibility(true));
   };
 
   const handleResetFilter = () => {
@@ -196,17 +195,16 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
   if (filterName) {
     inputData = inputData.filter(
-      (Settingg) =>
-        Settingg?.SettingKey?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        Settingg?.SettingDetail?.version?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        Settingg?.SettingDetail?.type?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(Settingg?.SettingDetail?.extensionTime)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(Settingg?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+      (ssetting) =>
+        ssetting?.techParam.name?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        ssetting?.techParam?.category?.name?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        ssetting?.techParamValue?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(ssetting?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 
   if (filterStatus.length) {
-    inputData = inputData.filter((Settingg) => filterStatus.includes(Settingg.status));
+    inputData = inputData.filter((ssetting) => filterStatus.includes(ssetting.status));
   }
 
   return inputData;

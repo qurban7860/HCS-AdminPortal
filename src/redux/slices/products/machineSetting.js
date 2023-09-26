@@ -5,16 +5,16 @@ import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
 const initialState = {
-  formVisibility: false,
-  setSettingViewFormVisibility:false,
+  initial: false,
+  settingFormVisibility: false,
+  settingViewFormVisibility: false,
   settingEditFormVisibility: false,
-  intial: false,
   responseMessage: null,
   success: false,
   isLoading: false,
   error: null,
+  setting: {},
   settings: [],
-  setting: null,
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
@@ -27,17 +27,23 @@ const slice = createSlice({
     // START LOADING
     startLoading(state) {
       state.isLoading = true;
-      state.error = null;
-    },
-    // SET TOGGLE
-    setSettingFormVisibility(state, action){
-      state.formVisibility = action.payload;
     },
 
-    // SET TOGGLE
+    // SET ADD FORM TOGGLE
+    setSettingFormVisibility(state, action){
+      state.settingFormVisibility = action.payload;
+    },
+
+    // SET EDIT FORM TOGGLE
     setSettingEditFormVisibility(state, action){
       state.settingEditFormVisibility = action.payload;
     },
+
+    // SET VIEW TOGGLE
+    setSettingViewFormVisibility(state, action){
+      state.settingViewFormVisibility = action.payload;
+    },
+
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -45,7 +51,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Setting
+    // GET  Setting
     getSettingsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -68,7 +74,8 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // RESET SETTING
+
+    // RESET LICENSE
     resetSetting(state){
       state.setting = {};
       state.responseMessage = null;
@@ -76,14 +83,23 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
-    // RESET SETTING
+    // RESET LICENSE
     resetSettings(state){
       state.settings = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
-        // Set FilterBy
+
+
+    backStep(state) {
+      state.checkout.activeStep -= 1;
+    },
+
+    nextStep(state) {
+      state.checkout.activeStep += 1;
+    },
+    // Set FilterBy
     setFilterBy(state, action) {
       state.filterBy = action.payload;
     },
@@ -105,6 +121,7 @@ export default slice.reducer;
 export const {
   setSettingFormVisibility,
   setSettingEditFormVisibility,
+  setSettingViewFormVisibility,
   resetSetting,
   resetSettings,
   setResponseMessage,
@@ -113,9 +130,10 @@ export const {
   ChangePage,
 } = slice.actions;
 
-// ----------------------------Add Setting------------------------------------------
+// ----------------------------------------------------------------------
 
-export function addSetting(machineId,params) {
+export function addSetting (machineId, params){
+
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -127,38 +145,20 @@ export function addSetting(machineId,params) {
       await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/`, data);
       dispatch(slice.actions.setResponseMessage('Setting saved successfully'));
       dispatch(getSettings(machineId));
+      await dispatch(setSettingFormVisibility(false));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
       throw error;
     }
-  };
+  }
 }
 
-// ---------------------------------Update Setting-------------------------------------
+// ----------------------------------------------------------------------
 
-export function updateSetting(machineId,settingId,params) {
-  return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const data = {
-        techParamValue: params.techParamValue,
-        isActive: params.isActive,
-      }
-      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${settingId}`, data, );
-      dispatch(slice.actions.setResponseMessage('Setting updated successfully'));
-      dispatch(setSettingEditFormVisibility (false));
-    } catch (error) {
-      console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
-      throw error;
-    }
-  };
-}
 
-// -----------------------------------Get Settings-----------------------------------
+export function getSettings (id){
 
-export function getSettings(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -179,12 +179,13 @@ export function getSettings(id) {
       dispatch(slice.actions.hasError(error.Message));
       throw error;
     }
-  };
+  }
 }
 
-// -------------------------------get Setting---------------------------------------
+// ----------------------------------------------------------------------
 
-export function getSetting(machineId,settingId) {
+export function getSetting(machineId, settingId) {
+
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -196,22 +197,22 @@ export function getSetting(machineId,settingId) {
       dispatch(slice.actions.hasError(error.Message));
       throw error;
     }
-  };
+  }
 }
 
-// ---------------------------------archive Setting-------------------------------------
+// ----------------------------------------------------------------------
 
-export function deleteSetting(machineId,id) {
+export function deleteSetting(machineId, Id) {
+
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      // const response = await axios.delete(`${CONFIG.SERVER_URL}customers/notes/${id}`,
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${id}` , 
-      {
-          isArchived: true, 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${Id}`, {
+        isArchived: true, 
       });
+     
       dispatch(slice.actions.setResponseMessage(response.data));
-      // state.responseMessage = response.data;
+      
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -220,4 +221,24 @@ export function deleteSetting(machineId,id) {
   };
 }
 
+// --------------------------------------------------------------------------
 
+export async function updateSetting(machineId,settingId,params) {
+
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const data = {
+        techParamValue: params.techParamValue,
+        isActive: params.isActive,
+      }
+      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${settingId}`, data, );
+      dispatch(slice.actions.setResponseMessage('Setting updated successfully'));
+      dispatch(setSettingEditFormVisibility (false));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  }
+}
