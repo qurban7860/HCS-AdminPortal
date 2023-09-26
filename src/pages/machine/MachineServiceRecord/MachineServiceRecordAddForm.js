@@ -46,13 +46,19 @@ function MachineServiceRecordAddForm() {
     dispatch(getSecurityUser(user._id))
   },[dispatch, machine, user?._id])
 
+  const machineDecoilers = (machine?.machineConnections || []).map((decoiler) => ({
+    _id: decoiler?.connectedMachine?._id ?? null,
+    name: decoiler?.connectedMachine?.name ?? null,
+    serialNo: decoiler?.connectedMachine?.serialNo ?? null
+  }));
+
   const defaultValues = useMemo(
     () => {
       const initialValues = {
       serviceRecordConfig: null,
       serviceDate: new Date(),
-      technician:  null,
-      decoilers: machine?.machineConnections,
+      technician:   securityUser?.contact || null,
+      decoilers: machineDecoilers,
       serviceNote: '',
       maintenanceRecommendation: '',
       suggestedSpares: '',
@@ -77,6 +83,7 @@ function MachineServiceRecordAddForm() {
     reset,
     watch,
     setValue,
+    trigger,
     handleSubmit,
     formState: { isSubmitting },
     control,
@@ -106,7 +113,7 @@ function MachineServiceRecordAddForm() {
   const handleParamChange = (event, newValue) => {
 
     setValue('serviceRecordConfig',newValue)
-    console.log(newValue)
+    trigger('serviceRecordConfig');
     if(newValue?.recordType==='Training'){
       setDocType(true)
     }else{
@@ -221,9 +228,9 @@ function MachineServiceRecordAddForm() {
                   <Autocomplete multiple
                     name="decoilers" 
                     defaultValue={defaultValues.decoilers}
-                    id="operator-autocomplete" options={machine?.machineConnections}
+                    id="operator-autocomplete" options={machineDecoilers}
                     onChange={(event, newValue) => setValue('decoilers',newValue)}
-                    getOptionLabel={(option) => `${option?.connectedMachine?.name||""} ${option?.connectedMachine?.serialNo||""}`}
+                    getOptionLabel={(option) => `${option?.name||""} ${option?.serialNo||""}`}
                     renderInput={(params) => (
                       <TextField {...params} variant="outlined" label="Decoilers" placeholder="Select Decoilers"/>
                     )}
@@ -235,17 +242,17 @@ function MachineServiceRecordAddForm() {
                     name="technician"
                     label="Technician"
                     options={activeSecurityUsers}
-                    getOptionLabel={(option) => option.name ? option.name :   ''}
+                    getOptionLabel={(option) => option?.name || ''}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     renderOption={(props, option) => (
-                    <li {...props} key={option._id}>{option.name ? option.name : ''}</li>
+                    <li {...props} key={option._id}>{option.name || ''}</li>
                     )}
                   />
                     <RHFTextField name="operatorRemarks" label="Technican Remarks" minRows={3} multiline/> 
                   
                     {checkParamList?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS_CONSTRCTUION} />}
 
-                    <Grid sx={{display:'flex', flexDirection:'column', mt:1}}>
+                    <Grid sx={{display:'flex', flexDirection:'column', mt:1,}}>
                           {checkParamList?.map((row, index) =>
                           ( typeof row?.paramList?.length === 'number' &&
                           <>
@@ -256,15 +263,19 @@ function MachineServiceRecordAddForm() {
 
                           {row?.paramList.map((childRow,childIndex) => (
                             <Box
-                              sx={{pl:4, alignItems: 'center'}}
+                              sx={{pl:4, alignItems: 'center', backgroundColor:(childIndex%2===0?"#f4f6f866":""), 
+                              ":hover": {
+                                backgroundColor: "#dbdbdb66"
+                              }}}
                               rowGap={2}
                               columnGap={2}
                               display="grid"
                               gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                               >
-                              <Typography variant="body2" ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}</Typography>
+                              <Typography variant="body2" ><b>{`${childIndex+1}). `}</b>{`${childRow?.name}`}</Typography>
                               <div>
                               { childRow?.inputType === 'Short Text' && <TextField 
+                                fullWidth
                                 type='text'
                                 label={childRow?.inputType} 
                                 name={`${childRow?.name}_${childIndex}_${index}`} 
@@ -276,6 +287,7 @@ function MachineServiceRecordAddForm() {
                               />}
 
                               { childRow?.inputType === 'Long Text' &&<TextField 
+                                fullWidth
                                 type="text"
                                 label={childRow?.inputType} 
                                 name={`${childRow?.name}_${childIndex}_${index}`} 
@@ -291,7 +303,7 @@ function MachineServiceRecordAddForm() {
                               <TextField 
                                 fullWidth
                                 id="outlined-number"
-                                label={`Measurement (${childRow?.unitType})`}
+                                label={`Measurement ${childRow?.unitType?`(${childRow?.unitType})`:''}`}
                                 name={childRow?.name} 
                                 type="number"
                                 value={checkParamList[index]?.paramList[childIndex]?.value}
