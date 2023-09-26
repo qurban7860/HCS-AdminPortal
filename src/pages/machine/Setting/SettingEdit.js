@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-import { getSetting } from '../../../redux/slices/products/machineTechParamValue';
+import { getSetting } from '../../../redux/slices/products/machineSetting';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components

@@ -31,7 +31,7 @@ import {
   setFilterBy
 } from '../../redux/slices/products/machine';
 import { resetToolInstalled, resetToolsInstalled } from '../../redux/slices/products/toolInstalled';
-import { resetSetting, resetSettings } from '../../redux/slices/products/machineTechParamValue';
+import { resetSetting, resetSettings } from '../../redux/slices/products/machineSetting';
 import { resetLicense, resetLicenses } from '../../redux/slices/products/license';
 import { resetNote, resetNotes } from '../../redux/slices/products/machineNote';
 import {

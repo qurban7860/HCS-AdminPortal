@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, Grid, Autocomplete, TextField } from '@mui/material';
 // slice
-import { addSetting, setSettingFormVisibility } from '../../../redux/slices/products/machineTechParamValue';
+import { addSetting, setSettingFormVisibility } from '../../../redux/slices/products/machineSetting';
 import { getActiveTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
 import {
   getTechparamsByCategory,
@@ -22,6 +22,7 @@ import { Snacks } from '../../../constants/machine-constants';
 import { BUTTONS } from '../../../constants/default-constants';
 // schema
 import { AddSettingSchema } from './schemas/AddSettingSchema';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
@@ -81,6 +82,10 @@ export default function SettingAddForm() {
       enqueueSnackbar(Snacks.failedAddSetting, { variant: `error` });
       console.error(err.message);
     }
+  };
+
+  const toggleCancel = () => {
+    dispatch(setSettingFormVisibility(false));
   };
 
   return (
@@ -167,14 +172,16 @@ export default function SettingAddForm() {
                   </Box>
                 
               </Grid>
-              <Grid display="flex" justifyContent="end">
+
+              <AddFormButtons isSubmitting={isSubmitting} disabled={isSubmitting} toggleCancel={toggleCancel} />
+              {/* <Grid display="flex" justifyContent="end">
                 <SingleButton
                     sx={{mt:"auto"}}
                     loading={isSubmitting && isSubmitting}
                     disabled={!techParamVal || isSubmitting}
                     name={BUTTONS.ADDSETTING}
                   />
-              </Grid>
+              </Grid> */}
           </Card>
         </Grid>
       </Grid>

@@ -21,9 +21,11 @@ import FormProvider, {
 } from '../../../components/hook-form';
 // slice
 import {
+  getSetting,
   setSettingEditFormVisibility,
+  setSettingViewFormVisibility,
   updateSetting,
-} from '../../../redux/slices/products/machineTechParamValue';
+} from '../../../redux/slices/products/machineSetting';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
@@ -31,12 +33,8 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 export default function SettingEditForm() {
   const { setting } = useSelector((state) => state.machineSetting);
   const { machine } = useSelector((state) => state.machine);
-
   const dispatch = useDispatch();
-
   const { enqueueSnackbar } = useSnackbar();
-
-
   const defaultValues = useMemo(
     () => ({
       techParamCategory: setting.techParam.category.name || '',
@@ -45,8 +43,9 @@ export default function SettingEditForm() {
       isActive: setting?.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [setting]
   );
+
   const EditSettingSchema = Yup.object().shape({
     techParamValue: Yup.string().max(50).required().label('Technical Parameter Value'),
     isActive: Yup.boolean(),
@@ -63,20 +62,16 @@ export default function SettingEditForm() {
     formState: { isSubmitting },
   } = methods;
 
-  // useEffect(() => {
-  //   if (site) {
-  //     reset(defaultValues);
-  //   }
-  // }, [site, reset, defaultValues]);
-
   const toggleCancel = () => {
     dispatch(setSettingEditFormVisibility(false));
+    dispatch(setSettingViewFormVisibility(true));
   };
 
   const onSubmit = async (data) => {
-    console.log("data: ",data);
     try {
-      await dispatch(updateSetting(machine._id, setting._id, data));
+      await dispatch(await updateSetting(machine._id, setting._id, data));
+      await dispatch(setSettingViewFormVisibility(true));
+      await dispatch(getSetting(machine._id, setting._id));
       reset();
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
@@ -104,30 +99,17 @@ export default function SettingEditForm() {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-
                 <RHFTextField name="techParamCategory" label="Category" disabled />
-
                 <RHFTextField name="techParam" label="Technical Parameters" disabled/>
-
                 <RHFTextField name="techParamValue" label="Technical Parameter Value" />
-
               </Box>
               <RHFSwitch
                 name="isActive"
                 labelPlacement="start"
                 label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary',
-                      }}
-                    >
-                      Active
-                    </Typography>
+                    <Typography variant="subtitle2" 
+                    sx={{mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary'}}
+                    >Active</Typography>
                 }
               />
             </Stack>

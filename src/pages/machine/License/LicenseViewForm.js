@@ -20,10 +20,7 @@ import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import { Snacks } from '../../../constants/machine-constants';
 
 export default function LicenseViewForm() {
-  const {
-    license
-  } = useSelector((state) => state.license);
-
+  const { license } = useSelector((state) => state.license);
   const { machine } = useSelector((state) => state.machine);
   const { enqueueSnackbar } = useSnackbar();
   

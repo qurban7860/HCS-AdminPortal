@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Grid, Link, Tooltip, Breadcrumbs, Chip } from '@mui/material';
+import { Card, Grid, Link, Tooltip, Breadcrumbs, Chip, CardHeader } from '@mui/material';
 // routes
 import { PATH_MACHINE } from '../../routes/paths';
 // slices
@@ -215,7 +215,7 @@ export default function MachineViewForm() {
 
   return (
     <>
-      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+      {/* <Grid container direction="row" justifyContent="space-between" alignItems="center">
         <Grid item xs={12} md={6}>
           <Breadcrumbs
             aria-label="breadcrumb"
@@ -227,7 +227,7 @@ export default function MachineViewForm() {
           </Breadcrumbs>
         </Grid>
         {!isMobile && <AddButtonAboveAccordion isCustomer />}
-      </Grid>
+      </Grid> */}
       <Grid container direction="row" mt={isMobile && 2}>
         <Card sx={{ p: 3 }}>
           <ViewFormEditDeleteButtons
@@ -261,6 +261,8 @@ export default function MachineViewForm() {
             <FormLabel content={FORMLABELS.KEYDETAILS} />
             <Grid container>
               <Card sx={{ width: '100%', p: '1rem' }}>
+                {/* <CardHeader title={FORMLABELS.KEYDETAILS} sx={{p:'5px 15px', m:0, color:'white', backgroundImage: (theme) =>
+            `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`}} /> */}
                 <Grid container>
                   <ViewFormField sm={2} heading="Serial No" param={defaultValues?.serialNo} />
                   <ViewFormField

@@ -18,7 +18,7 @@ import machinenoteReducer from './slices/products/machineNote';
 import machinestatusReducer from './slices/products/statuses';
 import machinemodelReducer from './slices/products/model';
 import techparamReducer from './slices/products/machineTechParam';
-import machineSettingReducer from './slices/products/machineTechParamValue';
+import machineSettingReducer from './slices/products/machineSetting';
 import toolInstalledReducer from './slices/products/toolInstalled';
 import roleReducer from './slices/securityUser/role';
 import userConfigReducer from './slices/securityUser/config';

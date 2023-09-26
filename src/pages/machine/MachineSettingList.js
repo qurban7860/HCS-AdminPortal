@@ -27,10 +27,10 @@ import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoord
 import {
   setSettingFormVisibility,
   getSettings,
-} from '../../redux/slices/products/machineTechParamValue';
-import SettingAddForm from './MachineTechParamValue/SettingAddForm';
-import SettingEditForm from './MachineTechParamValue/SettingEditForm';
-import SettingViewForm from './MachineTechParamValue/SettingViewForm';
+} from '../../redux/slices/products/machineSetting';
+import SettingAddForm from './Setting/SettingAddForm';
+import SettingEditForm from './Setting/SettingEditForm';
+import SettingViewForm from './Setting/SettingViewForm';
 import { fDate } from '../../utils/formatTime';
 // constants
 import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
