@@ -41,11 +41,11 @@ import TableCard from '../../components/ListTableTools/TableCard';
 
 
 const TABLE_HEAD = [
-  { id: 'printName', label: 'Service Configuration', align: 'left' },
-  { id: 'xs5', label: 'Technician', align: 'left' },
+  { id: 'serviceRecordConfig.docTitle', label: 'Service Configuration', align: 'left' },
+  { id: 'technician.name', visibility: 'xs5', label: 'Technician', align: 'left' },
   { id: 'serviceDate', label: 'Service Date', align: 'center' },
-  { id: 'active', label: 'Active', align: 'center' },
-  { id: 'created_at', label: 'Created At', align: 'right' },
+  { id: 'isActive', label: 'Active', align: 'center' },
+  { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 // ----------------------------------------------------------------------
 

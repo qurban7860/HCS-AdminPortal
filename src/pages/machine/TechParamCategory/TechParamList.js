@@ -38,18 +38,11 @@ import TableCard from '../../components/ListTableTools/TableCard';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Technnical Parameter Category', align: 'left' },
-  { id: 'isDisabled', label: 'Active', align: 'center' },
+  { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
-const STATUS_OPTIONS = [
-  // { id: '1', value: 'Order Received' },
-  // { id: '2', value: 'In Progress' },
-  // { id: '3', value: 'Ready For Transport' },
-  // { id: '4', value: 'In Freight' },
-  // { id: '5', value: 'Deployed' },
-  // { id: '6', value: 'Archived' },
-];
+
 
 // ----------------------------------------------------------------------
 
@@ -225,7 +218,6 @@ export default function TechParamList() {
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
             onFilterStatus={handleFilterStatus}
-            statusOptions={STATUS_OPTIONS}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
