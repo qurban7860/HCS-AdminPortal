@@ -109,7 +109,7 @@ function MachineServiceParamViewForm() {
                       display="grid"
                       gridTemplateColumns={{ sm: 'repeat(2, 1fr)', md: 'repeat(2, 1fr)' }}
                       >
-                      <Typography variant="body2" ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}</Typography>
+                      <Typography variant="body2" ><b>{`${childIndex+1}). `}</b>{`${childRow?.name}`}</Typography>
                       <Box sx={{textAlign:'right'}}>
                         {childRow?.inputType === 'Boolean' ? 
                         <Checkbox  checked={

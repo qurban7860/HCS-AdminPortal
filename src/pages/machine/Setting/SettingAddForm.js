@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, Grid, Autocomplete, TextField } from '@mui/material';
 // slice
-import { addSetting, setSettingFormVisibility } from '../../../redux/slices/products/machineTechParamValue';
+import { addSetting, setSettingFormVisibility } from '../../../redux/slices/products/machineSetting';
 import { getActiveTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
 import {
   getTechparamsByCategory,

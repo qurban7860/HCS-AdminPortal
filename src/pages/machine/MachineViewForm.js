@@ -215,7 +215,7 @@ export default function MachineViewForm() {
 
   return (
     <>
-      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+      {/* <Grid container direction="row" justifyContent="space-between" alignItems="center">
         <Grid item xs={12} md={6}>
           <Breadcrumbs
             aria-label="breadcrumb"
@@ -227,7 +227,7 @@ export default function MachineViewForm() {
           </Breadcrumbs>
         </Grid>
         {!isMobile && <AddButtonAboveAccordion isCustomer />}
-      </Grid>
+      </Grid> */}
       <Grid container direction="row" mt={isMobile && 2}>
         <Card sx={{ p: 3 }}>
           <ViewFormEditDeleteButtons

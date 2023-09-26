@@ -12,7 +12,7 @@ import {
   deleteSetting,
   getSettings,
   getSetting,
-} from '../../../redux/slices/products/machineTechParamValue';
+} from '../../../redux/slices/products/machineSetting';
 // paths
 // import { PATH_DASHBOARD } from '../../../routes/paths';
 // components

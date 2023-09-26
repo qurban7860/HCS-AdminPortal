@@ -6,6 +6,7 @@ import { CONFIG } from '../../../config-global';
 // ----------------------------------------------------------------------
 const initialState = {
   formVisibility: false,
+  setSettingViewFormVisibility:false,
   settingEditFormVisibility: false,
   intial: false,
   responseMessage: null,
