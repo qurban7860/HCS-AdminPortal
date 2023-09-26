@@ -15,6 +15,8 @@ import { PATH_DOCUMENT } from '../../../routes/paths';
 // import { useSnackbar } from '../../../components/snackbar';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+
 // import { getDocumentDownload } from '../../../redux/slices/document/documentFile';
 import {
   getDocumentHistory,
@@ -255,6 +257,10 @@ const handleNewFile = async () => {
       }
         <Grid item md={12} mt={2}>
           <Card sx={{ p: 3 }}>
+          <ViewFormEditDeleteButtons 
+      backLink={(customerPage || machinePage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false))} 
+      : () => navigate(PATH_DOCUMENT.document.list)}
+      />
             <Grid display="inline-flex">
               <Tooltip>
                 <ViewFormField isActive={defaultValues.isActive} />

@@ -128,14 +128,14 @@ export default function ViewFormEditDeleteButtons({
       <Grid item sm={6} sx={{display:'flex'}}>
 
       {backLink && <>
-        <StyledStack sx>
+        {/* <StyledStack sx>
           <IconTooltip
             title='Back'
             onClick={() => backLink()}
             color={theme.palette.primary.main}
             icon="ion:arrow-back-circle"
           />
-        </StyledStack>
+        </StyledStack> */}
         <Tooltip>
           <ViewFormField backLink={backLink} />
         </Tooltip>
