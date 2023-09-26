@@ -76,9 +76,9 @@ export default function SettingViewForm() {
       </Grid>
       <Grid container>
         <ViewFormField sm={12} heading="Category Name" param={defaultValues.techParam.category.name} />
-        <ViewFormField sm={6} heading="Parameter Code" param={defaultValues.techParam.code} />
+        {/* <ViewFormField sm={6} heading="Parameter Code" param={defaultValues.techParam.code} /> */}
         <ViewFormField sm={6} heading="Parameter Name" param={defaultValues.techParam.name} />
-        <ViewFormField sm={6} heading="Parameter Description" param={defaultValues.techParam.description} />
+        {/* <ViewFormField sm={6} heading="Parameter Description" param={defaultValues.techParam.description} /> */}
         <ViewFormField sm={6} heading="Parameter Value" param={defaultValues.techParamValue} />
         <ViewFormAudit defaultValues={defaultValues} /> 
       </Grid>
