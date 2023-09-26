@@ -52,9 +52,7 @@ export function Cover({
   titleLength
 }) {
   const navigate = useNavigate();
-  const handleNavigate = () => {
-    navigate(PATH_MACHINE.machines.settings.app);
-  };
+
   const handleSettingsNavigate = () => {
     navigate(PATH_SETTING.app);
   };
@@ -106,11 +104,11 @@ export function Cover({
         />
         <CoverSettingsIcons
           setting={setting}
-          handleNavigate={handleNavigate}
-          backLink={backLink}
-          machineDrawingsBackLink={machineDrawingsBackLink}
-          handleBacklink={handleBacklink}
-          handleBackLinks={handleBackLinks}
+          // handleNavigate={handleNavigate}
+          // backLink={backLink}
+          // machineDrawingsBackLink={machineDrawingsBackLink}
+          // handleBacklink={handleBacklink}
+          // handleBackLinks={handleBackLinks}
           handleSettingsNavigate={handleSettingsNavigate}
           generalSettings={generalSettings}
         />

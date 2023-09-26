@@ -150,7 +150,9 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
   }
   return (
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
+      <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete}
+      // backLink={() => navigate(PATH_SETTING.documentCategory.list)}
+      />
       <Grid display="inline-flex">
         <Tooltip>
           <ViewFormField isActive={defaultValues.isActive} />

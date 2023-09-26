@@ -106,6 +106,15 @@ export const ICONS = {
     color: 'red',
     heading: 'Disallowed',
   },
+  // ----------------------------------------------------------------
+
+    // Back Link
+    BACK_LINK: {
+      icon: 'ion:arrow-back-circle',
+      color: 'blue',
+      heading: 'Back',
+    },
+
   // ------------------------------------------------------------
   // map icon
   MAP: {

@@ -7,6 +7,7 @@ import Iconify from '../../../components/iconify';
 
 
 function ViewFormField({
+  backLink,
   heading,
   param,
   node,
@@ -82,6 +83,7 @@ function ViewFormField({
         }}
       >
         <IconPopover isActive={isActive} />
+        {backLink && <IconPopover backLink={backLink} />}
         {deleteDisabled !== undefined && <IconPopover deleteDisabled={deleteDisabled} />}
         {isRequired !== undefined && <IconPopover isRequired={isRequired} />}
         {(customerVerificationCount || machineVerificationCount > 0) && verified > 0 && (
@@ -260,4 +262,5 @@ ViewFormField.propTypes = {
   handleNewVersion: PropTypes.func,
   ViewAllVersions: PropTypes.bool,
   handleAllVersion: PropTypes.func,
+  backLink: PropTypes.func,
 };
