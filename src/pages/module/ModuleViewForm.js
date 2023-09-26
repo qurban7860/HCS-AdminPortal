@@ -60,6 +60,7 @@ console.log("module",module);
         <ViewFormEditDeleteButtons
           handleEdit={handleEdit}
           onDelete={onDelete}
+          backLink={() => navigate(PATH_SETTING.modules.list)}
         />
         <Grid display="inline-flex">
           <Tooltip>

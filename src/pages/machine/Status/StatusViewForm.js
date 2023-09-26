@@ -74,7 +74,7 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
 
   return (
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} />
+      <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.status.list)} />
       <Grid container>
         <ViewFormField sm={12} isActive={defaultValues.isActive} />
         <ViewFormField sm={12} heading="Name" param={defaultValues?.name} />

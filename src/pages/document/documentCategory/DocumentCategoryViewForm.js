@@ -61,8 +61,8 @@ export default function DocumentCategoryViewForm() {
   return (
     <Card sx={{ p: 2 }}>
       <Grid>
-        <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
-        <Grid sm={12} display="flex">
+        <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} backLink={() => navigate(PATH_SETTING.documentCategory.list)}/>
+        <Grid item sm={12} display="flex">
           <Tooltip>
             <ViewFormField documentIsActive={defaultValues.isActive} />
           </Tooltip>

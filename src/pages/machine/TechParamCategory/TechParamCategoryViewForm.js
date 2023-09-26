@@ -64,7 +64,7 @@ export default function TechParamCategoryViewForm({ currentTechparamcategory = n
   };
   return (
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} />
+      <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.technicalParameterCategories.list)}  />
       <Grid container>
       <ViewFormField sm={12} isActive={defaultValues.isActive}/>
         <ViewFormField sm={12} heading="Param Category Name" param={defaultValues?.name} />

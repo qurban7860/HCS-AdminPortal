@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid} from '@mui/material';
+import { Card, Grid } from '@mui/material';
 // redux
 import {
 
@@ -93,7 +93,7 @@ export default function ToolViewForm({ currentTool = null }) {
 
   return (
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
+      <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.tool.list)}/>
       <Grid container>
         <ViewFormField isActive={defaultValues.isActive} />
         <ViewFormField sm={12} heading="Name" param={defaultValues?.name} />

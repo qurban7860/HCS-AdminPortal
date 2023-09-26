@@ -68,7 +68,7 @@ function MachineServiceParamViewForm() {
   return (
     <Card sx={{ p: 2 }}>
       <Grid>
-        <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
+        <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} backLink={() => dispatch(setAllFlagsFalse())}/>
         <Grid item sm={12} display="flex">
           <Tooltip>
             <ViewFormField isActive={defaultValues.isActive} isRequired={defaultValues.isRequired}/>

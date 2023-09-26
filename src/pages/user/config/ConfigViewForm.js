@@ -69,6 +69,7 @@ export default function ConfigViewForm() {
         <ViewFormEditDeleteButtons
           handleEdit={handleEdit}
           onDelete={onDelete}
+          backLink={() => navigate(PATH_SETTING.userConfig.list)}
         />
         <Grid display="inline-flex">
           <Tooltip>

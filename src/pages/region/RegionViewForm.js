@@ -69,6 +69,7 @@ export default function RegionViewForm() {
         <ViewFormEditDeleteButtons
           handleEdit={handleEdit}
           onDelete={onDelete}
+          backLink={() => navigate(PATH_SETTING.regions.list)}
         />
         <Grid display="inline-flex">
           <Tooltip>
