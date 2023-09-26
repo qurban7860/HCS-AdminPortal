@@ -118,7 +118,7 @@ function MachineServiceRecordEditForm() {
       suggestedSpares:            machineServiceRecord?.suggestedSpares || '',
       // files: machineServiceRecord?.files || [],
       operators:                  machineServiceRecord?.operators || [],
-      operatorRemarks:            machineServiceRecord?.operatorRemarks || '',
+      technicianRemarks:          machineServiceRecord?.technicianRemarks || '',
       isActive:                   machineServiceRecord?.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -283,8 +283,8 @@ function MachineServiceRecordEditForm() {
                   <li {...props} key={option._id}>{`${option?.name || ''}`}</li>
                 )}
               />
-              <RHFTextField name="operatorRemarks" label="Technician Remarks" minRows={3} multiline/>
-                {checkParamList?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS_CONSTRCTUION} />}
+              <RHFTextField name="technicianRemarks" label="Technician Remarks" minRows={3} multiline/>
+                {checkParamList?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
 
                 <Grid sx={{display:'flex', flexDirection:'column'}}>
                       {checkParamList?.map((row, index) =>

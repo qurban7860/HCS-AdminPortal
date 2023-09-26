@@ -52,7 +52,7 @@ function MachineServiceParamViewForm() {
       suggestedSpares:                      machineServiceRecord?.suggestedSpares || '',
       files:                                machineServiceRecord?.files || [],
       operators:                             machineServiceRecord?.operators || [],
-      operatorRemarks:                      machineServiceRecord?.operatorRemarks ||'',
+      technicianRemarks:                      machineServiceRecord?.technicianRemarks ||'',
       isActive:                             machineServiceRecord?.isActive,
       createdAt:                            machineServiceRecord?.createdAt || '',
       createdByFullName:                    machineServiceRecord?.createdBy?.name || '',
@@ -82,8 +82,8 @@ function MachineServiceParamViewForm() {
           
           <ViewFormField sm={12} heading="Service Record Configuration" param={`${defaultValues.serviceRecordConfig} ${defaultValues.serviceRecordConfigRecordType ? '-' : ''} ${defaultValues.serviceRecordConfigRecordType ? defaultValues.serviceRecordConfigRecordType : ''}`} />
           <ViewFormField sm={6} heading="Service Date" param={fDate(defaultValues.serviceDate)} />
-          <ViewFormField sm={6} heading="Technician"  param={`${defaultValues?.technician?.firstName ? defaultValues?.technician?.firstName : ''} ${defaultValues?.technician?.lastName ? defaultValues?.technician?.lastName : ''}`} />
-          <ViewFormField sm={12} heading="Technician Remarks" param={defaultValues.operatorRemarks} />
+          <ViewFormField sm={6} heading="Technician"  param={defaultValues?.technician?.name || ''} />
+          <ViewFormField sm={12} heading="Technician Remarks" param={defaultValues.technicianRemarks} />
           <ViewFormField sm={12} heading="Decoilers" arrayParam={defaultValues?.decoilers?.map((decoilerMachine) => ({ name: `${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`}))} />
           <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7, pt:1}}>
             Check Items
@@ -100,26 +100,30 @@ function MachineServiceParamViewForm() {
                       component="form"
                       noValidate
                       autoComplete="off"
-                      sx={{pl:4, background:(childIndex%2===0?'rgba(145, 158, 171, 0.08)':'')}}
+                      sx={{padding:'5px 20px', background:(childIndex%2===0?'#f4f6f866':''), 
+                      ":hover": {
+                        backgroundColor: "#dbdbdb66"
+                      }}}
                       rowGap={2}
                       columnGap={2}
                       display="grid"
                       gridTemplateColumns={{ sm: 'repeat(2, 1fr)', md: 'repeat(2, 1fr)' }}
                       >
                       <Typography variant="body2" ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}</Typography>
-                      {childRow?.inputType === 'Boolean' ? 
-                      <Checkbox  checked={
-                        machineServiceRecord?.checkParams?.find((element) =>
-                        element?.paramListTitle === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramListTitle && element?.serviceParam === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramList[childIndex]?._id
-                        )?.value || false
-                        } disabled sx={{mr:'auto'}}/> 
-                        :
-                      <Typography variant="body2" >
-                      {/* {machineServiceRecord[index]?.paramList[childIndex]?.value || ""} */}
-                      {machineServiceRecord?.checkParams?.find((element) =>
-                        element?.paramListTitle === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramListTitle && element?.serviceParam === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramList[childIndex]?._id
-                        )?.value }
-                      </Typography> }
+                      <Box sx={{textAlign:'right'}}>
+                        {childRow?.inputType === 'Boolean' ? 
+                        <Checkbox  checked={
+                          machineServiceRecord?.checkParams?.find((element) =>
+                          element?.paramListTitle === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramListTitle && element?.serviceParam === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramList[childIndex]?._id
+                          )?.value || false
+                          } disabled sx={{mr:'auto'}}/> 
+                          :
+                        <Typography variant="body2" sx={{pr:1.5}}>
+                        {machineServiceRecord?.checkParams?.find((element) =>
+                          element?.paramListTitle === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramListTitle && element?.serviceParam === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramList[childIndex]?._id
+                          )?.value }
+                        </Typography> }
+                      </Box>
                     </Box>
                   ))}
                 </Grid>

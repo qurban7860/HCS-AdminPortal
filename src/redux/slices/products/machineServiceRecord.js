@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import FormData from 'form-data';
 
 // utils
 import axios from '../../../utils/axios';
@@ -243,7 +242,7 @@ export function addMachineServiceRecord(machineId,params) {
           suggestedSpares:            params?.suggestedSpares,
           operators:                  params?.operators?.map((dec)=> dec._id),
           checkParams:                params?.checkParams || [],
-          operatorRemarks:            params?.operatorRemarks,
+          technicianRemarks:          params?.technicianRemarks,
           isActive: params?.isActive
         }
         /* eslint-disable */
@@ -274,7 +273,7 @@ export function updateMachineServiceRecord(machineId,id, params) {
         maintenanceRecommendation:  params?.maintenanceRecommendation,
         suggestedSpares:            params?.suggestedSpares,
         operators:                  params?.operators?.map((dec)=> dec._id),
-        operatorRemarks:            params?.operatorRemarks,
+        technicianRemarks:          params?.technicianRemarks,
         checkParams:                params?.checkParams || [],
         isActive: params?.isActive
       }
