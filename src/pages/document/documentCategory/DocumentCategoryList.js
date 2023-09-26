@@ -54,10 +54,10 @@ import TableCard from '../../components/ListTableTools/TableCard';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Category Name', align: 'left' },
-  { id: 'xs1', label: 'Types', align: 'left' },
-  { id: 'xs2', label: 'Customer Access', align: 'center' },
-  { id: 'active', label: 'Active', align: 'center' },
-  { id: 'created_at', label: 'Created At', align: 'right' },
+  { id: 'customer', visibility: 'xs1', label: 'Types', align: 'left' },
+  { id: 'customerAccess', visibility: 'xs2', label: 'Customer Access', align: 'center' },
+  { id: 'isActive', label: 'Active', align: 'center' },
+  { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------

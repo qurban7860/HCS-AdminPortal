@@ -14,8 +14,8 @@ function ascending(a, b, orderBy) {
     const orderByArray = orderBy.split('.');
     const prop = orderByArray[0];
     const secondProp = orderByArray[1];
-    aValue = (a[prop] && a[prop][0][secondProp])
-    bValue = (b[prop] && b[prop][0][secondProp])
+    aValue = (a[prop] && a[prop][0] && a[prop][0][secondProp]) 
+    bValue = (b[prop] && b[prop][0] && b[prop][0][secondProp]) 
     aValueStr = aValue;
     bValueStr = bValue;
   }else if(!orderBy.includes('[]') && orderBy.includes('.') && orderBy.split('.').length === 2) {
@@ -60,8 +60,8 @@ function descending(a, b, orderBy) {
     const orderByArray = orderBy.split('.');
     const prop = orderByArray[0];
     const secondProp = orderByArray[1];
-    aValue = (a[prop] && a[prop][0][secondProp])
-    bValue = (b[prop] && b[prop][0][secondProp])
+    aValue = (a[prop] && a[prop][0] && a[prop][0][secondProp]) 
+    bValue = (b[prop] && b[prop][0] && b[prop][0][secondProp]) 
     aValueStr = aValue;
     bValueStr = bValue;
   }else if(!orderBy.includes('[]') && orderBy.includes('.') && orderBy.split('.').length === 2) {

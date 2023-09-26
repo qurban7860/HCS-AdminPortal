@@ -43,7 +43,7 @@ const ROLE_OPTIONS = ['Administrator', 'Normal User', 'Guest User', 'Restriced U
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'xs1', label: 'countries', align: 'left' },
+  { id: 'countries.country_name.[]', visibility: 'xs1', label: 'countries', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   // { id: 'isVerified', label: 'Verified', align: 'center' },
   // { id: 'status', label: 'Status', align: 'left' },
