@@ -68,8 +68,8 @@ const TABLE_HEAD = [
   { id: 'status.name', visibility: 'xs2',  label: 'Status', align: 'left' },
   { id: 'customer.name', visibility: 'md2', label: 'Customer', align: 'left' },
   { id: 'instalationSite.name', visibility: 'md3', label: 'Installation Site', align: 'left' },
-  { id: 'isActive', visibility: 'md1', label: 'Active', align: 'center' },
-  { id: 'createdAt', visibility: 'md1', label: 'Created At', align: 'left' },
+  { id: 'isActive', label: 'Active', align: 'center' },
+  { id: 'createdAt', label: 'Created At', align: 'left' },
 ];
 
 export default function MachineList() {

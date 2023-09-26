@@ -44,9 +44,9 @@ import TableCard from '../../components/ListTableTools/TableCard';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'userName', label: 'User Name', align: 'left' },
-  { id: 'xs1', label: 'User Login', align: 'left' },
-  { id: 'xs2', label: 'User IP', align: 'left' },
+  { id: 'user.name', label: 'User Name', align: 'left' },
+  { id: 'user.login', visibility: 'xs1', label: 'User Login', align: 'left' },
+  { id: 'loginIP', visibility: 'xs2', label: 'User IP', align: 'left' },
   { id: 'loginTime', label: 'Login Time', align: 'left' },
   { id: 'logoutTime', label: 'Logout Time', align: 'left' },
 ];
