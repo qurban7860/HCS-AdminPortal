@@ -39,7 +39,7 @@ const CollapsibleCheckedItemRow = ({value, index, toggleEdit, deleteIndex, handl
 
                   <TableBody>
                     {value?.paramList.map((childRow,childIndex) => (
-                      <TableRow key={childRow._id}>
+                      <TableRow hover key={childRow._id}>
                         <TableCell component="th" scope="row"><b>{`${childIndex+1}). `}</b>{`${childRow.name} ${childRow?.category?.name ? '-' : ''} ${childRow?.category?.name ? childRow?.category?.name : ''} ${childRow?.inputType ? '-' : '' } ${childRow?.inputType ? childRow?.inputType : '' }`}</TableCell>
                       </TableRow>
                     ))}

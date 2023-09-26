@@ -143,7 +143,6 @@ export default function Machine() {
                   icon={ICONS.TOOLS.icon}
                   content={ICONS.MACHINE_SERVICE_RECORD_CONFIG.heading}
                 />
-
                 
               </List>
           </StyledSettingsCardContainer>

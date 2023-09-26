@@ -166,7 +166,7 @@ export const ICONS = {
   },
   MACHINE_SERVICE_RECORD_CONFIG: {
     icon: 'mdi:tools',
-    heading: 'Service Record Configurations',
+    heading: 'Service Doc Configurations',
   },
 
   // @root - Settings - settings

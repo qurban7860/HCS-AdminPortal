@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import FormData from 'form-data';
 
 // utils
 import axios from '../../../utils/axios';
@@ -236,14 +235,14 @@ export function addMachineServiceRecord(machineId,params) {
         const data = {
           serviceRecordConfig:        params?.serviceRecordConfig?._id,
           serviceDate:                params?.serviceDate,
-          decoilers:                  params?.decoilers?.map((dec)=> dec?.connectedMachine?._id),
+          decoilers:                  params?.decoilers?.map((dec)=> dec?._id),
           technician:                 params?.technician?._id || null,
           serviceNote:                params?.serviceNote,
           maintenanceRecommendation:  params?.maintenanceRecommendation,
           suggestedSpares:            params?.suggestedSpares,
           operators:                  params?.operators?.map((dec)=> dec._id),
           checkParams:                params?.checkParams || [],
-          operatorRemarks:            params?.operatorRemarks,
+          technicianRemarks:          params?.technicianRemarks,
           isActive: params?.isActive
         }
         /* eslint-disable */
@@ -268,18 +267,16 @@ export function updateMachineServiceRecord(machineId,id, params) {
       const data = {
         serviceRecordConfig:        params?.serviceRecordConfig?._id,
         serviceDate:                params?.serviceDate,
-        decoilers:                  params?.decoilers?.map((dec)=> dec?.connectedMachine?._id),
+        decoilers:                  params?.decoilers?.map((dec)=> dec?._id),
         technician:                 params?.technician?._id || null,
         serviceNote:                params?.serviceNote,
         maintenanceRecommendation:  params?.maintenanceRecommendation,
         suggestedSpares:            params?.suggestedSpares,
         operators:                  params?.operators?.map((dec)=> dec._id),
-        operatorRemarks:            params?.operatorRemarks,
+        technicianRemarks:          params?.technicianRemarks,
         checkParams:                params?.checkParams || [],
         isActive: params?.isActive
       }
-
-      console.log("data when posting:",data)
       await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`,data);
     } catch (error) {
       console.error(error);

@@ -183,7 +183,6 @@ export default function ServiceRecordConfigAddForm() {
                   
                 </Box>
                   <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline />
-
                       <CheckItemTable setCheckParams={setCheckParams} checkParams={checkParams} paramListTitle={paramListTitle} setValue={setValue} checkItemCategory={checkItemCategory} />
                   <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline />
                 
