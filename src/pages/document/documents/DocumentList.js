@@ -144,7 +144,7 @@ const  onChangePage = (event, newPage) => {
 }
 
   const TABLE_HEAD = [
-    { id: 'name', label: 'Name', align: 'left' },
+    { id: 'displayName', label: 'Name', align: 'left' },
     { id: 'docCategory.name', visibility: 'xs1', label: 'Category', align: 'left' },
     { id: 'docType.name', visibility: 'xs2', label: 'Type', align: 'left' },
     { id: 'documentVersions.versionNo.[]', visibility: 'md1', label: 'Version', align: 'center' },
