@@ -101,8 +101,8 @@ export default function SettingEditForm() {
               >
                 <RHFTextField name="techParamCategory" label="Category" disabled />
                 <RHFTextField name="techParam" label="Technical Parameters" disabled/>
-                <RHFTextField name="techParamValue" label="Technical Parameter Value" />
               </Box>
+              <RHFTextField name="techParamValue" label="Technical Parameter Value" />
               <RHFSwitch
                 name="isActive"
                 labelPlacement="start"

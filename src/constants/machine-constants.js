@@ -1,17 +1,17 @@
 export const Snacks = {
   // @root - MachineViewForm
-  machineUpdated: 'Machine UPDATED',
-  failedUpdateMachine: 'FAILED to Update Machine',
+  machineUpdated: 'Machine Updated',
+  failedUpdateMachine: 'Failed to Update Machine',
   machineVerifiedSuccess: 'Machine VERIFIED',
-  machineFailedVerification: 'FAILED to Verify Machine',
-  machineDeleted: 'Machine DELETED',
-  machineFailedDelete: 'FAILED to Delete Machine',
+  machineFailedVerification: 'Failed to Verify Machine',
+  machineDeleted: 'Machine Deleted',
+  machineFailedDelete: 'Failed to Delete Machine',
   machineTransferSuccess: 'Machine TRANSFERRED',
-  machineFailedTransfer: 'FAILED to Transfer Machine',
+  machineFailedTransfer: 'Failed to Transfer Machine',
   
   // @root Machine Service Parameter
   checkItemAdd: 'Machine Check Item Added',
-  checkItemAddFailed: 'FAILED to add Machine Check Item',
+  checkItemAddFailed: 'Failed to add Machine Check Item',
   checkItemUpdate: 'Check Item is Updated',
   checkItemUpdateFailed: 'Failed to Update Machine Check Item',
   checkItemDeleteFailed: 'Failed to Delete Machine Check Item',
@@ -19,31 +19,31 @@ export const Snacks = {
 
 
   // @root - ModelEditForm
-  modelUpdated: 'Model UPDATED Successfully',
-  failedUpdateModel: 'FAILED to Update Model',
+  modelUpdated: 'Model Updated Successfully',
+  failedUpdateModel: 'Failed to Update Model',
   nameRequired: 'Name is required',
 
   // @root - SettingAddForm
-  settingAdded: 'Setting ADDED Successfully',
-  failedAddSetting: 'FAILED to Add Setting',
-  settingUpdated: 'Setting UPDATED Successfully',
+  settingAdded: 'Setting Added Successfully',
+  failedAddSetting: 'Failed to Add Setting',
+  settingUpdated: 'Setting Updated Successfully',
 
   // @root - LicenseViewForm
-  licenseUpdated: 'License UPDATED Successfully',
-  failedUpdateLicense: 'FAILED to Update License',
+  licenseUpdated: 'License Updated Successfully',
+  failedUpdateLicense: 'Failed to Update License',
   
-  licenseDeleted: 'License DELETED Successfully',
-  failedDeleteLicense: 'FAILED to Delete License',
+  licenseDeleted: 'License Deleted Successfully',
+  failedDeleteLicense: 'Failed to Delete License',
 
   // @root - LicenseAddForm - submit
-  licenseAdded: 'License ADDED Successfully',
-  failedAddLicense: 'FAILED to Add License',
+  licenseAdded: 'License Added Successfully',
+  failedAddLicense: 'Failed to Add License',
 
   // @root - AddLicenseSchema
-  licenseKeyRequired: 'License KEY is REQUIRED',
-  licenseExtensionTimeRequired: 'License Extension Time is REQUIRED',
-  licenseRequestTimeRequired: 'License Request Time is REQUIRED',
+  licenseKeyRequired: 'License KEY is Required',
+  licenseExtensionTimeRequired: 'License Extension Time is Required',
+  licenseRequestTimeRequired: 'License Request Time is Required',
   
   // @root - machine - EditMachineSchema
-  serialNoRequired: 'Serial Number is REQUIRED',
+  serialNoRequired: 'Serial Number is Required',
 };

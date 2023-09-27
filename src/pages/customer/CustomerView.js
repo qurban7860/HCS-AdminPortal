@@ -18,7 +18,6 @@ import Iconify from '../../components/iconify';
 // sections
 import { Cover } from '../components/Defaults/Cover';
 
-import CustomerNoteList from './CustomerNoteList';
 import CustomerViewForm from './CustomerViewForm';
 // import useResponsive from '../../hooks/useResponsive';
 import UnderDevelopment from '../boundaries/UnderDevelopment';
@@ -31,6 +30,8 @@ import CustomerMachineList from './CustomerMachineList';
 import DocumentTagPage from '../document/documents/DocumentTagPage';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
+import CustomerNotes from './note/CustomerNotes';
+
 // import { StyledCardContainer } from '../../theme/styles/default-styles';
 
 CustomerView.propTypes = {
@@ -43,7 +44,7 @@ export default function CustomerView({ editPage }) {
   const { customer, customerEditFormFlag } = useSelector((state) => state.customer);
   const { siteEditFormVisibility } = useSelector((state) => state.site);
   const { contactEditFormVisibility } = useSelector((state) => state.contact);
-  const { noteEditFormVisibility } = useSelector((state) => state.note);
+  const { noteEditFormVisibility } = useSelector((state) => state.customerNote);
   const [currentTab, setCurrentTab] = useState('customer-info');
   // const [editFlag, setEditFlag] = useState(false);
   // const toggleEditFlag = () => setEditFlag((value) => !value);
@@ -98,7 +99,7 @@ export default function CustomerView({ editPage }) {
       value: 'notes',
       label: 'Notes',
       icon: <Iconify icon="mdi:note-multiple" />,
-      component: <CustomerNoteList />,
+      component: <CustomerNotes />,
     },
     {
       disabled:

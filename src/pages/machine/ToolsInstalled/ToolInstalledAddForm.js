@@ -70,9 +70,7 @@ function ToolsInstalledAddForm() {
 
 
   const AddSettingSchema = Yup.object().shape({
-    tool: Yup.object().shape({
-      name: Yup.string()
-    }).nullable().required().label('Tool'),
+    tool: Yup.object().shape({name: Yup.string()}).nullable().required().label('Tool'),
     offset: Yup.number()
     .typeError('Offset must be a number')
     .transform((value, originalValue) => {

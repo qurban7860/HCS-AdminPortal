@@ -14,7 +14,7 @@ import {
 } from '../../../redux/slices/products/machineTechParam';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFTextField } from '../../../components/hook-form';
+import FormProvider, { RHFAutocomplete, RHFTextField } from '../../../components/hook-form';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import SingleButton from '../../components/DocumentForms/SingleButton';
 // constants
@@ -31,7 +31,7 @@ export default function SettingAddForm() {
   const { techparamsByCategory} = useSelector((state) => state.techparam);
   const { activeTechParamCategories } = useSelector((state) => state.techparamcategory);
   const [category, setCategory] = useState('');
-  const [techParamVal, setTechParamVal] = useState('');
+  const [techParamVal, setTechParamVal] = useState(null);
   // const [paramData, setparamData] = useState([]);
   const { machine } = useSelector((state) => state.machine);
   const dispatch = useDispatch();
@@ -51,6 +51,8 @@ export default function SettingAddForm() {
 
   const defaultValues = useMemo(
     () => ({
+      category: null,
+      techParamVal: null,
       techParamValue: '',
       isActive: true,
     }),
@@ -64,6 +66,8 @@ export default function SettingAddForm() {
 
   const {
     reset,
+    setValue,
+    trigger,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -104,58 +108,50 @@ export default function SettingAddForm() {
                     }}
                   >
                   
-                    <Autocomplete
-                      // freeSolo
-                      
+                    <RHFAutocomplete 
                       name="category"
-                      value={category || null}
+                      label="Category*"
                       options={activeTechParamCategories}
                       isOptionEqualToValue={(option, value) => option._id === value._id}
-                      getOptionLabel={(option) => option.name}
-                      id="controllable-states-demo"
+                      getOptionLabel={(option) => `${option.name || ''}`}
+                      renderOption={(props, option) => (
+                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                      )}
                       onChange={(event, newValue) => {
                         if (newValue) {
+                          setValue('category',newValue)
                           setCategory(newValue);
                         } else {
-                          setCategory('');
-                          setTechParamVal('')
+                          setValue('category',null)
+                          setCategory(null);
+                          setTechParamVal(null)
                           dispatch(resetTechParamByCategory());
                         }
+                        trigger('category');
+
                       }}
-                      renderOption={(props, option) => (
-                        <Box component="li" {...props} key={option.id}>
-                          {option.name}
-                        </Box>
-                      )}
-                      renderInput={(params) => <TextField {...params} label="Category" required />}
-                      ChipProps={{ size: 'small' }}
                     />
 
-                    <Autocomplete
-                      // freeSolo
-                      
-                      
-                      value={techParamVal || null}
+                    <RHFAutocomplete 
+                      name="techParamVal"
+                      label="Technical Parameters*"
                       options={techparamsByCategory.filter((item) => !settings.some((setting) => setting?.techParam?._id === item._id))}
                       isOptionEqualToValue={(option, value) => option._id === value._id}
                       getOptionLabel={(option) => option.name}
                       id="controllable-states-demo"
+                      renderOption={(props, option) => (
+                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                      )}
                       onChange={(event, newValue) => {
                         if (newValue) {
+                          setValue('techParamVal',newValue)
                           setTechParamVal(newValue);
                         } else {
-                          setTechParamVal('');
+                          setValue('techParamVal',null)
+                          setTechParamVal(null);
                         }
+                        trigger('techParamVal');
                       }}
-                      renderOption={(props, option) => (
-                        <Box component="li" {...props} key={option.id}>
-                          {option.name}
-                        </Box>
-                      )}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Technical Parameters" required />
-                      )}
-                      ChipProps={{ size: 'small' }}
                     />
                   </Box>
 
@@ -174,16 +170,7 @@ export default function SettingAddForm() {
                   </Box>
                 
               </Grid>
-
               <AddFormButtons isSubmitting={isSubmitting} disabled={isSubmitting} toggleCancel={toggleCancel} />
-              {/* <Grid display="flex" justifyContent="end">
-                <SingleButton
-                    sx={{mt:"auto"}}
-                    loading={isSubmitting && isSubmitting}
-                    disabled={!techParamVal || isSubmitting}
-                    name={BUTTONS.ADDSETTING}
-                  />
-              </Grid> */}
           </Card>
         </Grid>
       </Grid>

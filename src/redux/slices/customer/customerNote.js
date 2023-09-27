@@ -1,48 +1,49 @@
-// import sum from 'lodash/sum';
-// import uniq from 'lodash/uniq';
-// import uniqBy from 'lodash/uniqBy';
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
-
-
-
 // ----------------------------------------------------------------------
 const initialState = {
-  intial: false,
+  initial: false,
+  noteFormVisibility: false,
+  noteViewFormVisibility: false,
+  noteEditFormVisibility: false,
   responseMessage: null,
   success: false,
   isLoading: false,
   error: null,
+  note: {},
   notes: [],
-  activeNotes: [],
-  note: null,
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
 };
 
 const slice = createSlice({
-  name: 'note',
+  name: 'customerNote',
   initialState,
   reducers: {
     // START LOADING
     startLoading(state) {
       state.isLoading = true;
-      state.error = null;
-
     },
-    // SET TOGGLE
+
+    // SET ADD FORM TOGGLE
     setNoteFormVisibility(state, action){
-      state.formVisibility = action.payload;
+      state.noteFormVisibility = action.payload;
     },
 
-    // SET TOGGLE
+    // SET EDIT FORM TOGGLE
     setNoteEditFormVisibility(state, action){
       state.noteEditFormVisibility = action.payload;
     },
+
+    // SET VIEW TOGGLE
+    setNoteViewFormVisibility(state, action){
+      state.noteViewFormVisibility = action.payload;
+    },
+
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -50,7 +51,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Notes
+    // GET  Note
     getNotesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -66,16 +67,6 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Active Notes
-    getActiveNotesSuccess(state, action) {
-      state.isLoading = false;
-      state.success = true;
-      state.activeNotes = action.payload;
-      state.initial = true;
-    },
-    
-
-
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
       state.isLoading = false;
@@ -83,14 +74,16 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // RESET NOTE
+
+    // RESET LICENSE
     resetNote(state){
-      state.note = null;
+      state.note = {};
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
-    // RESET NOTES
+
+    // RESET LICENSE
     resetNotes(state){
       state.notes = [];
       state.responseMessage = null;
@@ -98,12 +91,13 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
-    // RESET Active CUSTOMERS
-    resetActiveNotes(state){
-      state.activeNotes = [];
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
+
+    backStep(state) {
+      state.checkout.activeStep -= 1;
+    },
+
+    nextStep(state) {
+      state.checkout.activeStep += 1;
     },
     // Set FilterBy
     setFilterBy(state, action) {
@@ -127,18 +121,18 @@ export default slice.reducer;
 export const {
   setNoteFormVisibility,
   setNoteEditFormVisibility,
+  setNoteViewFormVisibility,
   resetNote,
   resetNotes,
-  resetActiveNotes,
   setResponseMessage,
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,
 } = slice.actions;
 
-// ----------------------------Save Note------------------------------------------
 
-export function addNote(customerId,params) {
+export function addNote (customerId, params){
+
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -174,9 +168,7 @@ export function addNote(customerId,params) {
   };
 }
 
-// ---------------------------------Update Note-------------------------------------
-
-export function updateNote(customerId,params) {
+export function updateNote(customerId,noteId,params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -186,18 +178,15 @@ export function updateNote(customerId,params) {
         contact: params.contact,
         site: params.site
       }
-      await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/${params.id}`, data, );
+      await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/${noteId}`, data);
       dispatch(slice.actions.setResponseMessage('Note updated successfully'));
-
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
       throw error;
     }
-  };
+  }
 }
-
-// -----------------------------------Get Notes-----------------------------------
 
 export function getNotes(id) {
   return async (dispatch) => {
@@ -224,8 +213,6 @@ export function getNotes(id) {
   };
 }
 
-// -----------------------------------Get ActiveNotes-----------------------------------
-
 export function getActiveNotes(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -249,15 +236,12 @@ export function getActiveNotes(id) {
   };
 }
 
-// -------------------------------get Note---------------------------------------
-
 export function getNote(customerId,noteId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/${noteId}`);
       dispatch(slice.actions.getNoteSuccess(response.data));
-      // dispatch(slice.actions.setResponseMessage('Notes Loaded Successfuly'));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -265,8 +249,6 @@ export function getNote(customerId,noteId) {
     }
   };
 }
-
-// ---------------------------------archive Note-------------------------------------
 
 export function deleteNote(customerId,id) {
   return async (dispatch) => {
@@ -278,8 +260,6 @@ export function deleteNote(customerId,id) {
           isArchived: true, 
       });
       dispatch(slice.actions.setResponseMessage(response.data));
-      // console.log(response.data);
-      // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -287,5 +267,3 @@ export function deleteNote(customerId,id) {
     }
   };
 }
-
-
