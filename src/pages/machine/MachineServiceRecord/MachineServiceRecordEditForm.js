@@ -58,20 +58,21 @@ function MachineServiceRecordEditForm() {
     if (machineServiceRecord) {
       const checkParams = machineServiceRecord?.serviceRecordConfig?.checkParams;
       if (checkParams) {
+
         const params_ = checkParams.map((row, index) => {
           if (row && row.paramList) {
             const updatedParamList = row.paramList.map((childRow, childIndex) => {
               const foundParam = machineServiceRecord.checkParams.find(
-                (param) => param?.serviceParam === childRow?._id
+                (param) =>
+                  param?.serviceParam === childRow?._id &&
+                  param?.paramListTitle === row?.paramListTitle
               );
-              const updatedChildRow = { ...childRow };
-              if (foundParam) {
-                updatedChildRow.value = foundParam.value || '';
-              } else {
-                updatedChildRow.value = '';
-              }
-              return updatedChildRow;
+              return {
+                ...childRow,
+                value: foundParam ? foundParam.value : '',
+              };
             });
+        
             return {
               ...row,
               paramList: updatedParamList,
@@ -79,6 +80,8 @@ function MachineServiceRecordEditForm() {
           }
           return row;
         });
+        
+        
         setCheckParamList(params_);
       }
     }
@@ -324,9 +327,8 @@ function MachineServiceRecordEditForm() {
                                 minRows={3} multiline
                                 required={childRow?.isRequired}
                               />}
-
                               { childRow?.inputType === 'Number'  && <div><TextField
-                              fullWidth
+                                fullWidth
                                 id="filled-number"
                                 label={`Measurement${childRow?.unitType ? ` (${childRow.unitType})` : ''}`}
                                 name={childRow?.name}
