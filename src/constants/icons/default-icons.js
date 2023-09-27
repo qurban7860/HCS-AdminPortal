@@ -110,7 +110,7 @@ export const ICONS = {
 
     // Back Link
     BACK_LINK: {
-      icon: 'ion:arrow-back-circle',
+      icon: 'vaadin:arrow-backward',
       color: 'blue',
       heading: 'Back',
     },
