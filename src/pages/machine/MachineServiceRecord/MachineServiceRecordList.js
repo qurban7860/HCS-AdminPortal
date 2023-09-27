@@ -72,15 +72,10 @@ export default function MachineServiceRecordList() {
   };
 
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
-
   const dispatch = useDispatch();
-
   const [filterName, setFilterName] = useState('');
-
   const [tableData, setTableData] = useState([]);
-
   const [filterStatus, setFilterStatus] = useState([]);
-
 
   useLayoutEffect(() => {
     dispatch(getMachineServiceRecords(machine?._id)); 

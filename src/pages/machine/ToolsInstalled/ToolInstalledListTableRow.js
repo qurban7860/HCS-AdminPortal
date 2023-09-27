@@ -14,7 +14,7 @@ import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
-NoteListTableRow.propTypes = {
+ToolInstalledListTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onViewRow: PropTypes.func,
@@ -28,25 +28,29 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export default function NoteListTableRow({
+export default function ToolInstalledListTableRow({
   row,
   selected,
   onViewRow,
 }) {
   const {
-    note,
-    createdAt,
-    isActive
+    tool: {
+      name
+    },
+      toolType,
+      isActive,
+      createdAt
   } = row;
-  const smScreen = useScreenSize('sm')
 
+  const smScreen = useScreenSize('sm')
   return (
       <StyledTableRow hover selected={selected}>
-        
-        <LinkTableCell align="left" param={note} onClick={onViewRow} />
-        <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell>
+        <LinkTableCell align="left" param={name} onClick={onViewRow} />
+        { smScreen && <TableCell align="left">{toolType}</TableCell>}
+        <TableCell align="center">
+          <Switch checked={isActive} disabled size="small" />
+        </TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>
-  
       </StyledTableRow>
 
   );

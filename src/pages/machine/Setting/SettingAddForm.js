@@ -106,7 +106,8 @@ export default function SettingAddForm() {
                   
                     <Autocomplete
                       // freeSolo
-                      required
+                      
+                      name="category"
                       value={category || null}
                       options={activeTechParamCategories}
                       isOptionEqualToValue={(option, value) => option._id === value._id}
@@ -132,7 +133,8 @@ export default function SettingAddForm() {
 
                     <Autocomplete
                       // freeSolo
-                      required
+                      
+                      
                       value={techParamVal || null}
                       options={techparamsByCategory.filter((item) => !settings.some((setting) => setting?.techParam?._id === item._id))}
                       isOptionEqualToValue={(option, value) => option._id === value._id}

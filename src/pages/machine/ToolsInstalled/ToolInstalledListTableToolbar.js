@@ -7,11 +7,11 @@ import { useDispatch } from '../../../redux/store';
 // components
 import Iconify from '../../../components/iconify';
 // import { PATH_DOCUMENT } from '../../../routes/paths';
-import { setNoteFormVisibility } from '../../../redux/slices/products/machineNote';
+import { setToolInstalledFormVisibility } from '../../../redux/slices/products/toolInstalled';
 
 // ----------------------------------------------------------------------
 
-NoteListTableToolbar.propTypes = {
+ToolInstalledListTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
@@ -21,7 +21,7 @@ NoteListTableToolbar.propTypes = {
   statusOptions: PropTypes.array,
 };
 
-export default function NoteListTableToolbar({
+export default function ToolInstalledListTableToolbar({
   isFiltered,
   filterName,
   filterStatus,
@@ -32,7 +32,7 @@ export default function NoteListTableToolbar({
 }) {
   // const navigate = useNavigate();
   const dispatch = useDispatch();
-  const toggleAdd = () => dispatch(setNoteFormVisibility(true));
+  const toggleAdd = () => dispatch(setToolInstalledFormVisibility(true));
   return (
     <Stack
       spacing={2}
@@ -75,7 +75,7 @@ export default function NoteListTableToolbar({
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
             >
-              Add Note
+              Add Tool Installed
             </Button>
           </Stack>
         </Grid>

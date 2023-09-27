@@ -19,7 +19,7 @@ function SearchBarCombo({
 }) {
   const isMobile = useResponsive('sm', 'down');
   return (
-    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{display:'flex', justifyContent:'space-between'}}>
       <Grid item xs={12} sm={8} sx={{ display: 'inline-flex' }}>
         <TextField
           fullWidth={isMobile}

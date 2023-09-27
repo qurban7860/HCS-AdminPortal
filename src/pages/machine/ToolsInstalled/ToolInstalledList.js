@@ -22,20 +22,20 @@ import {
 } from '../../../components/table';
 import Scrollbar from '../../../components/scrollbar';
 // sections
-import NoteListTableRow from './NoteListTableRow';
-import NoteListTableToolbar from './NoteListTableToolbar';
+import ToolInstalledListTableRow from './ToolInstalledListTableRow';
+import ToolInstalledListTableToolbar from './ToolInstalledListTableToolbar';
 
 import {
-  getNote, 
-  getNotes,
+  getToolInstalled, 
+  getToolsInstalled,
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
-  setNoteViewFormVisibility } from '../../../redux/slices/products/machineNote';
+  setToolInstalledViewFormVisibility } from '../../../redux/slices/products/toolInstalled';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
 
-export default function NoteList() {
+export default function ToolInstalledList() {
   const {
     order,
     orderBy,
@@ -52,10 +52,11 @@ export default function NoteList() {
   const [filterStatus, setFilterStatus] = useState([]);
   const { machine } = useSelector((state) => state.machine);
 
-  const { notes, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.machineNote );
+  const { toolsInstalled, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.toolInstalled );
   const TABLE_HEAD = [
-    { id: 'note', label: 'Note', align: 'left' },
-    { id: 'active', visibility: 'xs1', label: 'Active', align: 'left' },
+    { id: 'Tool', label: 'Tool', align: 'left' },
+    { id: 'ToolType', visibility: 'xs1', label: 'Tool Type', align: 'left' },
+    { id: 'Active', label: 'Active', align: 'center' },
     { id: 'createdAt', label: 'Created At', align: 'right' },
   ];
 
@@ -68,13 +69,13 @@ export default function NoteList() {
 
   useEffect(() => {
     if(machine?._id){
-      dispatch(getNotes(machine?._id));
+      dispatch(getToolsInstalled(machine?._id));
     }
   }, [dispatch, machine]);
 
   useEffect(() => {
-    setTableData(notes);
-  }, [notes]);
+    setTableData(toolsInstalled);
+  }, [toolsInstalled]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -111,9 +112,10 @@ export default function NoteList() {
     setFilterStatus(event.target.value);
   };
 
-  const handleViewRow = (noteid) => {
-      dispatch(getNote(machine._id,noteid));
-      dispatch(setNoteViewFormVisibility(true));
+
+  const handleViewRow = (id) => {
+      dispatch(getToolInstalled(machine._id,id));
+      dispatch(setToolInstalledViewFormVisibility(true));
   };
 
   const handleResetFilter = () => {
@@ -123,7 +125,7 @@ export default function NoteList() {
 
   return (
       <TableCard>
-        <NoteListTableToolbar
+        <ToolInstalledListTableToolbar
           filterName={filterName}
           filterStatus={filterStatus}
           onFilterName={handleFilterName}
@@ -153,7 +155,7 @@ export default function NoteList() {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
-                      <NoteListTableRow
+                      <ToolInstalledListTableRow
                         key={row._id}
                         row={row}
                         onViewRow={() => handleViewRow(row?._id)}
@@ -195,14 +197,17 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
   if (filterName) {
     inputData = inputData.filter(
-      (noteg) =>
-        noteg?.note?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(noteg?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+      (licenseg) =>
+        licenseg?.licenseKey?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        licenseg?.licenseDetail?.version?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        licenseg?.licenseDetail?.type?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(licenseg?.licenseDetail?.extensionTime)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(licenseg?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 
   if (filterStatus.length) {
-    inputData = inputData.filter((noteg) => filterStatus.includes(noteg.status));
+    inputData = inputData.filter((licenseg) => filterStatus.includes(licenseg.status));
   }
 
   return inputData;

@@ -128,12 +128,21 @@ export const toolPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
+
 export const techparamcategoryPersistConfig = {
   key: 'techparamcategory',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
+
+export const machineNotePersistConfig = {
+  key: 'machineNote',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+
 export const machinestatusPersistConfig = {
   key: 'machinestatus',
   storage,
@@ -299,7 +308,7 @@ const rootReducer = combineReducers({
   category: persistReducer(categoryPersistConfig,categoryReducer),
   tool: persistReducer(toolPersistConfig,toolReducer),
   techparamcategory: persistReducer(techparamcategoryPersistConfig,techparamcategoryReducer),
-  machinenote: persistReducer(techparamcategoryPersistConfig, machinenoteReducer),
+  machineNote: persistReducer(machineNotePersistConfig, machinenoteReducer),
   machinestatus: persistReducer(machinestatusPersistConfig, machinestatusReducer),
   machinemodel: persistReducer(machinemodelPersistConfig, machinemodelReducer),
   techparam: persistReducer(techparamPersistConfig, techparamReducer),

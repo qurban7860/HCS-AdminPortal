@@ -5,36 +5,43 @@ import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
 const initialState = {
-  intial: false,
+  initial: false,
+  noteFormVisibility: false,
+  noteViewFormVisibility: false,
+  noteEditFormVisibility: false,
   responseMessage: null,
   success: false,
   isLoading: false,
   error: null,
+  note: {},
   notes: [],
-  note: null,
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
 };
 
 const slice = createSlice({
-  name: 'machinenote',
+  name: 'machineNote',
   initialState,
   reducers: {
     // START LOADING
     startLoading(state) {
       state.isLoading = true;
-      state.error = null;
     },
 
-    // SET TOGGLE
+    // SET ADD FORM TOGGLE
     setNoteFormVisibility(state, action){
-      state.formVisibility = action.payload;
+      state.noteFormVisibility = action.payload;
     },
 
-    // SET TOGGLE
+    // SET EDIT FORM TOGGLE
     setNoteEditFormVisibility(state, action){
       state.noteEditFormVisibility = action.payload;
+    },
+
+    // SET VIEW TOGGLE
+    setNoteViewFormVisibility(state, action){
+      state.noteViewFormVisibility = action.payload;
     },
 
     // HAS ERROR
@@ -44,7 +51,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Notes
+    // GET  Note
     getNotesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -68,7 +75,7 @@ const slice = createSlice({
     },
 
 
-    // RESET NOTE
+    // RESET LICENSE
     resetNote(state){
       state.note = {};
       state.responseMessage = null;
@@ -76,14 +83,23 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
-    // RESET NOTES
+    // RESET LICENSE
     resetNotes(state){
       state.notes = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
-        // Set FilterBy
+
+
+    backStep(state) {
+      state.checkout.activeStep -= 1;
+    },
+
+    nextStep(state) {
+      state.checkout.activeStep += 1;
+    },
+    // Set FilterBy
     setFilterBy(state, action) {
       state.filterBy = action.payload;
     },
@@ -105,6 +121,7 @@ export default slice.reducer;
 export const {
   setNoteFormVisibility,
   setNoteEditFormVisibility,
+  setNoteViewFormVisibility,
   resetNote,
   resetNotes,
   setResponseMessage,
@@ -113,19 +130,22 @@ export const {
   ChangePage,
 } = slice.actions;
 
-// ----------------------------Save Note------------------------------------------
+export const NoteTypes = [ 'Type 1','Type 2','Type 3','Type 4']
 
-export function addNote(machineId,params) {
-    return async (dispatch) => {
-        dispatch(slice.actions.startLoading());
-        try {
-            const data = {
-                note:     params.note,
-                isActive: params.isActive,
-            }
-            if(params.user){
-                data.user =    params.user;
-            }
+// ----------------------------------------------------------------------
+
+export function addNote (machineId, params){
+
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+        const data = {
+            note:     params.note,
+            isActive: params.isActive,
+        }
+        if(params.user){
+            data.user =    params.user;
+        }
       await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/`, data);
       dispatch(slice.actions.setNoteFormVisibility(false));
       dispatch(slice.actions.setResponseMessage('Note saved successfully'));
@@ -134,10 +154,8 @@ export function addNote(machineId,params) {
       dispatch(slice.actions.hasError(error.Message));
       throw error;
     }
-  };
+  }
 }
-
-// ---------------------------------Update Note-------------------------------------
 
 export function updateNote(machineId,noteId,params) {
   return async (dispatch) => {
@@ -155,10 +173,8 @@ export function updateNote(machineId,noteId,params) {
       dispatch(slice.actions.hasError(error.Message));
       throw error;
     }
-  };
+  }
 }
-
-// -----------------------------------Get Notes-----------------------------------
 
 export function getNotes(id) {
   return async (dispatch) => {
@@ -184,8 +200,6 @@ export function getNotes(id) {
   };
 }
 
-// -------------------------------get Note---------------------------------------
-
 export function getNote(machineId,noteId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -199,8 +213,6 @@ export function getNote(machineId,noteId) {
     }
   };
 }
-
-// ---------------------------------archive Note-------------------------------------
 
 export function deleteNote(machineId,id) {
   return async (dispatch) => {
@@ -218,5 +230,3 @@ export function deleteNote(machineId,id) {
     }
   };
 }
-
-
