@@ -41,11 +41,11 @@ import TableCard from '../../components/ListTableTools/TableCard';
 
 
 const TABLE_HEAD = [
-  { id: 'printName', label: 'Service Configuration', align: 'left' },
-  { id: 'xs5', label: 'Technician', align: 'left' },
+  { id: 'serviceRecordConfig.docTitle', label: 'Service Configuration', align: 'left' },
+  { id: 'technician.name', visibility: 'xs5', label: 'Technician', align: 'left' },
   { id: 'serviceDate', label: 'Service Date', align: 'center' },
-  { id: 'active', label: 'Active', align: 'center' },
-  { id: 'created_at', label: 'Created At', align: 'right' },
+  { id: 'isActive', label: 'Active', align: 'center' },
+  { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 // ----------------------------------------------------------------------
 
@@ -53,7 +53,6 @@ export default function MachineServiceRecordList() {
   const { machineServiceRecords, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine);
 
-  console.log('machineServiceRecords : ',machineServiceRecords)
   const {
     order,
     orderBy,
@@ -73,15 +72,10 @@ export default function MachineServiceRecordList() {
   };
 
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
-
   const dispatch = useDispatch();
-
   const [filterName, setFilterName] = useState('');
-
   const [tableData, setTableData] = useState([]);
-
   const [filterStatus, setFilterStatus] = useState([]);
-
 
   useLayoutEffect(() => {
     dispatch(getMachineServiceRecords(machine?._id)); 

@@ -60,8 +60,7 @@ export default function ServiceRecordConfigListTableRow({
 
       {/* { useScreenSize('lg') && <TableCell >{docTitle || ''}</TableCell>} */}
       { useScreenSize('lg') && <TableCell >{(!category && !machineModel && (`* / *`)) ||  
-      (category && !machineModel && `${category?.name}/ * `) ||   
-      (machineModel?.name)  }</TableCell>}
+      (category && !machineModel && `${category?.name}/ * `) ||  (!category && machineModel && `* / ${machineModel?.name}`) || (category && machineModel && `${machineModel?.name}`) }</TableCell>}
 
         <TableCell align="center">
           <Switch checked={isActive} disabled sx={{ my: -1 }} />{' '}

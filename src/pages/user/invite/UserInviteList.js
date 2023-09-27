@@ -47,7 +47,7 @@ export default function UserInviteList() {
     setPage,
     onSort,
   } = useTable({
-    defaultOrderBy: '-createdAt',
+    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
   });
 
   const dispatch = useDispatch();
@@ -59,11 +59,11 @@ export default function UserInviteList() {
 
   const { userInvites, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.userInvite );
   const TABLE_HEAD = [
-    { id: 'InvitedUser', label: 'Invited User', align: 'left' },
-    { id: 'xs1', label: 'Invited By', align: 'left' },
-    { id: 'Status', label: 'Status', align: 'left' },
-    { id: 'ExpiryTime', label: 'Expiry Time', align: 'left' },
-    { id: 'xs2', label: 'Created At', align: 'left' },
+    { id: 'receiverInvitationUser.name', label: 'Invited User', align: 'left' },
+    { id: 'senderInvitationUser.name', visibility: 'xs1', label: 'Invited By', align: 'left' },
+    { id: 'invitationStatus', label: 'Status', align: 'left' },
+    { id: 'inviteExpireTime', label: 'Expiry Time', align: 'left' },
+    { id: 'createdAt', visibility: 'xs2', label: 'Created At', align: 'left' },
   ];
 
   const onChangeRowsPerPage = (event) => {

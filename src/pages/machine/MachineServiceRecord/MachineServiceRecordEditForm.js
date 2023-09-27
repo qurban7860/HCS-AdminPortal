@@ -4,14 +4,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Typography, TableContainer, Table, TableBody, TextField, Autocomplete } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, TableContainer, Table, TableBody, TextField, Autocomplete, Checkbox,InputAdornment } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { v4 as uuidv4 } from 'uuid';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // slice
 import { updateMachineServiceRecord, setMachineServiceRecordViewFormVisibility, getMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
 import { getMachineConnections } from '../../../redux/slices/products/machineConnections';
-import { getActiveServiceRecordConfigs } from '../../../redux/slices/products/serviceRecordConfig';
+import { getActiveServiceRecordConfigsForRecords } from '../../../redux/slices/products/serviceRecordConfig';
 import { getActiveContacts } from '../../../redux/slices/customer/contact';
 // routes
 // import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -26,8 +26,10 @@ import FormProvider, {
   RHFTextField,
   RHFAutocomplete,
   RHFDatePicker,
+  RHFCheckbox,
 } from '../../../components/hook-form';
 import CollapsibleCheckedItemRow from '../ServiceRecordConfig/CollapsibleCheckedItemRow'
+import { getActiveSecurityUsers } from '../../../redux/slices/securityUser/securityUser';
 
 // ----------------------------------------------------------------------
 
@@ -36,38 +38,90 @@ function MachineServiceRecordEditForm() {
   const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
   const { activeContacts } = useSelector((state) => state.contact);
   const { activeServiceRecordConfigs } = useSelector((state) => state.serviceRecordConfig);
-  const { machineConnections } = useSelector((state) => state.machineConnections);
   const { machine } = useSelector((state) => state.machine);
   const [checkParam, setCheckParam] = useState([]);
   const [serviceDateError, setServiceDateError] = useState('');
-
+  const [checkParamList, setCheckParamList] = useState([]);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  const { activeSecurityUsers } = useSelector((state) => state.user);
+  const { recordTypes } = useSelector((state) => state.serviceRecordConfig);
 
   useEffect( ()=>{
-    dispatch(getMachineConnections(machine?.customer?._id))
-    dispatch(getActiveServiceRecordConfigs())
+    dispatch(getActiveServiceRecordConfigsForRecords(machine?._id))
     dispatch(getActiveContacts(machine?.customer?._id))
+    dispatch(getActiveSecurityUsers({roleType:'Support'}))
   },[dispatch, machine])
+
+  useEffect(() => {
+
+    if (machineServiceRecord) {
+      const checkParams = machineServiceRecord?.serviceRecordConfig?.checkParams;
+      if (checkParams) {
+
+        const params_ = checkParams.map((row, index) => {
+          if (row && row.paramList) {
+            const updatedParamList = row.paramList.map((childRow, childIndex) => {
+              const foundParam = machineServiceRecord.checkParams.find(
+                (param) =>
+                  param?.serviceParam === childRow?._id &&
+                  param?.paramListTitle === row?.paramListTitle
+              );
+              return {
+                ...childRow,
+                value: foundParam ? foundParam.value : '',
+              };
+            });
+        
+            return {
+              ...row,
+              paramList: updatedParamList,
+            };
+          }
+          return row;
+        });
+        
+        
+        setCheckParamList(params_);
+      }
+    }
+  }, [machineServiceRecord]);
+
+  const machineDecoilers = (machine?.machineConnections || []).map((decoiler) => ({
+    _id: decoiler?.connectedMachine?._id ?? null,
+    name: decoiler?.connectedMachine?.name ?? null,
+    serialNo: decoiler?.connectedMachine?.serialNo ?? null
+  }));
+
+  const defaultDecoilers = (machineServiceRecord?.decoilers || []).map((decoiler) => ({
+    _id: decoiler?._id ?? null,
+    name: decoiler?.name ?? "",
+    serialNo: decoiler?.serialNo ?? ""
+  }));
+
+  const machineOperators = (activeContacts || []).map((con) => ({
+    _id: con?._id ?? null,
+    firstName: con?.firstName ?? "",
+    lastName: con?.lastName ?? ""
+  }));
 
   const defaultValues = useMemo(
     () => ({
-
-      recordType:                 machineServiceRecord?.recordType || null,
+      recordType:                 machineServiceRecord?.serviceRecordConfig?.recordType || null,
       serviceRecordConfig:        machineServiceRecord?.serviceRecordConfig || null,
       serviceDate:                machineServiceRecord?.serviceDate || null,
-      customer:                   machineServiceRecord?.customer || null, 
+      customer:                   machineServiceRecord?.customer || null,
       site:                       machineServiceRecord?.site || null,
       machine:                    machineServiceRecord?.machine || null,
-      decoiler:                   machineServiceRecord?.decoilers || null,
+      decoilers:                  defaultDecoilers || [],
       technician:                 machineServiceRecord?.technician || null,
-      // checkParams:     
+      // checkParams:
       serviceNote:                machineServiceRecord?.serviceNote || '',
       maintenanceRecommendation:  machineServiceRecord?.maintenanceRecommendation || '',
       suggestedSpares:            machineServiceRecord?.suggestedSpares || '',
       // files: machineServiceRecord?.files || [],
-      operator:                   machineServiceRecord?.operator || null,
-      operatorRemarks:            machineServiceRecord?.operatorRemarks || '',
+      operators:                  machineServiceRecord?.operators || [],
+      technicianRemarks:          machineServiceRecord?.technicianRemarks || '',
       isActive:                   machineServiceRecord?.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -87,38 +141,50 @@ function MachineServiceRecordEditForm() {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-  const {  serviceDate, files, decoiler, serviceRecordConfig } = watch()
-
+  const { serviceDate, files, serviceRecordConfig, decoilers, operators } = watch()
   const handleServiceDateChange = (newValue) => setValue("serviceDate", newValue)
-
   useEffect(() => {
     if (machineServiceRecord) {
       reset(defaultValues);
     }
   }, [machineServiceRecord, reset, defaultValues]);
 
-  const toggleCancel = () => 
-  {
-    dispatch(setMachineServiceRecordViewFormVisibility(true));
-  };
-
+  const toggleCancel = () => { dispatch(setMachineServiceRecordViewFormVisibility(true)) };
   const onSubmit = async (data) => {
+
     try {
-      data.decoiler = decoiler
-      console.log("data : ",data)
+      const checkParams_ = [];
+      if(serviceRecordConfig &&
+        Array.isArray(checkParamList) &&
+        checkParamList.length > 0)
+        checkParamList.forEach((checkParam_, index )=>{
+          if(Array.isArray(checkParam_.paramList) &&
+            checkParam_.paramList.length>0) {
+            checkParam_.paramList.forEach((CI,ind)=>{
+              checkParams_.push({
+                serviceParam:CI._id,
+                name:CI.name || "",
+                paramListTitle:checkParam_.paramListTitle || "",
+                value:CI.value || "",
+              });
+            });
+          }
+        });
+
+      data.checkParams = checkParams_;
+      data.decoilers = decoilers;
+      data.operators = operators;
       await dispatch(updateMachineServiceRecord(machine?._id ,machineServiceRecord?._id , data));
       reset();
       dispatch(setMachineServiceRecordViewFormVisibility(true));
       await dispatch(getMachineServiceRecord(machine?._id, machineServiceRecord?._id))
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
-      console.error(err.message);
     }
   };
 
   useCallback(
     (index,acceptedFiles) => {
-      console.log(" acceptedFiles : ", acceptedFiles)
       const docFiles =  [];
       const newFiles = acceptedFiles.map((file) =>
         Object.assign(file, {
@@ -136,47 +202,60 @@ function MachineServiceRecordEditForm() {
           value: updatedVal[index]?.value || '',
           comments: updatedVal[index]?.comments || '',
         };
-        return updatedVal; 
+        return updatedVal;
       });
 
       setValue(`checkParamFiles${index}`, [...docFiles, ...newFiles], { shouldValidate: true });
-      console.log(`checkParamFiles${index}`)
     },
     [setValue, checkParam]
   );
 
+
+  const handleChangeCheckItemListValue = (index, childIndex, e) => {
+    const updatedCheckParams = [...checkParamList];
+    const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
+    updatedCheckParamObject.value = e.target.value;
+    setCheckParamList(updatedCheckParams);
+  }
+
+  const handleChangeCheckItemListCheckBoxValue = (index, childIndex, e) => {
+    const updatedCheckParams = [...checkParamList];
+    const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
+    updatedCheckParamObject.value =  !updatedCheckParams[index]?.paramList[childIndex]?.value ;
+    setCheckParamList(updatedCheckParams);
+  }
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
     <Grid container spacing={3}>
       <Grid item xs={18} md={12}>
         <Card sx={{ p: 3 }}>
           <Stack spacing={2}>
-            <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_RECORD_EDIT} />
+            <FormHeading heading="Edit Service Record" />
 
-              <RHFAutocomplete
-                name="serviceRecordConfig"
-                label="Service Record Configuration"
-                options={activeServiceRecordConfigs}
-                getOptionLabel={(option) => `${option?.docTitle ?? ''} ${option?.docTitle ? '-' : '' } ${option.recordType ? option.recordType :   ''}`}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => (
-                <li {...props} key={option._id}>{`${option?.docTitle ?? ''} ${option?.docTitle ? '-' : '' } ${option.recordType ? option.recordType : ''}`}</li>
-                )}
-              />
+            <Box
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+              >
+                <RHFTextField name="customer" label="Customer" value={`${machine?.customer?.name ? machine?.customer?.name : ''}`} disabled/>
+                <RHFTextField name="machine" label="Machine" value={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} disabled/>
+                <RHFTextField name="machine" label="Machine Model Category" value={machine?.machineModel?.category?.name || ''} disabled/>
+                <RHFTextField name="machine" label="Machine Model" value={machine?.machineModel?.name || ''} disabled/>
+            </Box>
 
-              {serviceRecordConfig?.checkParams?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
+            <RHFAutocomplete
+                    disabled
+                    name="serviceRecordConfig"
+                    label="Service Record Configuration"
+                    options={activeServiceRecordConfigs}
+                    getOptionLabel={(option) => `${option?.docTitle ?? ''} ${option?.docTitle ? '-' : '' } ${option.recordType ? option.recordType :   ''}`}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    renderOption={(props, option) => (
+                    <li {...props} key={option._id}>{`${option?.docTitle ?? ''} ${option?.docTitle ? '-' : '' } ${option.recordType ? option.recordType : ''}`}</li>
+                    )}
+                  />
 
-                <TableContainer >
-                    <Table>
-                        <TableBody>
-              {serviceRecordConfig?.checkParams.map((row, index) =>
-              ( typeof row?.paramList?.length === 'number' &&
-                            <CollapsibleCheckedItemRow key={uuidv4()} value={row} index={index} />
-              ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                              
             <Box
                 rowGap={2}
                 columnGap={2}
@@ -185,80 +264,112 @@ function MachineServiceRecordEditForm() {
               >
 
               <RHFDatePicker name="serviceDate" label="Service Date" />
-
+              <Autocomplete multiple
+                  name="decoilers"
+                  defaultValue={defaultValues.decoilers}
+                  id="decoilers-autocomplete" options={machineDecoilers}
+                  onChange={(event, newValue) => setValue('decoilers',newValue)}
+                  getOptionLabel={(option) => `${option?.name||""} ${option?.serialNo||""}`}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                  renderInput={(params) => (
+                    <TextField {...params} variant="outlined" label="Decoilers" placeholder="Select Decoilers"/>
+                  )}
+                />
+              </Box>
               <RHFAutocomplete
                 name="technician"
                 label="Technician"
-                options={activeContacts}
-                getOptionLabel={(option) => `${option.firstName ? option.firstName :   ''} ${option.lastName ? option.lastName :   ''}`}
-                  isOptionEqualToValue={(option, value) => option._id === value._id}
-                  renderOption={(props, option) => (
-                  <li {...props} key={option._id}>{`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName :   ''}`}</li>
-              )}
+                options={activeSecurityUsers}
+                getOptionLabel={(option) => `${option?.name || ''}`}
+                isOptionEqualToValue={(option, value) => option._id === value._id}
+                renderOption={(props, option) => (
+                  <li {...props} key={option._id}>{`${option?.name || ''}`}</li>
+                )}
               />
-              </Box>
-              <Box
-                rowGap={2}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-              >
-                <RHFTextField name="machine" label="Machine" value={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} disabled/>
-                <RHFTextField name="machine" label="Machine Model" value={machine?.machineModel?.name || ''} disabled/>
-                <RHFTextField name="machine" label="Machine Model Category" value={machine?.machineModel?.category?.name || ''} disabled/>
-                <RHFTextField name="customer" label="Customer" value={`${machine?.customer?.name ? machine?.customer?.name : ''}`} disabled/>
-              </Box>
+              <RHFTextField name="technicianRemarks" label="Technician Remarks" minRows={3} multiline/>
+                {checkParamList?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
 
-                <Controller
-                  name="decoiler"
-                  control={control}
-                  defaultValue={ decoiler || []}
-                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                  <Autocomplete
-                    multiple
-                    {...field}
-                    name="decoiler"
-                    id="tags-outlined"
-                    options={machineConnections}
-                    getOptionLabel={(option) => `${option.serialNo ? option.serialNo : ''} ${option.name ? '-' : ''} ${option.name ? option.name : ''}`}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
-                    onChange={(event, value) => field.onChange(value)}
-                    
-                    renderInput={(params) => (
-                      <TextField 
-                        {...params} 
-                        name="decoiler"
-                        id="decoiler"  
-                        label="Decoilers"  
-                        error={!!error}
-                        helperText={error?.message} 
-                        inputRef={ref}
-                        />
-                    )}
-                  />
+                <Grid sx={{display:'flex', flexDirection:'column'}}>
+                      {checkParamList?.map((row, index) =>
+                      ( typeof row?.paramList?.length === 'number' &&
+                      <>
+                    <Grid key={index}  item md={12} >
+                            <Typography variant="body2" sx={{fontWeight:'bold'}}>{`${index+1}). `} {typeof row?.paramListTitle === 'string' && row?.paramListTitle || ''}{' ( Items: '} {`${row?.paramList?.length}`} {' ) '}</Typography>
+                    </Grid>
+                    <Grid  item md={12}>
+                      {row?.paramList.map((childRow,childIndex) => (
+                        <Box
+                        sx={{pl:4, alignItems: 'center', backgroundColor:(childIndex%2===0?"#f4f6f866":""), 
+                            ":hover": {backgroundColor: "#dbdbdb66"}
+                            }}
+                          rowGap={2}
+                          columnGap={2}
+                          display="grid"
+                          gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                        >
+                          <Typography variant="body2" ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}</Typography>
+
+                          { childRow?.inputType === 'Short Text' && <TextField
+                                label={childRow?.inputType}
+                                name={childRow?.name}
+                                onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e)}
+                                size="small" sx={{m:0.3}}
+                                value={checkParamList[index]?.paramList[childIndex]?.value}
+                                required={childRow?.isRequired}
+                              />}
+
+                              { childRow?.inputType === 'Long Text' && <TextField
+                                label={childRow?.inputType}
+                                name={childRow?.name}
+                                onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e)}
+                                size="small" sx={{m:0.3}}
+                                value={checkParamList[index]?.paramList[childIndex]?.value}
+                                minRows={3} multiline
+                                required={childRow?.isRequired}
+                              />}
+                              { childRow?.inputType === 'Number'  && <div><TextField
+                                fullWidth
+                                id="filled-number"
+                                label={`Measurement${childRow?.unitType ? ` (${childRow.unitType})` : ''}`}
+                                name={childRow?.name}
+                                type="number"
+                                value={checkParamList[index]?.paramList[childIndex]?.value}
+                                onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e)}
+                                size="small" sx={{m:0.3}}
+                                required={childRow?.isRequired}
+                              /></div>}
+                              {childRow?.inputType === 'Boolean' &&
+                              <div>
+                              <Checkbox
+                                name={childRow.name}
+                                required={childRow?.isRequired}
+                                checked={checkParamList[index].paramList[childIndex]?.value || false}
+                                onChange={(val)=>handleChangeCheckItemListCheckBoxValue(index, childIndex, val)}
+
+                              /></div>}
+                        </Box>
+                      ))}
+                    </Grid>
+                    </>
+                      ))}
+                </Grid>
+                { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label="Note" minRows={3} multiline/> }
+                { serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="maintenanceRecommendation" label="Maintenance Recommendation" minRows={3} multiline/> }
+                { serviceRecordConfig?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }
+                {defaultValues?.recordType==='Training' &&
+                  <Autocomplete multiple
+                  name="operators"
+                  defaultValue={defaultValues.operators}
+                  id="operator-autocomplete" options={machineOperators}
+                  onChange={(event, newValue) => setValue('operators',newValue)}
+                  getOptionLabel={(option) => `${option.firstName ? option.firstName :   ''} ${option.lastName ? option.lastName :   ''}`}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                  renderInput={(params) => (
+                    <TextField {...params} variant="outlined" label="Operators" placeholder="Select Operators"/>
                   )}
                 />
+                }
 
-
-                { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label="Note" minRows={3} multiline/> }
-
-                { serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="maintenanceRecommendation" label="Maintenance Recommendation" minRows={3} multiline/> }
-
-                { serviceRecordConfig?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }
-
-                
-                <RHFAutocomplete
-                  name="operator"
-                  label="Operator"
-                  options={activeContacts}
-                  getOptionLabel={(option) => `${option.firstName ? option.firstName :   ''} ${option.lastName ? option.lastName :   ''}`}
-                  isOptionEqualToValue={(option, value) => option._id === value._id}
-                  renderOption={(props, option) => (
-                  <li {...props} key={option._id}>{`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName :   ''}`}</li>
-                )}
-                />
-
-                <RHFTextField name="operatorRemarks" label="Operator Remarks" minRows={3} multiline/> 
 
               {/* <Grid item xs={12} md={6} lg={12}>
                 <RHFUpload

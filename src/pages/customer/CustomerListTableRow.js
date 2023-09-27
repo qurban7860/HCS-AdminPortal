@@ -78,7 +78,7 @@ export default function CustomerListTableRow({
         )}
       </TableCell>}
       { smScreen && <TableCell>
-        {Object.values(address ?? {})
+        {Object.values(address ?? {}).reverse()
           .map((value) => (typeof value === 'string' ? value.trim() : ''))
           .filter((value) => value !== '')
           .join(', ')}

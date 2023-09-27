@@ -36,21 +36,13 @@ import { FORMLABELS } from '../../../constants/default-constants';
 
 const TABLE_HEAD = [
   { id: 'docTitle', label: 'Document Title', align: 'left' },
-  { id: 'recordType', label: 'Record Type', align: 'left' },
+  { id: 'recordType', label: 'Document Type', align: 'left' },
   // { id: 'category', label: 'Category', align: 'left' },
-  { id: 'machineModel', label: 'Machine Model', align: 'left' },
+  { id: 'machineModel.name', visibility: 'md1', label: 'Machine Model', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
-const STATUS_OPTIONS = [
-  // { id: '1', value: 'Order Received' },
-  // { id: '2', value: 'In Progress' },
-  // { id: '3', value: 'Ready For Transport' },
-  // { id: '4', value: 'In Freight' },
-  // { id: '5', value: 'Deployed' },
-  // { id: '6', value: 'Archived' },
-];
 
 // ----------------------------------------------------------------------
 
@@ -215,7 +207,7 @@ export default function ServiceRecordConfigList() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_CONFIGS} icon="material-symbols:list-alt-outline" setting="enable" />
+          <Cover name={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_CONFIGS} backLink='' icon="material-symbols:list-alt-outline" setting="enable" />
         </StyledCardContainer>
 
         <TableCard>
@@ -224,7 +216,6 @@ export default function ServiceRecordConfigList() {
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
             onFilterStatus={handleFilterStatus}
-            statusOptions={STATUS_OPTIONS}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />

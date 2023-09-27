@@ -31,7 +31,7 @@ import {
   setFilterBy
 } from '../../redux/slices/products/machine';
 import { resetToolInstalled, resetToolsInstalled } from '../../redux/slices/products/toolInstalled';
-import { resetSetting, resetSettings } from '../../redux/slices/products/machineTechParamValue';
+import { resetSetting, resetSettings } from '../../redux/slices/products/machineSetting';
 import { resetLicense, resetLicenses } from '../../redux/slices/products/license';
 import { resetNote, resetNotes } from '../../redux/slices/products/machineNote';
 import {
@@ -61,15 +61,15 @@ const STATUS_OPTIONS = [
 
 const TABLE_HEAD = [
   // { id: 'havePrevious', label: '', align: 'center', width: 1.5 },
-  { id: 'serialNumber', label: 'Serial Number', align: 'left' },
+  { id: 'serialNo', label: 'Serial Number', align: 'left' },
   // { id: 'previousMachine', label: 'Previous Machine', align: 'left' },
-  { id: 'md1', label: 'Name', align: 'left' },
-  { id: 'xs1', label: 'Model', align: 'left' },
-  { id: 'xs2', label: 'Status', align: 'left' },
-  { id: 'md2', label: 'Customer', align: 'left' },
-  { id: 'md3', label: 'Installation Site', align: 'left' },
-  { id: 'active', label: 'Active', align: 'center' },
-  { id: 'created_at', label: 'Created At', align: 'left' },
+  { id: 'name', visibility: 'md1',label: 'Name', align: 'left' },
+  { id: 'machineModel.name', visibility: 'xs1', label: 'Model', align: 'left' },
+  { id: 'status.name', visibility: 'xs2',  label: 'Status', align: 'left' },
+  { id: 'customer.name', visibility: 'md2', label: 'Customer', align: 'left' },
+  { id: 'instalationSite.name', visibility: 'md3', label: 'Installation Site', align: 'left' },
+  { id: 'isActive', label: 'Active', align: 'center' },
+  { id: 'createdAt', label: 'Created At', align: 'left' },
 ];
 
 export default function MachineList() {
@@ -81,7 +81,7 @@ export default function MachineList() {
     onSelectRow,
     onSelectAllRows,
     onSort,
-  } = useTable({ defaultOrderBy: '-createdAt' });
+  } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Grid, Link } from '@mui/material';
 import { useNavigate } from 'react-router';
 import Iconify from '../../../components/iconify/Iconify';
-import { PATH_DOCUMENT, } from '../../../routes/paths';
+import { PATH_DOCUMENT, PATH_MACHINE } from '../../../routes/paths';
 import { setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
 import { setLicenseViewFormVisibility } from '../../../redux/slices/products/license';
 import { setProfileViewFormVisibility } from '../../../redux/slices/products/profile';
@@ -31,7 +31,7 @@ function CoverSettingsIcons({
 
   return (
     <Grid style={{ flex: 1, display: 'flex', justifyContent: 'end' }}>
-      {backLink && (
+      {/* {backLink && (
         <Link
           title="Go Back"
           sx={{
@@ -133,7 +133,7 @@ function CoverSettingsIcons({
         >
           <Iconify icon="material-symbols:arrow-back-rounded" />
         </Link>
-      )}
+      )} */}
       {setting && (
         <Link
           title="Machine Setting"
@@ -146,7 +146,7 @@ function CoverSettingsIcons({
           }}
           component="button"
           variant="body2"
-          onClick={handleNavigate}
+          onClick={()=>navigate(PATH_MACHINE.machines.settings.app)}
         >
           <Iconify icon="mdi:cog" />
         </Link>

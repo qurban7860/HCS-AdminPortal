@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { IconButton, Button, Typography } from '@mui/material';
-import { alpha } from '@mui/material/styles';
+import { alpha, useTheme } from '@mui/material/styles';
 import { StyledPopover } from '../../../theme/styles/default-styles';
 import Iconify from '../../../components/iconify';
 import { ICONS } from '../../../constants/icons/default-icons';
 
 export default function IconPopover({
+  backLink,
   isActive,
   isRequired,
   deleteDisabled,
@@ -23,7 +24,7 @@ export default function IconPopover({
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const isPopoverOpen = Boolean(anchorEl);
-
+  const themes = useTheme();
   const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -68,6 +69,46 @@ export default function IconPopover({
               color={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color}
             >
               {isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading}
+            </Typography>
+          </StyledPopover>
+        </>
+      )}
+
+           {/* Back Link icon */}
+           {backLink && (
+        <>
+          <IconButton
+            aria-label={ICONS.BACK_LINK.heading}
+            onClick={backLink}
+            onMouseEnter={handlePopoverOpen}
+            onMouseLeave={handlePopoverClose}
+          >
+            <Iconify
+              heading={ICONS.BACK_LINK.heading}
+              icon={ICONS.BACK_LINK.icon}
+              style={{ color: themes.palette.primary.main }}
+              width={ICONS.size}
+            />
+          </IconButton>
+          <StyledPopover
+            open={isPopoverOpen}
+            anchorEl={anchorEl}
+            onClose={handlePopoverClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
+            transformOrigin={{
+              vertical: 'center',
+              horizontal: 'center',
+            }}
+            id="mouse-over-popover"
+          >
+            <Typography
+              variant="overline"
+              color={themes.palette.primary.main}
+            >
+              {ICONS.BACK_LINK.heading}
             </Typography>
           </StyledPopover>
         </>
@@ -477,5 +518,6 @@ IconPopover.propTypes = {
   sites: PropTypes.array,
   onMapClick: PropTypes.func,
   multiAuth:PropTypes.bool,
-  currentEmp:PropTypes.bool
+  currentEmp:PropTypes.bool,
+  backLink: PropTypes.func,
 };

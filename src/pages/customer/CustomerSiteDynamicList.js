@@ -36,7 +36,7 @@ import { BUTTONS, BREADCRUMBS, TITLES } from '../../constants/default-constants'
 // ----------------------------------------------------------------------
 
 export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
-  const { order, orderBy } = useTable({ defaultOrderBy: '-createdAt' });
+  const { order, orderBy } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
   // const [ setChecked] = useState(false);
   // const [ setOpenSite] = useState(false);
   const { site } = useSelector((state) => state.site);

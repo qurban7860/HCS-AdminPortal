@@ -57,13 +57,13 @@ export default function CategoryListTableRow({
       <TableRow hover selected={selected}>
         <LinkTableCell align="left" onClick={onViewRow} param={name} />
 
-        <TableCell align="center">
-          <Switch checked={isActive} disabled sx={{ my: -1 }} />{' '}
-        </TableCell>
-
         { smScreen && <TableCell align="center">
           <Switch checked={connections || false} disabled sx={{ my: -1 }} />{' '}
         </TableCell>}
+
+        <TableCell align="center">
+          <Switch checked={isActive} disabled sx={{ my: -1 }} />{' '}
+        </TableCell>
 
         <TableCell align="right">{fDate(createdAt)}</TableCell>
       </TableRow>

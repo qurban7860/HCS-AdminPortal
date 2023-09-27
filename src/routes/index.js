@@ -47,10 +47,11 @@ import {
   SupplierEdit,
   // SupplierEditForm,
 
-  MachineServiceParamList, 
-  MachineServiceParamViewForm,
-  MachineServiceParamEditForm,
-  MachineServiceParamAddForm,
+  // Check Items
+  CheckItemList, 
+  CheckItemViewForm,
+  CheckItemEditForm,
+  CheckItemAddForm,
 
   // License
   // MachineLicenses,
@@ -130,9 +131,9 @@ import {
 
   // Note
   NoteList,
-  NoteAdd,
-  NoteEdit,
-  NoteView,
+  NoteAddForm,
+  NoteEditForm,
+  NoteViewForm,
 
   // Document Name
   DocumentNameAddForm  ,
@@ -313,9 +314,9 @@ export default function Router() {
           path: 'note',
           children: [
             { path: 'list', element: <NoteList /> },
-            { path: 'new', element: <NoteAdd /> },
-            { path: ':id/edit', element: <NoteEdit />},
-            { path: ':id/view', element: <NoteView />}
+            { path: 'new', element: <NoteAddForm /> },
+            { path: ':id/edit', element: <NoteEditForm />},
+            { path: ':id/view', element: <NoteViewForm />}
           ],
         },
         { path: 'permission-denied', element: <PermissionDeniedPage /> },
@@ -421,12 +422,12 @@ export default function Router() {
                 ]
               },
               {
-                path: 'machineServiceParams',
+                path: 'checkItems',
                 children:[
-                  {path: 'new', element: <MachineServiceParamAddForm/>},
-                  {path: 'list', element: <MachineServiceParamList/>},
-                  {path: ':id/view', element: <MachineServiceParamViewForm/>},
-                  {path: ':id/edit', element: <MachineServiceParamEditForm/>},
+                  {path: 'new', element: <CheckItemAddForm/>},
+                  {path: 'list', element: <CheckItemList/>},
+                  {path: ':id/view', element: <CheckItemViewForm/>},
+                  {path: ':id/edit', element: <CheckItemEditForm/>},
                 ]
               },
               {

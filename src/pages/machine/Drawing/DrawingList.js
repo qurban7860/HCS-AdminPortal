@@ -63,7 +63,7 @@ export default function DrawingList() {
     // onChangePage,
     // onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: '-createdAt',
+    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
   });
 
   const dispatch = useDispatch();

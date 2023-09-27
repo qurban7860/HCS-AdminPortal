@@ -15,7 +15,6 @@ import CoverTitles from './CoverTitles';
 import LogoAvatar from '../../../components/logo-avatar/LogoAvatar';
 import useResponsive from '../../../hooks/useResponsive';
 
-
 // ----------------------------------------------------------------------
 
 Cover.propTypes = {
@@ -33,6 +32,7 @@ Cover.propTypes = {
   model: PropTypes.string,
   customer: PropTypes.string,
   generalSettings: PropTypes.string,
+  titleLength: PropTypes.number,
 };
 export function Cover({
   tradingName,
@@ -49,11 +49,10 @@ export function Cover({
   model,
   customer,
   generalSettings,
+  titleLength
 }) {
   const navigate = useNavigate();
-  const handleNavigate = () => {
-    navigate(PATH_MACHINE.machines.settings.app);
-  };
+
   const handleSettingsNavigate = () => {
     navigate(PATH_SETTING.app);
   };
@@ -68,8 +67,8 @@ export function Cover({
   const nameNumMaxLength2 = name?.split(' ')[1]?.substring(0, 10);
   const nameTitle = `${nameNumMaxLength} ${nameNumMaxLength2 || ''}`;
 
-  if(name?.length>30){
-    name = `${name.substring(0,30)}...`;
+  if(titleLength && name?.length>titleLength){
+    name = `${name.substring(0,titleLength)}...`;
   }
 
   return (
@@ -105,11 +104,11 @@ export function Cover({
         />
         <CoverSettingsIcons
           setting={setting}
-          handleNavigate={handleNavigate}
-          backLink={backLink}
-          machineDrawingsBackLink={machineDrawingsBackLink}
-          handleBacklink={handleBacklink}
-          handleBackLinks={handleBackLinks}
+          // handleNavigate={handleNavigate}
+          // backLink={backLink}
+          // machineDrawingsBackLink={machineDrawingsBackLink}
+          // handleBacklink={handleBacklink}
+          // handleBackLinks={handleBackLinks}
           handleSettingsNavigate={handleSettingsNavigate}
           generalSettings={generalSettings}
         />

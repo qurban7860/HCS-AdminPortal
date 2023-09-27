@@ -44,13 +44,11 @@ const ROLE_OPTIONS = ['Administrator', 'Normal User', 'Guest User', 'Restriced U
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'xs1', label: 'Email', align: 'left' },
-  { id: 'xs2', label: 'Phone Number', align: 'left' },
-  { id: 'md1', label: 'Roles', align: 'left' },
-  { id: 'employed', label: 'Employeed', align: 'center' },
+  { id: 'email', visibility: 'xs1', label: 'Email', align: 'left' },
+  { id: 'phone', visibility: 'xs2', label: 'Phone Number', align: 'left' },
+  { id: 'roles.name.[]', visibility: 'md1', label: 'Roles', align: 'left' },
+  { id: 'currentEmployee', label: 'Employeed', align: 'center' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  // { id: 'isVerified', label: 'Verified', align: 'center' },
-  // { id: 'status', label: 'Status', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
@@ -73,7 +71,7 @@ export default function SecurityUserList() {
     // onChangePage,
     // onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: '-createdAt',
+    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
   });
 
   const dispatch = useDispatch();

@@ -95,11 +95,11 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
   };
   return (
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} />
+      <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.list)} />
       <Grid container>
         <ViewFormField sm={12} isActive={defaultValues.isActive} />
-        <ViewFormField sm={6} heading="Record Type" param={defaultValues?.recordType} />
         <ViewFormField sm={6} heading="Document Title" param={defaultValues?.docTitle} />
+        <ViewFormField sm={6} heading="Document Type" param={defaultValues?.recordType} />
       </Grid>
       <Grid container>
         <ViewFormField sm={6} heading="Machine Category" param={defaultValues?.category} />

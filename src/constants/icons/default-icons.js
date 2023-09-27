@@ -106,6 +106,15 @@ export const ICONS = {
     color: 'red',
     heading: 'Disallowed',
   },
+  // ----------------------------------------------------------------
+
+    // Back Link
+    BACK_LINK: {
+      icon: 'vaadin:arrow-backward',
+      color: 'blue',
+      heading: 'Back',
+    },
+
   // ------------------------------------------------------------
   // map icon
   MAP: {
@@ -160,13 +169,13 @@ export const ICONS = {
   },
 
 
-  MACHINE_SERVICE_PARAMETERS: {
+  MACHINE_CHECK_ITEMS: {
     icon: 'carbon:parameter',
     heading: 'Check Items',
   },
   MACHINE_SERVICE_RECORD_CONFIG: {
     icon: 'mdi:tools',
-    heading: 'Service Record Configurations',
+    heading: 'Service Doc Configurations',
   },
 
   // @root - Settings - settings

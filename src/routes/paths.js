@@ -164,11 +164,11 @@ export const PATH_MACHINE = {
           path(ROOTS_MACHINE, `/machines/settings/technicalParameterCategories/${id}/edit`),
       },
 
-      machineServiceParams:{
-        new: (ROOTS_MACHINE, '/products/machines/settings/machineServiceParams/new'),
-        list:(ROOTS_MACHINE, '/products/machines/settings/machineServiceParams/list'),
-        view: (id) => path(ROOTS_MACHINE, `/machines/settings/machineServiceParams/${id}/view`),
-        edit: (id) => path(ROOTS_MACHINE, `/machines/settings/machineServiceParams/${id}/edit`),
+      checkItems:{
+        new: (ROOTS_MACHINE, '/products/machines/settings/checkItems/new'),
+        list:(ROOTS_MACHINE, '/products/machines/settings/checkItems/list'),
+        view: (id) => path(ROOTS_MACHINE, `/machines/settings/checkItems/${id}/view`),
+        edit: (id) => path(ROOTS_MACHINE, `/machines/settings/checkItems/${id}/edit`),
       },
 
       parameters: {

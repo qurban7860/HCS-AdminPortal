@@ -46,9 +46,9 @@ import TableCard from '../../components/ListTableTools/TableCard';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'xs1', label: 'Role Type', align: 'left' },
-  { id: 'active', label: 'Active', align: 'center' },
-  { id: 'created_at', label: 'Created At', align: 'right' },
+  { id: 'roleType',visibility: 'xs1', label: 'Role Type', align: 'left' },
+  { id: 'isActive', label: 'Active', align: 'center' },
+  { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------

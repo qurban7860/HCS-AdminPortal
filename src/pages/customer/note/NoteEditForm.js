@@ -16,7 +16,7 @@ import { Box, Card, Grid, Stack, Typography,TextField, Autocomplete } from '@mui
 import {
   updateNote,
   setNoteEditFormVisibility,
-} from '../../../redux/slices/customer/note';
+} from '../../../redux/slices/customer/customerNote';
 
 // routes
 // import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -36,13 +36,9 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
 export default function NoteEditForm() {
-  const { note } = useSelector((state) => state.note);
-  // const { users } = useSelector((state) => state.user);
-
+  const { note } = useSelector((state) => state.customerNote);
   const { sites } = useSelector((state) => state.site);
-
   const { activeContacts } = useSelector((state) => state.contact);
-
   const { customer } = useSelector((state) => state.customer);
   const [siteVal, setSiteVal] = useState('');
   const [contactVal, setContactVal] = useState('');
@@ -59,11 +55,9 @@ export default function NoteEditForm() {
   }, [note]);
 
   const EditNoteSchema = Yup.object().shape({
-    note: Yup.string().max(2000).required('Note Field is required!'),
+    note: Yup.string().max(2000).required('Note is required!'),
     user: Yup.string(),
     customer: Yup.string(),
-    // editSite: Yup.string().nullable(),
-    // editContact: Yup.string().nullable(),
     isActive: Yup.boolean(),
   });
 
@@ -71,10 +65,6 @@ export default function NoteEditForm() {
     () => ({
       id: note?._id || '',
       note: note?.note || '',
-      // user: note?.user || '',
-      // customer: note?.customer || '',
-      // editSite:  note?.site === null || note?.site === undefined ? null : note.site._id,
-      // editContact:   note?.contact === null || note?.contact === undefined  ? null : note.contact._id,
       isActive: note?.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -108,7 +98,6 @@ export default function NoteEditForm() {
   };
 
   const onSubmit = async (data) => {
-    // console.log(data);
     if (siteVal) {
       data.site = siteVal;
     } else {
@@ -120,10 +109,10 @@ export default function NoteEditForm() {
       data.contact = null;
     }
     try {
-      await dispatch(updateNote(customer._id, data));
+      await dispatch(updateNote(customer._id, note._id, data));
+      enqueueSnackbar('Note Updated Successfully');
       reset();
       dispatch(setNoteEditFormVisibility(false));
-      // navigate(PATH_DASHBOARD.note.list);
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
@@ -137,9 +126,7 @@ export default function NoteEditForm() {
           <Card sx={{ p: 3 }}>
             <Stack spacing={3} sx={{ mb: 3 }}>
               <Stack spacing={1}>
-                <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                  Edit Note
-                </Typography>
+                <Typography variant="h3" sx={{ color: 'text.secondary' }}>Edit Note</Typography>
               </Stack>
 
               <Box
@@ -173,17 +160,6 @@ export default function NoteEditForm() {
                   renderInput={(params) => <TextField {...params} label="Site" />}
                   ChipProps={{ size: 'small' }}
                 />
-
-                {/* <RHFSelect native name="editSite" label="Site">
-                    <option defaultValue value="null" selected >No Site Selected</option>
-                    {
-                    sites.length > 0 && sites.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.name}
-                    </option>
-                  ))}
-              </RHFSelect> */}
-
                 <Autocomplete
                   // freeSolo
                   value={contactVal || null}
@@ -211,15 +187,6 @@ export default function NoteEditForm() {
                   renderInput={(params) => <TextField {...params} label="Contact" />}
                   ChipProps={{ size: 'small' }}
                 />
-                {/* <RHFSelect native name="editContact" label="Contact">
-                    <option defaultValue value="null" selected >No Contact Selected</option>
-                    {
-                    contacts.length > 0 && contacts.map((option) => (
-                    <option key={option._id} value={option._id} >
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect> */}
               </Box>
 
               <RHFTextField name="note" label="Note*" minRows={8} multiline />
@@ -238,7 +205,6 @@ export default function NoteEditForm() {
                     color: 'text.secondary',
                   }}
                 >
-                  {' '}
                   Active
                 </Typography>
               }

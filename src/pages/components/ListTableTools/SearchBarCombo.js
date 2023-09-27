@@ -19,11 +19,10 @@ function SearchBarCombo({
 }) {
   const isMobile = useResponsive('sm', 'down');
   return (
-    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{display:'flex', justifyContent:'space-between'}}>
       <Grid item xs={12} sm={8} sx={{ display: 'inline-flex' }}>
         <TextField
           fullWidth={isMobile}
-          size="small"
           value={value}
           onChange={onChange}
           placeholder="Search..."
@@ -49,32 +48,32 @@ function SearchBarCombo({
           </Button>
         )}
       </Grid>
-      {inviteButton && <Grid item xs={12} sm={2}>
-        <Stack alignItems="flex-end">
-          <Button
-            fullWidth
-            sx={{ p: 1, width: '100%' }}
-            onClick={inviteOnClick}
-            variant="contained"
-            startIcon={<Iconify icon={buttonIcon || 'eva:plus-fill'} />}
-          >
-            {inviteButton}
-          </Button>
-        </Stack>
-      </Grid>}
-      {addButton && <Grid item xs={12} sm={2}>
-        <Stack alignItems="flex-end">
-          <Button
-            fullWidth
-            sx={{ p: 1, width: '100%' }}
-            onClick={SubOnClick}
-            variant="contained"
-            startIcon={<Iconify icon={buttonIcon || 'eva:plus-fill'} />}
-          >
-            {addButton}
-          </Button>
-        </Stack>
-      </Grid>}
+        {inviteButton && <Grid item xs={12} sm={2}>
+          <Stack alignItems="flex-end">
+            <Button
+              fullWidth
+              sx={{ p: 2, width: '100%' }}
+              onClick={inviteOnClick}
+              variant="contained"
+              startIcon={<Iconify icon={buttonIcon || 'eva:plus-fill'} />}
+            >
+              {inviteButton}
+            </Button>
+          </Stack>
+        </Grid>}
+        {addButton && <Grid item xs={12} sm={2}>
+          <Stack alignItems="flex-end">
+            <Button
+              fullWidth
+              sx={{ p: 2, width: '100%' }}
+              onClick={SubOnClick}
+              variant="contained"
+              startIcon={<Iconify icon={buttonIcon || 'eva:plus-fill'} />}
+            >
+              {addButton}
+            </Button>
+          </Stack>
+        </Grid>}
     </Grid>
   );
 }

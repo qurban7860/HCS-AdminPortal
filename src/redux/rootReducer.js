@@ -6,7 +6,7 @@ import userReducer from './slices/securityUser/securityUser';
 import customerReducer from './slices/customer/customer';
 import siteReducer from './slices/customer/site';
 import contactReducer from './slices/customer/contact';
-import noteReducer from './slices/customer/note';
+import customerNoteReducer from './slices/customer/customerNote';
 import machineReducer from './slices/products/machine';
 import supplierReducer from './slices/products/supplier';
 import licenseReducer from './slices/products/license';
@@ -18,7 +18,7 @@ import machinenoteReducer from './slices/products/machineNote';
 import machinestatusReducer from './slices/products/statuses';
 import machinemodelReducer from './slices/products/model';
 import techparamReducer from './slices/products/machineTechParam';
-import machineSettingReducer from './slices/products/machineTechParamValue';
+import machineSettingReducer from './slices/products/machineSetting';
 import toolInstalledReducer from './slices/products/toolInstalled';
 import roleReducer from './slices/securityUser/role';
 import userConfigReducer from './slices/securityUser/config';
@@ -35,7 +35,7 @@ import regionReducer from './slices/region/region';
 import moduleReducer from './slices/module/module';
 import drawingReducer from './slices/products/drawing';
 import configReducer from './slices/config/config';
-import machineServiceParamReducer from './slices/products/machineServiceParams'
+import checkItemsReducer from './slices/products/machineCheckItems'
 import machineServiceRecordReducer from './slices/products/machineServiceRecord';
 import serviceRecordConfigReducer from './slices/products/serviceRecordConfig';
 import serviceCategoryReducer from './slices/products/serviceCategory';
@@ -85,8 +85,8 @@ export const sitePersistConfig = {
   blacklist: ['error', 'initial', 'responseMessage', 'sites']
 };
 
-export const notePersistConfig = {
-  key: 'note',
+export const customerNotePersistConfig = {
+  key: 'customerNote',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage', 'notes']
@@ -128,12 +128,21 @@ export const toolPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
+
 export const techparamcategoryPersistConfig = {
   key: 'techparamcategory',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
+
+export const machineNotePersistConfig = {
+  key: 'machineNote',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+
 export const machinestatusPersistConfig = {
   key: 'machinestatus',
   storage,
@@ -254,8 +263,8 @@ export const drawingPersistConfig={
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
-export const machineServiceParamPersistConfig={
-  key: 'machineServiceParam',
+export const checkItemsPersistConfig={
+  key: 'checkItems',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
@@ -291,7 +300,7 @@ const rootReducer = combineReducers({
   customer: persistReducer(customerPersistConfig, customerReducer),
   site: persistReducer(sitePersistConfig, siteReducer),
   contact: persistReducer(contactPersistConfig, contactReducer),
-  note: persistReducer(notePersistConfig, noteReducer),
+  customerNote: persistReducer(customerNotePersistConfig, customerNoteReducer),
   machine: persistReducer(machinePersistConfig, machineReducer),
   supplier: persistReducer(suppplierPersistConfig,supplierReducer),
   license: persistReducer(licensePersistConfig,licenseReducer),
@@ -299,7 +308,7 @@ const rootReducer = combineReducers({
   category: persistReducer(categoryPersistConfig,categoryReducer),
   tool: persistReducer(toolPersistConfig,toolReducer),
   techparamcategory: persistReducer(techparamcategoryPersistConfig,techparamcategoryReducer),
-  machinenote: persistReducer(techparamcategoryPersistConfig, machinenoteReducer),
+  machineNote: persistReducer(machineNotePersistConfig, machinenoteReducer),
   machinestatus: persistReducer(machinestatusPersistConfig, machinestatusReducer),
   machinemodel: persistReducer(machinemodelPersistConfig, machinemodelReducer),
   techparam: persistReducer(techparamPersistConfig, techparamReducer),
@@ -321,7 +330,7 @@ const rootReducer = combineReducers({
   config: persistReducer(configPersistConfig, configReducer),
   userConfig: persistReducer(userConfigPersistConfig, userConfigReducer),
   serviceRecordConfig: persistReducer(serviceRecordConfigPersistConfig, serviceRecordConfigReducer),
-  machineServiceParam: persistReducer(machineServiceParamPersistConfig, machineServiceParamReducer),
+  checkItems: persistReducer(checkItemsPersistConfig, checkItemsReducer),
   machineServiceRecord: persistReducer(machineServiceRecordPersistConfig, machineServiceRecordReducer),
   serviceCategory: persistReducer(serviceCategoryPersistConfig, serviceCategoryReducer),
   userInvite: persistReducer(userInvitePersistConfig, userInviteReducer)

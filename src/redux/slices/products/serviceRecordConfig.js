@@ -14,6 +14,7 @@ const initialState = {
   error: null,
   serviceRecordConfigs: [],
   activeServiceRecordConfigs: [],
+  activeServiceRecordConfigsForRecords: [],
   serviceRecordConfig: {},
   filterBy: '',
   page: 0,
@@ -22,7 +23,7 @@ const initialState = {
     { _id:1 , name: 'Service'},
     { _id:2 , name: 'Repair'},
     { _id:3 , name: 'Training'},
-    { _id:4 , name: 'Install'},
+    { _id:4 , name: 'Pre-Install'},
   ],
   headerFooterTypes: [
     { _id:1 , name: 'Text'},
@@ -67,6 +68,13 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.activeServiceRecordConfigs = action.payload;
+      state.initial = true;
+    },
+    // GET Active ServiceRecordConfigs for Records
+    getActiveServiceRecordConfigsForRecordsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeServiceRecordConfigsForRecords = action.payload;
       state.initial = true;
     },
     // GET ServiceRecordConfig
@@ -154,7 +162,7 @@ export function getServiceRecordConfigs (){
 
 // ----------------------------------------------------------------------
 
-export function getActiveServiceRecordConfigs (){
+export function getActiveServiceRecordConfigs (categoryId, machineModelId ){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
@@ -162,10 +170,40 @@ export function getActiveServiceRecordConfigs (){
       {
         params: {
           isArchived: false,
-          isActive: true
+          isActive: true,
+          machineModel: machineModelId,
         }
       });
       dispatch(slice.actions.getActiveServiceRecordConfigsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('ServiceRecordConfigs loaded successfully'));
+      // dispatch(slice.actions)
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  }
+}
+
+
+// ----------------------------------------------------------------------
+
+export function getActiveServiceRecordConfigsForRecords(machineId, type){
+  return async (dispatch) =>{
+    dispatch(slice.actions.startLoading());    
+    try{
+
+      const query = {
+        params: {
+          isArchived: false,
+          isActive: true
+        }
+      }
+
+      
+      Object.assign(query.params, type)
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordsConfig`, query);
+      dispatch(slice.actions.getActiveServiceRecordConfigsForRecordsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('ServiceRecordConfigs loaded successfully'));
       // dispatch(slice.actions)
     } catch (error) {

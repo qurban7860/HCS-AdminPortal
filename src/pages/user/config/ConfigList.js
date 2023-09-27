@@ -45,12 +45,12 @@ import TableCard from '../../components/ListTableTools/TableCard';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'md1', label: 'Blocked Users', align: 'left' },
-  { id: 'blockedCustomer', label: 'Blocked Customer', align: 'left' },
-  { id: 'xs1', label: 'White List IPs', align: 'left' },
-  { id: 'xs2', label: 'Black List IPs', align: 'left' },
-  { id: 'active', label: 'Active', align: 'center' },
-  { id: 'created_at', label: 'Created At', align: 'right' },
+  { id: 'blockedUsers.name.[]', visibility: 'md1', label: 'Blocked Users', align: 'left' },
+  { id: 'blockedCustomers.name.[]', label: 'Blocked Customer', align: 'left' },
+  { id: 'whiteListIPs', visibility: 'xs1', label: 'White List IPs', align: 'left' },
+  { id: 'blackListIPs', visibility: 'xs2', label: 'Black List IPs', align: 'left' },
+  { id: 'isActive', label: 'Active', align: 'center' },
+  { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------

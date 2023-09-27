@@ -16,7 +16,6 @@ const CollapsibleCheckedItemInputRow = ({value, index, toggleEdit, deleteIndex, 
           updateCheckParamObject.value = event.target.value
     updateCheckParams[index]?.paramList.splice(childIndex, 1, updateCheckParamObject);
     setValue('checkParams',updateCheckParams)
-
   }
   return (
     <>
@@ -44,15 +43,16 @@ const CollapsibleCheckedItemInputRow = ({value, index, toggleEdit, deleteIndex, 
                         <b>{`${childIndex+1}). `}</b>
                         {`${childRow.name}`}
                         </TableCell>
-                        {( childRow?.inputType === 'String' || childRow?.inputType === 'Number' ) && <RHFTextField 
-                        label={childRow?.inputType} 
-                        name={childRow.name} 
-                        value={checkParams[index].paramList[childIndex]?.value || ''}
-                        type={childRow?.inputType === 'Number' && childRow?.inputType.toLowerCase()} 
-                        onChange={(val)=>handleChangeCheckItemListValue(childIndex, val)} 
-                        size="small" sx={{m:0.3}} />}
+                        {( childRow?.inputType === 'Short Text' || childRow?.inputType === 'Long Text' || childRow?.inputType === 'Number' ) && <RHFTextField 
+                          label={childRow?.inputType} 
+                          name={childRow.name} 
+                          value={checkParams[index].paramList[childIndex]?.value || ''}
+                          type={childRow?.inputType === 'Number' && childRow?.inputType.toLowerCase()} 
+                          onChange={(val)=>handleChangeCheckItemListValue(childIndex, val)} 
+                          size="small" sx={{m:0.3}} 
+                          minRows={childRow?.inputType === 'Long Text' && 3} multiline={childRow?.inputType === 'Long Text'}
+                        />}
                         {childRow?.inputType === 'Boolean' && <RHFCheckbox name={childRow.name} onChange={(val)=>handleChangeCheckItemListValue(childIndex, val)}/>}
-                        {childRow?.inputType === 'Date' && <RHFDatePicker name={childRow.name} label={childRow?.inputType} onChange={(val)=>handleChangeCheckItemListValue(childIndex, val)} />}
                       </TableRow>
                     ))}
                   </TableBody>
@@ -73,4 +73,4 @@ CollapsibleCheckedItemInputRow.propTypes = {
     handleListDrop: PropTypes.func,
   };
 
-export default memo(CollapsibleCheckedItemInputRow)
+export default CollapsibleCheckedItemInputRow

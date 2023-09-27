@@ -12,6 +12,7 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { addServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 import { getActiveMachineModels, resetActiveMachineModels } from '../../../redux/slices/products/model';
 import { getActiveCategories } from '../../../redux/slices/products/category';
+
 // schema
 import { ServiceRecordConfigSchema } from '../../schemas/machine';
 // routes
@@ -35,9 +36,10 @@ export default function ServiceRecordConfigAddForm() {
   const { recordTypes } = useSelector((state) => state.serviceRecordConfig);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
   const { activeCategories } = useSelector((state) => state.category);
+  const { serviceCategories } = useSelector((state) => state.serviceCategory);
   const [checkParams, setCheckParams] = useState([]);
   
-  useLayoutEffect(() => {
+  useEffect(() => {
     dispatch(getActiveCategories());
   }, [dispatch]);
 
@@ -48,6 +50,7 @@ export default function ServiceRecordConfigAddForm() {
       category: null,
       docTitle: '',
       textBeforeCheckItems: '',
+      checkItemCategory: null,
 
       textAfterCheckItems: '',
       isOperatorSignatureRequired: false,
@@ -86,7 +89,7 @@ export default function ServiceRecordConfigAddForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const { category, machineModel, paramListTitle } = watch();
+  const { category, machineModel, paramListTitle, checkItemCategory } = watch();
   useEffect(() => {
     if(category === null){
       dispatch(resetActiveMachineModels())
@@ -142,9 +145,11 @@ export default function ServiceRecordConfigAddForm() {
                   }}
                 >
 
+                  <RHFTextField name="docTitle" label="Document Title*" />
+
                   <RHFAutocomplete 
                     name="recordType"
-                    label="Record Type*"
+                    label="Document Type*"
                     options={recordTypes}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
@@ -153,7 +158,6 @@ export default function ServiceRecordConfigAddForm() {
                     )}
                   />
 
-                  <RHFTextField name="docTitle" label="Document Title*" />
 
                   <RHFAutocomplete 
                     name="category"
@@ -179,8 +183,7 @@ export default function ServiceRecordConfigAddForm() {
                   
                 </Box>
                   <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline />
-
-                      <CheckItemTable setCheckParams={setCheckParams} checkParams={checkParams} paramListTitle={paramListTitle} setValue={setValue}/>
+                      <CheckItemTable setCheckParams={setCheckParams} checkParams={checkParams} paramListTitle={paramListTitle} setValue={setValue} checkItemCategory={checkItemCategory} />
                   <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline />
                 
                 <Box

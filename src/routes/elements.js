@@ -48,9 +48,9 @@ export const ContactView = Loadable(lazy(() => import('../pages/customer/contact
 
 // NOTE
 export const NoteList = Loadable(lazy(() => import('../pages/customer/note/NoteList')));
-export const NoteAdd = Loadable(lazy(() => import('../pages/customer/note/NoteAdd')));
-export const NoteEdit = Loadable(lazy(() => import('../pages/customer/note/NoteEdit')));
-export const NoteView = Loadable(lazy(() => import('../pages/customer/note/NoteView')));
+export const NoteAddForm = Loadable(lazy(() => import('../pages/customer/note/NoteAddForm')));
+export const NoteEditForm = Loadable(lazy(() => import('../pages/customer/note/NoteEditForm')));
+export const NoteViewForm = Loadable(lazy(() => import('../pages/customer/note/NoteViewForm')));
 
 // DASHBOARD: USER
 export const SecurityUserProfile = Loadable(lazy(() => import('../pages/user/SecurityUserProfile')));
@@ -87,10 +87,10 @@ export const SupplierEdit = Loadable(lazy(() => import('../pages/machine/Supplie
 export const SupplierEditForm = Loadable(lazy(() => import('../pages/machine/Supplier/SupplierEditForm')));
 export const SForm = Loadable(lazy(() => import('../pages/machine/Supplier/SupplierEditForm')));
 
-export const MachineServiceParamList     = Loadable(lazy(() => import('../pages/machine/MachineServiceParams/MachineServiceParamList')));
-export const MachineServiceParamViewForm = Loadable(lazy(() => import('../pages/machine/MachineServiceParams/MachineServiceParamView')));
-export const MachineServiceParamEditForm = Loadable(lazy(() => import('../pages/machine/MachineServiceParams/MachineServiceParamEditForm')));
-export const MachineServiceParamAddForm  = Loadable(lazy(() => import('../pages/machine/MachineServiceParams/MachineServiceParamAddForm')));
+export const CheckItemList = Loadable(lazy(() => import('../pages/machine/CheckItem/CheckItemList')));
+export const CheckItemViewForm = Loadable(lazy(() => import('../pages/machine/CheckItem/CheckItemView')));
+export const CheckItemEditForm = Loadable(lazy(() => import('../pages/machine/CheckItem/CheckItemEditForm')));
+export const CheckItemAddForm  = Loadable(lazy(() => import('../pages/machine/CheckItem/CheckItemAddForm')));
 // Signin Logs
 export const SignInLogList = Loadable(lazy(() => import('../pages/user/signInLog/SignInLogList')));
 
@@ -100,12 +100,9 @@ export const UserConfigAddForm = Loadable(lazy(() => import('../pages/user/confi
 export const UserConfigEditForm = Loadable(lazy(() => import('../pages/user/config/ConfigEditForm')));
 export const UserConfigViewForm = Loadable(lazy(() => import('../pages/user/config/ConfigView')));
 
-
 // User Invitations List
 export const UserInvitationList = Loadable(lazy(() => import('../pages/user/invite/UserInviteList')));
 export const UserInvitationView = Loadable(lazy(() => import('../pages/user/invite/UserInviteViewForm')));
-
-
 
 // License
 // export const MachineLicenses = Loadable(lazy(()=> import('../pages/machine/License/MachineLicenses')));

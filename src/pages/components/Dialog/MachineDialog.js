@@ -70,7 +70,7 @@ function MachineDialog({ machineData }) {
         </Grid>
       </DialogContent>
       <DialogLink
-        onClick={() => navigate(PATH_MACHINE.machines.view(machineValue?._id))}
+        onClick={() => {navigate(PATH_MACHINE.machines.view(machineValue?._id)); dispatch(setMachineDialog(false)); }}
         content="Go to machine"
       />
     </Dialog>

@@ -20,10 +20,7 @@ import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import { Snacks } from '../../../constants/machine-constants';
 
 export default function LicenseViewForm() {
-  const {
-    license
-  } = useSelector((state) => state.license);
-
+  const { license } = useSelector((state) => state.license);
   const { machine } = useSelector((state) => state.machine);
   const { enqueueSnackbar } = useSnackbar();
   
@@ -75,7 +72,7 @@ export default function LicenseViewForm() {
     {/* <DocumentCover content={defaultValues?.displayName} backLink="true"  generalSettings /> */}
     <Grid item md={12} mt={2}>
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
+      <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} backLink={() => dispatch(setLicenseViewFormVisibility(false))} />
       <Grid display="inline-flex">
         <Tooltip>
           <ViewFormField isActive={defaultValues.isActive} />

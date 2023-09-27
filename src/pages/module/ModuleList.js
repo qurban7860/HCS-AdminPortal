@@ -62,7 +62,7 @@ export default function ModuleList() {
     // onChangePage,
     // onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: '-createdAt',
+    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
   });
 
   const onChangeRowsPerPage = (event) => {

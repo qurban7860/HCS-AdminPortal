@@ -56,7 +56,7 @@ export default function CustomerNoteList() {
     selected,
     setSelected,
   } = useTable({
-    defaultOrderBy: '-createdAt',
+    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
   });
   const dispatch = useDispatch();
   // const { themeStretch } = useSettingsContext();

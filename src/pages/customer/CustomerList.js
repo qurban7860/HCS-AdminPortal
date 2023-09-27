@@ -46,10 +46,10 @@ import { fDate } from '../../utils/formatTime';
 const TABLE_HEAD = [
   { id: 'customerType', label: '', align: 'center', width: 1.5 },
   { id: 'name', label: 'Customer', align: 'left' },
-  { id: 'xs1', label: 'Trading Name', align: 'left' },
-  { id: 'xs2', label: 'Address', align: 'left' },
-  { id: 'active', label: 'Active', align: 'center' },
-  { id: 'created_at', label: 'Created At', align: 'left' },
+  { id: 'tradingName', visibility: 's1', label: 'Trading Name', align: 'left' },
+  { id: 'mainSite.address.country', visibility: 'xs2', label: 'Address', align: 'left' },
+  { id: 'isActive', label: 'Active', align: 'center' },
+  { id: 'createdAt', label: 'Created At', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------
@@ -64,7 +64,7 @@ export default function CustomerList() {
     onSelectAllRows,
     onSort,
   } = useTable({
-    defaultOrderBy: '-createdAt',
+    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
   });
 
   const dispatch = useDispatch();
