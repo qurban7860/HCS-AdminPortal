@@ -70,7 +70,7 @@ export default function RegionList() {
     // onChangePage,
     // onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: '-createdAt',
+    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
   });
 
   const onChangeRowsPerPage = (event) => {

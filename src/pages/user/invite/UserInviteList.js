@@ -47,7 +47,7 @@ export default function UserInviteList() {
     setPage,
     onSort,
   } = useTable({
-    defaultOrderBy: '-createdAt',
+    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
   });
 
   const dispatch = useDispatch();

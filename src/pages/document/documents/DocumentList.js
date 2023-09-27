@@ -112,7 +112,7 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
     // onChangePage,
     // onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: '-createdAt',
+    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
   });
 
 const onChangeRowsPerPage = (event) => {
