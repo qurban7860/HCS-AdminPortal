@@ -1,14 +1,13 @@
 import React from 'react';
 import Iconify from '../../../components/iconify/Iconify';
-import MachineNoteList from '../MachineNoteList';
-import MachineSettingList from '../MachineSettingList';
 import DocumentTagPage from '../../document/documents/DocumentTagPage';
 import MachineDrawings from '../Drawing/MachineDrawings';
-import MachineToolsInstalledList from '../MachineToolsInstalledList';
 import MachineLicenses from '../License/MachineLicenses';
 import MachineServiceRecordList from '../MachineServiceRecordList';
 import MachineProfiles from '../Profile/MachineProfiles';
 import MachineSetting from '../Setting/MachineSetting';
+import MachineToolInstalled from '../ToolsInstalled/MachineToolInstalled';
+import MachineNotes from '../Note/MachineNotes';
 
 export const TABS = (currentComponent, showDevTabs, disableTab) => [
   {
@@ -29,14 +28,14 @@ export const TABS = (currentComponent, showDevTabs, disableTab) => [
     value: 'toolsInstalled',
     label: 'Tools Installed',
     icon: <Iconify icon="mdi:folder-wrench" />,
-    component: <MachineToolsInstalledList />,
+    component: <MachineToolInstalled />,
   },
   {
     disabled: disableTab,
     value: 'notes',
     label: 'Notes',
     icon: <Iconify icon="mdi:note-multiple" />,
-    component: <MachineNoteList />,
+    component: <MachineNotes />,
   },
   {
     disabled: disableTab,

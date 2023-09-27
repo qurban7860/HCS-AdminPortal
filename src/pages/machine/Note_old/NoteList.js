@@ -1,10 +1,9 @@
 import { Helmet } from 'react-helmet-async';
-import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { paramCase } from 'change-case';
+import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import debounce from 'lodash/debounce';
 // @mui
 import {
-  Grid,
   Card,
   Table,
   Button,
@@ -34,25 +33,22 @@ import {
 } from '../../../components/table';
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
+import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
-import SiteListTableRow from './ToolsInstalledListTableRow';
-import SiteListTableToolbar from './ToolsInstalledListTableToolbar';
-import { getSites, deleteSite,   ChangeRowsPerPage,
-  ChangePage,
-  setFilterBy, } from '../../../redux/slices/customer/site';
-import Cover from '../../components/Defaults/Cover';
-import { StyledCardContainer } from '../../../theme/styles/default-styles';
+import NoteListTableRow from './NoteListTableRow';
+import NoteListTableToolbar from './NoteListTableToolbar';
+import { getMachineNotes, deleteMachineNote, getMachineNote } from '../../../redux/slices/products/machineNote';
+
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Site', align: 'left' },
-  { id: 'email', label: 'Email', align: 'left' },
-  { id: 'website', label: 'Website', align: 'left' },
-  { id: 'isverified', label: 'Disabled', align: 'left' },
-  { id: 'created_at', label: 'Created At', align: 'left' },
-  { id: 'action', label: 'Actions', align: 'left' },
+  { id: 'note', label: 'Note', align: "left"},
+  { id: 'isDisabled', label: 'Disabled', align: "left"},
+  { id: 'created_at', label: 'Created At', align: "left"},
+  { id: 'action', label: 'Actions', align: "left"},
+
 ];
 
 const STATUS_OPTIONS = [
@@ -64,15 +60,23 @@ const STATUS_OPTIONS = [
   // { id: '6', value: 'Archived' },
 ];
 
+// const STATUS_OPTIONS = [
+//   { value: 'all_notes', label: 'All Note' },
+//   { value: 'deployable', label: 'All Deployable' },
+//   { value: 'pending', label: 'All Pending' },
+//   { value: 'archived', label: 'All Archived' },
+//   { value: 'undeployable', label: 'All Undeployable' }
+// ];
+
 // ----------------------------------------------------------------------
 
-export default function ToolsInstalledList() {
+export default function NoteList() {
   const {
     dense,
-    // page,
+    page,
     order,
     orderBy,
-    // rowsPerPage,
+    rowsPerPage,
     setPage,
     //
     selected,
@@ -82,8 +86,8 @@ export default function ToolsInstalledList() {
     //
     onSort,
     onChangeDense,
-    // onChangePage,
-    // onChangeRowsPerPage,
+    onChangePage,
+    onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'createdAt',
   });
@@ -104,24 +108,20 @@ export default function ToolsInstalledList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  // const { sites, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector((state) => state.site);
+  const { notes, isLoading, error, initial, responseMessage } = useSelector((state) => state.machine);
   
-  const onChangeRowsPerPage = (event) => {
-    dispatch(ChangePage(0));
-    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
-  };
+  const { machine } = useSelector((state) => state.machine);
 
-  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useLayoutEffect(() => {
-    dispatch(getSites());
-  }, [dispatch]);
+    dispatch(getMachineNotes(machine._id));
+  }, [dispatch,machine._id]);
 
   useEffect(() => {
     if (initial) {
-      setTableData(sites);
+      setTableData(notes);
     }
-  }, [sites, error, responseMessage, enqueueSnackbar, initial]);
+  }, [notes, error, responseMessage, enqueueSnackbar, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -146,25 +146,10 @@ export default function ToolsInstalledList() {
     setOpenConfirm(false);
   };
 
-  const debouncedSearch = useRef(debounce((value) => {
-    dispatch(ChangePage(0))
-    dispatch(setFilterBy(value))
-  }, 500))
-
   const handleFilterName = (event) => {
-    debouncedSearch.current(event.target.value);
-    setFilterName(event.target.value)
     setPage(0);
+    setFilterName(event.target.value);
   };
-  
-  useEffect(() => {
-      debouncedSearch.current.cancel();
-  }, [debouncedSearch]);
-  
-  useEffect(()=>{
-      setFilterName(filterBy)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -173,10 +158,10 @@ export default function ToolsInstalledList() {
 
   const handleDeleteRow = async (id) => {
     try {
-      // console.log(id);
-      await dispatch(deleteSite(id));
-      dispatch(getSites());
+      await dispatch(deleteMachineNote(id));
+      dispatch(getMachineNotes());
       setSelected([]);
+
       if (page > 0) {
         if (dataInPage.length < 2) {
           setPage(page - 1);
@@ -205,27 +190,46 @@ export default function ToolsInstalledList() {
   };
 
   const handleEditRow = (id) => {
-    // console.log(id);
-    navigate(PATH_DASHBOARD.site.edit(id));
+    navigate(PATH_DASHBOARD.note.edit(id));
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_DASHBOARD.site.view(id));
+    navigate(PATH_DASHBOARD.note.view(id));
   };
 
   const handleResetFilter = () => {
-    dispatch(setFilterBy(''))
     setFilterName('');
+    setFilterStatus([]);
   };
 
   return (
     <>
-      <Container maxWidth={false}>
-        <Grid container spacing={3}>
-          <Cover name="Setting List" icon="material-symbols:list-alt-outline" setting="enable" />
-        </Grid>
+      <Container maxWidth={themeStretch ? false : 'lg'}>
+
+        <CustomBreadcrumbs
+          // heading="Note List"
+          // links={[
+          //   { name: 'Dashboard', href: PATH_DASHBOARD.root },
+          //   {
+          //     name: 'Note',
+          //     href: PATH_DASHBOARD.note.list,
+          //   },
+          //   { name: 'List' },
+          // ]}
+          action={
+            <Button
+              component={RouterLink}
+              to={PATH_DASHBOARD.note.new}
+              variant="contained"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+            >
+              New Note
+            </Button>
+          }
+        />
+
         <Card>
-          <SiteListTableToolbar
+          <NoteListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -234,16 +238,10 @@ export default function ToolsInstalledList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
-          {!isNotFound && <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />}
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            {/* <TableSelectedAction
 
+          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+            <TableSelectedAction
+             
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -259,10 +257,10 @@ export default function ToolsInstalledList() {
                   </IconButton>
                 </Tooltip>
               }
-            /> */}
+            />
 
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 960 }}>
+              <Table size= 'small' sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -270,12 +268,12 @@ export default function ToolsInstalledList() {
                   // rowCount={tableData.length}
                   // numSelected={selected.length}
                   onSort={onSort}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row) => row._id)
-                  //   )
-                  // }
+                  onSelectAllRows={(checked) =>
+                    onSelectAllRows(
+                      checked,
+                      tableData.map((row) => row._id)
+                    )
+                  }
                 />
 
                 <TableBody>
@@ -283,7 +281,7 @@ export default function ToolsInstalledList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <SiteListTableRow
+                        <NoteListTableRow
                           key={row._id}
                           row={row}
                           selected={selected.includes(row._id)}
@@ -302,13 +300,14 @@ export default function ToolsInstalledList() {
             </Scrollbar>
           </TableContainer>
 
-          {!isNotFound && <TablePaginationCustom
+          <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          />}
+            
+          />
         </Card>
       </Container>
 
@@ -353,12 +352,12 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (site) => site.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (note) => note.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
 
   if (filterStatus.length) {
-    inputData = inputData.filter((site) => filterStatus.includes(site.status));
+    inputData = inputData.filter((note) => filterStatus.includes(note.status));
   }
 
   return inputData;

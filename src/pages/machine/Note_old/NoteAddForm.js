@@ -1,72 +1,87 @@
+import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Typography, Card, Grid, Stack } from '@mui/material';
-import UpdateFormButtons from '../../components/DocumentForms/UpdateFormButtons';
-// Slice
-import { updateNote, setNoteEditFormVisibility } from '../../../redux/slices/products/machineNote';
+// @mui
+import {
+  Card,
+  Grid,
+  Stack,
+  Typography,
+} from '@mui/material';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+// slice
+import { addNote, setNoteFormVisibility } from '../../../redux/slices/products/machineNote';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
 import FormHeading from '../../components/DocumentForms/FormHeading';
 
 // ----------------------------------------------------------------------
-export default function NoteEditForm() {
-  const { note } = useSelector((state) => state.machineNote);
-  const dispatch = useDispatch();
+
+NoteAddForm.propTypes = {
+  isEdit: PropTypes.bool,
+  readOnly: PropTypes.bool,
+  currentNote: PropTypes.object,
+};
+export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
   const { machine } = useSelector((state) => state.machine);
+  const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const EditNoteSchema = Yup.object().shape({
+  // a note can be archived.
+  const AddNoteSchema = Yup.object().shape({
     note: Yup.string().max(10000).required('Note Field is required!'),
     isActive: Yup.boolean(),
   });
   const defaultValues = useMemo(
     () => ({
-      note: note?.note || '',
-      isActive: note.isActive,
+      note: '',
+      isActive: true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [note]
+    [currentNote]
   );
+
   const methods = useForm({
-    resolver: yupResolver(EditNoteSchema),
+    resolver: yupResolver(AddNoteSchema),
     defaultValues,
   });
+
   const {
     reset,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+
   useEffect(() => {
-    if (note) {
-      reset(defaultValues);
-    }
+    reset(defaultValues);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [note]);
-  const toggleCancel = () => {
-    dispatch(setNoteEditFormVisibility(false));
-  };
+  }, []);
+
   const onSubmit = async (data) => {
     try {
-      await dispatch(updateNote(machine._id, note._id, data));
+      await dispatch(addNote(machine._id, data));
       reset();
-      enqueueSnackbar('Note Updated Successfully!');
-      dispatch(setNoteEditFormVisibility(false));
-    } catch (err) {
-      enqueueSnackbar('Saving failed!', { variant: `error` });
-      console.error(err.message);
+      enqueueSnackbar('Note Added Successfully!');
+    } catch (error) {
+      enqueueSnackbar('Note Save failed!', { variant: `error` });
+      console.error(error);
     }
+  };
+
+  const toggleCancel = () => {
+    dispatch(setNoteFormVisibility(false));
   };
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
-            <Stack spacing={3} sx={{ mb: 3 }}>
-              <FormHeading heading="Edit Note" />
+            <Stack spacing={2}>
+              <FormHeading heading="New Note" />
               <RHFTextField name="note" label="Note*" minRows={8} multiline />
               <RHFSwitch
                 name="isActive"
@@ -87,8 +102,8 @@ export default function NoteEditForm() {
                   </Typography>
                 }
               />
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Stack>
-            <UpdateFormButtons toggleCancel={toggleCancel} isSubmitting={isSubmitting} />
           </Card>
         </Grid>
       </Grid>
