@@ -44,7 +44,7 @@ export default function NoteListTableRow({
       <StyledTableRow hover selected={selected}>
         
         <LinkTableCell align="left" param={note} onClick={onViewRow} />
-        <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell>
+        <TableCell align="center" sx={{width:'100px'}}><Switch checked={isActive} disabled size="small" /></TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>
   
       </StyledTableRow>

@@ -131,9 +131,9 @@ import {
 
   // Note
   NoteList,
-  NoteAdd,
-  NoteEdit,
-  NoteView,
+  NoteAddForm,
+  NoteEditForm,
+  NoteViewForm,
 
   // Document Name
   DocumentNameAddForm  ,
@@ -314,9 +314,9 @@ export default function Router() {
           path: 'note',
           children: [
             { path: 'list', element: <NoteList /> },
-            { path: 'new', element: <NoteAdd /> },
-            { path: ':id/edit', element: <NoteEdit />},
-            { path: ':id/view', element: <NoteView />}
+            { path: 'new', element: <NoteAddForm /> },
+            { path: ':id/edit', element: <NoteEditForm />},
+            { path: ':id/view', element: <NoteViewForm />}
           ],
         },
         { path: 'permission-denied', element: <PermissionDeniedPage /> },

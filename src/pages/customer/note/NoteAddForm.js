@@ -10,20 +10,14 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // import { LoadingButton } from '@mui/lab';
 import { Box,Card, Grid, Stack, Typography, TextField, Autocomplete } from '@mui/material';
 // slice
-import { addNote, setNoteFormVisibility } from '../../../redux/slices/customer/note';
+import { addNote, setNoteFormVisibility } from '../../../redux/slices/customer/customerNote';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFSwitch, RHFTextField } from '../../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
-NoteAddForm.propTypes = {
-  isEdit: PropTypes.bool,
-  readOnly: PropTypes.bool,
-  currentNote: PropTypes.object,
-};
-
-export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
+export default function NoteAddForm() {
   // const { users } = useSelector((state) => state.user);
 
   const { activeSites } = useSelector((state) => state.site);
@@ -35,27 +29,18 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
   // const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
-  // a note can be archived. An archived
-
   const AddNoteSchema = Yup.object().shape({
     note: Yup.string().max(2000).required('Note Field is required!'),
-    // customer: Yup.string().nullable(),
-    // site: Yup.string().nullable(),
-    // user: Yup.string(),
-    // contact: Yup.string().nullable(),
     isActive: Yup.boolean(),
   });
 
   const defaultValues = useMemo(
     () => ({
       note: '',
-      // site: null,
-      // contact: null,
       isActive: true,
-      // user: '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentNote]
+    []
   );
 
   const methods = useForm({
@@ -69,15 +54,6 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
-   watch();
-
-  // useLayoutEffect(() => {
-  //   // dispatch(getUsers(customer._id));
-  //   dispatch(getSites(customer._id));
-  //   dispatch(getactiveContacts(customer._id));
-
-  // }, [dispatch,customer]);
 
   useEffect(() => {
     reset(defaultValues);
@@ -93,6 +69,7 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
     }
     try {
       await dispatch(addNote(customer._id, data));
+      enqueueSnackbar('Note Created Successfully!');
       reset();
     } catch (error) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
@@ -112,7 +89,7 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
             <Stack spacing={3}>
               <Stack spacing={1}>
                 <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                  Create a new Note
+                  Create a New Note
                 </Typography>
               </Stack>
               <Box
