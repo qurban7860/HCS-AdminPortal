@@ -11,9 +11,7 @@ import { fDate } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 
-// ----------------------------------------------------------------------
-
-NoteListTableRow.propTypes = {
+MachineListTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onViewRow: PropTypes.func,
@@ -27,23 +25,33 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export default function NoteListTableRow({
+export default function MachineListTableRow({
   row,
   selected,
   onViewRow,
 }) {
   const {
-    note,
-    createdAt,
-    isActive
+    name,
+    serialNo,
+    machineModel,
+    instalationSite
   } = row;
+
+  const address = {};
+  address.city = instalationSite?.address?.city;
+  address.region = instalationSite?.address?.region;
+  address.country = instalationSite?.address?.country;
 
   return (
       <StyledTableRow hover selected={selected}>
         
-        <LinkTableCell align="left" param={note} onClick={onViewRow} />
-        <TableCell align="center" sx={{width:'100px'}}><Switch checked={isActive} disabled size="small" /></TableCell>
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
+        <LinkTableCell align="left" param={serialNo} onClick={onViewRow} />
+        <TableCell>{name}</TableCell>
+        <TableCell>{machineModel?.name}</TableCell>
+        <TableCell>
+            {Object.values(address ?? {}).map((value) => (typeof value === 'string' ? value.trim() : ''))
+                          .filter((value) => value !== '').join(', ')}
+        </TableCell>
   
       </StyledTableRow>
 

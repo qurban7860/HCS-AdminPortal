@@ -28,10 +28,6 @@ export default function CustomerNotes() {
         dispatch(getActiveSites(customer._id));
 
     },[dispatch, customer])
-
-    // console.log("noteFormVisibility:",noteFormVisibility)
-    // console.log("noteEditFormVisibility:",noteEditFormVisibility)
-    // console.log("noteViewFormVisibility:",noteViewFormVisibility)
   return (<>
     { !noteFormVisibility && !noteEditFormVisibility && !noteViewFormVisibility && <NoteList /> }
     { noteFormVisibility && !noteEditFormVisibility && !noteViewFormVisibility && <NoteAddForm/> }

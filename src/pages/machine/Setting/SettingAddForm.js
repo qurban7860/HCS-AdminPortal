@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Autocomplete, TextField } from '@mui/material';
+import { Box, Card, Grid } from '@mui/material';
 // slice
 import { addSetting, setSettingFormVisibility } from '../../../redux/slices/products/machineSetting';
 import { getActiveTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
@@ -16,10 +16,8 @@ import {
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFAutocomplete, RHFTextField } from '../../../components/hook-form';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
-import SingleButton from '../../components/DocumentForms/SingleButton';
 // constants
 import { Snacks } from '../../../constants/machine-constants';
-import { BUTTONS } from '../../../constants/default-constants';
 // schema
 import { AddSettingSchema } from './schemas/AddSettingSchema';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
