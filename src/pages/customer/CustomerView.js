@@ -26,13 +26,11 @@ import CustomerEditForm from './CustomerEditForm';
 import CustomerSiteDynamicList from './CustomerSiteDynamicList';
 // import CustomerContactList from './CustomerContactList';
 import CustomerContactDynamicList from './CustomerContactDynamicList';
-import CustomerMachineList from './CustomerMachineList';
 import DocumentTagPage from '../document/documents/DocumentTagPage';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 import CustomerNotes from './note/CustomerNotes';
-
-// import { StyledCardContainer } from '../../theme/styles/default-styles';
+import MachineList from './machine/MachineList';
 
 CustomerView.propTypes = {
   editPage: PropTypes.bool,
@@ -121,7 +119,7 @@ export default function CustomerView({ editPage }) {
       value: 'machines',
       label: 'Machines',
       icon: <Iconify icon="mdi:greenhouse" />,
-      component: <CustomerMachineList />,
+      component: <MachineList />,
     },
   ];
 

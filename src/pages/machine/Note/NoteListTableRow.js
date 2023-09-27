@@ -10,9 +10,6 @@ import { styled } from '@mui/material/styles';
 import { fDate } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
-import { useScreenSize } from '../../../hooks/useResponsive';
-
-// ----------------------------------------------------------------------
 
 NoteListTableRow.propTypes = {
   row: PropTypes.object,
@@ -38,7 +35,6 @@ export default function NoteListTableRow({
     createdAt,
     isActive
   } = row;
-  const smScreen = useScreenSize('sm')
 
   return (
       <StyledTableRow hover selected={selected}>

@@ -16,7 +16,6 @@ import {
 } from '../../../redux/slices/customer/customerNote';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 // constants
-import { Snacks } from '../../../constants/machine-constants';
 
 export default function NoteViewForm() {
   const { note } = useSelector((state) => state.customerNote);

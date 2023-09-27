@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -50,7 +49,6 @@ export default function NoteAddForm() {
 
   const {
     reset,
-    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
