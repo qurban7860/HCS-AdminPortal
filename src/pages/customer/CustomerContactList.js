@@ -30,7 +30,7 @@ import ContactViewForm from './contact/ContactViewForm';
 
 export default function CustomerContactList() {
   const { dense, page, order, orderBy, rowsPerPage } = useTable({
-    defaultOrderBy: '-createdAt',
+    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
   });
   const [controlled, setControlled] = useState(false);
   const handleChangeControlled = (panel) => (event, isExpanded) => {

@@ -123,26 +123,25 @@ export default function ViewFormEditDeleteButtons({
     formState: { isSubmitting, isSubmitSuccessful },
   } = methods;
   return (
-    <Grid container >
+    <Grid container justifyContent="space-between">
 
-      <Grid item sm={6} sx={{display:'flex'}}>
-
+      <Grid item  sx={{display:'flex', my:-2.5}}>
       {backLink && <>
         {/* <StyledStack sx>
           <IconTooltip
             title='Back'
             onClick={() => backLink()}
             color={theme.palette.primary.main}
-            icon="ion:arrow-back-circle"
+            icon="foundation:arrow-left"
           />
         </StyledStack> */}
-        <Tooltip>
+        {/* <Tooltip> */}
           <ViewFormField backLink={backLink} />
-        </Tooltip>
+        {/* </Tooltip> */}
       </>}
       </Grid>
 
-      <Grid item sm={6} >
+      <Grid item  >
         <StyledStack>
           {handleVerification && !isVerified && (
           <IconTooltip

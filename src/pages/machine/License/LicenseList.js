@@ -42,7 +42,7 @@ export default function LicenseList() {
     setPage,
     onSort,
   } = useTable({
-    defaultOrderBy: '-createdAt',
+    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
   });
 
   const dispatch = useDispatch();

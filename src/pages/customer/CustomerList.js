@@ -64,7 +64,7 @@ export default function CustomerList() {
     onSelectAllRows,
     onSort,
   } = useTable({
-    defaultOrderBy: '-createdAt',
+    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
   });
 
   const dispatch = useDispatch();

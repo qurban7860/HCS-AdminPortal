@@ -163,6 +163,7 @@ export default function SecurityUserViewForm() {
             disablePasswordButton={!isSuperAdmin}
             disableDeleteButton={!isSuperAdmin}
             disableEditButton={disableEditButton}
+            backLink={() => navigate(PATH_SECURITY.users.list)}
           />
           <ConfirmDialog
             open={openConfirm}

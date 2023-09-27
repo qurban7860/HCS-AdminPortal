@@ -71,7 +71,7 @@ export default function SecurityUserList() {
     // onChangePage,
     // onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: '-createdAt',
+    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
   });
 
   const dispatch = useDispatch();

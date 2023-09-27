@@ -42,7 +42,7 @@ export default function SettingList() {
     setPage,
     onSort,
   } = useTable({
-    defaultOrderBy: '-createdAt',
+    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
   });
 
   const dispatch = useDispatch();
