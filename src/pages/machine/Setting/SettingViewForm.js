@@ -68,7 +68,7 @@ export default function SettingViewForm() {
     {/* <DocumentCover content={defaultValues?.displayName} backLink="true"  generalSettings /> */}
     <Grid item md={12} mt={2}>
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
+      <ViewFormEditDeleteButtons backLink={()=> dispatch(setSettingViewFormVisibility(false))} handleEdit={handleEdit} onDelete={onDelete} />
       <Grid display="inline-flex">
         <Tooltip>
           <ViewFormField isActive={defaultValues.isActive} />
