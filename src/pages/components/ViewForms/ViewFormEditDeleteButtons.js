@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
+import { Grid, Tooltip } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -14,8 +15,10 @@ import useResponsive from '../../../hooks/useResponsive';
 import { setTransferDialogBoxVisibility } from '../../../redux/slices/products/machine';
 import IconPopover from '../Icons/IconPopover';
 import IconTooltip from '../Icons/IconTooltip';
+import ViewFormField from './ViewFormField';
 
 export default function ViewFormEditDeleteButtons({
+  backLink,
   disableTransferButton = false,
   disableDeleteButton = false,
   disablePasswordButton = false,
@@ -120,9 +123,28 @@ export default function ViewFormEditDeleteButtons({
     formState: { isSubmitting, isSubmitSuccessful },
   } = methods;
   return (
-    <>
-      <StyledStack>
-        {handleVerification && !isVerified && (
+    <Grid container >
+
+      <Grid item sm={6} sx={{display:'flex'}}>
+
+      {backLink && <>
+        {/* <StyledStack sx>
+          <IconTooltip
+            title='Back'
+            onClick={() => backLink()}
+            color={theme.palette.primary.main}
+            icon="ion:arrow-back-circle"
+          />
+        </StyledStack> */}
+        <Tooltip>
+          <ViewFormField backLink={backLink} />
+        </Tooltip>
+      </>}
+      </Grid>
+
+      <Grid item sm={6} >
+        <StyledStack>
+          {handleVerification && !isVerified && (
           <IconTooltip
             title={isVerified ? 'Verified' : 'Verify'}
             // disabled={disableTransferButton}
@@ -278,11 +300,14 @@ export default function ViewFormEditDeleteButtons({
           </LoadingButton>
         }
       />
-    </>
+    </Grid>
+
+    </Grid>
   );
 }
 
 ViewFormEditDeleteButtons.propTypes = {
+  backLink: PropTypes.func,
   handleVerification: PropTypes.func,
   isVerified: PropTypes.bool,
   handleTransfer: PropTypes.func,

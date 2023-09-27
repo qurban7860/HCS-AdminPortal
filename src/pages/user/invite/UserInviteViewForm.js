@@ -1,18 +1,21 @@
 import { useMemo } from 'react';
 // @mui
 import { Card, Grid, Container } from '@mui/material';
-
+import { useNavigate } from 'react-router-dom';
 // hooks
 import { useSelector } from 'react-redux';
 import { PATH_SETTING } from '../../../routes/paths';
 import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+
 // components
 
 
 export default function UserInviteViewForm() {
   const {userInvite} = useSelector((state) => state.userInvite);
+  const navigate = useNavigate();
   const defaultValues = useMemo(
     () => ({
       username:userInvite?.receiverInvitationUser?.name|| '', 
@@ -36,6 +39,7 @@ export default function UserInviteViewForm() {
       </Card>
       <Grid item md={12} mt={2}>
         <Card sx={{ p: 2 }}>
+        <ViewFormEditDeleteButtons backLink={() => navigate(PATH_SETTING.invite.list)} />
           <Grid container>
             <ViewFormField sm={6} heading="Inveted User" param={defaultValues.username} />
             <ViewFormField sm={6} heading="Inveted User Email" param={defaultValues.useremail} />

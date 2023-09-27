@@ -72,6 +72,7 @@ export default function RoleViewForm() {
           disableDeleteButton={defaultValues.disableDelete}
           handleEdit={handleEdit}
           onDelete={onDelete}
+          backLink={() => navigate(PATH_SETTING.role.list)}
         />
         <Grid display="inline-flex">
           <Tooltip>

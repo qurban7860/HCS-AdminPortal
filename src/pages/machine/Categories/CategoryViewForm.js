@@ -86,7 +86,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
   };
   return (
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} />
+      <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.categories.list)} />
       <Grid container>
         <ViewFormField sm={12} isActive={defaultValues.isActive} />
         <ViewFormField sm={12} heading="Category Name" param={defaultValues?.name} />

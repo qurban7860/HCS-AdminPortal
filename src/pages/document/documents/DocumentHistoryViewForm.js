@@ -15,6 +15,8 @@ import { PATH_DOCUMENT } from '../../../routes/paths';
 // import { useSnackbar } from '../../../components/snackbar';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+
 // import { getDocumentDownload } from '../../../redux/slices/document/documentFile';
 import {
   getDocumentHistory,
@@ -33,6 +35,7 @@ import FormLabel from '../../components/DocumentForms/FormLabel';
 // import DialogLink from '../../components/Dialog/DialogLink';
 // import DialogLabel from '../../components/Dialog/DialogLabel';
 // import { document as documentType, Snacks } from '../../../constants/document-constants';
+import { setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
 import DocumentCover from '../../components/DocumentForms/DocumentCover';
 import CustomerDialog from '../../components/Dialog/CustomerDialog';
 import MachineDialog from '../../components/Dialog/MachineDialog';
@@ -255,6 +258,10 @@ const handleNewFile = async () => {
       }
         <Grid item md={12} mt={2}>
           <Card sx={{ p: 3 }}>
+          <ViewFormEditDeleteButtons 
+      backLink={(customerPage || machinePage || drawingPage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDrawingViewFormVisibility(false));} 
+      : () => navigate(PATH_DOCUMENT.document.list)}
+      />
             <Grid display="inline-flex">
               <Tooltip>
                 <ViewFormField isActive={defaultValues.isActive} />
