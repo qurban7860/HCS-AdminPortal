@@ -120,6 +120,7 @@ export default function CustomerViewForm() {
               handleVerification={handleVerification}
               handleEdit={handleEdit}
               onDelete={onDelete}
+              backLink={() => navigate(PATH_CUSTOMER.list)}
             />
             <Grid display="inline-flex" mx={0}>
               <ViewFormField sm={12} isActive={defaultValues.isActive} />

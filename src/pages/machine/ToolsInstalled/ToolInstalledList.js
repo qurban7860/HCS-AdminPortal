@@ -54,9 +54,9 @@ export default function ToolInstalledList() {
 
   const { toolsInstalled, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.toolInstalled );
   const TABLE_HEAD = [
-    { id: 'Tool', label: 'Tool', align: 'left' },
-    { id: 'ToolType', visibility: 'xs1', label: 'Tool Type', align: 'left' },
-    { id: 'Active', label: 'Active', align: 'center' },
+    { id: 'tool.name', label: 'Tool', align: 'left' },
+    { id: 'toolType', visibility: 'xs1', label: 'Tool Type', align: 'left' },
+    { id: 'isActive', label: 'Active', align: 'center' },
     { id: 'createdAt', label: 'Created At', align: 'right' },
   ];
 

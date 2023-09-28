@@ -54,10 +54,10 @@ export default function MachineList() {
   const { customerMachines, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.machine);
   
   const TABLE_HEAD = [
-    { id: 'SerialNo', label: 'SerialNo'},
+    { id: 'serialNo', label: 'SerialNo'},
     { id: 'name', visibility: 'xs1', label: 'name'},
-    { id: 'model', label: 'Model'},
-    { id: 'Address', label: 'Address'},
+    { id: 'machineModel.name', label: 'Model'},
+    { id: 'instalationSite.address.country', label: 'Address'},
   ];
 
   const onChangeRowsPerPage = (event) => {
