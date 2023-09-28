@@ -72,13 +72,8 @@ export default function ProfileViewForm() {
   return (
     <Grid item md={12} mt={2}>
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} backLink={() => dispatch(setProfileViewFormVisibility(false))} />
-      <Grid display="inline-flex">
-        <Tooltip>
-          <ViewFormField isActive={defaultValues.isActive} />
-        </Tooltip>
-      </Grid>
-      <Grid container>
+      <ViewFormEditDeleteButtons isActive={defaultValues.isActive}  handleEdit={handleEdit} onDelete={onDelete} backLink={() => dispatch(setProfileViewFormVisibility(false))} />
+      <Grid container sx={{mt:2}}>
         <ViewFormField heading="Default Name" param={defaultValues.defaultName} />
         <ViewFormField heading="Other Names" chips={defaultValues.names} />
         <ViewFormField sm={6} heading="Type" param={defaultValues?.type} />

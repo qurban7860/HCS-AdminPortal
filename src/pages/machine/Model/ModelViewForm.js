@@ -83,9 +83,8 @@ useEffect(()=>{
   };
   return (
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.model.list)}/>
-      <Grid container>
-        <ViewFormField sm={12} isActive={defaultValues.isActive} />
+      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.model.list)}/>
+      <Grid container sx={{mt:2}}>
         <ViewFormField sm={12} heading="Model Name" param={defaultValues?.name} />
         <ViewFormField sm={12} heading="Category Name" param={defaultValues?.category?.name} />
         <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />

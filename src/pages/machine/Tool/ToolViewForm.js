@@ -93,9 +93,8 @@ export default function ToolViewForm({ currentTool = null }) {
 
   return (
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.tool.list)}/>
-      <Grid container>
-        <ViewFormField isActive={defaultValues.isActive} />
+      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} handleEdit={handleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.tool.list)}/>
+      <Grid container sx={{mt:2}}>
         <ViewFormField sm={12} heading="Name" param={defaultValues?.name} />
         <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
         <ViewFormAudit defaultValues={defaultValues} />

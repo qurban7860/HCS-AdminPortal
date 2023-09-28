@@ -77,9 +77,8 @@ export default function ServiceCategoryViewForm({ currentCategory = null }) {
   };
   return (
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.serviceCategories.list)}/>
-      <Grid container>
-        <ViewFormField sm={12} isActive={defaultValues.isActive} />
+      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.serviceCategories.list)}/>
+      <Grid container sx={{mt:2}}>
         <ViewFormField sm={12} heading="Category Name" param={defaultValues?.name} />
         <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
         <ViewFormAudit defaultValues={defaultValues} />

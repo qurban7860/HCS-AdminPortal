@@ -209,10 +209,6 @@ export default function MachineViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [machine]
   );
-
- 
-  
-
   return (
     <>
       {/* <Grid container direction="row" justifyContent="space-between" alignItems="center">
@@ -229,39 +225,24 @@ export default function MachineViewForm() {
         {!isMobile && <AddButtonAboveAccordion isCustomer />}
       </Grid> */}
       <Grid container direction="row" mt={isMobile && 2}>
-        <Card sx={{ p: 3 }}>
-          <ViewFormEditDeleteButtons
+
+      <Card sx={{ width: '100%', p: '1rem', mb:3 }}>
+      <ViewFormEditDeleteButtons
             sx={{ pt: 5 }}
-            verificationCount={machine?.verifications?.length}
-            isVerified={machine?.verifications?.some((verified) => verified.verifiedBy?._id === userId)}
+            isVerified={machine?.verifications}
+            isActive={defaultValues?.isActive}
             handleVerification={handleVerification}
             disableTransferButton={disableTransferButton}
             disableEditButton={disableEditButton}
-            disableDeleteButton={disableDeleteButton }
+            disableDeleteButton={disableDeleteButton}
             handleEdit={handleEdit}
             onDelete={onDelete}
             handleTransfer={handleTransfer}
             backLink={() => navigate(PATH_MACHINE.machines.list)}
           />
 
-          <Grid display="inline-flex">
-            <Tooltip title="Active">
-              <ViewFormField sm={12} isActive={defaultValues.isActive} />
-            </Tooltip>
-            <Tooltip title="Verified By">
-              <ViewFormField
-                sm={12}
-                machineVerificationCount={machine?.verifications?.length}
-                verified
-                machineVerifiedBy={machine?.verifications}
-              />
-            </Tooltip>
-          </Grid>
+          <FormLabel content={FORMLABELS.KEYDETAILS} />
 
-          <Grid container>
-            <FormLabel content={FORMLABELS.KEYDETAILS} />
-            <Grid container>
-              <Card sx={{ width: '100%', p: '1rem' }}>
                 {/* <CardHeader title={FORMLABELS.KEYDETAILS} sx={{p:'5px 15px', m:0, color:'white', backgroundImage: (theme) =>
             `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`}} /> */}
                 <Grid container>
@@ -286,7 +267,53 @@ export default function MachineViewForm() {
                   } />
                 </Grid>
               </Card>
-            </Grid>
+              
+        <Card sx={{ p: 3 }}>
+          
+
+          {/* <Grid display="inline-flex">
+            <Tooltip title="Active">
+              <ViewFormField sm={12} isActive={defaultValues.isActive} />
+            </Tooltip>
+            <Tooltip title="Verified By">
+              <ViewFormField
+                sm={12}
+                machineVerificationCount={machine?.verifications?.length}
+                verified
+                machineVerifiedBy={machine?.verifications}
+              />
+            </Tooltip>
+          </Grid> */}
+
+          <Grid container>
+            {/* <FormLabel content={FORMLABELS.KEYDETAILS} />
+            <Grid container>
+              <Card sx={{ width: '100%', p: '1rem' }}>
+                <CardHeader title={FORMLABELS.KEYDETAILS} sx={{p:'5px 15px', m:0, color:'white', backgroundImage: (theme) =>
+            `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`}} />
+                <Grid container>
+                  <ViewFormField sm={2} heading="Serial No" param={defaultValues?.serialNo} />
+                  <ViewFormField
+                    sm={3}
+                    heading="Machine Model"
+                    param={defaultValues?.machineModel}
+                  />
+                  <ViewFormField
+                    sm={3}
+                    heading="Customer"
+                    node={
+                      defaultValues.customer && (
+                        <Link onClick={handleCustomerDialog} href="#" underline="none">
+                          {defaultValues.customer?.name}
+                        </Link>
+                      )
+                    }
+                  />
+                  <ViewFormField sm={3} heading="Profile" param={`${defaultValues?.machineProfile} ${(defaultValues?.machineweb && defaultValues?.machineflange)? `(${defaultValues?.machineweb} X ${defaultValues?.machineflange})` :""}`
+                  } />
+                </Grid>
+              </Card>
+            </Grid> */}
 
             <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
             { defaultValues?.parentSerialNo ? <ViewFormField sm={6} heading="Previous Machine" param={defaultValues?.parentSerialNo} /> : ''}

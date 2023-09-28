@@ -7,28 +7,12 @@ import { getServiceRecordConfig } from '../../../redux/slices/products/serviceRe
 import CategoryEditForm from './ServiceRecordConfigEditForm';
 // redux
 
-// routes
-// import { PATH_MACHINE } from '../../../routes/paths';
-// // components
-// import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
-// import { useSettingsContext } from '../../../components/settings';
-// sections
-
-
-
 // ----------------------------------------------------------------------
 
 export default function CategoryEdit() {
-  // const { themeStretch } = useSettingsContext();
-
   const dispatch = useDispatch();
-
   const { id } = useParams(); 
-  // console.log(id);
-
   
-  // const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
-
   useLayoutEffect(() => {
     dispatch(getServiceRecordConfig(id));
   }, [dispatch, id]);
