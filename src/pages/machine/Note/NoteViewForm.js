@@ -61,12 +61,12 @@ export default function NoteViewForm() {
     {/* <DocumentCover content={defaultValues?.displayName} backLink="true"  generalSettings /> */}
     <Grid item md={12} mt={2}>
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons backLink={()=> dispatch(setNoteViewFormVisibility(false))} handleEdit={handleEdit} onDelete={onDelete} />
-      <Grid display="inline-flex">
+      <ViewFormEditDeleteButtons isActive={defaultValues.isActive}  backLink={()=> dispatch(setNoteViewFormVisibility(false))} handleEdit={handleEdit} onDelete={onDelete} />
+      {/* <Grid display="inline-flex">
         <Tooltip>
           <ViewFormField isActive={defaultValues.isActive} />
         </Tooltip>
-      </Grid>
+      </Grid> */}
       <Grid container>
         <ViewFormField sm={12} heading="Note" param={defaultValues.note} />
         <ViewFormAudit defaultValues={defaultValues} /> 

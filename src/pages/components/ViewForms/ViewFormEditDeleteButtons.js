@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
-import { Grid, Tooltip } from '@mui/material';
+import { Badge, Divider, Grid, Tooltip } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -16,6 +16,8 @@ import { setTransferDialogBoxVisibility } from '../../../redux/slices/products/m
 import IconPopover from '../Icons/IconPopover';
 import IconTooltip from '../Icons/IconTooltip';
 import ViewFormField from './ViewFormField';
+import ViewFormMenuPopover from './ViewFormMenuPopover';
+import { ICONS } from '../../../constants/icons/default-icons';
 
 export default function ViewFormEditDeleteButtons({
   backLink,
@@ -23,7 +25,10 @@ export default function ViewFormEditDeleteButtons({
   disableDeleteButton = false,
   disablePasswordButton = false,
   disableEditButton = false,
+  isActive,
   isVerified,
+  customerAccess,
+  isRequired,
   handleVerification,
   onDelete,
   handleEdit,
@@ -65,16 +70,18 @@ export default function ViewFormEditDeleteButtons({
   }
 
   const handleOpenConfirm = (dialogType) => {
-    if (dialogType === 'UserInvite' && !isVerified) {
+    if (dialogType === 'UserInvite') {
       setOpenUserInviteConfirm(true);
     }
 
-    if (dialogType === 'Verification' && !isVerified) {
+    if (dialogType === 'Verification') {
       setOpenVerificationConfirm(true);
     }
+
     if (dialogType === 'delete' && !disableDeleteButton) {
       setOpenConfirm(true);
     }
+
     if (dialogType === 'transfer') {
       dispatch(setTransferDialogBoxVisibility(true));
     }
@@ -111,6 +118,17 @@ export default function ViewFormEditDeleteButtons({
   //   setAnchorEl(null);
   //   setIsPopoverOpen(false);
   // };
+  const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
+  const [verifiedBy, setVerifiedBy] = useState([]);
+  const handleVerifiedPopoverOpen = (event) => {
+    setVerifiedAnchorEl(event.currentTarget);
+    setVerifiedBy(isVerified)
+  };
+
+  const handleVerifiedPopoverClose = () => {
+    setVerifiedAnchorEl(null);
+    setVerifiedBy([])
+  };
 
   // const [anchorEl, setAnchorEl] = useState(null);
   const { isMobile } = useResponsive('down', 'sm');
@@ -122,34 +140,73 @@ export default function ViewFormEditDeleteButtons({
     handleSubmit,
     formState: { isSubmitting, isSubmitSuccessful },
   } = methods;
+
   return (
     <Grid container justifyContent="space-between">
+      <Grid item sx={{display:'flex'}}>
+        <StyledStack sx={{ml:2}}>
+          {backLink && 
+            <>
+              <IconTooltip
+                title='Back'
+                onClick={() => backLink()}
+                color={theme.palette.primary.main}
+                icon="mdi:arrow-left"
+              />
+              {/* <Divider */}
+              <Divider orientation="vertical" flexItem />
+            </>
+          }
 
-      <Grid item  sx={{display:'flex'}}>
-      {backLink && <>
-        <StyledStack sx>
-          <IconTooltip
-            title='Back'
-            onClick={() => backLink()}
-            color={theme.palette.primary.main}
-            icon="vaadin:arrow-backward"
-          />
+          {isActive!==undefined && 
+            <IconTooltip
+              title={isActive?ICONS.ACTIVE.heading:ICONS.INACTIVE.heading}
+              color={isActive?ICONS.ACTIVE.color:ICONS.INACTIVE.color}
+              icon={isActive?ICONS.ACTIVE.icon:ICONS.INACTIVE.icon}
+              sx={{cursor:'pencil'}}
+              
+            />
+          }
+          
+          {isVerified?.length>0 &&
+          <Badge badgeContent={isVerified.length} color="info">
+            <IconTooltip
+              title='Verified'
+              color={ICONS.ALLOWED.color}
+              icon="ic:round-verified-user"
+              onClick={handleVerifiedPopoverOpen}
+              />
+          </Badge>
+          }
+
+          {customerAccess !== undefined && 
+            <IconTooltip
+              title={customerAccess ? ICONS.ALLOWED.heading : ICONS.DISALLOWED.heading}
+              color={customerAccess ? ICONS.ALLOWED.color : ICONS.DISALLOWED.color}
+              icon={customerAccess ? ICONS.ALLOWED.icon : ICONS.DISALLOWED.icon}
+              sx={{cursor:'pencil'}}
+              
+            />
+          }
+
+          {isRequired !== undefined && 
+            <IconTooltip
+              title={isRequired ? ICONS.REQUIRED.heading : ICONS.NOTREQUIRED.heading}
+              color={isRequired ? ICONS.REQUIRED.color : ICONS.NOTREQUIRED.color}
+              icon={isRequired ? ICONS.REQUIRED.icon : ICONS.NOTREQUIRED.icon}
+              sx={{cursor:'pencil'}}
+              
+            />
+          }
         </StyledStack>
-        {/* <Tooltip> */}
-          {/* <ViewFormField backLink={backLink} /> */}
-        {/* </Tooltip> */}
-      </>}
       </Grid>
 
       <Grid item  >
         <StyledStack>
-          {handleVerification && !isVerified && (
+          {handleVerification && !isVerified?.length && (
           <IconTooltip
-            title={isVerified ? 'Verified' : 'Verify'}
-            // disabled={disableTransferButton}
-            onClick={() => {
-              handleOpenConfirm('Verification');
-            }}
+            title='Verify'
+            onClick={() => { handleOpenConfirm('Verification');}}
             color={theme.palette.primary.main}
             icon="ic:round-verified-user"
           />
@@ -299,6 +356,13 @@ export default function ViewFormEditDeleteButtons({
           </LoadingButton>
         }
       />
+
+      <ViewFormMenuPopover
+        open={verifiedAnchorEl}
+        onClose={handleVerifiedPopoverClose}
+        ListArr={verifiedBy}
+        ListTitle="Verified By"
+      />
     </Grid>
 
     </Grid>
@@ -308,7 +372,10 @@ export default function ViewFormEditDeleteButtons({
 ViewFormEditDeleteButtons.propTypes = {
   backLink: PropTypes.func,
   handleVerification: PropTypes.func,
-  isVerified: PropTypes.bool,
+  isVerified: PropTypes.array,
+  isActive:PropTypes.bool,
+  customerAccess:PropTypes.bool,
+  isRequired:PropTypes.bool,
   handleTransfer: PropTypes.func,
   handleUpdatePassword: PropTypes.func,
   handleUserInvite: PropTypes.func,

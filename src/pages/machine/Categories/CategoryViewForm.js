@@ -73,22 +73,14 @@ export default function CategoryViewForm({ currentCategory = null }) {
       enqueueSnackbar('Category Deleted Successfullty!');
       navigate(PATH_MACHINE.machines.settings.categories.list);
     } catch (err) {
-      // if(err.Message){
-      //   enqueueSnackbar(err.Message,{ variant: `error` })
-      // }else if(err.message){
-      //   enqueueSnackbar(err.message,{ variant: `error` })
-      // }else{
-      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
-      // }
       enqueueSnackbar('Category delete failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };
   return (
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.categories.list)} />
-      <Grid container>
-        <ViewFormField sm={12} isActive={defaultValues.isActive} />
+      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.categories.list)} />
+      <Grid container sx={{mt:2}}>
         <ViewFormField sm={12} heading="Category Name" param={defaultValues?.name} />
         <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
         <ViewFormSwitch sm={12} isActiveHeading='Connect as a child' isActive={defaultValues.connection} />

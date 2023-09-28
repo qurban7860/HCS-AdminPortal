@@ -2,8 +2,6 @@ import PropTypes from 'prop-types';
 import { forwardRef } from 'react';
 // mui icons
 import { Icon } from '@iconify/react';
-// icons to match howick hlc
-// import Icon from '@mdi/react';
 
 // @mui
 import { Box } from '@mui/material';

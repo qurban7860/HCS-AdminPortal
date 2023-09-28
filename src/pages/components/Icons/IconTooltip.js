@@ -20,6 +20,7 @@ export default function IconTooltip({
       disabled={disabled}
       variant="outlined"
       sx={{
+        cursor:onClick?"pointer":"default",
         color,
         borderColor: color,
         ':hover': {

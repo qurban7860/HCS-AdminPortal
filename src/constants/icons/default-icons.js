@@ -12,23 +12,23 @@ export const ICONS = {
   // isActive
   ACTIVE: {
     icon: 'mdi:check-circle',
-    color: 'green',
+    color: '#008000',
     heading: 'Active',
   },
   INACTIVE: {
     icon: 'mdi:power-off',
-    color: 'red',
+    color: '#FF0000',
     heading: 'Inactive',
   },
 
   REQUIRED: {
     icon: 'mdi:required-circle',
-    color: 'green',
+    color: '#008000',
     heading: 'Required',
   },
   NOTREQUIRED: {
     icon: 'mdi:required-circle',
-    color: 'red',
+    color: '#FF0000',
     heading: 'Not Required',
   },
 
@@ -98,12 +98,12 @@ export const ICONS = {
   // customerAccess
   ALLOWED: {
     icon: 'mdi:book-check',
-    color: 'green',
+    color:'#008000',
     heading: 'Allowed',
   },
   DISALLOWED: {
     icon: 'mdi:book-cancel-outline',
-    color: 'red',
+    color:'#FF0000',
     heading: 'Disallowed',
   },
   // ----------------------------------------------------------------

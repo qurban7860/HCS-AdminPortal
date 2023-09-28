@@ -116,24 +116,14 @@ export default function CustomerViewForm() {
         <Grid item md={12}>
           <Card sx={{ p: 2 }}>
             <ViewFormEditDeleteButtons
-              isVerified={customer?.verifications?.some((verified) => verified?.verifiedBy?._id === userId)}
+              isActive={defaultValues.isActive}
+              isVerified={customer?.verifications}
               handleVerification={handleVerification}
               handleEdit={handleEdit}
               onDelete={onDelete}
               backLink={() => navigate(PATH_CUSTOMER.list)}
             />
-            <Grid display="inline-flex" mx={0}>
-              <ViewFormField sm={12} isActive={defaultValues.isActive} />
-              <Tooltip title="Verified By">
-                <ViewFormField
-                  sm={12}
-                  customerVerificationCount={customer?.verifications?.length}
-                  verified
-                  customerVerifiedBy={customer?.verifications}
-                />
-              </Tooltip>
-            </Grid>
-            <Grid container>
+            <Grid container sx={{mt:2}}>
               <ViewFormField
                 sm={12}
                 heading={formLABELS.CUSTOMER.NAME.label}

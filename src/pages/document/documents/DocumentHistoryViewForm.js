@@ -246,10 +246,6 @@ const handleNewFile = async () => {
 }
   const handleCustomerDialog = () =>{dispatch(setCustomerDialog(true))}
   const handleMachineDialog = () =>{dispatch(setMachineDialog(true))}
-  // preview portal control
-  // const handleOpenPreview = () => { setOnPreview(true)};
-  // const handleClosePreview = () => { setOnPreview(false)};
-
 
   return (
     <>
@@ -259,18 +255,12 @@ const handleNewFile = async () => {
         <Grid item md={12} mt={2}>
           <Card sx={{ p: 3 }}>
           <ViewFormEditDeleteButtons 
-      backLink={(customerPage || machinePage || drawingPage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDrawingViewFormVisibility(false));} 
-      : () => navigate(PATH_DOCUMENT.document.list)}
+          customerAccess={defaultValues?.customerAccess}
+          isActive={defaultValues.isActive}
+          backLink={(customerPage || machinePage || drawingPage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDrawingViewFormVisibility(false));} 
+          : () => navigate(PATH_DOCUMENT.document.list)}
       />
-            <Grid display="inline-flex">
-              <Tooltip>
-                <ViewFormField isActive={defaultValues.isActive} />
-              </Tooltip>
-              <Tooltip>
-                <ViewFormField customerAccess={defaultValues?.customerAccess} />
-              </Tooltip>
-            </Grid>
-            <Grid container>
+            <Grid container sx={{mt:2}}>
               <ViewFormField sm={12} heading="Name" param={defaultValues?.displayName} />
               <ViewFormField
                 sm={6}

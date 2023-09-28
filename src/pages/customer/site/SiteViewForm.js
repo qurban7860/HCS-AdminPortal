@@ -102,8 +102,9 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
 
   return (
     <Grid>
-      <Grid container justifyContent="flex-end" >
+      <Grid container justifyContent="flex-end" sx={{mt:5}}>
         <ViewFormEditDeleteButtons
+          isActive={defaultValues?.isActive}
           handleEdit={handleEdit}
           onDelete={onDelete}
           sites
@@ -120,7 +121,7 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
         </Button>
       </Stack> */}
       <Grid container>
-        <ViewFormField sm={12} isActive={defaultValues.isActive} />
+        {/* <ViewFormField sm={12} isActive={defaultValues.isActive} /> */}
         <ViewFormField sm={12} heading="Name" param={defaultValues?.name} />
         <ViewFormField sm={6} heading="Phone" param={defaultValues?.phone} />
         <ViewFormField sm={6} heading="Fax" param={defaultValues?.fax} />
