@@ -32,11 +32,9 @@ function MachineServiceRecordAddForm() {
   const { machine } = useSelector((state) => state.machine)
   const { activeSecurityUsers, securityUser } = useSelector((state) => state.user);
   const { activeContacts } = useSelector((state) => state.contact);
-  const { activeServiceRecordConfigsForRecords } = useSelector((state) => state.serviceRecordConfig);
-  const { recordTypes } = useSelector((state) => state.serviceRecordConfig);
+  const { activeServiceRecordConfigsForRecords, recordTypes } = useSelector((state) => state.serviceRecordConfig);
   const [checkParamList, setCheckParamList] = useState([]);
   const [docType, setDocType] = useState(null);
-  // console.log("activeSecurityUsers : ", securityUser, activeSecurityUsers)
   const user = { _id: localStorage.getItem('userId'), name: localStorage.getItem('name') };
 
   useEffect( ()=>{
