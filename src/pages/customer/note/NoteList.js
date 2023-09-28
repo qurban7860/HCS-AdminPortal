@@ -55,7 +55,7 @@ export default function NoteList() {
   const { notes, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.customerNote );
   const TABLE_HEAD = [
     { id: 'note', label: 'Note', align: 'left' },
-    { id: 'active', visibility: 'xs1', label: 'Active', align: 'left' },
+    { id: 'isActive', visibility: 'xs1', label: 'Active', align: 'left' },
     { id: 'createdAt', label: 'Created At', align: 'right' },
   ];
 

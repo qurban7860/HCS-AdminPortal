@@ -31,16 +31,16 @@ export default function MachineListTableRow({
   onViewRow,
 }) {
   const {
-    name,
     serialNo,
+    name,
     machineModel,
     instalationSite
   } = row;
 
   const address = {};
-  address.city = instalationSite?.address?.city;
-  address.region = instalationSite?.address?.region;
   address.country = instalationSite?.address?.country;
+  address.region = instalationSite?.address?.region;
+  address.city = instalationSite?.address?.city;
 
   return (
       <StyledTableRow hover selected={selected}>

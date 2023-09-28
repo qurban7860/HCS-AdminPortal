@@ -241,6 +241,7 @@ export default function MachineViewForm() {
             handleEdit={handleEdit}
             onDelete={onDelete}
             handleTransfer={handleTransfer}
+            backLink={() => navigate(PATH_MACHINE.machines.list)}
           />
 
           <Grid display="inline-flex">

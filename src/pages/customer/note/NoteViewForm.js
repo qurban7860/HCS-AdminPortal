@@ -58,7 +58,7 @@ export default function NoteViewForm() {
   );
   
   return (
-    <Grid item md={12} mt={2}>
+    <Grid item md={12} >
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons backLink={()=> dispatch(setNoteViewFormVisibility(false))} handleEdit={handleEdit} onDelete={onDelete} />
       <Grid display="inline-flex">
