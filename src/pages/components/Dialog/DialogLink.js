@@ -1,35 +1,37 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Typography, Link } from '@mui/material';
+import { Grid, Typography, Link, Button } from '@mui/material';
 import Iconify from '../../../components/iconify';
 
-function DialogLink({ onClick, content }) {
+function DialogLink({ onClose, onClick, content }) {
   return (
-    <Grid item sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} sm={12}>
-      <Link
-        onClick={onClick}
-        href="#"
-        underline="none"
-        sx={{
-          ml: 'auto',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          px: 3,
-          pb: 3,
-        }}
-      >
-        <Typography variant="body" sx={{ px: 2 }}>
-          {content}
-        </Typography>
-        <Iconify icon="mdi:share" />
-      </Link>
+    <Grid item sx={{ textAlign: 'right', p:2}} sm={12}>
+      {onClose && 
+        <Button
+              variant="outlined"
+              sx={{ flexShrink: 0, ml: 1 }}
+              onClick={onClose}
+              endIcon={<Iconify icon="mdi:close-circle-outline" />}
+            >
+              Close
+        </Button>
+      }
+
+      <Button
+            variant="outlined"
+            sx={{ flexShrink: 0, ml: 1 }}
+            onClick={onClick}
+            endIcon={<Iconify icon="mdi:share" />}
+          >
+            {content}
+      </Button>
     </Grid>
   );
 }
 
 DialogLink.propTypes = {
   onClick: PropTypes.func,
+  onClose: PropTypes.func,
   content: PropTypes.string,
 };
 
