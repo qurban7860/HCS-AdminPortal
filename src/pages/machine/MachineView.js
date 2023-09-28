@@ -73,7 +73,17 @@ export default function MachineView({ editPage }) {
   return (
     <Container maxWidth={false} sx={{mb:3}}>
       <StyledCardContainer>
-        <Cover name={machine?.name} serialNo={machine?.serialNo ? machine?.serialNo : 'Serial Number'} icon="et:gears" setting />
+        <Cover
+          name={machine?.name}
+          // handleBackLinks={() => {
+          //   dispatch(setDocumentViewFormVisibility(false));
+          //   dispatch(setDocumentHistoryViewFormVisibility(false));
+          //   dispatch(setAllFlagsFalse(false));
+          // }}
+          serialNo={`${machine?.serialNo ? machine?.serialNo : 'Serial Number'} ${machine?.machineModel?.name ? machine?.machineModel?.name : '' }`}
+          icon="et:gears"
+          setting
+        />
         <TabContainer
           tabsClasses={tabsClasses.scrollButtons}
           currentTab={currentTab}

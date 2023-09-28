@@ -10,6 +10,7 @@ AddFormButtons.propTypes = {
   cancelButtonName: PropTypes.string,
   toggleCancel: PropTypes.func,
   isSubmitting: PropTypes.bool,
+  isDisabled: PropTypes.bool,
 };
 
 export default function AddFormButtons({
@@ -17,6 +18,7 @@ export default function AddFormButtons({
   toggleCancel,
   isSubmitting,
   cancelButtonName,
+  isDisabled,
 }) {
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -43,6 +45,7 @@ export default function AddFormButtons({
                 variant="contained"
                 size="large"
                 fullWidth
+                disabled={isDisabled}
                 loading={isSubmitting}
               >
                 {saveButtonName || BUTTONS.SAVE}

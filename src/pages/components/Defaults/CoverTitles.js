@@ -11,7 +11,7 @@ function CoverTitles({ name, nameTitle, serialNo, photoURL, isMobile, children, 
           sx={{
             px: 3,
             color: 'common.white',
-            mt: { xs: nameTitle.length > 15 ? 5 : 8, md: 6 },
+            mt: { xs: nameTitle.length > 15 ? 5 : 8, md: 6, sm:6 },
             mb: 0,
             display: { xs: 'flex', md: 'block' },
           }}
