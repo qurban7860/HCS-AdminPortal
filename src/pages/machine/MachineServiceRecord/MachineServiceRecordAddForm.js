@@ -313,7 +313,7 @@ function MachineServiceRecordAddForm() {
                               <TextField 
                                 fullWidth
                                 id="outlined-number"
-                                label={`Measurement ${childRow?.unitType?`(${childRow?.unitType})`:''}`}
+                                label={`${childRow?.unitType ? childRow?.unitType :'Enter Value'}`}
                                 name={childRow?.name} 
                                 type="number"
                                 value={checkParamList[index]?.paramList[childIndex]?.value}

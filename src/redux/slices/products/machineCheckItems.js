@@ -28,6 +28,8 @@ const initialState = {
     { _id:2 , name: 'Meter'},
     { _id:3 , name: 'Inches'},
     { _id:4 , name: 'Feet'},
+    { _id:4 , name: 'Unit'},
+    { _id:4 , name: 'Cycle'},
   ],
 };
 
