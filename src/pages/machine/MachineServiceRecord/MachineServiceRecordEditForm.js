@@ -37,7 +37,7 @@ function MachineServiceRecordEditForm() {
 
   const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
   const { activeContacts } = useSelector((state) => state.contact);
-  const { activeServiceRecordConfigs } = useSelector((state) => state.serviceRecordConfig);
+  const { activeServiceRecordConfigs, recordTypes } = useSelector((state) => state.serviceRecordConfig);
   const { machine } = useSelector((state) => state.machine);
   const [checkParam, setCheckParam] = useState([]);
   const [serviceDateError, setServiceDateError] = useState('');
@@ -45,7 +45,6 @@ function MachineServiceRecordEditForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { activeSecurityUsers } = useSelector((state) => state.user);
-  const { recordTypes } = useSelector((state) => state.serviceRecordConfig);
 
   useEffect( ()=>{
     dispatch(getActiveServiceRecordConfigsForRecords(machine?._id))

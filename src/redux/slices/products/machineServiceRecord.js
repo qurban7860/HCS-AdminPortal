@@ -20,12 +20,6 @@ const initialState = {
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
-  recordTypes: [
-    { _id:1 , name: 'Service'},
-    { _id:2 , name: 'Repair'},
-    { _id:3 , name: 'Training'},
-    { _id:4 , name: 'Install'},
-  ],
 };
 
 const slice = createSlice({
