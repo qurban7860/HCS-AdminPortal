@@ -80,7 +80,7 @@ export default function MachineView({ editPage }) {
           //   dispatch(setDocumentHistoryViewFormVisibility(false));
           //   dispatch(setAllFlagsFalse(false));
           // }}
-          serialNo={machine?.serialNo ? machine?.serialNo : 'Serial Number'}
+          serialNo={`${machine?.serialNo ? machine?.serialNo : 'Serial Number'} ${machine?.machineModel?.name ? machine?.machineModel?.name : '' }`}
           icon="et:gears"
           setting
         />

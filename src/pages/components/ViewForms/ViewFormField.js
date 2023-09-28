@@ -122,7 +122,7 @@ function ViewFormField({
       </Typography>
 
       {arrayParam && typeof arrayParam === 'object' && arrayParam?.length > 0 && (
-            <Grid container sx={{my:-2,
+            <Grid container sx={{mt:-2,mb:2,
               display: 'flex',
               alignItems: 'center',
               whiteSpace: 'pre-line',

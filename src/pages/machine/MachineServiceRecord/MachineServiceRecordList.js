@@ -62,9 +62,7 @@ export default function MachineServiceRecordList() {
     onSelectAllRows,
     //
     onSort,
-  } = useTable({
-    defaultOrderBy: 'name',
-  });
+  } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));

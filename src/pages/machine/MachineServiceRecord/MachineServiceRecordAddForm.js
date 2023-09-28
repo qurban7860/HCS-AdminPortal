@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Card, Grid, Stack, Typography, TextField,  Autocomplete, Checkbox, InputAdornment } from '@mui/material';
 
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
 import FormHeading from '../../components/DocumentForms/FormHeading';
 import { FORMLABELS } from '../../../constants/default-constants';
 // slice
@@ -53,6 +54,7 @@ function MachineServiceRecordAddForm() {
   const defaultValues = useMemo(
     () => {
       const initialValues = {
+      docRecordType: null,
       serviceRecordConfig: null,
       serviceDate: new Date(),
       technician:   securityUser?.contact || null,
@@ -87,8 +89,8 @@ function MachineServiceRecordAddForm() {
     control,
   } = methods;
 
-  const { decoilers, operators, serviceRecordConfig, technician } = watch()
-
+  const { decoilers, operators, serviceRecordConfig, technician, docRecordType } = watch()
+  
   useEffect(()=>{
     if(securityUser?.customer?.name === 'Howick' && !!securityUser?.roles?.find((role) => role?.roleType === 'Support')){
       setValue('technician',user)
@@ -135,7 +137,9 @@ function MachineServiceRecordAddForm() {
                 serviceParam:CI._id,
                 name:CI.name,
                 paramListTitle:checkParam_.paramListTitle,
-                value:CI.value
+                value:CI.value,
+                comment:checkParam_.comment,
+                status:checkParam_.status
               });
             });
           }
@@ -180,19 +184,28 @@ function MachineServiceRecordAddForm() {
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 <FormHeading heading="New Service Record" />
+                <Grid container>
+                  <ViewFormField sm={6} heading='Customer' param={machine?.customer?.name} label="serialNo"/>
+                  <ViewFormField sm={6} heading='Machine' param={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} label="serialNo"/>
+                  <ViewFormField sm={6} heading='Machine Model Category' param={machine?.machineModel?.category?.name} label="serialNo"/>
+                  <ViewFormField sm={6} heading='Machine Model' param={machine?.machineModel?.name} label="serialNo"/>
+                  <ViewFormField sm={6} heading='Decoilers' arrayParam={defaultValues.decoilers} chipLabel="serialNo"/>
+                </Grid>
                 <Box
                     rowGap={2}
                     columnGap={2}
                     display="grid"
                     gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                   >
-                    <RHFTextField name="customer" label="Customer" value={`${machine?.customer?.name ? machine?.customer?.name : ''}`} disabled/>
+
+
+                    {/* <RHFTextField name="customer" label="Customer" value={`${machine?.customer?.name ? machine?.customer?.name : ''}`} disabled/>
                     <RHFTextField name="machine" label="Machine" value={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} disabled/>
                     <RHFTextField name="machine" label="Machine Model Category" value={machine?.machineModel?.category?.name || ''} disabled/>
-                    <RHFTextField name="machine" label="Machine Model" value={machine?.machineModel?.name || ''} disabled/>
+                    <RHFTextField name="machine" label="Machine Model" value={machine?.machineModel?.name || ''} disabled/> */}
                   
                   <RHFAutocomplete 
-                    name="recordType"
+                    name="docRecordType"
                     label="Document Type*"
                     options={recordTypes}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
@@ -200,7 +213,6 @@ function MachineServiceRecordAddForm() {
                     renderOption={(props, option) => (
                       <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
-                    onChange={handleTypeChange}
                   />
 
                   <RHFAutocomplete
@@ -223,16 +235,17 @@ function MachineServiceRecordAddForm() {
                   >
 
                   <RHFDatePicker name="serviceDate" label="Service Date" />
-                  <Autocomplete multiple
+                  {/* <Autocomplete multiple
+                    readOnly
                     name="decoilers" 
                     defaultValue={defaultValues.decoilers}
                     id="operator-autocomplete" options={machineDecoilers}
                     onChange={(event, newValue) => setValue('decoilers',newValue)}
                     getOptionLabel={(option) => `${option?.name||""} ${option?.serialNo||""}`}
                     renderInput={(params) => (
-                      <TextField {...params} variant="outlined" label="Decoilers" placeholder="Select Decoilers"/>
+                      <TextField {...params} variant="outlined" label="Decoilers"  />
                     )}
-                  />
+                  /> */}
                   
                   </Box>
                     
@@ -358,7 +371,7 @@ function MachineServiceRecordAddForm() {
                       }
                     />
                   </Grid>
-                  <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+                  <AddFormButtons isDisabled={docRecordType === null} isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>
           </Grid>
