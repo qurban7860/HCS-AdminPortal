@@ -26,9 +26,10 @@ import { getActiveCustomers } from '../../redux/slices/customer/customer';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import  { addMachine, getActiveMachines } from '../../redux/slices/products/machine';
 import { getActiveMachineStatuses } from '../../redux/slices/products/statuses';
-import { getActiveMachineModels } from '../../redux/slices/products/model';
+import { getActiveMachineModels, resetActiveMachineModels } from '../../redux/slices/products/model';
 import { getActiveSuppliers } from '../../redux/slices/products/supplier';
 import { getMachineConnections } from '../../redux/slices/products/machineConnections';
+import { getActiveCategories } from '../../redux/slices/products/category';
 import { Cover } from '../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 
@@ -36,7 +37,7 @@ import { StyledCardContainer } from '../../theme/styles/default-styles';
 import { PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, { RHFTextField } from '../../components/hook-form';
+import FormProvider, { RHFTextField, RHFAutocomplete } from '../../components/hook-form';
 // auth
 // import { useAuthContext } from '../../auth/useAuthContext';
 // import { useSettingsContext } from '../../components/settings';
@@ -62,6 +63,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
   const { spContacts } = useSelector((state) => state.contact);
   const { machineConnections } = useSelector((state) => state.machineConnections);
+  const { activeCategories } = useSelector((state) => state.category);
 
   const { enqueueSnackbar } = useSnackbar();
   // const [parMachineVal, setParMachineVal] = useState('');
@@ -91,6 +93,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     dispatch(getActiveMachineModels());
     dispatch(getActiveSuppliers());
     dispatch(getActiveMachineStatuses());
+    dispatch(getActiveCategories());
     dispatch(getSPContacts());
   }, [dispatch]);
 
@@ -105,9 +108,11 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     supplier: Yup.object().shape({
       serialNo: Yup.string()
     }).nullable(),
-    model: Yup.object().shape({
+
+    machineModel: Yup.object().shape({
       name: Yup.string()
     }).nullable(),
+
     customer: Yup.object().shape({
       name: Yup.string()
     }).nullable().required("Customer Is Required!"),
@@ -155,7 +160,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       parentSerialNo: null,
       previousMachine: '',
       supplier: null,
-      model: null,
+      category: null,
+      machineModel: null,
       customer: null,
       machineConnectionVal: [],
       connection: [],
@@ -190,6 +196,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     status,
     customer,
     instalationSite,
+    category,
+    machineModel,
     machineConnectionVal,
     // installationDate,
     // shippingDate,
@@ -197,6 +205,19 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     projectManager,
     supportManager,
   } = watch();
+
+  useEffect(() => {
+    if(category === null){
+      // dispatch(resetActiveMachineModels())
+      dispatch(getActiveMachineModels());
+      setValue('machineModel',null);
+    }else if(category?._id === machineModel?.category?._id){
+      dispatch(getActiveMachineModels(category?._id));
+    }else if(category?._id !== machineModel?.category?._id){
+      dispatch(getActiveMachineModels(category?._id));
+      setValue('machineModel',null);
+    }
+  },[dispatch, category,setValue,machineModel]);
 
   useEffect(() => {
     if (customer !== null && customer._id !== undefined) {
@@ -210,6 +231,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
  styled('li')(({ theme }) => ({
     margin: theme.spacing(0.5),
   }));
+
   const onSubmit = async (data) => {
     console.log("data : " , data)
 
@@ -388,40 +410,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     )}
                   />
 
-                    {/* -------------------------------- Machine Model -------------------------------- */}
-
-                    <Controller
-                    name="model"
-                    control={control}
-                    defaultValue={supplier || null}
-                    render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                      <Autocomplete
-                        {...field}
-                        disabled={!!parentSerialNo?.machineModel}
-                        id="controllable-states-demo"
-                        options={activeMachineModels}
-                        isOptionEqualToValue={(option, value) => option._id === value._id}
-                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                        renderOption={(props, option) => (
-                          <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                        )}
-                        onChange={(event, value) => field.onChange(value)}
-                        renderInput={(params) => (
-                          <TextField 
-                          {...params} 
-                          name="model"
-                          id="model"
-                          label="Model"  
-                          error={!!error}
-                          helperText={error?.message} 
-                          inputRef={ref} 
-                          />
-                        )}
-                        ChipProps={{ size: 'small' }}
-                      />
-                    )}
-                  />
-
                     {/* -------------------------------- Customer -------------------------------- */}
 
                     <Controller
@@ -469,6 +457,32 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                       />
                     )}
                   />
+
+                   {/* ----------------------------- Filter Machine Model By Category ----------------------------------- */}
+
+                    <RHFAutocomplete 
+                      name="category"
+                      label="Machine Category"
+                      options={activeCategories}
+                      isOptionEqualToValue={(option, value) => option._id === value._id}
+                      getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                      renderOption={(props, option) => (
+                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                      )}
+                    />
+
+                    {/* -------------------------------- Machine Model -------------------------------- */}
+
+                    <RHFAutocomplete 
+                      name="machineModel"
+                      label="Machine Model"
+                      options={activeMachineModels}
+                      isOptionEqualToValue={(option, value) => option._id === value._id}
+                      getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                      renderOption={(props, option) => (
+                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                      )}
+                    />
 
                     {/* -------------------------------- Machine Connections -------------------------------- */}
 

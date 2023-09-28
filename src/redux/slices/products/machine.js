@@ -490,8 +490,8 @@ export function addMachine(params) {
         if(params.supplier){
           data.supplier = params.supplier._id;        
         }
-        if(params.model){
-            data.machineModel = params.model._id;        
+        if(params.machineModel){
+            data.machineModel = params.machineModel._id;        
         }
         if(params.workOrderRef){
           data.workOrderRef = params.workOrderRef;        
@@ -554,7 +554,7 @@ export function updateMachine(machineId, params) {
         parentSerialNo: params?.parentSerialNo?.serialNo,
         parentMachine: params?.parentSerialNo?.name,
         supplier: params?.supplier?._id || null,
-        machineModel: params?.model?._id || null,
+        machineModel: params?.machineModel?._id || null,
         customer: params?.customer?._id || null,
         status: params?.status?._id || null,
         workOrderRef: params?.workOrderRef,

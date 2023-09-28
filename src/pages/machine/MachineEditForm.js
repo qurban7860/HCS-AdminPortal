@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import {  useLayoutEffect, useState } from 'react';
+import {  useLayoutEffect, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -17,7 +17,7 @@ import { getSPContacts } from '../../redux/slices/customer/contact';
 import {  getActiveCustomers } from '../../redux/slices/customer/customer';
 import {  getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import {  getActiveMachineStatuses } from '../../redux/slices/products/statuses';
-import {  getActiveMachineModels } from '../../redux/slices/products/model';
+import {  getActiveMachineModels, resetMachineModels } from '../../redux/slices/products/model';
 import {  getActiveSuppliers } from '../../redux/slices/products/supplier';
 // global
 // import { CONFIG } from '../../config-global';
@@ -29,10 +29,11 @@ import {
   setTransferMachineFlag,
 } from '../../redux/slices/products/machine';
 import { getMachineConnections, resetMachineConnections } from '../../redux/slices/products/machineConnections';
+import { getActiveCategories } from '../../redux/slices/products/category';
 // hooks
 import { useSnackbar } from '../../components/snackbar';
 // components
-import FormProvider, { RHFTextField } from '../../components/hook-form';
+import FormProvider, { RHFTextField, RHFAutocomplete } from '../../components/hook-form';
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
@@ -61,6 +62,8 @@ export default function MachineEditForm() {
   const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
   const { spContacts } = useSelector((state) => state.contact);
   const { machineConnections } = useSelector((state) => state.machineConnections);
+  const { activeCategories } = useSelector((state) => state.category);
+
   // const [parMachineVal, setParMachineVal] = useState('');
   // const [parMachSerVal, setParMachSerVal] = useState('');
   // const [supplierVal, setSupplierVal] = useState('');
@@ -93,7 +96,7 @@ export default function MachineEditForm() {
     supplier: Yup.object().shape({
       serialNo: Yup.string()
     }).nullable(),
-    model: Yup.object().shape({
+    machineModel: Yup.object().shape({
       name: Yup.string()
     }).nullable(),
     customer: Yup.object().shape({
@@ -133,7 +136,8 @@ export default function MachineEditForm() {
       parentSerialNo: machine?.parentMachine || '',
       previousMachine: machine?.parentMachine?.name || '',
       supplier: machine.supplier || null,
-      model: machine.machineModel || null,
+      category: machine?.machineModel?.category || null,
+      machineModel: machine?.machineModel || null,
       customer: machine.customer || null,
       machineConnectionVal: machine.machineConnections || [],
       status: machine.status || null,
@@ -167,7 +171,8 @@ export default function MachineEditForm() {
     // previousMachine,
     parentSerialNo,
     supplier,
-    // model,
+    category,
+    machineModel,
     status,
     // connection,
     // workOrderRef,
@@ -185,6 +190,20 @@ export default function MachineEditForm() {
     // description,
     // isActive,
   } = watch();
+
+  useEffect(() => {
+    if(category === null){
+      // dispatch(resetActiveMachineModels())
+      dispatch(getActiveMachineModels());
+      setValue('machineModel',null);
+    }else if(category?._id === machineModel?.category?._id){
+      dispatch(getActiveMachineModels(category?._id));
+    }else if(category?._id !== machineModel?.category?._id){
+      dispatch(getActiveMachineModels(category?._id));
+      setValue('machineModel',null);
+    }
+  },[dispatch, category,setValue,machineModel]);
+
 
   useLayoutEffect(() => {
     // window.history.pushState({}, null, `/products/machines/${machine._id}/edit`);
@@ -412,38 +431,7 @@ export default function MachineEditForm() {
                     )}
                   />
 
-                    {/* -------------------------------- Machine Model -------------------------------- */}
 
-                  <Controller
-                    name="model"
-                    control={control}
-                    defaultValue={supplier || null}
-                    render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                      <Autocomplete
-                        {...field}
-                        id="controllable-states-demo"
-                        options={activeMachineModels}
-                        isOptionEqualToValue={(option, value) => option._id === value._id}
-                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                        renderOption={(props, option) => (
-                          <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                        )}
-                        onChange={(event, value) => field.onChange(value)}
-                        renderInput={(params) => (
-                          <TextField 
-                          {...params} 
-                          name="model"
-                          id="model"
-                          label="Model"  
-                          error={!!error}
-                          helperText={error?.message} 
-                          inputRef={ref} 
-                          />
-                        )}
-                        ChipProps={{ size: 'small' }}
-                      />
-                    )}
-                  />
 
                     {/* -------------------------------- Customer -------------------------------- */}
 
@@ -493,6 +481,33 @@ export default function MachineEditForm() {
                       />
                     )}
                   />
+
+
+                    {/* ----------------------------- Filter Machine Model By Category ----------------------------------- */}
+
+                                       <RHFAutocomplete 
+                      name="category"
+                      label="Machine Category"
+                      options={activeCategories}
+                      isOptionEqualToValue={(option, value) => option._id === value._id}
+                      getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                      renderOption={(props, option) => (
+                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                      )}
+                    />
+
+                    {/* -------------------------------- Machine Model -------------------------------- */}
+
+                    <RHFAutocomplete 
+                      name="machineModel"
+                      label="Machine Model"
+                      options={activeMachineModels}
+                      isOptionEqualToValue={(option, value) => option._id === value._id}
+                      getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                      renderOption={(props, option) => (
+                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                      )}
+                    />
 
                     {/* -------------------------------- Machine Connections -------------------------------- */}
 
