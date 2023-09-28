@@ -41,9 +41,7 @@ export default function NoteList() {
     orderBy,
     setPage,
     onSort,
-  } = useTable({
-    defaultOrderBy: '-createdAt',
-  });
+  } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
 
   const dispatch = useDispatch();
   useSettingsContext();

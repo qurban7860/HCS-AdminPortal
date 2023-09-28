@@ -21,6 +21,7 @@ import { useSnackbar } from '../../../components/snackbar';
 import FormHeading from '../../components/DocumentForms/FormHeading';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { MachineServiceRecordSchema } from '../../schemas/machine';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
 import FormProvider, {
   RHFSwitch,
   RHFTextField,
@@ -230,8 +231,14 @@ function MachineServiceRecordEditForm() {
         <Card sx={{ p: 3 }}>
           <Stack spacing={2}>
             <FormHeading heading="Edit Service Record" />
-
-            <Box
+              <Grid container>
+                <ViewFormField sm={6} heading='Customer'                param={machine?.customer?.name} label="serialNo"/>
+                <ViewFormField sm={6} heading='Machine'                 param={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} label="serialNo"/>
+                <ViewFormField sm={6} heading='Machine Model Category'  param={machine?.machineModel?.category?.name} label="serialNo"/>
+                <ViewFormField sm={6} heading='Machine Model'           param={machine?.machineModel?.name} label="serialNo"/>
+                <ViewFormField sm={6} heading='Decoilers'          arrayParam={defaultValues.decoilers} chipLabel="serialNo"/>
+              </Grid>
+            {/* <Box
                 rowGap={2}
                 columnGap={2}
                 display="grid"
@@ -241,7 +248,7 @@ function MachineServiceRecordEditForm() {
                 <RHFTextField name="machine" label="Machine" value={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} disabled/>
                 <RHFTextField name="machine" label="Machine Model Category" value={machine?.machineModel?.category?.name || ''} disabled/>
                 <RHFTextField name="machine" label="Machine Model" value={machine?.machineModel?.name || ''} disabled/>
-            </Box>
+            </Box> */}
 
             <RHFAutocomplete
                     disabled
@@ -263,7 +270,8 @@ function MachineServiceRecordEditForm() {
               >
 
               <RHFDatePicker name="serviceDate" label="Service Date" />
-              <Autocomplete multiple
+              {/* <Autocomplete multiple
+                  readonly
                   name="decoilers"
                   defaultValue={defaultValues.decoilers}
                   id="decoilers-autocomplete" options={machineDecoilers}
@@ -273,7 +281,7 @@ function MachineServiceRecordEditForm() {
                   renderInput={(params) => (
                     <TextField {...params} variant="outlined" label="Decoilers" placeholder="Select Decoilers"/>
                   )}
-                />
+                /> */}
               </Box>
               <RHFAutocomplete
                 name="technician"
