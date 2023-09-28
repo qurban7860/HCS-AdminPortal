@@ -71,7 +71,8 @@ function ViewFormField({
           heading === 'Serial No' ||
           heading === 'Machine Model' ||
           heading === 'Customer' ||
-          heading === 'Machine'
+          heading === 'Machine' ||
+          heading === 'Profile'
             ? 'h4'
             : 'body1'
         }
