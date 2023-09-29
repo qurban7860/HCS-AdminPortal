@@ -11,7 +11,7 @@ export const ICONS = {
   // @root - src/components/IconPopover -ViewFormFields
   // isActive
   ACTIVE: {
-    icon: 'mdi:check-circle',
+    icon: 'mdi:check-circle-outline',
     color: '#008000',
     heading: 'Active',
   },
@@ -71,26 +71,26 @@ export const ICONS = {
   // ------------------------------------------------------------
   // MultiAuth
   MULTIAUTH_ACTIVE: {
-    icon: 'mdi:password-outline',
-    color: 'green',
+    icon: 'heroicons-outline:lock-closed',
+    color: '#008000',
     heading: 'MFA Enabled',
   },
   MULTIAUTH_INACTIVE: {
-    icon: 'mdi:password-off-outline',
-    color: 'red',
+    icon: 'heroicons-outline:lock-open',
+    color: '#FF0000',
     heading: 'MFA Disabled',
   },
 
   // ------------------------------------------------------------
   // CURRENT EMPLOYEE
   CURR_EMP_ACTIVE: {
-    icon: 'raphael:employee',
-    color: 'green',
+    icon: 'mdi:user-check-outline',
+    color: '#008000',
     heading: 'Employee',
   },
   CURR_EMP_INACTIVE: {
-    icon: 'clarity:employee-line',
-    color: 'red',
+    icon: 'mdi:user-block-outline',
+    color: '#FF0000',
     heading: 'Not Employee',
   },
 

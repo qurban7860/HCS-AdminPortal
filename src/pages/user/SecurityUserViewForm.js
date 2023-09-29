@@ -164,6 +164,9 @@ export default function SecurityUserViewForm() {
             disableDeleteButton={!isSuperAdmin}
             disableEditButton={disableEditButton}
             backLink={() => navigate(PATH_SECURITY.users.list)}
+            isActive={defaultValues.isActive}
+            multiAuth={defaultValues?.multiFactorAuthentication} 
+            currentEmp={defaultValues?.currentEmployee}
           />
           <ConfirmDialog
             open={openConfirm}
@@ -176,8 +179,7 @@ export default function SecurityUserViewForm() {
               </Button>
             }
           />
-          <Grid container>
-            <ViewFormField sm={12} isActive={defaultValues.isActive} multiAuth={defaultValues?.multiFactorAuthentication} currentEmp={defaultValues?.currentEmployee}  />
+          <Grid container sx={{mt:2}}>
             <ViewFormField
               sm={6}
               heading="Customer"

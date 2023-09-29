@@ -39,8 +39,8 @@ export default function UserInviteViewForm() {
       </Card>
       <Grid item md={12} mt={2}>
         <Card sx={{ p: 2 }}>
-        <ViewFormEditDeleteButtons backLink={() => navigate(PATH_SETTING.invite.list)} />
-          <Grid container>
+        <ViewFormEditDeleteButtons isActive={defaultValues.isActive} backLink={() => navigate(PATH_SETTING.invite.list)} />
+          <Grid container sx={{mt:2}}>
             <ViewFormField sm={6} heading="Inveted User" param={defaultValues.username} />
             <ViewFormField sm={6} heading="Inveted User Email" param={defaultValues.useremail} />
             <ViewFormField sm={6} heading="Invited By " param={defaultValues.sender} />

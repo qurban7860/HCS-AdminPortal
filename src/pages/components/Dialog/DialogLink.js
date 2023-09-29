@@ -17,14 +17,16 @@ function DialogLink({ onClose, onClick, content }) {
         </Button>
       }
 
-      <Button
-            variant="outlined"
-            sx={{ flexShrink: 0, ml: 1 }}
-            onClick={onClick}
-            endIcon={<Iconify icon="mdi:share" />}
-          >
-            {content}
-      </Button>
+      {onClick &&
+        <Button
+              variant="outlined"
+              sx={{ flexShrink: 0, ml: 1 }}
+              onClick={onClick}
+              endIcon={<Iconify icon="mdi:share" />}
+            >
+              {content}
+        </Button>
+      }
     </Grid>
   );
 }

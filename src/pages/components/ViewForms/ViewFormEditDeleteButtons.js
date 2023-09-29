@@ -28,6 +28,8 @@ export default function ViewFormEditDeleteButtons({
   isActive,
   isVerified,
   customerAccess,
+  multiAuth,
+  currentEmp,
   isRequired,
   handleVerification,
   onDelete,
@@ -163,7 +165,6 @@ export default function ViewFormEditDeleteButtons({
               title={isActive?ICONS.ACTIVE.heading:ICONS.INACTIVE.heading}
               color={isActive?ICONS.ACTIVE.color:ICONS.INACTIVE.color}
               icon={isActive?ICONS.ACTIVE.icon:ICONS.INACTIVE.icon}
-              sx={{cursor:'pencil'}}
               
             />
           }
@@ -184,8 +185,6 @@ export default function ViewFormEditDeleteButtons({
               title={customerAccess ? ICONS.ALLOWED.heading : ICONS.DISALLOWED.heading}
               color={customerAccess ? ICONS.ALLOWED.color : ICONS.DISALLOWED.color}
               icon={customerAccess ? ICONS.ALLOWED.icon : ICONS.DISALLOWED.icon}
-              sx={{cursor:'pencil'}}
-              
             />
           }
 
@@ -194,8 +193,22 @@ export default function ViewFormEditDeleteButtons({
               title={isRequired ? ICONS.REQUIRED.heading : ICONS.NOTREQUIRED.heading}
               color={isRequired ? ICONS.REQUIRED.color : ICONS.NOTREQUIRED.color}
               icon={isRequired ? ICONS.REQUIRED.icon : ICONS.NOTREQUIRED.icon}
-              sx={{cursor:'pencil'}}
-              
+            />
+          }
+
+          {multiAuth !== undefined && 
+            <IconTooltip
+              title={multiAuth ? ICONS.MULTIAUTH_ACTIVE.heading : ICONS.MULTIAUTH_INACTIVE.heading}
+              color={multiAuth ? ICONS.MULTIAUTH_ACTIVE.color : ICONS.MULTIAUTH_INACTIVE.color}
+              icon={multiAuth ? ICONS.MULTIAUTH_ACTIVE.icon : ICONS.MULTIAUTH_INACTIVE.icon}
+            />
+          }
+
+          {currentEmp !== undefined && 
+            <IconTooltip
+              title={currentEmp ? ICONS.CURR_EMP_ACTIVE.heading : ICONS.CURR_EMP_INACTIVE.heading}
+              color={currentEmp ? ICONS.CURR_EMP_ACTIVE.color : ICONS.CURR_EMP_INACTIVE.color}
+              icon={currentEmp ? ICONS.CURR_EMP_ACTIVE.icon : ICONS.CURR_EMP_INACTIVE.icon}
             />
           }
         </StyledStack>
@@ -218,7 +231,7 @@ export default function ViewFormEditDeleteButtons({
           title="Resend Invitation"
           disabled={disableDeleteButton}
           color={theme.palette.secondary.main}
-          icon="mdi:person-add"
+          icon="mdi:person-add-outline"
           onClick={() => {
             handleOpenConfirm('UserInvite');
           }}
@@ -251,7 +264,7 @@ export default function ViewFormEditDeleteButtons({
               handleUpdatePassword();
             }}
             color={theme.palette.secondary.main}
-            icon="mdi:account-key"
+            icon="mdi:account-key-outline"
           />
         )}
 
@@ -263,7 +276,7 @@ export default function ViewFormEditDeleteButtons({
             handleEdit();
           }}
           color={theme.palette.primary.main}
-          icon="mdi:pencil"
+          icon="mdi:pencil-outline"
         />}
 
         {/* delete button */}
@@ -375,6 +388,8 @@ ViewFormEditDeleteButtons.propTypes = {
   isVerified: PropTypes.array,
   isActive:PropTypes.bool,
   customerAccess:PropTypes.bool,
+  multiAuth:PropTypes.bool,
+  currentEmp:PropTypes.bool,
   isRequired:PropTypes.bool,
   handleTransfer: PropTypes.func,
   handleUpdatePassword: PropTypes.func,
