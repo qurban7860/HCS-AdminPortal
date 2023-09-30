@@ -60,25 +60,8 @@ const userModuleRole = userRoles?.some((role) => role.roleType === 'Module');
       <Grid container gap={3}>
         {/* Grid for displaying Settings related information */}
 
+        
         <Grid item xs={12} md={6} lg={4}>
-          <StyledSettingsCardContainer>
-            <List
-              component="nav"
-              aria-labelledby="nested-list-subheader"
-              subheader={<ListItemsHeader header={FORMLABELS.DOCUMENT_SETTINGS} />}
-            >
-              <ListItem
-                onClick={linkDocumentCategory}
-                icon={ICONS.DOCUMENT_CATEGORY.icon}
-                content={ICONS.DOCUMENT_CATEGORY.heading}
-              />
-              <ListItem
-                onClick={linkDocumentType}
-                icon={ICONS.DOCUMENT_TYPE.icon}
-                content={ICONS.DOCUMENT_TYPE.heading}
-              />
-            </List>
-          </StyledSettingsCardContainer>
           <StyledSettingsCardContainer>
             <List
               component="nav"
@@ -122,6 +105,27 @@ const userModuleRole = userRoles?.some((role) => role.roleType === 'Module');
                 icon={ICONS.USER_INVITE.icon}
                 content={ICONS.USER_INVITE.heading}
               />             
+            </List>
+          </StyledSettingsCardContainer>
+        </Grid>
+
+        <Grid item xs={12} md={6} lg={4}>
+          <StyledSettingsCardContainer>
+            <List
+              component="nav"
+              aria-labelledby="nested-list-subheader"
+              subheader={<ListItemsHeader header={FORMLABELS.DOCUMENT_SETTINGS} />}
+            >
+              <ListItem
+                onClick={linkDocumentCategory}
+                icon={ICONS.DOCUMENT_CATEGORY.icon}
+                content={ICONS.DOCUMENT_CATEGORY.heading}
+              />
+              <ListItem
+                onClick={linkDocumentType}
+                icon={ICONS.DOCUMENT_TYPE.icon}
+                content={ICONS.DOCUMENT_TYPE.heading}
+              />
             </List>
           </StyledSettingsCardContainer>
         </Grid>

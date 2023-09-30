@@ -62,16 +62,8 @@ export default function DocumentTypeViewForm() {
   return (
     <Card sx={{ p: 2 }}>
       <Grid>
-        <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} backLink={() => navigate(PATH_SETTING.documentType.list)}/>
-        <Grid item sm={12} display="flex">
-          <Tooltip>
-            <ViewFormField documentIsActive={defaultValues.isActive} />
-          </Tooltip>
-          <Tooltip>
-            <ViewFormField customerAccess={defaultValues?.customerAccess} />
-          </Tooltip>
-        </Grid>
-        <Grid container>
+        <ViewFormEditDeleteButtons customerAccess={defaultValues?.customerAccess} isActive={defaultValues.isActive} handleEdit={handleEdit} onDelete={onDelete} backLink={() => navigate(PATH_SETTING.documentType.list)}/>
+        <Grid container sx={{mt:2}}>
           <ViewFormField sm={12} heading="Category" param={defaultValues.category} />
           <ViewFormField sm={6} heading="Type Name" param={defaultValues.name} />
           <ViewFormField sm={12} heading="Description" param={defaultValues.description} />

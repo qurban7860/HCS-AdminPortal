@@ -66,17 +66,12 @@ export default function ConfigViewForm() {
   return (
     <Card sx={{ p: 2 }}>
       <Grid>
-        <ViewFormEditDeleteButtons
+        <ViewFormEditDeleteButtons isActive={defaultValues.isActive}
           handleEdit={handleEdit}
           onDelete={onDelete}
           backLink={() => navigate(PATH_SETTING.configs.list)}
         />
-        <Grid display="inline-flex">
-          <Tooltip>
-            <ViewFormField isActive={defaultValues.isActive} />
-          </Tooltip>
-        </Grid>
-        <Grid container>
+        <Grid container sx={{mt:2}}>
           <ViewFormField sm={12} heading="Name" param={defaultValues.name} />
           <ViewFormField sm={12} heading="Value" param={defaultValues.value} />
 

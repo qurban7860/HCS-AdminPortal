@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Card, Grid, Tooltip } from '@mui/material';
+import { Card, Grid } from '@mui/material';
 // redux
 import { deleteRegion } from '../../redux/slices/region/region';
 // paths
@@ -18,12 +18,9 @@ import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDelet
 
 export default function RegionViewForm() {
   const { region } = useSelector((state) => state.region);
-
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-
   const onDelete = async () => {
     try {
       await dispatch(deleteRegion(region?._id));
@@ -66,21 +63,15 @@ export default function RegionViewForm() {
   return (
     <Card sx={{ p: 2 }}>
       <Grid>
-        <ViewFormEditDeleteButtons
+        <ViewFormEditDeleteButtons isActive={defaultValues.isActive}
           handleEdit={handleEdit}
           onDelete={onDelete}
           backLink={() => navigate(PATH_SETTING.regions.list)}
         />
-        <Grid display="inline-flex">
-          <Tooltip>
-            <ViewFormField isActive={defaultValues.isActive} />
-          </Tooltip>
-        </Grid>
-        <Grid container>
+        <Grid container sx={{mt:2}}>
           <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
           <ViewFormField sm={12} chips heading="Countries" arrayParam={defaultValues.countries} />
           <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
-
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
       </Grid>
