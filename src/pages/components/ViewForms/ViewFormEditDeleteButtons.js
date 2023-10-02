@@ -18,6 +18,7 @@ import IconTooltip from '../Icons/IconTooltip';
 import ViewFormField from './ViewFormField';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
 import { ICONS } from '../../../constants/icons/default-icons';
+import { fDate } from '../../../utils/formatTime';
 
 export default function ViewFormEditDeleteButtons({
   backLink,
@@ -42,6 +43,7 @@ export default function ViewFormEditDeleteButtons({
   sites,
   mainSite,
   handleMap,
+  machineSupportDate
 }) {
   const { id } = useParams();
   const userId = localStorage.getItem('userId');
@@ -143,6 +145,11 @@ export default function ViewFormEditDeleteButtons({
     formState: { isSubmitting, isSubmitSuccessful },
   } = methods;
 
+  const machineSupport = {
+    status:new Date(machineSupportDate).getTime() > new Date().getTime(),
+    date: new Date(machineSupportDate)
+  }
+
   return (
     <Grid container justifyContent="space-between">
       <Grid item sx={{display:'flex'}}>
@@ -168,16 +175,26 @@ export default function ViewFormEditDeleteButtons({
             />
           }
           
+          {machineSupportDate &&
+            <IconTooltip
+              title={machineSupport?.status?`Support valid till ${fDate(machineSupportDate)}`:`Support ended ${fDate(machineSupportDate)}`}
+              color={machineSupport?.status?ICONS.ALLOWED.color:ICONS.DISALLOWED.color}
+              icon="bx:support"
+              />
+          }
+          
           {isVerified?.length>0 &&
           <Badge badgeContent={isVerified.length} color="info">
             <IconTooltip
               title='Verified'
               color={ICONS.ALLOWED.color}
-              icon="ic:round-verified-user"
+              icon="ic:outline-verified-user"
               onClick={handleVerifiedPopoverOpen}
               />
           </Badge>
           }
+
+          
 
           {customerAccess !== undefined && 
             <IconTooltip
@@ -220,7 +237,7 @@ export default function ViewFormEditDeleteButtons({
             title='Verify'
             onClick={() => { handleOpenConfirm('Verification');}}
             color={theme.palette.primary.main}
-            icon="ic:round-verified-user"
+            icon="ic:outline-verified-user"
           />
         )}
 
@@ -404,4 +421,5 @@ ViewFormEditDeleteButtons.propTypes = {
   disableDeleteButton: PropTypes.bool,
   disableEditButton: PropTypes.bool,
   handleMap: PropTypes.func,
+  machineSupportDate: PropTypes.string
 };
