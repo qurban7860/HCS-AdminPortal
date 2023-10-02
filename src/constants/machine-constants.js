@@ -2,11 +2,11 @@ export const Snacks = {
   // @root - MachineViewForm
   machineUpdated: 'Machine Updated',
   failedUpdateMachine: 'Failed to Update Machine',
-  machineVerifiedSuccess: 'Machine VERIFIED',
+  machineVerifiedSuccess: 'Machine Verified',
   machineFailedVerification: 'Failed to Verify Machine',
   machineDeleted: 'Machine Deleted',
   machineFailedDelete: 'Failed to Delete Machine',
-  machineTransferSuccess: 'Machine TRANSFERRED',
+  machineTransferSuccess: 'Machine Transferred',
   machineFailedTransfer: 'Failed to Transfer Machine',
   
   // @root Machine Service Parameter
