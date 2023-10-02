@@ -19,6 +19,11 @@ const initialState = {
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
+  statusTypes: [
+    { _id:3 , name: 'In-Process'},
+    { _id:2 , name: 'Partly-Done'},
+    { _id:1 , name: 'Complete'},
+  ],
   recordTypes: [
     { _id:1 , name: 'Service'},
     { _id:2 , name: 'Repair'},

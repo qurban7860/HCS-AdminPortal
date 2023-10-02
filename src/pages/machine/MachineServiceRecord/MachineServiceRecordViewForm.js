@@ -14,6 +14,7 @@ import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDe
 import { fDate } from '../../../utils/formatTime';
 
 function MachineServiceParamViewForm() {
+
   const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine)
 
@@ -95,7 +96,7 @@ function MachineServiceParamViewForm() {
                       component="form"
                       noValidate
                       autoComplete="off"
-                      sx={{padding:'5px 20px', background:(childIndex%2===0?'#f4f6f866':''), 
+                      sx={{ background:(childIndex%2===0?'#f4f6f866':''), 
                       ":hover": {
                         backgroundColor: "#dbdbdb66"
                       }}}

@@ -23,7 +23,7 @@ import FormProvider, {
   RHFDatePicker
 } from '../../../components/hook-form';
 import { getActiveSecurityUsers, getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
-
+import CollapsibleCheckedItemInputRow from './CollapsibleCheckedItemInputRow';
 // ----------------------------------------------------------------------
 
 function MachineServiceRecordAddForm() {
@@ -177,6 +177,20 @@ function MachineServiceRecordAddForm() {
       setCheckParamList(updatedCheckParams);
   }
 
+  const handleChangeCheckItemListStatus = (index, childIndex, value) => {
+    const updatedCheckParams = [...checkParamList];
+    const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
+    updatedCheckParamObject.status = value;
+    setCheckParamList(updatedCheckParams);
+  }
+
+  const handleChangeCheckItemListComment = (index, childIndex, value) => {
+    const updatedCheckParams = [...checkParamList];
+    const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
+    updatedCheckParamObject.comment = value;
+    setCheckParamList(updatedCheckParams);
+  }
+  
   return (
       <FormProvider methods={methods}  onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
@@ -197,8 +211,7 @@ function MachineServiceRecordAddForm() {
                     display="grid"
                     gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                   >
-
-
+                  
                     {/* <RHFTextField name="customer" label="Customer" value={`${machine?.customer?.name ? machine?.customer?.name : ''}`} disabled/>
                     <RHFTextField name="machine" label="Machine" value={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} disabled/>
                     <RHFTextField name="machine" label="Machine Model Category" value={machine?.machineModel?.category?.name || ''} disabled/>
@@ -266,7 +279,17 @@ function MachineServiceRecordAddForm() {
                           {checkParamList?.map((row, index) =>
                           ( typeof row?.paramList?.length === 'number' &&
                           <>
-                        <Grid key={index}  item md={12} >
+                            <CollapsibleCheckedItemInputRow 
+                              row={row} 
+                              index={index} 
+                              checkParamList={checkParamList} 
+                              handleChangeCheckItemListValue={handleChangeCheckItemListValue}
+                              handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
+                              handleChangeCheckItemListNumberValue={handleChangeCheckItemListNumberValue}
+                              handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
+                            />
+
+                        {/* <Grid key={index}  item md={12} >
                                 <Typography variant="body2" sx={{fontWeight:'bold'}}>{`${index+1}). `}{typeof row?.paramListTitle === 'string' && row?.paramListTitle || ''}{' ( Items: '} {`${row?.paramList?.length}`}{' ) '}</Typography>
                         </Grid>
                         <Grid  item md={12} >
@@ -340,7 +363,7 @@ function MachineServiceRecordAddForm() {
                               </div>
                             </Box>
                           ))}
-                        </Grid>
+                        </Grid> */}
                         </>
                           ))}
                     </Grid>
