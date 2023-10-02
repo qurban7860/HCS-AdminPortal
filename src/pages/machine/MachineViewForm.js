@@ -268,8 +268,7 @@ export default function MachineViewForm() {
                 </Grid>
               </Card>
               
-        <Card sx={{ p: 3 }}>
-          
+              <Card sx={{ width: '100%', p: '1rem', mb:3 }}>
 
           {/* <Grid display="inline-flex">
             <Tooltip title="Active">

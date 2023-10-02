@@ -165,7 +165,6 @@ export default function ViewFormEditDeleteButtons({
               title={isActive?ICONS.ACTIVE.heading:ICONS.INACTIVE.heading}
               color={isActive?ICONS.ACTIVE.color:ICONS.INACTIVE.color}
               icon={isActive?ICONS.ACTIVE.icon:ICONS.INACTIVE.icon}
-              
             />
           }
           
@@ -230,7 +229,7 @@ export default function ViewFormEditDeleteButtons({
           <IconTooltip 
           title="Resend Invitation"
           disabled={disableDeleteButton}
-          color={theme.palette.secondary.main}
+          color={disableDeleteButton?"#c3c3c3":theme.palette.secondary.main}
           icon="mdi:person-add-outline"
           onClick={() => {
             handleOpenConfirm('UserInvite');
@@ -250,7 +249,7 @@ export default function ViewFormEditDeleteButtons({
             onClick={() => {
               handleOpenConfirm('transfer');
             }}
-            color={theme.palette.primary.main}
+            color={disableTransferButton?"#c3c3c3":theme.palette.primary.main}
             icon="mdi:cog-transfer-outline"
           />
         )}
@@ -259,11 +258,11 @@ export default function ViewFormEditDeleteButtons({
         {handleUpdatePassword && (
           <IconTooltip
             title="Change Password"
-            disabled={disablePasswordButton}
             onClick={() => {
               handleUpdatePassword();
             }}
             color={theme.palette.secondary.main}
+            color={disablePasswordButton?"#c3c3c3":theme.palette.secondary.main}
             icon="mdi:account-key-outline"
           />
         )}
@@ -275,7 +274,7 @@ export default function ViewFormEditDeleteButtons({
           onClick={() => {
             handleEdit();
           }}
-          color={theme.palette.primary.main}
+          color={disableEditButton?"#c3c3c3":theme.palette.primary.main}
           icon="mdi:pencil-outline"
         />}
 
@@ -287,7 +286,7 @@ export default function ViewFormEditDeleteButtons({
             onClick={() => {
               handleOpenConfirm('delete');
             }}
-            color={theme.palette.error.light}
+            color={disableDeleteButton?"#c3c3c3":theme.palette.error.main}
             icon="mdi:trash-can-outline"
           />
         )}

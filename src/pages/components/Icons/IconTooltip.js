@@ -15,32 +15,30 @@ export default function IconTooltip({
   disabled,
 }) {
   return (
-    <Button
-      onClick={onClick}
-      disabled={disabled}
-      variant="outlined"
-      sx={{
-        cursor:onClick?"pointer":"default",
-        color,
-        borderColor: color,
-        ':hover': {
-          borderColor: alpha(color, 0.5),
-        },
-      }}
-      // color={disableDeleteButton ? 'secondary' :'error'}
-    >
-      <StyledTooltip
-        title={title}
-        placement={placement}
-        disableFocusListener
-        tooltipcolor={color}
-        color={color}
-      >
-        <Iconify sx={{ height: '24px', width: '24px' }} icon={icon} />
-      </StyledTooltip>
-    </Button>
+    <>
+      {disabled ? (
+          <Button
+            variant="outlined"
+            sx={{ cursor: 'default', color, borderColor: color, ':hover': { borderColor: alpha(color, 0.5),},}}
+          >
+            <StyledTooltip title={title} placement={placement} disableFocusListener tooltipcolor={color} color={color}>
+              <Iconify color={color} sx={{ height: '24px', width: '24px' }} icon={icon} />
+            </StyledTooltip>
+          </Button>
+      ) : (
+        <Button onClick={onClick} 
+          variant="outlined"
+          sx={{ cursor: onClick ? 'pointer' : 'default', color, borderColor: color, ':hover': { borderColor: alpha(color, 0.5)}}}
+        >
+          <StyledTooltip title={title} placement={placement} disableFocusListener tooltipcolor={color} color={color}>
+            <Iconify color={color} sx={{ height: '24px', width: '24px' }} icon={icon} />
+          </StyledTooltip>
+        </Button>
+      )}
+    </>
   );
 }
+
 
 IconTooltip.propTypes = {
   onDelete: PropTypes.bool,
