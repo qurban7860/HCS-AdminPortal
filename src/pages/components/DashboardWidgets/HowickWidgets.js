@@ -74,7 +74,7 @@ export default function HowickWidgets({
         overflow: 'hidden',
         position: 'relative',
         color: 'primary.main',
-        bgcolor: 'grey.200',
+        bgcolor: 'white',
         ...sx,
       }}
       {...other}
