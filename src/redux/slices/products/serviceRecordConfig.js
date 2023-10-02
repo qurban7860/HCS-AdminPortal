@@ -31,8 +31,6 @@ const initialState = {
   ]
 };
 
-export const recordType = [ 'Service','Repair','Training','Install']
-
 const slice = createSlice({
   name: 'serviceRecordConfig',
   initialState,

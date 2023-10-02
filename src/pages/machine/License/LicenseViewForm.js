@@ -72,13 +72,8 @@ export default function LicenseViewForm() {
     {/* <DocumentCover content={defaultValues?.displayName} backLink="true"  generalSettings /> */}
     <Grid item md={12} mt={2}>
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} backLink={() => dispatch(setLicenseViewFormVisibility(false))} />
-      <Grid display="inline-flex">
-        <Tooltip>
-          <ViewFormField isActive={defaultValues.isActive} />
-        </Tooltip>
-      </Grid>
-      <Grid container>
+      <ViewFormEditDeleteButtons isActive={defaultValues.isActive}  handleEdit={handleEdit} onDelete={onDelete} backLink={() => dispatch(setLicenseViewFormVisibility(false))} />
+      <Grid container sx={{mt:2}}>
         <ViewFormField sm={6} heading="Device GUID" param={defaultValues.licenseDetail.deviceGUID} />
         <ViewFormField sm={6} heading="Device Name" param={defaultValues.licenseDetail.deviceName} />
         <ViewFormField sm={6} heading="Type" param={defaultValues.licenseDetail.type} />

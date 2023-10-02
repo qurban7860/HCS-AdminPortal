@@ -58,15 +58,10 @@ export default function NoteViewForm() {
   );
   
   return (
-    <Grid item md={12} mt={2}>
+    <Grid item md={12} >
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons backLink={()=> dispatch(setNoteViewFormVisibility(false))} handleEdit={handleEdit} onDelete={onDelete} />
-      <Grid display="inline-flex">
-        <Tooltip>
-          <ViewFormField isActive={defaultValues.isActive} />
-        </Tooltip>
-      </Grid>
-      <Grid container>
+      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} backLink={()=> dispatch(setNoteViewFormVisibility(false))} handleEdit={handleEdit} onDelete={onDelete} />
+      <Grid container sx={{mt:2}}>
         <ViewFormField sm={6} heading="Site" param={defaultValues?.site_name} />
         <ViewFormField sm={6} heading="Contact" param={defaultValues?.contact_firstName}
           secondParam={defaultValues?.contact_lastName !== '' ? defaultValues.contact_lastName : ''}

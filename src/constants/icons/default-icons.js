@@ -11,24 +11,24 @@ export const ICONS = {
   // @root - src/components/IconPopover -ViewFormFields
   // isActive
   ACTIVE: {
-    icon: 'mdi:check-circle',
-    color: 'green',
+    icon: 'mdi:check-circle-outline',
+    color: '#008000',
     heading: 'Active',
   },
   INACTIVE: {
     icon: 'mdi:power-off',
-    color: 'red',
+    color: '#FF0000',
     heading: 'Inactive',
   },
 
   REQUIRED: {
     icon: 'mdi:required-circle',
-    color: 'green',
+    color: '#008000',
     heading: 'Required',
   },
   NOTREQUIRED: {
     icon: 'mdi:required-circle',
-    color: 'red',
+    color: '#FF0000',
     heading: 'Not Required',
   },
 
@@ -71,26 +71,26 @@ export const ICONS = {
   // ------------------------------------------------------------
   // MultiAuth
   MULTIAUTH_ACTIVE: {
-    icon: 'mdi:password-outline',
-    color: 'green',
+    icon: 'heroicons-outline:lock-closed',
+    color: '#008000',
     heading: 'MFA Enabled',
   },
   MULTIAUTH_INACTIVE: {
-    icon: 'mdi:password-off-outline',
-    color: 'red',
+    icon: 'heroicons-outline:lock-open',
+    color: '#FF0000',
     heading: 'MFA Disabled',
   },
 
   // ------------------------------------------------------------
   // CURRENT EMPLOYEE
   CURR_EMP_ACTIVE: {
-    icon: 'raphael:employee',
-    color: 'green',
+    icon: 'mdi:user-check-outline',
+    color: '#008000',
     heading: 'Employee',
   },
   CURR_EMP_INACTIVE: {
-    icon: 'clarity:employee-line',
-    color: 'red',
+    icon: 'mdi:user-block-outline',
+    color: '#FF0000',
     heading: 'Not Employee',
   },
 
@@ -98,12 +98,12 @@ export const ICONS = {
   // customerAccess
   ALLOWED: {
     icon: 'mdi:book-check',
-    color: 'green',
+    color:'#008000',
     heading: 'Allowed',
   },
   DISALLOWED: {
     icon: 'mdi:book-cancel-outline',
-    color: 'red',
+    color:'#FF0000',
     heading: 'Disallowed',
   },
   // ----------------------------------------------------------------

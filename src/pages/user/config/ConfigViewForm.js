@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Grid, Tooltip } from '@mui/material';
+import { Card, Grid } from '@mui/material';
 // redux
 import { deleteConfig} from '../../../redux/slices/securityUser/config';
 // paths
@@ -70,16 +70,10 @@ export default function ConfigViewForm() {
           handleEdit={handleEdit}
           onDelete={onDelete}
           backLink={() => navigate(PATH_SETTING.userConfig.list)}
+          isActive={defaultValues.isActive}
+          
         />
-        <Grid display="inline-flex">
-          <Tooltip>
-            <ViewFormField isActive={defaultValues.isActive} />
-          </Tooltip>
-          <Tooltip>
-            <ViewFormField deleteDisabled={defaultValues.disableDelete} />
-          </Tooltip>
-        </Grid>
-        <Grid container>
+        <Grid container sx={{mt:2}}>
           <ViewFormField sm={12} heading="Blocked Users" arrayParam={defaultValues?.blockedUsers} />
           <ViewFormField sm={12} heading="Blocked Customers" arrayParam={defaultValues?.blockedCustomers} />
           <ViewFormField sm={12} heading="White List Ips" chips={defaultValues?.whiteListIPs} />

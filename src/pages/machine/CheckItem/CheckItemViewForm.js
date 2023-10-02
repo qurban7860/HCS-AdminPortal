@@ -68,13 +68,8 @@ export default function CheckItemViewForm() {
   return (
     <Card sx={{ p: 2 }}>
       <Grid>
-        <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.checkItems.list)}  />
-        <Grid item sm={12} display="flex">
-          <Tooltip>
-            <ViewFormField isActive={defaultValues.isActive} isRequired={defaultValues.isRequired}/>
-          </Tooltip>
-        </Grid>
-        <Grid container>
+        <ViewFormEditDeleteButtons isActive={defaultValues.isActive} isRequired={defaultValues.isRequired} handleEdit={handleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.checkItems.list)}  />
+        <Grid container sx={{mt:2}}>
           <ViewFormField sm={6} heading="Item Category" param={defaultValues.category} />
           <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
           <ViewFormField sm={12} heading="Print Name" param={defaultValues.printName} />

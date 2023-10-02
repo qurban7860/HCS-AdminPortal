@@ -38,18 +38,15 @@ export default function IconPopover({
       {/* isActive Icon */}
       {isActive !== undefined && (
         <>
-          <IconButton
-            aria-label={isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading}
+          
+            <Iconify
             onMouseEnter={handlePopoverOpen}
             onMouseLeave={handlePopoverClose}
-          >
-            <Iconify
               heading={isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading}
               icon={isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon}
               style={{ color: isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color }}
               width={ICONS.size}
             />
-          </IconButton>
           <StyledPopover
             open={isPopoverOpen}
             anchorEl={anchorEl}

@@ -2,7 +2,7 @@ import React from 'react';
 // import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Grid, Dialog } from '@mui/material';
+import { Grid, Dialog, DialogContent } from '@mui/material';
 import { setCustomerDialog } from '../../../redux/slices/customer/customer';
 // import Iconify from '../../../components/iconify';
 import { PATH_CUSTOMER } from '../../../routes/paths';
@@ -25,7 +25,8 @@ function CustomerDialog() {
       keepMounted
       aria-describedby="alert-dialog-slide-description"
     >
-      <DialogLabel onClick={handleCustomerDialog} content="Customer" />
+      <DialogLabel onClick={ handleCustomerDialog } content="Customer" />
+      <DialogContent dividers>
       <Grid item container sx={{ px: 2, pt: 2 }}>
         <ViewFormField sm={12} heading="Name" param={customer?.name} />
         <ViewFormField sm={12} heading="Trading Name" chips={customer?.tradingName} />
@@ -78,9 +79,11 @@ function CustomerDialog() {
           secondParam={customer?.supportManager?.lastName}
         />
       </Grid>
+      </DialogContent>
       <DialogLink
+        onClose={handleCustomerDialog}
         onClick={() => navigate(PATH_CUSTOMER.view(customer._id))}
-        content="Go to customer"
+        content="Go to Customer"
       />
     </Dialog>
   );

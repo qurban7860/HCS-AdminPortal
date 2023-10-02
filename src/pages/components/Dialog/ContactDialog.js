@@ -1,10 +1,11 @@
 // import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
-import { Grid, Dialog } from '@mui/material';
+import { Grid, Dialog, DialogContent } from '@mui/material';
 import { setContactDialog } from '../../../redux/slices/customer/contact';
 import DialogLabel from './DialogLabel';
 import ViewFormField from '../ViewForms/ViewFormField';
 import FormLabel from '../DocumentForms/FormLabel';
+import DialogLink from './DialogLink';
 
 function ContactDialog() {
     const dispatch = useDispatch();
@@ -12,13 +13,14 @@ function ContactDialog() {
     const handleConttactDialog = ()=>{ dispatch(setContactDialog(false)) }
   return (
     <Dialog
-        maxWidth="lg"
+        maxWidth="md"
         open={contactDialog}
         onClose={handleConttactDialog}
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
       >
         <DialogLabel content="Contact" onClick={handleConttactDialog} />
+        <DialogContent dividers>
         <Grid container sx={{ px: 2, py: 2 }}>
           <ViewFormField
             sm={6}
@@ -71,6 +73,8 @@ function ContactDialog() {
           />
           <ViewFormField />
         </Grid>
+        </DialogContent>
+        <DialogLink onClose={handleConttactDialog}/>
       </Dialog>
   );
 }

@@ -13,15 +13,15 @@ function DialogLabel({ onClick, content }) {
         bgcolor: 'primary.main',
         color: 'primary.contrastText',
         height: '50px',
-        pt: 1,
+        p: 2,
       }}
     >
       <Typography variant="h4" sx={{ px: 2 }}>
         {content}
       </Typography>
       <DialogActions>
-        <Button onClick={onClick} sx={{ mr: -4 }}>
-          <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
+        <Button onClick={onClick} sx={{ mr: -5 }}>
+          <Iconify sx={{ color: 'white' }} icon="mdi:close-circle-outline" />
         </Button>
       </DialogActions>
     </Grid>

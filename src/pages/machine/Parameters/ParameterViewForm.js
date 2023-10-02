@@ -84,9 +84,8 @@ export default function ParameterViewForm() {
 
   return (
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.parameters.list)}/>
-      <Grid container>
-        <ViewFormField sm={12} isActive={defaultValues.isActive} />
+      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.parameters.list)}/>
+      <Grid container sx={{mt:2}}>
         <ViewFormField sm={12} heading="Category Name" param={defaultValues?.category} />
         <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
         <ViewFormField sm={6} heading="Code" param={defaultValues?.code} />

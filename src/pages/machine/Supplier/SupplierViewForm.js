@@ -103,9 +103,8 @@ export default function SupplierViewForm({ currentSupplier = null }) {
   };
   return (
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.supplier.list)}  />
-      <Grid container>
-        <ViewFormField sm={12} isActive={defaultValues.isActive} />
+      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.supplier.list)}  />
+      <Grid container sx={{mt:2}}>
         <ViewFormField sm={12} heading="Name" param={defaultValues?.name} />
         <ViewFormField sm={6} heading="Contact Name" param={defaultValues?.contactName} />
         <ViewFormField sm={6} heading="Contact Title" param={defaultValues?.contactTitle} />
