@@ -30,7 +30,7 @@ import DocumentTagPage from '../document/documents/DocumentTagPage';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 import CustomerNotes from './note/CustomerNotes';
-import MachineList from './machine/MachineList';
+import CustomerMachines from './machine/CustomerMachines';
 
 CustomerView.propTypes = {
   editPage: PropTypes.bool,
@@ -41,14 +41,10 @@ export default function CustomerView({ editPage }) {
   const dispatch = useDispatch();
   const { customer, customerEditFormFlag } = useSelector((state) => state.customer);
   const { siteEditFormVisibility } = useSelector((state) => state.site);
-  const { contactEditFormVisibility } = useSelector((state) => state.contact);
+  const { contactEditFormVisibility, contactMoveFormVisibility } = useSelector((state) => state.contact);
   const { noteEditFormVisibility } = useSelector((state) => state.customerNote);
   const [currentTab, setCurrentTab] = useState('customer-info');
-  // const [editFlag, setEditFlag] = useState(false);
-  // const toggleEditFlag = () => setEditFlag((value) => !value);
   const [currentComponent, setCurrentComponent] = useState(<CustomerViewForm />);
-  // const [customerFlag, setCustomerFlag] = useState(true);
-  // const isMobile = useResponsive('down', 'sm');
 
   useEffect(() => {
     dispatch(setDocumentViewFormVisibility(false));
@@ -72,14 +68,14 @@ export default function CustomerView({ editPage }) {
 
   const TABS = [
     {
-      disabled: siteEditFormVisibility || contactEditFormVisibility || noteEditFormVisibility,
+      disabled: siteEditFormVisibility || contactEditFormVisibility || contactMoveFormVisibility || noteEditFormVisibility,
       value: 'customer-info',
       label: 'Customer Info',
       icon: <Iconify icon="mdi:badge-account" />,
       component: currentComponent,
     },
     {
-      disabled: customerEditFormFlag || contactEditFormVisibility || noteEditFormVisibility,
+      disabled: customerEditFormFlag || contactEditFormVisibility || contactMoveFormVisibility || noteEditFormVisibility,
       value: 'sites',
       label: 'Sites',
       icon: <Iconify icon="mdi:map-legend" />,
@@ -93,7 +89,7 @@ export default function CustomerView({ editPage }) {
       component: <CustomerContactDynamicList />,
     },
     {
-      disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility,
+      disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility || contactMoveFormVisibility,
       value: 'notes',
       label: 'Notes',
       icon: <Iconify icon="mdi:note-multiple" />,
@@ -101,10 +97,7 @@ export default function CustomerView({ editPage }) {
     },
     {
       disabled:
-        customerEditFormFlag ||
-        siteEditFormVisibility ||
-        contactEditFormVisibility ||
-        noteEditFormVisibility,
+        customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility || contactMoveFormVisibility || noteEditFormVisibility,
       value: 'documents',
       label: 'Documents',
       icon: <Iconify icon="mdi:folder-open" />,
@@ -112,14 +105,11 @@ export default function CustomerView({ editPage }) {
     },
     {
       disabled:
-        customerEditFormFlag ||
-        siteEditFormVisibility ||
-        contactEditFormVisibility ||
-        noteEditFormVisibility,
+        customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility || contactMoveFormVisibility || noteEditFormVisibility,
       value: 'machines',
       label: 'Machines',
       icon: <Iconify icon="mdi:greenhouse" />,
-      component: <MachineList />,
+      component: <CustomerMachines />,
     },
   ];
 

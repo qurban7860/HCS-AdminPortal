@@ -109,7 +109,7 @@ export function StyledScrollbar({ contacts, children, ...props }) {
         height: {
           xs: contacts === 1 ? '10vh' : '20vh',
           sm: contacts === 1 ? '10vh' : '20vh',
-          md: 'calc(100vh - 100px)',
+          md: 'calc(145vh - 100px)',
         },
 
         scrollSnapType: 'y mandatory',

@@ -25,6 +25,7 @@ import {
 import ContactAddForm from './contact/ContactAddForm';
 import ContactEditForm from './contact/ContactEditForm';
 import ContactViewForm from './contact/ContactViewForm';
+import ContactMoveForm from './contact/ContactMoveForm';
 import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import AvatarSection from '../components/sections/AvatarSection';
@@ -40,7 +41,6 @@ import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
 export default function CustomerContactList(currentContact = null) {
   const { order, orderBy } = useTable({ defaultOrderBy: '-createdAt' });
   const { customer } = useSelector((state) => state.customer);
-  const [ setOpenContact] = useState(false);
   const dispatch = useDispatch();
   const {
     contact: currentContactData,
@@ -49,6 +49,7 @@ export default function CustomerContactList(currentContact = null) {
     // initial,
     responseMessage,
     contactEditFormVisibility,
+    contactMoveFormVisibility,
     formVisibility,
   } = useSelector((state) => state.contact);
   const [checked, setChecked] = useState(false);
@@ -68,9 +69,7 @@ export default function CustomerContactList(currentContact = null) {
     setChecked((value) => !value);
     if (contactEditFormVisibility) {
       dispatch(setContactFormVisibility(false));
-      enqueueSnackbar(Snacks.CONTACT_CLOSE_CONFIRM, {
-        variant: 'warning',
-      });
+      enqueueSnackbar(Snacks.CONTACT_CLOSE_CONFIRM, {variant: 'warning'});
       setIsExpanded(false);
       setCardActiveIndex(null);
     } else {
@@ -99,6 +98,11 @@ export default function CustomerContactList(currentContact = null) {
   });
 
   useEffect(() => {
+    dispatch(getContacts(customer?._id))
+  }, [dispatch, customer]);
+
+
+  useEffect(() => {
     setTableData(contacts);
   }, [contacts, error, responseMessage]);
 
@@ -110,7 +114,7 @@ export default function CustomerContactList(currentContact = null) {
   };
 
   const handleActiveCard = (index) => {
-    if (!contactEditFormVisibility) {
+    if (!contactEditFormVisibility && !contactMoveFormVisibility) {
       setCardActiveIndex(index);
     }
   };
@@ -120,18 +124,21 @@ export default function CustomerContactList(currentContact = null) {
   };
 
   useLayoutEffect(() => {
-    if (!formVisibility && !contactEditFormVisibility) {
+    if (!formVisibility && !contactEditFormVisibility && !contactMoveFormVisibility) {
       dispatch(getContacts(customer._id));
     }
-  }, [dispatch, checked, customer, formVisibility, contactEditFormVisibility]);
+  }, [dispatch, checked, customer, formVisibility, contactEditFormVisibility, contactMoveFormVisibility]);
 
   const isNotFound = !contacts.length && !formVisibility && !contactEditFormVisibility;
   const fullName = contacts.map((contact) => `${contact.firstName ? contact.firstName : ''} ${contact.lastName || ''}`);
   // var conditions for rendering the contact view, edit, and add forms
-  const shouldShowContactView = isExpanded && !contactEditFormVisibility;
-  const shouldShowContactEdit = contactEditFormVisibility && !formVisibility;
-  const shouldShowContactAdd = formVisibility && !contactEditFormVisibility;
+  const shouldShowContactView = isExpanded && !contactEditFormVisibility && !contactMoveFormVisibility;
+  const shouldShowContactEdit = contactEditFormVisibility && !formVisibility && !contactMoveFormVisibility;
+  const shouldShowContactAdd = formVisibility && !contactEditFormVisibility && !contactMoveFormVisibility;
+  const shouldShowContactMove = contactMoveFormVisibility && !formVisibility && !contactEditFormVisibility;
 
+  // console.log(formVisibility,contactEditFormVisibility,contactMoveFormVisibility)
+  // console.log(shouldShowContactMove,contacts)
   return (
     <>
       <Grid container direction="row" justifyContent="space-between" alignItems="center">
@@ -158,7 +165,7 @@ export default function CustomerContactList(currentContact = null) {
           toggleChecked={toggleChecked}
           FormVisibility={formVisibility}
           toggleCancel={toggleCancel}
-          disabled={contactEditFormVisibility}
+          disabled={contactEditFormVisibility || contactMoveFormVisibility}
         />
       </Grid>
       <Grid container spacing={1} direction="row" justifyContent="flex-start">
@@ -213,7 +220,7 @@ export default function CustomerContactList(currentContact = null) {
                           lg={4}
                           display={{ xs: 'flex', lg: 'block' }}
                           onClick={() => {
-                            if (!contactEditFormVisibility && !formVisibility) {
+                            if (!contactMoveFormVisibility && !contactEditFormVisibility && !formVisibility) {
                               handleActiveCard(contact._id);
                               handleExpand(contact._id);
                             }
@@ -230,14 +237,13 @@ export default function CustomerContactList(currentContact = null) {
                           >
                             <CardActionArea
                               active={activeIndex === contact._id}
-                              disabled={contactEditFormVisibility || formVisibility}
+                              disabled={contactMoveFormVisibility || contactEditFormVisibility || formVisibility}
                             >
                               <Link
                                 underline="none"
-                                disabled={contactEditFormVisibility || formVisibility}
+                                disabled={contactMoveFormVisibility || contactEditFormVisibility || formVisibility}
                                 onClick={async () => {
                                   await dispatch(getContact(customer._id, contact._id));
-                                  setOpenContact(true);
                                   if (!isExpanded && !formVisibility) {
                                     handleExpand(contact._id);
                                     setContactFormVisibility(!formVisibility);
@@ -293,6 +299,7 @@ export default function CustomerContactList(currentContact = null) {
             )}
             {shouldShowContactEdit && <ContactEditForm setIsExpanded={setIsExpanded} />}
             {shouldShowContactAdd && <ContactAddForm />}
+            {shouldShowContactMove && <ContactMoveForm />}
           </GridBaseViewForm>
         )}
 
@@ -306,6 +313,7 @@ export default function CustomerContactList(currentContact = null) {
             )}
             {shouldShowContactEdit && <ContactEditForm isExpanded={isExpanded} />}
             {shouldShowContactAdd && <ContactAddForm />}
+            {shouldShowContactMove && <ContactMoveForm />}
           </Grid>
         )}
       </Grid>
