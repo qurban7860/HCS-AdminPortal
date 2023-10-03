@@ -14,6 +14,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
   handleChangeCheckItemListComment,
   handleChangeCheckItemListNumberValue,
   handleChangeCheckItemListCheckBoxValue}) =>{
+    console.log("checkParamList : ",checkParamList)
   const { statusTypes } = useSelector((state) => state.serviceRecordConfig);
   const [ commentVisibility, setCommentVisibility ] = useState(false)
   const handleCommentVisibility = (Index, childIndex)=>{
@@ -115,7 +116,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
                                 type="text"
                                 label="Comment" 
                                 name="comment"
-                                onChange={(e) => handleChangeCheckItemListComment(index, childIndex, e)}
+                                onChange={(e) => handleChangeCheckItemListComment(index, childIndex, e.target.value)}
                                 size="small" sx={{m:0.3,ml:{sm: 'auto'}, minWidth:180, pr:{md:4},width: {md: 470 }  }} 
                                 value={checkParamList[index]?.paramList[childIndex]?.comment}
                                 minRows={3} multiline

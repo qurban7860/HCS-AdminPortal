@@ -169,13 +169,13 @@ function MachineServiceRecordEditForm() {
                 name:CI.name || "",
                 paramListTitle:checkParam_.paramListTitle || "",
                 value:CI.value || "",
-                comment:checkParam_?.comment || "",
-                status:checkParam_?.status?.name || "",
+                comment: CI?.comment || "" ,
+                status: CI?.status?.name || "" ,
               });
             });
           }
         });
-
+        console.log("checkParams_ : ",checkParams_)
       data.checkParams = checkParams_;
       data.decoilers = decoilers;
       data.operators = operators;
@@ -334,6 +334,7 @@ function MachineServiceRecordEditForm() {
                         checkParamList={checkParamList} 
                         handleChangeCheckItemListValue={handleChangeCheckItemListValue}
                         handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
+                        handleChangeCheckItemListComment={handleChangeCheckItemListComment}
                         handleChangeCheckItemListNumberValue={handleChangeCheckItemListNumberValue}
                         handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
                       />

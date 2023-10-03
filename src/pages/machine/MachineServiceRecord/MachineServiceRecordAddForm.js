@@ -96,7 +96,7 @@ function MachineServiceRecordAddForm() {
       dispatch(getActiveServiceRecordConfigsForRecords(machine?._id, docRecordType))
     }
   },[docRecordType, serviceRecordConfig, dispatch, machine?._id])
-  
+
   useEffect(()=>{
     if(securityUser?.customer?.name === 'Howick' && !!securityUser?.roles?.find((role) => role?.roleType === 'Support')){
       setValue('technician',user)
@@ -143,9 +143,9 @@ function MachineServiceRecordAddForm() {
                 serviceParam:CI._id,
                 name:CI.name,
                 paramListTitle:checkParam_.paramListTitle,
-                value:CI.value,
-                comment:checkParam_.comment,
-                status:checkParam_.status
+                value:CI?.value,
+                comment:CI?.comment,
+                status:CI?.status?.name
               });
             });
           }
@@ -293,6 +293,7 @@ function MachineServiceRecordAddForm() {
                               handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
                               handleChangeCheckItemListNumberValue={handleChangeCheckItemListNumberValue}
                               handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
+                              handleChangeCheckItemListComment={handleChangeCheckItemListComment}
                             />
 
                         {/* <Grid key={index}  item md={12} >
