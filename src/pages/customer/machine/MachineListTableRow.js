@@ -10,11 +10,14 @@ import { styled } from '@mui/material/styles';
 import { fDate } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
+import IconTooltip from '../../components/Icons/IconTooltip';
+import LinkTableCellButtons from '../../components/ListTableTools/LinkTableCellButtons';
 
 MachineListTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onViewRow: PropTypes.func,
+  onMoveMachine: PropTypes.func
 };
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
@@ -29,6 +32,7 @@ export default function MachineListTableRow({
   row,
   selected,
   onViewRow,
+  onMoveMachine,
 }) {
   const {
     serialNo,
@@ -44,7 +48,6 @@ export default function MachineListTableRow({
 
   return (
       <StyledTableRow hover selected={selected}>
-        
         <LinkTableCell align="left" param={serialNo} onClick={onViewRow} />
         <TableCell>{name}</TableCell>
         <TableCell>{machineModel?.name}</TableCell>
@@ -52,7 +55,7 @@ export default function MachineListTableRow({
             {Object.values(address ?? {}).map((value) => (typeof value === 'string' ? value.trim() : ''))
                           .filter((value) => value !== '').join(', ')}
         </TableCell>
-  
+        <LinkTableCellButtons moveIcon align="center" onClick={onMoveMachine} />
       </StyledTableRow>
 
   );

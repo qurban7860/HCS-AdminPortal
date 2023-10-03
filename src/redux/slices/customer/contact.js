@@ -8,6 +8,7 @@ const initialState = {
   intial: false,
   formVisibility: false,
   contactEditFormVisibility: false,
+  contactMoveFormVisibility: false,
   responseMessage: null,
   success: false,
   isLoading: false,
@@ -49,6 +50,11 @@ const slice = createSlice({
     // SET TOGGLE
     setContactEditFormVisibility(state, action){
       state.contactEditFormVisibility = action.payload;
+    },
+
+    // SET TOGGLE
+    setContactMoveFormVisibility(state, action){
+      state.contactMoveFormVisibility = action.payload;
     },
 
     // SET TOGGLE
@@ -155,6 +161,7 @@ export default slice.reducer;
 export const {
   setContactFormVisibility,
   setContactEditFormVisibility,
+  setContactMoveFormVisibility,
   resetContact,
   resetContacts,
   resetActiveContacts,
@@ -440,4 +447,29 @@ export function deleteContact(customerID, id) {
   };
 }
 
+
+export function moveCustomerContact(params) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.setContactEditFormVisibility(false));
+
+    try {
+      /* eslint-disable */
+      let data = {
+        // customer : params?.customer,
+        contact: params.firstName,
+        sites: params.lastName
+      };
+
+      await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${params?.customer}/contacts/moveContact`,data);
+      dispatch(slice.actions.setContactMoveFormVisibility(false));
+      dispatch(slice.actions.setResponseMessage('Contact updated successfully'));
+
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
 

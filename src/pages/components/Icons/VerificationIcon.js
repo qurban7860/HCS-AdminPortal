@@ -12,7 +12,7 @@ export default function VerificationIcon({ isVerified }) {
       tooltipcolor={isVerified ? 'green' : 'red'}
     >
       <Iconify
-        icon={isVerified ? 'ic:round-verified-user' : 'mdi:shield-outline'}
+        icon={isVerified ? 'ic:outline-verified-user' : 'mdi:shield-outline'}
         color={isVerified ? 'green' : 'red'}
         width="1.5em"
         sx={{

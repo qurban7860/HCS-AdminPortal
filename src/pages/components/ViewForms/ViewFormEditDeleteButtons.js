@@ -43,7 +43,8 @@ export default function ViewFormEditDeleteButtons({
   sites,
   mainSite,
   handleMap,
-  machineSupportDate
+  machineSupportDate,
+  moveCustomerContact
 }) {
   const { id } = useParams();
   const userId = localStorage.getItem('userId');
@@ -284,6 +285,16 @@ export default function ViewFormEditDeleteButtons({
           />
         )}
 
+        {/* move contact button */}
+        {moveCustomerContact && <IconTooltip
+          title="Move Conact"
+          onClick={() => {
+            moveCustomerContact();
+          }}
+          color={theme.palette.primary.main}
+          icon="eva:swap-fill"
+        />}
+        
         {/* edit button */}
         {handleEdit && <IconTooltip
           title="Edit"
@@ -421,5 +432,6 @@ ViewFormEditDeleteButtons.propTypes = {
   disableDeleteButton: PropTypes.bool,
   disableEditButton: PropTypes.bool,
   handleMap: PropTypes.func,
-  machineSupportDate: PropTypes.string
+  machineSupportDate: PropTypes.string,
+  moveCustomerContact: PropTypes.func
 };
