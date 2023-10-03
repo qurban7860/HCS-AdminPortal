@@ -86,7 +86,7 @@ export default function Header({ onOpenNav }) {
         top: 0,
         zIndex: theme.zIndex.appBar + 1,
         ...bgBlur({
-          color: "#eceff1",
+          color: "#fff",
         }),
         transition: theme.transitions.create(['height'], {
           duration: theme.transitions.duration.shorter,

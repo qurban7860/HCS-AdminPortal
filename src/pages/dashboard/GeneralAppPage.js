@@ -116,19 +116,10 @@ export default function GeneralAppPage() {
 
   
   return (
-    <StyledContainer maxWidth={false} p={0}>
+    <StyledContainer maxWidth={false} p={0} >
       <Grid container item sx={{ justifyContent: 'center' }}>
         <Grid container item xs={12} md={20} lg={20} spacing={3}>
-          <Grid
-            item
-            xs={12}
-            md={10}
-            lg={10}
-            sx={{
-              height: { xs: 250, md: 400 },
-              position: 'relative',
-            }}
-          >
+          <Grid item xs={12} md={10} lg={10} sx={{ height: { xs: 250, md: 400 }, position: 'relative'}}>
             <HowickWelcome title={TITLES.WELCOME} description={TITLES.WELCOME_DESC} />
           </Grid>
         </Grid>
@@ -243,10 +234,7 @@ export default function GeneralAppPage() {
 
             {/* Machine Performance */}
             <Grid item xs={12} md={6} lg={6}>
-              <Card
-                sx={{ px: 3, mb: 3, backgroundColor: 'transparent' }}
-                variants={varFade().inDown}
-              >
+              <Card sx={{ px: 3, mb: 3}} variants={varFade().inDown}>
                 <CardHeader
                   sx={{padding:"15px 0px 0px"}}
                   title="Machine by  Models"
@@ -294,10 +282,7 @@ export default function GeneralAppPage() {
             </Grid>
 
             <Grid item xs={12} md={6} lg={6}>
-              <Card
-                sx={{ px: 3, mb: 3, backgroundColor: 'transparent' }}
-                variants={varFade().inDown}
-              >
+              <Card sx={{ px: 3, mb: 3}} variants={varFade().inDown}>
                 <CardHeader
                   sx={{padding:"15px 0px 0px"}}
                   title="Machine by Years"

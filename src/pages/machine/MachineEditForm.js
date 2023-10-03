@@ -74,6 +74,7 @@ export default function MachineEditForm() {
   // const [billingVal, setBillingVal] = useState('');
   const [shippingDate, setShippingDate] = useState(null);
   const [installationDate, setInstallationDate] = useState(null);
+  const [supportExpireDate, setSupportExpireDate] = useState(null);
   // const [disableInstallationDate, setInstallationDateToggle] = useState(true);
   // const [disableShippingDate, setShippingDateToggle] = useState(true);
   // const [accoVal, setAccoManVal] = useState('');
@@ -150,6 +151,7 @@ export default function MachineEditForm() {
       accountManager: machine.accountManager || null,
       projectManager: machine.projectManager || null,
       supportManager: machine.supportManager || null,
+      supportExpireDate: machine.supportExpireDate || null,
       // customerTags: [],
       description: machine.description || '',
       isActive: machine.isActive || false,
@@ -238,6 +240,9 @@ export default function MachineEditForm() {
     if(machine?.shippingDate){
       setShippingDate(machine?.shippingDate);
     }
+    if(machine?.supportExpireDate){
+      setSupportExpireDate(machine?.supportExpireDate);
+    }
   }, [dispatch, machine]);
 
   useLayoutEffect(() => {
@@ -258,12 +263,13 @@ export default function MachineEditForm() {
 
   const onSubmit = async (data) => {
 
-      data.alias = chips;
+    data.alias = chips;
     data.installationDate = installationDate;
     data.shippingDate = shippingDate;
+    data.supportExpireDate = supportExpireDate;
     try {
       await dispatch(updateMachine(machine._id ,data));
-      enqueueSnackbar('Update success!');
+      enqueueSnackbar('Machine updated successfully!');
       setShippingDate(null);
       setInstallationDate(null);
       reset();
@@ -687,6 +693,8 @@ export default function MachineEditForm() {
                     onChange={(newValue) => setShippingDate(newValue)}
                     renderInput={(params) => <TextField {...params} />}
                   />
+
+                  
                 {/* <Controller
                   name="shippingDate"
                   control={control}
@@ -830,6 +838,14 @@ export default function MachineEditForm() {
                   />
                   )}
                 />
+
+                  <DatePicker
+                    label="Support Expiry Date"
+                    value={supportExpireDate}
+                    // disabled={disableShippingDate}
+                    onChange={(newValue) => setSupportExpireDate(newValue)}
+                    renderInput={(params) => <TextField {...params} />}
+                  />
                 </Box>
 
                 {/* -------------------------------- Description -------------------------------- */}

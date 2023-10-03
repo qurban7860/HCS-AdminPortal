@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Grid, Link, Tooltip, Breadcrumbs, Chip, CardHeader } from '@mui/material';
+import { Card, Grid, Link, Chip} from '@mui/material';
 // routes
 import { PATH_MACHINE } from '../../routes/paths';
 // slices
@@ -23,8 +23,6 @@ import { setToolInstalledFormVisibility, setToolInstalledEditFormVisibility } fr
 import useResponsive from '../../hooks/useResponsive';
 import { useSnackbar } from '../../components/snackbar';
 // components
-import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
-import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
 import ViewFormField from '../components/ViewForms/ViewFormField';
 import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
@@ -32,7 +30,7 @@ import FormLabel from '../components/DocumentForms/FormLabel';
 import NothingProvided from '../components/Defaults/NothingProvided';
 import GoogleMaps from '../../assets/GoogleMaps';
 // constants
-import { BREADCRUMBS, TITLES, FORMLABELS } from '../../constants/default-constants';
+import { TITLES, FORMLABELS } from '../../constants/default-constants';
 import { Snacks } from '../../constants/machine-constants';
 // utils
 import { fDate } from '../../utils/formatTime';
@@ -198,6 +196,7 @@ export default function MachineViewForm() {
       accountManager: machine?.accountManager || '',
       projectManager: machine?.projectManager || '',
       supportManager: machine?.supportManager || '',
+      supportExpireDate: machine?.supportExpireDate  || '',
       isActive: machine?.isActive,
       createdByFullName: machine?.createdBy?.name,
       createdAt: machine?.createdAt,
@@ -239,6 +238,7 @@ export default function MachineViewForm() {
             onDelete={onDelete}
             handleTransfer={handleTransfer}
             backLink={() => navigate(PATH_MACHINE.machines.list)}
+            machineSupportDate={defaultValues?.supportExpireDate}
           />
 
           <FormLabel content={FORMLABELS.KEYDETAILS} />
@@ -268,8 +268,7 @@ export default function MachineViewForm() {
                 </Grid>
               </Card>
               
-        <Card sx={{ p: 3 }}>
-          
+              <Card sx={{ width: '100%', p: '1rem', mb:3 }}>
 
           {/* <Grid display="inline-flex">
             <Tooltip title="Active">
@@ -387,6 +386,12 @@ export default function MachineViewForm() {
               heading="Suppport Manager"
               param={defaultValues?.supportManager?.firstName}
               secondParam={defaultValues?.supportManager?.lastName}
+            />
+
+            <ViewFormField
+              sm={6}
+              heading="Suppory Expiry Date"
+              param={fDate(defaultValues?.supportExpireDate)}
             />
             <ViewFormField />
           </Grid>
