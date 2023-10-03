@@ -91,6 +91,12 @@ function MachineServiceRecordAddForm() {
 
   const { decoilers, operators, serviceRecordConfig, technician, docRecordType } = watch()
   
+  useEffect(() => {
+    if(docRecordType?.name !== serviceRecordConfig?.recordType){
+      dispatch(getActiveServiceRecordConfigsForRecords(machine?._id, docRecordType))
+    }
+  },[docRecordType, serviceRecordConfig, dispatch, machine?._id])
+  
   useEffect(()=>{
     if(securityUser?.customer?.name === 'Howick' && !!securityUser?.roles?.find((role) => role?.roleType === 'Support')){
       setValue('technician',user)

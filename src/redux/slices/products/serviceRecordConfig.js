@@ -199,12 +199,13 @@ export function getActiveServiceRecordConfigsForRecords(machineId, type){
       const query = {
         params: {
           isArchived: false,
-          isActive: true
+          isActive: true,
+          recordType: type?.name,
         }
       }
 
       
-      Object.assign(query.params, type)
+      // Object.assign(query.params, type)
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordsConfig`, query);
       dispatch(slice.actions.getActiveServiceRecordConfigsForRecordsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('ServiceRecordConfigs loaded successfully'));
