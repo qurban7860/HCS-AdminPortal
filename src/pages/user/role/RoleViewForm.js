@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Card, Grid, Tooltip } from '@mui/material';
+import { Card, Grid } from '@mui/material';
 // redux
 import { deleteRole } from '../../../redux/slices/securityUser/role';
 // paths
@@ -73,22 +73,14 @@ export default function RoleViewForm() {
           handleEdit={handleEdit}
           onDelete={onDelete}
           backLink={() => navigate(PATH_SETTING.role.list)}
+          isActive={defaultValues.isActive}
         />
-        <Grid display="inline-flex">
-          <Tooltip>
-            <ViewFormField isActive={defaultValues.isActive} />
-          </Tooltip>
-          <Tooltip>
-            <ViewFormField deleteDisabled={defaultValues.disableDelete} />
-          </Tooltip>
-        </Grid>
-        <Grid container>
+        <Grid container sx={{mt:2}}>
           <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
           <ViewFormField sm={12} heading="Role Type" param={defaultValues.roleType} />
           <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
           <ViewFormField sm={12} heading="Assigned Users" arrayParam={assignedUsers} />
           <ViewFormField sm={12}  />
-          
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
       </Grid>

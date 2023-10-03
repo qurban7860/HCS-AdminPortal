@@ -130,8 +130,7 @@ export const StyledContainer = styled(Container)(({ theme }) => ({
   backgroundImage: `url(../../assets/illustrations/illustration_howick_icon.svg)`,
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'top right',
-  backgroundSize: 'auto 90%',
-  backgroundOpacity: 0.1,
+  backgroundSize: 'auto 80%',
   backgroundAttachment: 'fixed',
   display: 'flex',
   flexDirection: 'column',
@@ -139,7 +138,6 @@ export const StyledContainer = styled(Container)(({ theme }) => ({
   alignItems: 'center',
   padding: 0,
   alignContent: 'center',
-  color: 'text.primary',
 }));
 
 export const StyledGlobalCard = styled(Card)(({ theme }) => ({

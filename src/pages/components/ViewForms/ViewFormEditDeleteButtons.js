@@ -18,6 +18,7 @@ import IconTooltip from '../Icons/IconTooltip';
 import ViewFormField from './ViewFormField';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
 import { ICONS } from '../../../constants/icons/default-icons';
+import { fDate } from '../../../utils/formatTime';
 
 export default function ViewFormEditDeleteButtons({
   backLink,
@@ -42,6 +43,7 @@ export default function ViewFormEditDeleteButtons({
   sites,
   mainSite,
   handleMap,
+  machineSupportDate
 }) {
   const { id } = useParams();
   const userId = localStorage.getItem('userId');
@@ -143,6 +145,11 @@ export default function ViewFormEditDeleteButtons({
     formState: { isSubmitting, isSubmitSuccessful },
   } = methods;
 
+  const machineSupport = {
+    status:new Date(machineSupportDate).getTime() > new Date().getTime(),
+    date: new Date(machineSupportDate)
+  }
+
   return (
     <Grid container justifyContent="space-between">
       <Grid item sx={{display:'flex'}}>
@@ -165,8 +172,15 @@ export default function ViewFormEditDeleteButtons({
               title={isActive?ICONS.ACTIVE.heading:ICONS.INACTIVE.heading}
               color={isActive?ICONS.ACTIVE.color:ICONS.INACTIVE.color}
               icon={isActive?ICONS.ACTIVE.icon:ICONS.INACTIVE.icon}
-              
             />
+          }
+          
+          {machineSupportDate &&
+            <IconTooltip
+              title={machineSupport?.status?`Support valid till ${fDate(machineSupportDate)}`:`Support ended ${fDate(machineSupportDate)}`}
+              color={machineSupport?.status?ICONS.ALLOWED.color:ICONS.DISALLOWED.color}
+              icon="bx:support"
+              />
           }
           
           {isVerified?.length>0 &&
@@ -174,11 +188,13 @@ export default function ViewFormEditDeleteButtons({
             <IconTooltip
               title='Verified'
               color={ICONS.ALLOWED.color}
-              icon="ic:round-verified-user"
+              icon="ic:outline-verified-user"
               onClick={handleVerifiedPopoverOpen}
               />
           </Badge>
           }
+
+          
 
           {customerAccess !== undefined && 
             <IconTooltip
@@ -221,7 +237,7 @@ export default function ViewFormEditDeleteButtons({
             title='Verify'
             onClick={() => { handleOpenConfirm('Verification');}}
             color={theme.palette.primary.main}
-            icon="ic:round-verified-user"
+            icon="ic:outline-verified-user"
           />
         )}
 
@@ -230,7 +246,7 @@ export default function ViewFormEditDeleteButtons({
           <IconTooltip 
           title="Resend Invitation"
           disabled={disableDeleteButton}
-          color={theme.palette.secondary.main}
+          color={disableDeleteButton?"#c3c3c3":theme.palette.secondary.main}
           icon="mdi:person-add-outline"
           onClick={() => {
             handleOpenConfirm('UserInvite');
@@ -250,7 +266,7 @@ export default function ViewFormEditDeleteButtons({
             onClick={() => {
               handleOpenConfirm('transfer');
             }}
-            color={theme.palette.primary.main}
+            color={disableTransferButton?"#c3c3c3":theme.palette.primary.main}
             icon="mdi:cog-transfer-outline"
           />
         )}
@@ -259,11 +275,11 @@ export default function ViewFormEditDeleteButtons({
         {handleUpdatePassword && (
           <IconTooltip
             title="Change Password"
-            disabled={disablePasswordButton}
             onClick={() => {
               handleUpdatePassword();
             }}
             color={theme.palette.secondary.main}
+            color={disablePasswordButton?"#c3c3c3":theme.palette.secondary.main}
             icon="mdi:account-key-outline"
           />
         )}
@@ -275,7 +291,7 @@ export default function ViewFormEditDeleteButtons({
           onClick={() => {
             handleEdit();
           }}
-          color={theme.palette.primary.main}
+          color={disableEditButton?"#c3c3c3":theme.palette.primary.main}
           icon="mdi:pencil-outline"
         />}
 
@@ -287,7 +303,7 @@ export default function ViewFormEditDeleteButtons({
             onClick={() => {
               handleOpenConfirm('delete');
             }}
-            color={theme.palette.error.light}
+            color={disableDeleteButton?"#c3c3c3":theme.palette.error.main}
             icon="mdi:trash-can-outline"
           />
         )}
@@ -405,4 +421,5 @@ ViewFormEditDeleteButtons.propTypes = {
   disableDeleteButton: PropTypes.bool,
   disableEditButton: PropTypes.bool,
   handleMap: PropTypes.func,
+  machineSupportDate: PropTypes.string
 };

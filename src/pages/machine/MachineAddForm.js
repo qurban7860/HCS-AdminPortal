@@ -80,6 +80,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   // const [currTag, setCurrTag] = useState('');
   const [shippingDate, setShippingDate] = useState(null);
   const [installationDate, setInstallationDate] = useState(null);
+  const [supportExpireDate, setSupportExpireDate] = useState(null);
   // const [disableInstallationDate, setInstallationDateToggle] = useState(true);
   // const [disableShippingDate, setShippingDateToggle] = useState(true);
 
@@ -175,6 +176,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       accountManager: null,
       projectManager: null,
       supportManager: null,
+      supportExpireDate: null,
       customerTags: [],
       description: '',
       isActive: true,
@@ -233,7 +235,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   }));
 
   const onSubmit = async (data) => {
-    console.log("data : " , data)
 
     if (chips && chips.length > 0) {
       data.alias = chips;
@@ -241,7 +242,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
 
     data.installationDate = installationDate;
     data.shippingDate = shippingDate;
-
+    data.supportExpireDate = supportExpireDate;
+    
     try {
       await dispatch(addMachine(data));
 
@@ -662,6 +664,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     onChange={(newValue) => setShippingDate(newValue)}
                     renderInput={(params) => <TextField {...params} />}
                   />
+
+                  
                 {/* <Controller
                   name="shippingDate"
                   control={control}
@@ -805,6 +809,15 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   />
                   )}
                 />
+
+                  <DatePicker
+                    label="Support Expiry Date"
+                    name="supportExpireDate"
+                    value={supportExpireDate}
+                    // disabled={disableInstallationDate}
+                    onChange={(newValue) => setSupportExpireDate(newValue)}
+                    renderInput={(params) => <TextField {...params} />}
+                  />
                 </Box>
 
                 {/* -------------------------------- Description -------------------------------- */}

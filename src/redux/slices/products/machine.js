@@ -458,76 +458,32 @@ export function addMachine(params) {
       dispatch(slice.actions.resetMachine());
       dispatch(slice.actions.startLoading());
       try {
-        /* eslint-disable */
-        let data = {
-          isActive: params.isActive,
+        const data = {
+          serialNo: params?.serialNo,
+          name: params?.name,
+          alias: params?.alias,
+          parentSerialNo: params?.parentSerialNo?.serialNo,
+          parentMachine: params?.parentSerialNo?.name,
+          supplier: params?.supplier?._id || null,
+          machineModel: params?.machineModel?._id || null,
+          customer: params?.customer?._id || null,
+          status: params?.status?._id || null,
+          workOrderRef: params?.workOrderRef,
+          instalationSite: params?.instalationSite?._id || null,
+          billingSite: params?.billingSite?._id || null,
+          installationDate: params?.installationDate,
+          shippingDate: params?.shippingDate,
+          siteMilestone: params?.siteMilestone,
+          accountManager: params?.accountManager?._id || null,
+          projectManager: params?.projectManager?._id || null,
+          supportManager: params?.supportManager?._id || null,
+          description: params?.description,
+          customerTags: params?.customerTags,
+          machineConnections: params?.machineConnectionVal.map(obj => obj._id),
+          isActive: params?.isActive,
+          supportExpireDate : params?.supportExpireDate 
         };
-        /* eslint-enable */
-        if(params.name){
-          data.name = params.name
-        }
-        if(params.siteMilestone){
-          data.siteMilestone = params.siteMilestone
-        }
-        if(params.machineConnectionVal){
-          data.machineConnections = params.machineConnectionVal.map(obj => obj._id);
-        }
-        if(params.alias){
-          data.alias = params.alias;        
-        }
-        if(params.serialNo){
-          data.serialNo = params.serialNo;        
-        }
-        if(params.parentSerialNo){
-          data.parentMachine = params.parentSerialNo._id;        
-        }
-        if(params.parentSerialNo){
-          data.parentSerialNo = params.parentSerialNo.serialNo;        
-        }
-        if(params.status){
-          data.status = params.status._id;        
-        }
-        if(params.supplier){
-          data.supplier = params.supplier._id;        
-        }
-        if(params.machineModel){
-            data.machineModel = params.machineModel._id;        
-        }
-        if(params.workOrderRef){
-          data.workOrderRef = params.workOrderRef;        
-        }
-        if(params.customer){
-          data.customer = params.customer._id;        
-        }
-        if(params.billingSite){
-          data.billingSite = params.billingSite._id;        
-        }
-        if(params.instalationSite){
-          data.instalationSite = params.instalationSite._id; 
-        }
-        if(params.installationDate){
-          data.installationDate = params.installationDate;
-        } 
-        if(params.shippingDate){
-          data.shippingDate = params.shippingDate;
-        }    
-        if(params.accountManager){
-          data.accountManager = params.accountManager._id;        
-        }
-        if(params.projectManager){
-            data.projectManager = params.projectManager._id;        
-        }
-        if(params.supportManager){
-            data.supportManager = params.supportManager._id;        
-        }
-        if(params.description){
-          data.description = params.description;        
-        }
-        if(params.customerTags){
-          data.customerTags = params.customerTags;        
-        }
         const response = await axios.post(`${CONFIG.SERVER_URL}products/machines`, data);
-
         dispatch(slice.actions.getMachineSuccess(response.data.Machine));
       } catch (error) {
         console.error(error);
@@ -543,9 +499,6 @@ export function addMachine(params) {
 export function updateMachine(machineId, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    console.log("params: " , params);
-    const machineConVal = params?.machineConnectionVal.map(obj => obj._id)
-    console.log(" machineConVal : " , machineConVal)
     try {
       const data = {
         serialNo: params?.serialNo,
@@ -570,69 +523,8 @@ export function updateMachine(machineId, params) {
         customerTags: params?.customerTags,
         machineConnections: params?.machineConnectionVal.map(obj => obj._id),
         isActive: params?.isActive,
+        supportExpireDate : params?.supportExpireDate 
       };
-      console.log("data ready for dispach : ", data);
-      // if(params?.serialNo){
-      //   data.serialNo = params.serialNo
-      // }
-      // if(params.name){
-      //   data.name = params.name 
-      // }
-      // if(params?.parentSerialNo?.serialNo){
-      //   data.parentSerialNo =params.parentSerialNo.serialNo
-      // }
-      // if(params?.parentSerialNo?.name){
-      //   data.parentMachine =params.parentSerialNo._id
-      // }
-      // if(params?.alias){
-      //   data.alias =  params.alias
-      // }
-      // if(params?.supplier?._id){
-      //   data.supplier = params.supplier._id
-      // }
-      // if(params?.model?._id){
-      //   data.machineModel = params.model._id
-      // }
-      // if(params?.customer?._id){
-      //   data.customer = params.customer._id
-      // }
-      // if(params?.status?._id){
-      //   data.status = params.status._id
-      // }
-      // if(params?.workOrderRef){
-      //   data.workOrderRef = params.workOrderRef
-      // }
-      // if(params?.instalationSite?._id){
-      //   data.instalationSite = params.instalationSite._id
-      // }
-      // if(params?.billingSite?._id){
-      //   data.billingSite = params.billingSite._id
-      // }
-      // if(params?.installationDate){
-      //   data.installationDate = params.installationDate
-      // }
-      // if(params?.shippingDate){
-      //   data.shippingDate = params.shippingDate
-      // }
-      // if(params?.siteMilestone){
-      //   data.siteMilestone = params.siteMilestone
-      // }
-      // if(params?.accountManager?._id){
-      //   data.accountManager = params.accountManager._id
-      // }
-      // if(params?.projectManager?._id){
-      //   data.projectManager = params.projectManager._id
-      // }
-      // if(params?.supportManager?._id){
-      //   data.supportManager = params.supportManager._id
-      // }
-      // if(params?.description){
-      //   data.description = params.description
-      // }
-
-      // if(params.machineConnectionVal){
-      //   data.machineConnections = params.machineConnectionVal.map(obj => obj._id);
-      // }
      /* eslint-enable */
       await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}`,
         data
