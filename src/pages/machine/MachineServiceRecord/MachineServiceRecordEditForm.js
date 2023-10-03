@@ -169,7 +169,7 @@ function MachineServiceRecordEditForm() {
                 name:CI.name || "",
                 paramListTitle:checkParam_.paramListTitle || "",
                 value:CI.value || "",
-                comment: CI?.comment || "" ,
+                comments: CI?.comments || "" ,
                 status: CI?.status?.name || "" ,
               });
             });
@@ -206,7 +206,7 @@ function MachineServiceRecordEditForm() {
           paramListTitle: updatedVal[index]?.paramListTitle || '',
           value: updatedVal[index]?.value || '',
           status: updatedVal[index]?.status,
-          comment: updatedVal[index]?.comment || '',
+          comments: updatedVal[index]?.comments || '',
         };
         return updatedVal;
       });
@@ -248,7 +248,7 @@ function MachineServiceRecordEditForm() {
   const handleChangeCheckItemListComment = (index, childIndex, value) => {
     const updatedCheckParams = [...checkParamList];
     const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
-    updatedCheckParamObject.comment = value;
+    updatedCheckParamObject.comments = value;
     setCheckParamList(updatedCheckParams);
   }
 

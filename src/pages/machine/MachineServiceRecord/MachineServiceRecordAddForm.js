@@ -144,7 +144,7 @@ function MachineServiceRecordAddForm() {
                 name:CI.name,
                 paramListTitle:checkParam_.paramListTitle,
                 value:CI?.value,
-                comment:CI?.comment,
+                comments:CI?.comment,
                 status:CI?.status?.name
               });
             });
@@ -193,7 +193,7 @@ function MachineServiceRecordAddForm() {
   const handleChangeCheckItemListComment = (index, childIndex, value) => {
     const updatedCheckParams = [...checkParamList];
     const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
-    updatedCheckParamObject.comment = value;
+    updatedCheckParamObject.comments = value;
     setCheckParamList(updatedCheckParams);
   }
   
