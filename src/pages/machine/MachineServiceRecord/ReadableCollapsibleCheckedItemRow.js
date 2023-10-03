@@ -40,7 +40,7 @@ const CollapsibleCheckedItemRow = ({value, index, toggleEdit, deleteIndex, handl
                           machineServiceRecord?.checkParams?.find((element) =>
                           element?.paramListTitle === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramListTitle && element?.serviceParam === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramList[childIndex]?._id
                           )?.value || false
-                          } disabled sx={{mr:'auto'}}/> 
+                          } disabled sx={{mr:'auto', my:-0.9}} /> 
                           :
                         <Typography variant="body2" sx={{pr:1.5}}>
                         {machineServiceRecord?.checkParams?.find((element) =>
