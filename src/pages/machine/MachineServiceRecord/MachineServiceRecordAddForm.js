@@ -96,7 +96,7 @@ function MachineServiceRecordAddForm() {
       dispatch(getActiveServiceRecordConfigsForRecords(machine?._id, docRecordType))
     }
   },[docRecordType, serviceRecordConfig, dispatch, machine?._id])
-  
+
   useEffect(()=>{
     if(securityUser?.customer?.name === 'Howick' && !!securityUser?.roles?.find((role) => role?.roleType === 'Support')){
       setValue('technician',user)
@@ -143,9 +143,9 @@ function MachineServiceRecordAddForm() {
                 serviceParam:CI._id,
                 name:CI.name,
                 paramListTitle:checkParam_.paramListTitle,
-                value:CI.value,
-                comment:checkParam_.comment,
-                status:checkParam_.status
+                value:CI?.value,
+                comments:CI?.comment,
+                status:CI?.status?.name
               });
             });
           }
@@ -193,7 +193,7 @@ function MachineServiceRecordAddForm() {
   const handleChangeCheckItemListComment = (index, childIndex, value) => {
     const updatedCheckParams = [...checkParamList];
     const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
-    updatedCheckParamObject.comment = value;
+    updatedCheckParamObject.comments = value;
     setCheckParamList(updatedCheckParams);
   }
   
@@ -293,6 +293,7 @@ function MachineServiceRecordAddForm() {
                               handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
                               handleChangeCheckItemListNumberValue={handleChangeCheckItemListNumberValue}
                               handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
+                              handleChangeCheckItemListComment={handleChangeCheckItemListComment}
                             />
 
                         {/* <Grid key={index}  item md={12} >

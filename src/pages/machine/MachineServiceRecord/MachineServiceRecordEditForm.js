@@ -169,13 +169,13 @@ function MachineServiceRecordEditForm() {
                 name:CI.name || "",
                 paramListTitle:checkParam_.paramListTitle || "",
                 value:CI.value || "",
-                comment:checkParam_?.comment || "",
-                status:checkParam_?.status?.name || "",
+                comments: CI?.comments || "" ,
+                status: CI?.status?.name || "" ,
               });
             });
           }
         });
-
+        console.log("checkParams_ : ",checkParams_)
       data.checkParams = checkParams_;
       data.decoilers = decoilers;
       data.operators = operators;
@@ -206,7 +206,7 @@ function MachineServiceRecordEditForm() {
           paramListTitle: updatedVal[index]?.paramListTitle || '',
           value: updatedVal[index]?.value || '',
           status: updatedVal[index]?.status,
-          comment: updatedVal[index]?.comment || '',
+          comments: updatedVal[index]?.comments || '',
         };
         return updatedVal;
       });
@@ -248,7 +248,7 @@ function MachineServiceRecordEditForm() {
   const handleChangeCheckItemListComment = (index, childIndex, value) => {
     const updatedCheckParams = [...checkParamList];
     const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
-    updatedCheckParamObject.comment = value;
+    updatedCheckParamObject.comments = value;
     setCheckParamList(updatedCheckParams);
   }
 
@@ -334,6 +334,7 @@ function MachineServiceRecordEditForm() {
                         checkParamList={checkParamList} 
                         handleChangeCheckItemListValue={handleChangeCheckItemListValue}
                         handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
+                        handleChangeCheckItemListComment={handleChangeCheckItemListComment}
                         handleChangeCheckItemListNumberValue={handleChangeCheckItemListNumberValue}
                         handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
                       />
