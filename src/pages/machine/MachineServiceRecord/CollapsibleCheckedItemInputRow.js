@@ -80,8 +80,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
                                     handleChangeCheckItemListNumberValue(index, childIndex, e.target.value)
                                     }else{
                                       handleChangeCheckItemListNumberValue(index, childIndex, checkParamList[index]?.paramList[childIndex].value)
-                                    }
-                                  }
+                                    }}
                                 } 
                                 size="small" sx={{m:0.3}} 
                                 required={childRow?.isRequired}
