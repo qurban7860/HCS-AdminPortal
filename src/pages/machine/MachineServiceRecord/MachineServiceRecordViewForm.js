@@ -6,14 +6,19 @@ import {  Card, Grid, Tooltip, Typography, Box, Checkbox } from '@mui/material';
 import { deleteMachineServiceRecord, setAllFlagsFalse, setMachineServiceRecordEditFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
 // components
 import { useSnackbar } from '../../../components/snackbar';
+import FormHeading from '../../components/DocumentForms/FormHeading';
+import { FORMLABELS } from '../../../constants/default-constants';
 // import { fDate, fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 // import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import { fDate } from '../../../utils/formatTime';
+import ReadableCollapsibleCheckedItemRow from './ReadableCollapsibleCheckedItemRow';
+
 
 function MachineServiceParamViewForm() {
+
   const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine)
 
@@ -80,13 +85,14 @@ function MachineServiceParamViewForm() {
           <ViewFormField sm={6} heading="Technician"  param={defaultValues?.technician?.name || ''} />
           <ViewFormField sm={12} heading="Technician Remarks" param={defaultValues.technicianRemarks} />
           <ViewFormField sm={12} heading="Decoilers" arrayParam={defaultValues?.decoilers?.map((decoilerMachine) => ({ name: `${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`}))} />
-          <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7, pt:1}}>
-            Check Items
-          </Typography>
-          <Grid item md={12} sx={{display:'flex', flexDirection:'column',p:2}}>
+
+          {machineServiceRecord?.serviceRecordConfig?.checkParams?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
+
+          <Grid item md={12} sx={{display:'flex', flexDirection:'column'}}>
             {machineServiceRecord?.serviceRecordConfig?.checkParams?.length > 0 ? (machineServiceRecord?.serviceRecordConfig?.checkParams.map((row, index) =>
               <>
-                <Grid key={index}  item md={12} sx={{pb:1}} >
+                    <ReadableCollapsibleCheckedItemRow value={row} index={index} />
+                {/* <Grid key={index}  item md={12} sx={{pb:1}} >
                   <Typography variant="body2" sx={{fontWeight:'bold'}}>{`${index+1}). `} {typeof row?.paramListTitle === 'string' && row?.paramListTitle || ''}{' ( Items: '}{`${row?.paramList?.length}`}{' ) '}</Typography>
                 </Grid>
                 <Grid  item md={12} sx={{ pb:1}}>
@@ -95,7 +101,7 @@ function MachineServiceParamViewForm() {
                       component="form"
                       noValidate
                       autoComplete="off"
-                      sx={{padding:'5px 20px', background:(childIndex%2===0?'#f4f6f866':''), 
+                      sx={{ background:(childIndex%2===0?'#f4f6f866':''), 
                       ":hover": {
                         backgroundColor: "#dbdbdb66"
                       }}}
@@ -119,9 +125,8 @@ function MachineServiceParamViewForm() {
                           )?.value }
                         </Typography> }
                       </Box>
-                    </Box>
-                  ))}
-                </Grid>
+                    </Box>))}
+                </Grid> */}
               </>
               )) : <ViewFormField /> }
           </Grid>

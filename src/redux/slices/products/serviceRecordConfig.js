@@ -19,6 +19,11 @@ const initialState = {
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
+  statusTypes: [
+    { _id:3 , name: 'In-Process'},
+    { _id:2 , name: 'Partly-Done'},
+    { _id:1 , name: 'Complete'},
+  ],
   recordTypes: [
     { _id:1 , name: 'Service'},
     { _id:2 , name: 'Repair'},
@@ -194,12 +199,13 @@ export function getActiveServiceRecordConfigsForRecords(machineId, type){
       const query = {
         params: {
           isArchived: false,
-          isActive: true
+          isActive: true,
+          recordType: type?.name,
         }
       }
 
       
-      Object.assign(query.params, type)
+      // Object.assign(query.params, type)
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordsConfig`, query);
       dispatch(slice.actions.getActiveServiceRecordConfigsForRecordsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('ServiceRecordConfigs loaded successfully'));

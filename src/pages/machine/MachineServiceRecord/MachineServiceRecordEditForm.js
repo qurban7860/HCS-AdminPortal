@@ -31,6 +31,7 @@ import FormProvider, {
 } from '../../../components/hook-form';
 import CollapsibleCheckedItemRow from '../ServiceRecordConfig/CollapsibleCheckedItemRow'
 import { getActiveSecurityUsers } from '../../../redux/slices/securityUser/securityUser';
+import CollapsibleCheckedItemInputRow from './CollapsibleCheckedItemInputRow';
 
 // ----------------------------------------------------------------------
 
@@ -70,6 +71,8 @@ function MachineServiceRecordEditForm() {
               return {
                 ...childRow,
                 value: foundParam ? foundParam.value : '',
+                status: foundParam ? foundParam.status : '',
+                comment: foundParam ? foundParam.comment : '',
               };
             });
         
@@ -166,6 +169,8 @@ function MachineServiceRecordEditForm() {
                 name:CI.name || "",
                 paramListTitle:checkParam_.paramListTitle || "",
                 value:CI.value || "",
+                comment:checkParam_?.comment || "",
+                status:checkParam_?.status?.name || "",
               });
             });
           }
@@ -200,7 +205,8 @@ function MachineServiceRecordEditForm() {
           name: updatedVal[index]?.name || '',
           paramListTitle: updatedVal[index]?.paramListTitle || '',
           value: updatedVal[index]?.value || '',
-          comments: updatedVal[index]?.comments || '',
+          status: updatedVal[index]?.status,
+          comment: updatedVal[index]?.comment || '',
         };
         return updatedVal;
       });
@@ -224,6 +230,28 @@ function MachineServiceRecordEditForm() {
     updatedCheckParamObject.value =  !updatedCheckParams[index]?.paramList[childIndex]?.value ;
     setCheckParamList(updatedCheckParams);
   }
+  
+  const handleChangeCheckItemListNumberValue = (index, childIndex, value) => {
+      const updatedCheckParams = [...checkParamList];
+      const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
+      updatedCheckParamObject.value = value;
+      setCheckParamList(updatedCheckParams);
+  }
+
+  const handleChangeCheckItemListStatus = (index, childIndex, value) => {
+    const updatedCheckParams = [...checkParamList];
+    const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
+    updatedCheckParamObject.status = value;
+    setCheckParamList(updatedCheckParams);
+  }
+
+  const handleChangeCheckItemListComment = (index, childIndex, value) => {
+    const updatedCheckParams = [...checkParamList];
+    const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
+    updatedCheckParamObject.comment = value;
+    setCheckParamList(updatedCheckParams);
+  }
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
     <Grid container spacing={3}>
@@ -300,7 +328,16 @@ function MachineServiceRecordEditForm() {
                       {checkParamList?.map((row, index) =>
                       ( typeof row?.paramList?.length === 'number' &&
                       <>
-                    <Grid key={index}  item md={12} >
+                      <CollapsibleCheckedItemInputRow 
+                        row={row} 
+                        index={index} 
+                        checkParamList={checkParamList} 
+                        handleChangeCheckItemListValue={handleChangeCheckItemListValue}
+                        handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
+                        handleChangeCheckItemListNumberValue={handleChangeCheckItemListNumberValue}
+                        handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
+                      />
+                    {/* <Grid key={index}  item md={12} >
                             <Typography variant="body2" sx={{fontWeight:'bold'}}>{`${index+1}). `} {typeof row?.paramListTitle === 'string' && row?.paramListTitle || ''}{' ( Items: '} {`${row?.paramList?.length}`} {' ) '}</Typography>
                     </Grid>
                     <Grid  item md={12}>
@@ -356,25 +393,26 @@ function MachineServiceRecordEditForm() {
                               /></div>}
                         </Box>
                       ))}
-                    </Grid>
+                    </Grid> */}
                     </>
                       ))}
                 </Grid>
                 { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label="Note" minRows={3} multiline/> }
                 { serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="maintenanceRecommendation" label="Maintenance Recommendation" minRows={3} multiline/> }
                 { serviceRecordConfig?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }
+
                 {defaultValues?.recordType==='Training' &&
                   <Autocomplete multiple
-                  name="operators"
-                  defaultValue={defaultValues.operators}
-                  id="operator-autocomplete" options={machineOperators}
-                  onChange={(event, newValue) => setValue('operators',newValue)}
-                  getOptionLabel={(option) => `${option.firstName ? option.firstName :   ''} ${option.lastName ? option.lastName :   ''}`}
-                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                  renderInput={(params) => (
-                    <TextField {...params} variant="outlined" label="Operators" placeholder="Select Operators"/>
-                  )}
-                />
+                    name="operators"
+                    defaultValue={defaultValues.operators}
+                    id="operator-autocomplete" options={machineOperators}
+                    onChange={(event, newValue) => setValue('operators',newValue)}
+                    getOptionLabel={(option) => `${option.firstName ? option.firstName :   ''} ${option.lastName ? option.lastName :   ''}`}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    renderInput={(params) => (
+                      <TextField {...params} variant="outlined" label="Operators" placeholder="Select Operators"/>
+                    )}
+                  />
                 }
 
 
