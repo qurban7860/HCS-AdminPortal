@@ -105,8 +105,8 @@ export default function ContactMoveForm() {
         <Grid container>
           <ViewFormField sm={6} heading="Name" param={`${contact?.firstName} ${contact?.lastName}`} />
           <ViewFormField sm={6} heading="Title" param={contact?.title} />
-          {/* <ViewFormField sm={6} heading="Email" param={contact?.email} />
-          <ViewFormField sm={6} heading="Phone" param={contact?.phone} /> */}
+          <ViewFormField sm={6} heading="Email" param={contact?.email} />
+          <ViewFormField sm={6} heading="Phone" param={contact?.phone} />
         </Grid>
       </Card>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
