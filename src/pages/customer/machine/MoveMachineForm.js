@@ -85,7 +85,7 @@ export default function MoveMachineForm() {
       reset();
       setMachineMoveFormVisibility(false);
     } catch (error) {
-      enqueueSnackbar('Moving failed!', { variant: `error` });
+      enqueueSnackbar(error, { variant: `error` });
       console.error(error);
     }
   };

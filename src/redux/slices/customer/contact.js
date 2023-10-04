@@ -466,7 +466,7 @@ export function moveCustomerContact(params) {
         contact: params?.contact,
       };
 
-      await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${params?.customer}/contacts/moveContact`,data);
+      await axios.post(`${CONFIG.SERVER_URL}crm/customers/${params?.customer?._id}/contacts/moveContact`,data);
       dispatch(slice.actions.setContactMoveFormVisibility(false));
       dispatch(slice.actions.setResponseMessage('Contact updated successfully'));
 
