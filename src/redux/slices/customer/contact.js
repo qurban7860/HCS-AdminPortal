@@ -85,6 +85,12 @@ const slice = createSlice({
       state.success = false;
       state.isLoading = false;
     },
+
+    resetContactFormsVisiblity(state){
+      state.contactEditFormVisibility=false;
+      state.contactMoveFormVisibility=false;
+      state.formVisibility=false;
+    },
       
     // GET Contacts
     getContactsSuccess(state, action) {
@@ -165,6 +171,7 @@ export const {
   resetContact,
   resetContacts,
   resetActiveContacts,
+  resetContactFormsVisiblity,
   setResponseMessage,
   setFilterBy,
   ChangeRowsPerPage,
@@ -456,11 +463,10 @@ export function moveCustomerContact(params) {
     try {
       /* eslint-disable */
       let data = {
-        customer : params?.customer?._id,
         contact: params?.contact,
       };
 
-      await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${params?.customer}/contacts/moveContact`,data);
+      await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${data?.customer}/contacts/moveContact`,data);
       dispatch(slice.actions.setContactMoveFormVisibility(false));
       dispatch(slice.actions.setResponseMessage('Contact updated successfully'));
 

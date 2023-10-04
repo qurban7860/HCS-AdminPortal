@@ -21,6 +21,7 @@ import {
   getContacts,
   setContactFormVisibility,
   getContact,
+  resetContactFormsVisiblity,
 } from '../../redux/slices/customer/contact';
 import ContactAddForm from './contact/ContactAddForm';
 import ContactEditForm from './contact/ContactEditForm';
@@ -96,6 +97,11 @@ export default function CustomerContactList(currentContact = null) {
     filterName,
     filterStatus,
   });
+
+  useEffect(() => {
+    dispatch(resetContactFormsVisiblity());
+  }, [dispatch]);
+
 
   useEffect(() => {
     dispatch(getContacts(customer?._id))
