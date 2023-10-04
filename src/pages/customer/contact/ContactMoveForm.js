@@ -16,11 +16,9 @@ import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFAutocomplete } from '../../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
-import { getActiveSites, resetActiveSites } from '../../../redux/slices/customer/site';
 // ----------------------------------------------------------------------
 
 export default function ContactMoveForm() {
-  const { activeSites } = useSelector((state) => state.site);
   const { contact } = useSelector((state) => state.contact);
   const { activeCustomers } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
@@ -33,9 +31,7 @@ export default function ContactMoveForm() {
   const defaultValues = useMemo(
     () => ({
       customer: null,
-      contact: '',
-      sites: '',
-
+      contact: null,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -54,33 +50,15 @@ export default function ContactMoveForm() {
   } = methods;
 
   useEffect(() => {
-    dispatch(resetActiveSites())
     dispatch(getActiveCustomers())
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
-  const { customer } = watch();
-  useEffect(() => {
-    if(customer !== null){
-      dispatch(getActiveSites(customer?._id))
-    }else{
-      dispatch(resetActiveSites())
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customer]);
-
   const onSubmit = async (data) => {
-    
-    if(customer){
-      data.customer = customer?._id;
-    }
 
-    if(contact){
-      data.contact = contact;
+    if(contact?._id){
+      data.contact = contact?._id;
     }
-
-    console.log(data)
 
     try {
       await dispatch(moveCustomerContact(data));
@@ -88,6 +66,7 @@ export default function ContactMoveForm() {
       reset();
       setContactMoveFormVisibility(false);
     } catch (error) {
+      // setValue()
       enqueueSnackbar('Moving failed!', { variant: `error` });
       console.error(error);
     }
@@ -115,23 +94,12 @@ export default function ContactMoveForm() {
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
                 <Stack spacing={1}>
-                  <Typography variant="h3" sx={{ color: 'text.secondary' }}>Move Contact</Typography>
+                  <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>Move Contact</Typography>
                 </Stack>
                 <RHFAutocomplete 
                     name="customer"
                     label="Customer*"
                     options={activeCustomers}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
-                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                    )}
-                  />
-                  <RHFAutocomplete 
-                    // multiple
-                    name="sites"
-                    label="Site"
-                    options={activeSites}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     renderOption={(props, option) => (

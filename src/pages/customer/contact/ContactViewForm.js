@@ -86,9 +86,9 @@ export default function ContactViewForm({
     [contact]
   );
   return (
-    <Grid>
+    <Grid sx={{mt:1}}>
       <ViewFormEditDeleteButtons moveCustomerContact={handleMoveConatct} isActive={defaultValues.isActive} handleEdit={handleEdit} onDelete={onDelete} />
-      <Grid container sx={{mt:2}}>
+      <Grid container>
         <ViewFormField sm={6} heading="First Name" param={defaultValues?.firstName} />
         <ViewFormField sm={6} heading="Last Name" param={defaultValues?.lastName} />
         <ViewFormField sm={6} heading="Title" param={defaultValues?.title} />
