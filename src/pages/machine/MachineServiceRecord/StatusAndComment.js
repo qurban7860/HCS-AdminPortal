@@ -4,7 +4,7 @@ import { Grid, Chip, TableRow, TableCell, Checkbox, Typography, Tooltip } from '
 import { useSelector } from 'react-redux';
 
 import Iconify from '../../../components/iconify';
-import { HtmlTooltip } from '../../../theme/styles/default-styles';
+import { HtmlTooltip, StyledTooltip } from '../../../theme/styles/default-styles';
 import MenuPopover from '../../../components/menu-popover/MenuPopover';
 
 const StatusAndComment = ({index, childIndex, childRow}) => {
@@ -56,7 +56,8 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
           )?.status && <Chip size="small" label={machineServiceRecord?.checkParams?.find((element) =>
           element?.paramListTitle === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramListTitle && element?.serviceParam === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramList[childIndex]?._id
           )?.status} /> }
-          <HtmlTooltip
+
+          {checkItem?.comments ? <HtmlTooltip
             placement="left"
             title={
               <>
@@ -67,11 +68,19 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
           >
             <Iconify
               // onClick={()=> handleVisibilityPopoverOpen()}
-              icon="mdi:comments-outline"
-              sx={{ cursor: (checkItem?.comments ? 'pointer': ''),mx:0.4, color:(checkItem?.comments ? 'green' : 'gray') }}
+              icon="mdi:comment-text-outline"
+              sx={{ cursor: 'pointer',mx:0.4, color: 'green'  }}
               disabled={checkItem?.comments}
             />
-          </HtmlTooltip>
+          </HtmlTooltip> : 
+          <StyledTooltip title="No Comments" placement="top" color="gray">
+            <Iconify
+              icon="mdi:comment-text-outline"
+              sx={{ mx:0.4, color: 'gray', cursor: 'pointer' }}
+              disabled={checkItem?.comments}
+            />
+          </StyledTooltip>
+            }
           </Grid>
 
           </Grid>

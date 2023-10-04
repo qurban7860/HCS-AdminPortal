@@ -1,12 +1,11 @@
 import { useState, memo } from 'react'
 import PropTypes, { number } from 'prop-types';
-import { useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 import { Box, Table, TableBody, TableCell, TableRow,  IconButton, Collapse, Grid, TextField, Checkbox, Typography, Autocomplete } from '@mui/material';
 import Iconify from '../../../components/iconify';
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons'
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import {  RHFTextField, RHFCheckbox, RHFDatePicker, RHFAutocomplete } from '../../../components/hook-form';
-
+import CommentsInput from './CommentsInput';
 
 const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue, 
   handleChangeCheckItemListValue, 
@@ -14,8 +13,6 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
   handleChangeCheckItemListComment,
   handleChangeCheckItemListNumberValue,
   handleChangeCheckItemListCheckBoxValue}) =>{
-    console.log("checkParamList : ",checkParamList)
-  const { statusTypes } = useSelector((state) => state.serviceRecordConfig);
   const [ commentVisibility, setCommentVisibility ] = useState(false)
   const handleCommentVisibility = (Index, childIndex)=>{
 
@@ -42,87 +39,11 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
                           {`${childRow.name}`}
                         </TableCell>
                         <TableCell align='right' >
-                        <Grid  sx={{display: { md:'flex', xs: 'block', }, justifyContent:'end'}}>
-                              {childRow?.inputType === 'Short Text' && <TextField 
-                                // fullWidth
-                                type='text'
-                                label={childRow?.inputType} 
-                                name={`${childRow?.name}_${childIndex}_${index}`} 
-                                onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e)}
-                                size="small" sx={{m:0.3}} 
-                                value={checkParamList[index]?.paramList[childIndex]?.value}
-                                required={childRow?.isRequired}
-                                InputProps={{ inputProps: { maxLength:50 } }}
-                              />}
-
-                              { childRow?.inputType === 'Long Text' &&<TextField 
-                                // fullWidth
-                                type="text"
-                                label={childRow?.inputType} 
-                                name={`${childRow?.name}_${childIndex}_${index}`} 
-                                onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e)}
-                                size="small" sx={{m:0.3}} 
-                                value={checkParamList[index]?.paramList[childIndex]?.value}
-                                minRows={3} multiline
-                                required={childRow?.isRequired}
-                                InputProps={{ inputProps: { maxLength: 200 } }}
-                              />}
-
-                              { childRow?.inputType === 'Number'  && 
-                              <TextField 
-                                // fullWidth
-                                id="outlined-number"
-                                label={`${childRow?.unitType ? childRow?.unitType :'Enter Value'}`}
-                                name={childRow?.name} 
-                                type="number"
-                                value={checkParamList[index]?.paramList[childIndex]?.value}
-                                onChange={(e) => {
-                                  if (/^\d*$/.test(e.target.value)) {
-                                    handleChangeCheckItemListNumberValue(index, childIndex, e.target.value)
-                                    }else{
-                                      handleChangeCheckItemListNumberValue(index, childIndex, checkParamList[index]?.paramList[childIndex].value)
-                                    }}
-                                } 
-                                size="small" sx={{m:0.3}} 
-                                required={childRow?.isRequired}
-                              />}
-
-                              <div>
-                              {childRow?.inputType === 'Boolean' && 
-                              <Checkbox 
-                                name={`${childRow?.name}_${childIndex}_${index}`} 
-                                checked={checkParamList[index].paramList[childIndex]?.value || false} 
-                                onChange={(val)=>handleChangeCheckItemListCheckBoxValue(index, childIndex, val)} 
-                              />}
-                              </div>
-
-                              <Autocomplete 
-                                value={checkParamList[index].paramList[childIndex]?.status || null }
-                                options={statusTypes}
-                                getOptionLabel={(option) => option?.name || ''}
-                                onChange={(event, newInputValue) =>  handleChangeCheckItemListStatus(index, childIndex, newInputValue) }
-                                renderInput={(params) => <TextField {...params} label="Status" size="small" />}
-                                sx={{ minWidth: 180,maxWidth: 255, m:0.3, ml:{sm: 'auto',md: 0}}}
-                              />
-                                <Iconify
-                                  onClick={()=> handleCommentVisibility(index, childIndex)}
-                                  icon="mdi:comments-outline"
-                                  sx={{ cursor: 'pointer', mt:1.7, mx:0.7 }}
+                                <CommentsInput index={index} childIndex={childIndex} 
+                                childRow={childRow}
+                                    checkParamList={checkParamList} 
+                                    handleChangeCheckItemListComment={handleChangeCheckItemListComment} 
                                 />
-                              </Grid>
-
-                                { commentVisibility === `${index}${childIndex}` &&<TextField 
-                                // fullWidth
-                                type="text"
-                                label="Comment" 
-                                name="comment"
-                                onChange={(e) => handleChangeCheckItemListComment(index, childIndex, e.target.value)}
-                                size="small" sx={{m:0.3,ml:{sm: 'auto'}, minWidth:180, pr:{md:4},width: {md: 470 }  }} 
-                                value={checkParamList[index]?.paramList[childIndex]?.comment}
-                                minRows={3} multiline
-                                InputProps={{ inputProps: { maxLength: 200 } }}
-                              />}
-
                         </TableCell>
                       </TableRow>
                     ))}
