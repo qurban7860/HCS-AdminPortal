@@ -20,7 +20,7 @@ import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import GoogleMaps from '../../assets/GoogleMaps';
 import useResponsive from '../../hooks/useResponsive';
-import { getSites, getSite, setSiteFormVisibility } from '../../redux/slices/customer/site';
+import { getSites, getSite, setSiteFormVisibility, resetSiteFormsVisiblity } from '../../redux/slices/customer/site';
 // import { getActiveContacts } from '../../redux/slices/customer/contact';
 import NothingProvided from '../components/Defaults/NothingProvided';
 import SiteAddForm from './site/SiteAddForm';
@@ -56,7 +56,10 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   // for filtering sites
   const isFiltered = filterName !== '' || !!filterStatus.length;
 
-  const toggleChecked = async () => {
+  const toggleChecked = () => {
+  // const toggleChecked = async () => {
+
+    // console.log('aaaaa',siteEditFormVisibility)
     // setChecked((value) => !value);
     if (siteEditFormVisibility) {
       dispatch(setSiteFormVisibility(false));
@@ -66,9 +69,13 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
       setCardActiveIndex(null);
       setIsExpanded(false);
     } else {
+      console.log('else')
+      // dispatch(resetSiteFormsVisiblity(false))
       dispatch(setSiteFormVisibility(true));
       setCardActiveIndex(null);
       setIsExpanded(false);
+
+      console.log('else1')
     }
   };
 
@@ -93,6 +100,12 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   useEffect(() => {
     setTableData(sites);
   }, [sites, error, responseMessage]);
+  
+  useEffect(() => {
+    dispatch(resetSiteFormsVisiblity());
+  }, [dispatch]);
+
+  
 
   // ------------------------------------------------------------
 
@@ -115,7 +128,6 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   useEffect( () => {
     if (!siteAddFormVisibility && !siteEditFormVisibility) {
       dispatch(getSites(customer._id));
-      // dispatch(getActiveContacts(customer._id));
     }
   }, [dispatch, customer, siteAddFormVisibility, siteEditFormVisibility]); 
 

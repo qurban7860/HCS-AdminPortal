@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
@@ -30,11 +30,10 @@ import { Snacks, FORMLABELS as formLABELS } from '../../constants/customer-const
 // ----------------------------------------------------------------------
 
 export default function CustomerViewForm() {
-  const [setIsExpanded] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isMobile = useResponsive('down', 'sm');
-  const { customer, customerEditFormVisibility } = useSelector((state) => state.customer);
+  const { customer, customerEditFormFlag } = useSelector((state) => state.customer);
   const userId = localStorage.getItem('userId');
   const { enqueueSnackbar } = useSnackbar();
   const isNotFound = !customer;
@@ -65,15 +64,9 @@ export default function CustomerViewForm() {
   // ----------------------------handle functions---------------------------------
 
   const handleEdit = async () => {
-    await dispatch(getCustomer(customer._id));
-    if (customerEditFormVisibility) {
-      dispatch(setCustomerEditFormVisibility(false));
-
-      setIsExpanded(false);
-    }
-    if (!customerEditFormVisibility) {
+    // await dispatch(getCustomer(customer._id));
+    if (!customerEditFormFlag) {
       dispatch(setCustomerEditFormVisibility(true));
-      setIsExpanded(true);
     }
   };
 

@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 // import { LoadingButton } from '@mui/lab';
-import { Box,Card, Grid, Stack, Typography, CardHeader } from '@mui/material';
+import { Card, Grid, Stack, Typography, CardHeader } from '@mui/material';
 // slice
 import {moveCustomerContact, setContactMoveFormVisibility } from '../../../redux/slices/customer/contact';
 import { getActiveCustomers } from '../../../redux/slices/customer/customer';
@@ -44,7 +44,6 @@ export default function ContactMoveForm() {
 
   const {
     reset,
-    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;

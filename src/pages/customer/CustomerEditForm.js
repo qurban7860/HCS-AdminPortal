@@ -34,7 +34,7 @@ import { EditCustomerSchema } from '../schemas/customer';
 // ----------------------------------------------------------------------
 
 export default function CustomerEditForm() {
-  const {  customer } = useSelector((state) => state.customer);
+  const {  customer, customerEditFormFlag } = useSelector((state) => state.customer);
   const { sites } = useSelector((state) => state.site);
   const {  spContacts, activeContacts } = useSelector((state) => state.contact);
   const filteredContacts = spContacts.filter((contact) => contact.isActive === true);
@@ -102,9 +102,12 @@ export default function CustomerEditForm() {
   }, [customer, reset, defaultValues]);
 
   const toggleCancel = () => {
+    console.log('aaaa',customerEditFormFlag)
     dispatch(setCustomerEditFormVisibility(false));
-    // navigate(PATH_CUSTOMER.list);
-    navigate(PATH_CUSTOMER.view(customer._id));
+
+    console.log(customerEditFormFlag)
+    // // navigate(PATH_CUSTOMER.list);
+    // navigate(PATH_CUSTOMER.view(customer._id));
 
     // window.history.pushState({}, null, `/customers/${customer._id}/view`);
   };
