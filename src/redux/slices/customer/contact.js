@@ -456,9 +456,8 @@ export function moveCustomerContact(params) {
     try {
       /* eslint-disable */
       let data = {
-        // customer : params?.customer,
-        contact: params.firstName,
-        sites: params.lastName
+        customer : params?.customer?._id,
+        contact: params?.contact,
       };
 
       await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${params?.customer}/contacts/moveContact`,data);

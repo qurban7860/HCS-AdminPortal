@@ -30,12 +30,18 @@ export default function MoveMachineForm() {
     customer: Yup.object().shape({name: Yup.string()}).nullable().required('Customer is required!'),
   });
 
+  const machineProfile = `${machine?.machineProfile?.defaultName || ''} ${machine?.machineProfile?.web && machine?.machineProfile?.flange
+    ? `(${machine.machineProfile.web}X${machine.machineProfile.flange})`
+    : ""} `
+
   const defaultValues = useMemo(
     () => ({
       customer: null,
       installationSite: '',
       billingSite: '',
-
+      serialNo: machine?.serialNo || "",
+      machineModel: machine?.machineModel?.name || "",
+      machineProfile: machineProfile || "",
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -95,20 +101,12 @@ export default function MoveMachineForm() {
         backgroundImage: (theme) => `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`}} />
         
         <Grid container>
-          <ViewFormField sm={2} heading="Serial No" param={machine?.serialNo} />
-          <ViewFormField
-            sm={3}
-            heading="Machine Model"
-            param={machine?.machineModel}
-          />
-          <ViewFormField
-            sm={3}
-            heading="Customer"
-            param={machine?.customer?.name}
-          />
-          <ViewFormField sm={3} heading="Profile" 
+          <ViewFormField sm={2} heading="Serial No" param={defaultValues.serialNo} />
+          <ViewFormField sm={2} heading="Machine Model" param={defaultValues.machineModel} />
+          <ViewFormField sm={2} heading="Profile" param={defaultValues.machineProfile} />
+          {/* <ViewFormField sm={3} heading="Profile" 
             param={`${machine?.machineProfile?.defaultName} ${(machine?.machineProfile?.web && machine?.machineProfile?.flange)? `(${machine?.machineProfile?.web} X ${machine?.machineProfile?.flange})` :""}`} 
-          />
+          /> */}
         </Grid>
       </Card>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -117,7 +115,7 @@ export default function MoveMachineForm() {
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
                 <Stack spacing={1}>
-                  <Typography variant="h3" sx={{ color: 'text.secondary' }}>Move Site</Typography>
+                  <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>Move Machine</Typography>
                 </Stack>
                 <RHFAutocomplete 
                     name="customer"
