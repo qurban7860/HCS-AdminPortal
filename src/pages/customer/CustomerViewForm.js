@@ -41,6 +41,7 @@ export default function CustomerViewForm() {
   const defaultValues = useMemo(
     () => ({
       id: customer?._id || '',
+      code: customer?.clientCode || '',
       name: customer?.name || '',
       tradingName: customer?.tradingName || '',
       accountManager: customer?.accountManager || '',
@@ -50,6 +51,7 @@ export default function CustomerViewForm() {
       primaryBillingContact: customer?.primaryBillingContact || null,
       primaryTechnicalContact: customer?.primaryTechnicalContact || null,
       isActive: customer?.isActive,
+      supportSubscription: customer?.supportSubscription,
       createdAt: customer?.createdAt || '',
       createdByFullName: customer?.createdBy?.name || '',
       createdIP: customer?.createdIP || '',
@@ -60,6 +62,8 @@ export default function CustomerViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer]
   );
+
+  console.log("customer::::::",customer)
 
   // ----------------------------handle functions---------------------------------
 
@@ -91,7 +95,7 @@ export default function CustomerViewForm() {
 
   return (
     <>
-      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+      {/* <Grid container direction="row" justifyContent="space-between" alignItems="center">
         <Grid item xs={12} md={6}>
           <BreadcrumbsProvider>
             <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
@@ -102,7 +106,7 @@ export default function CustomerViewForm() {
       </Grid>
       <Grid item lg={12}>
         <TableNoData isNotFound={isNotFound} />
-      </Grid>
+      </Grid> */}
 
       {/* customer view form */}
       <Grid container direction="row" mt={isMobile && 2}>
@@ -114,11 +118,19 @@ export default function CustomerViewForm() {
               handleVerification={handleVerification}
               handleEdit={handleEdit}
               onDelete={onDelete}
+              supportSubscription={defaultValues.supportSubscription}
               backLink={() => navigate(PATH_CUSTOMER.list)}
             />
             <Grid container sx={{mt:2}}>
               <ViewFormField
-                sm={12}
+                sm={2}
+                md={2}
+                heading={formLABELS.CUSTOMER.CODE.label}
+                param={defaultValues?.code}
+              />
+              <ViewFormField
+                sm={10}
+                md={10}
                 heading={formLABELS.CUSTOMER.NAME.label}
                 param={defaultValues?.name}
               />
