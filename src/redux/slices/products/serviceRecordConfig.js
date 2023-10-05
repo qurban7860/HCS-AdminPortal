@@ -11,6 +11,7 @@ const initialState = {
   responseMessage: null,
   success: false,
   isLoading: false,
+  isLoadingCheckItems: false,
   error: null,
   serviceRecordConfigs: [],
   activeServiceRecordConfigs: [],
@@ -43,6 +44,10 @@ const slice = createSlice({
     // START LOADING
     startLoading(state) {
       state.isLoading = true;
+    },
+    // START LOADING
+    startLoadingCheckItems(state) {
+      state.isLoadingCheckItems = true;
     },
     // SET TOGGLE
     setServiceRecordConfigEditFormVisibility(state, action){
@@ -82,8 +87,8 @@ const slice = createSlice({
     },
     // GET ServiceRecordConfig
     getServiceRecordConfigSuccess(state, action) {
-      
       state.isLoading = false;
+      state.isLoadingCheckItems = false;
       state.success = true;
       state.serviceRecordConfig = action.payload;
       state.initial = true;
@@ -223,6 +228,7 @@ export function getActiveServiceRecordConfigsForRecords(machineId, type){
 export function getServiceRecordConfig(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.startLoadingCheckItems());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/serviceRecordsConfig/${id}`);
       dispatch(slice.actions.getServiceRecordConfigSuccess(response.data));

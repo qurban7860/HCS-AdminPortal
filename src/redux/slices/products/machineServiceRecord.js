@@ -227,7 +227,7 @@ export function addMachineServiceRecord(machineId,params) {
       dispatch(slice.actions.startLoading());
       try {
         const data = {
-          serviceRecordConfig:        params?.serviceRecordConfig?._id,
+          serviceRecordConfig:        params?.serviceRecordConfiguration?._id,
           serviceDate:                params?.serviceDate,
           decoilers:                  params?.decoilers?.map((dec)=> dec?._id),
           technician:                 params?.technician?._id || null,

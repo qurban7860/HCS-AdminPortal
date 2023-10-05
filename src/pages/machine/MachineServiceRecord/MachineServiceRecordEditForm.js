@@ -217,40 +217,62 @@ function MachineServiceRecordEditForm() {
   );
 
 
-  const handleChangeCheckItemListValue = (index, childIndex, e) => {
-    const updatedCheckParams = [...checkParamList];
-    const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
-    updatedCheckParamObject.value = e.target.value;
-    setCheckParamList(updatedCheckParams);
-  }
 
-  const handleChangeCheckItemListCheckBoxValue = (index, childIndex, e) => {
+  const handleChangeCheckItemListValue = (index, childIndex, value) => {
     const updatedCheckParams = [...checkParamList];
-    const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
-    updatedCheckParamObject.value =  !updatedCheckParams[index]?.paramList[childIndex]?.value ;
-    setCheckParamList(updatedCheckParams);
-  }
-  
-  const handleChangeCheckItemListNumberValue = (index, childIndex, value) => {
-      const updatedCheckParams = [...checkParamList];
-      const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
-      updatedCheckParamObject.value = value;
-      setCheckParamList(updatedCheckParams);
-  }
+    const updatedParamObject = { 
+      ...updatedCheckParams[index],
+      paramList: [...updatedCheckParams[index].paramList],
+    };
+    updatedParamObject.paramList[childIndex] = {
+      ...updatedParamObject.paramList[childIndex],
+      value,
+    };
+    updatedCheckParams[index] = updatedParamObject;
+setCheckParamList(updatedCheckParams);
+}
 
-  const handleChangeCheckItemListStatus = (index, childIndex, value) => {
+const handleChangeCheckItemListCheckBoxValue = (index, childIndex) => {
     const updatedCheckParams = [...checkParamList];
-    const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
-    updatedCheckParamObject.status = value;
+      const updatedParamObject = { 
+        ...updatedCheckParams[index],
+        paramList: [ ...updatedCheckParams[index].paramList],
+      };
+      updatedParamObject.paramList[childIndex] = {
+        ...updatedParamObject.paramList[childIndex],
+        value: !updatedParamObject.paramList[childIndex].value,
+      };
+      updatedCheckParams[index] = updatedParamObject;
     setCheckParamList(updatedCheckParams);
-  }
+}
 
-  const handleChangeCheckItemListComment = (index, childIndex, value) => {
-    const updatedCheckParams = [...checkParamList];
-    const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
-    updatedCheckParamObject.comments = value;
-    setCheckParamList(updatedCheckParams);
-  }
+const handleChangeCheckItemListStatus = (index, childIndex, status) => {
+  const updatedCheckParams = [...checkParamList];
+  const updatedParamObject = { 
+    ...updatedCheckParams[index],
+    paramList: [ ...updatedCheckParams[index].paramList ],
+  };
+  updatedParamObject.paramList[childIndex] = {
+    ...updatedParamObject.paramList[childIndex],
+    status
+  };
+  updatedCheckParams[index] = updatedParamObject;
+setCheckParamList(updatedCheckParams);
+}
+
+const handleChangeCheckItemListComment = (index, childIndex, comments) => {
+  const updatedCheckParams = [...checkParamList];
+  const updatedParamObject = { 
+    ...updatedCheckParams[index],
+    paramList: [...updatedCheckParams[index].paramList ],
+  };
+  updatedParamObject.paramList[childIndex] = {
+    ...updatedParamObject.paramList[childIndex],
+    comments
+  };
+  updatedCheckParams[index] = updatedParamObject;
+setCheckParamList(updatedCheckParams);
+}
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -330,7 +352,6 @@ function MachineServiceRecordEditForm() {
                         handleChangeCheckItemListValue={handleChangeCheckItemListValue}
                         handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
                         handleChangeCheckItemListComment={handleChangeCheckItemListComment}
-                        handleChangeCheckItemListNumberValue={handleChangeCheckItemListNumberValue}
                         handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
                       />
                     {/* <Grid key={index}  item md={12} >

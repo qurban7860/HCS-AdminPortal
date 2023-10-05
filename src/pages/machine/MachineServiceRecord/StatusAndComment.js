@@ -31,66 +31,30 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
     
   return (
     <>
-    <TableRow key={childRow._id} sx={{":hover": {
-        backgroundColor: "#dbdbdb66" }
-      }}>
-        <TableCell component="th" scope="row"><b>{`${childIndex+1}). `}</b>{`${childRow.name} ${childRow?.inputType ? '-' : '' } ${childRow?.inputType ? childRow?.inputType : '' }`}</TableCell>
-        <TableCell align='right' >
-          <Grid  sx={{display: { md:'flex', xs: 'block', }, justifyContent:'end'}}>
-          {childRow?.inputType === 'Boolean' ? 
-        <Checkbox  checked={
-          machineServiceRecord?.checkParams?.find((element) =>
-          element?.paramListTitle === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramListTitle && element?.serviceParam === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramList[childIndex]?._id
-          )?.value || false
-          } readOnly sx={{ml:'auto', my:-0.9}} /> 
-          :
-          <Typography variant="body2" sx={{pr:1.5}}>
-          {machineServiceRecord?.checkParams?.find((element) =>
-            element?.paramListTitle === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramListTitle && element?.serviceParam === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramList[childIndex]?._id
-            )?.value }
-          </Typography> }
-
-          <Grid sx={{ width:105,display: 'flex', alignItems: 'center', justifyContent:'flex-end' }}>
-          {machineServiceRecord?.checkParams?.find((element) =>
-          element?.paramListTitle === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramListTitle && element?.serviceParam === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramList[childIndex]?._id
-          )?.status && <Chip size="small" label={machineServiceRecord?.checkParams?.find((element) =>
-          element?.paramListTitle === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramListTitle && element?.serviceParam === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramList[childIndex]?._id
-          )?.status} /> }
-
-          {checkItem?.comments ? <HtmlTooltip
-            placement="left"
-            title={
-              <>
-                {/* <Typography color="inherit">Comments</Typography> */}
-                {checkItem?.comments}
-              </>
-            }
-          >
-            <Iconify
-              // onClick={()=> handleVisibilityPopoverOpen()}
-              icon="mdi:comment-text-outline"
-              sx={{ cursor: 'pointer',mx:0.4, color: 'green'  }}
-              disabled={checkItem?.comments}
-            />
-          </HtmlTooltip> : 
-          <StyledTooltip title="No Comments" placement="top" color="gray">
-            <Iconify
-              icon="mdi:comment-text-outline"
-              sx={{ mx:0.4, color: 'gray', cursor: 'pointer' }}
-              disabled={checkItem?.comments}
-            />
-          </StyledTooltip>
-            }
-          </Grid>
-
-          </Grid>
-        </TableCell>
-      </TableRow>
+    <TableRow key={childRow._id} sx={{":hover": {  backgroundColor: "#dbdbdb66" } }}>
+      <TableCell>
+        <Grid sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', mx:-2 }} >
+          <TableCell ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}</TableCell>
+          <TableCell align='right' >
+            <Grid  sx={{display: { md:'flex', xs: 'block', }, justifyContent:'end'}}>
+            {childRow?.inputType === 'Boolean' ? 
+            <Checkbox disabled checked={checkItem?.value || false }  sx={{ml:'auto', my:-0.9}} />  :
+              <Typography variant="body2" sx={{pr:1.5}}>
+                {checkItem?.value }
+              </Typography> }
+              <Grid sx={{ width:80, display: 'flex', alignItems: 'center', justifyContent:'flex-end' }}>
+                {checkItem?.status && <Chip size="small" label={checkItem?.status} /> }
+              </Grid>
+            </Grid>
+          </TableCell>
+        </Grid>
+        <Grid sx={{ml:5, }} >
+          {checkItem?.comments && <Typography variant="body2" >{` ${checkItem?.comments}`}</Typography>}
+        </Grid>
+      </TableCell>
+        
+    </TableRow>
     
-    {/* <MenuPopover open={visibilityAnchorEl} onClose={handleVisibilityPopoverClose} sx={{ p: 2 }}>
-      <Typography variant='subtitle1' width="100%"> Comments: </Typography>
-      <Typography variant='body2' width="100%">{checkItem?.comments}</Typography>
-    </MenuPopover> */}
   </>
   )
 }

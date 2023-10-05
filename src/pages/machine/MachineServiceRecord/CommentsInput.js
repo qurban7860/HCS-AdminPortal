@@ -8,7 +8,6 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                     handleChangeCheckItemListValue, 
                     handleChangeCheckItemListStatus,
                     handleChangeCheckItemListComment,
-                    handleChangeCheckItemListNumberValue,
                     handleChangeCheckItemListCheckBoxValue
                 }) => {
     const [isOpen, setOpen] = useState(false)
@@ -23,11 +22,14 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 type='text'
                                 label={childRow?.inputType} 
                                 name={`${childRow?.name}_${childIndex}_${index}`} 
-                                onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e)}
+                                onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e.target.value)}
                                 size="small" sx={{m:0.3}} 
                                 value={checkParamList[index]?.paramList[childIndex]?.value}
                                 required={childRow?.isRequired}
-                                InputProps={{ inputProps: { maxLength:50 } }}
+                                InputProps={{ inputProps: { maxLength: 50 }, 
+                                    // style: { fontSize: '14px', height: 30 }
+                                }}
+                                // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
                             />}
 
                             { childRow?.inputType === 'Long Text' &&<TextField 
@@ -35,12 +37,15 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 type="text"
                                 label={childRow?.inputType} 
                                 name={`${childRow?.name}_${childIndex}_${index}`} 
-                                onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e)}
+                                onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e.target.value)}
                                 size="small" sx={{m:0.3}} 
                                 value={checkParamList[index]?.paramList[childIndex]?.value}
-                                minRows={3} multiline
+                                minRows={1} multiline
                                 required={childRow?.isRequired}
-                                InputProps={{ inputProps: { maxLength: 200 } }}
+                                InputProps={{ inputProps: { maxLength: 200 }, 
+                                // style: { fontSize: '14px', height: 30 }
+                                }}
+                                // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
                             />}
 
                             { childRow?.inputType === 'Number'  && 
@@ -53,13 +58,15 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 value={checkParamList[index]?.paramList[childIndex]?.value}
                                 onChange={(e) => {
                                     if (/^\d*$/.test(e.target.value)) {
-                                    handleChangeCheckItemListNumberValue(index, childIndex, e.target.value)
+                                    handleChangeCheckItemListValue(index, childIndex, e.target.value)
                                     }else{
-                                        handleChangeCheckItemListNumberValue(index, childIndex, checkParamList[index]?.paramList[childIndex].value)
+                                        handleChangeCheckItemListValue(index, childIndex, checkParamList[index]?.paramList[childIndex].value)
                                     }}
                                 } 
                                 size="small" sx={{m:0.3}} 
                                 required={childRow?.isRequired}
+                                // InputProps={{ style: { fontSize: '14px', height: 30 }}}
+                                // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
                             />}
 
                             <div>
@@ -67,7 +74,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                             <Checkbox 
                                 name={`${childRow?.name}_${childIndex}_${index}`} 
                                 checked={checkParamList[index].paramList[childIndex]?.value || false} 
-                                onChange={(val)=>handleChangeCheckItemListCheckBoxValue(index, childIndex, val)} 
+                                onChange={()=>handleChangeCheckItemListCheckBoxValue(index, childIndex )} 
                             />}
                             </div>
 
@@ -75,29 +82,45 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 value={checkParamList[index].paramList[childIndex]?.status || null }
                                 options={statusTypes}
                                 getOptionLabel={(option) => option?.name || ''}
+                                isOptionEqualToValue={(option, value) => option._id === value._id}
                                 onChange={(event, newInputValue) =>  handleChangeCheckItemListStatus(index, childIndex, newInputValue) }
-                                renderInput={(params) => <TextField {...params} label="Status" size="small" />}
-                                sx={{ minWidth: 180,maxWidth: 255, m:0.3, ml:{sm: 'auto',md: 0}}}
+                                renderInput={(params) => <TextField {...params} label="Status" size='small' 
+                                // InputProps={{ style: { fontSize: '14px !important', height: '30 !important' }}}
+                                // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
+                                />}
+                                // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
+                                sx={{ minWidth: 180,maxWidth: 255, m:0.3, ml:{sm: 'auto',md: 0},
+                                    // "& .MuiInputBase-root": { height: "30px", fontSize: '14px' },
+                                }}
+                                
                             />
-                                <Iconify
+
+                            <TextField 
+                                // fullWidth
+                                type="text"
+                                label="Comment" 
+                                name="comment"
+                                onChange={(e) => handleChangeCheckItemListComment(index, childIndex, e.target.value)}
+                                size="small" sx={{ m:0.3, ml:{sm: 'auto',md: 0}, minWidth:180 }} 
+                                // pr:{md:4},width: {md: 470 } 
+                                value={checkParamList[index]?.paramList[childIndex]?.comments}
+                                minRows={1} multiline
+                                InputProps={{ inputProps: { maxLength: 500 }, 
+                                // style: { fontSize: '14px', height: 30 }
+                                }}
+                                // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
+                                
+                            />
+                                {/* <Iconify
                                     onClick={()=> setOpen(!isOpen)}
                                     icon={isOpen ? 'mdi:comment-remove-outline' : 'mdi:comment-text-outline' }
                                     sx={{ cursor: 'pointer', mt:1.7, mx:0.7 }}
-                                />
+                                /> */}
                             </Grid>
             
-        { isOpen && <TextField 
-            // fullWidth
-            type="text"
-            label="Comment" 
-            name="comment"
-            onChange={(e) => handleChangeCheckItemListComment(index, childIndex, e.target.value)}
-            size="small" sx={{m:0.3,ml:'auto', minWidth:180, width: {md: 470 } }} 
-            // pr:{md:4},width: {md: 470 } 
-            value={checkParamList[index]?.paramList[childIndex]?.comments}
-            minRows={3} multiline
-            InputProps={{ inputProps: { maxLength: 200 } }}
-        />}
+        {/* { isOpen &&  */}
+
+        {/* } */}
     </Grid>
   )
 }
@@ -110,7 +133,6 @@ CommentsInput.propTypes = {
     handleChangeCheckItemListValue: PropTypes.func,
     handleChangeCheckItemListStatus: PropTypes.func,
     handleChangeCheckItemListComment: PropTypes.func,
-    handleChangeCheckItemListNumberValue: PropTypes.func,
     handleChangeCheckItemListCheckBoxValue: PropTypes.func,
   };
 export default CommentsInput
