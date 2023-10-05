@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, TextField, InputAdornment, Button, Stack } from '@mui/material';
+import { useSelector } from 'react-redux';
 import { BUTTONS } from '../../../constants/default-constants';
 import Iconify from '../../../components/iconify';
 import useResponsive from '../../../hooks/useResponsive';
@@ -18,6 +19,7 @@ function SearchBarCombo({
   ...other
 }) {
   const isMobile = useResponsive('sm', 'down');
+  const { machine } = useSelector((state) => state.machine);
   return (
     <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{display:'flex', justifyContent:'space-between'}}>
       <Grid item xs={12} sm={8} sx={{ display: 'inline-flex' }}>
@@ -64,6 +66,7 @@ function SearchBarCombo({
         {addButton && <Grid item xs={12} sm={2}>
           <Stack alignItems="flex-end">
             <Button
+              disabled={machine?.status?.slug==='transferred'}
               fullWidth
               sx={{ p: 2, width: '100%' }}
               onClick={SubOnClick}

@@ -57,7 +57,7 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
 
   const { documentHistory } = useSelector((state) => state.document);
   const { customer } = useSelector((state) => state.customer);
-  // const { machine } = useSelector((state) => state.machine);
+  const { machine } = useSelector((state) => state.machine);
   // const [ setOnPreview] = useState(false);
   // const [ setImageData] = useState(false);
   // const [ setImageName] = useState('');
@@ -256,7 +256,9 @@ const handleNewFile = async () => {
           <Card sx={{ p: 3 }}>
           <ViewFormEditDeleteButtons 
           customerAccess={defaultValues?.customerAccess}
-          isActive={defaultValues.isActive}
+          isActive={defaultValues.isActive}          
+          // disableEditButton={machine?.status?.slug==='transferred'}
+          // disableDeleteButton={machine?.status?.slug==='transferred'}
           backLink={(customerPage || machinePage || drawingPage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDrawingViewFormVisibility(false));} 
           : () => navigate(PATH_DOCUMENT.document.list)}
       />

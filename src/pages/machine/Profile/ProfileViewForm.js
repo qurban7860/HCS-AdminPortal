@@ -72,7 +72,10 @@ export default function ProfileViewForm() {
   return (
     <Grid item md={12} mt={2}>
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons isActive={defaultValues.isActive}  handleEdit={handleEdit} onDelete={onDelete} backLink={() => dispatch(setProfileViewFormVisibility(false))} />
+      <ViewFormEditDeleteButtons isActive={defaultValues.isActive}
+      disableEditButton={machine?.status?.slug==='transferred'}
+      disableDeleteButton={machine?.status?.slug==='transferred'}
+      handleEdit={handleEdit} onDelete={onDelete} backLink={() => dispatch(setProfileViewFormVisibility(false))} />
       <Grid container sx={{mt:2}}>
         <ViewFormField heading="Default Name" param={defaultValues.defaultName} />
         <ViewFormField heading="Other Names" chips={defaultValues.names} />

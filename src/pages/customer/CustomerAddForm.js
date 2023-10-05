@@ -125,6 +125,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const defaultValues = useMemo(
     () => ({
+      code:'',
       name: '',
       mainSite: '',
       // tradingName: chips   ,

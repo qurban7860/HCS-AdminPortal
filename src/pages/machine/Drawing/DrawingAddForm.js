@@ -26,11 +26,8 @@ export default function DrawingAddForm() {
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocuments } = useSelector((state) => state.document);
   const { drawings } = useSelector((state) => state.drawing );
-  console.log("drawings : ",drawings)
   const [ filteredDocuments, setFilteredDocuments ] = useState([])
-
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
