@@ -11,7 +11,6 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
   handleChangeCheckItemListValue, 
   handleChangeCheckItemListStatus,
   handleChangeCheckItemListComment,
-  handleChangeCheckItemListNumberValue,
   handleChangeCheckItemListCheckBoxValue}) =>{
   const [ commentVisibility, setCommentVisibility ] = useState(false)
   const handleCommentVisibility = (Index, childIndex)=>{
@@ -40,9 +39,12 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
                         </TableCell>
                         <TableCell align='right' >
                                 <CommentsInput index={index} childIndex={childIndex} 
-                                childRow={childRow}
-                                    checkParamList={checkParamList} 
-                                    handleChangeCheckItemListComment={handleChangeCheckItemListComment} 
+                                  childRow={childRow}
+                                  checkParamList={checkParamList} 
+                                  handleChangeCheckItemListValue={handleChangeCheckItemListValue}
+                                  handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
+                                  handleChangeCheckItemListComment={handleChangeCheckItemListComment}
+                                  handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
                                 />
                         </TableCell>
                       </TableRow>
@@ -60,7 +62,6 @@ CollapsibleCheckedItemInputRow.propTypes = {
     handleChangeCheckItemListValue: PropTypes.func,
     handleChangeCheckItemListStatus: PropTypes.func,
     handleChangeCheckItemListComment: PropTypes.func,
-    handleChangeCheckItemListNumberValue: PropTypes.func,
     handleChangeCheckItemListCheckBoxValue: PropTypes.func,
     setValue: PropTypes.func,
   };
