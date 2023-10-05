@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Box, Card, Grid, Stack, Autocomplete, TextField } from '@mui/material';
+import { Box, Card, Grid, Stack, Autocomplete, TextField, Typography, Switch } from '@mui/material';
 import { MuiChipsInput } from 'mui-chips-input';
 // hooks
 import { useForm } from 'react-hook-form';
@@ -24,12 +24,13 @@ import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
 import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
-import FormProvider, { RHFTextField } from '../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFTextField } from '../../components/hook-form';
 // constants
 import { BREADCRUMBS, FORMLABELS as formLABELS } from '../../constants/default-constants';
 import { FORMLABELS, Snacks } from '../../constants/customer-constants';
 // schema
 import { EditCustomerSchema } from '../schemas/customer';
+import { StyledToggleButtonLabel } from '../../theme/styles/document-styles';
 
 // ----------------------------------------------------------------------
 
@@ -53,6 +54,7 @@ export default function CustomerEditForm() {
   const defaultValues = useMemo(
     () => ({
       id: customer?._id || '',
+      code: customer?.clientCode || '',
       name: customer?.name || '',
       // tradingName: customer?.tradingName || '',
       // mainSite: customer?.mainSite?._id === null || customer?.mainSite?._id === undefined  ? null : customer.mainSite._id ,
@@ -62,6 +64,7 @@ export default function CustomerEditForm() {
       // primaryBillingContact: customer?.primaryBillingContact?._id  === null || customer?.primaryBillingContact?._id  === undefined  ? null : customer.primaryBillingContact?._id ,
       // primaryTechnicalContact: customer?.primaryTechnicalContact?._id === null || customer?.primaryTechnicalContact?._id === undefined  ? null : customer.primaryTechnicalContact._id,
       isActive: customer?.isActive,
+      supportSubscription: customer?.supportSubscription
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer]
@@ -102,35 +105,25 @@ export default function CustomerEditForm() {
   }, [customer, reset, defaultValues]);
 
   const toggleCancel = () => {
-    console.log('aaaa',customerEditFormFlag)
     dispatch(setCustomerEditFormVisibility(false));
-
-    console.log(customerEditFormFlag)
-    // // navigate(PATH_CUSTOMER.list);
-    // navigate(PATH_CUSTOMER.view(customer._id));
-
-    // window.history.pushState({}, null, `/customers/${customer._id}/view`);
   };
 
   const onSubmit = async (data) => {
-    // console.log("customer : ",data);
     data.mainSite = siteVal?._id || null;
-    // if (chips && chips.length > 0) {
-      data.tradingName = chips;
-    // }
+    data.tradingName = chips;
     data.accountManager = accountManVal?._id || null;
     data.projectManager = projectManVal?._id || null;
     data.supportManager = supportManVal?._id || null;
     data.primaryBillingContact = billingContactVal?._id || null;
     data.primaryTechnicalContact = technicalContactVal?._id || null;
+
     try {
-      dispatch(updateCustomer(data));
+      await dispatch(updateCustomer(data));
       reset();
       enqueueSnackbar('Update success!');
       navigate(PATH_CUSTOMER.view(customer._id));
     } catch (err) {
-      enqueueSnackbar(Snacks.SAVE_FAILED, { variant: `error` });
-      console.error(err.message);
+      enqueueSnackbar(err, { variant: `error` });
     }
   };
 
@@ -141,7 +134,7 @@ export default function CustomerEditForm() {
 
   return (
     <>
-      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+      {/* <Grid container direction="row" justifyContent="space-between" alignItems="center">
         <Grid item xs={12} md={6}>
           <BreadcrumbsProvider>
             <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
@@ -149,12 +142,26 @@ export default function CustomerEditForm() {
           </BreadcrumbsProvider>
         </Grid>
         {!isMobile && <AddButtonAboveAccordion isCustomer />}
-      </Grid>
+      </Grid> */}
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Grid container spacing={4}>
+        <Grid container >
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
+
+                <Box
+                  rowGap={3}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{
+                    xs: 'repeat(1, 1fr)',
+                    sm: 'repeat(1, 1fr 5fr)', // First one spans 1 column, and the second spans 5 columns on sm screens
+                  }}
+                >
+                  <RHFTextField name="code" label={FORMLABELS.CUSTOMER.CODE.label} />
+                  <RHFTextField name="name" label={FORMLABELS.CUSTOMER.NAME.label} />
+                </Box>
+
                 <Box
                   rowGap={3}
                   columnGap={2}
@@ -164,13 +171,6 @@ export default function CustomerEditForm() {
                     sm: 'repeat(1, 1fr)',
                   }}
                 >
-                  {/* customer name */}
-                  <RHFTextField
-                    name={FORMLABELS.CUSTOMER.NAME.name}
-                    label={FORMLABELS.CUSTOMER.NAME.label}
-                  />
-
-                  {/* trading name / alias */}
                   <MuiChipsInput
                     name={FORMLABELS.CUSTOMER.TRADING_NAME.name}
                     label={FORMLABELS.CUSTOMER.TRADING_NAME.label}
@@ -387,9 +387,36 @@ export default function CustomerEditForm() {
                     ChipProps={{ size: 'small' }}
                   />
                 </Box>
-                {customer?.type !== 'SP' ? (
-                  <ToggleButtons isMachine name={formLABELS.isACTIVE.name} />
-                ) : null}
+
+                <Box
+                  rowGap={3}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{
+                    xs: 'repeat(1, 1fr)',
+                    sm: 'repeat(2, 1fr)',
+                  }}
+                >
+
+                  <Grid display="flex" alignItems="center" mt={1}>
+                    
+                    {customer?.type !== 'SP' ? (
+                    <>
+                      <StyledToggleButtonLabel variant="body2" p={1}>
+                        Active
+                      </StyledToggleButtonLabel>
+                      <RHFSwitch name="isActive" defaultChecked={defaultValues?.isActive} />
+                    </>
+                    ) : null}
+
+                    <StyledToggleButtonLabel variant="body2" p={1}>
+                      Support Subscription
+                    </StyledToggleButtonLabel>
+                    <RHFSwitch name="supportSubscription" defaultChecked={defaultValues?.supportSubscription} />
+                  </Grid>
+
+                </Box>
+
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>

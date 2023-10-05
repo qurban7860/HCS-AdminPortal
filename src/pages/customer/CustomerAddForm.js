@@ -21,6 +21,7 @@ import {
   FormControlLabel,
   Autocomplete,
   TextField,
+  Switch,
 } from '@mui/material';
 import { MuiChipsInput } from 'mui-chips-input'
 
@@ -44,6 +45,8 @@ import { countries } from '../../assets/data';
 // util
 import { Cover } from '../components/Defaults/Cover';
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
+import { FORMLABELS } from '../../constants/customer-constants';
+import { StyledToggleButtonLabel } from '../../theme/styles/document-styles';
 // import { StyledCardContainer } from '../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
@@ -64,8 +67,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-
-  // const numberRegExp = /^[0-9]+$/;
 
   const [phone, setPhone] = useState('');
   const [fax, setFaxVal] = useState('');
@@ -132,6 +133,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       // supportManager: null,
       type: 'Customer',
       isActive: true,
+      supportSubscription:true,
       contactFlag,
       loginUser: {
         userId,
@@ -141,8 +143,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [AddCustomerSchema]
   );
-
-  // console.log('samecheckboxflag', defaultValues.contactFlag);
 
   const methods = useForm({
     resolver: yupResolver(AddCustomerSchema),
@@ -229,8 +229,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       enqueueSnackbar('Create success!');
       navigate(PATH_CUSTOMER.view(response.data.Customer._id));
     } catch (error) {
-      enqueueSnackbar('Saving failed!', { variant: `error` });
-      console.error(error);
+      enqueueSnackbar(error, { variant: `error` });
     }
   };
 
@@ -266,10 +265,22 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               display="grid"
               gridTemplateColumns={{
                 xs: 'repeat(1, 1fr)',
+                sm: 'repeat(1, 1fr 5fr)', // First one spans 1 column, and the second spans 5 columns on sm screens
+              }}
+            >
+              <RHFTextField name="code" label={FORMLABELS.CUSTOMER.CODE.label} />
+              <RHFTextField name="name" label={FORMLABELS.CUSTOMER.NAME.label} />
+            </Box>
+            <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
                 sm: 'repeat(1, 1fr)',
               }}
             >
-              <RHFTextField name="name" label="Customer Name*" />
+              {/* <RHFTextField name="name" label="Customer Name*" /> */}
 
               {/* <RHFTextField name="tradingName" label="Trading Name" /> */}
               <MuiChipsInput name="tradingName" label="Trading Name"  value={chips} onChange={handleChipChange} />
@@ -563,25 +574,31 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     ChipProps={{ size: 'small' }}
                   />
                 </Box>
-                <RHFSwitch
-                  name="isActive"
-                  labelPlacement="start"
-                  label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary',
-                      }}
-                    >
-                      {' '}
+                <Box
+                  rowGap={3}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{
+                    xs: 'repeat(1, 1fr)',
+                    sm: 'repeat(2, 1fr)',
+                  }}
+                >
+
+                  <Grid display="flex" alignItems="center" mt={1}>
+                    <StyledToggleButtonLabel variant="body2" p={1}>
                       Active
-                    </Typography>
-                  }
-                />
+                    </StyledToggleButtonLabel>
+                    <RHFSwitch name="isActive" checked={defaultValues?.isActive} />
+
+                    <StyledToggleButtonLabel variant="body2" p={1}>
+                      Support Subscription
+                    </StyledToggleButtonLabel>
+                    <RHFSwitch name="supportSubscription" checked={defaultValues?.supportSubscription} />
+                  </Grid>
+
+                </Box>
+                
+                
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>
