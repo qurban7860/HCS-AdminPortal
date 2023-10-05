@@ -63,8 +63,6 @@ export default function CustomerViewForm() {
     [customer]
   );
 
-  console.log("customer::::::",customer)
-
   // ----------------------------handle functions---------------------------------
 
   const handleEdit = async () => {

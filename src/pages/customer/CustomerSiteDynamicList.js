@@ -168,8 +168,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
       </Grid>
 
       <Grid container spacing={1} direction="row" justifyContent="flex-start">
-        {sites.length > 0 && (
-          <Grid
+      <Grid
             item
             xs={12}
             sm={12}
@@ -177,6 +176,15 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
             lg={4}
             sx={{ display: siteAddFormVisibility && isMobile && 'none' }}
           >
+            <AddButtonAboveAccordion
+          name={BUTTONS.NEWSITE}
+          toggleChecked={toggleChecked}
+          FormVisibility={siteAddFormVisibility}
+          toggleCancel={toggleCancel}
+          disabled={siteEditFormVisibility}
+        />
+        {sites.length > 0 && (
+          <>
             {sites.length > 5 && (
               <Grid item md={12}>
                 <SearchInput
@@ -277,9 +285,9 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                 })}
               </Grid>
             </StyledScrollbar>
-          </Grid>
+            </>
         )}
-
+        </Grid>
         {/* Google Maps View */}
         {isMobile && googleMapsVisibility && (
           <Grid item md={12}>

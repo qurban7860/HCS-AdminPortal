@@ -78,11 +78,14 @@ export default function CustomerEditForm() {
   const {
     reset,
     watch,
+    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-    watch();
+  // const {code} = watch();
+
+  // console.log(code)
 
   useLayoutEffect(() => {
     // window.history.pushState({}, null, `/customers/${customer._id}/edit`);
@@ -97,12 +100,6 @@ export default function CustomerEditForm() {
     setBillingContactVal(customer?.primaryBillingContact);
     setTechnicalContactVal(customer?.primaryTechnicalContact);
   }, [dispatch, customer]);
-
-  useEffect(() => {
-    if (customer) {
-      reset(defaultValues);
-    }
-  }, [customer, reset, defaultValues]);
 
   const toggleCancel = () => {
     dispatch(setCustomerEditFormVisibility(false));
@@ -123,6 +120,8 @@ export default function CustomerEditForm() {
       enqueueSnackbar('Update success!');
       navigate(PATH_CUSTOMER.view(customer._id));
     } catch (err) {
+      reset();
+      setValue('code',data.code);
       enqueueSnackbar(err, { variant: `error` });
     }
   };

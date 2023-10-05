@@ -63,27 +63,21 @@ export default function SettingViewForm() {
     [setting, machine]
   );
   return (
-    // needs cleanup
-    <>
-    {/* <DocumentCover content={defaultValues?.displayName} backLink="true"  generalSettings /> */}
     <Grid item md={12} mt={2}>
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} backLink={()=> dispatch(setSettingViewFormVisibility(false))} handleEdit={handleEdit} onDelete={onDelete} />
-      {/* <Grid display="inline-flex">
-        <Tooltip>
-          <ViewFormField isActive={defaultValues.isActive} />
-        </Tooltip>
-      </Grid> */}
+      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} 
+        backLink={()=> dispatch(setSettingViewFormVisibility(false))} 
+        handleEdit={handleEdit} onDelete={onDelete}
+        disableEditButton={machine?.status?.slug==='transferred'}
+        disableDeleteButton={machine?.status?.slug==='transferred'}
+        />
       <Grid container>
         <ViewFormField sm={12} heading="Category Name" param={defaultValues.techParam.category.name} />
-        {/* <ViewFormField sm={6} heading="Parameter Code" param={defaultValues.techParam.code} /> */}
         <ViewFormField sm={6} heading="Parameter Name" param={defaultValues.techParam.name} />
-        {/* <ViewFormField sm={6} heading="Parameter Description" param={defaultValues.techParam.description} /> */}
         <ViewFormField sm={6} heading="Parameter Value" param={defaultValues.techParamValue} />
         <ViewFormAudit defaultValues={defaultValues} /> 
       </Grid>
     </Card>
     </Grid>
-    </>
   );
 }
