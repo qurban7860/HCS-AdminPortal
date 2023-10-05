@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, memo } from 'react'
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import {  Grid, TextField, Autocomplete, Checkbox } from '@mui/material';
@@ -10,10 +10,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                     handleChangeCheckItemListComment,
                     handleChangeCheckItemListCheckBoxValue
                 }) => {
-    const [isOpen, setOpen] = useState(false)
     const { statusTypes } = useSelector((state) => state.serviceRecordConfig);
-
-
   return (
     <Grid sx={{display: 'flex', flexDirection: 'column'}}>
         <Grid  sx={{display: { md:'flex', xs: 'block', }, justifyContent:'end'}}>
@@ -135,4 +132,4 @@ CommentsInput.propTypes = {
     handleChangeCheckItemListComment: PropTypes.func,
     handleChangeCheckItemListCheckBoxValue: PropTypes.func,
   };
-export default CommentsInput
+export default memo(CommentsInput)
