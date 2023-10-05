@@ -11,17 +11,8 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
   handleChangeCheckItemListValue, 
   handleChangeCheckItemListStatus,
   handleChangeCheckItemListComment,
-  handleChangeCheckItemListCheckBoxValue}) =>{
-  const [ commentVisibility, setCommentVisibility ] = useState(false)
-  const handleCommentVisibility = (Index, childIndex)=>{
-
-    if(`${index}${childIndex}` !== commentVisibility ){
-      setCommentVisibility(`${Index}${childIndex}`)
-    }else{
-        setCommentVisibility(false)
-    }
-  }
-  return (
+  handleChangeCheckItemListCheckBoxValue}) =>
+  (
     <>
         <Typography key={index} variant='h5'>
             <b>{`${index+1}). `}</b>{typeof row?.paramListTitle === 'string' && row?.paramListTitle || ''}{' ( Items: '}<b>{`${row?.paramList?.length}`}</b>{' ) '}
@@ -31,7 +22,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
                   <TableBody>
                     {row?.paramList.map((childRow,childIndex) => (
                       <TableRow key={childRow._id} 
-                      sx={{ ":hover": { backgroundColor: "#dbdbdb66" } }}
+                          sx={{ ":hover": { backgroundColor: "#dbdbdb66" } }}
                       >
                         <TableCell component="th" size='small'>
                           <b>{`${childIndex+1}). `}</b>
@@ -54,7 +45,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
         </Grid>
         </>
   )
-}
+
 CollapsibleCheckedItemInputRow.propTypes = {
     index: PropTypes.number,
     row: PropTypes.object,
@@ -66,4 +57,4 @@ CollapsibleCheckedItemInputRow.propTypes = {
     setValue: PropTypes.func,
   };
 
-export default CollapsibleCheckedItemInputRow
+export default memo(CollapsibleCheckedItemInputRow)

@@ -10,7 +10,6 @@ import MenuPopover from '../../../components/menu-popover/MenuPopover';
 const StatusAndComment = ({index, childIndex, childRow}) => {
 
     const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
-    const [visibilityAnchorEl, setVisibilityAnchorEl] = useState(null);
     const [checkItem, setCheckItem] = useState({});
 
     useEffect(() => {
@@ -21,13 +20,6 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const handleVisibilityPopoverOpen = () => {
-        setVisibilityAnchorEl(true);
-    };
-    
-    const handleVisibilityPopoverClose = () => {
-        setVisibilityAnchorEl(false);
-    };
     
   return (
     <>
