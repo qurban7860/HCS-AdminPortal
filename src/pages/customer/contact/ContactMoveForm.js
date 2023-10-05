@@ -9,7 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // import { LoadingButton } from '@mui/lab';
 import { Card, Grid, Stack, Typography, CardHeader } from '@mui/material';
 // slice
-import {moveCustomerContact, setContactMoveFormVisibility } from '../../../redux/slices/customer/contact';
+import {moveCustomerContact, resetContact, resetContactFormsVisiblity, setContactFormVisibility, setContactMoveFormVisibility } from '../../../redux/slices/customer/contact';
 import { getActiveCustomers } from '../../../redux/slices/customer/customer';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -19,7 +19,7 @@ import ViewFormField from '../../components/ViewForms/ViewFormField';
 // ----------------------------------------------------------------------
 
 export default function ContactMoveForm() {
-  const { contact } = useSelector((state) => state.contact);
+  const { contact, formVisibility , contactEditFormVisibility , contactMoveFormVisibility} = useSelector((state) => state.contact);
   const { activeCustomers } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -62,11 +62,16 @@ export default function ContactMoveForm() {
     try {
       await dispatch(moveCustomerContact(data));
       enqueueSnackbar('Contact moved successfully!');
-      reset();
-      setContactMoveFormVisibility(false);
+      dispatch(resetContact());
+
+      console.log(formVisibility && !contactEditFormVisibility && !contactMoveFormVisibility)
+      // reset();
+      // dispatch(setContactMoveFormVisibility(false));
+      // dispatch(setContactFormVisibility(false));
+      
+      // dispatch(resetContactFormsVisiblity());
     } catch (error) {
-      // setValue()
-      enqueueSnackbar('Moving failed!', { variant: `error` });
+      enqueueSnackbar(error, { variant: `error` });
       console.error(error);
     }
   };
