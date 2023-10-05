@@ -11,7 +11,7 @@ import FormHeading from '../../components/DocumentForms/FormHeading';
 import { FORMLABELS } from '../../../constants/default-constants';
 // slice
 import { addMachineServiceRecord, setMachineServiceRecordAddFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
-import { getActiveServiceRecordConfigsForRecords } from '../../../redux/slices/products/serviceRecordConfig';
+import { getActiveServiceRecordConfigsForRecords, getServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 import { getActiveContacts } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -33,7 +33,8 @@ function MachineServiceRecordAddForm() {
   const { machine } = useSelector((state) => state.machine)
   const { activeSecurityUsers, securityUser } = useSelector((state) => state.user);
   const { activeContacts } = useSelector((state) => state.contact);
-  const { activeServiceRecordConfigsForRecords, recordTypes } = useSelector((state) => state.serviceRecordConfig);
+  const { activeServiceRecordConfigsForRecords, serviceRecordConfig, recordTypes } = useSelector((state) => state.serviceRecordConfig);
+  const [ activeServiceRecordConfigs, setActiveServiceRecordConfigs ] = useState([]);
   const [checkParamList, setCheckParamList] = useState([]);
   const [docType, setDocType] = useState(null);
   const user = { _id: localStorage.getItem('userId'), name: localStorage.getItem('name') };
@@ -55,7 +56,7 @@ function MachineServiceRecordAddForm() {
     () => {
       const initialValues = {
       docRecordType: null,
-      serviceRecordConfig: null,
+      serviceRecordConfiguration: null,
       serviceDate: new Date(),
       technician:   securityUser?.contact || null,
       decoilers: machineDecoilers,
@@ -89,13 +90,21 @@ function MachineServiceRecordAddForm() {
     control,
   } = methods;
 
-  const { decoilers, operators, serviceRecordConfig, technician, docRecordType } = watch()
+  const { decoilers, operators, serviceRecordConfiguration, technician, docRecordType } = watch()
   
   useEffect(() => {
-    if(docRecordType?.name !== serviceRecordConfig?.recordType){
-      dispatch(getActiveServiceRecordConfigsForRecords(machine?._id, docRecordType))
+      if(docRecordType === null){
+        setActiveServiceRecordConfigs(activeServiceRecordConfigsForRecords)
+      }else{
+        setActiveServiceRecordConfigs(activeServiceRecordConfigsForRecords.filter(activeRecordConfig => activeRecordConfig.recordType === docRecordType.name ))
+      }
+    },[docRecordType, activeServiceRecordConfigsForRecords ])
+
+    useEffect(() =>{
+      if(serviceRecordConfiguration !== null){
+      dispatch(getServiceRecordConfig(serviceRecordConfiguration?._id))
     }
-  },[docRecordType, serviceRecordConfig, dispatch, machine?._id])
+    },[dispatch, serviceRecordConfiguration])
 
   useEffect(()=>{
     if(securityUser?.customer?.name === 'Howick' && !!securityUser?.roles?.find((role) => role?.roleType === 'Support')){
@@ -112,14 +121,14 @@ function MachineServiceRecordAddForm() {
     if(newValue?._id===3) setDocType(true)
     else setDocType(false)
     const recordType = {recordType:newValue?.name}
-    setValue('serviceRecordConfig',null);
+    setValue('serviceRecordConfiguration',null);
     dispatch(getActiveServiceRecordConfigsForRecords(machine?._id, recordType))
   }
 
   const handleParamChange = (event, newValue) => {
 
-    setValue('serviceRecordConfig',newValue)
-    trigger('serviceRecordConfig');
+    setValue('serviceRecordConfiguration',newValue)
+    trigger('serviceRecordConfiguration');
     if(newValue?.recordType==='Training'){
       setDocType(true)
     }else{
@@ -163,24 +172,30 @@ function MachineServiceRecordAddForm() {
   };
   
   const toggleCancel = () => { dispatch(setMachineServiceRecordAddFormVisibility(false)) };
-  const handleChangeCheckItemListValue = (index, childIndex, e) => {
-    const updatedCheckParams = [...checkParamList];
-    const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
-    updatedCheckParamObject.value = e.target.value;
+
+  const handleChangeCheckItemListValue = (index, childIndex, value) => {
+    const updatedCheckParams = JSON.parse(JSON.stringify(checkParamList));
+    updatedCheckParams[index].paramList[childIndex].value = value;
     setCheckParamList(updatedCheckParams);
   }
   
-  const handleChangeCheckItemListCheckBoxValue = (index, childIndex, e) => {
-    const updatedCheckParams = [...checkParamList];
-    const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
-    updatedCheckParamObject.value =  !updatedCheckParams[index]?.paramList[childIndex]?.value ;
+  // const handleChangeCheckItemListCheckBoxValue = (index, childIndex ) => {
+  //   const updatedCheckParams = [...checkParamList];
+  //   const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
+  //   updatedCheckParamObject.value =  !updatedCheckParams[index]?.paramList[childIndex]?.value ;
+  //   setCheckParamList(updatedCheckParams);
+  // }
+
+  const handleChangeCheckItemListCheckBoxValue = (index, childIndex) => {
+    const updatedCheckParams = JSON.parse(JSON.stringify(checkParamList));
+    updatedCheckParams[index].paramList[childIndex].value = !updatedCheckParams[index].paramList[childIndex].value;
     setCheckParamList(updatedCheckParams);
   }
+
   const handleChangeCheckItemListNumberValue = (index, childIndex, value) => {
-      const updatedCheckParams = [...checkParamList];
-      const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
-      updatedCheckParamObject.value = value;
-      setCheckParamList(updatedCheckParams);
+    const updatedCheckParams = JSON.parse(JSON.stringify(checkParamList));
+    updatedCheckParams[index].paramList[childIndex].value = value;
+    setCheckParamList(updatedCheckParams);
   }
 
   const handleChangeCheckItemListStatus = (index, childIndex, value) => {
@@ -235,9 +250,9 @@ function MachineServiceRecordAddForm() {
                   />
 
                   <RHFAutocomplete
-                    name="serviceRecordConfig"
+                    name="serviceRecordConfiguration"
                     label="Service Record Configuration"
-                    options={activeServiceRecordConfigsForRecords}
+                    options={activeServiceRecordConfigs}
                     getOptionLabel={(option) => `${option?.docTitle ?? ''} ${option?.docTitle ? '-' : '' } ${option.recordType ? option.recordType :   ''}`}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     renderOption={(props, option) => (

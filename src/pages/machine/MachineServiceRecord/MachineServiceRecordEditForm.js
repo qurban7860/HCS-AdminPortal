@@ -49,7 +49,7 @@ function MachineServiceRecordEditForm() {
   const { activeSecurityUsers } = useSelector((state) => state.user);
 
   useEffect( ()=>{
-    dispatch(getActiveServiceRecordConfigsForRecords(machine?._id))
+    // dispatch(getActiveServiceRecordConfigsForRecords(machine?._id))
     dispatch(getActiveContacts(machine?.customer?._id))
     dispatch(getActiveSecurityUsers({roleType:'Support'}))
   },[dispatch, machine])
@@ -111,7 +111,7 @@ function MachineServiceRecordEditForm() {
   const defaultValues = useMemo(
     () => ({
       recordType:                 machineServiceRecord?.serviceRecordConfig?.recordType || null,
-      serviceRecordConfig:        machineServiceRecord?.serviceRecordConfig || null,
+      serviceRecordConfiguration: machineServiceRecord?.serviceRecordConfig || null,
       serviceDate:                machineServiceRecord?.serviceDate || null,
       customer:                   machineServiceRecord?.customer || null,
       site:                       machineServiceRecord?.site || null,
@@ -144,7 +144,7 @@ function MachineServiceRecordEditForm() {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-  const { serviceDate, files, serviceRecordConfig, decoilers, operators } = watch()
+  const { serviceDate, files, serviceRecordConfiguration, decoilers, operators } = watch()
   const handleServiceDateChange = (newValue) => setValue("serviceDate", newValue)
   useEffect(() => {
     if (machineServiceRecord) {
@@ -157,7 +157,7 @@ function MachineServiceRecordEditForm() {
 
     try {
       const checkParams_ = [];
-      if(serviceRecordConfig &&
+      if(serviceRecordConfiguration &&
         Array.isArray(checkParamList) &&
         checkParamList.length > 0)
         checkParamList.forEach((checkParam_, index )=>{
@@ -278,16 +278,11 @@ function MachineServiceRecordEditForm() {
                 <RHFTextField name="machine" label="Machine Model" value={machine?.machineModel?.name || ''} disabled/>
             </Box> */}
 
-            <RHFAutocomplete
+            <RHFTextField
                     disabled
-                    name="serviceRecordConfig"
+                    name="serviceRecordConfiguration"
                     label="Service Record Configuration"
-                    options={activeServiceRecordConfigs}
-                    getOptionLabel={(option) => `${option?.docTitle ?? ''} ${option?.docTitle ? '-' : '' } ${option.recordType ? option.recordType :   ''}`}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
-                    renderOption={(props, option) => (
-                    <li {...props} key={option._id}>{`${option?.docTitle ?? ''} ${option?.docTitle ? '-' : '' } ${option.recordType ? option.recordType : ''}`}</li>
-                    )}
+                    value={`${serviceRecordConfiguration?.docTitle ?? ''} ${serviceRecordConfiguration?.docTitle ? '-' : '' } ${serviceRecordConfiguration?.recordType ??  ''}`}
                   />
 
             <Box
@@ -398,9 +393,9 @@ function MachineServiceRecordEditForm() {
                     </>
                       ))}
                 </Grid>
-                { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label="Note" minRows={3} multiline/> }
-                { serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="maintenanceRecommendation" label="Maintenance Recommendation" minRows={3} multiline/> }
-                { serviceRecordConfig?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }
+                { serviceRecordConfiguration?.enableNote && <RHFTextField name="serviceNote" label="Note" minRows={3} multiline/> }
+                { serviceRecordConfiguration?.enableMaintenanceRecommendations && <RHFTextField name="maintenanceRecommendation" label="Maintenance Recommendation" minRows={3} multiline/> }
+                { serviceRecordConfiguration?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }
 
                 {defaultValues?.recordType==='Training' &&
                   <Autocomplete multiple

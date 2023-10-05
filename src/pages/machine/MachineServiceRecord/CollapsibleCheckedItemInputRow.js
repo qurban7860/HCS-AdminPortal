@@ -40,9 +40,13 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
                         </TableCell>
                         <TableCell align='right' >
                                 <CommentsInput index={index} childIndex={childIndex} 
-                                childRow={childRow}
-                                    checkParamList={checkParamList} 
-                                    handleChangeCheckItemListComment={handleChangeCheckItemListComment} 
+                                  childRow={childRow}
+                                  checkParamList={checkParamList} 
+                                  handleChangeCheckItemListValue={handleChangeCheckItemListValue}
+                                  handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
+                                  handleChangeCheckItemListComment={handleChangeCheckItemListComment}
+                                  handleChangeCheckItemListNumberValue={handleChangeCheckItemListNumberValue}
+                                  handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
                                 />
                         </TableCell>
                       </TableRow>
