@@ -305,7 +305,7 @@ export default function CustomerContactList(currentContact = null) {
             )}
             {shouldShowContactEdit && <ContactEditForm setIsExpanded={setIsExpanded} />}
             {shouldShowContactAdd && <ContactAddForm />}
-            {shouldShowContactMove && <ContactMoveForm />}
+            {shouldShowContactMove && <ContactMoveForm setIsExpanded={setIsExpanded} />}
           </GridBaseViewForm>
         )}
 

@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import PropTypes from 'prop-types';
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // import { useNavigate } from 'react-router-dom';
@@ -18,7 +19,11 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 // ----------------------------------------------------------------------
 
-export default function ContactMoveForm() {
+ContactMoveForm.propTypes = {
+  setIsExpanded: PropTypes.func
+};
+
+export default function ContactMoveForm({setIsExpanded}) {
   const { contact, formVisibility , contactEditFormVisibility , contactMoveFormVisibility} = useSelector((state) => state.contact);
   const { activeCustomers } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
@@ -37,6 +42,8 @@ export default function ContactMoveForm() {
     []
   );
 
+
+  console.log("setIsExpanded::::",setIsExpanded)
   const methods = useForm({
     resolver: yupResolver(MoveMachineSchema),
     defaultValues,
@@ -62,14 +69,7 @@ export default function ContactMoveForm() {
     try {
       await dispatch(moveCustomerContact(data));
       enqueueSnackbar('Contact moved successfully!');
-      dispatch(resetContact());
-
-      console.log(formVisibility && !contactEditFormVisibility && !contactMoveFormVisibility)
-      // reset();
-      // dispatch(setContactMoveFormVisibility(false));
-      // dispatch(setContactFormVisibility(false));
-      
-      // dispatch(resetContactFormsVisiblity());
+      setIsExpanded(false);
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.error(error);
