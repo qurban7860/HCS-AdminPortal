@@ -179,9 +179,9 @@ function MachineServiceRecordEditForm() {
       data.decoilers = decoilers;
       data.operators = operators;
       await dispatch(updateMachineServiceRecord(machine?._id ,machineServiceRecord?._id , data));
+      await dispatch(getMachineServiceRecord(machine?._id, machineServiceRecord?._id))
       reset();
       dispatch(setMachineServiceRecordViewFormVisibility(true));
-      await dispatch(getMachineServiceRecord(machine?._id, machineServiceRecord?._id))
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
     }
@@ -356,6 +356,7 @@ setCheckParamList(updatedCheckParams);
                           <>
                             <CollapsibleCheckedItemInputRow 
                               row={row} 
+                              key={index}
                               index={index} 
                               checkParamList={checkParamList} 
                               handleChangeCheckItemListValue={handleChangeCheckItemListValue}

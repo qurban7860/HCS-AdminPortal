@@ -86,7 +86,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
                                 />}
                                 // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
-                                sx={{ minWidth: 180,maxWidth: 255, m:0.3, ml:{sm: 'auto',md: 0},
+                                sx={{ minWidth: 240,maxWidth: 300, m:0.3, ml:{sm: 'auto',md: 0},
                                     // "& .MuiInputBase-root": { height: "30px", fontSize: '14px' },
                                 }}
                                 

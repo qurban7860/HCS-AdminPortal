@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
 import { Badge, Divider, Grid, Tooltip } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 // import { Button, Typography, IconButton } from '@mui/material';
@@ -20,7 +20,7 @@ import ViewFormMenuPopover from './ViewFormMenuPopover';
 import { ICONS } from '../../../constants/icons/default-icons';
 import { fDate } from '../../../utils/formatTime';
 
-export default function ViewFormEditDeleteButtons({
+function ViewFormEditDeleteButtons({
   backLink,
   disableTransferButton = false,
   disableDeleteButton = false,
@@ -417,7 +417,7 @@ export default function ViewFormEditDeleteButtons({
     </Grid>
   );
 }
-
+export default memo(ViewFormEditDeleteButtons)
 ViewFormEditDeleteButtons.propTypes = {
   backLink: PropTypes.func,
   handleVerification: PropTypes.func,
