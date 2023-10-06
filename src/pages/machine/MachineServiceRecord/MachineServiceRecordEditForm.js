@@ -356,6 +356,7 @@ setCheckParamList(updatedCheckParams);
                           <>
                             <CollapsibleCheckedItemInputRow 
                               row={row} 
+                              key={index}
                               index={index} 
                               checkParamList={checkParamList} 
                               handleChangeCheckItemListValue={handleChangeCheckItemListValue}

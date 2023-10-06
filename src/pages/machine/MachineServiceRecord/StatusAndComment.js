@@ -34,7 +34,7 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
               <Typography variant="body2" sx={{pr:1.5}}>
                 {checkItem?.value }
               </Typography> }
-              <Grid sx={{ width:80, display: 'flex', alignItems: 'center', justifyContent:'flex-end' }}>
+              <Grid sx={{ width:140, display: 'flex', alignItems: 'center', justifyContent:'flex-end' }}>
                 {checkItem?.status && <Chip size="small" label={checkItem?.status} /> }
               </Grid>
             </Grid>

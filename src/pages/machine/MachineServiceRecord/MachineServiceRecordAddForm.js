@@ -186,7 +186,6 @@ function MachineServiceRecordAddForm() {
   
   const toggleCancel = () => { dispatch(setMachineServiceRecordAddFormVisibility(false)) };
 
-
   const handleChangeCheckItemListValue = (index, childIndex, value) => {
       const updatedCheckParams = [...checkParamList];
       const updatedParamObject = { 
@@ -342,6 +341,7 @@ function MachineServiceRecordAddForm() {
                           ( typeof row?.paramList?.length === 'number' &&
                           <>
                             <CollapsibleCheckedItemInputRow 
+                              key={index}
                               row={row} 
                               index={index} 
                               checkParamList={checkParamList} 
