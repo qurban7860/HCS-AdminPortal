@@ -21,9 +21,12 @@ const initialState = {
   page: 0,
   rowsPerPage: 100,
   statusTypes: [
-    { _id:3 , name: 'In-Process'},
-    { _id:2 , name: 'Partly-Done'},
-    { _id:1 , name: 'Complete'},
+    { _id:1 , name: 'Healthy'},
+    { _id:2 , name: 'Service Required'},
+    { _id:3 , name: 'Under Service'},
+    { _id:4 , name: 'Replacement Required'},
+    { _id:5 , name: 'Replaced Recently'},
+
   ],
   recordTypes: [
     { _id:1 , name: 'Service'},
