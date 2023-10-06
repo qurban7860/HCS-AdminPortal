@@ -21,6 +21,8 @@ MachineListTableToolbar.propTypes = {
   filterStatus: PropTypes.array,
   onFilterStatus: PropTypes.func,
   statusOptions: PropTypes.array,
+  onFilterVerify: PropTypes.func,
+  filterVerify: PropTypes.string
 };
 
 export default function MachineListTableToolbar({
@@ -31,6 +33,8 @@ export default function MachineListTableToolbar({
   statusOptions,
   onResetFilter,
   onFilterStatus,
+  onFilterVerify,
+  filterVerify
 }) {
   const navigate = useNavigate();
   const toggleAdd = () => {
@@ -44,6 +48,8 @@ export default function MachineListTableToolbar({
         value={filterName}
         onChange={onFilterName}
         onClick={onResetFilter}
+        onFilterVerify={onFilterVerify}
+        filterVerify={filterVerify}
         SubOnClick={toggleAdd}
         addButton={BUTTONS.ADDMACHINE}
       />
