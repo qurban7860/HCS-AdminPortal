@@ -31,7 +31,7 @@ function SearchBarCombo({
   const { machine } = useSelector((state) => state.machine);
   return (
     <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{display:'flex', justifyContent:'space-between'}}>
-      <Grid item xs={12} sm={8}>
+      <Grid item xs={12} sm={onFilterVerify?6:8}>
         <TextField
           fullWidth
           value={value}
@@ -55,7 +55,7 @@ function SearchBarCombo({
         />
       </Grid>
         {onFilterVerify && 
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12} sm={4}>
             <Stack alignItems="flex-start">
             <FormControl fullWidth={isMobile} sx={{ml:2, width:'200px'}}>
               <InputLabel id="demo-simple-select-label">Status</InputLabel>
@@ -76,26 +76,12 @@ function SearchBarCombo({
             </Stack>
           </Grid>
         }
-        {/* {isFiltered && <Grid item xs={12} sm={2}>
-          <Stack alignItems="flex-start">
-            <Button
-              fullWidth
-              sx={{ p: 2}}
-              onClick={onClick}
-              variant="outlined"
-              color='error'
-              startIcon={<Iconify icon='eva:trash-2-outline' />}
-            >
-              {BUTTONS.CLEAR}
-            </Button>
-          </Stack>
-        </Grid>} */}
 
         {inviteButton && <Grid item xs={12} md={2}>
           <Stack alignItems="flex-end">
             <Button
               fullWidth
-              sx={{ p: 2, width: '100%' }}
+              sx={{ p: 2}}
               onClick={inviteOnClick}
               variant="contained"
               startIcon={<Iconify icon={buttonIcon || 'eva:plus-fill'} />}
@@ -109,7 +95,7 @@ function SearchBarCombo({
             <Button
               disabled={machine?.status?.slug==='transferred'}
               fullWidth
-              sx={{ p: 2, width: '100%' }}
+              sx={{ p: 2}}
               onClick={SubOnClick}
               variant="contained"
               startIcon={<Iconify icon={buttonIcon || 'eva:plus-fill'} />}
