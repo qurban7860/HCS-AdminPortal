@@ -74,9 +74,11 @@ function MachineServiceParamViewForm() {
     <Card sx={{ p: 2 }}>
       <Grid>
         <ViewFormEditDeleteButtons isActive={defaultValues.isActive}  
-        disableEditButton={machine?.status?.slug==='transferred'}
-        disableDeleteButton={machine?.status?.slug==='transferred'}
-        handleEdit={handleEdit} onDelete={onDelete} backLink={() => dispatch(setAllFlagsFalse())}/>
+          disableEditButton={machine?.status?.slug==='transferred'}
+          disableDeleteButton={machine?.status?.slug==='transferred'}
+          handleEdit={handleEdit} onDelete={onDelete} backLink={() => dispatch(setAllFlagsFalse())}
+        />
+        
         <Grid container>
           <ViewFormField sm={6} heading="Customer"  param={`${machine?.customer?.name ? machine?.customer?.name : ''}`} />
           <ViewFormField sm={6} heading="Machine"  param={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} />
@@ -92,45 +94,9 @@ function MachineServiceParamViewForm() {
           {machineServiceRecord?.serviceRecordConfig?.checkParams?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
 
           <Grid item md={12} sx={{display:'flex', flexDirection:'column'}}>
-            {machineServiceRecord?.serviceRecordConfig?.checkParams?.length > 0 ? (machineServiceRecord?.serviceRecordConfig?.checkParams.map((row, index) =>
-              <>
+            {machineServiceRecord?.serviceRecordConfig?.checkParams?.length > 0 ? 
+            (machineServiceRecord?.serviceRecordConfig?.checkParams.map((row, index) =>
                     <ReadableCollapsibleCheckedItemRow value={row} index={index} />
-                {/* <Grid key={index}  item md={12} sx={{pb:1}} >
-                  <Typography variant="body2" sx={{fontWeight:'bold'}}>{`${index+1}). `} {typeof row?.paramListTitle === 'string' && row?.paramListTitle || ''}{' ( Items: '}{`${row?.paramList?.length}`}{' ) '}</Typography>
-                </Grid>
-                <Grid  item md={12} sx={{ pb:1}}>
-                  {row?.paramList.map((childRow,childIndex) => 
-                  (<Box
-                      component="form"
-                      noValidate
-                      autoComplete="off"
-                      sx={{ background:(childIndex%2===0?'#f4f6f866':''), 
-                      ":hover": {
-                        backgroundColor: "#dbdbdb66"
-                      }}}
-                      rowGap={2}
-                      columnGap={2}
-                      display="grid"
-                      gridTemplateColumns={{ sm: 'repeat(2, 1fr)', md: 'repeat(2, 1fr)' }}
-                      >
-                      <Typography variant="body2" ><b>{`${childIndex+1}). `}</b>{`${childRow?.name}`}</Typography>
-                      <Box sx={{textAlign:'right'}}>
-                        {childRow?.inputType === 'Boolean' ? 
-                        <Checkbox  checked={
-                          machineServiceRecord?.checkParams?.find((element) =>
-                          element?.paramListTitle === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramListTitle && element?.serviceParam === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramList[childIndex]?._id
-                          )?.value || false
-                          } disabled sx={{mr:'auto'}}/> 
-                          :
-                        <Typography variant="body2" sx={{pr:1.5}}>
-                        {machineServiceRecord?.checkParams?.find((element) =>
-                          element?.paramListTitle === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramListTitle && element?.serviceParam === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramList[childIndex]?._id
-                          )?.value }
-                        </Typography> }
-                      </Box>
-                    </Box>))}
-                </Grid> */}
-              </>
               )) : <ViewFormField /> }
           </Grid>
 

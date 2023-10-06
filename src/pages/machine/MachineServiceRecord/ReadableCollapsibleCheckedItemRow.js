@@ -7,7 +7,7 @@ import Iconify from '../../../components/iconify';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons'
 import StatusAndComment from './StatusAndComment';
 
-const CollapsibleCheckedItemRow = ({value, index, toggleEdit, deleteIndex, handleListDragStart, handleListDrop }) => {
+const CollapsibleCheckedItemRow = ({value, index }) => {
   const [open, setOpen] = useState(true);
   const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
   return (
@@ -41,10 +41,6 @@ const CollapsibleCheckedItemRow = ({value, index, toggleEdit, deleteIndex, handl
 CollapsibleCheckedItemRow.propTypes = {
     index: PropTypes.number,
     value: PropTypes.object,
-    toggleEdit: PropTypes.func,
-    deleteIndex: PropTypes.func,
-    handleListDragStart: PropTypes.func,
-    handleListDrop: PropTypes.func,
   };
 
 export default memo(CollapsibleCheckedItemRow)

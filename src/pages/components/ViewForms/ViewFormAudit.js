@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
+import { memo } from 'react';
 import { Typography, Grid } from '@mui/material';
 import { fDateTime } from '../../../utils/formatTime';
 
 ViewFormAudit.propTypes = {
   defaultValues: PropTypes.object,
 };
-export default function ViewFormAudit({ defaultValues }) {
+function ViewFormAudit({ defaultValues }) {
   const { createdByFullName, createdAt, createdIP, updatedByFullName, updatedAt, updatedIP } =
     defaultValues;
 
@@ -37,3 +38,4 @@ export default function ViewFormAudit({ defaultValues }) {
     </Grid>
   );
 }
+export default memo(ViewFormAudit)
