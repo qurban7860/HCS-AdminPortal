@@ -65,23 +65,30 @@ export const TABS = (currentComponent, showDevTabs, disableTab) => [
     icon: <Iconify icon="mdi:window-open-variant" />,
     component: <MachineProfiles />,
   },
+  {
+    disabled: disableTab,
+    value: 'checkItemRecords',
+    label: 'Service Records',
+    icon: <Iconify icon="mdi:clipboard-text-clock" />,
+    component : <MachineServiceRecordList />,
+  },
  
-  ...(showDevTabs
-    ? [
+  // ...(showDevTabs
+  //   ? [
         
-        // {
-        //   disabled: disableTab,
-        //   value: 'repairHistory',
-        //   label: 'Repair History',
-        //   icon: <Iconify icon="ic:round-manage-history" />,
-        // },
-        {
-          disabled: disableTab,
-          value: 'checkItemRecords',
-          label: 'Service Records',
-          icon: <Iconify icon="mdi:clipboard-text-clock" />,
-          component : <MachineServiceRecordList />,
-        },
-      ]
-    : []),
+  //       // {
+  //       //   disabled: disableTab,
+  //       //   value: 'repairHistory',
+  //       //   label: 'Repair History',
+  //       //   icon: <Iconify icon="ic:round-manage-history" />,
+  //       // },
+  //       // {
+  //       //   disabled: disableTab,
+  //       //   value: 'checkItemRecords',
+  //       //   label: 'Service Records',
+  //       //   icon: <Iconify icon="mdi:clipboard-text-clock" />,
+  //       //   component : <MachineServiceRecordList />,
+  //       // },
+  //     ]
+  //   : []),
 ];
