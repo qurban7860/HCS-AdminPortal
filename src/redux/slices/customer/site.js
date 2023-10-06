@@ -100,6 +100,10 @@ const slice = createSlice({
       state.success = false;
       state.isLoading = false;
     },
+    resetSiteFormsVisiblity(state){
+      state.siteAddFormVisibility= false;
+      state.siteEditFormVisibility= false;
+    },
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
       state.isLoading = false;
@@ -138,6 +142,7 @@ export const {
   resetSite,
   resetSites,
   resetActiveSites,
+  resetSiteFormsVisiblity,
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,

@@ -7,6 +7,7 @@ import { CONFIG } from '../../../config-global';
 const initialState = {
   intial: false,
   machineEditFormFlag: false,
+  machineMoveFormVisibility: false,
   transferMachineFlag: false,
   responseMessage: null,
   success: false,
@@ -22,6 +23,7 @@ const initialState = {
   machineLatLongCoordinates: [],
   transferDialogBoxVisibility: false,
   filterBy: '',
+  verified: 'all',
   page: 0,
   rowsPerPage: 100,
 };
@@ -46,9 +48,14 @@ const slice = createSlice({
       state.transferDialogBoxVisibility = action.payload;
     },
 
-    // SET TOGGLE648ac5b7418fc12b70794fe4
+    // SET EDIT FORM
     setMachineEditFormVisibility(state, action){
       state.machineEditFormFlag = action.payload;
+    },
+
+    // SET MOVE FORM
+    setMachineMoveFormVisibility(state, action){
+      state.machineMoveFormVisibility = action.payload;
     },
 
     // SET TOGGLE
@@ -165,6 +172,12 @@ const slice = createSlice({
     setFilterBy(state, action) {
       state.filterBy = action.payload;
     },
+
+    // Set FilterBy
+    setVerified(state, action) {
+      state.verified = action.payload;
+    },
+
     // Set PageRowCount
     ChangeRowsPerPage(state, action) {
       state.rowsPerPage = action.payload;
@@ -182,6 +195,7 @@ export default slice.reducer;
 // Actions
 export const {
   setMachineEditFormVisibility,
+  setMachineMoveFormVisibility,
   stopLoading,
   setTransferMachineFlag,
   resetCustomerMachines,
@@ -191,6 +205,7 @@ export const {
   setResponseMessage,
   setTransferDialogBoxVisibility,
   setFilterBy,
+  setVerified,
   ChangeRowsPerPage,
   ChangePage,
   setMachineDialog,
@@ -566,6 +581,33 @@ export function transferMachine(params) {
       );
       dispatch(setTransferDialogBoxVisibility(false));
       dispatch(getMachine(response.data.Machine.parentMachineID));
+      return response; // eslint-disable-line
+
+    } catch (error) {
+      dispatch(slice.actions.stopLoading());
+      console.error(error);
+      throw error;
+      // dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+
+}
+
+export function moveMachine(params) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const data = {
+        customer: params?.customer?._id,
+        machine: params?.machine,
+        billingSite: params?.billingSite?._id,
+        installationSite: params?.installationSite?._id,
+      };
+     /* eslint-enable */
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/moveMachine`,
+        data
+      );
+      dispatch(slice.actions.setMachineMoveFormVisibility(false));
       return response; // eslint-disable-line
 
     } catch (error) {

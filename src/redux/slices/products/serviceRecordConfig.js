@@ -11,6 +11,7 @@ const initialState = {
   responseMessage: null,
   success: false,
   isLoading: false,
+  isLoadingCheckItems: false,
   error: null,
   serviceRecordConfigs: [],
   activeServiceRecordConfigs: [],
@@ -19,6 +20,14 @@ const initialState = {
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
+  statusTypes: [
+    { _id:1 , name: 'Healthy'},
+    { _id:2 , name: 'Service Required'},
+    { _id:3 , name: 'Under Service'},
+    { _id:4 , name: 'Replacement Required'},
+    { _id:5 , name: 'Replaced Recently'},
+
+  ],
   recordTypes: [
     { _id:1 , name: 'Service'},
     { _id:2 , name: 'Repair'},
@@ -38,6 +47,10 @@ const slice = createSlice({
     // START LOADING
     startLoading(state) {
       state.isLoading = true;
+    },
+    // START LOADING
+    startLoadingCheckItems(state) {
+      state.isLoadingCheckItems = true;
     },
     // SET TOGGLE
     setServiceRecordConfigEditFormVisibility(state, action){
@@ -77,8 +90,8 @@ const slice = createSlice({
     },
     // GET ServiceRecordConfig
     getServiceRecordConfigSuccess(state, action) {
-      
       state.isLoading = false;
+      state.isLoadingCheckItems = false;
       state.success = true;
       state.serviceRecordConfig = action.payload;
       state.initial = true;
@@ -194,12 +207,13 @@ export function getActiveServiceRecordConfigsForRecords(machineId, type){
       const query = {
         params: {
           isArchived: false,
-          isActive: true
+          isActive: true,
+          recordType: type?.name,
         }
       }
 
       
-      Object.assign(query.params, type)
+      // Object.assign(query.params, type)
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecordsConfig`, query);
       dispatch(slice.actions.getActiveServiceRecordConfigsForRecordsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('ServiceRecordConfigs loaded successfully'));
@@ -217,6 +231,7 @@ export function getActiveServiceRecordConfigsForRecords(machineId, type){
 export function getServiceRecordConfig(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.startLoadingCheckItems());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/serviceRecordsConfig/${id}`);
       dispatch(slice.actions.getServiceRecordConfigSuccess(response.data));

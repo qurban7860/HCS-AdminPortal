@@ -1,64 +1,46 @@
 import { useState, memo } from 'react'
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
-import { Box, Table, TableBody, TableCell, TableRow,  IconButton, Collapse } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { Box, Grid, Table, TableBody, TableCell, TableRow,  IconButton, Collapse, Typography, Checkbox, Chip } from '@mui/material';
 import Iconify from '../../../components/iconify';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons'
+import StatusAndComment from './StatusAndComment';
 
-const CollapsibleCheckedItemRow = ({value, index, toggleEdit, deleteIndex, handleListDragStart, handleListDrop }) => {
+const CollapsibleCheckedItemRow = ({value, index }) => {
   const [open, setOpen] = useState(true);
+  const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
   return (
     <>
-        <TableRow
-                key={index}
-                draggable
-                onDragStart={handleListDragStart && ((e) => handleListDragStart(e, index))}
-                onDragOver={(e) => e.preventDefault()}
-                onDrop={handleListDrop && ((e) => handleListDrop(e, index))}
-              >
-              <TableCell size='small' align='left' >
+            <Typography variant='h5'>
                 <b>{`${index+1}). `}</b>{typeof value?.paramListTitle === 'string' && value?.paramListTitle || ''}{' ( Items: '}<b>{`${value?.paramList?.length}`}</b>{' ) '}
-                <IconButton
+                {/* <IconButton
                   aria-label="expand row"
                   size="small"
                   color={open ? 'default' :  'primary'}
                   onClick={() => setOpen(!open)}
                 >
                   {open ? <Iconify icon="mingcute:up-line" /> : <Iconify icon="mingcute:down-line" /> }
-                </IconButton>
-                </TableCell>
-              <TableCell size='small' align='right' >
-                  {toggleEdit && <ViewFormEditDeleteButtons handleEdit={()=>toggleEdit(index)} onDelete={()=>deleteIndex(index)} /> }
-              </TableCell>
-        </TableRow>
-        <TableRow key={uuidv4()}>
-          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-              <Box sx={{ margin: 1 }}>
+                </IconButton> */}
+            </Typography>
+            {/* <Collapse in={open} timeout="auto" unmountOnExit> */}
+              <Grid sx={{ ml: 3 }}>
                 <Table size="small" aria-label="purchases">
-
                   <TableBody>
                     {value?.paramList.map((childRow,childIndex) => (
-                      <TableRow key={childRow._id}>
-                        <TableCell component="th" scope="row"><b>{`${childIndex+1}). `}</b>{`${childRow.name} ${childRow?.inputType ? '-' : '' } ${childRow?.inputType ? childRow?.inputType : '' }`}</TableCell>
-                      </TableRow>
+                      
+                          <StatusAndComment index={index} childIndex={childIndex} childRow={childRow}/>
                     ))}
                   </TableBody>
                 </Table>
-              </Box>   
-            </Collapse>
-          </TableCell>
-        </TableRow>
+              </Grid>   
+            {/* </Collapse> */}
         </>
   )
 }
 CollapsibleCheckedItemRow.propTypes = {
     index: PropTypes.number,
     value: PropTypes.object,
-    toggleEdit: PropTypes.func,
-    deleteIndex: PropTypes.func,
-    handleListDragStart: PropTypes.func,
-    handleListDrop: PropTypes.func,
   };
 
 export default memo(CollapsibleCheckedItemRow)

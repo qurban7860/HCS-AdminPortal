@@ -30,7 +30,9 @@ import TableCard from '../../components/ListTableTools/TableCard';
 import { getCustomerMachines, ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
-  setMachineDialog, } from '../../../redux/slices/products/machine';
+  setMachineDialog,
+  setMachineMoveFormVisibility,
+  getMachine, } from '../../../redux/slices/products/machine';
 import MachineDialog from '../../components/Dialog/MachineDialog';
 
 export default function MachineList() {
@@ -58,6 +60,7 @@ export default function MachineList() {
     { id: 'name', visibility: 'xs1', label: 'name'},
     { id: 'machineModel.name', label: 'Model'},
     { id: 'instalationSite.address.country', label: 'Address'},
+    { id: 'action', label: ''},
   ];
 
   const onChangeRowsPerPage = (event) => {
@@ -117,6 +120,11 @@ export default function MachineList() {
     setMachineData(MachineData)
   };
 
+  const handleMoveMachine = (id) => {
+    dispatch(getMachine(id))
+    dispatch(setMachineMoveFormVisibility(true)) 
+  };
+
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
@@ -158,6 +166,7 @@ export default function MachineList() {
                         key={row._id}
                         row={row}
                         onViewRow={() => handleViewRow(row)}
+                        onMoveMachine={() => handleMoveMachine(row?._id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
                     ) : (

@@ -1,76 +1,60 @@
 import { useState, memo } from 'react'
 import PropTypes, { number } from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
-import { Box, Table, TableBody, TableCell, TableRow,  IconButton, Collapse } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableRow,  IconButton, Collapse, Grid, TextField, Checkbox, Typography, Autocomplete } from '@mui/material';
 import Iconify from '../../../components/iconify';
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons'
-import {  RHFTextField, RHFCheckbox, RHFDatePicker } from '../../../components/hook-form';
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import {  RHFTextField, RHFCheckbox, RHFDatePicker, RHFAutocomplete } from '../../../components/hook-form';
+import CommentsInput from './CommentsInput';
 
-const CollapsibleCheckedItemInputRow = ({value, index, toggleEdit, deleteIndex, checkParams, setValue, handleListDragStart, handleListDrop }) => {
-  console.log("checkParams : ",checkParams)
-
-  const handleChangeCheckItemListValue = (childIndex, event) => {
-    console.log(" val : ",index,childIndex, event)
-    const updateCheckParams = [...checkParams]
-    const updateCheckParamObject = updateCheckParams[index].paramList[childIndex]
-          updateCheckParamObject.value = event.target.value
-    updateCheckParams[index]?.paramList.splice(childIndex, 1, updateCheckParamObject);
-    setValue('checkParams',updateCheckParams)
-  }
-  return (
+const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue, 
+  handleChangeCheckItemListValue, 
+  handleChangeCheckItemListStatus,
+  handleChangeCheckItemListComment,
+  handleChangeCheckItemListCheckBoxValue}) =>
+  (
     <>
-        <TableRow
-                key={index}
-                draggable
-                onDragStart={handleListDragStart && ((e) => handleListDragStart(e, index))}
-                onDragOver={(e) => e.preventDefault()}
-                onDrop={handleListDrop && ((e) => handleListDrop(e, index))}
-              >
-              <TableCell size='small' align='left' >
-                <b>{`${index+1}). `}</b>{typeof value?.paramListTitle === 'string' && value?.paramListTitle || ''}{' ( Items: '}<b>{`${value?.paramList?.length}`}</b>{' ) '}
-                </TableCell>
-              <TableCell size='small' align='right' >
-                  {toggleEdit && <ViewFormEditDeleteButtons handleEdit={()=>toggleEdit(index)} onDelete={()=>deleteIndex(index)} /> }
-              </TableCell>
-        </TableRow>
-        <TableRow key={uuidv4()}>
-          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+        <Typography key={index} variant='h5'>
+            <b>{`${index+1}). `}</b>{typeof row?.paramListTitle === 'string' && row?.paramListTitle || ''}{' ( Items: '}<b>{`${row?.paramList?.length}`}</b>{' ) '}
+        </Typography>
+        <Grid  sx={{ml:3}} >
                 <Table size="small" aria-label="purchases">
                   <TableBody>
-                    {value?.paramList.map((childRow,childIndex) => (
-                      <TableRow key={childRow._id} >
-                        <TableCell component="th" scope="row" >
-                        <b>{`${childIndex+1}). `}</b>
-                        {`${childRow.name}`}
+                    {row?.paramList.map((childRow,childIndex) => (
+                      <TableRow key={childRow._id} 
+                          sx={{ ":hover": { backgroundColor: "#dbdbdb66" } }}
+                      >
+                        <TableCell component="th" size='small'>
+                          <b>{`${childIndex+1}). `}</b>
+                          {`${childRow.name}`}
                         </TableCell>
-                        {( childRow?.inputType === 'Short Text' || childRow?.inputType === 'Long Text' || childRow?.inputType === 'Number' ) && <RHFTextField 
-                          label={childRow?.inputType} 
-                          name={childRow.name} 
-                          value={checkParams[index].paramList[childIndex]?.value || ''}
-                          type={childRow?.inputType === 'Number' && childRow?.inputType.toLowerCase()} 
-                          onChange={(val)=>handleChangeCheckItemListValue(childIndex, val)} 
-                          size="small" sx={{m:0.3}} 
-                          minRows={childRow?.inputType === 'Long Text' && 3} multiline={childRow?.inputType === 'Long Text'}
-                        />}
-                        {childRow?.inputType === 'Boolean' && <RHFCheckbox name={childRow.name} onChange={(val)=>handleChangeCheckItemListValue(childIndex, val)}/>}
+                        <TableCell align='right' >
+                                <CommentsInput index={index} childIndex={childIndex} 
+                                  childRow={childRow}
+                                  checkParamList={checkParamList} 
+                                  handleChangeCheckItemListValue={handleChangeCheckItemListValue}
+                                  handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
+                                  handleChangeCheckItemListComment={handleChangeCheckItemListComment}
+                                  handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
+                                />
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
-          </TableCell>
-        </TableRow>
+        </Grid>
         </>
   )
-}
+
 CollapsibleCheckedItemInputRow.propTypes = {
     index: PropTypes.number,
-    value: PropTypes.object,
-    checkParams: PropTypes.array,
+    row: PropTypes.object,
+    checkParamList: PropTypes.array,
+    handleChangeCheckItemListValue: PropTypes.func,
+    handleChangeCheckItemListStatus: PropTypes.func,
+    handleChangeCheckItemListComment: PropTypes.func,
+    handleChangeCheckItemListCheckBoxValue: PropTypes.func,
     setValue: PropTypes.func,
-    toggleEdit: PropTypes.func,
-    deleteIndex: PropTypes.func,
-    handleListDragStart: PropTypes.func,
-    handleListDrop: PropTypes.func,
   };
 
-export default CollapsibleCheckedItemInputRow
+export default memo(CollapsibleCheckedItemInputRow)

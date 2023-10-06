@@ -101,8 +101,8 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
   );
 
   return (
-    <Grid>
-      <Grid container justifyContent="flex-end" sx={{mt:5}}>
+    <Grid sx={{mt:1}}>
+      <Grid container justifyContent="flex-end">
         <ViewFormEditDeleteButtons
           isActive={defaultValues?.isActive}
           handleEdit={handleEdit}

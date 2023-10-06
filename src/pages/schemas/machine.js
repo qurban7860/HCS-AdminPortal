@@ -62,7 +62,7 @@ const year = currentDate.getFullYear();
 const dateCheck = `${year}-${month}-${day+1}`;
 export const MachineServiceRecordSchema = Yup.object().shape({
   recordType:Yup.object().label('Record Type').nullable(),
-  serviceRecordConfig: Yup.object().label('Service Record Configuration').nullable().required(),
+  serviceRecordConfiguration: Yup.object().label('Service Record Configuration').nullable().required(),
   // serviceDate: Yup.date().label('Service Date').nullable().required,
   serviceDate: Yup.date()
   .max(dateCheck).nullable()

@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
+import { memo } from 'react';
 import { Typography, Grid} from '@mui/material';
 
 ViewFormSubtitle.propTypes = {
     heading: PropTypes.string,
     sm: PropTypes.number,
   };
-export default function ViewFormSubtitle({heading,sm}) {
+function ViewFormSubtitle({heading,sm}) {
     return (
       <>
         <Grid item xs={12} sm={sm} sx={{ pt:2, overflowWrap: "break-word", }}>
@@ -14,3 +15,4 @@ export default function ViewFormSubtitle({heading,sm}) {
       </>
     )
 }
+export default memo(ViewFormSubtitle)

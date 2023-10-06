@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
 import { Badge, Divider, Grid, Tooltip } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 // import { Button, Typography, IconButton } from '@mui/material';
@@ -20,7 +20,7 @@ import ViewFormMenuPopover from './ViewFormMenuPopover';
 import { ICONS } from '../../../constants/icons/default-icons';
 import { fDate } from '../../../utils/formatTime';
 
-export default function ViewFormEditDeleteButtons({
+function ViewFormEditDeleteButtons({
   backLink,
   disableTransferButton = false,
   disableDeleteButton = false,
@@ -43,7 +43,9 @@ export default function ViewFormEditDeleteButtons({
   sites,
   mainSite,
   handleMap,
-  machineSupportDate
+  machineSupportDate,
+  moveCustomerContact,
+  supportSubscription
 }) {
   const { id } = useParams();
   const userId = localStorage.getItem('userId');
@@ -174,6 +176,14 @@ export default function ViewFormEditDeleteButtons({
               icon={isActive?ICONS.ACTIVE.icon:ICONS.INACTIVE.icon}
             />
           }
+
+          {supportSubscription!==undefined &&
+            <IconTooltip
+            title={supportSubscription?`Support Subscription Enabled`:`Support Subscription Disabled`}
+            color={supportSubscription?ICONS.ALLOWED.color:ICONS.DISALLOWED.color}
+            icon="bx:support"
+            />
+          }
           
           {machineSupportDate &&
             <IconTooltip
@@ -284,6 +294,16 @@ export default function ViewFormEditDeleteButtons({
           />
         )}
 
+        {/* move contact button */}
+        {moveCustomerContact && <IconTooltip
+          title="Move Conact"
+          onClick={() => {
+            moveCustomerContact();
+          }}
+          color={theme.palette.primary.main}
+          icon="eva:swap-fill"
+        />}
+        
         {/* edit button */}
         {handleEdit && <IconTooltip
           title="Edit"
@@ -397,7 +417,7 @@ export default function ViewFormEditDeleteButtons({
     </Grid>
   );
 }
-
+export default memo(ViewFormEditDeleteButtons)
 ViewFormEditDeleteButtons.propTypes = {
   backLink: PropTypes.func,
   handleVerification: PropTypes.func,
@@ -421,5 +441,7 @@ ViewFormEditDeleteButtons.propTypes = {
   disableDeleteButton: PropTypes.bool,
   disableEditButton: PropTypes.bool,
   handleMap: PropTypes.func,
-  machineSupportDate: PropTypes.string
+  machineSupportDate: PropTypes.string,
+  moveCustomerContact: PropTypes.func,
+  supportSubscription: PropTypes.bool
 };

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
@@ -30,11 +30,10 @@ import { Snacks, FORMLABELS as formLABELS } from '../../constants/customer-const
 // ----------------------------------------------------------------------
 
 export default function CustomerViewForm() {
-  const [setIsExpanded] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isMobile = useResponsive('down', 'sm');
-  const { customer, customerEditFormVisibility } = useSelector((state) => state.customer);
+  const { customer, customerEditFormFlag } = useSelector((state) => state.customer);
   const userId = localStorage.getItem('userId');
   const { enqueueSnackbar } = useSnackbar();
   const isNotFound = !customer;
@@ -42,6 +41,7 @@ export default function CustomerViewForm() {
   const defaultValues = useMemo(
     () => ({
       id: customer?._id || '',
+      code: customer?.clientCode || '',
       name: customer?.name || '',
       tradingName: customer?.tradingName || '',
       accountManager: customer?.accountManager || '',
@@ -51,6 +51,7 @@ export default function CustomerViewForm() {
       primaryBillingContact: customer?.primaryBillingContact || null,
       primaryTechnicalContact: customer?.primaryTechnicalContact || null,
       isActive: customer?.isActive,
+      supportSubscription: customer?.supportSubscription,
       createdAt: customer?.createdAt || '',
       createdByFullName: customer?.createdBy?.name || '',
       createdIP: customer?.createdIP || '',
@@ -65,15 +66,9 @@ export default function CustomerViewForm() {
   // ----------------------------handle functions---------------------------------
 
   const handleEdit = async () => {
-    await dispatch(getCustomer(customer._id));
-    if (customerEditFormVisibility) {
-      dispatch(setCustomerEditFormVisibility(false));
-
-      setIsExpanded(false);
-    }
-    if (!customerEditFormVisibility) {
+    // await dispatch(getCustomer(customer._id));
+    if (!customerEditFormFlag) {
       dispatch(setCustomerEditFormVisibility(true));
-      setIsExpanded(true);
     }
   };
 
@@ -98,7 +93,7 @@ export default function CustomerViewForm() {
 
   return (
     <>
-      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+      {/* <Grid container direction="row" justifyContent="space-between" alignItems="center">
         <Grid item xs={12} md={6}>
           <BreadcrumbsProvider>
             <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
@@ -109,7 +104,7 @@ export default function CustomerViewForm() {
       </Grid>
       <Grid item lg={12}>
         <TableNoData isNotFound={isNotFound} />
-      </Grid>
+      </Grid> */}
 
       {/* customer view form */}
       <Grid container direction="row" mt={isMobile && 2}>
@@ -121,11 +116,19 @@ export default function CustomerViewForm() {
               handleVerification={handleVerification}
               handleEdit={handleEdit}
               onDelete={onDelete}
+              supportSubscription={defaultValues.supportSubscription}
               backLink={() => navigate(PATH_CUSTOMER.list)}
             />
             <Grid container sx={{mt:2}}>
               <ViewFormField
-                sm={12}
+                sm={2}
+                md={2}
+                heading={formLABELS.CUSTOMER.CODE.label}
+                param={defaultValues?.code}
+              />
+              <ViewFormField
+                sm={10}
+                md={10}
                 heading={formLABELS.CUSTOMER.NAME.label}
                 param={defaultValues?.name}
               />

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, Typography, TextField,  Autocomplete, Checkbox, InputAdornment } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, TextField,  Autocomplete, Checkbox, InputAdornment, Skeleton } from '@mui/material';
 
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
@@ -11,7 +11,7 @@ import FormHeading from '../../components/DocumentForms/FormHeading';
 import { FORMLABELS } from '../../../constants/default-constants';
 // slice
 import { addMachineServiceRecord, setMachineServiceRecordAddFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
-import { getActiveServiceRecordConfigsForRecords } from '../../../redux/slices/products/serviceRecordConfig';
+import { getActiveServiceRecordConfigsForRecords, getServiceRecordConfig, resetServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 import { getActiveContacts } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -23,7 +23,7 @@ import FormProvider, {
   RHFDatePicker
 } from '../../../components/hook-form';
 import { getActiveSecurityUsers, getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
-
+import CollapsibleCheckedItemInputRow from './CollapsibleCheckedItemInputRow';
 // ----------------------------------------------------------------------
 
 function MachineServiceRecordAddForm() {
@@ -33,8 +33,10 @@ function MachineServiceRecordAddForm() {
   const { machine } = useSelector((state) => state.machine)
   const { activeSecurityUsers, securityUser } = useSelector((state) => state.user);
   const { activeContacts } = useSelector((state) => state.contact);
-  const { activeServiceRecordConfigsForRecords, recordTypes } = useSelector((state) => state.serviceRecordConfig);
+  const { activeServiceRecordConfigsForRecords, serviceRecordConfig, recordTypes, isLoadingCheckItems } = useSelector((state) => state.serviceRecordConfig);
+  const [ activeServiceRecordConfigs, setActiveServiceRecordConfigs ] = useState([]);
   const [checkParamList, setCheckParamList] = useState([]);
+  // console.log("checkParamList : ",checkParamList)
   const [docType, setDocType] = useState(null);
   const user = { _id: localStorage.getItem('userId'), name: localStorage.getItem('name') };
 
@@ -43,6 +45,7 @@ function MachineServiceRecordAddForm() {
     dispatch(getActiveContacts(machine?.customer?._id))
     dispatch(getActiveSecurityUsers({roleType:'Support'}))
     dispatch(getSecurityUser(user._id))
+    dispatch(resetServiceRecordConfig())
   },[dispatch, machine, user?._id])
 
   const machineDecoilers = (machine?.machineConnections || []).map((decoiler) => ({
@@ -55,7 +58,7 @@ function MachineServiceRecordAddForm() {
     () => {
       const initialValues = {
       docRecordType: null,
-      serviceRecordConfig: null,
+      serviceRecordConfiguration: null,
       serviceDate: new Date(),
       technician:   securityUser?.contact || null,
       decoilers: machineDecoilers,
@@ -89,8 +92,27 @@ function MachineServiceRecordAddForm() {
     control,
   } = methods;
 
-  const { decoilers, operators, serviceRecordConfig, technician, docRecordType } = watch()
+  const { decoilers, operators, serviceRecordConfiguration, technician, docRecordType } = watch()
   
+  useEffect(() => {
+      if(docRecordType === null){
+        setActiveServiceRecordConfigs(activeServiceRecordConfigsForRecords)
+      }else{
+        if(docRecordType.name !== serviceRecordConfiguration?.recordType ){
+          dispatch(resetServiceRecordConfig())
+          setValue('serviceRecordConfiguration',null)
+        }
+        setActiveServiceRecordConfigs(activeServiceRecordConfigsForRecords.filter(activeRecordConfig => activeRecordConfig.recordType === docRecordType.name ))
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[docRecordType, activeServiceRecordConfigsForRecords ])
+
+    useEffect(() =>{
+      if(serviceRecordConfiguration !== null){
+      dispatch(getServiceRecordConfig(serviceRecordConfiguration?._id))
+    }
+    },[dispatch, serviceRecordConfiguration])
+
   useEffect(()=>{
     if(securityUser?.customer?.name === 'Howick' && !!securityUser?.roles?.find((role) => role?.roleType === 'Support')){
       setValue('technician',user)
@@ -106,18 +128,22 @@ function MachineServiceRecordAddForm() {
     if(newValue?._id===3) setDocType(true)
     else setDocType(false)
     const recordType = {recordType:newValue?.name}
-    setValue('serviceRecordConfig',null);
+    setValue('serviceRecordConfiguration',null);
     dispatch(getActiveServiceRecordConfigsForRecords(machine?._id, recordType))
   }
 
   const handleParamChange = (event, newValue) => {
-
-    setValue('serviceRecordConfig',newValue)
-    trigger('serviceRecordConfig');
+    if(newValue != null){
+    setValue('serviceRecordConfiguration',newValue)
+    trigger('serviceRecordConfiguration');
     if(newValue?.recordType==='Training'){
       setDocType(true)
     }else{
       setDocType(false)
+    }
+    }else{
+      dispatch(resetServiceRecordConfig())
+      setValue('serviceRecordConfiguration',null)
     }
   }
   
@@ -126,24 +152,26 @@ function MachineServiceRecordAddForm() {
     try {
       const checkParams_ = [];
 
-      if(serviceRecordConfig && 
-        Array.isArray(serviceRecordConfig.checkParams) && 
-        serviceRecordConfig.checkParams.length>0) 
-        serviceRecordConfig.checkParams.forEach((checkParam_, index )=>{
+      if(checkParamList && 
+        Array.isArray(checkParamList) && 
+        checkParamList.length>0) 
+        checkParamList.forEach((checkParam_, index )=>{
           if(Array.isArray(checkParam_.paramList) && 
             checkParam_.paramList.length>0) {
             checkParam_.paramList.forEach((CI,ind)=>{
+              console.log("CI : ",CI)
               checkParams_.push({
                 serviceParam:CI._id,
                 name:CI.name,
                 paramListTitle:checkParam_.paramListTitle,
-                value:CI.value,
-                comment:checkParam_.comment,
-                status:checkParam_.status
+                value:CI?.value,
+                comments:CI?.comments,
+                status:CI?.status?.name
               });
             });
           }
         });
+        console.log("checkParams_ : ",checkParams_)
       data.checkParams = checkParams_;
       data.decoilers = decoilers;
       data.operators = operators;
@@ -157,26 +185,63 @@ function MachineServiceRecordAddForm() {
   };
   
   const toggleCancel = () => { dispatch(setMachineServiceRecordAddFormVisibility(false)) };
-  const handleChangeCheckItemListValue = (index, childIndex, e) => {
-    const updatedCheckParams = [...checkParamList];
-    const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
-    updatedCheckParamObject.value = e.target.value;
-    setCheckParamList(updatedCheckParams);
-  }
-  
-  const handleChangeCheckItemListCheckBoxValue = (index, childIndex, e) => {
-    const updatedCheckParams = [...checkParamList];
-    const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
-    updatedCheckParamObject.value =  !updatedCheckParams[index]?.paramList[childIndex]?.value ;
-    setCheckParamList(updatedCheckParams);
-  }
-  const handleChangeCheckItemListNumberValue = (index, childIndex, value) => {
+
+  const handleChangeCheckItemListValue = (index, childIndex, value) => {
       const updatedCheckParams = [...checkParamList];
-      const updatedCheckParamObject = updatedCheckParams[index].paramList[childIndex];
-      updatedCheckParamObject.value = value;
+      const updatedParamObject = { 
+        ...updatedCheckParams[index],
+        paramList: [...updatedCheckParams[index].paramList],
+      };
+      updatedParamObject.paramList[childIndex] = {
+        ...updatedParamObject.paramList[childIndex],
+        value,
+      };
+      updatedCheckParams[index] = updatedParamObject;
+  setCheckParamList(updatedCheckParams);
+  }
+
+  const handleChangeCheckItemListCheckBoxValue = (index, childIndex) => {
+      const updatedCheckParams = [...checkParamList];
+        const updatedParamObject = { 
+          ...updatedCheckParams[index],
+          paramList: [ ...updatedCheckParams[index].paramList],
+        };
+        updatedParamObject.paramList[childIndex] = {
+          ...updatedParamObject.paramList[childIndex],
+          value: !updatedParamObject.paramList[childIndex].value,
+        };
+        updatedCheckParams[index] = updatedParamObject;
       setCheckParamList(updatedCheckParams);
   }
 
+  const handleChangeCheckItemListStatus = (index, childIndex, status) => {
+    const updatedCheckParams = [...checkParamList];
+    const updatedParamObject = { 
+      ...updatedCheckParams[index],
+      paramList: [ ...updatedCheckParams[index].paramList ],
+    };
+    updatedParamObject.paramList[childIndex] = {
+      ...updatedParamObject.paramList[childIndex],
+      status
+    };
+    updatedCheckParams[index] = updatedParamObject;
+  setCheckParamList(updatedCheckParams);
+  }
+
+  const handleChangeCheckItemListComment = (index, childIndex, comments) => {
+    const updatedCheckParams = [...checkParamList];
+    const updatedParamObject = { 
+      ...updatedCheckParams[index],
+      paramList: [...updatedCheckParams[index].paramList ],
+    };
+    updatedParamObject.paramList[childIndex] = {
+      ...updatedParamObject.paramList[childIndex],
+      comments
+    };
+    updatedCheckParams[index] = updatedParamObject;
+  setCheckParamList(updatedCheckParams);
+  }
+  
   return (
       <FormProvider methods={methods}  onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
@@ -197,8 +262,7 @@ function MachineServiceRecordAddForm() {
                     display="grid"
                     gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                   >
-
-
+                  
                     {/* <RHFTextField name="customer" label="Customer" value={`${machine?.customer?.name ? machine?.customer?.name : ''}`} disabled/>
                     <RHFTextField name="machine" label="Machine" value={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} disabled/>
                     <RHFTextField name="machine" label="Machine Model Category" value={machine?.machineModel?.category?.name || ''} disabled/>
@@ -216,9 +280,9 @@ function MachineServiceRecordAddForm() {
                   />
 
                   <RHFAutocomplete
-                    name="serviceRecordConfig"
+                    name="serviceRecordConfiguration"
                     label="Service Record Configuration"
-                    options={activeServiceRecordConfigsForRecords}
+                    options={activeServiceRecordConfigs}
                     getOptionLabel={(option) => `${option?.docTitle ?? ''} ${option?.docTitle ? '-' : '' } ${option.recordType ? option.recordType :   ''}`}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     renderOption={(props, option) => (
@@ -262,88 +326,34 @@ function MachineServiceRecordAddForm() {
                     <RHFTextField name="technicianRemarks" label="Technician Remarks" minRows={3} multiline/> 
                     {checkParamList?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
 
-                    <Grid sx={{display:'flex', flexDirection:'column', mt:1,}}>
-                          {checkParamList?.map((row, index) =>
+                    {isLoadingCheckItems ? 
+                    <Box sx={{ width: '100%',mt:1 }}>
+                      <Skeleton />
+                      <Skeleton animation="wave" />
+                      <Skeleton animation="wave" />
+                      <Skeleton animation="wave" />
+                      <Skeleton animation="wave" />
+                      <Skeleton animation="wave" />
+                      <Skeleton animation={false} />
+                    </Box>
+                    :<>
+                    {checkParamList?.map((row, index) =>
                           ( typeof row?.paramList?.length === 'number' &&
                           <>
-                        <Grid key={index}  item md={12} >
-                                <Typography variant="body2" sx={{fontWeight:'bold'}}>{`${index+1}). `}{typeof row?.paramListTitle === 'string' && row?.paramListTitle || ''}{' ( Items: '} {`${row?.paramList?.length}`}{' ) '}</Typography>
-                        </Grid>
-                        <Grid  item md={12} >
-
-                          {row?.paramList.map((childRow,childIndex) => (
-                            <Box
-                              sx={{pl:4, alignItems: 'center', backgroundColor:(childIndex%2===0?"#f4f6f866":""), 
-                              ":hover": {
-                                backgroundColor: "#dbdbdb66"
-                              }}}
-                              rowGap={2}
-                              columnGap={2}
-                              display="grid"
-                              gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-                              >
-                              <Typography variant="body2" ><b>{`${childIndex+1}). `}</b>{`${childRow?.name}`}</Typography>
-                              <div>
-                              { childRow?.inputType === 'Short Text' && <TextField 
-                                fullWidth
-                                type='text'
-                                label={childRow?.inputType} 
-                                name={`${childRow?.name}_${childIndex}_${index}`} 
-                                onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e)}
-                                size="small" sx={{m:0.3}} 
-                                value={checkParamList[index]?.paramList[childIndex]?.value}
-                                required={childRow?.isRequired}
-                                InputProps={{ inputProps: { maxLength:50 } }}
-                              />}
-
-                              { childRow?.inputType === 'Long Text' &&<TextField 
-                                fullWidth
-                                type="text"
-                                label={childRow?.inputType} 
-                                name={`${childRow?.name}_${childIndex}_${index}`} 
-                                onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e)}
-                                size="small" sx={{m:0.3}} 
-                                value={checkParamList[index]?.paramList[childIndex]?.value}
-                                minRows={3} multiline
-                                required={childRow?.isRequired}
-                                InputProps={{ inputProps: { maxLength: 200 } }}
-                              />}
-
-                              { childRow?.inputType === 'Number'  && 
-                              <TextField 
-                                fullWidth
-                                id="outlined-number"
-                                label={`${childRow?.unitType ? childRow?.unitType :'Enter Value'}`}
-                                name={childRow?.name} 
-                                type="number"
-                                value={checkParamList[index]?.paramList[childIndex]?.value}
-                                onChange={(e) => {
-                                  if (/^\d*$/.test(e.target.value)) {
-                                    handleChangeCheckItemListNumberValue(index, childIndex, e.target.value)
-                                    }else{
-                                      handleChangeCheckItemListNumberValue(index, childIndex, checkParamList[index]?.paramList[childIndex].value)
-                                    }
-                                  }
-                                } 
-                                size="small" sx={{m:0.3}} 
-                                required={childRow?.isRequired}
-                              />}
-                              
-                              {childRow?.inputType === 'Boolean' && 
-
-                              <Checkbox 
-                                name={`${childRow?.name}_${childIndex}_${index}`} 
-                                checked={checkParamList[index].paramList[childIndex]?.value || false} 
-                                onChange={(val)=>handleChangeCheckItemListCheckBoxValue(index, childIndex, val)} 
-                                
-                              />}
-                              </div>
-                            </Box>
-                          ))}
-                        </Grid>
+                            <CollapsibleCheckedItemInputRow 
+                              key={index}
+                              row={row} 
+                              index={index} 
+                              checkParamList={checkParamList} 
+                              handleChangeCheckItemListValue={handleChangeCheckItemListValue}
+                              handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
+                              handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
+                              handleChangeCheckItemListComment={handleChangeCheckItemListComment}
+                            />
                         </>
                           ))}
-                    </Grid>
+                      </>
+                    }
 
                     { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label="Note" minRows={3} multiline/> }
                     { serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="maintenanceRecommendation" label="Maintenance Recommendation" minRows={3} multiline/> }
