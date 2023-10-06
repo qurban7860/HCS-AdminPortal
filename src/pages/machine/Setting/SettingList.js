@@ -121,6 +121,8 @@ export default function SettingList() {
     setFilterName('');
   };
 
+  const transferred = machine?.status?.slug==='transferred';
+
   return (
       <TableCard>
         <SettingListTableToolbar
@@ -130,6 +132,7 @@ export default function SettingList() {
           onFilterStatus={handleFilterStatus}
           isFiltered={isFiltered}
           onResetFilter={handleResetFilter}
+          transferred
         />
           {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}

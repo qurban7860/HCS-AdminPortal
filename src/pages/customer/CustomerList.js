@@ -36,10 +36,12 @@ import { FORMLABELS } from '../../constants/default-constants';
 // sections
 import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
-import { getCustomers, ChangePage, ChangeRowsPerPage, setFilterBy } from '../../redux/slices/customer/customer';
+import { getCustomers, ChangePage, ChangeRowsPerPage, setFilterBy, setCustomerEditFormVisibility } from '../../redux/slices/customer/customer';
 import { Cover } from '../components/Defaults/Cover';
 import TableCard from '../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
+import { setSiteEditFormVisibility, setSiteFormVisibility } from '../../redux/slices/customer/site';
+import { setContactEditFormVisibility, setContactFormVisibility } from '../../redux/slices/customer/contact';
 
 // ----------------------------------------------------------------------
 
@@ -133,8 +135,16 @@ export default function CustomerList() {
     setFilterStatus(event.target.value);
   };
 
-
   const handleViewRow = (id) => {
+    
+    
+    // dispatch(setCustomerEditFormVisibility(false));
+    // dispatch(setSiteEditFormVisibility(false));
+    // dispatch(setSiteFormVisibility(false));
+    // dispatch(setContactFormVisibility(false));
+    // dispatch(setContactEditFormVisibility(false));
+
+
     navigate(PATH_CUSTOMER.view(id));
   };
 

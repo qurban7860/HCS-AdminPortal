@@ -43,7 +43,9 @@ export default function ViewFormEditDeleteButtons({
   sites,
   mainSite,
   handleMap,
-  machineSupportDate
+  machineSupportDate,
+  moveCustomerContact,
+  supportSubscription
 }) {
   const { id } = useParams();
   const userId = localStorage.getItem('userId');
@@ -174,6 +176,14 @@ export default function ViewFormEditDeleteButtons({
               icon={isActive?ICONS.ACTIVE.icon:ICONS.INACTIVE.icon}
             />
           }
+
+          {supportSubscription!==undefined &&
+            <IconTooltip
+            title={supportSubscription?`Support Subscription Enabled`:`Support Subscription Disabled`}
+            color={supportSubscription?ICONS.ALLOWED.color:ICONS.DISALLOWED.color}
+            icon="bx:support"
+            />
+          }
           
           {machineSupportDate &&
             <IconTooltip
@@ -284,6 +294,16 @@ export default function ViewFormEditDeleteButtons({
           />
         )}
 
+        {/* move contact button */}
+        {moveCustomerContact && <IconTooltip
+          title="Move Conact"
+          onClick={() => {
+            moveCustomerContact();
+          }}
+          color={theme.palette.primary.main}
+          icon="eva:swap-fill"
+        />}
+        
         {/* edit button */}
         {handleEdit && <IconTooltip
           title="Edit"
@@ -421,5 +441,7 @@ ViewFormEditDeleteButtons.propTypes = {
   disableDeleteButton: PropTypes.bool,
   disableEditButton: PropTypes.bool,
   handleMap: PropTypes.func,
-  machineSupportDate: PropTypes.string
+  machineSupportDate: PropTypes.string,
+  moveCustomerContact: PropTypes.func,
+  supportSubscription: PropTypes.bool
 };

@@ -217,4 +217,9 @@ export const ICONS = {
     icon: 'icon-park-outline:setting-config',
     heading: 'Config',
   },
+
+  MOVE_MACHINE: {
+    icon: 'ri:swap-box-line',
+    heading: 'Move',
+  },
 };

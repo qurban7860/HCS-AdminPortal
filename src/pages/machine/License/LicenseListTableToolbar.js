@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 // @mui
 import { Stack, Button, TextField, InputAdornment, Grid } from '@mui/material';
 // import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { useDispatch } from '../../../redux/store';
 // components
 import Iconify from '../../../components/iconify';
@@ -33,6 +34,7 @@ export default function LicenseListTableToolbar({
   // const navigate = useNavigate();
   const dispatch = useDispatch();
   const toggleAdd = () => dispatch(setLicenseFormVisibility(true));
+  const { machine } = useSelector((state) => state.machine);
   return (
     <Stack
       spacing={2}
@@ -70,6 +72,7 @@ export default function LicenseListTableToolbar({
         <Grid item xs={8} sm={3}>
           <Stack alignItems="flex-end">
             <Button
+              disabled={machine?.status?.slug==='transferred'}
               sx={{ p: 2 }}
               onClick={toggleAdd}
               variant="contained"

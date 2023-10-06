@@ -153,6 +153,8 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
       <ViewFormEditDeleteButtons isActive={defaultValues.isActive} customerAccess={defaultValues?.customerAccess} handleEdit={handleEdit} onDelete={onDelete}
       backLink={(customerPage || machinePage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDocumentViewFormVisibility(false))} 
       : () => navigate(PATH_DOCUMENT.document.list)}
+      disableEditButton={machine?.status?.slug==='transferred'}
+      disableDeleteButton={machine?.status?.slug==='transferred'}
       />
       <Grid container>
         <ViewFormField sm={12} heading="Name" param={defaultValues?.displayName} />

@@ -73,7 +73,10 @@ function MachineServiceParamViewForm() {
   return (
     <Card sx={{ p: 2 }}>
       <Grid>
-        <ViewFormEditDeleteButtons isActive={defaultValues.isActive}  handleEdit={handleEdit} onDelete={onDelete} backLink={() => dispatch(setAllFlagsFalse())}/>
+        <ViewFormEditDeleteButtons isActive={defaultValues.isActive}  
+        disableEditButton={machine?.status?.slug==='transferred'}
+        disableDeleteButton={machine?.status?.slug==='transferred'}
+        handleEdit={handleEdit} onDelete={onDelete} backLink={() => dispatch(setAllFlagsFalse())}/>
         <Grid container>
           <ViewFormField sm={6} heading="Customer"  param={`${machine?.customer?.name ? machine?.customer?.name : ''}`} />
           <ViewFormField sm={6} heading="Machine"  param={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} />

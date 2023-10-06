@@ -1,33 +1,23 @@
 import PropTypes from 'prop-types';
 import {  useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-// import { useNavigate } from 'react-router-dom';
 // @mui
-// import { LoadingButton } from '@mui/lab';
 import { Grid } from '@mui/material';
-// global
-// import { CONFIG } from '../../../config-global';
-// routes
-// import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-// import ConfirmDialog from '../../../components/confirm-dialog';
 
 import {
   getContacts,
   getContact,
   setContactEditFormVisibility,
   deleteContact,
+  setContactMoveFormVisibility,
+  setContactFormVisibility,
 } from '../../../redux/slices/customer/contact';
-// Iconify
-// import Iconify from '../../../components/iconify';
-// import { fDate, fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 
-// ----------------------------------------------------------------------
 
 ContactViewForm.propTypes = {
   currentContact: PropTypes.object,
@@ -43,26 +33,19 @@ export default function ContactViewForm({
   const { contact } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  // const [openConfirm, setOpenConfirm] = useState(false);
-  // const [openPopover, setOpenPopover] = useState(null);
-
-  // const handleOpenConfirm = () => {
-  //   setOpenConfirm(true);
-  // };
-
-  // const handleCloseConfirm = () => {
-  //   setOpenConfirm(false);
-  // };
-
-  // const handleClosePopover = () => {
-  //   setOpenPopover(null);
-  // };
-
+ 
   const handleEdit = async () => {
     await dispatch(getContact(customer?._id, contact?._id));
+    dispatch(setContactMoveFormVisibility(false));
     dispatch(setContactEditFormVisibility(true));
+  };
+
+  const handleMoveConatct = async () => {
+    dispatch(setContactFormVisibility(false))
+    dispatch(setContactFormVisibility(false))
+    dispatch(setContactEditFormVisibility(false))
+    dispatch(setContactMoveFormVisibility(true))
   };
 
   const onDelete = async () => {
@@ -71,15 +54,7 @@ export default function ContactViewForm({
       setIsExpanded(false);
       enqueueSnackbar('Contact deleted Successfully!');
       dispatch(getContacts(customer?._id));
-      // setCurrentContactData({})
     } catch (err) {
-      // if(err.Message){
-      //   enqueueSnackbar(err.Message,{ variant: `error` })
-      // }else if(err.message){
-      //   enqueueSnackbar(err.message,{ variant: `error` })
-      // }else{
-      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
-      // }
       enqueueSnackbar('Contact delete failed!', { variant: `error` });
       console.log('Error:', err);
     }
@@ -110,11 +85,10 @@ export default function ContactViewForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [contact]
   );
-
   return (
-    <Grid>
-      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} handleEdit={handleEdit} onDelete={onDelete} />
-      <Grid container sx={{mt:2}}>
+    <Grid sx={{mt:1}}>
+      <ViewFormEditDeleteButtons moveCustomerContact={handleMoveConatct} isActive={defaultValues.isActive} handleEdit={handleEdit} onDelete={onDelete} />
+      <Grid container>
         <ViewFormField sm={6} heading="First Name" param={defaultValues?.firstName} />
         <ViewFormField sm={6} heading="Last Name" param={defaultValues?.lastName} />
         <ViewFormField sm={6} heading="Title" param={defaultValues?.title} />

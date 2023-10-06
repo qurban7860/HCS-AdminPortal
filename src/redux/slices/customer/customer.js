@@ -334,7 +334,9 @@ export function addCustomer(params) {
             name: params.name,
             address: {},
           },
-          type: params.type
+          type: params.type,
+          clientCode: params.code,
+          supportSubscription: params?.supportSubscription,
         };
 
         let billingContact = {};
@@ -493,6 +495,8 @@ export function updateCustomer(params) {
         name: params.name,
         tradingName: params.tradingName,
         isActive: params.isActive,
+        clientCode: params.code,
+        supportSubscription: params?.supportSubscription,
       };
      /* eslint-enable */
       if(params.mainSite !== "null" && params.mainSite !== null){
