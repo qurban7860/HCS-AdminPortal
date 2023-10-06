@@ -36,7 +36,7 @@ import { FORMLABELS } from '../../constants/default-constants';
 // sections
 import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
-import { getCustomers, ChangePage, ChangeRowsPerPage, setFilterBy, 
+import { getCustomers, ChangePage, ChangeRowsPerPage, setFilterBy, setVerified, 
    setCustomerEditFormVisibility } from '../../redux/slices/customer/customer';
 import { Cover } from '../components/Defaults/Cover';
 import TableCard from '../components/ListTableTools/TableCard';
@@ -72,13 +72,13 @@ export default function CustomerList() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [filterName, setFilterName] = useState('');
-  const [filterVerify, setFilterVerify] = useState('all');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
-  const { customers, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.customer);
-
+  const { customers, filterBy, verified, page, rowsPerPage, isLoading } = useSelector((state) => state.customer);
+  const [filterVerify, setFilterVerify] = useState(verified);
+  const [filterName, setFilterName] = useState(filterBy);
+  
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
@@ -102,7 +102,7 @@ export default function CustomerList() {
     filterStatus,
   });
   const denseHeight = 60;
-  const isFiltered = filterName !== '' || !!filterStatus.length || filterVerify !== 'all';
+  const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   const handleOpenConfirm = () => setOpenConfirm(true);
@@ -111,15 +111,21 @@ export default function CustomerList() {
   const debouncedSearch = useRef(debounce((value) => {
       dispatch(ChangePage(0))
       dispatch(setFilterBy(value))
-    }, 500))
+  }, 500))
+
+  const debouncedVerified = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setVerified(value))
+  }, 500))
 
   const handleFilterName = (event) => {
-    debouncedSearch.current(event.target.value);
+    debouncedSearch.current(event.target.value)
     setFilterName(event.target.value)
     setPage(0);
   };
 
   const handleFilterVerify = (event) => {
+    debouncedVerified.current(event.target.value)
     setFilterVerify(event.target.value)
     setPage(0);
   };
@@ -127,12 +133,7 @@ export default function CustomerList() {
   useEffect(() => {
       debouncedSearch.current.cancel();
   }, [debouncedSearch]);
-
-  useEffect(()=>{
-      setFilterName(filterBy)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
-
+  
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -145,7 +146,6 @@ export default function CustomerList() {
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
-    setFilterVerify('all')
     setFilterName('');
     setFilterStatus([]);
   };

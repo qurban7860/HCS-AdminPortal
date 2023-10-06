@@ -28,7 +28,8 @@ import {
   resetMachine,
   ChangeRowsPerPage,
   ChangePage,
-  setFilterBy
+  setFilterBy,
+  setVerified
 } from '../../redux/slices/products/machine';
 import { resetToolInstalled, resetToolsInstalled } from '../../redux/slices/products/toolInstalled';
 import { resetSetting, resetSettings } from '../../redux/slices/products/machineSetting';
@@ -50,14 +51,6 @@ import TableCard from '../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
 
 // ----------------------------------------------------------------------
-const STATUS_OPTIONS = [
-  // { id: '1', value: 'Order Received' },
-  // { id: '2', value: 'In Progress' },
-  // { id: '3', value: 'Ready For Transport' },
-  // { id: '4', value: 'In Freight' },
-  // { id: '5', value: 'Deployed' },
-  // { id: '6', value: 'Archived' },
-];
 
 const TABLE_HEAD = [
   // { id: 'havePrevious', label: '', align: 'center', width: 1.5 },
@@ -93,7 +86,7 @@ export default function MachineList() {
   // const { userId, user } = useAuthContext();
   const [tableData, setTableData] = useState([]);
   const dispatch = useDispatch();
-  const { machines, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector( (state) => state.machine );
+  const { machines, verified, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector( (state) => state.machine );
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -112,8 +105,8 @@ export default function MachineList() {
     dispatch(resetMachineDocuments());
   }, [dispatch]);
 
-  const [filterVerify, setFilterVerify] = useState('all');
-  const [filterName, setFilterName] = useState('');
+  const [filterVerify, setFilterVerify] = useState(verified);
+  const [filterName, setFilterName] = useState(filterBy);
   const [filterStatus, setFilterStatus] = useState([]);
   const [setOpenConfirm] = useState(false);
 
@@ -131,7 +124,7 @@ export default function MachineList() {
     filterStatus,
   });
 
-  const isFiltered = filterName !== '' || !!filterStatus.length || filterVerify!=='all';
+  const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
   const denseHeight = 60;
 
@@ -144,6 +137,11 @@ export default function MachineList() {
     dispatch(setFilterBy(value))
   }, 500))
 
+  const debouncedVerified = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setVerified(value))
+  }, 500))
+
   const handleFilterName = (event) => {
     debouncedSearch.current(event.target.value);
     setFilterName(event.target.value)
@@ -151,6 +149,7 @@ export default function MachineList() {
   };
 
   const handleFilterVerify = (event) => {
+    debouncedVerified.current(event.target.value);
     setFilterVerify(event.target.value)
     setPage(0);
   };
@@ -159,10 +158,11 @@ export default function MachineList() {
       debouncedSearch.current.cancel();
   }, [debouncedSearch]);
   
-  useEffect(()=>{
-      setFilterName(filterBy)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+  // useEffect(()=>{
+  //     setFilterName(filterBy)
+  //     setFilterVerify(verified)
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // },[])
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -176,7 +176,6 @@ export default function MachineList() {
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
-    setFilterVerify('all');
     setFilterStatus([]);
   };
 
@@ -193,7 +192,6 @@ export default function MachineList() {
             filterVerify={filterVerify}
             onFilterVerify={handleFilterVerify}
             onFilterStatus={handleFilterStatus}
-            statusOptions={STATUS_OPTIONS}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
