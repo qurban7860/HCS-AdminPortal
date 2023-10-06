@@ -112,6 +112,7 @@ export default function MachineList() {
     dispatch(resetMachineDocuments());
   }, [dispatch]);
 
+  const [filterVerify, setFilterVerify] = useState('all');
   const [filterName, setFilterName] = useState('');
   const [filterStatus, setFilterStatus] = useState([]);
   const [setOpenConfirm] = useState(false);
@@ -126,12 +127,12 @@ export default function MachineList() {
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
+    filterVerify,
     filterStatus,
   });
 
-  const isFiltered = filterName !== '' || !!filterStatus.length;
+  const isFiltered = filterName !== '' || !!filterStatus.length || filterVerify!=='all';
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
-
   const denseHeight = 60;
 
   const handleOpenConfirm = () => {
@@ -146,6 +147,11 @@ export default function MachineList() {
   const handleFilterName = (event) => {
     debouncedSearch.current(event.target.value);
     setFilterName(event.target.value)
+    setPage(0);
+  };
+
+  const handleFilterVerify = (event) => {
+    setFilterVerify(event.target.value)
     setPage(0);
   };
   
@@ -163,8 +169,6 @@ export default function MachineList() {
     setFilterStatus(event.target.value);
   };
 
-
-
   const handleViewRow = (id) => {
     navigate(PATH_MACHINE.machines.view(id));
   };
@@ -172,6 +176,7 @@ export default function MachineList() {
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
+    setFilterVerify('all');
     setFilterStatus([]);
   };
 
@@ -185,6 +190,8 @@ export default function MachineList() {
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
+            filterVerify={filterVerify}
+            onFilterVerify={handleFilterVerify}
             onFilterStatus={handleFilterStatus}
             statusOptions={STATUS_OPTIONS}
             isFiltered={isFiltered}
@@ -281,7 +288,7 @@ export default function MachineList() {
     </Container>
   );
 }
-function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+function applyFilter({ inputData, comparator, filterName, filterVerify, filterStatus }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
@@ -292,6 +299,11 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   inputData = stabilizedThis.map((el) => el[0]);
 
+  if(filterVerify==='verified')
+    inputData = inputData.filter((customer)=> customer.verifications.length>0);
+  else if(filterVerify==='unverified')
+    inputData = inputData.filter((customer)=> customer.verifications.length===0);
+    
   if (filterName) {
     inputData = inputData.filter(
       (product) =>

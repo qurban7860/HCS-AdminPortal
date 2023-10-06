@@ -36,7 +36,8 @@ import { FORMLABELS } from '../../constants/default-constants';
 // sections
 import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
-import { getCustomers, ChangePage, ChangeRowsPerPage, setFilterBy, setCustomerEditFormVisibility } from '../../redux/slices/customer/customer';
+import { getCustomers, ChangePage, ChangeRowsPerPage, setFilterBy, 
+   setCustomerEditFormVisibility } from '../../redux/slices/customer/customer';
 import { Cover } from '../components/Defaults/Cover';
 import TableCard from '../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
@@ -72,20 +73,17 @@ export default function CustomerList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
+  const [filterVerify, setFilterVerify] = useState('all');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
-  const { customers, filterBy, page, rowsPerPage, isLoading } = useSelector(
-    (state) => state.customer
-  );
+  const { customers, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.customer);
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
   };
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
-
-  
 
   useEffect(() => {
       dispatch(getCustomers());
@@ -100,10 +98,11 @@ export default function CustomerList() {
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
+    filterVerify,
     filterStatus,
   });
   const denseHeight = 60;
-  const isFiltered = filterName !== '' || !!filterStatus.length;
+  const isFiltered = filterName !== '' || !!filterStatus.length || filterVerify !== 'all';
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   const handleOpenConfirm = () => setOpenConfirm(true);
@@ -117,6 +116,11 @@ export default function CustomerList() {
   const handleFilterName = (event) => {
     debouncedSearch.current(event.target.value);
     setFilterName(event.target.value)
+    setPage(0);
+  };
+
+  const handleFilterVerify = (event) => {
+    setFilterVerify(event.target.value)
     setPage(0);
   };
 
@@ -136,20 +140,12 @@ export default function CustomerList() {
   };
 
   const handleViewRow = (id) => {
-    
-    
-    // dispatch(setCustomerEditFormVisibility(false));
-    // dispatch(setSiteEditFormVisibility(false));
-    // dispatch(setSiteFormVisibility(false));
-    // dispatch(setContactFormVisibility(false));
-    // dispatch(setContactEditFormVisibility(false));
-
-
     navigate(PATH_CUSTOMER.view(id));
   };
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
+    setFilterVerify('all')
     setFilterName('');
     setFilterStatus([]);
   };
@@ -164,6 +160,8 @@ export default function CustomerList() {
           filterName={filterName}
           filterStatus={filterStatus}
           onFilterName={handleFilterName}
+          filterVerify={filterVerify}
+          onFilterVerify={handleFilterVerify}
           onFilterStatus={handleFilterStatus}
           isFiltered={isFiltered}
           onResetFilter={handleResetFilter}
@@ -203,15 +201,7 @@ export default function CustomerList() {
                 order={order}
                 orderBy={orderBy}
                 headLabel={TABLE_HEAD}
-                // rowCount={tableData.length}
-                // numSelected={selected.length}
                 onSort={onSort}
-                // onSelectAllRows={(checked) =>
-                //   onSelectAllRows(
-                //     checked,
-                //     tableData.map((row) => row._id)
-                //   )
-                // }
               />
 
               <TableBody>
@@ -284,7 +274,7 @@ export default function CustomerList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+function applyFilter({ inputData, comparator, filterName, filterVerify, filterStatus }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
@@ -294,8 +284,11 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-  // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-
+  if(filterVerify==='verified')
+    inputData = inputData.filter((customer)=> customer.verifications.length>0);
+  else if(filterVerify==='unverified')
+    inputData = inputData.filter((customer)=> customer.verifications.length===0);
+  
   if (filterName) {
     inputData = inputData.filter(
       (customer) =>

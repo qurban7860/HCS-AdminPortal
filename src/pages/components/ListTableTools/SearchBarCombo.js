@@ -1,14 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, TextField, InputAdornment, Button, Stack } from '@mui/material';
+import { Grid, TextField, InputAdornment, Button, Stack, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { BUTTONS } from '../../../constants/default-constants';
 import Iconify from '../../../components/iconify';
 import useResponsive from '../../../hooks/useResponsive';
+import { RHFAutocomplete } from '../../../components/hook-form';
+import FormProvider from '../../../components/hook-form/FormProvider';
 
 function SearchBarCombo({
   isFiltered,
   value,
+  onFilterVerify,
+  filterVerify,
   onChange,
   onClick,
   SubOnClick,
@@ -39,10 +43,30 @@ function SearchBarCombo({
             width: isFiltered ? '80%' : '100%',
           }}
         />
+        {onFilterVerify && 
+        <FormControl fullWidth={isMobile} sx={{ml:2}}>
+            <InputLabel id="demo-simple-select-label">Verified</InputLabel>
+            <Select
+              sx={{width:'200px'}}
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              name="isVerified"
+              value={filterVerify}
+              label="Verified"
+              onChange={onFilterVerify}
+            >
+              <MenuItem key="all" value="all">All</MenuItem>
+              <MenuItem key="verified" value="verified">Verified</MenuItem>
+              <MenuItem key="unverified" value="unverified">Not Verified</MenuItem>
+              </Select>
+          </FormControl>
+                
+        }
+                
         {isFiltered && (
           <Button
             color="error"
-            sx={{ flexShrink: 0, ml: 1 }}
+            sx={{ flexShrink: 0, ml: 4 }}
             onClick={onClick}
             startIcon={<Iconify icon="eva:trash-2-outline" />}
           >
@@ -50,6 +74,29 @@ function SearchBarCombo({
           </Button>
         )}
       </Grid>
+{/*       
+      {onFilterVerify && 
+        <Grid item xs={12} sm={2}>
+          <Stack alignItems="flex-end">
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Verified</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                name="isVerified"
+                value={filterVerify}
+                label="Verified"
+                onChange={onFilterVerify}
+              >
+                <MenuItem key="all" value="all">All</MenuItem>
+                <MenuItem key="verified" value="verified">Verified</MenuItem>
+                <MenuItem key="unverified" value="unverified">Not Verified</MenuItem>
+                </Select>
+            </FormControl>
+          </Stack>
+        </Grid>
+        } */}
+        
         {inviteButton && <Grid item xs={12} sm={2}>
           <Stack alignItems="flex-end">
             <Button
@@ -91,6 +138,8 @@ SearchBarCombo.propTypes = {
   inviteOnClick: PropTypes.func,
   inviteButton: PropTypes.string,
   buttonIcon: PropTypes.string,
+  onFilterVerify:PropTypes.func,
+  filterVerify:PropTypes.string,  
 };
 
 export default SearchBarCombo;

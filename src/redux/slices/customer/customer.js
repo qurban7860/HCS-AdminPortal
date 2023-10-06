@@ -127,6 +127,7 @@ const slice = createSlice({
     setFilterBy(state, action) {
       state.filterBy = action.payload;
     },
+
     // Set PageRowCount
     ChangeRowsPerPage(state, action) {
       state.rowsPerPage = action.payload;

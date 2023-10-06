@@ -66,9 +66,6 @@ export default function ProfileViewForm() {
     [profile, machine]
   );
 
-  // const profilesString = names.join(', ');
-  
-
   return (
     <Grid item md={12} mt={2}>
     <Card sx={{ p: 2 }}>
