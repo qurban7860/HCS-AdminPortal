@@ -12,7 +12,7 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { updateMachineServiceRecord, setMachineServiceRecordViewFormVisibility, getMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
 import { getMachineConnections } from '../../../redux/slices/products/machineConnections';
 import { getActiveServiceRecordConfigsForRecords } from '../../../redux/slices/products/serviceRecordConfig';
-import { getActiveContacts } from '../../../redux/slices/customer/contact';
+import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
 // routes
 // import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -50,7 +50,10 @@ function MachineServiceRecordEditForm() {
 
   useEffect( ()=>{
     // dispatch(getActiveServiceRecordConfigsForRecords(machine?._id))
-    dispatch(getActiveContacts(machine?.customer?._id))
+    dispatch(resetActiveContacts())
+    if(machine?.customer?._id){
+      dispatch(getActiveContacts(machine?.customer?._id))
+    }
     dispatch(getActiveSecurityUsers({roleType:'Support'}))
   },[dispatch, machine])
 
@@ -145,7 +148,9 @@ function MachineServiceRecordEditForm() {
     formState: { isSubmitting },
   } = methods;
   const { serviceDate, files, serviceRecordConfiguration, decoilers, operators } = watch()
+
   const handleServiceDateChange = (newValue) => setValue("serviceDate", newValue)
+
   useEffect(() => {
     if (machineServiceRecord) {
       reset(defaultValues);
@@ -153,8 +158,8 @@ function MachineServiceRecordEditForm() {
   }, [machineServiceRecord, reset, defaultValues]);
 
   const toggleCancel = () => { dispatch(setMachineServiceRecordViewFormVisibility(true)) };
+  
   const onSubmit = async (data) => {
-
     try {
       const checkParams_ = [];
       if(Array.isArray(checkParamList) &&

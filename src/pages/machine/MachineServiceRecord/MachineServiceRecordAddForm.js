@@ -42,7 +42,9 @@ function MachineServiceRecordAddForm() {
 
   useEffect( ()=>{
     dispatch(getActiveServiceRecordConfigsForRecords(machine?._id))
-    dispatch(getActiveContacts(machine?.customer?._id))
+    if(machine?.customer?._id){
+      dispatch(getActiveContacts(machine?.customer?._id))
+    }
     dispatch(getActiveSecurityUsers({roleType:'Support'}))
     dispatch(getSecurityUser(user._id))
     dispatch(resetServiceRecordConfig())

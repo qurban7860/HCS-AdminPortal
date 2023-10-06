@@ -123,7 +123,7 @@ export function getServiceCategories (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/serviceCategories`, 
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/CheckItemCategories`, 
       {
         params: {
           isArchived: false
@@ -145,7 +145,7 @@ export function getActiveServiceCategories (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/serviceCategories`, 
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/CheckItemCategories`, 
       {
         params: {
           isArchived: false,
@@ -169,7 +169,7 @@ export function getServiceCategory(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/serviceCategories/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/CheckItemCategories/${id}`);
       dispatch(slice.actions.getCategorySuccess(response.data));
     } catch (error) {
       console.error(error);
@@ -185,7 +185,7 @@ export function deleteServiceCategory(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/serviceCategories/${id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/CheckItemCategories/${id}`,
       {
         isArchived: true, 
       });
@@ -205,7 +205,6 @@ export function addServiceCategory(params) {
       dispatch(slice.actions.resetServiceCategory());
       dispatch(slice.actions.startLoading());
       try {
-
         /* eslint-disable */
         let data = {
           name: params.name,
@@ -215,7 +214,7 @@ export function addServiceCategory(params) {
         if(params.description){
             data.description = params.description;
           }
-        const response = await axios.post(`${CONFIG.SERVER_URL}products/serviceCategories`, data);
+        const response = await axios.post(`${CONFIG.SERVER_URL}products/CheckItemCategories`, data);
         dispatch(slice.actions.setResponseMessage(response.data.Category));
       } catch (error) {
         console.error(error);
@@ -238,7 +237,7 @@ export function updateServiceCategory(params,Id) {
         description: params.description
       };
      /* eslint-enable */
-      await axios.patch(`${CONFIG.SERVER_URL}products/serviceCategories/${Id}`,
+      await axios.patch(`${CONFIG.SERVER_URL}products/CheckItemCategories/${Id}`,
         data
       );
       dispatch(getServiceCategories(params.id));
