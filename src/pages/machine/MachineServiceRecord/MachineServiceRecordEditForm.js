@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Typography, TableContainer, Table, TableBody, TextField, Autocomplete, Checkbox,InputAdornment } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, TableContainer, Table, TableBody, TextField, Autocomplete, Checkbox, InputAdornment, Skeleton } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { v4 as uuidv4 } from 'uuid';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
@@ -39,7 +39,7 @@ function MachineServiceRecordEditForm() {
 
   const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
   const { activeContacts } = useSelector((state) => state.contact);
-  const { activeServiceRecordConfigs, recordTypes } = useSelector((state) => state.serviceRecordConfig);
+  const { activeServiceRecordConfigs, recordTypes, isLoadingCheckItems } = useSelector((state) => state.serviceRecordConfig);
   const { machine } = useSelector((state) => state.machine);
   const [checkParam, setCheckParam] = useState([]);
   const [serviceDateError, setServiceDateError] = useState('');
@@ -71,8 +71,8 @@ function MachineServiceRecordEditForm() {
               return {
                 ...childRow,
                 value: foundParam ? foundParam.value : '',
-                status: foundParam ? foundParam.status : '',
-                comment: foundParam ? foundParam.comment : '',
+                status: foundParam ? { name: foundParam.status } : null,
+                comments: foundParam ? foundParam.comments : '',
               };
             });
         
@@ -157,8 +157,7 @@ function MachineServiceRecordEditForm() {
 
     try {
       const checkParams_ = [];
-      if(serviceRecordConfiguration &&
-        Array.isArray(checkParamList) &&
+      if(Array.isArray(checkParamList) &&
         checkParamList.length > 0)
         checkParamList.forEach((checkParam_, index )=>{
           if(Array.isArray(checkParam_.paramList) &&
@@ -341,79 +340,34 @@ setCheckParamList(updatedCheckParams);
               <RHFTextField name="technicianRemarks" label="Technician Remarks" minRows={3} multiline/>
                 {checkParamList?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
 
-                <Grid sx={{display:'flex', flexDirection:'column'}}>
-                      {checkParamList?.map((row, index) =>
-                      ( typeof row?.paramList?.length === 'number' &&
-                      <>
-                      <CollapsibleCheckedItemInputRow 
-                        row={row} 
-                        index={index} 
-                        checkParamList={checkParamList} 
-                        handleChangeCheckItemListValue={handleChangeCheckItemListValue}
-                        handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
-                        handleChangeCheckItemListComment={handleChangeCheckItemListComment}
-                        handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
-                      />
-                    {/* <Grid key={index}  item md={12} >
-                            <Typography variant="body2" sx={{fontWeight:'bold'}}>{`${index+1}). `} {typeof row?.paramListTitle === 'string' && row?.paramListTitle || ''}{' ( Items: '} {`${row?.paramList?.length}`} {' ) '}</Typography>
-                    </Grid>
-                    <Grid  item md={12}>
-                      {row?.paramList.map((childRow,childIndex) => (
-                        <Box
-                        sx={{pl:4, alignItems: 'center', backgroundColor:(childIndex%2===0?"#f4f6f866":""), 
-                            ":hover": {backgroundColor: "#dbdbdb66"}
-                            }}
-                          rowGap={2}
-                          columnGap={2}
-                          display="grid"
-                          gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-                        >
-                          <Typography variant="body2" ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}</Typography>
+                {isLoadingCheckItems ? 
+                    <Box sx={{ width: '100%',mt:1 }}>
+                      <Skeleton />
+                      <Skeleton animation="wave" />
+                      <Skeleton animation="wave" />
+                      <Skeleton animation="wave" />
+                      <Skeleton animation="wave" />
+                      <Skeleton animation="wave" />
+                      <Skeleton animation={false} />
+                    </Box>
+                    :<>
+                    {checkParamList?.map((row, index) =>
+                          ( typeof row?.paramList?.length === 'number' &&
+                          <>
+                            <CollapsibleCheckedItemInputRow 
+                              row={row} 
+                              index={index} 
+                              checkParamList={checkParamList} 
+                              handleChangeCheckItemListValue={handleChangeCheckItemListValue}
+                              handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
+                              handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
+                              handleChangeCheckItemListComment={handleChangeCheckItemListComment}
+                            />
+                        </>
+                          ))}
+                      </>
+                    }
 
-                          { childRow?.inputType === 'Short Text' && <TextField
-                                label={childRow?.inputType}
-                                name={childRow?.name}
-                                onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e)}
-                                size="small" sx={{m:0.3}}
-                                value={checkParamList[index]?.paramList[childIndex]?.value}
-                                required={childRow?.isRequired}
-                              />}
-
-                              { childRow?.inputType === 'Long Text' && <TextField
-                                label={childRow?.inputType}
-                                name={childRow?.name}
-                                onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e)}
-                                size="small" sx={{m:0.3}}
-                                value={checkParamList[index]?.paramList[childIndex]?.value}
-                                minRows={3} multiline
-                                required={childRow?.isRequired}
-                              />}
-                              { childRow?.inputType === 'Number'  && <div><TextField
-                                fullWidth
-                                id="filled-number"
-                                label={`Measurement${childRow?.unitType ? ` (${childRow.unitType})` : ''}`}
-                                name={childRow?.name}
-                                type="number"
-                                value={checkParamList[index]?.paramList[childIndex]?.value}
-                                onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e)}
-                                size="small" sx={{m:0.3}}
-                                required={childRow?.isRequired}
-                              /></div>}
-                              {childRow?.inputType === 'Boolean' &&
-                              <div>
-                              <Checkbox
-                                name={childRow.name}
-                                required={childRow?.isRequired}
-                                checked={checkParamList[index].paramList[childIndex]?.value || false}
-                                onChange={(val)=>handleChangeCheckItemListCheckBoxValue(index, childIndex, val)}
-
-                              /></div>}
-                        </Box>
-                      ))}
-                    </Grid> */}
-                    </>
-                      ))}
-                </Grid>
                 { serviceRecordConfiguration?.enableNote && <RHFTextField name="serviceNote" label="Note" minRows={3} multiline/> }
                 { serviceRecordConfiguration?.enableMaintenanceRecommendations && <RHFTextField name="maintenanceRecommendation" label="Maintenance Recommendation" minRows={3} multiline/> }
                 { serviceRecordConfiguration?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }
