@@ -12,7 +12,7 @@ import { FORMLABELS } from '../../../constants/default-constants';
 // slice
 import { addMachineServiceRecord, setMachineServiceRecordAddFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
 import { getActiveServiceRecordConfigsForRecords, getServiceRecordConfig, resetServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
-import { getActiveContacts } from '../../../redux/slices/customer/contact';
+import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { MachineServiceRecordSchema } from '../../schemas/machine';
@@ -42,6 +42,7 @@ function MachineServiceRecordAddForm() {
 
   useEffect( ()=>{
     dispatch(getActiveServiceRecordConfigsForRecords(machine?._id))
+    dispatch(resetActiveContacts())
     if(machine?.customer?._id){
       dispatch(getActiveContacts(machine?.customer?._id))
     }
