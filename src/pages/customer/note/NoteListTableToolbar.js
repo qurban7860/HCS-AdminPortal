@@ -8,6 +8,7 @@ import { useDispatch } from '../../../redux/store';
 import Iconify from '../../../components/iconify';
 // import { PATH_DOCUMENT } from '../../../routes/paths';
 import { setNoteFormVisibility } from '../../../redux/slices/customer/customerNote';
+import { BUTTONS } from '../../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -54,18 +55,16 @@ export default function NoteListTableToolbar({
                   <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />{' '}
                 </InputAdornment>
               ),
+              endAdornment: (isFiltered && (
+                <InputAdornment position="end">
+                  <Button fullWidth onClick={onResetFilter} color='error' startIcon={<Iconify icon='eva:trash-2-outline' />}>
+                    {BUTTONS.CLEAR}
+                  </Button>
+                </InputAdornment>
+              )
+              ),
             }}
           />
-          {isFiltered && (
-            <Button
-              color="error"
-              sx={{ flexShrink: 0, ml: 1 }}
-              onClick={onResetFilter}
-              startIcon={<Iconify icon="eva:trash-2-outline" />}
-            >
-              Clear
-            </Button>
-          )}
         </Grid>
         <Grid item xs={8} sm={3}>
           <Stack alignItems="flex-end">
