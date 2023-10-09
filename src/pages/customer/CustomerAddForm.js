@@ -70,7 +70,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const [phone, setPhone] = useState('');
   const [fax, setFaxVal] = useState('');
-  const [country, setCountryVal] = useState('');
+  const [country, setCountryVal] = useState(countries[169]);
   const [billingContactPhone, setBillingContactPhone] = useState('');
   const [technicalContactPhone, setTechnicalContactPhone] = useState('');
   const [accountManVal, setAccountManVal] = useState('');
