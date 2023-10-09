@@ -221,7 +221,7 @@ export function addSecurityUser(param, isInvite) {
 
 // ----------------------------------------------------------------------
 
-export function updateSecurityUser(param,id) {
+export function  updateSecurityUser(param,id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{
@@ -244,7 +244,8 @@ export function updateSecurityUser(param,id) {
             data.password = param.password 
         }
       const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/${id}`, data);
-      dispatch(resetSecurityUser());
+      await dispatch(resetSecurityUser());
+      await dispatch(getSecurityUser(id));
       // if(regEx.test(response.status)){
       //   dispatch(getSecurityUsers());
       // }
