@@ -57,6 +57,7 @@ export default function MoveMachineForm() {
   const {
     reset,
     watch,
+    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -68,10 +69,15 @@ export default function MoveMachineForm() {
   }, []);
 
   const { customer } = watch();
+
   useEffect(() => {
+    setValue('installationSite',null);
+    setValue('billingSite',null);
     if(customer !== null){
       dispatch(getActiveSites(customer?._id))
     }else{
+      // setValue('installationSite',null);
+      // setValue('billingSite',null);
       dispatch(resetActiveSites())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
