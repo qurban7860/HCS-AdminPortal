@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, memo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 // form
@@ -27,7 +27,7 @@ import LoginLayout from '../layouts/login/LoginLayout';
 
 // ----------------------------------------------------------------------
 
-export default function UserInviteLanding() {
+function UserInviteLanding() {
   const { id, code, expiry } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -35,7 +35,10 @@ export default function UserInviteLanding() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const expired = new Date(expiry).getTime() > new Date().getTime();
-  const { securityUser, verifiedInvite} = useSelector((state) => state.user);
+
+  const { verifiedInvite} = useSelector((state) => state.user);
+
+  console.log("verifiedInvite : ",verifiedInvite)
   const [phone, setPhone] = useState(verifiedInvite?.phone);
 
   const ChangePassWordSchema = Yup.object().shape({
@@ -81,6 +84,7 @@ export default function UserInviteLanding() {
 
   const {
     reset,
+    watch,
     setValue,
     handleSubmit,
     formState: { isSubmitting, errors, isSubmitSuccessful},
@@ -88,7 +92,15 @@ export default function UserInviteLanding() {
     trigger,
   } = methods;
 
-  
+  const { customerName, contactName, fullName, login, email } = watch();
+  useEffect(() => {
+    setValue('customerName',verifiedInvite?.customerName || '')
+    setValue('contactName',verifiedInvite?.contactName || '')
+    setValue('fullName',verifiedInvite?.fullName || '')
+    setValue('login',verifiedInvite?.login || '')
+    setValue('email',verifiedInvite?.email || '')
+  },[verifiedInvite, setValue])
+
   const handlePhoneChange = (newValue) => {
     matchIsValidTel(newValue);
     if (newValue.length < 20) {
@@ -119,7 +131,6 @@ export default function UserInviteLanding() {
   };
 
   return (
-    
     <StyledRoot sx={{width:900, margin:"0 auto"}}>
       <StyledContent>
         <Grid sx={{ display: 'flex', justifyContent: 'center'}} >
@@ -184,5 +195,5 @@ export default function UserInviteLanding() {
       </StyledContent>
     </StyledRoot>
   );
-
 }
+export default memo(UserInviteLanding)
