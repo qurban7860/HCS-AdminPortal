@@ -37,6 +37,7 @@ export default function UserInviteLanding() {
   const expired = new Date(expiry).getTime() > new Date().getTime();
   const { securityUser, verifiedInvite} = useSelector((state) => state.user);
   const [phone, setPhone] = useState(verifiedInvite?.phone);
+
   const ChangePassWordSchema = Yup.object().shape({
     fullName:Yup.string().trim().max(50, 'Name must be less than 50 characters').required('Name is required'),
     password: Yup.string().trim()
@@ -49,6 +50,7 @@ export default function UserInviteLanding() {
       customerName: verifiedInvite?.customerName ||'',
       contactName:verifiedInvite?.contactName ||'',
       fullName:verifiedInvite?.fullName || '',
+      login: verifiedInvite?.login || '',
       phone:verifiedInvite?.phone ||'',
       email:verifiedInvite?.email ||'',
       password:'',
@@ -57,8 +59,6 @@ export default function UserInviteLanding() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [verifiedInvite]
   );
-
-
 
   const methods = useForm({
     resolver: yupResolver(ChangePassWordSchema),
@@ -81,9 +81,13 @@ export default function UserInviteLanding() {
 
   const {
     reset,
+    setValue,
     handleSubmit,
-    formState: { errors, isSubmitting, isSubmitSuccessful},
+    formState: { isSubmitting, errors, isSubmitSuccessful},
+    control,
+    trigger,
   } = methods;
+
   
   const handlePhoneChange = (newValue) => {
     matchIsValidTel(newValue);
@@ -128,17 +132,20 @@ export default function UserInviteLanding() {
         </Grid>
         <Stack sx={{ width: '100%'}}>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)'}}>
+        <Stack spacing={2} >
+        <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)'}}>
           {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
         
-            <RHFTextField name="customerName" label="Customer" value={defaultValues?.customerName} disabled/>
-            <RHFTextField name="contactName" label="Contact" value={defaultValues?.contactName} disabled/>
-            <RHFTextField name="fullName" label="Full Name*" value={defaultValues?.fullName}/>
+            <RHFTextField name="customerName" label="Customer" disabled/>
+            <RHFTextField name="contactName" label="Contact" disabled/>
+            <RHFTextField name="fullName" label="Full Name*" />
             <MuiTelInput name="phone" value={phone} label="Phone Number" flagSize="medium" value={defaultValues?.phone}
               defaultCountry="NZ" onChange={handlePhoneChange}
               forceCallingCode
             />
-
+          </Box>
+            <RHFTextField name="login" label="Login" disabled />
+            <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)'}}>
             <RHFTextField name="password" id="password" label="Password"
               type={showPassword ? 'text' : 'password'}
               InputProps={{
@@ -170,6 +177,7 @@ export default function UserInviteLanding() {
                     sx={{ bgcolor: '#10079F', color: 'white', '&:hover': { bgcolor: '#FFA200' }}} >Save
             </LoadingButton>
           </Box>
+          </Stack>
         </FormProvider>
 
         </Stack>
