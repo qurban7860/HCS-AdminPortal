@@ -460,7 +460,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
             >
 
               <RHFMultiSelect
-                disabled={roleTypesDisabled}
+                // disabled={roleTypesDisabled}
                 chip
                 checkbox
                 name="roles"
