@@ -70,7 +70,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const [phone, setPhone] = useState('');
   const [fax, setFaxVal] = useState('');
-  const [country, setCountryVal] = useState('');
+  const [country, setCountryVal] = useState(countries[169]);
   const [billingContactPhone, setBillingContactPhone] = useState('');
   const [technicalContactPhone, setTechnicalContactPhone] = useState('');
   const [accountManVal, setAccountManVal] = useState('');
@@ -266,11 +266,11 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               display="grid"
               gridTemplateColumns={{
                 xs: 'repeat(1, 1fr)',
-                sm: 'repeat(1, 1fr 5fr)', // First one spans 1 column, and the second spans 5 columns on sm screens
+                sm: 'repeat(1, 5fr 1fr)', // First one spans 1 column, and the second spans 5 columns on sm screens
               }}
             >
-              <RHFTextField name="code" label={FORMLABELS.CUSTOMER.CODE.label} />
               <RHFTextField name="name" label={FORMLABELS.CUSTOMER.NAME.label} />
+              <RHFTextField name="code" label={FORMLABELS.CUSTOMER.CODE.label} />
             </Box>
             <Box
               rowGap={3}

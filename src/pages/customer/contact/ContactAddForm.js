@@ -45,7 +45,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
   const { enqueueSnackbar } = useSnackbar();
   // const numberRegExp = /^[0-9]+$/;
   const [phone, setPhone] = useState('');
-  const [country, setCountryVal] = useState('');
+  const [country, setCountryVal] = useState(countries[169]);
 
   const defaultValues = useMemo(
     () => ({

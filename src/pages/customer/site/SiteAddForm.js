@@ -38,7 +38,7 @@ export default function SiteAddForm() {
   const { enqueueSnackbar } = useSnackbar();
 
   const [phone, setPhone] = useState('');
-  const [country, setCountryVal] = useState('');
+  const [country, setCountryVal] = useState(countries[169]);
   const [fax, setFaxVal] = useState('');
   const [billingContactVal, setBillingContactVal] = useState('');
   const [technicalContactVal, setTechnicalContactVal] = useState('');

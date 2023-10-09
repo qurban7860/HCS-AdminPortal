@@ -59,7 +59,7 @@ export const SecurityUserChangePasswordByAdmin = Loadable(lazy(() => import('../
 export const SecurityUserList = Loadable(lazy(() => import('../pages/user/SecurityUserList')));
 export const SecurityUserAdd = Loadable(lazy(() => import('../pages/user/SecurityUserAdd')));
 export const SecurityUserEdit = Loadable(lazy(() => import('../pages/user/SecurityUserEdit')));
-export const SecurityUserViewForm = Loadable(lazy(() => import('../pages/user/SecurityUserViewForm')));
+export const SecurityUserViewForm = Loadable(lazy(() => import('../pages/user/SecurityUserView')));
 
 // SECURITY USERS ROLES
 export const RoleList = Loadable(lazy(() => import('../pages/user/role/RoleList')));
