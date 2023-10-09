@@ -20,6 +20,7 @@ const initialState = {
   customer: {},
   customerDialog: false,
   filterBy: '',
+  verified: 'all',
   page: 0,
   rowsPerPage: 100,
 };
@@ -127,6 +128,12 @@ const slice = createSlice({
     setFilterBy(state, action) {
       state.filterBy = action.payload;
     },
+
+    // Set FilterBy
+    setVerified(state, action) {
+      state.verified = action.payload;
+    },
+
     // Set PageRowCount
     ChangeRowsPerPage(state, action) {
       state.rowsPerPage = action.payload;
@@ -149,6 +156,7 @@ export const {
   resetActiveCustomers,
   setResponseMessage,
   setFilterBy,
+  setVerified,
   ChangeRowsPerPage,
   ChangePage,
   setCustomerDialog,

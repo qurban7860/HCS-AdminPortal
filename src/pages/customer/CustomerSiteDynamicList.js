@@ -176,13 +176,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
             lg={4}
             sx={{ display: siteAddFormVisibility && isMobile && 'none' }}
           >
-            <AddButtonAboveAccordion
-          name={BUTTONS.NEWSITE}
-          toggleChecked={toggleChecked}
-          FormVisibility={siteAddFormVisibility}
-          toggleCancel={toggleCancel}
-          disabled={siteEditFormVisibility}
-        />
+            
         {sites.length > 0 && (
           <>
             {sites.length > 5 && (

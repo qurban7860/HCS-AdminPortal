@@ -33,18 +33,16 @@ function SearchInput({
                   <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
                 </InputAdornment>
               ),
+              endAdornment: (isFiltered && (
+                <InputAdornment position="end">
+                  <Button fullWidth onClick={handleResetFilter} color='error' startIcon={<Iconify icon='eva:trash-2-outline' />}>
+                    {BUTTONS.CLEAR}
+                  </Button>
+                </InputAdornment>
+              )
+              ),
             }}
           />
-        )}
-        {isFiltered && (
-          <Button
-            color="error"
-            sx={{ flexShrink: 0, ml: 1 }}
-            onClick={handleResetFilter}
-            startIcon={<Iconify icon="eva:trash-2-outline" />}
-          >
-            {BUTTONS.CLEAR}
-          </Button>
         )}
       </Grid>
     </Grid>
