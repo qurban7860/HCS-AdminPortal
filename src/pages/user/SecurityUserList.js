@@ -206,7 +206,7 @@ useEffect(()=>{
     navigate(PATH_SECURITY.users.edit(id));
   };
   const handleViewRow = (id) => {
-    dispatch(getSecurityUser(id))
+    // dispatch(getSecurityUser(id))
     navigate(PATH_SECURITY.users.view(id));
   };
 

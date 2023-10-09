@@ -44,13 +44,13 @@ export default function SecurityUserViewForm() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     dispatch(setCustomerDialog(false))
     dispatch(setContactDialog(false))
-    // if (id) {
-      // dispatch(getSecurityUser(id));
-    // }
-  }, [id, dispatch]);
+    if (id) {
+      dispatch(getSecurityUser(id));
+    }
+  });
 
   useEffect(() => {
     if (loggedInUser) {
