@@ -51,6 +51,7 @@ function ViewFormEditDeleteButtons({
   const userId = localStorage.getItem('userId');
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
+  
   const { isLoading, transferDialogBoxVisibility } = useSelector((state) => state.machine);
   // const { site } = useSelector((state) => state.site);
   // const { customer } = useSelector((state) => state.customer);
