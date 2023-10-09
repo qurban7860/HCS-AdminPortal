@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import { useEffect, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 // import { useNavigate } from 'react-router-dom';
 // form
@@ -24,6 +25,7 @@ export default function MoveMachineForm() {
   const { activeSites } = useSelector((state) => state.site);
   const { activeCustomers } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
+  const { id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
 
   const MoveMachineSchema = Yup.object().shape({
@@ -55,6 +57,7 @@ export default function MoveMachineForm() {
   const {
     reset,
     watch,
+    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -66,10 +69,15 @@ export default function MoveMachineForm() {
   }, []);
 
   const { customer } = watch();
+
   useEffect(() => {
+    setValue('installationSite',null);
+    setValue('billingSite',null);
     if(customer !== null){
       dispatch(getActiveSites(customer?._id))
     }else{
+      // setValue('installationSite',null);
+      // setValue('billingSite',null);
       dispatch(resetActiveSites())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -120,7 +128,7 @@ export default function MoveMachineForm() {
                 <RHFAutocomplete 
                     name="customer"
                     label="Customer*"
-                    options={activeCustomers}
+                    options={activeCustomers.filter(activeCustomer => activeCustomer._id !== id)}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     renderOption={(props, option) => (

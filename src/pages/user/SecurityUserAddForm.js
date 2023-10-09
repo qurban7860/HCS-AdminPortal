@@ -342,11 +342,11 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
                 value={contactVal || null}
                 options={customerVal ? activeContacts : []}
                 isOptionEqualToValue={(option, value) => option._id === value._id}
-                getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
+                getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
                 onChange={(event, newValue) => {
                   if (newValue) {
                     setContactVal(newValue);
-                    handleNameChange(`${newValue.firstName} ${newValue.lastName}`);
+                    handleNameChange(`${newValue?.firstName  || '' } ${newValue?.lastName || ''}`);
                     setPhone(newValue.phone);
                     setValue('email',newValue.email)
                     trigger('email');
@@ -361,7 +361,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
                 id="controllable-states-demo"
                 renderOption={(props, option) => (
                   <li {...props} key={option.id}>
-                    {option.firstName} {option.lastName}
+                    {option?.firstName || ''} {option?.lastName || ''}
                   </li>
                 )}
                 renderInput={(params) => <TextField {...params} name="contact" label="Contact" />}
@@ -369,7 +369,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
               >
                 {(option) => (
                   <div key={option._id}>
-                    <span>{`${option.firstName} ${option.lastName}`}</span>
+                    <span>{`${option?.firstName || ''} ${option?.lastName || ''}`}</span>
                   </div>
                 )}
               </Autocomplete>
@@ -460,7 +460,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
             >
 
               <RHFMultiSelect
-                disabled={roleTypesDisabled}
+                // disabled={roleTypesDisabled}
                 chip
                 checkbox
                 name="roles"

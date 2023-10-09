@@ -51,6 +51,7 @@ function ViewFormEditDeleteButtons({
   const userId = localStorage.getItem('userId');
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
+  
   const { isLoading, transferDialogBoxVisibility } = useSelector((state) => state.machine);
   // const { site } = useSelector((state) => state.site);
   // const { customer } = useSelector((state) => state.customer);
@@ -69,7 +70,7 @@ function ViewFormEditDeleteButtons({
   // const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   // const [deleteButtonColor, setDeleteButtonColor] = useState('error.main');
   // const [deleteButtonHoverColor, setDeleteButtonHoverColor] = useState('error.dark');
-  const disableDelete = userRoles.some((role) => role?.disableDelete === true);
+  const disableDelete = userRoles?.some((role) => role?.disableDelete === true);
 
   if (disableDelete) {
     disableDeleteButton = true;

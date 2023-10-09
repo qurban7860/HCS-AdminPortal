@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect,useLayoutEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector, batch } from 'react-redux';
 // @mui
@@ -8,7 +8,6 @@ import ConfirmDialog from '../../components/confirm-dialog';
 import { PATH_SECURITY } from '../../routes/paths';
 // slices
 import {
-  getSecurityUser,
   getSecurityUsers,
   deleteSecurityUser,
   sendUserInvite,
@@ -35,7 +34,7 @@ export default function SecurityUserViewForm() {
   const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
 
   const { securityUser, loggedInUser, isLoading} = useSelector((state) => state.user);
-
+  const userId = localStorage.getItem('userId');
   const [openConfirm, setOpenConfirm] = useState(false);
   const handleCloseConfirm = () => setOpenConfirm(false);
 
@@ -47,22 +46,19 @@ export default function SecurityUserViewForm() {
   useEffect(() => {
     dispatch(setCustomerDialog(false))
     dispatch(setContactDialog(false))
-    if (id) {
-      dispatch(getSecurityUser(id));
-    }
-  }, [id, dispatch]);
+  },[dispatch]);
 
   useEffect(() => {
-    if (loggedInUser) {
+    if (userId) {
       // disable edit button
-      if (isSuperAdmin || loggedInUser._id === id) {
+      if (isSuperAdmin || userId === id) {
         setDisableEditButton(false);
       } else {
         setDisableEditButton(true);
       }
     }
-  }, [id, loggedInUser, isSuperAdmin]);
-  // disableDeleteButton, setDisableDeleteButton
+  }, [id, userId, isSuperAdmin]);
+  
   useEffect(() => {
     batch(() => {
       if (securityUser && securityUser?.customer && securityUser?.customer?._id) {
@@ -74,14 +70,10 @@ export default function SecurityUserViewForm() {
     });
   }, [dispatch, securityUser]);
 
-  useEffect(() => {
-    
-  }, [dispatch, securityUser]);
-
   const handleEdit = () => {
-    dispatch(setSecurityUserEditFormVisibility(true));
     navigate(PATH_SECURITY.users.edit(securityUser._id));
   };
+
   const handleCustomerDialog = () =>{dispatch(setCustomerDialog(true))}
   const handleContactDialog = () =>{dispatch(setContactDialog(true))}
 
@@ -156,7 +148,7 @@ export default function SecurityUserViewForm() {
         <Card sx={{ p: 3 }}>
           <ViewFormEditDeleteButtons
             handleEdit={handleEdit}
-            handleUserInvite={handleUserInvite}
+            handleUserInvite={securityUser?.invitationStatus && handleUserInvite}
             handleUpdatePassword={handleUpdatePassword}
             onDelete={onDelete}
             isInviteLoading={isLoading}

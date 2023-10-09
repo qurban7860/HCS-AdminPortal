@@ -119,19 +119,25 @@ export default function CustomerViewForm() {
               supportSubscription={defaultValues.supportSubscription}
               backLink={() => navigate(PATH_CUSTOMER.list)}
             />
+
+
+
             <Grid container sx={{mt:2}}>
-              <ViewFormField
-                sm={2}
-                md={2}
-                heading={formLABELS.CUSTOMER.CODE.label}
-                param={defaultValues?.code}
-              />
-              <ViewFormField
-                sm={10}
-                md={10}
+
+            <ViewFormField
+                sm={6}
+                md={6}
                 heading={formLABELS.CUSTOMER.NAME.label}
                 param={defaultValues?.name}
               />
+
+              <ViewFormField
+                sm={6}
+                md={6}
+                heading={formLABELS.CUSTOMER.CODE.label}
+                param={defaultValues?.code}
+              />
+
               <ViewFormField
                 sm={12}
                 heading={formLABELS.CUSTOMER.TRADING_NAME.label}

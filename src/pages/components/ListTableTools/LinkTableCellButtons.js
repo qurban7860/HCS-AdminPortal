@@ -25,7 +25,7 @@ export default function LinkTableCellButtons({ align, onClick, moveIcon}) {
   return (
     
       <TableCell align={align}>
-        {moveIcon &&
+        {moveIcon && onClick &&
           <StyledTooltip onClick={onClick} title={ICONS.MOVE_MACHINE.heading} placement="top" disableFocusListener tooltipcolor={theme.palette.primary.main}>
             <Iconify icon={ICONS.MOVE_MACHINE.icon} color={theme.palette.primary.main} width="1.7em" sx={{ mb: -0.5, mr: 0.5, cursor:"pointer"}}/>
           </StyledTooltip>
