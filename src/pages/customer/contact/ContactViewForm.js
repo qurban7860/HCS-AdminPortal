@@ -34,7 +34,11 @@ export default function ContactViewForm({
   const { customer } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
- 
+
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
+  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin'); 
+
   const handleEdit = async () => {
     await dispatch(getContact(customer?._id, contact?._id));
     dispatch(setContactMoveFormVisibility(false));
@@ -87,7 +91,7 @@ export default function ContactViewForm({
   );
   return (
     <Grid sx={{mt:1}}>
-      <ViewFormEditDeleteButtons moveCustomerContact={handleMoveConatct} isActive={defaultValues.isActive} handleEdit={handleEdit} onDelete={onDelete} />
+      <ViewFormEditDeleteButtons moveCustomerContact={ isSuperAdmin && handleMoveConatct } isActive={defaultValues.isActive} handleEdit={handleEdit} onDelete={onDelete} />
       <Grid container>
         <ViewFormField sm={6} heading="First Name" param={defaultValues?.firstName} />
         <ViewFormField sm={6} heading="Last Name" param={defaultValues?.lastName} />
