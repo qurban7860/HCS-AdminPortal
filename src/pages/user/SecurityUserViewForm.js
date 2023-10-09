@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect,useLayoutEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector, batch } from 'react-redux';
 // @mui
@@ -44,12 +44,12 @@ export default function SecurityUserViewForm() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     dispatch(setCustomerDialog(false))
     dispatch(setContactDialog(false))
-    if (id) {
-      dispatch(getSecurityUser(id));
-    }
+    // if (id) {
+      // dispatch(getSecurityUser(id));
+    // }
   }, [id, dispatch]);
 
   useEffect(() => {
@@ -79,7 +79,7 @@ export default function SecurityUserViewForm() {
   }, [dispatch, securityUser]);
 
   const handleEdit = () => {
-    dispatch(setSecurityUserEditFormVisibility(true));
+    // dispatch(setSecurityUserEditFormVisibility(true));
     navigate(PATH_SECURITY.users.edit(securityUser._id));
   };
   const handleCustomerDialog = () =>{dispatch(setCustomerDialog(true))}
