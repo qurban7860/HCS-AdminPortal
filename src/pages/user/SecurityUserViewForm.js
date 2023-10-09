@@ -8,7 +8,6 @@ import ConfirmDialog from '../../components/confirm-dialog';
 import { PATH_SECURITY } from '../../routes/paths';
 // slices
 import {
-  getSecurityUser,
   getSecurityUsers,
   deleteSecurityUser,
   sendUserInvite,
@@ -47,10 +46,7 @@ export default function SecurityUserViewForm() {
   useEffect(() => {
     dispatch(setCustomerDialog(false))
     dispatch(setContactDialog(false))
-    if (id) {
-      dispatch(getSecurityUser(id));
-    }
-  });
+  },[dispatch]);
 
   useEffect(() => {
     if (loggedInUser) {
