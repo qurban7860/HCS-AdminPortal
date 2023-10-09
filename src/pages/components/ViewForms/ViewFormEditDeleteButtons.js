@@ -70,7 +70,7 @@ function ViewFormEditDeleteButtons({
   // const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   // const [deleteButtonColor, setDeleteButtonColor] = useState('error.main');
   // const [deleteButtonHoverColor, setDeleteButtonHoverColor] = useState('error.dark');
-  const disableDelete = userRoles.some((role) => role?.disableDelete === true);
+  const disableDelete = userRoles?.some((role) => role?.disableDelete === true);
 
   if (disableDelete) {
     disableDeleteButton = true;
