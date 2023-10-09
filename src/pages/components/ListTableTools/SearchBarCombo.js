@@ -20,6 +20,10 @@ function SearchBarCombo({
 }) {
   const isMobile = useResponsive('sm', 'down');
   const { machine } = useSelector((state) => state.machine);
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
+  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
+
   return (
     <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{display:'flex', justifyContent:'space-between'}}>
       <Grid item xs={12} sm={8} sx={{ display: 'inline-flex' }}>
@@ -50,7 +54,7 @@ function SearchBarCombo({
           </Button>
         )}
       </Grid>
-        {inviteButton && <Grid item xs={12} sm={2}>
+        {inviteButton && isSuperAdmin && <Grid item xs={12} sm={2}>
           <Stack alignItems="flex-end">
             <Button
               fullWidth
