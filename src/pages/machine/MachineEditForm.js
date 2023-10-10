@@ -89,7 +89,7 @@ export default function MachineEditForm() {
 
   const AddMachineSchema = Yup.object().shape({
     serialNo: Yup.string().max(6).required('Serial Number is required').nullable(),
-    name: Yup.string().max(40),
+    name: Yup.string().max(250),
     parentSerialNo: Yup.object().shape({
       serialNo: Yup.string()
     }).nullable(),
@@ -329,7 +329,7 @@ export default function MachineEditForm() {
                   rowGap={3}
                   columnGap={2}
                   display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 2fr 6fr)', md: 'repeat(1, 1fr 5fr)' }}
                 >
 
                 {/* -------------------------- Machine Serial No -------------------------------------- */}
@@ -437,9 +437,71 @@ export default function MachineEditForm() {
                     )}
                   />
 
+                    {/* ----------------------------- Filter Machine Model By Category ----------------------------------- */}
 
+                                       <RHFAutocomplete 
+                      name="category"
+                      label="Machine Category"
+                      options={activeCategories}
+                      isOptionEqualToValue={(option, value) => option._id === value._id}
+                      getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                      renderOption={(props, option) => (
+                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                      )}
+                    />
 
-                    {/* -------------------------------- Customer -------------------------------- */}
+                    {/* -------------------------------- Machine Model -------------------------------- */}
+
+                    <RHFAutocomplete 
+                      name="machineModel"
+                      label="Machine Model"
+                      options={activeMachineModels}
+                      isOptionEqualToValue={(option, value) => option._id === value._id}
+                      getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                      renderOption={(props, option) => (
+                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                      )}
+                    />
+
+                    {/* -------------------------------- Statuses -------------------------------- */}
+
+                <Controller
+                  name="status"
+                  control={control}
+                  defaultValue={status || null}
+                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
+                  <Autocomplete
+                    {...field}
+                    options={activeMachineStatuses}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    getOptionDisabled={(option) =>
+                      option.slug === 'intransfer' || option.slug === 'transferred'
+                    }
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                    )}
+                    id="controllable-states-demo"
+                    onChange={(event, value) => field.onChange(value)}
+                    renderInput={(params) => <TextField 
+                        {...params} 
+                        name="status"
+                        id="status"   
+                        label="Status" 
+                        error={!!error}
+                        helperText={error?.message} 
+                        inputRef={ref}
+                    />}
+                    ChipProps={{ size: 'small' }}
+                  />
+                  )}
+                />
+
+                    {/* -------------------------------- Work Order/ Purchase Order -------------------------------- */}
+
+                  <RHFTextField name="workOrderRef" label="Work Order/ Purchase Order" />
+
+   {/* -------------------------------- Customer -------------------------------- */}
 
                   <Controller
                     name="customer"
@@ -488,103 +550,47 @@ export default function MachineEditForm() {
                     )}
                   />
 
+                    {/* -------------------------------- Billing Site -------------------------------- */}
 
-                    {/* ----------------------------- Filter Machine Model By Category ----------------------------------- */}
-
-                                       <RHFAutocomplete 
-                      name="category"
-                      label="Machine Category"
-                      options={activeCategories}
-                      isOptionEqualToValue={(option, value) => option._id === value._id}
-                      getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                      renderOption={(props, option) => (
-                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                      )}
-                    />
-
-                    {/* -------------------------------- Machine Model -------------------------------- */}
-
-                    <RHFAutocomplete 
-                      name="machineModel"
-                      label="Machine Model"
-                      options={activeMachineModels}
-                      isOptionEqualToValue={(option, value) => option._id === value._id}
-                      getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                      renderOption={(props, option) => (
-                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                      )}
-                    />
-
-                    {/* -------------------------------- Machine Connections -------------------------------- */}
-
-                <Controller
-                  name="machineConnectionVal"
+                    <Controller
+                  name="billingSite"
                   control={control}
-                  defaultValue={ machineConnectionVal || null}
+                  defaultValue={instalationSite || null}
                   render={ ({field: { ref, ...field }, fieldState: { error } }) => (
                   <Autocomplete
-                    multiple
+                    // freeSolo
                     {...field}
-                    name="machineConnectionVal"
-                    id="tags-outlined"
-                    options={machineConnections}
-                    getOptionLabel={(option) => `${option?.connectedMachine?.serialNo ? option?.connectedMachine?.serialNo : option?.serialNo} ${option?.name ? '-' : ''} ${option?.name ? option.name : ''}`}
-                    filterSelectedOptions
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
-                    onChange={(event, value) => field.onChange(value)}
-                    renderInput={(params) => (
-                      <TextField 
-                        {...params} 
-                        name="machineConnectionVal"
-                        id="machineConnectionVal"  
-                        label="Connected Machines" 
-                        placeholder="Search" 
-                        error={!!error}
-                        helperText={error?.message} 
-                        inputRef={ref}
-                        />
-                    )}
-                  />
-                  )}
-                />
-
-                    {/* -------------------------------- Statuses -------------------------------- */}
-
-                <Controller
-                  name="status"
-                  control={control}
-                  defaultValue={status || null}
-                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                  <Autocomplete
-                    {...field}
-                    options={activeMachineStatuses}
+                    options={activeSites}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                    getOptionDisabled={(option) =>
-                      option.slug === 'intransfer' || option.slug === 'transferred'
-                    }
+                    onChange={(event, value) => field.onChange(value)}
                     renderOption={(props, option) => (
                       <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
                     id="controllable-states-demo"
-                    onChange={(event, value) => field.onChange(value)}
                     renderInput={(params) => <TextField 
-                        {...params} 
-                        name="status"
-                        id="status"   
-                        label="Status" 
-                        error={!!error}
-                        helperText={error?.message} 
-                        inputRef={ref}
+                      {...params} 
+                      name="billingSite"
+                      id="billingSite"     
+                      label="Billing Site" 
+                      error={!!error}
+                      helperText={error?.message} 
+                      inputRef={ref}
                     />}
                     ChipProps={{ size: 'small' }}
                   />
                   )}
                 />
 
-                    {/* -------------------------------- Work Order/ Purchase Order -------------------------------- */}
-
-                  <RHFTextField name="workOrderRef" label="Work Order/ Purchase Order" />
+                    {/* -------------------------------- Shipping Date -------------------------------- */}
+                    
+                    <DatePicker
+                    label="Shipping Date"
+                    value={shippingDate}
+                    // disabled={disableShippingDate}
+                    onChange={(newValue) => setShippingDate(newValue)}
+                    renderInput={(params) => <TextField {...params} />}
+                  />
 
                     {/* -------------------------------- Installation Site -------------------------------- */}
 
@@ -612,38 +618,6 @@ export default function MachineEditForm() {
                         error={!!error}
                         helperText={error?.message} 
                         inputRef={ref}
-                    />}
-                    ChipProps={{ size: 'small' }}
-                  />
-                  )}
-                />
-
-                    {/* -------------------------------- Billing Site -------------------------------- */}
-
-                <Controller
-                  name="billingSite"
-                  control={control}
-                  defaultValue={instalationSite || null}
-                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                  <Autocomplete
-                    // freeSolo
-                    {...field}
-                    options={activeSites}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
-                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                    onChange={(event, value) => field.onChange(value)}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                    )}
-                    id="controllable-states-demo"
-                    renderInput={(params) => <TextField 
-                      {...params} 
-                      name="billingSite"
-                      id="billingSite"     
-                      label="Billing Site" 
-                      error={!!error}
-                      helperText={error?.message} 
-                      inputRef={ref}
                     />}
                     ChipProps={{ size: 'small' }}
                   />
@@ -684,16 +658,6 @@ export default function MachineEditForm() {
                   )}
                 /> */}
 
-                    {/* -------------------------------- Shipping Date -------------------------------- */}
-                    
-                    <DatePicker
-                    label="Shipping Date"
-                    value={shippingDate}
-                    // disabled={disableShippingDate}
-                    onChange={(newValue) => setShippingDate(newValue)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-
                   
                 {/* <Controller
                   name="shippingDate"
@@ -724,6 +688,39 @@ export default function MachineEditForm() {
                   display="grid"
                   gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
+
+                    {/* -------------------------------- Machine Connections -------------------------------- */}
+
+                    <Controller
+                  name="machineConnectionVal"
+                  control={control}
+                  defaultValue={ machineConnectionVal || null}
+                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
+                  <Autocomplete
+                    multiple
+                    {...field}
+                    name="machineConnectionVal"
+                    id="tags-outlined"
+                    options={machineConnections}
+                    getOptionLabel={(option) => `${option?.connectedMachine?.serialNo ? option?.connectedMachine?.serialNo : option?.serialNo} ${option?.name ? '-' : ''} ${option?.name ? option.name : ''}`}
+                    filterSelectedOptions
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    onChange={(event, value) => field.onChange(value)}
+                    renderInput={(params) => (
+                      <TextField 
+                        {...params} 
+                        name="machineConnectionVal"
+                        id="machineConnectionVal"  
+                        label="Connected Machines" 
+                        placeholder="Search" 
+                        error={!!error}
+                        helperText={error?.message} 
+                        inputRef={ref}
+                        />
+                    )}
+                  />
+                  )}
+                />
 
                 {/* -------------------------------- Account Manager -------------------------------- */}
 

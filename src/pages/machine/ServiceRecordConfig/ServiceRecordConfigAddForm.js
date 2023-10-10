@@ -11,6 +11,7 @@ import { Box, Card, Grid, Stack, Typography, Container } from '@mui/material';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { addServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 import { getActiveMachineModels, resetActiveMachineModels } from '../../../redux/slices/products/model';
+import { getActiveServiceCategories } from '../../../redux/slices/products/serviceCategory';
 import { getActiveCategories } from '../../../redux/slices/products/category';
 
 // schema
@@ -36,11 +37,12 @@ export default function ServiceRecordConfigAddForm() {
   const { recordTypes } = useSelector((state) => state.serviceRecordConfig);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
   const { activeCategories } = useSelector((state) => state.category);
-  const { serviceCategories } = useSelector((state) => state.serviceCategory);
+  const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
   const [checkParams, setCheckParams] = useState([]);
   
   useEffect(() => {
-    dispatch(getActiveCategories());
+    dispatch(getActiveCategories())
+    dispatch(getActiveServiceCategories());
   }, [dispatch]);
 
   const defaultValues = useMemo(
