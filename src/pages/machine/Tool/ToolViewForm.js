@@ -78,16 +78,9 @@ export default function ToolViewForm({ currentTool = null }) {
     try {
       dispatch(deleteTool(id));
       navigate(PATH_MACHINE.machines.settings.tool.list);
-    } catch (err) {
-      // if(err.Message){
-      //   enqueueSnackbar(err.Message,{ variant: `error` })
-      // }else if(err.message){
-      //   enqueueSnackbar(err.message,{ variant: `error` })
-      // }else{
-      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
-      // }
-      enqueueSnackbar('Tool delete failed!', { variant: `error` });
-      console.log('Error:', err);
+    } catch (error) {
+      enqueueSnackbar(error, { variant: `error` });
+      console.log('Error:', error);
     }
   };
 
