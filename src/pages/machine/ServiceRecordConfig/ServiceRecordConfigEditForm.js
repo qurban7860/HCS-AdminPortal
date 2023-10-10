@@ -12,6 +12,7 @@ import {
   getServiceRecordConfig,
 } from '../../../redux/slices/products/serviceRecordConfig';
 import { getActiveMachineModels, resetActiveMachineModels } from '../../../redux/slices/products/model';
+import { getActiveServiceCategories } from '../../../redux/slices/products/serviceCategory';
 import { getActiveCategories } from '../../../redux/slices/products/category';
 import { ServiceRecordConfigSchema } from '../../schemas/machine';
 // routes
@@ -31,6 +32,7 @@ export default function ServiceRecordConfigEditForm() {
   const { serviceRecordConfig, recordTypes } = useSelector((state) => state.serviceRecordConfig);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
   const { activeCategories } = useSelector((state) => state.category);
+  const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
