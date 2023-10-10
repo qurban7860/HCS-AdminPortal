@@ -74,13 +74,13 @@ export default function ToolViewForm({ currentTool = null }) {
     [currentTool, tool]
   );
 
-  const onDelete = () => {
+  const onDelete = async () => {
     try {
-      dispatch(deleteTool(id));
+      await dispatch(deleteTool(id));
       navigate(PATH_MACHINE.machines.settings.tool.list);
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
-      console.log('Error:', error);
+      console.log(error);
     }
   };
 
