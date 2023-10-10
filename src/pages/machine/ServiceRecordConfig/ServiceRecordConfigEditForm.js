@@ -32,14 +32,12 @@ export default function ServiceRecordConfigEditForm() {
   const { serviceRecordConfig, recordTypes } = useSelector((state) => state.serviceRecordConfig);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
   const { activeCategories } = useSelector((state) => state.category);
-  const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
 
-  // const [checkParam, setCheckParam] = useState({});
   const [checkParams, setCheckParams] = useState([]);
   const defaultValues = useMemo(
     () => ({
@@ -91,14 +89,12 @@ export default function ServiceRecordConfigEditForm() {
 
   const { recordType, paramListTitle, category, machineModel, checkItemCategory} = watch();
 
-
-
-
   /* eslint-disable */
   useLayoutEffect(() => {
     dispatch(getServiceRecordConfig(id));
     // dispatch(getActiveMachineModels())
     dispatch(getActiveCategories());
+    dispatch(getActiveServiceCategories());
   }, [dispatch, id]);
 
   /* eslint-enable */
