@@ -112,7 +112,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
         </Typography>
         {/* <Grid item md={12}>  */}
         {defaultValues?.checkParams?.length > 0 ? (defaultValues?.checkParams.map((row, index) =>
-          ( typeof row?.paramList?.length === 'number' &&
+          ( typeof row?.paramList?.length === 'number' && row?.paramList?.length > 0 ? 
             <TableContainer >
                 <Table>
                     <TableBody>
@@ -120,6 +120,8 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
                     </TableBody>
                 </Table>
             </TableContainer>
+            :
+            <ViewFormField />
           ))
         ) : <ViewFormField />
         }
