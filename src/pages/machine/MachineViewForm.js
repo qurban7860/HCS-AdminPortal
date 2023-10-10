@@ -319,24 +319,13 @@ export default function MachineViewForm() {
             <ViewFormField sm={12} heading="Alias" chips={defaultValues?.alias} />
             <ViewFormField sm={6} heading="Supplier" param={defaultValues?.supplier} />
             <ViewFormField sm={6} heading="Status" param={defaultValues?.status} />
-            <ViewFormField sm={12} heading="Connected Machiness" chipDialogArrayParam={linkedMachines} />
 
             <ViewFormField
               sm={12}
               heading="Work Order / Purchase Order"
               param={defaultValues?.workOrderRef}
             />
-            <ViewFormField
-              sm={6}
-              heading="Installation Site"
-              node={
-                defaultValues.instalationSite && (
-                  <Link onClick={ handleInstallationSiteDialog } href="#" underline="none">
-                    {defaultValues.instalationSite?.name}
-                  </Link>
-                )
-              }
-            />
+
             <ViewFormField
               sm={6}
               heading="Billing Site"
@@ -350,19 +339,33 @@ export default function MachineViewForm() {
             />
             <ViewFormField
               sm={6}
-              heading="Installation Date"
-              param={fDate(defaultValues?.installationDate)}
-            />
-            <ViewFormField
-              sm={6}
               heading="Shipping Date"
               param={fDate(defaultValues?.shippingDate)}
             />
+            <ViewFormField
+              sm={6}
+              heading="Installation Site"
+              node={
+                defaultValues.instalationSite && (
+                  <Link onClick={ handleInstallationSiteDialog } href="#" underline="none">
+                    {defaultValues.instalationSite?.name}
+                  </Link>
+                )
+              }
+            />
+
+            <ViewFormField
+              sm={6}
+              heading="Installation Date"
+              param={fDate(defaultValues?.installationDate)}
+            />
+
             <ViewFormField
               sm={12}
               heading="Nearby Milestone"
               param={defaultValues?.siteMilestone}
             />
+            <ViewFormField sm={12} heading="Connected Machiness" chipDialogArrayParam={linkedMachines} />
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
             {/* <ViewFormField sm={6} heading="Tags" param={defaultValues?.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
           </Grid>

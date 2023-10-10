@@ -33,7 +33,8 @@ const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue,
 
       const handleInputChange = (value) => {
         if (value) {
-          setCheckItemList(value);
+          // setCheckItemList(value);
+          setCheckItemList((checkItems) => [...checkItems, value[0]]);
         }
       };
 
@@ -171,21 +172,18 @@ useEffect(()=>{
                         multiple
                         name="paramList"
                         label="Select Items"
-                        defaultValue={checkItemList}
-                        // defaultValue={checkItemList}
+                        value={[]}
                         options={activeCheckItems}
                         isOptionEqualToValue={(option, value) => option._id === value._id}
                         getOptionLabel={(option) => `${option.name ? option.name : ''} ${option?.category?.name ? '-' : ''} ${option?.category?.name ? option?.category?.name : ''} ${option?.inputType ? '-' : '' } ${option?.inputType ? option?.inputType : '' }`}
                         renderOption={(props, option) => (
                           <li {...props} key={option._id}>{`${option.name ? option.name : ''} ${option?.category?.name ? '-' : ''} ${option?.category?.name ? option?.category?.name : ''} ${option?.inputType ? '-' : '' } ${option?.inputType ? option?.inputType : '' }`}</li>
                         )}
-                        onChange={(event, newValue) => setCheckItemList(newValue)}
-                        // filterSelectedOptions
-                        // onChange={(event, newValue) => {
-                        //   if(newValue){
-                        //     handleInputChange(newValue)
-                        //   }
-                        // }}
+                        onChange={(event, newValue) => {
+                          if(newValue){
+                            handleInputChange(newValue)
+                          }
+                        }}
                         renderTags={(value, getTagProps) => ''}
                         Error={!!checkItemListError} helperText={checkItemListError}
                       /> 

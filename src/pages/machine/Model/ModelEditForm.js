@@ -87,14 +87,13 @@ export default function ModelEditForm() {
       } else {
         data.category = null;
       }
-
       await dispatch(updateMachineModel(data, id));
       navigate(PATH_MACHINE.machines.settings.model.view(id));
       reset();
       enqueueSnackbar(Snacks.modelUpdated);
     } catch (error) {
       console.log(error);
-      enqueueSnackbar(Snacks.failedUpdateModel, { variant: 'error' });
+      enqueueSnackbar( error, { variant: 'error' } );
     }
   };
 
@@ -122,7 +121,7 @@ export default function ModelEditForm() {
                 }}
               >
                 <Autocomplete
-                  disabled
+                  // disabled
                   value={category || null}
                   options={activeCategories}
                   isOptionEqualToValue={(option, value) => option._id === value._id}
