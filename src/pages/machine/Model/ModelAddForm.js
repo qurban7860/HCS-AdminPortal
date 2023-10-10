@@ -101,13 +101,7 @@ export default function ModelAddForm() {
       enqueueSnackbar('Create success!');
       navigate(PATH_MACHINE.machines.settings.model.list);
     } catch (error) {
-      if (error.Message) {
-        enqueueSnackbar(error.Message, { variant: `error` });
-      } else if (error.message) {
-        enqueueSnackbar(error.message, { variant: `error` });
-      } else {
-        enqueueSnackbar('Something went wrong!', { variant: `error` });
-      }
+        enqueueSnackbar(error, { variant: `error` });
       console.log('Error:', error);
     }
   };

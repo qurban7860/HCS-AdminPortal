@@ -97,7 +97,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
       // }else{
       //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
       // }
-      enqueueSnackbar('Supplier failed!', { variant: `error` });
+      enqueueSnackbar('Supplier Delete failed!', { variant: `error` } );
       console.log('Error:', err);
     }
   };
