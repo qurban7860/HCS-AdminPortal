@@ -372,14 +372,14 @@ export function getToolInstalled(machineId,Id) {
   };
 }
 
-export function deleteToolInstalled(machineId,obj) {
+export function deleteToolInstalled(machineId,toolInstalled) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/${obj._id}` , 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/${toolInstalled._id}` , 
       {
           isArchived: true, 
-          toolType: obj.toolType,
+          toolType: toolInstalled.toolType,
       });
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
