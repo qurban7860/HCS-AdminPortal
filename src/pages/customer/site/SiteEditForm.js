@@ -28,6 +28,7 @@ import {
   getSite,
   getSites,
 } from '../../../redux/slices/customer/site';
+import { getCustomer } from '../../../redux/slices/customer/customer';
 // routes
 // import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -209,6 +210,7 @@ export default function SiteEditForm() {
       await dispatch(updateSite(data, customer?._id, site?._id));
       await dispatch(getSites(customer?._id));
       await dispatch(getSite(customer?._id, site?._id));
+      await dispatch(getCustomer(customer?._id));
       enqueueSnackbar('Site saved Successfully!');
       reset();
     } catch (err) {
