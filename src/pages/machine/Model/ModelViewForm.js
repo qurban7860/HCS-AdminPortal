@@ -64,19 +64,12 @@ useEffect(()=>{
     [currentMachinemodel, machineModel]
   );
 
-  const onDelete = () => {
+  const onDelete = async () => {
     try {
-      dispatch(deleteMachineModel(id));
+      await dispatch(deleteMachineModel(id));
+      enqueueSnackbar('Model deleted Successfully!');
       navigate(PATH_MACHINE.machines.settings.model.list);
     } catch (err) {
-      // if(err.Message){
-      //   enqueueSnackbar(err.Message,{ variant: `error` })
-      // }else if(err.message){
-      //   enqueueSnackbar(err.message,{ variant: `error` })
-      // }else{
-      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
-      // }
-
       enqueueSnackbar('Model delete failed!', { variant: `error` });
       console.log('Error:', err);
     }
