@@ -38,11 +38,11 @@ export default function ToolInstalledViewForm() {
   const dispatch = useDispatch();
   const onDelete = async () => {
     try {
-      await dispatch(deleteToolInstalled(machine._id, toolInstalled._id));
-      enqueueSnackbar(Snacks.licenseDeleted);
+      await dispatch(deleteToolInstalled(machine._id, toolInstalled));
+      enqueueSnackbar('Tool Installed deleted successfully!');
       dispatch(setToolInstalledViewFormVisibility(false));
     } catch (err) {
-      enqueueSnackbar(Snacks.failedDeleteToolInstalled, { variant: `error` });
+      enqueueSnackbar(err.message, { variant: `error` });
       console.log('Error:', err);
     }
   };

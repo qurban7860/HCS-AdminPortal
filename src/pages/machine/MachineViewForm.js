@@ -135,6 +135,7 @@ export default function MachineViewForm() {
     try {
       await dispatch(deleteMachine(machine._id));
       dispatch(getMachines());
+      enqueueSnackbar('Machine Deleted Successfully!');
       navigate(PATH_MACHINE.machines.list);
     } catch (err) {
       enqueueSnackbar(Snacks.machineFailedDelete, { variant: `error` });
