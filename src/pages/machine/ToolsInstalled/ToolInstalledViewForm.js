@@ -38,7 +38,7 @@ export default function ToolInstalledViewForm() {
   const dispatch = useDispatch();
   const onDelete = async () => {
     try {
-      dispatch(deleteToolInstalled(machine._id, toolInstalled._id));
+      await dispatch(deleteToolInstalled(machine._id, toolInstalled._id));
       enqueueSnackbar(Snacks.licenseDeleted);
       dispatch(setToolInstalledViewFormVisibility(false));
     } catch (err) {

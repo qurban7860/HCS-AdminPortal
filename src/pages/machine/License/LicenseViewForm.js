@@ -27,7 +27,7 @@ export default function LicenseViewForm() {
   const dispatch = useDispatch();
   const onDelete = async () => {
     try {
-      dispatch(deleteLicense(machine._id, license._id));
+      await dispatch(deleteLicense(machine._id, license._id));
       enqueueSnackbar(Snacks.licenseDeleted);
       dispatch(setLicenseViewFormVisibility(false));
     } catch (err) {

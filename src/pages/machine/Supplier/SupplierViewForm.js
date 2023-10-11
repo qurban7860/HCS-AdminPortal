@@ -85,18 +85,12 @@ export default function SupplierViewForm({ currentSupplier = null }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentSupplier, supplier]
   );
-  const onDelete = () => {
+  const onDelete = async () => {
     try {
-      dispatch(deleteSupplier(id));
+      await dispatch(deleteSupplier(id));
+      enqueueSnackbar('Supplier Deleted Successfully!');
       navigate(PATH_MACHINE.machines.settings.supplier.list);
     } catch (err) {
-      // if(err.Message){
-      //   enqueueSnackbar(err.Message,{ variant: `error` })
-      // }else if(err.message){
-      //   enqueueSnackbar(err.message,{ variant: `error` })
-      // }else{
-      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
-      // }
       enqueueSnackbar('Supplier Delete failed!', { variant: `error` } );
       console.log('Error:', err);
     }

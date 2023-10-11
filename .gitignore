@@ -8,7 +8,7 @@ src/config-global.js
 
 #configuration file
 .env
-
+howickcopy.sh
 
 # Node artifact files
 node_modules/

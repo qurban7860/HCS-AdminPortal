@@ -27,8 +27,8 @@ export default function SettingViewForm() {
   const dispatch = useDispatch();
   const onDelete = async () => {
     try {
-      dispatch(deleteSetting(machine._id, setting._id));
-      enqueueSnackbar("Setting Deleted");
+      await dispatch(deleteSetting(machine._id, setting._id));
+      enqueueSnackbar("Setting Deleted Successfully!");
       dispatch(setSettingViewFormVisibility(false));
     } catch (err) {
       enqueueSnackbar(Snacks.failedDeleteSetting, { variant: `error` });
