@@ -18,12 +18,11 @@ export default function NavMini() {
   const [envColor, setEnvColor]= useState('#897A69');
 
   useEffect(() => {
-    if (CONFIG.ENV === ('dev' || 'Dev' || 'DEV' || 'Development')) {
+    if (CONFIG.ENV.toLocaleLowerCase() === 'dev' || CONFIG.ENV.toLocaleLowerCase === 'development' ) {
       setEnvColor('green');
-    }else if(CONFIG.ENV === ('test' || 'Test' || 'TEST') ) {
+    }else if(CONFIG.ENV.toLocaleLowerCase() === 'test' ) {
+      
       setEnvColor('#4082ed');
-    }else{
-      setEnvColor('#897A69');
     }
   }, []);
 
@@ -55,7 +54,7 @@ export default function NavMini() {
         <Logo src="/logo/HowickIcon.svg" sx={{ mx: 'auto', my: 1, width: '50px', height: '50px' }} />
         <Grid sx={{ margin: '0 auto', mb:2}}>
         <Grid sx={{ display:'flex', alignItems:'baseline'}}>
-          {CONFIG.ENV !== ('live' || 'Live' || 'LIVE') && <Typography
+          {CONFIG.ENV.toLocaleLowerCase() !== 'live' && <Typography
               sx={{ color: envColor, fontSize:'14px', pr: 0.5 }} >
            <b>{CONFIG.ENV}</b>
           </Typography>}
