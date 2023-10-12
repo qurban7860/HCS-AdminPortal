@@ -48,7 +48,8 @@ import { setContactEditFormVisibility, setContactFormVisibility } from '../../re
 
 const TABLE_HEAD = [
   { id: 'customerType', label: '', align: 'center', width: 1.5 },
-  { id: 'name', label: 'Customer', align: 'left' },
+  { id: 'clientCode', label: 'Customer', align: 'left' },
+  { id: 'name', label: 'Code', align: 'left' },
   { id: 'tradingName', visibility: 's1', label: 'Trading Name', align: 'left' },
   { id: 'mainSite.address.country', visibility: 'xs2', label: 'Address', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
@@ -288,10 +289,11 @@ function applyFilter({ inputData, comparator, filterName, filterVerify, filterSt
     inputData = inputData.filter((customer)=> customer.verifications.length>0);
   else if(filterVerify==='unverified')
     inputData = inputData.filter((customer)=> customer.verifications.length===0);
-  
+    
   if (filterName) {
     inputData = inputData.filter(
       (customer) =>
+        customer?.clientCode?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         customer?.tradingName?.some((tName) => tName.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ) ||
         `${customer?.mainSite?.address?.city}, ${customer?.mainSite?.address?.country}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||

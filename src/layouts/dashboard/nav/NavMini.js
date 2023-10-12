@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 // @mui
 import { Stack, Box , Typography, Grid} from '@mui/material';
 // config
@@ -14,6 +15,16 @@ import NavToggleButton from './NavToggleButton';
 // ----------------------------------------------------------------------
 
 export default function NavMini() {
+  const [envColor, setEnvColor]= useState('#897A69');
+
+  useEffect(() => {
+    if (CONFIG.ENV === 'dev' || 'Dev' || 'DEV' || 'Development') {
+      setEnvColor('green');
+    }else if(CONFIG.ENV === 'test' || 'Test' || 'TEST' ) {
+      setEnvColor('#4082ed');
+    }
+  }, []);
+
   return (
     <Box
       component="nav"
@@ -39,11 +50,22 @@ export default function NavMini() {
           ...hideScrollbarX,
         }}
       >
-        <Logo src="/logo/HowickIcon.svg" sx={{ mx: 'auto', my: 2, width: '40px', height: '40px' }} />
-        <Grid sx={{ margin: '0 auto', mt: -2, mb: 1 }}>
-          <Typography  sx={{ margin: '0 auto', mt: 1, mb: 1, color: '#897A69', fontSize:'8px' }}>
-            {CONFIG.Version}
+        <Logo src="/logo/HowickIcon.svg" sx={{ mx: 'auto', my: 1, width: '50px', height: '50px' }} />
+        <Grid sx={{ margin: '0 auto', mb:2}}>
+        <Grid sx={{ display:'flex', alignItems:'baseline'}}>
+          <Typography
+              // variant="body2"
+              sx={{ color: envColor, fontSize:'14px', pr: 0.5 }}
+              >
+           <b>{CONFIG.ENV}</b>
           </Typography>
+          <Typography
+              // variant="body2"
+              sx={{ color: '#897A69', fontSize:'10px'}}
+              >
+           {CONFIG.Version}
+          </Typography>
+          </Grid>
         </Grid>
         <NavSectionMini data={navConfig} />
       </Stack>
