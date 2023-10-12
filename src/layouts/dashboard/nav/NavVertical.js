@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 // @mui
 import { Box, Stack, Drawer,Typography, Grid} from '@mui/material'
@@ -29,7 +29,7 @@ export default function NavVertical({ openNav, onCloseNav }) {
   const { pathname } = useLocation();
   // const { themeLayout } = useSettingsContext();
   const isDesktop = useResponsive('up', 'lg');
-
+  const [envColor, setEnvColor]= useState('#897A69');
   useEffect(() => {
     if (openNav) {
       onCloseNav();
@@ -37,6 +37,15 @@ export default function NavVertical({ openNav, onCloseNav }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
+  useEffect(() => {
+    if (CONFIG.ENV === 'dev' || 'Dev' || 'DEV' || 'Development') {
+      setEnvColor('green');
+    }else if(CONFIG.ENV === 'test' || 'Test' || 'TEST' ) {
+      setEnvColor('#4082ed');
+    }
+  }, []);
+
+  
   const renderContent = (
     <Scrollbar
       sx={{
@@ -56,15 +65,24 @@ export default function NavVertical({ openNav, onCloseNav }) {
           flexShrink: 0,
         }}
       >
-        <Logo sx={{ width: '70%', margin: '0 auto', mt: '-30px' }} />
-        <Grid sx={{ margin: '0 auto', mt: -2, mb: 1 }}>
+        <Logo sx={{ width: '70%', margin: '0 auto' }} />
+        <Grid sx={{ margin: '0 auto', mb:2}}>
+        <Grid sx={{ display:'flex', alignItems:'baseline'}}>
           <Typography
               // variant="body2"
-              sx={{ margin: '0 auto', mt: -1, mb: 3, color: '#897A69', fontSize:'10px' }}
+              sx={{ color: envColor, fontSize:'14px', pr: 0.5 }}
+              >
+           <b>{CONFIG.ENV}</b>
+          </Typography>
+          <Typography
+              // variant="body2"
+              sx={{ color: '#897A69', fontSize:'10px'}}
               >
            {CONFIG.Version}
           </Typography>
+          </Grid>
         </Grid>
+
         <NavAccount />
       </Stack>
 
