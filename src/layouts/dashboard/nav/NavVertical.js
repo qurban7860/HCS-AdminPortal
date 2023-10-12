@@ -38,12 +38,11 @@ export default function NavVertical({ openNav, onCloseNav }) {
   }, [pathname]);
 
   useEffect(() => {
-    if (CONFIG.ENV === ('dev' || 'Dev' || 'DEV' || 'Development')) {
+    if (CONFIG.ENV.toLocaleLowerCase() === 'dev' || CONFIG.ENV.toLocaleLowerCase === 'development' ) {
       setEnvColor('green');
-    }else if(CONFIG.ENV === ('test' || 'Test' || 'TEST') ) {
+    }else if(CONFIG.ENV.toLocaleLowerCase() === 'test' ) {
+      
       setEnvColor('#4082ed');
-    }else{
-      setEnvColor('#897A69');
     }
   }, []);
 
@@ -70,7 +69,7 @@ export default function NavVertical({ openNav, onCloseNav }) {
         <Logo sx={{ width: '70%', margin: '0 auto' }} />
         <Grid sx={{ margin: '0 auto', mb:2}}>
         <Grid sx={{ display:'flex', alignItems:'baseline'}}>
-          {CONFIG.ENV !== ('live' || 'Live' || 'LIVE') && <Typography
+          {CONFIG.ENV.toLocaleLowerCase() !== 'live'  && <Typography
               // variant="body2"
               sx={{ color: envColor, fontSize:'14px', pr: 0.5 }}
               >
