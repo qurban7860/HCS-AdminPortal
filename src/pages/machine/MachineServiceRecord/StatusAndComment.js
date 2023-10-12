@@ -32,7 +32,7 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
             {childRow?.inputType === 'Boolean' ? 
             <Checkbox disabled checked={checkItem?.value || false }  sx={{ml:'auto', my:-0.9}} />  :
               <Typography variant="body2" sx={{pr:1.5}}>
-                {checkItem?.value }
+                {childRow?.inputType === 'Date' ? checkItem?.date : checkItem?.value }
               </Typography> }
               <Grid sx={{ width:140, display: 'flex', alignItems: 'center', justifyContent:'flex-end' }}>
                 {checkItem?.status && <Chip size="small" label={checkItem?.status} /> }

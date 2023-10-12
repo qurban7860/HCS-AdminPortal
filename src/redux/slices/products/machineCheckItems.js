@@ -22,6 +22,7 @@ const initialState = {
     { _id:1 , name: 'Short Text'},
     { _id:2 , name: 'Long Text'},
     { _id:3 , name: 'Number'},
+    { _id:5 , name: 'Date'},
   ],
   unitTypes: [
     { _id:1 , name: 'Milimeter'},

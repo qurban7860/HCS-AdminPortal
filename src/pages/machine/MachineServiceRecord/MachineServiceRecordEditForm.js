@@ -44,6 +44,7 @@ function MachineServiceRecordEditForm() {
   const [checkParam, setCheckParam] = useState([]);
   const [serviceDateError, setServiceDateError] = useState('');
   const [checkParamList, setCheckParamList] = useState([]);
+  console.log("checkParamList : ",checkParamList)
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { activeSecurityUsers } = useSelector((state) => state.user);
@@ -75,6 +76,7 @@ function MachineServiceRecordEditForm() {
                 ...childRow,
                 value: foundParam ? foundParam.value : '',
                 status: foundParam ? { name: foundParam.status } : null,
+                date: foundParam ? foundParam.date : '',
                 comments: foundParam ? foundParam.comments : '',
               };
             });
@@ -173,6 +175,7 @@ function MachineServiceRecordEditForm() {
                 name:CI.name || "",
                 paramListTitle:checkParam_.paramListTitle || "",
                 value:CI.value || "",
+                date:CI.date || '',
                 comments: CI?.comments || "" ,
                 status: CI?.status?.name || "" ,
               });
@@ -209,6 +212,7 @@ function MachineServiceRecordEditForm() {
           name: updatedVal[index]?.name || '',
           paramListTitle: updatedVal[index]?.paramListTitle || '',
           value: updatedVal[index]?.value || '',
+          date: updatedVal[index]?.value || '',
           status: updatedVal[index]?.status,
           comments: updatedVal[index]?.comments || '',
         };
@@ -233,6 +237,21 @@ function MachineServiceRecordEditForm() {
       value,
     };
     updatedCheckParams[index] = updatedParamObject;
+setCheckParamList(updatedCheckParams);
+}
+
+const handleChangeCheckItemListDate = (index, childIndex, date) => {
+  console.log("date : ",date)
+  const updatedCheckParams = [...checkParamList];
+  const updatedParamObject = { 
+    ...updatedCheckParams[index],
+    paramList: [...updatedCheckParams[index].paramList],
+  };
+  updatedParamObject.paramList[childIndex] = {
+    ...updatedParamObject.paramList[childIndex],
+    date,
+  };
+  updatedCheckParams[index] = updatedParamObject;
 setCheckParamList(updatedCheckParams);
 }
 
@@ -364,6 +383,7 @@ setCheckParamList(updatedCheckParams);
                               key={index}
                               index={index} 
                               checkParamList={checkParamList} 
+                              handleChangeCheckItemListDate={handleChangeCheckItemListDate}
                               handleChangeCheckItemListValue={handleChangeCheckItemListValue}
                               handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
                               handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}

@@ -8,6 +8,7 @@ import {  RHFTextField, RHFCheckbox, RHFDatePicker, RHFAutocomplete } from '../.
 import CommentsInput from './CommentsInput';
 
 const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue, 
+  handleChangeCheckItemListDate,
   handleChangeCheckItemListValue, 
   handleChangeCheckItemListStatus,
   handleChangeCheckItemListComment,
@@ -32,6 +33,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
                                 <CommentsInput index={index} childIndex={childIndex} 
                                   childRow={childRow}
                                   checkParamList={checkParamList} 
+                                  handleChangeCheckItemListDate={handleChangeCheckItemListDate}
                                   handleChangeCheckItemListValue={handleChangeCheckItemListValue}
                                   handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
                                   handleChangeCheckItemListComment={handleChangeCheckItemListComment}
@@ -50,6 +52,7 @@ CollapsibleCheckedItemInputRow.propTypes = {
     index: PropTypes.number,
     row: PropTypes.object,
     checkParamList: PropTypes.array,
+    handleChangeCheckItemListDate: PropTypes.func,
     handleChangeCheckItemListValue: PropTypes.func,
     handleChangeCheckItemListStatus: PropTypes.func,
     handleChangeCheckItemListComment: PropTypes.func,
