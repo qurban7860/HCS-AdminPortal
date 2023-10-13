@@ -2,7 +2,7 @@ import React, { useState, memo, useEffect } from 'react'
 import PropTypes from 'prop-types';
 import { Grid, Chip, TableRow, TableCell, Checkbox, Typography, Tooltip } from '@mui/material';
 import { useSelector } from 'react-redux';
-
+import { fDate } from '../../../utils/formatTime';
 import Iconify from '../../../components/iconify';
 import { HtmlTooltip, StyledTooltip } from '../../../theme/styles/default-styles';
 import MenuPopover from '../../../components/menu-popover/MenuPopover';
@@ -32,7 +32,7 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
             {childRow?.inputType === 'Boolean' ? 
             <Checkbox disabled checked={checkItem?.value || false }  sx={{ml:'auto', my:-0.9}} />  :
               <Typography variant="body2" sx={{pr:1.5}}>
-                {checkItem?.value }
+                {childRow?.inputType === 'Date' ? fDate(checkItem?.date) : checkItem?.value }
               </Typography> }
               <Grid sx={{ width:140, display: 'flex', alignItems: 'center', justifyContent:'flex-end' }}>
                 {checkItem?.status && <Chip size="small" label={checkItem?.status} /> }

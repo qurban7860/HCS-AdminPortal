@@ -6,6 +6,7 @@ import Iconify from '../../../components/iconify';
 
 const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                     handleChangeCheckItemListValue, 
+                    handleChangeCheckItemListDate,
                     handleChangeCheckItemListStatus,
                     handleChangeCheckItemListComment,
                     handleChangeCheckItemListCheckBoxValue
@@ -66,6 +67,8 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
                             />}
 
+
+
                             <div>
                             {childRow?.inputType === 'Boolean' && 
                             <Checkbox 
@@ -74,7 +77,23 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 onChange={()=>handleChangeCheckItemListCheckBoxValue(index, childIndex )} 
                             />}
                             </div>
-
+                            { childRow?.inputType === 'Date'  && 
+                            <TextField 
+                                // fullWidth
+                                id="date"
+                                label='Date'
+                                name={childRow?.name} 
+                                type="date"
+                                format="dd/mm/yyyy"
+                                value={checkParamList[index]?.paramList[childIndex]?.date || null}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                onChange={(e) =>  handleChangeCheckItemListDate(index, childIndex, e.target.value) } 
+                                size="small" sx={{m:0.3, width:170}} 
+                                required={childRow?.isRequired}
+                            />
+                            }
                             <Autocomplete 
                                 value={checkParamList[index].paramList[childIndex]?.status || null }
                                 options={statusTypes}
@@ -127,6 +146,7 @@ CommentsInput.propTypes = {
     childIndex: PropTypes.number,
     checkParamList: PropTypes.array,
     childRow: PropTypes.object,
+    handleChangeCheckItemListDate: PropTypes.func,
     handleChangeCheckItemListValue: PropTypes.func,
     handleChangeCheckItemListStatus: PropTypes.func,
     handleChangeCheckItemListComment: PropTypes.func,

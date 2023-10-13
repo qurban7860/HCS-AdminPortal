@@ -13,8 +13,8 @@ import CollapsibleCheckedItemRow from './CollapsibleCheckedItemRow'
 const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue, checkItemCategory }) => {
 
     const isMobile = useResponsive('down', 'sm');
-    const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
+    const dispatch = useDispatch();
     const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
     const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
     const { activeCheckItems } = useSelector((state) => state.checkItems);
@@ -23,26 +23,19 @@ const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue,
     const [checkItemListTitleError, setItemListTitleError] = useState('');
     const [checkItemListError, setItemListError] = useState('');
 
-    useEffect(() => {
-      if(checkItemCategory === null ){
-        dispatch(getActiveCheckItems())
-      }else{
-        dispatch(getActiveCheckItems(checkItemCategory?._id))
-      }
-    },[checkItemCategory, dispatch])
-
       const handleInputChange = (value) => {
         if (value) {
-          // setCheckItemList(value);
-          setCheckItemList((checkItems) => [...checkItems, value[0]]);
+          setCheckItemList((checkItems) => [...checkItems, value[value.length - 1]]);
         }
       };
-
 
   const handleDragStart = (e, index) => {
     e.dataTransfer.setData('index', index);
   };
 
+  useEffect(()=>{
+    dispatch(getActiveCheckItems());
+  },[ dispatch ])
 
   const handleListDrop = (e, index) => {
     const draggedIndex = e.dataTransfer.getData('index');
@@ -172,8 +165,11 @@ useEffect(()=>{
                         multiple
                         name="paramList"
                         label="Select Items"
-                        value={[]}
-                        options={activeCheckItems}
+                        value={checkItemList}
+                        disableCloseOnSelect
+                        disableClearable
+                        filterSelectedOptions
+                        options={activeCheckItems.filter(activeCheckItem => activeCheckItem?.category?._id === checkItemCategory?._id)}
                         isOptionEqualToValue={(option, value) => option._id === value._id}
                         getOptionLabel={(option) => `${option.name ? option.name : ''} ${option?.category?.name ? '-' : ''} ${option?.category?.name ? option?.category?.name : ''} ${option?.inputType ? '-' : '' } ${option?.inputType ? option?.inputType : '' }`}
                         renderOption={(props, option) => (

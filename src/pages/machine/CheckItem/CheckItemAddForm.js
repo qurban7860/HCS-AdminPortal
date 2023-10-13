@@ -67,7 +67,7 @@ export default function CheckItemAddForm() {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-  const { inputType } = watch();
+  const { inputType, unitType } = watch();
 
   useEffect(() => {
     reset(defaultValues);
@@ -136,15 +136,24 @@ export default function CheckItemAddForm() {
                       )}
                     />
 
-                    <RHFAutocomplete 
+                    {inputType && inputType?.name === 'Number' && <RHFAutocomplete 
                       name="unitType" label="Unit Type"
                       options={unitTypes}
-                      isOptionEqualToValue={(option, value) => option._id === value._id}
+                      isOptionEqualToValue={(option, value) => option?.name === value?.name}
                       getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                       renderOption={(props, option) => (
                         <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
-                    />
+                    />}
+                  </Box>
+
+                  <Box
+                    rowGap={2}
+                    columnGap={2}
+                    display="grid"
+                    gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                  >
+                    
                     <RHFTextField name="minValidation" label="Minimum Validation" />
                     <RHFTextField name="maxValidation" label="Maximum Validation" />
                     

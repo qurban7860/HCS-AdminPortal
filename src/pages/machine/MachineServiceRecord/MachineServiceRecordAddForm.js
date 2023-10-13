@@ -36,7 +36,7 @@ function MachineServiceRecordAddForm() {
   const { activeServiceRecordConfigsForRecords, serviceRecordConfig, recordTypes, isLoadingCheckItems } = useSelector((state) => state.serviceRecordConfig);
   const [ activeServiceRecordConfigs, setActiveServiceRecordConfigs ] = useState([]);
   const [checkParamList, setCheckParamList] = useState([]);
-  // console.log("checkParamList : ",checkParamList)
+  console.log("checkParamList : ",checkParamList)
   const [docType, setDocType] = useState(null);
   const user = { _id: localStorage.getItem('userId'), name: localStorage.getItem('name') };
 
@@ -168,6 +168,7 @@ function MachineServiceRecordAddForm() {
                 name:CI.name,
                 paramListTitle:checkParam_.paramListTitle,
                 value:CI?.value,
+                date:CI?.date || '',
                 comments:CI?.comments,
                 status:CI?.status?.name
               });
@@ -203,6 +204,21 @@ function MachineServiceRecordAddForm() {
   setCheckParamList(updatedCheckParams);
   }
 
+  const handleChangeCheckItemListDate = (index, childIndex, date) => {
+    console.log("date : " , date)
+    const updatedCheckParams = [...checkParamList];
+    const updatedParamObject = { 
+      ...updatedCheckParams[index],
+      paramList: [...updatedCheckParams[index].paramList],
+    };
+    updatedParamObject.paramList[childIndex] = {
+      ...updatedParamObject.paramList[childIndex],
+      date,
+    };
+    updatedCheckParams[index] = updatedParamObject;
+  setCheckParamList(updatedCheckParams);
+  }
+  
   const handleChangeCheckItemListCheckBoxValue = (index, childIndex) => {
       const updatedCheckParams = [...checkParamList];
         const updatedParamObject = { 
@@ -348,6 +364,7 @@ function MachineServiceRecordAddForm() {
                               row={row} 
                               index={index} 
                               checkParamList={checkParamList} 
+                              handleChangeCheckItemListDate={handleChangeCheckItemListDate}
                               handleChangeCheckItemListValue={handleChangeCheckItemListValue}
                               handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
                               handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
