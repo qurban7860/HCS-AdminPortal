@@ -1,8 +1,9 @@
 import { memo, useState, useEffect } from 'react'
 import PropTypes from 'prop-types';
 import { Grid, Stack, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import {  useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
+import { getActiveCheckItems } from '../../../redux/slices/products/machineCheckItems';
 import { RHFTextField, RHFAutocomplete} from '../../../components/hook-form';
 import useResponsive from '../../../hooks/useResponsive';
 import { useSnackbar } from '../../../components/snackbar';
@@ -13,6 +14,7 @@ const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue,
 
     const isMobile = useResponsive('down', 'sm');
     const { enqueueSnackbar } = useSnackbar();
+    const dispatch = useDispatch();
     const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
     const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
     const { activeCheckItems } = useSelector((state) => state.checkItems);
@@ -30,6 +32,10 @@ const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue,
   const handleDragStart = (e, index) => {
     e.dataTransfer.setData('index', index);
   };
+
+  useEffect(()=>{
+    dispatch(getActiveCheckItems());
+  },[ dispatch ])
 
   const handleListDrop = (e, index) => {
     const draggedIndex = e.dataTransfer.getData('index');
