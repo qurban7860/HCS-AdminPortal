@@ -169,7 +169,7 @@ useEffect(()=>{
                         disableCloseOnSelect
                         disableClearable
                         filterSelectedOptions
-                        options={activeCheckItems.filter(activeCheckItem => activeCheckItem?.category?._id === checkItemCategory?._id)}
+                        options={activeCheckItems.filter(activeCheckItem => checkItemCategory ? activeCheckItem?.category?._id === checkItemCategory?._id : activeCheckItem)}
                         isOptionEqualToValue={(option, value) => option._id === value._id}
                         getOptionLabel={(option) => `${option.name ? option.name : ''} ${option?.category?.name ? '-' : ''} ${option?.category?.name ? option?.category?.name : ''} ${option?.inputType ? '-' : '' } ${option?.inputType ? option?.inputType : '' }`}
                         renderOption={(props, option) => (
