@@ -21,7 +21,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 label={childRow?.inputType} 
                                 name={`${childRow?.name}_${childIndex}_${index}`} 
                                 onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e.target.value)}
-                                size="small" sx={{m:0.3}} 
+                                size="small" sx={{m:0.3, width: {sm: 'auto', xs: '100%'}}} 
                                 value={checkParamList[index]?.paramList[childIndex]?.value}
                                 required={childRow?.isRequired}
                                 InputProps={{ inputProps: { maxLength: 50 }, 
@@ -36,7 +36,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 label={childRow?.inputType} 
                                 name={`${childRow?.name}_${childIndex}_${index}`} 
                                 onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e.target.value)}
-                                size="small" sx={{m:0.3}} 
+                                size="small" sx={{m:0.3, width: {sm: 'auto', xs: '100%'}}} 
                                 value={checkParamList[index]?.paramList[childIndex]?.value}
                                 minRows={1} multiline
                                 required={childRow?.isRequired}
@@ -61,7 +61,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                         handleChangeCheckItemListValue(index, childIndex, checkParamList[index]?.paramList[childIndex].value)
                                     }}
                                 } 
-                                size="small" sx={{m:0.3}} 
+                                size="small" sx={{m:0.3, width: {sm: 'auto', xs: '100%'}}} 
                                 required={childRow?.isRequired}
                                 // InputProps={{ style: { fontSize: '14px', height: 30 }}}
                                 // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
@@ -90,7 +90,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                     shrink: true,
                                 }}
                                 onChange={(e) =>  handleChangeCheckItemListDate(index, childIndex, e.target.value) } 
-                                size="small" sx={{m:0.3, width:170}} 
+                                size="small" sx={{m:0.3, width: {sm: 170, xs: '100%'}}} 
                                 required={childRow?.isRequired}
                             />
                             }
@@ -105,38 +105,14 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
                                 />}
                                 // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
-                                sx={{ minWidth: 240,maxWidth: 300, m:0.3, ml:{sm: 'auto',md: 0},
+                                sx={{ width: {sm: 254, xs: '100%'}, m:0.3, ml:{sm: 'auto',md: 0},
                                     // "& .MuiInputBase-root": { height: "30px", fontSize: '14px' },
                                 }}
                                 
                             />
 
-                            <TextField 
-                                // fullWidth
-                                type="text"
-                                label="Comment" 
-                                name="comment"
-                                onChange={(e) => handleChangeCheckItemListComment(index, childIndex, e.target.value)}
-                                size="small" sx={{ m:0.3, ml:{sm: 'auto',md: 0}, minWidth:180 }} 
-                                // pr:{md:4},width: {md: 470 } 
-                                value={checkParamList[index]?.paramList[childIndex]?.comments}
-                                minRows={1} multiline
-                                InputProps={{ inputProps: { maxLength: 500 }, 
-                                // style: { fontSize: '14px', height: 30 }
-                                }}
-                                // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
-                                
-                            />
-                                {/* <Iconify
-                                    onClick={()=> setOpen(!isOpen)}
-                                    icon={isOpen ? 'mdi:comment-remove-outline' : 'mdi:comment-text-outline' }
-                                    sx={{ cursor: 'pointer', mt:1.7, mx:0.7 }}
-                                /> */}
                             </Grid>
-            
-        {/* { isOpen &&  */}
 
-        {/* } */}
     </Grid>
   )
 }

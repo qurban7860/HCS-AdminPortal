@@ -52,12 +52,18 @@ function MachineServiceParamViewForm() {
       decoilers:                            machineServiceRecord?.decoilers ,
       technician:                           machineServiceRecord?.technician || null,
       // checkParams:         
+      headerLeftText:                       machineServiceRecord?.serviceRecordConfig?.header?.leftText || '',
+      headerCenterText:                     machineServiceRecord?.serviceRecordConfig?.header?.centerText || '',
+      headerRightText:                      machineServiceRecord?.serviceRecordConfig?.header?.rightText || '',
+      footerLeftText:                       machineServiceRecord?.serviceRecordConfig?.footer?.leftText || '', 
+      footerCenterText:                     machineServiceRecord?.serviceRecordConfig?.footer?.centerText || '',
+      footerRightText:                      machineServiceRecord?.serviceRecordConfig?.footer?.rightText || '',
       serviceNote:                          machineServiceRecord?.serviceNote || '',
       maintenanceRecommendation:            machineServiceRecord?.maintenanceRecommendation || '',
       suggestedSpares:                      machineServiceRecord?.suggestedSpares || '',
       files:                                machineServiceRecord?.files || [],
-      operators:                             machineServiceRecord?.operators || [],
-      technicianRemarks:                      machineServiceRecord?.technicianRemarks ||'',
+      operators:                            machineServiceRecord?.operators || [],
+      technicianRemarks:                    machineServiceRecord?.technicianRemarks ||'',
       isActive:                             machineServiceRecord?.isActive,
       createdAt:                            machineServiceRecord?.createdAt || '',
       createdByFullName:                    machineServiceRecord?.createdBy?.name || '',
@@ -91,6 +97,17 @@ function MachineServiceParamViewForm() {
           <ViewFormField sm={12} heading="Technician Remarks" param={defaultValues.technicianRemarks} />
           <ViewFormField sm={12} heading="Decoilers" arrayParam={defaultValues?.decoilers?.map((decoilerMachine) => ({ name: `${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`}))} />
 
+          <Grid item md={12} >
+            <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
+              Header
+            </Typography>
+          </Grid>
+          <Grid container>
+            <ViewFormField sm={4}   param={defaultValues?.headerLeftText} />
+            <ViewFormField sm={4}   param={defaultValues?.headerCenterText} />
+            <ViewFormField sm={4}   param={defaultValues?.headerRightText} />
+          </Grid>
+
           {machineServiceRecord?.serviceRecordConfig?.checkParams?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
 
           <Grid item md={12} sx={{display:'flex', flexDirection:'column'}}>
@@ -98,6 +115,15 @@ function MachineServiceParamViewForm() {
             (machineServiceRecord?.serviceRecordConfig?.checkParams.map((row, index) =>
                     <ReadableCollapsibleCheckedItemRow value={row} index={index} />
               )) : <ViewFormField /> }
+          </Grid>
+
+          <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
+            Footer
+          </Typography>
+          <Grid container>
+            <ViewFormField sm={4} param={defaultValues?.footerLeftText} />
+            <ViewFormField sm={4} param={defaultValues?.footerCenterText} />
+            <ViewFormField sm={4} param={defaultValues?.footerRightText} />
           </Grid>
 
           {machineServiceRecord?.serviceRecordConfig?.enableNote && <ViewFormField sm={12} heading="Note" param={defaultValues.serviceNote} />}
