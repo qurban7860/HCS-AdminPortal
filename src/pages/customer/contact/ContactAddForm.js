@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
+import { MuiTelInput } from 'mui-tel-input';
 import { Box, Card, Grid, Stack,TextField } from '@mui/material';
 // schema
 import { AddContactSchema } from './schemas/AddContactSchema';
@@ -89,12 +89,12 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
-  const handlePhoneChange = (newValue) => {
-    matchIsValidTel(newValue)
-    if(newValue.length < 17){
-      setPhone(newValue);
-    }
-  };
+  // const handlePhoneChange = (newValue) => {
+  //   matchIsValidTel(newValue)
+  //   if(newValue.length < 17){
+  //     setPhone(newValue);
+  //   }
+  // };
 
   const onSubmit = async (data) => {
     try {
@@ -149,7 +149,8 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
                 name={FORMLABELS.PHONE.name}
                 label={FORMLABELS.PHONE.label}
                 flagSize={FORMLABELS.PHONE.flagSize}
-                onChange={handlePhoneChange}
+                onChange={(newValue)=>setPhone(newValue)}
+                inputProps={{maxLength:13}}
                 forceCallingCode
                 defaultCountry={FORMLABELS.PHONE.defaultCountry}
               />

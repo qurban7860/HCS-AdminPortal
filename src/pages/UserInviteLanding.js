@@ -35,10 +35,7 @@ function UserInviteLanding() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const expired = new Date(expiry).getTime() > new Date().getTime();
-
   const { verifiedInvite} = useSelector((state) => state.user);
-
-  console.log("verifiedInvite : ",verifiedInvite)
   const [phone, setPhone] = useState(verifiedInvite?.phone);
 
   const ChangePassWordSchema = Yup.object().shape({
@@ -101,13 +98,6 @@ function UserInviteLanding() {
     setValue('email',verifiedInvite?.email || '')
   },[verifiedInvite, setValue])
 
-  const handlePhoneChange = (newValue) => {
-    matchIsValidTel(newValue);
-    if (newValue.length < 20) {
-      setPhone(newValue);
-    }
-  };
-
   const onSubmit = async (data) => {
     if (id) {
       try {
@@ -150,8 +140,15 @@ function UserInviteLanding() {
             <RHFTextField name="customerName" label="Customer" disabled/>
             <RHFTextField name="contactName" label="Contact" disabled/>
             <RHFTextField name="fullName" label="Full Name*" />
-            <MuiTelInput name="phone" value={phone} label="Phone Number" flagSize="medium" value={defaultValues?.phone}
-              defaultCountry="NZ" onChange={handlePhoneChange}
+            <MuiTelInput 
+              name="phone" 
+              label="Phone Number" 
+              flagSize="medium" 
+              value={phone || defaultValues?.phone}
+              defaultCountry="NZ" 
+              onChange={(newValue)=>setPhone(newValue)}
+              inputProps={{maxLength:13}}
+                  
               forceCallingCode
             />
           </Box>
