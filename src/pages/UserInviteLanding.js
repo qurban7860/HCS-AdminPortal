@@ -9,21 +9,19 @@ import { useDispatch, useSelector } from 'react-redux';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Alert, Box, IconButton, InputAdornment, Stack, Typography, Grid, MenuItem, Autocomplete, TextField } from '@mui/material';
+import { Alert, Box, IconButton, InputAdornment, Stack, Typography, Grid } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
+import { MuiTelInput } from 'mui-tel-input';
 import { StyledRoot, StyledContent } from '../layouts/login/styles';
 import FormProvider, { RHFTextField} from '../components/hook-form';
 import Iconify from '../components/iconify';
 import Logo from '../components/logo';
 //
-import { CONFIG } from '../config-global';
 import { PATH_AUTH, PATH_PAGE } from '../routes/paths';
 import {
   updateInvitedUser,
   verifyUserInvite,
 } from '../redux/slices/securityUser/securityUser';
-import LoginLayout from '../layouts/login/LoginLayout';
 
 // ----------------------------------------------------------------------
 
@@ -64,7 +62,7 @@ function UserInviteLanding() {
     resolver: yupResolver(ChangePassWordSchema),
     defaultValues,
   });
-  
+
   useEffect(() => {
     if(expired){
       navigate(PATH_PAGE.expiredErrorPage);
@@ -73,7 +71,7 @@ function UserInviteLanding() {
       response.catch(error => {
         navigate(PATH_PAGE.invalidErrorPage);
       });
-      
+
     }else{
       navigate(PATH_PAGE.invalidErrorPage);
     }
@@ -81,15 +79,11 @@ function UserInviteLanding() {
 
   const {
     reset,
-    watch,
     setValue,
     handleSubmit,
     formState: { isSubmitting, errors, isSubmitSuccessful},
-    control,
-    trigger,
   } = methods;
 
-  const { customerName, contactName, fullName, login, email } = watch();
   useEffect(() => {
     setValue('customerName',verifiedInvite?.customerName || '')
     setValue('contactName',verifiedInvite?.contactName || '')
@@ -136,19 +130,19 @@ function UserInviteLanding() {
         <Stack spacing={2} >
         <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)'}}>
           {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
-        
+
             <RHFTextField name="customerName" label="Customer" disabled/>
             <RHFTextField name="contactName" label="Contact" disabled/>
             <RHFTextField name="fullName" label="Full Name*" />
-            <MuiTelInput 
-              name="phone" 
-              label="Phone Number" 
-              flagSize="medium" 
+            <MuiTelInput
+              name="phone"
+              label="Phone Number"
+              flagSize="medium"
               value={phone || defaultValues?.phone}
-              defaultCountry="NZ" 
+              defaultCountry="NZ"
               onChange={(newValue)=>setPhone(newValue)}
               inputProps={{maxLength:13}}
-                  
+
               forceCallingCode
             />
           </Box>
@@ -167,8 +161,8 @@ function UserInviteLanding() {
               }}
             />
 
-            <RHFTextField name="confirmPassword" id="confirmPassword"  label="Confirm Password" 
-              type={showConfirmPassword ? 'text' : 'password'} 
+            <RHFTextField name="confirmPassword" id="confirmPassword"  label="Confirm Password"
+              type={showConfirmPassword ? 'text' : 'password'}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -177,7 +171,7 @@ function UserInviteLanding() {
                     </IconButton>
                   </InputAdornment>
                 ),
-              }} 
+              }}
             />
           </Box>
           <Box sx={{mt:3, display:'flex', justifyContent:"end"}}>
