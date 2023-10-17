@@ -24,7 +24,6 @@ import {
 import SecurityUserTableToolbar from './SecurityUserTableToolbar';
 import UserTableRow from './SecurityUserTableRow';
 import {
-  getSecurityUser,
   getSecurityUsers,
   deleteSecurityUser,
   setSecurityUserEditFormVisibility,
