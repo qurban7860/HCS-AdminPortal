@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
+import { MuiTelInput } from 'mui-tel-input';
 import {
   Box,
   Card,
@@ -67,7 +67,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
   const [contactVal, setContactVal] = useState('');
   const [sortedRoles, setSortedRoles] = useState([]);
   const [phone, setPhone] = useState('');
-  const [roleTypesDisabled, setDisableRoleTypes] = useState(false);
 
   const ROLES = [];
   roles.map((role) => ROLES.push({ value: role?._id, label: role.name }));
@@ -91,13 +90,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
   useEffect(() => {
     if (customerVal) {
       dispatch(getActiveContacts(customerVal._id));
-    }
-    if (userRoles) {
-      if (userRoles.some((role) => role?.roleType === 'SuperAdmin')) {
-        setDisableRoleTypes(false);
-      } else {
-        setDisableRoleTypes(true);
-      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -175,12 +167,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, currentUser]);
 
-  const handlePhoneChange = (newValue) => {
-    matchIsValidTel(newValue);
-    if (newValue.length < 20) {
-      setPhone(newValue);
-    }
-  };
 
   const handleNameChange = (event) => {
     setName(event);
@@ -387,7 +373,8 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
                 label="Phone Number"
                 flagSize="medium"
                 defaultCountry="NZ"
-                onChange={handlePhoneChange}
+                onChange={(newValue)=>setPhone(newValue)}
+                inputProps={{maxLength:13}}
                 forceCallingCode
               />
             </Box>

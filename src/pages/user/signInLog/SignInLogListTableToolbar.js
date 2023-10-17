@@ -36,7 +36,7 @@ export default function SignInLogListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={buttonAction}
-        addButton="Refresh Report"
+        addButton="Refresh"
         buttonIcon="mdi:reload"
       />
     </Stack>

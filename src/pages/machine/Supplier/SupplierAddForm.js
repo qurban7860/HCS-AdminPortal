@@ -90,20 +90,6 @@ export default function StatusAddForm() {
     navigate(PATH_MACHINE.machines.settings.supplier.list);
   };
 
-  const handlePhoneChange = (newValue) => {
-    matchIsValidTel(newValue);
-    if (newValue.length < 20) {
-      setPhone(newValue);
-    }
-  };
-
-  const handleFaxChange = (newValue) => {
-    matchIsValidTel(newValue);
-    if (newValue.length < 20) {
-      setFaxVal(newValue);
-    }
-  };
-
   const onSubmit = async (data) => {
     try {
       if (phone && phone.length > 4) {
@@ -166,7 +152,8 @@ export default function StatusAddForm() {
                   name="phone"
                   label="Phone Number"
                   flagSize="medium"
-                  onChange={handlePhoneChange}
+                  onChange={(newValue)=>setPhone(newValue)}
+                  inputProps={{maxLength:13}}
                   forceCallingCode
                   defaultCountry="NZ"
                 />
@@ -176,7 +163,8 @@ export default function StatusAddForm() {
                   name="fax"
                   label="Fax"
                   flagSize="medium"
-                  onChange={handleFaxChange}
+                  onChange={(newValue)=>setFaxVal(newValue)}
+                  inputProps={{maxLength:13}}
                   forceCallingCode
                   defaultCountry="NZ"
                 />

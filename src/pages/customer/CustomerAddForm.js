@@ -21,7 +21,6 @@ import {
   FormControlLabel,
   Autocomplete,
   TextField,
-  Switch,
 } from '@mui/material';
 import { MuiChipsInput } from 'mui-chips-input'
 
@@ -163,25 +162,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     dispatch(getSPContacts());
   }, [dispatch]);
 
-  const handlePhoneChange = (newValue) => {
-    if(newValue.length < 17){
-      setPhone(newValue);
-    }
-  };
-
-  const handleFaxChange = (newValue) => {
-    if(newValue.length < 17){
-      setFaxVal(newValue);
-    }
-  };
-
-  const handleBillingContactPhoneChange = (newValue) => {
-      setBillingContactPhone(newValue);
-  };
-
-  const handleTechnicalContactPhoneChange = (newValue) => {
-      setTechnicalContactPhone(newValue);
-  };
+  
   const toggleCancel = () => {
     navigate(PATH_CUSTOMER.list);
   };
@@ -301,7 +282,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 name="phone"
                 label="Phone Number"
                 flagSize="medium"
-                onChange={handlePhoneChange}
+                onChange={(newValue)=> setPhone(newValue)}
+                inputProps={{ maxLength: 13 }}
                 forceCallingCode
                 defaultCountry="NZ"
               />
@@ -312,7 +294,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 name="fax"
                 label="Fax"
                 flagSize="medium"
-                onChange={handleFaxChange}
+                onChange={(newValue) => setFaxVal(newValue)}
+                inputProps={{ maxLength: 13 }}
                 forceCallingCode
                 defaultCountry="NZ"
               />
@@ -418,9 +401,11 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 name="billingContactPhone"
                 label="Contact Phone"
                 flagSize="medium"
-                onChange={handleBillingContactPhoneChange}
+                onChange={(newValue) => setBillingContactPhone(newValue)}
+                inputProps={{ maxLength: 13 }}
                 forceCallingCode
                 defaultCountry="NZ"
+                onCount
               />
 
               <RHFTextField name="billingContactEmail" label="Contact Email" />
@@ -465,7 +450,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     name="technicalContactPhone"
                     label="Contact Phone"
                     flagSize="medium"
-                    onChange={handleTechnicalContactPhoneChange}
+                    onChange={(newValue) => setTechnicalContactPhone(newValue)}
+                    inputProps={{ maxLength: 13 }}
                     forceCallingCode
                     defaultCountry="NZ"
                   />
