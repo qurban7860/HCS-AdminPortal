@@ -1,4 +1,4 @@
-import { useEffect,useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector, batch } from 'react-redux';
 // @mui
@@ -11,7 +11,6 @@ import {
   getSecurityUsers,
   deleteSecurityUser,
   sendUserInvite,
-  setSecurityUserEditFormVisibility,
 } from '../../redux/slices/securityUser/securityUser';
 import { getCustomer , setCustomerDialog } from '../../redux/slices/customer/customer';
 import { getContact , setContactDialog } from '../../redux/slices/customer/contact';
@@ -33,7 +32,7 @@ export default function SecurityUserViewForm() {
   const userRoles = JSON.parse(userRolesString);
   const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
 
-  const { securityUser, loggedInUser, isLoading} = useSelector((state) => state.user);
+  const { securityUser, isLoading} = useSelector((state) => state.user);
   const userId = localStorage.getItem('userId');
   const [openConfirm, setOpenConfirm] = useState(false);
   const handleCloseConfirm = () => setOpenConfirm(false);

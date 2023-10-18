@@ -67,49 +67,27 @@ export default function NavVertical({ openNav, onCloseNav }) {
         }}
       >
         <Logo sx={{ width: '70%', margin: '0 auto' }} />
-        <Grid sx={{ margin: '0 auto', mb:2}}>
-        <Grid sx={{ display:'flex', alignItems:'baseline'}}>
-          {CONFIG.ENV.toLocaleLowerCase() !== 'live'  && <Typography
-              // variant="body2"
-              sx={{ color: envColor, fontSize:'14px', pr: 0.5 }}
-              >
-           <b>{CONFIG.ENV}</b>
-          </Typography>}
-          <Typography
-              // variant="body2"
-              sx={{ color: '#897A69', fontSize:'10px'}}
-              >
-           {CONFIG.Version}
-          </Typography>
-          </Grid>
-        </Grid>
+        <Grid sx={{ margin: '0 auto', mb:2, display:'flex', alignItems:'baseline'}}>
+          {CONFIG.ENV.toLocaleLowerCase()!=='live' &&
+            <Typography sx={{background:envColor, borderRadius:'50px', fontSize:'10px', padding:'2px 5px', color:"#FFF"}}>{`${CONFIG.ENV.toLocaleUpperCase()} ${CONFIG.Version}`}</Typography>
+          }
 
+          {CONFIG.ENV.toLocaleLowerCase()==='live' &&
+            <Typography sx={{ color: '#897A69', fontSize:'10px'}}>{CONFIG.Version}</Typography>
+          }
+        </Grid>
+        
         <NavAccount />
       </Stack>
-
       <NavSectionVertical sx={{ mt: '-50px' }} data={navConfig} />
-
       <Box sx={{ flexGrow: 1 }} />
-
       <NavDocs />
     </Scrollbar>
   );
       // console.log({ themeLayout, isDesktop })
   return (
-    <Box
-      component="nav"
-      sx={{
-        flexShrink: { lg: 0 },
-        width: { lg: NAV.W_DASHBOARD },
-        // background: '#DFDFDF',
-      }}
-    >
-      <NavToggleButton
-        sx={{
-          top: 22
-        }}
-      />
-
+    <Box component="nav" sx={{ flexShrink: { lg: 0 }, width: { lg: NAV.W_DASHBOARD }}}>
+      <NavToggleButton sx={{top: 22}}/>
       {isDesktop ? (
         <Drawer
           open
