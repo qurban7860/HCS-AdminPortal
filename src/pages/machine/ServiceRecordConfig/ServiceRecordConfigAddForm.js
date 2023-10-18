@@ -134,7 +134,7 @@ export default function ServiceRecordConfigAddForm() {
         />
       </StyledCardContainer>
         <Grid container>
-          <Grid item xs={18} md={12} sx={{ mt: 3 }}>
+          <Grid item xs={18} md={12} >
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 <Box

@@ -129,7 +129,7 @@ export default function ServiceRecordConfigEditForm() {
   };
 
   return (
-    <Container maxWidth={false}>
+    <>
       <StyledCardContainer>
         <Cover
           name={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_CONFIGS_EDIT}
@@ -139,7 +139,7 @@ export default function ServiceRecordConfigEditForm() {
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container>
-          <Grid item xs={18} md={12} sx={{ mt: 3 }}>
+          <Grid item xs={18} md={12} >
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 <Box
@@ -320,6 +320,6 @@ export default function ServiceRecordConfigEditForm() {
           </Grid>
         </Grid>
       </FormProvider>
-    </Container>
+    </>
   );
 }
