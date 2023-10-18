@@ -21,7 +21,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                     name={`${childRow?.name}_${childIndex}_${index}_${childIndex}`} 
                                     checked={checkParamList[index].paramList[childIndex]?.checked || false} 
                                     onChange={()=>handleChangeCheckItemListChecked(index, childIndex )} 
-                                    sx={{my:'auto'}}
+                                    sx={{my:'auto', mr:'auto'}}
                                 />
 
                             {childRow?.inputType === 'Short Text' && <TextField 
@@ -79,16 +79,17 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
                             />}
 
-                            {/* <div> */}
                                 {childRow?.inputType === 'Boolean' && 
+                            <div style={{my:'auto',width: 259}}>
                                 <Checkbox 
                                     disabled={!checkParamList[index].paramList[childIndex]?.checked}
                                     name={`${childRow?.name}_${childIndex}_${index}`} 
                                     checked={checkParamList[index].paramList[childIndex]?.value || false} 
                                     onChange={()=>handleChangeCheckItemListCheckBoxValue(index, childIndex )} 
                                     sx={{my:'auto'}}
-                                />}
-                            {/* </div> */}
+                                    />
+                            </div>}
+
                             { childRow?.inputType === 'Date'  && 
                             <TextField 
                                 // fullWidth
@@ -105,9 +106,9 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 onChange={(e) =>  handleChangeCheckItemListDate(index, childIndex, e.target.value) } 
                                 size="small" sx={{m:0.3, width: {sm: 170, xs: '100%'}}} 
                                 required={childRow?.isRequired}
-                            />
-                            }
-                            <Autocomplete 
+                            /> }
+
+                            { childRow?.inputType === 'Status' && <Autocomplete 
                                 disabled={!checkParamList[index].paramList[childIndex]?.checked}
                                 value={checkParamList[index].paramList[childIndex]?.status || null }
                                 options={statusTypes}
@@ -122,13 +123,10 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 sx={{ width: {sm: 254, xs: '100%'}, m:0.3, ml:{sm: 'auto',md: 0},
                                     // "& .MuiInputBase-root": { height: "30px", fontSize: '14px' },
                                 }}
-                                
-                            />
-
-                            </Grid>
-
+                            /> }
+                        </Grid>
     </Grid>
-  )
+    )
 }
 
 CommentsInput.propTypes = {

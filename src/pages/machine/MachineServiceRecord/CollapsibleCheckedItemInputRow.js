@@ -8,6 +8,7 @@ import {  RHFTextField, RHFCheckbox, RHFDatePicker, RHFAutocomplete } from '../.
 import CommentsInput from './CommentsInput';
 
 const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue, 
+  editPage,
   handleChangeCheckItemListDate,
   handleChangeCheckItemListValue, 
   handleChangeCheckItemListStatus,
@@ -46,6 +47,9 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
                                   />
                           </Grid>
                         </Grid>
+                        {editPage && <Grid sx={{mx: {sm: 0.6, } }} >
+                          <Typography variant='body2'>History:</Typography>
+                        </Grid>}
                         <Grid sx={{mx: {sm: 0.6, } }} >
                           <TextField 
                               // fullWidth
@@ -65,8 +69,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
                         </Grid>
                       </Grid>
                       </TableRow>
-                                
-                                </>
+                        </>
                     ))}
                   </TableBody>
                 </Table>
@@ -77,6 +80,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
 CollapsibleCheckedItemInputRow.propTypes = {
     index: PropTypes.number,
     row: PropTypes.object,
+    editPage: PropTypes.bool,
     checkParamList: PropTypes.array,
     handleChangeCheckItemListDate: PropTypes.func,
     handleChangeCheckItemListValue: PropTypes.func,

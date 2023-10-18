@@ -78,6 +78,7 @@ function MachineServiceRecordEditForm() {
                 status: foundParam ? { name: foundParam.status } : null,
                 date: foundParam ? foundParam.date : '',
                 comments: foundParam ? foundParam.comments : '',
+                checked: foundParam?.checked || false ,
               };
             });
         
@@ -170,7 +171,8 @@ function MachineServiceRecordEditForm() {
           if(Array.isArray(checkParam_.paramList) &&
             checkParam_.paramList.length>0) {
             checkParam_.paramList.forEach((CI,ind)=>{
-              checkParams_.push({
+              if (CI?.checked) {
+                checkParams_.push({
                 serviceParam:CI._id,
                 name:CI.name || "",
                 paramListTitle:checkParam_.paramListTitle || "",
@@ -178,7 +180,8 @@ function MachineServiceRecordEditForm() {
                 date:CI.date || '',
                 comments: CI?.comments || "" ,
                 status: CI?.status?.name || "" ,
-              });
+                checked: CI?.checked || false ,
+              })};
             });
           }
         });
@@ -396,6 +399,7 @@ setCheckParamList(updatedCheckParams);
                               row={row} 
                               key={index}
                               index={index} 
+                              editPage
                               checkParamList={checkParamList} 
                               handleChangeCheckItemListDate={handleChangeCheckItemListDate}
                               handleChangeCheckItemListValue={handleChangeCheckItemListValue}
