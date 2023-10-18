@@ -12,6 +12,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
   handleChangeCheckItemListValue, 
   handleChangeCheckItemListStatus,
   handleChangeCheckItemListComment,
+  handleChangeCheckItemListChecked,
   handleChangeCheckItemListCheckBoxValue}) =>
   (
     <>
@@ -40,6 +41,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
                                     handleChangeCheckItemListValue={handleChangeCheckItemListValue}
                                     handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
                                     handleChangeCheckItemListComment={handleChangeCheckItemListComment}
+                                    handleChangeCheckItemListChecked={handleChangeCheckItemListChecked}
                                     handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
                                   />
                           </Grid>
@@ -80,6 +82,7 @@ CollapsibleCheckedItemInputRow.propTypes = {
     handleChangeCheckItemListValue: PropTypes.func,
     handleChangeCheckItemListStatus: PropTypes.func,
     handleChangeCheckItemListComment: PropTypes.func,
+    handleChangeCheckItemListChecked: PropTypes.func,
     handleChangeCheckItemListCheckBoxValue: PropTypes.func,
     setValue: PropTypes.func,
   };

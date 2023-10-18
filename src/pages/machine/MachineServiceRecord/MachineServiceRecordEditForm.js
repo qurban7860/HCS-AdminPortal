@@ -269,6 +269,20 @@ const handleChangeCheckItemListCheckBoxValue = (index, childIndex) => {
     setCheckParamList(updatedCheckParams);
 }
 
+const handleChangeCheckItemListChecked = ( index, childIndex ) =>{
+  const updatedCheckParams = [...checkParamList];
+  const updatedParamObject = { 
+    ...updatedCheckParams[index],
+    paramList: [ ...updatedCheckParams[index].paramList],
+  };
+  updatedParamObject.paramList[childIndex] = {
+    ...updatedParamObject.paramList[childIndex],
+    checked: !updatedParamObject.paramList[childIndex].checked,
+  };
+  updatedCheckParams[index] = updatedParamObject;
+setCheckParamList(updatedCheckParams);
+}
+
 const handleChangeCheckItemListStatus = (index, childIndex, status) => {
   const updatedCheckParams = [...checkParamList];
   const updatedParamObject = { 
@@ -386,8 +400,9 @@ setCheckParamList(updatedCheckParams);
                               handleChangeCheckItemListDate={handleChangeCheckItemListDate}
                               handleChangeCheckItemListValue={handleChangeCheckItemListValue}
                               handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
-                              handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
                               handleChangeCheckItemListComment={handleChangeCheckItemListComment}
+                              handleChangeCheckItemListChecked={handleChangeCheckItemListChecked}
+                              handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
                             />
                         </>
                           ))}

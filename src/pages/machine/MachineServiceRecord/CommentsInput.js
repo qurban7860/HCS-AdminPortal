@@ -9,15 +9,25 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                     handleChangeCheckItemListDate,
                     handleChangeCheckItemListStatus,
                     handleChangeCheckItemListComment,
+                    handleChangeCheckItemListChecked,
                     handleChangeCheckItemListCheckBoxValue
                 }) => {
     const { statusTypes } = useSelector((state) => state.serviceRecordConfig);
   return (
     <Grid sx={{display: 'flex', flexDirection: 'column'}}>
-        <Grid  sx={{display: { md:'flex', xs: 'block', }, justifyContent:'end'}}>
+        <Grid  sx={{display: { md:'flex', xs: 'block', }, justifyContent:'end'}} >
+
+                                <Checkbox 
+                                    name={`${childRow?.name}_${childIndex}_${index}_${childIndex}`} 
+                                    checked={checkParamList[index].paramList[childIndex]?.checked || false} 
+                                    onChange={()=>handleChangeCheckItemListChecked(index, childIndex )} 
+                                    sx={{my:'auto'}}
+                                />
+
                             {childRow?.inputType === 'Short Text' && <TextField 
                                 // fullWidth
                                 type='text'
+                                disabled={!checkParamList[index].paramList[childIndex]?.checked}
                                 label={childRow?.inputType} 
                                 name={`${childRow?.name}_${childIndex}_${index}`} 
                                 onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e.target.value)}
@@ -33,6 +43,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                             { childRow?.inputType === 'Long Text' &&<TextField 
                                 // fullWidth
                                 type="text"
+                                disabled={!checkParamList[index].paramList[childIndex]?.checked}
                                 label={childRow?.inputType} 
                                 name={`${childRow?.name}_${childIndex}_${index}`} 
                                 onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e.target.value)}
@@ -53,6 +64,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 label={`${childRow?.unitType ? childRow?.unitType :'Enter Value'}`}
                                 name={childRow?.name} 
                                 type="number"
+                                disabled={!checkParamList[index].paramList[childIndex]?.checked}
                                 value={checkParamList[index]?.paramList[childIndex]?.value}
                                 onChange={(e) => {
                                     if (/^\d*$/.test(e.target.value)) {
@@ -67,16 +79,16 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
                             />}
 
-
-
-                            <div>
-                            {childRow?.inputType === 'Boolean' && 
-                            <Checkbox 
-                                name={`${childRow?.name}_${childIndex}_${index}`} 
-                                checked={checkParamList[index].paramList[childIndex]?.value || false} 
-                                onChange={()=>handleChangeCheckItemListCheckBoxValue(index, childIndex )} 
-                            />}
-                            </div>
+                            {/* <div> */}
+                                {childRow?.inputType === 'Boolean' && 
+                                <Checkbox 
+                                    disabled={!checkParamList[index].paramList[childIndex]?.checked}
+                                    name={`${childRow?.name}_${childIndex}_${index}`} 
+                                    checked={checkParamList[index].paramList[childIndex]?.value || false} 
+                                    onChange={()=>handleChangeCheckItemListCheckBoxValue(index, childIndex )} 
+                                    sx={{my:'auto'}}
+                                />}
+                            {/* </div> */}
                             { childRow?.inputType === 'Date'  && 
                             <TextField 
                                 // fullWidth
@@ -85,6 +97,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 name={childRow?.name} 
                                 type="date"
                                 format="dd/mm/yyyy"
+                                disabled={!checkParamList[index].paramList[childIndex]?.checked}
                                 value={checkParamList[index]?.paramList[childIndex]?.date || null}
                                 InputLabelProps={{
                                     shrink: true,
@@ -95,6 +108,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                             />
                             }
                             <Autocomplete 
+                                disabled={!checkParamList[index].paramList[childIndex]?.checked}
                                 value={checkParamList[index].paramList[childIndex]?.status || null }
                                 options={statusTypes}
                                 getOptionLabel={(option) => option?.name || ''}
@@ -126,6 +140,7 @@ CommentsInput.propTypes = {
     handleChangeCheckItemListValue: PropTypes.func,
     handleChangeCheckItemListStatus: PropTypes.func,
     handleChangeCheckItemListComment: PropTypes.func,
+    handleChangeCheckItemListChecked: PropTypes.func,
     handleChangeCheckItemListCheckBoxValue: PropTypes.func,
   };
 export default memo(CommentsInput)

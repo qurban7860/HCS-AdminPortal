@@ -233,6 +233,21 @@ function MachineServiceRecordAddForm() {
       setCheckParamList(updatedCheckParams);
   }
 
+  const handleChangeCheckItemListChecked = ( index, childIndex ) =>{
+    console.log("checcked : ")
+    const updatedCheckParams = [...checkParamList];
+    const updatedParamObject = { 
+      ...updatedCheckParams[index],
+      paramList: [ ...updatedCheckParams[index].paramList],
+    };
+    updatedParamObject.paramList[childIndex] = {
+      ...updatedParamObject.paramList[childIndex],
+      checked: !updatedParamObject.paramList[childIndex].checked,
+    };
+    updatedCheckParams[index] = updatedParamObject;
+  setCheckParamList(updatedCheckParams);
+  }
+
   const handleChangeCheckItemListStatus = (index, childIndex, status) => {
     const updatedCheckParams = [...checkParamList];
     const updatedParamObject = { 
@@ -367,6 +382,7 @@ function MachineServiceRecordAddForm() {
                               handleChangeCheckItemListDate={handleChangeCheckItemListDate}
                               handleChangeCheckItemListValue={handleChangeCheckItemListValue}
                               handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
+                              handleChangeCheckItemListChecked={handleChangeCheckItemListChecked}
                               handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
                               handleChangeCheckItemListComment={handleChangeCheckItemListComment}
                             />
