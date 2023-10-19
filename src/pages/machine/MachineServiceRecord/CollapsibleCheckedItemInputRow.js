@@ -47,9 +47,9 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
                                   />
                           </Grid>
                         </Grid>
-                        {editPage && <Grid sx={{mx: {sm: 0.6, } }} >
+                        {/* {editPage && <Grid sx={{mx: {sm: 0.6, } }} >
                           <Typography variant='body2'>History:</Typography>
-                        </Grid>}
+                        </Grid>} */}
                         <Grid sx={{mx: {sm: 0.6, } }} >
                           <TextField 
                               // fullWidth

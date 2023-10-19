@@ -31,10 +31,10 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
             <Grid  sx={{display: { md:'flex', xs: 'block', }, justifyContent:'end'}}>
             {childRow?.inputType === 'Boolean' ? 
             <Checkbox disabled checked={checkItem?.value || false }  sx={{ml:'auto', my:-0.9}} />  :
-              <Typography variant="body2" sx={{pr:1.5}}>
+              <Typography variant="body2" >
                 {childRow?.inputType === 'Date' ? fDate(checkItem?.date) : checkItem?.value }
               </Typography> }
-              <Grid sx={{ width:140, display: 'flex', alignItems: 'center', justifyContent:'flex-end' }}>
+              <Grid sx={{ display: 'flex', alignItems: 'center', justifyContent:'flex-end' }}>
                 {checkItem?.status && <Chip size="small" label={checkItem?.status} /> }
               </Grid>
             </Grid>
