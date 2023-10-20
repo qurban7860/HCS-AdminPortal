@@ -8,6 +8,7 @@ import {  RHFTextField, RHFCheckbox, RHFDatePicker, RHFAutocomplete } from '../.
 import CommentsInput from './CommentsInput';
 
 const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue, 
+  editPage,
   handleChangeCheckItemListDate,
   handleChangeCheckItemListValue, 
   handleChangeCheckItemListStatus,
@@ -30,8 +31,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
                       <Grid display='flex' flexDirection='column'>
                         <Grid  sx={{display: {sm: 'flex',xs:'block'}, justifyContent:'space-between', }}>
                           <Typography variant='body2' size='small' sx={{ my:'auto'}} >
-                            <b>{`${childIndex+1}). `}</b>
-                            {`${childRow.name}`}
+                            <b>{`${childIndex+1}). `}</b>{`${childRow.name}`}
                           </Typography>
                           <Grid align='right' sx={{ ml: 'auto'}} >
                                   <CommentsInput index={index} childIndex={childIndex} 
@@ -46,6 +46,9 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
                                   />
                           </Grid>
                         </Grid>
+                        {/* {editPage && <Grid sx={{mx: {sm: 0.6, } }} >
+                          <Typography variant='body2'>History:</Typography>
+                        </Grid>} */}
                         <Grid sx={{mx: {sm: 0.6, } }} >
                           <TextField 
                               // fullWidth
@@ -65,8 +68,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
                         </Grid>
                       </Grid>
                       </TableRow>
-                                
-                                </>
+                        </>
                     ))}
                   </TableBody>
                 </Table>
@@ -77,6 +79,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
 CollapsibleCheckedItemInputRow.propTypes = {
     index: PropTypes.number,
     row: PropTypes.object,
+    editPage: PropTypes.bool,
     checkParamList: PropTypes.array,
     handleChangeCheckItemListDate: PropTypes.func,
     handleChangeCheckItemListValue: PropTypes.func,

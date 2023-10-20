@@ -25,16 +25,16 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
     <>
     <TableRow key={childRow._id} sx={{":hover": {  backgroundColor: "#dbdbdb66" } }}>
       <TableCell>
-        <Grid sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', mx:-2 }} >
-          <TableCell ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}</TableCell>
+        <Grid sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', mx:-2}} >
+          <TableCell ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}<Iconify icon='material-symbols:history' sx={{mb:-0.6, mx:1, cursor: 'pointer'}} /></TableCell>
           <TableCell align='right' >
             <Grid  sx={{display: { md:'flex', xs: 'block', }, justifyContent:'end'}}>
             {childRow?.inputType === 'Boolean' ? 
             <Checkbox disabled checked={checkItem?.value || false }  sx={{ml:'auto', my:-0.9}} />  :
-              <Typography variant="body2" sx={{pr:1.5}}>
+              <Typography variant="body2" >
                 {childRow?.inputType === 'Date' ? fDate(checkItem?.date) : checkItem?.value }
               </Typography> }
-              <Grid sx={{ width:140, display: 'flex', alignItems: 'center', justifyContent:'flex-end' }}>
+              <Grid sx={{ display: 'flex', alignItems: 'center', justifyContent:'flex-end' }}>
                 {checkItem?.status && <Chip size="small" label={checkItem?.status} /> }
               </Grid>
             </Grid>
