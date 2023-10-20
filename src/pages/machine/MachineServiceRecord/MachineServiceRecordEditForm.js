@@ -77,7 +77,7 @@ function MachineServiceRecordEditForm() {
                 value: foundParam ? foundParam.value : '',
                 status: foundParam ? { name: foundParam.status } : null,
                 date: foundParam ? foundParam.date : '',
-                comments: foundParam ? foundParam.comments : '',
+                // comments: foundParam ? foundParam.comments : '',
                 checked: foundParam?.checked || false ,
               };
             });

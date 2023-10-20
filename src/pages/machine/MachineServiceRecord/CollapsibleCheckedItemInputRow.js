@@ -31,8 +31,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
                       <Grid display='flex' flexDirection='column'>
                         <Grid  sx={{display: {sm: 'flex',xs:'block'}, justifyContent:'space-between', }}>
                           <Typography variant='body2' size='small' sx={{ my:'auto'}} >
-                            <b>{`${childIndex+1}). `}</b>
-                            {`${childRow.name}`}
+                            <b>{`${childIndex+1}). `}</b>{`${childRow.name}`}
                           </Typography>
                           <Grid align='right' sx={{ ml: 'auto'}} >
                                   <CommentsInput index={index} childIndex={childIndex} 

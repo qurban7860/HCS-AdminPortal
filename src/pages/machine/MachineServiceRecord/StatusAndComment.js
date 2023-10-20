@@ -25,8 +25,8 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
     <>
     <TableRow key={childRow._id} sx={{":hover": {  backgroundColor: "#dbdbdb66" } }}>
       <TableCell>
-        <Grid sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', mx:-2 }} >
-          <TableCell ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}</TableCell>
+        <Grid sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', mx:-2}} >
+          <TableCell ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}<Iconify icon='material-symbols:history' sx={{mb:-0.6, mx:1, cursor: 'pointer'}} /></TableCell>
           <TableCell align='right' >
             <Grid  sx={{display: { md:'flex', xs: 'block', }, justifyContent:'end'}}>
             {childRow?.inputType === 'Boolean' ? 
