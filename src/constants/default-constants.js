@@ -145,7 +145,10 @@ export const DIALOGS = {
 
 export const BUTTONS = {
   SAVE: 'Save',
-
+  EXPORT: {
+    label:'Export CSV',
+    icon:'icon-park-outline:excel'
+  },
   CLEAR: 'Clear',
   CANCEL: 'Cancel',
   DISCARD: 'Discard',

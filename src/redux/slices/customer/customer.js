@@ -19,6 +19,7 @@ const initialState = {
   spCustomers: [],
   customer: {},
   customerDialog: false,
+  customerCSV:'',
   filterBy: '',
   verified: 'all',
   page: 0,
@@ -94,6 +95,14 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // GET Customer
+    getCustomerCSVSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.customerCSV = action.payload;
+      state.initial = true;
+    },
+
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
       state.isLoading = false;
@@ -163,6 +172,21 @@ export const {
 } = slice.actions;
 
 // ----------------------------------------------------------------------
+
+export function getCustomerCSV() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/export`);
+      dispatch(slice.actions.getCustomerCSVSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Customers csv data loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
 
 export function getCustomers() {
   return async (dispatch) => {

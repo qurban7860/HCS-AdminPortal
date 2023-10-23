@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 // @mui
-import { Stack, Card, CardMedia, Grid, CardActionArea, Link } from '@mui/material';
+import { Stack, Card, CardMedia, Grid, CardActionArea, Link, Button } from '@mui/material';
 import {
   CardBase,
   GridBaseViewForm,
@@ -20,7 +20,7 @@ import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import GoogleMaps from '../../assets/GoogleMaps';
 import useResponsive from '../../hooks/useResponsive';
-import { getSites, getSite, setSiteFormVisibility, resetSiteFormsVisiblity } from '../../redux/slices/customer/site';
+import { getSites, getSite, setSiteFormVisibility, resetSiteFormsVisiblity, getSitesCSV } from '../../redux/slices/customer/site';
 // import { getActiveContacts } from '../../redux/slices/customer/contact';
 import NothingProvided from '../components/Defaults/NothingProvided';
 import SiteAddForm from './site/SiteAddForm';
@@ -32,6 +32,7 @@ import SearchInput from '../components/Defaults/SearchInput';
 import { fDate } from '../../utils/formatTime';
 import { Snacks } from '../../constants/customer-constants';
 import { BUTTONS, BREADCRUMBS, TITLES } from '../../constants/default-constants';
+import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -50,17 +51,13 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   const [googleMapsVisibility, setGoogleMapsVisibility] = useState(false);
   const isMobile = useResponsive('down', 'sm');
   const dispatch = useDispatch();
-  const { sites, error, responseMessage, siteEditFormVisibility, siteAddFormVisibility } =
+  const { sites, error, responseMessage, siteEditFormVisibility, siteAddFormVisibility, sitesCSV } =
     useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
   // for filtering sites
   const isFiltered = filterName !== '' || !!filterStatus.length;
 
   const toggleChecked = () => {
-  // const toggleChecked = async () => {
-
-    // console.log('aaaaa',siteEditFormVisibility)
-    // setChecked((value) => !value);
     if (siteEditFormVisibility) {
       dispatch(setSiteFormVisibility(false));
       enqueueSnackbar(Snacks.SITE_CLOSE_CONFIRM, {
@@ -69,13 +66,9 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
       setCardActiveIndex(null);
       setIsExpanded(false);
     } else {
-      console.log('else')
-      // dispatch(resetSiteFormsVisiblity(false))
       dispatch(setSiteFormVisibility(true));
       setCardActiveIndex(null);
       setIsExpanded(false);
-
-      console.log('else1')
     }
   };
 
@@ -129,6 +122,8 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
     if (!siteAddFormVisibility && !siteEditFormVisibility) {
       dispatch(getSites(customer._id));
     }
+
+    dispatch(getSitesCSV(customer._id));
   }, [dispatch, customer, siteAddFormVisibility, siteEditFormVisibility]); 
 
   const isNotFound = !sites.length && !siteAddFormVisibility && !siteEditFormVisibility;
@@ -137,6 +132,18 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   const shouldShowSiteView = isExpanded && !siteEditFormVisibility && !siteAddFormVisibility;
   const shouldShowSiteEdit = siteEditFormVisibility && !siteAddFormVisibility;
   const shouldShowSiteAdd = siteAddFormVisibility && !siteEditFormVisibility;
+
+  const onExportCSV = () => {
+    const fileName = "CustomerSites.csv";
+    const blob = new Blob([sitesCSV], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
 
   return (
     <>
@@ -158,13 +165,29 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
             />
           </BreadcrumbsProvider>
         </Grid>
-        <AddButtonAboveAccordion
-          name={BUTTONS.NEWSITE}
-          toggleChecked={toggleChecked}
-          FormVisibility={siteAddFormVisibility}
-          toggleCancel={toggleCancel}
-          disabled={siteEditFormVisibility}
-        />
+        <Grid item xs={12} md={6} style={{display:'flex', justifyContent:"flex-end"}}>
+          <Button
+              sx={{
+                mb: { xs: 0, md: 2 },
+                my: { xs: 1 },
+                mr:1
+              }}
+              onClick={onExportCSV}
+              variant="contained"
+              startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />}
+              >
+                {BUTTONS.EXPORT.label}
+            </Button>
+            
+            <AddButtonAboveAccordion
+            name={BUTTONS.NEWSITE}
+            toggleChecked={toggleChecked}
+            FormVisibility={siteAddFormVisibility}
+            toggleCancel={toggleCancel}
+            disabled={siteEditFormVisibility}
+          />
+        </Grid>
+        
       </Grid>
 
       <Grid container spacing={1} direction="row" justifyContent="flex-start">
