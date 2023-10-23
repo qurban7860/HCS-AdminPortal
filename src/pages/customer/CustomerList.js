@@ -37,7 +37,8 @@ import { FORMLABELS } from '../../constants/default-constants';
 import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
 import { getCustomers, ChangePage, ChangeRowsPerPage, setFilterBy, setVerified, 
-   setCustomerEditFormVisibility } from '../../redux/slices/customer/customer';
+   setCustomerEditFormVisibility, 
+   getCustomerCSV} from '../../redux/slices/customer/customer';
 import { Cover } from '../components/Defaults/Cover';
 import TableCard from '../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
@@ -76,7 +77,7 @@ export default function CustomerList() {
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
-  const { customers, filterBy, verified, page, rowsPerPage, isLoading } = useSelector((state) => state.customer);
+  const { customers, filterBy, verified, page, rowsPerPage, isLoading, customerCSV } = useSelector((state) => state.customer);
   const [filterVerify, setFilterVerify] = useState(verified);
   const [filterName, setFilterName] = useState(filterBy);
   
@@ -88,6 +89,7 @@ export default function CustomerList() {
 
   useEffect(() => {
       dispatch(getCustomers());
+      dispatch(getCustomerCSV());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
@@ -151,6 +153,18 @@ export default function CustomerList() {
     setFilterStatus([]);
   };
 
+  const onExportCSV = () => {
+    const fileName = "Customers.csv";
+    const blob = new Blob([customerCSV], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
   return (
     <Container maxWidth={false}>
         <StyledCardContainer>
@@ -176,6 +190,7 @@ export default function CustomerList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
+            onExportCSV={onExportCSV}
           />}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <TableSelectedAction

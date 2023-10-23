@@ -19,6 +19,7 @@ const initialState = {
   activeSpContact:[],
   contactDialog:false,
   contact: null,
+  contactsCSV:'',
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
@@ -113,6 +114,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.spContacts = action.payload;
+      state.initial = true;
+    },
+
+    // GET SP Contacts
+    getContactsCSVSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.contactsCSV = action.payload;
       state.initial = true;
     },
 
@@ -317,6 +326,30 @@ export function getSPContacts() {
 }
 
 // ----------------------------------------------------------------------
+
+export function getContactsCSV(customerID ) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts/export` , 
+        {
+          params: {
+            isArchived: false,
+            orderBy : {
+              createdAt:-1
+            }
+          }
+        }
+        );
+      dispatch(slice.actions.getContactsCSVSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Contacts CSV loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
 
 export function getContacts(customerID ) {
   return async (dispatch) => {

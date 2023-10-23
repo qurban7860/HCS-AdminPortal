@@ -1,7 +1,7 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
 // import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
-import { Stack, Grid, Link, CardActionArea } from '@mui/material';
+import { Stack, Grid, Link, CardActionArea, Button } from '@mui/material';
 import {
   CardBase,
   GridBaseViewForm,
@@ -22,6 +22,7 @@ import {
   setContactFormVisibility,
   getContact,
   resetContactFormsVisiblity,
+  getContactsCSV,
 } from '../../redux/slices/customer/contact';
 import ContactAddForm from './contact/ContactAddForm';
 import ContactEditForm from './contact/ContactEditForm';
@@ -36,6 +37,7 @@ import SearchInput from '../components/Defaults/SearchInput';
 import { fDate } from '../../utils/formatTime';
 import { Snacks } from '../../constants/customer-constants';
 import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
+import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -46,6 +48,7 @@ export default function CustomerContactList(currentContact = null) {
   const {
     contact: currentContactData,
     contacts,
+    contactsCSV,
     error,
     // initial,
     responseMessage,
@@ -104,7 +107,8 @@ export default function CustomerContactList(currentContact = null) {
 
 
   useEffect(() => {
-    dispatch(getContacts(customer?._id))
+    dispatch(getContacts(customer?._id));
+    dispatch(getContactsCSV(customer?._id));
   }, [dispatch, customer]);
 
 
@@ -143,6 +147,19 @@ export default function CustomerContactList(currentContact = null) {
   const shouldShowContactAdd = formVisibility && !contactEditFormVisibility && !contactMoveFormVisibility;
   const shouldShowContactMove = contactMoveFormVisibility && !formVisibility && !contactEditFormVisibility;
 
+
+  const onExportCSV = () => {
+    const fileName = "CustomerContacts.csv";
+    const blob = new Blob([contactsCSV], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
   // console.log(formVisibility,contactEditFormVisibility,contactMoveFormVisibility)
   // console.log(shouldShowContactMove,contacts)
   return (
@@ -166,13 +183,31 @@ export default function CustomerContactList(currentContact = null) {
             />
           </BreadcrumbsProvider>
         </Grid>
-        <AddButtonAboveAccordion
-          name={BUTTONS.NEWCONTACT}
-          toggleChecked={toggleChecked}
-          FormVisibility={formVisibility}
-          toggleCancel={toggleCancel}
-          disabled={contactEditFormVisibility || contactMoveFormVisibility}
-        />
+
+        <Grid item xs={12} md={6} style={{display:'flex', justifyContent:"flex-end"}}>
+          <Button
+              sx={{
+                mb: { xs: 0, md: 2 },
+                my: { xs: 1 },
+                mr:1
+              }}
+              onClick={onExportCSV}
+              variant="contained"
+              startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />}
+            >
+              {BUTTONS.EXPORT.heading}
+            </Button>
+            
+            <AddButtonAboveAccordion
+              name={BUTTONS.NEWCONTACT}
+              toggleChecked={toggleChecked}
+              FormVisibility={formVisibility}
+              toggleCancel={toggleCancel}
+              disabled={contactEditFormVisibility || contactMoveFormVisibility}
+            />
+        </Grid>
+
+        
       </Grid>
       <Grid container spacing={1} direction="row" justifyContent="flex-start">
         {contacts.length === 0 && (

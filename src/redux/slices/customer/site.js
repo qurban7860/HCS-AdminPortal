@@ -16,6 +16,7 @@ const initialState = {
   siteDialog: false,
   activeSites: [],
   site: null,
+  sitesCSV: '',
   lat: '',
   long: '',
   filterBy: '',
@@ -76,6 +77,17 @@ const slice = createSlice({
       state.site = action.payload;
       state.initial = true;
     },
+
+
+    // GET Site
+    getSitesCSVSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.sitesCSV = action.payload;
+      state.initial = true;
+    },
+
+    
 
     // RESET SITE
     resetSite(state){
@@ -275,6 +287,33 @@ export function updateSite(params,customerId,Id) {
 }
 
 // ----------------------------------------------------------------------
+
+export function getSitesCSV(customerID) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      let response = null;
+      if(customerID){
+        response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites/export` , 
+        {
+          params: {
+            isArchived: false,
+            orderBy : {
+              createdAt:-1
+            }
+          }
+        }
+        );
+        dispatch(slice.actions.getSitesCSVSuccess(response.data));
+        dispatch(slice.actions.setResponseMessage('Sites CSV loaded successfully'));
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
 
 export function getSites(customerID) {
   return async (dispatch) => {
