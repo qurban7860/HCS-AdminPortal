@@ -1,9 +1,7 @@
 // @mui
-import { Stack, Button, Typography, Box } from '@mui/material';
+import { Stack, Button, Typography } from '@mui/material';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
-// locales
-import { useLocales } from '../../../locales';
 // routes
 import { PATH_DOCS } from '../../../routes/paths';
 
@@ -11,35 +9,21 @@ import { PATH_DOCS } from '../../../routes/paths';
 
 export default function NavDocs() {
   const { user } = useAuthContext();
-
-  const { translate } = useLocales();
-
   return (
     <Stack
-      spacing={3}
       sx={{
-        px: 5,
-        pb: 5,
-        mt: 10,
-        width: 1,
+        px: 5, pb: 5, pt: 25,
         display: 'block',
         textAlign: 'center',
+        background: `url('/assets/illustrations/illustration_howick_icon.svg')`,
+        backgroundPosition:'center top',
+        backgroundRepeat:'no-repeat',
+        backgroundSize:"70%"
       }}
-    >
-      <Box component="img" src="/assets/illustrations/illustration_howick_icon.svg" />
-
-      <div>
-        <Typography gutterBottom variant="subtitle1">
-          {`${translate('docs.hi')}, ${user?.displayName}`}
-        </Typography>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Know more about our products and services
-        </Typography>
-      </div>
-
-      <Button href={PATH_DOCS.root} target="_blank" rel="noopener" variant="contained">
-        SEE HOWICK
-      </Button>
+      >
+        <Typography gutterBottom variant="subtitle1">Hi, {user?.displayName}</Typography>
+        <Typography variant="body2" sx={{ color: 'text.secondary', pb:1 }}>Know more about our products and services</Typography>
+        <Button href={PATH_DOCS.root} target="_blank" rel="noopener" variant="contained">SEE HOWICK</Button>
     </Stack>
   );
 }
