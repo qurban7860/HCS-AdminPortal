@@ -44,8 +44,6 @@ export default function MachineListTableRow({
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
   const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
-  console.log('isSuperAdmin : ',isSuperAdmin)
-
   const address = {};
 
   address.country = instalationSite?.address?.country;

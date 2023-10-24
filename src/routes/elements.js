@@ -104,6 +104,14 @@ export const UserConfigViewForm = Loadable(lazy(() => import('../pages/user/conf
 export const UserInvitationList = Loadable(lazy(() => import('../pages/user/invite/UserInviteList')));
 export const UserInvitationView = Loadable(lazy(() => import('../pages/user/invite/UserInviteViewForm')));
 
+// User Blocked Customers
+export const BlockedCustomerList = Loadable(lazy(() => import('../pages/security/config/blockedCustomer/BlockedCustomerList')));
+export const BlockedCustomerAddForm = Loadable(lazy(() => import('../pages/security/config/blockedCustomer/BlockedCustomerAddForm')));
+
+// User Blocked Users
+// export const BlockedCustomerList = Loadable(lazy(() => import('../pages/security/config/blockedCustomer/BlockedCustomerList')));
+// export const BlockedCustomerAddForm = Loadable(lazy(() => import('../pages/security/config/blockedCustomer/BlockedCustomerAddForm')));
+
 // License
 // export const MachineLicenses = Loadable(lazy(()=> import('../pages/machine/License/MachineLicenses')));
 // export const LicenseList = Loadable(lazy(()=> import('../pages/machine/License/LicenseList')));

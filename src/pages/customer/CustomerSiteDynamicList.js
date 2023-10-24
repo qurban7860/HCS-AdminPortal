@@ -37,6 +37,11 @@ import Iconify from '../../components/iconify';
 // ----------------------------------------------------------------------
 
 export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
+
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
+  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
+  
   const { order, orderBy } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
   // const [ setChecked] = useState(false);
   // const [ setOpenSite] = useState(false);
@@ -166,7 +171,8 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
           </BreadcrumbsProvider>
         </Grid>
         <Grid item xs={12} md={6} style={{display:'flex', justifyContent:"flex-end"}}>
-          <Button
+          {isSuperAdmin &&
+            <Button
               sx={{
                 mb: { xs: 0, md: 2 },
                 my: { xs: 1 },
@@ -178,6 +184,8 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
               >
                 {BUTTONS.EXPORT.label}
             </Button>
+          }
+          
             
             <AddButtonAboveAccordion
             name={BUTTONS.NEWSITE}

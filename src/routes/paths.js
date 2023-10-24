@@ -233,6 +233,16 @@ export const PATH_SECURITY = {
     demoEdit: path(ROOTS_SECURITY, `/users/reece-chung/edit`),
     signInLogList: path(ROOTS_SECURITY, '/users/signInLogList'),
   },
+  config:{
+    blockedCustomer: {
+      list: path(ROOTS_SECURITY, '/config/blockedCustomer/list'),
+      new: path(ROOTS_SECURITY, `/config/blockedCustomer/new`)
+    },
+    blockedUser: {
+      list: path(ROOTS_SECURITY, '/config/blockedUser/list'),
+      new: path(ROOTS_SECURITY, `/config/blockedUser/new`)
+    },
+  }
 };
 
 export const PATH_SETTING = {
@@ -290,7 +300,7 @@ export const PATH_SETTING = {
   invite: {
     list: path(ROOTS_SETTING, '/invite/list'),
     view: (id) => path(ROOTS_SETTING, `/invite/${id}/view`)
-  },
+  }
 };
 
 export const PATH_SITEMAP = {
