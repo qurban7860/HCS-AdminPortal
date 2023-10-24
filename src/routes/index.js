@@ -215,7 +215,9 @@ import {
   ComingSoonPage,
   MaintenancePage,
   ErrorPage,
-  UserInviteLanding
+  UserInviteLanding,
+  BlockedCustomerAddForm,
+  BlockedCustomerList
 } from './elements';
 
 // ----------------------------------------------------------------------
@@ -497,7 +499,19 @@ export default function Router() {
             { path: ':id/edit', element: <SecurityUserEdit /> },
             { path: ':id/view', element: <SecurityUserViewForm /> },
           ],
-        }, 
+        },
+        {
+          path: 'config',
+          children: [
+            {
+              path: 'blockedCustomer',
+              children: [
+                { path: 'list', element: <BlockedCustomerList /> },
+                { path: 'new', element: <BlockedCustomerAddForm /> },
+              ],
+            },
+          ]
+        },
         { path: 'permission-denied', element: <PermissionDeniedPage /> },
         { path: 'blank', element: <BlankPage /> },
       ],
@@ -589,7 +603,7 @@ export default function Router() {
             { path: 'list', element: <UserInvitationList /> },
             { path: ':id/view', element: <UserInvitationView /> },
           ],
-        },
+        }
       ],
     },
     {

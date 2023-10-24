@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import { Container, Grid, List } from '@mui/material';
 // routes
-import { PATH_SETTING } from '../../routes/paths';
+import { PATH_SECURITY, PATH_SETTING } from '../../routes/paths';
 // components
 import { Cover } from '../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
@@ -45,6 +45,10 @@ export default function Setting() {
 
   const linkUserInvites = () => {
     navigate(PATH_SETTING.invite.list);
+  }
+
+  const linkBlockedCustomer = () => {
+    navigate(PATH_SECURITY.config.blockedCustomer.list);
   }
 
 const userRolesString = localStorage.getItem('userRoles');
@@ -104,6 +108,12 @@ const userModuleRole = userRoles?.some((role) => role.roleType === 'Module');
                 onClick={linkUserInvites}
                 icon={ICONS.USER_INVITE.icon}
                 content={ICONS.USER_INVITE.heading}
+              />
+
+              <ListItem
+                onClick={linkBlockedCustomer}
+                icon={ICONS.BLOCKED_CUSTOMER.icon}
+                content={ICONS.BLOCKED_CUSTOMER.heading}
               />             
             </List>
           </StyledSettingsCardContainer>

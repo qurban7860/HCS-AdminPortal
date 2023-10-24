@@ -205,6 +205,10 @@ export const ICONS = {
     icon: 'mdi:person-add',
     heading: 'User Invites',
   },
+  BLOCKED_CUSTOMER: {
+    icon: 'mdi:person-add',
+    heading: 'Blocked Customer',
+  },
   REGION: {
     icon: 'mdi:map-marker-circle',
     heading: 'Regions',

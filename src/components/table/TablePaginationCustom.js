@@ -24,6 +24,11 @@ function TablePaginationCustom({
   onExportCSV,
   ...other
 }) {
+
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
+  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
+
   return (
     <Box sx={{ position: 'relative', ...sx }}>
       
@@ -36,7 +41,7 @@ function TablePaginationCustom({
       }}
       />
 
-      {onExportCSV && (
+      {isSuperAdmin && onExportCSV && (
         <Button sx={{ top: 10, left:25, position: {md: 'absolute',}}} 
           onClick={onExportCSV} variant="contained"  
           startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />}>

@@ -42,6 +42,11 @@ import Iconify from '../../components/iconify';
 // ----------------------------------------------------------------------
 
 export default function CustomerContactList(currentContact = null) {
+
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
+  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
+
   const { order, orderBy } = useTable({ defaultOrderBy: '-createdAt' });
   const { customer } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
@@ -185,7 +190,8 @@ export default function CustomerContactList(currentContact = null) {
         </Grid>
 
         <Grid item xs={12} md={6} style={{display:'flex', justifyContent:"flex-end"}}>
-          <Button
+         
+          {isSuperAdmin && <Button
               sx={{
                 mb: { xs: 0, md: 2 },
                 my: { xs: 1 },
@@ -195,8 +201,9 @@ export default function CustomerContactList(currentContact = null) {
               variant="contained"
               startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />}
             >
-              {BUTTONS.EXPORT.heading}
+              {BUTTONS.EXPORT.label}
             </Button>
+          }
             
             <AddButtonAboveAccordion
               name={BUTTONS.NEWCONTACT}
