@@ -242,6 +242,14 @@ export const PATH_SECURITY = {
       list: path(ROOTS_SECURITY, '/config/blockedUser/list'),
       new: path(ROOTS_SECURITY, `/config/blockedUser/new`)
     },
+    blacklistIP: {
+      list: path(ROOTS_SECURITY, '/config/blacklistIP/list'),
+      new: path(ROOTS_SECURITY, `/config/blacklistIP/new`)
+    },
+    whitelistIP: {
+      list: path(ROOTS_SECURITY, '/config/whitelistIP/list'),
+      new: path(ROOTS_SECURITY, `/config/whitelistIP/new`)
+    },
   }
 };
 
@@ -290,12 +298,6 @@ export const PATH_SETTING = {
     new: path(ROOTS_SETTING, '/configs/new'),
     view: (id) => path(ROOTS_SETTING, `/configs/${id}/view`),
     edit: (id) => path(ROOTS_SETTING, `/configs/${id}/edit`)
-  },
-  userConfig: {
-    list: path(ROOTS_SETTING, '/userConfig/list'),
-    new: path(ROOTS_SETTING, '/userConfig/new'),
-    view: (id) => path(ROOTS_SETTING, `/userConfig/${id}/view`),
-    edit: (id) => path(ROOTS_SETTING, `/userConfig/${id}/edit`)
   },
   invite: {
     list: path(ROOTS_SETTING, '/invite/list'),

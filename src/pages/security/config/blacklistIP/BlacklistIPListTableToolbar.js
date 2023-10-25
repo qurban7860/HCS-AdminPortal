@@ -3,17 +3,15 @@ import PropTypes from 'prop-types';
 import { Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 // components
-import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
+import SearchBarCombo from '../../../components/ListTableTools/SearchBarCombo';
 // routes
-import { PATH_SETTING } from '../../../routes/paths';
-// constants
-import { BUTTONS } from '../../../constants/default-constants';
+import { PATH_SECURITY } from '../../../../routes/paths';
 // styles
-import { options } from '../../../theme/styles/default-styles';
+import { options } from '../../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
-ConfigListTableToolbar.propTypes = {
+BlacklistIPListTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
@@ -23,7 +21,7 @@ ConfigListTableToolbar.propTypes = {
   statusOptions: PropTypes.array,
 };
 
-export default function ConfigListTableToolbar({
+export default function BlacklistIPListTableToolbar({
   isFiltered,
   filterName,
   filterStatus,
@@ -34,7 +32,7 @@ export default function ConfigListTableToolbar({
 }) {
   const navigate = useNavigate();
   const toggleAdd = () => {
-    navigate(PATH_SETTING.userConfig.new);
+    navigate(PATH_SECURITY.config.blacklistIP.new);
   };
   return (
     <Stack {...options}>
@@ -44,7 +42,7 @@ export default function ConfigListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        addButton={BUTTONS.ADDCONFIG}
+        addButton='Add IP'
       />
     </Stack>
   );

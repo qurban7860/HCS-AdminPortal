@@ -75,6 +75,7 @@ export const FORMLABELS = {
   // @root - Settings
   DOCUMENT_SETTINGS: 'Document Settings',
   SECURITY_SETTINGS: 'Security Settings',
+  SECURITY_ACCESSIBILITY: 'Accessibility',
 
   // @root DocumentAddForm in dashboard/documents
   SELECT_CUSTOMER: 'Select Customer',

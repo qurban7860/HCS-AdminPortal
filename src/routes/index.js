@@ -111,12 +111,6 @@ import {
   RoleView,
   RoleEdit,
 
-  // USER CONFIG
-  UserConfigList,
-  UserConfigAddForm,
-  UserConfigEditForm,
-  UserConfigViewForm,
-
   // Site
   SiteList,
   SiteAdd,
@@ -217,9 +211,14 @@ import {
   ErrorPage,
   UserInviteLanding,
   BlockedCustomerAddForm,
-  BlockedCustomerList
+  BlockedCustomerList,
+  BlockedUserList,
+  BlockedUserAddForm,
+  BlacklistIPList,
+  BlacklistIPAddForm,
+  WhitelistIPList,
+  WhitelistIPAddForm
 } from './elements';
-
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -510,6 +509,27 @@ export default function Router() {
                 { path: 'new', element: <BlockedCustomerAddForm /> },
               ],
             },
+            {
+              path: 'blockedUser',
+              children: [
+                { path: 'list', element: <BlockedUserList /> },
+                { path: 'new', element: <BlockedUserAddForm /> },
+              ],
+            },
+            {
+              path: 'blacklistIP',
+              children: [
+                { path: 'list', element: <BlacklistIPList /> },
+                { path: 'new', element: <BlacklistIPAddForm /> },
+              ],
+            },
+            {
+              path: 'whitelistIP',
+              children: [
+                { path: 'list', element: <WhitelistIPList /> },
+                { path: 'new', element: <WhitelistIPAddForm /> },
+              ],
+            },
           ]
         },
         { path: 'permission-denied', element: <PermissionDeniedPage /> },
@@ -585,16 +605,6 @@ export default function Router() {
             { path: 'new', element: <ConfigAdd /> },
             { path: ':id/view', element: <ConfigView /> },
             { path: ':id/edit', element: <ConfigEdit /> }
-          ],
-        },
-        {
-          path: 'userConfig',
-          children: [
-            { path: 'list', element: <UserConfigList /> },
-            { path: 'new', element: <UserConfigAddForm /> },
-            { path: ':id/view', element: <UserConfigViewForm /> },
-            { path: ':id/edit', element: <UserConfigEditForm /> }
-
           ],
         },
         {

@@ -21,7 +21,6 @@ import techparamReducer from './slices/products/machineTechParam';
 import machineSettingReducer from './slices/products/machineSetting';
 import toolInstalledReducer from './slices/products/toolInstalled';
 import roleReducer from './slices/securityUser/role';
-import userConfigReducer from './slices/securityUser/config';
 import countReducer from './slices/dashboard/count';
 import documentTypeReducer from './slices/document/documentType';
 import documentCategoryReducer from './slices/document/documentCategory';
@@ -41,6 +40,9 @@ import serviceRecordConfigReducer from './slices/products/serviceRecordConfig';
 import serviceCategoryReducer from './slices/products/serviceCategory';
 import userInviteReducer from './slices/securityUser/invite';
 import blockedCustomerReducer from './slices/securityConfig/blockedCustomers';
+import blockedUserReducer from './slices/securityConfig/blockedUsers';
+import blacklistIPReducer from './slices/securityConfig/blacklistIP';
+import whitelistIPReducer from './slices/securityConfig/whitelistIP';
 
 // ----------------------------------------------------------------------
 
@@ -186,12 +188,6 @@ export const configPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
-export const userConfigPersistConfig = {
-  key: 'userConfig',
-  storage,
-  keyPrefix: 'redux-',
-  blacklist: ['error', 'initial', 'responseMessage']
-};
 export const countPersistConfig = {
   key: 'count',
   storage,
@@ -303,6 +299,27 @@ export const blockedCustomerPersistConfig={
   blacklist: ['error', 'initial', 'responseMessage']
 }
 
+export const blockedUserPersistConfig={
+  key: 'blockedUser',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+
+export const blacklistIPPersistConfig={
+  key: 'blacklistIP',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+
+export const whitelistIPPersistConfig={
+  key: 'whitelistIP',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+
 
 
 const rootReducer = combineReducers({
@@ -338,13 +355,15 @@ const rootReducer = combineReducers({
   module: persistReducer(modulePersistConfig, moduleReducer),
   drawing: persistReducer(drawingPersistConfig, drawingReducer),
   config: persistReducer(configPersistConfig, configReducer),
-  userConfig: persistReducer(userConfigPersistConfig, userConfigReducer),
   serviceRecordConfig: persistReducer(serviceRecordConfigPersistConfig, serviceRecordConfigReducer),
   checkItems: persistReducer(checkItemsPersistConfig, checkItemsReducer),
   machineServiceRecord: persistReducer(machineServiceRecordPersistConfig, machineServiceRecordReducer),
   serviceCategory: persistReducer(serviceCategoryPersistConfig, serviceCategoryReducer),
   userInvite: persistReducer(userInvitePersistConfig, userInviteReducer),
-  blockedCustomer: persistReducer(blockedCustomerPersistConfig, blockedCustomerReducer)
+  blockedCustomer: persistReducer(blockedCustomerPersistConfig, blockedCustomerReducer),
+  blockedUser: persistReducer(blockedUserPersistConfig, blockedUserReducer),
+  blacklistIP: persistReducer(blacklistIPPersistConfig, blacklistIPReducer),
+  whitelistIP: persistReducer(whitelistIPPersistConfig, whitelistIPReducer)
 
 });
 

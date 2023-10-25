@@ -94,12 +94,6 @@ export const CheckItemAddForm  = Loadable(lazy(() => import('../pages/machine/Ch
 // Signin Logs
 export const SignInLogList = Loadable(lazy(() => import('../pages/user/signInLog/SignInLogList')));
 
-// config List
-export const UserConfigList = Loadable(lazy(() => import('../pages/user/config/ConfigList')));
-export const UserConfigAddForm = Loadable(lazy(() => import('../pages/user/config/ConfigAddForm')));
-export const UserConfigEditForm = Loadable(lazy(() => import('../pages/user/config/ConfigEditForm')));
-export const UserConfigViewForm = Loadable(lazy(() => import('../pages/user/config/ConfigView')));
-
 // User Invitations List
 export const UserInvitationList = Loadable(lazy(() => import('../pages/user/invite/UserInviteList')));
 export const UserInvitationView = Loadable(lazy(() => import('../pages/user/invite/UserInviteViewForm')));
@@ -109,8 +103,16 @@ export const BlockedCustomerList = Loadable(lazy(() => import('../pages/security
 export const BlockedCustomerAddForm = Loadable(lazy(() => import('../pages/security/config/blockedCustomer/BlockedCustomerAddForm')));
 
 // User Blocked Users
-// export const BlockedCustomerList = Loadable(lazy(() => import('../pages/security/config/blockedCustomer/BlockedCustomerList')));
-// export const BlockedCustomerAddForm = Loadable(lazy(() => import('../pages/security/config/blockedCustomer/BlockedCustomerAddForm')));
+export const BlockedUserList = Loadable(lazy(() => import('../pages/security/config/blockedUser/BlockedUserList')));
+export const BlockedUserAddForm = Loadable(lazy(() => import('../pages/security/config/blockedUser/BlockedUserAddForm')));
+
+// Blacklist IP
+export const BlacklistIPList = Loadable(lazy(() => import('../pages/security/config/blacklistIP/BlacklistIPList')));
+export const BlacklistIPAddForm = Loadable(lazy(() => import('../pages/security/config/blacklistIP/BlacklistIPAddForm')));
+
+// Whitelist IP
+export const WhitelistIPList = Loadable(lazy(() => import('../pages/security/config/whitelistIP/WhitelistIPList')));
+export const WhitelistIPAddForm = Loadable(lazy(() => import('../pages/security/config/whitelistIP/WhitelistIPAddForm')));
 
 // License
 // export const MachineLicenses = Loadable(lazy(()=> import('../pages/machine/License/MachineLicenses')));

@@ -206,8 +206,20 @@ export const ICONS = {
     heading: 'User Invites',
   },
   BLOCKED_CUSTOMER: {
-    icon: 'mdi:person-add',
-    heading: 'Blocked Customer',
+    icon: 'mdi:user-block',
+    heading: 'Blocked Customers',
+  },
+  BLOCKED_USER: {
+    icon: 'mdi:user-block',
+    heading: 'Blocked Users',
+  },
+  BLACKLIST_IP: {
+    icon: 'solar:list-cross-bold',
+    heading: 'Blacklist IPs',
+  },
+  WHITELIST_IP: {
+    icon: 'solar:list-check-outline',
+    heading: 'Whitelist IPs',
   },
   REGION: {
     icon: 'mdi:map-marker-circle',
