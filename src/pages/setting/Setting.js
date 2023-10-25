@@ -125,7 +125,7 @@ const userModuleRole = userRoles?.some((role) => role.roleType === 'Module');
                 </List>
             </StyledSettingsCardContainer>
 
-            <StyledSettingsCardContainer sx={{height:'fit-content'}}>
+            <StyledSettingsCardContainer>
                 <List
                   component="nav"
                   aria-labelledby="nested-list-subheader"
@@ -158,7 +158,7 @@ const userModuleRole = userRoles?.some((role) => role.roleType === 'Module');
                 </List>
             </StyledSettingsCardContainer>
 
-            <StyledSettingsCardContainer>
+            <StyledSettingsCardContainer >
               <List
                 component="nav"
                 aria-labelledby="nested-list-subheader"
