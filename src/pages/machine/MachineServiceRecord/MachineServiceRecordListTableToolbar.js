@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 // @mui
 import { Stack } from '@mui/material';
 // routes
@@ -38,6 +38,9 @@ export default function MachineServiceRecordListTableToolbar({
     dispatch(setMachineServiceRecordAddFormVisibility(true))
   };
 
+  const { machine } = useSelector((state) => state.machine);
+  
+
   return (
     <Stack {...options}>
       <SearchBarCombo
@@ -47,6 +50,7 @@ export default function MachineServiceRecordListTableToolbar({
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
         addButton={BUTTONS.ADD_MACHINE_SERVICE_RECORD}
+        transferredMachine={machine?.status?.slug==='transferred'}
       />
     </Stack>
   );

@@ -97,7 +97,7 @@ export default function AuthLoginForm() {
       }else{
         setError('afterSubmit', {
           ...error,
-          message: "Something went wrong",
+          message: error,
         });
       }
     }

@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 // @mui
 import { Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { useDispatch } from '../../../redux/store';
 // components
 import { PATH_DOCUMENT } from '../../../routes/paths';
@@ -54,6 +55,9 @@ export default function DocumentListTableToolbar({
   }else{
     addButton = undefined;
   }
+
+  const { machine } = useSelector((state) => state.machine);
+  
   return (
     <Stack
       spacing={2}
@@ -68,6 +72,7 @@ export default function DocumentListTableToolbar({
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
         addButton={addButton}
+        transferredMachine={machine?.status?.slug==='transferred'}
       />
     </Stack>
   );

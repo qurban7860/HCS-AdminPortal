@@ -52,8 +52,6 @@ export default function BlockedUserListTableRow({
   const smScreen = useScreenSize('sm')
   const lgScreen = useScreenSize('lg')
 
-  console.log(row)
-
   return (
     <StyledTableRow hover selected={selected} onClick={onViewRow} sx={{cursor:'pointer'}} >
       <TableCell align="left"> {blockedUser?.name} </TableCell>
