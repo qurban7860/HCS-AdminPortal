@@ -242,6 +242,14 @@ export const PATH_SECURITY = {
       list: path(ROOTS_SECURITY, '/config/blockedUser/list'),
       new: path(ROOTS_SECURITY, `/config/blockedUser/new`)
     },
+    blacklistIP: {
+      list: path(ROOTS_SECURITY, '/config/blacklistIP/list'),
+      new: path(ROOTS_SECURITY, `/config/blacklistIP/new`)
+    },
+    whitelistIP: {
+      list: path(ROOTS_SECURITY, '/config/whitelistIP/list'),
+      new: path(ROOTS_SECURITY, `/config/whitelistIP/new`)
+    },
   }
 };
 

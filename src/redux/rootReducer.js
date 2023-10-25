@@ -41,6 +41,9 @@ import serviceRecordConfigReducer from './slices/products/serviceRecordConfig';
 import serviceCategoryReducer from './slices/products/serviceCategory';
 import userInviteReducer from './slices/securityUser/invite';
 import blockedCustomerReducer from './slices/securityConfig/blockedCustomers';
+import blockedUserReducer from './slices/securityConfig/blockedUsers';
+import blacklistIPReducer from './slices/securityConfig/blacklistIP';
+import whitelistIPReducer from './slices/securityConfig/whitelistIP';
 
 // ----------------------------------------------------------------------
 
@@ -303,6 +306,27 @@ export const blockedCustomerPersistConfig={
   blacklist: ['error', 'initial', 'responseMessage']
 }
 
+export const blockedUserPersistConfig={
+  key: 'blockedUser',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+
+export const blacklistIPPersistConfig={
+  key: 'blacklistIP',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+
+export const whitelistIPPersistConfig={
+  key: 'whitelistIP',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+
 
 
 const rootReducer = combineReducers({
@@ -344,7 +368,10 @@ const rootReducer = combineReducers({
   machineServiceRecord: persistReducer(machineServiceRecordPersistConfig, machineServiceRecordReducer),
   serviceCategory: persistReducer(serviceCategoryPersistConfig, serviceCategoryReducer),
   userInvite: persistReducer(userInvitePersistConfig, userInviteReducer),
-  blockedCustomer: persistReducer(blockedCustomerPersistConfig, blockedCustomerReducer)
+  blockedCustomer: persistReducer(blockedCustomerPersistConfig, blockedCustomerReducer),
+  blockedUser: persistReducer(blockedUserPersistConfig, blockedUserReducer),
+  blacklistIP: persistReducer(blacklistIPPersistConfig, blacklistIPReducer),
+  whitelistIP: persistReducer(whitelistIPPersistConfig, whitelistIPReducer)
 
 });
 

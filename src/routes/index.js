@@ -217,9 +217,14 @@ import {
   ErrorPage,
   UserInviteLanding,
   BlockedCustomerAddForm,
-  BlockedCustomerList
+  BlockedCustomerList,
+  BlockedUserList,
+  BlockedUserAddForm,
+  BlacklistIPList,
+  BlacklistIPAddForm,
+  WhitelistIPList,
+  WhitelistIPAddForm
 } from './elements';
-
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -508,6 +513,27 @@ export default function Router() {
               children: [
                 { path: 'list', element: <BlockedCustomerList /> },
                 { path: 'new', element: <BlockedCustomerAddForm /> },
+              ],
+            },
+            {
+              path: 'blockedUser',
+              children: [
+                { path: 'list', element: <BlockedUserList /> },
+                { path: 'new', element: <BlockedUserAddForm /> },
+              ],
+            },
+            {
+              path: 'blacklistIP',
+              children: [
+                { path: 'list', element: <BlacklistIPList /> },
+                { path: 'new', element: <BlacklistIPAddForm /> },
+              ],
+            },
+            {
+              path: 'whitelistIP',
+              children: [
+                { path: 'list', element: <WhitelistIPList /> },
+                { path: 'new', element: <WhitelistIPAddForm /> },
               ],
             },
           ]

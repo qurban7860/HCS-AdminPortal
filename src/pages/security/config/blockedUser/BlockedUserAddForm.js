@@ -21,8 +21,8 @@ import {
 // ROUTES
 import { PATH_SECURITY, PATH_SETTING } from '../../../../routes/paths';
 // slice
-import { getCustomers, resetCustomers } from '../../../../redux/slices/customer/customer';
-import { addBlockedCustomers } from '../../../../redux/slices/securityConfig/blockedCustomers';
+import { getSecurityUsers, resetSecurityUsers } from '../../../../redux/slices/securityUser/securityUser';
+import { addBlockedUsers } from '../../../../redux/slices/securityConfig/blockedUsers';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 // assets
@@ -31,30 +31,30 @@ import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { Cover } from '../../../components/Defaults/Cover';
 
 
-export default function BlockedCustomerAddForm() {
+export default function BlockedUserAddForm() {
 
-  const { customers } = useSelector((state) => state.customer);
+  const { securityUsers } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   
 
   useEffect(() => {
-    dispatch(resetCustomers());
-    dispatch(getCustomers());
+    dispatch(resetSecurityUsers());
+    dispatch(getSecurityUsers());
   },[dispatch])
 
  
 
   const BlockCustomerSchema = Yup.object().shape({
-    customer: Yup.object().shape({name: Yup.string()}).nullable().required('Customer is required!'),
+    user: Yup.object().shape({name: Yup.string()}).nullable().required('User is required!'),
   });
 
   const methods = useForm({
     resolver: yupResolver(BlockCustomerSchema),
     defaultValues:{
-      customer:null,
-      blockedCustomer:null
+      user:null,
+      blockedUser:null
     }
   });
 
@@ -67,24 +67,24 @@ export default function BlockedCustomerAddForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const { customer } = watch();
+  const { user } = watch();
   
   const onSubmit = async (data) => {
     try { 
-      // data.blockedCustomers = data?.blockedCustomers?.map((customer1) => customer1?._id);
-      data.blockedCustomer = customer?._id;
-      await dispatch(addBlockedCustomers(data));
-      enqueueSnackbar('Customers blocked successfully!');
+      // data.blockedUsers = data?.blockedUsers?.map((customer1) => customer1?._id);
+      data.blockedUser = user?._id;
+      await dispatch(addBlockedUsers(data));
+      enqueueSnackbar('User blocked successfully!');
       reset();
-      navigate(PATH_SECURITY.config.blockedCustomer.list);
+      navigate(PATH_SECURITY.config.blockedUser.list);
     } catch (error) {
-      enqueueSnackbar('Customers blocking failed!', { variant: `error` });
+      enqueueSnackbar('User blocking failed!', { variant: `error` });
       console.error(error);
     }
   };
 
   const toggleCancel = () => {
-    navigate(PATH_SECURITY.config.blockedCustomer.list);
+    navigate(PATH_SECURITY.config.blockedUser.list);
   };
 
  
@@ -98,7 +98,7 @@ export default function BlockedCustomerAddForm() {
           // mt: '24px',
         }}
       >
-        <Cover name="Block Customers" />
+        <Cover name="Block User" />
       </Card>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
@@ -107,9 +107,9 @@ export default function BlockedCustomerAddForm() {
               <Box rowGap={2} columnGap={2} display="grid" sx={{mb:3}} gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)',}}>
                   <RHFAutocomplete
                     // multiple 
-                    name="customer"
-                    label="Customer*"
-                    options={customers}
+                    name="user"
+                    label="User*"
+                    options={securityUsers}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     renderOption={(props, option) => (

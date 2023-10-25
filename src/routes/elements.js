@@ -109,8 +109,16 @@ export const BlockedCustomerList = Loadable(lazy(() => import('../pages/security
 export const BlockedCustomerAddForm = Loadable(lazy(() => import('../pages/security/config/blockedCustomer/BlockedCustomerAddForm')));
 
 // User Blocked Users
-// export const BlockedCustomerList = Loadable(lazy(() => import('../pages/security/config/blockedCustomer/BlockedCustomerList')));
-// export const BlockedCustomerAddForm = Loadable(lazy(() => import('../pages/security/config/blockedCustomer/BlockedCustomerAddForm')));
+export const BlockedUserList = Loadable(lazy(() => import('../pages/security/config/blockedUser/BlockedUserList')));
+export const BlockedUserAddForm = Loadable(lazy(() => import('../pages/security/config/blockedUser/BlockedUserAddForm')));
+
+// Blacklist IP
+export const BlacklistIPList = Loadable(lazy(() => import('../pages/security/config/blacklistIP/BlacklistIPList')));
+export const BlacklistIPAddForm = Loadable(lazy(() => import('../pages/security/config/blacklistIP/BlacklistIPAddForm')));
+
+// Whitelist IP
+export const WhitelistIPList = Loadable(lazy(() => import('../pages/security/config/whitelistIP/WhitelistIPList')));
+export const WhitelistIPAddForm = Loadable(lazy(() => import('../pages/security/config/whitelistIP/WhitelistIPAddForm')));
 
 // License
 // export const MachineLicenses = Loadable(lazy(()=> import('../pages/machine/License/MachineLicenses')));

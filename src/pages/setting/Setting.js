@@ -51,6 +51,18 @@ export default function Setting() {
     navigate(PATH_SECURITY.config.blockedCustomer.list);
   }
 
+  const linkBlockedUser = () => {
+    navigate(PATH_SECURITY.config.blockedUser.list);
+  }
+
+  const linkBlackListIP = () => {
+    navigate(PATH_SECURITY.config.blacklistIP.list);
+  }
+
+  const linkWhiteListIP = () => {
+    navigate(PATH_SECURITY.config.whitelistIP.list);
+  }
+
 const userRolesString = localStorage.getItem('userRoles');
 const userRoles = userRolesString ? JSON.parse(userRolesString) : [];
 const userModuleRole = userRoles?.some((role) => role.roleType === 'Module');
@@ -115,6 +127,25 @@ const userModuleRole = userRoles?.some((role) => role.roleType === 'Module');
                 icon={ICONS.BLOCKED_CUSTOMER.icon}
                 content={ICONS.BLOCKED_CUSTOMER.heading}
               />             
+              
+              <ListItem
+                onClick={linkBlockedUser}
+                icon={ICONS.BLOCKED_USER.icon}
+                content={ICONS.BLOCKED_USER.heading}
+              />
+
+              <ListItem
+                onClick={linkBlackListIP}
+                icon={ICONS.BLACKLIST_IP.icon}
+                content={ICONS.BLACKLIST_IP.heading}
+              />
+
+              <ListItem
+                onClick={linkWhiteListIP}
+                icon={ICONS.WHITELIST_IP.icon}
+                content={ICONS.WHITELIST_IP.heading}
+              />
+
             </List>
           </StyledSettingsCardContainer>
         </Grid>
