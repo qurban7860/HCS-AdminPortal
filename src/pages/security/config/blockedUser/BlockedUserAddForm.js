@@ -22,7 +22,7 @@ import {
 import { PATH_SECURITY, PATH_SETTING } from '../../../../routes/paths';
 // slice
 import { getSecurityUsers, resetSecurityUsers } from '../../../../redux/slices/securityUser/securityUser';
-import { addBlockedUsers } from '../../../../redux/slices/securityConfig/blockedUsers';
+import { addBlockedUsers, getBlockedUsers, resetBlockedUsers } from '../../../../redux/slices/securityConfig/blockedUsers';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 // assets
@@ -34,6 +34,7 @@ import { Cover } from '../../../components/Defaults/Cover';
 export default function BlockedUserAddForm() {
 
   const { securityUsers } = useSelector((state) => state.user);
+  const { blockedUsers } = useSelector((state) => state.blockedUser);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -42,9 +43,13 @@ export default function BlockedUserAddForm() {
   useEffect(() => {
     dispatch(resetSecurityUsers());
     dispatch(getSecurityUsers());
+    dispatch(resetBlockedUsers());
+    dispatch(getBlockedUsers());
   },[dispatch])
 
- 
+  const usersNotBlocked = securityUsers.filter((securityUser) => (
+    !blockedUsers.some((blockedUser) => blockedUser?.blockedUser?._id === securityUser._id)
+  ));
 
   const BlockCustomerSchema = Yup.object().shape({
     user: Yup.object().shape({name: Yup.string()}).nullable().required('User is required!'),
@@ -109,7 +114,7 @@ export default function BlockedUserAddForm() {
                     // multiple 
                     name="user"
                     label="User*"
-                    options={securityUsers}
+                    options={usersNotBlocked}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     renderOption={(props, option) => (

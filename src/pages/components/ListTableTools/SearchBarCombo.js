@@ -1,12 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, TextField, InputAdornment, Button, Stack, FormControl, Select, InputLabel, MenuItem, IconButton } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { Grid, TextField, InputAdornment, Button, Stack, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
 import { BUTTONS } from '../../../constants/default-constants';
 import Iconify from '../../../components/iconify';
 import useResponsive from '../../../hooks/useResponsive';
-import { RHFAutocomplete } from '../../../components/hook-form';
-import FormProvider from '../../../components/hook-form/FormProvider';
 
 function SearchBarCombo({
   isFiltered,
@@ -20,15 +17,11 @@ function SearchBarCombo({
   inviteOnClick,
   inviteButton,
   buttonIcon,
+  transferredMachine,
   ...other
 }) {
 
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
-
   const isMobile = useResponsive('sm', 'down');
-  const { machine } = useSelector((state) => state.machine);
   return (
     <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{display:'flex', justifyContent:'space-between'}}>
       <Grid item xs={12} sm={onFilterVerify?6:8}>
@@ -93,7 +86,7 @@ function SearchBarCombo({
         {addButton && <Grid item xs={12} sm={2}>
           <Stack alignItems="flex-end">
             <Button
-              disabled={machine?.status?.slug==='transferred'}
+              disabled={transferredMachine}
               fullWidth
               sx={{ p: 2}}
               onClick={SubOnClick}
@@ -119,7 +112,8 @@ SearchBarCombo.propTypes = {
   inviteButton: PropTypes.string,
   buttonIcon: PropTypes.string,
   onFilterVerify:PropTypes.func,
-  filterVerify:PropTypes.string,  
+  filterVerify:PropTypes.string,
+  transferredMachine:PropTypes.bool  
 };
 
 export default SearchBarCombo;
