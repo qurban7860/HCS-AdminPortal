@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Container, Grid, List } from '@mui/material';
+import { Box, Container, List } from '@mui/material';
 // routes
 import { PATH_SECURITY, PATH_SETTING } from '../../routes/paths';
 // components
@@ -36,9 +36,7 @@ export default function Setting() {
   const linkModules = () => {
     navigate(PATH_SETTING.modules.list);
   };
-  const linkUserConfig = () => {
-    navigate(PATH_SETTING.userConfig.list);
-  }
+  
   const linkConfigs = () => {
     navigate(PATH_SETTING.configs.list);
   };
@@ -73,104 +71,112 @@ const userModuleRole = userRoles?.some((role) => role.roleType === 'Module');
       <StyledCardContainer>
         <Cover name={FORMLABELS.COVER.SETTINGS} />
       </StyledCardContainer>
-      <Grid container gap={3}>
-        {/* Grid for displaying Settings related information */}
 
-        
-        <Grid item xs={12} md={6} lg={4}>
-          <StyledSettingsCardContainer>
-            <List
-              component="nav"
-              aria-labelledby="nested-list-subheader"
-              subheader={<ListItemsHeader header={FORMLABELS.SECURITY_SETTINGS} />}
+          <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(1, 1fr)', // First one spans 1 column, and the second spans 5 columns on sm screens
+                lg: 'repeat(3, 1fr)',
+              }}
             >
-              <ListItem
-                onClick={linkRegions}
-                icon={ICONS.REGION.icon}
-                content={ICONS.REGION.heading}
-              />
-                { userModuleRole  &&   (
-               <ListItem
-                  onClick={linkModules}
-                  icon={ICONS.MODULE.icon}
-                  content={ICONS.MODULE.heading}
-               />
-              )}
-              <ListItem
-                onClick={linkConfigs}
-                icon={ICONS.CONFIG.icon}
-                content={ICONS.CONFIG.heading}
-              />
-              <ListItem
-                onClick={linkRole}
-                icon={ICONS.SECURITY_ROLES.icon}
-                content={ICONS.SECURITY_ROLES.heading}
-              />
-              <ListItem
-                onClick={linkSignInLogs}
-                icon={ICONS.SIGNIN_LOGS.icon}
-                content={ICONS.SIGNIN_LOGS.heading}
-              /> 
-              <ListItem
-                onClick={linkUserConfig}
-                icon={ICONS.USER_CONFIG.icon}
-                content={ICONS.USER_CONFIG.heading}
-              /> 
-              <ListItem
-                onClick={linkUserInvites}
-                icon={ICONS.USER_INVITE.icon}
-                content={ICONS.USER_INVITE.heading}
-              />
 
-              <ListItem
-                onClick={linkBlockedCustomer}
-                icon={ICONS.BLOCKED_CUSTOMER.icon}
-                content={ICONS.BLOCKED_CUSTOMER.heading}
-              />             
-              
-              <ListItem
-                onClick={linkBlockedUser}
-                icon={ICONS.BLOCKED_USER.icon}
-                content={ICONS.BLOCKED_USER.heading}
-              />
+            <StyledSettingsCardContainer>
+                <List
+                  component="nav"
+                  aria-labelledby="nested-list-subheader"
+                  subheader={<ListItemsHeader header={FORMLABELS.SECURITY_SETTINGS} />}
+                >
+                  <ListItem
+                    onClick={linkRegions}
+                    icon={ICONS.REGION.icon}
+                    content={ICONS.REGION.heading}
+                  />
+                    { userModuleRole  &&   (
+                  <ListItem
+                      onClick={linkModules}
+                      icon={ICONS.MODULE.icon}
+                      content={ICONS.MODULE.heading}
+                  />
+                  )}
+                  <ListItem
+                    onClick={linkConfigs}
+                    icon={ICONS.CONFIG.icon}
+                    content={ICONS.CONFIG.heading}
+                  />
+                  <ListItem
+                    onClick={linkRole}
+                    icon={ICONS.SECURITY_ROLES.icon}
+                    content={ICONS.SECURITY_ROLES.heading}
+                  />
+                  <ListItem
+                    onClick={linkSignInLogs}
+                    icon={ICONS.SIGNIN_LOGS.icon}
+                    content={ICONS.SIGNIN_LOGS.heading}
+                  /> 
+                  <ListItem
+                    onClick={linkUserInvites}
+                    icon={ICONS.USER_INVITE.icon}
+                    content={ICONS.USER_INVITE.heading}
+                  />
+                
+                </List>
+            </StyledSettingsCardContainer>
 
-              <ListItem
-                onClick={linkBlackListIP}
-                icon={ICONS.BLACKLIST_IP.icon}
-                content={ICONS.BLACKLIST_IP.heading}
-              />
+            <StyledSettingsCardContainer sx={{height:'fit-content'}}>
+                <List
+                  component="nav"
+                  aria-labelledby="nested-list-subheader"
+                  subheader={<ListItemsHeader header={FORMLABELS.SECURITY_ACCESSIBILITY} />}
+                >
+                  <ListItem
+                    onClick={linkBlockedCustomer}
+                    icon={ICONS.BLOCKED_CUSTOMER.icon}
+                    content={ICONS.BLOCKED_CUSTOMER.heading}
+                  />             
+                  
+                  <ListItem
+                    onClick={linkBlockedUser}
+                    icon={ICONS.BLOCKED_USER.icon}
+                    content={ICONS.BLOCKED_USER.heading}
+                  />
 
-              <ListItem
-                onClick={linkWhiteListIP}
-                icon={ICONS.WHITELIST_IP.icon}
-                content={ICONS.WHITELIST_IP.heading}
-              />
+                  <ListItem
+                    onClick={linkBlackListIP}
+                    icon={ICONS.BLACKLIST_IP.icon}
+                    content={ICONS.BLACKLIST_IP.heading}
+                  />
 
-            </List>
-          </StyledSettingsCardContainer>
-        </Grid>
+                  <ListItem
+                    onClick={linkWhiteListIP}
+                    icon={ICONS.WHITELIST_IP.icon}
+                    content={ICONS.WHITELIST_IP.heading}
+                  />
+                
+                </List>
+            </StyledSettingsCardContainer>
 
-        <Grid item xs={12} md={6} lg={4}>
-          <StyledSettingsCardContainer>
-            <List
-              component="nav"
-              aria-labelledby="nested-list-subheader"
-              subheader={<ListItemsHeader header={FORMLABELS.DOCUMENT_SETTINGS} />}
-            >
-              <ListItem
-                onClick={linkDocumentCategory}
-                icon={ICONS.DOCUMENT_CATEGORY.icon}
-                content={ICONS.DOCUMENT_CATEGORY.heading}
-              />
-              <ListItem
-                onClick={linkDocumentType}
-                icon={ICONS.DOCUMENT_TYPE.icon}
-                content={ICONS.DOCUMENT_TYPE.heading}
-              />
-            </List>
-          </StyledSettingsCardContainer>
-        </Grid>
-      </Grid>
+            <StyledSettingsCardContainer>
+              <List
+                component="nav"
+                aria-labelledby="nested-list-subheader"
+                subheader={<ListItemsHeader header={FORMLABELS.DOCUMENT_SETTINGS} />}
+              >
+                <ListItem
+                  onClick={linkDocumentCategory}
+                  icon={ICONS.DOCUMENT_CATEGORY.icon}
+                  content={ICONS.DOCUMENT_CATEGORY.heading}
+                />
+                <ListItem
+                  onClick={linkDocumentType}
+                  icon={ICONS.DOCUMENT_TYPE.icon}
+                  content={ICONS.DOCUMENT_TYPE.heading}
+                />
+                </List>
+            </StyledSettingsCardContainer>
+          </Box>
     </Container>
   );
 }

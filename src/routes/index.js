@@ -111,12 +111,6 @@ import {
   RoleView,
   RoleEdit,
 
-  // USER CONFIG
-  UserConfigList,
-  UserConfigAddForm,
-  UserConfigEditForm,
-  UserConfigViewForm,
-
   // Site
   SiteList,
   SiteAdd,
@@ -611,16 +605,6 @@ export default function Router() {
             { path: 'new', element: <ConfigAdd /> },
             { path: ':id/view', element: <ConfigView /> },
             { path: ':id/edit', element: <ConfigEdit /> }
-          ],
-        },
-        {
-          path: 'userConfig',
-          children: [
-            { path: 'list', element: <UserConfigList /> },
-            { path: 'new', element: <UserConfigAddForm /> },
-            { path: ':id/view', element: <UserConfigViewForm /> },
-            { path: ':id/edit', element: <UserConfigEditForm /> }
-
           ],
         },
         {
