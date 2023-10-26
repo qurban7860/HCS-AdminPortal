@@ -54,7 +54,9 @@ export default function SignInLogListTableRow({
         <TableCell align="left"> {user?.name ? user?.name : ''} </TableCell>
         { useScreenSize('lg') && <TableCell align="left"> {user?.login ? user?.login : ''} </TableCell>}
         { useScreenSize('lg') && <TableCell align="left"> {loginIP} </TableCell>}
-        { useScreenSize('sm') && <TableCell align="left"> {statusCode} </TableCell>}
+        { useScreenSize('sm') && <TableCell align="left" sx={{color: statusCode===200?"green":"red"}}> 
+          {`${statusCode===200?"Successfull":"Un-Successfull"}`} 
+        </TableCell>}
         <TableCell align="left"> {fDateTime(loginTime)} </TableCell>
         <TableCell align="left">{fDateTime(logoutTime)}</TableCell>
       </StyledTableRow>
