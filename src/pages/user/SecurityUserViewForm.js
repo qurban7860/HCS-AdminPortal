@@ -11,6 +11,8 @@ import {
   getSecurityUsers,
   deleteSecurityUser,
   sendUserInvite,
+  getSecurityUser,
+  changeUserStatus,
 } from '../../redux/slices/securityUser/securityUser';
 import { getCustomer , setCustomerDialog } from '../../redux/slices/customer/customer';
 import { getContact , setContactDialog } from '../../redux/slices/customer/contact';
@@ -78,6 +80,19 @@ export default function SecurityUserViewForm() {
 
   const handleUpdatePassword = () => {
     navigate(PATH_SECURITY.users.userPassword);
+  };
+
+  const handleChangeUserStatus = async () => {
+    if (securityUser?._id) {
+      try {
+        await dispatch(changeUserStatus(securityUser._id, !securityUser?.userLocked));
+        await dispatch(getSecurityUser(securityUser._id));
+        enqueueSnackbar("User status chnaged successfully");
+      } catch (error) {
+        enqueueSnackbar(error.Message, { variant: `error` });
+        console.log('Error:', error);
+      }
+    }
   };
 
   const handleUserInvite = async () => {
@@ -158,6 +173,8 @@ export default function SecurityUserViewForm() {
             isActive={defaultValues.isActive}
             multiAuth={defaultValues?.multiFactorAuthentication} 
             currentEmp={defaultValues?.currentEmployee}
+            lockedBy={securityUser?.userLocked && securityUser?.lockedBy}
+            onUserStatusChange={handleChangeUserStatus}
           />
           <ConfirmDialog
             open={openConfirm}

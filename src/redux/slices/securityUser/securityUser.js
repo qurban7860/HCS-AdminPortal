@@ -456,6 +456,21 @@ export function sendUserInvite(Id) {
   };
 }
 
+export function changeUserStatus(Id, status) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/changeUserStatus/${Id}/${status}`);
+      dispatch(slice.actions.setResponseMessage(response.data));
+      return response; // eslint-disable-line
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
+      console.error(error);
+      throw error;
+    }
+  };
+}
+
 export function verifyUserInvite(Id,code) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());

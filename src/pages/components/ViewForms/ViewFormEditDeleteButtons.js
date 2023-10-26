@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
-import { Badge, Divider, Grid, Tooltip } from '@mui/material';
+import { Badge, Divider, Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { memo, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -15,7 +15,6 @@ import useResponsive from '../../../hooks/useResponsive';
 import { setTransferDialogBoxVisibility } from '../../../redux/slices/products/machine';
 import IconPopover from '../Icons/IconPopover';
 import IconTooltip from '../Icons/IconTooltip';
-import ViewFormField from './ViewFormField';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
 import { ICONS } from '../../../constants/icons/default-icons';
 import { fDate } from '../../../utils/formatTime';
@@ -45,7 +44,9 @@ function ViewFormEditDeleteButtons({
   handleMap,
   machineSupportDate,
   moveCustomerContact,
-  supportSubscription
+  supportSubscription,
+  lockedBy,
+  onUserStatusChange,
 }) {
   const { id } = useParams();
   const userId = localStorage.getItem('userId');
@@ -58,8 +59,8 @@ function ViewFormEditDeleteButtons({
   const dispatch = useDispatch();
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openUserInviteConfirm, setOpenUserInviteConfirm] = useState(false);
-  
   const [openVerificationConfirm, setOpenVerificationConfirm] = useState(false);
+  const [openUserStatuConfirm, setOpenUserStatuConfirm] = useState(false);
   const theme = createTheme({
     palette: {
       success: green,
@@ -77,6 +78,7 @@ function ViewFormEditDeleteButtons({
   }
 
   const handleOpenConfirm = (dialogType) => {
+
     if (dialogType === 'UserInvite') {
       setOpenUserInviteConfirm(true);
     }
@@ -92,6 +94,11 @@ function ViewFormEditDeleteButtons({
     if (dialogType === 'transfer') {
       dispatch(setTransferDialogBoxVisibility(true));
     }
+
+    if (dialogType === 'UserStatus') {
+      setOpenUserStatuConfirm(true);
+    }
+
   };
 
   const handleCloseConfirm = (dialogType) => {
@@ -110,6 +117,10 @@ function ViewFormEditDeleteButtons({
     }
     if (dialogType === 'transfer') {
       dispatch(setTransferDialogBoxVisibility(false));
+    }
+
+    if (dialogType === 'UserStatus') {
+      setOpenUserStatuConfirm(false);
     }
   };
 
@@ -136,10 +147,8 @@ function ViewFormEditDeleteButtons({
     setVerifiedAnchorEl(null);
     setVerifiedBy([])
   };
-
-  // const [anchorEl, setAnchorEl] = useState(null);
+  
   const { isMobile } = useResponsive('down', 'sm');
-
   const methods = useForm();
 
   const {
@@ -238,6 +247,11 @@ function ViewFormEditDeleteButtons({
               icon={currentEmp ? ICONS.CURR_EMP_ACTIVE.icon : ICONS.CURR_EMP_INACTIVE.icon}
             />
           }
+
+          {lockedBy &&
+            <IconTooltip title={`User Locked by (${lockedBy})`} color={ICONS.USER_UNLOCK.color} icon={ICONS.USER_LOCK.icon}/>
+          }
+
         </StyledStack>
       </Grid>
 
@@ -246,25 +260,35 @@ function ViewFormEditDeleteButtons({
           {handleVerification && !isVerified?.length && (
           <IconTooltip
             title='Verify'
-            onClick={() => { handleOpenConfirm('Verification');}}
+            onClick={() => handleOpenConfirm('Verification')}
             color={theme.palette.primary.main}
             icon="ic:outline-verified-user"
           />
-        )}
+          )}
 
-        {/* User Invitation */}
-        {handleUserInvite && id!==userId &&(
-          <IconTooltip 
-          title="Resend Invitation"
-          disabled={disableDeleteButton}
-          color={disableDeleteButton?"#c3c3c3":theme.palette.secondary.main}
-          icon="mdi:person-add-outline"
-          onClick={() => {
-            handleOpenConfirm('UserInvite');
-          }}
+          {/* User Status Change */}
+          {onUserStatusChange && id!==userId &&(
+            <IconTooltip 
+            title={lockedBy?ICONS.USER_UNLOCK.heading:ICONS.USER_LOCK.heading}
+            color={lockedBy?ICONS.USER_UNLOCK.color:ICONS.USER_LOCK.color}
+            icon={lockedBy?ICONS.USER_UNLOCK.icon:ICONS.USER_LOCK.icon}
+            onClick={() =>handleOpenConfirm('UserStatus')}
+            />
+          )}
 
-          />
-        )}
+          {/* User Invitation */}
+          {handleUserInvite && id!==userId &&(
+            <IconTooltip 
+            title="Resend Invitation"
+            disabled={disableDeleteButton}
+            color={disableDeleteButton?"#c3c3c3":theme.palette.secondary.main}
+            icon="mdi:person-add-outline"
+            onClick={() => {
+              handleOpenConfirm('UserInvite');
+            }}
+
+            />
+          )}
 
         {/* map toggle button on mobile */}
         {sites && !isMobile && <IconPopover onMapClick={() => handleMap()} sites={sites} />}
@@ -289,7 +313,6 @@ function ViewFormEditDeleteButtons({
             onClick={() => {
               handleUpdatePassword();
             }}
-            color={theme.palette.secondary.main}
             color={disablePasswordButton?"#c3c3c3":theme.palette.secondary.main}
             icon="mdi:account-key-outline"
           />
@@ -370,6 +393,23 @@ function ViewFormEditDeleteButtons({
       />
 
       <ConfirmDialog
+        open={openUserStatuConfirm}
+        onClose={() => handleCloseConfirm('UserStatus')}
+        title={lockedBy?"Unlock User":"Lock User"}
+        content={`Are you sure you want to ${lockedBy?"Unlock User":"Lock User"}?`}
+        action={
+          <LoadingButton variant="contained"
+            onClick={()=>{
+              setOpenUserStatuConfirm(false);
+              onUserStatusChange();
+            }}
+          >
+            {lockedBy?"Unlock User":"Lock User"}
+          </LoadingButton>
+        }
+      />
+
+      <ConfirmDialog
         open={openConfirm}
         onClose={() => {
           handleCloseConfirm('delete');
@@ -444,5 +484,7 @@ ViewFormEditDeleteButtons.propTypes = {
   handleMap: PropTypes.func,
   machineSupportDate: PropTypes.string,
   moveCustomerContact: PropTypes.func,
-  supportSubscription: PropTypes.bool
+  supportSubscription: PropTypes.bool,
+  lockedBy:PropTypes.string,
+  onUserStatusChange:PropTypes.func
 };

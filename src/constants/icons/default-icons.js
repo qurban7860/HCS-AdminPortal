@@ -71,12 +71,12 @@ export const ICONS = {
   // ------------------------------------------------------------
   // MultiAuth
   MULTIAUTH_ACTIVE: {
-    icon: 'heroicons-outline:lock-closed',
+    icon: 'mdi:lock-plus',
     color: '#008000',
     heading: 'MFA Enabled',
   },
   MULTIAUTH_INACTIVE: {
-    icon: 'heroicons-outline:lock-open',
+    icon: 'mdi:lock-open-plus',
     color: '#FF0000',
     heading: 'MFA Disabled',
   },
@@ -206,11 +206,11 @@ export const ICONS = {
     heading: 'User Invites',
   },
   BLOCKED_CUSTOMER: {
-    icon: 'mdi:user-block',
+    icon: 'fluent:people-lock-20-filled',
     heading: 'Blocked Customers',
   },
   BLOCKED_USER: {
-    icon: 'mdi:user-block',
+    icon: 'fluent:people-lock-20-filled',
     heading: 'Blocked Users',
   },
   BLACKLIST_IP: {
@@ -237,5 +237,16 @@ export const ICONS = {
   MOVE_MACHINE: {
     icon: 'ri:swap-box-line',
     heading: 'Move',
+  },
+
+  USER_LOCK: {
+    icon: 'mdi:user-lock-outline',
+    color: '#008000',
+    heading: 'Lock User',
+  },
+  USER_UNLOCK: {
+    icon: 'mdi:user-lock-open-outline',
+    color: '#FF0000',
+    heading: 'Unlock User',
   },
 };

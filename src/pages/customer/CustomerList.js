@@ -44,6 +44,7 @@ import TableCard from '../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
 import { setSiteEditFormVisibility, setSiteFormVisibility } from '../../redux/slices/customer/site';
 import { setContactEditFormVisibility, setContactFormVisibility } from '../../redux/slices/customer/contact';
+import { useSnackbar } from '../../components/snackbar';
 
 // ----------------------------------------------------------------------
 
@@ -74,6 +75,7 @@ export default function CustomerList() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
@@ -89,7 +91,6 @@ export default function CustomerList() {
 
   useEffect(() => {
       dispatch(getCustomers());
-      dispatch(getCustomerCSV());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
@@ -153,16 +154,29 @@ export default function CustomerList() {
     setFilterStatus([]);
   };
 
-  const onExportCSV = () => {
-    const fileName = "Customers.csv";
-    const blob = new Blob([customerCSV], { type: 'text/csv;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = fileName;
-    document.body.appendChild(a);
-    a.click();
-    window.URL.revokeObjectURL(url);
+  const onExportCSV = async () => {
+    try {
+      await dispatch(await getCustomerCSV());
+      const fileName = "Customers.csv";
+      const blob = new Blob([customerCSV], { type: 'text/csv;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      enqueueSnackbar('CSV generated successfully!');
+    } catch (error) {
+      if (error.Message) {
+        enqueueSnackbar(error.Message, { variant: `error` });
+      } else if (error.message) {
+        enqueueSnackbar(error.message, { variant: `error` });
+      } else {
+        enqueueSnackbar('Something went wrong!', { variant: `error` });
+      }
+      console.log('Error:', error);
+    }
   };
 
   return (
