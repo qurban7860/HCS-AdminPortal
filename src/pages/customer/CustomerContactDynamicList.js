@@ -110,13 +110,6 @@ export default function CustomerContactList(currentContact = null) {
     dispatch(resetContactFormsVisiblity());
   }, [dispatch]);
 
-
-  useEffect(() => {
-    dispatch(getContacts(customer?._id));
-    dispatch(getContactsCSV(customer?._id));
-  }, [dispatch, customer]);
-
-
   useEffect(() => {
     setTableData(contacts);
   }, [contacts, error, responseMessage]);
@@ -153,20 +146,31 @@ export default function CustomerContactList(currentContact = null) {
   const shouldShowContactMove = contactMoveFormVisibility && !formVisibility && !contactEditFormVisibility;
 
 
-  const onExportCSV = () => {
-    const fileName = "CustomerContacts.csv";
-    const blob = new Blob([contactsCSV], { type: 'text/csv;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = fileName;
-    document.body.appendChild(a);
-    a.click();
-    window.URL.revokeObjectURL(url);
+  const onExportCSV = async () => {
+    try {
+      await dispatch(await getContactsCSV(customer?._id));
+      const fileName = "CustomerContacts.csv";
+      const blob = new Blob([contactsCSV], { type: 'text/csv;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      enqueueSnackbar('CSV generated successfully!');
+    } catch (err) {
+      if (err.Message) {
+        enqueueSnackbar(err.Message, { variant: `error` });
+      } else if (err.message) {
+        enqueueSnackbar(err.message, { variant: `error` });
+      } else {
+        enqueueSnackbar('Something went wrong!', { variant: `error` });
+      }
+      console.log('Error:', err);
+    }
   };
 
-  // console.log(formVisibility,contactEditFormVisibility,contactMoveFormVisibility)
-  // console.log(shouldShowContactMove,contacts)
   return (
     <>
       <Grid container direction="row" justifyContent="space-between" alignItems="center">

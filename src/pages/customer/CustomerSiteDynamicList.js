@@ -127,8 +127,6 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
     if (!siteAddFormVisibility && !siteEditFormVisibility) {
       dispatch(getSites(customer._id));
     }
-
-    dispatch(getSitesCSV(customer._id));
   }, [dispatch, customer, siteAddFormVisibility, siteEditFormVisibility]); 
 
   const isNotFound = !sites.length && !siteAddFormVisibility && !siteEditFormVisibility;
@@ -138,17 +136,31 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   const shouldShowSiteEdit = siteEditFormVisibility && !siteAddFormVisibility;
   const shouldShowSiteAdd = siteAddFormVisibility && !siteEditFormVisibility;
 
-  const onExportCSV = () => {
-    const fileName = "CustomerSites.csv";
-    const blob = new Blob([sitesCSV], { type: 'text/csv;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = fileName;
-    document.body.appendChild(a);
-    a.click();
-    window.URL.revokeObjectURL(url);
+  const onExportCSV = async () => {
+    try {
+      await dispatch(await getSitesCSV(customer._id));
+      const fileName = "CustomerSites.csv";
+      const blob = new Blob([sitesCSV], { type: 'text/csv;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      enqueueSnackbar('CSV generated successfully!');
+    } catch (err) {
+      if (err.Message) {
+        enqueueSnackbar(err.Message, { variant: `error` });
+      } else if (err.message) {
+        enqueueSnackbar(err.message, { variant: `error` });
+      } else {
+        enqueueSnackbar('Something went wrong!', { variant: `error` });
+      }
+      console.log('Error:', err);
+    }
   };
+
 
   return (
     <>
