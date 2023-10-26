@@ -87,7 +87,7 @@ export default function SecurityUserViewForm() {
       try {
         await dispatch(changeUserStatus(securityUser._id, !securityUser?.userLocked));
         await dispatch(getSecurityUser(securityUser._id));
-        enqueueSnackbar("User status chnaged successfully");
+        enqueueSnackbar(`User ${securityUser?.userLocked?"Unlocked":"Locked"} Successfully`);
       } catch (error) {
         enqueueSnackbar(error.Message, { variant: `error` });
         console.log('Error:', error);
