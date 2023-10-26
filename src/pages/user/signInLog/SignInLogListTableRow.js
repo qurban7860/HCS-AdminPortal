@@ -16,15 +16,7 @@ import {
 // utils
 import { styled } from '@mui/system';
 import {  fDateTime } from '../../../utils/formatTime';
-// import { fCurrency } from '../../../utils/formatNumber';
-// components
-// import Iconify from '../../../components/iconify';
-// import MenuPopover from '../../../components/menu-popover';
-// import ConfirmDialog from '../../../components/confirm-dialog';
-// import Label from '../../../components/label';
-// import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
-// import { useSelector } from '../../../redux/store';
-import { useWidth } from '../../../hooks/useResponsive';
+import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -56,90 +48,15 @@ export default function SignInLogListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { loginTime, user, loginIP, logoutTime } = row;
-
-  // const [openConfirm, setOpenConfirm] = useState(false);
-
-  // const [openPopover, setOpenPopover] = useState(null);
-
-  // const handleOpenConfirm = () => {
-  //   setOpenConfirm(true);
-  // };
-
-  // const handleCloseConfirm = () => {
-  //   setOpenConfirm(false);
-  // };
-
-  // const handleOpenPopover = (event) => {
-  //   setOpenPopover(event.currentTarget);
-  // };
-
-  // const handleClosePopover = () => {
-  //   setOpenPopover(null);
-  // };
-
-  const width = useWidth();
-
+  const { loginTime, user, loginIP, logoutTime, statusCode } = row;
   return (
-    <>
       <StyledTableRow hover selected={selected}>
-        {/* <TableCell padding="checkbox">
-          <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell> */}
-        {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
-        {/* <LinkTableCell align="left" onClick={onViewRow} param={name} /> */}
         <TableCell align="left"> {user?.name ? user?.name : ''} </TableCell>
-        { ( width === 'lg' || width === 'xl' ) && <TableCell align="left"> {user?.login ? user?.login : ''} </TableCell>}
-        { ( width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell align="left"> {loginIP} </TableCell>}
-
+        { useScreenSize('lg') && <TableCell align="left"> {user?.login ? user?.login : ''} </TableCell>}
+        { useScreenSize('lg') && <TableCell align="left"> {loginIP} </TableCell>}
+        { useScreenSize('sm') && <TableCell align="left"> {statusCode} </TableCell>}
         <TableCell align="left"> {fDateTime(loginTime)} </TableCell>
         <TableCell align="left">{fDateTime(logoutTime)}</TableCell>
-        {/* <TableCell align="center">
-          <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
-            <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
-        </TableCell>   */}
       </StyledTableRow>
-
-      {/* <MenuPopover
-        open={openPopover}
-        onClose={handleClosePopover}
-        arrow="right-top"
-        sx={{ width: 140 }}
-      >
-        <MenuItem
-          onClick={() => {
-            handleOpenConfirm();
-            handleClosePopover();
-          }}
-          sx={{ color: 'error.main' }}
-        >
-          <Iconify icon="eva:trash-2-outline" />
-          Delete
-        </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            onEditRow();
-            handleClosePopover();
-          }}
-        >
-          <Iconify icon="eva:edit-fill" />
-          Edit
-        </MenuItem>
-      </MenuPopover> */}
-
-      {/* <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content="Are you sure want to delete?"
-        action={
-          <Button variant="contained" color="error" onClick={onDeleteRow}>
-            Delete
-          </Button>
-        }
-      /> */}
-    </>
   );
 }
