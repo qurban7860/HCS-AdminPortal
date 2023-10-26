@@ -13,7 +13,7 @@ TablePaginationCustom.propTypes = {
   onChangeDense: PropTypes.func,
   rowsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
   sx: PropTypes.object,
-  onExportCSV: PropTypes.bool,
+  onExportCSV: PropTypes.func,
 };
 
 function TablePaginationCustom({

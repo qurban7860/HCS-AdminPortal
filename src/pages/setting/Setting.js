@@ -73,8 +73,8 @@ const userModuleRole = userRoles?.some((role) => role.roleType === 'Module');
       </StyledCardContainer>
 
           <Box
-              rowGap={3}
-              columnGap={2}
+              rowGap={1}
+              columnGap={4}
               display="grid"
               gridTemplateColumns={{
                 xs: 'repeat(1, 1fr)',

@@ -36,8 +36,9 @@ import TableCard from '../../components/ListTableTools/TableCard';
 
 const TABLE_HEAD = [
   { id: 'user.name', label: 'User Name', align: 'left' },
-  { id: 'user.login', visibility: 'xs1', label: 'User Login', align: 'left' },
-  { id: 'loginIP', visibility: 'xs2', label: 'User IP', align: 'left' },
+  { id: 'xs1', visibility: 'md1', label: 'User Login', align: 'left' },
+  { id: 'xs2', visibility: 'md2', label: 'User IP', align: 'left' },
+  { id: 'xs3', visibility: 'xs3', label: 'Status', align: 'left' },
   { id: 'loginTime', label: 'Login Time', align: 'left' },
   { id: 'logoutTime', label: 'Logout Time', align: 'left' },
 ];
@@ -63,6 +64,7 @@ export default function SignInLogList() {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   const dispatch = useDispatch();
+  const [filterRequestStatus, setFilterRequestStatus] = useState(-1);
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
@@ -88,6 +90,7 @@ export default function SignInLogList() {
     comparator: getComparator(order, orderBy),
     filterName,
     filterStatus,
+    filterRequestStatus
   });
 
   const denseHeight = 60;
@@ -98,10 +101,16 @@ export default function SignInLogList() {
     dispatch(ChangePage(0))
     dispatch(setFilterBy(value))
   }, 500))
+  
 
   const handleFilterName = (event) => {
     debouncedSearch.current(event.target.value);
     setFilterName(event.target.value)
+    setPage(0);
+  };
+
+  const handleFilterRequestStatus = (event) => {
+    setFilterRequestStatus(event.target.value);
     setPage(0);
   };
   
@@ -139,6 +148,8 @@ export default function SignInLogList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
             buttonAction={reloadList}
+            filterRequestStatus={filterRequestStatus}
+            onFilterRequestStatus={handleFilterRequestStatus}
           />
           {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
@@ -191,7 +202,7 @@ export default function SignInLogList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+function applyFilter({ inputData, comparator, filterName, filterStatus, filterRequestStatus }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -200,6 +211,11 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
+
+  if(filterRequestStatus===200)
+    inputData = inputData.filter((log)=> log.statusCode===200);
+  else if(filterRequestStatus===401)
+    inputData = inputData.filter((log)=> log.statusCode!==200);
 
   if (filterName) {
     inputData = inputData.filter(
