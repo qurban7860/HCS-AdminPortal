@@ -16,7 +16,6 @@ const initialState = {
   siteDialog: false,
   activeSites: [],
   site: null,
-  sitesCSV: '',
   lat: '',
   long: '',
   filterBy: '',
@@ -77,18 +76,7 @@ const slice = createSlice({
       state.site = action.payload;
       state.initial = true;
     },
-
-
-    // GET Site
-    getSitesCSVSuccess(state, action) {
-      state.isLoading = false;
-      state.success = true;
-      state.sitesCSV = action.payload;
-      state.initial = true;
-    },
-
     
-
     // RESET SITE
     resetSite(state){
       state.site = null;
@@ -288,13 +276,12 @@ export function updateSite(params,customerId,Id) {
 
 // ----------------------------------------------------------------------
 
-export function getSitesCSV(customerID) {
+export function createCustomerStiesCSV(customerID) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      let response = null;
       if(customerID){
-        response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites/export` , 
+        const response = axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites/export` , 
         {
           params: {
             isArchived: false,
@@ -302,10 +289,22 @@ export function getSitesCSV(customerID) {
               createdAt:-1
             }
           }
-        }
-        );
-        dispatch(slice.actions.getSitesCSVSuccess(response.data));
-        dispatch(slice.actions.setResponseMessage('Sites CSV loaded successfully'));
+        });
+
+        response.then((res) => {
+          const fileName = "CustomerSites.csv";
+          const blob = new Blob([res.data], { type: 'text/csv;charset=utf-8' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          dispatch(slice.actions.setResponseMessage('Customer Sites CSV generated successfully'));
+        }).catch((error) => {
+          console.error(error);
+        });
       }
     } catch (error) {
       console.log(error);

@@ -89,23 +89,7 @@ const userModuleRole = userRoles?.some((role) => role.roleType === 'Module');
                   aria-labelledby="nested-list-subheader"
                   subheader={<ListItemsHeader header={FORMLABELS.SECURITY_SETTINGS} />}
                 >
-                  <ListItem
-                    onClick={linkRegions}
-                    icon={ICONS.REGION.icon}
-                    content={ICONS.REGION.heading}
-                  />
-                    { userModuleRole  &&   (
-                  <ListItem
-                      onClick={linkModules}
-                      icon={ICONS.MODULE.icon}
-                      content={ICONS.MODULE.heading}
-                  />
-                  )}
-                  <ListItem
-                    onClick={linkConfigs}
-                    icon={ICONS.CONFIG.icon}
-                    content={ICONS.CONFIG.heading}
-                  />
+                 
                   <ListItem
                     onClick={linkRole}
                     icon={ICONS.SECURITY_ROLES.icon}
@@ -121,16 +105,6 @@ const userModuleRole = userRoles?.some((role) => role.roleType === 'Module');
                     icon={ICONS.USER_INVITE.icon}
                     content={ICONS.USER_INVITE.heading}
                   />
-                
-                </List>
-            </StyledSettingsCardContainer>
-
-            <StyledSettingsCardContainer>
-                <List
-                  component="nav"
-                  aria-labelledby="nested-list-subheader"
-                  subheader={<ListItemsHeader header={FORMLABELS.SECURITY_ACCESSIBILITY} />}
-                >
                   <ListItem
                     onClick={linkBlockedCustomer}
                     icon={ICONS.BLOCKED_CUSTOMER.icon}
@@ -155,6 +129,34 @@ const userModuleRole = userRoles?.some((role) => role.roleType === 'Module');
                     content={ICONS.WHITELIST_IP.heading}
                   />
                 
+                
+                </List>
+            </StyledSettingsCardContainer>
+
+            <StyledSettingsCardContainer>
+                <List
+                  component="nav"
+                  aria-labelledby="nested-list-subheader"
+                  subheader={<ListItemsHeader header={FORMLABELS.CONFIG} />}
+                >
+                   <ListItem
+                    onClick={linkRegions}
+                    icon={ICONS.REGION.icon}
+                    content={ICONS.REGION.heading}
+                  />
+                    { userModuleRole  &&   (
+                  <ListItem
+                      onClick={linkModules}
+                      icon={ICONS.MODULE.icon}
+                      content={ICONS.MODULE.heading}
+                  />
+                  )}
+                  <ListItem
+                    onClick={linkConfigs}
+                    icon={ICONS.CONFIG.icon}
+                    content={ICONS.CONFIG.heading}
+                  />
+
                 </List>
             </StyledSettingsCardContainer>
 

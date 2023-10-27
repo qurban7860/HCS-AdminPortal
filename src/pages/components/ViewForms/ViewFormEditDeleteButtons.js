@@ -248,9 +248,11 @@ function ViewFormEditDeleteButtons({
             />
           }
 
-          {lockedBy &&
-            <IconTooltip title={`User Locked by (${lockedBy})`} color={ICONS.USER_UNLOCK.color} icon={ICONS.USER_LOCK.icon}/>
-          }
+          <IconTooltip 
+            title={lockedBy?`User locked by ${lockedBy}`:"User Unlocked"} 
+            color={lockedBy?ICONS.USER_LOCK.color:ICONS.USER_UNLOCK.color} 
+            icon={lockedBy?ICONS.USER_LOCK.icon:ICONS.USER_UNLOCK.icon}
+          />
 
         </StyledStack>
       </Grid>
@@ -282,7 +284,7 @@ function ViewFormEditDeleteButtons({
             title="Resend Invitation"
             disabled={disableDeleteButton}
             color={disableDeleteButton?"#c3c3c3":theme.palette.secondary.main}
-            icon="mdi:person-add-outline"
+            icon="mdi:invite"
             onClick={() => {
               handleOpenConfirm('UserInvite');
             }}
@@ -314,7 +316,7 @@ function ViewFormEditDeleteButtons({
               handleUpdatePassword();
             }}
             color={disablePasswordButton?"#c3c3c3":theme.palette.secondary.main}
-            icon="mdi:account-key-outline"
+            icon="solar:key-broken"
           />
         )}
 

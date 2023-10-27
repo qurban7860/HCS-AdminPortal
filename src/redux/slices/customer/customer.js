@@ -19,7 +19,6 @@ const initialState = {
   spCustomers: [],
   customer: {},
   customerDialog: false,
-  customerCSV:'',
   filterBy: '',
   verified: 'all',
   page: 0,
@@ -95,14 +94,6 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customer
-    getCustomerCSVSuccess(state, action) {
-      state.isLoading = false;
-      state.success = true;
-      state.customerCSV = action.payload;
-      state.initial = true;
-    },
-
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
       state.isLoading = false;
@@ -173,13 +164,36 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getCustomerCSV() {
+export function createCustomerCSV() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/export`);
-      dispatch(slice.actions.getCustomerCSVSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Customers csv data loaded successfully'));
+      const response = axios.get(`${CONFIG.SERVER_URL}crm/customers/export`,
+      {
+        params: {
+          isArchived: false,
+          orderBy : {
+            createdAt:-1
+          }
+        }
+      });
+      response.then((res) => {
+        const fileName = "Customers.csv";
+        const blob = new Blob([res.data], { type: 'text/csv;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        dispatch(slice.actions.setResponseMessage('Customers CSV generated successfully'));
+      }).catch((error) => {
+        console.error(error);
+      });
+
+      // console.log()
+      
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));

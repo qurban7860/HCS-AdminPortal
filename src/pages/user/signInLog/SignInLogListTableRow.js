@@ -17,6 +17,7 @@ import {
 import { styled } from '@mui/system';
 import {  fDateTime } from '../../../utils/formatTime';
 import { useScreenSize } from '../../../hooks/useResponsive';
+import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 
 // ----------------------------------------------------------------------
 
@@ -51,14 +52,14 @@ export default function SignInLogListTableRow({
   const { loginTime, user, loginIP, logoutTime, statusCode } = row;
   return (
       <StyledTableRow hover selected={selected}>
-        <TableCell align="left"> {user?.name ? user?.name : ''} </TableCell>
+        <LinkTableCell align="left" onClick={onViewRow} param={user?.name} />
         { useScreenSize('lg') && <TableCell align="left"> {user?.login ? user?.login : ''} </TableCell>}
         { useScreenSize('lg') && <TableCell align="left"> {loginIP} </TableCell>}
-        { useScreenSize('sm') && <TableCell align="left" sx={{color: statusCode===200?"green":"red"}}> 
-          {`${statusCode===200?"Successfull":"Un-Successfull"}`} 
-        </TableCell>}
         <TableCell align="left"> {fDateTime(loginTime)} </TableCell>
         <TableCell align="left">{fDateTime(logoutTime)}</TableCell>
+        { useScreenSize('sm') && <TableCell align="left" sx={{color: statusCode===200?"green":"red"}}> 
+          {`${statusCode===200?"Success":"Failed"}`} 
+        </TableCell>}
       </StyledTableRow>
   );
 }

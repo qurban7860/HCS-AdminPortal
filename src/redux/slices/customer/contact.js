@@ -19,7 +19,6 @@ const initialState = {
   activeSpContact:[],
   contactDialog:false,
   contact: null,
-  contactsCSV:'',
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
@@ -118,13 +117,6 @@ const slice = createSlice({
     },
 
     // GET SP Contacts
-    getContactsCSVSuccess(state, action) {
-      state.isLoading = false;
-      state.success = true;
-      state.contactsCSV = action.payload;
-      state.initial = true;
-    },
-
     getActiveSPContactsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -327,11 +319,11 @@ export function getSPContacts() {
 
 // ----------------------------------------------------------------------
 
-export function getContactsCSV(customerID ) {
+export function createCustomerContactsCSV(customerID ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts/export` , 
+       const response = axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts/export` , 
         {
           params: {
             isArchived: false,
@@ -341,8 +333,22 @@ export function getContactsCSV(customerID ) {
           }
         }
         );
-      dispatch(slice.actions.getContactsCSVSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Contacts CSV loaded successfully'));
+
+        
+        response.then((res) => {
+          const fileName = "CustomerContacts.csv";
+          const blob = new Blob([res.data], { type: 'text/csv;charset=utf-8' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          dispatch(slice.actions.setResponseMessage('Customer Contacts CSV generated successfully'));
+        }).catch((error) => {
+          console.error(error);
+        });
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));

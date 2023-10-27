@@ -22,7 +22,7 @@ import {
   setContactFormVisibility,
   getContact,
   resetContactFormsVisiblity,
-  getContactsCSV,
+  createCustomerContactsCSV,
 } from '../../redux/slices/customer/contact';
 import ContactAddForm from './contact/ContactAddForm';
 import ContactEditForm from './contact/ContactEditForm';
@@ -53,7 +53,6 @@ export default function CustomerContactList(currentContact = null) {
   const {
     contact: currentContactData,
     contacts,
-    contactsCSV,
     error,
     // initial,
     responseMessage,
@@ -147,29 +146,15 @@ export default function CustomerContactList(currentContact = null) {
 
 
   const onExportCSV = async () => {
-    try {
-      await dispatch(await getContactsCSV(customer?._id));
-      const fileName = "CustomerContacts.csv";
-      const blob = new Blob([contactsCSV], { type: 'text/csv;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      enqueueSnackbar('CSV generated successfully!');
-    } catch (err) {
-      if (err.Message) {
-        enqueueSnackbar(err.Message, { variant: `error` });
-      } else if (err.message) {
-        enqueueSnackbar(err.message, { variant: `error` });
-      } else {
-        enqueueSnackbar('Something went wrong!', { variant: `error` });
-      }
-      console.log('Error:', err);
-    }
+    const response = dispatch(await createCustomerContactsCSV(customer?._id));
+    response.then((res) => {
+      enqueueSnackbar('CSV Generated Successfully');
+    }).catch((err) => {
+      console.error(err);
+      enqueueSnackbar(err.message, { variant: `error` });
+    });
   };
+
 
   return (
     <>
