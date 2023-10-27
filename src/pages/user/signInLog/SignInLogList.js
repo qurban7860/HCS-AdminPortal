@@ -9,6 +9,7 @@ import {
   TableContainer,
 } from '@mui/material';
 // redux
+import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
 import {
@@ -31,6 +32,7 @@ import { getSignInLogs,
 import { Cover } from '../../components/Defaults/Cover';
 import { fDateTime } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
+import { PATH_SECURITY } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -38,9 +40,9 @@ const TABLE_HEAD = [
   { id: 'user.name', label: 'User Name', align: 'left' },
   { id: 'xs1', visibility: 'md1', label: 'User Login', align: 'left' },
   { id: 'xs2', visibility: 'md2', label: 'User IP', align: 'left' },
-  { id: 'xs3', visibility: 'xs3', label: 'Status', align: 'left' },
   { id: 'loginTime', label: 'Login Time', align: 'left' },
   { id: 'logoutTime', label: 'Logout Time', align: 'left' },
+  { id: 'xs3', visibility: 'xs3', label: 'Status', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------
@@ -64,6 +66,7 @@ export default function SignInLogList() {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [filterRequestStatus, setFilterRequestStatus] = useState(-1);
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
@@ -133,6 +136,10 @@ export default function SignInLogList() {
     setFilterName('');
   };
 
+  const handleViewRow = (id) => {
+    navigate(PATH_SECURITY.users.view(id));
+  };
+
   return (
       <Container maxWidth={false}>
         <Card sx={{ mb: 3, height: 160, position: 'relative'}}>
@@ -176,6 +183,7 @@ export default function SignInLogList() {
                         <RoleListTableRow
                           key={row._id}
                           row={row}
+                          onViewRow={()=> handleViewRow(row?.user?._id)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         />
                       ) : (

@@ -12,6 +12,7 @@ import { fDate } from '../../../../utils/formatTime';
 import { useScreenSize } from '../../../../hooks/useResponsive';
 import { StyledTooltip } from '../../../../theme/styles/default-styles';
 import Iconify from '../../../../components/iconify';
+import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 // components
 
 // ----------------------------------------------------------------------
@@ -52,15 +53,21 @@ export default function BlockedUserListTableRow({
   const smScreen = useScreenSize('sm')
   const lgScreen = useScreenSize('lg')
 
+  console.log(blockedUser)
   return (
     <StyledTableRow hover selected={selected} onClick={onViewRow} sx={{cursor:'pointer'}} >
-      <TableCell align="left"> {blockedUser?.name} </TableCell>
+      <LinkTableCell
+        align="left"
+        onClick={onViewRow}
+        param={blockedUser?.name}
+      />
+      <TableCell align="left"> {blockedUser?.email} </TableCell>
       {/* <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell> */}
       <TableCell align="left"> {createdBy?.name} </TableCell>
       <TableCell align="left" sx={{width:'200px'}}>{fDate(createdAt)}</TableCell>
       <TableCell sx={{width:'100px'}} align='right'>
-          <StyledTooltip onClick={onDeleteRow} title='Delete' placement="top" disableFocusListener tooltipcolor='red'>
-            <Iconify icon='mdi:trash' color='red' width="1.7em" sx={{ mb: -0.5, mr: 0.5, cursor:"pointer"}}/>
+          <StyledTooltip onClick={onDeleteRow} title='Unblock User' placement="top" disableFocusListener tooltipcolor='green'>
+            <Iconify icon='zondicons:lock-open' color='green' width="1.7em" sx={{ mb: -0.5, mr: 0.5, cursor:"pointer"}}/>
           </StyledTooltip>
       </TableCell>
     </StyledTableRow>

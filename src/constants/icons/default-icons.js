@@ -16,7 +16,7 @@ export const ICONS = {
     heading: 'Active',
   },
   INACTIVE: {
-    icon: 'mdi:power-off',
+    icon: 'mdi:ban',
     color: '#FF0000',
     heading: 'Inactive',
   },
@@ -71,12 +71,12 @@ export const ICONS = {
   // ------------------------------------------------------------
   // MultiAuth
   MULTIAUTH_ACTIVE: {
-    icon: 'mdi:lock-plus',
+    icon: 'tabler:2fa',
     color: '#008000',
     heading: 'MFA Enabled',
   },
   MULTIAUTH_INACTIVE: {
-    icon: 'mdi:lock-open-plus',
+    icon: 'tabler:2fa',
     color: '#FF0000',
     heading: 'MFA Disabled',
   },
@@ -84,12 +84,12 @@ export const ICONS = {
   // ------------------------------------------------------------
   // CURRENT EMPLOYEE
   CURR_EMP_ACTIVE: {
-    icon: 'mdi:user-check-outline',
+    icon: 'ph:identification-badge',
     color: '#008000',
     heading: 'Employee',
   },
   CURR_EMP_INACTIVE: {
-    icon: 'mdi:user-block-outline',
+    icon: 'ph:identification-badge',
     color: '#FF0000',
     heading: 'Not Employee',
   },
@@ -240,13 +240,13 @@ export const ICONS = {
   },
 
   USER_LOCK: {
-    icon: 'mdi:user-lock-outline',
-    color: '#008000',
+    icon: 'mingcute:lock-fill',
+    color: '#FF0000',
     heading: 'Lock User',
   },
   USER_UNLOCK: {
-    icon: 'mdi:user-lock-open-outline',
-    color: '#FF0000',
+    icon: 'mingcute:unlock-fill',
+    color: '#008000',
     heading: 'Unlock User',
   },
 };

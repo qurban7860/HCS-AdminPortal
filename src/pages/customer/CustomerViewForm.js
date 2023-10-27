@@ -92,24 +92,8 @@ export default function CustomerViewForm() {
   };
 
   return (
-    <>
-      {/* <Grid container direction="row" justifyContent="space-between" alignItems="center">
-        <Grid item xs={12} md={6}>
-          <BreadcrumbsProvider>
-            <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
-            <BreadcrumbsLink to={PATH_CUSTOMER.view} name={customer.name} />
-          </BreadcrumbsProvider>
-        </Grid>
-        {!isMobile && <AddButtonAboveAccordion isCustomer />}
-      </Grid>
-      <Grid item lg={12}>
-        <TableNoData isNotFound={isNotFound} />
-      </Grid> */}
-
-      {/* customer view form */}
       <Grid container direction="row" mt={isMobile && 2}>
-        <Grid item md={12}>
-          <Card sx={{ p: 2 }}>
+          <Card sx={{ width: '100%', p: '1rem', mb:3 }}>
             <ViewFormEditDeleteButtons
               isActive={defaultValues.isActive}
               isVerified={customer?.verifications}
@@ -158,19 +142,21 @@ export default function CustomerViewForm() {
                 heading={formLABELS.CUSTOMER.EMAIL}
                 param={defaultValues?.mainSite?.email}
               />
+
+              <ViewFormField
+                sm={6}
+                heading={formLABELS.CUSTOMER.BILLING_CONTACT}
+                param={defaultValues?.primaryBillingContact?.firstName}
+                secondParam={defaultValues?.primaryBillingContact?.lastName}
+              />
+              <ViewFormField
+                sm={6}
+                heading={formLABELS.CUSTOMER.TECHNICAL_CONTACT}
+                param={defaultValues?.primaryTechnicalContact?.firstName}
+                secondParam={defaultValues?.primaryTechnicalContact?.lastName}
+              />
             </Grid>
-            <ViewFormField
-              sm={6}
-              heading={formLABELS.CUSTOMER.BILLING_CONTACT}
-              param={defaultValues?.primaryBillingContact?.firstName}
-              secondParam={defaultValues?.primaryBillingContact?.lastName}
-            />
-            <ViewFormField
-              sm={6}
-              heading={formLABELS.CUSTOMER.TECHNICAL_CONTACT}
-              param={defaultValues?.primaryTechnicalContact?.firstName}
-              secondParam={defaultValues?.primaryTechnicalContact?.lastName}
-            />
+            
 
             {defaultValues.mainSite && (
               <Grid container>
@@ -229,11 +215,10 @@ export default function CustomerViewForm() {
                 secondParam={defaultValues?.supportManager?.lastName}
               />
               <ViewFormField />
-            </Grid>
               <ViewFormAudit defaultValues={defaultValues} />
+            </Grid>
+              
           </Card>
-        </Grid>
       </Grid>
-    </>
   );
 }

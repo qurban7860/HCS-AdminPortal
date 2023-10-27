@@ -38,7 +38,7 @@ import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
 import { getCustomers, ChangePage, ChangeRowsPerPage, setFilterBy, setVerified, 
    setCustomerEditFormVisibility, 
-   getCustomerCSV} from '../../redux/slices/customer/customer';
+   createCustomerCSV} from '../../redux/slices/customer/customer';
 import { Cover } from '../components/Defaults/Cover';
 import TableCard from '../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
@@ -79,7 +79,7 @@ export default function CustomerList() {
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
-  const { customers, filterBy, verified, page, rowsPerPage, isLoading, customerCSV } = useSelector((state) => state.customer);
+  const { customers, filterBy, verified, page, rowsPerPage, isLoading, responseMessage } = useSelector((state) => state.customer);
   const [filterVerify, setFilterVerify] = useState(verified);
   const [filterName, setFilterName] = useState(filterBy);
   
@@ -155,28 +155,13 @@ export default function CustomerList() {
   };
 
   const onExportCSV = async () => {
-    try {
-      await dispatch(await getCustomerCSV());
-      const fileName = "Customers.csv";
-      const blob = new Blob([customerCSV], { type: 'text/csv;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      enqueueSnackbar('CSV generated successfully!');
-    } catch (error) {
-      if (error.Message) {
-        enqueueSnackbar(error.Message, { variant: `error` });
-      } else if (error.message) {
-        enqueueSnackbar(error.message, { variant: `error` });
-      } else {
-        enqueueSnackbar('Something went wrong!', { variant: `error` });
-      }
-      console.log('Error:', error);
-    }
+    const response = dispatch(await createCustomerCSV());
+    response.then((res) => {
+      enqueueSnackbar('CSV Generated Successfully');
+    }).catch((error) => {
+      console.error(error);
+      enqueueSnackbar(error.message, { variant: `error` });
+    });
   };
 
   return (

@@ -20,7 +20,7 @@ import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import GoogleMaps from '../../assets/GoogleMaps';
 import useResponsive from '../../hooks/useResponsive';
-import { getSites, getSite, setSiteFormVisibility, resetSiteFormsVisiblity, getSitesCSV } from '../../redux/slices/customer/site';
+import { getSites, getSite, setSiteFormVisibility, resetSiteFormsVisiblity, createCustomerStiesCSV } from '../../redux/slices/customer/site';
 // import { getActiveContacts } from '../../redux/slices/customer/contact';
 import NothingProvided from '../components/Defaults/NothingProvided';
 import SiteAddForm from './site/SiteAddForm';
@@ -56,7 +56,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   const [googleMapsVisibility, setGoogleMapsVisibility] = useState(false);
   const isMobile = useResponsive('down', 'sm');
   const dispatch = useDispatch();
-  const { sites, error, responseMessage, siteEditFormVisibility, siteAddFormVisibility, sitesCSV } =
+  const { sites, error, responseMessage, siteEditFormVisibility, siteAddFormVisibility } =
     useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
   // for filtering sites
@@ -137,30 +137,14 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   const shouldShowSiteAdd = siteAddFormVisibility && !siteEditFormVisibility;
 
   const onExportCSV = async () => {
-    try {
-      await dispatch(await getSitesCSV(customer._id));
-      const fileName = "CustomerSites.csv";
-      const blob = new Blob([sitesCSV], { type: 'text/csv;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      enqueueSnackbar('CSV generated successfully!');
-    } catch (err) {
-      if (err.Message) {
-        enqueueSnackbar(err.Message, { variant: `error` });
-      } else if (err.message) {
+    const response = dispatch(await createCustomerStiesCSV(customer?._id));
+      response.then((res) => {
+        enqueueSnackbar('CSV Generated Successfully');
+      }).catch((err) => {
+        console.error(err);
         enqueueSnackbar(err.message, { variant: `error` });
-      } else {
-        enqueueSnackbar('Something went wrong!', { variant: `error` });
-      }
-      console.log('Error:', err);
-    }
+      });
   };
-
 
   return (
     <>

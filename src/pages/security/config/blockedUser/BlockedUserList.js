@@ -15,7 +15,7 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
-import { PATH_SETTING } from '../../../../routes/paths';
+import { PATH_SECURITY, PATH_SETTING } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import {
@@ -47,6 +47,7 @@ import LoadingButton from '../../../../theme/overrides/LoadingButton';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Blocked Users', align: 'left' },
+  { id: 'email', label: 'Blocked User Email', align: 'left' },
   { id: 'blockedBy', label: 'Blocked By', align: 'left' },
   { id: 'createdAt', label: 'Blocked Date', align: 'left' },
   { id: 'action', label: 'Action', align: 'right'},
@@ -174,6 +175,10 @@ export default function BlockedUserList() {
     setFilterName('');
   };
 
+  const handleViewRow = (id) => {
+    navigate(PATH_SECURITY.users.view(id));
+  };
+
   return (
     <>
       <Container maxWidth={false}>
@@ -222,6 +227,7 @@ export default function BlockedUserList() {
                         <BlockedUserListTableRow
                           key={row._id}
                           row={row}
+                          onViewRow={() => handleViewRow(row?.blockedUser?._id)}
                           onDeleteRow={() => {handleOpenConfirm(); setSelected(row?._id);}}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         />

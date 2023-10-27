@@ -86,8 +86,8 @@ function SearchBarCombo({
                 onChange={onSignInLogsFilter}
               >
                 <MenuItem key="-1" value={-1}>All</MenuItem>
-                <MenuItem key="200" value={200}>Successfull</MenuItem>
-                <MenuItem key="401" value={401}>Un-Successfull</MenuItem>
+                <MenuItem key="200" value={200}>Success</MenuItem>
+                <MenuItem key="401" value={401}>Failed</MenuItem>
                 </Select>
             </FormControl>
             </Stack>
