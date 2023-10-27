@@ -50,8 +50,8 @@ export default function BlacklistIPListTableRow({
       <TableCell align="left"> {createdBy?.name} </TableCell>
       <TableCell align="left" sx={{width:'200px'}}>{fDate(createdAt)}</TableCell>
       <TableCell sx={{width:'100px'}} align='right'>
-          <StyledTooltip onClick={onDeleteRow} title='Delete' placement="top" disableFocusListener tooltipcolor='red'>
-            <Iconify icon='mdi:trash' color='red' width="1.7em" sx={{ mb: -0.5, mr: 0.5, cursor:"pointer"}}/>
+          <StyledTooltip onClick={onDeleteRow} title='Remove IP from Blacklist' placement="top" disableFocusListener tooltipcolor='green'>
+            <Iconify icon='mdi:check-circle-outline' color='green' width="1.7em" sx={{ mb: -0.5, mr: 0.5, cursor:"pointer"}}/>
           </StyledTooltip>
       </TableCell>
     </StyledTableRow>

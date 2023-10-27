@@ -17,7 +17,7 @@ import IconPopover from '../Icons/IconPopover';
 import IconTooltip from '../Icons/IconTooltip';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
 import { ICONS } from '../../../constants/icons/default-icons';
-import { fDate } from '../../../utils/formatTime';
+import { fDate, fDateTime } from '../../../utils/formatTime';
 
 function ViewFormEditDeleteButtons({
   backLink,
@@ -45,7 +45,7 @@ function ViewFormEditDeleteButtons({
   machineSupportDate,
   moveCustomerContact,
   supportSubscription,
-  lockedBy,
+  userStatus,
   onUserStatusChange,
 }) {
   const { id } = useParams();
@@ -248,11 +248,13 @@ function ViewFormEditDeleteButtons({
             />
           }
 
+          {userStatus &&
           <IconTooltip 
-            title={lockedBy?`User locked by ${lockedBy}`:"User Unlocked"} 
-            color={lockedBy?ICONS.USER_LOCK.color:ICONS.USER_UNLOCK.color} 
-            icon={lockedBy?ICONS.USER_LOCK.icon:ICONS.USER_UNLOCK.icon}
+            title={userStatus?.locked?`User locked by ${userStatus?.lockedBy} until ${fDateTime(userStatus?.lockedUntil)}`:"User Unlocked"} 
+            color={userStatus?.locked?ICONS.USER_LOCK.color:ICONS.USER_UNLOCK.color} 
+            icon={userStatus?.locked?ICONS.USER_LOCK.icon:ICONS.USER_UNLOCK.icon}
           />
+          }
 
         </StyledStack>
       </Grid>
@@ -271,9 +273,9 @@ function ViewFormEditDeleteButtons({
           {/* User Status Change */}
           {onUserStatusChange && id!==userId &&(
             <IconTooltip 
-            title={lockedBy?ICONS.USER_UNLOCK.heading:ICONS.USER_LOCK.heading}
-            color={lockedBy?ICONS.USER_UNLOCK.color:ICONS.USER_LOCK.color}
-            icon={lockedBy?ICONS.USER_UNLOCK.icon:ICONS.USER_LOCK.icon}
+            title={userStatus?.locked?ICONS.USER_UNLOCK.heading:ICONS.USER_LOCK.heading}
+            color={userStatus?.locked?ICONS.USER_UNLOCK.color:ICONS.USER_LOCK.color}
+            icon={userStatus?.locked?ICONS.USER_UNLOCK.icon:ICONS.USER_LOCK.icon}
             onClick={() =>handleOpenConfirm('UserStatus')}
             />
           )}
@@ -349,7 +351,7 @@ function ViewFormEditDeleteButtons({
             onClick={() => {
               handleOpenConfirm('delete');
             }}
-            color={disableDeleteButton?"#c3c3c3":theme.palette.error.main}
+            color={disableDeleteButton?"#c3c3c3":"#FF0000"}
             icon="mdi:trash-can-outline"
           />
         )}
@@ -397,8 +399,8 @@ function ViewFormEditDeleteButtons({
       <ConfirmDialog
         open={openUserStatuConfirm}
         onClose={() => handleCloseConfirm('UserStatus')}
-        title={lockedBy?"Unlock User":"Lock User"}
-        content={`Are you sure you want to ${lockedBy?"Unlock User":"Lock User"}?`}
+        title={userStatus?.locked?"Unlock User":"Lock User"}
+        content={`Are you sure you want to ${userStatus?.locked?"Unlock User":"Lock User"}?`}
         action={
           <LoadingButton variant="contained"
             onClick={()=>{
@@ -406,7 +408,7 @@ function ViewFormEditDeleteButtons({
               onUserStatusChange();
             }}
           >
-            {lockedBy?"Unlock User":"Lock User"}
+            {userStatus?.locked?"Unlock User":"Lock User"}
           </LoadingButton>
         }
       />
@@ -487,6 +489,6 @@ ViewFormEditDeleteButtons.propTypes = {
   machineSupportDate: PropTypes.string,
   moveCustomerContact: PropTypes.func,
   supportSubscription: PropTypes.bool,
-  lockedBy:PropTypes.string,
+  userStatus:PropTypes.object,
   onUserStatusChange:PropTypes.func
 };

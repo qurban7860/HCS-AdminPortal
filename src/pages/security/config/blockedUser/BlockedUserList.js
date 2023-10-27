@@ -112,15 +112,6 @@ export default function BlockedUserList() {
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
-
-  const handleCloseConfirm = () => {
-    // setSelectedUser('');
-    setOpenConfirm(false);
-  };
-
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
     dispatch(setFilterBy(value))
@@ -149,8 +140,9 @@ export default function BlockedUserList() {
   const handleDeleteRow = async (id) => {
     try {
       await dispatch(deleteBlockedUser(id));
-      dispatch(getBlockedUsers());
+      await dispatch(getBlockedUsers());
       setSelected('');
+      enqueueSnackbar('User unblocked successfully');
 
       if (page > 0) {
         if (dataInPage.length < 2) {
@@ -227,8 +219,12 @@ export default function BlockedUserList() {
                         <BlockedUserListTableRow
                           key={row._id}
                           row={row}
-                          onViewRow={() => handleViewRow(row?.blockedUser?._id)}
-                          onDeleteRow={() => {handleOpenConfirm(); setSelected(row?._id);}}
+                          onViewRow={() => {handleViewRow(row?.blockedUser?._id)}}
+                          onDeleteRow={() => {
+                            setSelected(row?._id);
+                            setOpenConfirm(true);
+                          }
+                          }
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         />
                       ) : (
@@ -256,19 +252,18 @@ export default function BlockedUserList() {
 
       <ConfirmDialog
         open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content='Are you sure want to delete?'
+        onClose={()=> setOpenConfirm(false)}
+        title="Unblock User"
+        content='Are you sure want to unblock user?'
         action={
           <Button
             variant="contained"
-            color="error"
             onClick={() => {
               handleDeleteRow(selected);
-              handleCloseConfirm();
+              setOpenConfirm(false);
             }}
           >
-            Delete
+            Unblock User
           </Button>
         }
       />
