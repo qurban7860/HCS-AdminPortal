@@ -210,7 +210,7 @@ export default function SecurityUserViewForm() {
                 defaultValues?.customer && (
                   <Link onClick={handleCustomerDialog} href="#" underline="none">
                     {defaultValues?.customer}
-                    {blockedCustomer?._id &&
+                    {blockedCustomer.length > 0 &&
                       <StyledTooltip title="Customer is Blocked" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
                         <Iconify color="#FF0000" sx={{height: '24px', width: '24px', verticalAlign:"middle", ml:1 }} icon="mdi:ban" />
                       </StyledTooltip>
@@ -238,7 +238,7 @@ export default function SecurityUserViewForm() {
                 defaultValues?.name && (
                   <>
                     {defaultValues?.name}
-                    {blockedUser?._id &&
+                    {blockedUser.length > 0 &&
                       <StyledTooltip title="User is Blocked" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
                         <Iconify color="#FF0000" sx={{height: '24px', width: '24px', verticalAlign:"middle", ml:1 }} icon="mdi:ban" />
                       </StyledTooltip>
