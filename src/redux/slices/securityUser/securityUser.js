@@ -460,7 +460,7 @@ export function changeUserStatus(Id, status) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/changeUserStatus/${Id}/${status}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/changeUserStatus/${Id}/${status}/0`);
       dispatch(slice.actions.setResponseMessage(response.data));
       return response; // eslint-disable-line
     } catch (error) {

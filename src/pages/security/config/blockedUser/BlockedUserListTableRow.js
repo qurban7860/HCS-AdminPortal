@@ -52,17 +52,14 @@ export default function BlockedUserListTableRow({
   const { blockedUser, isActive, createdBy, createdAt } = row;
   const smScreen = useScreenSize('sm')
   const lgScreen = useScreenSize('lg')
-
-  console.log(blockedUser)
   return (
-    <StyledTableRow hover selected={selected} onClick={onViewRow} sx={{cursor:'pointer'}} >
+    <StyledTableRow hover selected={selected} sx={{cursor:'pointer'}} >
       <LinkTableCell
         align="left"
         onClick={onViewRow}
         param={blockedUser?.name}
       />
       <TableCell align="left"> {blockedUser?.email} </TableCell>
-      {/* <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell> */}
       <TableCell align="left"> {createdBy?.name} </TableCell>
       <TableCell align="left" sx={{width:'200px'}}>{fDate(createdAt)}</TableCell>
       <TableCell sx={{width:'100px'}} align='right'>

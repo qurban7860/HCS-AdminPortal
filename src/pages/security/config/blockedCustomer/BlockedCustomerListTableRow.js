@@ -12,6 +12,7 @@ import { fDate } from '../../../../utils/formatTime';
 import { useScreenSize } from '../../../../hooks/useResponsive';
 import { StyledTooltip } from '../../../../theme/styles/default-styles';
 import Iconify from '../../../../components/iconify';
+import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 // components
 
 // ----------------------------------------------------------------------
@@ -53,8 +54,12 @@ export default function BlockedCustomerListTableRow({
   const lgScreen = useScreenSize('lg')
 
   return (
-    <StyledTableRow hover selected={selected} onClick={onViewRow} sx={{cursor:'pointer'}} >
-      <TableCell align="left"> {blockedCustomer?.name} </TableCell>
+    <StyledTableRow hover selected={selected} sx={{cursor:'pointer'}} >
+       <LinkTableCell
+        align="left"
+        onClick={onViewRow}
+        param={blockedCustomer?.name}
+      />
       {/* <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell> */}
       <TableCell align="left"> {createdBy?.name} </TableCell>
       <TableCell align="left" sx={{width:'200px'}}>{fDate(createdAt)}</TableCell>

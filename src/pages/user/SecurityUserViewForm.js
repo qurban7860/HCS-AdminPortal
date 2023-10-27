@@ -14,6 +14,8 @@ import {
   getSecurityUser,
   changeUserStatus,
 } from '../../redux/slices/securityUser/securityUser';
+import { getBlockedCustomer } from '../../redux/slices/securityConfig/blockedCustomers';
+import { getBlockedUser } from '../../redux/slices/securityConfig/blockedUsers';
 import { getCustomer , setCustomerDialog } from '../../redux/slices/customer/customer';
 import { getContact , setContactDialog } from '../../redux/slices/customer/contact';
 import ViewFormField from '../components/ViewForms/ViewFormField';
@@ -25,6 +27,8 @@ import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 import CustomerDialog from '../components/Dialog/CustomerDialog';
 import ContactDialog from '../components/Dialog/ContactDialog';
+import { StyledTooltip } from '../../theme/styles/default-styles';
+import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -33,8 +37,9 @@ export default function SecurityUserViewForm() {
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
   const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
-
   const { securityUser, isLoading} = useSelector((state) => state.user);
+  const { blockedCustomer } = useSelector((state) => state.blockedCustomer);
+  const { blockedUser } = useSelector((state) => state.blockedUser);
   const userId = localStorage.getItem('userId');
   const [openConfirm, setOpenConfirm] = useState(false);
   const handleCloseConfirm = () => setOpenConfirm(false);
@@ -47,7 +52,10 @@ export default function SecurityUserViewForm() {
   useEffect(() => {
     dispatch(setCustomerDialog(false))
     dispatch(setContactDialog(false))
-  },[dispatch]);
+    dispatch(getBlockedCustomer(securityUser?.customer?._id))
+    dispatch(getBlockedUser(securityUser?._id))
+  },[dispatch, securityUser]);
+
 
   useEffect(() => {
     if (userId) {
@@ -82,14 +90,20 @@ export default function SecurityUserViewForm() {
     navigate(PATH_SECURITY.users.userPassword);
   };
 
+  const userStatus = {
+    locked:new Date(securityUser?.lockUntil).getTime() > new Date().getTime(),
+    lockedBy:securityUser?.lockedBy,
+    lockedUntil:securityUser?.lockUntil
+  }
+
   const handleChangeUserStatus = async () => {
-    if (securityUser?._id) {
+    if (securityUser?._id) {  
       try {
-        await dispatch(changeUserStatus(securityUser._id, !securityUser?.userLocked));
+        await dispatch(changeUserStatus(securityUser._id, !userStatus?.locked));
         await dispatch(getSecurityUser(securityUser._id));
         enqueueSnackbar(`User ${securityUser?.userLocked?"Unlocked":"Locked"} Successfully`);
       } catch (error) {
-        enqueueSnackbar(error.Message, { variant: `error` });
+        enqueueSnackbar("Something went wrong!", { variant: `error` });
         console.log('Error:', error);
       }
     }
@@ -149,6 +163,7 @@ export default function SecurityUserViewForm() {
     }),
     [securityUser]
   );
+
   return (
     <>
       <Grid sx={{ p: 3, mt: -3 }}>
@@ -173,7 +188,7 @@ export default function SecurityUserViewForm() {
             isActive={defaultValues.isActive}
             multiAuth={defaultValues?.multiFactorAuthentication} 
             currentEmp={defaultValues?.currentEmployee}
-            lockedBy={securityUser?.userLocked && securityUser?.lockedBy}
+            userStatus={userStatus}
             onUserStatusChange={handleChangeUserStatus}
           />
           <ConfirmDialog
@@ -195,8 +210,14 @@ export default function SecurityUserViewForm() {
                 defaultValues?.customer && (
                   <Link onClick={handleCustomerDialog} href="#" underline="none">
                     {defaultValues?.customer}
+                    {blockedCustomer?._id &&
+                      <StyledTooltip title="Customer is Blocked" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
+                        <Iconify color="#FF0000" sx={{height: '24px', width: '24px', verticalAlign:"middle", ml:1 }} icon="mdi:ban" />
+                      </StyledTooltip>
+                    }
                   </Link>
                 )
+
               }
             />
             <ViewFormField
@@ -208,6 +229,23 @@ export default function SecurityUserViewForm() {
                     {defaultValues?.contact}
                   </Link>
                 )
+              }
+            />
+            <ViewFormField
+              sm={6}
+              heading="Full Name"
+              objectParam={
+                defaultValues?.name && (
+                  <>
+                    {defaultValues?.name}
+                    {blockedUser?._id &&
+                      <StyledTooltip title="User is Blocked" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
+                        <Iconify color="#FF0000" sx={{height: '24px', width: '24px', verticalAlign:"middle", ml:1 }} icon="mdi:ban" />
+                      </StyledTooltip>
+                    }
+                  </>
+                )
+
               }
             />
             <ViewFormField sm={6} heading="Full Name" param={defaultValues?.name} />

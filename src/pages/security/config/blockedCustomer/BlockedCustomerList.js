@@ -15,7 +15,7 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
-import { PATH_SETTING } from '../../../../routes/paths';
+import { PATH_CUSTOMER } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import {
@@ -112,15 +112,6 @@ export default function BlockedCustomerList() {
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
-
-  const handleCloseConfirm = () => {
-    // setSelectedUser('');
-    setOpenConfirm(false);
-  };
-
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
     dispatch(setFilterBy(value))
@@ -149,9 +140,9 @@ export default function BlockedCustomerList() {
   const handleDeleteRow = async (id) => {
     try {
       await dispatch(deleteBlockedCustomer(id));
-      dispatch(getBlockedCustomers());
+      await dispatch(getBlockedCustomers());
       setSelected('');
-
+      enqueueSnackbar('Customer unblocked successfully');
       if (page > 0) {
         if (dataInPage.length < 2) {
           setPage(page - 1);
@@ -173,6 +164,10 @@ export default function BlockedCustomerList() {
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
+  };
+
+  const handleViewRow = (id) => {
+    navigate(PATH_CUSTOMER.view(id));
   };
 
   return (
@@ -223,16 +218,14 @@ export default function BlockedCustomerList() {
                         <BlockedCustomerListTableRow
                           key={row._id}
                           row={row}
-                          onDeleteRow={() => {handleOpenConfirm(); setSelected(row?._id);}}
+                          onViewRow={() => {handleViewRow(row?.blockedCustomer?._id)}}
+                          onDeleteRow={() => {setOpenConfirm(true); setSelected(row?._id);}}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
-
-                  
-
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
@@ -251,19 +244,18 @@ export default function BlockedCustomerList() {
 
       <ConfirmDialog
         open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content='Are you sure want to delete?'
+        onClose={()=> setOpenConfirm(false)}
+        title="Unblock Customer"
+        content='Are you sure want to unblock customer?'
         action={
           <Button
             variant="contained"
-            color="error"
             onClick={() => {
               handleDeleteRow(selected);
-              handleCloseConfirm();
+              setOpenConfirm(false);
             }}
           >
-            Delete
+            Unblock Customer
           </Button>
         }
       />

@@ -12,6 +12,7 @@ const initialState = {
   success: false,
   isLoading: false,
   error: null,
+  blockedUser: {},
   blockedUsers: [],
   filterBy: '',
   page: 0,
@@ -37,6 +38,14 @@ const slice = createSlice({
     // SET VISIBILITY
     setBlockedUserFormVisibility(state, action){
       state.formVisibility = action.payload;
+    },
+
+    // GET  Blocked Customers 
+    getBlockedUserSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.blockedUser = action.payload;
+      state.initial = true;
     },
 
     // GET  Blocked Customers 
@@ -111,11 +120,34 @@ export function getBlockedUsers() {
       const response = await axios.get(`${CONFIG.SERVER_URL}security/configs/blockedUsers`,
       {
         params: {
+          isActive:true,
           isArchived: false
         }
       }
       );
       dispatch(slice.actions.getBlockedUsersSuccess(response.data));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+export function getBlockedUser(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/configs/blockedUsers`,
+      {
+        params: {
+          blockedUser:id,
+          isActive:true,
+          isArchived: false
+        }
+      }
+      );
+      dispatch(slice.actions.getBlockedUserSuccess(response.data));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
