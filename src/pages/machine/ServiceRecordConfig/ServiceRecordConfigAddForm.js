@@ -9,7 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Card, Grid, Stack, Typography, Container } from '@mui/material';
 // slice
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import { addServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
+import { addServiceRecordConfig, getActiveServiceRecordConfigs, resetServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 import { getActiveMachineModels, resetActiveMachineModels } from '../../../redux/slices/products/model';
 import { getActiveServiceCategories } from '../../../redux/slices/products/serviceCategory';
 import { getActiveCategories } from '../../../redux/slices/products/category';
@@ -34,11 +34,12 @@ export default function ServiceRecordConfigAddForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const { recordTypes } = useSelector((state) => state.serviceRecordConfig);
+  const { recordTypes, status, activeServiceRecordConfigs } = useSelector((state) => state.serviceRecordConfig);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
   const { activeCategories } = useSelector((state) => state.category);
   const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
   const [checkParams, setCheckParams] = useState([]);
+  const [isDraft, setDraft] = useState(false);
   
   useEffect(() => {
     dispatch(getActiveCategories())
@@ -47,10 +48,12 @@ export default function ServiceRecordConfigAddForm() {
 
   const defaultValues = useMemo(
     () => ({
+      docTitle: '',
       recordType: null,
+      docVersionNo: 1,
+      NoOfApprovalsRequired: 1,
       machineModel: null,
       category: null,
-      docTitle: '',
       textBeforeCheckItems: '',
       checkItemCategory: null,
 
@@ -92,6 +95,7 @@ export default function ServiceRecordConfigAddForm() {
   } = methods;
 
   const { category, machineModel, paramListTitle, checkItemCategory } = watch();
+
   useEffect(() => {
     if(category === null){
       dispatch(resetActiveMachineModels())
@@ -110,6 +114,11 @@ export default function ServiceRecordConfigAddForm() {
 
   const onSubmit = async (data) => {
     try {
+      if(isDraft){
+        data.status = 'DRAFT'
+      }else{
+        data.status = 'SUBMITTED'
+      }
       data.checkParam = checkParams
       await dispatch(addServiceRecordConfig(data));
       reset();
@@ -160,6 +169,30 @@ export default function ServiceRecordConfigAddForm() {
                     )}
                   />
 
+                  <RHFTextField name="docVersionNo" label="Version No.*" />
+                  <RHFTextField name="NoOfApprovalsRequired" label="Required Approvals*" />
+
+                  {/* <RHFAutocomplete 
+                    name="status"
+                    label="Status*"
+                    options={status}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                    )}
+                  />
+
+                  <RHFAutocomplete 
+                    name="parentConfig"
+                    label="Parent Configuration"
+                    options={activeServiceRecordConfigs}
+                    getOptionLabel={(option) => `${option?.docTitle ?? ''} ${option?.docTitle ? '-' : '' } ${option.recordType ? option.recordType :   ''}`}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    renderOption={(props, option) => (
+                    <li {...props} key={option._id}>{`${option?.docTitle ?? ''} ${option?.docTitle ? '-' : '' } ${option.recordType ? option.recordType : ''}`}</li>
+                    )}
+                  /> */}
 
                   <RHFAutocomplete 
                     name="category"
@@ -287,7 +320,7 @@ export default function ServiceRecordConfigAddForm() {
                     }
                   />
 
-                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+                <AddFormButtons saveAsDraft={() => setDraft(true)} isDraft={isDraft} saveButtonName='submit' isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>
           </Grid>

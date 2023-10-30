@@ -185,8 +185,12 @@ export const MachineServiceRecordSchema = Yup.object().shape({
 })
 
 export const ServiceRecordConfigSchema = Yup.object().shape({
-  recordType: Yup.object().label('Record Type').required().nullable(),
   docTitle: Yup.string().max(200).required().label('Document Title'),
+  recordType: Yup.object().label('Record Type').required().nullable(),
+  docVersionNo: Yup.number().min(1).max(10).label('Version No.').required().typeError('Version No. must be a number'),
+  NoOfApprovalsRequired: Yup.number().min(1).label('Required Approvals').required().typeError('Required Approvals must be a number'),
+  // status: Yup.object().label('Status').required().nullable,
+  // parentConfig: Yup.object().label('Parent Configuration').nullable(),
   machineModel: Yup.object().label('Model').nullable(),
   category: Yup.object().label('Category').nullable(),
   textBeforeCheckItems: Yup.string().max(4000),

@@ -10,6 +10,8 @@ import { Card, Grid, Typography, TableBody, Table, TableContainer } from '@mui/m
 import {
   getServiceRecordConfig,
   setServiceRecordConfigEditFormVisibility,
+  approveServiceRecordConfig,
+  changeStatusToDraft,
   deleteServiceRecordConfig,
 } from '../../../redux/slices/products/serviceRecordConfig';
 import { useSnackbar } from '../../../components/snackbar';
@@ -23,6 +25,7 @@ import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import CollapsibleCheckedItemRow from './CollapsibleCheckedItemRow';
+import { Snacks } from '../../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -52,7 +55,9 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
   const defaultValues = useMemo(
     () => ({
       recordType: serviceRecordConfig?.recordType || '',
-      category: serviceRecordConfig?.category?.name || '',
+      status: serviceRecordConfig?.status || '',
+      docVersionNo: serviceRecordConfig?.docVersionNo || '',
+      machineCategory: serviceRecordConfig?.machineCategory?.name || '',
       machineModel: serviceRecordConfig?.machineModel?.name || '',
       docTitle: serviceRecordConfig?.docTitle || '',
       textBeforeCheckItems: serviceRecordConfig?.textBeforeCheckItems || '',
@@ -93,15 +98,48 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
       console.log('Error:', err);
     }
   };
+
+  const handleVerification = async () => {
+    try {
+      await dispatch(approveServiceRecordConfig(serviceRecordConfig._id, true));
+      await dispatch(getServiceRecordConfig(serviceRecordConfig._id));
+      enqueueSnackbar(Snacks.configuration_Verification_Success);
+    } catch (error) {
+      console.log(error);
+      enqueueSnackbar(error, { variant: 'error' });
+    }
+  };
+
+  const returnToDraft = async () => {
+    try {
+      await dispatch(changeStatusToDraft(serviceRecordConfig._id, 'DRAFT'));
+      await dispatch(getServiceRecordConfig(serviceRecordConfig._id));
+      enqueueSnackbar(Snacks.configuration_Verification_Success);
+    } catch (error) {
+      console.log(error);
+      enqueueSnackbar(Snacks.configuration_Verification_Failed, { variant: 'error' });
+    }
+  };
+
   return (
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.list)} />
+      <ViewFormEditDeleteButtons 
+        isActive={defaultValues.isActive} 
+        isVerified={serviceRecordConfig?.Approvals} 
+        isSubmitted={defaultValues?.status.toLowerCase() === 'submitted' && returnToDraft } 
+        handleVerification={handleVerification} 
+        handleEdit={toggleEdit} 
+        onDelete={onDelete} 
+        backLink={() => navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.list)} 
+      />
       <Grid container sx={{mt:2}}>
         <ViewFormField sm={6} heading="Document Title" param={defaultValues?.docTitle} />
         <ViewFormField sm={6} heading="Document Type" param={defaultValues?.recordType} />
+        <ViewFormField sm={6} heading="Status" param={defaultValues?.status} />
+        <ViewFormField sm={6} heading="Version No." param={defaultValues?.docVersionNo} />
       </Grid>
       <Grid container>
-        <ViewFormField sm={6} heading="Machine Category" param={defaultValues?.category} />
+        <ViewFormField sm={6} heading="Machine Category" param={defaultValues?.machineCategory} />
         <ViewFormField sm={6} heading="Machine Model" param={defaultValues?.machineModel} />
       </Grid>
       <Grid container>  
