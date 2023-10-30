@@ -6,6 +6,9 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 import { BUTTONS, DIALOGS } from '../../../constants/default-constants';
 
 AddFormButtons.propTypes = {
+  saveAsDraft: PropTypes.func,
+  isDraft: PropTypes.bool,
+  saveAsDraftButtonName: PropTypes.string,
   saveButtonName: PropTypes.string,
   cancelButtonName: PropTypes.string,
   toggleCancel: PropTypes.func,
@@ -14,6 +17,9 @@ AddFormButtons.propTypes = {
 };
 
 export default function AddFormButtons({
+  saveAsDraft,
+  isDraft,
+  saveAsDraftButtonName,
   saveButtonName,
   toggleCancel,
   isSubmitting,
@@ -37,8 +43,22 @@ export default function AddFormButtons({
   return (
     <>
       <Stack justifyContent="flex-end" direction="row" spacing={2}>
-        <Grid item md={4} sm={6} xs={12}>
+        <Grid item lg={saveAsDraft ? 6 : 4} md={saveAsDraft ? 8 : 4} sm={saveAsDraft ? 10 : 6} xs={12}>
           <Stack justifyContent="flex-end" direction="row" spacing={2}>
+          {saveAsDraft && <Grid item sm={6}>
+              <LoadingButton
+                sx={{textTransform: 'none'}}
+                type="submit"
+                variant="contained"
+                size="large"
+                fullWidth
+                disabled={isDisabled}
+                loading={isDraft && isSubmitting}
+                onClick={saveAsDraft}
+              >
+                {saveAsDraftButtonName || BUTTONS.SAVE_AS_DRAFT}
+              </LoadingButton>
+            </Grid>}
             <Grid item sm={6}>
               <LoadingButton
                 type="submit"
@@ -46,7 +66,7 @@ export default function AddFormButtons({
                 size="large"
                 fullWidth
                 disabled={isDisabled}
-                loading={isSubmitting}
+                loading={!isDraft && isSubmitting}
               >
                 {saveButtonName || BUTTONS.SAVE}
               </LoadingButton>

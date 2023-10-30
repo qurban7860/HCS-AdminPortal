@@ -39,11 +39,15 @@ export default function ServiceRecordConfigEditForm() {
   const { id } = useParams();
 
   const [checkParams, setCheckParams] = useState([]);
+  const [isDraft, setDraft] = useState(false);
+
   const defaultValues = useMemo(
     () => ({
     recordType: {name: serviceRecordConfig?.recordType} || null,
+    machineCategory: serviceRecordConfig?.machineCategory || null,
     machineModel: serviceRecordConfig?.machineModel || null,
-    category: serviceRecordConfig?.category || null,
+    docVersionNo: serviceRecordConfig?.docVersionNo || 1,
+    NoOfApprovalsRequired: serviceRecordConfig?.NoOfApprovalsRequired || 1,
     docTitle: serviceRecordConfig?.docTitle || '',
     textBeforeCheckItems: serviceRecordConfig?.textBeforeCheckItems || '',
     checkItemCategory: null,
@@ -87,7 +91,7 @@ export default function ServiceRecordConfigEditForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const { recordType, paramListTitle, category, machineModel, checkItemCategory} = watch();
+  const { recordType, paramListTitle, machineCategory, machineModel, checkItemCategory} = watch();
 
   /* eslint-disable */
   useLayoutEffect(() => {
@@ -116,7 +120,11 @@ export default function ServiceRecordConfigEditForm() {
   const onSubmit = async (data) => {
     try {
       data.checkParam = checkParams
-      // console.log(data);
+      if(isDraft){
+        data.status = 'DRAFT'
+      }else{
+        data.status = 'SUBMITTED'
+      }
       await dispatch(updateServiceRecordConfig(data, id));
       reset();
       dispatch(setServiceRecordConfigEditFormVisibility(false));
@@ -165,10 +173,13 @@ export default function ServiceRecordConfigEditForm() {
                     )}
                   />
 
+                  <RHFTextField name="docVersionNo" label="Version No.*" />
+                  <RHFTextField name="NoOfApprovalsRequired" label="Required Approvals*" />
+
                   <Controller
-                    name="category"
+                    name="machineCategory"
                     control={control}
-                    defaultValue={category || null}
+                    defaultValue={machineCategory || null}
                     render={ ({field: { ref, ...field }, fieldState: { error } }) => (
                       <Autocomplete
                         {...field}
@@ -314,7 +325,7 @@ export default function ServiceRecordConfigEditForm() {
                     }
                   />
 
-                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+                <AddFormButtons saveAsDraft={() => setDraft(true)} isDraft={isDraft} saveButtonName='submit' isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>
           </Grid>
