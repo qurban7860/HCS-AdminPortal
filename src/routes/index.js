@@ -667,14 +667,14 @@ export default function Router() {
       ],
     },
     { path: 'invite/:id/:code/:expiry', element: <UserInviteLanding /> },
+    { path: '500', element: <Page500 /> },
+    { path: '403', element: <Page403 /> },
+    { path: '404', element: <Page404 /> },
     {
       element: <CompactLayout />,
       children: [
         { path: 'coming-soon', element: <ComingSoonPage /> },
         { path: 'maintenance', element: <MaintenancePage /> },
-        { path: '500', element: <Page500 /> },
-        { path: '404', element: <Page404 /> },
-        { path: '403', element: <Page403 /> },
         { path: 'invalidErrorPage', element: <ErrorPage title='Invalid Code' /> },
         { path: 'expiredErrorPage', element: <ErrorPage title='Invitation Expired' /> },
       ],
