@@ -29,15 +29,20 @@ const initialState = {
 
   ],
   recordTypes: [
-    { _id:1 , name: 'Service'},
-    { _id:2 , name: 'Repair'},
-    { _id:3 , name: 'Training'},
-    { _id:4 , name: 'Pre-Install'},
-    { _id:5 , name: 'Install'},
+    { _id:1 , name: 'SERVICE'},
+    { _id:2 , name: 'REPAIR'},
+    { _id:3 , name: 'TRAINING'},
+    { _id:4 , name: 'PRE-INSTALL'},
+    { _id:5 , name: 'INSTALL'},
   ],
   headerFooterTypes: [
     { _id:1 , name: 'Text'},
     { _id:2 , name: 'Image'},
+  ],
+  status: [
+    { _id:1 , name: 'Draft'},
+    { _id:2 , name: 'Submitted'},
+    { _id:3 , name: 'Approved'},
   ]
 };
 
@@ -246,6 +251,42 @@ export function getServiceRecordConfig(id) {
 
 //------------------------------------------------------------------------------
 
+export function approveServiceRecordConfig(id, isVerified) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/serviceRecordsConfig/${id}`,
+      {
+        isApproved: isVerified, 
+      });
+      dispatch(slice.actions.setResponseMessage(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+export function changeStatusToDraft(id, status) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/serviceRecordsConfig/${id}`,
+      {
+        status, 
+      });
+      dispatch(slice.actions.setResponseMessage(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+//------------------------------------------------------------------------------
+
 export function deleteServiceRecordConfig(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -274,7 +315,10 @@ export function addServiceRecordConfig(params) {
 
         /* eslint-disable */
         let data = {
-          recordType: params.recordType?.name,
+          recordType: params.recordType?.name.toUpperCase(),
+          status: params.status,
+          docVersionNo: params.docVersionNo,
+          NoOfApprovalsRequired: params.NoOfApprovalsRequired,
           header: {},
           footer: {},
           checkParams: [],
@@ -286,7 +330,7 @@ export function addServiceRecordConfig(params) {
         }
 
         if(params.category){
-          data.category = params.category?._id;
+          data.machineCategory = params.category?._id;
         }
         if(params.docTitle){
           data.docTitle = params.docTitle;
@@ -363,9 +407,12 @@ export function updateServiceRecordConfig(params,Id) {
     try {
       /* eslint-disable */
       let data = {
-        recordType: params?.recordType?.name,
         docTitle: params?.docTitle,
-        category: params?.category?._id || null,
+        recordType: params?.recordType?.name,
+        status: params.status,
+        docVersionNo: params.docVersionNo,
+        NoOfApprovalsRequired: params.NoOfApprovalsRequired,
+        machineCategory: params?.category?._id || null,
         machineModel: params?.machineModel?._id || null,
         textBeforeCheckItems: params?.textBeforeCheckItems,
         textAfterCheckItems: params?.textAfterCheckItems,

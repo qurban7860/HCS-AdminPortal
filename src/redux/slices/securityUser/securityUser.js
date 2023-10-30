@@ -456,11 +456,11 @@ export function sendUserInvite(Id) {
   };
 }
 
-export function changeUserStatus(Id, status) {
+export function changeUserStatus(Id, status, lockUntil) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/changeUserStatus/${Id}/${status}/0`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/changeUserStatus/${Id}/${status}/${lockUntil}`);
       dispatch(slice.actions.setResponseMessage(response.data));
       return response; // eslint-disable-line
     } catch (error) {

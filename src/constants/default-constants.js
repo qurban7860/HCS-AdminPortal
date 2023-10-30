@@ -75,6 +75,7 @@ export const FORMLABELS = {
   // @root - Settings
   DOCUMENT_SETTINGS: 'Document Settings',
   SECURITY_SETTINGS: 'Security Settings',
+  REPORTS: 'Reports',
   CONFIG: 'Configuration',
 
   // @root DocumentAddForm in dashboard/documents
@@ -146,6 +147,7 @@ export const DIALOGS = {
 
 export const BUTTONS = {
   SAVE: 'Save',
+  SAVE_AS_DRAFT: 'Save as Draft',
   EXPORT: {
     label:'Export CSV',
     icon:'icon-park-outline:excel'
@@ -281,3 +283,9 @@ export const TOGGLE = {
   ACTIVE: 'Active',
   CONNECTABLE: 'Connect as a child',
 };
+
+
+export const Snacks = {
+  configuration_Verification_Success: 'Verification Success',
+  configuration_Verification_Failed: 'Verification Failed!',
+}

@@ -226,11 +226,11 @@ useEffect(()=>{
                         >Save List</Button>
                       </Grid>
                     </Grid>
-                    {checkParams.length > 0 && <Stack sx={{ minWidth: 250,  minHeight:75 }}>
+                    {checkParams && checkParams?.length > 0 && <Stack sx={{ minWidth: 250,  minHeight:75 }}>
                     <TableContainer >
                       <Table>
                         <TableBody>
-                          {checkParams.map((value, checkParamsIndex) =>( typeof value?.paramList?.length === 'number' &&
+                          {checkParams && checkParams.map((value, checkParamsIndex) =>( typeof value?.paramList?.length === 'number' &&
                           <CollapsibleCheckedItemRow key={uuidv4()} value={value} index={checkParamsIndex} toggleEdit={toggleEdit} deleteIndex={deleteIndex} handleListDragStart={handleListDragStart} handleListDrop={handleListDrop} />
                           ))}
                       </TableBody>

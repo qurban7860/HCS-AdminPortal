@@ -1,47 +1,20 @@
-import { m } from 'framer-motion';
-// import { Helmet } from 'react-helmet-async';
-// import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { Button, Typography , Grid } from '@mui/material';
 // components
-import { MotionContainer, varBounce } from '../components/animate';
-// assets
-import { SeverErrorIllustration } from '../assets/illustrations';
-// import { CONFIG } from '../config-global';
+import { MotionContainer } from '../components/animate';
+import Logo from '../components/logo';
 
 // ----------------------------------------------------------------------
 
 export default function Page500() {
   return (
-    <>
-      {/* <Helmet>
-        <title> 500 Internal Server Error | {CONFIG.APP_TITLE} </title>
-      </Helmet> */}
-
-      <MotionContainer >
-        <Grid sx={{display:'flex', flexDirection:'column', justifyContent:'center',alignItems:'center',mt:5}}>
-
-        <m.div variants={varBounce().in}>
-          <Typography variant="h3" paragraph>
-            500 Internal Server Error
-          </Typography>
-        </m.div>
-
-        <m.div variants={varBounce().in}>
-          <Typography sx={{ color: 'text.secondary' }}>
-            There was an error, please try again later.
-          </Typography>
-        </m.div>
-
-        <m.div variants={varBounce().in}>
-          <SeverErrorIllustration sx={{ height: 260, my: { xs: 5, sm: 10 } }} />
-        </m.div>
-
-        <Button onClick={()=> window.open('/','_self')} size="large" variant="contained">
-          Go to Home
-        </Button>
-        </Grid>
-      </MotionContainer>
-    </>
+    <MotionContainer>
+      <Grid sx={{width:'900px', margin:'auto', textAlign:'center', pt:10}}>
+        <Typography variant="p" sx={{color:'text.secondary'}} paragraph>Ooppps.. an error has occured</Typography>
+        <Logo sx={{ width:'60%', margin:'auto', filter: 'grayscale(100%) opacity(30%)', pointerEvents: 'none',pt:20, pb:20 }}/>
+        <Typography variant="p" sx={{color:'#c9c9c9', fontSize:16, p:19, pt:0, pb:2}} paragraph>We&apos;re committed to delevring a seamless and delightfull user experience, and we won&apos;t reset until we&apos;ve achieved just that. Thank you for your understanding, and stay tuned for updates. We&apos;ll be back before you know it.</Typography>
+        <Button onClick={()=> window.open('/','_self')} size="large" variant="contained">Go Back</Button>
+      </Grid>
+    </MotionContainer >
   );
 }

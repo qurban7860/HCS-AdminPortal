@@ -96,16 +96,6 @@ const userModuleRole = userRoles?.some((role) => role.roleType === 'Module');
                     content={ICONS.SECURITY_ROLES.heading}
                   />
                   <ListItem
-                    onClick={linkSignInLogs}
-                    icon={ICONS.SIGNIN_LOGS.icon}
-                    content={ICONS.SIGNIN_LOGS.heading}
-                  /> 
-                  <ListItem
-                    onClick={linkUserInvites}
-                    icon={ICONS.USER_INVITE.icon}
-                    content={ICONS.USER_INVITE.heading}
-                  />
-                  <ListItem
                     onClick={linkBlockedCustomer}
                     icon={ICONS.BLOCKED_CUSTOMER.icon}
                     content={ICONS.BLOCKED_CUSTOMER.heading}
@@ -128,8 +118,24 @@ const userModuleRole = userRoles?.some((role) => role.roleType === 'Module');
                     icon={ICONS.WHITELIST_IP.icon}
                     content={ICONS.WHITELIST_IP.heading}
                   />
-                
-                
+                </List>
+
+                <List
+                  component="nav"
+                  aria-labelledby="nested-list-subheader"
+                  subheader={<ListItemsHeader header={FORMLABELS.REPORTS} />}
+                >
+
+                  <ListItem
+                    onClick={linkSignInLogs}
+                    icon={ICONS.SIGNIN_LOGS.icon}
+                    content={ICONS.SIGNIN_LOGS.heading}
+                  /> 
+                  <ListItem
+                    onClick={linkUserInvites}
+                    icon={ICONS.USER_INVITE.icon}
+                    content={ICONS.USER_INVITE.heading}
+                  />
                 </List>
             </StyledSettingsCardContainer>
 
@@ -153,10 +159,9 @@ const userModuleRole = userRoles?.some((role) => role.roleType === 'Module');
                   )}
                   <ListItem
                     onClick={linkConfigs}
-                    icon={ICONS.CONFIG.icon}
-                    content={ICONS.CONFIG.heading}
+                    icon={ICONS.SYSTEM_CONFIG.icon}
+                    content={ICONS.SYSTEM_CONFIG.heading}
                   />
-
                 </List>
             </StyledSettingsCardContainer>
 
