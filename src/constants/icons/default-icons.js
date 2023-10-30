@@ -181,7 +181,7 @@ export const ICONS = {
   // @root - Settings - settings
   // document settings
   DOCUMENT_TYPE: {
-    icon: 'mdi:rename',
+    icon: 'lucide:list-todo',
     heading: 'Document Type',
   },
   DOCUMENT_CATEGORY: {
@@ -190,11 +190,11 @@ export const ICONS = {
   },
   // security settings
   SECURITY_ROLES: {
-    icon: 'carbon:user-role',
+    icon: 'ph:user-list-bold',
     heading: 'User Roles',
   },
   SIGNIN_LOGS: {
-    icon: 'mdi:clipboard-text',
+    icon: 'icon-park-outline:log',
     heading: 'User Sign In Logs',
   },
   USER_CONFIG: {
@@ -202,15 +202,15 @@ export const ICONS = {
     heading: 'User Configurations',
   },
   USER_INVITE: {
-    icon: 'mdi:person-add',
+    icon: 'ph:user-plus-bold',
     heading: 'User Invites',
   },
   BLOCKED_CUSTOMER: {
-    icon: 'fluent:people-lock-20-filled',
+    icon: 'tabler:home-off',
     heading: 'Blocked Customers',
   },
   BLOCKED_USER: {
-    icon: 'fluent:people-lock-20-filled',
+    icon: 'fluent:people-lock-20-regular',
     heading: 'Blocked Users',
   },
   BLACKLIST_IP: {
@@ -218,20 +218,20 @@ export const ICONS = {
     heading: 'Blacklist IPs',
   },
   WHITELIST_IP: {
-    icon: 'solar:list-check-outline',
+    icon: 'solar:list-check-bold',
     heading: 'Whitelist IPs',
   },
   REGION: {
-    icon: 'mdi:map-marker-circle',
+    icon: 'grommet-icons:map',
     heading: 'Regions',
   },
   MODULE: {
     icon: 'ic:round-view-module',
     heading: 'Module',
   },
-  CONFIG: {
+  SYSTEM_CONFIG: {
     icon: 'icon-park-outline:setting-config',
-    heading: 'Config',
+    heading: 'System Config',
   },
 
   MOVE_MACHINE: {

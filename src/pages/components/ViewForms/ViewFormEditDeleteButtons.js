@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
-import { Badge, Divider, Grid } from '@mui/material';
+import { Badge, Box, Divider, Grid, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { memo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 // import { Button, Typography, IconButton } from '@mui/material';
 import { green } from '@mui/material/colors';
+import { DateTimePicker } from '@mui/x-date-pickers';
 import { createTheme } from '@mui/material/styles';
 import { StyledStack } from '../../../theme/styles/default-styles';
 import ConfirmDialog from '../../../components/confirm-dialog';
@@ -26,7 +27,6 @@ function ViewFormEditDeleteButtons({
   disablePasswordButton = false,
   disableEditButton = false,
   isActive,
-  isSubmitted,
   isVerified,
   customerAccess,
   multiAuth,
@@ -53,7 +53,7 @@ function ViewFormEditDeleteButtons({
   const userId = localStorage.getItem('userId');
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
-  
+
   const { isLoading, transferDialogBoxVisibility } = useSelector((state) => state.machine);
   // const { site } = useSelector((state) => state.site);
   // const { customer } = useSelector((state) => state.customer);
@@ -62,24 +62,57 @@ function ViewFormEditDeleteButtons({
   const [openUserInviteConfirm, setOpenUserInviteConfirm] = useState(false);
   const [openVerificationConfirm, setOpenVerificationConfirm] = useState(false);
   const [openUserStatuConfirm, setOpenUserStatuConfirm] = useState(false);
-  const [openConfigStatuConfirm, setOpenConfigStatuConfirm] = useState(false);
 
+  const [lockUntil, setLockUntil] = useState(''); // State to store the selected date
+  const [lockUntilError, setLockUntilError] = useState(''); // State to manage the error message
 
   const theme = createTheme({
     palette: {
       success: green,
     },
   });
-  // const [openTransferConfirm, setOpenTransferConfirm] = useState(false);
-  // const [openPopover, setOpenPopover] = useState(null);
-  // const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  // const [deleteButtonColor, setDeleteButtonColor] = useState('error.main');
-  // const [deleteButtonHoverColor, setDeleteButtonHoverColor] = useState('error.dark');
+  
   const disableDelete = userRoles?.some((role) => role?.disableDelete === true);
 
   if (disableDelete) {
     disableDeleteButton = true;
   }
+
+  // Function to handle date change
+  const handleLockUntilChange = newValue => {
+    const selectedDate = new Date(newValue);
+    if (selectedDate) {
+      // Check if the selected date is in the future (optional)
+      const currentDate = new Date();
+      if (selectedDate < currentDate) {
+        setLockUntilError('Please select a future date and time.');
+      } else {
+        setLockUntil(newValue);
+        setLockUntilError(''); // Clear the error when a valid date is selected
+      }
+    } else {
+      setLockUntilError('Invalid date and time'); // Set an error message for an invalid date and time
+    }
+  };
+
+   // Function to handle date change
+   const handleChangeUserStatus = () => {
+    if (!lockUntil && !userStatus?.locked) {
+      setLockUntilError('Lock Until is required');
+    }else{
+
+      if(lockUntil){
+        const timeDifference = new Date(lockUntil) - new Date();
+        const minutesDifference = timeDifference / (1000 * 60);
+        onUserStatusChange(minutesDifference);
+      }else{
+        onUserStatusChange(0);
+      }
+      setOpenUserStatuConfirm(false);
+    }
+    setLockUntil('');
+  };
+
 
   const handleOpenConfirm = (dialogType) => {
 
@@ -101,10 +134,6 @@ function ViewFormEditDeleteButtons({
 
     if (dialogType === 'UserStatus') {
       setOpenUserStatuConfirm(true);
-    }
-
-    if (dialogType === 'ChangeConfigStatus') {
-      setOpenConfigStatuConfirm(true);
     }
 
   };
@@ -129,9 +158,7 @@ function ViewFormEditDeleteButtons({
 
     if (dialogType === 'UserStatus') {
       setOpenUserStatuConfirm(false);
-    }
-    if (dialogType === 'ChangeConfigStatus') {
-      setOpenConfigStatuConfirm(false);
+      setLockUntilError('');
     }
   };
 
@@ -158,7 +185,7 @@ function ViewFormEditDeleteButtons({
     setVerifiedAnchorEl(null);
     setVerifiedBy([])
   };
-  
+
   const { isMobile } = useResponsive('down', 'sm');
   const methods = useForm();
 
@@ -177,7 +204,7 @@ function ViewFormEditDeleteButtons({
     <Grid container justifyContent="space-between">
       <Grid item sx={{display:'flex'}}>
         <StyledStack sx={{ml:2}}>
-          {backLink && 
+          {backLink &&
             <>
               <IconTooltip
                 title='Back'
@@ -190,7 +217,7 @@ function ViewFormEditDeleteButtons({
             </>
           }
 
-          {isActive!==undefined && 
+          {isActive!==undefined &&
             <IconTooltip
               title={isActive?ICONS.ACTIVE.heading:ICONS.INACTIVE.heading}
               color={isActive?ICONS.ACTIVE.color:ICONS.INACTIVE.color}
@@ -205,7 +232,7 @@ function ViewFormEditDeleteButtons({
             icon="bx:support"
             />
           }
-          
+
           {machineSupportDate &&
             <IconTooltip
               title={machineSupport?.status?`Support valid till ${fDate(machineSupportDate)}`:`Support ended ${fDate(machineSupportDate)}`}
@@ -213,7 +240,7 @@ function ViewFormEditDeleteButtons({
               icon="bx:support"
               />
           }
-          
+
           {isVerified?.length>0 &&
           <Badge badgeContent={isVerified.length} color="info">
             <IconTooltip
@@ -225,9 +252,9 @@ function ViewFormEditDeleteButtons({
           </Badge>
           }
 
-          
 
-          {customerAccess !== undefined && 
+
+          {customerAccess !== undefined &&
             <IconTooltip
               title={customerAccess ? ICONS.ALLOWED.heading : ICONS.DISALLOWED.heading}
               color={customerAccess ? ICONS.ALLOWED.color : ICONS.DISALLOWED.color}
@@ -235,7 +262,7 @@ function ViewFormEditDeleteButtons({
             />
           }
 
-          {isRequired !== undefined && 
+          {isRequired !== undefined &&
             <IconTooltip
               title={isRequired ? ICONS.REQUIRED.heading : ICONS.NOTREQUIRED.heading}
               color={isRequired ? ICONS.REQUIRED.color : ICONS.NOTREQUIRED.color}
@@ -243,7 +270,7 @@ function ViewFormEditDeleteButtons({
             />
           }
 
-          {multiAuth !== undefined && 
+          {multiAuth !== undefined &&
             <IconTooltip
               title={multiAuth ? ICONS.MULTIAUTH_ACTIVE.heading : ICONS.MULTIAUTH_INACTIVE.heading}
               color={multiAuth ? ICONS.MULTIAUTH_ACTIVE.color : ICONS.MULTIAUTH_INACTIVE.color}
@@ -251,7 +278,7 @@ function ViewFormEditDeleteButtons({
             />
           }
 
-          {currentEmp !== undefined && 
+          {currentEmp !== undefined &&
             <IconTooltip
               title={currentEmp ? ICONS.CURR_EMP_ACTIVE.heading : ICONS.CURR_EMP_INACTIVE.heading}
               color={currentEmp ? ICONS.CURR_EMP_ACTIVE.color : ICONS.CURR_EMP_INACTIVE.color}
@@ -260,9 +287,9 @@ function ViewFormEditDeleteButtons({
           }
 
           {userStatus &&
-          <IconTooltip 
-            title={userStatus?.locked?`User locked by ${userStatus?.lockedBy} until ${fDateTime(userStatus?.lockedUntil)}`:"User Unlocked"} 
-            color={userStatus?.locked?ICONS.USER_LOCK.color:ICONS.USER_UNLOCK.color} 
+          <IconTooltip
+            title={userStatus?.locked?`User locked by ${userStatus?.lockedBy} until ${fDateTime(userStatus?.lockedUntil)}`:"User Unlocked"}
+            color={userStatus?.locked?ICONS.USER_LOCK.color:ICONS.USER_UNLOCK.color}
             icon={userStatus?.locked?ICONS.USER_LOCK.icon:ICONS.USER_UNLOCK.icon}
           />
           }
@@ -283,7 +310,7 @@ function ViewFormEditDeleteButtons({
 
           {/* User Status Change */}
           {onUserStatusChange && id!==userId &&(
-            <IconTooltip 
+            <IconTooltip
             title={userStatus?.locked?ICONS.USER_UNLOCK.heading:ICONS.USER_LOCK.heading}
             color={userStatus?.locked?ICONS.USER_UNLOCK.color:ICONS.USER_LOCK.color}
             icon={userStatus?.locked?ICONS.USER_UNLOCK.icon:ICONS.USER_LOCK.icon}
@@ -293,11 +320,11 @@ function ViewFormEditDeleteButtons({
 
           {/* User Invitation */}
           {handleUserInvite && id!==userId &&(
-            <IconTooltip 
+            <IconTooltip
             title="Resend Invitation"
             disabled={disableDeleteButton}
             color={disableDeleteButton?"#c3c3c3":theme.palette.secondary.main}
-            icon="mdi:invite"
+            icon={ICONS.USER_INVITE.icon}
             onClick={() => {
               handleOpenConfirm('UserInvite');
             }}
@@ -318,18 +345,6 @@ function ViewFormEditDeleteButtons({
             }}
             color={disableTransferButton?"#c3c3c3":theme.palette.primary.main}
             icon="mdi:cog-transfer-outline"
-          />
-        )}
-
-        {isSubmitted && (
-          <IconTooltip
-            title="Return To Draft"
-            // disabled={...}
-            onClick={() => {
-              handleOpenConfirm('ChangeConfigStatus');
-            }}
-            color={theme.palette.primary.main}
-            icon="carbon:license-maintenance-draft"
           />
         )}
 
@@ -354,7 +369,7 @@ function ViewFormEditDeleteButtons({
           color={theme.palette.primary.main}
           icon="eva:swap-fill"
         />}
-        
+
         {/* edit button */}
         {handleEdit && <IconTooltip
           title="Edit"
@@ -423,34 +438,29 @@ function ViewFormEditDeleteButtons({
         open={openUserStatuConfirm}
         onClose={() => handleCloseConfirm('UserStatus')}
         title={userStatus?.locked?"Unlock User":"Lock User"}
-        content={`Are you sure you want to ${userStatus?.locked?"Unlock User":"Lock User"}?`}
+        content={
+          <Box rowGap={2} display="grid">
+            Are you sure you want to {userStatus?.locked?"Unlock User":"Lock User"}?
+            {!userStatus?.locked &&
+            <DateTimePicker
+              fullWidth
+              sx={{mt:2}}
+              label="Lock Until"
+              name="lockUntil"
+              value={lockUntil}
+              onChange={handleLockUntilChange}
+              renderInput={params => <TextField {...params} error={!!lockUntilError} helperText={lockUntilError} />}
+            />
+            }
+          </Box>
+        }
         action={
-          <LoadingButton variant="contained"
-            onClick={()=>{
-              setOpenUserStatuConfirm(false);
-              onUserStatusChange();
-            }}
-          >
+          <LoadingButton variant="contained" onClick={handleChangeUserStatus}>
             {userStatus?.locked?"Unlock User":"Lock User"}
           </LoadingButton>
         }
       />
-      <ConfirmDialog
-        open={openConfigStatuConfirm}
-        onClose={() => handleCloseConfirm('UserStatus')}
-        title="Configuration Status"
-        content="Are you sure you want to change configuration status to DRAFT? "
-        action={
-          <LoadingButton variant="contained"
-            onClick={()=>{
-              setOpenConfigStatuConfirm(false);
-              isSubmitted();
-            }}
-          >
-          Yes
-          </LoadingButton>
-        }
-      />
+
       <ConfirmDialog
         open={openConfirm}
         onClose={() => {
@@ -506,7 +516,6 @@ ViewFormEditDeleteButtons.propTypes = {
   handleVerification: PropTypes.func,
   isVerified: PropTypes.array,
   isActive:PropTypes.bool,
-  isSubmitted: PropTypes.func,
   customerAccess:PropTypes.bool,
   multiAuth:PropTypes.bool,
   currentEmp:PropTypes.bool,

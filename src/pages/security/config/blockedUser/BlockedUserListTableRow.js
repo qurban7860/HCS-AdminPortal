@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 // utils
 import { styled } from '@mui/system';
-import { fDate } from '../../../../utils/formatTime';
+import { fDateTime } from '../../../../utils/formatTime';
 import { useScreenSize } from '../../../../hooks/useResponsive';
 import { StyledTooltip } from '../../../../theme/styles/default-styles';
 import Iconify from '../../../../components/iconify';
@@ -49,7 +49,7 @@ export default function BlockedUserListTableRow({
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
   const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
-  const { blockedUser, isActive, createdBy, createdAt } = row;
+  const { blockedUser, customer, isActive, createdBy, createdAt } = row;
   const smScreen = useScreenSize('sm')
   const lgScreen = useScreenSize('lg')
   return (
@@ -60,8 +60,9 @@ export default function BlockedUserListTableRow({
         param={blockedUser?.name}
       />
       <TableCell align="left"> {blockedUser?.email} </TableCell>
+      <TableCell align="left"> {customer?.name} </TableCell>
       <TableCell align="left"> {createdBy?.name} </TableCell>
-      <TableCell align="left" sx={{width:'200px'}}>{fDate(createdAt)}</TableCell>
+      <TableCell align="left" sx={{width:'200px'}}>{fDateTime(createdAt)}</TableCell>
       <TableCell sx={{width:'100px'}} align='right'>
           <StyledTooltip onClick={onDeleteRow} title='Unblock User' placement="top" disableFocusListener tooltipcolor='green'>
             <Iconify icon='zondicons:lock-open' color='green' width="1.7em" sx={{ mb: -0.5, mr: 0.5, cursor:"pointer"}}/>

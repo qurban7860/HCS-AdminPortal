@@ -47,12 +47,10 @@ import LoadingButton from '../../../../theme/overrides/LoadingButton';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Blacklist IPs', align: 'left' },
-  { id: 'AddedBy', label: 'Added By', align: 'left' },
-  { id: 'AddedAt', label: 'Added Date', align: 'left' },
+  { id: 'AddedBy', label: 'Updated By', align: 'left' },
+  { id: 'AddedAt', label: 'Updated At', align: 'left' },
   { id: 'action', label: 'Action', align: 'right'},
 ];
-
-// ----------------------------------------------------------------------
 
 export default function BlacklistIPList() {
   const {
