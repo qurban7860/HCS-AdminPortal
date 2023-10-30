@@ -43,10 +43,11 @@ import TableCard from '../components/ListTableTools/TableCard';
 const ROLE_OPTIONS = ['Administrator', 'Normal User', 'Guest User', 'Restriced User'];
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', align: 'left' },
-  { id: 'value',visibility: 'xs1', label: 'Value', align: 'left' },
+  { id: 'name', label: 'Config Name', align: 'left' },
+  { id: 'value',visibility: 'xs1', label: 'Config Value', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'updateBy', label: 'Update By', align: 'right' },
+  { id: 'updateAt', label: 'Update At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------

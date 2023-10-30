@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 // utils
 import { styled } from '@mui/system';
-import { fDate } from '../../../../utils/formatTime';
+import { fDateTime } from '../../../../utils/formatTime';
 import { StyledTooltip } from '../../../../theme/styles/default-styles';
 import Iconify from '../../../../components/iconify';
 // components
@@ -48,10 +48,10 @@ export default function WhitelistIPListTableRow({
       <TableCell align="left"> {whiteListIP} </TableCell>
       {/* <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell> */}
       <TableCell align="left"> {createdBy?.name} </TableCell>
-      <TableCell align="left" sx={{width:'200px'}}>{fDate(createdAt)}</TableCell>
+      <TableCell align="left" sx={{width:'200px'}}>{fDateTime(createdAt)}</TableCell>
       <TableCell sx={{width:'100px'}} align='right'>
           <StyledTooltip onClick={onDeleteRow} title='Remove IP from Whitelist' placement="top" disableFocusListener tooltipcolor='red'>
-            <Iconify icon='mdi:ban' color='red' width="1.7em" sx={{ mb: -0.5, mr: 0.5, cursor:"pointer"}}/>
+            <Iconify icon='zondicons:lock-open' color='red' width="1.7em" sx={{ mb: -0.5, mr: 0.5, cursor:"pointer"}}/>
           </StyledTooltip>
       </TableCell>
     </StyledTableRow>

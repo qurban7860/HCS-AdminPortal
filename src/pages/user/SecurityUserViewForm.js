@@ -96,12 +96,12 @@ export default function SecurityUserViewForm() {
     lockedUntil:securityUser?.lockUntil
   }
 
-  const handleChangeUserStatus = async () => {
-    if (securityUser?._id) {  
+  const handleChangeUserStatus = async (lockUntil) => {
+    if (securityUser?._id) {
       try {
-        await dispatch(changeUserStatus(securityUser._id, !userStatus?.locked));
+        await dispatch(changeUserStatus(securityUser._id, !userStatus?.locked, lockUntil));
         await dispatch(getSecurityUser(securityUser._id));
-        enqueueSnackbar(`User ${securityUser?.userLocked?"Unlocked":"Locked"} Successfully`);
+        enqueueSnackbar(`User ${userStatus?.locked?"Unlocked":"Locked"} Successfully`);
       } catch (error) {
         enqueueSnackbar("Something went wrong!", { variant: `error` });
         console.log('Error:', error);
