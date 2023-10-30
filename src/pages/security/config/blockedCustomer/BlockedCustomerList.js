@@ -46,9 +46,9 @@ import LoadingButton from '../../../../theme/overrides/LoadingButton';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Blocked Customer', align: 'left' },
-  { id: 'blockedBy', label: 'Blocked By', align: 'left' },
-  { id: 'createdAt', label: 'Blocked Date', align: 'left' },
+  { id: 'name', label: 'Customer', align: 'left' },
+  { id: 'blockedBy', label: 'Updated By', align: 'left' },
+  { id: 'createdAt', label: 'Updated At', align: 'left' },
   { id: 'action', label: 'Action', align: 'right'},
 ];
 
