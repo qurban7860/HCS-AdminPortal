@@ -40,7 +40,7 @@ import TableCard from '../../../components/ListTableTools/TableCard';
 const TABLE_HEAD = [
   { id: 'name', label: 'Whitelist IPs', align: 'left' },
   { id: 'AddedBy', label: 'Updated By', align: 'left' },
-  { id: 'AddedAt', label: 'Date/Time of last update', align: 'left' },
+  { id: 'AddedAt', label: 'Updated At', align: 'left' },
   { id: 'action', label: 'Action', align: 'right'},
 ];
 
