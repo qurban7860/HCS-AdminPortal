@@ -407,8 +407,11 @@ export function updateServiceRecordConfig(params,Id) {
     try {
       /* eslint-disable */
       let data = {
-        recordType: params?.recordType?.name,
         docTitle: params?.docTitle,
+        recordType: params?.recordType?.name,
+        status: params.status,
+        docVersionNo: params.docVersionNo,
+        NoOfApprovalsRequired: params.NoOfApprovalsRequired,
         machineCategory: params?.category?._id || null,
         machineModel: params?.machineModel?._id || null,
         textBeforeCheckItems: params?.textBeforeCheckItems,

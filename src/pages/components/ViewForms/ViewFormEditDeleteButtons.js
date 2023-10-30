@@ -27,6 +27,7 @@ function ViewFormEditDeleteButtons({
   disablePasswordButton = false,
   disableEditButton = false,
   isActive,
+  isSubmitted,
   isVerified,
   customerAccess,
   multiAuth,
@@ -62,7 +63,7 @@ function ViewFormEditDeleteButtons({
   const [openUserInviteConfirm, setOpenUserInviteConfirm] = useState(false);
   const [openVerificationConfirm, setOpenVerificationConfirm] = useState(false);
   const [openUserStatuConfirm, setOpenUserStatuConfirm] = useState(false);
-
+  const [openConfigStatuConfirm, setOpenConfigStatuConfirm] = useState(false);
   const [lockUntil, setLockUntil] = useState(''); // State to store the selected date
   const [lockUntilError, setLockUntilError] = useState(''); // State to manage the error message
 
@@ -136,6 +137,9 @@ function ViewFormEditDeleteButtons({
       setOpenUserStatuConfirm(true);
     }
 
+    if (dialogType === 'ChangeConfigStatus') {
+      setOpenConfigStatuConfirm(true);
+    }
   };
 
   const handleCloseConfirm = (dialogType) => {
@@ -159,6 +163,10 @@ function ViewFormEditDeleteButtons({
     if (dialogType === 'UserStatus') {
       setOpenUserStatuConfirm(false);
       setLockUntilError('');
+    }
+
+    if (dialogType === 'ChangeConfigStatus') {
+      setOpenConfigStatuConfirm(false);
     }
   };
 
@@ -348,6 +356,18 @@ function ViewFormEditDeleteButtons({
           />
         )}
 
+        {isSubmitted && (
+          <IconTooltip
+            title="Return To Draft"
+            // disabled={...}
+            onClick={() => {
+              handleOpenConfirm('ChangeConfigStatus');
+            }}
+            color={theme.palette.primary.main}
+            icon="carbon:license-maintenance-draft"
+          />
+        )}
+
         {/* change password for users */}
         {handleUpdatePassword && (
           <IconTooltip
@@ -462,6 +482,23 @@ function ViewFormEditDeleteButtons({
       />
 
       <ConfirmDialog
+        open={openConfigStatuConfirm}
+        onClose={() => handleCloseConfirm('UserStatus')}
+        title="Configuration Status"
+        content="Are you sure you want to change configuration status to DRAFT? "
+        action={
+          <LoadingButton variant="contained"
+            onClick={()=>{
+              setOpenConfigStatuConfirm(false);
+              isSubmitted();
+            }}
+          >
+          Yes
+          </LoadingButton>
+        }
+      />
+
+      <ConfirmDialog
         open={openConfirm}
         onClose={() => {
           handleCloseConfirm('delete');
@@ -516,6 +553,7 @@ ViewFormEditDeleteButtons.propTypes = {
   handleVerification: PropTypes.func,
   isVerified: PropTypes.array,
   isActive:PropTypes.bool,
+  isSubmitted: PropTypes.func,
   customerAccess:PropTypes.bool,
   multiAuth:PropTypes.bool,
   currentEmp:PropTypes.bool,
