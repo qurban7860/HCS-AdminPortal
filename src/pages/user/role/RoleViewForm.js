@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,7 +7,7 @@ import { Card, Grid } from '@mui/material';
 // redux
 import { deleteRole } from '../../../redux/slices/securityUser/role';
 // paths
-import { PATH_SETTING } from '../../../routes/paths';
+import { PATH_PAGE, PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
@@ -19,10 +19,20 @@ import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDe
 export default function RoleViewForm() {
   const { role } = useSelector((state) => state.role);
   const { assignedUsers } = useSelector((state) => state.user);
-  const navigate = useNavigate();
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
+  const isSuperAdmin = userRoles?.some((rolee) => rolee.roleType === 'SuperAdmin');
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    if(!isSuperAdmin){
+      navigate(PATH_PAGE.page403)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate, isSuperAdmin]);
 
   const onDelete = async () => {
     try {

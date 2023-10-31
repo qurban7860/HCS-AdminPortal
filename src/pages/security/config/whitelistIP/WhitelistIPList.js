@@ -8,8 +8,10 @@ import {
   TableBody,
   Container,
   TableContainer,
+  Grid,
 } from '@mui/material';
 // redux
+import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from '../../../../redux/store';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
@@ -34,6 +36,7 @@ import { getWhitelistIPs , deleteWhitelistIP,
 import { Cover } from '../../../components/Defaults/Cover';
 import { fDate } from '../../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
+import { PATH_PAGE } from '../../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -66,27 +69,36 @@ export default function WhitelistIPList() {
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
-    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
   };
 
   const onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
   const { whitelistIPs, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.whitelistIP);
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
+  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
 
   useLayoutEffect(() => {
     dispatch(getWhitelistIPs());
   }, [dispatch]);
 
   useEffect(() => {
+    
+    if(!isSuperAdmin){
+      navigate(PATH_PAGE.page403)
+    }
+
     if (initial) {
       setTableData(whitelistIPs);
     }
-  }, [whitelistIPs, initial]);
+  }, [whitelistIPs, initial, navigate, isSuperAdmin]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -119,11 +131,11 @@ export default function WhitelistIPList() {
     setFilterName(event.target.value)
     setPage(0);
   };
-  
+
   useEffect(() => {
       debouncedSearch.current.cancel();
   }, [debouncedSearch]);
-  
+
   useEffect(()=>{
       setFilterName(filterBy)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -135,12 +147,12 @@ export default function WhitelistIPList() {
   };
 
   const handleDeleteRow = async (id) => {
-      
+
     try {
       await dispatch(deleteWhitelistIP(id));
       dispatch(getWhitelistIPs());
       setSelected('');
-      
+
       if (page > 0) {
         if (dataInPage.length < 2) {
           setPage(page - 1);
@@ -158,7 +170,7 @@ export default function WhitelistIPList() {
     }
   };
 
-  
+
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
@@ -219,22 +231,24 @@ export default function WhitelistIPList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
-
-                  
-
-                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
           </TableContainer>
 
-          {!isNotFound && <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />}
+          {!isNotFound && 
+            <TablePaginationCustom
+              count={dataFiltered.length}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+            />
+          }
+
+          <Grid md={12}>
+            <TableNoData isNotFound={isNotFound} />
+          </Grid>
         </TableCard>
       </Container>
 

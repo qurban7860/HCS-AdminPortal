@@ -63,10 +63,9 @@ export default function Setting() {
 
 const userRolesString = localStorage.getItem('userRoles');
 const userRoles = userRolesString ? JSON.parse(userRolesString) : [];
-const userModuleRole = userRoles?.some((role) => role.roleType === 'Module');
-// console.log(userRoles);
+const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
 
-  return (
+return (
     <Container maxWidth={false}>
       <StyledCardContainer>
         <Cover name={FORMLABELS.COVER.SETTINGS} />
@@ -82,7 +81,7 @@ const userModuleRole = userRoles?.some((role) => role.roleType === 'Module');
                 lg: 'repeat(3, 1fr)',
               }}
             >
-
+            {isSuperAdmin &&
             <StyledSettingsCardContainer>
                 <List
                   component="nav"
@@ -138,7 +137,7 @@ const userModuleRole = userRoles?.some((role) => role.roleType === 'Module');
                   />
                 </List>
             </StyledSettingsCardContainer>
-
+            }
             <StyledSettingsCardContainer>
                 <List
                   component="nav"
@@ -150,13 +149,13 @@ const userModuleRole = userRoles?.some((role) => role.roleType === 'Module');
                     icon={ICONS.REGION.icon}
                     content={ICONS.REGION.heading}
                   />
-                    { userModuleRole  &&   (
+                  {/* { isSuperAdmin  &&   (
                   <ListItem
                       onClick={linkModules}
                       icon={ICONS.MODULE.icon}
                       content={ICONS.MODULE.heading}
                   />
-                  )}
+                  )} */}
                   <ListItem
                     onClick={linkConfigs}
                     icon={ICONS.SYSTEM_CONFIG.icon}

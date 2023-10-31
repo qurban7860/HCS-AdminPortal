@@ -1,4 +1,4 @@
-import { useEffect, useMemo , useState} from 'react';
+import { useMemo , useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
@@ -16,7 +16,6 @@ import {
   setProfileViewFormVisibility,
   getProfile,
   ProfileTypes,
-  getProfiles
 } from '../../../redux/slices/products/profile';
 import { ProfileSchema } from './schemas/ProfileSchema';
 import FormProvider, { RHFSwitch, RHFTextField } from '../../../components/hook-form';
@@ -27,7 +26,6 @@ export default function ProfileEditForm() {
   
   const { profile } = useSelector((state) => state.profile);
   const { machine } = useSelector((state) => state.machine);
-  const { profiles } = useSelector((state) => state.profile);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const defaultValues = useMemo(
@@ -66,13 +64,13 @@ export default function ProfileEditForm() {
     dispatch(setProfileViewFormVisibility(true));
   };
 
-  const [profileTypes, setProfileTypes] = useState([]);
+  // const [profileTypes, setProfileTypes] = useState([]);
 
-  useEffect(() => {
-    const hasManufacturer = profiles.some((p) => p.type === 'MANUFACTURER');
-    const updatedProfileTypes = hasManufacturer?ProfileTypes.filter((type) => type !== 'MANUFACTURER'): ProfileTypes;
-    setProfileTypes(updatedProfileTypes);
-  }, [profiles]);
+  // useEffect(() => {
+  //   const hasManufacturer = profiles.some((p) => p.type === 'MANUFACTURER');
+  //   const updatedProfileTypes = hasManufacturer?ProfileTypes.filter((type) => type !== 'MANUFACTURER'): ProfileTypes;
+  //   setProfileTypes(updatedProfileTypes);
+  // }, [profiles]);
 
    // Handle Type
   const [selectedValue, setSelectedValue] = useState(defaultValues?.type);
@@ -119,7 +117,7 @@ export default function ProfileEditForm() {
                   onChange={handleChange}
                   disabled
                   >
-                {profileTypes.map((option, index) => (
+                {ProfileTypes.map((option, index) => (
                   <MenuItem key={index} value={option}>
                     {option}
                   </MenuItem>
