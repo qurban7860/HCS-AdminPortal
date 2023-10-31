@@ -6,16 +6,15 @@ import {
   Card,
   Table,
   Button,
-  Tooltip,
   TableBody,
   Container,
-  IconButton,
   TableContainer,
+  Grid,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
-import { PATH_CUSTOMER } from '../../../../routes/paths';
+import { PATH_CUSTOMER, PATH_PAGE } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import {
@@ -24,10 +23,8 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from '../../../../components/table';
-import Iconify from '../../../../components/iconify';
 import Scrollbar from '../../../../components/scrollbar';
 import ConfirmDialog from '../../../../components/confirm-dialog';
 // sections
@@ -41,7 +38,6 @@ import { getBlockedCustomers , deleteBlockedCustomer,
 import { Cover } from '../../../components/Defaults/Cover';
 import { fDate } from '../../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
-import LoadingButton from '../../../../theme/overrides/LoadingButton';
 
 // ----------------------------------------------------------------------
 
@@ -64,8 +60,6 @@ export default function BlockedCustomerList() {
     //
     selected,
     setSelected,
-    onSelectRow,
-    onSelectAllRows,
     //
     onSort,
     // onChangePage,
@@ -90,15 +84,23 @@ export default function BlockedCustomerList() {
   // const [selectedUser, setSelectedUser] = useState('');
   const { blockedCustomers, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.blockedCustomer);
 
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
+  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
+
   useLayoutEffect(() => {
     dispatch(getBlockedCustomers());
   }, [dispatch]);
 
   useEffect(() => {
+    if(!isSuperAdmin){
+      navigate(PATH_PAGE.page403)
+    }
+
     if (initial) {
       setTableData(blockedCustomers);
     }
-  }, [blockedCustomers, initial]);
+  }, [blockedCustomers, initial, navigate, isSuperAdmin]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -226,7 +228,6 @@ export default function BlockedCustomerList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
-                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
@@ -239,6 +240,10 @@ export default function BlockedCustomerList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
+
+          <Grid md={12}>
+            <TableNoData isNotFound={isNotFound} />
+          </Grid>
         </TableCard>
       </Container>
 

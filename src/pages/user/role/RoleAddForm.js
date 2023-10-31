@@ -16,7 +16,7 @@ import {
   Container,
 } from '@mui/material';
 // ROUTES
-import { PATH_SETTING } from '../../../routes/paths';
+import { PATH_PAGE, PATH_SETTING } from '../../../routes/paths';
 // slice
 import { addRole } from '../../../redux/slices/securityUser/role';
 
@@ -33,6 +33,11 @@ RoleAddForm.propTypes = {
 };
 
 export default function RoleAddForm({ currentRole }) {
+
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
+  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
+
   const { userRoleTypes } = useSelector((state) => state.role);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -87,9 +92,12 @@ export default function RoleAddForm({ currentRole }) {
   } = methods;
 
   useEffect(() => {
+    if(!isSuperAdmin){
+      navigate(PATH_PAGE.page403)
+    }
     reset(defaultValues);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [navigate, isSuperAdmin]);
 
   const handleRoleTypeChange = (event, newValue) => {
     setRoleType(newValue);

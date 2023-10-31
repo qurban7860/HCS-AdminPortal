@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -12,7 +13,7 @@ import {
   Box,
 } from '@mui/material';
 // ROUTES
-import { PATH_SECURITY } from '../../../../routes/paths';
+import { PATH_PAGE, PATH_SECURITY } from '../../../../routes/paths';
 // slice
 import { addWhitelistIPs } from '../../../../redux/slices/securityConfig/whitelistIP';
 // components
@@ -28,6 +29,15 @@ export default function WhitelistIPAddForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
+  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
+  useEffect(() => {
+    if(!isSuperAdmin){
+      navigate(PATH_PAGE.page403)
+    }
+  }, [navigate, isSuperAdmin]);
 
   const WhitelistIPSchema = Yup.object().shape({
     whiteListIP: Yup.string().required('IP is required to whitelist!'),
