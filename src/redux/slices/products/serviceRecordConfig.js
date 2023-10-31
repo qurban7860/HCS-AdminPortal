@@ -257,7 +257,7 @@ export function approveServiceRecordConfig(id, isVerified) {
     try {
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/serviceRecordsConfig/${id}`,
       {
-        isApproved: isVerified, 
+        isVerified: true, 
       });
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
@@ -268,7 +268,7 @@ export function approveServiceRecordConfig(id, isVerified) {
   };
 }
 
-export function changeStatusToDraft(id, status) {
+export function changeConfigStatus(id, status) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -325,6 +325,9 @@ export function addServiceRecordConfig(params) {
           isActive: params.isActive,
         };
         /* eslint-enable */
+        if(params.parentConfig){
+          data.parentConfig = params.parentConfig;
+        }
         if(params.machineModel){
           data.machineModel = params.machineModel?._id;
         }

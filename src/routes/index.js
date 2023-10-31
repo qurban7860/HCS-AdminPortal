@@ -371,6 +371,7 @@ export default function Router() {
                 path: 'serviceRecordConfigs',
                 children:[
                   {path: 'new', element: <ServiceRecordConfigAddForm/>},
+                  {path: ':id/copy', element: <ServiceRecordConfigAddForm/>},
                   {path: 'list', element: <ServiceRecordConfigList/>},
                   {path: ':id/view', element: <ServiceRecordConfigView/>},
                   {path: 'viewform', element: <ServiceRecordConfigViewForm/>},

@@ -11,7 +11,7 @@ import {
   getServiceRecordConfig,
   setServiceRecordConfigEditFormVisibility,
   approveServiceRecordConfig,
-  changeStatusToDraft,
+  changeConfigStatus,
   deleteServiceRecordConfig,
 } from '../../../redux/slices/products/serviceRecordConfig';
 import { useSnackbar } from '../../../components/snackbar';
@@ -45,7 +45,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
   const navigate = useNavigate();
   const { serviceRecordConfig, editFormVisibility } = useSelector((state) => state.serviceRecordConfig);
   const { id } = useParams();
-
+  const userId = localStorage.getItem('userId');
   const dispatch = useDispatch();
   useLayoutEffect(() => {
     if (id != null) {
@@ -109,10 +109,21 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
       enqueueSnackbar(error, { variant: 'error' });
     }
   };
+  
+  const approveConfigHandler = async () => {
+    try {
+      await dispatch(changeConfigStatus(serviceRecordConfig._id, 'APPROVED'));
+      await dispatch(getServiceRecordConfig(serviceRecordConfig._id));
+      enqueueSnackbar(Snacks.configuration_Verification_Success);
+    } catch (error) {
+      console.log(error);
+      enqueueSnackbar(error, { variant: 'error' });
+    }
+  };
 
   const returnToDraft = async () => {
     try {
-      await dispatch(changeStatusToDraft(serviceRecordConfig._id, 'DRAFT'));
+      await dispatch(changeConfigStatus(serviceRecordConfig._id, 'DRAFT'));
       await dispatch(getServiceRecordConfig(serviceRecordConfig._id));
       enqueueSnackbar(Snacks.configuration_Verification_Success);
     } catch (error) {
@@ -125,10 +136,14 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons 
         isActive={defaultValues.isActive} 
-        isVerified={serviceRecordConfig?.Approvals} 
-        isSubmitted={defaultValues?.status.toLowerCase() === 'submitted' && returnToDraft } 
-        handleVerification={handleVerification} 
-        handleEdit={toggleEdit} 
+        isVerified={serviceRecordConfig?.verifications } 
+        approveConfigHandler={defaultValues?.status.toLowerCase() !== 'approved' && serviceRecordConfig?.verifications?.length >= serviceRecordConfig?.NoOfApprovalsRequired && approveConfigHandler}
+        approveConfig={ serviceRecordConfig?.verifications?.length >= serviceRecordConfig?.NoOfApprovalsRequired}
+        isSubmitted={defaultValues?.status.toLowerCase() === 'submitted' && defaultValues?.status.toLowerCase() !== 'approved' && returnToDraft } 
+        handleVerification={ handleVerification } 
+        copyConfiguration={defaultValues?.status.toLowerCase() === 'approved' && (() => navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.copy(serviceRecordConfig._id)))}
+        // ( serviceRecordConfig?.verifications.length > 0 && serviceRecordConfig?.verifications.find((verifiedUser)=> verifiedUser?.verifiedBy?._id !== userId )) || serviceRecordConfig?.verifications?.length <= serviceRecordConfig?.NoOfApprovalsRequired &&
+        handleEdit={defaultValues?.status.toLowerCase() !== 'approved' ? toggleEdit : false  } 
         onDelete={onDelete} 
         backLink={() => navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.list)} 
       />

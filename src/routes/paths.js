@@ -190,6 +190,7 @@ export const PATH_MACHINE = {
       },
       serviceRecordConfigs: {
         new: (ROOTS_MACHINE, '/products/machines/settings/serviceRecordConfigs/new'),
+        copy: (id) => path(ROOTS_MACHINE, `/machines/settings/serviceRecordConfigs/${id}/copy`),
         list: (ROOTS_MACHINE, '/products/machines/settings/serviceRecordConfigs/list'),
         view: (id) => path(ROOTS_MACHINE, `/machines/settings/serviceRecordConfigs/${id}/view`),
         servicerecordconfigedit: (id) => path(ROOTS_MACHINE, `/machines/settings/serviceRecordConfigs/${id}/edit`),

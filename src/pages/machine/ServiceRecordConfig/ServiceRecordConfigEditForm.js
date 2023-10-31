@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, Typography, Container, Autocomplete, TextField} from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Autocomplete, TextField} from '@mui/material';
 // slice
 import {
   updateServiceRecordConfig,
@@ -43,12 +43,12 @@ export default function ServiceRecordConfigEditForm() {
 
   const defaultValues = useMemo(
     () => ({
+    docTitle: serviceRecordConfig?.docTitle || '',
     recordType: {name: serviceRecordConfig?.recordType} || null,
     machineCategory: serviceRecordConfig?.machineCategory || null,
     machineModel: serviceRecordConfig?.machineModel || null,
     docVersionNo: serviceRecordConfig?.docVersionNo || 1,
-    NoOfApprovalsRequired: serviceRecordConfig?.NoOfApprovalsRequired || 1,
-    docTitle: serviceRecordConfig?.docTitle || '',
+    NoOfApprovalsRequired: serviceRecordConfig?.noOfVerificationsRequired || 1,
     textBeforeCheckItems: serviceRecordConfig?.textBeforeCheckItems || '',
     checkItemCategory: null,
     // // Check Params
@@ -71,7 +71,7 @@ export default function ServiceRecordConfigEditForm() {
     footerCenterText: serviceRecordConfig?.footer?.centerText || '',
     footerRightText: serviceRecordConfig?.footer?.rightText || '',
 
-    isActive: serviceRecordConfig.isActive
+    isActive: serviceRecordConfig?.isActive
   }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [serviceRecordConfig]
