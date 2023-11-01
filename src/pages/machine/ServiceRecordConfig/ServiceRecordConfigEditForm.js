@@ -91,7 +91,7 @@ export default function ServiceRecordConfigEditForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const { recordType, paramListTitle, machineCategory, machineModel, checkItemCategory} = watch();
+  const { recordType, ListTitle, machineCategory, machineModel, checkItemCategory} = watch();
 
   /* eslint-disable */
   useLayoutEffect(() => {
@@ -225,7 +225,7 @@ export default function ServiceRecordConfigEditForm() {
                 
                   <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline />
 
-                  <CheckItemTable setCheckParams={setCheckParams} checkParams={checkParams} paramListTitle={paramListTitle} setValue={setValue} checkItemCategory={checkItemCategory} />
+                  <CheckItemTable setCheckParams={setCheckParams} checkParams={checkParams} ListTitle={ListTitle} setValue={setValue} checkItemCategory={checkItemCategory} />
 
                   <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline />          
                 

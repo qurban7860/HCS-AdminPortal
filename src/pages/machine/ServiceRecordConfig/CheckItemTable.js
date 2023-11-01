@@ -141,7 +141,6 @@ useEffect(()=>{
       }
     }
   }
-
   return (
                   <Stack spacing={2}>
                     <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
@@ -218,7 +217,7 @@ useEffect(()=>{
                       </Grid>
                       <Grid item md={12} display="flex" justifyContent="flex-end" >
                         <Button
-                          disabled={(!checkItemList?.length ?? 0) || (!ListTitle ?? '') }
+                          disabled={(!checkItemList?.length ?? 0) || ( ListTitle?.trim() === '') }
                           onClick={()=>saveCheckParam(checkParamNumber)}
                           fullWidth={ isMobile }
                           variant="contained" color='primary' sx={{ ...(isMobile && { width: '100%' })}}
