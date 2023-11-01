@@ -7,7 +7,7 @@ import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDe
 import {  RHFTextField, RHFCheckbox, RHFDatePicker, RHFAutocomplete } from '../../../components/hook-form';
 import CommentsInput from './CommentsInput';
 
-const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue, 
+const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue, 
   editPage,
   handleChangeCheckItemListDate,
   handleChangeCheckItemListValue, 
@@ -18,12 +18,12 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
   (
     <>
         <Typography key={index} variant='h5'>
-            <b>{`${index+1}). `}</b>{typeof row?.paramListTitle === 'string' && row?.paramListTitle || ''}{' ( Items: '}<b>{`${row?.paramList?.length}`}</b>{' ) '}
+            <b>{`${index+1}). `}</b>{typeof row?.ListTitle === 'string' && row?.ListTitle || ''}{' ( Items: '}<b>{`${row?.checkItems?.length}`}</b>{' ) '}
         </Typography>
         <Grid  sx={{ml:3}} >
                 <Table size="small" aria-label="purchases">
                   <TableBody>
-                    {row?.paramList.map((childRow,childIndex) => (
+                    {row?.checkItems?.map((childRow,childIndex) => (
                       <>
                       <TableRow key={childRow._id} 
                           sx={{ ":hover": { backgroundColor: "#dbdbdb66" } }}
@@ -36,7 +36,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
                           <Grid align='right' sx={{ ml: 'auto'}} >
                                   <CommentsInput index={index} childIndex={childIndex} 
                                     childRow={childRow}
-                                    checkParamList={checkParamList} 
+                                    checkParamList={checkItemLists} 
                                     handleChangeCheckItemListDate={handleChangeCheckItemListDate}
                                     handleChangeCheckItemListValue={handleChangeCheckItemListValue}
                                     handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
@@ -58,7 +58,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkParamList, setValue,
                               onChange={(e) => handleChangeCheckItemListComment(index, childIndex, e.target.value)}
                               size="small" sx={{ m: 0.3, width: '100%', }} 
                               // pr:{md:4},width: {md: 470 } 
-                              value={checkParamList[index]?.paramList[childIndex]?.comments}
+                              value={checkItemLists[index]?.checkItems[childIndex]?.comments}
                               minRows={1} multiline
                               InputProps={{ inputProps: { maxLength: 500 }, 
                               // style: { fontSize: '14px', height: 30 }
@@ -80,7 +80,7 @@ CollapsibleCheckedItemInputRow.propTypes = {
     index: PropTypes.number,
     row: PropTypes.object,
     editPage: PropTypes.bool,
-    checkParamList: PropTypes.array,
+    checkItemLists: PropTypes.array,
     handleChangeCheckItemListDate: PropTypes.func,
     handleChangeCheckItemListValue: PropTypes.func,
     handleChangeCheckItemListStatus: PropTypes.func,
