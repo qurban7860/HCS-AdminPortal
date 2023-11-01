@@ -174,7 +174,7 @@ export default function ServiceRecordConfigAddForm() {
                     name="recordType"
                     label="Document Type*"
                     options={recordTypes}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) => option.name === value.name}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     renderOption={(props, option) => (
                       <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>

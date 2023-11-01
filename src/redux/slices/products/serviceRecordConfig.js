@@ -321,7 +321,6 @@ export function addServiceRecordConfig(params) {
           noOfVerificationsRequired: params.noOfVerificationsRequired,
           header: {},
           footer: {},
-          checkParams: [],
           isActive: params.isActive,
         };
         /* eslint-enable */
@@ -385,12 +384,12 @@ export function addServiceRecordConfig(params) {
         if(params?.checkItemLists){
           data.checkItemLists = (params?.checkItemLists || [])
           .map((param) => ({
-            ListTitle: param.paramListTitle || '', 
-            checkItems: (param.paramList || [])
+            ListTitle: param.ListTitle || '', 
+            checkItems: (param.checkItems || [])
               .map((paramlist) => (paramlist?._id || null))
               .filter((item) => item !== null), 
           }))
-          .filter((param) => param.paramList.length > 0);
+          .filter((param) => param.checkItems.length > 0);
         }
         const response = await axios.post(`${CONFIG.SERVER_URL}products/serviceRecordsConfig`, data);
         dispatch(slice.actions.setResponseMessage(response.data.ServiceRecordConfig));
@@ -425,7 +424,6 @@ export function updateServiceRecordConfig(params,Id) {
         enableSuggestedSpares: params?.enableSuggestedSpares,
         header: {},
         footer: {},
-        checkParams: [],
         isActive: params.isActive,
       };
 
@@ -456,7 +454,7 @@ export function updateServiceRecordConfig(params,Id) {
         }))
         .filter((param) => param.checkItems.length > 0);
       }else{
-        data.checkParams = [];
+        data.checkItemLists = [];
       }
       // console.log("data : ", data)
       await axios.patch(`${CONFIG.SERVER_URL}products/serviceRecordsConfig/${Id}`,

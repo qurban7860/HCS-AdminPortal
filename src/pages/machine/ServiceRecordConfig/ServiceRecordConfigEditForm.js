@@ -135,7 +135,6 @@ export default function ServiceRecordConfigEditForm() {
       console.error(err.message);
     }
   };
-console.log("checkParams : ",checkParams);
   return (
     <>
       <StyledCardContainer>
