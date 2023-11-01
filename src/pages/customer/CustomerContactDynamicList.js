@@ -268,8 +268,7 @@ export default function CustomerContactList(currentContact = null) {
                         >
                           
                           <StyledCardWrapper
-                            condition1={activeCardIndex !== contact._id}
-                            condition2={activeCardIndex === contact._id}
+                            condition={activeCardIndex === contact._id}
                             isMobile={isMobile}
                           >
                             <CardActionArea
