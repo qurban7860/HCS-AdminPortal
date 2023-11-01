@@ -4,13 +4,22 @@ import Chart, { useChart } from '../../../components/chart';
 // ----------------------------------------------------------------------
 
 ChartBar.propTypes = {
+  type:PropTypes.string,
+  height: PropTypes.number,
   optionsData: PropTypes.array,
   seriesData: PropTypes.array,
 };
-export default function ChartBar({ optionsData, seriesData }) {
-  const series = [{ name: 'Machines', data:  seriesData }];
+export default function ChartBar({ type, height, optionsData, seriesData}) {
+
+  const minHeight = 320;
+  const series = [{ name: 'Machines', data:  seriesData}];
   const chartOptions = useChart({
-    stroke: { show: false },
+    stroke: { show: true },
+    yaxis: {
+      labels: {
+        formatter: (value) => value.toString(),
+      },
+    },
     plotOptions: {
       bar: { horizontal: true, barHeight: '30%' },
     },
@@ -18,6 +27,5 @@ export default function ChartBar({ optionsData, seriesData }) {
       categories: optionsData,
     },
   });
-
-  return <Chart type="bar" series={series} options={chartOptions} height={320} />;
+  return <Chart type={type} series={series} options={chartOptions} height={height>minHeight?height:minHeight} />;
 }
