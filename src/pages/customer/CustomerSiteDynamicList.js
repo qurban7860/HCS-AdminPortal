@@ -223,7 +223,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
             )}
             <StyledScrollbar
               snap
-              snapOffset={100}
+              snapOffset={50}
               onClick={(e) => e.stopPropagation()}
               snapAlign="start"
               contacts={sites.length}

@@ -39,7 +39,6 @@ import ContactListTableRow from './ContactListTableRow';
 import ContactListTableToolbar from './ContactListTableToolbar';
 import { getContacts, deleteContact } from '../../../redux/slices/customer/contact';
 import CustomerDashboardNavbar from '../util/CustomerDashboardNavbar';
-// import CustomerViewPage from '../CustomerView';
 
 // ----------------------------------------------------------------------
 

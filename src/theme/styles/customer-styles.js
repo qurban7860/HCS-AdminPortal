@@ -84,7 +84,7 @@ export function StyledCardWrapper({ children, isMobile, condition1, condition2, 
         opacity: condition1 ? 1 : 0.6,
         border: condition2 && '2px solid #D9D9D9',
         boxShadow: condition2 && '0px 4px 4px rgba(127, 5, 35, 0.25)',
-
+        borderRadius:'5px',
         backgroundColor: condition2 && '#EDE7D9',
         height: isMobile ? '100px' : '200px',
         width: '100%',
@@ -103,13 +103,16 @@ StyledCardWrapper.propTypes = {
 };
 
 export function StyledScrollbar({ contacts, children, ...props }) {
+  
+  const height = contacts*23;
+  console.log(height)
   return (
     <Scrollbar
       sx={{
         height: {
-          xs: contacts === 1 ? '10vh' : '20vh',
-          sm: contacts === 1 ? '10vh' : '20vh',
-          md: 'calc(145vh - 100px)',
+          xs: '25vh',
+          sm: '25vh',
+          md: contacts===1?'23vh':`calc(${height>135?135:height}vh - 5px)`,
         },
 
         scrollSnapType: 'y mandatory',
@@ -118,8 +121,9 @@ export function StyledScrollbar({ contacts, children, ...props }) {
         '&::-webkit-scrollbar': { display: 'none' },
         '& .simplebar-content': { height: { xs: 'calc(100vh - 200px)', md: '100%' } },
         border: contacts <= 4 ? 'none' : '1px solid #D9D9D9',
-        borderRadius: '15px',
-        boxShadow: contacts === 1 && '0px 4px 4px rgba(127, 5, 35, 0.1)',
+        backgroundColor: '#e9e9e9',
+        borderRadius: '10px',
+        padding:'5px',
       }}
     >
       {children}
