@@ -64,7 +64,7 @@ export default function ServiceRecordConfigList() {
     onSort,
     // onChangePage,
     // onChangeRowsPerPage,
-  } = useTable({ });
+  } = useTable({ defaultOrderBy: 'docTitle', defaultOrder: 'asc' });
 
   const dispatch = useDispatch();
   // const { themeStretch } = useSettingsContext();

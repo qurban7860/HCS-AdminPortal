@@ -35,8 +35,8 @@ function MachineServiceRecordAddForm() {
   const { activeContacts } = useSelector((state) => state.contact);
   const { activeServiceRecordConfigsForRecords, serviceRecordConfig, recordTypes, isLoadingCheckItems } = useSelector((state) => state.serviceRecordConfig);
   const [ activeServiceRecordConfigs, setActiveServiceRecordConfigs ] = useState([]);
-  const [checkParamList, setCheckParamList] = useState([]);
-  // console.log("checkParamList : ",checkParamList)
+  const [checkItemLists, setCheckItemLists] = useState([]);
+  // console.log("checkItemLists : ",checkItemLists)
   const [docType, setDocType] = useState(null);
   const user = { _id: localStorage.getItem('userId'), name: localStorage.getItem('name') };
 
@@ -96,7 +96,7 @@ function MachineServiceRecordAddForm() {
   } = methods;
 
   const { decoilers, operators, serviceRecordConfiguration, technician, docRecordType } = watch()
-  
+  console.log("serviceRecordConfiguration : ",serviceRecordConfiguration)
   useEffect(() => {
       if(docRecordType === null){
         setActiveServiceRecordConfigs(activeServiceRecordConfigsForRecords)
@@ -124,7 +124,7 @@ function MachineServiceRecordAddForm() {
   },[securityUser, setValue, user?._id])
 
   useEffect(()=>{
-    setCheckParamList(serviceRecordConfig?.checkParams)
+    setCheckItemLists(serviceRecordConfig?.checkItemLists)
   },[serviceRecordConfig])
 
   const handleTypeChange = (event, newValue) => {
@@ -153,20 +153,19 @@ function MachineServiceRecordAddForm() {
 
   const onSubmit = async (data) => {
     try {
-      const checkParams_ = [];
+      const checkItemLists_ = [];
 
-      if(checkParamList && 
-        Array.isArray(checkParamList) && 
-        checkParamList.length>0) 
-        checkParamList.forEach((checkParam_, index )=>{
-          if(Array.isArray(checkParam_.paramList) && 
-            checkParam_.paramList.length>0) {
-            checkParam_.paramList.forEach((CI,ind)=>{
-              console.log("CI : ",CI)
-              checkParams_.push({
+      if(checkItemLists && 
+        Array.isArray(checkItemLists) && 
+        checkItemLists.length>0) 
+        checkItemLists.forEach((checkParam_, index )=>{
+          if(Array.isArray(checkParam_.checkItems) && 
+            checkParam_.checkItems.length>0) {
+            checkParam_.checkItems.forEach((CI,ind)=>{
+              checkItemLists_.push({
                 serviceParam:CI._id,
                 name:CI.name,
-                paramListTitle:checkParam_.paramListTitle,
+                ListTitle:checkParam_.ListTitle,
                 value:CI?.value,
                 date:CI?.date || '',
                 comments:CI?.comments,
@@ -175,8 +174,7 @@ function MachineServiceRecordAddForm() {
             });
           }
         });
-        console.log("checkParams_ : ",checkParams_)
-      data.checkParams = checkParams_;
+      data.checkItemLists = checkItemLists_;
       data.decoilers = decoilers;
       data.operators = operators;
       await dispatch(addMachineServiceRecord(machine?._id,data));
@@ -191,89 +189,89 @@ function MachineServiceRecordAddForm() {
   const toggleCancel = () => { dispatch(setMachineServiceRecordAddFormVisibility(false)) };
 
   const handleChangeCheckItemListValue = (index, childIndex, value) => {
-      const updatedCheckParams = [...checkParamList];
+      const updatedCheckParams = [...checkItemLists];
       const updatedParamObject = { 
         ...updatedCheckParams[index],
-        paramList: [...updatedCheckParams[index].paramList],
+        checkItems: [...updatedCheckParams[index].checkItems],
       };
-      updatedParamObject.paramList[childIndex] = {
-        ...updatedParamObject.paramList[childIndex],
+      updatedParamObject.checkItems[childIndex] = {
+        ...updatedParamObject.checkItems[childIndex],
         value,
       };
       updatedCheckParams[index] = updatedParamObject;
-  setCheckParamList(updatedCheckParams);
+  setCheckItemLists(updatedCheckParams);
   }
 
   const handleChangeCheckItemListDate = (index, childIndex, date) => {
     console.log("date : " , date)
-    const updatedCheckParams = [...checkParamList];
+    const updatedCheckParams = [...checkItemLists];
     const updatedParamObject = { 
       ...updatedCheckParams[index],
-      paramList: [...updatedCheckParams[index].paramList],
+      checkItems: [...updatedCheckParams[index].checkItems],
     };
-    updatedParamObject.paramList[childIndex] = {
-      ...updatedParamObject.paramList[childIndex],
+    updatedParamObject.checkItems[childIndex] = {
+      ...updatedParamObject.checkItems[childIndex],
       date,
     };
     updatedCheckParams[index] = updatedParamObject;
-  setCheckParamList(updatedCheckParams);
+  setCheckItemLists(updatedCheckParams);
   }
   
   const handleChangeCheckItemListCheckBoxValue = (index, childIndex) => {
-      const updatedCheckParams = [...checkParamList];
+      const updatedCheckParams = [...checkItemLists];
         const updatedParamObject = { 
           ...updatedCheckParams[index],
-          paramList: [ ...updatedCheckParams[index].paramList],
+          checkItems: [ ...updatedCheckParams[index].checkItems],
         };
-        updatedParamObject.paramList[childIndex] = {
-          ...updatedParamObject.paramList[childIndex],
-          value: !updatedParamObject.paramList[childIndex].value,
+        updatedParamObject.checkItems[childIndex] = {
+          ...updatedParamObject.checkItems[childIndex],
+          value: !updatedParamObject.checkItems[childIndex].value,
         };
         updatedCheckParams[index] = updatedParamObject;
-      setCheckParamList(updatedCheckParams);
+      setCheckItemLists(updatedCheckParams);
   }
 
   const handleChangeCheckItemListChecked = ( index, childIndex ) =>{
     console.log("checcked : ")
-    const updatedCheckParams = [...checkParamList];
+    const updatedCheckParams = [...checkItemLists];
     const updatedParamObject = { 
       ...updatedCheckParams[index],
-      paramList: [ ...updatedCheckParams[index].paramList],
+      checkItems: [ ...updatedCheckParams[index].checkItems],
     };
-    updatedParamObject.paramList[childIndex] = {
-      ...updatedParamObject.paramList[childIndex],
-      checked: !updatedParamObject.paramList[childIndex].checked,
+    updatedParamObject.checkItems[childIndex] = {
+      ...updatedParamObject.checkItems[childIndex],
+      checked: !updatedParamObject.checkItems[childIndex].checked,
     };
     updatedCheckParams[index] = updatedParamObject;
-  setCheckParamList(updatedCheckParams);
+  setCheckItemLists(updatedCheckParams);
   }
 
   const handleChangeCheckItemListStatus = (index, childIndex, status) => {
-    const updatedCheckParams = [...checkParamList];
+    const updatedCheckParams = [...checkItemLists];
     const updatedParamObject = { 
       ...updatedCheckParams[index],
-      paramList: [ ...updatedCheckParams[index].paramList ],
+      checkItems: [ ...updatedCheckParams[index].checkItems ],
     };
-    updatedParamObject.paramList[childIndex] = {
-      ...updatedParamObject.paramList[childIndex],
+    updatedParamObject.checkItems[childIndex] = {
+      ...updatedParamObject.checkItems[childIndex],
       status
     };
     updatedCheckParams[index] = updatedParamObject;
-  setCheckParamList(updatedCheckParams);
+  setCheckItemLists(updatedCheckParams);
   }
 
   const handleChangeCheckItemListComment = (index, childIndex, comments) => {
-    const updatedCheckParams = [...checkParamList];
+    const updatedCheckParams = [...checkItemLists];
     const updatedParamObject = { 
       ...updatedCheckParams[index],
-      paramList: [...updatedCheckParams[index].paramList ],
+      checkItems: [...updatedCheckParams[index].checkItems ],
     };
-    updatedParamObject.paramList[childIndex] = {
-      ...updatedParamObject.paramList[childIndex],
+    updatedParamObject.checkItems[childIndex] = {
+      ...updatedParamObject.checkItems[childIndex],
       comments
     };
     updatedCheckParams[index] = updatedParamObject;
-  setCheckParamList(updatedCheckParams);
+  setCheckItemLists(updatedCheckParams);
   }
   
   return (
@@ -358,7 +356,7 @@ function MachineServiceRecordAddForm() {
                     )}
                   />
                     <RHFTextField name="technicianRemarks" label="Technician Remarks" minRows={3} multiline/> 
-                    {checkParamList?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
+                    {checkItemLists?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
 
                     {isLoadingCheckItems ? 
                     <Box sx={{ width: '100%',mt:1 }}>
@@ -371,14 +369,14 @@ function MachineServiceRecordAddForm() {
                       <Skeleton animation={false} />
                     </Box>
                     :<>
-                    {checkParamList?.map((row, index) =>
-                          ( typeof row?.paramList?.length === 'number' &&
+                    {checkItemLists?.map((row, index) =>
+                          ( typeof row?.checkItems?.length === 'number' &&
                           <>
                             <CollapsibleCheckedItemInputRow 
                               key={index}
                               row={row} 
                               index={index} 
-                              checkParamList={checkParamList} 
+                              checkItemLists={checkItemLists} 
                               handleChangeCheckItemListDate={handleChangeCheckItemListDate}
                               handleChangeCheckItemListValue={handleChangeCheckItemListValue}
                               handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}

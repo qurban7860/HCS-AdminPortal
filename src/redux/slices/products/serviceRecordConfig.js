@@ -214,6 +214,7 @@ export function getActiveServiceRecordConfigsForRecords(machineId, type){
         params: {
           isArchived: false,
           isActive: true,
+          status: 'APPROVED',
           recordType: type?.name,
         }
       }
