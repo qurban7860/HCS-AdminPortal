@@ -46,6 +46,9 @@ function ViewFormEditDeleteButtons({
   handleMap,
   machineSupportDate,
   moveCustomerContact,
+  approveConfig,
+  approveConfigHandler,
+  copyConfiguration,
   supportSubscription,
   userStatus,
   onUserStatusChange,
@@ -64,6 +67,7 @@ function ViewFormEditDeleteButtons({
   const [openVerificationConfirm, setOpenVerificationConfirm] = useState(false);
   const [openUserStatuConfirm, setOpenUserStatuConfirm] = useState(false);
   const [openConfigStatuConfirm, setOpenConfigStatuConfirm] = useState(false);
+  const [openCopyConfigConfirm, setOpenCopyConfigConfirm] = useState(false);
   const [lockUntil, setLockUntil] = useState(''); // State to store the selected date
   const [lockUntilError, setLockUntilError] = useState(''); // State to manage the error message
 
@@ -140,6 +144,11 @@ function ViewFormEditDeleteButtons({
     if (dialogType === 'ChangeConfigStatus') {
       setOpenConfigStatuConfirm(true);
     }
+
+    if (dialogType === 'copyConfiguration') {
+      setOpenCopyConfigConfirm(true);
+    }
+
   };
 
   const handleCloseConfirm = (dialogType) => {
@@ -168,6 +177,10 @@ function ViewFormEditDeleteButtons({
     if (dialogType === 'ChangeConfigStatus') {
       setOpenConfigStatuConfirm(false);
     }
+    if (dialogType === 'copyConfiguration') {
+      setOpenCopyConfigConfirm(false);
+    }
+    
   };
 
   const handleVerificationConfirm = () => {
@@ -233,6 +246,14 @@ function ViewFormEditDeleteButtons({
             />
           }
 
+          {approveConfig !==undefined &&
+            <IconTooltip
+              title={approveConfig?ICONS.APPROVED.heading:ICONS.NOTAPPROVED.heading}
+              color={approveConfig?ICONS.APPROVED.color:ICONS.NOTAPPROVED.color}
+              icon={approveConfig?ICONS.APPROVED.icon:ICONS.NOTAPPROVED.icon}
+            />
+          }
+          
           {supportSubscription!==undefined &&
             <IconTooltip
             title={supportSubscription?`Support Subscription Enabled`:`Support Subscription Disabled`}
@@ -307,7 +328,7 @@ function ViewFormEditDeleteButtons({
 
       <Grid item  >
         <StyledStack>
-          {handleVerification && !isVerified?.length && (
+          {handleVerification && (
           <IconTooltip
             title='Verify'
             onClick={() => handleOpenConfirm('Verification')}
@@ -368,6 +389,16 @@ function ViewFormEditDeleteButtons({
           />
         )}
 
+        {copyConfiguration && (
+          <IconTooltip
+            title="Create Copy"
+            // disabled={...}
+            onClick={copyConfiguration}
+            color={theme.palette.primary.main}
+            icon="mingcute:copy-fill"
+          />
+        )}
+
         {/* change password for users */}
         {handleUpdatePassword && (
           <IconTooltip
@@ -388,6 +419,16 @@ function ViewFormEditDeleteButtons({
           }}
           color={theme.palette.primary.main}
           icon="eva:swap-fill"
+        />}
+
+          {/* approve configuration */}
+          {approveConfigHandler && <IconTooltip
+          title="Change Status to Approve"
+          onClick={() => {
+            approveConfigHandler();
+          }}
+          color={theme.palette.primary.main}
+          icon="mdi:approve"
         />}
 
         {/* edit button */}
@@ -574,6 +615,9 @@ ViewFormEditDeleteButtons.propTypes = {
   handleMap: PropTypes.func,
   machineSupportDate: PropTypes.string,
   moveCustomerContact: PropTypes.func,
+  approveConfig: PropTypes.bool,
+  approveConfigHandler: PropTypes.func,
+  copyConfiguration: PropTypes.func,
   supportSubscription: PropTypes.bool,
   userStatus:PropTypes.object,
   onUserStatusChange:PropTypes.func

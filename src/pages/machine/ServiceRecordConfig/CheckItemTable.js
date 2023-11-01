@@ -10,7 +10,7 @@ import { useSnackbar } from '../../../components/snackbar';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import CollapsibleCheckedItemRow from './CollapsibleCheckedItemRow'
 
-const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue, checkItemCategory }) => {
+const CheckItemTable = ({ checkParams, setCheckParams, ListTitle, setValue, checkItemCategory }) => {
 
     const isMobile = useResponsive('down', 'sm');
     const { enqueueSnackbar } = useSnackbar();
@@ -22,7 +22,6 @@ const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue,
     const [checkItemList, setCheckItemList] = useState([]);
     const [checkItemListTitleError, setItemListTitleError] = useState('');
     const [checkItemListError, setItemListError] = useState('');
-
       const handleInputChange = (value) => {
         if (value) {
           setCheckItemList((checkItems) => [...checkItems, value[value.length - 1]]);
@@ -77,7 +76,7 @@ const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue,
     }
   };
 
-  const toggleEdit = (index) => {setCheckItemList(checkParams[index]?.paramList); setCheckParamNumber(index); setValue('paramListTitle',checkParams[index]?.paramListTitle) };
+  const toggleEdit = (index) => {setCheckItemList(checkParams[index]?.checkItems); setCheckParamNumber(index); setValue('ListTitle',checkParams[index]?.ListTitle) };
 
   const deleteIndex = (indexToRemove) => {
     try {
@@ -91,7 +90,7 @@ const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue,
   };
   
 useEffect(()=>{
-  if(paramListTitle?.length > 200){
+  if(ListTitle?.length > 200){
     setItemListTitleError('Item List Title must be at most 200 characters')
   }else{
     setItemListTitleError('')
@@ -102,10 +101,10 @@ useEffect(()=>{
   }else{
     setItemListError('')
   }
-},[checkItemList, paramListTitle ])
+},[checkItemList, ListTitle ])
 
   const saveCheckParam = (prevCheckParamNumber) =>{
-          if(typeof paramListTitle !== 'string' || paramListTitle && paramListTitle?.length === 0 ){
+          if(typeof ListTitle !== 'string' || ListTitle && ListTitle?.length === 0 ){
             setItemListTitleError('Item List Title is Required!')
           }
 
@@ -116,7 +115,7 @@ useEffect(()=>{
           if( !checkItemListError.trim() && !checkItemListTitleError.trim() ){
       try {
         const updatedCheckParam = [...checkParams]; 
-        const checkItemObject= { paramListTitle, paramList: checkItemList }
+        const checkItemObject= { ListTitle, checkItems: checkItemList }
         if(prevCheckParamNumber > checkParams.length-1) {
           updatedCheckParam.splice(prevCheckParamNumber, 0, checkItemObject);
           setCheckParams(updatedCheckParam);
@@ -134,7 +133,7 @@ useEffect(()=>{
           setCheckParamNumber(checkParams.length) 
           enqueueSnackbar('Updated success!');
         }
-        setValue('paramListTitle','')
+        setValue('ListTitle','')
         setCheckItemList([])
       } catch (err) {
         enqueueSnackbar('Save failed!', { variant: `error` });
@@ -148,7 +147,7 @@ useEffect(()=>{
                     <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
                       Check Items
                     </Typography>
-                    <RHFTextField name="paramListTitle" label="Item List Title*" Error={!!checkItemListTitleError} helperText={checkItemListTitleError} />
+                    <RHFTextField name="ListTitle" label="Item List Title*" Error={!!checkItemListTitleError} helperText={checkItemListTitleError} />
 
                       <RHFAutocomplete 
                           name="checkItemCategory"
@@ -219,7 +218,7 @@ useEffect(()=>{
                       </Grid>
                       <Grid item md={12} display="flex" justifyContent="flex-end" >
                         <Button
-                          disabled={(!checkItemList?.length ?? 0) || (!paramListTitle ?? '') }
+                          disabled={(!checkItemList?.length ?? 0) || (!ListTitle ?? '') }
                           onClick={()=>saveCheckParam(checkParamNumber)}
                           fullWidth={ isMobile }
                           variant="contained" color='primary' sx={{ ...(isMobile && { width: '100%' })}}
@@ -230,7 +229,7 @@ useEffect(()=>{
                     <TableContainer >
                       <Table>
                         <TableBody>
-                          {checkParams && checkParams.map((value, checkParamsIndex) =>( typeof value?.paramList?.length === 'number' &&
+                          {checkParams && checkParams.map((value, checkParamsIndex) =>( typeof value?.checkItems?.length === 'number' &&
                           <CollapsibleCheckedItemRow key={uuidv4()} value={value} index={checkParamsIndex} toggleEdit={toggleEdit} deleteIndex={deleteIndex} handleListDragStart={handleListDragStart} handleListDrop={handleListDrop} />
                           ))}
                       </TableBody>
@@ -246,7 +245,7 @@ export default memo(CheckItemTable)
 CheckItemTable.propTypes = {
     checkParams: PropTypes.array.isRequired,
     setCheckParams: PropTypes.func.isRequired,
-    paramListTitle: PropTypes.string,
+    ListTitle: PropTypes.string,
     setValue: PropTypes.func.isRequired,
     checkItemCategory: PropTypes.object,
 };

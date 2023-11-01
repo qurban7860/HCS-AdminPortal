@@ -21,6 +21,18 @@ export const ICONS = {
     heading: 'Inactive',
   },
 
+  // isAPPROVED
+  APPROVED: {
+    icon: 'mdi:check-decagram',
+    color: '#008000',
+    heading: 'Approved',
+  },
+  NOTAPPROVED: {
+    icon: 'mdi:alert-decagram',
+    color: '#FF0000',
+    heading: 'Not Approved',
+  },
+  
   REQUIRED: {
     icon: 'mdi:required-circle',
     color: '#008000',

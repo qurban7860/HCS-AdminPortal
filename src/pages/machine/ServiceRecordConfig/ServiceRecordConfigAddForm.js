@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 // form
 import { useForm } from 'react-hook-form';
@@ -34,7 +34,8 @@ export default function ServiceRecordConfigAddForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const { recordTypes, status, activeServiceRecordConfigs } = useSelector((state) => state.serviceRecordConfig);
+  const { id } = useParams();
+  const { recordTypes, status, activeServiceRecordConfigs, serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
   const { activeCategories } = useSelector((state) => state.category);
   const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
@@ -46,36 +47,42 @@ export default function ServiceRecordConfigAddForm() {
     dispatch(getActiveServiceCategories());
   }, [dispatch]);
 
+  useEffect(() => {
+    if(id){
+      setCheckParams(serviceRecordConfig?.checkItemLists || [])
+    }
+  }, [serviceRecordConfig, id]);
+
   const defaultValues = useMemo(
     () => ({
-      docTitle: '',
-      recordType: null,
-      docVersionNo: 1,
-      NoOfApprovalsRequired: 1,
-      machineModel: null,
-      category: null,
-      textBeforeCheckItems: '',
+      docTitle: id ? serviceRecordConfig?.docTitle : '',
+      recordType: id ? {name: serviceRecordConfig?.recordType} || null : null,
+      docVersionNo: id ? serviceRecordConfig?.docVersionNo || 1 : 1,
+      noOfVerificationsRequired: id ? serviceRecordConfig?.noOfVerificationsRequired || 1 : 1,
+      machineCategory: id ? serviceRecordConfig?.machineCategory || null : null,
+      machineModel:  id ? serviceRecordConfig?.machineModel || null : null,
+      textBeforeCheckItems:  id ? serviceRecordConfig?.textBeforeCheckItems || '' : '',
       checkItemCategory: null,
 
-      textAfterCheckItems: '',
-      isOperatorSignatureRequired: false,
-      enableNote: false,
-      enableMaintenanceRecommendations: false,
-      enableSuggestedSpares: false,
+      textAfterCheckItems:  id ? serviceRecordConfig?.textAfterCheckItems || '' : '',
+      isOperatorSignatureRequired:  id ? serviceRecordConfig?.isOperatorSignatureRequired : false,
+      enableNote:  id ? serviceRecordConfig?.enableNote : false,
+      enableMaintenanceRecommendations:  id ? serviceRecordConfig?.enableMaintenanceRecommendations : false,
+      enableSuggestedSpares:  id ? serviceRecordConfig?.enableSuggestedSpares : false,
 
       // header
-      headerType: null,
-      headerLeftText: '',
-      headerCenterText: '',
-      headerRightText: '',
+      headerType:  id ? { name: serviceRecordConfig?.header?.type } : null,
+      headerLeftText:  id ? serviceRecordConfig?.header?.leftText || '' : '',
+      headerCenterText:  id ? serviceRecordConfig?.header?.centerText || '' : '',
+      headerRightText:  id ? serviceRecordConfig?.header?.rightText || '' : '',
 
       // footer
-      footerType: null,
-      footerLeftText: '',
-      footerCenterText: '',
-      footerRightText: '',
+      footerType:  id ? { name: serviceRecordConfig?.footer?.type } : null,
+      footerLeftText:  id ? serviceRecordConfig?.footer?.leftText || '' : '',
+      footerCenterText:  id ? serviceRecordConfig?.footer?.centerText || '' : '',
+      footerRightText:  id ? serviceRecordConfig?.footer?.rightText || '' : '',
 
-      isActive: true,
+      isActive: id ? serviceRecordConfig?.isActive : true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -94,19 +101,19 @@ export default function ServiceRecordConfigAddForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const { category, machineModel, paramListTitle, checkItemCategory } = watch();
+  const { machineCategory, machineModel, ListTitle, checkItemCategory } = watch();
 
   useEffect(() => {
-    if(category === null){
+    if(machineCategory === null){
       dispatch(resetActiveMachineModels())
       setValue('machineModel',null);
-    }else if(category?._id === machineModel?.category?._id){
-      dispatch(getActiveMachineModels(category?._id));
-    }else if(category?._id !== machineModel?.category?._id){
-      dispatch(getActiveMachineModels(category?._id));
-      setValue('machineModel',null);
+    }else if(machineCategory?._id === machineModel?.category?._id){
+      dispatch(getActiveMachineModels(machineCategory?._id));
+    }else if(machineCategory?._id !== machineModel?.category?._id){
+      dispatch(getActiveMachineModels(machineCategory?._id));
+      // setValue('machineModel',null);
     }
-  },[dispatch, category,setValue,machineModel]);
+  },[dispatch, machineCategory,setValue,machineModel]);
 
   const toggleCancel = () => {
     navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.list);
@@ -114,12 +121,16 @@ export default function ServiceRecordConfigAddForm() {
 
   const onSubmit = async (data) => {
     try {
+
       if(isDraft){
         data.status = 'DRAFT'
       }else{
         data.status = 'SUBMITTED'
       }
-      data.checkParam = checkParams
+      if(id){
+        data.parentConfig = id
+      }
+      data.checkItemLists = checkParams
       await dispatch(addServiceRecordConfig(data));
       reset();
       enqueueSnackbar('Create success!');
@@ -169,8 +180,8 @@ export default function ServiceRecordConfigAddForm() {
                     )}
                   />
 
-                  <RHFTextField name="docVersionNo" label="Version No.*" />
-                  <RHFTextField name="NoOfApprovalsRequired" label="Required Approvals*" />
+                  <RHFTextField name="docVersionNo" disabled={id} label="Version No.*" />
+                  <RHFTextField name="noOfVerificationsRequired" label="Required Approvals*" />
 
                   {/* <RHFAutocomplete 
                     name="status"
@@ -195,7 +206,7 @@ export default function ServiceRecordConfigAddForm() {
                   /> */}
 
                   <RHFAutocomplete 
-                    name="category"
+                    name="machineCategory"
                     label="Machine Category"
                     options={activeCategories}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
@@ -218,7 +229,7 @@ export default function ServiceRecordConfigAddForm() {
                   
                 </Box>
                   <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline />
-                      <CheckItemTable setCheckParams={setCheckParams} checkParams={checkParams} paramListTitle={paramListTitle} setValue={setValue} checkItemCategory={checkItemCategory} />
+                      <CheckItemTable setCheckParams={setCheckParams} checkParams={checkParams} ListTitle={ListTitle} setValue={setValue} checkItemCategory={checkItemCategory} />
                   <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline />
                 
                 <Box

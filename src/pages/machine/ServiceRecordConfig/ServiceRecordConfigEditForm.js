@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, Typography, Container, Autocomplete, TextField} from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Autocomplete, TextField} from '@mui/material';
 // slice
 import {
   updateServiceRecordConfig,
@@ -43,12 +43,12 @@ export default function ServiceRecordConfigEditForm() {
 
   const defaultValues = useMemo(
     () => ({
+    docTitle: serviceRecordConfig?.docTitle || '',
     recordType: {name: serviceRecordConfig?.recordType} || null,
     machineCategory: serviceRecordConfig?.machineCategory || null,
     machineModel: serviceRecordConfig?.machineModel || null,
     docVersionNo: serviceRecordConfig?.docVersionNo || 1,
-    NoOfApprovalsRequired: serviceRecordConfig?.NoOfApprovalsRequired || 1,
-    docTitle: serviceRecordConfig?.docTitle || '',
+    noOfVerificationsRequired: serviceRecordConfig?.noOfVerificationsRequired || 1,
     textBeforeCheckItems: serviceRecordConfig?.textBeforeCheckItems || '',
     checkItemCategory: null,
     // // Check Params
@@ -71,7 +71,7 @@ export default function ServiceRecordConfigEditForm() {
     footerCenterText: serviceRecordConfig?.footer?.centerText || '',
     footerRightText: serviceRecordConfig?.footer?.rightText || '',
 
-    isActive: serviceRecordConfig.isActive
+    isActive: serviceRecordConfig?.isActive
   }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [serviceRecordConfig]
@@ -103,7 +103,7 @@ export default function ServiceRecordConfigEditForm() {
 
   /* eslint-enable */
   useEffect(() => {
-    setCheckParams(serviceRecordConfig?.checkParams)
+    setCheckParams(serviceRecordConfig?.checkItemLists || [])
   }, [serviceRecordConfig]);
 
   useEffect(() => {
@@ -119,7 +119,7 @@ export default function ServiceRecordConfigEditForm() {
   };
   const onSubmit = async (data) => {
     try {
-      data.checkParam = checkParams
+      data.checkItemLists = checkParams
       if(isDraft){
         data.status = 'DRAFT'
       }else{
@@ -135,7 +135,7 @@ export default function ServiceRecordConfigEditForm() {
       console.error(err.message);
     }
   };
-
+console.log("checkParams : ",checkParams);
   return (
     <>
       <StyledCardContainer>
@@ -174,7 +174,7 @@ export default function ServiceRecordConfigEditForm() {
                   />
 
                   <RHFTextField name="docVersionNo" label="Version No.*" />
-                  <RHFTextField name="NoOfApprovalsRequired" label="Required Approvals*" />
+                  <RHFTextField name="noOfVerificationsRequired" label="Required Approvals*" />
 
                   <Controller
                     name="machineCategory"
