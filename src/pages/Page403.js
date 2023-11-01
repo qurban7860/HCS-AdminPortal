@@ -19,7 +19,7 @@ export default function Page403() {
             margin: 'auto',
             filter: 'grayscale(100%) opacity(30%)',
             pointerEvents: 'none',
-            pt: 20,
+            pt: 30,
             pb: 20,
           }}
         />
