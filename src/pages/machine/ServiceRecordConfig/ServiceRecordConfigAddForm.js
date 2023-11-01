@@ -62,6 +62,7 @@ export default function ServiceRecordConfigAddForm() {
       machineCategory: id ? serviceRecordConfig?.machineCategory || null : null,
       machineModel:  id ? serviceRecordConfig?.machineModel || null : null,
       textBeforeCheckItems:  id ? serviceRecordConfig?.textBeforeCheckItems || '' : '',
+      ListTitle: '',
       checkItemCategory: null,
 
       textAfterCheckItems:  id ? serviceRecordConfig?.textAfterCheckItems || '' : '',

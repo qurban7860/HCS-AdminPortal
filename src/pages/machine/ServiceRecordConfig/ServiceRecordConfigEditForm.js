@@ -52,7 +52,7 @@ export default function ServiceRecordConfigEditForm() {
     textBeforeCheckItems: serviceRecordConfig?.textBeforeCheckItems || '',
     checkItemCategory: null,
     // // Check Params
-    paramListTitle:  '',
+    ListTitle:  '',
     // paramList : serviceRecordConfig?.checkParams[0]?.paramList || [],
 
     textAfterCheckItems: serviceRecordConfig?.textAfterCheckItems || '',
