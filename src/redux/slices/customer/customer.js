@@ -166,7 +166,6 @@ export const {
 
 export function createCustomerCSV() {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
     try {
       const response = axios.get(`${CONFIG.SERVER_URL}crm/customers/export`,
       {

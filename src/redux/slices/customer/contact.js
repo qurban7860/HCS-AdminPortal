@@ -321,7 +321,6 @@ export function getSPContacts() {
 
 export function createCustomerContactsCSV(customerID ) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
     try {
        const response = axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts/export` , 
         {

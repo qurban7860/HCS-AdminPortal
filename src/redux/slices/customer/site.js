@@ -278,7 +278,6 @@ export function updateSite(params,customerId,Id) {
 
 export function createCustomerStiesCSV(customerID) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
     try {
       if(customerID){
         const response = axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites/export` , 

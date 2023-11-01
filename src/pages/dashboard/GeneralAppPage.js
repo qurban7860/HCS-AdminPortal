@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useState } from 'react';
 // @mui
-import { Typography, Grid, Stack, Card, Divider, TextField, Autocomplete, CardHeader, Box } from '@mui/material';
+import { Typography, Grid, Stack, Card, Divider, TextField, Autocomplete, CardHeader, Box, createTheme, IconButton, Dialog, DialogContent, useMediaQuery } from '@mui/material';
 import { StyledBg, StyledContainer, StyledGlobalCard } from '../../theme/styles/default-styles';
 // sections
 import HowickWelcome from '../components/DashboardWidgets/HowickWelcome';
@@ -8,6 +8,7 @@ import HowickWidgets from '../components/DashboardWidgets/HowickWidgets';
 // assets & hooks
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCount, getMachinesByCountry, getMachinesByModel, getMachinesByYear } from '../../redux/slices/dashboard/count';
+
 // components
 import ChartBar from '../components/Charts/ChartBar';
 import ProductionLog from '../components/Charts/ProductionLog';
@@ -25,10 +26,13 @@ import { CONFIG } from '../../config-global';
 import {  getActiveMachineModels } from '../../redux/slices/products/model';
 import {  getCategories } from '../../redux/slices/products/category';
 import { countries } from '../../assets/data';
+import Iconify from '../../components/iconify';
+import IconTooltip from '../components/Icons/IconTooltip';
+import DialogLabel from '../components/Dialog/DialogLabel';
+import DialogLink from '../components/Dialog/DialogLink';
 // ----------------------------------------------------------------------
- 
+
 export default function GeneralAppPage() {
-  
   const dispatch = useDispatch();
   const { count, isLoading, error, initial, responseMessage, machinesByCountry, machinesByYear, machinesByModel } = useSelector((state) => state.count);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
@@ -39,15 +43,21 @@ export default function GeneralAppPage() {
   const [MBCYear, setMBCYear] = useState(null);
   const [MBCModel, setMBCModel] = useState(null);
   const [MBCCategory, setMBCCategory] = useState(null);
-  
+
   const [MBMYear, setMBMYear] = useState(null);
   const [MBMCountry, setMBMCountry] = useState(null);
   const [MBMCategory, setMBMCategory] = useState(null);
-  
+
   const [MBYCountry, setMBYCountry] = useState(null);
   const [MBYModel, setMBYModel] = useState(null);
   const [MBYCategory, setMBYCategory] = useState(null);
-  
+
+  const [preview, setPreview] = useState(false);
+  const [expandTitle, setExpandTitle] = useState("");
+  const [optionData, setOptionData] = useState([]);
+  const [seriesData, setSeriesData] = useState([]);
+  const [expandGraphHeight, setExpandGraphHeight] = useState(320);
+
   const modelWiseMachineNumber = [];
   const yearWiseMachinesYear = [];
   const modelWiseMachineModel = [];
@@ -60,7 +70,6 @@ export default function GeneralAppPage() {
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: currentYear - 1999 }, (_, index) => 2000 + index);
-
   if (machinesByModel.length !== 0) {
     machinesByModel.modelWiseMachineCount.map((model) => {
       modelWiseMachineNumber.push(model.count);
@@ -76,7 +85,7 @@ export default function GeneralAppPage() {
       return null;
     });
   }
-  
+
   if (machinesByCountry.length !== 0) {
     machinesByCountry.countryWiseMachineCount.map((customer) => {
       countryWiseMachineCountNumber.push(customer.count);
@@ -93,6 +102,8 @@ export default function GeneralAppPage() {
     });
   }
 
+  console.log()
+
   const handleGraphCountry = (category, year, model) => {
     dispatch(getMachinesByCountry(category, year, model));
   };
@@ -105,6 +116,29 @@ export default function GeneralAppPage() {
     dispatch(getMachinesByYear(category, model, country));
   };
 
+  const handleExpandGraph = (graph) => {
+    
+    if(graph==="country"){
+      setExpandTitle("Machine By Countries");
+      setOptionData(countryWiseMachineCountCountries);
+      setSeriesData(countryWiseMachineCountNumber);
+      setExpandGraphHeight(countryWiseMachineCountCountries.length*50)
+    }else if(graph==="model"){
+      setExpandTitle("Machine By Models");
+      setOptionData(modelWiseMachineModel);
+      setSeriesData(modelWiseMachineNumber);
+      setExpandGraphHeight(modelWiseMachineModel.length*50)
+    } else if(graph==="year"){
+      setExpandTitle("Machine By Years");
+      setOptionData(yearWiseMachinesYear);
+      setSeriesData(yearWiseMachinesNumber);
+      setExpandGraphHeight(yearWiseMachinesYear.length*50)
+    }
+
+    setPreview(true);
+    // dispatch(getMachinesByYear(category, model, country));
+  };
+   
   useLayoutEffect(() => {
     dispatch(getCategories());
     dispatch(getActiveMachineModels());
@@ -114,7 +148,6 @@ export default function GeneralAppPage() {
     dispatch(getMachinesByYear());
   }, [dispatch]);
 
-  
   return (
     <StyledContainer maxWidth={false} p={0} >
       <Grid container item sx={{ justifyContent: 'center' }}>
@@ -159,7 +192,7 @@ export default function GeneralAppPage() {
                 total={count?.machineCount || 0}
                 notVerifiedTitle="Not Verified"
                 notVerifiedCount={count?.nonVerifiedMachineCount}
-                connectableTitle="Decoilers / Kits" 
+                connectableTitle="Decoilers / Kits"
                 connectableCount={count?.connectAbleMachinesCount}
                 icon="mdi:window-shutter-settings"
                 color="info"
@@ -211,23 +244,29 @@ export default function GeneralAppPage() {
                         />
 
                         <Autocomplete
-                          sx={{ width: '120px'}}
+                          sx={{ width: '120px', paddingRight:1}}
                           options={years}
                           getOptionLabel={(option) => option.toString()}
                           renderInput={(params) => <TextField {...params} label="Year" size="small" />}
                           onChange={(event, newValue) =>{setMBCYear(newValue); ; handleGraphCountry(MBCCategory, newValue, MBCModel)}}
                         />
+
+
+                        <IconButton size='large' color="primary" onClick={()=>{handleExpandGraph('country')}}>
+                          <Iconify icon="fluent:expand-up-right-20-filled" />
+                        </IconButton>
+
+
                       </Box>
                   }
                 />
                 <Divider sx={{paddingTop:2}} />
+
                 <ChartBar
                   optionsData={countryWiseMachineCountCountries}
                   seriesData={countryWiseMachineCountNumber}
                   type="bar"
-                  height="300px"
-                  width="100%"
-                  color="warning"
+                  sx={{ backgroundColor: 'transparent' }}
                 />
               </StyledGlobalCard>
             </Grid>
@@ -260,13 +299,15 @@ export default function GeneralAppPage() {
                         />
 
                         <Autocomplete
-                          sx={{ width: '120px'}}
+                          sx={{ width: '120px', paddingRight:1 }}
                           options={years}
                           getOptionLabel={(option) => option.toString()}
                           renderInput={(params) => <TextField {...params} label="Year" size="small" />}
                           onChange={(event, newValue) =>{setMBMYear(newValue);handleGraphModel(MBMCategory, newValue,MBMCountry)}}
                         />
-                       
+                        <IconButton size='large' color="primary" onClick={()=>{handleExpandGraph('model')}}>
+                          <Iconify icon="fluent:expand-up-right-20-filled" />
+                        </IconButton>
                       </Box>
                   }
                 />
@@ -308,13 +349,16 @@ export default function GeneralAppPage() {
                         />
 
                         <Autocomplete
-                          sx={{ width: '120px'}}
+                          sx={{ width: '120px', paddingRight:1 }}
                           options={countries}
                           isOptionEqualToValue={(option, value) => option.code === value.code}
                           getOptionLabel={(option) => `${option.label ? option.label : ''}`}
                           renderInput={(params) => <TextField {...params} label="Country" size="small" />}
                           onChange={(event, newValue) =>{setMBYCountry(newValue?.code);handleGraphYear(MBYCategory, MBYModel,newValue?.code)}}
                         />
+                        <IconButton size='large' color="primary" onClick={()=>{handleExpandGraph('year')}}>
+                          <Iconify icon="fluent:expand-up-right-20-filled" />
+                        </IconButton>
                       </Box>
                   }
                 />
@@ -373,6 +417,29 @@ export default function GeneralAppPage() {
 
           </Grid>
         </Grid>
+
+        <Dialog
+          disableEnforceFocus
+          fullWidth
+          maxWidth="xl"
+          open={ preview }
+          onClose={ ()=> setPreview(false) }
+          keepMounted
+          aria-describedby="alert-dialog-slide-description"
+          
+        >
+          <DialogLabel onClick={ ()=> setPreview(false) } content={expandTitle} />
+          <DialogContent dividers>
+              <ChartBar
+                optionsData={optionData}
+                seriesData={seriesData}
+                height={expandGraphHeight}
+                type="bar"
+                sx={{ backgroundColor: 'transparent'}}
+              />
+          </DialogContent>
+          <DialogLink onClose={()=> setPreview(false)}/>
+        </Dialog>
 
         {/* hide this in the live, but show in development and test for now  */}
         {showDevGraphs ?

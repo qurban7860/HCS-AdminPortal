@@ -68,6 +68,7 @@ export default function HowickWidgets({
       direction="row"
       alignItems="center"
       sx={{
+        width:'100%',
         p: 3,
         height:'100%',
         borderRadius: 2,
