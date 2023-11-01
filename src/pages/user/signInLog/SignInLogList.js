@@ -32,7 +32,7 @@ import { getSignInLogs,
 import { Cover } from '../../components/Defaults/Cover';
 import { fDateTime } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
-import { PATH_SECURITY } from '../../../routes/paths';
+import { PATH_PAGE, PATH_SECURITY } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -74,15 +74,25 @@ export default function SignInLogList() {
   const userId = localStorage.getItem('userId');
 
   const { signInLogs, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.user);
+
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
+  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
+
   useLayoutEffect(() => {
     dispatch(getSignInLogs(userId));
   }, [dispatch, userId]);
 
   useEffect(() => {
+
+    if(!isSuperAdmin){
+      navigate(PATH_PAGE.page403)
+    }
+
     if (initial) {
       setTableData(signInLogs);
     }
-  }, [signInLogs, initial]);
+  }, [signInLogs, initial, isSuperAdmin, navigate]);
 
   const reloadList = () => {
     dispatch(getSignInLogs(userId));

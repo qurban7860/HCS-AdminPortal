@@ -110,22 +110,22 @@ export const ICONS = {
   // customerAccess
   ALLOWED: {
     icon: 'mdi:book-check',
-    color:'#008000',
+    color: '#008000',
     heading: 'Allowed',
   },
   DISALLOWED: {
     icon: 'mdi:book-cancel-outline',
-    color:'#FF0000',
+    color: '#FF0000',
     heading: 'Disallowed',
   },
   // ----------------------------------------------------------------
 
-    // Back Link
-    BACK_LINK: {
-      icon: 'vaadin:arrow-backward',
-      color: 'blue',
-      heading: 'Back',
-    },
+  // Back Link
+  BACK_LINK: {
+    icon: 'vaadin:arrow-backward',
+    color: 'blue',
+    heading: 'Back',
+  },
 
   // ------------------------------------------------------------
   // map icon
@@ -179,7 +179,6 @@ export const ICONS = {
     icon: 'mdi:cog',
     heading: 'Item Categories',
   },
-
 
   MACHINE_CHECK_ITEMS: {
     icon: 'carbon:parameter',
@@ -260,5 +259,9 @@ export const ICONS = {
     icon: 'mingcute:unlock-fill',
     color: '#008000',
     heading: 'Unlock User',
+  },
+  // @root - GoogleMaps - map marker
+  MAP_MARKER: {
+    url: '/logo/howick_map-marker.svg',
   },
 };

@@ -171,13 +171,13 @@ export default function ProfileList() {
           </Scrollbar>
         </TableContainer>
 
-        <TablePaginationCustom
+        {!isNotFound &&<TablePaginationCustom
           count={dataFiltered.length}
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
-        />
+        />}
         <Grid md={12}>
           <TableNoData isNotFound={isNotFound} />
         </Grid>
