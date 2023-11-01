@@ -318,7 +318,7 @@ export function addServiceRecordConfig(params) {
           recordType: params.recordType?.name.toUpperCase(),
           status: params.status,
           docVersionNo: params.docVersionNo,
-          NoOfApprovalsRequired: params.NoOfApprovalsRequired,
+          noOfVerificationsRequired: params.noOfVerificationsRequired,
           header: {},
           footer: {},
           checkParams: [],
@@ -332,8 +332,8 @@ export function addServiceRecordConfig(params) {
           data.machineModel = params.machineModel?._id;
         }
 
-        if(params.category){
-          data.machineCategory = params.category?._id;
+        if(params.machineCategory){
+          data.machineCategory = params.machineCategory?._id;
         }
         if(params.docTitle){
           data.docTitle = params.docTitle;
@@ -382,11 +382,11 @@ export function addServiceRecordConfig(params) {
         if(params.footerRightText){
           data.footer.rightText = params.footerRightText;
         }
-        if(params?.checkParam){
-          data.checkParams = (params?.checkParam || [])
+        if(params?.checkItemLists){
+          data.checkItemLists = (params?.checkItemLists || [])
           .map((param) => ({
-            paramListTitle: param.paramListTitle || '', 
-            paramList: (param.paramList || [])
+            ListTitle: param.paramListTitle || '', 
+            checkItems: (param.paramList || [])
               .map((paramlist) => (paramlist?._id || null))
               .filter((item) => item !== null), 
           }))
@@ -414,8 +414,8 @@ export function updateServiceRecordConfig(params,Id) {
         recordType: params?.recordType?.name,
         status: params.status,
         docVersionNo: params.docVersionNo,
-        NoOfApprovalsRequired: params.NoOfApprovalsRequired,
-        machineCategory: params?.category?._id || null,
+        noOfVerificationsRequired: params.noOfVerificationsRequired,
+        machineCategory: params?.machineCategory?._id || null,
         machineModel: params?.machineModel?._id || null,
         textBeforeCheckItems: params?.textBeforeCheckItems,
         textAfterCheckItems: params?.textAfterCheckItems,
@@ -446,19 +446,19 @@ export function updateServiceRecordConfig(params,Id) {
       }
 
       // checkParams
-      if(params?.checkParam){
-        data.checkParams = (params?.checkParam || [])
+      if(params?.checkItemLists){
+        data.checkItemLists = (params?.checkItemLists || [])
         .map((param) => ({
-          paramListTitle: param.paramListTitle || '', 
-          paramList: (param.paramList || [])
+          ListTitle: param.ListTitle || '', 
+          checkItems: (param.checkItems || [])
             .map((paramlist) => (paramlist?._id || null))
             .filter((item) => item !== null), 
         }))
-        .filter((param) => param.paramList.length > 0);
+        .filter((param) => param.checkItems.length > 0);
       }else{
         data.checkParams = [];
       }
-      console.log("data : ", data)
+      // console.log("data : ", data)
       await axios.patch(`${CONFIG.SERVER_URL}products/serviceRecordsConfig/${Id}`,
         data
       );

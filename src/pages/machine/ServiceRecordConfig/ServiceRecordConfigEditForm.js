@@ -48,7 +48,7 @@ export default function ServiceRecordConfigEditForm() {
     machineCategory: serviceRecordConfig?.machineCategory || null,
     machineModel: serviceRecordConfig?.machineModel || null,
     docVersionNo: serviceRecordConfig?.docVersionNo || 1,
-    NoOfApprovalsRequired: serviceRecordConfig?.noOfVerificationsRequired || 1,
+    noOfVerificationsRequired: serviceRecordConfig?.noOfVerificationsRequired || 1,
     textBeforeCheckItems: serviceRecordConfig?.textBeforeCheckItems || '',
     checkItemCategory: null,
     // // Check Params
@@ -103,7 +103,7 @@ export default function ServiceRecordConfigEditForm() {
 
   /* eslint-enable */
   useEffect(() => {
-    setCheckParams(serviceRecordConfig?.checkParams)
+    setCheckParams(serviceRecordConfig?.checkItemLists || [])
   }, [serviceRecordConfig]);
 
   useEffect(() => {
@@ -119,7 +119,7 @@ export default function ServiceRecordConfigEditForm() {
   };
   const onSubmit = async (data) => {
     try {
-      data.checkParam = checkParams
+      data.checkItemLists = checkParams
       if(isDraft){
         data.status = 'DRAFT'
       }else{
@@ -135,7 +135,7 @@ export default function ServiceRecordConfigEditForm() {
       console.error(err.message);
     }
   };
-
+console.log("checkParams : ",checkParams);
   return (
     <>
       <StyledCardContainer>
@@ -174,7 +174,7 @@ export default function ServiceRecordConfigEditForm() {
                   />
 
                   <RHFTextField name="docVersionNo" label="Version No.*" />
-                  <RHFTextField name="NoOfApprovalsRequired" label="Required Approvals*" />
+                  <RHFTextField name="noOfVerificationsRequired" label="Required Approvals*" />
 
                   <Controller
                     name="machineCategory"

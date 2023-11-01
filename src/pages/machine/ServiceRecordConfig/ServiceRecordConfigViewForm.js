@@ -61,7 +61,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
       machineModel: serviceRecordConfig?.machineModel?.name || '',
       docTitle: serviceRecordConfig?.docTitle || '',
       textBeforeCheckItems: serviceRecordConfig?.textBeforeCheckItems || '',
-      checkParams: serviceRecordConfig?.checkParams || [],
+      checkItemLists: serviceRecordConfig?.checkItemLists ,
       textAfterCheckItems: serviceRecordConfig?.textAfterCheckItems || '',
       isOperatorSignatureRequired: serviceRecordConfig?.isOperatorSignatureRequired,
       enableNote: serviceRecordConfig?.enableNote,
@@ -137,12 +137,12 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
       <ViewFormEditDeleteButtons 
         isActive={defaultValues.isActive} 
         isVerified={serviceRecordConfig?.verifications } 
-        approveConfigHandler={defaultValues?.status.toLowerCase() !== 'approved' && serviceRecordConfig?.verifications?.length >= serviceRecordConfig?.NoOfApprovalsRequired && approveConfigHandler}
-        approveConfig={ serviceRecordConfig?.verifications?.length >= serviceRecordConfig?.NoOfApprovalsRequired}
+        approveConfigHandler={defaultValues?.status.toLowerCase() === 'submitted' && serviceRecordConfig?.verifications?.length >= serviceRecordConfig?.noOfVerificationsRequired && approveConfigHandler}
+        approveConfig={ serviceRecordConfig?.verifications?.length >= serviceRecordConfig?.noOfVerificationsRequired}
         isSubmitted={defaultValues?.status.toLowerCase() === 'submitted' && defaultValues?.status.toLowerCase() !== 'approved' && returnToDraft } 
-        handleVerification={ handleVerification } 
+        handleVerification={ (!serviceRecordConfig?.verifications?.some((verifiedUser)=> verifiedUser?.verifiedBy?._id !== userId ) && serviceRecordConfig?.verifications?.length < serviceRecordConfig?.noOfVerificationsRequired) && handleVerification } 
         copyConfiguration={defaultValues?.status.toLowerCase() === 'approved' && (() => navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.copy(serviceRecordConfig._id)))}
-        // ( serviceRecordConfig?.verifications.length > 0 && serviceRecordConfig?.verifications.find((verifiedUser)=> verifiedUser?.verifiedBy?._id !== userId )) || serviceRecordConfig?.verifications?.length <= serviceRecordConfig?.NoOfApprovalsRequired &&
+        // ( serviceRecordConfig?.verifications.length > 0 && serviceRecordConfig?.verifications.find((verifiedUser)=> verifiedUser?.verifiedBy?._id !== userId )) || serviceRecordConfig?.verifications?.length <= serviceRecordConfig?.noOfVerificationsRequired &&
         handleEdit={defaultValues?.status.toLowerCase() !== 'approved' ? toggleEdit : false  } 
         onDelete={onDelete} 
         backLink={() => navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.list)} 
@@ -164,8 +164,8 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
           Check Items
         </Typography>
         {/* <Grid item md={12}>  */}
-        {defaultValues?.checkParams?.length > 0 ? (defaultValues?.checkParams.map((row, index) =>
-          ( typeof row?.paramList?.length === 'number' && row?.paramList?.length > 0 ? 
+        {defaultValues?.checkItemLists?.length > 0 ? (defaultValues?.checkItemLists.map((row, index) =>
+          ( typeof row?.checkItems?.length === 'number' && row?.checkItems?.length > 0 ? 
             <TableContainer >
                 <Table>
                     <TableBody>

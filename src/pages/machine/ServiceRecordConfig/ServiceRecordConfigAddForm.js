@@ -47,18 +47,24 @@ export default function ServiceRecordConfigAddForm() {
     dispatch(getActiveServiceCategories());
   }, [dispatch]);
 
+  useEffect(() => {
+    if(id){
+      setCheckParams(serviceRecordConfig?.checkItemLists || [])
+    }
+  }, [serviceRecordConfig, id]);
+
   const defaultValues = useMemo(
     () => ({
       docTitle: id ? serviceRecordConfig?.docTitle : '',
-      recordType: id ? {name: serviceRecordConfig?.recordType} : null,
+      recordType: id ? {name: serviceRecordConfig?.recordType} || null : null,
       docVersionNo: id ? serviceRecordConfig?.docVersionNo || 1 : 1,
-      NoOfApprovalsRequired: id ? serviceRecordConfig?.noOfVerificationsRequired || 1 : 1,
-      machineCategory: id ? serviceRecordConfig?.machineCategory : null,
-      machineModel:  id ? serviceRecordConfig?.machineModel : null,
-      textBeforeCheckItems:  id ? serviceRecordConfig?.textBeforeCheckItems : '',
+      noOfVerificationsRequired: id ? serviceRecordConfig?.noOfVerificationsRequired || 1 : 1,
+      machineCategory: id ? serviceRecordConfig?.machineCategory || null : null,
+      machineModel:  id ? serviceRecordConfig?.machineModel || null : null,
+      textBeforeCheckItems:  id ? serviceRecordConfig?.textBeforeCheckItems || '' : '',
       checkItemCategory: null,
 
-      textAfterCheckItems:  id ? serviceRecordConfig?.textAfterCheckItems : '',
+      textAfterCheckItems:  id ? serviceRecordConfig?.textAfterCheckItems || '' : '',
       isOperatorSignatureRequired:  id ? serviceRecordConfig?.isOperatorSignatureRequired : false,
       enableNote:  id ? serviceRecordConfig?.enableNote : false,
       enableMaintenanceRecommendations:  id ? serviceRecordConfig?.enableMaintenanceRecommendations : false,
@@ -66,15 +72,15 @@ export default function ServiceRecordConfigAddForm() {
 
       // header
       headerType:  id ? { name: serviceRecordConfig?.header?.type } : null,
-      headerLeftText:  id ? serviceRecordConfig?.header?.leftText : '',
-      headerCenterText:  id ? serviceRecordConfig?.header?.centerText : '',
-      headerRightText:  id ? serviceRecordConfig?.header?.rightText : '',
+      headerLeftText:  id ? serviceRecordConfig?.header?.leftText || '' : '',
+      headerCenterText:  id ? serviceRecordConfig?.header?.centerText || '' : '',
+      headerRightText:  id ? serviceRecordConfig?.header?.rightText || '' : '',
 
       // footer
       footerType:  id ? { name: serviceRecordConfig?.footer?.type } : null,
-      footerLeftText:  id ? serviceRecordConfig?.footer?.leftText : '',
-      footerCenterText:  id ? serviceRecordConfig?.footer?.centerText : '',
-      footerRightText:  id ? serviceRecordConfig?.footer?.rightText : '',
+      footerLeftText:  id ? serviceRecordConfig?.footer?.leftText || '' : '',
+      footerCenterText:  id ? serviceRecordConfig?.footer?.centerText || '' : '',
+      footerRightText:  id ? serviceRecordConfig?.footer?.rightText || '' : '',
 
       isActive: id ? serviceRecordConfig?.isActive : true,
     }),
@@ -95,7 +101,7 @@ export default function ServiceRecordConfigAddForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const { machineCategory, machineModel, paramListTitle, checkItemCategory } = watch();
+  const { machineCategory, machineModel, ListTitle, checkItemCategory } = watch();
 
   useEffect(() => {
     if(machineCategory === null){
@@ -105,7 +111,7 @@ export default function ServiceRecordConfigAddForm() {
       dispatch(getActiveMachineModels(machineCategory?._id));
     }else if(machineCategory?._id !== machineModel?.category?._id){
       dispatch(getActiveMachineModels(machineCategory?._id));
-      setValue('machineModel',null);
+      // setValue('machineModel',null);
     }
   },[dispatch, machineCategory,setValue,machineModel]);
 
@@ -124,7 +130,7 @@ export default function ServiceRecordConfigAddForm() {
       if(id){
         data.parentConfig = id
       }
-      data.checkParam = checkParams
+      data.checkItemLists = checkParams
       await dispatch(addServiceRecordConfig(data));
       reset();
       enqueueSnackbar('Create success!');
@@ -175,7 +181,7 @@ export default function ServiceRecordConfigAddForm() {
                   />
 
                   <RHFTextField name="docVersionNo" disabled={id} label="Version No.*" />
-                  <RHFTextField name="NoOfApprovalsRequired" label="Required Approvals*" />
+                  <RHFTextField name="noOfVerificationsRequired" label="Required Approvals*" />
 
                   {/* <RHFAutocomplete 
                     name="status"
@@ -223,7 +229,7 @@ export default function ServiceRecordConfigAddForm() {
                   
                 </Box>
                   <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline />
-                      <CheckItemTable setCheckParams={setCheckParams} checkParams={checkParams} paramListTitle={paramListTitle} setValue={setValue} checkItemCategory={checkItemCategory} />
+                      <CheckItemTable setCheckParams={setCheckParams} checkParams={checkParams} ListTitle={ListTitle} setValue={setValue} checkItemCategory={checkItemCategory} />
                   <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline />
                 
                 <Box
