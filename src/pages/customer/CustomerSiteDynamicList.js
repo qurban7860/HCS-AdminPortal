@@ -252,8 +252,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                           }}
                         >
                           <StyledCardWrapper
-                            condition1={activeCardIndex !== index}
-                            condition2={activeCardIndex === index}
+                            condition={activeCardIndex === index}
                             isMobile={isMobile}
                           >
                             <CardActionArea

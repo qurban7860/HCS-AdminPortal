@@ -77,15 +77,12 @@ export const GridBaseCard2 = styled(Grid)(({ theme }) => ({
  * @param {StyledCardWrapper} wrapper for the card
  * @returns wrapper for the card
  */
-export function StyledCardWrapper({ children, isMobile, condition1, condition2, ...props }) {
+export function StyledCardWrapper({ children, isMobile, condition, ...props }) {
   return (
     <Card
       sx={{
-        opacity: condition1 ? 1 : 0.6,
-        border: condition2 && '2px solid #D9D9D9',
-        boxShadow: condition2 && '0px 4px 4px rgba(127, 5, 35, 0.25)',
         borderRadius:'5px',
-        backgroundColor: condition2 && '#EDE7D9',
+        backgroundColor: condition && '#e9ecff',
         height: isMobile ? '100px' : '200px',
         width: '100%',
       }}
@@ -98,14 +95,11 @@ export function StyledCardWrapper({ children, isMobile, condition1, condition2, 
 StyledCardWrapper.propTypes = {
   children: PropTypes.node,
   isMobile: PropTypes.bool,
-  condition1: PropTypes.bool,
-  condition2: PropTypes.bool,
+  condition: PropTypes.bool
 };
 
 export function StyledScrollbar({ contacts, children, ...props }) {
-  
   const height = contacts*23;
-  console.log(height)
   return (
     <Scrollbar
       sx={{
