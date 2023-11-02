@@ -5,6 +5,7 @@ import {
   Card,
   Grid,
   IconButton,
+  Button,
   Typography,
   TableRow,
 } from '@mui/material';
@@ -63,6 +64,14 @@ export const ThumbnailNameGrid = styled(Grid)(({ theme }) => ({
   textAlign: 'center',
   width: '140px',
   mt: 1,
+}));
+
+export const ThumbnailUploadButton = styled(Button)(({ theme }) => ({
+  width: '140px',
+  height: '140px',
+  borderRadius: '16px',
+  justifyContent: 'center',
+  flexDirection: 'column',
 }));
 
 // @root - DocumentListTableRow - src/pages/document/dashboard/documents/DocumentListTableRow.js
