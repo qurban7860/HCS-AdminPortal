@@ -181,7 +181,7 @@ export default function ServiceRecordConfigAddForm() {
                     )}
                   />
 
-                  <RHFTextField name="docVersionNo" disabled={id} label="Version No.*" />
+                  <RHFTextField name="docVersionNo" disabled label="Version No.*" />
                   <RHFTextField name="noOfVerificationsRequired" label="Required Approvals*" />
 
                   {/* <RHFAutocomplete 

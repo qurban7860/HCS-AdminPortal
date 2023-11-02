@@ -12,6 +12,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                     handleChangeCheckItemListChecked,
                     handleChangeCheckItemListCheckBoxValue
                 }) => {
+                    
     const { statusTypes } = useSelector((state) => state.serviceRecordConfig);
   return (
     <Grid sx={{display: 'flex', flexDirection: 'column'}}>
