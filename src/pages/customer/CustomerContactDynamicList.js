@@ -180,7 +180,7 @@ export default function CustomerContactList(currentContact = null) {
 
         <Grid item xs={12} md={6} style={{display:'flex', justifyContent:"flex-end"}}>
          
-          {isSuperAdmin && <Button
+          {isSuperAdmin && contacts.length>0 && <Button
               sx={{
                 mb: { xs: 0, md: 2 },
                 my: { xs: 1 },

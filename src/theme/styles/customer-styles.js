@@ -98,17 +98,16 @@ StyledCardWrapper.propTypes = {
   condition: PropTypes.bool
 };
 
-export function StyledScrollbar({ contacts, children, ...props }) {
-  const height = contacts*23;
+export function StyledScrollbar({ maxHeight, contacts, children, ...props }) {
+  // const height = contacts*23;
   return (
     <Scrollbar
       sx={{
         height: {
-          xs: '25vh',
-          sm: '25vh',
-          md: contacts===1?'23vh':`calc(${height>135?135:height}vh - 5px)`,
+          xs: '23.5vh',
+          lg: 'fit-content',
         },
-
+        maxHeight:maxHeight?`${maxHeight}vh`:"82vh",
         scrollSnapType: 'y mandatory',
         scrollSnapAlign: 'start',
         scrollbarWidth: 'none',
@@ -126,6 +125,7 @@ export function StyledScrollbar({ contacts, children, ...props }) {
 }
 
 StyledScrollbar.propTypes = {
+  maxHeight:PropTypes.number,
   contacts: PropTypes.number,
   children: PropTypes.node,
 };
