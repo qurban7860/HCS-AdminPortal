@@ -28,12 +28,15 @@ function ViewFormEditDeleteButtons({
   disableEditButton = false,
   isActive,
   isSubmitted,
+  returnToSubmitted,
   isVerified,
+  isVerifiedTitle,
   customerAccess,
   multiAuth,
   currentEmp,
   isRequired,
   handleVerification,
+  handleVerificationTitle,
   onDelete,
   handleEdit,
   handleTransfer,
@@ -66,7 +69,8 @@ function ViewFormEditDeleteButtons({
   const [openUserInviteConfirm, setOpenUserInviteConfirm] = useState(false);
   const [openVerificationConfirm, setOpenVerificationConfirm] = useState(false);
   const [openUserStatuConfirm, setOpenUserStatuConfirm] = useState(false);
-  const [openConfigStatuConfirm, setOpenConfigStatuConfirm] = useState(false);
+  const [openConfigDraftStatuConfirm, setOpenConfigDraftStatuConfirm] = useState(false);
+  const [openConfigSubmittedStatuConfirm, setOpenConfigSubmittedStatuConfirm] = useState(false);
   const [openCopyConfigConfirm, setOpenCopyConfigConfirm] = useState(false);
   const [lockUntil, setLockUntil] = useState(''); // State to store the selected date
   const [lockUntilError, setLockUntilError] = useState(''); // State to manage the error message
@@ -141,10 +145,13 @@ function ViewFormEditDeleteButtons({
       setOpenUserStatuConfirm(true);
     }
 
-    if (dialogType === 'ChangeConfigStatus') {
-      setOpenConfigStatuConfirm(true);
+    if (dialogType === 'ChangeConfigStatusToDraft') {
+      setOpenConfigDraftStatuConfirm(true);
     }
-
+    if (dialogType === 'ChangeConfigStatusToSubmitted') {
+      setOpenConfigSubmittedStatuConfirm(true);
+    }
+    
     if (dialogType === 'copyConfiguration') {
       setOpenCopyConfigConfirm(true);
     }
@@ -174,9 +181,14 @@ function ViewFormEditDeleteButtons({
       setLockUntilError('');
     }
 
-    if (dialogType === 'ChangeConfigStatus') {
-      setOpenConfigStatuConfirm(false);
+    if (dialogType === 'ChangeConfigStatusToDraft') {
+      setOpenConfigDraftStatuConfirm(false);
     }
+
+    if (dialogType === 'ChangeConfigStatusToSubmitted') {
+      setOpenConfigSubmittedStatuConfirm(false);
+    }
+
     if (dialogType === 'copyConfiguration') {
       setOpenCopyConfigConfirm(false);
     }
@@ -273,7 +285,7 @@ function ViewFormEditDeleteButtons({
           {isVerified?.length>0 &&
           <Badge badgeContent={isVerified.length} color="info">
             <IconTooltip
-              title='Verified'
+              title={isVerifiedTitle || 'Verified'}
               color={ICONS.ALLOWED.color}
               icon="ic:outline-verified-user"
               onClick={handleVerifiedPopoverOpen}
@@ -330,7 +342,7 @@ function ViewFormEditDeleteButtons({
         <StyledStack>
           {handleVerification && (
           <IconTooltip
-            title='Verify'
+            title={handleVerificationTitle || 'Verify'}
             onClick={() => handleOpenConfirm('Verification')}
             color={theme.palette.primary.main}
             icon="ic:outline-verified-user"
@@ -382,10 +394,21 @@ function ViewFormEditDeleteButtons({
             title="Return To Draft"
             // disabled={...}
             onClick={() => {
-              handleOpenConfirm('ChangeConfigStatus');
+              handleOpenConfirm('ChangeConfigStatusToDraft');
             }}
             color={theme.palette.primary.main}
             icon="carbon:license-maintenance-draft"
+          />
+        )}
+        {returnToSubmitted && (
+          <IconTooltip
+            title="Return To Sunmitted"
+            // disabled={...}
+            onClick={() => {
+              handleOpenConfirm('ChangeConfigStatusToSubmitted'); //
+            }}
+            color={theme.palette.primary.main}
+            icon="iconoir:submit-document"
           />
         )}
 
@@ -523,15 +546,32 @@ function ViewFormEditDeleteButtons({
       />
 
       <ConfirmDialog
-        open={openConfigStatuConfirm}
+        open={openConfigDraftStatuConfirm}
         onClose={() => handleCloseConfirm('UserStatus')}
         title="Configuration Status"
         content="Are you sure you want to change configuration status to DRAFT? "
         action={
           <LoadingButton variant="contained"
             onClick={()=>{
-              setOpenConfigStatuConfirm(false);
+              setOpenConfigDraftStatuConfirm(false);
               isSubmitted();
+            }}
+          >
+          Yes
+          </LoadingButton>
+        }
+      />
+
+      <ConfirmDialog
+        open={openConfigSubmittedStatuConfirm}
+        onClose={() => handleCloseConfirm('UserStatus')}
+        title="Configuration Status"
+        content="Are you sure you want to change configuration status to SUBMITTED? "
+        action={
+          <LoadingButton variant="contained"
+            onClick={()=>{
+              setOpenConfigSubmittedStatuConfirm(false);
+              returnToSubmitted();
             }}
           >
           Yes
@@ -581,7 +621,7 @@ function ViewFormEditDeleteButtons({
         open={verifiedAnchorEl}
         onClose={handleVerifiedPopoverClose}
         ListArr={verifiedBy}
-        ListTitle="Verified By"
+        ListTitle={isVerifiedTitle || "Verified By"}
       />
     </Grid>
 
@@ -592,9 +632,12 @@ export default memo(ViewFormEditDeleteButtons)
 ViewFormEditDeleteButtons.propTypes = {
   backLink: PropTypes.func,
   handleVerification: PropTypes.func,
+  handleVerificationTitle: PropTypes.string,
   isVerified: PropTypes.array,
+  isVerifiedTitle: PropTypes.string,
   isActive:PropTypes.bool,
   isSubmitted: PropTypes.func,
+  returnToSubmitted: PropTypes.func,
   customerAccess:PropTypes.bool,
   multiAuth:PropTypes.bool,
   currentEmp:PropTypes.bool,
