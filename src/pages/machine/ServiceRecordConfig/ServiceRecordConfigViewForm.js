@@ -143,18 +143,20 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
       enqueueSnackbar(Snacks.configuration_Verification_Failed, { variant: 'error' });
     }
   };
-
+console.log("first tested: ",!serviceRecordConfig?.verifications?.some((verifiedUser)=> verifiedUser?.verifiedBy?._id !== userId ) && serviceRecordConfig?.verifications?.length < serviceRecordConfig?.noOfVerificationsRequired )
   return (
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons 
         isActive={defaultValues.isActive} 
-        isVerified={serviceRecordConfig?.verifications } 
-        isVerifiedTitle="Approved By"
-        approveConfigHandler={defaultValues?.status.toLowerCase() === 'submitted' && serviceRecordConfig?.verifications?.length >= serviceRecordConfig?.noOfVerificationsRequired && approveConfigHandler}
+        approvedUsers={serviceRecordConfig?.verifications } 
+        // isVerifiedTitle="Approved By"
+        approveConfiglength={`${serviceRecordConfig?.verifications.length}/${serviceRecordConfig?.noOfVerificationsRequired}`}
+        // approveConfigStatusHandler={defaultValues?.status.toLowerCase() === 'submitted' && serviceRecordConfig?.verifications?.length >= serviceRecordConfig?.noOfVerificationsRequired && approveConfigHandler}
         // approveConfig={ serviceRecordConfig?.verifications?.length >= serviceRecordConfig?.noOfVerificationsRequired}
-        isSubmitted={defaultValues?.status.toLowerCase() === 'submitted' && defaultValues?.status.toLowerCase() !== 'approved' && returnToDraft } 
+        isSubmitted={!serviceRecordConfig?.verifications?.length > 0 && defaultValues?.status.toLowerCase() === 'submitted' && defaultValues?.status.toLowerCase() !== 'approved' && returnToDraft } 
         returnToSubmitted={defaultValues?.status.toLowerCase() === 'draft' && defaultValues?.status.toLowerCase() !== 'approved' && returnToSubmitted } 
-        handleVerification={ (!serviceRecordConfig?.verifications?.some((verifiedUser)=> verifiedUser?.verifiedBy?._id !== userId ) && serviceRecordConfig?.verifications?.length < serviceRecordConfig?.noOfVerificationsRequired) && handleVerification } 
+        approveConfig={ serviceRecordConfig?.verifications?.length >= serviceRecordConfig?.noOfVerificationsRequired} 
+        approveHandler={defaultValues?.status.toLowerCase() === 'submitted' && !serviceRecordConfig?.verifications?.some((verifiedUser)=> verifiedUser?.verifiedBy?._id !== userId ) && serviceRecordConfig?.verifications?.length < serviceRecordConfig?.noOfVerificationsRequired && handleVerification}
         handleVerificationTitle="Approve"
         copyConfiguration={defaultValues?.status.toLowerCase() === 'approved' && (() => navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.copy(serviceRecordConfig._id)))}
         // ( serviceRecordConfig?.verifications.length > 0 && serviceRecordConfig?.verifications.find((verifiedUser)=> verifiedUser?.verifiedBy?._id !== userId )) || serviceRecordConfig?.verifications?.length <= serviceRecordConfig?.noOfVerificationsRequired &&
