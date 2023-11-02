@@ -172,7 +172,7 @@ export default function ServiceRecordConfigEditForm() {
                     )}
                   />
 
-                  <RHFTextField name="docVersionNo" label="Version No.*" />
+                  <RHFTextField name="docVersionNo" disabled label="Version No.*" />
                   <RHFTextField name="noOfVerificationsRequired" label="Required Approvals*" />
 
                   <Controller
