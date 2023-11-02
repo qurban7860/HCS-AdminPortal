@@ -11,6 +11,7 @@ import {
   Link,
   Button
 } from '@mui/material';
+import { ThumbnailDocButton } from '../../components/Thumbnails'
 import { PATH_DOCUMENT } from '../../../routes/paths';
 // import { useSnackbar } from '../../../components/snackbar';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
@@ -123,7 +124,7 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
     [documentHistory]
   );
 
-// download the file 
+// download the file
   // const handleDownload = (documentId, versionId, fileId, fileName, fileExtension) => {
   //   dispatch(getDocumentDownload(documentId, versionId, fileId))
   //     .then((res) => {
@@ -249,17 +250,17 @@ const handleNewFile = async () => {
 
   return (
     <>
-      {!customerPage && !machinePage && !drawingPage && 
+      {!customerPage && !machinePage && !drawingPage &&
         <DocumentCover content={defaultValues?.displayName} backLink={!customerPage && !machinePage && !machineDrawings} machineDrawingsBackLink={machineDrawings}  generalSettings />
       }
         <Grid item md={12} mt={2}>
           <Card sx={{ p: 3 }}>
-          <ViewFormEditDeleteButtons 
+          <ViewFormEditDeleteButtons
           customerAccess={defaultValues?.customerAccess}
-          isActive={defaultValues.isActive}          
+          isActive={defaultValues.isActive}
           // disableEditButton={machine?.status?.slug==='transferred'}
           // disableDeleteButton={machine?.status?.slug==='transferred'}
-          backLink={(customerPage || machinePage || drawingPage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDrawingViewFormVisibility(false));} 
+          backLink={(customerPage || machinePage || drawingPage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDrawingViewFormVisibility(false));}
           : () => navigate(PATH_DOCUMENT.document.list)}
       />
             <Grid container sx={{mt:2}}>
@@ -284,7 +285,7 @@ const handleNewFile = async () => {
                   )
                 }
               />
-              
+
               {!customerPage && !machineDrawings && !drawingPage && defaultValues.customer && (
                 <ViewFormField
                   sm={6}
@@ -298,7 +299,7 @@ const handleNewFile = async () => {
                   }
                 />
               )}
-              
+
               {!machinePage && !machineDrawings && !drawingPage &&  defaultValues?.machine && (
                 <ViewFormField
                   sm={6}
@@ -351,7 +352,7 @@ const handleNewFile = async () => {
                         </Grid>
                       </Grid>
                     ))}
-                    {index === 0 && ( <Button title="Add/Upload Files in Current version." variant="contained" color="inherit" onClick={handleNewFile}  sx={{width:'140px', height:'140px', borderRadius:'16px'}} >Add/Upload Files</Button>)}
+                    {index === 0 && (<ThumbnailDocButton onClick={handleNewFile}/>)}
                       <ViewFormAudit defaultValues={fileValues} />
                   </Grid>
                 )})}
