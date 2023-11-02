@@ -167,7 +167,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
           </BreadcrumbsProvider>
         </Grid>
         <Grid item xs={12} md={6} style={{display:'flex', justifyContent:"flex-end"}}>
-          {isSuperAdmin &&
+          {isSuperAdmin && sites.length>0 &&
             <Button
               sx={{
                 mb: { xs: 0, md: 2 },
@@ -222,6 +222,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
               </Grid>
             )}
             <StyledScrollbar
+              maxHeight={155}
               snap
               snapOffset={50}
               onClick={(e) => e.stopPropagation()}
