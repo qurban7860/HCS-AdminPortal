@@ -150,7 +150,7 @@ console.log("first tested: ",!serviceRecordConfig?.verifications?.some((verified
         isActive={defaultValues.isActive} 
         approvedUsers={serviceRecordConfig?.verifications } 
         // isVerifiedTitle="Approved By"
-        approveConfiglength={`${serviceRecordConfig?.verifications.length}/${serviceRecordConfig?.noOfVerificationsRequired}`}
+        approveConfiglength={`${serviceRecordConfig?.verifications?.length || 0}/${serviceRecordConfig?.noOfVerificationsRequired}`}
         // approveConfigStatusHandler={defaultValues?.status.toLowerCase() === 'submitted' && serviceRecordConfig?.verifications?.length >= serviceRecordConfig?.noOfVerificationsRequired && approveConfigHandler}
         // approveConfig={ serviceRecordConfig?.verifications?.length >= serviceRecordConfig?.noOfVerificationsRequired}
         isSubmitted={!serviceRecordConfig?.verifications?.length > 0 && defaultValues?.status.toLowerCase() === 'submitted' && defaultValues?.status.toLowerCase() !== 'approved' && returnToDraft } 

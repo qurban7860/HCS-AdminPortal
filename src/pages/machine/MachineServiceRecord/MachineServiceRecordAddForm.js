@@ -36,7 +36,7 @@ function MachineServiceRecordAddForm() {
   const { activeServiceRecordConfigsForRecords, serviceRecordConfig, recordTypes, isLoadingCheckItems } = useSelector((state) => state.serviceRecordConfig);
   const [ activeServiceRecordConfigs, setActiveServiceRecordConfigs ] = useState([]);
   const [checkItemLists, setCheckItemLists] = useState([]);
-  // console.log("checkItemLists : ",checkItemLists)
+  console.log("checkItemLists : ",checkItemLists)
   const [docType, setDocType] = useState(null);
   const user = { _id: localStorage.getItem('userId'), name: localStorage.getItem('name') };
 
@@ -67,6 +67,7 @@ function MachineServiceRecordAddForm() {
       decoilers: machineDecoilers,
       serviceNote: '',
       maintenanceRecommendation: '',
+      internalComments: '',
       suggestedSpares: '',
       files: [],
       // checkParamFiles: [],
@@ -159,22 +160,24 @@ function MachineServiceRecordAddForm() {
         Array.isArray(checkItemLists) && 
         checkItemLists.length>0) 
         checkItemLists.forEach((checkParam_, index )=>{
+          console.log("checkParam_ : ",checkParam_)
           if(Array.isArray(checkParam_.checkItems) && 
             checkParam_.checkItems.length>0) {
             checkParam_.checkItems.forEach((CI,ind)=>{
               checkItemLists_.push({
-                serviceParam:CI._id,
-                name:CI.name,
-                ListTitle:checkParam_.ListTitle,
-                value:CI?.value,
-                date:CI?.date || '',
+                machineCheckItem: CI?._id,
+                // name:CI.name,
+                checkItemListId:checkParam_?._id,
+                checkItemValue:CI?.value,
+                // date:CI?.date || '',
                 comments:CI?.comments,
-                status:CI?.status?.name
+                // status:CI?.status?.name
               });
             });
           }
         });
-      data.checkItemLists = checkItemLists_;
+        console.log("checkItemLists_ : ",checkItemLists_)
+      data.checkItemRecordValues = checkItemLists_;
       data.decoilers = decoilers;
       data.operators = operators;
       await dispatch(addMachineServiceRecord(machine?._id,data));
@@ -203,7 +206,6 @@ function MachineServiceRecordAddForm() {
   }
 
   const handleChangeCheckItemListDate = (index, childIndex, date) => {
-    console.log("date : " , date)
     const updatedCheckParams = [...checkItemLists];
     const updatedParamObject = { 
       ...updatedCheckParams[index],
@@ -211,7 +213,7 @@ function MachineServiceRecordAddForm() {
     };
     updatedParamObject.checkItems[childIndex] = {
       ...updatedParamObject.checkItems[childIndex],
-      date,
+      value: date,
     };
     updatedCheckParams[index] = updatedParamObject;
   setCheckItemLists(updatedCheckParams);
@@ -254,7 +256,7 @@ function MachineServiceRecordAddForm() {
     };
     updatedParamObject.checkItems[childIndex] = {
       ...updatedParamObject.checkItems[childIndex],
-      status
+      value: status
     };
     updatedCheckParams[index] = updatedParamObject;
   setCheckItemLists(updatedCheckParams);
@@ -388,7 +390,7 @@ function MachineServiceRecordAddForm() {
                           ))}
                       </>
                     }
-
+                    <RHFTextField name="internalComments" label="Internal Comments" minRows={3} multiline/>
                     { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label="Note" minRows={3} multiline/> }
                     { serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="maintenanceRecommendation" label="Maintenance Recommendation" minRows={3} multiline/> }
                     { serviceRecordConfig?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }

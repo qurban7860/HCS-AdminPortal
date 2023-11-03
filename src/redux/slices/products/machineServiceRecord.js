@@ -233,9 +233,10 @@ export function addMachineServiceRecord(machineId,params) {
           technician:                 params?.technician?._id || null,
           serviceNote:                params?.serviceNote,
           maintenanceRecommendation:  params?.maintenanceRecommendation,
+          internalComments:           params?.internalComments,
           suggestedSpares:            params?.suggestedSpares,
           operators:                  params?.operators?.map((dec)=> dec._id),
-          checkParams:                params?.checkParams || [],
+          checkItemRecordValues:      params?.checkItemRecordValues || [],
           technicianRemarks:          params?.technicianRemarks,
           isActive: params?.isActive
         }
@@ -265,6 +266,7 @@ export function updateMachineServiceRecord(machineId,id, params) {
         technician:                 params?.technician?._id || null,
         serviceNote:                params?.serviceNote,
         maintenanceRecommendation:  params?.maintenanceRecommendation,
+        internalComments:           params?.internalComments,
         suggestedSpares:            params?.suggestedSpares,
         operators:                  params?.operators?.map((dec)=> dec._id),
         technicianRemarks:          params?.technicianRemarks,

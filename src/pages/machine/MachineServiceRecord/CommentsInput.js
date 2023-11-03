@@ -100,7 +100,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 type="date"
                                 format="dd/mm/yyyy"
                                 disabled={!checkParamList[index].checkItems[childIndex]?.checked}
-                                value={checkParamList[index]?.checkItems[childIndex]?.date || null}
+                                value={checkParamList[index]?.checkItems[childIndex]?.value || null}
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
@@ -111,7 +111,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
 
                             { childRow?.inputType === 'Status' && <Autocomplete 
                                 disabled={!checkParamList[index].checkItems[childIndex]?.checked}
-                                value={checkParamList[index].checkItems[childIndex]?.status || null }
+                                value={checkParamList[index].checkItems[childIndex]?.value || null }
                                 options={statusTypes}
                                 getOptionLabel={(option) => option?.name || ''}
                                 isOptionEqualToValue={(option, value) => option._id === value._id}
