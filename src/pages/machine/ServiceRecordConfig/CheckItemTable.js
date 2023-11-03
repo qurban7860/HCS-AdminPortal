@@ -18,7 +18,7 @@ const CheckItemTable = ({ checkParams, setCheckParams, ListTitle, setValue, chec
     const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
     const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
     const { activeCheckItems } = useSelector((state) => state.checkItems);
-    const [checkParamNumber, setCheckParamNumber]= useState(serviceRecordConfig?.checkParams?.length || 0);
+    const [checkParamNumber, setCheckParamNumber]= useState(serviceRecordConfig?.checkItemLists?.length || 0);
     const [checkItemList, setCheckItemList] = useState([]);
     const [checkItemListTitleError, setItemListTitleError] = useState('');
     const [checkItemListError, setItemListError] = useState('');
@@ -34,6 +34,7 @@ const CheckItemTable = ({ checkParams, setCheckParams, ListTitle, setValue, chec
 
   useEffect(()=>{
     dispatch(getActiveCheckItems());
+
   },[ dispatch ])
 
   const handleListDrop = (e, index) => {
@@ -126,6 +127,7 @@ useEffect(()=>{
           setCheckParams(updatedCheckParam);
           setCheckParamNumber(checkParams.length) 
           enqueueSnackbar('Updated success!');
+          console.log('1 : ')
         }
         else if(prevCheckParamNumber === checkParams.length-1){
           updatedCheckParam[prevCheckParamNumber]= checkItemObject;
@@ -141,6 +143,7 @@ useEffect(()=>{
       }
     }
   }
+
   return (
                   <Stack spacing={2}>
                     <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>

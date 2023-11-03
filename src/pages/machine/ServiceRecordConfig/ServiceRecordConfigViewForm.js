@@ -160,7 +160,7 @@ console.log("first tested: ",!serviceRecordConfig?.verifications?.some((verified
         handleVerificationTitle="Approve"
         copyConfiguration={defaultValues?.status.toLowerCase() === 'approved' && (() => navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.copy(serviceRecordConfig._id)))}
         // ( serviceRecordConfig?.verifications.length > 0 && serviceRecordConfig?.verifications.find((verifiedUser)=> verifiedUser?.verifiedBy?._id !== userId )) || serviceRecordConfig?.verifications?.length <= serviceRecordConfig?.noOfVerificationsRequired &&
-        handleEdit={defaultValues?.status.toLowerCase() !== 'approved' ? toggleEdit : false  } 
+        handleEdit={defaultValues?.status.toLowerCase() !== 'approved' && defaultValues?.status.toLowerCase() !== 'submitted' && toggleEdit } 
         onDelete={onDelete} 
         backLink={() => navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.list)} 
       />
