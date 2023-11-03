@@ -126,6 +126,7 @@ function MachineServiceRecordEditForm() {
       // checkParams:
       serviceNote:                machineServiceRecord?.serviceNote || '',
       maintenanceRecommendation:  machineServiceRecord?.maintenanceRecommendation || '',
+      internalComments:           machineServiceRecord?.internalComments || '',
       suggestedSpares:            machineServiceRecord?.suggestedSpares || '',
       // files: machineServiceRecord?.files || [],
       operators:                  machineServiceRecord?.operators || [],
@@ -410,7 +411,8 @@ setCheckItemLists(updatedCheckParams);
                           ))}
                       </>
                     }
-
+                    
+                <RHFTextField name="internalComments" label="Internal Comments" minRows={3} multiline/>
                 { serviceRecordConfiguration?.enableNote && <RHFTextField name="serviceNote" label="Note" minRows={3} multiline/> }
                 { serviceRecordConfiguration?.enableMaintenanceRecommendations && <RHFTextField name="maintenanceRecommendation" label="Maintenance Recommendation" minRows={3} multiline/> }
                 { serviceRecordConfiguration?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }

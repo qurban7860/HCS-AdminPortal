@@ -75,6 +75,7 @@ export const MachineServiceRecordSchema = Yup.object().shape({
   // checkParams:
   serviceNote: Yup.string().label('Service Note'),
   maintenanceRecommendation: Yup.string().label('Maintenance Recommendation'),
+  internalComments: Yup.string().max(5000).label('Internal Comments'),
   suggestedSpares: Yup.string().label('Suggested Spares'),
   files: Yup.mixed()
   .test(
