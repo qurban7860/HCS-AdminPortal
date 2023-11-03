@@ -39,6 +39,8 @@ export default function ServiceRecordConfigEditForm() {
   const { id } = useParams();
 
   const [checkParams, setCheckParams] = useState([]);
+  const [checkItemList, setCheckItemList] = useState([]);
+
   const [isDraft, setDraft] = useState(false);
 
   const defaultValues = useMemo(
@@ -225,7 +227,7 @@ export default function ServiceRecordConfigEditForm() {
                 
                   <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline />
 
-                  <CheckItemTable setCheckParams={setCheckParams} checkParams={checkParams} ListTitle={ListTitle} setValue={setValue} checkItemCategory={checkItemCategory} />
+                  <CheckItemTable setCheckParams={setCheckParams} checkParams={checkParams} checkItemList={checkItemList} setCheckItemList={setCheckItemList} ListTitle={ListTitle} setValue={setValue} checkItemCategory={checkItemCategory} />
 
                   <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline />          
                 

@@ -10,16 +10,16 @@ import { useSnackbar } from '../../../components/snackbar';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import CollapsibleCheckedItemRow from './CollapsibleCheckedItemRow'
 
-const CheckItemTable = ({ checkParams, setCheckParams, ListTitle, setValue, checkItemCategory }) => {
-
+const CheckItemTable = ({ checkParams, setCheckParams, checkItemList, setCheckItemList, ListTitle, setValue, checkItemCategory }) => {
+  
     const isMobile = useResponsive('down', 'sm');
     const { enqueueSnackbar } = useSnackbar();
     const dispatch = useDispatch();
     const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
     const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
     const { activeCheckItems } = useSelector((state) => state.checkItems);
-    const [checkParamNumber, setCheckParamNumber]= useState(serviceRecordConfig?.checkParams?.length || 0);
-    const [checkItemList, setCheckItemList] = useState([]);
+    const [checkParamNumber, setCheckParamNumber]= useState(serviceRecordConfig?.checkItemLists?.length || 0);
+    // const [checkItemList, setCheckItemList] = useState([]);
     const [checkItemListTitleError, setItemListTitleError] = useState('');
     const [checkItemListError, setItemListError] = useState('');
       const handleInputChange = (value) => {
@@ -244,6 +244,8 @@ export default memo(CheckItemTable)
 CheckItemTable.propTypes = {
     checkParams: PropTypes.array.isRequired,
     setCheckParams: PropTypes.func.isRequired,
+    checkItemList: PropTypes.array, 
+    setCheckItemList: PropTypes.func,
     ListTitle: PropTypes.string,
     setValue: PropTypes.func.isRequired,
     checkItemCategory: PropTypes.object,

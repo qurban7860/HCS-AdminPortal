@@ -30,7 +30,9 @@ function ViewFormEditDeleteButtons({
   isSubmitted,
   returnToSubmitted,
   isVerified,
+  approvedUsers,
   isVerifiedTitle,
+  approveConfiglength,
   customerAccess,
   multiAuth,
   currentEmp,
@@ -50,7 +52,7 @@ function ViewFormEditDeleteButtons({
   machineSupportDate,
   moveCustomerContact,
   approveConfig,
-  approveConfigHandler,
+  approveHandler,
   copyConfiguration,
   supportSubscription,
   userStatus,
@@ -209,6 +211,10 @@ function ViewFormEditDeleteButtons({
   // };
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
+
+  const [approvedAnchorEl, setApprovedAnchorEl] = useState(null);
+  const [approvedBy, setApprovedBy] = useState([]);
+
   const handleVerifiedPopoverOpen = (event) => {
     setVerifiedAnchorEl(event.currentTarget);
     setVerifiedBy(isVerified)
@@ -217,6 +223,16 @@ function ViewFormEditDeleteButtons({
   const handleVerifiedPopoverClose = () => {
     setVerifiedAnchorEl(null);
     setVerifiedBy([])
+  };
+
+  const handleApprovedPopoverOpen = (event) => {
+    setApprovedAnchorEl(event.currentTarget);
+    setApprovedBy(approvedUsers)
+  };
+
+  const handleApprovedPopoverClose = () => {
+    setApprovedAnchorEl(null);
+    setApprovedBy([])
   };
 
   const { isMobile } = useResponsive('down', 'sm');
@@ -257,14 +273,6 @@ function ViewFormEditDeleteButtons({
               icon={isActive?ICONS.ACTIVE.icon:ICONS.INACTIVE.icon}
             />
           }
-
-          {approveConfig !==undefined &&
-            <IconTooltip
-              title={approveConfig?ICONS.APPROVED.heading:ICONS.NOTAPPROVED.heading}
-              color={approveConfig?ICONS.APPROVED.color:ICONS.NOTAPPROVED.color}
-              icon={approveConfig?ICONS.APPROVED.icon:ICONS.NOTAPPROVED.icon}
-            />
-          }
           
           {supportSubscription!==undefined &&
             <IconTooltip
@@ -293,6 +301,16 @@ function ViewFormEditDeleteButtons({
           </Badge>
           }
 
+          {approveConfiglength !== undefined &&
+            <Badge badgeContent={approveConfiglength} color="info">
+              <IconTooltip
+                title={approveConfig?ICONS.APPROVED.heading:ICONS.NOTAPPROVED.heading}
+                color={approveConfig?ICONS.APPROVED.color:ICONS.NOTAPPROVED.color}
+                icon={approveConfig?ICONS.APPROVED.icon:ICONS.NOTAPPROVED.icon}
+                onClick={handleApprovedPopoverOpen}
+              />
+            </Badge>
+          }
 
 
           {customerAccess !== undefined &&
@@ -389,6 +407,16 @@ function ViewFormEditDeleteButtons({
           />
         )}
 
+          {/* approve configuration */}
+          {approveHandler && <IconTooltip
+          title="Approve"
+          onClick={() => {
+            approveHandler();
+          }}
+          color={theme.palette.primary.main}
+          icon="mdi:approve"
+        />}
+
         {isSubmitted && (
           <IconTooltip
             title="Return To Draft"
@@ -400,6 +428,7 @@ function ViewFormEditDeleteButtons({
             icon="carbon:license-maintenance-draft"
           />
         )}
+
         {returnToSubmitted && (
           <IconTooltip
             title="Return To Sunmitted"
@@ -442,16 +471,6 @@ function ViewFormEditDeleteButtons({
           }}
           color={theme.palette.primary.main}
           icon="eva:swap-fill"
-        />}
-
-          {/* approve configuration */}
-          {approveConfigHandler && <IconTooltip
-          title="Change Status to Approve"
-          onClick={() => {
-            approveConfigHandler();
-          }}
-          color={theme.palette.primary.main}
-          icon="mdi:approve"
         />}
 
         {/* edit button */}
@@ -547,7 +566,7 @@ function ViewFormEditDeleteButtons({
 
       <ConfirmDialog
         open={openConfigDraftStatuConfirm}
-        onClose={() => handleCloseConfirm('UserStatus')}
+        onClose={() => handleCloseConfirm('ChangeConfigStatusToDraft')}
         title="Configuration Status"
         content="Are you sure you want to change configuration status to DRAFT? "
         action={
@@ -564,7 +583,7 @@ function ViewFormEditDeleteButtons({
 
       <ConfirmDialog
         open={openConfigSubmittedStatuConfirm}
-        onClose={() => handleCloseConfirm('UserStatus')}
+        onClose={() => handleCloseConfirm('ChangeConfigStatusToSubmitted')}
         title="Configuration Status"
         content="Are you sure you want to change configuration status to SUBMITTED? "
         action={
@@ -623,6 +642,13 @@ function ViewFormEditDeleteButtons({
         ListArr={verifiedBy}
         ListTitle={isVerifiedTitle || "Verified By"}
       />
+
+      <ViewFormMenuPopover
+        open={approvedBy && approvedBy?.length > 0 && approvedAnchorEl }
+        onClose={handleApprovedPopoverClose}
+        ListArr={approvedBy}
+        ListTitle= "Approved By"
+      />
     </Grid>
 
     </Grid>
@@ -634,7 +660,9 @@ ViewFormEditDeleteButtons.propTypes = {
   handleVerification: PropTypes.func,
   handleVerificationTitle: PropTypes.string,
   isVerified: PropTypes.array,
+  approvedUsers: PropTypes.array,
   isVerifiedTitle: PropTypes.string,
+  approveConfiglength: PropTypes.number,
   isActive:PropTypes.bool,
   isSubmitted: PropTypes.func,
   returnToSubmitted: PropTypes.func,
@@ -659,7 +687,7 @@ ViewFormEditDeleteButtons.propTypes = {
   machineSupportDate: PropTypes.string,
   moveCustomerContact: PropTypes.func,
   approveConfig: PropTypes.bool,
-  approveConfigHandler: PropTypes.func,
+  approveHandler: PropTypes.func,
   copyConfiguration: PropTypes.func,
   supportSubscription: PropTypes.bool,
   userStatus:PropTypes.object,

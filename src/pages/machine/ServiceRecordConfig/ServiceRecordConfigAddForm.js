@@ -40,6 +40,7 @@ export default function ServiceRecordConfigAddForm() {
   const { activeCategories } = useSelector((state) => state.category);
   const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
   const [checkParams, setCheckParams] = useState([]);
+  const [checkItemList, setCheckItemList] = useState([]);
   const [isDraft, setDraft] = useState(false);
   
   useEffect(() => {
@@ -230,7 +231,7 @@ export default function ServiceRecordConfigAddForm() {
                   
                 </Box>
                   <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline />
-                      <CheckItemTable setCheckParams={setCheckParams} checkParams={checkParams} ListTitle={ListTitle} setValue={setValue} checkItemCategory={checkItemCategory} />
+                      <CheckItemTable setCheckParams={setCheckParams} checkParams={checkParams} checkItemList={checkItemList} setCheckItemList={setCheckItemList} ListTitle={ListTitle} setValue={setValue} checkItemCategory={checkItemCategory} />
                   <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline />
                 
                 <Box
