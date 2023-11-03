@@ -10,8 +10,8 @@ import { useSnackbar } from '../../../components/snackbar';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import CollapsibleCheckedItemRow from './CollapsibleCheckedItemRow'
 
-const CheckItemTable = ({ checkParams, setCheckParams, ListTitle, setValue, checkItemCategory }) => {
-
+const CheckItemTable = ({ checkParams, setCheckParams, checkItemList, setCheckItemList, ListTitle, setValue, checkItemCategory }) => {
+  
     const isMobile = useResponsive('down', 'sm');
     const { enqueueSnackbar } = useSnackbar();
     const dispatch = useDispatch();
@@ -19,7 +19,7 @@ const CheckItemTable = ({ checkParams, setCheckParams, ListTitle, setValue, chec
     const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
     const { activeCheckItems } = useSelector((state) => state.checkItems);
     const [checkParamNumber, setCheckParamNumber]= useState(serviceRecordConfig?.checkItemLists?.length || 0);
-    const [checkItemList, setCheckItemList] = useState([]);
+    // const [checkItemList, setCheckItemList] = useState([]);
     const [checkItemListTitleError, setItemListTitleError] = useState('');
     const [checkItemListError, setItemListError] = useState('');
       const handleInputChange = (value) => {
@@ -34,7 +34,6 @@ const CheckItemTable = ({ checkParams, setCheckParams, ListTitle, setValue, chec
 
   useEffect(()=>{
     dispatch(getActiveCheckItems());
-
   },[ dispatch ])
 
   const handleListDrop = (e, index) => {
@@ -127,7 +126,6 @@ useEffect(()=>{
           setCheckParams(updatedCheckParam);
           setCheckParamNumber(checkParams.length) 
           enqueueSnackbar('Updated success!');
-          console.log('1 : ')
         }
         else if(prevCheckParamNumber === checkParams.length-1){
           updatedCheckParam[prevCheckParamNumber]= checkItemObject;
@@ -143,7 +141,6 @@ useEffect(()=>{
       }
     }
   }
-
   return (
                   <Stack spacing={2}>
                     <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
@@ -247,6 +244,8 @@ export default memo(CheckItemTable)
 CheckItemTable.propTypes = {
     checkParams: PropTypes.array.isRequired,
     setCheckParams: PropTypes.func.isRequired,
+    checkItemList: PropTypes.array, 
+    setCheckItemList: PropTypes.func,
     ListTitle: PropTypes.string,
     setValue: PropTypes.func.isRequired,
     checkItemCategory: PropTypes.object,

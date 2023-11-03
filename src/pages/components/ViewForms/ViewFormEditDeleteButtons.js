@@ -407,6 +407,16 @@ function ViewFormEditDeleteButtons({
           />
         )}
 
+          {/* approve configuration */}
+          {approveHandler && <IconTooltip
+          title="Approve"
+          onClick={() => {
+            approveHandler();
+          }}
+          color={theme.palette.primary.main}
+          icon="mdi:approve"
+        />}
+
         {isSubmitted && (
           <IconTooltip
             title="Return To Draft"
@@ -418,6 +428,7 @@ function ViewFormEditDeleteButtons({
             icon="carbon:license-maintenance-draft"
           />
         )}
+
         {returnToSubmitted && (
           <IconTooltip
             title="Return To Sunmitted"
@@ -460,16 +471,6 @@ function ViewFormEditDeleteButtons({
           }}
           color={theme.palette.primary.main}
           icon="eva:swap-fill"
-        />}
-
-          {/* approve configuration */}
-          {approveHandler && <IconTooltip
-          title="Approve"
-          onClick={() => {
-            approveHandler();
-          }}
-          color={theme.palette.primary.main}
-          icon="mdi:approve"
         />}
 
         {/* edit button */}
@@ -565,7 +566,7 @@ function ViewFormEditDeleteButtons({
 
       <ConfirmDialog
         open={openConfigDraftStatuConfirm}
-        onClose={() => handleCloseConfirm('UserStatus')}
+        onClose={() => handleCloseConfirm('ChangeConfigStatusToDraft')}
         title="Configuration Status"
         content="Are you sure you want to change configuration status to DRAFT? "
         action={
@@ -582,7 +583,7 @@ function ViewFormEditDeleteButtons({
 
       <ConfirmDialog
         open={openConfigSubmittedStatuConfirm}
-        onClose={() => handleCloseConfirm('UserStatus')}
+        onClose={() => handleCloseConfirm('ChangeConfigStatusToSubmitted')}
         title="Configuration Status"
         content="Are you sure you want to change configuration status to SUBMITTED? "
         action={
