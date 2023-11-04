@@ -73,6 +73,7 @@ function ViewFormEditDeleteButtons({
   const [openUserStatuConfirm, setOpenUserStatuConfirm] = useState(false);
   const [openConfigDraftStatuConfirm, setOpenConfigDraftStatuConfirm] = useState(false);
   const [openConfigSubmittedStatuConfirm, setOpenConfigSubmittedStatuConfirm] = useState(false);
+  const [openConfigApproveStatuConfirm, setOpenConfigApproveStatuConfirm] = useState(false);
   const [openCopyConfigConfirm, setOpenCopyConfigConfirm] = useState(false);
   const [lockUntil, setLockUntil] = useState(''); // State to store the selected date
   const [lockUntilError, setLockUntilError] = useState(''); // State to manage the error message
@@ -150,14 +151,19 @@ function ViewFormEditDeleteButtons({
     if (dialogType === 'ChangeConfigStatusToDraft') {
       setOpenConfigDraftStatuConfirm(true);
     }
+
     if (dialogType === 'ChangeConfigStatusToSubmitted') {
       setOpenConfigSubmittedStatuConfirm(true);
+    }
+
+    if (dialogType === 'ChangeConfigStatusToApprove') {
+      setOpenConfigApproveStatuConfirm(true);
     }
     
     if (dialogType === 'copyConfiguration') {
       setOpenCopyConfigConfirm(true);
     }
-
+    
   };
 
   const handleCloseConfirm = (dialogType) => {
@@ -189,6 +195,10 @@ function ViewFormEditDeleteButtons({
 
     if (dialogType === 'ChangeConfigStatusToSubmitted') {
       setOpenConfigSubmittedStatuConfirm(false);
+    }
+
+    if (dialogType === 'ChangeConfigStatusToApprove') {
+      setOpenConfigApproveStatuConfirm(false);
     }
 
     if (dialogType === 'copyConfiguration') {
@@ -407,15 +417,7 @@ function ViewFormEditDeleteButtons({
           />
         )}
 
-          {/* approve configuration */}
-          {approveHandler && <IconTooltip
-          title="Approve"
-          onClick={() => {
-            approveHandler();
-          }}
-          color={theme.palette.primary.main}
-          icon="mdi:approve"
-        />}
+
 
         {isSubmitted && (
           <IconTooltip
@@ -431,7 +433,7 @@ function ViewFormEditDeleteButtons({
 
         {returnToSubmitted && (
           <IconTooltip
-            title="Return To Sunmitted"
+            title="Sunmitted"
             // disabled={...}
             onClick={() => {
               handleOpenConfirm('ChangeConfigStatusToSubmitted'); //
@@ -441,6 +443,16 @@ function ViewFormEditDeleteButtons({
           />
         )}
 
+          {/* approve configuration */}
+          {approveHandler && <IconTooltip
+          title="Approve"
+          onClick={() => {
+            handleOpenConfirm('ChangeConfigStatusToApprove'); //
+            // approveHandler();
+          }}
+          color={theme.palette.primary.main}
+          icon="mdi:approve"
+        />}
         {copyConfiguration && (
           <IconTooltip
             title="Create Copy"
@@ -591,6 +603,23 @@ function ViewFormEditDeleteButtons({
             onClick={()=>{
               setOpenConfigSubmittedStatuConfirm(false);
               returnToSubmitted();
+            }}
+          >
+          Yes
+          </LoadingButton>
+        }
+      />
+
+  <ConfirmDialog
+        open={openConfigApproveStatuConfirm}
+        onClose={() => handleCloseConfirm('ChangeConfigStatusToApprove')}
+        title="Configuration Approval"
+        content="Are you sure you want to APPROVE configuration? "
+        action={
+          <LoadingButton variant="contained"
+            onClick={()=>{
+              setOpenConfigApproveStatuConfirm(false);
+              approveHandler();
             }}
           >
           Yes

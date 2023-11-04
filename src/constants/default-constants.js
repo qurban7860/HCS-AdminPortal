@@ -288,4 +288,6 @@ export const TOGGLE = {
 export const Snacks = {
   configuration_Verification_Success: 'Verification Success',
   configuration_Verification_Failed: 'Verification Failed!',
+  configuration_approve_Success: 'Approve Success',
+  configuration_approve_Failed: 'Approve Failed!',
 }
