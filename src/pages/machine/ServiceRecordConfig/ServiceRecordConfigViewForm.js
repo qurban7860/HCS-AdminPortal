@@ -114,7 +114,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
     try {
       await dispatch(changeConfigStatus(serviceRecordConfig._id, 'APPROVED'));
       await dispatch(getServiceRecordConfig(serviceRecordConfig._id));
-      enqueueSnackbar(Snacks.configuration_Verification_Success);
+      enqueueSnackbar(Snacks.configuration_approve_Success);
     } catch (error) {
       console.log(error);
       enqueueSnackbar(error, { variant: 'error' });

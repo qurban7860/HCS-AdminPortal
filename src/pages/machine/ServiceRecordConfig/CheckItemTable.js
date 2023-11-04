@@ -68,9 +68,9 @@ const CheckItemTable = ({ checkParams, setCheckParams, checkItemList, setCheckIt
     try {
       const newArray =  checkItemList.filter((_, index) => index !== indexToRemove);
       setCheckItemList(newArray);
-      enqueueSnackbar('Deleted success!');
+      enqueueSnackbar('Check Item deleted successfully!');
     } catch (err) {
-      enqueueSnackbar('Delete failed!', { variant: 'error' });
+      enqueueSnackbar('Check Item Delete failed!', { variant: 'error' });
       console.error(err.message);
     }
   };
@@ -81,9 +81,9 @@ const CheckItemTable = ({ checkParams, setCheckParams, checkItemList, setCheckIt
     try {
       const newArray =  checkParams.filter((_, index) => index !== indexToRemove);
       setCheckParams(newArray);
-      enqueueSnackbar('Deleted success!');
+      enqueueSnackbar('Check Item deleted successfully!');
     } catch (err) {
-      enqueueSnackbar('Delete failed!', { variant: `error` });
+      enqueueSnackbar('Check Item delete failed!', { variant: `error` });
       console.error(err.message);
     }
   };
@@ -133,6 +133,7 @@ useEffect(()=>{
           enqueueSnackbar('Updated success!');
         }
         setValue('ListTitle','')
+        setValue('checkItemCategory','')
         setCheckItemList([])
       } catch (err) {
         enqueueSnackbar('Save failed!', { variant: `error` });
