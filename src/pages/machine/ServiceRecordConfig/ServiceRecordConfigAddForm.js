@@ -58,7 +58,7 @@ export default function ServiceRecordConfigAddForm() {
     () => ({
       docTitle: id ? serviceRecordConfig?.docTitle : '',
       recordType: id ? {name: serviceRecordConfig?.recordType} || null : null,
-      docVersionNo: id ? serviceRecordConfig?.docVersionNo || 1 : 1,
+      docVersionNo: id ? typeof serviceRecordConfig?.docVersionNo === 'number' && serviceRecordConfig.docVersionNo + 1   : 1,
       noOfVerificationsRequired: id ? serviceRecordConfig?.noOfVerificationsRequired || 1 : 1,
       machineCategory: id ? serviceRecordConfig?.machineCategory || null : null,
       machineModel:  id ? serviceRecordConfig?.machineModel || null : null,
