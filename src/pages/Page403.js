@@ -9,7 +9,7 @@ import Logo from '../components/logo';
 
 export default function Page403() {
   const configurations = JSON.parse(localStorage.getItem('configurations'));
-  const content = configurations?.find((config) => (config.type === 'AUTH' && config.name === '403'));
+  const content = configurations?.find((config) => (config.type === 'ERROR-PAGES' && config.name === '403'));
 
   const defaultValues = useMemo(
     () => ({

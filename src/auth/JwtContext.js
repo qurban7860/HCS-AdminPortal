@@ -144,7 +144,13 @@ export function AuthProvider({ children }) {
 
   async function getConfigs(){
     localStorage.removeItem("configurations");
-    const configsResponse = await axios.get(`${CONFIG.SERVER_URL}configs`);
+    const configsResponse = await axios.get(`${CONFIG.SERVER_URL}configs`,
+    {
+      params: {
+        isActive: true,
+        isArchived: false
+      }
+    });
     if(configsResponse && Array.isArray(configsResponse.data) && configsResponse.data.length>0 ) {
       const configs = configsResponse.data.map((c)=>({name:c.name, type:c.type, value:c.value, notes:c.notes}));
       localStorage.setItem("configurations",JSON.stringify(configs));
