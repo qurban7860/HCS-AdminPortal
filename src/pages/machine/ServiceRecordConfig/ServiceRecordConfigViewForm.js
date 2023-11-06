@@ -103,7 +103,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
     try {
       await dispatch(approveServiceRecordConfig(serviceRecordConfig._id, true));
       await dispatch(getServiceRecordConfig(serviceRecordConfig._id));
-      enqueueSnackbar(Snacks.configuration_Verification_Success);
+      enqueueSnackbar(Snacks.configuration_approve_Success);
     } catch (error) {
       console.log(error);
       enqueueSnackbar(error, { variant: 'error' });
@@ -125,7 +125,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
     try {
       await dispatch(changeConfigStatus(serviceRecordConfig._id, 'DRAFT'));
       await dispatch(getServiceRecordConfig(serviceRecordConfig._id));
-      enqueueSnackbar(Snacks.configuration_Verification_Success);
+      enqueueSnackbar('Document is submitted for draft!');
     } catch (error) {
       console.log(error);
       enqueueSnackbar(Snacks.configuration_Verification_Failed, { variant: 'error' });
@@ -137,18 +137,21 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
     try {
       await dispatch(changeConfigStatus(serviceRecordConfig._id, 'SUBMITTED'));
       await dispatch(getServiceRecordConfig(serviceRecordConfig._id));
-      enqueueSnackbar(Snacks.configuration_Verification_Success);
+      enqueueSnackbar('Document is submitted for approval!');
     } catch (error) {
       console.log(error);
       enqueueSnackbar(Snacks.configuration_Verification_Failed, { variant: 'error' });
     }
   };
-console.log("first tested: ",!serviceRecordConfig?.verifications?.some((verifiedUser)=> verifiedUser?.verifiedBy?._id !== userId ) && serviceRecordConfig?.verifications?.length < serviceRecordConfig?.noOfVerificationsRequired )
+  console.log("Array Innclude test : ",serviceRecordConfig?.verifications?.includes((verifiedUser)=>  verifiedUser?.verifiedBy?._id === userId ))
+// console.log("first tested: ",serviceRecordConfig?.verifications?.length > 0 ? serviceRecordConfig?.verifications?.some((verifiedUser)=>  verifiedUser?.verifiedBy?._id !== userId ): true, 
+// serviceRecordConfig?.verifications?.length < serviceRecordConfig?.noOfVerificationsRequired,
+// defaultValues?.status.toLowerCase() === 'submitted' )
   return (
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons 
         isActive={defaultValues.isActive} 
-        approvedUsers={serviceRecordConfig?.verifications } 
+        approvers={serviceRecordConfig?.verifications } 
         // isVerifiedTitle="Approved By"
         approveConfiglength={`${serviceRecordConfig?.verifications?.length || 0}/${serviceRecordConfig?.noOfVerificationsRequired}`}
         // approveConfigStatusHandler={defaultValues?.status.toLowerCase() === 'submitted' && serviceRecordConfig?.verifications?.length >= serviceRecordConfig?.noOfVerificationsRequired && approveConfigHandler}
@@ -156,7 +159,8 @@ console.log("first tested: ",!serviceRecordConfig?.verifications?.some((verified
         isSubmitted={!serviceRecordConfig?.verifications?.length > 0 && defaultValues?.status.toLowerCase() === 'submitted' && defaultValues?.status.toLowerCase() !== 'approved' && returnToDraft } 
         returnToSubmitted={defaultValues?.status.toLowerCase() === 'draft' && defaultValues?.status.toLowerCase() !== 'approved' && returnToSubmitted } 
         approveConfig={ serviceRecordConfig?.verifications?.length >= serviceRecordConfig?.noOfVerificationsRequired} 
-        approveHandler={defaultValues?.status.toLowerCase() === 'submitted' && !serviceRecordConfig?.verifications?.some((verifiedUser)=> verifiedUser?.verifiedBy?._id !== userId ) && serviceRecordConfig?.verifications?.length < serviceRecordConfig?.noOfVerificationsRequired && handleVerification}
+        approveHandler={defaultValues?.status.toLowerCase() === 'submitted' && 
+        serviceRecordConfig?.verifications?.length < serviceRecordConfig?.noOfVerificationsRequired && handleVerification}
         handleVerificationTitle="Approve"
         copyConfiguration={defaultValues?.status.toLowerCase() === 'approved' && (() => navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.copy(serviceRecordConfig._id)))}
         // ( serviceRecordConfig?.verifications.length > 0 && serviceRecordConfig?.verifications.find((verifiedUser)=> verifiedUser?.verifiedBy?._id !== userId )) || serviceRecordConfig?.verifications?.length <= serviceRecordConfig?.noOfVerificationsRequired &&

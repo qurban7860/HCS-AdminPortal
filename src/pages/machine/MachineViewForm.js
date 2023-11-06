@@ -229,7 +229,7 @@ export default function MachineViewForm() {
       <Card sx={{ width: '100%', p: '1rem', mb:3 }}>
       <ViewFormEditDeleteButtons
             sx={{ pt: 5 }}
-            isVerified={machine?.verifications}
+            verifiers={machine?.verifications}
             isActive={defaultValues?.isActive}
             handleVerification={handleVerification}
             disableTransferButton={disableTransferButton}

@@ -29,8 +29,8 @@ function ViewFormEditDeleteButtons({
   isActive,
   isSubmitted,
   returnToSubmitted,
-  isVerified,
-  approvedUsers,
+  verifiers,
+  approvers,
   isVerifiedTitle,
   approveConfiglength,
   customerAccess,
@@ -227,7 +227,7 @@ function ViewFormEditDeleteButtons({
 
   const handleVerifiedPopoverOpen = (event) => {
     setVerifiedAnchorEl(event.currentTarget);
-    setVerifiedBy(isVerified)
+    setVerifiedBy(verifiers)
   };
 
   const handleVerifiedPopoverClose = () => {
@@ -237,7 +237,7 @@ function ViewFormEditDeleteButtons({
 
   const handleApprovedPopoverOpen = (event) => {
     setApprovedAnchorEl(event.currentTarget);
-    setApprovedBy(approvedUsers)
+    setApprovedBy(approvers)
   };
 
   const handleApprovedPopoverClose = () => {
@@ -300,8 +300,8 @@ function ViewFormEditDeleteButtons({
               />
           }
 
-          {isVerified?.length>0 &&
-          <Badge badgeContent={isVerified.length} color="info">
+          {verifiers?.length>0 &&
+          <Badge badgeContent={verifiers.length} color="info">
             <IconTooltip
               title={isVerifiedTitle || 'Verified'}
               color={ICONS.ALLOWED.color}
@@ -368,7 +368,7 @@ function ViewFormEditDeleteButtons({
 
       <Grid item  >
         <StyledStack>
-          {handleVerification && (
+          {handleVerification && !(verifiers && verifiers.length > 0 && verifiers?.some((verified) => verified?.verifiedBy?._id === userId)) && (
           <IconTooltip
             title={handleVerificationTitle || 'Verify'}
             onClick={() => handleOpenConfirm('Verification')}
@@ -433,7 +433,7 @@ function ViewFormEditDeleteButtons({
 
         {returnToSubmitted && (
           <IconTooltip
-            title="Sunmitted"
+            title="Submit"
             // disabled={...}
             onClick={() => {
               handleOpenConfirm('ChangeConfigStatusToSubmitted'); //
@@ -444,7 +444,7 @@ function ViewFormEditDeleteButtons({
         )}
 
           {/* approve configuration */}
-          {approveHandler && <IconTooltip
+          {approveHandler && !(approvers && approvers.length > 0 && approvers?.some((verified) => verified?.verifiedBy?._id === userId)) && <IconTooltip
           title="Approve"
           onClick={() => {
             handleOpenConfirm('ChangeConfigStatusToApprove'); //
@@ -597,7 +597,7 @@ function ViewFormEditDeleteButtons({
         open={openConfigSubmittedStatuConfirm}
         onClose={() => handleCloseConfirm('ChangeConfigStatusToSubmitted')}
         title="Configuration Status"
-        content="Are you sure you want to change configuration status to SUBMITTED? "
+        content="Do you want to submit it for Approval? "
         action={
           <LoadingButton variant="contained"
             onClick={()=>{
@@ -688,8 +688,8 @@ ViewFormEditDeleteButtons.propTypes = {
   backLink: PropTypes.func,
   handleVerification: PropTypes.func,
   handleVerificationTitle: PropTypes.string,
-  isVerified: PropTypes.array,
-  approvedUsers: PropTypes.array,
+  verifiers: PropTypes.array,
+  approvers: PropTypes.array,
   isVerifiedTitle: PropTypes.string,
   approveConfiglength: PropTypes.number,
   isActive:PropTypes.bool,
