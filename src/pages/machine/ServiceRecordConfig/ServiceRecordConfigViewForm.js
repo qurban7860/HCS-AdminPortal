@@ -143,10 +143,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
       enqueueSnackbar(Snacks.configuration_Verification_Failed, { variant: 'error' });
     }
   };
-  console.log("Array Innclude test : ",serviceRecordConfig?.verifications?.includes((verifiedUser)=>  verifiedUser?.verifiedBy?._id === userId ))
-// console.log("first tested: ",serviceRecordConfig?.verifications?.length > 0 ? serviceRecordConfig?.verifications?.some((verifiedUser)=>  verifiedUser?.verifiedBy?._id !== userId ): true, 
-// serviceRecordConfig?.verifications?.length < serviceRecordConfig?.noOfVerificationsRequired,
-// defaultValues?.status.toLowerCase() === 'submitted' )
+  
   return (
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons 

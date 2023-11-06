@@ -36,7 +36,6 @@ function MachineServiceRecordAddForm() {
   const { activeServiceRecordConfigsForRecords, serviceRecordConfig, recordTypes, isLoadingCheckItems } = useSelector((state) => state.serviceRecordConfig);
   const [ activeServiceRecordConfigs, setActiveServiceRecordConfigs ] = useState([]);
   const [checkItemLists, setCheckItemLists] = useState([]);
-  console.log("checkItemLists : ",checkItemLists)
   const [docType, setDocType] = useState(null);
   const user = { _id: localStorage.getItem('userId'), name: localStorage.getItem('name') };
 
@@ -56,24 +55,32 @@ function MachineServiceRecordAddForm() {
     name: decoiler?.connectedMachine?.name ?? null,
     serialNo: decoiler?.connectedMachine?.serialNo ?? null
   }));
-
+  console.log("machine?.instalationSite?._id : ",machine?.instalationSite._id)
   const defaultValues = useMemo(
     () => {
       const initialValues = {
-      docRecordType: null,
-      serviceRecordConfiguration: null,
-      serviceDate: new Date(),
-      technician:   securityUser?.contact || null,
-      decoilers: machineDecoilers,
-      serviceNote: '',
-      maintenanceRecommendation: '',
-      internalComments: '',
-      suggestedSpares: '',
-      files: [],
-      // checkParamFiles: [],
-      operators: [],
-      operatorRemarks: '',
-      isActive: true,
+      docRecordType:                null,
+      serviceRecordConfiguration:   null,
+      serviceDate:                  new Date(),
+      versionNo:                    1,
+      customer:                     machine?.customer?._id || null,
+      site:                         machine?.instalationSite?._id,
+      machine:                      machine?._id || null,
+      decoilers:                    machineDecoilers || [],
+      technician:                   securityUser?.contact || null,
+      technicianNotes:              '',
+      textBeforeCheckItems:         '',
+      textAfterCheckItems:          '',
+      serviceNote:                  '',
+      recommendationNote:           '',
+      internalComments:             '',
+      suggestedSpares:              '',
+      internalNote:                 '',
+      operators:                    [],
+      files:                        [],
+      operatorNotes:                '',
+      checkItemRecordValues:        [],
+      isActive:                     true,
     }
     return initialValues;
   },
@@ -97,7 +104,6 @@ function MachineServiceRecordAddForm() {
   } = methods;
 
   const { decoilers, operators, serviceRecordConfiguration, technician, docRecordType } = watch()
-  console.log("serviceRecordConfiguration : ",serviceRecordConfiguration)
   useEffect(() => {
       if(docRecordType === null){
         setActiveServiceRecordConfigs(activeServiceRecordConfigsForRecords)
@@ -284,10 +290,11 @@ function MachineServiceRecordAddForm() {
               <Stack spacing={2}>
                 <FormHeading heading="New Service Record" />
                 <Grid container>
-                  <ViewFormField sm={6} heading='Customer' param={machine?.customer?.name} label="serialNo"/>
-                  <ViewFormField sm={6} heading='Machine' param={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} label="serialNo"/>
-                  <ViewFormField sm={6} heading='Machine Model Category' param={machine?.machineModel?.category?.name} label="serialNo"/>
-                  <ViewFormField sm={6} heading='Machine Model' param={machine?.machineModel?.name} label="serialNo"/>
+                  {/* <ViewFormField sm={6} heading='Customer' param={machine?.customer?.name} />
+                  <ViewFormField sm={6} heading='Site' param={machine?.instalationSite?.name} /> */}
+                  <ViewFormField sm={6} heading='Machine' param={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} />
+                  <ViewFormField sm={6} heading='Machine Model Category' param={machine?.machineModel?.category?.name} />
+                  <ViewFormField sm={6} heading='Machine Model' param={machine?.machineModel?.name} />
                   <ViewFormField sm={6} heading='Decoilers' arrayParam={defaultValues.decoilers} chipLabel="serialNo"/>
                 </Grid>
                 <Box
@@ -333,6 +340,8 @@ function MachineServiceRecordAddForm() {
                   >
 
                   <RHFDatePicker name="serviceDate" label="Service Date" />
+                  <RHFTextField name="versionNo" label="Version No" disabled/>
+
                   {/* <Autocomplete multiple
                     readOnly
                     name="decoilers" 
@@ -357,7 +366,9 @@ function MachineServiceRecordAddForm() {
                     <li {...props} key={option._id}>{option.name || ''}</li>
                     )}
                   />
-                    <RHFTextField name="technicianRemarks" label="Technician Remarks" minRows={3} multiline/> 
+                    <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
+                    <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline/> 
+                    
                     {checkItemLists?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
 
                     {isLoadingCheckItems ? 
@@ -390,11 +401,17 @@ function MachineServiceRecordAddForm() {
                           ))}
                       </>
                     }
+
+                    <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline/> 
+                    
+                    
                     <RHFTextField name="internalComments" label="Internal Comments" minRows={3} multiline/>
                     { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label="Note" minRows={3} multiline/> }
-                    { serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="maintenanceRecommendation" label="Maintenance Recommendation" minRows={3} multiline/> }
+                    { serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="recommendationNote" label="Recommendation Note" minRows={3} multiline/> }
                     { serviceRecordConfig?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }
-                    {docType &&
+                    <RHFTextField name="internalNote" label="Internal Note" minRows={3} multiline/> 
+
+                    {/* {docType && */}
                       <Autocomplete multiple
                         name="operators" 
                         defaultValue={defaultValues.operators}
@@ -405,7 +422,10 @@ function MachineServiceRecordAddForm() {
                           <TextField {...params} variant="outlined" label="Operators" placeholder="Select Operators"/>
                         )}
                       />
-                    }
+                    {/* } */}
+
+                    <RHFTextField name="operatorNotes" label="operatorNotes" minRows={3} multiline/> 
+
                   <Grid container display="flex">
                     <RHFSwitch
                       name="isActive"
