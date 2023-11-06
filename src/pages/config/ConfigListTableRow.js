@@ -29,15 +29,17 @@ export default function ConfigListTableRow({
   onSelectRow,
   onDeleteRow,
 }) {
-  const { name, value, updatedBy, updatedAt, isActive } = row;
+  const { name, type, value, updatedBy, updatedAt, isActive } = row;
+  const mdScreen = useScreenSize('lg')
   const smScreen = useScreenSize('sm')
   return (
       <TableRow hover selected={selected}>
         <LinkTableCell align="left" onClick={onViewRow} param={name} />
-        { smScreen && <TableCell align="left" sx={{ textTransform: 'capitalize' }}>{value}</TableCell>}
+        <TableCell sx={{ textTransform: 'capitalize' }}>{value}</TableCell>
+        { smScreen && <TableCell>{type}</TableCell>}
         <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell>
-        <TableCell align="right">{updatedBy?.name}</TableCell>
-        <TableCell align="right" sx={{ textTransform: 'capitalize' }}>{fDateTime(updatedAt)}</TableCell>
+        { mdScreen && <TableCell >{updatedBy?.name}</TableCell>}
+        { mdScreen && <TableCell align="right" sx={{ textTransform: 'capitalize' }}>{fDateTime(updatedAt)}</TableCell>}
       </TableRow>
   );
 }

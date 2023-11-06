@@ -136,7 +136,7 @@ export const {
 } = slice.actions;
 // ----------------------------------------------------------------------
 
-export const ConfigTypes = ['AUTH','ERROR-PAGES','NORMAL-CONFIG'];
+export const ConfigTypes = ['AUTH','ERROR-PAGES','NORMAL-CONFIG','ADMIN-CONFIG', 'RESPONSE'];
 
 export function addConfig(data) {
   return async (dispatch) => {

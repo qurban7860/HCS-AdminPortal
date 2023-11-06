@@ -10,7 +10,7 @@ import Logo from '../components/logo';
 
 export default function Page404() {
   const configurations = JSON.parse(localStorage.getItem('configurations'));
-  const content = configurations?.find((config) => (config.type === 'AUTH' && config.name === '404'));
+  const content = configurations?.find((config) => (config.type === 'ERROR-PAGES' && config.name === '404'));
 
   const defaultValues = useMemo(
     () => ({
