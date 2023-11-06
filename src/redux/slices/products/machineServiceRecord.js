@@ -226,19 +226,30 @@ export function addMachineServiceRecord(machineId,params) {
     return async (dispatch) => {
       dispatch(slice.actions.startLoading());
       try {
+        console.log(
+          "params",params
+        )
         const data = {
-          serviceRecordConfig:        params?.serviceRecordConfiguration?._id,
+          serviceRecordConfig:        params?.serviceRecordConfiguration?._id || null,
           serviceDate:                params?.serviceDate,
-          decoilers:                  params?.decoilers?.map((dec)=> dec?._id),
+          versionNo:                  params?.versionNo,
+          customer:                   params?.customer || null,
+          site:                       params?.site || null,
+          machine:                    machineId,
+          decoilers:                  params?.decoilers?.map((dec)=> dec?._id) || [],
           technician:                 params?.technician?._id || null,
+          technicianNotes:            params?.technicianNotes,
+          textBeforeCheckItems:       params?.textBeforeCheckItems,
+          textAfterCheckItems:        params?.textAfterCheckItems,
           serviceNote:                params?.serviceNote,
-          maintenanceRecommendation:  params?.maintenanceRecommendation,
+          recommendationNote:         params?.recommendationNote,
           internalComments:           params?.internalComments,
           suggestedSpares:            params?.suggestedSpares,
-          operators:                  params?.operators?.map((dec)=> dec._id),
+          internalNote:               params.internalNote,
+          operators:                  params?.operators?.map((ope)=> ope?._id) || [],
+          operatorNotes:              params.operatorNotes,
           checkItemRecordValues:      params?.checkItemRecordValues || [],
-          technicianRemarks:          params?.technicianRemarks,
-          isActive: params?.isActive
+          isActive:                   params?.isActive
         }
         /* eslint-disable */
 
@@ -260,18 +271,26 @@ export function updateMachineServiceRecord(machineId,id, params) {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        serviceRecordConfig:        params?.serviceRecordConfig?._id,
+        serviceRecordConfig:        params?.serviceRecordConfiguration,
         serviceDate:                params?.serviceDate,
-        decoilers:                  params?.decoilers?.map((dec)=> dec?._id),
+        versionNo:                  params?.versionNo,
+        customer:                   params?.customer || null,
+        site:                       params?.site || null,
+        machine:                    machineId,
+        decoilers:                  params?.decoilers?.map((dec)=> dec?._id) || [],
         technician:                 params?.technician?._id || null,
+        technicianNotes:            params?.technicianNotes,
+        textBeforeCheckItems:       params?.textBeforeCheckItems,
+        textAfterCheckItems:        params?.textAfterCheckItems,
         serviceNote:                params?.serviceNote,
-        maintenanceRecommendation:  params?.maintenanceRecommendation,
+        recommendationNote:         params?.recommendationNote,
         internalComments:           params?.internalComments,
         suggestedSpares:            params?.suggestedSpares,
-        operators:                  params?.operators?.map((dec)=> dec._id),
-        technicianRemarks:          params?.technicianRemarks,
-        checkParams:                params?.checkParams || [],
-        isActive: params?.isActive
+        internalNote:               params.internalNote,
+        operators:                  params?.operators,
+        operatorNotes:              params.operatorNotes,
+        checkItemRecordValues:      params?.checkItemRecordValues || [],
+        isActive:                   params?.isActive
       }
       await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`,data);
     } catch (error) {
