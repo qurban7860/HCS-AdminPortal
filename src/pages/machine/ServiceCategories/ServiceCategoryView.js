@@ -28,7 +28,7 @@ export default function ServiceCategoryView({ editPage }) {
       <StyledCardContainer>
         <Cover
           name={serviceCategory?.name}
-          setting="setting"
+          setting
           backLink={PATH_MACHINE.machines.settings.serviceCategories.list}
         />
       </StyledCardContainer>
