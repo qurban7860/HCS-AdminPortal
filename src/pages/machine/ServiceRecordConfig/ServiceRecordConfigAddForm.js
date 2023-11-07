@@ -334,7 +334,7 @@ export default function ServiceRecordConfigAddForm() {
                     }
                   />
 
-                <AddFormButtons saveAsDraft={() => setDraft(true)} isDraft={isDraft} saveButtonName='submit' isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+                <AddFormButtons saveAsDraft={() => setDraft(true)} isDisabled={checkItemList.length > 0} isDraft={isDraft} saveButtonName='submit' isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>
           </Grid>

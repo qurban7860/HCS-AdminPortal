@@ -21,6 +21,9 @@ const CheckItemTable = ({ checkParams, setCheckParams, checkItemList, setCheckIt
     const [checkParamNumber, setCheckParamNumber]= useState(serviceRecordConfig?.checkItemLists?.length || 0);
     const [checkItemListTitleError, setItemListTitleError] = useState('');
     const [checkItemListError, setItemListError] = useState('');
+    // const [checkItemListButtonVariant, setCheckItemListButtonVariant] = useState('contained');
+    // const [checkItemListButtoncolor, setCheckItemListButtoncolor] = useState('primary');
+
       const handleInputChange = (value) => {
         if (value) {
           setCheckItemList((checkItems) => [...checkItems, value[value.length - 1]]);
@@ -88,19 +91,29 @@ const CheckItemTable = ({ checkParams, setCheckParams, checkItemList, setCheckIt
     }
   };
   
-useEffect(()=>{
-  if(ListTitle?.length > 200){
-    setItemListTitleError('Item List Title must be at most 200 characters')
-  }else{
-    setItemListTitleError('')
-  }
+  useEffect(()=>{
+    if(ListTitle?.length > 200){
+      setItemListTitleError('Item List Title must be at most 200 characters')
+    }else if(checkItemList?.length > 0 && ListTitle.trim() === ''){
+      setItemListTitleError('Item List Title must required!')
+    }else{
+      setItemListTitleError('')
+    }
 
-  if(checkItemList && checkItemList?.length > 100){
-    setItemListError('Check Items must be at most 99!')
-  }else{
-    setItemListError('')
-  }
-},[checkItemList, ListTitle ])
+    // if(checkItemList?.length > 0 && ListTitle.trim() !== ''){
+    //   setCheckItemListButtonVariant('outlined');
+    //   setCheckItemListButtoncolor('error');
+    // }else{
+    //   setCheckItemListButtonVariant('contained');
+    //   setCheckItemListButtoncolor('primary');
+    // }
+
+    if(checkItemList && checkItemList?.length > 100){
+      setItemListError('Check Items must be at most 99!')
+    }else{
+      setItemListError('')
+    }
+  },[checkItemList, ListTitle ])
 
   const saveCheckParam = (prevCheckParamNumber) =>{
           if(typeof ListTitle !== 'string' || ListTitle && ListTitle?.length === 0 ){
@@ -141,6 +154,7 @@ useEffect(()=>{
       }
     }
   }
+  
   return (
                   <Stack spacing={2}>
                     <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
@@ -220,9 +234,12 @@ useEffect(()=>{
                           disabled={(!checkItemList?.length ?? 0) || ( ListTitle?.trim() === '') }
                           onClick={()=>saveCheckParam(checkParamNumber)}
                           fullWidth={ isMobile }
-                          variant="contained" color='primary' sx={{ ...(isMobile && { width: '100%' })}}
+                          variant="contained" 
+                          color='primary' 
+                          sx={{ ...(isMobile && { width: '100%', })}}
                         >Save List</Button>
                       </Grid>
+
                     </Grid>
                     {checkParams && checkParams?.length > 0 && <Stack sx={{ minWidth: 250,  minHeight:75 }}>
                     <TableContainer >

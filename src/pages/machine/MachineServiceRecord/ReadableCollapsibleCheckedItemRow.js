@@ -13,7 +13,7 @@ const CollapsibleCheckedItemRow = ({value, index }) => {
   return (
     <>
             <Typography variant='h5'>
-                <b>{`${index+1}). `}</b>{typeof value?.paramListTitle === 'string' && value?.paramListTitle || ''}{' ( Items: '}<b>{`${value?.paramList?.length}`}</b>{' ) '}
+                <b>{`${index+1}). `}</b>{typeof value?.ListTitle === 'string' && value?.ListTitle || ''}{' ( Items: '}<b>{`${value?.checkItems?.length || 0}`}</b>{' ) '}
                 {/* <IconButton
                   aria-label="expand row"
                   size="small"
@@ -27,7 +27,7 @@ const CollapsibleCheckedItemRow = ({value, index }) => {
               <Grid sx={{ ml: 3 }}>
                 <Table size="small" aria-label="purchases">
                   <TableBody>
-                    {value?.paramList.map((childRow,childIndex) => (
+                    {value?.checkItems?.map((childRow,childIndex) => (
                       
                           <StatusAndComment index={index} childIndex={childIndex} childRow={childRow}/>
                     ))}

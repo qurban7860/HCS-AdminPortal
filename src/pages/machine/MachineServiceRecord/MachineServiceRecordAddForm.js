@@ -55,7 +55,6 @@ function MachineServiceRecordAddForm() {
     name: decoiler?.connectedMachine?.name ?? null,
     serialNo: decoiler?.connectedMachine?.serialNo ?? null
   }));
-  console.log("machine?.instalationSite?._id : ",machine?.instalationSite._id)
   const defaultValues = useMemo(
     () => {
       const initialValues = {
@@ -166,7 +165,6 @@ function MachineServiceRecordAddForm() {
         Array.isArray(checkItemLists) && 
         checkItemLists.length>0) 
         checkItemLists.forEach((checkParam_, index )=>{
-          console.log("checkParam_ : ",checkParam_)
           if(Array.isArray(checkParam_.checkItems) && 
             checkParam_.checkItems.length>0) {
             checkParam_.checkItems.forEach((CI,ind)=>{
@@ -174,7 +172,7 @@ function MachineServiceRecordAddForm() {
                 machineCheckItem: CI?._id,
                 // name:CI.name,
                 checkItemListId:checkParam_?._id,
-                checkItemValue:CI?.value,
+                checkItemValue: CI?.inputType.trim().toLowerCase() === 'status' ? CI?.value?.name : CI?.value,
                 // date:CI?.date || '',
                 comments:CI?.comments,
                 // status:CI?.status?.name
@@ -182,7 +180,6 @@ function MachineServiceRecordAddForm() {
             });
           }
         });
-        console.log("checkItemLists_ : ",checkItemLists_)
       data.checkItemRecordValues = checkItemLists_;
       data.decoilers = decoilers;
       data.operators = operators;
@@ -240,7 +237,6 @@ function MachineServiceRecordAddForm() {
   }
 
   const handleChangeCheckItemListChecked = ( index, childIndex ) =>{
-    console.log("checcked : ")
     const updatedCheckParams = [...checkItemLists];
     const updatedParamObject = { 
       ...updatedCheckParams[index],
@@ -406,7 +402,7 @@ function MachineServiceRecordAddForm() {
                     
                     
                     <RHFTextField name="internalComments" label="Internal Comments" minRows={3} multiline/>
-                    { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label="Note" minRows={3} multiline/> }
+                    { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label="Service Note" minRows={3} multiline/> }
                     { serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="recommendationNote" label="Recommendation Note" minRows={3} multiline/> }
                     { serviceRecordConfig?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }
                     <RHFTextField name="internalNote" label="Internal Note" minRows={3} multiline/> 
@@ -424,7 +420,7 @@ function MachineServiceRecordAddForm() {
                       />
                     {/* } */}
 
-                    <RHFTextField name="operatorNotes" label="operatorNotes" minRows={3} multiline/> 
+                    <RHFTextField name="Operatorc Notes" label="operatorNotes" minRows={3} multiline/> 
 
                   <Grid container display="flex">
                     <RHFSwitch
