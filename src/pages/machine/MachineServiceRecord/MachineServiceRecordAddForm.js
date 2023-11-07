@@ -420,7 +420,7 @@ function MachineServiceRecordAddForm() {
                       />
                     {/* } */}
 
-                    <RHFTextField name="Operatorc Notes" label="operatorNotes" minRows={3} multiline/> 
+                    <RHFTextField name="operatorNotes" label="Operator Notes" minRows={3} multiline/> 
 
                   <Grid container display="flex">
                     <RHFSwitch
