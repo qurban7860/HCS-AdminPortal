@@ -226,9 +226,6 @@ export function addMachineServiceRecord(machineId,params) {
     return async (dispatch) => {
       dispatch(slice.actions.startLoading());
       try {
-        console.log(
-          "params",params
-        )
         const data = {
           serviceRecordConfig:        params?.serviceRecordConfiguration?._id || null,
           serviceDate:                params?.serviceDate,
