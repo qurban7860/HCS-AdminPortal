@@ -105,7 +105,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                     shrink: true,
                                 }}
                                 onChange={(e) =>  handleChangeCheckItemListDate(index, childIndex, e.target.value) } 
-                                size="small" sx={{m:0.3, width: {sm: 170, xs: '100%'}}} 
+                                size="small" sx={{m:0.3, ml:'auto', width: {sm: 259, xs: '100%'}}} 
                                 required={childRow?.isRequired}
                             /> }
 

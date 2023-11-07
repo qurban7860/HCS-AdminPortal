@@ -19,7 +19,7 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
     //     element?.serviceParam === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramList[childIndex]?._id));
     // // eslint-disable-next-line react-hooks/exhaustive-deps
     // }, []);
-    
+
   return (
     <>
     <TableRow key={childRow._id} sx={{":hover": {  backgroundColor: "#dbdbdb66" } }}>
@@ -45,9 +45,10 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
             </Grid>
           </TableCell>
         </Grid>
-        <Grid 
-        // sx={{ml:5, }}
-         >
+        <Grid sx={{          
+          alignItems: 'center',
+          whiteSpace: 'pre-line',
+          wordBreak: 'break-word' }}>
           {childRow?.comments && <Typography variant="body2" >{` ${childRow?.comments}`}</Typography>}
         </Grid>
       </TableCell>
