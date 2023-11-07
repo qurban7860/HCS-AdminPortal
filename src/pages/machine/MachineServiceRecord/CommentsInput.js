@@ -32,7 +32,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 label={childRow?.inputType} 
                                 name={`${childRow?.name}_${childIndex}_${index}`} 
                                 onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e.target.value)}
-                                size="small" sx={{m:0.3, width: {sm: 'auto', xs: '100%'}}} 
+                                size="small" sx={{m:0.3, width: {sm: 259, xs: '100%'}}} 
                                 value={checkParamList[index]?.checkItems[childIndex]?.value}
                                 required={childRow?.isRequired}
                                 InputProps={{ inputProps: { maxLength: 50 }, 
@@ -48,7 +48,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 label={childRow?.inputType} 
                                 name={`${childRow?.name}_${childIndex}_${index}`} 
                                 onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e.target.value)}
-                                size="small" sx={{m:0.3, width: {sm: 'auto', xs: '100%'}}} 
+                                size="small" sx={{m:0.3, width: {sm: 259, xs: '100%'}}} 
                                 value={checkParamList[index]?.checkItems[childIndex]?.value}
                                 minRows={1} multiline
                                 required={childRow?.isRequired}
@@ -74,7 +74,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                         handleChangeCheckItemListValue(index, childIndex, checkParamList[index]?.checkItems[childIndex].value)
                                     }}
                                 } 
-                                size="small" sx={{m:0.3, width: {sm: 'auto', xs: '100%'}}} 
+                                size="small" sx={{m:0.3, width: {sm: 259, xs: '100%'}}} 
                                 required={childRow?.isRequired}
                                 // InputProps={{ style: { fontSize: '14px', height: 30 }}}
                                 // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
@@ -105,7 +105,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                     shrink: true,
                                 }}
                                 onChange={(e) =>  handleChangeCheckItemListDate(index, childIndex, e.target.value) } 
-                                size="small" sx={{m:0.3, width: {sm: 170, xs: '100%'}}} 
+                                size="small" sx={{m:0.3, ml:'auto', width: {sm: 259, xs: '100%'}}} 
                                 required={childRow?.isRequired}
                             /> }
 
@@ -121,7 +121,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
                                 />}
                                 // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
-                                sx={{ width: {sm: 254, xs: '100%'}, m:0.3, ml:{sm: 'auto',md: 0},
+                                sx={{ width: {sm: 259, xs: '100%'}, m:0.3, ml:{sm: 'auto',md: 0},
                                     // "& .MuiInputBase-root": { height: "30px", fontSize: '14px' },
                                 }}
                             /> }
