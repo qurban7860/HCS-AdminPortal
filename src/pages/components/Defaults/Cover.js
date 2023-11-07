@@ -4,7 +4,7 @@ import { alpha } from '@mui/system';
 // import { useSelector } from 'react-redux';
 import { StyledRoot, StyledInfo } from '../../../theme/styles/default-styles';
 // utils
-import { PATH_MACHINE, PATH_SETTING } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 // auth
 // import { useAuthContext } from '../../../auth/useAuthContext';
 // components
@@ -31,7 +31,7 @@ Cover.propTypes = {
   machineDrawingsBackLink: PropTypes.string,
   model: PropTypes.string,
   customer: PropTypes.string,
-  generalSettings: PropTypes.string,
+  generalSettings: PropTypes.bool,
   titleLength: PropTypes.number,
 };
 export function Cover({
@@ -55,11 +55,6 @@ export function Cover({
 
   const handleSettingsNavigate = () => {
     navigate(PATH_SETTING.app);
-  };
-  const handleBacklink = () => {
-    if (typeof backLink === 'string') {
-      navigate(backLink);
-    }
   };
 
   const isMobile = useResponsive('down', 'sm');
@@ -104,11 +99,6 @@ export function Cover({
         />
         <CoverSettingsIcons
           setting={setting}
-          // handleNavigate={handleNavigate}
-          // backLink={backLink}
-          // machineDrawingsBackLink={machineDrawingsBackLink}
-          // handleBacklink={handleBacklink}
-          // handleBackLinks={handleBackLinks}
           handleSettingsNavigate={handleSettingsNavigate}
           generalSettings={generalSettings}
         />

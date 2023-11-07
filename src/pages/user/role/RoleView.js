@@ -37,7 +37,7 @@ export default function RoleView() {
           // mt: '24px',
         }}
       >
-        <Cover name={role?.name} generalSettings="enabled" backLink={PATH_SETTING.role.list} />
+        <Cover name={role?.name} generalSettings backLink={PATH_SETTING.role.list} />
       </Card>
       <RoleViewForm />
     </Container>

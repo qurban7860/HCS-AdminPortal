@@ -156,7 +156,7 @@ export default function SignInLogList() {
   return (
       <Container maxWidth={false}>
         <Card sx={{ mb: 3, height: 160, position: 'relative'}}>
-          <Cover generalSettings="enabled" name="Sign In Logs" icon="ph:users-light" />
+          <Cover generalSettings name="Sign In Logs" icon="ph:users-light" />
         </Card>
 
         <TableCard>

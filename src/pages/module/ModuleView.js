@@ -35,7 +35,7 @@ export default function ModuleView() {
             // mt: '24px',
           }}
         >
-          <Cover name={module?.name} generalSettings="enabled" backLink={PATH_SETTING.modules.list} />
+          <Cover name={module?.name} generalSettings backLink={PATH_SETTING.modules.list} />
           
         </Card>
         <ModuleViewForm />

@@ -70,7 +70,7 @@ export default function ToolView({ editPage }) {
         <StyledCardContainer>
           <Cover
             name={tool?.name}
-            setting="setting"
+            setting
             backLink={PATH_MACHINE.machines.settings.tool.list}
           />
         </StyledCardContainer>
