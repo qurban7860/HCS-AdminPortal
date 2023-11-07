@@ -214,7 +214,7 @@ export default function ConfigList() {
     <>
       <Container maxWidth={false}>
         <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
-          <Cover generalSettings="enabled" name="Configs" icon="ph:users-light" />
+          <Cover generalSettings name="Configs" icon="ph:users-light" />
         </Card>
         <TableCard>
           <ConfigListTableToolbar

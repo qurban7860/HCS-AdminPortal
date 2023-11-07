@@ -183,7 +183,7 @@ export default function BlockedCustomerList() {
             // mt: '24px',
           }}
         >
-          <Cover generalSettings="enabled" name="Blocked Customer" icon="ph:users-light" />
+          <Cover generalSettings name="Blocked Customer" icon="ph:users-light" />
         </Card>
 
         <TableCard>

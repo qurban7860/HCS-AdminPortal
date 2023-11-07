@@ -7,15 +7,13 @@ import { useIdleTimer } from "react-idle-timer"
  */
 const useIdleTimeout = ({ onIdle, idleTime = 1, isAuthenticated }) => {
     const idleTimeout = 1000 * idleTime;
-
     const [isIdle, setIdle] = useState(false)
     const handleIdle = () => {
         setIdle(true)
-        // logout()
     }
     const idleTimer = useIdleTimer({
         timeout: idleTimeout,
-        promptTimeout: idleTimeout,
+        promptBeforeIdle: idleTime,
         onPrompt: onIdle,
         onIdle: handleIdle,
         debounce: 500,
