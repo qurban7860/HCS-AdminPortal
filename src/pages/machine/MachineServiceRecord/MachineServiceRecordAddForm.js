@@ -165,19 +165,20 @@ function MachineServiceRecordAddForm() {
         Array.isArray(checkItemLists) && 
         checkItemLists.length>0) 
         checkItemLists.forEach((checkParam_, index )=>{
+          console.log("checkParam_ : ",checkParam_)
           if(Array.isArray(checkParam_.checkItems) && 
             checkParam_.checkItems.length>0) {
-            checkParam_.checkItems.forEach((CI,ind)=>{
-              checkItemLists_.push({
+            checkParam_.checkItems.forEach((CI,ind)=>(
+              CI?.checked && checkItemLists_.push({
                 machineCheckItem: CI?._id,
                 // name:CI.name,
                 checkItemListId:checkParam_?._id,
-                checkItemValue: CI?.inputType.trim().toLowerCase() === 'status' ? CI?.value?.name : CI?.value,
+                checkItemValue:  CI?.inputType.trim().toLowerCase() === 'status' ? CI?.value?.name : CI?.value,
                 // date:CI?.date || '',
                 comments:CI?.comments,
                 // status:CI?.status?.name
-              });
-            });
+              })
+            ));
           }
         });
       data.checkItemRecordValues = checkItemLists_;

@@ -146,7 +146,7 @@ const CheckItemTable = ({ checkParams, setCheckParams, checkItemList, setCheckIt
           enqueueSnackbar('Updated success!');
         }
         setValue('ListTitle','')
-        setValue('checkItemCategory','')
+        setValue('checkItemCategory',null)
         setCheckItemList([])
       } catch (err) {
         enqueueSnackbar('Save failed!', { variant: `error` });
@@ -154,7 +154,7 @@ const CheckItemTable = ({ checkParams, setCheckParams, checkItemList, setCheckIt
       }
     }
   }
-  
+
   return (
                   <Stack spacing={2}>
                     <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
