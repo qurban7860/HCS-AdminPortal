@@ -140,7 +140,7 @@ export default function UserInviteList() {
   return (
       <Container maxWidth={false}>
         <Card sx={{mb: 3, height: 160, position: 'relative'}}>
-          <Cover generalSettings="enabled" name="User Invites" icon="ph:users-light" />
+          <Cover generalSettings name="User Invites" icon="ph:users-light" />
         </Card>
         <TableCard>
           <UserInviteListTableToolbar
