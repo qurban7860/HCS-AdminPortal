@@ -143,11 +143,17 @@ export function AuthProvider({ children }) {
   // LOGIN
 
   async function getConfigs(){
-    const configsResponse = await axios.get(`${CONFIG.SERVER_URL}configs`);
-
+    localStorage.removeItem("configurations");
+    const configsResponse = await axios.get(`${CONFIG.SERVER_URL}configs`,
+    {
+      params: {
+        isActive: true,
+        isArchived: false
+      }
+    });
     if(configsResponse && Array.isArray(configsResponse.data) && configsResponse.data.length>0 ) {
-      const configs = configsResponse.data.map((c)=>({name:c.name,value:c.value}));
-      localStorage.setItem("CONFIGS",JSON.stringify(configs));
+      const configs = configsResponse.data.map((c)=>({name:c.name, type:c.type, value:c.value, notes:c.notes}));
+      localStorage.setItem("configurations",JSON.stringify(configs));
     }
   }
 
@@ -167,8 +173,6 @@ export function AuthProvider({ children }) {
     
 
     if (response.data.multiFactorAuthentication){
-      console.log('res----------->', response.data);
-
       localStorage.setItem("userId", response.data.userId);
       localStorage.setItem("MFA", true);
     }

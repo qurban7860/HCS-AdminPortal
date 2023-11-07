@@ -77,15 +77,12 @@ export const GridBaseCard2 = styled(Grid)(({ theme }) => ({
  * @param {StyledCardWrapper} wrapper for the card
  * @returns wrapper for the card
  */
-export function StyledCardWrapper({ children, isMobile, condition1, condition2, ...props }) {
+export function StyledCardWrapper({ children, isMobile, condition, ...props }) {
   return (
     <Card
       sx={{
-        opacity: condition1 ? 1 : 0.6,
-        border: condition2 && '2px solid #D9D9D9',
-        boxShadow: condition2 && '0px 4px 4px rgba(127, 5, 35, 0.25)',
-
-        backgroundColor: condition2 && '#EDE7D9',
+        borderRadius:'5px',
+        backgroundColor: condition && '#e9ecff',
         height: isMobile ? '100px' : '200px',
         width: '100%',
       }}
@@ -98,28 +95,28 @@ export function StyledCardWrapper({ children, isMobile, condition1, condition2, 
 StyledCardWrapper.propTypes = {
   children: PropTypes.node,
   isMobile: PropTypes.bool,
-  condition1: PropTypes.bool,
-  condition2: PropTypes.bool,
+  condition: PropTypes.bool
 };
 
-export function StyledScrollbar({ contacts, children, ...props }) {
+export function StyledScrollbar({ maxHeight, contacts, children, ...props }) {
+  // const height = contacts*23;
   return (
     <Scrollbar
       sx={{
         height: {
-          xs: contacts === 1 ? '10vh' : '20vh',
-          sm: contacts === 1 ? '10vh' : '20vh',
-          md: 'calc(145vh - 100px)',
+          xs: '23.5vh',
+          lg: 'fit-content',
         },
-
+        maxHeight:maxHeight?`${maxHeight}vh`:"82vh",
         scrollSnapType: 'y mandatory',
         scrollSnapAlign: 'start',
         scrollbarWidth: 'none',
         '&::-webkit-scrollbar': { display: 'none' },
         '& .simplebar-content': { height: { xs: 'calc(100vh - 200px)', md: '100%' } },
         border: contacts <= 4 ? 'none' : '1px solid #D9D9D9',
-        borderRadius: '15px',
-        boxShadow: contacts === 1 && '0px 4px 4px rgba(127, 5, 35, 0.1)',
+        backgroundColor: '#e9e9e9',
+        borderRadius: '10px',
+        padding:'5px',
       }}
     >
       {children}
@@ -128,6 +125,7 @@ export function StyledScrollbar({ contacts, children, ...props }) {
 }
 
 StyledScrollbar.propTypes = {
+  maxHeight:PropTypes.number,
   contacts: PropTypes.number,
   children: PropTypes.node,
 };

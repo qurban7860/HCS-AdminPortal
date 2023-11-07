@@ -29,6 +29,7 @@ SignInLogListTableRow.propTypes = {
   onViewRow: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
+  status:PropTypes.object
 };
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -48,6 +49,7 @@ export default function SignInLogListTableRow({
   onDeleteRow,
   onEditRow,
   onViewRow,
+  status
 }) {
   const { loginTime, user, loginIP, logoutTime, statusCode } = row;
   return (
@@ -58,7 +60,8 @@ export default function SignInLogListTableRow({
         <TableCell align="left"> {fDateTime(loginTime)} </TableCell>
         <TableCell align="left">{fDateTime(logoutTime)}</TableCell>
         { useScreenSize('sm') && <TableCell align="left" sx={{color: statusCode===200?"green":"red"}}> 
-          {`${statusCode===200?"Success":"Failed"}`} 
+          {`${status?.value} (${status?.notes})`}
+          {/* {`${statusCode===200?"Success":"Failed"} (${statusCode})`}  */}
         </TableCell>}
       </StyledTableRow>
   );

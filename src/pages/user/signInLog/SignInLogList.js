@@ -123,8 +123,8 @@ export default function SignInLogList() {
   };
 
   const handleFilterRequestStatus = (event) => {
+    dispatch(ChangePage(0))
     setFilterRequestStatus(event.target.value);
-    setPage(0);
   };
   
   useEffect(() => {
@@ -150,6 +150,9 @@ export default function SignInLogList() {
     navigate(PATH_SECURITY.users.view(id));
   };
 
+  const configurations = JSON.parse(localStorage.getItem('configurations'));
+  const AUTH = configurations?.filter((config) => config.type === 'AUTH');
+  
   return (
       <Container maxWidth={false}>
         <Card sx={{ mb: 3, height: 160, position: 'relative'}}>
@@ -193,6 +196,8 @@ export default function SignInLogList() {
                         <RoleListTableRow
                           key={row._id}
                           row={row}
+                          status={AUTH?.find((config) => (config.name === `${row?.statusCode}`))}
+                          // status={AUTH?.find((config) => (config.name === row?.statusCode))}
                           onViewRow={()=> handleViewRow(row?.user?._id)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         />
