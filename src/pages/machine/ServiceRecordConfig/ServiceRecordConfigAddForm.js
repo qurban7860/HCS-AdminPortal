@@ -131,6 +131,7 @@ export default function ServiceRecordConfigAddForm() {
       }
       if(id){
         data.parentConfig = id
+        data.originalConfiguration = serviceRecordConfig?.originalConfiguration ? serviceRecordConfig?.originalConfiguration : id
       }
       data.checkItemLists = checkParams
       await dispatch(addServiceRecordConfig(data));

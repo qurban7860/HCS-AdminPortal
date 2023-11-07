@@ -86,7 +86,7 @@ function MachineServiceParamViewForm() {
     <Card sx={{ p: 2 }}>
       <Grid>
         <ViewFormEditDeleteButtons isActive={defaultValues.isActive}  
-          disableEditButton={machine?.status?.slug==='transferred'}
+          disableEditButton
           disableDeleteButton={machine?.status?.slug==='transferred'}
           handleEdit={handleEdit} onDelete={onDelete} backLink={() => dispatch(setAllFlagsFalse())}
         />

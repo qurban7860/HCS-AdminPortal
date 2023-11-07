@@ -322,6 +322,7 @@ export function addServiceRecordConfig(params) {
           noOfVerificationsRequired: params.noOfVerificationsRequired,
           header: {},
           footer: {},
+          originalConfiguration: params.originalConfiguration || null,
           isActive: params.isActive,
         };
         /* eslint-enable */
