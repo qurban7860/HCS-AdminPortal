@@ -13,15 +13,9 @@ function DetailsSection({ content, content2, content3, lg, ...props }) {
         height="200px"
         my={{ xs: 0, lg: 2 }}
       >
-        <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-          {content}
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          {content2}
-        </Typography>
-        <Typography variant="overline" color="text.secondary" pt={2}>
-          {content3}
-        </Typography>
+        <Typography variant="h4" sx={{ fontWeight: 'bold' }}>{content}</Typography>
+        <Typography variant="body1" color="text.secondary">{content2}</Typography>
+        <Typography variant="overline" color="text.secondary" pt={2}>{content3}</Typography>
       </CardContent>
     </GridBaseCard2>
   );
