@@ -64,7 +64,7 @@ function MachineServiceRecordAddForm() {
       versionNo:                    1,
       customer:                     machine?.customer?._id || null,
       site:                         machine?.instalationSite?._id,
-      machine:                      machine?._id || null,
+      // machine:                      machine?._id || null,
       decoilers:                    machineDecoilers || [],
       technician:                   securityUser?.contact || null,
       technicianNotes:              '',
@@ -165,18 +165,14 @@ function MachineServiceRecordAddForm() {
         Array.isArray(checkItemLists) && 
         checkItemLists.length>0) 
         checkItemLists.forEach((checkParam_, index )=>{
-          console.log("checkParam_ : ",checkParam_)
           if(Array.isArray(checkParam_.checkItems) && 
             checkParam_.checkItems.length>0) {
             checkParam_.checkItems.forEach((CI,ind)=>(
               CI?.checked && checkItemLists_.push({
                 machineCheckItem: CI?._id,
-                // name:CI.name,
-                checkItemListId:checkParam_?._id,
-                checkItemValue:  CI?.inputType.trim().toLowerCase() === 'status' ? CI?.value?.name : CI?.value,
-                // date:CI?.date || '',
+                checkItemListId:  checkParam_?._id,
+                checkItemValue:  CI?.checkItemValue,
                 comments:CI?.comments,
-                // status:CI?.status?.name
               })
             ));
           }
@@ -195,7 +191,7 @@ function MachineServiceRecordAddForm() {
   
   const toggleCancel = () => { dispatch(setMachineServiceRecordAddFormVisibility(false)) };
 
-  const handleChangeCheckItemListValue = (index, childIndex, value) => {
+  const handleChangeCheckItemListValue = (index, childIndex, checkItemValue) => {
       const updatedCheckParams = [...checkItemLists];
       const updatedParamObject = { 
         ...updatedCheckParams[index],
@@ -203,7 +199,7 @@ function MachineServiceRecordAddForm() {
       };
       updatedParamObject.checkItems[childIndex] = {
         ...updatedParamObject.checkItems[childIndex],
-        value,
+        checkItemValue,
       };
       updatedCheckParams[index] = updatedParamObject;
   setCheckItemLists(updatedCheckParams);
@@ -217,7 +213,7 @@ function MachineServiceRecordAddForm() {
     };
     updatedParamObject.checkItems[childIndex] = {
       ...updatedParamObject.checkItems[childIndex],
-      value: date,
+      checkItemValue: date,
     };
     updatedCheckParams[index] = updatedParamObject;
   setCheckItemLists(updatedCheckParams);
@@ -231,7 +227,7 @@ function MachineServiceRecordAddForm() {
         };
         updatedParamObject.checkItems[childIndex] = {
           ...updatedParamObject.checkItems[childIndex],
-          value: !updatedParamObject.checkItems[childIndex].value,
+          checkItemValue: !updatedParamObject.checkItems[childIndex].checkItemValue,
         };
         updatedCheckParams[index] = updatedParamObject;
       setCheckItemLists(updatedCheckParams);
@@ -259,7 +255,7 @@ function MachineServiceRecordAddForm() {
     };
     updatedParamObject.checkItems[childIndex] = {
       ...updatedParamObject.checkItems[childIndex],
-      value: status
+      checkItemValue: status
     };
     updatedCheckParams[index] = updatedParamObject;
   setCheckItemLists(updatedCheckParams);

@@ -33,7 +33,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 name={`${childRow?.name}_${childIndex}_${index}`} 
                                 onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e.target.value)}
                                 size="small" sx={{m:0.3, width: {sm: 259, xs: '100%'}}} 
-                                value={checkParamList[index]?.checkItems[childIndex]?.value}
+                                value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue}
                                 required={childRow?.isRequired}
                                 InputProps={{ inputProps: { maxLength: 50 }, 
                                     // style: { fontSize: '14px', height: 30 }
@@ -49,7 +49,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 name={`${childRow?.name}_${childIndex}_${index}`} 
                                 onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e.target.value)}
                                 size="small" sx={{m:0.3, width: {sm: 259, xs: '100%'}}} 
-                                value={checkParamList[index]?.checkItems[childIndex]?.value}
+                                value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue}
                                 minRows={1} multiline
                                 required={childRow?.isRequired}
                                 InputProps={{ inputProps: { maxLength: 200 }, 
@@ -66,7 +66,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 name={childRow?.name} 
                                 type="number"
                                 disabled={!checkParamList[index].checkItems[childIndex]?.checked}
-                                value={checkParamList[index]?.checkItems[childIndex]?.value}
+                                value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue}
                                 onChange={(e) => {
                                     if (/^\d*$/.test(e.target.value)) {
                                     handleChangeCheckItemListValue(index, childIndex, e.target.value)
@@ -85,7 +85,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 <Checkbox 
                                     disabled={!checkParamList[index].checkItems[childIndex]?.checked}
                                     name={`${childRow?.name}_${childIndex}_${index}`} 
-                                    checked={checkParamList[index].checkItems[childIndex]?.value || false} 
+                                    checked={checkParamList[index].checkItems[childIndex]?.checkItemValue || false} 
                                     onChange={()=>handleChangeCheckItemListCheckBoxValue(index, childIndex )} 
                                     sx={{my:'auto'}}
                                     />
@@ -100,7 +100,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 type="date"
                                 format="dd/mm/yyyy"
                                 disabled={!checkParamList[index].checkItems[childIndex]?.checked}
-                                value={checkParamList[index]?.checkItems[childIndex]?.value || null}
+                                value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue || null}
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
@@ -111,10 +111,9 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
 
                             { childRow?.inputType === 'Status' && <Autocomplete 
                                 disabled={!checkParamList[index].checkItems[childIndex]?.checked}
-                                value={checkParamList[index].checkItems[childIndex]?.value || null }
+                                value={checkParamList[index].checkItems[childIndex]?.checkItemValue  }
                                 options={statusTypes}
-                                getOptionLabel={(option) => option?.name || ''}
-                                isOptionEqualToValue={(option, value) => option._id === value._id}
+                                // isOptionEqualToValue={(option, value) => option === value}
                                 onChange={(event, newInputValue) =>  handleChangeCheckItemListStatus(index, childIndex, newInputValue) }
                                 renderInput={(params) => <TextField {...params} label="Status" size='small' 
                                 // InputProps={{ style: { fontSize: '14px !important', height: '30 !important' }}}
