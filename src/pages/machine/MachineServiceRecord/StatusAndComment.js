@@ -1,16 +1,30 @@
 import React, { useState, memo, useEffect } from 'react'
 import PropTypes from 'prop-types';
-import { Grid, Chip, TableRow, TableCell, Checkbox, Typography, Tooltip } from '@mui/material';
+import { Grid, Chip, TableRow, TableCell, Checkbox, Typography, Tooltip, Badge } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { fDate } from '../../../utils/formatTime';
 import Iconify from '../../../components/iconify';
 import { HtmlTooltip, StyledTooltip } from '../../../theme/styles/default-styles';
 import MenuPopover from '../../../components/menu-popover/MenuPopover';
+import ViewFormHistoricalPopover from '../../components/ViewForms/ViewFormHistoricalPopover';
+import IconTooltip from '../../components/Icons/IconTooltip';
 
 const StatusAndComment = ({index, childIndex, childRow}) => {
 
     const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
     const [checkItem, setCheckItem] = useState({});
+    const [historyAnchorEl, setHistoryAnchorEl] = useState(null);
+    const [history, setHistory] = useState([]);
+
+    const handleHistoryPopoverOpen = (event) => {
+      setHistoryAnchorEl(event.currentTarget);
+      setHistory(childRow?.historicalData)
+    };
+  
+    const handleHistoryPopoverClose = () => {
+      setHistoryAnchorEl(null);
+      setHistory([])
+    };
 
     // useEffect(() => {
     //   setCheckItem(machineServiceRecord?.checkParams?.find((element) =>
@@ -25,7 +39,17 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
     <TableRow key={childRow._id} sx={{":hover": {  backgroundColor: "#dbdbdb66" } }}>
       <TableCell>
         <Grid sx={{ width: '100%', display: 'flex', justifyContent: 'space-between' }} >
-          <TableCell ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}{childRow?.historicalData && childRow?.historicalData?.length > 0 && <Iconify icon='material-symbols:history' sx={{mb:-0.6, mx:1, cursor: 'pointer'}} />}</TableCell>
+          <TableCell ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}
+            {childRow?.historicalData && childRow?.historicalData?.length > 0 && 
+            <Badge badgeContent={childRow?.historicalData?.length} color="info" sx={{mb:-0.6, mx:1, cursor: 'pointer'}}>
+              <Iconify
+                title="History"
+                icon="material-symbols:history"
+                onClick={handleHistoryPopoverOpen}
+                sx={{width: 25, height: 25}}
+              />
+            </Badge>}
+          </TableCell>
           <TableCell align='right' >
             <Grid  sx={{display: { md:'flex', xs: 'block', }, justifyContent:'end'}}>
 
@@ -54,7 +78,11 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
       </TableCell>
         
     </TableRow>
-    
+    <ViewFormHistoricalPopover
+        open={historyAnchorEl }
+        onClose={handleHistoryPopoverClose}
+        ListArr={childRow?.historicalData || []}
+        ListTitle= "History" />
   </>
   )
 }

@@ -31,7 +31,7 @@ MenuPopover.propTypes = {
 export default function MenuPopover({
   open,
   children,
-  arrow = 'top-right',
+  arrow = 'top-left',
   disabledArrow,
   sx,
   ...other

@@ -13,6 +13,8 @@ import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 // import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormHistoricalPopover from '../../components/ViewForms/ViewFormHistoricalPopover';
+
 import { fDate } from '../../../utils/formatTime';
 import ReadableCollapsibleCheckedItemRow from './ReadableCollapsibleCheckedItemRow';
 
