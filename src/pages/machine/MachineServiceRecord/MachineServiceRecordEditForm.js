@@ -44,6 +44,7 @@ function MachineServiceRecordEditForm() {
   const [checkParam, setCheckParam] = useState([]);
   const [serviceDateError, setServiceDateError] = useState('');
   const [checkItemLists, setCheckItemLists] = useState([]);
+  console.log("checkItemLists state : ",checkItemLists)
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { activeSecurityUsers } = useSelector((state) => state.user);
@@ -60,38 +61,40 @@ function MachineServiceRecordEditForm() {
   useEffect(() => {
 
     if (machineServiceRecord) {
-      const checkParams = machineServiceRecord?.serviceRecordConfig?.checkParams;
-      if (checkParams) {
+      // const checkItems = machineServiceRecord?.serviceRecordConfig?.checkItemLists;
+      // if (checkItems) {
 
-        const params_ = checkParams.map((row, index) => {
-          if (row && row.checkItems) {
-            const updatedParamList = row.checkItems.map((childRow, childIndex) => {
-              const foundParam = machineServiceRecord.checkParams.find(
-                (param) =>
-                  param?.serviceParam === childRow?._id &&
-                  param?.checkItemsTitle === row?.checkItemsTitle
-              );
-              return {
-                ...childRow,
-                value: foundParam ? foundParam.value : '',
-                status: foundParam ? { name: foundParam.status } : null,
-                date: foundParam ? foundParam.date : '',
-                // comments: foundParam ? foundParam.comments : '',
-                checked: foundParam?.checked || false ,
-              };
-            });
+      //   const params_ = checkItems.map((row, index) => {
+      //     if (row && row.checkItems) {
+      //       const updatedParamList = row.checkItems.map((childRow, childIndex) => {
+      //         const foundParam = machineServiceRecord.checkParams.find(
+      //           (param) =>
+      //             param?.serviceParam === childRow?._id &&
+      //             param?.checkItemsTitle === row?.checkItemsTitle
+      //         );
+      //         return {
+      //           ...childRow,
+      //           value: foundParam ? foundParam.value : '',
+      //           status: foundParam ? { name: foundParam.status } : null,
+      //           date: foundParam ? foundParam.date : '',
+      //           // comments: foundParam ? foundParam.comments : '',
+      //           checked: foundParam?.checked || false ,
+      //         };
+      //       });
         
-            return {
-              ...row,
-              checkItems: updatedParamList,
-            };
-          }
-          return row;
-        });
+      //       return {
+      //         ...row,
+      //         checkItems: updatedParamList,
+      //         _id
+      //       };
+      //     }
+      //     return row;
+      //   });
         
         
-        setCheckItemLists(params_);
-      }
+      //   setCheckItemLists(params_);
+      // }
+      setCheckItemLists(machineServiceRecord?.serviceRecordConfig?.checkItemLists);
     }
   }, [machineServiceRecord]);
 
@@ -117,20 +120,24 @@ function MachineServiceRecordEditForm() {
     () => ({
       recordType:                 machineServiceRecord?.serviceRecordConfig?.recordType || null,
       serviceRecordConfiguration: machineServiceRecord?.serviceRecordConfig || null,
-      serviceDate:                machineServiceRecord?.serviceDate || null,
-      customer:                   machineServiceRecord?.customer || null,
+      serviceDate:                machineServiceRecord?.serviceDate || new Date(),
+      versionNo:                  Number(machineServiceRecord?.versionNo) + 1 || 1,
+      // customer:                   machineServiceRecord?.customer || null,
       site:                       machineServiceRecord?.site || null,
       machine:                    machineServiceRecord?.machine || null,
       decoilers:                  defaultDecoilers || [],
       technician:                 machineServiceRecord?.technician || null,
-      // checkParams:
+      technicianNotes:            machineServiceRecord?.technicianNotes || '',
+      textBeforeCheckItems:       machineServiceRecord?.textBeforeCheckItems || '',
+      textAfterCheckItems:        machineServiceRecord?.textAfterCheckItems || '',
       serviceNote:                machineServiceRecord?.serviceNote || '',
-      maintenanceRecommendation:  machineServiceRecord?.maintenanceRecommendation || '',
+      recommendationNote:         machineServiceRecord?.recommendationNote || '',
       internalComments:           machineServiceRecord?.internalComments || '',
       suggestedSpares:            machineServiceRecord?.suggestedSpares || '',
-      // files: machineServiceRecord?.files || [],
+      internalNote:               machineServiceRecord?.internalNote || '',
       operators:                  machineServiceRecord?.operators || [],
-      technicianRemarks:          machineServiceRecord?.technicianRemarks || '',
+      operatorNotes:              machineServiceRecord?.operatorNotes || '',
+      // files: machineServiceRecord?.files || [],
       isActive:                   machineServiceRecord?.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -165,28 +172,30 @@ function MachineServiceRecordEditForm() {
   const onSubmit = async (data) => {
     try {
       const checkItemLists_ = [];
-
+console.log("before submit checkItemLists : ",checkItemLists)
       if(checkItemLists && 
         Array.isArray(checkItemLists) && 
         checkItemLists.length>0) 
         checkItemLists.forEach((checkParam_, index )=>{
           if(Array.isArray(checkParam_.checkItems) && 
             checkParam_.checkItems.length>0) {
-            checkParam_.checkItems.forEach((CI,ind)=>{
-              checkItemLists_.push({
-                serviceParam:CI._id,
-                name:CI.name,
-                ListTitle:checkParam_.ListTitle,
-                value:CI?.value,
-                date:CI?.date || '',
+            checkParam_.checkItems.forEach((CI,ind)=>(
+              CI?.checked && checkItemLists_.push({
+                machineCheckItem: CI?._id,
+                // name:CI.name,
+                checkItemListId:  checkParam_?._id,
+                checkItemValue:  CI?.checkItemValue,
+                // date:CI?.date || '',
                 comments:CI?.comments,
-                status:CI?.status?.name
-              });
-            });
+                // status:CI?.status?.name
+              })
+            ));
           }
         });
-      data.checkItemLists = checkItemLists_;
+        console.log("checkItemLists_",checkItemLists_)
+      data.checkItemRecordValues = checkItemLists_;
       data.decoilers = decoilers;
+      data.serviceId = machineServiceRecord?.serviceId || null
       data.operators = operators;
       await dispatch(updateMachineServiceRecord(machine?._id ,machineServiceRecord?._id , data));
       await dispatch(getMachineServiceRecord(machine?._id, machineServiceRecord?._id))
@@ -227,8 +236,7 @@ function MachineServiceRecordEditForm() {
   );
 
 
-
-  const handleChangeCheckItemListValue = (index, childIndex, value) => {
+  const handleChangeCheckItemListValue = (index, childIndex, checkItemValue) => {
     const updatedCheckParams = [...checkItemLists];
     const updatedParamObject = { 
       ...updatedCheckParams[index],
@@ -236,14 +244,13 @@ function MachineServiceRecordEditForm() {
     };
     updatedParamObject.checkItems[childIndex] = {
       ...updatedParamObject.checkItems[childIndex],
-      value,
+      checkItemValue,
     };
     updatedCheckParams[index] = updatedParamObject;
 setCheckItemLists(updatedCheckParams);
 }
 
 const handleChangeCheckItemListDate = (index, childIndex, date) => {
-  console.log("date : ",date)
   const updatedCheckParams = [...checkItemLists];
   const updatedParamObject = { 
     ...updatedCheckParams[index],
@@ -251,7 +258,7 @@ const handleChangeCheckItemListDate = (index, childIndex, date) => {
   };
   updatedParamObject.checkItems[childIndex] = {
     ...updatedParamObject.checkItems[childIndex],
-    date,
+    checkItemValue: date,
   };
   updatedCheckParams[index] = updatedParamObject;
 setCheckItemLists(updatedCheckParams);
@@ -265,7 +272,7 @@ const handleChangeCheckItemListCheckBoxValue = (index, childIndex) => {
       };
       updatedParamObject.checkItems[childIndex] = {
         ...updatedParamObject.checkItems[childIndex],
-        value: !updatedParamObject.checkItems[childIndex].value,
+        checkItemValue: !updatedParamObject.checkItems[childIndex].checkItemValue,
       };
       updatedCheckParams[index] = updatedParamObject;
     setCheckItemLists(updatedCheckParams);
@@ -293,7 +300,7 @@ const handleChangeCheckItemListStatus = (index, childIndex, status) => {
   };
   updatedParamObject.checkItems[childIndex] = {
     ...updatedParamObject.checkItems[childIndex],
-    status
+    checkItemValue: status
   };
   updatedCheckParams[index] = updatedParamObject;
 setCheckItemLists(updatedCheckParams);
@@ -321,7 +328,7 @@ setCheckItemLists(updatedCheckParams);
           <Stack spacing={2}>
             <FormHeading heading="Edit Service Record" />
               <Grid container>
-                <ViewFormField sm={6} heading='Customer'                param={machine?.customer?.name} label="serialNo"/>
+                {/* <ViewFormField sm={6} heading='Customer'                param={machine?.customer?.name} label="serialNo"/> */}
                 <ViewFormField sm={6} heading='Machine'                 param={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} label="serialNo"/>
                 <ViewFormField sm={6} heading='Machine Model Category'  param={machine?.machineModel?.category?.name} label="serialNo"/>
                 <ViewFormField sm={6} heading='Machine Model'           param={machine?.machineModel?.name} label="serialNo"/>
@@ -354,6 +361,8 @@ setCheckItemLists(updatedCheckParams);
               >
 
               <RHFDatePicker name="serviceDate" label="Service Date" />
+              <RHFTextField name="versionNo" label="Version No" disabled/>
+
               {/* <Autocomplete multiple
                   readonly
                   name="decoilers"
@@ -377,7 +386,9 @@ setCheckItemLists(updatedCheckParams);
                   <li {...props} key={option._id}>{`${option?.name || ''}`}</li>
                 )}
               />
-              <RHFTextField name="technicianRemarks" label="Technician Remarks" minRows={3} multiline/>
+              <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/>
+              <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline/> 
+
                 {checkItemLists?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
 
                 {isLoadingCheckItems ? 
@@ -411,13 +422,17 @@ setCheckItemLists(updatedCheckParams);
                           ))}
                       </>
                     }
-                    
+
+                <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline/> 
+                
                 <RHFTextField name="internalComments" label="Internal Comments" minRows={3} multiline/>
                 { serviceRecordConfiguration?.enableNote && <RHFTextField name="serviceNote" label="Note" minRows={3} multiline/> }
-                { serviceRecordConfiguration?.enableMaintenanceRecommendations && <RHFTextField name="maintenanceRecommendation" label="Maintenance Recommendation" minRows={3} multiline/> }
+                { serviceRecordConfiguration?.enableMaintenanceRecommendations && <RHFTextField name="recommendationNote" label="Recommendation Note" minRows={3} multiline/> }
                 { serviceRecordConfiguration?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }
 
-                {defaultValues?.recordType==='Training' &&
+                <RHFTextField name="internalNote" label="Internal Note" minRows={3} multiline/> 
+
+                {/* {defaultValues?.recordType==='Training' && */}
                   <Autocomplete multiple
                     name="operators"
                     defaultValue={defaultValues.operators}
@@ -429,8 +444,9 @@ setCheckItemLists(updatedCheckParams);
                       <TextField {...params} variant="outlined" label="Operators" placeholder="Select Operators"/>
                     )}
                   />
-                }
+                {/* } */}
 
+                <RHFTextField name="operatorNotes" label="Operator Notes" minRows={3} multiline/> 
 
               {/* <Grid item xs={12} md={6} lg={12}>
                 <RHFUpload

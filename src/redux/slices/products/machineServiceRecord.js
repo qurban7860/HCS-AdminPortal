@@ -287,6 +287,7 @@ export function updateMachineServiceRecord(machineId,id, params) {
         operators:                  params?.operators,
         operatorNotes:              params.operatorNotes,
         checkItemRecordValues:      params?.checkItemRecordValues || [],
+        serviceId:                  params?.serviceId,
         isActive:                   params?.isActive
       }
       await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`,data);
