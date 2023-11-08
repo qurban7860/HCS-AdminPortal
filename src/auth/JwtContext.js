@@ -73,7 +73,7 @@ AuthProvider.propTypes = {
 export function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const storageAvailable = useMemo(() => localStorageAvailable(), []);
-
+      
   const initialize = useCallback(async () => {
     try {
       const accessToken = storageAvailable ? localStorage.getItem('accessToken') : '';
@@ -86,23 +86,6 @@ export function AuthProvider({ children }) {
           displayName: localStorage.getItem('name'),
         };
         const userId = localStorage.getItem('userId');
-
-        // const tokenExpTime = jwtDecode(accessToken).exp * 1000;
-        // const tokenRefreshTime = tokenExpTime - 20 * 60 * 1000;
-        // const resetTokenTime = setTimeout(async () => {
-        //   try {
-        //     const response = await axios.post(`${CONFIG.SERVER_URL}security/refreshToken`, {
-        //       userID: userId,
-        //     });
-        //     const newAccessToken = response.data.accessToken;
-
-        //     localStorage.setItem('accessToken', newAccessToken);
-
-        //     initialize();
-        //   } catch (error) {
-        //     console.error(error);
-        //   }
-        // }, tokenRefreshTime - Date.now() + 30 * 1000);
 
         dispatch({
           type: 'INITIAL',
@@ -138,7 +121,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     initialize();
-  }, [initialize]);
+  }, [initialize]);  
 
   // LOGIN
 
@@ -186,7 +169,6 @@ export function AuthProvider({ children }) {
 
       setSession(accessToken);
       await getConfigs();
-      
 
       dispatch({
         type: 'LOGIN',

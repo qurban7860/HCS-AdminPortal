@@ -45,7 +45,7 @@ export const StyledBadgeStatus = styled('span')(({ theme, ownerState }) => {
     }),
 
     ...(status === 'online' && {
-      backgroundColor: theme.palette.success.main,
+      backgroundColor: '#44b700',
     }),
 
     ...(status === 'invisible' && {

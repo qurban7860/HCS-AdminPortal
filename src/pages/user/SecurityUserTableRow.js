@@ -18,6 +18,7 @@ import { fDate } from '../../utils/formatTime';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 import LinkTableCell from '../components/ListTableTools/LinkTableCell';
 import { useScreenSize } from '../../hooks/useResponsive';
+import BadgeStatus from '../../components/badge-status/BadgeStatus';
 
 // ----------------------------------------------------------------------
 
@@ -38,10 +39,8 @@ export default function SecurityUserTableRow({
   onSelectRow,
   onDeleteRow,
 }) {
-  const { email, name, roles, phone, createdAt, currentEmployee, isActive } = row;
-
+  const { email, name, roles, phone, createdAt, currentEmployee, isActive, isOnline } = row;
   const [openConfirm, setOpenConfirm] = useState(false);
-
   const [openPopover, setOpenPopover] = useState(null);
 
   const smScreen = useScreenSize('sm')
@@ -63,6 +62,10 @@ export default function SecurityUserTableRow({
     setOpenConfirm(false);
   };
 
+  if(isOnline){
+    console.log("--Name:",name," ------ Online:",isOnline)
+  }
+  
   return (
     <>
       <TableRow hover selected={selected}>
@@ -72,56 +75,27 @@ export default function SecurityUserTableRow({
             alt={name}
             sx={{ ml: 1, my: 0.5, width: '30px', height: '30px' }}
           />
+          <CustomAvatar
+            // src={contact.avatar}
+            name={name}
+            alt={name}
+            BadgeProps={{
+              badgeContent: <BadgeStatus status={isOnline?"online":"offline"} />,
+            }}
+          />
           <LinkTableCell align="left" onClick={onViewRow} param={name} />
         </Stack>
 
         { smScreen && <TableCell align="left">{email}</TableCell>}
-        { smScreen && <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-          {phone || ''}
-        </TableCell>}
-
-        { lgScreen && <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-        {roles.map((obj) => (obj.roleType === 'SuperAdmin' ? <Chip label={obj.name} sx={{m:0.2}} color='secondary' /> : <Chip label={obj.name} sx={{mx:0.3}} />))}
-        </TableCell>}
-        <TableCell align="center">
-          {' '}
-          <Switch checked={currentEmployee} disabled size="small" />{' '}
-        </TableCell>
-        <TableCell align="center">
-          {' '}
-          <Switch checked={isActive} disabled size="small" />{' '}
-        </TableCell>
-        <TableCell align="right" sx={{ textTransform: 'capitalize' }}>
-          {fDate(createdAt)}
-        </TableCell>
-
-        {/* <TableCell align="center">
-          <Iconify
-            icon={isVerified ? 'eva:checkmark-circle-fill' : 'eva:clock-outline'}
-            sx={{
-              width: 20,
-              height: 20,
-              color: 'success.main',
-              ...(!isVerified && { color: 'warning.main' }),
-            }}
-          />
-        </TableCell> */}
-
-        {/* <TableCell align="left">
-          <Label
-            variant="soft"
-            color={(status === 'banned' && 'error') || 'success'}
-            sx={{ textTransform: 'capitalize' }}
-          >
-            {status}
-          </Label>
-        </TableCell>  */}
-
-        {/* <TableCell align="right">
-          <IconButton color={openPopover ? 'inherit' : 'default'} onClick={handleOpenPopover}>
-            <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
-        </TableCell> */}
+        { smScreen && <TableCell align="left">{phone || ''}</TableCell>}
+        { lgScreen && 
+          <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+            {roles.map((obj) => (obj.roleType === 'SuperAdmin' ? <Chip label={obj.name} sx={{m:0.2}} color='secondary' /> : <Chip label={obj.name} sx={{mx:0.3}} />))}
+          </TableCell>
+        }
+        <TableCell align="center"><Switch checked={currentEmployee} disabled size="small" /></TableCell>
+        <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell>
+        <TableCell align="right">{fDate(createdAt)}</TableCell>
       </TableRow>
 
       <MenuPopover

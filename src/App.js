@@ -23,7 +23,8 @@ import 'slick-carousel/slick/slick-theme.css';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import 'react-quill/dist/quill.snow.css';
 // ----------------------------------------------------------------------
-
+import useWebSocket from 'react-use-websocket';
+import { useState, useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Provider as ReduxProvider } from 'react-redux';
@@ -55,10 +56,26 @@ import IdleManager from './components/idleManager';
 
 import { AuthProvider } from './auth/JwtContext';
 import Page500 from './pages/Page500';
+import { CONFIG } from './config-global';
 
 // ----------------------------------------------------------------------
 
 export default function App() {
+
+  const WS_URL=`${CONFIG.SOCKET_URL}/?accessToken=${localStorage.getItem('accessToken')}`;
+  const { readyState } = useWebSocket(WS_URL, {
+    onOpen: () => {
+      console.log('WebSocket connection established.');
+    },
+    onClose: () => {
+      console.log('WebSocket connection closed.');
+    },
+    share: true,
+    filter: () => false,
+    retryOnError: true,
+    shouldReconnect: () => true
+  });
+  
   return (
     <AuthProvider>
         <HelmetProvider>
