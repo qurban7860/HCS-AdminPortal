@@ -673,7 +673,7 @@ function ViewFormEditDeleteButtons({
       />
 
       <ViewFormMenuPopover
-        open={approvedAnchorEl }
+        open={approvedAnchorEl}
         onClose={handleApprovedPopoverClose}
         ListArr={approvedBy}
         ListTitle= "Approved By"
