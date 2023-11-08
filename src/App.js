@@ -62,8 +62,9 @@ import { CONFIG } from './config-global';
 
 export default function App() {
 
-  const WS_URL=`${CONFIG.SOCKET_URL}/?accessToken=${localStorage.getItem('accessToken')}`;
-  const { readyState } = useWebSocket(WS_URL, {
+  const token = localStorage.getItem('accessToken');
+  const WS_URL = token ? `${CONFIG.SOCKET_URL}/?accessToken=${token}` : null;
+  const { sendMessage, readyState } = useWebSocket(WS_URL, {
     onOpen: () => {
       console.log('WebSocket connection established.');
     },
