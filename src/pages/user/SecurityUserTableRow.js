@@ -73,15 +73,10 @@ export default function SecurityUserTableRow({
           <CustomAvatar
             name={name}
             alt={name}
-            sx={{ ml: 1, my: 0.5, width: '30px', height: '30px' }}
-          />
-          <CustomAvatar
-            // src={contact.avatar}
-            name={name}
-            alt={name}
             BadgeProps={{
               badgeContent: <BadgeStatus status={isOnline?"online":"offline"} />,
             }}
+            sx={{ ml: 1, my: 0.5, width: '30px', height: '30px' }}
           />
           <LinkTableCell align="left" onClick={onViewRow} param={name} />
         </Stack>
