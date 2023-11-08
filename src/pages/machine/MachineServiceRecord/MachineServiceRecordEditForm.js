@@ -44,7 +44,6 @@ function MachineServiceRecordEditForm() {
   const [checkParam, setCheckParam] = useState([]);
   const [serviceDateError, setServiceDateError] = useState('');
   const [checkItemLists, setCheckItemLists] = useState([]);
-  console.log("checkItemLists state : ",checkItemLists)
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { activeSecurityUsers } = useSelector((state) => state.user);
@@ -172,7 +171,6 @@ function MachineServiceRecordEditForm() {
   const onSubmit = async (data) => {
     try {
       const checkItemLists_ = [];
-console.log("before submit checkItemLists : ",checkItemLists)
       if(checkItemLists && 
         Array.isArray(checkItemLists) && 
         checkItemLists.length>0) 
@@ -192,13 +190,12 @@ console.log("before submit checkItemLists : ",checkItemLists)
             ));
           }
         });
-        console.log("checkItemLists_",checkItemLists_)
       data.checkItemRecordValues = checkItemLists_;
       data.decoilers = decoilers;
       data.serviceId = machineServiceRecord?.serviceId || null
       data.operators = operators;
       await dispatch(updateMachineServiceRecord(machine?._id ,machineServiceRecord?._id , data));
-      await dispatch(getMachineServiceRecord(machine?._id, machineServiceRecord?._id))
+      // await dispatch(getMachineServiceRecord(machine?._id, machineServiceRecord?._id))
       reset();
       dispatch(setMachineServiceRecordViewFormVisibility(true));
     } catch (err) {

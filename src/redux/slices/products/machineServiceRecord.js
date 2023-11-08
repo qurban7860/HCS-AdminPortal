@@ -290,7 +290,8 @@ export function updateMachineServiceRecord(machineId,id, params) {
         serviceId:                  params?.serviceId,
         isActive:                   params?.isActive
       }
-      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`,data);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`,data);
+      await dispatch(getMachineServiceRecord(machineId, response?.data?.serviceRecord?._id))
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
