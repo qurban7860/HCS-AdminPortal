@@ -61,10 +61,6 @@ export default function SecurityUserTableRow({
     onDeleteRow();
     setOpenConfirm(false);
   };
-
-  if(isOnline){
-    console.log("--Name:",name," ------ Online:",isOnline)
-  }
   
   return (
     <>
