@@ -41,7 +41,7 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
         <Grid sx={{ width: '100%', display: 'flex', justifyContent: 'space-between' }} >
           <TableCell ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}
             {childRow?.historicalData && childRow?.historicalData?.length > 0 && 
-            <Badge badgeContent={childRow?.historicalData?.length} color="info" sx={{mb:-0.6, mx:1, cursor: 'pointer'}}>
+            <Badge badgeContent={childRow?.historicalData?.length} color="info" sx={{mb:-0.6, mx:1, cursor: 'pointer'}} onClick={handleHistoryPopoverOpen} >
               <Iconify
                 title="History"
                 icon="material-symbols:history"
