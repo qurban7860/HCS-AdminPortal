@@ -1,13 +1,15 @@
 import PropTypes from 'prop-types';
 import { createContext, useEffect, useReducer, useCallback, useMemo } from 'react';
-// import jwtDecode from 'jwt-decode';
-// import { ROOT_CONFIG } from 'src/config-global';
 import { CONFIG } from '../config-global';
 // utils
 import axios from '../utils/axios';
 import localStorageAvailable from '../utils/localStorageAvailable';
 //
 import { isValidToken, setSession } from './utils';
+import { clearAllPersistedStates } from '../redux/slices/auth/clearPersistStates';
+// import { WebSocketConnection } from './WebSocketContext';
+
+
 
 // ----------------------------------------------------------------------
 
@@ -73,7 +75,7 @@ AuthProvider.propTypes = {
 export function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const storageAvailable = useMemo(() => localStorageAvailable(), []);
-      
+  
   const initialize = useCallback(async () => {
     try {
       const accessToken = storageAvailable ? localStorage.getItem('accessToken') : '';
@@ -140,7 +142,6 @@ export function AuthProvider({ children }) {
     }
   }
 
-   
   const login = useCallback(async (email, password) => {
     localStorage.removeItem('userId');
     localStorage.removeItem('email');
@@ -153,13 +154,10 @@ export function AuthProvider({ children }) {
       password,
     })
 
-    
-
     if (response.data.multiFactorAuthentication){
       localStorage.setItem("userId", response.data.userId);
       localStorage.setItem("MFA", true);
-    }
-    else{
+    } else{
       const { accessToken, user, userId } = response.data;
       const rolesArrayString = JSON.stringify(user.roles);
       localStorage.setItem('email', user.email);
@@ -169,7 +167,7 @@ export function AuthProvider({ children }) {
 
       setSession(accessToken);
       await getConfigs();
-
+      
       dispatch({
         type: 'LOGIN',
         payload: {
@@ -177,9 +175,9 @@ export function AuthProvider({ children }) {
           userId
         },
       });
-    }
 
-    
+      // window.location.reload();
+    }
   }, []);
 
   // MULTI FACTOR CODE
@@ -242,8 +240,8 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('name');
     localStorage.removeItem('userRoles');
     localStorage.removeItem('accessToken');
+    await dispatch(clearAllPersistedStates)
     window.location.reload();
-    // localStorage.clear();
     dispatch({
       type: 'LOGOUT',
     });
@@ -266,3 +264,5 @@ export function AuthProvider({ children }) {
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;
 }
+
+
