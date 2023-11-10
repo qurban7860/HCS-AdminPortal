@@ -46,6 +46,7 @@ const TABLE_HEAD = [
   { id: 'versionNo', visibility: 'xs5', label: 'Version No', align: 'center' },
   { id: 'serviceDate', label: 'Service Date', align: 'center' },
   { id: 'isActive', label: 'Active', align: 'center' },
+  { id: 'createdBy.name', label: 'Created By', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 // ----------------------------------------------------------------------

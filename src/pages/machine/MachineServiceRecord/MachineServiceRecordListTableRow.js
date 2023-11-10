@@ -51,7 +51,7 @@ export default function MachineServiceRecordListTableRow({
   onViewRow,
 }) {
 
-  const { serviceRecordConfig, technician, versionNo, serviceDate, isActive, createdAt } = row;
+  const { serviceRecordConfig, technician, versionNo, serviceDate, isActive, createdAt, createdBy } = row;
 
   return (
       <StyledTableRow hover selected={selected}>
@@ -63,6 +63,7 @@ export default function MachineServiceRecordListTableRow({
           {' '}
           <Switch checked={isActive} disabled size="small" />{' '}
         </TableCell>
+        <TableCell align="left">{createdBy.name}</TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>
       </StyledTableRow>
 
