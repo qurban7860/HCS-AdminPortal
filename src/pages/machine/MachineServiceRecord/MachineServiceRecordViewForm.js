@@ -14,7 +14,7 @@ import ViewFormField from '../../components/ViewForms/ViewFormField';
 // import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormHistoricalPopover from '../../components/ViewForms/ViewFormHistoricalPopover';
-
+import FormLabel from '../../components/DocumentForms/FormLabel';
 import { fDate } from '../../../utils/formatTime';
 import ReadableCollapsibleCheckedItemRow from './ReadableCollapsibleCheckedItemRow';
 
@@ -98,13 +98,13 @@ function MachineServiceParamViewForm() {
           <ViewFormField sm={6} heading="Machine"  param={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} />
           <ViewFormField sm={6} heading="Model Category"  param={machine?.machineModel?.category?.name || ''} />
           <ViewFormField sm={6} heading="Machine Model"  param={machine?.machineModel?.name || ''} /> */}
+          <FormLabel content={FORMLABELS.KEYDETAILS} />
+          
+          <ViewFormField sm={4} heading="Service Date" param={fDate(defaultValues.serviceDate)} />
+          <ViewFormField sm={4} heading="Service Record Configuration" param={`${defaultValues.serviceRecordConfig} ${defaultValues.serviceRecordConfigRecordType ? '-' : ''} ${defaultValues.serviceRecordConfigRecordType ? defaultValues.serviceRecordConfigRecordType : ''}`} />
+          <ViewFormField sm={4} heading="Version No" param={defaultValues?.versionNo} />
+          
           <ViewFormField sm={12} heading="Decoilers" arrayParam={defaultValues?.decoilers?.map((decoilerMachine) => ({ name: `${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`}))} />
-          
-          <ViewFormField sm={12} heading="Service Record Configuration" param={`${defaultValues.serviceRecordConfig} ${defaultValues.serviceRecordConfigRecordType ? '-' : ''} ${defaultValues.serviceRecordConfigRecordType ? defaultValues.serviceRecordConfigRecordType : ''}`} />
-          
-          <ViewFormField sm={6} heading="Service Date" param={fDate(defaultValues.serviceDate)} />
-          <ViewFormField sm={6} heading="Version No" param={defaultValues?.versionNo} />
-          
           <ViewFormField sm={6} heading="Technician"  param={defaultValues?.technician?.name || ''} />
           <ViewFormField sm={12} heading="Technician Notes" param={defaultValues.technicianNotes} />
 
