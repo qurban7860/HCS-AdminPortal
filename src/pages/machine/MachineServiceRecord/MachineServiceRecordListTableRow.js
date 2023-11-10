@@ -51,12 +51,13 @@ export default function MachineServiceRecordListTableRow({
   onViewRow,
 }) {
 
-  const { serviceRecordConfig, technician, serviceDate, isActive, createdAt } = row;
+  const { serviceRecordConfig, technician, versionNo, serviceDate, isActive, createdAt } = row;
 
   return (
       <StyledTableRow hover selected={selected}>
         <LinkTableCell align="left" onClick={onViewRow} param={`${serviceRecordConfig?.docTitle ? serviceRecordConfig?.docTitle	: ''	} ${serviceRecordConfig?.recordType ? ' - ' : ''} ${serviceRecordConfig?.recordType ? serviceRecordConfig?.recordType : ''}`} />
-        <TableCell align="left">{`${technician?.name ? technician?.name : ''}`}</TableCell>
+        {/* <TableCell align="left">{`${technician?.name ? technician?.name : ''}`}</TableCell> */}
+        <TableCell align="center">{versionNo}</TableCell>
         <TableCell align="center">{fDate(serviceDate)}</TableCell>
         <TableCell align="center">
           {' '}

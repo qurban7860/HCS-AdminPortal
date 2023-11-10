@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Grid, Box, Divider, Chip, TableRow, TableCell, Checkbox, Typography, Tooltip, Badge, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import { useSelector } from 'react-redux';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { fDate } from '../../../utils/formatTime';
+import { fDate, fDateTime } from '../../../utils/formatTime';
 import Iconify from '../../../components/iconify';
 import { HtmlTooltip, StyledTooltip } from '../../../theme/styles/default-styles';
 import MenuPopover from '../../../components/menu-popover/MenuPopover';
@@ -51,7 +51,7 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
       onChange={childRow?.historicalData?.length > 0 && handleChange(`${index}${childIndex}`)}
     >
     <AccordionSummary
-        sx={{ mt: expanded && 0.5  }}
+        sx={{ mt: expanded && 0.  }}
         expandIcon={childRow?.historicalData?.length > 0 && <Iconify icon="eva:arrow-ios-downward-fill" />}
         onClick={() => handleAccordianClick(`${index}${childIndex}`)}
     >
@@ -97,14 +97,15 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
             <Box
               rowGap={2}
               columnGap={2}
-              display="grid"
+              display="flex"
+              justifyContent="space-between"
               gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' }}
             >
-              <Typography variant="body2" >{fDate(ItemHistory?.createdAt) || ''}</Typography>
-              <Typography variant="body2" >{ItemHistory?.createdBy?.name || ''}</Typography>
-              <Typography variant="body2" >{ItemHistory?.checkItemValue || ''}</Typography>
+              <Typography variant="body2" sx={{ml:5}}>{fDateTime(ItemHistory?.createdAt)}{` By ${ItemHistory?.createdBy?.name || ''}: `}</Typography>
+              {/* <Typography variant="body2" >{ItemHistory?.createdBy?.name || ''}</Typography> */}
+              <Typography variant="body2" sx={{mr:1.6}}>{ItemHistory?.checkItemValue || ''}</Typography>
             </Box>
-            <Typography variant="body2" >{ItemHistory?.comments || ''}</Typography>
+            <Typography variant="body2" sx={{ml:5}}>{ItemHistory?.comments || ''}</Typography>
             <Divider  sx={{ borderStyle: 'solid' }} />
           </>))}
         </Grid>
