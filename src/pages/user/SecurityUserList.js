@@ -47,6 +47,7 @@ const TABLE_HEAD = [
   { id: 'email', visibility: 'xs1', label: 'Email', align: 'left' },
   { id: 'phone', visibility: 'xs2', label: 'Phone Number', align: 'left' },
   { id: 'roles.name.[]', visibility: 'md1', label: 'Roles', align: 'left' },
+  { id: 'isOnline', label: 'Online', align: 'center' },
   { id: 'currentEmployee', label: 'Employeed', align: 'center' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
@@ -71,7 +72,7 @@ export default function SecurityUserList() {
     // onChangePage,
     // onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
+    defaultOrderBy: 'isOnline', defaultOrder: 'desc',
   });
 
   const dispatch = useDispatch();
@@ -107,12 +108,6 @@ export default function SecurityUserList() {
 
   useEffect(() => {
     if (initial) {
-      //   if (users && !error) {
-      //     enqueueSnackbar(responseMessage);
-      //   }
-      // if(error) {
-      //   enqueueSnackbar(error, { variant: `error` });
-      // }
       setTableData(securityUsers);
     }
   }, [securityUsers, error, enqueueSnackbar, responseMessage, initial]);
@@ -310,7 +305,7 @@ useEffect(()=>{
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus, filterRole }) {
+function applyFilter({ inputData, comparator, filterName, filterStatus, filterRole}) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {

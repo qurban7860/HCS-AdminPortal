@@ -21,6 +21,18 @@ export const ICONS = {
     heading: 'Inactive',
   },
 
+  // isOnline
+  ONLINE: {
+    icon: 'mdi:circle',
+    color: '#008000',
+    heading: 'Online',
+  },
+  OFFLINE: {
+    icon: 'mdi:circle',
+    color: '#bdbdbd',
+    heading: 'Offline',
+  },
+
   // isAPPROVED
   APPROVED: {
     icon: 'mdi:check-decagram',

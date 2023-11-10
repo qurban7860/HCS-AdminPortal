@@ -80,7 +80,7 @@ export default function AccountPopover() {
   const handleLogout = async () => {
     try {
       logout();
-      await dispatch(clearAllPersistedStates)
+      // await dispatch(clearAllPersistedStates)
       // navigate(PATH_AUTH.login, { replace: true });
       // window.location.href('/auth/login');
       handleClosePopover();
