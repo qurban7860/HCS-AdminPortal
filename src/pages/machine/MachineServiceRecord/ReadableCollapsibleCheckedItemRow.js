@@ -24,7 +24,7 @@ const CollapsibleCheckedItemRow = ({value, index }) => {
                 </IconButton> */}
             </Typography>
             {/* <Collapse in={open} timeout="auto" unmountOnExit> */}
-              <Grid sx={{ ml: 3 }}>
+              <Grid >
                 <Table size="small" aria-label="purchases">
                   <TableBody>
                     {value?.checkItems?.map((childRow,childIndex) => (

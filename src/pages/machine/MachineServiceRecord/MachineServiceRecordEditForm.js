@@ -60,40 +60,36 @@ function MachineServiceRecordEditForm() {
   useEffect(() => {
 
     if (machineServiceRecord) {
-      // const checkItems = machineServiceRecord?.serviceRecordConfig?.checkItemLists;
-      // if (checkItems) {
+      const checkItems = machineServiceRecord?.serviceRecordConfig?.checkItemLists;
+      if (checkItems) {
+        const params_ = checkItems.map((row, index) => {
+          if (row && row?.checkItems) {
+            const updatedCheckItemsList = row?.checkItems?.map((childRow, childIndex) => 
 
-      //   const params_ = checkItems.map((row, index) => {
-      //     if (row && row.checkItems) {
-      //       const updatedParamList = row.checkItems.map((childRow, childIndex) => {
-      //         const foundParam = machineServiceRecord.checkParams.find(
-      //           (param) =>
-      //             param?.serviceParam === childRow?._id &&
-      //             param?.checkItemsTitle === row?.checkItemsTitle
-      //         );
-      //         return {
-      //           ...childRow,
-      //           value: foundParam ? foundParam.value : '',
-      //           status: foundParam ? { name: foundParam.status } : null,
-      //           date: foundParam ? foundParam.date : '',
-      //           // comments: foundParam ? foundParam.comments : '',
-      //           checked: foundParam?.checked || false ,
-      //         };
-      //       });
+              ({
+                _id:            childRow?._id || '',
+                inputType:      childRow?.inputType || '',
+                isRequired:     childRow?.isRequired || '',
+                maxValidation:  childRow?.maxValidation || '',
+                minValidation:  childRow?.minValidation || '',
+                name:           childRow?.name || '',
+                unitType:       childRow?.unitType || '',
+              })
+            );
         
-      //       return {
-      //         ...row,
-      //         checkItems: updatedParamList,
-      //         _id
-      //       };
-      //     }
-      //     return row;
-      //   });
+            return {
+              ...row,
+              checkItems: updatedCheckItemsList,
+
+            };
+          }
+          return row;
+        });
         
         
-      //   setCheckItemLists(params_);
-      // }
-      setCheckItemLists(machineServiceRecord?.serviceRecordConfig?.checkItemLists);
+        setCheckItemLists(params_);
+      }
+      // setCheckItemLists(machineServiceRecord?.serviceRecordConfig?.checkItemLists);
     }
   }, [machineServiceRecord]);
 
@@ -316,7 +312,6 @@ const handleChangeCheckItemListComment = (index, childIndex, comments) => {
   updatedCheckParams[index] = updatedParamObject;
 setCheckItemLists(updatedCheckParams);
 }
-
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
     <Grid container spacing={3}>
@@ -324,13 +319,12 @@ setCheckItemLists(updatedCheckParams);
         <Card sx={{ p: 3 }}>
           <Stack spacing={2}>
             <FormHeading heading="Edit Service Record" />
-              <Grid container>
-                {/* <ViewFormField sm={6} heading='Customer'                param={machine?.customer?.name} label="serialNo"/> */}
+              {/* <Grid container>
                 <ViewFormField sm={6} heading='Machine'                 param={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} label="serialNo"/>
                 <ViewFormField sm={6} heading='Machine Model Category'  param={machine?.machineModel?.category?.name} label="serialNo"/>
                 <ViewFormField sm={6} heading='Machine Model'           param={machine?.machineModel?.name} label="serialNo"/>
                 <ViewFormField sm={6} heading='Decoilers'          arrayParam={defaultValues.decoilers} chipLabel="serialNo"/>
-              </Grid>
+              </Grid> */}
             {/* <Box
                 rowGap={2}
                 columnGap={2}
@@ -386,7 +380,7 @@ setCheckItemLists(updatedCheckParams);
               <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/>
               <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline/> 
 
-                {checkItemLists?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
+                {machineServiceRecord?.serviceRecordConfig?.checkItemLists?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
 
                 {isLoadingCheckItems ? 
                     <Box sx={{ width: '100%',mt:1 }}>
@@ -399,7 +393,7 @@ setCheckItemLists(updatedCheckParams);
                       <Skeleton animation={false} />
                     </Box>
                     :<>
-                    {checkItemLists?.map((row, index) =>
+                    {machineServiceRecord?.serviceRecordConfig?.checkItemLists?.map((row, index) =>
                           ( typeof row?.checkItems?.length === 'number' &&
                           <>
                             <CollapsibleCheckedItemInputRow 

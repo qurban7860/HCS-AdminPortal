@@ -174,7 +174,8 @@ export function getMachineServiceRecords (machineId){
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords`, 
       {
         params: {
-          isArchived: false
+          isArchived: false,
+          isHistory: false,
         }
       }
       );

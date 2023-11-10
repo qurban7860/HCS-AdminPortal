@@ -1,11 +1,12 @@
 import { useState, memo } from 'react'
 import PropTypes, { number } from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
-import { Box, Table, TableBody, TableCell, TableRow,  IconButton, Collapse, Grid, TextField, Checkbox, Typography, Autocomplete } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableRow,  IconButton, Collapse, Grid, TextField, Checkbox, Typography, Autocomplete, Card } from '@mui/material';
 import Iconify from '../../../components/iconify';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import {  RHFTextField, RHFCheckbox, RHFDatePicker, RHFAutocomplete } from '../../../components/hook-form';
 import CommentsInput from './CommentsInput';
+import { fDate } from '../../../utils/formatTime';
 
 const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue, 
   editPage,
@@ -35,6 +36,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                           </Typography>
                           <Grid align='right' sx={{ ml: 'auto'}} >
                                   <CommentsInput index={index} childIndex={childIndex} 
+                                    key={`${index}${childIndex}`}
                                     childRow={childRow}
                                     checkParamList={checkItemLists} 
                                     handleChangeCheckItemListDate={handleChangeCheckItemListDate}
@@ -46,26 +48,32 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                                   />
                           </Grid>
                         </Grid>
-                        {/* {editPage && <Grid sx={{mx: {sm: 0.6, } }} >
-                          <Typography variant='body2'>History:</Typography>
-                        </Grid>} */}
+
                         <Grid sx={{mx: {sm: 0.6, } }} >
                           <TextField 
-                              // fullWidth
                               type="text"
                               label="Comment" 
                               name="comment"
+                              disabled={!checkItemLists[index]?.checkItems[childIndex]?.checked}
                               onChange={(e) => handleChangeCheckItemListComment(index, childIndex, e.target.value)}
                               size="small" sx={{ m: 0.3, width: '100%', }} 
-                              // pr:{md:4},width: {md: 470 } 
                               value={checkItemLists[index]?.checkItems[childIndex]?.comments}
                               minRows={1} multiline
                               InputProps={{ inputProps: { maxLength: 500 }, 
-                              // style: { fontSize: '14px', height: 30 }
                               }}
-                              // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
                           />
                         </Grid>
+                          {editPage && <Card sx={{p:1,m:1}}>
+                            <Grid sx={{ display:'flex', justifyContent:'space-between' }} >
+                              <Typography variant="body2" sx={{ml:1,my:'auto'}} > {fDate(childRow?.createdAt)} {childRow?.createdBy?.name || ''} </Typography>
+                              <Grid sx={{width: 235}} >
+                              {childRow?.inputType?.toLowerCase() !== 'boolean' ? 
+                                <Typography variant="body2"  > {childRow?.checkItemValue || ''} </Typography> :
+                                <Checkbox  disabled checked={childRow?.checkItemValue || false} sx={{my:'auto',mr:'auto'}} /> }
+                                </Grid>
+                            </Grid>
+                            <Typography variant="body2" sx={{ml:4}} >{childRow?.comments || ''}</Typography>
+                          </Card>}
                       </Grid>
                       </TableRow>
                         </>

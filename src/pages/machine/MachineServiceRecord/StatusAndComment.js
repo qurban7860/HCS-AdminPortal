@@ -69,7 +69,8 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
             </Grid>
           </TableCell>
         </Grid>
-        <Grid sx={{          
+        <Grid sx={{     
+          ml:4,     
           alignItems: 'center',
           whiteSpace: 'pre-line',
           wordBreak: 'break-word' }}>
