@@ -55,6 +55,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                               type="text"
                               label="Comment" 
                               name="comment"
+                              disabled={!checkItemLists[index]?.checkItems[childIndex]?.checked}
                               onChange={(e) => handleChangeCheckItemListComment(index, childIndex, e.target.value)}
                               size="small" sx={{ m: 0.3, width: '100%', }} 
                               // pr:{md:4},width: {md: 470 } 
