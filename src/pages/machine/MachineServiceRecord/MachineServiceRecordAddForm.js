@@ -282,14 +282,12 @@ function MachineServiceRecordAddForm() {
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 <FormHeading heading="New Service Record" />
-                <Grid container>
-                  {/* <ViewFormField sm={6} heading='Customer' param={machine?.customer?.name} />
-                  <ViewFormField sm={6} heading='Site' param={machine?.instalationSite?.name} /> */}
+                {/* <Grid container>
                   <ViewFormField sm={6} heading='Machine' param={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} />
                   <ViewFormField sm={6} heading='Machine Model Category' param={machine?.machineModel?.category?.name} />
                   <ViewFormField sm={6} heading='Machine Model' param={machine?.machineModel?.name} />
                   <ViewFormField sm={6} heading='Decoilers' arrayParam={defaultValues.decoilers} chipLabel="serialNo"/>
-                </Grid>
+                </Grid> */}
                 <Box
                     rowGap={2}
                     columnGap={2}

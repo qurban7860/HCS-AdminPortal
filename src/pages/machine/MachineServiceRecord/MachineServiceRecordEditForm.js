@@ -324,13 +324,12 @@ setCheckItemLists(updatedCheckParams);
         <Card sx={{ p: 3 }}>
           <Stack spacing={2}>
             <FormHeading heading="Edit Service Record" />
-              <Grid container>
-                {/* <ViewFormField sm={6} heading='Customer'                param={machine?.customer?.name} label="serialNo"/> */}
+              {/* <Grid container>
                 <ViewFormField sm={6} heading='Machine'                 param={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} label="serialNo"/>
                 <ViewFormField sm={6} heading='Machine Model Category'  param={machine?.machineModel?.category?.name} label="serialNo"/>
                 <ViewFormField sm={6} heading='Machine Model'           param={machine?.machineModel?.name} label="serialNo"/>
                 <ViewFormField sm={6} heading='Decoilers'          arrayParam={defaultValues.decoilers} chipLabel="serialNo"/>
-              </Grid>
+              </Grid> */}
             {/* <Box
                 rowGap={2}
                 columnGap={2}
