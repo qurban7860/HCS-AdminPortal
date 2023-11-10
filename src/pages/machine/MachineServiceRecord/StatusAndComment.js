@@ -1,7 +1,8 @@
 import React, { useState, memo, useEffect } from 'react'
 import PropTypes from 'prop-types';
-import { Grid, Chip, TableRow, TableCell, Checkbox, Typography, Tooltip, Badge } from '@mui/material';
+import { Grid, Box, Divider, Chip, TableRow, TableCell, Checkbox, Typography, Tooltip, Badge, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import { useSelector } from 'react-redux';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { fDate } from '../../../utils/formatTime';
 import Iconify from '../../../components/iconify';
 import { HtmlTooltip, StyledTooltip } from '../../../theme/styles/default-styles';
@@ -15,6 +16,8 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
     const [checkItem, setCheckItem] = useState({});
     const [historyAnchorEl, setHistoryAnchorEl] = useState(null);
     const [history, setHistory] = useState([]);
+    const [activeIndex, setActiveIndex] = useState(null);
+    const [expanded, setExpanded] = useState(false);
 
     const handleHistoryPopoverOpen = (event) => {
       setHistoryAnchorEl(event.currentTarget);
@@ -26,21 +29,36 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
       setHistory([])
     };
 
-    // useEffect(() => {
-    //   setCheckItem(machineServiceRecord?.checkParams?.find((element) =>
-    //     element?.paramListTitle === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramListTitle 
-    //     &&
-    //     element?.serviceParam === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramList[childIndex]?._id));
-    // // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, []);
+    const handleAccordianClick = (accordianIndex) => {
+      if (accordianIndex === activeIndex) {
+        setActiveIndex(null);
+      } else {
+        setActiveIndex(accordianIndex);
+      }
+    };
+
+    const handleChange = (panel) => (event, isExpanded) => {
+      setExpanded(isExpanded ? panel : false);
+    };
 
   return (
     <>
     <TableRow key={childRow._id} sx={{":hover": {  backgroundColor: "#dbdbdb66" } }}>
-      <TableCell>
+    <Accordion
+      sx={{":hover": {  backgroundColor: "#dbdbdb66" } }}
+      key={childIndex?._id}
+      expanded={expanded === `${index}${childIndex}`}
+      onChange={childRow?.historicalData?.length > 0 && handleChange(`${index}${childIndex}`)}
+    >
+    <AccordionSummary
+        sx={{ mt: expanded && 0.5  }}
+        expandIcon={childRow?.historicalData?.length > 0 && <Iconify icon="eva:arrow-ios-downward-fill" />}
+        onClick={() => handleAccordianClick(`${index}${childIndex}`)}
+    >
+      <Grid sx={{width:'100%'}}>
         <Grid sx={{ width: '100%', display: 'flex', justifyContent: 'space-between' }} >
-          <TableCell ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}
-            {childRow?.historicalData && childRow?.historicalData?.length > 0 && 
+          <Typography variant="body2" ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}
+            {/* {childRow?.historicalData && childRow?.historicalData?.length > 0 && 
             <Badge badgeContent={childRow?.historicalData?.length} color="info" sx={{mb:-0.6, mx:1, cursor: 'pointer'}} onClick={handleHistoryPopoverOpen} >
               <Iconify
                 title="History"
@@ -48,11 +66,9 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
                 onClick={handleHistoryPopoverOpen}
                 sx={{width: 25, height: 25}}
               />
-            </Badge>}
-          </TableCell>
-          <TableCell align='right' >
+            </Badge>} */}
+          </Typography>
             <Grid  sx={{display: { md:'flex', xs: 'block', }, justifyContent:'end'}}>
-
             {childRow?.inputType.toLowerCase() === 'boolean' ? 
               <Checkbox disabled checked={childRow?.checkItemValue || false }  sx={{ml:'auto', my:-0.9}} />  :
                 <Typography variant="body2" >
@@ -63,11 +79,7 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
                   }
                 </Typography> 
             }
-              {/* <Grid sx={{ display: 'flex', alignItems: 'center', justifyContent:'flex-end' }}>
-                {childRow?.inputType.toLowerCase() === 'status' && <Chip size="small" label={childRow?.checkItemValue} /> }
-              </Grid> */}
             </Grid>
-          </TableCell>
         </Grid>
         <Grid sx={{     
           ml:4,     
@@ -76,14 +88,34 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
           wordBreak: 'break-word' }}>
           {childRow?.comments && <Typography variant="body2" >{` ${childRow?.comments}`}</Typography>}
         </Grid>
-      </TableCell>
-        
+      </Grid>
+      </AccordionSummary>
+      {childRow?.historicalData && childRow?.historicalData?.length > 0 && <AccordionDetails >
+        <Grid sx={{ width: '100%' }} >
+        {childRow?.historicalData?.map((ItemHistory ) => (<>
+            {/* {ItemIndex !== 0 && <Divider  sx={{ borderStyle: 'solid' }} />} */}
+            <Box
+              rowGap={2}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' }}
+            >
+              <Typography variant="body2" >{fDate(ItemHistory?.createdAt) || ''}</Typography>
+              <Typography variant="body2" >{ItemHistory?.createdBy?.name || ''}</Typography>
+              <Typography variant="body2" >{ItemHistory?.checkItemValue || ''}</Typography>
+            </Box>
+            <Typography variant="body2" >{ItemHistory?.comments || ''}</Typography>
+            <Divider  sx={{ borderStyle: 'solid' }} />
+          </>))}
+        </Grid>
+      </AccordionDetails>}
+      </Accordion>
     </TableRow>
-    <ViewFormHistoricalPopover
+    {/* <ViewFormHistoricalPopover
         open={historyAnchorEl }
         onClose={handleHistoryPopoverClose}
         ListArr={childRow?.historicalData || []}
-        ListTitle= "History" />
+        ListTitle= "History" /> */}
   </>
   )
 }
