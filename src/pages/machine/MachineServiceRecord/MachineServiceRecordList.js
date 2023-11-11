@@ -231,6 +231,8 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
     inputData = inputData.filter(
       (docCategory) =>
         docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        docCategory?.versionNo?.toString().indexOf(filterName.toLowerCase()) >= 0 ||
+        docCategory?.createdBy?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // (docCategory?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(docCategory?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
