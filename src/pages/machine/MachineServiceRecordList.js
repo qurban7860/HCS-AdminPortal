@@ -6,13 +6,14 @@ import MachineServiceRecordAddForm from './MachineServiceRecord/MachineServiceRe
 import MachineServiceRecordEditForm from './MachineServiceRecord/MachineServiceRecordEditForm';
 import MachineServiceRecordViewForm from './MachineServiceRecord/MachineServiceRecordViewForm';
 import MachineServiceRecordListTable from './MachineServiceRecord/MachineServiceRecordList';
+import MachineServiceRecordHistoryList from './MachineServiceRecord/MachineServiceRecordHistoryList';
 
 
 // ----------------------------------------------------------------------
 
 export default function MachineServiceRecordList() {
 
-  const { machineServiceRecordEditFormFlag, machineServiceRecordAddFormFlag, machineServiceRecordViewFormFlag } = useSelector((state) => state.machineServiceRecord);
+  const { machineServiceRecordEditFormFlag, machineServiceRecordAddFormFlag, machineServiceRecordViewFormFlag, machineServiceRecordHistoryFormFlag } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine);
 
   const dispatch = useDispatch();
@@ -22,10 +23,11 @@ export default function MachineServiceRecordList() {
  
   return (
     <>
-      { !machineServiceRecordEditFormFlag && !machineServiceRecordAddFormFlag && !machineServiceRecordViewFormFlag && <MachineServiceRecordListTable />}
-      { !machineServiceRecordEditFormFlag && machineServiceRecordAddFormFlag && !machineServiceRecordViewFormFlag && <MachineServiceRecordAddForm />}
-      { machineServiceRecordEditFormFlag && !machineServiceRecordAddFormFlag && !machineServiceRecordViewFormFlag && <MachineServiceRecordEditForm />}
-      { !machineServiceRecordEditFormFlag && !machineServiceRecordAddFormFlag && machineServiceRecordViewFormFlag && <MachineServiceRecordViewForm />}
+      { !machineServiceRecordEditFormFlag && !machineServiceRecordAddFormFlag && !machineServiceRecordViewFormFlag && !machineServiceRecordHistoryFormFlag && <MachineServiceRecordListTable />}
+      { !machineServiceRecordEditFormFlag && machineServiceRecordAddFormFlag && !machineServiceRecordViewFormFlag && !machineServiceRecordHistoryFormFlag && <MachineServiceRecordAddForm />}
+      { machineServiceRecordEditFormFlag && !machineServiceRecordAddFormFlag && !machineServiceRecordViewFormFlag && !machineServiceRecordHistoryFormFlag && <MachineServiceRecordEditForm />}
+      { !machineServiceRecordEditFormFlag && !machineServiceRecordAddFormFlag && machineServiceRecordViewFormFlag && !machineServiceRecordHistoryFormFlag && <MachineServiceRecordViewForm />}
+      { !machineServiceRecordEditFormFlag && !machineServiceRecordAddFormFlag && !machineServiceRecordViewFormFlag && machineServiceRecordHistoryFormFlag && <MachineServiceRecordHistoryList />}
     </>
   );
 }

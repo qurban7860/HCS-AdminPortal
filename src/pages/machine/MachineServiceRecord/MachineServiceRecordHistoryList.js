@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 // @mui
@@ -26,7 +27,7 @@ import Scrollbar from '../../../components/scrollbar';
 import MachineServiceRecordListTableRow from './MachineServiceRecordListTableRow';
 import MachineServiceRecordListTableToolbar from './MachineServiceRecordListTableToolbar';
 import {
-  getMachineServiceRecords,
+  getMachineServiceRecordHistory,
   getMachineServiceRecord,
   setMachineServiceRecordViewFormVisibility,
   resetMachineServiceRecord,
@@ -39,6 +40,9 @@ import TableCard from '../../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 
+MachineServiceRecordHistoryList.propTypes = {
+  serviceId: PropTypes.string,
+};
 
 const TABLE_HEAD = [
   { id: 'serviceRecordConfig.docTitle', label: 'Service Configuration', align: 'left' },
@@ -51,8 +55,8 @@ const TABLE_HEAD = [
 ];
 // ----------------------------------------------------------------------
 
-export default function MachineServiceRecordList() {
-  const { machineServiceRecords, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceRecord);
+export default function MachineServiceRecordHistoryList({ serviceId }) {
+  const { machineServiceRecordHistory, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine);
 
   const {
@@ -78,14 +82,14 @@ export default function MachineServiceRecordList() {
   const [filterStatus, setFilterStatus] = useState([]);
 
   useLayoutEffect(() => {
-    dispatch(getMachineServiceRecords(machine?._id)); 
-  }, [dispatch, machine?._id]);
+    dispatch(getMachineServiceRecordHistory(machine?._id, serviceId)); 
+  }, [dispatch, machine?._id,serviceId]);
 
   useEffect(() => {
     if (initial) {
-      setTableData(machineServiceRecords);
+      setTableData(machineServiceRecordHistory);
     }
-  }, [machineServiceRecords, initial]);
+  }, [machineServiceRecordHistory, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -144,6 +148,7 @@ export default function MachineServiceRecordList() {
             onFilterStatus={handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
+            isHistory
           />
 
           {!isNotFound && <TablePaginationCustom
@@ -192,6 +197,7 @@ export default function MachineServiceRecordList() {
                           row={row}
                           onViewRow={() => handleViewRow(row._id)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                          isHistory
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

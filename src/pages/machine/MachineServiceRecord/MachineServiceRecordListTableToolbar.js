@@ -21,6 +21,7 @@ MachineServiceRecordListTableToolbar.propTypes = {
   filterStatus: PropTypes.array,
   onFilterStatus: PropTypes.func,
   statusOptions: PropTypes.array,
+  isHistory: PropTypes.bool,
 };
 
 export default function MachineServiceRecordListTableToolbar({
@@ -31,6 +32,7 @@ export default function MachineServiceRecordListTableToolbar({
   statusOptions,
   onResetFilter,
   onFilterStatus,
+  isHistory
 }) {
   const dispatch = useDispatch()
 
@@ -49,7 +51,7 @@ export default function MachineServiceRecordListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        addButton={BUTTONS.ADD_MACHINE_SERVICE_RECORD}
+        addButton={!isHistory && BUTTONS.ADD_MACHINE_SERVICE_RECORD}
         transferredMachine={machine?.status?.slug==='transferred'}
       />
     </Stack>

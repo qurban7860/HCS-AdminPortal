@@ -6,17 +6,16 @@ import {
   TableRow,
   TableCell,
 } from '@mui/material';
+import { createTheme } from '@mui/material/styles';
+import { green } from '@mui/material/colors';
 // utils
 import { styled } from '@mui/system';
 import { fDate } from '../../../utils/formatTime';
-// import { fCurrency } from '../../../utils/formatNumber';
 // components
-// import Iconify from '../../../components/iconify';
-// import MenuPopover from '../../../components/menu-popover';
-// import ConfirmDialog from '../../../components/confirm-dialog';
-// import Label from '../../../components/label';
-
-// import { useSelector } from '../../../redux/store';
+import Iconify from '../../../components/iconify';
+import { StyledTooltip } from '../../../theme/styles/default-styles';
+import { setMachineServiceRecordHistoryFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
+import { useDispatch } from '../../../redux/store';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 // import { useScreenSize } from '../../../hooks/useResponsive';
 
@@ -30,6 +29,7 @@ MachineServiceRecordListTableRow.propTypes = {
   onViewRow: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
+  isHistory: PropTypes.bool,
 };
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -49,15 +49,30 @@ export default function MachineServiceRecordListTableRow({
   onDeleteRow,
   onEditRow,
   onViewRow,
+  isHistory
 }) {
 
-  const { serviceRecordConfig, technician, versionNo, serviceDate, isActive, createdAt, createdBy } = row;
-
+  const { serviceRecordConfig, versionNo, serviceDate, isActive, createdAt, createdBy } = row;
+  const theme = createTheme({
+    palette: {
+      success: green,
+    },
+  });
+  const dispatch = useDispatch();
+  const handleServiceRecordHistory = () => {
+    dispatch(setMachineServiceRecordHistoryFormVisibility(true));
+  }
   return (
       <StyledTableRow hover selected={selected}>
         <LinkTableCell align="left" onClick={onViewRow} param={`${serviceRecordConfig?.docTitle ? serviceRecordConfig?.docTitle	: ''	} ${serviceRecordConfig?.recordType ? ' - ' : ''} ${serviceRecordConfig?.recordType ? serviceRecordConfig?.recordType : ''}`} />
         {/* <TableCell align="left">{`${technician?.name ? technician?.name : ''}`}</TableCell> */}
-        <TableCell align="center">{versionNo}</TableCell>
+        <TableCell align="left">{versionNo} 
+              {versionNo > 1 && !isHistory && <StyledTooltip
+                arrow
+                title="History"
+                placement='top'
+                tooltipcolor={theme.palette.primary.main}
+              ><Iconify icon="material-symbols:history" title="History" sx={{ml:0.7, mb:-0.6, cursor: 'pointer'}} onClick={handleServiceRecordHistory} /></StyledTooltip>}</TableCell>
         <TableCell align="center">{fDate(serviceDate)}</TableCell>
         <TableCell align="center">
           {' '}
