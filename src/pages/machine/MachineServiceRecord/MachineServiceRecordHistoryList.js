@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 // @mui
@@ -7,6 +8,8 @@ import {
   TableBody,
   IconButton,
   TableContainer,
+  Grid,
+  Typography,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
@@ -23,12 +26,13 @@ import {
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 // sections
-import MachineServiceRecordListTableRow from './MachineServiceRecordListTableRow';
+import MachineServiceRecordHistoryListTableRow from './MachineServiceRecordHistoryListTableRow';
 import MachineServiceRecordListTableToolbar from './MachineServiceRecordListTableToolbar';
 import {
-  getMachineServiceRecords,
-  getMachineServiceRecord,
+  getMachineServiceRecordHistory,
+  getMachineServiceRecordVersion,
   setMachineServiceRecordViewFormVisibility,
+  setMachineServiceRecordHistoryFormVisibility,
   resetMachineServiceRecord,
   ChangeRowsPerPage,
   ChangePage,
@@ -36,23 +40,27 @@ import {
 } from '../../../redux/slices/products/machineServiceRecord';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
+import IconTooltip from '../../components/Icons/IconTooltip';
+import { StyledStack } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
+MachineServiceRecordHistoryList.propTypes = {
+  serviceId: PropTypes.string,
+};
 
 const TABLE_HEAD = [
-  { id: 'serviceRecordConfig.docTitle', label: 'Service Configuration', align: 'left' },
   // { id: 'technician.name', visibility: 'xs5', label: 'Technician', align: 'left' },
+  { id: 'serviceDate', label: 'Service Date', align: 'left' },
   { id: 'versionNo', visibility: 'xs5', label: 'Version No', align: 'left' },
-  { id: 'serviceDate', label: 'Service Date', align: 'center' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdBy.name', label: 'Created By', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 // ----------------------------------------------------------------------
 
-export default function MachineServiceRecordList() {
-  const { machineServiceRecords, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceRecord);
+export default function MachineServiceRecordHistoryList({ serviceId }) {
+  const { machineServiceRecordHistory, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine);
 
   const {
@@ -78,14 +86,14 @@ export default function MachineServiceRecordList() {
   const [filterStatus, setFilterStatus] = useState([]);
 
   useLayoutEffect(() => {
-    dispatch(getMachineServiceRecords(machine?._id)); 
-  }, [dispatch, machine?._id]);
+    dispatch(getMachineServiceRecordHistory(machine?._id, serviceId)); 
+  }, [dispatch, machine?._id,serviceId]);
 
   useEffect(() => {
     if (initial) {
-      setTableData(machineServiceRecords);
+      setTableData(machineServiceRecordHistory);
     }
-  }, [machineServiceRecords, initial]);
+  }, [machineServiceRecordHistory, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -127,7 +135,7 @@ export default function MachineServiceRecordList() {
   const handleViewRow = async (id) => {
     await dispatch(setMachineServiceRecordViewFormVisibility(true));
     await dispatch(resetMachineServiceRecord())
-    await dispatch(getMachineServiceRecord(machine._id, id));
+    await dispatch(getMachineServiceRecordVersion(machine._id, id));
   };
 
   const handleResetFilter = () => {
@@ -137,14 +145,23 @@ export default function MachineServiceRecordList() {
 
   return (
         <TableCard>
-          <MachineServiceRecordListTableToolbar
-            filterName={filterName}
-            filterStatus={filterStatus}
-            onFilterName={handleFilterName}
-            onFilterStatus={handleFilterStatus}
-            isFiltered={isFiltered}
-            onResetFilter={handleResetFilter}
-          />
+        <Grid container sx={{ mx:2, mt:2, }}>
+
+        <Grid item sm={12}
+          sx={{ display: 'flex' }}
+        >
+        <StyledStack>
+          <IconTooltip
+            title='Back'
+            color='#008000'
+            icon="mdi:arrow-left"
+            onClick={() => dispatch(setMachineServiceRecordHistoryFormVisibility(false))}
+            size="small"
+            />
+        </StyledStack>
+        </Grid> 
+            <Typography variant='h3'>{machineServiceRecordHistory?.[0]?.serviceRecordConfig?.docTitle || '' }{` (Current version: ${Number(machineServiceRecordHistory?.[0]?.versionNo)+1 || 1} )`}</Typography>
+        </Grid>
 
           {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
@@ -187,11 +204,12 @@ export default function MachineServiceRecordList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <MachineServiceRecordListTableRow
+                        <MachineServiceRecordHistoryListTableRow
                           key={row._id}
                           row={row}
                           onViewRow={() => handleViewRow(row._id)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                          isHistory
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

@@ -10,13 +10,16 @@ const initialState = {
   machineServiceRecordEditFormFlag: false,
   machineServiceRecordAddFormFlag: false,
   machineServiceRecordViewFormFlag: false,
+  machineServiceRecordHistoryFormFlag: false,
   responseMessage: null,
   success: false,
   isLoading: false,
   error: null,
   machineServiceRecord: {},
   machineServiceRecords: [],
+  machineServiceRecordHistory: [],
   activeMachineServiceRecords: [],
+  isHistorical: false,
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
@@ -36,27 +39,41 @@ const slice = createSlice({
     setMachineServiceRecordEditFormVisibility(state, action){
       state.machineServiceRecordAddFormFlag = false;
       state.machineServiceRecordEditFormFlag = action.payload;
+      state.machineServiceRecordHistoryFormFlag = false;
       state.machineServiceRecordViewFormFlag = false;
     },
     // SET TOGGLE
     setMachineServiceRecordAddFormVisibility(state, action){
       state.machineServiceRecordAddFormFlag = action.payload;
       state.machineServiceRecordEditFormFlag = false;
+      state.machineServiceRecordHistoryFormFlag = false;
       state.machineServiceRecordViewFormFlag = false;
     },    
     // SET TOGGLE
     setMachineServiceRecordViewFormVisibility(state, action){
       state.machineServiceRecordEditFormFlag = false;
       state.machineServiceRecordAddFormFlag = false;
+      state.machineServiceRecordHistoryFormFlag = false;
       state.machineServiceRecordViewFormFlag = action.payload;
+    },
+    // SET HISTORY TOGGLE
+    setMachineServiceRecordHistoryFormVisibility(state, action){
+      state.machineServiceRecordEditFormFlag = false;
+      state.machineServiceRecordAddFormFlag = false;
+      state.machineServiceRecordViewFormFlag = false;
+      state.machineServiceRecordHistoryFormFlag = action.payload;
     },
     // SET ALL TOGGLEs
     setAllFlagsFalse(state, action){
       state.machineServiceRecordEditFormFlag = false;
       state.machineServiceRecordAddFormFlag = false;
       state.machineServiceRecordViewFormFlag = false;
+      state.machineServiceRecordHistoryFormFlag = false;
     },
-
+    // SET HISTORICAL FLAG
+    setHistoricalFlag(state, action){
+      state.isHistorical = action.payload;;
+    },
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -72,10 +89,10 @@ const slice = createSlice({
       state.initial = true;
     },
     // GET MACHINE SERVICE PARAM
-    getMachineServiceRecordSuccess(state, action) {
+    getMachineServiceRecordHistorySuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.machineServiceRecord = action.payload;
+      state.machineServiceRecordHistory = action.payload;
       state.initial = true;
     },
 
@@ -84,6 +101,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.activeMachineServiceRecords = action.payload;
+      state.initial = true;
+    },
+
+    // GET MACHINE Active SERVICE PARAM
+    getMachineServiceRecordSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.machineServiceRecord = action.payload;
       state.initial = true;
     },
 
@@ -134,6 +159,8 @@ export const {
   setMachineServiceRecordEditFormVisibility,
   setMachineServiceRecordAddFormVisibility,
   setMachineServiceRecordViewFormVisibility,
+  setMachineServiceRecordHistoryFormVisibility,
+  setHistoricalFlag,
   setAllFlagsFalse,
   resetMachineServiceRecords,
   resetMachineServiceRecord,
@@ -165,7 +192,71 @@ export function getActiveMachineServiceRecords (machineId){
   }
 }
 
+export function getMachineServiceRecordsHistory(machineId, serviceId ){
+  return async (dispatch) =>{
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords`, 
+      {
+        params: {
+          isArchived: false,
+          isHistory: true,
+          serviceId,
+        }
+      }
+      );
+      dispatch(slice.actions.getMachineServiceRecordHistorySuccess(response.data));
+      dispatch(setHistoricalFlag(false));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  }
+}
+
+export function getMachineServiceRecordHistory(machineId, serviceId ){
+  return async (dispatch) =>{
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords`, 
+      {
+        params: {
+          isArchived: false,
+          isHistory: true,
+          serviceId,
+        }
+      }
+      );
+      dispatch(slice.actions.getMachineServiceRecordHistorySuccess(response.data));
+      dispatch(setHistoricalFlag(true));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  }
+}
+
 // ------------------------------------------------------------------------------------------------
+
+export function getMachineServiceRecordVersion(machineId, id ){
+  return async (dispatch) =>{
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/values`);
+      dispatch(slice.actions.getMachineServiceRecordSuccess(response.data));
+      dispatch(setHistoricalFlag(true));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  }
+}
+
+// ------------------------------------------------------------------------------------------------
+
 
 export function getMachineServiceRecords (machineId){
   return async (dispatch) =>{

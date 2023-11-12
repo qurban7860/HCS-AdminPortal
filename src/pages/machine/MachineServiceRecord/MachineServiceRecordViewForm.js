@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // @mui
 import {  Card, Grid, Tooltip, Typography, Box, Checkbox } from '@mui/material';
 // redux
-import { deleteMachineServiceRecord, setAllFlagsFalse, setMachineServiceRecordEditFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
+import { deleteMachineServiceRecord, setAllFlagsFalse, setMachineServiceRecordHistoryFormVisibility, setMachineServiceRecordEditFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormHeading from '../../components/DocumentForms/FormHeading';
@@ -21,7 +21,7 @@ import ReadableCollapsibleCheckedItemRow from './ReadableCollapsibleCheckedItemR
 
 function MachineServiceParamViewForm() {
 
-  const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
+  const { machineServiceRecord, isHistorical } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine)
 
   const dispatch = useDispatch();
@@ -90,7 +90,7 @@ function MachineServiceParamViewForm() {
         <ViewFormEditDeleteButtons isActive={defaultValues.isActive}  
           disableEditButton={machine?.status?.slug==='transferred'}
           disableDeleteButton={machine?.status?.slug==='transferred'}
-          handleEdit={handleEdit} onDelete={onDelete} backLink={() => dispatch(setAllFlagsFalse())}
+          handleEdit={handleEdit} onDelete={onDelete} backLink={() => dispatch(isHistorical ? setMachineServiceRecordHistoryFormVisibility(true) : setAllFlagsFalse())}
         />
         
         <Grid container>
