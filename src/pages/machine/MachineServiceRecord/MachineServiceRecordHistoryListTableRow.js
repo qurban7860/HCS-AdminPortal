@@ -17,7 +17,6 @@ import { StyledTooltip } from '../../../theme/styles/default-styles';
 import { setMachineServiceRecordHistoryFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
 import { useDispatch } from '../../../redux/store';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
-// import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -50,7 +49,7 @@ export default function MachineServiceRecordListTableRow({
   onViewRow,
 }) {
 
-  const { serviceRecordConfig, versionNo, serviceDate, isActive, createdAt, createdBy } = row;
+  const { versionNo, serviceDate, isActive, createdAt, createdBy } = row;
   const theme = createTheme({
     palette: {
       success: green,
@@ -62,16 +61,8 @@ export default function MachineServiceRecordListTableRow({
   }
   return (
       <StyledTableRow hover selected={selected}>
-        <LinkTableCell align="left" onClick={onViewRow} param={`${serviceRecordConfig?.docTitle ? serviceRecordConfig?.docTitle	: ''	} ${serviceRecordConfig?.recordType ? ' - ' : ''} ${serviceRecordConfig?.recordType ? serviceRecordConfig?.recordType : ''}`} />
-        {/* <TableCell align="left">{`${technician?.name ? technician?.name : ''}`}</TableCell> */}
-        <TableCell align="left" >{versionNo} 
-              {versionNo > 1 &&  <StyledTooltip
-                arrow
-                title="History"
-                placement='top'
-                tooltipcolor={theme.palette.primary.main}
-              ><Iconify icon="material-symbols:history" title="History" sx={{ml:0.7, mb:-0.6, cursor: 'pointer'}} onClick={handleServiceRecordHistory} /></StyledTooltip>}</TableCell>
-        <TableCell align="center">{fDate(serviceDate)}</TableCell>
+        <LinkTableCell align="left" onClick={onViewRow} param={fDate(serviceDate)} />
+        <LinkTableCell align="left" onClick={onViewRow} param={versionNo} />
         <TableCell align="center">
           {' '}
           <Switch checked={isActive} disabled size="small" />{' '}
