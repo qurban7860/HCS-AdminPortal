@@ -100,9 +100,7 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
         {childRow?.historicalData?.map((ItemHistory, ItemIndex ) => (<>
           
             {ItemIndex === 0 && <Divider  sx={{ borderStyle: 'solid' }} />}
-            <Grid sx={{ width: '100%', display: 'flex', justifyContent: 'end'}} >
-              {ItemHistory?.checkItemValue && <Typography variant="body2" sx={{color: 'text.disabled'}}>Modified at: {fDateTime(ItemHistory?.createdAt)}{` by `}{`${ItemHistory?.createdBy?.name || ''}`.toUpperCase()}</Typography>}
-            </Grid>
+
             {ItemHistory?.checkItemValue && <Grid sx={{ mt:1,
               alignItems: 'center',
               whiteSpace: 'pre-line',
@@ -132,6 +130,9 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
               whiteSpace: 'pre-line',
               wordBreak: 'break-word' }}>
               {ItemHistory?.comments && <Typography variant="body2" sx={{mr:1}} ><b>Comment: </b>{` ${ItemHistory?.comments || ''}`}</Typography>}
+            </Grid>
+            <Grid sx={{ width: '100%', display: 'flex', justifyContent: 'end'}} >
+              {ItemHistory?.checkItemValue && <Typography variant="body2" sx={{color: 'text.disabled'}}>Modified at: {fDateTime(ItemHistory?.createdAt)}{` by `}{`${ItemHistory?.createdBy?.name || ''}`.toUpperCase()}</Typography>}
             </Grid>
             {ItemHistory?.checkItemValue && <Divider  sx={{ borderStyle: 'solid' }} />}
           </>))}
