@@ -261,12 +261,7 @@ export default function MachineList() {
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                     )
                   )}
-
-                {/* <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  /> */}
-
+                  <TableNoData isNotFound={isNotFound} />
               </TableBody>
               </Table>
             </Scrollbar>
@@ -280,9 +275,6 @@ export default function MachineList() {
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
         </TableCard>
-        <Grid item md={12}>
-          <TableNoData isNotFound={isNotFound} />
-        </Grid>
     </Container>
   );
 }

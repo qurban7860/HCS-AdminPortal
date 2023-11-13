@@ -224,12 +224,7 @@ export default function DrawingList() {
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                     )
                   )}
-
-                {/* <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  /> */}
-
+                  <TableNoData isNotFound={isNotFound} />
               </TableBody>
             </Table>
           </Scrollbar>
@@ -242,9 +237,6 @@ export default function DrawingList() {
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
         />
-        <Grid item md={12}>
-          <TableNoData isNotFound={isNotFound} />
-        </Grid>
       </TableCard>
 
       <ConfirmDialog

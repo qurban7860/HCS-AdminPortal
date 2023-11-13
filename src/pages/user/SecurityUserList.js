@@ -16,6 +16,7 @@ import {
   useTable,
   getComparator,
   TableNoData,
+  TableSkeleton,
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
@@ -76,7 +77,7 @@ export default function SecurityUserList() {
   });
 
   const dispatch = useDispatch();
-
+  const denseHeight = 60;
   const {
     securityUsers,
     error,
@@ -254,8 +255,8 @@ useEffect(()=>{
                 <TableBody>
                   {dataFiltered
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => (
-                      <UserTableRow
+                    .map((row, index) => (
+                      row ? (<UserTableRow
                         key={row._id}
                         row={row}
                         selected={selected.includes(row._id)}
@@ -264,11 +265,14 @@ useEffect(()=>{
                         onEditRow={() => handleEditRow(row._id)}
                         onViewRow={() => handleViewRow(row._id)}
                       />
+                      ) : (
+                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                      )
                     ))}
+                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
-            <TableNoData isNotFound={isNotFound} />
           </TableContainer>
 
           {!isNotFound && <TablePaginationCustom

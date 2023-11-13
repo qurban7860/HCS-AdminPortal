@@ -173,6 +173,7 @@ export default function MachineList() {
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                     )
                   )}
+                <TableNoData isNotFound={isNotFound} />
               </TableBody>
             </Table>
           </Scrollbar>
@@ -185,9 +186,6 @@ export default function MachineList() {
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
         />
-        <Grid md={12}>
-          <TableNoData isNotFound={isNotFound} />
-        </Grid>
 
         <MachineDialog machineData={ machineData }/>
 

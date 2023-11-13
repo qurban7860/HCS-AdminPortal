@@ -228,6 +228,7 @@ export default function ToolList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
+                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
@@ -242,9 +243,6 @@ export default function ToolList() {
           />}
         </TableCard>
       </Container>
-      <Grid item lg={12}>
-        <TableNoData isNotFound={isNotFound} />
-      </Grid>
       <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
