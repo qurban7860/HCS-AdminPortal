@@ -60,7 +60,7 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function MachineServiceRecordHistoryList({ serviceId }) {
-  const { machineServiceRecordHistory, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceRecord);
+  const { machineServiceRecordHistory, isDetailPage, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine);
 
   const {
@@ -154,7 +154,7 @@ export default function MachineServiceRecordHistoryList({ serviceId }) {
             title='Back'
             color='#008000'
             icon="mdi:arrow-left"
-            onClick={() => dispatch(setMachineServiceRecordHistoryFormVisibility(false))}
+            onClick={() => dispatch(isDetailPage ? setMachineServiceRecordViewFormVisibility(true) : setMachineServiceRecordHistoryFormVisibility(false))}
             size="small"
             />
         </StyledStack>

@@ -2,8 +2,10 @@ import { useMemo, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
 import {  Card, Grid, Tooltip, Typography, Box, Checkbox } from '@mui/material';
+import { createTheme } from '@mui/material/styles';
+import { green } from '@mui/material/colors';
 // redux
-import { deleteMachineServiceRecord, setAllFlagsFalse, setMachineServiceRecordHistoryFormVisibility, setMachineServiceRecordEditFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
+import { deleteMachineServiceRecord, setAllFlagsFalse, setMachineServiceRecordHistoryFormVisibility, setDetailPageFlag, setMachineServiceRecordEditFormVisibility, getMachineServiceHistoryRecords } from '../../../redux/slices/products/machineServiceRecord';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormHeading from '../../components/DocumentForms/FormHeading';
@@ -17,12 +19,19 @@ import ViewFormHistoricalPopover from '../../components/ViewForms/ViewFormHistor
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import { fDate } from '../../../utils/formatTime';
 import ReadableCollapsibleCheckedItemRow from './ReadableCollapsibleCheckedItemRow';
-
+import Iconify from '../../../components/iconify';
+import { StyledTooltip } from '../../../theme/styles/default-styles';
 
 function MachineServiceParamViewForm() {
 
   const { machineServiceRecord, isHistorical } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine)
+
+  const theme = createTheme({
+    palette: {
+      success: green,
+    },
+  });
 
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -41,6 +50,12 @@ function MachineServiceParamViewForm() {
   const handleEdit = async () => {
     dispatch(setMachineServiceRecordEditFormVisibility(true))
   };
+
+  const handleServiceRecordHistory = () => {
+    dispatch(setMachineServiceRecordHistoryFormVisibility(true));
+    dispatch(getMachineServiceHistoryRecords( machine?._id ,machineServiceRecord?.serviceId ))
+    dispatch(setDetailPageFlag(true))
+  }
 
   const defaultValues = useMemo(
     () => ({
@@ -102,7 +117,16 @@ function MachineServiceParamViewForm() {
           
           <ViewFormField sm={4} heading="Service Date" param={fDate(defaultValues.serviceDate)} />
           <ViewFormField sm={4} heading="Service Record Configuration" param={`${defaultValues.serviceRecordConfig} ${defaultValues.serviceRecordConfigRecordType ? '-' : ''} ${defaultValues.serviceRecordConfigRecordType ? defaultValues.serviceRecordConfigRecordType : ''}`} />
-          <ViewFormField sm={4} heading="Version No" param={defaultValues?.versionNo} />
+          <ViewFormField sm={4} heading="Version No" param={
+            <>{defaultValues?.versionNo}
+              {!machineServiceRecord?.isHistory && <StyledTooltip
+                arrow
+                title="History"
+                placement='top'
+                tooltipcolor={theme.palette.primary.main}
+              ><Iconify icon="material-symbols:history" sx={{ml:0.7, cursor: 'pointer'}} onClick={handleServiceRecordHistory} /></StyledTooltip>}
+            </>  
+          } />
           
           <ViewFormField sm={12} heading="Decoilers" arrayParam={defaultValues?.decoilers?.map((decoilerMachine) => ({ name: `${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`}))} />
           <ViewFormField sm={6} heading="Technician"  param={defaultValues?.technician?.name || ''} />

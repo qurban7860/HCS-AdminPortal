@@ -57,35 +57,38 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
     >
       <Grid sx={{width:'100%'}}>
         <Grid sx={{ width: '100%', display: 'flex', justifyContent: 'space-between' }} >
-          <Typography variant="body2" ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}
-            {/* {childRow?.historicalData && childRow?.historicalData?.length > 0 && 
-            <Badge badgeContent={childRow?.historicalData?.length} color="info" sx={{mb:-0.6, mx:1, cursor: 'pointer'}} onClick={handleHistoryPopoverOpen} >
-              <Iconify
-                title="History"
-                icon="material-symbols:history"
-                onClick={handleHistoryPopoverOpen}
-                sx={{width: 25, height: 25}}
-              />
-            </Badge>} */}
-          </Typography>
-            <Grid  sx={{display: { md:'flex', xs: 'block', }, justifyContent:'end'}}>
-            {childRow?.inputType.toLowerCase() === 'boolean' ? 
-              <Checkbox disabled checked={childRow?.checkItemValue || false }  sx={{ml:'auto', my:-0.9}} />  :
-                <Typography variant="body2" >
-                  {childRow?.inputType.toLowerCase() === 'date' ? fDate(childRow?.checkItemValue) : 
-                  <Grid >
-                    {childRow?.inputType.toLowerCase() === 'status' ? (childRow?.checkItemValue && <Chip size="small" label={childRow?.checkItemValue} /> || '') : childRow?.checkItemValue }
-                  </Grid>
-                  }
-                </Typography> 
-            }
-            </Grid>
+          <Typography variant="body2" ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}</Typography>
+          {childRow?.checkItemValue && <Typography variant="body2" sx={{color: 'text.disabled'}}>Last Modified: {fDateTime(childRow?.createdAt)}{` by `}{`${childRow?.valueCreatedBy?.name || ''}`.toUpperCase()} {` at version (${childRow?.serviceRecord?.versionNo || 1})`}</Typography>}
         </Grid>
+        {childRow?.checkItemValue && <Grid sx={{ mt:1,
+          alignItems: 'center',
+          whiteSpace: 'pre-line',
+          wordBreak: 'break-word' }}>
+          <Typography variant="body2" sx={{mr:1}}>
+              <b>Value: </b>
+              {childRow?.inputType.toLowerCase() === 'boolean' && childRow?.checkItemValue && <Iconify
+                sx={{mb:-0.5}}
+                color={childRow?.checkItemValue ? '#008000' : '#FF0000'} 
+                icon={childRow?.checkItemValue ? 'ph:check-square-bold' : 'charm:square-cross' } />}
+
+              {childRow?.inputType.toLowerCase() === 'date' ? fDate(childRow?.checkItemValue) : 
+                <> 
+                  {childRow?.inputType.toLowerCase() === 'status' ? (childRow?.checkItemValue && 
+                    <Chip size="small" label={childRow?.checkItemValue} /> || '') : 
+                    (childRow?.inputType.toLowerCase() === 'number' || 
+                    childRow?.inputType.toLowerCase() === 'long text' || 
+                    childRow?.inputType.toLowerCase() === 'short text') && 
+                    childRow?.checkItemValue 
+                  }
+                </> 
+            }
+          </Typography>
+        </Grid>}
         <Grid sx={{  
           alignItems: 'center',
           whiteSpace: 'pre-line',
           wordBreak: 'break-word' }}>
-          {childRow?.comments && <Typography variant="body2" ><b>Comment: </b>{` ${childRow?.comments}`}</Typography>}
+          {childRow?.comments && <Typography variant="body2" sx={{mr:1}} ><b>Comment: </b>{` ${childRow?.comments}`}</Typography>}
         </Grid>
       </Grid>
       </AccordionSummary>

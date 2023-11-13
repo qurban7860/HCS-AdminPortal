@@ -196,6 +196,15 @@ export default function DrawingAddForm() {
                   )}
                 />
 
+
+
+                </Box>
+
+                <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(1, 1fr)' }}>
                 <Controller
                   name="document"
                   clearOnBlur 
@@ -223,7 +232,6 @@ export default function DrawingAddForm() {
                   />
                   )}
                 />
-
                 </Box>
 
                     <RHFSwitch

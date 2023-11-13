@@ -29,6 +29,7 @@ import {
   getMachineServiceRecords,
   getMachineServiceRecord,
   setMachineServiceRecordViewFormVisibility,
+  setDetailPageFlag,
   resetMachineServiceRecord,
   ChangeRowsPerPage,
   ChangePage,
@@ -79,6 +80,7 @@ export default function MachineServiceRecordList() {
 
   useLayoutEffect(() => {
     dispatch(getMachineServiceRecords(machine?._id)); 
+    dispatch(setDetailPageFlag(false));
   }, [dispatch, machine?._id]);
 
   useEffect(() => {
@@ -128,6 +130,7 @@ export default function MachineServiceRecordList() {
     await dispatch(setMachineServiceRecordViewFormVisibility(true));
     await dispatch(resetMachineServiceRecord())
     await dispatch(getMachineServiceRecord(machine._id, id));
+          dispatch(setDetailPageFlag(false));
   };
 
   const handleResetFilter = () => {
