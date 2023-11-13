@@ -166,6 +166,7 @@ function MachineServiceRecordEditForm() {
   
   const onSubmit = async (data) => {
     try {
+      console.log("checkItemLists : ",checkItemLists)
       const checkItemLists_ = [];
       if(checkItemLists && 
         Array.isArray(checkItemLists) && 

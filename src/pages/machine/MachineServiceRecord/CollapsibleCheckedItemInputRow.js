@@ -6,7 +6,7 @@ import Iconify from '../../../components/iconify';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import {  RHFTextField, RHFCheckbox, RHFDatePicker, RHFAutocomplete } from '../../../components/hook-form';
 import CommentsInput from './CommentsInput';
-import { fDate } from '../../../utils/formatTime';
+import { fDateTime } from '../../../utils/formatTime';
 
 const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue, 
   editPage,
@@ -26,67 +26,61 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                 <Table size="small" aria-label="purchases">
                   <TableBody>
                     {row?.checkItems?.map((childRow,childIndex) => (
-                      <>
-                      <TableRow key={childRow._id} 
-                          sx={{ ":hover": { backgroundColor: "#dbdbdb66" } }}
-                      >
-                      <Grid display='flex' flexDirection='column'>
-                        <Grid  
-                          // sx={{display: {sm: 'flex',xs:'block'}, justifyContent:'space-between', }}
-                        >
-                          <Typography variant='body2' size='small' sx={{ my:'auto'}} >
-                          <Checkbox 
-                              name={`${childRow?.name}_${childIndex}_${index}_${childIndex}`} 
-                              checked={checkItemLists[index]?.checkItems[childIndex]?.checked || false} 
-                              onChange={()=>handleChangeCheckItemListChecked(index, childIndex )} 
-                              // sx={{my:'auto', mr:1}}
-                          />
-                            {/* <b>{`${childIndex+1}). `}</b> */}
-                            {`${childRow.name}`}
-                          </Typography>
-                          <Grid sx={{ width: '100%'}} >
-                                  <CommentsInput index={index} childIndex={childIndex} 
-                                    key={`${index}${childIndex}`}
-                                    childRow={childRow}
-                                    checkParamList={checkItemLists} 
-                                    handleChangeCheckItemListDate={handleChangeCheckItemListDate}
-                                    handleChangeCheckItemListValue={handleChangeCheckItemListValue}
-                                    handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
-                                    handleChangeCheckItemListComment={handleChangeCheckItemListComment}
-                                    handleChangeCheckItemListChecked={handleChangeCheckItemListChecked}
-                                    handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
-                                  />
-                          </Grid>
-                        </Grid>
-
-                        <Grid sx={{mx: {sm: 0.6, } }} >
-                          <TextField 
-                              type="text"
-                              label="Comment" 
-                              name="comment"
-                              disabled={!checkItemLists[index]?.checkItems[childIndex]?.checked}
-                              onChange={(e) => handleChangeCheckItemListComment(index, childIndex, e.target.value)}
-                              size="small" sx={{ m: 0.3, width: '100%', }} 
-                              value={checkItemLists[index]?.checkItems[childIndex]?.comments}
-                              minRows={2} multiline
-                              InputProps={{ inputProps: { maxLength: 5000 }, 
-                              }}
-                          />
-                        </Grid>
-                          {editPage && <Card sx={{p:1,m:1}}>
-                            <Grid sx={{ display:'flex', justifyContent:'space-between' }} >
-                              <Typography variant="body2" sx={{ml:1,my:'auto'}} > {fDate(childRow?.createdAt)} {childRow?.createdBy?.name || ''} </Typography>
-                              <Grid sx={{width: 235}} >
-                              {childRow?.inputType?.toLowerCase() !== 'boolean' ? 
-                                <Typography variant="body2"  > {childRow?.checkItemValue || ''} </Typography> :
-                                <Checkbox  disabled checked={childRow?.checkItemValue || false} sx={{my:'auto',mr:'auto'}} /> }
-                                </Grid>
+                      <TableRow key={childRow._id} sx={{ ":hover": { backgroundColor: "#dbdbdb66" } }} >
+                        <Grid display='flex' flexDirection='column'>
+                          <Grid >
+                            <Typography variant='body2' size='small' sx={{ my:'auto'}} >
+                              <Checkbox 
+                                name={`${childRow?.name}_${childIndex}_${index}_${childIndex}`} 
+                                checked={checkItemLists[index]?.checkItems[childIndex]?.checked || false} 
+                                onChange={()=>handleChangeCheckItemListChecked(index, childIndex )} 
+                              />
+                              {`${childRow.name}`}
+                            </Typography>
+                            <Grid sx={{ m: {sm: 1, }}} >
+                              <CommentsInput index={index} childIndex={childIndex} 
+                                key={`${index}${childIndex}`}
+                                childRow={childRow}
+                                checkParamList={checkItemLists} 
+                                handleChangeCheckItemListDate={handleChangeCheckItemListDate}
+                                handleChangeCheckItemListValue={handleChangeCheckItemListValue}
+                                handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
+                                handleChangeCheckItemListComment={handleChangeCheckItemListComment}
+                                handleChangeCheckItemListChecked={handleChangeCheckItemListChecked}
+                                handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
+                              />
                             </Grid>
-                            <Typography variant="body2" sx={{ml:4}} >{childRow?.comments || ''}</Typography>
-                          </Card>}
-                      </Grid>
+                          </Grid>
+
+                          <Grid sx={{mx: {sm: 1, } }} >
+                            <TextField 
+                                type="text"
+                                label="Comment" 
+                                name="comment"
+                                disabled={!checkItemLists[index]?.checkItems[childIndex]?.checked}
+                                onChange={(e) => handleChangeCheckItemListComment(index, childIndex, e.target.value)}
+                                size="small" sx={{ width: '100%', }} 
+                                value={checkItemLists[index]?.checkItems[childIndex]?.comments}
+                                minRows={2} multiline
+                                InputProps={{ inputProps: { maxLength: 5000 }, 
+                                }}
+                            />
+                          </Grid>
+                          {editPage && childRow?.checkItemValue && 
+                            <Grid sx={{ mx:2,my:1 }} >
+                                <Typography variant="body2"><b>Value : </b>
+                                {childRow?.inputType?.toLowerCase() !== 'boolean' ? childRow?.checkItemValue || ''  : 
+                                <Checkbox  disabled checked={childRow?.checkItemValue || false} sx={{my:'auto',mr:'auto'}} /> }
+                                </Typography>
+                                {childRow?.comments && <Typography variant="body2" ><b>Comment: </b>{childRow?.comments || ''}</Typography>}
+                                <Grid sx={{ display: 'flex' }}>
+                                    {childRow?.checkItemValue && <Typography variant="body2" sx={{color: 'text.disabled',ml:'auto'}}>Last Modified: {fDateTime(childRow?.createdAt)}
+                                    {` by `}{`${childRow?.valueCreatedBy?.name || ''}`.toUpperCase()} 
+                                    {` at version (${childRow?.serviceRecord?.versionNo|| 1})`}</Typography>}
+                                </Grid>
+                            </Grid>}
+                        </Grid>
                       </TableRow>
-                        </>
                     ))}
                   </TableBody>
                 </Table>

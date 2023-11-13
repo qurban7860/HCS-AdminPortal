@@ -56,9 +56,8 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
         onClick={() => handleAccordianClick(`${index}${childIndex}`)}
     >
       <Grid sx={{width:'100%'}}>
-        <Grid sx={{ width: '100%', display: 'flex', justifyContent: 'space-between' }} >
+        <Grid sx={{ width: '100%' }} >
           <Typography variant="body2" ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}</Typography>
-          {childRow?.checkItemValue && <Typography variant="body2" sx={{color: 'text.disabled'}}>Last Modified: {fDateTime(childRow?.createdAt)}{` by `}{`${childRow?.valueCreatedBy?.name || ''}`.toUpperCase()} {` at version (${childRow?.serviceRecord?.versionNo|| 1})`}</Typography>}
         </Grid>
         {childRow?.checkItemValue && <Grid sx={{ mt:1,
           alignItems: 'center',
@@ -68,8 +67,8 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
               <b>Value: </b>
               {childRow?.inputType.toLowerCase() === 'boolean' && childRow?.checkItemValue && <Iconify
                 sx={{mb:-0.5}}
-                color={childRow?.checkItemValue === true ? '#008000' : '#FF0000'} 
-                icon={childRow?.checkItemValue  === true ? 'ph:check-square-bold' : 'charm:square-cross' } />}
+                color={childRow?.checkItemValue === true || childRow?.checkItemValue  === 'true' ? '#008000' : '#FF0000'} 
+                icon={ childRow?.checkItemValue === true || childRow?.checkItemValue  === 'true' ? 'ph:check-square-bold' : 'charm:square-cross' } />}
 
               {childRow?.inputType.toLowerCase() === 'date' ? fDate(childRow?.checkItemValue) : 
                 <> 
@@ -89,6 +88,9 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
           whiteSpace: 'pre-line',
           wordBreak: 'break-word' }}>
           {childRow?.comments && <Typography variant="body2" sx={{mr:1}} ><b>Comment: </b>{` ${childRow?.comments}`}</Typography>}
+        </Grid>
+        <Grid display="flex">
+            {childRow?.checkItemValue && <Typography variant="body2" sx={{color: 'text.disabled',ml:'auto'}}>Last Modified: {fDateTime(childRow?.valueCreatedAt)}{` by `}{`${childRow?.valueCreatedBy?.name || ''}`.toUpperCase()} {` at version (${childRow?.serviceRecord?.versionNo|| 1})`}</Typography>}
         </Grid>
       </Grid>
       </AccordionSummary>
