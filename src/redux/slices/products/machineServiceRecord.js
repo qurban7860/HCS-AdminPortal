@@ -196,7 +196,7 @@ export function getActiveMachineServiceRecords (machineId){
   }
 }
 
-export function getMachineServiceRecordsHistory(machineId, serviceId ){
+export function getMachineServiceHistoryRecords(machineId, serviceId ){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
@@ -204,35 +204,12 @@ export function getMachineServiceRecordsHistory(machineId, serviceId ){
       {
         params: {
           isArchived: false,
-          isHistory: true,
+          // isHistory: true,
           serviceId,
         }
       }
       );
       dispatch(slice.actions.getMachineServiceRecordHistorySuccess(response.data));
-    } catch (error) {
-      console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
-      throw error;
-    }
-  }
-}
-
-export function getMachineServiceRecordHistory(machineId, serviceId ){
-  return async (dispatch) =>{
-    dispatch(slice.actions.startLoading());
-    try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords`, 
-      {
-        params: {
-          isArchived: false,
-          isHistory: true,
-          serviceId,
-        }
-      }
-      );
-      dispatch(slice.actions.getMachineServiceRecordHistorySuccess(response.data));
-      dispatch(setHistoricalFlag(true));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));

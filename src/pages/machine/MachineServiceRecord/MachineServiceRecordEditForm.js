@@ -416,7 +416,7 @@ setCheckItemLists(updatedCheckParams);
 
                 <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline/> 
                 
-                <RHFTextField name="internalComments" label="Internal Comments" minRows={3} multiline/>
+                {/* <RHFTextField name="internalComments" label="Internal Comments" minRows={3} multiline/> */}
                 { serviceRecordConfiguration?.enableNote && <RHFTextField name="serviceNote" label="Note" minRows={3} multiline/> }
                 { serviceRecordConfiguration?.enableMaintenanceRecommendations && <RHFTextField name="recommendationNote" label="Recommendation Note" minRows={3} multiline/> }
                 { serviceRecordConfiguration?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }

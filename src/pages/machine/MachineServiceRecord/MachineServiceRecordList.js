@@ -43,7 +43,7 @@ import TableCard from '../../components/ListTableTools/TableCard';
 const TABLE_HEAD = [
   { id: 'serviceRecordConfig.docTitle', label: 'Service Configuration', align: 'left' },
   // { id: 'technician.name', visibility: 'xs5', label: 'Technician', align: 'left' },
-  { id: 'versionNo', visibility: 'xs5', label: 'Version No', align: 'left' },
+  { id: 'versionNo', visibility: 'xs5', label: 'Version', align: 'left' },
   { id: 'serviceDate', label: 'Service Date', align: 'center' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdBy.name', label: 'Created By', align: 'left' },

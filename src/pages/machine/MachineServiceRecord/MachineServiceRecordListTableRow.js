@@ -14,8 +14,8 @@ import { fDate } from '../../../utils/formatTime';
 // components
 import Iconify from '../../../components/iconify';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
-import { setMachineServiceRecordHistoryFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
-import { useDispatch } from '../../../redux/store';
+import { setMachineServiceRecordHistoryFormVisibility, getMachineServiceHistoryRecords } from '../../../redux/slices/products/machineServiceRecord';
+import { useDispatch, useSelector } from '../../../redux/store';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 // import { useScreenSize } from '../../../hooks/useResponsive';
 
@@ -50,7 +50,9 @@ export default function MachineServiceRecordListTableRow({
   onViewRow,
 }) {
 
+  const { machine } = useSelector((state) => state.machine);
   const { serviceRecordConfig, versionNo, serviceDate, isActive, createdAt, createdBy } = row;
+
   const theme = createTheme({
     palette: {
       success: green,
@@ -59,6 +61,7 @@ export default function MachineServiceRecordListTableRow({
   const dispatch = useDispatch();
   const handleServiceRecordHistory = () => {
     dispatch(setMachineServiceRecordHistoryFormVisibility(true));
+    dispatch(getMachineServiceHistoryRecords( machine?._id ,row?.serviceId ))
   }
   return (
       <StyledTableRow hover selected={selected}>

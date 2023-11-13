@@ -81,12 +81,11 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
             }
             </Grid>
         </Grid>
-        <Grid sx={{     
-          ml:4,     
+        <Grid sx={{  
           alignItems: 'center',
           whiteSpace: 'pre-line',
           wordBreak: 'break-word' }}>
-          {childRow?.comments && <Typography variant="body2" >{` ${childRow?.comments}`}</Typography>}
+          {childRow?.comments && <Typography variant="body2" ><b>Comment: </b>{` ${childRow?.comments}`}</Typography>}
         </Grid>
       </Grid>
       </AccordionSummary>
@@ -101,22 +100,17 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
               justifyContent="space-between"
               gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' }}
             >
-              <Typography variant="body2" sx={{ml:5}}>{fDateTime(ItemHistory?.createdAt)}{` By ${ItemHistory?.createdBy?.name || ''}: `}</Typography>
+              <Typography variant="body2" >{fDateTime(ItemHistory?.createdAt)}{` By ${ItemHistory?.createdBy?.name || ''}: `}</Typography>
               {/* <Typography variant="body2" >{ItemHistory?.createdBy?.name || ''}</Typography> */}
               <Typography variant="body2" sx={{mr:1.6}}>{ItemHistory?.checkItemValue || ''}</Typography>
             </Box>
-            <Typography variant="body2" sx={{ml:5}}>{ItemHistory?.comments || ''}</Typography>
+            <Typography variant="body2" >{ItemHistory?.comments || ''}</Typography>
             <Divider  sx={{ borderStyle: 'solid' }} />
           </>))}
         </Grid>
       </AccordionDetails>}
       </Accordion>
     </TableRow>
-    {/* <ViewFormHistoricalPopover
-        open={historyAnchorEl }
-        onClose={handleHistoryPopoverClose}
-        ListArr={childRow?.historicalData || []}
-        ListTitle= "History" /> */}
   </>
   )
 }

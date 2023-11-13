@@ -59,7 +59,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                               size="small" sx={{ m: 0.3, width: '100%', }} 
                               value={checkItemLists[index]?.checkItems[childIndex]?.comments}
                               minRows={1} multiline
-                              InputProps={{ inputProps: { maxLength: 500 }, 
+                              InputProps={{ inputProps: { maxLength: 5000 }, 
                               }}
                           />
                         </Grid>
