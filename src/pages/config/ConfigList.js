@@ -263,10 +263,10 @@ export default function ConfigList() {
                         onViewRow={() => handleViewRow(row._id)}
                       />
                     ))}
+                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
-            <TableNoData isNotFound={isNotFound} />
           </TableContainer>
 
           {!isNotFound && <TablePaginationCustom

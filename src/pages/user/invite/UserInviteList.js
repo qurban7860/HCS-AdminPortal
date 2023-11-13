@@ -183,6 +183,7 @@ export default function UserInviteList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
+                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
@@ -195,9 +196,6 @@ export default function UserInviteList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />
-          <Grid md={12}>
-            <TableNoData isNotFound={isNotFound} />
-          </Grid>
         </TableCard>
       </Container>
   );

@@ -156,7 +156,6 @@ export default function MachineServiceRecordList() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
 
-
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
                 <TableHeadCustom
@@ -181,9 +180,9 @@ export default function MachineServiceRecordList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
+                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
-                  <TableNoData isNotFound={isNotFound} />
             </Scrollbar>
           </TableContainer>
 

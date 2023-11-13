@@ -238,11 +238,7 @@ export default function CustomerList() {
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                     )
                   )}
-
-                {/* <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  /> */}
+                  <TableNoData isNotFound={isNotFound} />
 
               </TableBody>
             </Table>
@@ -256,9 +252,6 @@ export default function CustomerList() {
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
         />}
-        <Grid item md={12}>
-          <TableNoData isNotFound={isNotFound} />
-        </Grid>
       </TableCard>
 
       <ConfirmDialog

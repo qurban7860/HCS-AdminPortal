@@ -437,12 +437,7 @@ const  onChangePage = (event, newPage) => {
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                     )
                   )}
-
-                {/* <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  /> */}
-
+                  <TableNoData isNotFound={isNotFound} />
               </TableBody>
             </Table>
           </Scrollbar>
@@ -455,9 +450,6 @@ const  onChangePage = (event, newPage) => {
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
         />}
-        <Grid item md={12}>
-          <TableNoData isNotFound={isNotFound} />
-        </Grid>
       </TableCard>
 
       <ConfirmDialog

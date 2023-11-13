@@ -228,6 +228,7 @@ export default function BlockedCustomerList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
+                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
@@ -240,10 +241,6 @@ export default function BlockedCustomerList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
-
-          <Grid md={12}>
-            <TableNoData isNotFound={isNotFound} />
-          </Grid>
         </TableCard>
       </Container>
 
