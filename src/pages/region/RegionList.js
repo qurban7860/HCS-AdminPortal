@@ -262,10 +262,10 @@ export default function RegionList() {
                         onViewRow={() => handleViewRow(row._id)}
                       />
                     ))}
+                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
-            <TableNoData isNotFound={isNotFound} />
           </TableContainer>
 
           <TablePaginationCustom

@@ -396,7 +396,7 @@ function MachineServiceRecordAddForm() {
                     <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline/> 
                     
                     
-                    <RHFTextField name="internalComments" label="Internal Comments" minRows={3} multiline/>
+                    {/* <RHFTextField name="internalComments" label="Internal Comments" minRows={3} multiline/> */}
                     { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label="Service Note" minRows={3} multiline/> }
                     { serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="recommendationNote" label="Recommendation Note" minRows={3} multiline/> }
                     { serviceRecordConfig?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }

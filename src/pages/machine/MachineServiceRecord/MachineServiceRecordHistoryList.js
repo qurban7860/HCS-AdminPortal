@@ -29,7 +29,7 @@ import Scrollbar from '../../../components/scrollbar';
 import MachineServiceRecordHistoryListTableRow from './MachineServiceRecordHistoryListTableRow';
 import MachineServiceRecordListTableToolbar from './MachineServiceRecordListTableToolbar';
 import {
-  getMachineServiceRecordHistory,
+  getMachineServiceHistoryRecords,
   getMachineServiceRecordVersion,
   setMachineServiceRecordViewFormVisibility,
   setMachineServiceRecordHistoryFormVisibility,
@@ -52,7 +52,7 @@ MachineServiceRecordHistoryList.propTypes = {
 const TABLE_HEAD = [
   // { id: 'technician.name', visibility: 'xs5', label: 'Technician', align: 'left' },
   { id: 'serviceDate', label: 'Service Date', align: 'left' },
-  { id: 'versionNo', visibility: 'xs5', label: 'Version No', align: 'left' },
+  { id: 'versionNo', visibility: 'xs5', label: 'Version', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdBy.name', label: 'Created By', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
@@ -85,9 +85,9 @@ export default function MachineServiceRecordHistoryList({ serviceId }) {
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
 
-  useLayoutEffect(() => {
-    dispatch(getMachineServiceRecordHistory(machine?._id, serviceId)); 
-  }, [dispatch, machine?._id,serviceId]);
+  // useLayoutEffect(() => {
+  //   dispatch(getMachineServiceHistoryRecords(machine?._id, serviceId)); 
+  // }, [dispatch, machine?._id,serviceId]);
 
   useEffect(() => {
     if (initial) {
@@ -145,8 +145,7 @@ export default function MachineServiceRecordHistoryList({ serviceId }) {
 
   return (
         <TableCard>
-        <Grid container sx={{ mx:2, mt:2, }}>
-
+        <Grid container sx={{ m: 2 }}>
         <Grid item sm={12}
           sx={{ display: 'flex' }}
         >
@@ -160,7 +159,7 @@ export default function MachineServiceRecordHistoryList({ serviceId }) {
             />
         </StyledStack>
         </Grid> 
-            <Typography variant='h3'>{machineServiceRecordHistory?.[0]?.serviceRecordConfig?.docTitle || '' }{` (Current version: ${Number(machineServiceRecordHistory?.[0]?.versionNo)+1 || 1} )`}</Typography>
+            <Typography variant='h3'>{machineServiceRecordHistory?.[0]?.serviceRecordConfig?.docTitle || '' }</Typography>
         </Grid>
 
           {!isNotFound && <TablePaginationCustom
@@ -215,11 +214,11 @@ export default function MachineServiceRecordHistoryList({ serviceId }) {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
+                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
           </TableContainer>
-        <TableNoData isNotFound={isNotFound} />
 
           {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}

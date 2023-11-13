@@ -259,10 +259,6 @@ export default function SiteList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  />
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>

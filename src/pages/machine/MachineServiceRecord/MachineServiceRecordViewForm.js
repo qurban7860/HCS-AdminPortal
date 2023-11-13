@@ -83,14 +83,14 @@ function MachineServiceParamViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [ machineServiceRecord]
   );
-
+  
   return (
     <Card sx={{ p: 2 }}>
       <Grid>
         <ViewFormEditDeleteButtons isActive={defaultValues.isActive}  
           disableEditButton={machine?.status?.slug==='transferred'}
           disableDeleteButton={machine?.status?.slug==='transferred'}
-          handleEdit={handleEdit} onDelete={onDelete} backLink={() => dispatch(isHistorical ? setMachineServiceRecordHistoryFormVisibility(true) : setAllFlagsFalse())}
+          handleEdit={!isHistorical && handleEdit} onDelete={!isHistorical && onDelete} backLink={() => dispatch(isHistorical ? setMachineServiceRecordHistoryFormVisibility(true) : setAllFlagsFalse())}
         />
         
         <Grid container>
@@ -124,7 +124,7 @@ function MachineServiceParamViewForm() {
           
           <ViewFormField sm={12} heading="Text After Check Items" param={defaultValues.textAfterCheckItems} />
 
-          <Grid item md={12} >
+          {/* <Grid item md={12} >
             <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
               Header
             </Typography>
@@ -142,7 +142,7 @@ function MachineServiceParamViewForm() {
             <ViewFormField sm={4} param={defaultValues?.footerLeftText} />
             <ViewFormField sm={4} param={defaultValues?.footerCenterText} />
             <ViewFormField sm={4} param={defaultValues?.footerRightText} />
-          </Grid>
+          </Grid> */}
 
           <ViewFormField sm={12} heading="Internal Comments" param={defaultValues.internalComments} />
           {machineServiceRecord?.serviceRecordConfig?.enableNote && <ViewFormField sm={12} heading="Service Note" param={defaultValues.serviceNote} />}

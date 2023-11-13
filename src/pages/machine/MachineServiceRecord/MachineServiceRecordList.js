@@ -43,7 +43,7 @@ import TableCard from '../../components/ListTableTools/TableCard';
 const TABLE_HEAD = [
   { id: 'serviceRecordConfig.docTitle', label: 'Service Configuration', align: 'left' },
   // { id: 'technician.name', visibility: 'xs5', label: 'Technician', align: 'left' },
-  { id: 'versionNo', visibility: 'xs5', label: 'Version No', align: 'left' },
+  { id: 'versionNo', visibility: 'xs5', label: 'Version', align: 'left' },
   { id: 'serviceDate', label: 'Service Date', align: 'center' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdBy.name', label: 'Created By', align: 'left' },
@@ -155,23 +155,6 @@ export default function MachineServiceRecordList() {
           />}
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
-              numSelected={selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row._id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" >
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            />
 
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
@@ -197,11 +180,11 @@ export default function MachineServiceRecordList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
+                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
           </TableContainer>
-        <TableNoData isNotFound={isNotFound} />
 
           {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}

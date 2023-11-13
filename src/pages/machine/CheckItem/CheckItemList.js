@@ -220,11 +220,11 @@ export default function CheckItemList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
+                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
           </TableContainer>
-        <TableNoData isNotFound={isNotFound} />
 
           {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}

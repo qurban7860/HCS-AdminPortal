@@ -49,7 +49,7 @@ export default function MachineServiceRecordListTableRow({
   onViewRow,
 }) {
 
-  const { versionNo, serviceDate, isActive, createdAt, createdBy } = row;
+  const { isHistory, versionNo, serviceDate, isActive, createdAt, createdBy } = row;
   const theme = createTheme({
     palette: {
       success: green,
@@ -61,8 +61,8 @@ export default function MachineServiceRecordListTableRow({
   }
   return (
       <StyledTableRow hover selected={selected}>
-        <LinkTableCell align="left" onClick={onViewRow} param={fDate(serviceDate)} />
-        <LinkTableCell align="left" onClick={onViewRow} param={versionNo} />
+        <TableCell align="left" onClick={onViewRow} >{fDate(serviceDate)}</TableCell>
+        <LinkTableCell align="left" onClick={onViewRow} param={`${versionNo || 1} ${isHistory ? '' : '(Current Version)'}`} />
         <TableCell align="center">
           {' '}
           <Switch checked={isActive} disabled size="small" />{' '}

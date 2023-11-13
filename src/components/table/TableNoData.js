@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { TableCell } from '@mui/material';
+import { TableCell, TableRow } from '@mui/material';
 import EmptyContent from '../empty-content';
 
 
@@ -13,14 +13,20 @@ export default function TableNoData({ isNotFound }) {
   return (
     <>
       {isNotFound ? (
-        <EmptyContent
-          title="Empty"
-          sx={{
-            color: '#DFDFDF'
-          }}
-        />
+        <TableRow>
+        <TableCell colSpan={12}>
+          <EmptyContent
+            title="Empty"
+            sx={{
+              color: '#DFDFDF'
+            }}
+          />
+        </TableCell>
+        </TableRow>
       ) : (
+        <TableRow>
         <TableCell colSpan={12} sx={{ p: 0 }} />
+        </TableRow>
       )}
     </>
   );
