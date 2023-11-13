@@ -20,6 +20,7 @@ const initialState = {
   machineServiceRecordHistory: [],
   activeMachineServiceRecords: [],
   isHistorical: false,
+  isDetailPage: false,
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
@@ -77,6 +78,10 @@ const slice = createSlice({
     // SET HISTORICAL FLAG
     setHistoricalFlag(state, action){
       state.isHistorical = action.payload;;
+    },
+    // SET DETAIL PAGE FLAG
+    setDetailPageFlag(state, action){
+      state.isDetailPage = action.payload;;
     },
     // HAS ERROR
     hasError(state, action) {
@@ -165,6 +170,7 @@ export const {
   setMachineServiceRecordViewFormVisibility,
   setMachineServiceRecordHistoryFormVisibility,
   setHistoricalFlag,
+  setDetailPageFlag,
   setAllFlagsFalse,
   resetMachineServiceRecords,
   resetMachineServiceRecord,

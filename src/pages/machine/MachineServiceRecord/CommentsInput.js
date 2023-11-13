@@ -52,7 +52,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue}
                                 minRows={1} multiline
                                 required={childRow?.isRequired}
-                                InputProps={{ inputProps: { maxLength: 200 }, 
+                                InputProps={{ inputProps: { maxLength: 3000 }, 
                                 // style: { fontSize: '14px', height: 30 }
                                 }}
                                 // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
