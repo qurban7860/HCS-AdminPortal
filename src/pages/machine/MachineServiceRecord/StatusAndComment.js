@@ -92,8 +92,8 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
       </AccordionSummary>
       {childRow?.historicalData && childRow?.historicalData?.length > 0 && <AccordionDetails >
         <Grid sx={{ width: '100%' }} >
-        {childRow?.historicalData?.map((ItemHistory ) => (<>
-            {/* {ItemIndex !== 0 && <Divider  sx={{ borderStyle: 'solid' }} />} */}
+        {childRow?.historicalData?.map((ItemHistory, ItemIndex ) => (<>
+            {ItemIndex === 0 && <Divider  sx={{ borderStyle: 'solid' }} />}
             <Box
               rowGap={2}
               columnGap={2}

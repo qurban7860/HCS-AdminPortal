@@ -14,16 +14,7 @@ const CollapsibleCheckedItemRow = ({value, index }) => {
     <>
             <Typography variant='h5'>
                 <b>{`${index+1}). `}</b>{typeof value?.ListTitle === 'string' && value?.ListTitle || ''}{' ( Items: '}<b>{`${value?.checkItems?.length || 0}`}</b>{' ) '}
-                {/* <IconButton
-                  aria-label="expand row"
-                  size="small"
-                  color={open ? 'default' :  'primary'}
-                  onClick={() => setOpen(!open)}
-                >
-                  {open ? <Iconify icon="mingcute:up-line" /> : <Iconify icon="mingcute:down-line" /> }
-                </IconButton> */}
             </Typography>
-            {/* <Collapse in={open} timeout="auto" unmountOnExit> */}
               <Grid >
                 <Table size="small" aria-label="purchases">
                   <TableBody>
@@ -34,7 +25,6 @@ const CollapsibleCheckedItemRow = ({value, index }) => {
                   </TableBody>
                 </Table>
               </Grid>   
-            {/* </Collapse> */}
         </>
   )
 }

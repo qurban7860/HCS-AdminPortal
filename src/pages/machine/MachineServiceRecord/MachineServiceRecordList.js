@@ -155,23 +155,7 @@ export default function MachineServiceRecordList() {
           />}
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
-              numSelected={selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row._id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" >
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            />
+
 
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
@@ -199,9 +183,9 @@ export default function MachineServiceRecordList() {
                     )}
                 </TableBody>
               </Table>
+                  <TableNoData isNotFound={isNotFound} />
             </Scrollbar>
           </TableContainer>
-        <TableNoData isNotFound={isNotFound} />
 
           {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}

@@ -63,14 +63,13 @@ export default function MachineServiceRecordListTableRow({
   return (
       <StyledTableRow hover selected={selected}>
         <LinkTableCell align="left" onClick={onViewRow} param={`${serviceRecordConfig?.docTitle ? serviceRecordConfig?.docTitle	: ''	} ${serviceRecordConfig?.recordType ? ' - ' : ''} ${serviceRecordConfig?.recordType ? serviceRecordConfig?.recordType : ''}`} />
-        {/* <TableCell align="left">{`${technician?.name ? technician?.name : ''}`}</TableCell> */}
         <TableCell align="left" >{versionNo} 
               {versionNo > 1 &&  <StyledTooltip
                 arrow
                 title="History"
                 placement='top'
                 tooltipcolor={theme.palette.primary.main}
-              ><Iconify icon="material-symbols:history" title="History" sx={{ml:0.7, mb:-0.6, cursor: 'pointer'}} onClick={handleServiceRecordHistory} /></StyledTooltip>}</TableCell>
+              ><Iconify icon="material-symbols:history" sx={{ml:0.7, mb:-0.6, cursor: 'pointer'}} onClick={handleServiceRecordHistory} /></StyledTooltip>}</TableCell>
         <TableCell align="center">{fDate(serviceDate)}</TableCell>
         <TableCell align="center">
           {' '}
