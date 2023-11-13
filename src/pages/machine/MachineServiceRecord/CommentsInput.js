@@ -16,14 +16,9 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
     const { statusTypes } = useSelector((state) => state.serviceRecordConfig);
   return (
     <Grid sx={{display: 'flex', flexDirection: 'column'}}>
-        <Grid  sx={{display: { md:'flex', xs: 'block', }, justifyContent:'end'}} >
-
-                                <Checkbox 
-                                    name={`${childRow?.name}_${childIndex}_${index}_${childIndex}`} 
-                                    checked={checkParamList[index]?.checkItems[childIndex]?.checked || false} 
-                                    onChange={()=>handleChangeCheckItemListChecked(index, childIndex )} 
-                                    sx={{my:'auto', mr:'auto'}}
-                                />
+        <Grid  
+        // sx={{display: { md:'flex', xs: 'block', }, justifyContent:'end'}} 
+        >
 
                             {childRow?.inputType === 'Short Text' && <TextField 
                                 // fullWidth
@@ -32,7 +27,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 label={childRow?.inputType} 
                                 name={`${childRow?.name}_${childIndex}_${index}`} 
                                 onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e.target.value)}
-                                size="small" sx={{m:0.3, width: {sm: 259, xs: '100%'}}} 
+                                size="small" sx={{m:0.3}} 
                                 value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue}
                                 required={childRow?.isRequired}
                                 InputProps={{ inputProps: { maxLength: 50 }, 
@@ -48,7 +43,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 label={childRow?.inputType} 
                                 name={`${childRow?.name}_${childIndex}_${index}`} 
                                 onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e.target.value)}
-                                size="small" sx={{m:0.3, width: {sm: 259, xs: '100%'}}} 
+                                size="small" sx={{m:0.3 }} 
                                 value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue}
                                 minRows={1} multiline
                                 required={childRow?.isRequired}
@@ -67,6 +62,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                 type="number"
                                 disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
                                 value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue}
+                                onWheel={(e) => e.target.blur()}
                                 onChange={(e) => {
                                     if (/^\d*$/.test(e.target.value)) {
                                     handleChangeCheckItemListValue(index, childIndex, e.target.value)
@@ -74,14 +70,14 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                         handleChangeCheckItemListValue(index, childIndex, checkParamList[index]?.checkItems[childIndex].value)
                                     }}
                                 } 
-                                size="small" sx={{m:0.3, width: {sm: 259, xs: '100%'}}} 
+                                size="small" sx={{m:0.3 }} 
                                 required={childRow?.isRequired}
                                 // InputProps={{ style: { fontSize: '14px', height: 30 }}}
                                 // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
                             />}
 
                                 {childRow?.inputType === 'Boolean' && 
-                            <div style={{my:'auto',width: 259}}>
+                            <div style={{my:'auto' }}>
                                 <Checkbox 
                                     disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
                                     name={`${childRow?.name}_${childIndex}_${index}`} 
@@ -105,7 +101,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                                     shrink: true,
                                 }}
                                 onChange={(e) =>  handleChangeCheckItemListDate(index, childIndex, e.target.value) } 
-                                size="small" sx={{m:0.3, ml:'auto', width: {sm: 259, xs: '100%'}}} 
+                                size="small" sx={{m:0.3, ml:'auto'}} 
                                 required={childRow?.isRequired}
                             /> }
 

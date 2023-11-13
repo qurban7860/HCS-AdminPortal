@@ -61,7 +61,7 @@ export default function MachineServiceRecordListTableRow({
   }
   return (
       <StyledTableRow hover selected={selected}>
-        <TableCell align="left" onClick={onViewRow} >{fDate(serviceDate)}</TableCell>
+        <TableCell align="left" >{fDate(serviceDate)}</TableCell>
         <LinkTableCell align="left" onClick={onViewRow} param={`${versionNo || 1} ${isHistory ? '' : '(Current Version)'}`} />
         <TableCell align="center">
           {' '}

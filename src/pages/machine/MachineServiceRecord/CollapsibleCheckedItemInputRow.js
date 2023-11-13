@@ -19,6 +19,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
   (
     <>
         <Typography key={index} variant='h5'>
+
             <b>{`${index+1}). `}</b>{typeof row?.ListTitle === 'string' && row?.ListTitle || ''}{' ( Items: '}<b>{`${row?.checkItems?.length}`}</b>{' ) '}
         </Typography>
         <Grid  sx={{ml:3}} >
@@ -30,11 +31,20 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                           sx={{ ":hover": { backgroundColor: "#dbdbdb66" } }}
                       >
                       <Grid display='flex' flexDirection='column'>
-                        <Grid  sx={{display: {sm: 'flex',xs:'block'}, justifyContent:'space-between', }}>
+                        <Grid  
+                          // sx={{display: {sm: 'flex',xs:'block'}, justifyContent:'space-between', }}
+                        >
                           <Typography variant='body2' size='small' sx={{ my:'auto'}} >
-                            <b>{`${childIndex+1}). `}</b>{`${childRow.name}`}
+                          <Checkbox 
+                              name={`${childRow?.name}_${childIndex}_${index}_${childIndex}`} 
+                              checked={checkItemLists[index]?.checkItems[childIndex]?.checked || false} 
+                              onChange={()=>handleChangeCheckItemListChecked(index, childIndex )} 
+                              // sx={{my:'auto', mr:1}}
+                          />
+                            {/* <b>{`${childIndex+1}). `}</b> */}
+                            {`${childRow.name}`}
                           </Typography>
-                          <Grid align='right' sx={{ ml: 'auto'}} >
+                          <Grid sx={{ width: '100%'}} >
                                   <CommentsInput index={index} childIndex={childIndex} 
                                     key={`${index}${childIndex}`}
                                     childRow={childRow}
