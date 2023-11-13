@@ -116,8 +116,8 @@ export default function ModuleList() {
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
-    filterRole,
     filterStatus,
+    filterRole
   });
 
   // const dataInPage = dataFiltered?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);

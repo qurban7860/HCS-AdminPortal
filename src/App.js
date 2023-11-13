@@ -54,59 +54,47 @@ import IdleManager from './components/idleManager';
 // Check our docs
 // https://docs.minimals.cc/authentication/js-version
 
-import { AuthProvider } from './auth/JwtContext';
 import Page500 from './pages/Page500';
 import { CONFIG } from './config-global';
+import { AuthProvider } from './auth/JwtContext';
+import { WebSocketProvider } from './auth/WebSocketContext';
 
 // ----------------------------------------------------------------------
 
 export default function App() {
 
-  const token = localStorage.getItem('accessToken');
-  const WS_URL = token ? `${CONFIG.SOCKET_URL}/?accessToken=${token}` : null;
-  const { sendMessage, readyState } = useWebSocket(WS_URL, {
-    onOpen: () => {
-      console.log('WebSocket connection established.');
-    },
-    onClose: () => {
-      console.log('WebSocket connection closed.');
-    },
-    share: true,
-    filter: () => false,
-    retryOnError: true,
-    shouldReconnect: () => true
-  });
-  
   return (
-    <AuthProvider>
-        <HelmetProvider>
-          <ReduxProvider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <SettingsProvider>
-                  <BrowserRouter>
-                    <ErrorBoundary fallback={<Page500 /> } >
-                      <ScrollToTop />
-                      <MotionLazyContainer>
-                        <ThemeProvider>
-                          <ThemeSettings>
-                            <ThemeLocalization>
-                              <SnackbarProvider>
-                                <StyledChart />
-                                <IdleManager/>
-                                  <Router />
-                              </SnackbarProvider>
-                            </ThemeLocalization>
-                          </ThemeSettings>
-                        </ThemeProvider>
-                      </MotionLazyContainer>
-                   </ErrorBoundary>
-                  </BrowserRouter>
-                </SettingsProvider>
-              </LocalizationProvider>
-            </PersistGate>
-          </ReduxProvider>
-        </HelmetProvider>
+      <AuthProvider>
+        <WebSocketProvider>
+          <HelmetProvider>
+            <ReduxProvider store={store}>
+              <PersistGate loading={null} persistor={persistor}>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <SettingsProvider>
+                    <BrowserRouter>
+                      <ErrorBoundary fallback={<Page500 /> } >
+                        <ScrollToTop />
+                        <MotionLazyContainer>
+                          <ThemeProvider>
+                            <ThemeSettings>
+                              <ThemeLocalization>
+                                <SnackbarProvider>
+                                  <StyledChart />
+                                  <IdleManager/>
+                                    <Router />
+                                </SnackbarProvider>
+                              </ThemeLocalization>
+                            </ThemeSettings>
+                          </ThemeProvider>
+                        </MotionLazyContainer>
+                    </ErrorBoundary>
+                    </BrowserRouter>
+                  </SettingsProvider>
+                </LocalizationProvider>
+              </PersistGate>
+            </ReduxProvider>
+          </HelmetProvider>
+        </WebSocketProvider>
       </AuthProvider>
   );
 }

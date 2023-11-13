@@ -70,7 +70,7 @@ export default function ConfigList() {
     // onChangePage,
     // onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'createdAt', defaultOrder: 'desc'
+    defaultOrderBy: 'updateAt', defaultOrder: 'desc'
   });
 
   const onChangeRowsPerPage = (event) => {
@@ -303,7 +303,7 @@ export default function ConfigList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus, filterRole }) {
+function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
@@ -319,7 +319,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRo
       (config) =>
         config?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         config?.value?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(config?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+        fDate(config?.updateAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 

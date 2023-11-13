@@ -19,6 +19,8 @@ import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 import LinkTableCell from '../components/ListTableTools/LinkTableCell';
 import { useScreenSize } from '../../hooks/useResponsive';
 import BadgeStatus from '../../components/badge-status/BadgeStatus';
+import { ICONS } from '../../constants/icons/default-icons';
+import { StyledTooltip } from '../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -84,6 +86,13 @@ export default function SecurityUserTableRow({
             {roles.map((obj) => (obj.roleType === 'SuperAdmin' ? <Chip label={obj.name} sx={{m:0.2}} color='secondary' /> : <Chip label={obj.name} sx={{mx:0.3}} />))}
           </TableCell>
         }
+        <TableCell align="center" key={isOnline}>
+          <StyledTooltip title={isOnline?ICONS.ONLINE.heading:ICONS.OFFLINE.heading} placement="top" 
+            disableFocusListener tooltipcolor={isOnline?ICONS.ONLINE.color:ICONS.OFFLINE.color} 
+            color={isOnline?ICONS.ONLINE.color:ICONS.OFFLINE.color}>
+            <Iconify color={isOnline?ICONS.ONLINE.color:ICONS.OFFLINE.color} sx={{ height: 20, width: 20 }} icon={isOnline?ICONS.ONLINE.icon:ICONS.OFFLINE.icon} />
+          </StyledTooltip>
+        </TableCell>
         <TableCell align="center"><Switch checked={currentEmployee} disabled size="small" /></TableCell>
         <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>
