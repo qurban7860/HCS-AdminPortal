@@ -1,7 +1,7 @@
 import { useState, memo } from 'react'
 import PropTypes, { number } from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
-import { Box, Table, TableBody, TableCell, TableRow,  IconButton, Collapse, Grid, TextField, Checkbox, Typography, Autocomplete, Card } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableRow,  IconButton, Collapse, Grid, TextField, Checkbox, Typography, Autocomplete, Card, Stack, Divider } from '@mui/material';
 import Iconify from '../../../components/iconify';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import {  RHFTextField, RHFCheckbox, RHFDatePicker, RHFAutocomplete } from '../../../components/hook-form';
@@ -27,17 +27,17 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                   <TableBody>
                     {row?.checkItems?.map((childRow,childIndex) => (
                       <TableRow key={childRow._id} sx={{ ":hover": { backgroundColor: "#dbdbdb66" } }} >
-                        <Grid display='flex' flexDirection='column'>
+                        <Grid display='flex' flexDirection='column' sx={{ m:  1, }} >
                           <Grid >
-                            <Typography variant='body2' size='small' sx={{ my:'auto'}} >
+                            <Typography variant='body2' size='small'  >
+                              <b>{`${Number(childIndex)+1}) `}</b>{`${childRow.name}`}
                               <Checkbox 
                                 name={`${childRow?.name}_${childIndex}_${index}_${childIndex}`} 
                                 checked={checkItemLists[index]?.checkItems[childIndex]?.checked || false} 
                                 onChange={()=>handleChangeCheckItemListChecked(index, childIndex )} 
                               />
-                              {`${childRow.name}`}
                             </Typography>
-                            <Grid sx={{ m: {sm: 1, }}} >
+                            <Grid  >
                               <CommentsInput index={index} childIndex={childIndex} 
                                 key={`${index}${childIndex}`}
                                 childRow={childRow}
@@ -52,7 +52,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                             </Grid>
                           </Grid>
 
-                          <Grid sx={{mx: {sm: 1, } }} >
+                          <Grid  >
                             <TextField 
                                 type="text"
                                 label="Comment" 
@@ -67,18 +67,19 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                             />
                           </Grid>
                           {editPage && childRow?.checkItemValue && 
-                            <Grid sx={{ mx:2,my:1 }} >
-                                <Typography variant="body2"><b>Value : </b>
+                            <Stack spacing={1}  >
+                                <Divider sx={{mt:1.5 }}/>
+                                <Typography variant="body2" sx={{mt:1}}><b>Value : </b>
                                 {childRow?.inputType?.toLowerCase() !== 'boolean' ? childRow?.checkItemValue || ''  : 
-                                <Checkbox  disabled checked={childRow?.checkItemValue || false} sx={{my:'auto',mr:'auto'}} /> }
+                                <Checkbox  disabled checked={childRow?.checkItemValue === 'true' || childRow?.checkItemValue === true } sx={{my:'auto',mr:'auto'}} /> }
                                 </Typography>
                                 {childRow?.comments && <Typography variant="body2" ><b>Comment: </b>{childRow?.comments || ''}</Typography>}
                                 <Grid sx={{ display: 'flex' }}>
                                     {childRow?.checkItemValue && <Typography variant="body2" sx={{color: 'text.disabled',ml:'auto'}}>Last Modified: {fDateTime(childRow?.createdAt)}
-                                    {` by `}{`${childRow?.valueCreatedBy?.name || ''}`.toUpperCase()} 
+                                    {` by `}{`${childRow?.valueCreatedBy?.name || ''}`} 
                                     {` at version (${childRow?.serviceRecord?.versionNo|| 1})`}</Typography>}
                                 </Grid>
-                            </Grid>}
+                            </Stack>}
                         </Grid>
                       </TableRow>
                     ))}

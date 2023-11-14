@@ -134,17 +134,17 @@ function MachineServiceParamViewForm() {
 
           <ViewFormField sm={12} heading="Text Before Check Items" param={defaultValues.textBeforeCheckItems} />
 
+          <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
           {machineServiceRecord?.serviceRecordConfig?.checkItemLists?.length > 0 && 
-          <Grid item md={12} sx={{ px: 2, py: 1, overflowWrap: 'break-word' }}>
-          <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
-
-          <Grid item md={12} sx={{display:'flex', flexDirection:'column'}}>
-            {machineServiceRecord?.serviceRecordConfig?.checkItemLists?.length > 0 ? 
-            (machineServiceRecord?.serviceRecordConfig?.checkItemLists.map((row, index) =>
-                    <ReadableCollapsibleCheckedItemRow value={row} index={index} />
-              )) : <ViewFormField /> }
-          </Grid>
-          </Grid>}
+            <Grid item md={12} sx={{ px: 2, py: 1, overflowWrap: 'break-word' }}>
+              <Grid item md={12} sx={{display:'flex', flexDirection:'column'}}>
+                {machineServiceRecord?.serviceRecordConfig?.checkItemLists?.length > 0 ? 
+                (machineServiceRecord?.serviceRecordConfig?.checkItemLists.map((row, index) =>
+                        <ReadableCollapsibleCheckedItemRow value={row} index={index} />
+                  )) : <ViewFormField /> }
+              </Grid>
+            </Grid>
+          }
           
           <ViewFormField sm={12} heading="Text After Check Items" param={defaultValues.textAfterCheckItems} />
 
