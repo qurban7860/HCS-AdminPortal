@@ -20,7 +20,6 @@ import {
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
-  TableSkeleton,
 } from '../../components/table';
 // sections
 import SecurityUserTableToolbar from './SecurityUserTableToolbar';
@@ -79,7 +78,6 @@ export default function SecurityUserList() {
   });
 
   const dispatch = useDispatch();
-  const denseHeight = 60;
   const {
     securityUsers,
     error,

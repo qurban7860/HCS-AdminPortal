@@ -60,8 +60,8 @@ export default function SignInLogListTableRow({
         <TableCell align="left"> {fDateTime(loginTime)} </TableCell>
         <TableCell align="left">{fDateTime(logoutTime)}</TableCell>
         { useScreenSize('sm') && <TableCell align="left" sx={{color: statusCode===200?"green":"red"}}> 
-          {`${status?.value} (${status?.notes})`}
-          {/* {`${statusCode===200?"Success":"Failed"} (${statusCode})`}  */}
+          {status?.value}
+          {status?.notes && `(${status?.notes})`}
         </TableCell>}
       </StyledTableRow>
   );
