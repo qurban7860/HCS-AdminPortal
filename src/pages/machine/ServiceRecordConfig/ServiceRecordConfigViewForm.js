@@ -21,6 +21,7 @@ import { PATH_MACHINE } from '../../../routes/paths';
 // import Iconify from '../../../components/iconify/Iconify';
 //  components
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormAprovedSubmit from '../../components/ViewForms/ViewFormAprovedSubmit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
@@ -46,6 +47,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
   const { serviceRecordConfig, editFormVisibility } = useSelector((state) => state.serviceRecordConfig);
   const { id } = useParams();
   const userId = localStorage.getItem('userId');
+  const VerificationIndex = serviceRecordConfig?.verifications?.length || 1
   const dispatch = useDispatch();
   useLayoutEffect(() => {
     if (id != null) {
@@ -76,6 +78,9 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
       updatedByFullName: serviceRecordConfig?.updatedBy?.name || '',
       updatedAt: serviceRecordConfig?.updatedAt || '',
       updatedIP: serviceRecordConfig?.updatedIP || '',
+      submittedInfo: serviceRecordConfig?.submittedInfo || {},
+      approvedInfo: serviceRecordConfig?.verifications[VerificationIndex -1 ] || {},
+
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentServiceRecordConfig, serviceRecordConfig]
@@ -221,6 +226,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
         <ViewFormField sm={4} heading="Footer Center Text" param={defaultValues?.footer?.centerText} />
         <ViewFormField sm={4} heading="Footer Right Text" param={defaultValues?.footer?.rightText} />
       </Grid>
+        <ViewFormAprovedSubmit submittedInfo={defaultValues?.submittedInfo} approvedInfo={defaultValues.approvedInfo} />
         <ViewFormAudit defaultValues={defaultValues} />
     </Card>
   );

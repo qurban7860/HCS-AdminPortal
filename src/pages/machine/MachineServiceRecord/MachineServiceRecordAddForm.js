@@ -24,6 +24,9 @@ import FormProvider, {
 } from '../../../components/hook-form';
 import { getActiveSecurityUsers, getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
 import CollapsibleCheckedItemInputRow from './CollapsibleCheckedItemInputRow';
+import FormLabel from '../../components/DocumentForms/FormLabel';
+
+
 // ----------------------------------------------------------------------
 
 function MachineServiceRecordAddForm() {
@@ -360,7 +363,7 @@ function MachineServiceRecordAddForm() {
                     <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
                     <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline/> 
                     
-                    {checkItemLists?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
+                    {checkItemLists?.length > 0 && <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
 
                     {isLoadingCheckItems ? 
                     <Box sx={{ width: '100%',mt:1 }}>
