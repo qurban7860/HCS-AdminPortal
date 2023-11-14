@@ -39,9 +39,9 @@ export default function SignInLogListTableToolbar({
         value={filterName}
         onChange={onFilterName}
         onClick={onResetFilter}
-        SubOnClick={buttonAction}
-        addButton="Refresh"
-        buttonIcon="mdi:reload"
+        // SubOnClick={buttonAction}
+        // addButton="Refresh"
+        // buttonIcon="mdi:reload"
         onSignInLogsFilter={onFilterRequestStatus}
         signInLogsFilter={filterRequestStatus}
       />

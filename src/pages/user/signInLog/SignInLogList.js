@@ -177,6 +177,7 @@ export default function SignInLogList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
+            refresh={reloadList}
           />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
