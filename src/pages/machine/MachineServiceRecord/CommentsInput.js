@@ -1,7 +1,7 @@
 import React, { useState, memo } from 'react'
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import {  Grid, Stack, Box, TextField, Autocomplete, Checkbox } from '@mui/material';
+import {  Grid, Stack, Box, TextField, Autocomplete, Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 import Iconify from '../../../components/iconify';
 
 const CommentsInput = ({ index, childIndex, childRow, checkParamList,
@@ -46,15 +46,28 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
             />}
 
                 {childRow?.inputType === 'Boolean' && 
-            <div style={{my:'auto' }}>
+            
+            <FormGroup sx={{my:'auto',ml:1 }}>
+                <FormControlLabel control={
+                    <div >
                 <Checkbox 
                     disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
+                    label="Check"
+                    icon={<Iconify
+                        color={checkParamList[index]?.checkItems[childIndex]?.checkItemValue === true || checkParamList[index]?.checkItems[childIndex]?.checkItemValue  === 'true' ? '#008000' : '#FF0000'} 
+                        icon={ checkParamList[index]?.checkItems[childIndex]?.checkItemValue === true || checkParamList[index]?.checkItems[childIndex]?.checkItemValue  === 'true' ? 'ph:check-square-bold' : 'charm:square-cross' } />}
+                    checkedIcon={<Iconify
+                        color={checkParamList[index]?.checkItems[childIndex]?.checkItemValue === true || checkParamList[index]?.checkItems[childIndex]?.checkItemValue  === 'true' ? '#008000' : '#FF0000'} 
+                        icon={ checkParamList[index]?.checkItems[childIndex]?.checkItemValue === true || checkParamList[index]?.checkItems[childIndex]?.checkItemValue  === 'true' ? 'ph:check-square-bold' : 'charm:square-cross' } />}
                     name={`${childRow?.name}_${childIndex}_${index}`} 
                     checked={checkParamList[index]?.checkItems[childIndex]?.checkItemValue === 'true' || checkParamList[index]?.checkItems[childIndex]?.checkItemValue === true } 
                     onChange={()=>handleChangeCheckItemListCheckBoxValue(index, childIndex )} 
                     sx={{my:'auto'}}
                     />
-            </div>}
+                    </div>
+                } label="Check" />
+            </FormGroup>
+            }
 
 
             <Box
