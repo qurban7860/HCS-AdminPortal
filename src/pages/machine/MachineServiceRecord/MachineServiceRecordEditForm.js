@@ -19,6 +19,7 @@ import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/cu
 import { useSnackbar } from '../../../components/snackbar';
 // import Iconify from '../../../components/iconify';
 import FormHeading from '../../components/DocumentForms/FormHeading';
+import FormLabel from '../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { MachineServiceRecordSchema } from '../../schemas/machine';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
@@ -317,6 +318,7 @@ setCheckItemLists(updatedCheckParams);
       <Grid item xs={18} md={12}>
         <Card sx={{ p: 3 }}>
           <Stack spacing={2}>
+          <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
             <FormHeading heading="Edit Service Record" />
               {/* <Grid container>
                 <ViewFormField sm={6} heading='Machine'                 param={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} label="serialNo"/>
@@ -379,7 +381,7 @@ setCheckItemLists(updatedCheckParams);
               <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/>
               <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline/> 
 
-                {machineServiceRecord?.serviceRecordConfig?.checkItemLists?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
+                {machineServiceRecord?.serviceRecordConfig?.checkItemLists?.length > 0 &&   <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
 
                 {isLoadingCheckItems ? 
                     <Box sx={{ width: '100%',mt:1 }}>

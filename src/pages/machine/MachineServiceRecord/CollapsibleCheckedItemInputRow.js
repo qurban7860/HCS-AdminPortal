@@ -7,6 +7,7 @@ import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDe
 import {  RHFTextField, RHFCheckbox, RHFDatePicker, RHFAutocomplete } from '../../../components/hook-form';
 import CommentsInput from './CommentsInput';
 import { fDateTime } from '../../../utils/formatTime';
+import ViewFormServiceRecordVersionAudit from '../../components/ViewForms/ViewFormServiceRecordVersionAudit';
 
 const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue, 
   editPage,
@@ -26,7 +27,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                 <Table size="small" aria-label="purchases">
                   <TableBody>
                     {row?.checkItems?.map((childRow,childIndex) => (
-                      <TableRow key={childRow._id} sx={{ ":hover": { backgroundColor: "#dbdbdb66" } }} >
+                      <TableRow key={childRow._id}  >
                         <Grid display='flex' flexDirection='column' sx={{ m:  1, }} >
                           <Grid >
                             <Typography variant='body2' size='small'  >
@@ -74,11 +75,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                                 <Checkbox  disabled checked={childRow?.checkItemValue === 'true' || childRow?.checkItemValue === true } sx={{my:'auto',mr:'auto'}} /> }
                                 </Typography>
                                 {childRow?.comments && <Typography variant="body2" ><b>Comment: </b>{childRow?.comments || ''}</Typography>}
-                                <Grid sx={{ display: 'flex' }}>
-                                    {childRow?.checkItemValue && <Typography variant="body2" sx={{color: 'text.disabled',ml:'auto'}}>Last Modified: {fDateTime(childRow?.createdAt)}
-                                    {` by `}{`${childRow?.valueCreatedBy?.name || ''}`} 
-                                    {` at version (${childRow?.serviceRecord?.versionNo|| 1})`}</Typography>}
-                                </Grid>
+                                <ViewFormServiceRecordVersionAudit value={childRow}/>
                             </Stack>}
                         </Grid>
                       </TableRow>

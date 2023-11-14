@@ -11,7 +11,7 @@ import { useSnackbar } from '../../../components/snackbar';
 import { HtmlTooltip, StyledTooltip } from '../../../theme/styles/default-styles';
 import MenuPopover from '../../../components/menu-popover/MenuPopover';
 import ViewFormHistoricalPopover from '../../components/ViewForms/ViewFormHistoricalPopover';
-
+import ViewFormServiceRecordVersionAudit from '../../components/ViewForms/ViewFormServiceRecordVersionAudit';
 
 
 const StatusAndComment = ({index, childIndex, childRow}) => {
@@ -69,9 +69,9 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
 
   return (
     <>
-    <TableRow key={childRow._id} sx={{":hover": {  backgroundColor: "#dbdbdb66" },borderRadius: 30  }}>
+    <TableRow key={childRow._id} >
     <Accordion
-      sx={{":hover": {  backgroundColor: "#dbdbdb66" },backgroundColor: expanded === `${index}${childIndex}` ? "#dbdbdb66" : ''}}
+      sx={{ backgroundColor: expanded === `${index}${childIndex}` ? "#dbdbdb66" : ''}}
       key={childIndex?._id}
       expanded={expanded === `${index}${childIndex}`}
       onChange={childRow?.historicalData?.length > 0 && handleChange(`${index}${childIndex}`)}
@@ -86,10 +86,11 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
           <Typography variant="body2" ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}</Typography>
         </Grid>
         {childRow?.checkItemValue && <Grid sx={{ mt:1,
+        
           alignItems: 'center',
           whiteSpace: 'pre-line',
           wordBreak: 'break-word' }}>
-          <Typography variant="body2" sx={{mr:1}}>
+          <Typography variant="body2" >
               <b>Value: </b>
               {childRow?.inputType.toLowerCase() === 'boolean' && childRow?.checkItemValue && <Iconify
                 sx={{mb:-0.5}}
@@ -105,29 +106,36 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
                     childRow?.inputType.toLowerCase() === 'short text') && 
                     childRow?.checkItemValue 
                   }
+                    {childRow?.checkItemValue?.trim() && <StyledTooltip
+                        arrow
+                        title="Copy"
+                        placement='top'
+                        tooltipcolor={theme.palette.primary.main}
+                      >
+                      <Iconify icon="mingcute:copy-line" sx={{ cursor: 'pointer',ml:1}} onClick={()=> copyTextToClipboard(childRow?.checkItemValue)}/>
+                    </StyledTooltip>}
                 </> 
             }
           </Typography>
         </Grid>}
-        <Grid sx={{display: 'flex', justifyContent:'end'}}>
+
+        <Grid sx={{  
+          alignItems: 'center',
+          whiteSpace: 'pre-line',
+          wordBreak: 'break-word' }}>
+          {childRow?.comments && <Typography variant="body2" sx={{mr:1}} ><b>Comment: </b>{` ${childRow?.comments}`}
+          {childRow?.comments?.trim() && 
             <StyledTooltip
                 arrow
                 title="Copy"
                 placement='top'
                 tooltipcolor={theme.palette.primary.main}
               >
-              <Iconify icon="tabler:clipboard-copy" sx={{ cursor: 'pointer'}} onClick={()=> copyTextToClipboard(childRow?.comments)}/>
-            </StyledTooltip>
+              <Iconify icon="mingcute:copy-line" sx={{ cursor: 'pointer',ml:1 }} onClick={()=> copyTextToClipboard(childRow?.comments)}/>
+            </StyledTooltip>}
+            </Typography>}
         </Grid>
-        <Grid sx={{  
-          alignItems: 'center',
-          whiteSpace: 'pre-line',
-          wordBreak: 'break-word' }}>
-          {childRow?.comments && <Typography variant="body2" sx={{mr:1}} ><b>Comment: </b>{` ${childRow?.comments}`}</Typography>}
-        </Grid>
-        <Grid display="flex">
-            {childRow?.checkItemValue && <Typography variant="body2" sx={{color: 'text.disabled',ml:'auto'}}>Last Modified: {fDateTime(childRow?.valueCreatedAt)}{` by `}{`${childRow?.valueCreatedBy?.name || ''}`} {` at version (${childRow?.serviceRecord?.versionNo|| 1})`}</Typography>}
-        </Grid>
+        <ViewFormServiceRecordVersionAudit value={childRow}/>
       </Grid>
       </AccordionSummary>
       {childRow?.historicalData && childRow?.historicalData?.length > 0 && 
@@ -141,7 +149,7 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
               alignItems: 'center',
               whiteSpace: 'pre-line',
               wordBreak: 'break-word' }}>
-              <Typography variant="body2" sx={{mr:1}}>
+              <Typography variant="body2" sx={{mr:1, }}>
                   <b>Value: </b>
                   {childRow?.inputType?.toLowerCase() === 'boolean' && ItemHistory?.checkItemValue && <Iconify
                     sx={{mb:-0.5}}
@@ -153,33 +161,40 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
                       {childRow?.inputType?.toLowerCase() === 'status' ? (ItemHistory?.checkItemValue && 
                         <Chip size="small" label={ItemHistory?.checkItemValue} /> || '') : 
                         (childRow?.inputType?.toLowerCase() === 'number' || 
-                         childRow?.inputType?.toLowerCase() === 'long text' || 
-                         childRow?.inputType?.toLowerCase() === 'short text') && 
-                         ItemHistory?.checkItemValue || '' 
+                          childRow?.inputType?.toLowerCase() === 'long text' || 
+                          childRow?.inputType?.toLowerCase() === 'short text') && 
+                          ItemHistory?.checkItemValue  
                       }
+                      {ItemHistory?.checkItemValue?.trim() && <StyledTooltip
+                          arrow
+                          title="Copy"
+                          placement='top'
+                          tooltipcolor={theme.palette.primary.main}
+                        >
+                        <Iconify icon="mingcute:copy-line" sx={{ cursor: 'pointer',ml:1 }} onClick={()=> copyTextToClipboard(ItemHistory?.checkItemValue)}/>
+                      </StyledTooltip>}
                     </> 
                 }
               </Typography>
             </Grid>}
-            {ItemHistory?.comments && <Grid sx={{display: 'flex', justifyContent:'end'}}>
+           
+            <Grid sx={{  
+              alignItems: 'center',
+              whiteSpace: 'pre-line',
+              wordBreak: 'break-word' }}>
+              {ItemHistory?.comments && <Typography variant="body2" sx={{mr:1}} ><b>Comment: </b>{` ${ItemHistory?.comments || ''}`}
+              {ItemHistory?.comments?.trim() && 
                 <StyledTooltip
                     arrow
                     title="Copy"
                     placement='top'
                     tooltipcolor={theme.palette.primary.main}
                   >
-                  <Iconify icon="tabler:clipboard-copy" sx={{ cursor: 'pointer'}} onClick={()=> copyTextToClipboard(ItemHistory?.comments)}/>
-                </StyledTooltip>
-            </Grid>}
-            <Grid sx={{  
-              alignItems: 'center',
-              whiteSpace: 'pre-line',
-              wordBreak: 'break-word' }}>
-              {ItemHistory?.comments && <Typography variant="body2" sx={{mr:1}} ><b>Comment: </b>{` ${ItemHistory?.comments || ''}`}</Typography>}
+                  <Iconify icon="mingcute:copy-line" sx={{ cursor: 'pointer', ml:1}} onClick={()=> copyTextToClipboard(ItemHistory?.comments)}/>
+                </StyledTooltip>}
+              </Typography>}
             </Grid>
-            <Grid sx={{ width: '100%', display: 'flex', justifyContent: 'end'}} >
-              {ItemHistory?.checkItemValue && <Typography variant="body2" sx={{color: 'text.disabled'}}>Modified at: {fDateTime(ItemHistory?.createdAt)}{` by `}{`${ItemHistory?.createdBy?.name || ''} at version (${ItemHistory?.serviceRecord?.versionNo || 1})`}</Typography>}
-            </Grid>
+            <ViewFormServiceRecordVersionAudit value={childRow}/>
             {ItemHistory?.checkItemValue && <Divider  sx={{ borderStyle: 'solid' }} />}
           </>))}
         </Grid>
