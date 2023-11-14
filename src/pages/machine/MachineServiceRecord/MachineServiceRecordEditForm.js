@@ -166,8 +166,8 @@ function MachineServiceRecordEditForm() {
   
   const onSubmit = async (data) => {
     try {
-      console.log("checkItemLists : ",checkItemLists)
       const checkItemLists_ = [];
+      console.log("checkItemLists : ",checkItemLists)
       if(checkItemLists && 
         Array.isArray(checkItemLists) && 
         checkItemLists.length>0) 
@@ -177,16 +177,14 @@ function MachineServiceRecordEditForm() {
             checkParam_.checkItems.forEach((CI,ind)=>(
               CI?.checked && checkItemLists_.push({
                 machineCheckItem: CI?._id,
-                // name:CI.name,
                 checkItemListId:  checkParam_?._id,
-                checkItemValue:  CI?.checkItemValue,
-                // date:CI?.date || '',
+                checkItemValue:  CI?.inputType?.toLowerCase() === 'boolean' ? CI?.checkItemValue || false : CI?.checkItemValue,
                 comments:CI?.comments,
-                // status:CI?.status?.name
               })
-            ));
-          }
-        });
+              ));
+            }
+          });
+          console.log("checkItemLists_ : ", checkItemLists_)
       data.checkItemRecordValues = checkItemLists_;
       data.decoilers = decoilers;
       data.serviceId = machineServiceRecord?.serviceId || null

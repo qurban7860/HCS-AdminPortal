@@ -2,13 +2,17 @@ import React, { useState, memo, useEffect } from 'react'
 import PropTypes from 'prop-types';
 import { Grid, Box, Divider, Chip, TableRow, TableCell, Checkbox, Typography, Tooltip, Badge, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import { useSelector } from 'react-redux';
+import { createTheme, styled } from '@mui/material/styles';
+import { green } from '@mui/material/colors';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { fDate, fDateTime } from '../../../utils/formatTime';
 import Iconify from '../../../components/iconify';
+import { useSnackbar } from '../../../components/snackbar';
 import { HtmlTooltip, StyledTooltip } from '../../../theme/styles/default-styles';
 import MenuPopover from '../../../components/menu-popover/MenuPopover';
 import ViewFormHistoricalPopover from '../../components/ViewForms/ViewFormHistoricalPopover';
-import IconTooltip from '../../components/Icons/IconTooltip';
+
+
 
 const StatusAndComment = ({index, childIndex, childRow}) => {
 
@@ -18,6 +22,14 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
     const [history, setHistory] = useState([]);
     const [activeIndex, setActiveIndex] = useState(null);
     const [expanded, setExpanded] = useState(false);
+    const { enqueueSnackbar } = useSnackbar();
+    const theme = createTheme({
+      palette: {
+        success: green,
+      },
+    });
+
+
 
     const handleHistoryPopoverOpen = (event) => {
       setHistoryAnchorEl(event.currentTarget);
@@ -41,6 +53,20 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
       setExpanded(isExpanded ? panel : false);
     };
 
+    const copyTextToClipboard = (textToCopy) => {
+      try{
+        const tempInput = document.createElement('input');
+        tempInput.value = textToCopy;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+      enqueueSnackbar("Coppied!");
+      }catch(err){
+        enqueueSnackbar('Copy Failed!');
+      }
+    };
+
   return (
     <>
     <TableRow key={childRow._id} sx={{":hover": {  backgroundColor: "#dbdbdb66" },borderRadius: 30  }}>
@@ -51,8 +77,8 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
       onChange={childRow?.historicalData?.length > 0 && handleChange(`${index}${childIndex}`)}
     >
     <AccordionSummary
-        sx={{ mt: expanded && 0.6  }}
-        expandIcon={childRow?.historicalData?.length > 0 && <Iconify icon="eva:arrow-ios-downward-fill" />}
+        sx={{ mt: expanded && 0.6, display:'flex'  }}
+        expandIcon={childRow?.historicalData?.length > 0 && <Iconify icon="eva:arrow-ios-downward-fill" sx={{ml:'auto',mt:'auto'}}/>}
         onClick={() => handleAccordianClick(`${index}${childIndex}`)}
     >
       <Grid sx={{width:'100%'}}>
@@ -83,6 +109,16 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
             }
           </Typography>
         </Grid>}
+        <Grid sx={{display: 'flex', justifyContent:'end'}}>
+            <StyledTooltip
+                arrow
+                title="Copy"
+                placement='top'
+                tooltipcolor={theme.palette.primary.main}
+              >
+              <Iconify icon="tabler:clipboard-copy" sx={{ cursor: 'pointer'}} onClick={()=> copyTextToClipboard(childRow?.comments)}/>
+            </StyledTooltip>
+        </Grid>
         <Grid sx={{  
           alignItems: 'center',
           whiteSpace: 'pre-line',
@@ -90,7 +126,7 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
           {childRow?.comments && <Typography variant="body2" sx={{mr:1}} ><b>Comment: </b>{` ${childRow?.comments}`}</Typography>}
         </Grid>
         <Grid display="flex">
-            {childRow?.checkItemValue && <Typography variant="body2" sx={{color: 'text.disabled',ml:'auto'}}>Last Modified: {fDateTime(childRow?.valueCreatedAt)}{` by `}{`${childRow?.valueCreatedBy?.name || ''}`.toUpperCase()} {` at version (${childRow?.serviceRecord?.versionNo|| 1})`}</Typography>}
+            {childRow?.checkItemValue && <Typography variant="body2" sx={{color: 'text.disabled',ml:'auto'}}>Last Modified: {fDateTime(childRow?.valueCreatedAt)}{` by `}{`${childRow?.valueCreatedBy?.name || ''}`} {` at version (${childRow?.serviceRecord?.versionNo|| 1})`}</Typography>}
         </Grid>
       </Grid>
       </AccordionSummary>
@@ -125,6 +161,16 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
                 }
               </Typography>
             </Grid>}
+            {ItemHistory?.comments && <Grid sx={{display: 'flex', justifyContent:'end'}}>
+                <StyledTooltip
+                    arrow
+                    title="Copy"
+                    placement='top'
+                    tooltipcolor={theme.palette.primary.main}
+                  >
+                  <Iconify icon="tabler:clipboard-copy" sx={{ cursor: 'pointer'}} onClick={()=> copyTextToClipboard(ItemHistory?.comments)}/>
+                </StyledTooltip>
+            </Grid>}
             <Grid sx={{  
               alignItems: 'center',
               whiteSpace: 'pre-line',
@@ -132,7 +178,7 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
               {ItemHistory?.comments && <Typography variant="body2" sx={{mr:1}} ><b>Comment: </b>{` ${ItemHistory?.comments || ''}`}</Typography>}
             </Grid>
             <Grid sx={{ width: '100%', display: 'flex', justifyContent: 'end'}} >
-              {ItemHistory?.checkItemValue && <Typography variant="body2" sx={{color: 'text.disabled'}}>Modified at: {fDateTime(ItemHistory?.createdAt)}{` by `}{`${ItemHistory?.createdBy?.name || ''}`.toUpperCase()}</Typography>}
+              {ItemHistory?.checkItemValue && <Typography variant="body2" sx={{color: 'text.disabled'}}>Modified at: {fDateTime(ItemHistory?.createdAt)}{` by `}{`${ItemHistory?.createdBy?.name || ''} at version (${ItemHistory?.serviceRecord?.versionNo || 1})`}</Typography>}
             </Grid>
             {ItemHistory?.checkItemValue && <Divider  sx={{ borderStyle: 'solid' }} />}
           </>))}
