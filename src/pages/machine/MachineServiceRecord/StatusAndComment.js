@@ -12,6 +12,7 @@ import { HtmlTooltip, StyledTooltip } from '../../../theme/styles/default-styles
 import MenuPopover from '../../../components/menu-popover/MenuPopover';
 import ViewFormHistoricalPopover from '../../components/ViewForms/ViewFormHistoricalPopover';
 import ViewFormServiceRecordVersionAudit from '../../components/ViewForms/ViewFormServiceRecordVersionAudit';
+import ViewFormServiceRecordVersionHistoricalAudit from '../../components/ViewForms/ViewFormServiceRecordVersionHistoricalAudit';
 
 
 const StatusAndComment = ({index, childIndex, childRow}) => {
@@ -106,7 +107,7 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
                     childRow?.inputType.toLowerCase() === 'short text') && 
                     childRow?.checkItemValue 
                   }
-                    {childRow?.checkItemValue?.trim() && <StyledTooltip
+                    {childRow?.checkItemValue?.trim() && childRow?.inputType?.toLowerCase() !== 'boolean' &&<StyledTooltip
                         arrow
                         title="Copy"
                         placement='top'
@@ -165,7 +166,7 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
                           childRow?.inputType?.toLowerCase() === 'short text') && 
                           ItemHistory?.checkItemValue  
                       }
-                      {ItemHistory?.checkItemValue?.trim() && <StyledTooltip
+                      {ItemHistory?.checkItemValue?.trim() && childRow?.inputType?.toLowerCase() !== 'boolean' && <StyledTooltip
                           arrow
                           title="Copy"
                           placement='top'
@@ -194,7 +195,7 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
                 </StyledTooltip>}
               </Typography>}
             </Grid>
-            <ViewFormServiceRecordVersionAudit value={childRow}/>
+            <ViewFormServiceRecordVersionHistoricalAudit value={ItemHistory}/>
             {ItemHistory?.checkItemValue && <Divider  sx={{ borderStyle: 'solid' }} />}
           </>))}
         </Grid>
