@@ -107,7 +107,8 @@ function SearchBarCombo({
             </Button>
           </Stack>
         </Grid>}
-        {addButton && <Grid item xs={12} sm={2}>
+        <Grid item xs={12} sm={2}>
+        {addButton && 
           <Stack alignItems="flex-end">
             <Button
               disabled={transferredMachine}
@@ -120,7 +121,8 @@ function SearchBarCombo({
               {addButton}
             </Button>
           </Stack>
-        </Grid>}
+        }
+        </Grid>
     </Grid>
   );
 }

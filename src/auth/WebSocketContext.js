@@ -54,7 +54,7 @@ export function WebSocketProvider({ children }) {
     share: true,
     filter: () => false,
     retryOnError: true,
-    shouldReconnect: () => false
+    shouldReconnect: () => true
   });
 
   useEffect(() => {
