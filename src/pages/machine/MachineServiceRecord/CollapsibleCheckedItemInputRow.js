@@ -26,7 +26,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                         <Grid display='flex' flexDirection='column' sx={{ m:  1, }} key={childRow._id} >
                           <Grid >
                             <Typography variant='body2' size='small'  >
-                              <b>{`${Number(childIndex)+1}) `}</b>{`${childRow.name}`}
+                              <b>{`${index+1}.${childIndex+1}. `}</b>{`${childRow.name}`}
                               <Checkbox 
                                 name={`${childRow?.name}_${childIndex}_${index}_${childIndex}`} 
                                 checked={checkItemLists[index]?.checkItems[childIndex]?.checked || false} 

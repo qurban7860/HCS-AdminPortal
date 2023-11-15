@@ -3,9 +3,7 @@ import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 // @mui
 import {
   Table,
-  Tooltip,
   TableBody,
-  IconButton,
   TableContainer,
 } from '@mui/material';
 // redux
@@ -17,11 +15,10 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from '../../../components/table';
-import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
+import { useSnackbar } from '../../../components/snackbar';
 // sections
 import MachineServiceRecordListTableRow from './MachineServiceRecordListTableRow';
 import MachineServiceRecordListTableToolbar from './MachineServiceRecordListTableToolbar';
@@ -55,14 +52,13 @@ const TABLE_HEAD = [
 export default function MachineServiceRecordList() {
   const { machineServiceRecords, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine);
+  const { enqueueSnackbar } = useSnackbar();
 
   const {
     order,
     orderBy,
     setPage,
     //
-    selected,
-    onSelectAllRows,
     //
     onSort,
   } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
@@ -127,10 +123,16 @@ export default function MachineServiceRecordList() {
   };
 
   const handleViewRow = async (id) => {
-    await dispatch(setMachineServiceRecordViewFormVisibility(true));
-    await dispatch(resetMachineServiceRecord())
-    await dispatch(getMachineServiceRecord(machine._id, id));
-          dispatch(setDetailPageFlag(false));
+    try{
+      await dispatch(setMachineServiceRecordViewFormVisibility(true));
+      await dispatch(resetMachineServiceRecord())
+      await dispatch(getMachineServiceRecord(machine._id, id));
+      await dispatch(setDetailPageFlag(false));
+    }catch(e){
+      enqueueSnackbar(e, { variant: `error` });
+      console.error(e);
+    }
+
   };
 
   const handleResetFilter = () => {

@@ -3,7 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 // @mui
 import {  Card, Grid } from '@mui/material';
 // redux
-import { deleteMachineServiceRecord, setAllFlagsFalse, setMachineServiceRecordHistoryFormVisibility, setDetailPageFlag, setMachineServiceRecordEditFormVisibility, getMachineServiceHistoryRecords } from '../../../redux/slices/products/machineServiceRecord';
+import { deleteMachineServiceRecord, 
+  setAllFlagsFalse, 
+  setMachineServiceRecordHistoryFormVisibility, 
+  setDetailPageFlag, 
+  setMachineServiceRecordEditFormVisibility, 
+  getMachineServiceRecord,
+  getMachineServiceHistoryRecords } from '../../../redux/slices/products/machineServiceRecord';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { FORMLABELS } from '../../../constants/default-constants';
@@ -15,6 +21,7 @@ import FormLabel from '../../components/DocumentForms/FormLabel';
 import { fDate } from '../../../utils/formatTime';
 import ReadableCollapsibleCheckedItemRow from './ReadableCollapsibleCheckedItemRow';
 import HistoryIcon from '../../components/Icons/HistoryIcon';
+import CurrentIcon from '../../components/Icons/CurrentIcon';
 
 function MachineServiceParamViewForm() {
 
@@ -27,7 +34,7 @@ function MachineServiceParamViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteMachineServiceRecord(machine?._id, machineServiceRecord?._id));
-      dispatch(setAllFlagsFalse());
+      await dispatch(setAllFlagsFalse());
       enqueueSnackbar('Machine Service Record deleted Successfully!');
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
@@ -39,10 +46,19 @@ function MachineServiceParamViewForm() {
     dispatch(setMachineServiceRecordEditFormVisibility(true))
   };
 
-  const handleServiceRecordHistory = () => {
-    dispatch(setMachineServiceRecordHistoryFormVisibility(true));
-    dispatch(getMachineServiceHistoryRecords( machine?._id ,machineServiceRecord?.serviceId ))
-    dispatch(setDetailPageFlag(true))
+  const handleServiceRecordHistory = async () => {
+    await dispatch(setMachineServiceRecordHistoryFormVisibility(true));
+    await dispatch(getMachineServiceHistoryRecords( machine?._id ,machineServiceRecord?.serviceId ))
+    await dispatch(setDetailPageFlag(true))
+  }
+
+  const handleCurrentServiceRecord = async() => {
+    try{
+      await dispatch(getMachineServiceRecord(machine?._id , machineServiceRecord?.currentVersion?._id))
+    }catch(error){
+      enqueueSnackbar(error, { variant: `error` });
+      console.error(error);
+    }
   }
 
   const defaultValues = useMemo(
@@ -103,11 +119,11 @@ function MachineServiceParamViewForm() {
           <ViewFormField sm={6} heading="Machine Model"  param={machine?.machineModel?.name || ''} /> */}
           <FormLabel content={FORMLABELS.KEYDETAILS} />
           
-          <ViewFormField sm={4} heading="Service Date" param={fDate(defaultValues.serviceDate)} />
-          <ViewFormField sm={4} heading="Service Record Configuration" param={`${defaultValues.serviceRecordConfig} ${defaultValues.serviceRecordConfigRecordType ? '-' : ''} ${defaultValues.serviceRecordConfigRecordType ? defaultValues.serviceRecordConfigRecordType : ''}`} />
-          <ViewFormField sm={4} heading="Version No" param={
-            <>{defaultValues?.versionNo}{!machineServiceRecord?.isHistory && ` (Current) `}
-              {!machineServiceRecord?.isHistory && <HistoryIcon callFunction={handleServiceRecordHistory} /> }
+          <ViewFormField sm={3} heading="Service Date" param={fDate(defaultValues.serviceDate)} />
+          <ViewFormField sm={6} heading="Service Record Configuration" param={`${defaultValues.serviceRecordConfig} ${defaultValues.serviceRecordConfigRecordType ? '-' : ''} ${defaultValues.serviceRecordConfigRecordType ? defaultValues.serviceRecordConfigRecordType : ''}`} />
+          <ViewFormField sm={3} heading="Version No" param={
+            <>{defaultValues?.versionNo}{machineServiceRecord?.isHistory && <CurrentIcon callFunction={handleCurrentServiceRecord} />}
+              {!machineServiceRecord?.isHistory && defaultValues?.versionNo > 1 && <HistoryIcon callFunction={handleServiceRecordHistory} /> }
             </>  
           } />
           
