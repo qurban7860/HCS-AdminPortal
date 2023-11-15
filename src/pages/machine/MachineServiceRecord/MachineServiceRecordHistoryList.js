@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
-import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 // @mui
 import {
   Table,
@@ -27,12 +27,12 @@ import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 // sections
 import MachineServiceRecordHistoryListTableRow from './MachineServiceRecordHistoryListTableRow';
-import MachineServiceRecordListTableToolbar from './MachineServiceRecordListTableToolbar';
 import {
-  getMachineServiceHistoryRecords,
   getMachineServiceRecordVersion,
+  getMachineServiceRecord,
   setMachineServiceRecordViewFormVisibility,
   setMachineServiceRecordHistoryFormVisibility,
+  setHistoricalFlag,
   resetMachineServiceRecord,
   ChangeRowsPerPage,
   ChangePage,
@@ -66,7 +66,6 @@ export default function MachineServiceRecordHistoryList({ serviceId }) {
   const {
     order,
     orderBy,
-    setPage,
     //
     selected,
     onSelectAllRows,
@@ -83,7 +82,6 @@ export default function MachineServiceRecordHistoryList({ serviceId }) {
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
-  const [filterStatus, setFilterStatus] = useState([]);
 
   // useLayoutEffect(() => {
   //   dispatch(getMachineServiceHistoryRecords(machine?._id, serviceId)); 
@@ -99,10 +97,8 @@ export default function MachineServiceRecordHistoryList({ serviceId }) {
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
-    filterStatus,
   });
 
-  const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   const denseHeight = 60;
@@ -111,12 +107,6 @@ export default function MachineServiceRecordHistoryList({ serviceId }) {
     dispatch(ChangePage(0))
     dispatch(setFilterBy(value))
   }, 500))
-
-  const handleFilterName = (event) => {
-    debouncedSearch.current(event.target.value);
-    setFilterName(event.target.value)
-    setPage(0);
-  };
   
   useEffect(() => {
       debouncedSearch.current.cancel();
@@ -127,21 +117,17 @@ export default function MachineServiceRecordHistoryList({ serviceId }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-  const handleFilterStatus = (event) => {
-    setPage(0);
-    setFilterStatus(event.target.value);
-  };
-
-  const handleViewRow = async (id) => {
+  const handleViewRow = async (id, isHistory, ServiceId) => {
     await dispatch(setMachineServiceRecordViewFormVisibility(true));
     await dispatch(resetMachineServiceRecord())
-    await dispatch(getMachineServiceRecordVersion(machine._id, id));
+    if(isHistory) {
+      await dispatch(getMachineServiceRecordVersion(machine._id, id));
+    }else{
+      await dispatch(getMachineServiceRecord(machine._id, id));
+      await dispatch(setHistoricalFlag(true));
+    }
   };
 
-  const handleResetFilter = () => {
-    dispatch(setFilterBy(''))
-    setFilterName('');
-  };
 
   return (
         <TableCard>
@@ -206,7 +192,7 @@ export default function MachineServiceRecordHistoryList({ serviceId }) {
                         <MachineServiceRecordHistoryListTableRow
                           key={row._id}
                           row={row}
-                          onViewRow={() => handleViewRow(row._id)}
+                          onViewRow={() => handleViewRow(row._id, row?.isHistory, row?.serviceId)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                           isHistory
                         />
@@ -253,10 +239,6 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
         // (docCategory?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(docCategory?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
-  }
-
-  if (filterStatus.length) {
-    inputData = inputData.filter((customer) => filterStatus.includes(customer.status));
   }
 
   return inputData;

@@ -12,7 +12,7 @@ const ViewFormNoteField = ({ sm, heading, param }) => (
             {heading || ''}
         </Typography>
         <Typography variant="body2" >
-            {param || ''}<CopyIcon value={param}/>
+            {param || ''}{param?.trim() && <CopyIcon value={param}/>}
         </Typography>
     </Grid>
   )

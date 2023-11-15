@@ -6,14 +6,10 @@ import {
   TableRow,
   TableCell,
 } from '@mui/material';
-import { createTheme } from '@mui/material/styles';
-import { green } from '@mui/material/colors';
 // utils
 import { styled } from '@mui/system';
 import { fDate } from '../../../utils/formatTime';
 // components
-import Iconify from '../../../components/iconify';
-import { StyledTooltip } from '../../../theme/styles/default-styles';
 import { setMachineServiceRecordHistoryFormVisibility, getMachineServiceHistoryRecords } from '../../../redux/slices/products/machineServiceRecord';
 import { useDispatch, useSelector } from '../../../redux/store';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
@@ -54,11 +50,6 @@ export default function MachineServiceRecordListTableRow({
   const { machine } = useSelector((state) => state.machine);
   const { serviceRecordConfig, versionNo, serviceDate, isActive, createdAt, createdBy } = row;
 
-  const theme = createTheme({
-    palette: {
-      success: green,
-    },
-  });
   const dispatch = useDispatch();
 
   const handleServiceRecordHistory = () => {

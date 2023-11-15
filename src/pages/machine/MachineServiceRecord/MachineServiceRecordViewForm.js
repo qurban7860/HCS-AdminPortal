@@ -93,7 +93,7 @@ function MachineServiceParamViewForm() {
         <ViewFormEditDeleteButtons isActive={defaultValues.isActive}  
           disableEditButton={machine?.status?.slug==='transferred'}
           disableDeleteButton={machine?.status?.slug==='transferred'}
-          handleEdit={!isHistorical && handleEdit} onDelete={!isHistorical && onDelete} backLink={() => dispatch(isHistorical ? setMachineServiceRecordHistoryFormVisibility(true) : setAllFlagsFalse())}
+          handleEdit={!machineServiceRecord?.isHistory && handleEdit} onDelete={!machineServiceRecord?.isHistory && onDelete} backLink={() => dispatch(isHistorical ? setMachineServiceRecordHistoryFormVisibility(true) : setAllFlagsFalse())}
         />
         
         <Grid container>
@@ -106,7 +106,7 @@ function MachineServiceParamViewForm() {
           <ViewFormField sm={4} heading="Service Date" param={fDate(defaultValues.serviceDate)} />
           <ViewFormField sm={4} heading="Service Record Configuration" param={`${defaultValues.serviceRecordConfig} ${defaultValues.serviceRecordConfigRecordType ? '-' : ''} ${defaultValues.serviceRecordConfigRecordType ? defaultValues.serviceRecordConfigRecordType : ''}`} />
           <ViewFormField sm={4} heading="Version No" param={
-            <>{defaultValues?.versionNo}
+            <>{defaultValues?.versionNo}{!machineServiceRecord?.isHistory && isHistorical && ` (Current) `}
               {!machineServiceRecord?.isHistory && <HistoryIcon callFunction={handleServiceRecordHistory} /> }
             </>  
           } />

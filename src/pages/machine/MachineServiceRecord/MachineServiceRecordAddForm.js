@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, Typography, TextField,  Autocomplete, Checkbox, InputAdornment, Skeleton } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, TextField,  Autocomplete,   Skeleton } from '@mui/material';
 
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import ViewFormField from '../../components/ViewForms/ViewFormField';
 import FormHeading from '../../components/DocumentForms/FormHeading';
 import { FORMLABELS } from '../../../constants/default-constants';
 // slice
@@ -25,7 +24,6 @@ import FormProvider, {
 import { getActiveSecurityUsers, getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
 import CollapsibleCheckedItemInputRow from './CollapsibleCheckedItemInputRow';
 import FormLabel from '../../components/DocumentForms/FormLabel';
-
 
 // ----------------------------------------------------------------------
 
@@ -102,10 +100,9 @@ function MachineServiceRecordAddForm() {
     trigger,
     handleSubmit,
     formState: { isSubmitting },
-    control,
   } = methods;
 
-  const { decoilers, operators, serviceRecordConfiguration, technician, docRecordType } = watch()
+  const { decoilers, operators, serviceRecordConfiguration, docRecordType } = watch()
   useEffect(() => {
       if(docRecordType === null){
         setActiveServiceRecordConfigs(activeServiceRecordConfigsForRecords)
@@ -135,14 +132,6 @@ function MachineServiceRecordAddForm() {
   useEffect(()=>{
     setCheckItemLists(serviceRecordConfig?.checkItemLists)
   },[serviceRecordConfig])
-
-  const handleTypeChange = (event, newValue) => {
-    if(newValue?._id===3) setDocType(true)
-    else setDocType(false)
-    const recordType = {recordType:newValue?.name}
-    setValue('serviceRecordConfiguration',null);
-    dispatch(getActiveServiceRecordConfigsForRecords(machine?._id, recordType))
-  }
 
   const handleParamChange = (event, newValue) => {
     if(newValue != null){
@@ -378,7 +367,6 @@ function MachineServiceRecordAddForm() {
                     :<>
                     {checkItemLists?.map((row, index) =>
                           ( typeof row?.checkItems?.length === 'number' &&
-                          <>
                             <CollapsibleCheckedItemInputRow 
                               key={index}
                               row={row} 
@@ -391,7 +379,6 @@ function MachineServiceRecordAddForm() {
                               handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
                               handleChangeCheckItemListComment={handleChangeCheckItemListComment}
                             />
-                        </>
                           ))}
                       </>
                     }
