@@ -25,6 +25,7 @@ import {
 } from '../../../components/table';
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
+import { useSnackbar } from '../../../components/snackbar';
 // sections
 import MachineServiceRecordHistoryListTableRow from './MachineServiceRecordHistoryListTableRow';
 import {
@@ -62,6 +63,7 @@ const TABLE_HEAD = [
 export default function MachineServiceRecordHistoryList({ serviceId }) {
   const { machineServiceRecordHistory, isDetailPage, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine);
+  const { enqueueSnackbar } = useSnackbar();
 
   const {
     order,
@@ -82,10 +84,6 @@ export default function MachineServiceRecordHistoryList({ serviceId }) {
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
-
-  // useLayoutEffect(() => {
-  //   dispatch(getMachineServiceHistoryRecords(machine?._id, serviceId)); 
-  // }, [dispatch, machine?._id,serviceId]);
 
   useEffect(() => {
     if (initial) {
@@ -118,14 +116,20 @@ export default function MachineServiceRecordHistoryList({ serviceId }) {
   },[])
 
   const handleViewRow = async (id, isHistory, ServiceId) => {
-    await dispatch(setMachineServiceRecordViewFormVisibility(true));
-    await dispatch(resetMachineServiceRecord())
-    if(isHistory) {
-      await dispatch(getMachineServiceRecordVersion(machine._id, id));
-    }else{
-      await dispatch(getMachineServiceRecord(machine._id, id));
-      await dispatch(setHistoricalFlag(true));
+    try{
+      await dispatch(setMachineServiceRecordViewFormVisibility(true));
+      await dispatch(resetMachineServiceRecord())
+      if(isHistory) {
+        await dispatch(getMachineServiceRecordVersion(machine._id, id));
+      }else{
+        await dispatch(getMachineServiceRecord(machine._id, id));
+        await dispatch(setHistoricalFlag(true));
+      }
+    }catch(e){
+      enqueueSnackbar(e, { variant: `error` });
+      console.error(e);
     }
+
   };
 
 
