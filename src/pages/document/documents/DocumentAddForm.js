@@ -46,12 +46,14 @@ import {
   updateDocumentVersion,
 } from '../../../redux/slices/document/documentVersion';
 import {
+  getActiveMachines,
   resetActiveMachines
 } from '../../../redux/slices/products/machine';
 import { resetActiveSites } from '../../../redux/slices/customer/site';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, {
+  RHFAutocomplete,
   RHFTextField,
   RHFUpload,
 } from '../../../components/hook-form';
@@ -92,7 +94,7 @@ function DocumentAddForm({
 
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
-  const { machine } = useSelector((state) => state.machine);
+  const { machine, activeMachines } = useSelector((state) => state.machine);
   const { document ,documentHistory, activeDocuments, documentAddFilesViewFormVisibility, documentNewVersionFormVisibility, documentHistoryAddFilesViewFormVisibility, documentHistoryNewVersionFormVisibility } = useSelector((state) => state.document);
   const { customer } = useSelector((state) => state.customer);
 
@@ -156,6 +158,7 @@ function DocumentAddForm({
       documentType: null,
       documentCategory: null,
       displayName:  '',
+      stockNumber:  '',
       referenceNumber:  '',
       versionNo:  '',
       documentVal:  null ,
@@ -176,7 +179,7 @@ function DocumentAddForm({
     formState: { isSubmitting },
   } = methods;
 
-  const {  documentType, documentCategory, displayName, documentVal, files, isActive, customerAccess,  } = watch();
+  const {  documentType, documentCategory, displayName, machineVal, documentVal, files, isActive, customerAccess,  } = watch();
 
   useEffect(()=>{
     if(customerPage){
@@ -189,6 +192,10 @@ function DocumentAddForm({
     }
   },[customerPage, machinePage, machineDrawings ])
 
+  // if(files){
+  //   console.log(files[0].name)
+  //   // setValue('displayName', files[0].name);
+  // }
   useEffect(() => {
     if(categoryBy){
       dispatch(getActiveDocumentCategories(categoryBy));
@@ -261,7 +268,7 @@ function DocumentAddForm({
     dispatch(resetActiveDocumentTypes());
     // dispatch(getActiveDocumentTypes());
     // dispatch(getActiveCustomers());
-    // dispatch(getActiveMachines());
+    dispatch(getActiveMachines());
     // dispatch(getActiveMachineModels());
     if (customerPage) {
       setValue('customerVal', customer?._id);
@@ -305,15 +312,13 @@ function DocumentAddForm({
         dispatch(getCustomerDocuments(customer?._id));
       }
     }
-  }, [dispatch, customer, customerPage, machineDrawings, machinePage, selectedValue ]);
 
-  // ------------------------- customer Site documents ---------------------------------------
-  // useEffect(() => {
-  //   if (customerSiteVal?._id && selectedValue === 'newVersion') {
-  //     dispatch(getCustomerSiteDocuments(customerSiteVal._id));
-  //     console.log('customerSiteVal._id : ', customerSiteVal._id);
-  //   }
-  // }, [dispatch, customerSiteVal, selectedValue]);
+    // if(machineDrawings){
+    //   dispatch(getActiveMachines());
+    // }
+
+    
+  }, [dispatch, customer, customerPage, machineDrawings, machinePage, selectedValue ]);
 
   // ------------------------- get forMachine documents ---------------------------------------
   useEffect(() => {
@@ -333,6 +338,7 @@ function DocumentAddForm({
   
 
   const onSubmit = async (data) => {
+    data.machine = machineVal?._id;
     try {
       if (selectedValue === 'new') {
         // New Document Part
@@ -483,24 +489,32 @@ function DocumentAddForm({
     }
   };
   const handleVersionRadioChange = (event) => setSelectedVersionValue(event.target.value);
-
-
-
-
   const handleIsActiveChange = () => setValue('isActive' ,!isActive);
 
   const handleDropMultiFile = useCallback(
     (acceptedFiles) => {
+
       const docFiles = files || [];
-      const newFiles = acceptedFiles.map((file) =>
-        Object.assign(file, {
-          preview: URL.createObjectURL(file),
-        })
+      const newFiles = acceptedFiles.map((file, index) => {
+
+          if(index===0 && docFiles.length===0){
+            setValue('displayName', removeFileExtension(file.name))
+          }
+
+          return Object.assign(file, {
+            preview: URL.createObjectURL(file),
+          })
+        }
       );
       setValue('files', [...docFiles, ...newFiles], { shouldValidate: true });
     },
     [setValue, files ]
   );
+
+  const removeFileExtension = (filename) => {
+    const lastDotIndex = filename.lastIndexOf('.');
+    return lastDotIndex !== -1 ? filename.substring(0, lastDotIndex) : filename;
+  };
 
 
   return (
@@ -701,9 +715,41 @@ function DocumentAddForm({
                   display="grid"
                   gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                 >
-                  <RHFTextField name='referenceNumber' label='Reference Number' />
+                  
                   <RHFTextField name='versionNo' label='Version Number' />
+                  <RHFTextField name='referenceNumber' label='Reference Number' />
                 </Box>)}
+
+                {machineDrawings && (
+                  <Box
+                  rowGap={3}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                >
+                  <RHFTextField name='stockNumber' label='Stock Number' />
+                  
+                  <RHFAutocomplete
+                    // multiple 
+                    value={machineVal || null}
+                    name="machineVal"
+                    label="Machine"
+                    options={activeMachines}
+                    isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
+                    getOptionLabel={(option) => option.serialNo}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{option.serialNo}</li>
+                    )}
+                    onChange={(event, newValue) => {
+                      if (newValue) {
+                        setValue('machineVal', newValue);
+                      } else {
+                        setValue('machineVal', '');
+                      }
+                    }}
+                  />
+                </Box>
+                )}
 
                 {(selectedValue === 'new' ||
                   (documentVal && selectedVersionValue !== 'existingVersion')) && (

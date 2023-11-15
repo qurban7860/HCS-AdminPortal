@@ -48,6 +48,9 @@ export const PATH_DASHBOARD = {
   blank: path(ROOTS_AUTH, '/login'),
   general: {
     app: path(ROOTS_DASHBOARD, '/app'),
+    machineByCountries: path(ROOTS_DASHBOARD, '/machineByCountries'),
+    machineByModels: path(ROOTS_DASHBOARD, '/machineByModels'),
+    machineByYears: path(ROOTS_DASHBOARD, '/machineByYears'),
   },
   asset: {
     root: path(ROOTS_DASHBOARD, '/asset'),
