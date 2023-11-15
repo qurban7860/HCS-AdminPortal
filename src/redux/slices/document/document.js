@@ -262,11 +262,17 @@ export function addDocument(customerId , machineId ,  params) {
           if(customerId){
             formData.append('customer', customerId);
           }
-            if(machineId){
-              formData.append('machine', machineId);
-            }
-            formData.append('customerAccess', params.customerAccess);
-            formData.append('isActive', params.isActive);
+          
+          if(machineId){
+            formData.append('machine', machineId);
+          }
+
+          if(params?.machine){
+            formData.append('machine', params?.machine);
+          }
+
+          formData.append('customerAccess', params.customerAccess);
+          formData.append('isActive', params.isActive);
           if(params.machineModel){
             formData.append('machineModel', params?.machineModel);
           }
@@ -301,6 +307,7 @@ export function addDocument(customerId , machineId ,  params) {
               formData.append(`images`, file);
             });
           }
+          
       await axios.post(`${CONFIG.SERVER_URL}documents/document/`, formData );
       dispatch(slice.actions.setResponseMessage('Document saved successfully'));
       dispatch(getDocuments( customerId, machineId ));

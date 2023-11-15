@@ -187,6 +187,7 @@ export default function MachineViewForm() {
       supplier: machine?.supplier?.name || '',
       workOrderRef: machine?.workOrderRef || '',
       machineModel: machine?.machineModel?.name || '',
+      machineConnections: machine?.machineModel?.category?.connections || false,
       machineProfile: machine?.machineProfile?.defaultName || '',
       machineweb:machine?.machineProfile?.web || '',
       machineflange:machine?.machineProfile?.flange || '',
@@ -372,7 +373,11 @@ export default function MachineViewForm() {
               param={defaultValues?.siteMilestone}
             />
             <ViewFormField sm={12} heading="Connected Machiness" chipDialogArrayParam={linkedMachines} />
-            <ViewFormField sm={12} heading="Parent Machiness" chipDialogArrayParam={paranetMachines} />
+
+            {defaultValues?.machineConnections &&
+              <ViewFormField sm={12} heading="Parent Machiness" chipDialogArrayParam={paranetMachines} />
+            }
+            
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
             {/* <ViewFormField sm={6} heading="Tags" param={defaultValues?.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
           </Grid>
