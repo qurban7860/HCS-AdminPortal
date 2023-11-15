@@ -1,37 +1,25 @@
 import { useMemo, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
-import {  Card, Grid, Tooltip, Typography, Box, Checkbox } from '@mui/material';
-import { createTheme } from '@mui/material/styles';
-import { green } from '@mui/material/colors';
+import {  Card, Grid } from '@mui/material';
 // redux
 import { deleteMachineServiceRecord, setAllFlagsFalse, setMachineServiceRecordHistoryFormVisibility, setDetailPageFlag, setMachineServiceRecordEditFormVisibility, getMachineServiceHistoryRecords } from '../../../redux/slices/products/machineServiceRecord';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormHeading from '../../components/DocumentForms/FormHeading';
 import { FORMLABELS } from '../../../constants/default-constants';
-// import { fDate, fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
-// import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';
+import ViewFormNoteField from '../../components/ViewForms/ViewFormNoteField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-import ViewFormHistoricalPopover from '../../components/ViewForms/ViewFormHistoricalPopover';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import { fDate } from '../../../utils/formatTime';
 import ReadableCollapsibleCheckedItemRow from './ReadableCollapsibleCheckedItemRow';
-import Iconify from '../../../components/iconify';
-import { StyledTooltip } from '../../../theme/styles/default-styles';
+import HistoryIcon from '../../components/Icons/HistoryIcon';
 
 function MachineServiceParamViewForm() {
 
   const { machineServiceRecord, isHistorical } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine)
-
-  const theme = createTheme({
-    palette: {
-      success: green,
-    },
-  });
 
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -119,20 +107,15 @@ function MachineServiceParamViewForm() {
           <ViewFormField sm={4} heading="Service Record Configuration" param={`${defaultValues.serviceRecordConfig} ${defaultValues.serviceRecordConfigRecordType ? '-' : ''} ${defaultValues.serviceRecordConfigRecordType ? defaultValues.serviceRecordConfigRecordType : ''}`} />
           <ViewFormField sm={4} heading="Version No" param={
             <>{defaultValues?.versionNo}
-              {!machineServiceRecord?.isHistory && <StyledTooltip
-                arrow
-                title="History"
-                placement='top'
-                tooltipcolor={theme.palette.primary.main}
-              ><Iconify icon="material-symbols:history" sx={{ml:0.7, cursor: 'pointer'}} onClick={handleServiceRecordHistory} /></StyledTooltip>}
+              {!machineServiceRecord?.isHistory && <HistoryIcon callFunction={handleServiceRecordHistory} /> }
             </>  
           } />
           
           <ViewFormField sm={12} heading="Decoilers" arrayParam={defaultValues?.decoilers?.map((decoilerMachine) => ({ name: `${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`}))} />
           <ViewFormField sm={6} heading="Technician"  param={defaultValues?.technician?.name || ''} />
-          <ViewFormField sm={12} heading="Technician Notes" param={defaultValues.technicianNotes} />
+          <ViewFormNoteField sm={12} heading="Technician Notes" param={defaultValues.technicianNotes} />
 
-          <ViewFormField sm={12} heading="Text Before Check Items" param={defaultValues.textBeforeCheckItems} />
+          <ViewFormNoteField sm={12} heading="Text Before Check Items" param={defaultValues.textBeforeCheckItems} />
 
           <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
           {machineServiceRecord?.serviceRecordConfig?.checkItemLists?.length > 0 && 
@@ -146,7 +129,7 @@ function MachineServiceParamViewForm() {
             </Grid>
           }
           
-          <ViewFormField sm={12} heading="Text After Check Items" param={defaultValues.textAfterCheckItems} />
+          <ViewFormNoteField sm={12} heading="Text After Check Items" param={defaultValues.textAfterCheckItems} />
 
           {/* <Grid item md={12} >
             <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
@@ -168,15 +151,15 @@ function MachineServiceParamViewForm() {
             <ViewFormField sm={4} param={defaultValues?.footerRightText} />
           </Grid> */}
 
-          <ViewFormField sm={12} heading="Internal Comments" param={defaultValues.internalComments} />
-          {machineServiceRecord?.serviceRecordConfig?.enableNote && <ViewFormField sm={12} heading="Service Note" param={defaultValues.serviceNote} />}
+          {/* <ViewFormField sm={12} heading="Internal Comments" param={defaultValues.internalComments} /> */}
+          {machineServiceRecord?.serviceRecordConfig?.enableNote && <ViewFormNoteField sm={12} heading="Service Note" param={defaultValues.serviceNote} />}
 
-          {machineServiceRecord?.serviceRecordConfig?.enableMaintenanceRecommendations && <ViewFormField sm={12} heading="Recommendation Note" param={defaultValues.recommendationNote} />}
-          {machineServiceRecord?.serviceRecordConfig?.enableSuggestedSpares && <ViewFormField sm={12} heading="Suggested Spares" param={defaultValues.suggestedSpares} />}
-          <ViewFormField sm={12} heading="Internal Note" param={defaultValues.internalNote} />
+          {machineServiceRecord?.serviceRecordConfig?.enableMaintenanceRecommendations && <ViewFormNoteField sm={12} heading="Recommendation Note" param={defaultValues.recommendationNote} />}
+          {machineServiceRecord?.serviceRecordConfig?.enableSuggestedSpares && <ViewFormNoteField sm={12} heading="Suggested Spares" param={defaultValues.suggestedSpares} />}
+          <ViewFormNoteField sm={12} heading="Internal Note" param={defaultValues.internalNote} />
           
           <ViewFormField sm={12} heading="Operators" arrayParam={defaultValues?.operators?.map((operator) => ({ name: `${operator?.firstName || ''} ${operator?.lastName || ''}`}))} />
-          <ViewFormField sm={12} heading="Operator Notes" param={defaultValues.operatorNotes} />
+          <ViewFormNoteField sm={12} heading="Operator Notes" param={defaultValues.operatorNotes} />
           
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

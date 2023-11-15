@@ -1,17 +1,9 @@
-import { useState, memo } from 'react'
+import { memo } from 'react'
 import PropTypes from 'prop-types';
-import { v4 as uuidv4 } from 'uuid';
-import { useSelector } from 'react-redux';
-import { Box, Grid, Table, TableBody, TableCell, TableRow,  IconButton, Collapse, Typography, Checkbox, Chip } from '@mui/material';
-import Iconify from '../../../components/iconify';
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons'
+import { Grid, Table, TableBody, Typography } from '@mui/material';
 import StatusAndComment from './StatusAndComment';
 
-const CollapsibleCheckedItemRow = ({value, index }) => {
-  const [open, setOpen] = useState(true);
-  const { machineServiceRecord, isHistorical } = useSelector((state) => state.machineServiceRecord);
-
-  return (
+const CollapsibleCheckedItemRow = ({value, index }) => (
     <>
             <Typography variant='h5'>
                 <b>{`${index+1}). `}</b>{typeof value?.ListTitle === 'string' && value?.ListTitle || ''}{' ( Items: '}<b>{`${value?.checkItems?.length || 0}`}</b>{' ) '}
@@ -31,7 +23,7 @@ const CollapsibleCheckedItemRow = ({value, index }) => {
             </Grid>   
     </>
   )
-}
+
 CollapsibleCheckedItemRow.propTypes = {
     index: PropTypes.number,
     value: PropTypes.object,

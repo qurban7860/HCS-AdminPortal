@@ -17,6 +17,7 @@ import { StyledTooltip } from '../../../theme/styles/default-styles';
 import { setMachineServiceRecordHistoryFormVisibility, getMachineServiceHistoryRecords } from '../../../redux/slices/products/machineServiceRecord';
 import { useDispatch, useSelector } from '../../../redux/store';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
+import HistoryIcon from '../../components/Icons/HistoryIcon';
 // import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
@@ -59,6 +60,7 @@ export default function MachineServiceRecordListTableRow({
     },
   });
   const dispatch = useDispatch();
+
   const handleServiceRecordHistory = () => {
     dispatch(setMachineServiceRecordHistoryFormVisibility(true));
     dispatch(getMachineServiceHistoryRecords( machine?._id ,row?.serviceId ))
@@ -67,12 +69,7 @@ export default function MachineServiceRecordListTableRow({
       <StyledTableRow hover selected={selected}>
         <LinkTableCell align="left" onClick={onViewRow} param={`${serviceRecordConfig?.docTitle ? serviceRecordConfig?.docTitle	: ''	} ${serviceRecordConfig?.recordType ? ' - ' : ''} ${serviceRecordConfig?.recordType ? serviceRecordConfig?.recordType : ''}`} />
         <TableCell align="left" >{versionNo} 
-              {versionNo > 1 &&  <StyledTooltip
-                arrow
-                title="History"
-                placement='top'
-                tooltipcolor={theme.palette.primary.main}
-              ><Iconify icon="material-symbols:history" sx={{ml:0.7, mb:-0.6, cursor: 'pointer'}} onClick={handleServiceRecordHistory} /></StyledTooltip>}</TableCell>
+              {versionNo > 1 && <HistoryIcon callFunction={handleServiceRecordHistory} /> }</TableCell>
         <TableCell align="center">{fDate(serviceDate)}</TableCell>
         <TableCell align="center">
           {' '}

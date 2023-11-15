@@ -122,6 +122,7 @@ export const allowedExtensions = [
   'ott',
   'rtf',
   'txt',
+  'json',
 ];
 
 // NOTE: These are the constants for the document upload radio buttons for adding a document
