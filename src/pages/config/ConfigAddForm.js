@@ -67,6 +67,7 @@ export default function ConfigAddForm() {
   const { type } = watch();
 
   const onSubmit = async (data) => {
+    data.notes = data?.notes.trim();
     try {
       const response = await dispatch(addConfig(data));
       reset();
