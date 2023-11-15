@@ -1,45 +1,16 @@
-import React, { useState, memo, useEffect } from 'react'
+import React, { useState, memo } from 'react'
 import PropTypes from 'prop-types';
-import { Grid, Box, Card, Divider, Chip, TableRow, TableCell, Checkbox, Typography, Tooltip, Badge, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
-import { useSelector } from 'react-redux';
-import { createTheme, styled } from '@mui/material/styles';
-import { green } from '@mui/material/colors';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { fDate, fDateTime } from '../../../utils/formatTime';
+import { Grid, Divider, Chip, TableRow, Typography } from '@mui/material';
+import { fDate } from '../../../utils/formatTime';
 import Iconify from '../../../components/iconify';
-import { useSnackbar } from '../../../components/snackbar';
-import { HtmlTooltip, StyledTooltip } from '../../../theme/styles/default-styles';
-import MenuPopover from '../../../components/menu-popover/MenuPopover';
-import ViewFormHistoricalPopover from '../../components/ViewForms/ViewFormHistoricalPopover';
+import CopyIcon from '../../components/Icons/CopyIcon';
+import HistoryDropDownUpIcons from '../../components/Icons/HistoryDropDownUpIcons';
 import ViewFormServiceRecordVersionAudit from '../../components/ViewForms/ViewFormServiceRecordVersionAudit';
-import ViewFormServiceRecordVersionHistoricalAudit from '../../components/ViewForms/ViewFormServiceRecordVersionHistoricalAudit';
 
 
 const StatusAndComment = ({index, childIndex, childRow}) => {
 
-    const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
-    const [checkItem, setCheckItem] = useState({});
-    const [historyAnchorEl, setHistoryAnchorEl] = useState(null);
-    const [history, setHistory] = useState([]);
     const [activeIndex, setActiveIndex] = useState(null);
-    const { enqueueSnackbar } = useSnackbar();
-    const theme = createTheme({
-      palette: {
-        success: green,
-      },
-    });
-
-
-
-    const handleHistoryPopoverOpen = (event) => {
-      setHistoryAnchorEl(event.currentTarget);
-      setHistory(childRow?.historicalData)
-    };
-  
-    const handleHistoryPopoverClose = () => {
-      setHistoryAnchorEl(null);
-      setHistory([])
-    };
 
     const handleAccordianClick = (accordianIndex) => {
       if (accordianIndex === activeIndex) {
@@ -49,58 +20,36 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
       }
     };
 
-
-    const copyTextToClipboard = (textToCopy) => {
-      try{
-        const tempInput = document.createElement('input');
-        tempInput.value = textToCopy;
-        document.body.appendChild(tempInput);
-        tempInput.select();
-        document.execCommand('copy');
-        document.body.removeChild(tempInput);
-      enqueueSnackbar("Coppied!");
-      }catch(err){
-        enqueueSnackbar('Copy Failed!');
-      }
-    };
-
   return (
-    <>
-    <TableRow key={childRow._id} >
-      <Grid sx={{width:'100%'}}>
-        <Grid sx={{ width: '100%' }} >
-          <Typography variant="body2" ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}</Typography>
+    <TableRow key={childRow._id}  >
+    <Grid item md={12} sx={{mx:2}} >
+      <Grid item md={12} sx={{my:0.7}}>
+        <Grid item md={12}>
+          <Typography variant="body2" ><b>{`${index+1}.${childIndex+1}. `}</b>{`${childRow.name}`}</Typography>
         </Grid>
-        {childRow?.checkItemValue && 
-        <Grid sx={{ml:1.5}}>
+        {childRow?.recordValue?.checkItemValue && 
+        <Grid >
           <Grid sx={{ mt:1,
             alignItems: 'center',
             whiteSpace: 'pre-line',
             wordBreak: 'break-word' }}>
             <Typography variant="body2" >
                 <b>Value: </b>
-                {childRow?.inputType.toLowerCase() === 'boolean' && childRow?.checkItemValue && <Iconify
+                {childRow?.inputType.toLowerCase() === 'boolean' && childRow?.recordValue?.checkItemValue && <Iconify
                   sx={{mb:-0.5}}
-                  color={childRow?.checkItemValue === true || childRow?.checkItemValue  === 'true' ? '#008000' : '#FF0000'} 
-                  icon={ childRow?.checkItemValue === true || childRow?.checkItemValue  === 'true' ? 'ph:check-square-bold' : 'charm:square-cross' } />}
+                  color={childRow?.recordValue?.checkItemValue === true || childRow?.recordValue?.checkItemValue  === 'true' ? '#008000' : '#FF0000'} 
+                  icon={ childRow?.recordValue?.checkItemValue === true || childRow?.recordValue?.checkItemValue  === 'true' ? 'ph:check-square-bold' : 'charm:square-cross' } />}
 
-                {childRow?.inputType.toLowerCase() === 'date' ? fDate(childRow?.checkItemValue) : 
+                {childRow?.inputType.toLowerCase() === 'date' ? fDate(childRow?.recordValue?.checkItemValue) : 
                   <> 
-                    {childRow?.inputType.toLowerCase() === 'status' ? (childRow?.checkItemValue && 
-                      <Chip size="small" label={childRow?.checkItemValue} /> || '') : 
+                    {childRow?.inputType.toLowerCase() === 'status' ? (childRow?.recordValue?.checkItemValue && 
+                      <Chip size="small" label={childRow?.recordValue?.checkItemValue} /> || '') : 
                       (childRow?.inputType.toLowerCase() === 'number' || 
                       childRow?.inputType.toLowerCase() === 'long text' || 
                       childRow?.inputType.toLowerCase() === 'short text') && 
                       childRow?.checkItemValue 
                     }
-                      {childRow?.checkItemValue?.trim() && childRow?.inputType?.toLowerCase() !== 'boolean' &&<StyledTooltip
-                          arrow
-                          title="Copy"
-                          placement='top'
-                          tooltipcolor={theme.palette.primary.main}
-                        >
-                        <Iconify icon="mingcute:copy-line" sx={{ cursor: 'pointer',ml:1}} onClick={()=> copyTextToClipboard(childRow?.checkItemValue)}/>
-                      </StyledTooltip>}
+                      {childRow?.checkItemValue?.trim() && childRow?.inputType?.toLowerCase() !== 'boolean' && <CopyIcon value={childRow?.recordValue?.checkItemValue}/>}
                   </> 
               }
             </Typography>
@@ -110,35 +59,22 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
             alignItems: 'center',
             whiteSpace: 'pre-line',
             wordBreak: 'break-word' }}>
-            {childRow?.comments && <Typography variant="body2" sx={{mr:1}} ><b>Comment: </b>{` ${childRow?.comments}`}
-            {childRow?.comments?.trim() && 
-              <StyledTooltip
-                  arrow
-                  title="Copy"
-                  placement='top'
-                  tooltipcolor={theme.palette.primary.main}
-                >
-                <Iconify icon="mingcute:copy-line" sx={{ cursor: 'pointer',ml:1 }} onClick={()=> copyTextToClipboard(childRow?.comments)}/>
-              </StyledTooltip>}
+            {childRow?.recordValue?.comments && <Typography variant="body2" sx={{mr:1}} ><b>Comment: </b>{childRow?.recordValue?.comments}
+            {childRow?.recordValue?.comments?.trim() && <CopyIcon value={childRow?.recordValue?.comments || ''} />}
               </Typography>}
           </Grid>
-          {childRow?.historicalData && childRow?.historicalData?.length > 0 &&<Grid sx={{display: 'flex',}}>
-            <Iconify icon={activeIndex === `${index}${childIndex}` ? "eva:arrow-ios-upward-fill" : "eva:arrow-ios-downward-fill" } 
-            sx={{ml:'auto',mt:'auto',cursor: 'pointer'}}
-            onClick={() => handleAccordianClick(`${index}${childIndex}`) }
-            />
-          </Grid>}
-          <ViewFormServiceRecordVersionAudit value={childRow}/>
+          <ViewFormServiceRecordVersionAudit value={childRow?.recordValue}/>
+          {childRow?.historicalData && childRow?.historicalData?.length > 0 &&  <>
+          <Divider  sx={{ borderStyle: 'solid' }} />
+            <HistoryDropDownUpIcons activeIndex={`${activeIndex || ''}`} indexValue={`${index}${childIndex}`} onClick={handleAccordianClick}/>
+          </>}
         </Grid>}
-
       </Grid>
 
       {activeIndex === `${index}${childIndex}` && childRow?.historicalData && childRow?.historicalData?.length > 0 && 
-        <Grid sx={{ width: '100%',ml:1.5 }} >
+        <Grid item md={12} sx={{mb:1}} >
           {childRow?.historicalData?.map((ItemHistory, ItemIndex ) => (<>
           
-            {ItemIndex === 0 && <Divider  sx={{ borderStyle: 'solid' }} />}
-
             {ItemHistory?.checkItemValue && <Grid sx={{ mt:1,
               alignItems: 'center',
               whiteSpace: 'pre-line',
@@ -159,14 +95,7 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
                           childRow?.inputType?.toLowerCase() === 'short text') && 
                           ItemHistory?.checkItemValue  
                       }
-                      {ItemHistory?.checkItemValue?.trim() && childRow?.inputType?.toLowerCase() !== 'boolean' && <StyledTooltip
-                          arrow
-                          title="Copy"
-                          placement='top'
-                          tooltipcolor={theme.palette.primary.main}
-                        >
-                        <Iconify icon="mingcute:copy-line" sx={{ cursor: 'pointer',ml:1 }} onClick={()=> copyTextToClipboard(ItemHistory?.checkItemValue)}/>
-                      </StyledTooltip>}
+                      {ItemHistory?.checkItemValue?.trim() && childRow?.inputType?.toLowerCase() !== 'boolean' && <CopyIcon value={ItemHistory?.comments} />}
                     </> 
                 }
               </Typography>
@@ -177,24 +106,15 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
               whiteSpace: 'pre-line',
               wordBreak: 'break-word' }}>
               {ItemHistory?.comments && <Typography variant="body2" sx={{mr:1}} ><b>Comment: </b>{` ${ItemHistory?.comments || ''}`}
-              {ItemHistory?.comments?.trim() && 
-                <StyledTooltip
-                    arrow
-                    title="Copy"
-                    placement='top'
-                    tooltipcolor={theme.palette.primary.main}
-                  >
-                  <Iconify icon="mingcute:copy-line" sx={{ cursor: 'pointer', ml:1}} onClick={()=> copyTextToClipboard(ItemHistory?.comments)}/>
-                </StyledTooltip>}
+              {ItemHistory?.comments?.trim() && <CopyIcon value={childRow?.comments} /> }
               </Typography>}
             </Grid>
-            <ViewFormServiceRecordVersionHistoricalAudit value={ItemHistory}/>
+            <ViewFormServiceRecordVersionAudit value={ItemHistory}/>
             {ItemHistory?.checkItemValue && <Divider  sx={{ borderStyle: 'solid' }} />}
           </>))}
         </Grid>}
-      {/* </Card> */}
+      </Grid>
     </TableRow>
-  </>
   )
 }
 StatusAndComment.propTypes = {

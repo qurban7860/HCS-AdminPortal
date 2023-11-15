@@ -67,14 +67,14 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                                 }}
                             />
                           </Grid>
-                          {editPage && childRow?.checkItemValue && 
+                          {editPage && childRow?.recordValue?.checkItemValue && 
                             <Stack spacing={1}  >
                                 <Divider sx={{mt:1.5 }}/>
                                 <Typography variant="body2" sx={{mt:1}}><b>Value : </b>
-                                {childRow?.inputType?.toLowerCase() !== 'boolean' ? childRow?.checkItemValue || ''  : 
-                                <Checkbox  disabled checked={childRow?.checkItemValue === 'true' || childRow?.checkItemValue === true } sx={{my:'auto',mr:'auto'}} /> }
+                                {childRow?.inputType?.toLowerCase() !== 'boolean' ? childRow?.recordValue?.checkItemValue || ''  : 
+                                <Checkbox  disabled checked={childRow?.recordValue?.checkItemValue === 'true' || childRow?.recordValue?.checkItemValue === true } sx={{my:'auto',mr:'auto'}} /> }
                                 </Typography>
-                                {childRow?.comments && <Typography variant="body2" ><b>Comment: </b>{childRow?.comments || ''}</Typography>}
+                                {childRow?.recordValue?.comments && <Typography variant="body2" sx={{ alignItems: 'center', whiteSpace: 'pre-line', wordBreak: 'break-word'}} ><b>Comment: </b>{childRow?.recordValue?.comments || ''}</Typography>}
                                 <ViewFormServiceRecordVersionAudit value={childRow}/>
                             </Stack>}
                         </Grid>
