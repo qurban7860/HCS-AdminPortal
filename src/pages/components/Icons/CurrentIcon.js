@@ -16,7 +16,7 @@ export default function CurrentIcon({ callFunction }) {
         placement='top'
         tooltipcolor={theme.palette.primary.main}
       >
-        <Iconify icon="basil:refresh-solid" width={25} height={25} color={theme.palette.primary.main} sx={{ml:1, mb:-0.6, cursor: 'pointer'}} onClick={callFunction} />
+        <Iconify icon="basil:refresh-solid" width={23} height={23} color={theme.palette.primary.main} sx={{ml:1, mb:0.2 ,cursor: 'pointer'}} onClick={callFunction} />
       </StyledTooltip>
   );
 }
