@@ -47,9 +47,9 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
                       (childRow?.inputType.toLowerCase() === 'number' || 
                       childRow?.inputType.toLowerCase() === 'long text' || 
                       childRow?.inputType.toLowerCase() === 'short text') && 
-                      childRow?.checkItemValue 
+                      childRow?.recordValue?.checkItemValue 
                     }
-                      {childRow?.checkItemValue?.trim() && childRow?.inputType?.toLowerCase() !== 'boolean' && <CopyIcon value={childRow?.recordValue?.checkItemValue}/>}
+                      {childRow?.recordValue?.checkItemValue?.trim() && childRow?.inputType?.toLowerCase() !== 'boolean' && <CopyIcon value={childRow?.recordValue?.checkItemValue}/>}
                   </> 
               }
             </Typography>

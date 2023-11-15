@@ -22,5 +22,5 @@ export default function HistoryIcon({ callFunction }) {
 }
 
 HistoryIcon.propTypes = {
-  callFunction: PropTypes.string,
+  callFunction: PropTypes.func,
 };

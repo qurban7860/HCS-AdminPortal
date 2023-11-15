@@ -1,12 +1,7 @@
-import { useState, memo } from 'react'
-import PropTypes, { number } from 'prop-types';
-import { v4 as uuidv4 } from 'uuid';
-import { Box, Table, TableBody, TableCell, TableRow,  IconButton, Collapse, Grid, TextField, Checkbox, Typography, Autocomplete, Card, Stack, Divider } from '@mui/material';
-import Iconify from '../../../components/iconify';
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-import {  RHFTextField, RHFCheckbox, RHFDatePicker, RHFAutocomplete } from '../../../components/hook-form';
+import { memo } from 'react'
+import PropTypes from 'prop-types';
+import { Table, TableBody, TableRow, Grid, TextField, Checkbox, Typography, Stack, Divider } from '@mui/material';
 import CommentsInput from './CommentsInput';
-import { fDateTime } from '../../../utils/formatTime';
 import ViewFormServiceRecordVersionAudit from '../../components/ViewForms/ViewFormServiceRecordVersionAudit';
 
 const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue, 
@@ -28,7 +23,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                   <TableBody>
                     {row?.checkItems?.map((childRow,childIndex) => (
                       <TableRow key={childRow._id}  >
-                        <Grid display='flex' flexDirection='column' sx={{ m:  1, }} >
+                        <Grid display='flex' flexDirection='column' sx={{ m:  1, }} key={childRow._id} >
                           <Grid >
                             <Typography variant='body2' size='small'  >
                               <b>{`${Number(childIndex)+1}) `}</b>{`${childRow.name}`}
@@ -53,7 +48,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                             </Grid>
                           </Grid>
 
-                          <Grid  >
+                          <Grid >
                             <TextField 
                                 type="text"
                                 label="Comment" 
@@ -75,7 +70,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                                 <Checkbox  disabled checked={childRow?.recordValue?.checkItemValue === 'true' || childRow?.recordValue?.checkItemValue === true } sx={{my:'auto',mr:'auto'}} /> }
                                 </Typography>
                                 {childRow?.recordValue?.comments && <Typography variant="body2" sx={{ alignItems: 'center', whiteSpace: 'pre-line', wordBreak: 'break-word'}} ><b>Comment: </b>{childRow?.recordValue?.comments || ''}</Typography>}
-                                <ViewFormServiceRecordVersionAudit value={childRow}/>
+                                <ViewFormServiceRecordVersionAudit value={childRow?.recordValue}/>
                             </Stack>}
                         </Grid>
                       </TableRow>

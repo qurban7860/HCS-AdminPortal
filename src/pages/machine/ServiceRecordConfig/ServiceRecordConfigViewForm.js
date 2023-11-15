@@ -46,7 +46,6 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
   const navigate = useNavigate();
   const { serviceRecordConfig, editFormVisibility } = useSelector((state) => state.serviceRecordConfig);
   const { id } = useParams();
-  const userId = localStorage.getItem('userId');
   const VerificationIndex = serviceRecordConfig?.verifications?.length || 1
   const dispatch = useDispatch();
   useLayoutEffect(() => {
@@ -114,17 +113,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
       enqueueSnackbar(error, { variant: 'error' });
     }
   };
-  
-  const approveConfigHandler = async () => {
-    try {
-      await dispatch(changeConfigStatus(serviceRecordConfig._id, 'APPROVED'));
-      await dispatch(getServiceRecordConfig(serviceRecordConfig._id));
-      enqueueSnackbar(Snacks.configuration_approve_Success);
-    } catch (error) {
-      console.log(error);
-      enqueueSnackbar(error, { variant: 'error' });
-    }
-  };
+
 
   const returnToDraft = async () => {
     try {
@@ -136,7 +125,6 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
       enqueueSnackbar(Snacks.configuration_Verification_Failed, { variant: 'error' });
     }
   };
-
   
   const returnToSubmitted = async () => {
     try {

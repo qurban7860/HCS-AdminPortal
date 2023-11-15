@@ -1,17 +1,13 @@
 import {  useEffect, useCallback, useMemo, memo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Typography, TableContainer, Table, TableBody, TextField, Autocomplete, Checkbox, InputAdornment, Skeleton } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers';
-import { v4 as uuidv4 } from 'uuid';
+import { Box, Card, Grid, Stack, Typography, TextField, Autocomplete, Skeleton } from '@mui/material';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // slice
-import { updateMachineServiceRecord, setMachineServiceRecordViewFormVisibility, getMachineServiceRecord } from '../../../redux/slices/products/machineServiceRecord';
-import { getMachineConnections } from '../../../redux/slices/products/machineConnections';
-import { getActiveServiceRecordConfigsForRecords } from '../../../redux/slices/products/serviceRecordConfig';
+import { updateMachineServiceRecord, setMachineServiceRecordViewFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
 import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
 // routes
 // import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -22,15 +18,12 @@ import FormHeading from '../../components/DocumentForms/FormHeading';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { MachineServiceRecordSchema } from '../../schemas/machine';
-import ViewFormField from '../../components/ViewForms/ViewFormField';
 import FormProvider, {
   RHFSwitch,
   RHFTextField,
   RHFAutocomplete,
   RHFDatePicker,
-  RHFCheckbox,
 } from '../../../components/hook-form';
-import CollapsibleCheckedItemRow from '../ServiceRecordConfig/CollapsibleCheckedItemRow'
 import { getActiveSecurityUsers } from '../../../redux/slices/securityUser/securityUser';
 import CollapsibleCheckedItemInputRow from './CollapsibleCheckedItemInputRow';
 
@@ -40,10 +33,9 @@ function MachineServiceRecordEditForm() {
 
   const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
   const { activeContacts } = useSelector((state) => state.contact);
-  const { activeServiceRecordConfigs, recordTypes, isLoadingCheckItems } = useSelector((state) => state.serviceRecordConfig);
+  const { isLoadingCheckItems } = useSelector((state) => state.serviceRecordConfig);
   const { machine } = useSelector((state) => state.machine);
   const [checkParam, setCheckParam] = useState([]);
-  const [serviceDateError, setServiceDateError] = useState('');
   const [checkItemLists, setCheckItemLists] = useState([]);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -66,7 +58,6 @@ function MachineServiceRecordEditForm() {
         const params_ = checkItems.map((row, index) => {
           if (row && row?.checkItems) {
             const updatedCheckItemsList = row?.checkItems?.map((childRow, childIndex) => 
-
               ({
                 _id:            childRow?._id || '',
                 inputType:      childRow?.inputType || '',
@@ -77,28 +68,18 @@ function MachineServiceRecordEditForm() {
                 unitType:       childRow?.unitType || '',
               })
             );
-        
             return {
               ...row,
               checkItems: updatedCheckItemsList,
-
             };
           }
           return row;
         });
-        
-        
         setCheckItemLists(params_);
       }
-      // setCheckItemLists(machineServiceRecord?.serviceRecordConfig?.checkItemLists);
     }
   }, [machineServiceRecord]);
 
-  const machineDecoilers = (machine?.machineConnections || []).map((decoiler) => ({
-    _id: decoiler?.connectedMachine?._id ?? null,
-    name: decoiler?.connectedMachine?.name ?? null,
-    serialNo: decoiler?.connectedMachine?.serialNo ?? null
-  }));
 
   const defaultDecoilers = (machineServiceRecord?.decoilers || []).map((decoiler) => ({
     _id: decoiler?._id ?? null,
@@ -149,13 +130,10 @@ function MachineServiceRecordEditForm() {
     reset,
     watch,
     setValue,
-    control,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-  const { serviceDate, files, serviceRecordConfiguration, decoilers, operators } = watch()
-
-  const handleServiceDateChange = (newValue) => setValue("serviceDate", newValue)
+  const { serviceRecordConfiguration, decoilers, operators } = watch()
 
   useEffect(() => {
     if (machineServiceRecord) {
@@ -396,7 +374,6 @@ setCheckItemLists(updatedCheckParams);
                     :<>
                     {machineServiceRecord?.serviceRecordConfig?.checkItemLists?.map((row, index) =>
                           ( typeof row?.checkItems?.length === 'number' &&
-                          <>
                             <CollapsibleCheckedItemInputRow 
                               row={row} 
                               key={index}
@@ -410,7 +387,6 @@ setCheckItemLists(updatedCheckParams);
                               handleChangeCheckItemListChecked={handleChangeCheckItemListChecked}
                               handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
                             />
-                        </>
                           ))}
                       </>
                     }
