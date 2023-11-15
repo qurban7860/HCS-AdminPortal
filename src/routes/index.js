@@ -19,6 +19,9 @@ import {
   Authenticate,
   // Dashboard: General
   GeneralAppPage,
+  MachineByModelsViewForm,
+  MachineByYearsViewForm,
+  MachineByCountriesViewForm,
   // User
   SecurityUserList,
   SecurityUserEdit,
@@ -217,7 +220,7 @@ import {
   BlacklistIPList,
   BlacklistIPAddForm,
   WhitelistIPList,
-  WhitelistIPAddForm
+  WhitelistIPAddForm,
 } from './elements';
 // ----------------------------------------------------------------------
 
@@ -274,6 +277,9 @@ export default function Router() {
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'app', element: <GeneralAppPage /> },
+        { path: 'machineByCountries', element: <MachineByCountriesViewForm /> },
+        { path: 'machineByModels', element: <MachineByModelsViewForm /> },
+        { path: 'machineByYears', element: <MachineByYearsViewForm /> },
         { path: 'permission-denied', element: <PermissionDeniedPage /> },
         { path: 'blank', element: <BlankPage /> },
       ],

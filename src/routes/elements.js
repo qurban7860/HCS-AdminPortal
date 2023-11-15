@@ -23,6 +23,9 @@ export const Authenticate = Loadable(lazy(() => import('../sections/auth/Authent
 
 // DASHBOARD: GENERAL
 export const GeneralAppPage = Loadable(lazy(() => import('../pages/dashboard/GeneralAppPage')));
+export const MachineByCountriesViewForm = Loadable(lazy(() => import('../pages/dashboard/MachineByCountriesViewForm')));
+export const MachineByModelsViewForm = Loadable(lazy(() => import('../pages/dashboard/MachineByModelsViewForm')));
+export const MachineByYearsViewForm = Loadable(lazy(() => import('../pages/dashboard/MachineByYearsViewForm')));
 
 // --------------------------
 
