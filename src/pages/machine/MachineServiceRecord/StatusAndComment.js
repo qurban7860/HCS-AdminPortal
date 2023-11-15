@@ -6,6 +6,7 @@ import Iconify from '../../../components/iconify';
 import CopyIcon from '../../components/Icons/CopyIcon';
 import HistoryDropDownUpIcons from '../../components/Icons/HistoryDropDownUpIcons';
 import ViewFormServiceRecordVersionAudit from '../../components/ViewForms/ViewFormServiceRecordVersionAudit';
+import { StyledTableRow } from '../../../theme/styles/default-styles';
 
 
 const StatusAndComment = ({index, childIndex, childRow}) => {
@@ -21,7 +22,7 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
     };
 
   return (
-    <TableRow key={childRow._id}  >
+    <StyledTableRow key={childRow._id}  >
     <Grid item md={12} sx={{mx:2}} >
       <Grid item md={12} sx={{my:0.7}}>
         <Grid item md={12}>
@@ -114,7 +115,7 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
           </>))}
         </Grid>}
       </Grid>
-    </TableRow>
+    </StyledTableRow>
   )
 }
 StatusAndComment.propTypes = {

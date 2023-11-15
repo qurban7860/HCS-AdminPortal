@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Table, TableBody, TableRow, Grid, TextField, Checkbox, Typography, Stack, Divider } from '@mui/material';
 import CommentsInput from './CommentsInput';
 import ViewFormServiceRecordVersionAudit from '../../components/ViewForms/ViewFormServiceRecordVersionAudit';
+import { StyledTableRow } from '../../../theme/styles/default-styles';
 
 const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue, 
   editPage,
@@ -22,7 +23,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                 <Table size="small" aria-label="purchases">
                   <TableBody>
                     {row?.checkItems?.map((childRow,childIndex) => (
-                      <TableRow key={childRow._id}  >
+                      <StyledTableRow key={childRow._id}  >
                         <Grid display='flex' flexDirection='column' sx={{ m:  1, }} key={childRow._id} >
                           <Grid >
                             <Typography variant='body2' size='small'  >
@@ -58,8 +59,8 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                                 size="small" sx={{ width: '100%', }} 
                                 value={checkItemLists[index]?.checkItems[childIndex]?.comments}
                                 minRows={2} multiline
-                                InputProps={{ inputProps: { maxLength: 5000 }, 
-                                }}
+                                InputProps={{ inputProps: { maxLength: 5000 } }}
+                                InputLabelProps={{ shrink: checkItemLists[index]?.checkItems[childIndex]?.checked }}
                             />
                           </Grid>
                           {editPage && childRow?.recordValue?.checkItemValue && 
@@ -73,7 +74,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                                 <ViewFormServiceRecordVersionAudit value={childRow?.recordValue}/>
                             </Stack>}
                         </Grid>
-                      </TableRow>
+                      </StyledTableRow>
                     ))}
                   </TableBody>
                 </Table>
