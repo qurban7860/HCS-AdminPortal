@@ -37,11 +37,13 @@ import FormLabel from '../../components/DocumentForms/FormLabel';
 // import DialogLink from '../../components/Dialog/DialogLink';
 // import DialogLabel from '../../components/Dialog/DialogLabel';
 // import { document as documentType, Snacks } from '../../../constants/document-constants';
+import { useSnackbar } from '../../../components/snackbar';
 import { setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
 import DocumentCover from '../../components/DocumentForms/DocumentCover';
 import CustomerDialog from '../../components/Dialog/CustomerDialog';
 import MachineDialog from '../../components/Dialog/MachineDialog';
 import { Snacks } from '../../../constants/document-constants';
+import { PATH_DOCUMENT } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
