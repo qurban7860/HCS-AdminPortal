@@ -11,8 +11,7 @@ import {
   Link,
   Button
 } from '@mui/material';
-import { PATH_DASHBOARD, PATH_DOCUMENT, PATH_SETTING } from '../../../routes/paths';
-import { useSnackbar } from '../../../components/snackbar';
+import { ThumbnailDocButton } from '../../components/Thumbnails'
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
@@ -38,11 +37,13 @@ import FormLabel from '../../components/DocumentForms/FormLabel';
 // import DialogLink from '../../components/Dialog/DialogLink';
 // import DialogLabel from '../../components/Dialog/DialogLabel';
 // import { document as documentType, Snacks } from '../../../constants/document-constants';
+import { useSnackbar } from '../../../components/snackbar';
 import { setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
 import DocumentCover from '../../components/DocumentForms/DocumentCover';
 import CustomerDialog from '../../components/Dialog/CustomerDialog';
 import MachineDialog from '../../components/Dialog/MachineDialog';
 import { Snacks } from '../../../constants/document-constants';
+import { PATH_DOCUMENT } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -194,14 +195,14 @@ const handleNewFile = async () => {
 
   return (
     <>
-      {!customerPage && !machinePage && !drawingPage && 
+      {!customerPage && !machinePage && !drawingPage &&
         <DocumentCover content={defaultValues?.displayName} backLink={!customerPage && !machinePage && !machineDrawings} machineDrawingsBackLink={machineDrawings}  generalSettings />
       }
         <Grid item md={12} mt={2}>
           <Card sx={{ p: 3 }}>
-          <ViewFormEditDeleteButtons 
+          <ViewFormEditDeleteButtons
           customerAccess={defaultValues?.customerAccess}
-          isActive={defaultValues.isActive}          
+          isActive={defaultValues.isActive}
           // disableEditButton={machine?.status?.slug==='transferred'}
           // disableDeleteButton={machine?.status?.slug==='transferred'}
           onDelete={machineDrawings && handleDeleteDrawing}
@@ -230,7 +231,7 @@ const handleNewFile = async () => {
                   )
                 }
               />
-              
+
               {!customerPage && !machineDrawings && !drawingPage && defaultValues.customer && (
                 <ViewFormField
                   sm={6}
@@ -244,7 +245,7 @@ const handleNewFile = async () => {
                   }
                 />
               )}
-              
+
               {!machinePage && !machineDrawings && !drawingPage &&  defaultValues?.machine && (
                 <ViewFormField
                   sm={6}
@@ -297,7 +298,7 @@ const handleNewFile = async () => {
                         </Grid>
                       </Grid>
                     ))}
-                    {index === 0 && ( <Button title="Add/Upload Files in Current version." variant="contained" color="inherit" onClick={handleNewFile}  sx={{width:'140px', height:'140px', borderRadius:'16px'}} >Add/Upload Files</Button>)}
+                    {index === 0 && (<ThumbnailDocButton onClick={handleNewFile}/>)}
                       <ViewFormAudit defaultValues={fileValues} />
                   </Grid>
                 )})}

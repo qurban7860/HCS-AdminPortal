@@ -20,7 +20,7 @@ import {
   setDocumentHistoryNewVersionFormVisibility,
 } from '../../../redux/slices/document/document';
 // components
-import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
+import { Thumbnail, ThumbnailDocButton } from '../../components/Thumbnails';
 import { useSnackbar } from '../../../components/snackbar';
 import { Snacks } from '../../../constants/document-constants';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
@@ -151,7 +151,7 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
   return (
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons isActive={defaultValues.isActive} customerAccess={defaultValues?.customerAccess} handleEdit={handleEdit} onDelete={onDelete}
-      backLink={(customerPage || machinePage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDocumentViewFormVisibility(false))} 
+      backLink={(customerPage || machinePage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDocumentViewFormVisibility(false))}
       : () => navigate(PATH_DOCUMENT.document.list)}
       disableEditButton={machine?.status?.slug==='transferred'}
       disableDeleteButton={machine?.status?.slug==='transferred'}
@@ -189,7 +189,7 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
                   getCallAfterDelete={callAfterDelete}
                 />
               ))}
-              <Button title="Add/Upload Files in Current version." variant="contained" color="inherit" onClick={handleNewFile}  sx={{width:'140px', height:'140px', borderRadius:'16px'}} >Add/Upload Files</Button>
+              <ThumbnailDocButton onClick={handleNewFile} />
           </Grid>
         </Grid>
         <Grid container sx={{ mt: 2 }}>

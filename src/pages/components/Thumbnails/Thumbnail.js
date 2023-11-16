@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import download from 'downloadjs';
 import { useTheme } from '@mui/material/styles';
-import { Stack, Tooltip, Typography } from '@mui/material';
+import { Stack, Tooltip, Typography, Grid } from '@mui/material';
 import {
   ThumbnailCard,
   ThumbnailCardContent,
@@ -36,6 +36,7 @@ export function Thumbnail({
   const [imageName, setImageName] = useState('');
   const [imageData, setImageData] = useState('');
   const [imageExtension, setImageExtension] = useState('');
+  const [hovered, setHovered] = useState(false);
   const theme = useTheme();
   const dispatch = useDispatch();
   const regEx = /^[^2]*/;
@@ -114,62 +115,71 @@ export function Thumbnail({
   return (
     <ThumbnailCard>
       <ThumbnailGrid item justifyContent="center">
-        <ThumbnailCardContent component={Stack} display="block" height="110px">
-          {!hideDelete && (
-            <DeleteIconButton
-              left={file?.fileType.startsWith('image') ? 44 : 76}
-              onClick={() =>
-                handleDelete(
-                  currentDocument._id,
-                  currentDocument?.documentVersions[0]._id,
-                  file._id
-                )
-              }
-            />
+        <ThumbnailCardContent
+          component={Stack}
+          display="block"
+          height="110px"
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+        >
+          {hovered && (
+            <Grid item>
+              {!hideDelete && (
+                <DeleteIconButton
+                  left={file?.fileType.startsWith('image') ? 44 : 76}
+                  onClick={() =>
+                    handleDelete(
+                      currentDocument._id,
+                      currentDocument?.documentVersions[0]._id,
+                      file._id
+                    )
+                  }
+                />
+              )}
+              {file?.fileType.startsWith('image') && (
+                <ThumbnailIconButtonDefault
+                  icon="icon-park-outline:preview-open"
+                  left={76}
+                  size="small"
+                  onClick={() => {
+                    handleDownloadAndPreview(
+                      currentDocument._id,
+                      currentDocument?.documentVersions[0]._id,
+                      file._id,
+                      file.name,
+                      file.extension
+                    );
+                  }}
+                />
+              )}
+              {file?.fileType.startsWith('image') && (
+                <ImagePreviewDialog
+                  onPreview={onPreview}
+                  handleClosePreview={handleClosePreview}
+                  handleDownloadImage={handleDownloadImage}
+                  imageName={imageName}
+                  imageExtension={imageExtension}
+                  file={file}
+                  imageData={imageData}
+                />
+              )}
+              <ThumbnailIconButtonDefault
+                icon="line-md:download-loop"
+                left={108}
+                size="small"
+                onClick={() =>
+                  handleDownload(
+                    currentDocument._id,
+                    currentDocument?.documentVersions[0]._id,
+                    file._id,
+                    file.name,
+                    file.extension
+                  )
+                }
+                theme={theme}
+              />
+            </Grid>
           )}
-          {file?.fileType.startsWith('image') && (
-            <ThumbnailIconButtonDefault
-              icon="icon-park-outline:preview-open"
-              left={76}
-              size="small"
-              onClick={() => {
-                handleDownloadAndPreview(
-                  currentDocument._id,
-                  currentDocument?.documentVersions[0]._id,
-                  file._id,
-                  file.name,
-                  file.extension
-                );
-              }}
-            />
-          )}
-          {file?.fileType.startsWith('image') && (
-            <ImagePreviewDialog
-              onPreview={onPreview}
-              handleClosePreview={handleClosePreview}
-              handleDownloadImage={handleDownloadImage}
-              imageName={imageName}
-              imageExtension={imageExtension}
-              file={file}
-              imageData={imageData}
-            />
-          )}
-
-          <ThumbnailIconButtonDefault
-            icon="line-md:download-loop"
-            left={108}
-            size="small"
-            onClick={() =>
-              handleDownload(
-                currentDocument._id,
-                currentDocument?.documentVersions[0]._id,
-                file._id,
-                file.name,
-                file.extension
-              )
-            }
-            theme={theme}
-          />
           {file?.fileType.startsWith('image') && file.thumbnail && (
             <ThumbnailCardMedia
               component="img"
