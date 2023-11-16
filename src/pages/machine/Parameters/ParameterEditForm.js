@@ -58,7 +58,7 @@ export default function ParameterEditForm() {
     name: Yup.string().max(40).required('Name is required'),
     description: Yup.string().max(2000),
     isActive: Yup.boolean(),
-    code: Yup.string().max(20).required('Code is required'),
+    code: Yup.string().max(200).required('Code is required'),
   });
 
   const defaultValues = useMemo(
