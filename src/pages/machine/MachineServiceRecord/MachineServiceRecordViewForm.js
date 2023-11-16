@@ -112,7 +112,10 @@ function MachineServiceParamViewForm() {
           disableEditButton={machine?.status?.slug==='transferred'}
           disableDeleteButton={machine?.status?.slug==='transferred'}
           skeletonIcon={ isLoading && !machineServiceRecord?._id }
-          handleEdit={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleEdit} onDelete={!machineServiceRecord?.isHistory && machineServiceRecord?._id && onDelete} backLink={() => dispatch(isHistorical ? setMachineServiceRecordHistoryFormVisibility(true) : setAllFlagsFalse())}
+          handleEdit={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleEdit} 
+          onDelete={!machineServiceRecord?.isHistory && machineServiceRecord?._id && onDelete} 
+          backLink={() => dispatch( // isHistorical ? setMachineServiceRecordHistoryFormVisibility(true) : 
+          setAllFlagsFalse())}
         />
         
         <Grid container>
@@ -138,7 +141,7 @@ function MachineServiceParamViewForm() {
 
           <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
           {machineServiceRecord?.serviceRecordConfig?.checkItemLists?.length > 0 && 
-            <Grid item md={12} sx={{ px: 2, py: 1, overflowWrap: 'break-word' }}>
+            <Grid item md={12} sx={{  overflowWrap: 'break-word' }}>
               <Grid item md={12} sx={{display:'flex', flexDirection:'column'}}>
                 {machineServiceRecord?.serviceRecordConfig?.checkItemLists?.length > 0 ? 
                 (machineServiceRecord?.serviceRecordConfig?.checkItemLists.map((row, index) =>
