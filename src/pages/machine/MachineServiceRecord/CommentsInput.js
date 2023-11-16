@@ -4,6 +4,32 @@ import PropTypes from 'prop-types';
 import { Stack, Box, TextField, Autocomplete, Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 // import { RHFTextField, RHFAutocomplete } from '../../../components/hook-form';
 
+// const NumericFormatCustom = React.forwardRef(function NumericFormatCustom( props, ref ) {
+//     const { onChange, ...other } = props;
+//     return (
+//     <NumericFormat
+//         {...other}
+//         getInputRef={ref}
+//         onValueChange={(values) => {
+//             onChange({
+//                 target: {
+//                     name: props.name,
+//                     value: values.value,
+//                 },
+//             });
+//         }}
+//         thousandSeparator
+//         valueIsNumericString
+//         prefix="$"
+//     />
+//     );
+//     });
+
+//     NumericFormatCustom.propTypes = {
+//         name: PropTypes.string.isRequired,
+//         onChange: PropTypes.func.isRequired,
+//     };
+
 const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                     handleChangeCheckItemListValue, 
                     handleChangeCheckItemListDate,
@@ -14,7 +40,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                 }) => {
                     
     const { statusTypes } = useSelector((state) => state.serviceRecordConfig);
-
+console.log("checkParamList : ",checkParamList,statusTypes)
   return (
     <>
     <Stack spacing={1} >
@@ -31,7 +57,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                 InputProps={{ inputProps: { maxLength: 200 } }}
                 InputLabelProps={{ shrink: checkParamList[index]?.checkItems[childIndex]?.checked }}
             />}
-            
+
             { childRow?.inputType === 'Long Text' &&<TextField 
                 // fullWidth
                 type="text"
@@ -78,9 +104,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                         format="dd/mm/yyyy"
                         disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
                         value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue || null}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
+                        // InputProps={{ inputComponent: NumericFormatCustom }}
                         onChange={(e) =>  handleChangeCheckItemListDate(index, childIndex, e.target.value) } 
                         size="small" 
                         required={childRow?.isRequired}
@@ -110,14 +134,12 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                     />}
 
                     { childRow?.inputType === 'Status' && <Autocomplete
-                        name={`${index}${childIndex}`} 
+                        // name={`${index}${childIndex}`} 
                         disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
-                        value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue  }
+                        value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue || '' }
                         options={statusTypes}
                         onChange={(event, newInputValue) =>  handleChangeCheckItemListStatus(index, childIndex, newInputValue) }
                         renderInput={(params) => <TextField {...params} label="Status" size='small' />}
-                        InputLabelProps={{ shrink: checkParamList[index]?.checkItems[childIndex]?.checked }}
-
                     /> }
             </Box>
     </Stack>
@@ -137,4 +159,6 @@ CommentsInput.propTypes = {
     handleChangeCheckItemListChecked: PropTypes.func,
     handleChangeCheckItemListCheckBoxValue: PropTypes.func,
   };
+
+
 export default memo(CommentsInput)

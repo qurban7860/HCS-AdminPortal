@@ -25,7 +25,7 @@ import CurrentIcon from '../../components/Icons/CurrentIcon';
 
 function MachineServiceParamViewForm() {
 
-  const { machineServiceRecord, isHistorical } = useSelector((state) => state.machineServiceRecord);
+  const { machineServiceRecord, isHistorical, isLoading } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine)
 
   const dispatch = useDispatch();
@@ -43,7 +43,9 @@ function MachineServiceParamViewForm() {
   };
 
   const handleEdit = async () => {
-    dispatch(setMachineServiceRecordEditFormVisibility(true))
+      await dispatch(setMachineServiceRecordEditFormVisibility(true))
+      await dispatch(getMachineServiceRecord(machine._id, machineServiceRecord?._id));
+
   };
 
   const handleServiceRecordHistory = async () => {
@@ -106,10 +108,11 @@ function MachineServiceParamViewForm() {
   return (
     <Card sx={{ p: 2 }}>
       <Grid>
-        <ViewFormEditDeleteButtons isActive={defaultValues.isActive}  
+        <ViewFormEditDeleteButtons isLoading={isLoading} isActive={defaultValues.isActive}  
           disableEditButton={machine?.status?.slug==='transferred'}
           disableDeleteButton={machine?.status?.slug==='transferred'}
-          handleEdit={!machineServiceRecord?.isHistory && handleEdit} onDelete={!machineServiceRecord?.isHistory && onDelete} backLink={() => dispatch(isHistorical ? setMachineServiceRecordHistoryFormVisibility(true) : setAllFlagsFalse())}
+          skeletonIcon={ isLoading && !machineServiceRecord?._id }
+          handleEdit={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleEdit} onDelete={!machineServiceRecord?.isHistory && machineServiceRecord?._id && onDelete} backLink={() => dispatch(isHistorical ? setMachineServiceRecordHistoryFormVisibility(true) : setAllFlagsFalse())}
         />
         
         <Grid container>

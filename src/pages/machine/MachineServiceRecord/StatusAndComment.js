@@ -29,47 +29,46 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
           <Typography variant="body2" ><b>{`${index+1}.${childIndex+1}. `}</b>{`${childRow.name}`}</Typography>
         </Grid>
         {childRow?.recordValue?.checkItemValue && 
-        <Grid >
-          <Grid sx={{ mt:1,
-            alignItems: 'center',
-            whiteSpace: 'pre-line',
-            wordBreak: 'break-word' }}>
-            <Typography variant="body2" >
-                <b>Value: </b>
-                {childRow?.inputType.toLowerCase() === 'boolean' && childRow?.recordValue?.checkItemValue && <Iconify
-                  sx={{mb:-0.5}}
-                  color={childRow?.recordValue?.checkItemValue === true || childRow?.recordValue?.checkItemValue  === 'true' ? '#008000' : '#FF0000'} 
-                  icon={ childRow?.recordValue?.checkItemValue === true || childRow?.recordValue?.checkItemValue  === 'true' ? 'ph:check-square-bold' : 'charm:square-cross' } />}
-
-                {childRow?.inputType.toLowerCase() === 'date' ? fDate(childRow?.recordValue?.checkItemValue) : 
-                  <> 
-                    {childRow?.inputType.toLowerCase() === 'status' ? (childRow?.recordValue?.checkItemValue && 
-                      <Chip size="small" label={childRow?.recordValue?.checkItemValue} /> || '') : 
-                      (childRow?.inputType.toLowerCase() === 'number' || 
-                      childRow?.inputType.toLowerCase() === 'long text' || 
-                      childRow?.inputType.toLowerCase() === 'short text') && 
-                      childRow?.recordValue?.checkItemValue 
-                    }
-                      {childRow?.recordValue?.checkItemValue?.trim() && childRow?.inputType?.toLowerCase() !== 'boolean' && <CopyIcon value={childRow?.recordValue?.checkItemValue}/>}
-                  </> 
-              }
-            </Typography>
-          </Grid>
-
-          <Grid sx={{ 
-            alignItems: 'center',
-            whiteSpace: 'pre-line',
-            wordBreak: 'break-word' }}>
-            {childRow?.recordValue?.comments && <Typography variant="body2" sx={{mr:1}} ><b>Comment: </b>{childRow?.recordValue?.comments}
-            {childRow?.recordValue?.comments?.trim() && <CopyIcon value={childRow?.recordValue?.comments || ''} />}
+          <Grid >
+            <Grid sx={{ mt:1,
+              alignItems: 'center',
+              whiteSpace: 'pre-line',
+              wordBreak: 'break-word' }}>
+              <Typography variant="body2" >
+                  <b>Value: </b>
+                  {childRow?.inputType.toLowerCase() === 'boolean' && childRow?.recordValue?.checkItemValue && <Iconify
+                    sx={{mb:-0.5}}
+                    color={childRow?.recordValue?.checkItemValue === true || childRow?.recordValue?.checkItemValue  === 'true' ? '#008000' : '#FF0000'} 
+                    icon={ childRow?.recordValue?.checkItemValue === true || childRow?.recordValue?.checkItemValue  === 'true' ? 'ph:check-square-bold' : 'charm:square-cross' } />}
+                  {childRow?.inputType.toLowerCase() === 'date' ? fDate(childRow?.recordValue?.checkItemValue) : 
+                    <> 
+                      {childRow?.inputType.toLowerCase() === 'status' ? (childRow?.recordValue?.checkItemValue && 
+                        <Chip size="small" label={childRow?.recordValue?.checkItemValue} /> || '') : 
+                        (childRow?.inputType.toLowerCase() === 'number' || 
+                        childRow?.inputType.toLowerCase() === 'long text' || 
+                        childRow?.inputType.toLowerCase() === 'short text') && 
+                        childRow?.recordValue?.checkItemValue 
+                      }
+                        {childRow?.recordValue?.checkItemValue?.trim() && childRow?.inputType?.toLowerCase() !== 'boolean' && <CopyIcon value={childRow?.recordValue?.checkItemValue}/>}
+                    </> 
+                }
+              </Typography>
+            </Grid>
+            <Grid sx={{ 
+              alignItems: 'center',
+              whiteSpace: 'pre-line',
+              wordBreak: 'break-word' }}>
+              {childRow?.recordValue?.comments && <Typography variant="body2" sx={{mr:1}} ><b>Comment: </b>{childRow?.recordValue?.comments}
+                {childRow?.recordValue?.comments?.trim() && <CopyIcon value={childRow?.recordValue?.comments || ''} />}
               </Typography>}
+            </Grid>
           </Grid>
+        }
           <ViewFormServiceRecordVersionAudit value={childRow?.recordValue}/>
-          {childRow?.historicalData && childRow?.historicalData?.length > 0 &&  <>
-          <Divider  sx={{ borderStyle: 'solid' }} />
+        {childRow?.historicalData && childRow?.historicalData?.length > 0 &&  <>
+          <Divider  sx={{ borderStyle: 'solid', mt:childRow?.recordValue?.checkItemValue ? 0 : 1 }} />
             <HistoryDropDownUpIcons activeIndex={`${activeIndex || ''}`} indexValue={`${index}${childIndex}`} onClick={handleAccordianClick}/>
           </>}
-        </Grid>}
       </Grid>
 
       {activeIndex === `${index}${childIndex}` && childRow?.historicalData && childRow?.historicalData?.length > 0 && 
