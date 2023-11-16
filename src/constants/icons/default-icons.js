@@ -128,7 +128,7 @@ export const ICONS = {
   DISALLOWED: {
     icon: 'mdi:book-cancel-outline',
     color: '#FF0000',
-    heading: 'Disallowed',
+    heading: 'Customer Access Blocked',
   },
   // ----------------------------------------------------------------
 
