@@ -55,7 +55,7 @@ export default function SignInLogListTableRow({
   return (
       <StyledTableRow hover selected={selected}>
         { useScreenSize('lg') && <TableCell align="left"> {requestedLogin || ''} </TableCell>}
-        <LinkTableCell align="left" onClick={onViewRow} param={user?.name} />
+        {user && <LinkTableCell align="left" onClick={onViewRow} param={user?.name} /> || <TableCell align="left"> </TableCell>}
         { useScreenSize('lg') && <TableCell align="left"> {loginIP} </TableCell>}
         <TableCell align="left"> {fDateTime(loginTime)} </TableCell>
         <TableCell align="left">{fDateTime(logoutTime)}</TableCell>
