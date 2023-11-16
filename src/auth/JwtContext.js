@@ -1,13 +1,15 @@
 import PropTypes from 'prop-types';
 import { createContext, useEffect, useReducer, useCallback, useMemo } from 'react';
-// import jwtDecode from 'jwt-decode';
-// import { ROOT_CONFIG } from 'src/config-global';
 import { CONFIG } from '../config-global';
 // utils
 import axios from '../utils/axios';
 import localStorageAvailable from '../utils/localStorageAvailable';
 //
 import { isValidToken, setSession } from './utils';
+import { clearAllPersistedStates } from '../redux/slices/auth/clearPersistStates';
+// import { WebSocketConnection } from './WebSocketContext';
+
+
 
 // ----------------------------------------------------------------------
 
@@ -73,7 +75,7 @@ AuthProvider.propTypes = {
 export function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const storageAvailable = useMemo(() => localStorageAvailable(), []);
-
+  
   const initialize = useCallback(async () => {
     try {
       const accessToken = storageAvailable ? localStorage.getItem('accessToken') : '';
@@ -86,23 +88,6 @@ export function AuthProvider({ children }) {
           displayName: localStorage.getItem('name'),
         };
         const userId = localStorage.getItem('userId');
-
-        // const tokenExpTime = jwtDecode(accessToken).exp * 1000;
-        // const tokenRefreshTime = tokenExpTime - 20 * 60 * 1000;
-        // const resetTokenTime = setTimeout(async () => {
-        //   try {
-        //     const response = await axios.post(`${CONFIG.SERVER_URL}security/refreshToken`, {
-        //       userID: userId,
-        //     });
-        //     const newAccessToken = response.data.accessToken;
-
-        //     localStorage.setItem('accessToken', newAccessToken);
-
-        //     initialize();
-        //   } catch (error) {
-        //     console.error(error);
-        //   }
-        // }, tokenRefreshTime - Date.now() + 30 * 1000);
 
         dispatch({
           type: 'INITIAL',
@@ -138,20 +123,25 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     initialize();
-  }, [initialize]);
+  }, [initialize]);  
 
   // LOGIN
 
   async function getConfigs(){
-    const configsResponse = await axios.get(`${CONFIG.SERVER_URL}configs`);
-
+    localStorage.removeItem("configurations");
+    const configsResponse = await axios.get(`${CONFIG.SERVER_URL}configs`,
+    {
+      params: {
+        isActive: true,
+        isArchived: false
+      }
+    });
     if(configsResponse && Array.isArray(configsResponse.data) && configsResponse.data.length>0 ) {
-      const configs = configsResponse.data.map((c)=>({name:c.name,value:c.value}));
-      localStorage.setItem("CONFIGS",JSON.stringify(configs));
+      const configs = configsResponse.data.map((c)=>({name:c.name, type:c.type, value:c.value, notes:c.notes}));
+      localStorage.setItem("configurations",JSON.stringify(configs));
     }
   }
 
-   
   const login = useCallback(async (email, password) => {
     localStorage.removeItem('userId');
     localStorage.removeItem('email');
@@ -164,15 +154,10 @@ export function AuthProvider({ children }) {
       password,
     })
 
-    
-
     if (response.data.multiFactorAuthentication){
-      console.log('res----------->', response.data);
-
       localStorage.setItem("userId", response.data.userId);
       localStorage.setItem("MFA", true);
-    }
-    else{
+    } else{
       const { accessToken, user, userId } = response.data;
       const rolesArrayString = JSON.stringify(user.roles);
       localStorage.setItem('email', user.email);
@@ -183,7 +168,6 @@ export function AuthProvider({ children }) {
       setSession(accessToken);
       await getConfigs();
       
-
       dispatch({
         type: 'LOGIN',
         payload: {
@@ -191,9 +175,9 @@ export function AuthProvider({ children }) {
           userId
         },
       });
-    }
 
-    
+      // window.location.reload();
+    }
   }, []);
 
   // MULTI FACTOR CODE
@@ -256,8 +240,8 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('name');
     localStorage.removeItem('userRoles');
     localStorage.removeItem('accessToken');
+    await dispatch(clearAllPersistedStates)
     window.location.reload();
-    // localStorage.clear();
     dispatch({
       type: 'LOGOUT',
     });
@@ -280,3 +264,5 @@ export function AuthProvider({ children }) {
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;
 }
+
+

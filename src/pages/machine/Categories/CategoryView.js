@@ -28,7 +28,7 @@ export default function CategoryView({ editPage }) {
       <StyledCardContainer>
         <Cover
           name={category?.name}
-          setting="setting"
+          setting
           backLink={PATH_MACHINE.machines.settings.categories.list}
         />
       </StyledCardContainer>

@@ -21,6 +21,7 @@ import { PATH_MACHINE } from '../../../routes/paths';
 // import Iconify from '../../../components/iconify/Iconify';
 //  components
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormAprovedSubmit from '../../components/ViewForms/ViewFormAprovedSubmit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
@@ -45,7 +46,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
   const navigate = useNavigate();
   const { serviceRecordConfig, editFormVisibility } = useSelector((state) => state.serviceRecordConfig);
   const { id } = useParams();
-  const userId = localStorage.getItem('userId');
+  const VerificationIndex = serviceRecordConfig?.verifications?.length || 1
   const dispatch = useDispatch();
   useLayoutEffect(() => {
     if (id != null) {
@@ -76,6 +77,9 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
       updatedByFullName: serviceRecordConfig?.updatedBy?.name || '',
       updatedAt: serviceRecordConfig?.updatedAt || '',
       updatedIP: serviceRecordConfig?.updatedIP || '',
+      submittedInfo: serviceRecordConfig?.submittedInfo || {},
+      approvedInfo: serviceRecordConfig?.verifications[VerificationIndex -1 ] || {},
+
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentServiceRecordConfig, serviceRecordConfig]
@@ -103,62 +107,54 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
     try {
       await dispatch(approveServiceRecordConfig(serviceRecordConfig._id, true));
       await dispatch(getServiceRecordConfig(serviceRecordConfig._id));
-      enqueueSnackbar(Snacks.configuration_Verification_Success);
+      enqueueSnackbar(Snacks.configuration_approve_Success);
     } catch (error) {
       console.log(error);
       enqueueSnackbar(error, { variant: 'error' });
     }
   };
-  
-  const approveConfigHandler = async () => {
-    try {
-      await dispatch(changeConfigStatus(serviceRecordConfig._id, 'APPROVED'));
-      await dispatch(getServiceRecordConfig(serviceRecordConfig._id));
-      enqueueSnackbar(Snacks.configuration_Verification_Success);
-    } catch (error) {
-      console.log(error);
-      enqueueSnackbar(error, { variant: 'error' });
-    }
-  };
+
 
   const returnToDraft = async () => {
     try {
       await dispatch(changeConfigStatus(serviceRecordConfig._id, 'DRAFT'));
       await dispatch(getServiceRecordConfig(serviceRecordConfig._id));
-      enqueueSnackbar(Snacks.configuration_Verification_Success);
+      enqueueSnackbar('Document is submitted for draft!');
     } catch (error) {
       console.log(error);
       enqueueSnackbar(Snacks.configuration_Verification_Failed, { variant: 'error' });
     }
   };
-
   
   const returnToSubmitted = async () => {
     try {
       await dispatch(changeConfigStatus(serviceRecordConfig._id, 'SUBMITTED'));
       await dispatch(getServiceRecordConfig(serviceRecordConfig._id));
-      enqueueSnackbar(Snacks.configuration_Verification_Success);
+      enqueueSnackbar('Document is submitted for approval!');
     } catch (error) {
       console.log(error);
       enqueueSnackbar(Snacks.configuration_Verification_Failed, { variant: 'error' });
     }
   };
-
+  
   return (
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons 
         isActive={defaultValues.isActive} 
-        isVerified={serviceRecordConfig?.verifications } 
-        isVerifiedTitle="Approved By"
-        approveConfigHandler={defaultValues?.status.toLowerCase() === 'submitted' && serviceRecordConfig?.verifications?.length >= serviceRecordConfig?.noOfVerificationsRequired && approveConfigHandler}
+        approvers={serviceRecordConfig?.verifications } 
+        // isVerifiedTitle="Approved By"
+        approveConfiglength={`${serviceRecordConfig?.verifications?.length || 0}/${serviceRecordConfig?.noOfVerificationsRequired}`}
+        // approveConfigStatusHandler={defaultValues?.status.toLowerCase() === 'submitted' && serviceRecordConfig?.verifications?.length >= serviceRecordConfig?.noOfVerificationsRequired && approveConfigHandler}
         // approveConfig={ serviceRecordConfig?.verifications?.length >= serviceRecordConfig?.noOfVerificationsRequired}
-        isSubmitted={defaultValues?.status.toLowerCase() === 'submitted' && defaultValues?.status.toLowerCase() !== 'approved' && returnToDraft } 
+        isSubmitted={!serviceRecordConfig?.verifications?.length > 0 && defaultValues?.status.toLowerCase() === 'submitted' && defaultValues?.status.toLowerCase() !== 'approved' && returnToDraft } 
         returnToSubmitted={defaultValues?.status.toLowerCase() === 'draft' && defaultValues?.status.toLowerCase() !== 'approved' && returnToSubmitted } 
-        handleVerification={ (!serviceRecordConfig?.verifications?.some((verifiedUser)=> verifiedUser?.verifiedBy?._id !== userId ) && serviceRecordConfig?.verifications?.length < serviceRecordConfig?.noOfVerificationsRequired) && handleVerification } 
+        approveConfig={ serviceRecordConfig?.verifications?.length >= serviceRecordConfig?.noOfVerificationsRequired} 
+        approveHandler={defaultValues?.status.toLowerCase() === 'submitted' && 
+        serviceRecordConfig?.verifications?.length < serviceRecordConfig?.noOfVerificationsRequired && handleVerification}
         handleVerificationTitle="Approve"
         copyConfiguration={defaultValues?.status.toLowerCase() === 'approved' && (() => navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.copy(serviceRecordConfig._id)))}
         // ( serviceRecordConfig?.verifications.length > 0 && serviceRecordConfig?.verifications.find((verifiedUser)=> verifiedUser?.verifiedBy?._id !== userId )) || serviceRecordConfig?.verifications?.length <= serviceRecordConfig?.noOfVerificationsRequired &&
-        handleEdit={defaultValues?.status.toLowerCase() !== 'approved' ? toggleEdit : false  } 
+        handleEdit={defaultValues?.status.toLowerCase() !== 'approved' && defaultValues?.status.toLowerCase() !== 'submitted' && toggleEdit } 
         onDelete={onDelete} 
         backLink={() => navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.list)} 
       />
@@ -218,6 +214,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
         <ViewFormField sm={4} heading="Footer Center Text" param={defaultValues?.footer?.centerText} />
         <ViewFormField sm={4} heading="Footer Right Text" param={defaultValues?.footer?.rightText} />
       </Grid>
+        <ViewFormAprovedSubmit submittedInfo={defaultValues?.submittedInfo} approvedInfo={defaultValues.approvedInfo} />
         <ViewFormAudit defaultValues={defaultValues} />
     </Card>
   );

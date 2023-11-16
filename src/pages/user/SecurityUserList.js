@@ -16,6 +16,7 @@ import {
   useTable,
   getComparator,
   TableNoData,
+  TableSkeleton,
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
@@ -29,7 +30,8 @@ import {
   setSecurityUserEditFormVisibility,
   ChangeRowsPerPage,
   ChangePage,
-  setFilterBy
+  setFilterBy,
+  resetSecurityUsers
 } from '../../redux/slices/securityUser/securityUser';
 import { fDate } from '../../utils/formatTime';
 // constants
@@ -47,6 +49,7 @@ const TABLE_HEAD = [
   { id: 'email', visibility: 'xs1', label: 'Email', align: 'left' },
   { id: 'phone', visibility: 'xs2', label: 'Phone Number', align: 'left' },
   { id: 'roles.name.[]', visibility: 'md1', label: 'Roles', align: 'left' },
+  { id: 'isOnline', label: 'Online', align: 'center' },
   { id: 'currentEmployee', label: 'Employeed', align: 'center' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
@@ -71,11 +74,10 @@ export default function SecurityUserList() {
     // onChangePage,
     // onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
+    defaultOrderBy: 'isOnline', defaultOrder: 'desc',
   });
 
   const dispatch = useDispatch();
-
   const {
     securityUsers,
     error,
@@ -83,7 +85,7 @@ export default function SecurityUserList() {
     initial,
     securityUserEditFormVisibility,
     securityUserFormVisibility,
-    filterBy, page, rowsPerPage,
+    filterBy, page, rowsPerPage, isLoading
   } = useSelector((state) => state.user);
 
   const onChangeRowsPerPage = (event) => {
@@ -107,12 +109,6 @@ export default function SecurityUserList() {
 
   useEffect(() => {
     if (initial) {
-      //   if (users && !error) {
-      //     enqueueSnackbar(responseMessage);
-      //   }
-      // if(error) {
-      //   enqueueSnackbar(error, { variant: `error` });
-      // }
       setTableData(securityUsers);
     }
   }, [securityUsers, error, enqueueSnackbar, responseMessage, initial]);
@@ -124,13 +120,16 @@ export default function SecurityUserList() {
     filterRole,
     filterStatus,
   });
+  
 
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  
+  const denseHeight = 60;
   const isFiltered = filterName !== '' || filterRole !== 'all' || filterStatus !== 'all';
   const isNotFound =
     (!dataFiltered.length && !!filterName) ||
     (!dataFiltered.length && !!filterRole) ||
-    (!dataFiltered.length && !!filterStatus);
+    (!dataFiltered.length && !!filterStatus) || 
+    (!dataFiltered.length && !isLoading);
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
@@ -161,49 +160,8 @@ useEffect(()=>{
     setFilterRole(event.target.value);
   };
 
-  const handleDeleteRow = async (id) => {
-    try {
-      try {
-        dispatch(deleteSecurityUser(id));
-        dispatch(getSecurityUsers());
-        setSelected([]);
+  
 
-        if (page > 0) {
-          if (dataInPage.length < 2) {
-            setPage(page - 1);
-          }
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
-
-  const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row.id));
-    setSelected([]);
-    setTableData(deleteRows);
-
-    if (page > 0) {
-      if (selectedRows.length === dataInPage.length) {
-        setPage(page - 1);
-      } else if (selectedRows.length === dataFiltered.length) {
-        setPage(0);
-      } else if (selectedRows.length > dataInPage.length) {
-        const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-        setPage(newPage);
-      }
-    }
-  };
-
-  const handleEditRow = (id) => {
-    // console.log('id', id);
-    // console.log('edit');
-    dispatch(setSecurityUserEditFormVisibility(true));
-    navigate(PATH_SECURITY.users.edit(id));
-  };
   const handleViewRow = (id) => {
     // dispatch(getSecurityUser(id))
     navigate(PATH_SECURITY.users.view(id));
@@ -216,8 +174,11 @@ useEffect(()=>{
     setFilterStatus('all');
   };
 
+  const onRefresh = () => {
+    dispatch(getSecurityUsers());
+  };
+
   return (
-    <>
       <Container maxWidth={false}>
         <Card sx={{ height: 160, position: 'relative' }}>
           <Cover name="Users" icon="ph:users-light" />
@@ -239,6 +200,7 @@ useEffect(()=>{
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
+            refresh={onRefresh}
           />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
@@ -257,23 +219,25 @@ useEffect(()=>{
                 />
 
                 <TableBody>
-                  {dataFiltered
+                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => (
-                      <UserTableRow
+                    .map((row, index) =>
+                      row ? (
+                        <UserTableRow
                         key={row._id}
                         row={row}
                         selected={selected.includes(row._id)}
                         onSelectRow={() => onSelectRow(row._id)}
-                        onDeleteRow={() => handleDeleteRow(row._id)}
-                        onEditRow={() => handleEditRow(row._id)}
                         onViewRow={() => handleViewRow(row._id)}
                       />
-                    ))}
+                      ) : (
+                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                      )
+                    )}
+                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
-            <TableNoData isNotFound={isNotFound} />
           </TableContainer>
 
           {!isNotFound && <TablePaginationCustom
@@ -285,32 +249,12 @@ useEffect(()=>{
           />}
         </TableCard>
       </Container>
-
-      <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title={DIALOGS.DELETE.title}
-        content={DIALOGS.DELETE.content}
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRows(selected);
-              handleCloseConfirm();
-            }}
-          >
-            {DIALOGS.DELETE.title}
-          </Button>
-        }
-      />
-    </>
   );
 }
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus, filterRole }) {
+function applyFilter({ inputData, comparator, filterName, filterStatus, filterRole}) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {

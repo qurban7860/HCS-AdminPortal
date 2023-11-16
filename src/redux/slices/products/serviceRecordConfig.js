@@ -21,12 +21,11 @@ const initialState = {
   page: 0,
   rowsPerPage: 100,
   statusTypes: [
-    { _id:1 , name: 'Healthy'},
-    { _id:2 , name: 'Service Required'},
-    { _id:3 , name: 'Under Service'},
-    { _id:4 , name: 'Replacement Required'},
-    { _id:5 , name: 'Replaced Recently'},
-
+    'Healthy',
+    'Service Required',
+    'Under Service',
+    'Replacement Required',
+    'Replaced Recently',
   ],
   recordTypes: [
     { _id:1 , name: 'SERVICE'},
@@ -322,6 +321,7 @@ export function addServiceRecordConfig(params) {
           noOfVerificationsRequired: params.noOfVerificationsRequired,
           header: {},
           footer: {},
+          originalConfiguration: params.originalConfiguration || null,
           isActive: params.isActive,
         };
         /* eslint-enable */

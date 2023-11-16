@@ -10,18 +10,20 @@ import { useSnackbar } from '../../../components/snackbar';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import CollapsibleCheckedItemRow from './CollapsibleCheckedItemRow'
 
-const CheckItemTable = ({ checkParams, setCheckParams, ListTitle, setValue, checkItemCategory }) => {
-
+const CheckItemTable = ({ checkParams, setCheckParams, checkItemList, setCheckItemList, ListTitle, setValue, checkItemCategory }) => {
+  
     const isMobile = useResponsive('down', 'sm');
     const { enqueueSnackbar } = useSnackbar();
     const dispatch = useDispatch();
     const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
     const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
     const { activeCheckItems } = useSelector((state) => state.checkItems);
-    const [checkParamNumber, setCheckParamNumber]= useState(serviceRecordConfig?.checkParams?.length || 0);
-    const [checkItemList, setCheckItemList] = useState([]);
+    const [checkParamNumber, setCheckParamNumber]= useState(serviceRecordConfig?.checkItemLists?.length || 0);
     const [checkItemListTitleError, setItemListTitleError] = useState('');
     const [checkItemListError, setItemListError] = useState('');
+    // const [checkItemListButtonVariant, setCheckItemListButtonVariant] = useState('contained');
+    // const [checkItemListButtoncolor, setCheckItemListButtoncolor] = useState('primary');
+
       const handleInputChange = (value) => {
         if (value) {
           setCheckItemList((checkItems) => [...checkItems, value[value.length - 1]]);
@@ -69,9 +71,9 @@ const CheckItemTable = ({ checkParams, setCheckParams, ListTitle, setValue, chec
     try {
       const newArray =  checkItemList.filter((_, index) => index !== indexToRemove);
       setCheckItemList(newArray);
-      enqueueSnackbar('Deleted success!');
+      enqueueSnackbar('Check Item deleted successfully!');
     } catch (err) {
-      enqueueSnackbar('Delete failed!', { variant: 'error' });
+      enqueueSnackbar('Check Item Delete failed!', { variant: 'error' });
       console.error(err.message);
     }
   };
@@ -82,26 +84,36 @@ const CheckItemTable = ({ checkParams, setCheckParams, ListTitle, setValue, chec
     try {
       const newArray =  checkParams.filter((_, index) => index !== indexToRemove);
       setCheckParams(newArray);
-      enqueueSnackbar('Deleted success!');
+      enqueueSnackbar('Check Item deleted successfully!');
     } catch (err) {
-      enqueueSnackbar('Delete failed!', { variant: `error` });
+      enqueueSnackbar('Check Item delete failed!', { variant: `error` });
       console.error(err.message);
     }
   };
   
-useEffect(()=>{
-  if(ListTitle?.length > 200){
-    setItemListTitleError('Item List Title must be at most 200 characters')
-  }else{
-    setItemListTitleError('')
-  }
+  useEffect(()=>{
+    if(ListTitle?.length > 200){
+      setItemListTitleError('Item List Title must be at most 200 characters')
+    }else if(checkItemList?.length > 0 && ListTitle.trim() === ''){
+      setItemListTitleError('Item List Title must required!')
+    }else{
+      setItemListTitleError('')
+    }
 
-  if(checkItemList && checkItemList?.length > 100){
-    setItemListError('Check Items must be at most 99!')
-  }else{
-    setItemListError('')
-  }
-},[checkItemList, ListTitle ])
+    // if(checkItemList?.length > 0 && ListTitle.trim() !== ''){
+    //   setCheckItemListButtonVariant('outlined');
+    //   setCheckItemListButtoncolor('error');
+    // }else{
+    //   setCheckItemListButtonVariant('contained');
+    //   setCheckItemListButtoncolor('primary');
+    // }
+
+    if(checkItemList && checkItemList?.length > 100){
+      setItemListError('Check Items must be at most 99!')
+    }else{
+      setItemListError('')
+    }
+  },[checkItemList, ListTitle ])
 
   const saveCheckParam = (prevCheckParamNumber) =>{
           if(typeof ListTitle !== 'string' || ListTitle && ListTitle?.length === 0 ){
@@ -134,6 +146,7 @@ useEffect(()=>{
           enqueueSnackbar('Updated success!');
         }
         setValue('ListTitle','')
+        setValue('checkItemCategory',null)
         setCheckItemList([])
       } catch (err) {
         enqueueSnackbar('Save failed!', { variant: `error` });
@@ -141,6 +154,7 @@ useEffect(()=>{
       }
     }
   }
+
   return (
                   <Stack spacing={2}>
                     <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
@@ -220,9 +234,12 @@ useEffect(()=>{
                           disabled={(!checkItemList?.length ?? 0) || ( ListTitle?.trim() === '') }
                           onClick={()=>saveCheckParam(checkParamNumber)}
                           fullWidth={ isMobile }
-                          variant="contained" color='primary' sx={{ ...(isMobile && { width: '100%' })}}
+                          variant="contained" 
+                          color='primary' 
+                          sx={{ ...(isMobile && { width: '100%', })}}
                         >Save List</Button>
                       </Grid>
+
                     </Grid>
                     {checkParams && checkParams?.length > 0 && <Stack sx={{ minWidth: 250,  minHeight:75 }}>
                     <TableContainer >
@@ -244,6 +261,8 @@ export default memo(CheckItemTable)
 CheckItemTable.propTypes = {
     checkParams: PropTypes.array.isRequired,
     setCheckParams: PropTypes.func.isRequired,
+    checkItemList: PropTypes.array, 
+    setCheckItemList: PropTypes.func,
     ListTitle: PropTypes.string,
     setValue: PropTypes.func.isRequired,
     checkItemCategory: PropTypes.object,

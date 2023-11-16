@@ -183,7 +183,7 @@ export default function BlacklistIPList() {
             // mt: '24px',
           }}
         >
-          <Cover generalSettings="enabled" name="Blacklist IPs" icon="ph:users-light" />
+          <Cover generalSettings name="Blacklist IPs" icon="ph:users-light" />
         </Card>
 
         <TableCard>
@@ -227,6 +227,7 @@ export default function BlacklistIPList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
+                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
@@ -239,10 +240,6 @@ export default function BlacklistIPList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
-
-          <Grid md={12}>
-            <TableNoData isNotFound={isNotFound} />
-          </Grid>
         </TableCard>
       </Container>
 

@@ -43,11 +43,12 @@ import TableCard from '../components/ListTableTools/TableCard';
 const ROLE_OPTIONS = ['Administrator', 'Normal User', 'Guest User', 'Restriced User'];
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Config Name', align: 'left' },
-  { id: 'value',visibility: 'xs1', label: 'Config Value', align: 'left' },
+  { id: 'name', label: 'Config Name'},
+  { id: 'value', label: 'Config Value'},
+  { id: 'type', visibility: 'xs1', label: 'Type'},
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'updateBy', label: 'Update By', align: 'right' },
-  { id: 'updateAt', label: 'Update At', align: 'right' },
+  { id: 'updateBy', visibility: 'md1', label: 'Update By'},
+  { id: 'updateAt', visibility: 'md2', label: 'Update At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
@@ -69,7 +70,7 @@ export default function ConfigList() {
     // onChangePage,
     // onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'createdAt', defaultOrder: 'desc'
+    defaultOrderBy: 'updateAt', defaultOrder: 'desc'
   });
 
   const onChangeRowsPerPage = (event) => {
@@ -213,7 +214,7 @@ export default function ConfigList() {
     <>
       <Container maxWidth={false}>
         <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
-          <Cover generalSettings="enabled" name="Configs" icon="ph:users-light" />
+          <Cover generalSettings name="Configs" icon="ph:users-light" />
         </Card>
         <TableCard>
           <ConfigListTableToolbar
@@ -262,10 +263,10 @@ export default function ConfigList() {
                         onViewRow={() => handleViewRow(row._id)}
                       />
                     ))}
+                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
-            <TableNoData isNotFound={isNotFound} />
           </TableContainer>
 
           {!isNotFound && <TablePaginationCustom
@@ -302,7 +303,7 @@ export default function ConfigList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus, filterRole }) {
+function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
@@ -318,7 +319,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRo
       (config) =>
         config?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         config?.value?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(config?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+        fDate(config?.updateAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 

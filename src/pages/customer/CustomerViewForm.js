@@ -96,7 +96,7 @@ export default function CustomerViewForm() {
           <Card sx={{ width: '100%', p: '1rem', mb:3 }}>
             <ViewFormEditDeleteButtons
               isActive={defaultValues.isActive}
-              isVerified={customer?.verifications}
+              verifiers={customer?.verifications}
               handleVerification={handleVerification}
               handleEdit={handleEdit}
               onDelete={onDelete}

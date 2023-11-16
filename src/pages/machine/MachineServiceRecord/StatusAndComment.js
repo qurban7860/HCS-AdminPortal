@@ -1,53 +1,121 @@
-import React, { useState, memo, useEffect } from 'react'
+import React, { useState, memo } from 'react'
 import PropTypes from 'prop-types';
-import { Grid, Chip, TableRow, TableCell, Checkbox, Typography, Tooltip } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { Grid, Divider, Chip, TableRow, Typography } from '@mui/material';
 import { fDate } from '../../../utils/formatTime';
 import Iconify from '../../../components/iconify';
-import { HtmlTooltip, StyledTooltip } from '../../../theme/styles/default-styles';
-import MenuPopover from '../../../components/menu-popover/MenuPopover';
+import CopyIcon from '../../components/Icons/CopyIcon';
+import HistoryDropDownUpIcons from '../../components/Icons/HistoryDropDownUpIcons';
+import ViewFormServiceRecordVersionAudit from '../../components/ViewForms/ViewFormServiceRecordVersionAudit';
+import { StyledTableRow } from '../../../theme/styles/default-styles';
+
 
 const StatusAndComment = ({index, childIndex, childRow}) => {
 
-    const { machineServiceRecord } = useSelector((state) => state.machineServiceRecord);
-    const [checkItem, setCheckItem] = useState({});
+    const [activeIndex, setActiveIndex] = useState(null);
 
-    useEffect(() => {
-      setCheckItem(machineServiceRecord?.checkParams?.find((element) =>
-        element?.paramListTitle === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramListTitle 
-        &&
-        element?.serviceParam === machineServiceRecord?.serviceRecordConfig?.checkParams[index]?.paramList[childIndex]?._id));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    const handleAccordianClick = (accordianIndex) => {
+      if (accordianIndex === activeIndex) {
+        setActiveIndex(null);
+      } else {
+        setActiveIndex(accordianIndex);
+      }
+    };
 
-    
   return (
-    <>
-    <TableRow key={childRow._id} sx={{":hover": {  backgroundColor: "#dbdbdb66" } }}>
-      <TableCell>
-        <Grid sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', mx:-2}} >
-          <TableCell ><b>{`${childIndex+1}). `}</b>{`${childRow.name}`}<Iconify icon='material-symbols:history' sx={{mb:-0.6, mx:1, cursor: 'pointer'}} /></TableCell>
-          <TableCell align='right' >
-            <Grid  sx={{display: { md:'flex', xs: 'block', }, justifyContent:'end'}}>
-            {childRow?.inputType === 'Boolean' ? 
-            <Checkbox disabled checked={checkItem?.value || false }  sx={{ml:'auto', my:-0.9}} />  :
-              <Typography variant="body2" >
-                {childRow?.inputType === 'Date' ? fDate(checkItem?.date) : checkItem?.value }
-              </Typography> }
-              <Grid sx={{ display: 'flex', alignItems: 'center', justifyContent:'flex-end' }}>
-                {checkItem?.status && <Chip size="small" label={checkItem?.status} /> }
-              </Grid>
+    <StyledTableRow key={childRow._id}  >
+    <Grid item md={12} sx={{mx:2}} >
+      <Grid item md={12} sx={{my:0.7}}>
+        <Grid item md={12}>
+          <Typography variant="body2" ><b>{`${index+1}.${childIndex+1}. `}</b>{`${childRow.name}`}</Typography>
+        </Grid>
+        {childRow?.recordValue?.checkItemValue && 
+        <Grid >
+          <Grid sx={{ mt:1,
+            alignItems: 'center',
+            whiteSpace: 'pre-line',
+            wordBreak: 'break-word' }}>
+            <Typography variant="body2" >
+                <b>Value: </b>
+                {childRow?.inputType.toLowerCase() === 'boolean' && childRow?.recordValue?.checkItemValue && <Iconify
+                  sx={{mb:-0.5}}
+                  color={childRow?.recordValue?.checkItemValue === true || childRow?.recordValue?.checkItemValue  === 'true' ? '#008000' : '#FF0000'} 
+                  icon={ childRow?.recordValue?.checkItemValue === true || childRow?.recordValue?.checkItemValue  === 'true' ? 'ph:check-square-bold' : 'charm:square-cross' } />}
+
+                {childRow?.inputType.toLowerCase() === 'date' ? fDate(childRow?.recordValue?.checkItemValue) : 
+                  <> 
+                    {childRow?.inputType.toLowerCase() === 'status' ? (childRow?.recordValue?.checkItemValue && 
+                      <Chip size="small" label={childRow?.recordValue?.checkItemValue} /> || '') : 
+                      (childRow?.inputType.toLowerCase() === 'number' || 
+                      childRow?.inputType.toLowerCase() === 'long text' || 
+                      childRow?.inputType.toLowerCase() === 'short text') && 
+                      childRow?.recordValue?.checkItemValue 
+                    }
+                      {childRow?.recordValue?.checkItemValue?.trim() && childRow?.inputType?.toLowerCase() !== 'boolean' && <CopyIcon value={childRow?.recordValue?.checkItemValue}/>}
+                  </> 
+              }
+            </Typography>
+          </Grid>
+
+          <Grid sx={{ 
+            alignItems: 'center',
+            whiteSpace: 'pre-line',
+            wordBreak: 'break-word' }}>
+            {childRow?.recordValue?.comments && <Typography variant="body2" sx={{mr:1}} ><b>Comment: </b>{childRow?.recordValue?.comments}
+            {childRow?.recordValue?.comments?.trim() && <CopyIcon value={childRow?.recordValue?.comments || ''} />}
+              </Typography>}
+          </Grid>
+          <ViewFormServiceRecordVersionAudit value={childRow?.recordValue}/>
+          {childRow?.historicalData && childRow?.historicalData?.length > 0 &&  <>
+          <Divider  sx={{ borderStyle: 'solid' }} />
+            <HistoryDropDownUpIcons activeIndex={`${activeIndex || ''}`} indexValue={`${index}${childIndex}`} onClick={handleAccordianClick}/>
+          </>}
+        </Grid>}
+      </Grid>
+
+      {activeIndex === `${index}${childIndex}` && childRow?.historicalData && childRow?.historicalData?.length > 0 && 
+        <Grid item md={12} sx={{mb:1}} >
+          {childRow?.historicalData?.map((ItemHistory, ItemIndex ) => (<>
+          
+            {ItemHistory?.checkItemValue && <Grid sx={{ mt:1,
+              alignItems: 'center',
+              whiteSpace: 'pre-line',
+              wordBreak: 'break-word' }}>
+              <Typography variant="body2" sx={{mr:1, }}>
+                  <b>Value: </b>
+                  {childRow?.inputType?.toLowerCase() === 'boolean' && ItemHistory?.checkItemValue && <Iconify
+                    sx={{mb:-0.5}}
+                    color={ItemHistory?.checkItemValue === true || ItemHistory?.checkItemValue  === 'true' ? '#008000' : '#FF0000'} 
+                    icon={ItemHistory?.checkItemValue  === true || ItemHistory?.checkItemValue  === 'true' ? 'ph:check-square-bold' : 'charm:square-cross' } />}
+
+                  {childRow?.inputType?.toLowerCase() === 'date' ? fDate(ItemHistory?.checkItemValue) : 
+                    <> 
+                      {childRow?.inputType?.toLowerCase() === 'status' ? (ItemHistory?.checkItemValue && 
+                        <Chip size="small" label={ItemHistory?.checkItemValue} /> || '') : 
+                        (childRow?.inputType?.toLowerCase() === 'number' || 
+                          childRow?.inputType?.toLowerCase() === 'long text' || 
+                          childRow?.inputType?.toLowerCase() === 'short text') && 
+                          ItemHistory?.checkItemValue  
+                      }
+                      {ItemHistory?.checkItemValue?.trim() && childRow?.inputType?.toLowerCase() !== 'boolean' && <CopyIcon value={ItemHistory?.comments} />}
+                    </> 
+                }
+              </Typography>
+            </Grid>}
+           
+            <Grid sx={{  
+              alignItems: 'center',
+              whiteSpace: 'pre-line',
+              wordBreak: 'break-word' }}>
+              {ItemHistory?.comments && <Typography variant="body2" sx={{mr:1}} ><b>Comment: </b>{` ${ItemHistory?.comments || ''}`}
+              {ItemHistory?.comments?.trim() && <CopyIcon value={childRow?.comments} /> }
+              </Typography>}
             </Grid>
-          </TableCell>
-        </Grid>
-        <Grid sx={{ml:5, }} >
-          {checkItem?.comments && <Typography variant="body2" >{` ${checkItem?.comments}`}</Typography>}
-        </Grid>
-      </TableCell>
-        
-    </TableRow>
-    
-  </>
+            <ViewFormServiceRecordVersionAudit value={ItemHistory}/>
+            {ItemHistory?.checkItemValue && <Divider  sx={{ borderStyle: 'solid' }} />}
+          </>))}
+        </Grid>}
+      </Grid>
+    </StyledTableRow>
   )
 }
 StatusAndComment.propTypes = {

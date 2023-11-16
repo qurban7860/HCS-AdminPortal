@@ -187,7 +187,7 @@ export default function WhitelistIPList() {
             // mt: '24px',
           }}
         >
-          <Cover generalSettings="enabled" name="Whitelist IPs" icon="ph:users-light" />
+          <Cover generalSettings name="Whitelist IPs" icon="ph:users-light" />
         </Card>
 
         <TableCard>
@@ -231,6 +231,7 @@ export default function WhitelistIPList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
+                    <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
@@ -245,10 +246,6 @@ export default function WhitelistIPList() {
               onRowsPerPageChange={onChangeRowsPerPage}
             />
           }
-
-          <Grid md={12}>
-            <TableNoData isNotFound={isNotFound} />
-          </Grid>
         </TableCard>
       </Container>
 

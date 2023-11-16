@@ -91,7 +91,6 @@ export default function ServiceRecordConfigList() {
   // }, [dispatch]);
 
   useLayoutEffect(() => {
-    // console.log('Testing done')
     dispatch(getServiceRecordConfigs());
   }, [dispatch]);
 

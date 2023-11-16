@@ -3,9 +3,7 @@ import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 // @mui
 import {
   Table,
-  Tooltip,
   TableBody,
-  IconButton,
   TableContainer,
 } from '@mui/material';
 // redux
@@ -17,11 +15,10 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from '../../../components/table';
-import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
+import { useSnackbar } from '../../../components/snackbar';
 // sections
 import MachineServiceRecordListTableRow from './MachineServiceRecordListTableRow';
 import MachineServiceRecordListTableToolbar from './MachineServiceRecordListTableToolbar';
@@ -29,6 +26,7 @@ import {
   getMachineServiceRecords,
   getMachineServiceRecord,
   setMachineServiceRecordViewFormVisibility,
+  setDetailPageFlag,
   resetMachineServiceRecord,
   ChangeRowsPerPage,
   ChangePage,
@@ -42,9 +40,11 @@ import TableCard from '../../components/ListTableTools/TableCard';
 
 const TABLE_HEAD = [
   { id: 'serviceRecordConfig.docTitle', label: 'Service Configuration', align: 'left' },
-  { id: 'technician.name', visibility: 'xs5', label: 'Technician', align: 'left' },
+  // { id: 'technician.name', visibility: 'xs5', label: 'Technician', align: 'left' },
+  { id: 'versionNo', visibility: 'xs5', label: 'Version', align: 'left' },
   { id: 'serviceDate', label: 'Service Date', align: 'center' },
   { id: 'isActive', label: 'Active', align: 'center' },
+  { id: 'createdBy.name', label: 'Created By', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 // ----------------------------------------------------------------------
@@ -52,14 +52,13 @@ const TABLE_HEAD = [
 export default function MachineServiceRecordList() {
   const { machineServiceRecords, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine);
+  const { enqueueSnackbar } = useSnackbar();
 
   const {
     order,
     orderBy,
     setPage,
     //
-    selected,
-    onSelectAllRows,
     //
     onSort,
   } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
@@ -77,6 +76,7 @@ export default function MachineServiceRecordList() {
 
   useLayoutEffect(() => {
     dispatch(getMachineServiceRecords(machine?._id)); 
+    dispatch(setDetailPageFlag(false));
   }, [dispatch, machine?._id]);
 
   useEffect(() => {
@@ -123,9 +123,16 @@ export default function MachineServiceRecordList() {
   };
 
   const handleViewRow = async (id) => {
-    await dispatch(setMachineServiceRecordViewFormVisibility(true));
-    await dispatch(resetMachineServiceRecord())
-    await dispatch(getMachineServiceRecord(machine._id, id));
+    try{
+      await dispatch(setMachineServiceRecordViewFormVisibility(true));
+      await dispatch(resetMachineServiceRecord())
+      await dispatch(getMachineServiceRecord(machine._id, id));
+      await dispatch(setDetailPageFlag(false));
+    }catch(e){
+      enqueueSnackbar(e, { variant: `error` });
+      console.error(e);
+    }
+
   };
 
   const handleResetFilter = () => {
@@ -153,23 +160,6 @@ export default function MachineServiceRecordList() {
           />}
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
-              numSelected={selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row._id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" >
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            />
 
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
@@ -195,11 +185,11 @@ export default function MachineServiceRecordList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
+                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
           </TableContainer>
-        <TableNoData isNotFound={isNotFound} />
 
           {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
@@ -229,6 +219,8 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
     inputData = inputData.filter(
       (docCategory) =>
         docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        docCategory?.versionNo?.toString().indexOf(filterName.toLowerCase()) >= 0 ||
+        docCategory?.createdBy?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // (docCategory?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(docCategory?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );

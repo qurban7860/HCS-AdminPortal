@@ -185,7 +185,7 @@ export default function BlockedUserList() {
             // mt: '24px',
           }}
         >
-          <Cover generalSettings="enabled" name="Blocked User" icon="ph:users-light" />
+          <Cover generalSettings name="Blocked User" icon="ph:users-light" />
         </Card>
 
         <TableCard>
@@ -234,6 +234,7 @@ export default function BlockedUserList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
+                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
@@ -246,10 +247,6 @@ export default function BlockedUserList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
-
-          <Grid md={12}>
-            <TableNoData isNotFound={isNotFound} />
-          </Grid>
         </TableCard>
       </Container>
 

@@ -35,7 +35,7 @@ export default function ConfigView() {
             // mt: '24px',
           }}
         >
-          <Cover name={config?.name} generalSettings="enabled" backLink={PATH_SETTING.configs.list} />
+          <Cover name={config?.name} generalSettings backLink={PATH_SETTING.configs.list} />
         </Card>
         <ConfigViewForm />
       </Container>

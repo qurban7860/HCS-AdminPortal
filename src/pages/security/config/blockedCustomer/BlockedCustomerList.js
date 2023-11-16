@@ -183,7 +183,7 @@ export default function BlockedCustomerList() {
             // mt: '24px',
           }}
         >
-          <Cover generalSettings="enabled" name="Blocked Customer" icon="ph:users-light" />
+          <Cover generalSettings name="Blocked Customer" icon="ph:users-light" />
         </Card>
 
         <TableCard>
@@ -228,6 +228,7 @@ export default function BlockedCustomerList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
+                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
@@ -240,10 +241,6 @@ export default function BlockedCustomerList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
-
-          <Grid md={12}>
-            <TableNoData isNotFound={isNotFound} />
-          </Grid>
         </TableCard>
       </Container>
 

@@ -58,6 +58,7 @@ import {
   setMachineDrawingsFilterBy,
   machineDrawingsChangePage,
   machineDrawingsChangeRowsPerPage,
+  deleteDocument,
 } from '../../../redux/slices/document/document';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
@@ -85,7 +86,6 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
   const [rowsPerPage, setRowsPerPage] = useState(100);
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  const [openConfirm, setOpenConfirm] = useState(false);
   // const [documentBy, setDocumentBy] = useState({});
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
@@ -160,7 +160,7 @@ const  onChangePage = (event, newPage) => {
       { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left' }
     );
   }
-
+  
   useEffect(() => {
     const fetchData = async () => {
       dispatch(resetDocuments());
@@ -203,24 +203,7 @@ const  onChangePage = (event, newPage) => {
     }
   },[customerPage, machinePage, machineDrawings, machineDocumentsRowsPerPage, customerDocumentsRowsPerPage, machineDrawingsRowsPerPage, documentRowsPerPage])
 
-  // useEffect(()=>{
-  //   if(customerPage){
-  //     setDocumentBy({customer: true});
-  //   }else if(machinePage){
-  //     setDocumentBy({machine: true});
-  //   }
-  //   else if(machineDrawings){
-  //     setDocumentBy({drawing: true});
-  //   }
-  // },[customerPage, machinePage, machineDrawings ])
-  
-    // useEffect(() => {
-    //   if(documentBy && (customerPage || machinePage || machineDrawings ) ){
-    //     if(customer?._id || machine?._id){
-    //     }
-    //     await dispatch(getDocuments(documentBy));
-    //   }
-    // },[dispatch, documentBy])
+
 
   useEffect(() => {
     setTableData(documents);
@@ -236,9 +219,6 @@ const  onChangePage = (event, newPage) => {
   const denseHeight = 60;
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
-
-  const handleOpenConfirm = () => setOpenConfirm(true);
-  const handleCloseConfirm = () => setOpenConfirm(false);
 
   const filterNameDebounce = (value) => {
     if(machinePage){
@@ -286,44 +266,6 @@ const  onChangePage = (event, newPage) => {
     setPage(0);
     setFilterStatus(event.target.value);
   };
-
-  // const handleDeleteRow = async (id) => {
-  //   try {
-  //     await dispatch(deleteDocument(id));
-  //     dispatch(deleteDocument());
-  //     setSelected([]);
-
-  //     if (page > 0) {
-  //       if (dataInPage.length < 2) {
-  //         setPage(page - 1);
-  //       }
-  //     }
-  //   } catch (err) {
-  //     console.log(err.message);
-  //   }
-  // };
-
-  // const handleDeleteRows = (selectedRows) => {
-  //   const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-  //   setSelected([]);
-  //   setTableData(deleteRows);
-
-  //   if (page > 0) {
-  //     if (selectedRows.length === dataInPage.length) {
-  //       setPage(page - 1);
-  //     } else if (selectedRows.length === dataFiltered.length) {
-  //       setPage(0);
-  //     } else if (selectedRows.length > dataInPage.length) {
-  //       const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-  //       setPage(newPage);
-  //     }
-  //   }
-  // };
-
-  // const handleEditRow = (id) => {
-  //   // console.log(id);
-  //   navigate(PATH_DOCUMENT.document.edit(id));
-  // };
 
   const handleViewRow = (id) => {
       dispatch(resetDocument())
@@ -380,39 +322,13 @@ const  onChangePage = (event, newPage) => {
           onRowsPerPageChange={onChangeRowsPerPage}
         />}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <TableSelectedAction
-            numSelected={selected.length}
-            rowCount={tableData.length}
-            onSelectAllRows={(checked) =>
-              onSelectAllRows(
-                checked,
-                tableData.map((row) => row._id)
-              )
-            }
-            action={
-              <Tooltip title="Delete">
-                <IconButton color="primary" onClick={handleOpenConfirm}>
-                  <Iconify icon="eva:trash-2-outline" />
-                </IconButton>
-              </Tooltip>
-            }
-          />
-
           <Scrollbar>
             <Table size="small" sx={{ minWidth: 360 }}>
               <TableHeadCustom
                 order={order}
                 orderBy={orderBy}
                 headLabel={TABLE_HEAD}
-                // rowCount={tableData.length}
-                // numSelected={selected.length}
                 onSort={onSort}
-                // onSelectAllRows={(checked) =>
-                //   onSelectAllRows(
-                //     checked,
-                //     tableData.map((row) => row._id)
-                //   )
-                // }
               />
 
               <TableBody>
@@ -424,9 +340,6 @@ const  onChangePage = (event, newPage) => {
                         key={row._id}
                         row={row}
                         selected={selected.includes(row._id)}
-                        onSelectRow={() => onSelectRow(row._id)}
-                        // onDeleteRow={() => handleDeleteRow(row._id)}
-                        // onEditRow={() => handleEditRow(row._id)}
                         onViewRow={() => handleViewRow(row._id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         customerPage={customerPage}
@@ -437,12 +350,7 @@ const  onChangePage = (event, newPage) => {
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                     )
                   )}
-
-                {/* <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  /> */}
-
+                  <TableNoData isNotFound={isNotFound} />
               </TableBody>
             </Table>
           </Scrollbar>
@@ -455,34 +363,8 @@ const  onChangePage = (event, newPage) => {
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
         />}
-        <Grid item md={12}>
-          <TableNoData isNotFound={isNotFound} />
-        </Grid>
       </TableCard>
-
-      <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              // handleDeleteRows(selected);
-              handleCloseConfirm();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      />
-     {/* </Container> */}
+      {/* </Container> */}
     </>
   );
 }

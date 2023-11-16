@@ -1,20 +1,12 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
 // @mui
 import {
   Switch,
-  Stack,
-  Button,
   TableRow,
-  MenuItem,
   TableCell,
 } from '@mui/material';
 // components
-import Iconify from '../../components/iconify';
-import MenuPopover from '../../components/menu-popover';
-import ConfirmDialog from '../../components/confirm-dialog';
 import { fDateTime } from '../../utils/formatTime';
-import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 import LinkTableCell from '../components/ListTableTools/LinkTableCell';
 import { useScreenSize } from '../../hooks/useResponsive';
 
@@ -37,22 +29,17 @@ export default function ConfigListTableRow({
   onSelectRow,
   onDeleteRow,
 }) {
-  const { name, value, createdAt, updatedBy, updatedAt, isActive } = row;
+  const { name, type, value, updatedBy, updatedAt, isActive } = row;
+  const mdScreen = useScreenSize('lg')
   const smScreen = useScreenSize('sm')
   return (
       <TableRow hover selected={selected}>
-        <Stack direction="row" alignItems="center">
-          <CustomAvatar
-            name={name}
-            alt={name}
-            sx={{ ml: 1, my: 0.5, width: '30px', height: '30px' }}
-          />
-          <LinkTableCell align="left" onClick={onViewRow} param={name} />
-        </Stack>
-        { smScreen && <TableCell align="left" sx={{ textTransform: 'capitalize' }}>{value}</TableCell>}
+        <LinkTableCell align="left" onClick={onViewRow} param={name} />
+        <TableCell sx={{ textTransform: 'capitalize' }}>{value}</TableCell>
+        { smScreen && <TableCell>{type}</TableCell>}
         <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell>
-        <TableCell align="right">{updatedBy?.name}</TableCell>
-        <TableCell align="right" sx={{ textTransform: 'capitalize' }}>{fDateTime(updatedAt)}</TableCell>
+        { mdScreen && <TableCell >{updatedBy?.name}</TableCell>}
+        { mdScreen && <TableCell align="right" sx={{ textTransform: 'capitalize' }}>{fDateTime(updatedAt)}</TableCell>}
       </TableRow>
   );
 }

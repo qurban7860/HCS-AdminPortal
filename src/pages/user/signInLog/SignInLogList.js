@@ -37,11 +37,12 @@ import { PATH_PAGE, PATH_SECURITY } from '../../../routes/paths';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'user.name', label: 'User Name', align: 'left' },
   { id: 'xs1', visibility: 'md1', label: 'User Login', align: 'left' },
+  { id: 'user.name', label: 'User Name', align: 'left' },
   { id: 'xs2', visibility: 'md2', label: 'User IP', align: 'left' },
   { id: 'loginTime', label: 'Login Time', align: 'left' },
   { id: 'logoutTime', label: 'Logout Time', align: 'left' },
+  { id: 'logoutBy', label: 'Logout By', align: 'left' },
   { id: 'xs3', visibility: 'xs3', label: 'Status', align: 'left' },
 ];
 
@@ -123,8 +124,8 @@ export default function SignInLogList() {
   };
 
   const handleFilterRequestStatus = (event) => {
+    dispatch(ChangePage(0))
     setFilterRequestStatus(event.target.value);
-    setPage(0);
   };
   
   useEffect(() => {
@@ -150,10 +151,13 @@ export default function SignInLogList() {
     navigate(PATH_SECURITY.users.view(id));
   };
 
+  const configurations = JSON.parse(localStorage.getItem('configurations'));
+  const AUTH = configurations?.filter((config) => config.type === 'AUTH');
+  
   return (
       <Container maxWidth={false}>
         <Card sx={{ mb: 3, height: 160, position: 'relative'}}>
-          <Cover generalSettings="enabled" name="Sign In Logs" icon="ph:users-light" />
+          <Cover generalSettings name="Sign In Logs" icon="ph:users-light" />
         </Card>
 
         <TableCard>
@@ -174,6 +178,7 @@ export default function SignInLogList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
+            refresh={reloadList}
           />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
@@ -193,6 +198,8 @@ export default function SignInLogList() {
                         <RoleListTableRow
                           key={row._id}
                           row={row}
+                          status={AUTH?.find((config) => (config.name === `${row?.statusCode}`))}
+                          // status={AUTH?.find((config) => (config.name === row?.statusCode))}
                           onViewRow={()=> handleViewRow(row?.user?._id)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         />

@@ -1,11 +1,9 @@
-import { useState, memo } from 'react'
-import PropTypes, { number } from 'prop-types';
-import { v4 as uuidv4 } from 'uuid';
-import { Box, Table, TableBody, TableCell, TableRow,  IconButton, Collapse, Grid, TextField, Checkbox, Typography, Autocomplete } from '@mui/material';
-import Iconify from '../../../components/iconify';
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-import {  RHFTextField, RHFCheckbox, RHFDatePicker, RHFAutocomplete } from '../../../components/hook-form';
+import { memo } from 'react'
+import PropTypes from 'prop-types';
+import { Table, TableBody, TableRow, Grid, TextField, Checkbox, Typography, Stack, Divider } from '@mui/material';
 import CommentsInput from './CommentsInput';
+import ViewFormServiceRecordVersionAudit from '../../components/ViewForms/ViewFormServiceRecordVersionAudit';
+import { StyledTableRow } from '../../../theme/styles/default-styles';
 
 const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue, 
   editPage,
@@ -18,57 +16,65 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
   (
     <>
         <Typography key={index} variant='h5'>
+
             <b>{`${index+1}). `}</b>{typeof row?.ListTitle === 'string' && row?.ListTitle || ''}{' ( Items: '}<b>{`${row?.checkItems?.length}`}</b>{' ) '}
         </Typography>
         <Grid  sx={{ml:3}} >
                 <Table size="small" aria-label="purchases">
                   <TableBody>
                     {row?.checkItems?.map((childRow,childIndex) => (
-                      <>
-                      <TableRow key={childRow._id} 
-                          sx={{ ":hover": { backgroundColor: "#dbdbdb66" } }}
-                      >
-                      <Grid display='flex' flexDirection='column'>
-                        <Grid  sx={{display: {sm: 'flex',xs:'block'}, justifyContent:'space-between', }}>
-                          <Typography variant='body2' size='small' sx={{ my:'auto'}} >
-                            <b>{`${childIndex+1}). `}</b>{`${childRow.name}`}
-                          </Typography>
-                          <Grid align='right' sx={{ ml: 'auto'}} >
-                                  <CommentsInput index={index} childIndex={childIndex} 
-                                    childRow={childRow}
-                                    checkParamList={checkItemLists} 
-                                    handleChangeCheckItemListDate={handleChangeCheckItemListDate}
-                                    handleChangeCheckItemListValue={handleChangeCheckItemListValue}
-                                    handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
-                                    handleChangeCheckItemListComment={handleChangeCheckItemListComment}
-                                    handleChangeCheckItemListChecked={handleChangeCheckItemListChecked}
-                                    handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
-                                  />
+                      <StyledTableRow key={childRow._id}  >
+                        <Grid display='flex' flexDirection='column' sx={{ m:  1, }} key={childRow._id} >
+                          <Grid >
+                            <Typography variant='body2' size='small'  >
+                              <b>{`${index+1}.${childIndex+1}. `}</b>{`${childRow.name}`}
+                              <Checkbox 
+                                name={`${childRow?.name}_${childIndex}_${index}_${childIndex}`} 
+                                checked={checkItemLists[index]?.checkItems[childIndex]?.checked || false} 
+                                onChange={()=>handleChangeCheckItemListChecked(index, childIndex )} 
+                              />
+                            </Typography>
+                            <Grid  >
+                              <CommentsInput index={index} childIndex={childIndex} 
+                                key={`${index}${childIndex}`}
+                                childRow={childRow}
+                                checkParamList={checkItemLists} 
+                                handleChangeCheckItemListDate={handleChangeCheckItemListDate}
+                                handleChangeCheckItemListValue={handleChangeCheckItemListValue}
+                                handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
+                                handleChangeCheckItemListComment={handleChangeCheckItemListComment}
+                                handleChangeCheckItemListChecked={handleChangeCheckItemListChecked}
+                                handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
+                              />
+                            </Grid>
                           </Grid>
+
+                          <Grid >
+                            <TextField 
+                                type="text"
+                                label="Comment" 
+                                name="comment"
+                                disabled={!checkItemLists[index]?.checkItems[childIndex]?.checked}
+                                onChange={(e) => handleChangeCheckItemListComment(index, childIndex, e.target.value)}
+                                size="small" sx={{ width: '100%', }} 
+                                value={checkItemLists[index]?.checkItems[childIndex]?.comments}
+                                minRows={2} multiline
+                                InputProps={{ inputProps: { maxLength: 5000 } }}
+                                InputLabelProps={{ shrink: checkItemLists[index]?.checkItems[childIndex]?.checked }}
+                            />
+                          </Grid>
+                          {editPage && childRow?.recordValue?.checkItemValue && 
+                            <Stack spacing={1}  >
+                                <Divider sx={{mt:1.5 }}/>
+                                <Typography variant="body2" sx={{mt:1}}><b>Value : </b>
+                                {childRow?.inputType?.toLowerCase() !== 'boolean' ? childRow?.recordValue?.checkItemValue || ''  : 
+                                <Checkbox  disabled checked={childRow?.recordValue?.checkItemValue === 'true' || childRow?.recordValue?.checkItemValue === true } sx={{my:'auto',mr:'auto'}} /> }
+                                </Typography>
+                                {childRow?.recordValue?.comments && <Typography variant="body2" sx={{ alignItems: 'center', whiteSpace: 'pre-line', wordBreak: 'break-word'}} ><b>Comment: </b>{childRow?.recordValue?.comments || ''}</Typography>}
+                                <ViewFormServiceRecordVersionAudit value={childRow?.recordValue}/>
+                            </Stack>}
                         </Grid>
-                        {/* {editPage && <Grid sx={{mx: {sm: 0.6, } }} >
-                          <Typography variant='body2'>History:</Typography>
-                        </Grid>} */}
-                        <Grid sx={{mx: {sm: 0.6, } }} >
-                          <TextField 
-                              // fullWidth
-                              type="text"
-                              label="Comment" 
-                              name="comment"
-                              onChange={(e) => handleChangeCheckItemListComment(index, childIndex, e.target.value)}
-                              size="small" sx={{ m: 0.3, width: '100%', }} 
-                              // pr:{md:4},width: {md: 470 } 
-                              value={checkItemLists[index]?.checkItems[childIndex]?.comments}
-                              minRows={1} multiline
-                              InputProps={{ inputProps: { maxLength: 500 }, 
-                              // style: { fontSize: '14px', height: 30 }
-                              }}
-                              // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
-                          />
-                        </Grid>
-                      </Grid>
-                      </TableRow>
-                        </>
+                      </StyledTableRow>
                     ))}
                   </TableBody>
                 </Table>

@@ -215,7 +215,7 @@ export default function RoleList() {
             // mt: '24px',
           }}
         >
-          <Cover generalSettings="enabled" name="Roles" icon="ph:users-light" />
+          <Cover generalSettings name="Roles" icon="ph:users-light" />
         </Card>
 
         <TableCard>
@@ -288,11 +288,6 @@ export default function RoleList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
-
-                  {/* <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  /> */}
 
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>

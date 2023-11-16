@@ -136,16 +136,13 @@ export const {
 } = slice.actions;
 // ----------------------------------------------------------------------
 
-export function addConfig(param) {
+export const ConfigTypes = ['AUTH','ERROR-PAGES','NORMAL-CONFIG','ADMIN-CONFIG', 'RESPONSE'];
+
+export function addConfig(data) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     dispatch(resetConfig());
     try{
-      const data = {
-        name: param.name,
-        value: param.value,
-        isActive: param.isActive,
-      }
       const response = await axios.post(`${CONFIG.SERVER_URL}configs`, data);
       if(regEx.test(response.status)){
         dispatch(setConfigAddFormVisibility(false))
@@ -161,20 +158,13 @@ export function addConfig(param) {
 
 // ----------------------------------------------------------------------
 
-export function updateConfig(param,id) {
+export function updateConfig(data,id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{
-      const data = {
-        name: param.name,
-        value: param.value,
-        isActive: param.isActive,
-      }
       const response = await axios.patch(`${CONFIG.SERVER_URL}configs/${id}`, data);
       dispatch(resetConfig());
-      // if(regEx.test(response.status)){
-      //   dispatch(getSecurityUsers());
-      // }
+      dispatch(getConfigs());
       return response;
     } catch (error) {
       console.error(error);

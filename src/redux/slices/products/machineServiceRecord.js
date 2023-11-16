@@ -10,13 +10,17 @@ const initialState = {
   machineServiceRecordEditFormFlag: false,
   machineServiceRecordAddFormFlag: false,
   machineServiceRecordViewFormFlag: false,
+  machineServiceRecordHistoryFormFlag: false,
   responseMessage: null,
   success: false,
   isLoading: false,
   error: null,
   machineServiceRecord: {},
   machineServiceRecords: [],
+  machineServiceRecordHistory: [],
   activeMachineServiceRecords: [],
+  isHistorical: false,
+  isDetailPage: false,
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
@@ -36,27 +40,49 @@ const slice = createSlice({
     setMachineServiceRecordEditFormVisibility(state, action){
       state.machineServiceRecordAddFormFlag = false;
       state.machineServiceRecordEditFormFlag = action.payload;
+      state.machineServiceRecordHistoryFormFlag = false;
       state.machineServiceRecordViewFormFlag = false;
+      state.isHistorical = false;
     },
     // SET TOGGLE
     setMachineServiceRecordAddFormVisibility(state, action){
       state.machineServiceRecordAddFormFlag = action.payload;
       state.machineServiceRecordEditFormFlag = false;
+      state.machineServiceRecordHistoryFormFlag = false;
       state.machineServiceRecordViewFormFlag = false;
+      state.isHistorical = false;
     },    
     // SET TOGGLE
     setMachineServiceRecordViewFormVisibility(state, action){
       state.machineServiceRecordEditFormFlag = false;
       state.machineServiceRecordAddFormFlag = false;
+      state.machineServiceRecordHistoryFormFlag = false;
+      state.isHistorical = false;
       state.machineServiceRecordViewFormFlag = action.payload;
+    },
+    // SET HISTORY TOGGLE
+    setMachineServiceRecordHistoryFormVisibility(state, action){
+      state.machineServiceRecordEditFormFlag = false;
+      state.machineServiceRecordAddFormFlag = false;
+      state.machineServiceRecordViewFormFlag = false;
+      state.machineServiceRecordHistoryFormFlag = action.payload;
     },
     // SET ALL TOGGLEs
     setAllFlagsFalse(state, action){
       state.machineServiceRecordEditFormFlag = false;
       state.machineServiceRecordAddFormFlag = false;
       state.machineServiceRecordViewFormFlag = false;
+      state.machineServiceRecordHistoryFormFlag = false;
+      state.isHistorical = false;
     },
-
+    // SET HISTORICAL FLAG
+    setHistoricalFlag(state, action){
+      state.isHistorical = action.payload;;
+    },
+    // SET DETAIL PAGE FLAG
+    setDetailPageFlag(state, action){
+      state.isDetailPage = action.payload;;
+    },
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -72,10 +98,10 @@ const slice = createSlice({
       state.initial = true;
     },
     // GET MACHINE SERVICE PARAM
-    getMachineServiceRecordSuccess(state, action) {
+    getMachineServiceRecordHistorySuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.machineServiceRecord = action.payload;
+      state.machineServiceRecordHistory = action.payload;
       state.initial = true;
     },
 
@@ -84,6 +110,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.activeMachineServiceRecords = action.payload;
+      state.initial = true;
+    },
+
+    // GET MACHINE Active SERVICE PARAM
+    getMachineServiceRecordSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.machineServiceRecord = action.payload;
       state.initial = true;
     },
 
@@ -134,6 +168,9 @@ export const {
   setMachineServiceRecordEditFormVisibility,
   setMachineServiceRecordAddFormVisibility,
   setMachineServiceRecordViewFormVisibility,
+  setMachineServiceRecordHistoryFormVisibility,
+  setHistoricalFlag,
+  setDetailPageFlag,
   setAllFlagsFalse,
   resetMachineServiceRecords,
   resetMachineServiceRecord,
@@ -165,7 +202,47 @@ export function getActiveMachineServiceRecords (machineId){
   }
 }
 
+export function getMachineServiceHistoryRecords(machineId, serviceId ){
+  return async (dispatch) =>{
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords`, 
+      {
+        params: {
+          isArchived: false,
+          // isHistory: true,
+          serviceId,
+        }
+      }
+      );
+      dispatch(slice.actions.getMachineServiceRecordHistorySuccess(response.data));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  }
+}
+
 // ------------------------------------------------------------------------------------------------
+
+export function getMachineServiceRecordVersion(machineId, id ){
+  return async (dispatch) =>{
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/values`);
+      dispatch(slice.actions.getMachineServiceRecordSuccess(response.data));
+      dispatch(setHistoricalFlag(true));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  }
+}
+
+// ------------------------------------------------------------------------------------------------
+
 
 export function getMachineServiceRecords (machineId){
   return async (dispatch) =>{
@@ -174,7 +251,8 @@ export function getMachineServiceRecords (machineId){
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords`, 
       {
         params: {
-          isArchived: false
+          isArchived: false,
+          isHistory: false,
         }
       }
       );
@@ -227,17 +305,26 @@ export function addMachineServiceRecord(machineId,params) {
       dispatch(slice.actions.startLoading());
       try {
         const data = {
-          serviceRecordConfig:        params?.serviceRecordConfiguration?._id,
+          serviceRecordConfig:        params?.serviceRecordConfiguration?._id || null,
           serviceDate:                params?.serviceDate,
-          decoilers:                  params?.decoilers?.map((dec)=> dec?._id),
+          versionNo:                  params?.versionNo,
+          customer:                   params?.customer || null,
+          site:                       params?.site || null,
+          machine:                    machineId,
+          decoilers:                  params?.decoilers?.map((dec)=> dec?._id) || [],
           technician:                 params?.technician?._id || null,
+          technicianNotes:            params?.technicianNotes,
+          textBeforeCheckItems:       params?.textBeforeCheckItems,
+          textAfterCheckItems:        params?.textAfterCheckItems,
           serviceNote:                params?.serviceNote,
-          maintenanceRecommendation:  params?.maintenanceRecommendation,
+          recommendationNote:         params?.recommendationNote,
+          internalComments:           params?.internalComments,
           suggestedSpares:            params?.suggestedSpares,
-          operators:                  params?.operators?.map((dec)=> dec._id),
-          checkParams:                params?.checkParams || [],
-          technicianRemarks:          params?.technicianRemarks,
-          isActive: params?.isActive
+          internalNote:               params.internalNote,
+          operators:                  params?.operators?.map((ope)=> ope?._id) || [],
+          operatorNotes:              params.operatorNotes,
+          checkItemRecordValues:      params?.checkItemRecordValues || [],
+          isActive:                   params?.isActive
         }
         /* eslint-disable */
 
@@ -259,19 +346,30 @@ export function updateMachineServiceRecord(machineId,id, params) {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        serviceRecordConfig:        params?.serviceRecordConfig?._id,
+        serviceRecordConfig:        params?.serviceRecordConfiguration,
         serviceDate:                params?.serviceDate,
-        decoilers:                  params?.decoilers?.map((dec)=> dec?._id),
+        versionNo:                  params?.versionNo,
+        customer:                   params?.customer || null,
+        site:                       params?.site || null,
+        machine:                    machineId,
+        decoilers:                  params?.decoilers?.map((dec)=> dec?._id) || [],
         technician:                 params?.technician?._id || null,
+        technicianNotes:            params?.technicianNotes,
+        textBeforeCheckItems:       params?.textBeforeCheckItems,
+        textAfterCheckItems:        params?.textAfterCheckItems,
         serviceNote:                params?.serviceNote,
-        maintenanceRecommendation:  params?.maintenanceRecommendation,
+        recommendationNote:         params?.recommendationNote,
+        internalComments:           params?.internalComments,
         suggestedSpares:            params?.suggestedSpares,
-        operators:                  params?.operators?.map((dec)=> dec._id),
-        technicianRemarks:          params?.technicianRemarks,
-        checkParams:                params?.checkParams || [],
-        isActive: params?.isActive
+        internalNote:               params.internalNote,
+        operators:                  params?.operators,
+        operatorNotes:              params.operatorNotes,
+        checkItemRecordValues:      params?.checkItemRecordValues || [],
+        serviceId:                  params?.serviceId,
+        isActive:                   params?.isActive
       }
-      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`,data);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`,data);
+      await dispatch(getMachineServiceRecord(machineId, response?.data?.serviceRecord?._id))
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

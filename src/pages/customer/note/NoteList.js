@@ -163,6 +163,7 @@ export default function NoteList() {
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                     )
                   )}
+                  <TableNoData isNotFound={isNotFound} />
               </TableBody>
             </Table>
           </Scrollbar>
@@ -175,9 +176,6 @@ export default function NoteList() {
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
         />
-        <Grid md={12}>
-          <TableNoData isNotFound={isNotFound} />
-        </Grid>
       </TableCard>
   );
 }

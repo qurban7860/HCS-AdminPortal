@@ -40,6 +40,7 @@ export default function ServiceRecordConfigAddForm() {
   const { activeCategories } = useSelector((state) => state.category);
   const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
   const [checkParams, setCheckParams] = useState([]);
+  const [checkItemList, setCheckItemList] = useState([]);
   const [isDraft, setDraft] = useState(false);
   
   useEffect(() => {
@@ -57,7 +58,7 @@ export default function ServiceRecordConfigAddForm() {
     () => ({
       docTitle: id ? serviceRecordConfig?.docTitle : '',
       recordType: id ? {name: serviceRecordConfig?.recordType} || null : null,
-      docVersionNo: id ? serviceRecordConfig?.docVersionNo || 1 : 1,
+      docVersionNo: id ? typeof serviceRecordConfig?.docVersionNo === 'number' && serviceRecordConfig.docVersionNo + 1   : 1,
       noOfVerificationsRequired: id ? serviceRecordConfig?.noOfVerificationsRequired || 1 : 1,
       machineCategory: id ? serviceRecordConfig?.machineCategory || null : null,
       machineModel:  id ? serviceRecordConfig?.machineModel || null : null,
@@ -130,6 +131,7 @@ export default function ServiceRecordConfigAddForm() {
       }
       if(id){
         data.parentConfig = id
+        data.originalConfiguration = serviceRecordConfig?.originalConfiguration ? serviceRecordConfig?.originalConfiguration : id
       }
       data.checkItemLists = checkParams
       await dispatch(addServiceRecordConfig(data));
@@ -230,7 +232,7 @@ export default function ServiceRecordConfigAddForm() {
                   
                 </Box>
                   <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline />
-                      <CheckItemTable setCheckParams={setCheckParams} checkParams={checkParams} ListTitle={ListTitle} setValue={setValue} checkItemCategory={checkItemCategory} />
+                      <CheckItemTable setCheckParams={setCheckParams} checkParams={checkParams} checkItemList={checkItemList} setCheckItemList={setCheckItemList} ListTitle={ListTitle} setValue={setValue} checkItemCategory={checkItemCategory} />
                   <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline />
                 
                 <Box
@@ -239,7 +241,8 @@ export default function ServiceRecordConfigAddForm() {
                   display="grid"
                   gridTemplateColumns={{
                     xs: 'repeat(1, 1fr)',
-                    sm: 'repeat(3, 1fr)',
+                    sm: 'repeat(2, 1fr)',
+                    md: 'repeat(3, 1fr)',
                   }}
                 >
 
@@ -332,7 +335,7 @@ export default function ServiceRecordConfigAddForm() {
                     }
                   />
 
-                <AddFormButtons saveAsDraft={() => setDraft(true)} isDraft={isDraft} saveButtonName='submit' isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+                <AddFormButtons saveAsDraft={() => setDraft(true)} isDisabled={checkItemList.length > 0} isDraft={isDraft} saveButtonName='submit' isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>
           </Grid>

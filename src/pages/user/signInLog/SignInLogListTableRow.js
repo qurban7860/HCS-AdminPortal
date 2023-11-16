@@ -29,6 +29,7 @@ SignInLogListTableRow.propTypes = {
   onViewRow: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
+  status:PropTypes.object
 };
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -48,17 +49,20 @@ export default function SignInLogListTableRow({
   onDeleteRow,
   onEditRow,
   onViewRow,
+  status
 }) {
-  const { loginTime, user, loginIP, logoutTime, statusCode } = row;
+  const { loginTime, user, loginIP, requestedLogin, logoutTime, loggedOutBy, statusCode } = row;
   return (
       <StyledTableRow hover selected={selected}>
+        { useScreenSize('lg') && <TableCell align="left"> {requestedLogin || ''} </TableCell>}
         <LinkTableCell align="left" onClick={onViewRow} param={user?.name} />
-        { useScreenSize('lg') && <TableCell align="left"> {user?.login ? user?.login : ''} </TableCell>}
         { useScreenSize('lg') && <TableCell align="left"> {loginIP} </TableCell>}
         <TableCell align="left"> {fDateTime(loginTime)} </TableCell>
         <TableCell align="left">{fDateTime(logoutTime)}</TableCell>
+        <TableCell align="left">{loggedOutBy}</TableCell>
         { useScreenSize('sm') && <TableCell align="left" sx={{color: statusCode===200?"green":"red"}}> 
-          {`${statusCode===200?"Success":"Failed"}`} 
+          {status?.value}
+          {status?.notes && ` (${status?.notes})`}
         </TableCell>}
       </StyledTableRow>
   );

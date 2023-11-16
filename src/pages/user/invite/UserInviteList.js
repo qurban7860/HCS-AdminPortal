@@ -140,7 +140,7 @@ export default function UserInviteList() {
   return (
       <Container maxWidth={false}>
         <Card sx={{mb: 3, height: 160, position: 'relative'}}>
-          <Cover generalSettings="enabled" name="User Invites" icon="ph:users-light" />
+          <Cover generalSettings name="User Invites" icon="ph:users-light" />
         </Card>
         <TableCard>
           <UserInviteListTableToolbar
@@ -183,6 +183,7 @@ export default function UserInviteList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
+                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
@@ -195,9 +196,6 @@ export default function UserInviteList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />
-          <Grid md={12}>
-            <TableNoData isNotFound={isNotFound} />
-          </Grid>
         </TableCard>
       </Container>
   );

@@ -5,6 +5,7 @@ import {
   Switch,
   TableRow,
   TableCell,
+  IconButton,
 } from '@mui/material';
 // utils
 import { styled } from '@mui/material/styles';
@@ -12,7 +13,6 @@ import { fDate } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import { useScreenSize } from '../../../hooks/useResponsive';
-
 // ----------------------------------------------------------------------
 
 DocumentListTableRow.propTypes = {
@@ -77,12 +77,8 @@ export default function DocumentListTableRow({
         {' '}
         <Switch checked={customerAccess} disabled size="small" />{' '}
       </TableCell>}
-      <TableCell align="center">
-        {' '}
-        <Switch checked={isActive} disabled size="small" />{' '}
-      </TableCell>
+      <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell>
       <TableCell align="right">{fDate(createdAt)}</TableCell>
-     
     </StyledTableRow>
   );
 }
