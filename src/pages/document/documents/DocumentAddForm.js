@@ -45,11 +45,11 @@ import {
   addDocumentVersion,
   updateDocumentVersion,
 } from '../../../redux/slices/document/documentVersion';
+import { getActiveCustomers, resetActiveCustomers } from '../../../redux/slices/customer/customer';
 import {
-  getActiveMachines,
-  resetActiveMachines
+  getCustomerMachines,
+  resetCustomerMachines
 } from '../../../redux/slices/products/machine';
-import { resetActiveSites } from '../../../redux/slices/customer/site';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, {
@@ -69,8 +69,7 @@ import {
 } from '../../../constants/document-constants';
 import DocumentCover from '../../components/DocumentForms/DocumentCover';
 import { FORMLABELS } from '../../../constants/default-constants';
-import { validateFileType } from './Utills/Util'
-
+import { validateFileType } from './Utills/Util';
 // ----------------------------------------------------------------------
 DocumentAddForm.propTypes = {
   currentDocument: PropTypes.object,
@@ -94,9 +93,9 @@ function DocumentAddForm({
 
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
-  const { machine, activeMachines } = useSelector((state) => state.machine);
+  const { machine, customerMachines } = useSelector((state) => state.machine);
   const { document ,documentHistory, activeDocuments, documentAddFilesViewFormVisibility, documentNewVersionFormVisibility, documentHistoryAddFilesViewFormVisibility, documentHistoryNewVersionFormVisibility } = useSelector((state) => state.document);
-  const { customer } = useSelector((state) => state.customer);
+  const { customer, activeCustomers } = useSelector((state) => state.customer);
 
   // ------------------ document values states ------------------------------
 
@@ -179,7 +178,7 @@ function DocumentAddForm({
     formState: { isSubmitting },
   } = methods;
 
-  const {  documentType, documentCategory, displayName, machineVal, documentVal, files, isActive, customerAccess,  } = watch();
+  const {  documentType, documentCategory, displayName, machineVal, customerVal, documentVal, files, isActive, customerAccess,  } = watch();
 
   useEffect(()=>{
     if(customerPage){
@@ -263,13 +262,10 @@ function DocumentAddForm({
       setReadOnlyDocument(false);
     }
     dispatch(resetActiveDocuments());
-    dispatch(resetActiveMachines);
-    dispatch(resetActiveSites);
+    dispatch(resetCustomerMachines());
     dispatch(resetActiveDocumentTypes());
-    // dispatch(getActiveDocumentTypes());
-    // dispatch(getActiveCustomers());
-    dispatch(getActiveMachines());
-    // dispatch(getActiveMachineModels());
+    dispatch(getActiveCustomers());
+    
     if (customerPage) {
       setValue('customerVal', customer?._id);
     }
@@ -278,6 +274,14 @@ function DocumentAddForm({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
+
+  const handleCustomerChange = (custmerId) => {
+    console.log('aaaaaa', custmerId);
+    dispatch(resetCustomerMachines());
+    if(custmerId){
+      dispatch(getCustomerMachines(custmerId));
+    }
+  }
 
   useEffect(() => {
     if (documentCategory?._id) {
@@ -314,7 +318,7 @@ function DocumentAddForm({
     }
 
     // if(machineDrawings){
-    //   dispatch(getActiveMachines());
+    //   dispatch(getCustomerMachines());
     // }
 
     
@@ -336,7 +340,6 @@ function DocumentAddForm({
       }
     }, [dispatch, customerPage, machineDrawings, machinePage, selectedValue]);
   
-
   const onSubmit = async (data) => {
     data.machine = machineVal?._id;
     try {
@@ -715,40 +718,69 @@ function DocumentAddForm({
                   display="grid"
                   gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                 >
-                  
                   <RHFTextField name='versionNo' label='Version Number' />
                   <RHFTextField name='referenceNumber' label='Reference Number' />
                 </Box>)}
 
-                {machineDrawings && (
-                  <Box
-                  rowGap={3}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-                >
-                  <RHFTextField name='stockNumber' label='Stock Number' />
-                  
-                  <RHFAutocomplete
-                    // multiple 
-                    value={machineVal || null}
-                    name="machineVal"
-                    label="Machine"
-                    options={activeMachines}
-                    isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
-                    getOptionLabel={(option) => option.serialNo}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{option.serialNo}</li>
-                    )}
-                    onChange={(event, newValue) => {
-                      if (newValue) {
-                        setValue('machineVal', newValue);
-                      } else {
-                        setValue('machineVal', '');
-                      }
-                    }}
-                  />
-                </Box>
+                {selectedValue === 'new' && machineDrawings && (
+                  <>
+                    <Box
+                      rowGap={3}
+                      columnGap={2}
+                      display="grid"
+                      gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(1, 1fr)' }}
+                    >
+                      <RHFTextField name='stockNumber' label='Stock Number' />
+                    </Box>
+                    <Box
+                      rowGap={3}
+                      columnGap={2}
+                      display="grid"
+                      gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                    >
+                    <RHFAutocomplete
+                      // multiple 
+                      value={customerVal || null}
+                      name="customerVal"
+                      label="Customer"
+                      options={activeCustomers}
+                      isOptionEqualToValue={(option, value) => option._id === value._id}
+                      getOptionLabel={(option) => option.name}
+                      renderOption={(props, option) => (
+                        <li {...props} key={option._id}>{option.name}</li>
+                      )}
+                      onChange={(event, newValue) => {
+                        if (newValue) {
+                          setValue('customerVal', newValue);
+                        } else {
+                          setValue('customerVal', '');
+                        }
+
+                        handleCustomerChange(newValue);
+                      }}
+                    />
+
+                    <RHFAutocomplete
+                      // multiple 
+                      value={machineVal || null}
+                      name="machineVal"
+                      label="Machine"
+                      options={customerMachines}
+                      isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
+                      getOptionLabel={(option) => option.serialNo}
+                      renderOption={(props, option) => (
+                        <li {...props} key={option._id}>{option.serialNo}</li>
+                      )}
+                      onChange={(event, newValue) => {
+                        if (newValue) {
+                          setValue('machineVal', newValue);
+                        } else {
+                          setValue('machineVal', '');
+                        }
+                      }}
+                    />
+                  </Box>
+                  </>
                 )}
 
                 {(selectedValue === 'new' ||
