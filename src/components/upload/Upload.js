@@ -99,7 +99,7 @@ export default function Upload({
         sx={{
           ...(isDragActive && {
             opacity: 0.72,
-            height: '115px',
+            height: '232px',
           }),
           ...(isError && {
             color: 'error.main',
