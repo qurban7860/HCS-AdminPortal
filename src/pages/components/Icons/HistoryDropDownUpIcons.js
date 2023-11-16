@@ -13,7 +13,7 @@ function HistoryDropDownUpIcons({ activeIndex, indexValue, onClick }) {
                             });
 
   return (
-    <Grid sx={{display: 'flex',}}>
+    <Grid sx={{display: 'flex', ml:'auto'}}>
       <StyledTooltip
         arrow
         title={activeIndex === indexValue ? "Hide history" : "Show history" }

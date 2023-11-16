@@ -22,12 +22,10 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
     };
 
   return (
-    <StyledTableRow key={childRow._id}  >
-    <Grid item md={12} sx={{mx:2}} >
-      <Grid item md={12} sx={{my:0.7}}>
-        <Grid item md={12}>
-          <Typography variant="body2" ><b>{`${index+1}.${childIndex+1}. `}</b>{`${childRow.name}`}</Typography>
-        </Grid>
+    <TableRow key={childRow._id}  >
+    <Grid item md={12} sx={{m:0.5,p:1,  border: '2px solid', borderColor: '#e8e8e8' , borderRadius:'7px'}} >
+      <Grid item md={12} sx={{my:0.7, display: childRow?.recordValue?.checkItemValue ? 'block' : 'flex'}}>
+        <Typography variant="body2" ><b>{`${index+1}.${childIndex+1}- `}</b>{`${childRow.name}`}</Typography>
         {childRow?.recordValue?.checkItemValue && 
           <Grid >
             <Grid sx={{ mt:1,
@@ -62,20 +60,19 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
                 {childRow?.recordValue?.comments?.trim() && <CopyIcon value={childRow?.recordValue?.comments || ''} />}
               </Typography>}
             </Grid>
+          <ViewFormServiceRecordVersionAudit value={childRow?.recordValue}/>
           </Grid>
         }
-          <ViewFormServiceRecordVersionAudit value={childRow?.recordValue}/>
         {childRow?.historicalData && childRow?.historicalData?.length > 0 &&  <>
-          <Divider  sx={{ borderStyle: 'solid', mt:childRow?.recordValue?.checkItemValue ? 0 : 1 }} />
             <HistoryDropDownUpIcons activeIndex={`${activeIndex || ''}`} indexValue={`${index}${childIndex}`} onClick={handleAccordianClick}/>
           </>}
       </Grid>
 
       {activeIndex === `${index}${childIndex}` && childRow?.historicalData && childRow?.historicalData?.length > 0 && 
-        <Grid item md={12} sx={{mb:1}} >
+        <Grid item md={12} sx={{mb:1, backgroundColor: '#f9f9f9', p:1.3, borderRadius:'7px', border: '1px solid', borderColor: '#f2f2f2'}} >
           {childRow?.historicalData?.map((ItemHistory, ItemIndex ) => (<>
-          
-            {ItemHistory?.checkItemValue && <Grid sx={{ mt:1,
+              {ItemIndex !== 0 && <Divider  sx={{ borderStyle: 'solid' }} />}
+            {ItemHistory?.checkItemValue && <Grid sx={{ mt:0.5,
               alignItems: 'center',
               whiteSpace: 'pre-line',
               wordBreak: 'break-word' }}>
@@ -110,11 +107,10 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
               </Typography>}
             </Grid>
             <ViewFormServiceRecordVersionAudit value={ItemHistory}/>
-            {ItemHistory?.checkItemValue && <Divider  sx={{ borderStyle: 'solid' }} />}
           </>))}
         </Grid>}
       </Grid>
-    </StyledTableRow>
+    </TableRow>
   )
 }
 StatusAndComment.propTypes = {
