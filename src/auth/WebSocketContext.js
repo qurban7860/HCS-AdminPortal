@@ -23,10 +23,10 @@ export function WebSocketProvider({ children }) {
   const WS_URL = token ? `${CONFIG.SOCKET_URL}/?accessToken=${token}` : null;
   const { sendMessage, readyState } = useWebSocket(WS_URL, {
     onOpen: () => {
-      console.log('WebSocket connection established.');
+      // console.log('WebSocket connection established.');
     },
     onClose: () => {
-      console.log('WebSocket connection closed.');
+      // console.log('WebSocket connection closed.');
     },
     onMessage: (event) => {
       if (event.data instanceof Blob) {
