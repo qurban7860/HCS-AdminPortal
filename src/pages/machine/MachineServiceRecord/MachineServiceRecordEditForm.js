@@ -146,7 +146,6 @@ function MachineServiceRecordEditForm() {
   const onSubmit = async (data) => {
     try {
       const checkItemLists_ = [];
-      console.log("checkItemLists : ",checkItemLists)
       if(checkItemLists && 
         Array.isArray(checkItemLists) && 
         checkItemLists.length>0) 
@@ -157,13 +156,12 @@ function MachineServiceRecordEditForm() {
               CI?.checked && checkItemLists_.push({
                 machineCheckItem: CI?._id,
                 checkItemListId:  checkParam_?._id,
-                checkItemValue:  CI?.inputType?.toLowerCase() === 'boolean' ? CI?.checkItemValue || false : CI?.checkItemValue,
+                checkItemValue:  CI?.inputType?.toLowerCase() === 'boolean' ? CI?.checkItemValue || false : CI?.checkItemValue || '',
                 comments:CI?.comments,
               })
               ));
             }
           });
-          console.log("checkItemLists_ : ", checkItemLists_)
       data.checkItemRecordValues = checkItemLists_;
       data.decoilers = decoilers;
       data.serviceId = machineServiceRecord?.serviceId || null
@@ -394,7 +392,7 @@ setCheckItemLists(updatedCheckParams);
                 <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline/> 
                 
                 {/* <RHFTextField name="internalComments" label="Internal Comments" minRows={3} multiline/> */}
-                { serviceRecordConfiguration?.enableNote && <RHFTextField name="serviceNote" label="Note" minRows={3} multiline/> }
+                { serviceRecordConfiguration?.enableNote && <RHFTextField name="serviceNote" label="Service Note" minRows={3} multiline/> }
                 { serviceRecordConfiguration?.enableMaintenanceRecommendations && <RHFTextField name="recommendationNote" label="Recommendation Note" minRows={3} multiline/> }
                 { serviceRecordConfiguration?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }
 

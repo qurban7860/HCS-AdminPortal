@@ -193,7 +193,7 @@ export function getActiveMachineServiceRecords (machineId){
         }
       }
       );
-      dispatch(slice.actions.getActiveMachineServiceRecordsSuccess(response.data));
+      await dispatch(slice.actions.getActiveMachineServiceRecordsSuccess(response.data));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -230,6 +230,7 @@ export function getMachineServiceRecordVersion(machineId, id ){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
+      await dispatch(resetMachineServiceRecord());
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}/values`);
       dispatch(slice.actions.getMachineServiceRecordSuccess(response.data));
       dispatch(setHistoricalFlag(true));
@@ -271,6 +272,7 @@ export function getMachineServiceRecord(machineId, id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
+      await dispatch(resetMachineServiceRecord());
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`);
       dispatch(slice.actions.getMachineServiceRecordSuccess(response.data));
     } catch (error) {
@@ -329,6 +331,7 @@ export function addMachineServiceRecord(machineId,params) {
         /* eslint-disable */
 
         const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords`, data );
+        await dispatch(resetMachineServiceRecord());
         dispatch(slice.actions.getMachineServiceRecordSuccess(response.data.MachineTool));
       } catch (error) {
         console.error(error);

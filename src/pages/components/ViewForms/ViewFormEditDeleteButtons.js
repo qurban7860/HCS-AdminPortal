@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
-import { Badge, Box, Divider, Grid, TextField } from '@mui/material';
+import { Badge, Box, Divider, Grid, TextField, Skeleton } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { memo, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -19,24 +19,18 @@ import IconTooltip from '../Icons/IconTooltip';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
 import { ICONS } from '../../../constants/icons/default-icons';
 import { fDate, fDateTime } from '../../../utils/formatTime';
+import SkeletonIcon from '../../../components/skeleton/SkeletonIcon'
 
 function ViewFormEditDeleteButtons({
+  // Icons 
   backLink,
-  disableTransferButton = false,
-  disableDeleteButton = false,
-  disablePasswordButton = false,
-  disableEditButton = false,
   isActive,
-  isSubmitted,
-  returnToSubmitted,
-  verifiers,
-  approvers,
-  isVerifiedTitle,
-  approveConfiglength,
   customerAccess,
+  isRequired,
   multiAuth,
   currentEmp,
-  isRequired,
+
+  // Handlers
   handleVerification,
   handleVerificationTitle,
   onDelete,
@@ -44,28 +38,41 @@ function ViewFormEditDeleteButtons({
   handleTransfer,
   handleUpdatePassword,
   handleUserInvite,
+  isSubmitted,
+  returnToSubmitted,
+  approvers,
+  isVerifiedTitle,
   isInviteLoading,
   type,
   sites,
   mainSite,
   handleMap,
-  machineSupportDate,
   moveCustomerContact,
   approveConfig,
   approveHandler,
   copyConfiguration,
-  supportSubscription,
-  userStatus,
   onUserStatusChange,
+
+  // DISABLE
+  disableTransferButton = false,
+  disableDeleteButton = false,
+  disablePasswordButton = false,
+  disableEditButton = false,
+  isLoading,
+
+  // ICONS & HANDLERS
+  verifiers,
+  userStatus,
+  supportSubscription,
+  machineSupportDate,
+  approveConfiglength,
+
 }) {
   const { id } = useParams();
   const userId = localStorage.getItem('userId');
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
-
-  const { isLoading, transferDialogBoxVisibility } = useSelector((state) => state.machine);
-  // const { site } = useSelector((state) => state.site);
-  // const { customer } = useSelector((state) => state.customer);
+  const { transferDialogBoxVisibility } = useSelector((state) => state.machine);
   const dispatch = useDispatch();
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openUserInviteConfirm, setOpenUserInviteConfirm] = useState(false);
@@ -75,9 +82,8 @@ function ViewFormEditDeleteButtons({
   const [openConfigSubmittedStatuConfirm, setOpenConfigSubmittedStatuConfirm] = useState(false);
   const [openConfigApproveStatuConfirm, setOpenConfigApproveStatuConfirm] = useState(false);
   const [openCopyConfigConfirm, setOpenCopyConfigConfirm] = useState(false);
-  const [lockUntil, setLockUntil] = useState(''); // State to store the selected date
-  const [lockUntilError, setLockUntilError] = useState(''); // State to manage the error message
-
+  const [lockUntil, setLockUntil] = useState(''); 
+  const [lockUntilError, setLockUntilError] = useState(''); 
   const theme = createTheme({
     palette: {
       success: green,
@@ -720,5 +726,6 @@ ViewFormEditDeleteButtons.propTypes = {
   copyConfiguration: PropTypes.func,
   supportSubscription: PropTypes.bool,
   userStatus:PropTypes.object,
-  onUserStatusChange:PropTypes.func
+  onUserStatusChange:PropTypes.func,
+  isLoading: PropTypes.bool,
 };

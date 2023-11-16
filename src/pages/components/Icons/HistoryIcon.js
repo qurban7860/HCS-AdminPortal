@@ -16,7 +16,7 @@ export default function HistoryIcon({ callFunction }) {
         placement='top'
         tooltipcolor={theme.palette.primary.main}
       >
-        <Iconify icon="material-symbols:history" sx={{ml:0.7, cursor: 'pointer'}} onClick={callFunction} />
+        <Iconify icon="lucide:list-restart" sx={{ml:0.7, cursor: 'pointer'}} onClick={callFunction} />
       </StyledTooltip>
   );
 }
