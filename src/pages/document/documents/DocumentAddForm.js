@@ -730,14 +730,8 @@ function DocumentAddForm({
                       display="grid"
                       gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(1, 1fr)' }}
                     >
-                      <RHFTextField name='stockNumber' label='Stock Number' />
-                    </Box>
-                    <Box
-                      rowGap={3}
-                      columnGap={2}
-                      display="grid"
-                      gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-                    >
+                    <RHFTextField name='stockNumber' label='Stock Number' />
+                   
                     <RHFAutocomplete
                       // multiple 
                       value={customerVal || null}
