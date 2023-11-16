@@ -167,30 +167,30 @@ export const DocRadioExistingDocument = {
 
 // Snackbars constants
 export const Snacks = {
-  docSaved: 'Document UPLOAD Successful',
-  docUpdated: 'Document UPDATE Successful',
-  docVersionUpdated: 'Document Version UPDATE Successful',
-  failedSaveDoc: 'FAILED to Save the Document',
+  docSaved: 'Document Upload Successful',
+  docUpdated: 'Document Update Successful',
+  docVersionUpdated: 'Document Version Update Successful',
+  failedSaveDoc: 'Failed to Save the Document',
 
   // @root - DocumentCategoryAddForm - documents dashboard
   addedDocCategory: 'Document Category ADD Successful', // Add Success message
-  updatedDocCategory: 'Document Category UPDATE Successful', // Update Success message
-  deletedDocCategory: 'Document Category DELETE Successful', // Delete Success message
-  failedSaveDocCategory: 'FAILED to Save Document Category', // Add Failed message
+  updatedDocCategory: 'Document Category Update Successful', // Update Success message
+  deletedDocCategory: 'Document Category Delete Successful', // Delete Success message
+  failedSaveDocCategory: 'Failed to Save Document Category', // Add Failed message
 
   // @root - DocumentAddForm - machine documents
-  addedMachineDoc: 'Machine Document UPLOAD Successful', // Upload Success message
-  updatedMachineDoc: 'Machine Document UPDATE Successful', // Update Success message
-  updatedVersionMachineDoc: 'Machine Document Version UPDATE Successful', // Update Success message
-  deletedMachineDoc: 'Machine Document DELETE Successful', // Delete Success message
+  addedMachineDoc: 'Machine Document Upload Successful', // Upload Success message
+  updatedMachineDoc: 'Machine Document Update Successful', // Update Success message
+  updatedVersionMachineDoc: 'Machine Document Version Update Successful', // Update Success message
+  deletedMachineDoc: 'Machine Document Delete Successful', // Delete Success message
 
-  addedDoc: 'Document UPLOAD Successful', // Upload Success message
-  updatedDoc: 'Document UPDATE Successful', // Update Success message
-  deletedDoc: 'Document DELETE Successful', // Delete Success message
+  addedDoc: 'Document Upload Successful', // Upload Success message
+  updatedDoc: 'Document Update Successful', // Update Success message
+  deletedDoc: 'Document Delete Successful', // Delete Success message
 
-  failedDoc: 'FAILED to UPLOAD Document', // Update Failed message
-  failedUpdateDoc: 'FAILED to UPDATE Document', // Update Failed message
-  failedDeleteDoc: 'FAILED to DELETE Document', // Delete Failed message
+  failedDoc: 'Failed to Upload Document', // Update Failed message
+  failedUpdateDoc: 'Failed to Update Document', // Update Failed message
+  failedDeleteDoc: 'Failed to Delete Document', // Delete Failed message
 
   // documentAddForm -documents dashboard
   fileRequired: 'File is required',

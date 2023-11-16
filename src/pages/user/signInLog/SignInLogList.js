@@ -37,8 +37,8 @@ import { PATH_PAGE, PATH_SECURITY } from '../../../routes/paths';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'user.name', label: 'User Name', align: 'left' },
   { id: 'xs1', visibility: 'md1', label: 'User Login', align: 'left' },
+  { id: 'user.name', label: 'User Name', align: 'left' },
   { id: 'xs2', visibility: 'md2', label: 'User IP', align: 'left' },
   { id: 'loginTime', label: 'Login Time', align: 'left' },
   { id: 'logoutTime', label: 'Logout Time', align: 'left' },
