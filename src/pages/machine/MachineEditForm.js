@@ -205,7 +205,7 @@ export default function MachineEditForm() {
     }
   },[dispatch, category,setValue,machineModel]);
 
-
+console.log("machineConnectionVal : ",machineConnectionVal)
   useLayoutEffect(() => {
     // window.history.pushState({}, null, `/products/machines/${machine._id}/edit`);
     dispatch(getActiveCustomers());
@@ -700,10 +700,10 @@ export default function MachineEditForm() {
                     {...field}
                     name="machineConnectionVal"
                     id="tags-outlined"
-                    options={machineConnections}
+                    options={machineConnections?.filter((machinforConnection)=> machinforConnection?._id !== machine?._id)}
                     getOptionLabel={(option) => `${option?.connectedMachine?.serialNo ? option?.connectedMachine?.serialNo : option?.serialNo} ${option?.name ? '-' : ''} ${option?.name ? option.name : ''}`}
                     filterSelectedOptions
-                    isOptionEqualToValue={(option, value) => option?.connectedMachine?._id === value?.connectedMachine?._id}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     onChange={(event, value) => field.onChange(value)}
                     renderInput={(params) => (
                       <TextField 

@@ -527,7 +527,7 @@ function DocumentAddForm({
       }
       <Box
         column={12}
-        rowGap={3}
+        rowGap={2}
         columnGap={2}
         // display="grid"
         gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
@@ -536,7 +536,7 @@ function DocumentAddForm({
         <Grid container item xs={12} md={12} lg={12}>
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
-              <Stack spacing={3}>
+              <Stack spacing={2}>
                 <RadioButtons
                   radioDisaled={ documentNewVersionFormVisibility || documentAddFilesViewFormVisibility || documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility }
                   value={selectedValue}
@@ -733,6 +733,8 @@ function DocumentAddForm({
                   >
                     <RHFTextField name='stockNumber' label='Stock Number' />
                     <RHFTextField name='referenceNumber' label='Reference Number' />
+                    <RHFTextField name='versionNo' label='Version Number' /> 
+
                   </Box>
 
                     <Box
@@ -741,7 +743,6 @@ function DocumentAddForm({
                       display="grid"
                       gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(1, 1fr)' }}
                     >
-                    <RHFTextField name='versionNo' label='Version Number' /> 
                     <RHFAutocomplete
                       // multiple 
                       value={customerVal || null}
@@ -773,7 +774,7 @@ function DocumentAddForm({
                       isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
                       getOptionLabel={(option) => option.serialNo}
                       renderOption={(props, option) => (
-                        <li {...props} key={option._id}>{option.serialNo}</li>
+                        <li {...props} key={option._id}>{`${option.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}</li>
                       )}
                       onChange={(event, newValue) => {
                         if (newValue) {
