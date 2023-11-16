@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import {  useMemo, useEffect, memo } from 'react';
+import {  useMemo, useEffect, memo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 // import download from 'downloadjs';
@@ -11,8 +11,7 @@ import {
   Link,
   Button
 } from '@mui/material';
-import { PATH_DOCUMENT } from '../../../routes/paths';
-// import { useSnackbar } from '../../../components/snackbar';
+import { ThumbnailDocButton } from '../../components/Thumbnails'
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
@@ -27,6 +26,9 @@ import {
   setDocumentHistoryNewVersionFormVisibility,
   setDocumentAddFilesViewFormVisibility,
   setDocumentNewVersionFormVisibility,
+  deleteDocument,
+  setDocumentViewFormVisibility,
+  getDocuments,
 } from '../../../redux/slices/document/document';
 import { getCustomer, resetCustomer, setCustomerDialog} from '../../../redux/slices/customer/customer';
 import { getMachine, resetMachine, setMachineDialog } from '../../../redux/slices/products/machine';
@@ -35,10 +37,13 @@ import FormLabel from '../../components/DocumentForms/FormLabel';
 // import DialogLink from '../../components/Dialog/DialogLink';
 // import DialogLabel from '../../components/Dialog/DialogLabel';
 // import { document as documentType, Snacks } from '../../../constants/document-constants';
+import { useSnackbar } from '../../../components/snackbar';
 import { setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
 import DocumentCover from '../../components/DocumentForms/DocumentCover';
 import CustomerDialog from '../../components/Dialog/CustomerDialog';
 import MachineDialog from '../../components/Dialog/MachineDialog';
+import { Snacks } from '../../../constants/document-constants';
+import { PATH_DOCUMENT } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -52,17 +57,12 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
   const dispatch = useDispatch();
   const { id } = useParams();
   const navigate = useNavigate();
-  // const { enqueueSnackbar } = useSnackbar();
-  // const regEx = /^[^2]*/;
-
+  const { enqueueSnackbar } = useSnackbar();
+  
   const { documentHistory } = useSelector((state) => state.document);
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
-  // const [ setOnPreview] = useState(false);
-  // const [ setImageData] = useState(false);
-  // const [ setImageName] = useState('');
-  // const [ setImageExtension] = useState('');
-
+  
   useEffect(() => {
     // dispatch(resetActiveDocuments());
     if(!machinePage && !drawingPage){
@@ -123,100 +123,35 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
     [documentHistory]
   );
 
-// download the file 
-  // const handleDownload = (documentId, versionId, fileId, fileName, fileExtension) => {
-  //   dispatch(getDocumentDownload(documentId, versionId, fileId))
-  //     .then((res) => {
-  //       if (regEx.test(res.status)) {
-  //         download(atob(res.data), `${fileName}.${fileExtension}`, { type: fileExtension });
-  //         enqueueSnackbar(res.statusText);
-  //       } else {
-  //         enqueueSnackbar(res.statusText, { variant: `error` });
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       if (err.Message) {
-  //         enqueueSnackbar(err.Message, { variant: `error` });
-  //       } else if (err.message) {
-  //         enqueueSnackbar(err.message, { variant: `error` });
-  //       } else {
-  //         enqueueSnackbar('Something went wrong!', { variant: `error` });
-  //       }
-  //     });
-  // };
-
-  // for download the file
-  // const handleDownloadImage = (fileName, fileExtension) => {
-  //   download(atob(imageData), `${fileName}.${fileExtension}`, { type: fileExtension });
-  // };
-
-  // for download and preview the file
-  // const handleDownloadAndPreview = (documentId, versionId, fileId, fileName, fileExtension) => {
-  //   setImageName(fileName);
-  //   setImageExtension(fileExtension);
-  //   dispatch(getDocumentDownload(documentId, versionId, fileId))
-  //     .then((res) => {
-  //       if (regEx.test(res.status)) {
-  //         setImageData(res.data);
-  //         handleOpenPreview();
-  //       } else {
-  //         enqueueSnackbar(res.statusText, { variant: `error` });
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       if (err.Message) {
-  //         enqueueSnackbar(err.Message, { variant: `error` });
-  //       } else if (err.message) {
-  //         enqueueSnackbar(err.message, { variant: `error` });
-  //       } else {
-  //         enqueueSnackbar('Something went wrong!', { variant: `error` });
-  //       }
-  //     });
-  // };
-
   // refresh the document when file deleted
   const callAfterDelete = () => {dispatch(getDocumentHistory(documentHistory._id))};
 
-
-// delete document and navigate to docuements list page
-// const onDelete = async () => {
-//   try {
-//     await dispatch(deleteDocument(documentHistory._id));
-//     dispatch(getDocuments());
-//     navigate(PATH_DOCUMENT.document.list);
-//     enqueueSnackbar(Snacks.deletedDoc);
-//   } catch (err) {
-//     enqueueSnackbar(Snacks.failedDeleteDoc, { variant: `error` });
-//     console.log('Error:', err);
-//   }
-// };
-
-const handleNewVersion = async () => {
-  if(customerPage || machinePage){
-    dispatch(setDocumentHistoryViewFormVisibility(false));
-    dispatch(setDocumentFormVisibility(true));
-    dispatch(setDocumentHistoryNewVersionFormVisibility(true));
-    dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
-    dispatch(setDocumentAddFilesViewFormVisibility(false));
-    dispatch(setDocumentNewVersionFormVisibility(false));
-    dispatch(resetDocument());
-  }else if(!customerPage && !machinePage && !machineDrawings){
-    dispatch(setDocumentHistoryNewVersionFormVisibility(true));
-    dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
-    dispatch(setDocumentAddFilesViewFormVisibility(false));
-    dispatch(setDocumentNewVersionFormVisibility(false));
-    navigate(PATH_DOCUMENT.document.new);
-    dispatch(resetDocument());
-  }
-  else if(machineDrawings){
-    dispatch(setDocumentHistoryNewVersionFormVisibility(true));
-    dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
-    dispatch(setDocumentAddFilesViewFormVisibility(false));
-    dispatch(setDocumentNewVersionFormVisibility(false));
-    navigate(PATH_DOCUMENT.document.machineDrawings.new);
-    dispatch(resetDocument());
-  }
-}
+  const handleNewVersion = async () => {
+    if(customerPage || machinePage){
+      dispatch(setDocumentHistoryViewFormVisibility(false));
+      dispatch(setDocumentFormVisibility(true));
+      dispatch(setDocumentHistoryNewVersionFormVisibility(true));
+      dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
+      dispatch(setDocumentAddFilesViewFormVisibility(false));
+      dispatch(setDocumentNewVersionFormVisibility(false));
+      dispatch(resetDocument());
+    }else if(!customerPage && !machinePage && !machineDrawings){
+      dispatch(setDocumentHistoryNewVersionFormVisibility(true));
+      dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
+      dispatch(setDocumentAddFilesViewFormVisibility(false));
+      dispatch(setDocumentNewVersionFormVisibility(false));
+      navigate(PATH_DOCUMENT.document.new);
+      dispatch(resetDocument());
+    }
+    else if(machineDrawings){
+      dispatch(setDocumentHistoryNewVersionFormVisibility(true));
+      dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
+      dispatch(setDocumentAddFilesViewFormVisibility(false));
+      dispatch(setDocumentNewVersionFormVisibility(false));
+      navigate(PATH_DOCUMENT.document.machineDrawings.new);
+      dispatch(resetDocument());
+    }
+  } 
 
 const handleNewFile = async () => {
   if(customerPage || machinePage){
@@ -247,18 +182,30 @@ const handleNewFile = async () => {
   const handleCustomerDialog = () =>{dispatch(setCustomerDialog(true))}
   const handleMachineDialog = () =>{dispatch(setMachineDialog(true))}
 
+  const handleDeleteDrawing = async () => {
+    try {
+      await dispatch(deleteDocument(documentHistory._id));
+      navigate(PATH_DOCUMENT.document.machineDrawings.list);
+      enqueueSnackbar(`Drawing ${Snacks.deletedDoc}`, { variant: `success` });
+    } catch (err) {
+      console.log(err);
+      enqueueSnackbar(`Drawing ${Snacks.failedDeleteDoc}`, { variant: `error` });
+    }
+  };
+
   return (
     <>
-      {!customerPage && !machinePage && !drawingPage && 
+      {!customerPage && !machinePage && !drawingPage &&
         <DocumentCover content={defaultValues?.displayName} backLink={!customerPage && !machinePage && !machineDrawings} machineDrawingsBackLink={machineDrawings}  generalSettings />
       }
         <Grid item md={12} mt={2}>
           <Card sx={{ p: 3 }}>
-          <ViewFormEditDeleteButtons 
+          <ViewFormEditDeleteButtons
           customerAccess={defaultValues?.customerAccess}
-          isActive={defaultValues.isActive}          
+          isActive={defaultValues.isActive}
           // disableEditButton={machine?.status?.slug==='transferred'}
           // disableDeleteButton={machine?.status?.slug==='transferred'}
+          onDelete={machineDrawings && handleDeleteDrawing}
           backLink={(customerPage || machinePage || drawingPage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDrawingViewFormVisibility(false));} 
           : () =>  machineDrawings ? navigate(PATH_DOCUMENT.document.machineDrawings.list) : navigate(PATH_DOCUMENT.document.list)}
       />
@@ -284,7 +231,7 @@ const handleNewFile = async () => {
                   )
                 }
               />
-              
+
               {!customerPage && !machineDrawings && !drawingPage && defaultValues.customer && (
                 <ViewFormField
                   sm={6}
@@ -298,7 +245,7 @@ const handleNewFile = async () => {
                   }
                 />
               )}
-              
+
               {!machinePage && !machineDrawings && !drawingPage &&  defaultValues?.machine && (
                 <ViewFormField
                   sm={6}
@@ -351,7 +298,7 @@ const handleNewFile = async () => {
                         </Grid>
                       </Grid>
                     ))}
-                    {index === 0 && ( <Button title="Add/Upload Files in Current version." variant="contained" color="inherit" onClick={handleNewFile}  sx={{width:'140px', height:'140px', borderRadius:'16px'}} >Add/Upload Files</Button>)}
+                    {index === 0 && (<ThumbnailDocButton onClick={handleNewFile}/>)}
                       <ViewFormAudit defaultValues={fileValues} />
                   </Grid>
                 )})}

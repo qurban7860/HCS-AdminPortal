@@ -63,6 +63,7 @@ export default function ConfigEditForm() {
   };
 
   const onSubmit = async (data) => {
+    data.notes = data?.notes.trim();
     try {
       await dispatch(updateConfig(data, config._id));
       dispatch(getConfig(config._id));

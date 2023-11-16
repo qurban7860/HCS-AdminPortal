@@ -38,6 +38,7 @@ import { fDate } from '../../utils/formatTime';
 import MachineDialog from '../components/Dialog/MachineDialog'
 import CustomerDialog from '../components/Dialog/CustomerDialog';
 import SiteDialog from '../components/Dialog/SiteDialog';
+import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -160,15 +161,19 @@ export default function MachineViewForm() {
     try {
       await dispatch(getConnntedMachine(id));
       setOpenMachineConnection(true);
+      navigate(PATH_MACHINE.machines.view(id))
     } catch (error) {
       console.log(error);
     }
   }
   
   const handleCloseMachineConnection = () => setOpenMachineConnection(false);
-
   const linkedMachines = machine?.machineConnections?.map((machineConnection, index) => (
-    <Chip sx={{m:0.2}} onClick={() => handleOpenMachineConnection(machineConnection.connectedMachine._id)} label={machineConnection.connectedMachine.serialNo ? machineConnection.connectedMachine.serialNo : 'NA'} />
+    <Chip sx={{ml:index===0?0:1}}onClick={() => handleOpenMachineConnection(machineConnection.connectedMachine._id)} label={machineConnection.connectedMachine.serialNo ? machineConnection.connectedMachine.serialNo : 'NA'} />
+  ));
+
+  const paranetMachines = machine?.parentMachines?.map((parentMachine, index) => (
+    <Chip sx={{ml:index===0?0:1}} onClick={() => handleOpenMachineConnection(parentMachine.machine._id)} label={parentMachine.machine.serialNo ? parentMachine.machine.serialNo : 'NA'} />
   ));
 
   const defaultValues = useMemo(
@@ -182,6 +187,7 @@ export default function MachineViewForm() {
       supplier: machine?.supplier?.name || '',
       workOrderRef: machine?.workOrderRef || '',
       machineModel: machine?.machineModel?.name || '',
+      machineConnections: machine?.machineModel?.category?.connections || false,
       machineProfile: machine?.machineProfile?.defaultName || '',
       machineweb:machine?.machineProfile?.web || '',
       machineflange:machine?.machineProfile?.flange || '',
@@ -367,6 +373,11 @@ export default function MachineViewForm() {
               param={defaultValues?.siteMilestone}
             />
             <ViewFormField sm={12} heading="Connected Machiness" chipDialogArrayParam={linkedMachines} />
+
+            {defaultValues?.machineConnections &&
+              <ViewFormField sm={12} heading="Parent Machiness" chipDialogArrayParam={paranetMachines} />
+            }
+            
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
             {/* <ViewFormField sm={6} heading="Tags" param={defaultValues?.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
           </Grid>

@@ -37,11 +37,12 @@ import { PATH_PAGE, PATH_SECURITY } from '../../../routes/paths';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'user.name', label: 'User Name', align: 'left' },
   { id: 'xs1', visibility: 'md1', label: 'User Login', align: 'left' },
+  { id: 'user.name', label: 'User Name', align: 'left' },
   { id: 'xs2', visibility: 'md2', label: 'User IP', align: 'left' },
   { id: 'loginTime', label: 'Login Time', align: 'left' },
   { id: 'logoutTime', label: 'Logout Time', align: 'left' },
+  { id: 'logoutBy', label: 'Logout By', align: 'left' },
   { id: 'xs3', visibility: 'xs3', label: 'Status', align: 'left' },
 ];
 
@@ -177,6 +178,7 @@ export default function SignInLogList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
+            refresh={reloadList}
           />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>

@@ -51,17 +51,18 @@ export default function SignInLogListTableRow({
   onViewRow,
   status
 }) {
-  const { loginTime, user, loginIP, logoutTime, statusCode } = row;
+  const { loginTime, user, loginIP, requestedLogin, logoutTime, loggedOutBy, statusCode } = row;
   return (
       <StyledTableRow hover selected={selected}>
-        <LinkTableCell align="left" onClick={onViewRow} param={user?.name} />
-        { useScreenSize('lg') && <TableCell align="left"> {user?.login ? user?.login : ''} </TableCell>}
+        { useScreenSize('lg') && <TableCell align="left"> {requestedLogin || ''} </TableCell>}
+        {user && <LinkTableCell align="left" onClick={onViewRow} param={user?.name} /> || <TableCell align="left"> </TableCell>}
         { useScreenSize('lg') && <TableCell align="left"> {loginIP} </TableCell>}
         <TableCell align="left"> {fDateTime(loginTime)} </TableCell>
         <TableCell align="left">{fDateTime(logoutTime)}</TableCell>
+        <TableCell align="left">{loggedOutBy}</TableCell>
         { useScreenSize('sm') && <TableCell align="left" sx={{color: statusCode===200?"green":"red"}}> 
-          {`${status?.value} (${status?.notes})`}
-          {/* {`${statusCode===200?"Success":"Failed"} (${statusCode})`}  */}
+          {status?.value}
+          {status?.notes && ` (${status?.notes})`}
         </TableCell>}
       </StyledTableRow>
   );

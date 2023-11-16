@@ -1,6 +1,7 @@
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
+import { useLayoutEffect, useState } from 'react';
 // @mui
-import { Typography, Grid, Stack, Card, Divider, TextField, Autocomplete, CardHeader, Box, createTheme, IconButton, Dialog, DialogContent, useMediaQuery } from '@mui/material';
+import { Grid, Card, Divider, TextField, Autocomplete, CardHeader, Box, IconButton } from '@mui/material';
 import { StyledBg, StyledContainer, StyledGlobalCard } from '../../theme/styles/default-styles';
 // sections
 import HowickWelcome from '../components/DashboardWidgets/HowickWelcome';
@@ -27,14 +28,14 @@ import {  getActiveMachineModels } from '../../redux/slices/products/model';
 import {  getCategories } from '../../redux/slices/products/category';
 import { countries } from '../../assets/data';
 import Iconify from '../../components/iconify';
-import IconTooltip from '../components/Icons/IconTooltip';
-import DialogLabel from '../components/Dialog/DialogLabel';
-import DialogLink from '../components/Dialog/DialogLink';
+import { PATH_DASHBOARD } from '../../routes/paths';
 // ----------------------------------------------------------------------
 
 export default function GeneralAppPage() {
   const dispatch = useDispatch();
-  const { count, isLoading, error, initial, responseMessage, machinesByCountry, machinesByYear, machinesByModel } = useSelector((state) => state.count);
+  const navigate = useNavigate();
+  
+  const { count, machinesByCountry, machinesByYear, machinesByModel } = useSelector((state) => state.count);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
   const { categories } = useSelector((state) => state.category);
   const enviroment = CONFIG.ENV.toLowerCase();
@@ -51,12 +52,6 @@ export default function GeneralAppPage() {
   const [MBYCountry, setMBYCountry] = useState(null);
   const [MBYModel, setMBYModel] = useState(null);
   const [MBYCategory, setMBYCategory] = useState(null);
-
-  const [preview, setPreview] = useState(false);
-  const [expandTitle, setExpandTitle] = useState("");
-  const [optionData, setOptionData] = useState([]);
-  const [seriesData, setSeriesData] = useState([]);
-  const [expandGraphHeight, setExpandGraphHeight] = useState(320);
 
   const modelWiseMachineNumber = [];
   const yearWiseMachinesYear = [];
@@ -102,8 +97,6 @@ export default function GeneralAppPage() {
     });
   }
 
-  console.log()
-
   const handleGraphCountry = (category, year, model) => {
     dispatch(getMachinesByCountry(category, year, model));
   };
@@ -117,28 +110,15 @@ export default function GeneralAppPage() {
   };
 
   const handleExpandGraph = (graph) => {
-    
     if(graph==="country"){
-      setExpandTitle("Machine By Countries");
-      setOptionData(countryWiseMachineCountCountries);
-      setSeriesData(countryWiseMachineCountNumber);
-      setExpandGraphHeight(countryWiseMachineCountCountries.length*50)
+      navigate(PATH_DASHBOARD.general.machineByCountries)
     }else if(graph==="model"){
-      setExpandTitle("Machine By Models");
-      setOptionData(modelWiseMachineModel);
-      setSeriesData(modelWiseMachineNumber);
-      setExpandGraphHeight(modelWiseMachineModel.length*50)
-    } else if(graph==="year"){
-      setExpandTitle("Machine By Years");
-      setOptionData(yearWiseMachinesYear);
-      setSeriesData(yearWiseMachinesNumber);
-      setExpandGraphHeight(yearWiseMachinesYear.length*50)
+      navigate(PATH_DASHBOARD.general.machineByModels)
+    }else if(graph==="year"){
+      navigate(PATH_DASHBOARD.general.machineByYears)
     }
-
-    setPreview(true);
-    // dispatch(getMachinesByYear(category, model, country));
-  };
-   
+  }
+ 
   useLayoutEffect(() => {
     dispatch(getCategories());
     dispatch(getActiveMachineModels());
@@ -251,11 +231,9 @@ export default function GeneralAppPage() {
                           onChange={(event, newValue) =>{setMBCYear(newValue); ; handleGraphCountry(MBCCategory, newValue, MBCModel)}}
                         />
 
-
                         <IconButton size='large' color="primary" onClick={()=>{handleExpandGraph('country')}}>
                           <Iconify icon="fluent:expand-up-right-20-filled" />
                         </IconButton>
-
 
                       </Box>
                   }
@@ -417,29 +395,6 @@ export default function GeneralAppPage() {
 
           </Grid>
         </Grid>
-
-        <Dialog
-          disableEnforceFocus
-          fullWidth
-          maxWidth="xl"
-          open={ preview }
-          onClose={ ()=> setPreview(false) }
-          keepMounted
-          aria-describedby="alert-dialog-slide-description"
-          
-        >
-          <DialogLabel onClick={ ()=> setPreview(false) } content={expandTitle} />
-          <DialogContent dividers>
-              <ChartBar
-                optionsData={optionData}
-                seriesData={seriesData}
-                height={expandGraphHeight}
-                type="bar"
-                sx={{ backgroundColor: 'transparent'}}
-              />
-          </DialogContent>
-          <DialogLink onClose={()=> setPreview(false)}/>
-        </Dialog>
 
         {/* hide this in the live, but show in development and test for now  */}
         {showDevGraphs ?
