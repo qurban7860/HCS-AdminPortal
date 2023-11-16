@@ -140,7 +140,7 @@ export default function MachineEditForm() {
       category: machine?.machineModel?.category || null,
       machineModel: machine?.machineModel || null,
       customer: machine.customer || null,
-      machineConnectionVal: machine.machineConnections || [],
+      machineConnectionVal: machine.machineConnections.map((connection)=> connection.connectedMachine) || [],
       status: machine.status || null,
       workOrderRef: machine.workOrderRef || '',
       instalationSite: machine.instalationSite || null,
@@ -192,7 +192,6 @@ export default function MachineEditForm() {
     // description,
     // isActive,
   } = watch();
-
   useEffect(() => {
     if(category === null){
       // dispatch(resetActiveMachineModels())
@@ -704,7 +703,7 @@ export default function MachineEditForm() {
                     options={machineConnections}
                     getOptionLabel={(option) => `${option?.connectedMachine?.serialNo ? option?.connectedMachine?.serialNo : option?.serialNo} ${option?.name ? '-' : ''} ${option?.name ? option.name : ''}`}
                     filterSelectedOptions
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) => option?.connectedMachine?._id === value?.connectedMachine?._id}
                     onChange={(event, value) => field.onChange(value)}
                     renderInput={(params) => (
                       <TextField 
