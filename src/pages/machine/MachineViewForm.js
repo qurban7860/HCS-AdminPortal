@@ -14,6 +14,7 @@ import {
   setMachineEditFormVisibility,
   transferMachine,
   setMachineVerification,
+  setMachineDialog
 } from '../../redux/slices/products/machine';
 import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
 import { getSite, resetSite, setSiteDialog } from '../../redux/slices/customer/site';
@@ -57,6 +58,9 @@ export default function MachineViewForm() {
   const [disableDeleteButton, setDisableDeleteButton] = useState(false);
   const [hasValidLatLong, setHasValidLatLong] = useState(false);
   const isMobile = useResponsive('down', 'sm');
+  
+  const [machineData, setMachineData] = useState({});
+
   const handleInstallationSiteDialog = () =>{ dispatch(resetSite()); dispatch(getSite(machine?.customer?._id, machine?.instalationSite?._id)); dispatch(setSiteDialog(true))}
   const handleBillingSiteDialog = () =>{ dispatch(resetSite()); dispatch(getSite(machine?.customer?._id, machine?.billingSite?._id)); dispatch(setSiteDialog(true))}
 
@@ -155,25 +159,20 @@ export default function MachineViewForm() {
   };
   const [openMachineConnection, setOpenMachineConnection] = useState(false);
 
-
   const handleCustomerDialog = () => dispatch(setCustomerDialog(true));
-  const handleOpenMachineConnection = async (id) => {
-    try {
-      await dispatch(getConnntedMachine(id));
-      setOpenMachineConnection(true);
-      navigate(PATH_MACHINE.machines.view(id))
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  
+  const handleMachineDialog = (MachineData) => {
+    dispatch(setMachineDialog(true)); 
+    setMachineData(MachineData)
+  };
   
   const handleCloseMachineConnection = () => setOpenMachineConnection(false);
   const linkedMachines = machine?.machineConnections?.map((machineConnection, index) => (
-    <Chip sx={{ml:index===0?0:1}}onClick={() => handleOpenMachineConnection(machineConnection.connectedMachine._id)} label={machineConnection.connectedMachine.serialNo ? machineConnection.connectedMachine.serialNo : 'NA'} />
+    <Chip sx={{ml:index===0?0:1}}onClick={() => handleMachineDialog(machineConnection.connectedMachine)} label={machineConnection.connectedMachine.serialNo ? machineConnection.connectedMachine.serialNo : 'NA'} />
   ));
 
   const paranetMachines = machine?.parentMachines?.map((parentMachine, index) => (
-    <Chip sx={{ml:index===0?0:1}} onClick={() => handleOpenMachineConnection(parentMachine.machine._id)} label={parentMachine.machine.serialNo ? parentMachine.machine.serialNo : 'NA'} />
+    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(parentMachine.machine)} label={parentMachine.machine.serialNo ? parentMachine.machine.serialNo : 'NA'} />
   ));
 
   const defaultValues = useMemo(
@@ -427,13 +426,14 @@ export default function MachineViewForm() {
       </Grid>
 
       {/* connected machine dialog */}      
-      <MachineDialog 
+      {/* <MachineDialog 
         openMachine={openMachineConnection}
         handleCloseMachine={handleCloseMachineConnection}
         handleConnectedMachine={openMachineConnection}
-      />
+      /> */}
 
       <CustomerDialog />
+      <MachineDialog machineData={ machineData }/>
 
       <SiteDialog
         site={defaultValues?.instalationSite}

@@ -29,7 +29,7 @@ import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
 import { getCustomerMachines, ChangeRowsPerPage,
   ChangePage,
-  setFilterBy,
+  // setFilterBy,
   setMachineDialog,
   setMachineMoveFormVisibility,
   getMachine, } from '../../../redux/slices/products/machine';
@@ -53,7 +53,7 @@ export default function MachineList() {
   const [machineData, setMachineData] = useState({});
 
   const { customer } = useSelector((state) => state.customer);
-  const { customerMachines, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.machine);
+  const { customerMachines, page, rowsPerPage, isLoading } = useSelector((state) => state.machine);
   
   const TABLE_HEAD = [
     { id: 'serialNo', label: 'SerialNo'},
@@ -92,7 +92,7 @@ export default function MachineList() {
 
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
-    dispatch(setFilterBy(value))
+    // dispatch(setFilterBy(value))
   }, 500))
 
   const handleFilterName = (event) => {
@@ -105,10 +105,6 @@ export default function MachineList() {
       debouncedSearch.current.cancel();
   }, [debouncedSearch]);
   
-  useEffect(()=>{
-      setFilterName(filterBy)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -126,7 +122,7 @@ export default function MachineList() {
   };
 
   const handleResetFilter = () => {
-    dispatch(setFilterBy(''))
+    // dispatch(setFilterBy(''))
     setFilterName('');
   };
 
