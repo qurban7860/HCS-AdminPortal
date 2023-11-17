@@ -34,7 +34,7 @@ function MachineDialog({ machineData }) {
     >
       <DialogLabel onClick={ handleMachineDialog } content="Machine" />
       <DialogContent dividers>
-        <Grid container sx={{ px: 2, pt: 2 }}>
+        <Grid container>
           <ViewFormField sm={6} heading="Serial No" param={machineValue?.serialNo} />
           <ViewFormField sm={6} heading="Name" param={machineValue?.name} />
           <ViewFormField sm={6} heading="Supplier" param={machineValue?.supplier?.name} />
@@ -47,7 +47,7 @@ function MachineDialog({ machineData }) {
           <ViewFormField sm={6} heading="Billing Site" param={machineValue?.billingSite?.name} />
           <ViewFormField sm={12} heading="Nearby Milestone" param={machineValue?.siteMilestone} />
         </Grid>
-        <Grid container sx={{ px: 2, pb: 3 }}>
+        <Grid container>
           <FormLabel content="Howick Resources" />
           <ViewFormField
             sm={6}
