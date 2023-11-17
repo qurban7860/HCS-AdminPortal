@@ -4,31 +4,6 @@ import PropTypes from 'prop-types';
 import { Stack, Box, TextField, Autocomplete, Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 // import { RHFTextField, RHFAutocomplete } from '../../../components/hook-form';
 
-// const NumericFormatCustom = React.forwardRef(function NumericFormatCustom( props, ref ) {
-//     const { onChange, ...other } = props;
-//     return (
-//     <NumericFormat
-//         {...other}
-//         getInputRef={ref}
-//         onValueChange={(values) => {
-//             onChange({
-//                 target: {
-//                     name: props.name,
-//                     value: values.value,
-//                 },
-//             });
-//         }}
-//         thousandSeparator
-//         valueIsNumericString
-//         prefix="$"
-//     />
-//     );
-//     });
-
-//     NumericFormatCustom.propTypes = {
-//         name: PropTypes.string.isRequired,
-//         onChange: PropTypes.func.isRequired,
-//     };
 
 const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                     handleChangeCheckItemListValue, 
@@ -40,7 +15,6 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                 }) => {
                     
     const { statusTypes } = useSelector((state) => state.serviceRecordConfig);
-console.log("checkParamList : ",checkParamList,statusTypes)
   return (
     <>
     <Stack spacing={1} >
@@ -55,11 +29,10 @@ console.log("checkParamList : ",checkParamList,statusTypes)
                 value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue}
                 required={childRow?.isRequired}
                 InputProps={{ inputProps: { maxLength: 200 } }}
-                InputLabelProps={{ shrink: checkParamList[index]?.checkItems[childIndex]?.checked }}
+                InputLabelProps={{ shrink: checkParamList[index]?.checkItems[childIndex]?.checked || checkParamList[index]?.checkItems[childIndex]?.checkItemValue}}
             />}
 
             { childRow?.inputType === 'Long Text' &&<TextField 
-                // fullWidth
                 type="text"
                 disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
                 label={childRow?.inputType} 
@@ -70,7 +43,7 @@ console.log("checkParamList : ",checkParamList,statusTypes)
                 minRows={1} multiline
                 required={childRow?.isRequired}
                 InputProps={{ inputProps: { maxLength: 3000 } }}
-                InputLabelProps={{ shrink: checkParamList[index]?.checkItems[childIndex]?.checked }}
+                InputLabelProps={{ shrink: checkParamList[index]?.checkItems[childIndex]?.checked || checkParamList[index]?.checkItems[childIndex]?.checkItemValue}}
             />}
 
             </Stack>
@@ -108,30 +81,38 @@ console.log("checkParamList : ",checkParamList,statusTypes)
                         onChange={(e) =>  handleChangeCheckItemListDate(index, childIndex, e.target.value) } 
                         size="small" 
                         required={childRow?.isRequired}
-                        InputLabelProps={{ shrink: checkParamList[index]?.checkItems[childIndex]?.checked }}
+                        InputLabelProps={{ shrink: checkParamList[index]?.checkItems[childIndex]?.checked || checkParamList[index]?.checkItems[childIndex]?.checkItemValue }}
                     /> }
 
                     { childRow?.inputType === 'Number'  && 
                     <TextField 
-                        // fullWidth
                         id="outlined-number"
-                        label={`${childRow?.unitType ? childRow?.unitType :'Enter Value'}`}
+                        label={`${childRow?.unitType ? childRow?.unitType : 'Enter Value'}`}
                         name={childRow?.name} 
                         type="number"
                         disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
                         value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue}
-                        onWheel={(e) => e.target.blur()}
+                        // onWheel={(e) => e.target.blur()}
                         onChange={(e) => {
-                            if (/^\d*$/.test(e.target.value)) {
-                            handleChangeCheckItemListValue(index, childIndex, e.target.value)
-                            }else{
-                                handleChangeCheckItemListValue(index, childIndex, checkParamList[index]?.checkItems[childIndex].value)
-                            }}
-                        } 
+                            const inputValue = e.target.value;
+                            if (/^\d*$/.test(inputValue)) {
+                                handleChangeCheckItemListValue(index, childIndex, inputValue);
+                            }
+                        }} 
+                        onKeyDown={(e) => {
+                            if (e.key === 'Backspace') {
+                                return;
+                            }
+                            if (!/^\d*$/.test(e.key)) {
+                                e.preventDefault();
+                            }
+                        }}
                         size="small" 
                         required={childRow?.isRequired}
-                        InputLabelProps={{ shrink: checkParamList[index]?.checkItems[childIndex]?.checked }}
-                    />}
+                        InputLabelProps={{ shrink: checkParamList[index]?.checkItems[childIndex]?.checked || checkParamList[index]?.checkItems[childIndex]?.checkItemValue }}
+                    />
+                    }
+
 
                     { childRow?.inputType === 'Status' && <Autocomplete
                         // name={`${index}${childIndex}`} 

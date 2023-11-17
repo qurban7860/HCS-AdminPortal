@@ -60,7 +60,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                                 value={checkItemLists[index]?.checkItems[childIndex]?.comments}
                                 minRows={2} multiline
                                 InputProps={{ inputProps: { maxLength: 5000 } }}
-                                InputLabelProps={{ shrink: checkItemLists[index]?.checkItems[childIndex]?.checked }}
+                                InputLabelProps={{ shrink: checkItemLists[index]?.checkItems[childIndex]?.checked || checkItemLists[index]?.checkItems[childIndex]?.comments}}
                             />
                           </Grid>
                           {editPage && childRow?.recordValue?.checkItemValue && 
