@@ -7,14 +7,14 @@ import { Card, Grid, Link, Chip} from '@mui/material';
 import { PATH_MACHINE } from '../../routes/paths';
 // slices
 import {
-  getConnntedMachine,
   getMachines,
   getMachine,
   deleteMachine,
   setMachineEditFormVisibility,
   transferMachine,
   setMachineVerification,
-  setMachineDialog
+  setMachineDialog,
+  getMachineForDialog
 } from '../../redux/slices/products/machine';
 import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
 import { getSite, resetSite, setSiteDialog } from '../../redux/slices/customer/site';
@@ -39,7 +39,6 @@ import { fDate } from '../../utils/formatTime';
 import MachineDialog from '../components/Dialog/MachineDialog'
 import CustomerDialog from '../components/Dialog/CustomerDialog';
 import SiteDialog from '../components/Dialog/SiteDialog';
-import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -59,7 +58,7 @@ export default function MachineViewForm() {
   const [hasValidLatLong, setHasValidLatLong] = useState(false);
   const isMobile = useResponsive('down', 'sm');
   
-  const [machineData, setMachineData] = useState({});
+  const [machineID, setMachineID] = useState('');
 
   const handleInstallationSiteDialog = () =>{ dispatch(resetSite()); dispatch(getSite(machine?.customer?._id, machine?.instalationSite?._id)); dispatch(setSiteDialog(true))}
   const handleBillingSiteDialog = () =>{ dispatch(resetSite()); dispatch(getSite(machine?.customer?._id, machine?.billingSite?._id)); dispatch(setSiteDialog(true))}
@@ -88,7 +87,6 @@ export default function MachineViewForm() {
   useEffect(() => {
     dispatch(setSiteDialog(false))
     dispatch(setCustomerDialog(false));
-    setOpenMachineConnection(false);
     dispatch(setToolInstalledEditFormVisibility(false));
     dispatch(setToolInstalledFormVisibility(false));
     const isValid = hasValidArray(latLongValues);
@@ -157,22 +155,21 @@ export default function MachineViewForm() {
       enqueueSnackbar(Snacks.machineFailedVerification, { variant: 'error' });
     }
   };
-  const [openMachineConnection, setOpenMachineConnection] = useState(false);
-
-  const handleCustomerDialog = () => dispatch(setCustomerDialog(true));
   
-  const handleMachineDialog = (MachineData) => {
+  const handleCustomerDialog = () => dispatch(setCustomerDialog(true));
+
+  const handleMachineDialog = (MachineID) => {
+    dispatch(getMachineForDialog(MachineID));
     dispatch(setMachineDialog(true)); 
-    setMachineData(MachineData)
+    // setMachineID(MachineID)
   };
   
-  const handleCloseMachineConnection = () => setOpenMachineConnection(false);
   const linkedMachines = machine?.machineConnections?.map((machineConnection, index) => (
-    <Chip sx={{ml:index===0?0:1}}onClick={() => handleMachineDialog(machineConnection.connectedMachine)} label={machineConnection.connectedMachine.serialNo ? machineConnection.connectedMachine.serialNo : 'NA'} />
+    <Chip sx={{ml:index===0?0:1}}onClick={() => handleMachineDialog(machineConnection.connectedMachine._id)} label={machineConnection.connectedMachine.serialNo ? machineConnection.connectedMachine.serialNo : 'NA'} />
   ));
 
   const paranetMachines = machine?.parentMachines?.map((parentMachine, index) => (
-    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(parentMachine.machine)} label={parentMachine.machine.serialNo ? parentMachine.machine.serialNo : 'NA'} />
+    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(parentMachine.machine._id)} label={parentMachine.machine.serialNo ? parentMachine.machine.serialNo : 'NA'} />
   ));
 
   const defaultValues = useMemo(
@@ -426,14 +423,9 @@ export default function MachineViewForm() {
       </Grid>
 
       {/* connected machine dialog */}      
-      {/* <MachineDialog 
-        openMachine={openMachineConnection}
-        handleCloseMachine={handleCloseMachineConnection}
-        handleConnectedMachine={openMachineConnection}
-      /> */}
 
       <CustomerDialog />
-      <MachineDialog machineData={ machineData }/>
+      <MachineDialog />
 
       <SiteDialog
         site={defaultValues?.instalationSite}

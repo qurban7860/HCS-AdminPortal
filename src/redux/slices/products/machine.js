@@ -14,6 +14,7 @@ const initialState = {
   isLoading: false,
   error: null,
   machine: {},
+  machineForDialog: {},
   machineDialog: false,
   machines: [],
   connectedMachine: {},
@@ -126,6 +127,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.machine = action.payload;
+      state.initial = true;
+    },
+
+    // GET Machine For Dialog
+    getMachineForDialogSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.machineForDialog = action.payload;
       state.initial = true;
     },
 
@@ -421,6 +430,21 @@ export function getMachine(id) {
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}`);
       dispatch(slice.actions.getMachineSuccess(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// Machine For Dialog
+export function getMachineForDialog(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}`);
+      dispatch(slice.actions.getMachineForDialogSuccess(response.data));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
