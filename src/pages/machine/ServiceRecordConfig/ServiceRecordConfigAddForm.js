@@ -1,7 +1,6 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import * as Yup from 'yup';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -9,7 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Card, Grid, Stack, Typography, Container } from '@mui/material';
 // slice
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import { addServiceRecordConfig, getActiveServiceRecordConfigs, resetServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
+import { addServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 import { getActiveMachineModels, resetActiveMachineModels } from '../../../redux/slices/products/model';
 import { getActiveServiceCategories } from '../../../redux/slices/products/serviceCategory';
 import { getActiveCategories } from '../../../redux/slices/products/category';
@@ -35,7 +34,7 @@ export default function ServiceRecordConfigAddForm() {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const { id } = useParams();
-  const { recordTypes, status, activeServiceRecordConfigs, serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
+  const { recordTypes, serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
   const { activeCategories } = useSelector((state) => state.category);
   const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
@@ -59,7 +58,7 @@ export default function ServiceRecordConfigAddForm() {
       docTitle: id ? serviceRecordConfig?.docTitle : '',
       recordType: id ? {name: serviceRecordConfig?.recordType} || null : null,
       docVersionNo: id ? typeof serviceRecordConfig?.docVersionNo === 'number' && serviceRecordConfig.docVersionNo + 1   : 1,
-      noOfVerificationsRequired: id ? serviceRecordConfig?.noOfVerificationsRequired || 1 : 1,
+      noOfApprovalsRequired: id ? serviceRecordConfig?.noOfVerificationsRequired || 1 : 1,
       machineCategory: id ? serviceRecordConfig?.machineCategory || null : null,
       machineModel:  id ? serviceRecordConfig?.machineModel || null : null,
       textBeforeCheckItems:  id ? serviceRecordConfig?.textBeforeCheckItems || '' : '',
@@ -184,7 +183,7 @@ export default function ServiceRecordConfigAddForm() {
                   />
 
                   <RHFTextField name="docVersionNo" disabled label="Version No.*" />
-                  <RHFTextField name="noOfVerificationsRequired" label="Required Approvals*" />
+                  <RHFTextField name="noOfApprovalsRequired" label="Required Approvals*" />
 
                   {/* <RHFAutocomplete 
                     name="status"

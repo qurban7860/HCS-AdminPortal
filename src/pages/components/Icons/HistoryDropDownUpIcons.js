@@ -6,7 +6,7 @@ import { green } from '@mui/material/colors';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
 import Iconify from '../../../components/iconify';
 
-function HistoryDropDownUpIcons({ activeIndex, indexValue, onClick }) {
+function HistoryDropDownUpIcons({ showTitle, hideTitle, activeIndex, indexValue, onClick }) {
 
   const theme = createTheme({
                               palette: { success: green },
@@ -16,7 +16,7 @@ function HistoryDropDownUpIcons({ activeIndex, indexValue, onClick }) {
     <Grid sx={{display: 'flex', ml:'auto'}}>
       <StyledTooltip
         arrow
-        title={activeIndex === indexValue ? "Hide history" : "Show history" }
+        title={activeIndex === indexValue ? hideTitle : showTitle }
         placement='top'
         tooltipcolor={theme.palette.primary.main}
       >
@@ -30,6 +30,8 @@ function HistoryDropDownUpIcons({ activeIndex, indexValue, onClick }) {
 }
 
 HistoryDropDownUpIcons.propTypes = {
+  showTitle: PropTypes.string,
+  hideTitle: PropTypes.string,
   activeIndex: PropTypes.string,
   indexValue: PropTypes.string,
   onClick: PropTypes.func,

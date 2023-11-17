@@ -1,15 +1,14 @@
 import PropTypes from 'prop-types';
 import { memo } from 'react';
-import { Typography, Grid } from '@mui/material';
+import { Typography, Grid, Chip } from '@mui/material';
 import { fDateTime } from '../../../utils/formatTime';
 
 ViewFormAprovedSubmit.propTypes = {
   submittedInfo: PropTypes.object,
-  approvedInfo: PropTypes.object,
+  approvedInfo: PropTypes.array,
 };
 function ViewFormAprovedSubmit({ submittedInfo, approvedInfo }) {
   const { submittedBy, submittedDate,  } = submittedInfo;
-  const { verifiedBy, verifiedDate } = approvedInfo;
 
   return (
     <Grid container item md={12} sx={{ overflowWrap: 'break-word', display: 'flex', mt:1  }}>
@@ -20,14 +19,11 @@ function ViewFormAprovedSubmit({ submittedInfo, approvedInfo }) {
         </Typography>
       </Grid>
 
-      {/* {createdDate !== updatedDate && ( */}
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={12}>
           <Typography variant="body2" sx={{ px: 2, color: 'text.disabled' }}>
-            approved by: {verifiedBy?.name ? `${verifiedBy?.name} / ` : ''}
-            {fDateTime(verifiedDate) ? `${fDateTime(verifiedDate)}` : ''}
+            approved by: {approvedInfo?.map((approveBy) => <Chip size='small' label={`${approveBy?.approvedBy?.name || ''} / ${fDateTime(approveBy?.approvedDate)}`} sx={{m:0.3}} /> )}
           </Typography>
         </Grid>
-      {/* )} */}
     </Grid>
   );
 }

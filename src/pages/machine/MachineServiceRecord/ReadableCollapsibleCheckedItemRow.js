@@ -1,23 +1,30 @@
-import { memo } from 'react'
+import { memo, useState } from 'react'
 import PropTypes from 'prop-types';
 import { Grid, TableContainer, Table, TableBody, Typography, Paper } from '@mui/material';
 import StatusAndComment from './StatusAndComment';
+import DropDownUpIcons from '../../components/Icons/HistoryDropDownUpIcons';
 
-const CollapsibleCheckedItemRow = ({value, index }) => (
-    <Grid sx={{ border: '3px solid', borderColor: '#e1e1e1', borderRadius: '7px',mt:1.5 ,p:1}}>
-            <Typography variant='h5'>
-                <b>{`${index+1}- `}</b>{typeof value?.ListTitle === 'string' && value?.ListTitle || ''}{' ( Items: '}<b>{`${value?.checkItems?.length || 0}`}</b>{' ) '}
+const CollapsibleCheckedItemRow = ({value, index }) => {
+    const [openedIndex, setOpenedIndex] = useState(null)
+
+    const handleAccordianClick = () => {
+      if ( index === openedIndex ) {
+        setOpenedIndex(null);
+      } else {
+        setOpenedIndex( index );
+      }
+    }
+    return (<Grid sx={{ border: '1px solid #e1e1e1', borderRadius: '7px', mt:1, p:1, backgroundColor: '#f3f4f594'}}>
+            <Typography variant='h5' sx={{ display: 'flex'}}>
+                <b>{`${index+1}- `}</b>{typeof value?.ListTitle === 'string' && value?.ListTitle || ''}{' ( Items: '}<b>{`${value?.checkItems?.length || 0}`}</b>{' ) '} 
+                {/* <DropDownUpIcons showTitle="Open All History" hideTitle="Hide All History" activeIndex={`${openedIndex || ''}`} indexValue={`${index}`} onClick={handleAccordianClick} /> */}
             </Typography>
-            <Grid >
-            <TableContainer component={Paper} >
+            <Grid  >
+            <TableContainer >
               <Table size="small" aria-label="simple table" >
-                <TableBody>
+                <TableBody  >
                   {value?.checkItems?.map((childRow,childIndex) => (
-                    <>
-                    {/* {!isHistorical && childRow?.checkItemValue &&   */}
                       <StatusAndComment index={index} childIndex={childIndex} childRow={childRow}/>
-                    {/* } */}
-                    </>
                   ))}
                 </TableBody>
               </Table>
@@ -25,6 +32,7 @@ const CollapsibleCheckedItemRow = ({value, index }) => (
             </Grid>   
     </Grid>
   )
+}
 
 CollapsibleCheckedItemRow.propTypes = {
     index: PropTypes.number,
