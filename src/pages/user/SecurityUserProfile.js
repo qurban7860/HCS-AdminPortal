@@ -50,22 +50,27 @@ export default function SecurityUserProfile() {
   }, [dispatch, userId, initial]);
 
   useEffect(() => {
-    batch(() => {
-      if (userId && securityUser?.customer?._id) {
-        dispatch(getCustomer(securityUser?.customer?._id));
-      }
-      if (userId && securityUser?.contact?._id) {
-        dispatch(getContact(securityUser?.customer?._id, securityUser?.contact?._id));
-      }
-    });
-  }, [dispatch, userId, securityUser]);
+    dispatch(setCustomerDialog(false));
+    dispatch(setContactDialog(false));
+  }, [dispatch]);
 
   // const handleViewCustomer = (id) => {
   //   navigate(PATH_SECURITY.users.view(id));
   // };
 
-  const handleCustomerDialog = () =>{dispatch(setCustomerDialog(true))}
-  const handleContactDialog = () =>{dispatch(setContactDialog(true))}
+  const handleCustomerDialog = () =>{
+    dispatch(setCustomerDialog(true))
+    if (userId && securityUser?.customer?._id) {
+      dispatch(getCustomer(securityUser?.customer?._id));
+    }
+  }
+
+  const handleContactDialog = () =>{
+    dispatch(setContactDialog(true))
+    if (userId && securityUser?.contact?._id) {
+      dispatch(getContact(securityUser?.customer?._id, securityUser?.contact?._id));
+    }
+  }
 
   const handleEdit = () => {
     dispatch(setSecurityUserEditFormVisibility(true));

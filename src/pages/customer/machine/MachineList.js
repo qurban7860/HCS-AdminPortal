@@ -32,7 +32,8 @@ import { getCustomerMachines, ChangeRowsPerPage,
   // setFilterBy,
   setMachineDialog,
   setMachineMoveFormVisibility,
-  getMachine, } from '../../../redux/slices/products/machine';
+  getMachine,
+  getMachineForDialog, } from '../../../redux/slices/products/machine';
 import MachineDialog from '../../components/Dialog/MachineDialog';
 
 export default function MachineList() {
@@ -50,8 +51,7 @@ export default function MachineList() {
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  const [machineData, setMachineData] = useState({});
-
+  
   const { customer } = useSelector((state) => state.customer);
   const { customerMachines, page, rowsPerPage, isLoading } = useSelector((state) => state.machine);
   
@@ -111,9 +111,9 @@ export default function MachineList() {
     setFilterStatus(event.target.value);
   };
 
-  const handleViewRow = (MachineData) => {
-    dispatch(setMachineDialog(true)); 
-    setMachineData(MachineData)
+  const handleViewRow = (machineId) => {
+    dispatch(getMachineForDialog(machineId)); 
+    dispatch(setMachineDialog(true));
   };
 
   const handleMoveMachine = (id) => {
@@ -161,7 +161,7 @@ export default function MachineList() {
                       <MachineListTableRow
                         key={row._id}
                         row={row}
-                        onViewRow={() => handleViewRow(row)}
+                        onViewRow={() => handleViewRow(row?._id)}
                         onMoveMachine={() => handleMoveMachine(row?._id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
@@ -183,7 +183,7 @@ export default function MachineList() {
           onRowsPerPageChange={onChangeRowsPerPage}
         />
 
-        <MachineDialog machineData={ machineData }/>
+        <MachineDialog/>
 
       </TableCard>
   );
