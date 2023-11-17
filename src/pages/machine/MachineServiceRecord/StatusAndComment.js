@@ -64,14 +64,14 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
           </Grid>
         }
         {childRow?.historicalData && childRow?.historicalData?.length > 0 &&  <>
-            <HistoryDropDownUpIcons activeIndex={`${activeIndex || ''}`} indexValue={`${index}${childIndex}`} onClick={handleAccordianClick}/>
+            <HistoryDropDownUpIcons showTitle="Show History" hideTitle="Hide History" activeIndex={`${activeIndex || ''}`} indexValue={`${index}${childIndex}`} onClick={handleAccordianClick}/>
           </>}
       </Grid>
 
       {activeIndex === `${index}${childIndex}` && childRow?.historicalData && childRow?.historicalData?.length > 0 && 
         <Grid item md={12} sx={{ backgroundColor: '#f3f4f594', p:1, borderRadius:'7px', border: '1px solid #e1e1e1'}} >
           {childRow?.historicalData?.map((ItemHistory, ItemIndex ) => (<>
-              {ItemIndex !== 0 && <Divider  sx={{ borderStyle: 'solid' }} />}
+              {ItemIndex !== 0 && <Divider  sx={{ borderStyle: 'solid', mx:-1 }} />}
             {ItemHistory?.checkItemValue && <Grid sx={{ mt:0.5,
               alignItems: 'center',
               whiteSpace: 'pre-line',

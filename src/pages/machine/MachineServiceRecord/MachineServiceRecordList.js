@@ -39,10 +39,10 @@ import TableCard from '../../components/ListTableTools/TableCard';
 
 
 const TABLE_HEAD = [
+  { id: 'serviceDate', label: 'Service Date', align: 'left' },
   { id: 'serviceRecordConfig.docTitle', label: 'Service Configuration', align: 'left' },
   // { id: 'technician.name', visibility: 'xs5', label: 'Technician', align: 'left' },
   { id: 'versionNo', visibility: 'xs5', label: 'Version', align: 'left' },
-  { id: 'serviceDate', label: 'Service Date', align: 'center' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdBy.name', label: 'Created By', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },

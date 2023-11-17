@@ -16,7 +16,7 @@ function HistoryDropDownUpIcons({ showTitle, hideTitle, activeIndex, indexValue,
     <Grid sx={{display: 'flex', ml:'auto'}}>
       <StyledTooltip
         arrow
-        title={activeIndex === indexValue ? "Hide history" : "Show history" }
+        title={activeIndex === indexValue ? hideTitle : showTitle }
         placement='top'
         tooltipcolor={theme.palette.primary.main}
       >
