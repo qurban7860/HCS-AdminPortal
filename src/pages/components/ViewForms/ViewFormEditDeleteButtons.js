@@ -17,6 +17,7 @@ import { setTransferDialogBoxVisibility } from '../../../redux/slices/products/m
 import IconPopover from '../Icons/IconPopover';
 import IconTooltip from '../Icons/IconTooltip';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
+import ViewFormApprovalsPopover from './ViewFormApprovalsPopover';
 import { ICONS } from '../../../constants/icons/default-icons';
 import { fDate, fDateTime } from '../../../utils/formatTime';
 import SkeletonIcon from '../../../components/skeleton/SkeletonIcon'
@@ -678,7 +679,7 @@ function ViewFormEditDeleteButtons({
         ListTitle={isVerifiedTitle || "Verified By"}
       />
 
-      <ViewFormMenuPopover
+      <ViewFormApprovalsPopover
         open={approvedAnchorEl}
         onClose={handleApprovedPopoverClose}
         ListArr={approvedBy}

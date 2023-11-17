@@ -22,9 +22,9 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
     };
 
   return (
-    <TableRow key={childRow._id}  >
-    <Grid item md={12} sx={{m:0.5,p:1,  border: '2px solid', borderColor: '#e8e8e8' , borderRadius:'7px'}} >
-      <Grid item md={12} sx={{my:0.7, display: childRow?.recordValue?.checkItemValue ? 'block' : 'flex'}}>
+    <TableRow key={childRow._id} sx={{ backgroundColor: 'none',}} >
+    <Grid item md={12} sx={{mt: childIndex !==0 && 0.5, p:1,  border: '1px solid #e8e8e8',  borderRadius:'7px',backgroundColor: 'white' }} >
+      <Grid item md={12} sx={{ display: childRow?.recordValue?.checkItemValue ? 'block' : 'flex'}}>
         <Typography variant="body2" ><b>{`${index+1}.${childIndex+1}- `}</b>{`${childRow.name}`}</Typography>
         {childRow?.recordValue?.checkItemValue && 
           <Grid >
@@ -69,7 +69,7 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
       </Grid>
 
       {activeIndex === `${index}${childIndex}` && childRow?.historicalData && childRow?.historicalData?.length > 0 && 
-        <Grid item md={12} sx={{mb:1, backgroundColor: '#f9f9f9', p:1.3, borderRadius:'7px', border: '1px solid', borderColor: '#f2f2f2'}} >
+        <Grid item md={12} sx={{ backgroundColor: '#f3f4f594', p:1, borderRadius:'7px', border: '1px solid #e1e1e1'}} >
           {childRow?.historicalData?.map((ItemHistory, ItemIndex ) => (<>
               {ItemIndex !== 0 && <Divider  sx={{ borderStyle: 'solid' }} />}
             {ItemHistory?.checkItemValue && <Grid sx={{ mt:0.5,
