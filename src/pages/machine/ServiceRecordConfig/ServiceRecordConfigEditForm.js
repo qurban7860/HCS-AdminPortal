@@ -50,7 +50,7 @@ export default function ServiceRecordConfigEditForm() {
     machineCategory: serviceRecordConfig?.machineCategory || null,
     machineModel: serviceRecordConfig?.machineModel || null,
     docVersionNo: serviceRecordConfig?.docVersionNo || 1,
-    noOfVerificationsRequired: serviceRecordConfig?.noOfVerificationsRequired || 1,
+    noOfApprovalsRequired: serviceRecordConfig?.noOfApprovalsRequired || 1,
     textBeforeCheckItems: serviceRecordConfig?.textBeforeCheckItems || '',
     checkItemCategory: null,
     // // Check Params
@@ -175,7 +175,7 @@ export default function ServiceRecordConfigEditForm() {
                   />
 
                   <RHFTextField name="docVersionNo" disabled label="Version No.*" />
-                  <RHFTextField name="noOfVerificationsRequired" label="Required Approvals*" />
+                  <RHFTextField name="noOfApprovalsRequired" label="Required Approvals*" />
 
                   <Controller
                     name="machineCategory"

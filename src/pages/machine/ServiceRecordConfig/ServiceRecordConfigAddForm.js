@@ -59,7 +59,7 @@ export default function ServiceRecordConfigAddForm() {
       docTitle: id ? serviceRecordConfig?.docTitle : '',
       recordType: id ? {name: serviceRecordConfig?.recordType} || null : null,
       docVersionNo: id ? typeof serviceRecordConfig?.docVersionNo === 'number' && serviceRecordConfig.docVersionNo + 1   : 1,
-      noOfVerificationsRequired: id ? serviceRecordConfig?.noOfVerificationsRequired || 1 : 1,
+      noOfApprovalsRequired: id ? serviceRecordConfig?.noOfVerificationsRequired || 1 : 1,
       machineCategory: id ? serviceRecordConfig?.machineCategory || null : null,
       machineModel:  id ? serviceRecordConfig?.machineModel || null : null,
       textBeforeCheckItems:  id ? serviceRecordConfig?.textBeforeCheckItems || '' : '',
@@ -184,7 +184,7 @@ export default function ServiceRecordConfigAddForm() {
                   />
 
                   <RHFTextField name="docVersionNo" disabled label="Version No.*" />
-                  <RHFTextField name="noOfVerificationsRequired" label="Required Approvals*" />
+                  <RHFTextField name="noOfApprovalsRequired" label="Required Approvals*" />
 
                   {/* <RHFAutocomplete 
                     name="status"
