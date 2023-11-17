@@ -31,7 +31,7 @@ import {
   getDocuments,
 } from '../../../redux/slices/document/document';
 import { getCustomer, resetCustomer, setCustomerDialog} from '../../../redux/slices/customer/customer';
-import { getMachine, resetMachine, setMachineDialog } from '../../../redux/slices/products/machine';
+import { getMachine, getMachineForDialog, resetMachine, setMachineDialog } from '../../../redux/slices/products/machine';
 import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 // import DialogLink from '../../components/Dialog/DialogLink';
@@ -81,7 +81,6 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
   useEffect(() => {
     if (documentHistory?.machine && !machinePage && !drawingPage) {
       dispatch(setMachineDialog(false));
-      dispatch(getMachine(documentHistory.machine._id));
     }
   }, [documentHistory, machinePage, drawingPage, dispatch]);
 
@@ -89,7 +88,7 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
   useEffect(() => {
     if (documentHistory?.customer && !customerPage) {
       dispatch(setCustomerDialog(false));
-      dispatch(getCustomer(documentHistory.customer._id));
+      // dispatch(getCustomer(documentHistory.customer._id));
     }
   }, [documentHistory, customerPage, dispatch]);
 
@@ -179,8 +178,18 @@ const handleNewFile = async () => {
     dispatch(resetDocument());
   }
 }
-  const handleCustomerDialog = () =>{dispatch(setCustomerDialog(true))}
-  const handleMachineDialog = () =>{dispatch(setMachineDialog(true))}
+  const handleCustomerDialog = () =>{
+    if (documentHistory?.customer && !customerPage) {
+      dispatch(setCustomerDialog(true));
+      dispatch(getCustomer(documentHistory.customer._id));
+    }
+  }
+  const handleMachineDialog = () =>{
+    if (documentHistory?.machine && !machinePage && !drawingPage) {
+      dispatch(setMachineDialog(true));
+      dispatch(getMachineForDialog(documentHistory.machine._id));
+    }
+  }
 
   const handleDeleteDrawing = async () => {
     try {
