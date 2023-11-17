@@ -162,35 +162,43 @@ export default function DrawingEditForm() {
                   )}
                 />
 
-                <Controller
-                  name="document"
-                  clearOnBlur 
-                  clearOnEscape 
-                  control={control}
-                  defaultValue={document || null}
-                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                  <Autocomplete
-                    {...field}
-                    options={activeDocuments}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
-                    getOptionLabel={(option) => option.name}
-                    onChange={(event, value) => field.onChange(value)}
-                    id="controllable-states-demo"
-                    renderInput={(params) => <TextField 
-                              {...params} 
-                              id="document"  
-                              name='document' 
-                              label="Document*" 
-                              error={!!error}
-                              helperText={error?.message} 
-                              inputRef={ref}
-                              />}
-                    ChipProps={{ size: 'small' }}
-                  />
-                  )}
-                />
-
                 </Box>
+
+                <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                >
+                    <Controller
+                      name="document"
+                      clearOnBlur 
+                      clearOnEscape 
+                      control={control}
+                      defaultValue={document || null}
+                      render={ ({field: { ref, ...field }, fieldState: { error } }) => (
+                      <Autocomplete
+                        {...field}
+                        options={activeDocuments}
+                        isOptionEqualToValue={(option, value) => option._id === value._id}
+                        getOptionLabel={(option) => option.name}
+                        onChange={(event, value) => field.onChange(value)}
+                        id="controllable-states-demo"
+                        renderInput={(params) => <TextField 
+                                  {...params} 
+                                  id="document"  
+                                  name='document' 
+                                  label="Document*" 
+                                  error={!!error}
+                                  helperText={error?.message} 
+                                  inputRef={ref}
+                                  />}
+                        ChipProps={{ size: 'small' }}
+                      />
+                      )}
+                    />
+                </Box>
+
                   <RHFSwitch
                         name="isActive"
                         labelPlacement="start"

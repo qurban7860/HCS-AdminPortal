@@ -7,21 +7,20 @@ import { CONFIG } from '../../../config-global';
 const regEx = /^[^2]*/
 const initialState = {
   formVisibility: false,
-  editFormVisibility: false,
-  intial: false,
+  initial: false,
   responseMessage: null,
   success: false,
   isLoading: false,
   error: null,
-  configs: [],
-  config: null,
+  blockedUser: {},
+  blockedUsers: [],
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
 };
 
 const slice = createSlice({
-  name: 'userConfig',
+  name: 'blockedUser',
   initialState,
   reducers: {
     // START LOADING
@@ -37,28 +36,23 @@ const slice = createSlice({
     },
 
     // SET VISIBILITY
-    setConfigFormVisibility(state, action){
+    setBlockedUserFormVisibility(state, action){
       state.formVisibility = action.payload;
     },
 
-    // SET VISIBILITY
-    setConfigEditFormVisibility(state, action){
-      state.editFormVisibility = action.payload;
-    },
-
-    // GET  Config
-    getConfigsSuccess(state, action) {
+    // GET  Blocked Customers 
+    getBlockedUserSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.configs = action.payload;
+      state.blockedUser = action.payload;
       state.initial = true;
     },
 
-    // GET Config
-    getConfigSuccess(state, action) {
+    // GET  Blocked Customers 
+    getBlockedUsersSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.config = action.payload;
+      state.blockedUsers = action.payload;
       state.initial = true;
     },
 
@@ -69,18 +63,10 @@ const slice = createSlice({
       state.success = true;
       state.initial = true;
     },
-
-    // RESET Config
-    resetConfig(state){
-      state.config = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
-
-    // RESET ConfigS
-    resetConfigs(state){
-      state.configs = [];
+    
+    // RESET BlockedUsers
+    resetBlockedUsers(state){
+      state.blockedUsers = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
@@ -106,74 +92,40 @@ export default slice.reducer;
 // Actions
 export const {
   setFormVisibility,
-  setEditFormVisibility,
-  resetConfigs,
-  resetConfig,
+  resetBlockedUsers,
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,
 } = slice.actions;
+
 // ----------------------------------------------------------------------
 
-export function addConfig(params) {
+export function addBlockedUsers(data) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = {}
-        if(params.BlockedUsers){
-            data.blockedUsers = params.blockedUsers
-        }
-        if(params.BlockedCustomers){
-            data.blockedCustomers = params.blockedCustomers
-        }
-        if(params.whiteListIPs){
-            data.whiteListIPs = params.whiteListIPs
-        }if(params.blackListIPs){
-            data.blackListIPs = params.blackListIPs
-        }
-      const response = await axios.post(`${CONFIG.SERVER_URL}security/configs/`, data);
+      const response = await axios.post(`${CONFIG.SERVER_URL}security/configs/blockedUsers/`, data);
       return response;
     } catch (error) {
       console.log(error);
       throw error;
-      // dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
-// ----------------------------------------------------------------------
 
-export function updateConfig(id, params) {
+export function getBlockedUsers() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = {
-        blockedUsers: params.BlockedUsers,
-        blockedCustomers: params.BlockedCustomers,
-        whiteListIPs: params.whiteListIPs,
-        blackListIPs: params.blackListIPs,
-      }
-      await axios.patch(`${CONFIG.SERVER_URL}security/configs/${id}`, data);
-    } catch (error) {
-      console.log(error);
-      throw error;
-      // dispatch(slice.actions.hasError(error.Message));
-    }
-  };
-}
-// ----------------------------------------------------------------------
-
-export function getConfigs() {
-  return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}security/configs`,
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/configs/blockedUsers`,
       {
         params: {
+          isActive:true,
           isArchived: false
         }
       }
       );
-      dispatch(slice.actions.getConfigsSuccess(response.data));
+      dispatch(slice.actions.getBlockedUsersSuccess(response.data));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -182,36 +134,40 @@ export function getConfigs() {
   };
 }
 
-// ----------------------------------------------------------------------
-
-export function getConfig(id) {
+export function getBlockedUser(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}security/configs/${id}`);
-      dispatch(slice.actions.getConfigSuccess(response.data));
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/configs/blockedUsers`,
+      {
+        params: {
+          blockedUser:id,
+          isActive:true,
+          isArchived: false
+        }
+      }
+      );
+      dispatch(slice.actions.getBlockedUserSuccess(response.data));
     } catch (error) {
-      console.error(error);
+      console.log(error);
       dispatch(slice.actions.hasError(error.Message));
       throw error;
     }
   };
 }
 
-// ----------------------------------------------------------------------
-
-export function deleteConfig(id) {
+export function deleteBlockedUser(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.patch(`${CONFIG.SERVER_URL}security/configs/${id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}security/configs/blockedUsers/${id}`,
       {
         isArchived: true, 
       }
       )
       if(regEx.test(response.status)){
         dispatch(slice.actions.setResponseMessage(response.data));
-        dispatch(resetConfig());
+        dispatch(resetBlockedUsers());
       }
       return response;
     } catch (error) {

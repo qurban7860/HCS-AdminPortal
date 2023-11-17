@@ -9,7 +9,7 @@ import TextField from '@mui/material/TextField';
 // @mui
 // import { LoadingButton } from '@mui/lab';
 import {  Box, Card, Grid, Stack, Typography } from '@mui/material';
-import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
+import { MuiTelInput } from 'mui-tel-input';
 // global
 import FormProvider, {
   RHFAutocomplete,
@@ -124,19 +124,7 @@ export default function SupplierEditForm() {
     // dispatch(setSupplierEditFormVisibility(false));
     navigate(PATH_MACHINE.machines.settings.supplier.view(id));
   };
-  const handlePhoneChange = (newValue) => {
-    matchIsValidTel(newValue);
-    if (newValue.length < 20) {
-      setPhone(newValue);
-    }
-  };
-
-  const handleFaxChange = (newValue) => {
-    matchIsValidTel(newValue);
-    if (newValue.length < 20) {
-      setFaxVal(newValue);
-    }
-  };
+ 
 
   const onSubmit = async (data) => {
     try {
@@ -205,7 +193,8 @@ export default function SupplierEditForm() {
                   name="phone"
                   label="Phone Number"
                   flagSize="medium"
-                  onChange={handlePhoneChange}
+                  onChange={(newValue)=>setPhone(newValue)}
+                  inputProps={{maxLength:13}}
                   forceCallingCode
                   defaultCountry="NZ"
                 />
@@ -215,7 +204,8 @@ export default function SupplierEditForm() {
                   name="fax"
                   label="Fax"
                   flagSize="medium"
-                  onChange={handleFaxChange}
+                  onChange={(newValue)=>setFaxVal(newValue)}
+                  inputProps={{maxLength:13}}
                   forceCallingCode
                   defaultCountry="NZ"
                 />

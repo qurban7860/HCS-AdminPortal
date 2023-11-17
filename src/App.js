@@ -23,7 +23,8 @@ import 'slick-carousel/slick/slick-theme.css';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import 'react-quill/dist/quill.snow.css';
 // ----------------------------------------------------------------------
-
+import useWebSocket from 'react-use-websocket';
+import { useState, useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Provider as ReduxProvider } from 'react-redux';
@@ -53,45 +54,47 @@ import IdleManager from './components/idleManager';
 // Check our docs
 // https://docs.minimals.cc/authentication/js-version
 
-import { AuthProvider } from './auth/JwtContext';
-// import { AuthProvider } from './auth/Auth0Context';
-// import { AuthProvider } from './auth/FirebaseContext';
-// import { AuthProvider } from './auth/AwsCognitoContext';
 import Page500 from './pages/Page500';
+import { CONFIG } from './config-global';
+import { AuthProvider } from './auth/JwtContext';
+import { WebSocketProvider } from './auth/WebSocketContext';
 
 // ----------------------------------------------------------------------
 
 export default function App() {
+
   return (
-    <AuthProvider>
-        <HelmetProvider>
-          <ReduxProvider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <SettingsProvider>
-                  <BrowserRouter>
-                    <ErrorBoundary fallback={<Page500 /> } >
-                      <ScrollToTop />
-                      <MotionLazyContainer>
-                        <ThemeProvider>
-                          <ThemeSettings>
-                            <ThemeLocalization>
-                              <SnackbarProvider>
-                                <StyledChart />
-                                <IdleManager/>
-                                  <Router />
-                              </SnackbarProvider>
-                            </ThemeLocalization>
-                          </ThemeSettings>
-                        </ThemeProvider>
-                      </MotionLazyContainer>
-                   </ErrorBoundary>
-                  </BrowserRouter>
-                </SettingsProvider>
-              </LocalizationProvider>
-            </PersistGate>
-          </ReduxProvider>
-        </HelmetProvider>
+      <AuthProvider>
+        <WebSocketProvider>
+          <HelmetProvider>
+            <ReduxProvider store={store}>
+              <PersistGate loading={null} persistor={persistor}>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <SettingsProvider>
+                    <BrowserRouter>
+                      <ErrorBoundary fallback={<Page500 /> } >
+                        <ScrollToTop />
+                        <MotionLazyContainer>
+                          <ThemeProvider>
+                            <ThemeSettings>
+                              <ThemeLocalization>
+                                <SnackbarProvider>
+                                  <StyledChart />
+                                  <IdleManager/>
+                                    <Router />
+                                </SnackbarProvider>
+                              </ThemeLocalization>
+                            </ThemeSettings>
+                          </ThemeProvider>
+                        </MotionLazyContainer>
+                    </ErrorBoundary>
+                    </BrowserRouter>
+                  </SettingsProvider>
+                </LocalizationProvider>
+              </PersistGate>
+            </ReduxProvider>
+          </HelmetProvider>
+        </WebSocketProvider>
       </AuthProvider>
   );
 }

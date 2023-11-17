@@ -91,7 +91,6 @@ export default function MachineList() {
   const { enqueueSnackbar } = useSnackbar();
 
   useLayoutEffect(() => {
-    dispatch(getMachines());
     dispatch(resetMachine());
     dispatch(resetToolInstalled());
     dispatch(resetToolsInstalled());
@@ -103,6 +102,8 @@ export default function MachineList() {
     dispatch(resetNotes());
     dispatch(resetMachineDocument());
     dispatch(resetMachineDocuments());
+    
+    dispatch(getMachines());
   }, [dispatch]);
 
   const [filterVerify, setFilterVerify] = useState(verified);
@@ -261,12 +262,7 @@ export default function MachineList() {
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                     )
                   )}
-
-                {/* <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  /> */}
-
+                  <TableNoData isNotFound={isNotFound} />
               </TableBody>
               </Table>
             </Scrollbar>
@@ -280,9 +276,6 @@ export default function MachineList() {
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
         </TableCard>
-        <Grid item md={12}>
-          <TableNoData isNotFound={isNotFound} />
-        </Grid>
     </Container>
   );
 }

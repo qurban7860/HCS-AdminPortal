@@ -166,21 +166,19 @@ export default function LicenseList() {
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                     )
                   )}
+                <TableNoData isNotFound={isNotFound} />
               </TableBody>
             </Table>
           </Scrollbar>
         </TableContainer>
 
-        <TablePaginationCustom
+        {!isNotFound && <TablePaginationCustom
           count={dataFiltered.length}
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
-        />
-        <Grid md={12}>
-          <TableNoData isNotFound={isNotFound} />
-        </Grid>
+        />}
       </TableCard>
   );
 }

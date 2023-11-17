@@ -16,11 +16,35 @@ export const ICONS = {
     heading: 'Active',
   },
   INACTIVE: {
-    icon: 'mdi:power-off',
+    icon: 'mdi:ban',
     color: '#FF0000',
     heading: 'Inactive',
   },
 
+  // isOnline
+  ONLINE: {
+    icon: 'mdi:circle',
+    color: '#008000',
+    heading: 'Online',
+  },
+  OFFLINE: {
+    icon: 'mdi:circle',
+    color: '#bdbdbd',
+    heading: 'Offline',
+  },
+
+  // isAPPROVED
+  APPROVED: {
+    icon: 'mdi:check-decagram',
+    color: '#008000',
+    heading: 'Approved',
+  },
+  NOTAPPROVED: {
+    icon: 'mdi:alert-decagram',
+    color: '#FF0000',
+    heading: 'Not Approved',
+  },
+  
   REQUIRED: {
     icon: 'mdi:required-circle',
     color: '#008000',
@@ -71,12 +95,12 @@ export const ICONS = {
   // ------------------------------------------------------------
   // MultiAuth
   MULTIAUTH_ACTIVE: {
-    icon: 'heroicons-outline:lock-closed',
+    icon: 'tabler:2fa',
     color: '#008000',
     heading: 'MFA Enabled',
   },
   MULTIAUTH_INACTIVE: {
-    icon: 'heroicons-outline:lock-open',
+    icon: 'tabler:2fa',
     color: '#FF0000',
     heading: 'MFA Disabled',
   },
@@ -84,12 +108,12 @@ export const ICONS = {
   // ------------------------------------------------------------
   // CURRENT EMPLOYEE
   CURR_EMP_ACTIVE: {
-    icon: 'mdi:user-check-outline',
+    icon: 'ph:identification-badge',
     color: '#008000',
     heading: 'Employee',
   },
   CURR_EMP_INACTIVE: {
-    icon: 'mdi:user-block-outline',
+    icon: 'ph:identification-badge',
     color: '#FF0000',
     heading: 'Not Employee',
   },
@@ -98,22 +122,22 @@ export const ICONS = {
   // customerAccess
   ALLOWED: {
     icon: 'mdi:book-check',
-    color:'#008000',
+    color: '#008000',
     heading: 'Allowed',
   },
   DISALLOWED: {
     icon: 'mdi:book-cancel-outline',
-    color:'#FF0000',
-    heading: 'Disallowed',
+    color: '#FF0000',
+    heading: 'Customer Access Blocked',
   },
   // ----------------------------------------------------------------
 
-    // Back Link
-    BACK_LINK: {
-      icon: 'vaadin:arrow-backward',
-      color: 'blue',
-      heading: 'Back',
-    },
+  // Back Link
+  BACK_LINK: {
+    icon: 'vaadin:arrow-backward',
+    color: 'blue',
+    heading: 'Back',
+  },
 
   // ------------------------------------------------------------
   // map icon
@@ -168,7 +192,6 @@ export const ICONS = {
     heading: 'Item Categories',
   },
 
-
   MACHINE_CHECK_ITEMS: {
     icon: 'carbon:parameter',
     heading: 'Check Items',
@@ -181,7 +204,7 @@ export const ICONS = {
   // @root - Settings - settings
   // document settings
   DOCUMENT_TYPE: {
-    icon: 'mdi:rename',
+    icon: 'lucide:list-todo',
     heading: 'Document Type',
   },
   DOCUMENT_CATEGORY: {
@@ -190,11 +213,11 @@ export const ICONS = {
   },
   // security settings
   SECURITY_ROLES: {
-    icon: 'carbon:user-role',
+    icon: 'ph:user-list-bold',
     heading: 'User Roles',
   },
   SIGNIN_LOGS: {
-    icon: 'mdi:clipboard-text',
+    icon: 'icon-park-outline:log',
     heading: 'User Sign In Logs',
   },
   USER_CONFIG: {
@@ -202,24 +225,55 @@ export const ICONS = {
     heading: 'User Configurations',
   },
   USER_INVITE: {
-    icon: 'mdi:person-add',
+    icon: 'ph:user-plus-bold',
     heading: 'User Invites',
   },
+  BLOCKED_CUSTOMER: {
+    icon: 'tabler:home-off',
+    heading: 'Blocked Customers',
+  },
+  BLOCKED_USER: {
+    icon: 'fluent:people-lock-20-regular',
+    heading: 'Blocked Users',
+  },
+  BLACKLIST_IP: {
+    icon: 'solar:list-cross-bold',
+    heading: 'Blacklist IPs',
+  },
+  WHITELIST_IP: {
+    icon: 'solar:list-check-bold',
+    heading: 'Whitelist IPs',
+  },
   REGION: {
-    icon: 'mdi:map-marker-circle',
+    icon: 'grommet-icons:map',
     heading: 'Regions',
   },
   MODULE: {
     icon: 'ic:round-view-module',
     heading: 'Module',
   },
-  CONFIG: {
+  SYSTEM_CONFIG: {
     icon: 'icon-park-outline:setting-config',
-    heading: 'Config',
+    heading: 'System Config',
   },
 
   MOVE_MACHINE: {
     icon: 'ri:swap-box-line',
     heading: 'Move',
+  },
+
+  USER_LOCK: {
+    icon: 'mingcute:lock-fill',
+    color: '#FF0000',
+    heading: 'Lock User',
+  },
+  USER_UNLOCK: {
+    icon: 'mingcute:unlock-fill',
+    color: '#008000',
+    heading: 'Unlock User',
+  },
+  // @root - GoogleMaps - map marker
+  MAP_MARKER: {
+    url: '/logo/howick_map-marker.svg',
   },
 };

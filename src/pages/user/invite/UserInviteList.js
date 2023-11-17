@@ -10,7 +10,7 @@ import {
   Card
 } from '@mui/material';
 import { useNavigate } from 'react-router';
-import { PATH_SETTING } from '../../../routes/paths';
+import { PATH_PAGE, PATH_SETTING } from '../../../routes/paths';
 
 import { Cover } from '../../components/Defaults/Cover';
 // redux
@@ -57,7 +57,7 @@ export default function UserInviteList() {
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
 
-  const { userInvites, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.userInvite );
+  const { userInvites, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.userInvite );
   const TABLE_HEAD = [
     { id: 'receiverInvitationUser.name', label: 'Invited User', align: 'left' },
     { id: 'senderInvitationUser.name', visibility: 'xs1', label: 'Invited By', align: 'left' },
@@ -65,6 +65,10 @@ export default function UserInviteList() {
     { id: 'inviteExpireTime', label: 'Expiry Time', align: 'left' },
     { id: 'createdAt', visibility: 'xs2', label: 'Created At', align: 'left' },
   ];
+
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
+  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
@@ -78,8 +82,15 @@ export default function UserInviteList() {
   }, [dispatch]);
 
   useEffect(() => {
-    setTableData(userInvites);
-  }, [userInvites]);
+    
+    if(!isSuperAdmin){
+      navigate(PATH_PAGE.page403)
+    }
+
+    if (initial) {
+      setTableData(userInvites);
+    }
+  }, [initial, userInvites, navigate, isSuperAdmin]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -129,7 +140,7 @@ export default function UserInviteList() {
   return (
       <Container maxWidth={false}>
         <Card sx={{mb: 3, height: 160, position: 'relative'}}>
-          <Cover generalSettings="enabled" name="User Invites" icon="ph:users-light" />
+          <Cover generalSettings name="User Invites" icon="ph:users-light" />
         </Card>
         <TableCard>
           <UserInviteListTableToolbar
@@ -172,6 +183,7 @@ export default function UserInviteList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
+                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
@@ -184,9 +196,6 @@ export default function UserInviteList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />
-          <Grid md={12}>
-            <TableNoData isNotFound={isNotFound} />
-          </Grid>
         </TableCard>
       </Container>
   );

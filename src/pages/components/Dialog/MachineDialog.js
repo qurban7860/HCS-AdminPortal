@@ -2,84 +2,75 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { Grid, Dialog, DialogContent } from '@mui/material';
+import { Grid, Dialog, DialogContent, Skeleton } from '@mui/material';
 import { PATH_MACHINE } from '../../../routes/paths';
 import DialogLink from './DialogLink';
 import DialogLabel from './DialogLabel';
 import ViewFormField from '../ViewForms/ViewFormField';
 import FormLabel from '../DocumentForms/FormLabel';
 import { setMachineDialog } from '../../../redux/slices/products/machine';
+import ViewFormFieldWithSkelton from '../ViewForms/ViewFormFieldWithSkelton';
 
-function MachineDialog({ machineData }) {
+function MachineDialog() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { machine, machineDialog } = useSelector((state) => state.machine);
+  const { machineForDialog, machineDialog, isLoading } = useSelector((state) => state.machine);
   const handleMachineDialog = ()=>{ dispatch(setMachineDialog(false)) }
-  const [machineValue, setMachineValue] = useState({})
-  useEffect(()=>{
-    if(typeof machineData === 'object' && machineData){
-      setMachineValue(machineData)
-    }else{
-      setMachineValue(machine)
-    }
-  },[machine, machineData, machineDialog])
+
   return (
     <Dialog
       disableEnforceFocus
       maxWidth="lg"
+      minWidth="lg"
       open={ machineDialog }
       onClose={ handleMachineDialog }
       keepMounted
       aria-describedby="alert-dialog-slide-description"
     >
       <DialogLabel onClick={ handleMachineDialog } content="Machine" />
-      <DialogContent dividers>
-        <Grid container sx={{ px: 2, pt: 2 }}>
-          <ViewFormField sm={6} heading="Serial No" param={machineValue?.serialNo} />
-          <ViewFormField sm={6} heading="Name" param={machineValue?.name} />
-          <ViewFormField sm={6} heading="Supplier" param={machineValue?.supplier?.name} />
-          <ViewFormField sm={6} heading="Machine Model" param={machineValue?.machineModel?.name} />
-          <ViewFormField
+      <DialogContent dividers sx={{width:"1000px"}}>
+        <Grid container>
+          <ViewFormFieldWithSkelton sm={6} variant='h4' heading="Serial No" var param={machineForDialog?.serialNo} isLoading={isLoading} />
+          <ViewFormFieldWithSkelton sm={6} variant='h4' heading="Name" param={machineForDialog?.name} isLoading={isLoading}/>
+          <ViewFormFieldWithSkelton sm={6} heading="Supplier" param={machineForDialog?.supplier?.name} isLoading={isLoading}/>
+          <ViewFormFieldWithSkelton sm={6} heading="Machine Model" param={machineForDialog?.machineModel?.name} isLoading={isLoading}/>
+          <ViewFormFieldWithSkelton
             sm={6}
             heading="Installation Site"
-            param={machineValue?.instalationSite?.name}
+            param={machineForDialog?.instalationSite?.name} isLoading={isLoading}
           />
-          <ViewFormField sm={6} heading="Billing Site" param={machineValue?.billingSite?.name} />
-          <ViewFormField sm={12} heading="Nearby Milestone" param={machineValue?.siteMilestone} />
+          <ViewFormFieldWithSkelton sm={6} heading="Billing Site" param={machineForDialog?.billingSite?.name} isLoading={isLoading} />
+          <ViewFormFieldWithSkelton sm={12} heading="Nearby Milestone" param={machineForDialog?.siteMilestone} isLoading={isLoading}/>
         </Grid>
-        <Grid container sx={{ px: 2, pb: 3 }}>
+        <Grid container>
           <FormLabel content="Howick Resources" />
-          <ViewFormField
+          <ViewFormFieldWithSkelton isLoading={isLoading}
             sm={6}
             heading="Account Manager"
-            param={machineValue?.accountManager?.firstName}
-            secondParam={machineValue?.accountManager?.lastName}
+            param={machineForDialog?.accountManager?.firstName}
+            secondParam={machineForDialog?.accountManager?.lastName}
           />
-          <ViewFormField
+          <ViewFormFieldWithSkelton isLoading={isLoading}
             sm={6}
             heading="Project Manager"
-            param={machineValue?.projectManager?.firstName}
-            secondParam={machineValue?.projectManager?.lastName}
+            param={machineForDialog?.projectManager?.firstName}
+            secondParam={machineForDialog?.projectManager?.lastName}
           />
-          <ViewFormField
+          <ViewFormFieldWithSkelton isLoading={isLoading} 
             sm={6}
             heading="Suppport Manager"
-            param={machineValue?.supportManager?.firstName}
-            secondParam={machineValue?.supportManager?.lastName}
+            param={machineForDialog?.supportManager?.firstName}
+            secondParam={machineForDialog?.supportManager?.lastName}
           />
         </Grid>
       </DialogContent>
       <DialogLink
         onClose={handleMachineDialog}
-        onClick={() => {navigate(PATH_MACHINE.machines.view(machineValue?._id)); dispatch(setMachineDialog(false)); }}
+        onClick={() => {navigate(PATH_MACHINE.machines.view(machineForDialog?._id)); dispatch(setMachineDialog(false)); }}
         content="Go to machine"
       />
     </Dialog>
   );
 }
-
-MachineDialog.propTypes = {
-  machineData: PropTypes.object,
-};
 
 export default MachineDialog;

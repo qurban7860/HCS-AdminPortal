@@ -17,7 +17,7 @@ const CollapsibleCheckedItemRow = ({value, index, toggleEdit, deleteIndex, handl
                 onDrop={handleListDrop && ((e) => handleListDrop(e, index))}
               >
               <TableCell size='small' align='left' >
-                <b>{`${index+1}). `}</b>{typeof value?.paramListTitle === 'string' && value?.paramListTitle || ''}{' ( Items: '}<b>{`${value?.paramList?.length}`}</b>{' ) '}
+                <b>{`${index+1}). `}</b>{typeof value?.ListTitle === 'string' && value?.ListTitle || ''}{' ( Items: '}<b>{`${value?.checkItems?.length}`}</b>{' ) '}
                 <IconButton
                   aria-label="expand row"
                   size="small"
@@ -38,7 +38,7 @@ const CollapsibleCheckedItemRow = ({value, index, toggleEdit, deleteIndex, handl
                 <Table size="small" aria-label="purchases">
 
                   <TableBody>
-                    {value?.paramList.map((childRow,childIndex) => (
+                    {value?.checkItems.map((childRow,childIndex) => (
                       <TableRow hover key={childRow._id}>
                         <TableCell component="th" scope="row"><b>{`${childIndex+1}). `}</b>{`${childRow.name} ${childRow?.category?.name ? '-' : ''} ${childRow?.category?.name ? childRow?.category?.name : ''} ${childRow?.inputType ? '-' : '' } ${childRow?.inputType ? childRow?.inputType : '' }`}</TableCell>
                       </TableRow>

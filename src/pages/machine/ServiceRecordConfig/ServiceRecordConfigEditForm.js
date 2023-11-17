@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, Typography, Container, Autocomplete, TextField} from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Autocomplete, TextField} from '@mui/material';
 // slice
 import {
   updateServiceRecordConfig,
@@ -39,16 +39,22 @@ export default function ServiceRecordConfigEditForm() {
   const { id } = useParams();
 
   const [checkParams, setCheckParams] = useState([]);
+  const [checkItemList, setCheckItemList] = useState([]);
+
+  const [isDraft, setDraft] = useState(false);
+
   const defaultValues = useMemo(
     () => ({
-    recordType: {name: serviceRecordConfig?.recordType} || null,
-    machineModel: serviceRecordConfig?.machineModel || null,
-    category: serviceRecordConfig?.category || null,
     docTitle: serviceRecordConfig?.docTitle || '',
+    recordType: {name: serviceRecordConfig?.recordType} || null,
+    machineCategory: serviceRecordConfig?.machineCategory || null,
+    machineModel: serviceRecordConfig?.machineModel || null,
+    docVersionNo: serviceRecordConfig?.docVersionNo || 1,
+    noOfApprovalsRequired: serviceRecordConfig?.noOfApprovalsRequired || 1,
     textBeforeCheckItems: serviceRecordConfig?.textBeforeCheckItems || '',
     checkItemCategory: null,
     // // Check Params
-    paramListTitle:  '',
+    ListTitle:  '',
     // paramList : serviceRecordConfig?.checkParams[0]?.paramList || [],
 
     textAfterCheckItems: serviceRecordConfig?.textAfterCheckItems || '',
@@ -67,7 +73,7 @@ export default function ServiceRecordConfigEditForm() {
     footerCenterText: serviceRecordConfig?.footer?.centerText || '',
     footerRightText: serviceRecordConfig?.footer?.rightText || '',
 
-    isActive: serviceRecordConfig.isActive
+    isActive: serviceRecordConfig?.isActive
   }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [serviceRecordConfig]
@@ -87,7 +93,7 @@ export default function ServiceRecordConfigEditForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const { recordType, paramListTitle, category, machineModel, checkItemCategory} = watch();
+  const { recordType, ListTitle, machineCategory, machineModel, checkItemCategory} = watch();
 
   /* eslint-disable */
   useLayoutEffect(() => {
@@ -99,7 +105,7 @@ export default function ServiceRecordConfigEditForm() {
 
   /* eslint-enable */
   useEffect(() => {
-    setCheckParams(serviceRecordConfig?.checkParams)
+    setCheckParams(serviceRecordConfig?.checkItemLists || [])
   }, [serviceRecordConfig]);
 
   useEffect(() => {
@@ -115,8 +121,12 @@ export default function ServiceRecordConfigEditForm() {
   };
   const onSubmit = async (data) => {
     try {
-      data.checkParam = checkParams
-      // console.log(data);
+      data.checkItemLists = checkParams
+      if(isDraft){
+        data.status = 'DRAFT'
+      }else{
+        data.status = 'SUBMITTED'
+      }
       await dispatch(updateServiceRecordConfig(data, id));
       reset();
       dispatch(setServiceRecordConfigEditFormVisibility(false));
@@ -127,9 +137,8 @@ export default function ServiceRecordConfigEditForm() {
       console.error(err.message);
     }
   };
-
   return (
-    <Container maxWidth={false}>
+    <>
       <StyledCardContainer>
         <Cover
           name={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_CONFIGS_EDIT}
@@ -139,7 +148,7 @@ export default function ServiceRecordConfigEditForm() {
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container>
-          <Grid item xs={18} md={12} sx={{ mt: 3 }}>
+          <Grid item xs={18} md={12} >
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 <Box
@@ -165,10 +174,13 @@ export default function ServiceRecordConfigEditForm() {
                     )}
                   />
 
+                  <RHFTextField name="docVersionNo" disabled label="Version No.*" />
+                  <RHFTextField name="noOfApprovalsRequired" label="Required Approvals*" />
+
                   <Controller
-                    name="category"
+                    name="machineCategory"
                     control={control}
-                    defaultValue={category || null}
+                    defaultValue={machineCategory || null}
                     render={ ({field: { ref, ...field }, fieldState: { error } }) => (
                       <Autocomplete
                         {...field}
@@ -215,7 +227,7 @@ export default function ServiceRecordConfigEditForm() {
                 
                   <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline />
 
-                  <CheckItemTable setCheckParams={setCheckParams} checkParams={checkParams} paramListTitle={paramListTitle} setValue={setValue} checkItemCategory={checkItemCategory} />
+                  <CheckItemTable setCheckParams={setCheckParams} checkParams={checkParams} checkItemList={checkItemList} setCheckItemList={setCheckItemList} ListTitle={ListTitle} setValue={setValue} checkItemCategory={checkItemCategory} />
 
                   <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline />          
                 
@@ -226,6 +238,7 @@ export default function ServiceRecordConfigEditForm() {
                   gridTemplateColumns={{
                     xs: 'repeat(1, 1fr)',
                     sm: 'repeat(2, 1fr)',
+                    md: 'repeat(3, 1fr)',
                   }}
                 >
                   
@@ -314,12 +327,12 @@ export default function ServiceRecordConfigEditForm() {
                     }
                   />
 
-                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+                <AddFormButtons saveAsDraft={() => setDraft(true)} isDraft={isDraft} saveButtonName='submit' isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>
           </Grid>
         </Grid>
       </FormProvider>
-    </Container>
+    </>
   );
 }

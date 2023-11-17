@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 // @mui
 import { Stack } from '@mui/material';
 // routes
@@ -21,6 +21,7 @@ MachineServiceRecordListTableToolbar.propTypes = {
   filterStatus: PropTypes.array,
   onFilterStatus: PropTypes.func,
   statusOptions: PropTypes.array,
+  isHistory: PropTypes.bool,
 };
 
 export default function MachineServiceRecordListTableToolbar({
@@ -31,12 +32,16 @@ export default function MachineServiceRecordListTableToolbar({
   statusOptions,
   onResetFilter,
   onFilterStatus,
+  isHistory
 }) {
   const dispatch = useDispatch()
 
   const toggleAdd = () => {
     dispatch(setMachineServiceRecordAddFormVisibility(true))
   };
+
+  const { machine } = useSelector((state) => state.machine);
+  
 
   return (
     <Stack {...options}>
@@ -46,7 +51,8 @@ export default function MachineServiceRecordListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        addButton={BUTTONS.ADD_MACHINE_SERVICE_RECORD}
+        addButton={!isHistory && BUTTONS.ADD_MACHINE_SERVICE_RECORD}
+        transferredMachine={machine?.status?.slug==='transferred'}
       />
     </Stack>
   );

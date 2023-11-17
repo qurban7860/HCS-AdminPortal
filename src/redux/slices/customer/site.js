@@ -76,7 +76,7 @@ const slice = createSlice({
       state.site = action.payload;
       state.initial = true;
     },
-
+    
     // RESET SITE
     resetSite(state){
       state.site = null;
@@ -275,6 +275,43 @@ export function updateSite(params,customerId,Id) {
 }
 
 // ----------------------------------------------------------------------
+
+export function createCustomerStiesCSV(customerID) {
+  return async (dispatch) => {
+    try {
+      if(customerID){
+        const response = axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites/export` , 
+        {
+          params: {
+            isArchived: false,
+            orderBy : {
+              createdAt:-1
+            }
+          }
+        });
+
+        response.then((res) => {
+          const fileName = "CustomerSites.csv";
+          const blob = new Blob([res.data], { type: 'text/csv;charset=utf-8' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          dispatch(slice.actions.setResponseMessage('Customer Sites CSV generated successfully'));
+        }).catch((error) => {
+          console.error(error);
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
 
 export function getSites(customerID) {
   return async (dispatch) => {

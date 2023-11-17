@@ -1,61 +1,55 @@
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
 import {
   Card,
   Table,
   Button,
-  Tooltip,
   TableBody,
   Container,
-  IconButton,
   TableContainer,
+  Grid,
 } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from '../../../redux/store';
-// routes
-import { PATH_SETTING } from '../../../routes/paths';
+import { useNavigate } from 'react-router';
+import { useDispatch, useSelector } from '../../../../redux/store';
 // components
-import { useSnackbar } from '../../../components/snackbar';
+import { useSnackbar } from '../../../../components/snackbar';
 import {
   useTable,
   getComparator,
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
-} from '../../../components/table';
-import Iconify from '../../../components/iconify';
-import Scrollbar from '../../../components/scrollbar';
-import ConfirmDialog from '../../../components/confirm-dialog';
+} from '../../../../components/table';
+import Scrollbar from '../../../../components/scrollbar';
+import ConfirmDialog from '../../../../components/confirm-dialog';
 // sections
-import ConfigListTableRow from './ConfigListTableRow';
-import ConfigListTableToolbar from './ConfigListTableToolbar';
-import { getConfigs , deleteConfig,
+import WhitelistIPListTableRow from './WhitelistIPListTableRow';
+import WhitelistIPListTableToolbar from './WhitelistIPListTableToolbar';
+import { getWhitelistIPs , deleteWhitelistIP,
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
- } from '../../../redux/slices/securityUser/config';
-import { Cover } from '../../components/Defaults/Cover';
-import { fDate } from '../../../utils/formatTime';
-import TableCard from '../../components/ListTableTools/TableCard';
+ } from '../../../../redux/slices/securityConfig/whitelistIP';
+import { Cover } from '../../../components/Defaults/Cover';
+import { fDate } from '../../../../utils/formatTime';
+import TableCard from '../../../components/ListTableTools/TableCard';
+import { PATH_PAGE } from '../../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'blockedUsers.name.[]', visibility: 'md1', label: 'Blocked Users', align: 'left' },
-  { id: 'blockedCustomers.name.[]', label: 'Blocked Customer', align: 'left' },
-  { id: 'whiteListIPs', visibility: 'xs1', label: 'White List IPs', align: 'left' },
-  { id: 'blackListIPs', visibility: 'xs2', label: 'Black List IPs', align: 'left' },
-  { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'name', label: 'Whitelist IPs', align: 'left' },
+  { id: 'AddedBy', label: 'Updated By', align: 'left' },
+  { id: 'AddedAt', label: 'Updated At', align: 'left' },
+  { id: 'action', label: 'Action', align: 'right'},
 ];
 
 // ----------------------------------------------------------------------
 
-export default function ConfigList() {
+export default function WhitelistIPList() {
   const {
     // page,
     order,
@@ -65,8 +59,6 @@ export default function ConfigList() {
     //
     selected,
     setSelected,
-    onSelectRow,
-    onSelectAllRows,
     //
     onSort,
     // onChangePage,
@@ -77,37 +69,36 @@ export default function ConfigList() {
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
-    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
   };
 
-  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
-
+  const onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
   const dispatch = useDispatch();
-
-
   const { enqueueSnackbar } = useSnackbar();
-
   const navigate = useNavigate();
-
   const [filterName, setFilterName] = useState('');
-
   const [tableData, setTableData] = useState([]);
-
   const [filterStatus, setFilterStatus] = useState([]);
-
   const [openConfirm, setOpenConfirm] = useState(false);
-
-  const { configs, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.userConfig);
+  const { whitelistIPs, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.whitelistIP);
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
+  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
 
   useLayoutEffect(() => {
-    dispatch(getConfigs());
+    dispatch(getWhitelistIPs());
   }, [dispatch]);
 
   useEffect(() => {
-    if (initial) {
-      setTableData(configs);
+    
+    if(!isSuperAdmin){
+      navigate(PATH_PAGE.page403)
     }
-  }, [configs, initial]);
+
+    if (initial) {
+      setTableData(whitelistIPs);
+    }
+  }, [whitelistIPs, initial, navigate, isSuperAdmin]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -117,11 +108,8 @@ export default function ConfigList() {
   });
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
   const denseHeight = 60;
-
   const isFiltered = filterName !== '' || !!filterStatus.length;
-
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   const handleOpenConfirm = () => {
@@ -129,6 +117,7 @@ export default function ConfigList() {
   };
 
   const handleCloseConfirm = () => {
+    // setSelectedUser('');
     setOpenConfirm(false);
   };
 
@@ -142,11 +131,11 @@ export default function ConfigList() {
     setFilterName(event.target.value)
     setPage(0);
   };
-  
+
   useEffect(() => {
       debouncedSearch.current.cancel();
   }, [debouncedSearch]);
-  
+
   useEffect(()=>{
       setFilterName(filterBy)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -158,11 +147,11 @@ export default function ConfigList() {
   };
 
   const handleDeleteRow = async (id) => {
+
     try {
-      // console.log(id);
-      await dispatch(deleteConfig(id));
-      dispatch(getConfigs());
-      setSelected([]);
+      await dispatch(deleteWhitelistIP(id));
+      dispatch(getWhitelistIPs());
+      setSelected('');
 
       if (page > 0) {
         if (dataInPage.length < 2) {
@@ -181,27 +170,6 @@ export default function ConfigList() {
     }
   };
 
-  const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-    setSelected([]);
-    setTableData(deleteRows);
-
-    if (page > 0) {
-      if (selectedRows.length === dataInPage.length) {
-        setPage(page - 1);
-      } else if (selectedRows.length === dataFiltered.length) {
-        setPage(0);
-      } else if (selectedRows.length > dataInPage.length) {
-        const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-        setPage(newPage);
-      }
-    }
-  };
-
-
-  const handleViewRow = (id) => {
-    navigate(PATH_SETTING.userConfig.view(id));
-  };
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
@@ -219,11 +187,11 @@ export default function ConfigList() {
             // mt: '24px',
           }}
         >
-          <Cover generalSettings="enabled" name="Configurations" icon="ph:users-light" />
+          <Cover generalSettings name="Whitelist IPs" icon="ph:users-light" />
         </Card>
 
         <TableCard>
-          <ConfigListTableToolbar
+          <WhitelistIPListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -239,39 +207,13 @@ export default function ConfigList() {
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
-              numSelected={selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row._id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            />
-
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  // rowCount={tableData.length}
-                  // numSelected={selected.length}
                   onSort={onSort}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row) => row._id)
-                  //   )
-                  // }
                 />
 
                 <TableBody>
@@ -279,35 +221,31 @@ export default function ConfigList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <ConfigListTableRow
+                        <WhitelistIPListTableRow
                           key={row._id}
                           row={row}
-                          selected={selected.includes(row._id)}
-                          onSelectRow={() => onSelectRow(row._id)}
-                          onDeleteRow={() => handleDeleteRow(row._id)}
-                          onViewRow={() => handleViewRow(row._id)}
+                          onDeleteRow={() => {handleOpenConfirm(); setSelected(row?._id);}}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
-
-                  
-
-                  <TableNoData isNotFound={isNotFound} />
+                    <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
           </TableContainer>
 
-          {!isNotFound && <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />}
+          {!isNotFound && 
+            <TablePaginationCustom
+              count={dataFiltered.length}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+            />
+          }
         </TableCard>
       </Container>
 
@@ -315,17 +253,13 @@ export default function ConfigList() {
         open={openConfirm}
         onClose={handleCloseConfirm}
         title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
-          </>
-        }
+        content='Are you sure want to delete?'
         action={
           <Button
             variant="contained"
             color="error"
             onClick={() => {
-              handleDeleteRows(selected);
+              handleDeleteRow(selected);
               handleCloseConfirm();
             }}
           >
@@ -348,16 +282,13 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-  // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
 
   if (filterName) {
     inputData = inputData.filter(
-      (configuration) =>
-        configuration?.blockedUsers?.some((blkUser) => blkUser?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ) ||
-        configuration?.blockedCustomers?.some((blkCustomer) => blkCustomer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ) ||
-        configuration?.whiteListIPs?.some((Wip) => Wip?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ) ||
-        configuration?.blackListIPs?.some((Bip) => Bip?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ) ||
-        fDate(configuration?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+      (whiteList) =>
+        whiteList?.whiteListIP?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+        whiteList?.createdBy?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+        fDate(whiteList?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 

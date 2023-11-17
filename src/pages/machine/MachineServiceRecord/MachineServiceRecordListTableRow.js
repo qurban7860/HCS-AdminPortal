@@ -9,15 +9,11 @@ import {
 // utils
 import { styled } from '@mui/system';
 import { fDate } from '../../../utils/formatTime';
-// import { fCurrency } from '../../../utils/formatNumber';
 // components
-// import Iconify from '../../../components/iconify';
-// import MenuPopover from '../../../components/menu-popover';
-// import ConfirmDialog from '../../../components/confirm-dialog';
-// import Label from '../../../components/label';
-
-// import { useSelector } from '../../../redux/store';
+import { setMachineServiceRecordHistoryFormVisibility, getMachineServiceHistoryRecords } from '../../../redux/slices/products/machineServiceRecord';
+import { useDispatch, useSelector } from '../../../redux/store';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
+import HistoryIcon from '../../components/Icons/HistoryIcon';
 // import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
@@ -51,17 +47,26 @@ export default function MachineServiceRecordListTableRow({
   onViewRow,
 }) {
 
-  const { serviceRecordConfig, technician, serviceDate, isActive, createdAt } = row;
+  const { machine } = useSelector((state) => state.machine);
+  const { serviceRecordConfig, versionNo, serviceDate, isActive, createdAt, createdBy } = row;
 
+  const dispatch = useDispatch();
+
+  const handleServiceRecordHistory = () => {
+    dispatch(setMachineServiceRecordHistoryFormVisibility(true));
+    dispatch(getMachineServiceHistoryRecords( machine?._id ,row?.serviceId ))
+  }
   return (
       <StyledTableRow hover selected={selected}>
+        <TableCell align="left">{fDate(serviceDate)}</TableCell>
         <LinkTableCell align="left" onClick={onViewRow} param={`${serviceRecordConfig?.docTitle ? serviceRecordConfig?.docTitle	: ''	} ${serviceRecordConfig?.recordType ? ' - ' : ''} ${serviceRecordConfig?.recordType ? serviceRecordConfig?.recordType : ''}`} />
-        <TableCell align="left">{`${technician?.name ? technician?.name : ''}`}</TableCell>
-        <TableCell align="center">{fDate(serviceDate)}</TableCell>
+        <TableCell align="left" sx={{display: 'flex', alignItems:'center'}} >{versionNo} 
+              {versionNo > 1 && <HistoryIcon callFunction={handleServiceRecordHistory} /> }</TableCell>
         <TableCell align="center">
           {' '}
           <Switch checked={isActive} disabled size="small" />{' '}
         </TableCell>
+        <TableCell align="left">{createdBy.name}</TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>
       </StyledTableRow>
 

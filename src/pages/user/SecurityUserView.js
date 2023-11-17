@@ -1,6 +1,6 @@
 import React, { useLayoutEffect } from 'react'
 import { useDispatch } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import {  useParams } from 'react-router-dom';
 import SecurityUserViewForm from './SecurityUserViewForm'
 import { getSecurityUser } from '../../redux/slices/securityUser/securityUser';
 

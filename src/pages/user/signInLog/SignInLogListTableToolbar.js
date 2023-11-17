@@ -15,6 +15,8 @@ SignInLogListTableToolbar.propTypes = {
   onFilterStatus: PropTypes.func,
   statusOptions: PropTypes.array,
   buttonAction: PropTypes.func,
+  filterRequestStatus: PropTypes.number,
+  onFilterRequestStatus:PropTypes.func,
 };
 
 export default function SignInLogListTableToolbar({
@@ -26,6 +28,8 @@ export default function SignInLogListTableToolbar({
   onResetFilter,
   onFilterStatus,
   buttonAction,
+  filterRequestStatus,
+  onFilterRequestStatus
 }) {
 
   return (
@@ -35,9 +39,11 @@ export default function SignInLogListTableToolbar({
         value={filterName}
         onChange={onFilterName}
         onClick={onResetFilter}
-        SubOnClick={buttonAction}
-        addButton="Refresh Report"
-        buttonIcon="mdi:reload"
+        // SubOnClick={buttonAction}
+        // addButton="Refresh"
+        // buttonIcon="mdi:reload"
+        onSignInLogsFilter={onFilterRequestStatus}
+        signInLogsFilter={filterRequestStatus}
       />
     </Stack>
   );

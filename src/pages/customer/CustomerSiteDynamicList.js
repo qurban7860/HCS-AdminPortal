@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 // @mui
-import { Stack, Card, CardMedia, Grid, CardActionArea, Link } from '@mui/material';
+import { Stack, Card, CardMedia, Grid, CardActionArea, Link, Button } from '@mui/material';
 import {
   CardBase,
   GridBaseViewForm,
@@ -20,7 +20,7 @@ import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import GoogleMaps from '../../assets/GoogleMaps';
 import useResponsive from '../../hooks/useResponsive';
-import { getSites, getSite, setSiteFormVisibility, resetSiteFormsVisiblity } from '../../redux/slices/customer/site';
+import { getSites, getSite, setSiteFormVisibility, resetSiteFormsVisiblity, createCustomerStiesCSV } from '../../redux/slices/customer/site';
 // import { getActiveContacts } from '../../redux/slices/customer/contact';
 import NothingProvided from '../components/Defaults/NothingProvided';
 import SiteAddForm from './site/SiteAddForm';
@@ -32,10 +32,16 @@ import SearchInput from '../components/Defaults/SearchInput';
 import { fDate } from '../../utils/formatTime';
 import { Snacks } from '../../constants/customer-constants';
 import { BUTTONS, BREADCRUMBS, TITLES } from '../../constants/default-constants';
+import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
 
 export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
+
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
+  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
+  
   const { order, orderBy } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
   // const [ setChecked] = useState(false);
   // const [ setOpenSite] = useState(false);
@@ -57,10 +63,6 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   const isFiltered = filterName !== '' || !!filterStatus.length;
 
   const toggleChecked = () => {
-  // const toggleChecked = async () => {
-
-    // console.log('aaaaa',siteEditFormVisibility)
-    // setChecked((value) => !value);
     if (siteEditFormVisibility) {
       dispatch(setSiteFormVisibility(false));
       enqueueSnackbar(Snacks.SITE_CLOSE_CONFIRM, {
@@ -69,13 +71,9 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
       setCardActiveIndex(null);
       setIsExpanded(false);
     } else {
-      console.log('else')
-      // dispatch(resetSiteFormsVisiblity(false))
       dispatch(setSiteFormVisibility(true));
       setCardActiveIndex(null);
       setIsExpanded(false);
-
-      console.log('else1')
     }
   };
 
@@ -138,6 +136,16 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   const shouldShowSiteEdit = siteEditFormVisibility && !siteAddFormVisibility;
   const shouldShowSiteAdd = siteAddFormVisibility && !siteEditFormVisibility;
 
+  const onExportCSV = async () => {
+    const response = dispatch(await createCustomerStiesCSV(customer?._id));
+      response.then((res) => {
+        enqueueSnackbar('CSV Generated Successfully');
+      }).catch((err) => {
+        console.error(err);
+        enqueueSnackbar(err.message, { variant: `error` });
+      });
+  };
+
   return (
     <>
       {/* <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}></Stack> */}
@@ -158,13 +166,32 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
             />
           </BreadcrumbsProvider>
         </Grid>
-        <AddButtonAboveAccordion
-          name={BUTTONS.NEWSITE}
-          toggleChecked={toggleChecked}
-          FormVisibility={siteAddFormVisibility}
-          toggleCancel={toggleCancel}
-          disabled={siteEditFormVisibility}
-        />
+        <Grid item xs={12} md={6} style={{display:'flex', justifyContent:"flex-end"}}>
+          {isSuperAdmin && sites.length>0 &&
+            <Button
+              sx={{
+                mb: { xs: 0, md: 2 },
+                my: { xs: 1 },
+                mr:1
+              }}
+              onClick={onExportCSV}
+              variant="contained"
+              startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />}
+              >
+                {BUTTONS.EXPORT.label}
+            </Button>
+          }
+          
+            
+            <AddButtonAboveAccordion
+            name={BUTTONS.NEWSITE}
+            toggleChecked={toggleChecked}
+            FormVisibility={siteAddFormVisibility}
+            toggleCancel={toggleCancel}
+            disabled={siteEditFormVisibility}
+          />
+        </Grid>
+        
       </Grid>
 
       <Grid container spacing={1} direction="row" justifyContent="flex-start">
@@ -195,8 +222,9 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
               </Grid>
             )}
             <StyledScrollbar
+              maxHeight={155}
               snap
-              snapOffset={100}
+              snapOffset={50}
               onClick={(e) => e.stopPropagation()}
               snapAlign="start"
               contacts={sites.length}
@@ -225,8 +253,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                           }}
                         >
                           <StyledCardWrapper
-                            condition1={activeCardIndex !== index}
-                            condition2={activeCardIndex === index}
+                            condition={activeCardIndex === index}
                             isMobile={isMobile}
                           >
                             <CardActionArea

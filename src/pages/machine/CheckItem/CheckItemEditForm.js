@@ -67,10 +67,11 @@ export default function DocumentCategoryeEditForm() {
 
   const {
     reset,
+    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
+ const { inputType } = watch();
   const toggleCancel = () => {
     navigate(PATH_MACHINE.machines.settings.checkItems.view(checkItem._id));
   };
@@ -134,7 +135,7 @@ export default function DocumentCategoryeEditForm() {
                       )}
                     />
 
-                    <RHFAutocomplete 
+                    {inputType && inputType.name === 'Number' && <RHFAutocomplete 
                       name="unitType" label="Unit Type"
                       options={unitTypes}
                       isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -142,7 +143,7 @@ export default function DocumentCategoryeEditForm() {
                       renderOption={(props, option) => (
                         <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
-                    />
+                    />}
                   <RHFTextField name="minValidation" label="Minimum Validation" />
                   <RHFTextField name="maxValidation" label="Maximum Validation" />
                 </Box>

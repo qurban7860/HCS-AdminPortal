@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 // @mui
-import { Stack, Box , Typography, Grid} from '@mui/material';
+import { Stack, Box , Typography, Grid } from '@mui/material';
 // config
 import { NAV, CONFIG } from '../../../config-global';
 // utils
@@ -52,19 +52,14 @@ export default function NavMini() {
         }}
       >
         <Logo src="/logo/HowickIcon.svg" sx={{ mx: 'auto', my: 1, width: '50px', height: '50px' }} />
-        <Grid sx={{ margin: '0 auto', mb:2}}>
-        <Grid sx={{ display:'flex', alignItems:'baseline'}}>
-          {CONFIG.ENV.toLocaleLowerCase() !== 'live' && <Typography
-              sx={{ color: envColor, fontSize:'14px', pr: 0.5 }} >
-           <b>{CONFIG.ENV}</b>
-          </Typography>}
-          <Typography
-              // variant="body2"
-              sx={{ color: '#897A69', fontSize:'10px'}}
-              >
-           {CONFIG.Version}
-          </Typography>
-          </Grid>
+        <Grid sx={{ margin: '0 auto', mb:2, display:'flex', alignItems:'baseline'}}>
+          {CONFIG.ENV.toLocaleLowerCase()!=='live' &&
+              <Typography sx={{background:envColor, borderRadius:'50px', fontSize:'10px', padding:'2px 5px', color:"#FFF"}}>{`${CONFIG.ENV.toLocaleUpperCase()} ${CONFIG.Version}`}</Typography>
+            }
+
+            {CONFIG.ENV.toLocaleLowerCase()==='live' &&
+              <Typography sx={{ color: '#897A69', fontSize:'10px'}}>{CONFIG.Version}</Typography>
+            } 
         </Grid>
         <NavSectionMini data={navConfig} />
       </Stack>

@@ -10,39 +10,33 @@ import { useSnackbar } from '../../../components/snackbar';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import CollapsibleCheckedItemRow from './CollapsibleCheckedItemRow'
 
-const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue, checkItemCategory }) => {
-
+const CheckItemTable = ({ checkParams, setCheckParams, checkItemList, setCheckItemList, ListTitle, setValue, checkItemCategory }) => {
+  
     const isMobile = useResponsive('down', 'sm');
-    const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
+    const dispatch = useDispatch();
     const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
     const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
     const { activeCheckItems } = useSelector((state) => state.checkItems);
-    const [checkParamNumber, setCheckParamNumber]= useState(serviceRecordConfig?.checkParams?.length || 0);
-    const [checkItemList, setCheckItemList] = useState([]);
+    const [checkParamNumber, setCheckParamNumber]= useState(serviceRecordConfig?.checkItemLists?.length || 0);
     const [checkItemListTitleError, setItemListTitleError] = useState('');
     const [checkItemListError, setItemListError] = useState('');
-
-    useEffect(() => {
-      if(checkItemCategory === null ){
-        dispatch(getActiveCheckItems())
-      }else{
-        dispatch(getActiveCheckItems(checkItemCategory?._id))
-      }
-    },[checkItemCategory, dispatch])
+    // const [checkItemListButtonVariant, setCheckItemListButtonVariant] = useState('contained');
+    // const [checkItemListButtoncolor, setCheckItemListButtoncolor] = useState('primary');
 
       const handleInputChange = (value) => {
         if (value) {
-          // setCheckItemList(value);
-          setCheckItemList((checkItems) => [...checkItems, value[0]]);
+          setCheckItemList((checkItems) => [...checkItems, value[value.length - 1]]);
         }
       };
-
 
   const handleDragStart = (e, index) => {
     e.dataTransfer.setData('index', index);
   };
 
+  useEffect(()=>{
+    dispatch(getActiveCheckItems());
+  },[ dispatch ])
 
   const handleListDrop = (e, index) => {
     const draggedIndex = e.dataTransfer.getData('index');
@@ -77,42 +71,52 @@ const CheckItemTable = ({ checkParams, setCheckParams, paramListTitle, setValue,
     try {
       const newArray =  checkItemList.filter((_, index) => index !== indexToRemove);
       setCheckItemList(newArray);
-      enqueueSnackbar('Deleted success!');
+      enqueueSnackbar('Check Item deleted successfully!');
     } catch (err) {
-      enqueueSnackbar('Delete failed!', { variant: 'error' });
+      enqueueSnackbar('Check Item Delete failed!', { variant: 'error' });
       console.error(err.message);
     }
   };
 
-  const toggleEdit = (index) => {setCheckItemList(checkParams[index]?.paramList); setCheckParamNumber(index); setValue('paramListTitle',checkParams[index]?.paramListTitle) };
+  const toggleEdit = (index) => {setCheckItemList(checkParams[index]?.checkItems); setCheckParamNumber(index); setValue('ListTitle',checkParams[index]?.ListTitle) };
 
   const deleteIndex = (indexToRemove) => {
     try {
       const newArray =  checkParams.filter((_, index) => index !== indexToRemove);
       setCheckParams(newArray);
-      enqueueSnackbar('Deleted success!');
+      enqueueSnackbar('Check Item deleted successfully!');
     } catch (err) {
-      enqueueSnackbar('Delete failed!', { variant: `error` });
+      enqueueSnackbar('Check Item delete failed!', { variant: `error` });
       console.error(err.message);
     }
   };
   
-useEffect(()=>{
-  if(paramListTitle?.length > 200){
-    setItemListTitleError('Item List Title must be at most 200 characters')
-  }else{
-    setItemListTitleError('')
-  }
+  useEffect(()=>{
+    if(ListTitle?.length > 200){
+      setItemListTitleError('Item List Title must be at most 200 characters')
+    }else if(checkItemList?.length > 0 && ListTitle.trim() === ''){
+      setItemListTitleError('Item List Title must required!')
+    }else{
+      setItemListTitleError('')
+    }
 
-  if(checkItemList && checkItemList?.length > 100){
-    setItemListError('Check Items must be at most 99!')
-  }else{
-    setItemListError('')
-  }
-},[checkItemList, paramListTitle ])
+    // if(checkItemList?.length > 0 && ListTitle.trim() !== ''){
+    //   setCheckItemListButtonVariant('outlined');
+    //   setCheckItemListButtoncolor('error');
+    // }else{
+    //   setCheckItemListButtonVariant('contained');
+    //   setCheckItemListButtoncolor('primary');
+    // }
+
+    if(checkItemList && checkItemList?.length > 100){
+      setItemListError('Check Items must be at most 99!')
+    }else{
+      setItemListError('')
+    }
+  },[checkItemList, ListTitle ])
 
   const saveCheckParam = (prevCheckParamNumber) =>{
-          if(typeof paramListTitle !== 'string' || paramListTitle && paramListTitle?.length === 0 ){
+          if(typeof ListTitle !== 'string' || ListTitle && ListTitle?.length === 0 ){
             setItemListTitleError('Item List Title is Required!')
           }
 
@@ -123,7 +127,7 @@ useEffect(()=>{
           if( !checkItemListError.trim() && !checkItemListTitleError.trim() ){
       try {
         const updatedCheckParam = [...checkParams]; 
-        const checkItemObject= { paramListTitle, paramList: checkItemList }
+        const checkItemObject= { ListTitle, checkItems: checkItemList }
         if(prevCheckParamNumber > checkParams.length-1) {
           updatedCheckParam.splice(prevCheckParamNumber, 0, checkItemObject);
           setCheckParams(updatedCheckParam);
@@ -141,7 +145,8 @@ useEffect(()=>{
           setCheckParamNumber(checkParams.length) 
           enqueueSnackbar('Updated success!');
         }
-        setValue('paramListTitle','')
+        setValue('ListTitle','')
+        setValue('checkItemCategory',null)
         setCheckItemList([])
       } catch (err) {
         enqueueSnackbar('Save failed!', { variant: `error` });
@@ -155,7 +160,7 @@ useEffect(()=>{
                     <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
                       Check Items
                     </Typography>
-                    <RHFTextField name="paramListTitle" label="Item List Title*" Error={!!checkItemListTitleError} helperText={checkItemListTitleError} />
+                    <RHFTextField name="ListTitle" label="Item List Title*" Error={!!checkItemListTitleError} helperText={checkItemListTitleError} />
 
                       <RHFAutocomplete 
                           name="checkItemCategory"
@@ -172,8 +177,11 @@ useEffect(()=>{
                         multiple
                         name="paramList"
                         label="Select Items"
-                        value={[]}
-                        options={activeCheckItems}
+                        value={checkItemList}
+                        disableCloseOnSelect
+                        disableClearable
+                        filterSelectedOptions
+                        options={activeCheckItems.filter(activeCheckItem => checkItemCategory ? activeCheckItem?.category?._id === checkItemCategory?._id : activeCheckItem)}
                         isOptionEqualToValue={(option, value) => option._id === value._id}
                         getOptionLabel={(option) => `${option.name ? option.name : ''} ${option?.category?.name ? '-' : ''} ${option?.category?.name ? option?.category?.name : ''} ${option?.inputType ? '-' : '' } ${option?.inputType ? option?.inputType : '' }`}
                         renderOption={(props, option) => (
@@ -223,18 +231,21 @@ useEffect(()=>{
                       </Grid>
                       <Grid item md={12} display="flex" justifyContent="flex-end" >
                         <Button
-                          disabled={(!checkItemList?.length ?? 0) || (!paramListTitle ?? '') }
+                          disabled={(!checkItemList?.length ?? 0) || ( ListTitle?.trim() === '') }
                           onClick={()=>saveCheckParam(checkParamNumber)}
                           fullWidth={ isMobile }
-                          variant="contained" color='primary' sx={{ ...(isMobile && { width: '100%' })}}
+                          variant="contained" 
+                          color='primary' 
+                          sx={{ ...(isMobile && { width: '100%', })}}
                         >Save List</Button>
                       </Grid>
+
                     </Grid>
-                    {checkParams.length > 0 && <Stack sx={{ minWidth: 250,  minHeight:75 }}>
+                    {checkParams && checkParams?.length > 0 && <Stack sx={{ minWidth: 250,  minHeight:75 }}>
                     <TableContainer >
                       <Table>
                         <TableBody>
-                          {checkParams.map((value, checkParamsIndex) =>( typeof value?.paramList?.length === 'number' &&
+                          {checkParams && checkParams.map((value, checkParamsIndex) =>( typeof value?.checkItems?.length === 'number' &&
                           <CollapsibleCheckedItemRow key={uuidv4()} value={value} index={checkParamsIndex} toggleEdit={toggleEdit} deleteIndex={deleteIndex} handleListDragStart={handleListDragStart} handleListDrop={handleListDrop} />
                           ))}
                       </TableBody>
@@ -250,7 +261,9 @@ export default memo(CheckItemTable)
 CheckItemTable.propTypes = {
     checkParams: PropTypes.array.isRequired,
     setCheckParams: PropTypes.func.isRequired,
-    paramListTitle: PropTypes.string,
+    checkItemList: PropTypes.array, 
+    setCheckItemList: PropTypes.func,
+    ListTitle: PropTypes.string,
     setValue: PropTypes.func.isRequired,
     checkItemCategory: PropTypes.object,
 };

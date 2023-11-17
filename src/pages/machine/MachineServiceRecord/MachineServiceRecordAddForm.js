@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, Typography, TextField,  Autocomplete, Checkbox, InputAdornment, Skeleton } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, TextField,  Autocomplete,   Skeleton } from '@mui/material';
 
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import ViewFormField from '../../components/ViewForms/ViewFormField';
 import FormHeading from '../../components/DocumentForms/FormHeading';
 import { FORMLABELS } from '../../../constants/default-constants';
 // slice
@@ -24,6 +23,8 @@ import FormProvider, {
 } from '../../../components/hook-form';
 import { getActiveSecurityUsers, getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
 import CollapsibleCheckedItemInputRow from './CollapsibleCheckedItemInputRow';
+import FormLabel from '../../components/DocumentForms/FormLabel';
+
 // ----------------------------------------------------------------------
 
 function MachineServiceRecordAddForm() {
@@ -35,8 +36,7 @@ function MachineServiceRecordAddForm() {
   const { activeContacts } = useSelector((state) => state.contact);
   const { activeServiceRecordConfigsForRecords, serviceRecordConfig, recordTypes, isLoadingCheckItems } = useSelector((state) => state.serviceRecordConfig);
   const [ activeServiceRecordConfigs, setActiveServiceRecordConfigs ] = useState([]);
-  const [checkParamList, setCheckParamList] = useState([]);
-  // console.log("checkParamList : ",checkParamList)
+  const [checkItemLists, setCheckItemLists] = useState([]);
   const [docType, setDocType] = useState(null);
   const user = { _id: localStorage.getItem('userId'), name: localStorage.getItem('name') };
 
@@ -56,23 +56,31 @@ function MachineServiceRecordAddForm() {
     name: decoiler?.connectedMachine?.name ?? null,
     serialNo: decoiler?.connectedMachine?.serialNo ?? null
   }));
-
   const defaultValues = useMemo(
     () => {
       const initialValues = {
-      docRecordType: null,
-      serviceRecordConfiguration: null,
-      serviceDate: new Date(),
-      technician:   securityUser?.contact || null,
-      decoilers: machineDecoilers,
-      serviceNote: '',
-      maintenanceRecommendation: '',
-      suggestedSpares: '',
-      files: [],
-      // checkParamFiles: [],
-      operators: [],
-      operatorRemarks: '',
-      isActive: true,
+      docRecordType:                null,
+      serviceRecordConfiguration:   null,
+      serviceDate:                  new Date(),
+      versionNo:                    1,
+      customer:                     machine?.customer?._id || null,
+      site:                         machine?.instalationSite?._id,
+      // machine:                      machine?._id || null,
+      decoilers:                    machineDecoilers || [],
+      technician:                   securityUser?.contact || null,
+      technicianNotes:              '',
+      textBeforeCheckItems:         '',
+      textAfterCheckItems:          '',
+      serviceNote:                  '',
+      recommendationNote:           '',
+      internalComments:             '',
+      suggestedSpares:              '',
+      internalNote:                 '',
+      operators:                    [],
+      files:                        [],
+      operatorNotes:                '',
+      checkItemRecordValues:        [],
+      isActive:                     true,
     }
     return initialValues;
   },
@@ -92,11 +100,9 @@ function MachineServiceRecordAddForm() {
     trigger,
     handleSubmit,
     formState: { isSubmitting },
-    control,
   } = methods;
 
-  const { decoilers, operators, serviceRecordConfiguration, technician, docRecordType } = watch()
-  
+  const { decoilers, operators, serviceRecordConfiguration, docRecordType } = watch()
   useEffect(() => {
       if(docRecordType === null){
         setActiveServiceRecordConfigs(activeServiceRecordConfigsForRecords)
@@ -124,16 +130,8 @@ function MachineServiceRecordAddForm() {
   },[securityUser, setValue, user?._id])
 
   useEffect(()=>{
-    setCheckParamList(serviceRecordConfig?.checkParams)
+    setCheckItemLists(serviceRecordConfig?.checkItemLists)
   },[serviceRecordConfig])
-
-  const handleTypeChange = (event, newValue) => {
-    if(newValue?._id===3) setDocType(true)
-    else setDocType(false)
-    const recordType = {recordType:newValue?.name}
-    setValue('serviceRecordConfiguration',null);
-    dispatch(getActiveServiceRecordConfigsForRecords(machine?._id, recordType))
-  }
 
   const handleParamChange = (event, newValue) => {
     if(newValue != null){
@@ -153,29 +151,25 @@ function MachineServiceRecordAddForm() {
 
   const onSubmit = async (data) => {
     try {
-      const checkParams_ = [];
+      const checkItemLists_ = [];
 
-      if(checkParamList && 
-        Array.isArray(checkParamList) && 
-        checkParamList.length>0) 
-        checkParamList.forEach((checkParam_, index )=>{
-          if(Array.isArray(checkParam_.paramList) && 
-            checkParam_.paramList.length>0) {
-            checkParam_.paramList.forEach((CI,ind)=>{
-              console.log("CI : ",CI)
-              checkParams_.push({
-                serviceParam:CI._id,
-                name:CI.name,
-                paramListTitle:checkParam_.paramListTitle,
-                value:CI?.value,
+      if(checkItemLists && 
+        Array.isArray(checkItemLists) && 
+        checkItemLists.length>0) 
+        checkItemLists.forEach((checkParam_, index )=>{
+          if(Array.isArray(checkParam_.checkItems) && 
+            checkParam_.checkItems.length>0) {
+            checkParam_.checkItems.forEach((CI,ind)=>(
+              CI?.checked && checkItemLists_.push({
+                machineCheckItem: CI?._id,
+                checkItemListId:  checkParam_?._id,
+                checkItemValue:   CI?.inputType?.toLowerCase() === 'boolean' ? CI?.checkItemValue || false : CI?.checkItemValue || '',
                 comments:CI?.comments,
-                status:CI?.status?.name
-              });
-            });
+              })
+            ));
           }
         });
-        console.log("checkParams_ : ",checkParams_)
-      data.checkParams = checkParams_;
+      data.checkItemRecordValues = checkItemLists_;
       data.decoilers = decoilers;
       data.operators = operators;
       await dispatch(addMachineServiceRecord(machine?._id,data));
@@ -189,60 +183,88 @@ function MachineServiceRecordAddForm() {
   
   const toggleCancel = () => { dispatch(setMachineServiceRecordAddFormVisibility(false)) };
 
-  const handleChangeCheckItemListValue = (index, childIndex, value) => {
-      const updatedCheckParams = [...checkParamList];
+  const handleChangeCheckItemListValue = (index, childIndex, checkItemValue) => {
+      const updatedCheckParams = [...checkItemLists];
       const updatedParamObject = { 
         ...updatedCheckParams[index],
-        paramList: [...updatedCheckParams[index].paramList],
+        checkItems: [...updatedCheckParams[index].checkItems],
       };
-      updatedParamObject.paramList[childIndex] = {
-        ...updatedParamObject.paramList[childIndex],
-        value,
+      updatedParamObject.checkItems[childIndex] = {
+        ...updatedParamObject.checkItems[childIndex],
+        checkItemValue,
       };
       updatedCheckParams[index] = updatedParamObject;
-  setCheckParamList(updatedCheckParams);
+  setCheckItemLists(updatedCheckParams);
   }
 
+  const handleChangeCheckItemListDate = (index, childIndex, date) => {
+    const updatedCheckParams = [...checkItemLists];
+    const updatedParamObject = { 
+      ...updatedCheckParams[index],
+      checkItems: [...updatedCheckParams[index].checkItems],
+    };
+    updatedParamObject.checkItems[childIndex] = {
+      ...updatedParamObject.checkItems[childIndex],
+      checkItemValue: date,
+    };
+    updatedCheckParams[index] = updatedParamObject;
+  setCheckItemLists(updatedCheckParams);
+  }
+  
   const handleChangeCheckItemListCheckBoxValue = (index, childIndex) => {
-      const updatedCheckParams = [...checkParamList];
+      const updatedCheckParams = [...checkItemLists];
         const updatedParamObject = { 
           ...updatedCheckParams[index],
-          paramList: [ ...updatedCheckParams[index].paramList],
+          checkItems: [ ...updatedCheckParams[index].checkItems],
         };
-        updatedParamObject.paramList[childIndex] = {
-          ...updatedParamObject.paramList[childIndex],
-          value: !updatedParamObject.paramList[childIndex].value,
+        updatedParamObject.checkItems[childIndex] = {
+          ...updatedParamObject.checkItems[childIndex],
+          checkItemValue: !updatedParamObject.checkItems[childIndex].checkItemValue,
         };
         updatedCheckParams[index] = updatedParamObject;
-      setCheckParamList(updatedCheckParams);
+      setCheckItemLists(updatedCheckParams);
+  }
+
+  const handleChangeCheckItemListChecked = ( index, childIndex ) =>{
+    const updatedCheckParams = [...checkItemLists];
+    const updatedParamObject = { 
+      ...updatedCheckParams[index],
+      checkItems: [ ...updatedCheckParams[index].checkItems],
+    };
+    updatedParamObject.checkItems[childIndex] = {
+      ...updatedParamObject.checkItems[childIndex],
+      checked: !updatedParamObject.checkItems[childIndex].checked,
+    };
+    updatedCheckParams[index] = updatedParamObject;
+  setCheckItemLists(updatedCheckParams);
   }
 
   const handleChangeCheckItemListStatus = (index, childIndex, status) => {
-    const updatedCheckParams = [...checkParamList];
+    const updatedCheckParams = [...checkItemLists];
     const updatedParamObject = { 
       ...updatedCheckParams[index],
-      paramList: [ ...updatedCheckParams[index].paramList ],
+      checkItems: [ ...updatedCheckParams[index].checkItems ],
     };
-    updatedParamObject.paramList[childIndex] = {
-      ...updatedParamObject.paramList[childIndex],
-      status
+    updatedParamObject.checkItems[childIndex] = {
+      ...updatedParamObject.checkItems[childIndex],
+      checkItemValue: status
     };
     updatedCheckParams[index] = updatedParamObject;
-  setCheckParamList(updatedCheckParams);
+  setCheckItemLists(updatedCheckParams);
   }
 
   const handleChangeCheckItemListComment = (index, childIndex, comments) => {
-    const updatedCheckParams = [...checkParamList];
+    const updatedCheckParams = [...checkItemLists];
     const updatedParamObject = { 
       ...updatedCheckParams[index],
-      paramList: [...updatedCheckParams[index].paramList ],
+      checkItems: [...updatedCheckParams[index].checkItems ],
     };
-    updatedParamObject.paramList[childIndex] = {
-      ...updatedParamObject.paramList[childIndex],
+    updatedParamObject.checkItems[childIndex] = {
+      ...updatedParamObject.checkItems[childIndex],
       comments
     };
     updatedCheckParams[index] = updatedParamObject;
-  setCheckParamList(updatedCheckParams);
+  setCheckItemLists(updatedCheckParams);
   }
   
   return (
@@ -252,13 +274,12 @@ function MachineServiceRecordAddForm() {
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 <FormHeading heading="New Service Record" />
-                <Grid container>
-                  <ViewFormField sm={6} heading='Customer' param={machine?.customer?.name} label="serialNo"/>
-                  <ViewFormField sm={6} heading='Machine' param={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} label="serialNo"/>
-                  <ViewFormField sm={6} heading='Machine Model Category' param={machine?.machineModel?.category?.name} label="serialNo"/>
-                  <ViewFormField sm={6} heading='Machine Model' param={machine?.machineModel?.name} label="serialNo"/>
+                {/* <Grid container>
+                  <ViewFormField sm={6} heading='Machine' param={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} />
+                  <ViewFormField sm={6} heading='Machine Model Category' param={machine?.machineModel?.category?.name} />
+                  <ViewFormField sm={6} heading='Machine Model' param={machine?.machineModel?.name} />
                   <ViewFormField sm={6} heading='Decoilers' arrayParam={defaultValues.decoilers} chipLabel="serialNo"/>
-                </Grid>
+                </Grid> */}
                 <Box
                     rowGap={2}
                     columnGap={2}
@@ -302,6 +323,8 @@ function MachineServiceRecordAddForm() {
                   >
 
                   <RHFDatePicker name="serviceDate" label="Service Date" />
+                  <RHFTextField name="versionNo" label="Version No" disabled/>
+
                   {/* <Autocomplete multiple
                     readOnly
                     name="decoilers" 
@@ -326,8 +349,10 @@ function MachineServiceRecordAddForm() {
                     <li {...props} key={option._id}>{option.name || ''}</li>
                     )}
                   />
-                    <RHFTextField name="technicianRemarks" label="Technician Remarks" minRows={3} multiline/> 
-                    {checkParamList?.length > 0 && <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
+                    <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
+                    <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline/> 
+                    
+                    {checkItemLists?.length > 0 && <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />}
 
                     {isLoadingCheckItems ? 
                     <Box sx={{ width: '100%',mt:1 }}>
@@ -340,28 +365,34 @@ function MachineServiceRecordAddForm() {
                       <Skeleton animation={false} />
                     </Box>
                     :<>
-                    {checkParamList?.map((row, index) =>
-                          ( typeof row?.paramList?.length === 'number' &&
-                          <>
+                    {checkItemLists?.map((row, index) =>
+                          ( typeof row?.checkItems?.length === 'number' &&
                             <CollapsibleCheckedItemInputRow 
                               key={index}
                               row={row} 
                               index={index} 
-                              checkParamList={checkParamList} 
+                              checkItemLists={checkItemLists} 
+                              handleChangeCheckItemListDate={handleChangeCheckItemListDate}
                               handleChangeCheckItemListValue={handleChangeCheckItemListValue}
                               handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
+                              handleChangeCheckItemListChecked={handleChangeCheckItemListChecked}
                               handleChangeCheckItemListCheckBoxValue={handleChangeCheckItemListCheckBoxValue}
                               handleChangeCheckItemListComment={handleChangeCheckItemListComment}
                             />
-                        </>
                           ))}
                       </>
                     }
 
-                    { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label="Note" minRows={3} multiline/> }
-                    { serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="maintenanceRecommendation" label="Maintenance Recommendation" minRows={3} multiline/> }
+                    <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline/> 
+                    
+                    
+                    {/* <RHFTextField name="internalComments" label="Internal Comments" minRows={3} multiline/> */}
+                    { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label="Service Note" minRows={3} multiline/> }
+                    { serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="recommendationNote" label="Recommendation Note" minRows={3} multiline/> }
                     { serviceRecordConfig?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }
-                    {docType &&
+                    <RHFTextField name="internalNote" label="Internal Note" minRows={3} multiline/> 
+
+                    {/* {docType && */}
                       <Autocomplete multiple
                         name="operators" 
                         defaultValue={defaultValues.operators}
@@ -372,7 +403,10 @@ function MachineServiceRecordAddForm() {
                           <TextField {...params} variant="outlined" label="Operators" placeholder="Select Operators"/>
                         )}
                       />
-                    }
+                    {/* } */}
+
+                    <RHFTextField name="operatorNotes" label="Operator Notes" minRows={3} multiline/> 
+
                   <Grid container display="flex">
                     <RHFSwitch
                       name="isActive"

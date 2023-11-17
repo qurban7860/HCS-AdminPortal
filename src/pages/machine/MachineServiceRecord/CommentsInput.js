@@ -1,125 +1,131 @@
-import React, { useState, memo } from 'react'
+import React, { memo } from 'react'
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import {  Grid, TextField, Autocomplete, Checkbox } from '@mui/material';
-import Iconify from '../../../components/iconify';
+import { Stack, Box, TextField, Autocomplete, Checkbox, FormControlLabel, FormGroup } from '@mui/material';
+// import { RHFTextField, RHFAutocomplete } from '../../../components/hook-form';
+
 
 const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                     handleChangeCheckItemListValue, 
+                    handleChangeCheckItemListDate,
                     handleChangeCheckItemListStatus,
                     handleChangeCheckItemListComment,
+                    handleChangeCheckItemListChecked,
                     handleChangeCheckItemListCheckBoxValue
                 }) => {
+                    
     const { statusTypes } = useSelector((state) => state.serviceRecordConfig);
   return (
-    <Grid sx={{display: 'flex', flexDirection: 'column'}}>
-        <Grid  sx={{display: { md:'flex', xs: 'block', }, justifyContent:'end'}}>
-                            {childRow?.inputType === 'Short Text' && <TextField 
-                                // fullWidth
-                                type='text'
-                                label={childRow?.inputType} 
-                                name={`${childRow?.name}_${childIndex}_${index}`} 
-                                onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e.target.value)}
-                                size="small" sx={{m:0.3}} 
-                                value={checkParamList[index]?.paramList[childIndex]?.value}
-                                required={childRow?.isRequired}
-                                InputProps={{ inputProps: { maxLength: 50 }, 
-                                    // style: { fontSize: '14px', height: 30 }
-                                }}
-                                // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
-                            />}
+    <>
+    <Stack spacing={1} >
+            {childRow?.inputType === 'Short Text' && <TextField 
+                // name={`${index}${childIndex}`} 
+                type='text'
+                disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
+                label={childRow?.inputType} 
+                name={`${childRow?.name}_${childIndex}_${index}`} 
+                onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e.target.value)}
+                size="small" sx={{ width: '100%' }} 
+                value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue}
+                required={childRow?.isRequired}
+                InputProps={{ inputProps: { maxLength: 200 } }}
+                InputLabelProps={{ shrink: checkParamList[index]?.checkItems[childIndex]?.checked || checkParamList[index]?.checkItems[childIndex]?.checkItemValue}}
+            />}
 
-                            { childRow?.inputType === 'Long Text' &&<TextField 
-                                // fullWidth
-                                type="text"
-                                label={childRow?.inputType} 
-                                name={`${childRow?.name}_${childIndex}_${index}`} 
-                                onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e.target.value)}
-                                size="small" sx={{m:0.3}} 
-                                value={checkParamList[index]?.paramList[childIndex]?.value}
-                                minRows={1} multiline
-                                required={childRow?.isRequired}
-                                InputProps={{ inputProps: { maxLength: 200 }, 
-                                // style: { fontSize: '14px', height: 30 }
-                                }}
-                                // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
-                            />}
+            { childRow?.inputType === 'Long Text' &&<TextField 
+                type="text"
+                disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
+                label={childRow?.inputType} 
+                name={`${childRow?.name}_${childIndex}_${index}`} 
+                onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e.target.value)}
+                size="small" sx={{ width: '100%'}} 
+                value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue}
+                minRows={1} multiline
+                required={childRow?.isRequired}
+                InputProps={{ inputProps: { maxLength: 3000 } }}
+                InputLabelProps={{ shrink: checkParamList[index]?.checkItems[childIndex]?.checked || checkParamList[index]?.checkItems[childIndex]?.checkItemValue}}
+            />}
 
-                            { childRow?.inputType === 'Number'  && 
-                            <TextField 
-                                // fullWidth
-                                id="outlined-number"
-                                label={`${childRow?.unitType ? childRow?.unitType :'Enter Value'}`}
-                                name={childRow?.name} 
-                                type="number"
-                                value={checkParamList[index]?.paramList[childIndex]?.value}
-                                onChange={(e) => {
-                                    if (/^\d*$/.test(e.target.value)) {
-                                    handleChangeCheckItemListValue(index, childIndex, e.target.value)
-                                    }else{
-                                        handleChangeCheckItemListValue(index, childIndex, checkParamList[index]?.paramList[childIndex].value)
-                                    }}
-                                } 
-                                size="small" sx={{m:0.3}} 
-                                required={childRow?.isRequired}
-                                // InputProps={{ style: { fontSize: '14px', height: 30 }}}
-                                // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
-                            />}
+            </Stack>
+                {childRow?.inputType === 'Boolean' && 
+            <FormGroup >
+                <FormControlLabel control={
+                <Checkbox 
+                    disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
+                    checked={checkParamList[index]?.checkItems[childIndex]?.checkItemValue === 'true' || checkParamList[index]?.checkItems[childIndex]?.checkItemValue === true } 
+                    onChange={()=>handleChangeCheckItemListCheckBoxValue(index, childIndex )} 
+                    />
+                } label="Check" />
+            </FormGroup>
+            }
 
-                            <div>
-                            {childRow?.inputType === 'Boolean' && 
-                            <Checkbox 
-                                name={`${childRow?.name}_${childIndex}_${index}`} 
-                                checked={checkParamList[index].paramList[childIndex]?.value || false} 
-                                onChange={()=>handleChangeCheckItemListCheckBoxValue(index, childIndex )} 
-                            />}
-                            </div>
+            <Stack spacing={1} >
 
-                            <Autocomplete 
-                                value={checkParamList[index].paramList[childIndex]?.status || null }
-                                options={statusTypes}
-                                getOptionLabel={(option) => option?.name || ''}
-                                isOptionEqualToValue={(option, value) => option._id === value._id}
-                                onChange={(event, newInputValue) =>  handleChangeCheckItemListStatus(index, childIndex, newInputValue) }
-                                renderInput={(params) => <TextField {...params} label="Status" size='small' 
-                                // InputProps={{ style: { fontSize: '14px !important', height: '30 !important' }}}
-                                // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
-                                />}
-                                // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
-                                sx={{ minWidth: 240,maxWidth: 300, m:0.3, ml:{sm: 'auto',md: 0},
-                                    // "& .MuiInputBase-root": { height: "30px", fontSize: '14px' },
-                                }}
-                                
-                            />
+            <Box
+                rowGap={1}
+                columnGap={1}
+                display="grid"
+                sx={{my:1}}
+                gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(1, 1fr)' }}
+            >
+                    { childRow?.inputType === 'Date'  && 
+                    <TextField 
+                        id="date"
+                        label='Date'
+                        name={childRow?.name} 
+                        type="date"
+                        format="dd/mm/yyyy"
+                        disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
+                        value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue || null}
+                        // InputProps={{ inputComponent: NumericFormatCustom }}
+                        onChange={(e) =>  handleChangeCheckItemListDate(index, childIndex, e.target.value) } 
+                        size="small" 
+                        required={childRow?.isRequired}
+                        InputLabelProps={{ shrink: checkParamList[index]?.checkItems[childIndex]?.checked || checkParamList[index]?.checkItems[childIndex]?.checkItemValue }}
+                    /> }
 
-                            <TextField 
-                                // fullWidth
-                                type="text"
-                                label="Comment" 
-                                name="comment"
-                                onChange={(e) => handleChangeCheckItemListComment(index, childIndex, e.target.value)}
-                                size="small" sx={{ m:0.3, ml:{sm: 'auto',md: 0}, minWidth:180 }} 
-                                // pr:{md:4},width: {md: 470 } 
-                                value={checkParamList[index]?.paramList[childIndex]?.comments}
-                                minRows={1} multiline
-                                InputProps={{ inputProps: { maxLength: 500 }, 
-                                // style: { fontSize: '14px', height: 30 }
-                                }}
-                                // InputLabelProps={{ style: {  fontSize: '14px', top: '-4px' } }}
-                                
-                            />
-                                {/* <Iconify
-                                    onClick={()=> setOpen(!isOpen)}
-                                    icon={isOpen ? 'mdi:comment-remove-outline' : 'mdi:comment-text-outline' }
-                                    sx={{ cursor: 'pointer', mt:1.7, mx:0.7 }}
-                                /> */}
-                            </Grid>
-            
-        {/* { isOpen &&  */}
+                    { childRow?.inputType === 'Number'  && 
+                    <TextField 
+                        id="outlined-number"
+                        label={`${childRow?.unitType ? childRow?.unitType : 'Enter Value'}`}
+                        name={childRow?.name} 
+                        type="number"
+                        disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
+                        value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue}
+                        // onWheel={(e) => e.target.blur()}
+                        onChange={(e) => {
+                            const inputValue = e.target.value;
+                            if (/^\d*$/.test(inputValue)) {
+                                handleChangeCheckItemListValue(index, childIndex, inputValue);
+                            }
+                        }} 
+                        onKeyDown={(e) => {
+                            if (e.key === 'Backspace') {
+                                return;
+                            }
+                            if (!/^\d*$/.test(e.key)) {
+                                e.preventDefault();
+                            }
+                        }}
+                        size="small" 
+                        required={childRow?.isRequired}
+                        InputLabelProps={{ shrink: checkParamList[index]?.checkItems[childIndex]?.checked || checkParamList[index]?.checkItems[childIndex]?.checkItemValue }}
+                    />
+                    }
 
-        {/* } */}
-    </Grid>
-  )
+
+                    { childRow?.inputType === 'Status' && <Autocomplete
+                        // name={`${index}${childIndex}`} 
+                        disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
+                        value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue || '' }
+                        options={statusTypes}
+                        onChange={(event, newInputValue) =>  handleChangeCheckItemListStatus(index, childIndex, newInputValue) }
+                        renderInput={(params) => <TextField {...params} label="Status" size='small' />}
+                    /> }
+            </Box>
+    </Stack>
+    </>
+    )
 }
 
 CommentsInput.propTypes = {
@@ -127,9 +133,13 @@ CommentsInput.propTypes = {
     childIndex: PropTypes.number,
     checkParamList: PropTypes.array,
     childRow: PropTypes.object,
+    handleChangeCheckItemListDate: PropTypes.func,
     handleChangeCheckItemListValue: PropTypes.func,
     handleChangeCheckItemListStatus: PropTypes.func,
     handleChangeCheckItemListComment: PropTypes.func,
+    handleChangeCheckItemListChecked: PropTypes.func,
     handleChangeCheckItemListCheckBoxValue: PropTypes.func,
   };
+
+
 export default memo(CommentsInput)

@@ -130,7 +130,7 @@ export const StyledTableRow = styled(TableRow)(({ theme }) => ({
     backgroundColor: 'white',
   },
   '&:nth-of-type(even)': {
-    backgroundColor: '#f4f6f866',
+    backgroundColor: '#f8f8f8',
   },
 }));
 

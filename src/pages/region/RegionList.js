@@ -116,8 +116,8 @@ export default function RegionList() {
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
-    filterRole,
     filterStatus,
+    filterRole
   });
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
@@ -213,7 +213,7 @@ export default function RegionList() {
     <>
       <Container maxWidth={false}>
         <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
-          <Cover name="Regions" generalSettings="enabled" icon="ph:users-light" />
+          <Cover name="Regions" generalSettings icon="ph:users-light" />
         </Card>
         <TableCard>
           <RegionTableToolbar
@@ -262,10 +262,10 @@ export default function RegionList() {
                         onViewRow={() => handleViewRow(row._id)}
                       />
                     ))}
+                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
-            <TableNoData isNotFound={isNotFound} />
           </TableContainer>
 
           <TablePaginationCustom

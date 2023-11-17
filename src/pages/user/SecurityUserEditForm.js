@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
+import { MuiTelInput } from 'mui-tel-input';
 import { Box, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
 // routes
 import { PATH_SECURITY } from '../../routes/paths';
@@ -182,13 +182,6 @@ export default function SecurityUserEditForm() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [securityUser]);
-
-  const handlePhoneChange = (newValue) => {
-    matchIsValidTel(newValue);
-    if (newValue.length < 20) {
-      setPhone(newValue);
-    }
-  };
 
   const handleNameChange = (e) => {
     setName(e);
@@ -452,7 +445,8 @@ export default function SecurityUserEditForm() {
                 label="Phone Number"
                 flagSize="medium"
                 defaultCountry="NZ"
-                onChange={handlePhoneChange}
+                onChange={(newValue)=>setPhone(newValue)}
+                inputProps={{maxLength:13}}
                 forceCallingCode
               />
             </Box>

@@ -1,7 +1,10 @@
 import { memo } from 'react'
 import PropTypes from 'prop-types';
 // @mui
-import { Box, Switch, TablePagination, FormControlLabel } from '@mui/material';
+import { Box, Switch, TablePagination, FormControlLabel, Button } from '@mui/material';
+import Iconify from '../iconify';
+import { BUTTONS } from '../../constants/default-constants';
+
 
 // ----------------------------------------------------------------------
 
@@ -10,6 +13,8 @@ TablePaginationCustom.propTypes = {
   onChangeDense: PropTypes.func,
   rowsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
   sx: PropTypes.object,
+  onExportCSV: PropTypes.func,
+  refresh: PropTypes.func,
 };
 
 function TablePaginationCustom({
@@ -17,10 +22,18 @@ function TablePaginationCustom({
   onChangeDense,
   rowsPerPageOptions = [10, 20,50,100],
   sx,
+  onExportCSV,
+  refresh,
   ...other
 }) {
+
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
+  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
+
   return (
     <Box sx={{ position: 'relative', ...sx }}>
+      
       <TablePagination labelRowsPerPage="Rows:" colSpan={2} rowsPerPageOptions={rowsPerPageOptions} component="div" showLastButton showFirstButton {...other} 
       sx={{
         '.MuiTablePagination-toolbar': {
@@ -29,6 +42,23 @@ function TablePaginationCustom({
         },
       }}
       />
+
+      {isSuperAdmin && onExportCSV && (
+        <Button sx={{ top: 10, left:25, position: {md: 'absolute',}}} 
+          onClick={onExportCSV} variant="outlined"  
+          startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />}>
+          {BUTTONS.EXPORT.label}
+        </Button>
+      )}
+
+      {refresh && (
+        <Button sx={{ top: 10, left:25, position: {md: 'absolute',}}} 
+          onClick={refresh} variant="outlined"  
+          startIcon={<Iconify icon="mdi:reload" />}>
+          Reload
+        </Button>
+      )}
+
       {onChangeDense && (
         <FormControlLabel
           label="Dense"

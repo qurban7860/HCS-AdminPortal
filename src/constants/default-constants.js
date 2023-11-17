@@ -71,10 +71,11 @@ export const FORMLABELS = {
   TOOLS_INFO: ' Tools Information',
   SERVICE: ' Service Settings',
 
-
   // @root - Settings
   DOCUMENT_SETTINGS: 'Document Settings',
   SECURITY_SETTINGS: 'Security Settings',
+  REPORTS: 'Reports',
+  CONFIG: 'Configuration',
 
   // @root DocumentAddForm in dashboard/documents
   SELECT_CUSTOMER: 'Select Customer',
@@ -145,7 +146,11 @@ export const DIALOGS = {
 
 export const BUTTONS = {
   SAVE: 'Save',
-
+  SAVE_AS_DRAFT: 'Save as Draft',
+  EXPORT: {
+    label: 'Export CSV',
+    icon: 'icon-park-outline:excel',
+  },
   CLEAR: 'Clear',
   CANCEL: 'Cancel',
   DISCARD: 'Discard',
@@ -188,6 +193,7 @@ export const BUTTONS = {
   ADDROLE: 'Add Role',
   ADDDOCUMENT_CATEGORY: 'Add Document Category',
   ADDDOCUMENT_TYPE: 'Add Document Type',
+  THUMBNAIL_UPLOAD: 'Add / Upload Files',
 
   // region
   ADDREGION: 'Add Region',
@@ -202,7 +208,6 @@ export const BUTTONS = {
   ADD_SERVICE_CHECK_ITEM: 'Add Check Item',
   ADD_MACHINE_SERVICE_CONFIG: 'Add Configuration',
   ADD_MACHINE_SERVICE_RECORD: 'Add Record',
-
 };
 
 export const BREADCRUMBS = {
@@ -277,3 +282,10 @@ export const TOGGLE = {
   ACTIVE: 'Active',
   CONNECTABLE: 'Connect as a child',
 };
+
+export const Snacks = {
+  configuration_Verification_Success: 'Verification Success',
+  configuration_Verification_Failed: 'Verification Failed!',
+  configuration_approve_Success: 'Document approved Successfully!',
+  configuration_approve_Failed: 'Document approve Failed!',
+}

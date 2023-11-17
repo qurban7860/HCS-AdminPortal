@@ -39,7 +39,6 @@ import ContactListTableRow from './ContactListTableRow';
 import ContactListTableToolbar from './ContactListTableToolbar';
 import { getContacts, deleteContact } from '../../../redux/slices/customer/contact';
 import CustomerDashboardNavbar from '../util/CustomerDashboardNavbar';
-// import CustomerViewPage from '../CustomerView';
 
 // ----------------------------------------------------------------------
 
@@ -263,11 +262,6 @@ export default function ContactList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
-
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  />
 
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>

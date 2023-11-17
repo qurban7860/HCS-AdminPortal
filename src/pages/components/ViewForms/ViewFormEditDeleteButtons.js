@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
-import { Badge, Divider, Grid, Tooltip } from '@mui/material';
+import { Badge, Box, Divider, Grid, TextField, Skeleton } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { memo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 // import { Button, Typography, IconButton } from '@mui/material';
 import { green } from '@mui/material/colors';
+import { DateTimePicker } from '@mui/x-date-pickers';
 import { createTheme } from '@mui/material/styles';
 import { StyledStack } from '../../../theme/styles/default-styles';
 import ConfirmDialog from '../../../components/confirm-dialog';
@@ -15,68 +16,125 @@ import useResponsive from '../../../hooks/useResponsive';
 import { setTransferDialogBoxVisibility } from '../../../redux/slices/products/machine';
 import IconPopover from '../Icons/IconPopover';
 import IconTooltip from '../Icons/IconTooltip';
-import ViewFormField from './ViewFormField';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
+import ViewFormApprovalsPopover from './ViewFormApprovalsPopover';
 import { ICONS } from '../../../constants/icons/default-icons';
-import { fDate } from '../../../utils/formatTime';
+import { fDate, fDateTime } from '../../../utils/formatTime';
+import SkeletonIcon from '../../../components/skeleton/SkeletonIcon'
 
 function ViewFormEditDeleteButtons({
+  // Icons 
   backLink,
-  disableTransferButton = false,
-  disableDeleteButton = false,
-  disablePasswordButton = false,
-  disableEditButton = false,
   isActive,
-  isVerified,
   customerAccess,
+  isRequired,
   multiAuth,
   currentEmp,
-  isRequired,
+
+  // Handlers
   handleVerification,
+  handleVerificationTitle,
   onDelete,
   handleEdit,
   handleTransfer,
   handleUpdatePassword,
   handleUserInvite,
+  isSubmitted,
+  returnToSubmitted,
+  approvers,
+  isVerifiedTitle,
   isInviteLoading,
   type,
   sites,
   mainSite,
   handleMap,
-  machineSupportDate,
   moveCustomerContact,
-  supportSubscription
+  approveConfig,
+  approveHandler,
+  copyConfiguration,
+  onUserStatusChange,
+
+  // DISABLE
+  disableTransferButton = false,
+  disableDeleteButton = false,
+  disablePasswordButton = false,
+  disableEditButton = false,
+  isLoading,
+
+  // ICONS & HANDLERS
+  verifiers,
+  userStatus,
+  supportSubscription,
+  machineSupportDate,
+  approveConfiglength,
+
 }) {
   const { id } = useParams();
   const userId = localStorage.getItem('userId');
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
-  
-  const { isLoading, transferDialogBoxVisibility } = useSelector((state) => state.machine);
-  // const { site } = useSelector((state) => state.site);
-  // const { customer } = useSelector((state) => state.customer);
+  const { transferDialogBoxVisibility } = useSelector((state) => state.machine);
   const dispatch = useDispatch();
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openUserInviteConfirm, setOpenUserInviteConfirm] = useState(false);
-  
   const [openVerificationConfirm, setOpenVerificationConfirm] = useState(false);
+  const [openUserStatuConfirm, setOpenUserStatuConfirm] = useState(false);
+  const [openConfigDraftStatuConfirm, setOpenConfigDraftStatuConfirm] = useState(false);
+  const [openConfigSubmittedStatuConfirm, setOpenConfigSubmittedStatuConfirm] = useState(false);
+  const [openConfigApproveStatuConfirm, setOpenConfigApproveStatuConfirm] = useState(false);
+  const [openCopyConfigConfirm, setOpenCopyConfigConfirm] = useState(false);
+  const [lockUntil, setLockUntil] = useState(''); 
+  const [lockUntilError, setLockUntilError] = useState(''); 
   const theme = createTheme({
     palette: {
       success: green,
     },
   });
-  // const [openTransferConfirm, setOpenTransferConfirm] = useState(false);
-  // const [openPopover, setOpenPopover] = useState(null);
-  // const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  // const [deleteButtonColor, setDeleteButtonColor] = useState('error.main');
-  // const [deleteButtonHoverColor, setDeleteButtonHoverColor] = useState('error.dark');
+  
   const disableDelete = userRoles?.some((role) => role?.disableDelete === true);
 
   if (disableDelete) {
     disableDeleteButton = true;
   }
 
+  // Function to handle date change
+  const handleLockUntilChange = newValue => {
+    const selectedDate = new Date(newValue);
+    if (selectedDate) {
+      // Check if the selected date is in the future (optional)
+      const currentDate = new Date();
+      if (selectedDate < currentDate) {
+        setLockUntilError('Please select a future date and time.');
+      } else {
+        setLockUntil(newValue);
+        setLockUntilError(''); // Clear the error when a valid date is selected
+      }
+    } else {
+      setLockUntilError('Invalid date and time'); // Set an error message for an invalid date and time
+    }
+  };
+
+   // Function to handle date change
+   const handleChangeUserStatus = () => {
+    if (!lockUntil && !userStatus?.locked) {
+      setLockUntilError('Lock Until is required');
+    }else{
+
+      if(lockUntil){
+        const timeDifference = new Date(lockUntil) - new Date();
+        const minutesDifference = timeDifference / (1000 * 60);
+        onUserStatusChange(minutesDifference);
+      }else{
+        onUserStatusChange(0);
+      }
+      setOpenUserStatuConfirm(false);
+    }
+    setLockUntil('');
+  };
+
+
   const handleOpenConfirm = (dialogType) => {
+
     if (dialogType === 'UserInvite') {
       setOpenUserInviteConfirm(true);
     }
@@ -92,6 +150,27 @@ function ViewFormEditDeleteButtons({
     if (dialogType === 'transfer') {
       dispatch(setTransferDialogBoxVisibility(true));
     }
+
+    if (dialogType === 'UserStatus') {
+      setOpenUserStatuConfirm(true);
+    }
+
+    if (dialogType === 'ChangeConfigStatusToDraft') {
+      setOpenConfigDraftStatuConfirm(true);
+    }
+
+    if (dialogType === 'ChangeConfigStatusToSubmitted') {
+      setOpenConfigSubmittedStatuConfirm(true);
+    }
+
+    if (dialogType === 'ChangeConfigStatusToApprove') {
+      setOpenConfigApproveStatuConfirm(true);
+    }
+    
+    if (dialogType === 'copyConfiguration') {
+      setOpenCopyConfigConfirm(true);
+    }
+    
   };
 
   const handleCloseConfirm = (dialogType) => {
@@ -111,6 +190,28 @@ function ViewFormEditDeleteButtons({
     if (dialogType === 'transfer') {
       dispatch(setTransferDialogBoxVisibility(false));
     }
+
+    if (dialogType === 'UserStatus') {
+      setOpenUserStatuConfirm(false);
+      setLockUntilError('');
+    }
+
+    if (dialogType === 'ChangeConfigStatusToDraft') {
+      setOpenConfigDraftStatuConfirm(false);
+    }
+
+    if (dialogType === 'ChangeConfigStatusToSubmitted') {
+      setOpenConfigSubmittedStatuConfirm(false);
+    }
+
+    if (dialogType === 'ChangeConfigStatusToApprove') {
+      setOpenConfigApproveStatuConfirm(false);
+    }
+
+    if (dialogType === 'copyConfiguration') {
+      setOpenCopyConfigConfirm(false);
+    }
+    
   };
 
   const handleVerificationConfirm = () => {
@@ -127,9 +228,13 @@ function ViewFormEditDeleteButtons({
   // };
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
+
+  const [approvedAnchorEl, setApprovedAnchorEl] = useState(null);
+  const [approvedBy, setApprovedBy] = useState([]);
+
   const handleVerifiedPopoverOpen = (event) => {
     setVerifiedAnchorEl(event.currentTarget);
-    setVerifiedBy(isVerified)
+    setVerifiedBy(verifiers)
   };
 
   const handleVerifiedPopoverClose = () => {
@@ -137,9 +242,17 @@ function ViewFormEditDeleteButtons({
     setVerifiedBy([])
   };
 
-  // const [anchorEl, setAnchorEl] = useState(null);
-  const { isMobile } = useResponsive('down', 'sm');
+  const handleApprovedPopoverOpen = (event) => {
+    setApprovedAnchorEl(event.currentTarget);
+    setApprovedBy(approvers)
+  };
 
+  const handleApprovedPopoverClose = () => {
+    setApprovedAnchorEl(null);
+    setApprovedBy([])
+  };
+
+  const { isMobile } = useResponsive('down', 'sm');
   const methods = useForm();
 
   const {
@@ -156,8 +269,8 @@ function ViewFormEditDeleteButtons({
   return (
     <Grid container justifyContent="space-between">
       <Grid item sx={{display:'flex'}}>
-        <StyledStack sx={{ml:2}}>
-          {backLink && 
+        <StyledStack>
+          {backLink &&
             <>
               <IconTooltip
                 title='Back'
@@ -170,14 +283,14 @@ function ViewFormEditDeleteButtons({
             </>
           }
 
-          {isActive!==undefined && 
+          {isActive!==undefined &&
             <IconTooltip
               title={isActive?ICONS.ACTIVE.heading:ICONS.INACTIVE.heading}
               color={isActive?ICONS.ACTIVE.color:ICONS.INACTIVE.color}
               icon={isActive?ICONS.ACTIVE.icon:ICONS.INACTIVE.icon}
             />
           }
-
+          
           {supportSubscription!==undefined &&
             <IconTooltip
             title={supportSubscription?`Support Subscription Enabled`:`Support Subscription Disabled`}
@@ -185,7 +298,7 @@ function ViewFormEditDeleteButtons({
             icon="bx:support"
             />
           }
-          
+
           {machineSupportDate &&
             <IconTooltip
               title={machineSupport?.status?`Support valid till ${fDate(machineSupportDate)}`:`Support ended ${fDate(machineSupportDate)}`}
@@ -193,11 +306,11 @@ function ViewFormEditDeleteButtons({
               icon="bx:support"
               />
           }
-          
-          {isVerified?.length>0 &&
-          <Badge badgeContent={isVerified.length} color="info">
+
+          {verifiers?.length>0 &&
+          <Badge badgeContent={verifiers.length} color="info">
             <IconTooltip
-              title='Verified'
+              title={isVerifiedTitle || 'Verified'}
               color={ICONS.ALLOWED.color}
               icon="ic:outline-verified-user"
               onClick={handleVerifiedPopoverOpen}
@@ -205,9 +318,19 @@ function ViewFormEditDeleteButtons({
           </Badge>
           }
 
-          
+          {approveConfiglength !== undefined &&
+            <Badge badgeContent={approveConfiglength} color="info">
+              <IconTooltip
+                title={approveConfig?ICONS.APPROVED.heading:ICONS.NOTAPPROVED.heading}
+                color={approveConfig?ICONS.APPROVED.color:ICONS.NOTAPPROVED.color}
+                icon={approveConfig?ICONS.APPROVED.icon:ICONS.NOTAPPROVED.icon}
+                onClick={handleApprovedPopoverOpen}
+              />
+            </Badge>
+          }
 
-          {customerAccess !== undefined && 
+
+          {customerAccess !== undefined &&
             <IconTooltip
               title={customerAccess ? ICONS.ALLOWED.heading : ICONS.DISALLOWED.heading}
               color={customerAccess ? ICONS.ALLOWED.color : ICONS.DISALLOWED.color}
@@ -215,7 +338,7 @@ function ViewFormEditDeleteButtons({
             />
           }
 
-          {isRequired !== undefined && 
+          {isRequired !== undefined &&
             <IconTooltip
               title={isRequired ? ICONS.REQUIRED.heading : ICONS.NOTREQUIRED.heading}
               color={isRequired ? ICONS.REQUIRED.color : ICONS.NOTREQUIRED.color}
@@ -223,7 +346,7 @@ function ViewFormEditDeleteButtons({
             />
           }
 
-          {multiAuth !== undefined && 
+          {multiAuth !== undefined &&
             <IconTooltip
               title={multiAuth ? ICONS.MULTIAUTH_ACTIVE.heading : ICONS.MULTIAUTH_INACTIVE.heading}
               color={multiAuth ? ICONS.MULTIAUTH_ACTIVE.color : ICONS.MULTIAUTH_INACTIVE.color}
@@ -231,40 +354,59 @@ function ViewFormEditDeleteButtons({
             />
           }
 
-          {currentEmp !== undefined && 
+          {currentEmp !== undefined &&
             <IconTooltip
               title={currentEmp ? ICONS.CURR_EMP_ACTIVE.heading : ICONS.CURR_EMP_INACTIVE.heading}
               color={currentEmp ? ICONS.CURR_EMP_ACTIVE.color : ICONS.CURR_EMP_INACTIVE.color}
               icon={currentEmp ? ICONS.CURR_EMP_ACTIVE.icon : ICONS.CURR_EMP_INACTIVE.icon}
             />
           }
+
+          {userStatus &&
+          <IconTooltip
+            title={userStatus?.locked?`User locked by ${userStatus?.lockedBy} until ${fDateTime(userStatus?.lockedUntil)}`:"User Unlocked"}
+            color={userStatus?.locked?ICONS.USER_LOCK.color:ICONS.USER_UNLOCK.color}
+            icon={userStatus?.locked?ICONS.USER_LOCK.icon:ICONS.USER_UNLOCK.icon}
+          />
+          }
+
         </StyledStack>
       </Grid>
 
       <Grid item  >
         <StyledStack>
-          {handleVerification && !isVerified?.length && (
+          {handleVerification && !(verifiers && verifiers.length > 0 && verifiers?.some((verified) => verified?.verifiedBy?._id === userId)) && (
           <IconTooltip
-            title='Verify'
-            onClick={() => { handleOpenConfirm('Verification');}}
+            title={handleVerificationTitle || 'Verify'}
+            onClick={() => handleOpenConfirm('Verification')}
             color={theme.palette.primary.main}
             icon="ic:outline-verified-user"
           />
-        )}
+          )}
 
-        {/* User Invitation */}
-        {handleUserInvite && id!==userId &&(
-          <IconTooltip 
-          title="Resend Invitation"
-          disabled={disableDeleteButton}
-          color={disableDeleteButton?"#c3c3c3":theme.palette.secondary.main}
-          icon="mdi:person-add-outline"
-          onClick={() => {
-            handleOpenConfirm('UserInvite');
-          }}
+          {/* User Status Change */}
+          {onUserStatusChange && id!==userId &&(
+            <IconTooltip
+            title={userStatus?.locked?ICONS.USER_UNLOCK.heading:ICONS.USER_LOCK.heading}
+            color={userStatus?.locked?ICONS.USER_UNLOCK.color:ICONS.USER_LOCK.color}
+            icon={userStatus?.locked?ICONS.USER_UNLOCK.icon:ICONS.USER_LOCK.icon}
+            onClick={() =>handleOpenConfirm('UserStatus')}
+            />
+          )}
 
-          />
-        )}
+          {/* User Invitation */}
+          {handleUserInvite && id!==userId &&(
+            <IconTooltip
+            title="Resend Invitation"
+            disabled={disableDeleteButton}
+            color={disableDeleteButton?"#c3c3c3":theme.palette.secondary.main}
+            icon={ICONS.USER_INVITE.icon}
+            onClick={() => {
+              handleOpenConfirm('UserInvite');
+            }}
+
+            />
+          )}
 
         {/* map toggle button on mobile */}
         {sites && !isMobile && <IconPopover onMapClick={() => handleMap()} sites={sites} />}
@@ -282,6 +424,52 @@ function ViewFormEditDeleteButtons({
           />
         )}
 
+
+
+        {isSubmitted && (
+          <IconTooltip
+            title="Return To Draft"
+            // disabled={...}
+            onClick={() => {
+              handleOpenConfirm('ChangeConfigStatusToDraft');
+            }}
+            color={theme.palette.primary.main}
+            icon="carbon:license-maintenance-draft"
+          />
+        )}
+
+        {returnToSubmitted && (
+          <IconTooltip
+            title="Submit"
+            // disabled={...}
+            onClick={() => {
+              handleOpenConfirm('ChangeConfigStatusToSubmitted'); //
+            }}
+            color={theme.palette.primary.main}
+            icon="iconoir:submit-document"
+          />
+        )}
+
+          {/* approve configuration */}
+          {approveHandler && !(approvers && approvers.length > 0 && approvers?.some((verified) => verified?.verifiedBy?._id === userId)) && <IconTooltip
+          title="Approve"
+          onClick={() => {
+            handleOpenConfirm('ChangeConfigStatusToApprove'); //
+            // approveHandler();
+          }}
+          color={theme.palette.primary.main}
+          icon="mdi:approve"
+        />}
+        {copyConfiguration && (
+          <IconTooltip
+            title="Create Copy"
+            // disabled={...}
+            onClick={copyConfiguration}
+            color={theme.palette.primary.main}
+            icon="mingcute:copy-fill"
+          />
+        )}
+
         {/* change password for users */}
         {handleUpdatePassword && (
           <IconTooltip
@@ -289,9 +477,8 @@ function ViewFormEditDeleteButtons({
             onClick={() => {
               handleUpdatePassword();
             }}
-            color={theme.palette.secondary.main}
             color={disablePasswordButton?"#c3c3c3":theme.palette.secondary.main}
-            icon="mdi:account-key-outline"
+            icon="solar:key-broken"
           />
         )}
 
@@ -304,7 +491,7 @@ function ViewFormEditDeleteButtons({
           color={theme.palette.primary.main}
           icon="eva:swap-fill"
         />}
-        
+
         {/* edit button */}
         {handleEdit && <IconTooltip
           title="Edit"
@@ -324,7 +511,7 @@ function ViewFormEditDeleteButtons({
             onClick={() => {
               handleOpenConfirm('delete');
             }}
-            color={disableDeleteButton?"#c3c3c3":theme.palette.error.main}
+            color={disableDeleteButton?"#c3c3c3":"#FF0000"}
             icon="mdi:trash-can-outline"
           />
         )}
@@ -365,6 +552,84 @@ function ViewFormEditDeleteButtons({
             // onClick={()=> {handleVerification(); handleCloseConfirm('Verification');}}
           >
             Verify
+          </LoadingButton>
+        }
+      />
+
+      <ConfirmDialog
+        open={openUserStatuConfirm}
+        onClose={() => handleCloseConfirm('UserStatus')}
+        title={userStatus?.locked?"Unlock User":"Lock User"}
+        content={
+          <Box rowGap={2} display="grid">
+            Are you sure you want to {userStatus?.locked?"Unlock User":"Lock User"}?
+            {!userStatus?.locked &&
+            <DateTimePicker
+              fullWidth
+              sx={{mt:2}}
+              label="Lock Until"
+              name="lockUntil"
+              value={lockUntil}
+              onChange={handleLockUntilChange}
+              renderInput={params => <TextField {...params} error={!!lockUntilError} helperText={lockUntilError} />}
+            />
+            }
+          </Box>
+        }
+        action={
+          <LoadingButton variant="contained" onClick={handleChangeUserStatus}>
+            {userStatus?.locked?"Unlock User":"Lock User"}
+          </LoadingButton>
+        }
+      />
+
+      <ConfirmDialog
+        open={openConfigDraftStatuConfirm}
+        onClose={() => handleCloseConfirm('ChangeConfigStatusToDraft')}
+        title="Configuration Status"
+        content="Are you sure you want to change configuration status to DRAFT? "
+        action={
+          <LoadingButton variant="contained"
+            onClick={()=>{
+              setOpenConfigDraftStatuConfirm(false);
+              isSubmitted();
+            }}
+          >
+          Yes
+          </LoadingButton>
+        }
+      />
+
+      <ConfirmDialog
+        open={openConfigSubmittedStatuConfirm}
+        onClose={() => handleCloseConfirm('ChangeConfigStatusToSubmitted')}
+        title="Configuration Status"
+        content="Do you want to submit it for Approval? "
+        action={
+          <LoadingButton variant="contained"
+            onClick={()=>{
+              setOpenConfigSubmittedStatuConfirm(false);
+              returnToSubmitted();
+            }}
+          >
+          Yes
+          </LoadingButton>
+        }
+      />
+
+  <ConfirmDialog
+        open={openConfigApproveStatuConfirm}
+        onClose={() => handleCloseConfirm('ChangeConfigStatusToApprove')}
+        title="Configuration Approval"
+        content="Are you sure you want to APPROVE configuration? "
+        action={
+          <LoadingButton variant="contained"
+            onClick={()=>{
+              setOpenConfigApproveStatuConfirm(false);
+              approveHandler();
+            }}
+          >
+          Yes
           </LoadingButton>
         }
       />
@@ -411,7 +676,14 @@ function ViewFormEditDeleteButtons({
         open={verifiedAnchorEl}
         onClose={handleVerifiedPopoverClose}
         ListArr={verifiedBy}
-        ListTitle="Verified By"
+        ListTitle={isVerifiedTitle || "Verified By"}
+      />
+
+      <ViewFormApprovalsPopover
+        open={approvedAnchorEl}
+        onClose={handleApprovedPopoverClose}
+        ListArr={approvedBy}
+        ListTitle= "Approved By"
       />
     </Grid>
 
@@ -422,8 +694,14 @@ export default memo(ViewFormEditDeleteButtons)
 ViewFormEditDeleteButtons.propTypes = {
   backLink: PropTypes.func,
   handleVerification: PropTypes.func,
-  isVerified: PropTypes.array,
+  handleVerificationTitle: PropTypes.string,
+  verifiers: PropTypes.array,
+  approvers: PropTypes.array,
+  isVerifiedTitle: PropTypes.string,
+  approveConfiglength: PropTypes.number,
   isActive:PropTypes.bool,
+  isSubmitted: PropTypes.func,
+  returnToSubmitted: PropTypes.func,
   customerAccess:PropTypes.bool,
   multiAuth:PropTypes.bool,
   currentEmp:PropTypes.bool,
@@ -444,5 +722,11 @@ ViewFormEditDeleteButtons.propTypes = {
   handleMap: PropTypes.func,
   machineSupportDate: PropTypes.string,
   moveCustomerContact: PropTypes.func,
-  supportSubscription: PropTypes.bool
+  approveConfig: PropTypes.bool,
+  approveHandler: PropTypes.func,
+  copyConfiguration: PropTypes.func,
+  supportSubscription: PropTypes.bool,
+  userStatus:PropTypes.object,
+  onUserStatusChange:PropTypes.func,
+  isLoading: PropTypes.bool,
 };

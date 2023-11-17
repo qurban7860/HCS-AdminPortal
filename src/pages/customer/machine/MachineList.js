@@ -29,10 +29,11 @@ import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
 import { getCustomerMachines, ChangeRowsPerPage,
   ChangePage,
-  setFilterBy,
+  // setFilterBy,
   setMachineDialog,
   setMachineMoveFormVisibility,
-  getMachine, } from '../../../redux/slices/products/machine';
+  getMachine,
+  getMachineForDialog, } from '../../../redux/slices/products/machine';
 import MachineDialog from '../../components/Dialog/MachineDialog';
 
 export default function MachineList() {
@@ -50,10 +51,9 @@ export default function MachineList() {
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  const [machineData, setMachineData] = useState({});
-
+  
   const { customer } = useSelector((state) => state.customer);
-  const { customerMachines, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.machine);
+  const { customerMachines, page, rowsPerPage, isLoading } = useSelector((state) => state.machine);
   
   const TABLE_HEAD = [
     { id: 'serialNo', label: 'SerialNo'},
@@ -92,7 +92,7 @@ export default function MachineList() {
 
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
-    dispatch(setFilterBy(value))
+    // dispatch(setFilterBy(value))
   }, 500))
 
   const handleFilterName = (event) => {
@@ -105,19 +105,15 @@ export default function MachineList() {
       debouncedSearch.current.cancel();
   }, [debouncedSearch]);
   
-  useEffect(()=>{
-      setFilterName(filterBy)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
 
   const handleFilterStatus = (event) => {
     setPage(0);
     setFilterStatus(event.target.value);
   };
 
-  const handleViewRow = (MachineData) => {
-    dispatch(setMachineDialog(true)); 
-    setMachineData(MachineData)
+  const handleViewRow = (machineId) => {
+    dispatch(getMachineForDialog(machineId)); 
+    dispatch(setMachineDialog(true));
   };
 
   const handleMoveMachine = (id) => {
@@ -126,7 +122,7 @@ export default function MachineList() {
   };
 
   const handleResetFilter = () => {
-    dispatch(setFilterBy(''))
+    // dispatch(setFilterBy(''))
     setFilterName('');
   };
 
@@ -165,7 +161,7 @@ export default function MachineList() {
                       <MachineListTableRow
                         key={row._id}
                         row={row}
-                        onViewRow={() => handleViewRow(row)}
+                        onViewRow={() => handleViewRow(row?._id)}
                         onMoveMachine={() => handleMoveMachine(row?._id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
@@ -173,6 +169,7 @@ export default function MachineList() {
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                     )
                   )}
+                <TableNoData isNotFound={isNotFound} />
               </TableBody>
             </Table>
           </Scrollbar>
@@ -185,11 +182,8 @@ export default function MachineList() {
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
         />
-        <Grid md={12}>
-          <TableNoData isNotFound={isNotFound} />
-        </Grid>
 
-        <MachineDialog machineData={ machineData }/>
+        <MachineDialog/>
 
       </TableCard>
   );

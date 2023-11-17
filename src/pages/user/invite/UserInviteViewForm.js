@@ -1,17 +1,14 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 // @mui
 import { Card, Grid, Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 // hooks
 import { useSelector } from 'react-redux';
-import { PATH_SETTING } from '../../../routes/paths';
+import { PATH_PAGE, PATH_SETTING } from '../../../routes/paths';
 import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-
-// components
-
 
 export default function UserInviteViewForm() {
   const {userInvite} = useSelector((state) => state.userInvite);
@@ -31,11 +28,22 @@ export default function UserInviteViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [userInvite]
   );
+
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
+  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
+
+  useEffect(() => {
+    if(!isSuperAdmin){
+      navigate(PATH_PAGE.page403)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate, isSuperAdmin]);
   
   return (
     <Container maxWidth={false}>
       <Card sx={{mb: 3, height: 160, position: 'relative'}}>
-        <Cover generalSettings="enabled" backLink={PATH_SETTING.invite.list} name="User Invite Detail" icon="ph:users-light" />
+        <Cover generalSettings backLink={PATH_SETTING.invite.list} name="User Invite Detail" icon="ph:users-light" />
       </Card>
       <Grid item md={12} mt={2}>
         <Card sx={{ p: 2 }}>

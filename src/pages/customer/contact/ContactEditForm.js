@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
+import { MuiTelInput } from 'mui-tel-input';
 import { Box, Card, Grid, Stack,TextField } from '@mui/material';
 // slice
 import {
@@ -112,13 +112,6 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
     dispatch(setContactEditFormVisibility(false));
   };
 
-  const handlePhoneChange = (newValue) => {
-    matchIsValidTel(newValue)
-    if(newValue.length < 17){
-      setPhone(newValue);
-    }
-  };
-
   const onSubmit = async (data) => {
     try {
       if (phone && phone.length > 4) {
@@ -172,12 +165,13 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                   options={FORMLABELS.CONTACT_TYPES.options}
                 />
 
-<MuiTelInput
+                <MuiTelInput
                   value={phone}
                   name="phone"
                   label="Phone Number"
                   flagSize="medium"
-                  onChange={handlePhoneChange}
+                  onChange={(newValue)=>setPhone(newValue)}
+                  inputProps={{maxLength:13}}
                   forceCallingCode
                   defaultCountry="NZ"
                 />

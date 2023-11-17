@@ -1,7 +1,7 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
 // import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
-import { Stack, Grid, Link, CardActionArea } from '@mui/material';
+import { Stack, Grid, Link, CardActionArea, Button } from '@mui/material';
 import {
   CardBase,
   GridBaseViewForm,
@@ -22,6 +22,7 @@ import {
   setContactFormVisibility,
   getContact,
   resetContactFormsVisiblity,
+  createCustomerContactsCSV,
 } from '../../redux/slices/customer/contact';
 import ContactAddForm from './contact/ContactAddForm';
 import ContactEditForm from './contact/ContactEditForm';
@@ -36,10 +37,16 @@ import SearchInput from '../components/Defaults/SearchInput';
 import { fDate } from '../../utils/formatTime';
 import { Snacks } from '../../constants/customer-constants';
 import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
+import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
 
 export default function CustomerContactList(currentContact = null) {
+
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
+  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
+
   const { order, orderBy } = useTable({ defaultOrderBy: '-createdAt' });
   const { customer } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
@@ -102,12 +109,6 @@ export default function CustomerContactList(currentContact = null) {
     dispatch(resetContactFormsVisiblity());
   }, [dispatch]);
 
-
-  useEffect(() => {
-    dispatch(getContacts(customer?._id))
-  }, [dispatch, customer]);
-
-
   useEffect(() => {
     setTableData(contacts);
   }, [contacts, error, responseMessage]);
@@ -143,8 +144,18 @@ export default function CustomerContactList(currentContact = null) {
   const shouldShowContactAdd = formVisibility && !contactEditFormVisibility && !contactMoveFormVisibility;
   const shouldShowContactMove = contactMoveFormVisibility && !formVisibility && !contactEditFormVisibility;
 
-  // console.log(formVisibility,contactEditFormVisibility,contactMoveFormVisibility)
-  // console.log(shouldShowContactMove,contacts)
+
+  const onExportCSV = async () => {
+    const response = dispatch(await createCustomerContactsCSV(customer?._id));
+    response.then((res) => {
+      enqueueSnackbar('CSV Generated Successfully');
+    }).catch((err) => {
+      console.error(err);
+      enqueueSnackbar(err.message, { variant: `error` });
+    });
+  };
+
+
   return (
     <>
       <Grid container direction="row" justifyContent="space-between" alignItems="center">
@@ -166,13 +177,33 @@ export default function CustomerContactList(currentContact = null) {
             />
           </BreadcrumbsProvider>
         </Grid>
-        <AddButtonAboveAccordion
-          name={BUTTONS.NEWCONTACT}
-          toggleChecked={toggleChecked}
-          FormVisibility={formVisibility}
-          toggleCancel={toggleCancel}
-          disabled={contactEditFormVisibility || contactMoveFormVisibility}
-        />
+
+        <Grid item xs={12} md={6} style={{display:'flex', justifyContent:"flex-end"}}>
+         
+          {isSuperAdmin && contacts.length>0 && <Button
+              sx={{
+                mb: { xs: 0, md: 2 },
+                my: { xs: 1 },
+                mr:1
+              }}
+              onClick={onExportCSV}
+              variant="contained"
+              startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />}
+            >
+              {BUTTONS.EXPORT.label}
+            </Button>
+          }
+            
+            <AddButtonAboveAccordion
+              name={BUTTONS.NEWCONTACT}
+              toggleChecked={toggleChecked}
+              FormVisibility={formVisibility}
+              toggleCancel={toggleCancel}
+              disabled={contactEditFormVisibility || contactMoveFormVisibility}
+            />
+        </Grid>
+
+        
       </Grid>
       <Grid container spacing={1} direction="row" justifyContent="flex-start">
         {contacts.length === 0 && (
@@ -237,8 +268,7 @@ export default function CustomerContactList(currentContact = null) {
                         >
                           
                           <StyledCardWrapper
-                            condition1={activeCardIndex !== contact._id}
-                            condition2={activeCardIndex === contact._id}
+                            condition={activeCardIndex === contact._id}
                             isMobile={isMobile}
                           >
                             <CardActionArea

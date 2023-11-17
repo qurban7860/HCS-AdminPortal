@@ -50,7 +50,9 @@ export default function ConfigViewForm() {
   const defaultValues = useMemo(
     () => ({
       name: config?.name,
+      type: config?.type || '',
       value: config?.value || '',
+      notes: config?.notes || '',
       isActive: config?.isActive,
       createdAt: config?.createdAt || '',
       createdByFullName: config?.createdBy?.name || '',
@@ -73,8 +75,9 @@ export default function ConfigViewForm() {
         />
         <Grid container sx={{mt:2}}>
           <ViewFormField sm={12} heading="Name" param={defaultValues.name} />
-          <ViewFormField sm={12} heading="Value" param={defaultValues.value} />
-
+          <ViewFormField sm={6} heading="Type" param={defaultValues.type} />
+          <ViewFormField sm={6} heading="Value" param={defaultValues.value} />
+          <ViewFormField sm={12} heading="Notes" param={defaultValues.notes} />
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
       </Grid>

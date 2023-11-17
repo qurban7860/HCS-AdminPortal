@@ -1,4 +1,3 @@
-// import { useParams } from 'react-router-dom';
 // @mui
 import { Container, Card } from '@mui/material';
 // redux

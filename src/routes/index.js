@@ -19,6 +19,9 @@ import {
   Authenticate,
   // Dashboard: General
   GeneralAppPage,
+  MachineByModelsViewForm,
+  MachineByYearsViewForm,
+  MachineByCountriesViewForm,
   // User
   SecurityUserList,
   SecurityUserEdit,
@@ -110,12 +113,6 @@ import {
   RoleAdd,
   RoleView,
   RoleEdit,
-
-  // USER CONFIG
-  UserConfigList,
-  UserConfigAddForm,
-  UserConfigEditForm,
-  UserConfigViewForm,
 
   // Site
   SiteList,
@@ -215,9 +212,16 @@ import {
   ComingSoonPage,
   MaintenancePage,
   ErrorPage,
-  UserInviteLanding
+  UserInviteLanding,
+  BlockedCustomerAddForm,
+  BlockedCustomerList,
+  BlockedUserList,
+  BlockedUserAddForm,
+  BlacklistIPList,
+  BlacklistIPAddForm,
+  WhitelistIPList,
+  WhitelistIPAddForm,
 } from './elements';
-
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -273,6 +277,9 @@ export default function Router() {
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'app', element: <GeneralAppPage /> },
+        { path: 'machineByCountries', element: <MachineByCountriesViewForm /> },
+        { path: 'machineByModels', element: <MachineByModelsViewForm /> },
+        { path: 'machineByYears', element: <MachineByYearsViewForm /> },
         { path: 'permission-denied', element: <PermissionDeniedPage /> },
         { path: 'blank', element: <BlankPage /> },
       ],
@@ -370,6 +377,7 @@ export default function Router() {
                 path: 'serviceRecordConfigs',
                 children:[
                   {path: 'new', element: <ServiceRecordConfigAddForm/>},
+                  {path: ':id/copy', element: <ServiceRecordConfigAddForm/>},
                   {path: 'list', element: <ServiceRecordConfigList/>},
                   {path: ':id/view', element: <ServiceRecordConfigView/>},
                   {path: 'viewform', element: <ServiceRecordConfigViewForm/>},
@@ -497,7 +505,40 @@ export default function Router() {
             { path: ':id/edit', element: <SecurityUserEdit /> },
             { path: ':id/view', element: <SecurityUserViewForm /> },
           ],
-        }, 
+        },
+        {
+          path: 'config',
+          children: [
+            {
+              path: 'blockedCustomer',
+              children: [
+                { path: 'list', element: <BlockedCustomerList /> },
+                { path: 'new', element: <BlockedCustomerAddForm /> },
+              ],
+            },
+            {
+              path: 'blockedUser',
+              children: [
+                { path: 'list', element: <BlockedUserList /> },
+                { path: 'new', element: <BlockedUserAddForm /> },
+              ],
+            },
+            {
+              path: 'blacklistIP',
+              children: [
+                { path: 'list', element: <BlacklistIPList /> },
+                { path: 'new', element: <BlacklistIPAddForm /> },
+              ],
+            },
+            {
+              path: 'whitelistIP',
+              children: [
+                { path: 'list', element: <WhitelistIPList /> },
+                { path: 'new', element: <WhitelistIPAddForm /> },
+              ],
+            },
+          ]
+        },
         { path: 'permission-denied', element: <PermissionDeniedPage /> },
         { path: 'blank', element: <BlankPage /> },
       ],
@@ -574,22 +615,12 @@ export default function Router() {
           ],
         },
         {
-          path: 'userConfig',
-          children: [
-            { path: 'list', element: <UserConfigList /> },
-            { path: 'new', element: <UserConfigAddForm /> },
-            { path: ':id/view', element: <UserConfigViewForm /> },
-            { path: ':id/edit', element: <UserConfigEditForm /> }
-
-          ],
-        },
-        {
           path: 'invite',
           children: [
             { path: 'list', element: <UserInvitationList /> },
             { path: ':id/view', element: <UserInvitationView /> },
           ],
-        },
+        }
       ],
     },
     {
@@ -643,14 +674,14 @@ export default function Router() {
       ],
     },
     { path: 'invite/:id/:code/:expiry', element: <UserInviteLanding /> },
+    { path: '500', element: <Page500 /> },
+    { path: '403', element: <Page403 /> },
+    { path: '404', element: <Page404 /> },
     {
       element: <CompactLayout />,
       children: [
         { path: 'coming-soon', element: <ComingSoonPage /> },
         { path: 'maintenance', element: <MaintenancePage /> },
-        { path: '500', element: <Page500 /> },
-        { path: '404', element: <Page404 /> },
-        { path: '403', element: <Page403 /> },
         { path: 'invalidErrorPage', element: <ErrorPage title='Invalid Code' /> },
         { path: 'expiredErrorPage', element: <ErrorPage title='Invitation Expired' /> },
       ],

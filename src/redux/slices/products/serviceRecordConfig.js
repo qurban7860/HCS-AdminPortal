@@ -21,22 +21,27 @@ const initialState = {
   page: 0,
   rowsPerPage: 100,
   statusTypes: [
-    { _id:1 , name: 'Healthy'},
-    { _id:2 , name: 'Service Required'},
-    { _id:3 , name: 'Under Service'},
-    { _id:4 , name: 'Replacement Required'},
-    { _id:5 , name: 'Replaced Recently'},
-
+    'Healthy',
+    'Service Required',
+    'Under Service',
+    'Replacement Required',
+    'Replaced Recently',
   ],
   recordTypes: [
-    { _id:1 , name: 'Service'},
-    { _id:2 , name: 'Repair'},
-    { _id:3 , name: 'Training'},
-    { _id:4 , name: 'Pre-Install'},
+    { _id:1 , name: 'SERVICE'},
+    { _id:2 , name: 'REPAIR'},
+    { _id:3 , name: 'TRAINING'},
+    { _id:4 , name: 'PRE-INSTALL'},
+    { _id:5 , name: 'INSTALL'},
   ],
   headerFooterTypes: [
     { _id:1 , name: 'Text'},
     { _id:2 , name: 'Image'},
+  ],
+  status: [
+    { _id:1 , name: 'Draft'},
+    { _id:2 , name: 'Submitted'},
+    { _id:3 , name: 'Approved'},
   ]
 };
 
@@ -208,6 +213,7 @@ export function getActiveServiceRecordConfigsForRecords(machineId, type){
         params: {
           isArchived: false,
           isActive: true,
+          status: 'APPROVED',
           recordType: type?.name,
         }
       }
@@ -235,6 +241,42 @@ export function getServiceRecordConfig(id) {
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/serviceRecordsConfig/${id}`);
       dispatch(slice.actions.getServiceRecordConfigSuccess(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+//------------------------------------------------------------------------------
+
+export function approveServiceRecordConfig(id, isVerified) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/serviceRecordsConfig/${id}`,
+      {
+        isVerified: true, 
+      });
+      dispatch(slice.actions.setResponseMessage(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+export function changeConfigStatus(id, status) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/serviceRecordsConfig/${id}`,
+      {
+        status, 
+      });
+      dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -273,19 +315,25 @@ export function addServiceRecordConfig(params) {
 
         /* eslint-disable */
         let data = {
-          recordType: params.recordType?.name,
+          recordType: params.recordType?.name.toUpperCase(),
+          status: params.status,
+          docVersionNo: params.docVersionNo,
+          noOfApprovalsRequired: params.noOfApprovalsRequired,
           header: {},
           footer: {},
-          checkParams: [],
+          originalConfiguration: params.originalConfiguration || null,
           isActive: params.isActive,
         };
         /* eslint-enable */
+        if(params.parentConfig){
+          data.parentConfig = params.parentConfig;
+        }
         if(params.machineModel){
           data.machineModel = params.machineModel?._id;
         }
 
-        if(params.category){
-          data.category = params.category?._id;
+        if(params.machineCategory){
+          data.machineCategory = params.machineCategory?._id;
         }
         if(params.docTitle){
           data.docTitle = params.docTitle;
@@ -334,15 +382,15 @@ export function addServiceRecordConfig(params) {
         if(params.footerRightText){
           data.footer.rightText = params.footerRightText;
         }
-        if(params?.checkParam){
-          data.checkParams = (params?.checkParam || [])
+        if(params?.checkItemLists){
+          data.checkItemLists = (params?.checkItemLists || [])
           .map((param) => ({
-            paramListTitle: param.paramListTitle || '', 
-            paramList: (param.paramList || [])
+            ListTitle: param.ListTitle || '', 
+            checkItems: (param.checkItems || [])
               .map((paramlist) => (paramlist?._id || null))
               .filter((item) => item !== null), 
           }))
-          .filter((param) => param.paramList.length > 0);
+          .filter((param) => param.checkItems.length > 0);
         }
         const response = await axios.post(`${CONFIG.SERVER_URL}products/serviceRecordsConfig`, data);
         dispatch(slice.actions.setResponseMessage(response.data.ServiceRecordConfig));
@@ -362,9 +410,12 @@ export function updateServiceRecordConfig(params,Id) {
     try {
       /* eslint-disable */
       let data = {
-        recordType: params?.recordType?.name,
         docTitle: params?.docTitle,
-        category: params?.category?._id || null,
+        recordType: params?.recordType?.name,
+        status: params.status,
+        docVersionNo: params.docVersionNo,
+        noOfApprovalsRequired: params.noOfApprovalsRequired,
+        machineCategory: params?.machineCategory?._id || null,
         machineModel: params?.machineModel?._id || null,
         textBeforeCheckItems: params?.textBeforeCheckItems,
         textAfterCheckItems: params?.textAfterCheckItems,
@@ -374,7 +425,6 @@ export function updateServiceRecordConfig(params,Id) {
         enableSuggestedSpares: params?.enableSuggestedSpares,
         header: {},
         footer: {},
-        checkParams: [],
         isActive: params.isActive,
       };
 
@@ -395,19 +445,19 @@ export function updateServiceRecordConfig(params,Id) {
       }
 
       // checkParams
-      if(params?.checkParam){
-        data.checkParams = (params?.checkParam || [])
+      if(params?.checkItemLists){
+        data.checkItemLists = (params?.checkItemLists || [])
         .map((param) => ({
-          paramListTitle: param.paramListTitle || '', 
-          paramList: (param.paramList || [])
+          ListTitle: param.ListTitle || '', 
+          checkItems: (param.checkItems || [])
             .map((paramlist) => (paramlist?._id || null))
             .filter((item) => item !== null), 
         }))
-        .filter((param) => param.paramList.length > 0);
+        .filter((param) => param.checkItems.length > 0);
       }else{
-        data.checkParams = [];
+        data.checkItemLists = [];
       }
-      console.log("data : ", data)
+      // console.log("data : ", data)
       await axios.patch(`${CONFIG.SERVER_URL}products/serviceRecordsConfig/${Id}`,
         data
       );

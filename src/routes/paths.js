@@ -48,6 +48,9 @@ export const PATH_DASHBOARD = {
   blank: path(ROOTS_AUTH, '/login'),
   general: {
     app: path(ROOTS_DASHBOARD, '/app'),
+    machineByCountries: path(ROOTS_DASHBOARD, '/machineByCountries'),
+    machineByModels: path(ROOTS_DASHBOARD, '/machineByModels'),
+    machineByYears: path(ROOTS_DASHBOARD, '/machineByYears'),
   },
   asset: {
     root: path(ROOTS_DASHBOARD, '/asset'),
@@ -190,6 +193,7 @@ export const PATH_MACHINE = {
       },
       serviceRecordConfigs: {
         new: (ROOTS_MACHINE, '/products/machines/settings/serviceRecordConfigs/new'),
+        copy: (id) => path(ROOTS_MACHINE, `/machines/settings/serviceRecordConfigs/${id}/copy`),
         list: (ROOTS_MACHINE, '/products/machines/settings/serviceRecordConfigs/list'),
         view: (id) => path(ROOTS_MACHINE, `/machines/settings/serviceRecordConfigs/${id}/view`),
         servicerecordconfigedit: (id) => path(ROOTS_MACHINE, `/machines/settings/serviceRecordConfigs/${id}/edit`),
@@ -233,6 +237,24 @@ export const PATH_SECURITY = {
     demoEdit: path(ROOTS_SECURITY, `/users/reece-chung/edit`),
     signInLogList: path(ROOTS_SECURITY, '/users/signInLogList'),
   },
+  config:{
+    blockedCustomer: {
+      list: path(ROOTS_SECURITY, '/config/blockedCustomer/list'),
+      new: path(ROOTS_SECURITY, `/config/blockedCustomer/new`)
+    },
+    blockedUser: {
+      list: path(ROOTS_SECURITY, '/config/blockedUser/list'),
+      new: path(ROOTS_SECURITY, `/config/blockedUser/new`)
+    },
+    blacklistIP: {
+      list: path(ROOTS_SECURITY, '/config/blacklistIP/list'),
+      new: path(ROOTS_SECURITY, `/config/blacklistIP/new`)
+    },
+    whitelistIP: {
+      list: path(ROOTS_SECURITY, '/config/whitelistIP/list'),
+      new: path(ROOTS_SECURITY, `/config/whitelistIP/new`)
+    },
+  }
 };
 
 export const PATH_SETTING = {
@@ -281,16 +303,10 @@ export const PATH_SETTING = {
     view: (id) => path(ROOTS_SETTING, `/configs/${id}/view`),
     edit: (id) => path(ROOTS_SETTING, `/configs/${id}/edit`)
   },
-  userConfig: {
-    list: path(ROOTS_SETTING, '/userConfig/list'),
-    new: path(ROOTS_SETTING, '/userConfig/new'),
-    view: (id) => path(ROOTS_SETTING, `/userConfig/${id}/view`),
-    edit: (id) => path(ROOTS_SETTING, `/userConfig/${id}/edit`)
-  },
   invite: {
     list: path(ROOTS_SETTING, '/invite/list'),
     view: (id) => path(ROOTS_SETTING, `/invite/${id}/view`)
-  },
+  }
 };
 
 export const PATH_SITEMAP = {

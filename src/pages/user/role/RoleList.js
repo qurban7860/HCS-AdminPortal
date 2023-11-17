@@ -15,7 +15,7 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_SETTING } from '../../../routes/paths';
+import { PATH_PAGE, PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import {
@@ -79,35 +79,35 @@ export default function RoleList() {
   };
 
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
-
   const dispatch = useDispatch();
-
-
   const { enqueueSnackbar } = useSnackbar();
-
   const navigate = useNavigate();
-
   const [filterName, setFilterName] = useState('');
-
   const [tableData, setTableData] = useState([]);
-
   const [filterStatus, setFilterStatus] = useState([]);
-
   const [openConfirm, setOpenConfirm] = useState(false);
-
   const { roles, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.role);
 
-  // console.log("roles : ", roles )
-
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
+  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
+  
   useLayoutEffect(() => {
-    dispatch(getRoles());
-  }, [dispatch]);
+    if(isSuperAdmin){
+      dispatch(getRoles());
+    }
+  }, [dispatch, isSuperAdmin]);
 
   useEffect(() => {
+
+    if(!isSuperAdmin){
+      navigate(PATH_PAGE.page403)
+    }
+
     if (initial) {
       setTableData(roles);
     }
-  }, [roles, initial]);
+  }, [roles, initial, navigate, isSuperAdmin]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -117,11 +117,8 @@ export default function RoleList() {
   });
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
   const denseHeight = 60;
-
   const isFiltered = filterName !== '' || !!filterStatus.length;
-
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   const handleOpenConfirm = () => {
@@ -218,7 +215,7 @@ export default function RoleList() {
             // mt: '24px',
           }}
         >
-          <Cover generalSettings="enabled" name="Roles" icon="ph:users-light" />
+          <Cover generalSettings name="Roles" icon="ph:users-light" />
         </Card>
 
         <TableCard>
@@ -291,11 +288,6 @@ export default function RoleList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
-
-                  {/* <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  /> */}
 
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>

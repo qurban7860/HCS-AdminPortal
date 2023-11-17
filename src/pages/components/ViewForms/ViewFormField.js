@@ -72,7 +72,11 @@ function ViewFormField({
           heading === 'Machine Model' ||
           heading === 'Customer' ||
           heading === 'Machine' ||
-          heading === 'Profile'
+          heading === 'Profile' ||
+          heading === 'Service Date' ||
+          heading === 'Service Record Configuration' ||
+          heading === 'Version No' ||
+          heading === 'Status'
             ? 'h4'
             : 'body1'
         }

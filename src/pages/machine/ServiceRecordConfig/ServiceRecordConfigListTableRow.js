@@ -30,7 +30,7 @@ export default function ServiceRecordConfigListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { recordType, category, docTitle, machineModel, isActive, createdAt } = row;
+  const { recordType, category, docTitle, status, docVersionNo, approvals, noOfApprovalsRequired, machineModel, isActive, createdAt } = row;
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
 
@@ -56,9 +56,10 @@ export default function ServiceRecordConfigListTableRow({
     <>
       <TableRow hover selected={selected}>
         <LinkTableCell align="left" onClick={onViewRow} param={docTitle} />
-        <LinkTableCell align="left" onClick={onViewRow} param={recordType} />
-
-      {/* { useScreenSize('lg') && <TableCell >{docTitle || ''}</TableCell>} */}
+        <LinkTableCell align="left" onClick={onViewRow} param={recordType} /> 
+      { useScreenSize('lg') && <TableCell >{status || ''}</TableCell>}
+      { useScreenSize('lg') && <TableCell >{docVersionNo || ''}</TableCell>}
+      { useScreenSize('lg') && <TableCell >{`${approvals?.length || 0}/${noOfApprovalsRequired || 1}`}</TableCell>}
       { useScreenSize('lg') && <TableCell >{(!category && !machineModel && (`* / *`)) ||  
       (category && !machineModel && `${category?.name}/ * `) ||  (!category && machineModel && `* / ${machineModel?.name}`) || (category && machineModel && `${machineModel?.name}`) }</TableCell>}
 

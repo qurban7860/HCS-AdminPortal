@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import {  useMemo, useState, useLayoutEffect } from 'react';
+import {  useMemo, useState, useLayoutEffect, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +19,7 @@ import {
 // global
 // slice
 // routes
-import { PATH_SETTING } from '../../../routes/paths';
+import { PATH_PAGE, PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, {
@@ -46,10 +46,12 @@ export default function RoleEditForm() {
   );
 
   const dispatch = useDispatch();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const navigate = useNavigate();
+
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
+  const isSuperAdmin = userRoles?.some((rolee) => rolee.roleType === 'SuperAdmin');
 
   const EditRoleSchema = Yup.object().shape({
     name: Yup.string().min(2).max(50).required('Name Field is required!'),
@@ -87,14 +89,18 @@ export default function RoleEditForm() {
 
   const {
     reset,
-    watch,
     setValue,
     handleSubmit,
     formState: { isSubmitting },
     trigger,
   } = methods;
 
-  watch();
+  useEffect(() => {
+    if(!isSuperAdmin){
+      navigate(PATH_PAGE.page403)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate, isSuperAdmin]);
 
   useLayoutEffect(() => {
     const filteredRole = roleTypesArray.find((x) => x.key === role?.roleType);

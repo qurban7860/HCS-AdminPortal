@@ -37,12 +37,14 @@ import { FORMLABELS } from '../../constants/default-constants';
 import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
 import { getCustomers, ChangePage, ChangeRowsPerPage, setFilterBy, setVerified, 
-   setCustomerEditFormVisibility } from '../../redux/slices/customer/customer';
+   setCustomerEditFormVisibility, 
+   createCustomerCSV} from '../../redux/slices/customer/customer';
 import { Cover } from '../components/Defaults/Cover';
 import TableCard from '../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
 import { setSiteEditFormVisibility, setSiteFormVisibility } from '../../redux/slices/customer/site';
 import { setContactEditFormVisibility, setContactFormVisibility } from '../../redux/slices/customer/contact';
+import { useSnackbar } from '../../components/snackbar';
 
 // ----------------------------------------------------------------------
 
@@ -73,10 +75,11 @@ export default function CustomerList() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
-  const { customers, filterBy, verified, page, rowsPerPage, isLoading } = useSelector((state) => state.customer);
+  const { customers, filterBy, verified, page, rowsPerPage, isLoading, responseMessage } = useSelector((state) => state.customer);
   const [filterVerify, setFilterVerify] = useState(verified);
   const [filterName, setFilterName] = useState(filterBy);
   
@@ -151,6 +154,16 @@ export default function CustomerList() {
     setFilterStatus([]);
   };
 
+  const onExportCSV = async () => {
+    const response = dispatch(await createCustomerCSV());
+    response.then((res) => {
+      enqueueSnackbar('CSV Generated Successfully');
+    }).catch((error) => {
+      console.error(error);
+      enqueueSnackbar(error.message, { variant: `error` });
+    });
+  };
+
   return (
     <Container maxWidth={false}>
         <StyledCardContainer>
@@ -176,6 +189,7 @@ export default function CustomerList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
+            onExportCSV={onExportCSV}
           />}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <TableSelectedAction
@@ -224,11 +238,7 @@ export default function CustomerList() {
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                     )
                   )}
-
-                {/* <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  /> */}
+                  <TableNoData isNotFound={isNotFound} />
 
               </TableBody>
             </Table>
@@ -242,9 +252,6 @@ export default function CustomerList() {
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
         />}
-        <Grid item md={12}>
-          <TableNoData isNotFound={isNotFound} />
-        </Grid>
       </TableCard>
 
       <ConfirmDialog

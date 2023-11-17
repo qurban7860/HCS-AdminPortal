@@ -298,10 +298,6 @@ export default function DocumentCategoryList() {
                       )
                     )}
 
-                  {/* <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  /> */}
 
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>

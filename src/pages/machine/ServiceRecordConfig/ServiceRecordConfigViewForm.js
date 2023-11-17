@@ -10,19 +10,21 @@ import { Card, Grid, Typography, TableBody, Table, TableContainer } from '@mui/m
 import {
   getServiceRecordConfig,
   setServiceRecordConfigEditFormVisibility,
+  approveServiceRecordConfig,
+  changeConfigStatus,
   deleteServiceRecordConfig,
 } from '../../../redux/slices/products/serviceRecordConfig';
 import { useSnackbar } from '../../../components/snackbar';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
-// Iconify
-// import Iconify from '../../../components/iconify/Iconify';
 //  components
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormAprovedSubmit from '../../components/ViewForms/ViewFormAprovedSubmit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import CollapsibleCheckedItemRow from './CollapsibleCheckedItemRow';
+import { Snacks } from '../../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -42,7 +44,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
   const navigate = useNavigate();
   const { serviceRecordConfig, editFormVisibility } = useSelector((state) => state.serviceRecordConfig);
   const { id } = useParams();
-
+  const VerificationIndex = serviceRecordConfig?.verifications?.length || 1
   const dispatch = useDispatch();
   useLayoutEffect(() => {
     if (id != null) {
@@ -52,11 +54,13 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
   const defaultValues = useMemo(
     () => ({
       recordType: serviceRecordConfig?.recordType || '',
-      category: serviceRecordConfig?.category?.name || '',
+      status: serviceRecordConfig?.status || '',
+      docVersionNo: serviceRecordConfig?.docVersionNo || '',
+      machineCategory: serviceRecordConfig?.machineCategory?.name || '',
       machineModel: serviceRecordConfig?.machineModel?.name || '',
       docTitle: serviceRecordConfig?.docTitle || '',
       textBeforeCheckItems: serviceRecordConfig?.textBeforeCheckItems || '',
-      checkParams: serviceRecordConfig?.checkParams || [],
+      checkItemLists: serviceRecordConfig?.checkItemLists ,
       textAfterCheckItems: serviceRecordConfig?.textAfterCheckItems || '',
       isOperatorSignatureRequired: serviceRecordConfig?.isOperatorSignatureRequired,
       enableNote: serviceRecordConfig?.enableNote,
@@ -71,6 +75,9 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
       updatedByFullName: serviceRecordConfig?.updatedBy?.name || '',
       updatedAt: serviceRecordConfig?.updatedAt || '',
       updatedIP: serviceRecordConfig?.updatedIP || '',
+      submittedInfo: serviceRecordConfig?.submittedInfo || {},
+      approvedInfo: serviceRecordConfig?.approvals || [],
+
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentServiceRecordConfig, serviceRecordConfig]
@@ -79,7 +86,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
   const onDelete = async () => {
     try {
       await dispatch(deleteServiceRecordConfig(id));
-      enqueueSnackbar('ServiceRecordConfig Deleted Successfullty!');
+      enqueueSnackbar('Service record configuration Deleted Successfullty!');
       navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.list);
     } catch (err) {
       // if(err.Message){
@@ -89,19 +96,70 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
       // }else{
       //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
       // }
-      enqueueSnackbar('ServiceRecordConfig delete failed!', { variant: `error` });
+      enqueueSnackbar('Service record configuration delete failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };
+
+  const handleVerification = async () => {
+    try {
+      await dispatch(approveServiceRecordConfig(serviceRecordConfig._id, true));
+      await dispatch(getServiceRecordConfig(serviceRecordConfig._id));
+      enqueueSnackbar(Snacks.configuration_approve_Success);
+    } catch (error) {
+      console.log(error);
+      enqueueSnackbar(error, { variant: 'error' });
+    }
+  };
+
+
+  const returnToDraft = async () => {
+    try {
+      await dispatch(changeConfigStatus(serviceRecordConfig._id, 'DRAFT'));
+      await dispatch(getServiceRecordConfig(serviceRecordConfig._id));
+      enqueueSnackbar('Document is submitted for draft!');
+    } catch (error) {
+      console.log(error);
+      enqueueSnackbar(error, { variant: 'error' });
+    }
+  };
+  
+  const returnToSubmitted = async () => {
+    try {
+      await dispatch(changeConfigStatus(serviceRecordConfig._id, 'SUBMITTED'));
+      await dispatch(getServiceRecordConfig(serviceRecordConfig._id));
+      enqueueSnackbar('Document is submitted for approval!');
+    } catch (error) {
+      console.log(error);
+      enqueueSnackbar(error, { variant: 'error' });
+    }
+  };
+  
   return (
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.list)} />
+      <ViewFormEditDeleteButtons 
+        isActive={defaultValues.isActive} 
+        approvers={serviceRecordConfig?.approvals }
+        approveConfiglength={`${serviceRecordConfig?.approvals?.length || 0}/${serviceRecordConfig?.noOfApprovalsRequired || 1 }`}
+        isSubmitted={!serviceRecordConfig?.approvals?.length > 0 && defaultValues?.status.toLowerCase() === 'submitted' && defaultValues?.status.toLowerCase() !== 'approved' && returnToDraft } 
+        returnToSubmitted={defaultValues?.status.toLowerCase() === 'draft' && defaultValues?.status.toLowerCase() !== 'approved' && returnToSubmitted } 
+        approveConfig={ serviceRecordConfig?.approvals?.length >= serviceRecordConfig?.noOfApprovalsRequired} 
+        approveHandler={defaultValues?.status.toLowerCase() === 'submitted' && 
+        serviceRecordConfig?.approvals?.length < serviceRecordConfig?.noOfApprovalsRequired && handleVerification}
+        handleVerificationTitle="Approve"
+        copyConfiguration={defaultValues?.status.toLowerCase() === 'approved' && (() => navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.copy(serviceRecordConfig._id)))}
+        handleEdit={defaultValues?.status.toLowerCase() !== 'approved' && defaultValues?.status.toLowerCase() !== 'submitted' && toggleEdit } 
+        onDelete={onDelete} 
+        backLink={() => navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.list)} 
+      />
       <Grid container sx={{mt:2}}>
         <ViewFormField sm={6} heading="Document Title" param={defaultValues?.docTitle} />
         <ViewFormField sm={6} heading="Document Type" param={defaultValues?.recordType} />
+        <ViewFormField sm={6} heading="Status" param={defaultValues?.status} />
+        <ViewFormField sm={6} heading="Version No." param={defaultValues?.docVersionNo} />
       </Grid>
       <Grid container>
-        <ViewFormField sm={6} heading="Machine Category" param={defaultValues?.category} />
+        <ViewFormField sm={6} heading="Machine Category" param={defaultValues?.machineCategory} />
         <ViewFormField sm={6} heading="Machine Model" param={defaultValues?.machineModel} />
       </Grid>
       <Grid container>  
@@ -111,8 +169,8 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
           Check Items
         </Typography>
         {/* <Grid item md={12}>  */}
-        {defaultValues?.checkParams?.length > 0 ? (defaultValues?.checkParams.map((row, index) =>
-          ( typeof row?.paramList?.length === 'number' && row?.paramList?.length > 0 ? 
+        {defaultValues?.checkItemLists?.length > 0 ? (defaultValues?.checkItemLists.map((row, index) =>
+          ( typeof row?.checkItems?.length === 'number' && row?.checkItems?.length > 0 ? 
             <TableContainer >
                 <Table>
                     <TableBody>
@@ -150,6 +208,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
         <ViewFormField sm={4} heading="Footer Center Text" param={defaultValues?.footer?.centerText} />
         <ViewFormField sm={4} heading="Footer Right Text" param={defaultValues?.footer?.rightText} />
       </Grid>
+        <ViewFormAprovedSubmit submittedInfo={defaultValues?.submittedInfo} approvedInfo={defaultValues.approvedInfo} />
         <ViewFormAudit defaultValues={defaultValues} />
     </Card>
   );

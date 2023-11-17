@@ -18,18 +18,21 @@ const initialState = {
   page: 0,
   rowsPerPage: 100,
   inputTypes: [
-    { _id:4 , name: 'Boolean'},
-    { _id:1 , name: 'Short Text'},
-    { _id:2 , name: 'Long Text'},
-    { _id:3 , name: 'Number'},
+    { _id:1 , name: 'Boolean'},
+    { _id:2 , name: 'Date'},
+    { _id:3 , name: 'Long Text'},
+    { _id:4 , name: 'Number'},
+    { _id:5 , name: 'Short Text'},
+    { _id:6 , name: 'Status'},
+
   ],
   unitTypes: [
-    { _id:1 , name: 'Milimeter'},
-    { _id:2 , name: 'Meter'},
+    { _id:1 , name: 'Cycle'},
+    { _id:2 , name: 'Feet'},
     { _id:3 , name: 'Inches'},
-    { _id:4 , name: 'Feet'},
-    { _id:4 , name: 'Unit'},
-    { _id:4 , name: 'Cycle'},
+    { _id:4 , name: 'Meter'},
+    { _id:5 , name: 'Milimeter'},
+    { _id:6 , name: 'Unit'},
   ],
 };
 

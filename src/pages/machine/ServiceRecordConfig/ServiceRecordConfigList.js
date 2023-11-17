@@ -37,7 +37,9 @@ import { FORMLABELS } from '../../../constants/default-constants';
 const TABLE_HEAD = [
   { id: 'docTitle', label: 'Document Title', align: 'left' },
   { id: 'recordType', label: 'Document Type', align: 'left' },
-  // { id: 'category', label: 'Category', align: 'left' },
+  { id: 'status', visibility: 'md1', label: 'Status', align: 'left' },
+  { id: 'docVersionNo', visibility: 'md1', label: 'Version No.', align: 'left' },
+  { id: 'verifications', visibility: 'md1', label: 'Approvals', align: 'left' },
   { id: 'machineModel.name', visibility: 'md1', label: 'Machine Model', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
@@ -62,7 +64,7 @@ export default function ServiceRecordConfigList() {
     onSort,
     // onChangePage,
     // onChangeRowsPerPage,
-  } = useTable({ });
+  } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
 
   const dispatch = useDispatch();
   // const { themeStretch } = useSettingsContext();
@@ -89,7 +91,6 @@ export default function ServiceRecordConfigList() {
   // }, [dispatch]);
 
   useLayoutEffect(() => {
-    // console.log('Testing done')
     dispatch(getServiceRecordConfigs());
   }, [dispatch]);
 
@@ -338,6 +339,9 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
       (serviceConfig) =>
         serviceConfig?.recordType?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         serviceConfig?.docTitle?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        serviceConfig?.status?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        serviceConfig?.docVersionNo?.toString().indexOf(filterName.toLowerCase()) >= 0 ||
+        serviceConfig?.verifications?.length?.toString().indexOf(filterName.toLowerCase()) >= 0 ||
         serviceConfig?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         serviceConfig?.machineModel?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
         fDate(serviceConfig?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0

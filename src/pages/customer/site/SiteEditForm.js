@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
-import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
+import { MuiTelInput } from 'mui-tel-input';
 // import { LoadingButton } from '@mui/lab';
 import {
   Box,
@@ -171,20 +171,6 @@ export default function SiteEditForm() {
     dispatch(setSiteEditFormVisibility(false));
   };
 
-  const handlePhoneChange = (newValue) => {
-    matchIsValidTel(newValue)
-    if(newValue.length < 17){
-      setPhone(newValue);
-    }
-  };
-
-  const handleFaxChange = (newValue) => {
-    matchIsValidTel(newValue)
-    if(newValue.length < 17){
-      setFaxVal(newValue);
-    }
-  };
-
   const onSubmit = async (data) => {
     try {
       if (phone && phone.length > 4) {
@@ -241,7 +227,8 @@ export default function SiteEditForm() {
                   name="phone"
                   label="Phone Number"
                   flagSize="medium"
-                  onChange={handlePhoneChange}
+                  onChange={(newValue)=>setPhone(newValue)}
+                  inputProps={{maxLength:13}}
                   forceCallingCode
                   defaultCountry="NZ"
                 />
@@ -252,7 +239,8 @@ export default function SiteEditForm() {
                   name="fax"
                   label="Fax"
                   flagSize="medium"
-                  onChange={handleFaxChange}
+                  onChange={(newValue)=>setFaxVal(newValue)}
+                  inputProps={{maxLength:13}}
                   forceCallingCode
                   defaultCountry="NZ"
                 />

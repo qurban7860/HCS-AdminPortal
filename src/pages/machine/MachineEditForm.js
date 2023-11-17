@@ -140,7 +140,7 @@ export default function MachineEditForm() {
       category: machine?.machineModel?.category || null,
       machineModel: machine?.machineModel || null,
       customer: machine.customer || null,
-      machineConnectionVal: machine.machineConnections || [],
+      machineConnectionVal: machine?.machineConnections?.map((connection)=> connection?.connectedMachine) || [],
       status: machine.status || null,
       workOrderRef: machine.workOrderRef || '',
       instalationSite: machine.instalationSite || null,
@@ -192,7 +192,6 @@ export default function MachineEditForm() {
     // description,
     // isActive,
   } = watch();
-
   useEffect(() => {
     if(category === null){
       // dispatch(resetActiveMachineModels())
@@ -205,7 +204,6 @@ export default function MachineEditForm() {
       setValue('machineModel',null);
     }
   },[dispatch, category,setValue,machineModel]);
-
 
   useLayoutEffect(() => {
     // window.history.pushState({}, null, `/products/machines/${machine._id}/edit`);
@@ -701,10 +699,10 @@ export default function MachineEditForm() {
                     {...field}
                     name="machineConnectionVal"
                     id="tags-outlined"
-                    options={machineConnections}
+                    options={machineConnections?.filter((machinforConnection)=> machinforConnection?._id !== machine?._id)}
                     getOptionLabel={(option) => `${option?.connectedMachine?.serialNo ? option?.connectedMachine?.serialNo : option?.serialNo} ${option?.name ? '-' : ''} ${option?.name ? option.name : ''}`}
                     filterSelectedOptions
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     onChange={(event, value) => field.onChange(value)}
                     renderInput={(params) => (
                       <TextField 

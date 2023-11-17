@@ -116,8 +116,8 @@ export default function ModuleList() {
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
-    filterRole,
     filterStatus,
+    filterRole
   });
 
   // const dataInPage = dataFiltered?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
@@ -169,7 +169,7 @@ export default function ModuleList() {
     <>
       <Container maxWidth={false}>
         <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
-          <Cover generalSettings="enabled" name="Modules" icon="ph:users-light" />
+          <Cover generalSettings name="Modules" icon="ph:users-light" />
         </Card>
         <Card>
           <ModuleListTableToolbar

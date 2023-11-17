@@ -24,9 +24,6 @@ import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
 import { getCustomer , setCustomerDialog } from '../../redux/slices/customer/customer';
 import { getContact , setContactDialog } from '../../redux/slices/customer/contact';
 import { Cover } from '../components/Defaults/Cover';
-// import DialogLabel from '../components/Dialog/DialogLabel';
-// import DialogLink from '../components/Dialog/DialogLink';
-// import FormLabel from '../components/DocumentForms/FormLabel';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
@@ -53,22 +50,27 @@ export default function SecurityUserProfile() {
   }, [dispatch, userId, initial]);
 
   useEffect(() => {
-    batch(() => {
-      if (userId && securityUser?.customer?._id) {
-        dispatch(getCustomer(securityUser?.customer?._id));
-      }
-      if (userId && securityUser?.contact?._id) {
-        dispatch(getContact(securityUser?.customer?._id, securityUser?.contact?._id));
-      }
-    });
-  }, [dispatch, userId, securityUser]);
+    dispatch(setCustomerDialog(false));
+    dispatch(setContactDialog(false));
+  }, [dispatch]);
 
   // const handleViewCustomer = (id) => {
   //   navigate(PATH_SECURITY.users.view(id));
   // };
 
-  const handleCustomerDialog = () =>{dispatch(setCustomerDialog(true))}
-  const handleContactDialog = () =>{dispatch(setContactDialog(true))}
+  const handleCustomerDialog = () =>{
+    dispatch(setCustomerDialog(true))
+    if (userId && securityUser?.customer?._id) {
+      dispatch(getCustomer(securityUser?.customer?._id));
+    }
+  }
+
+  const handleContactDialog = () =>{
+    dispatch(setContactDialog(true))
+    if (userId && securityUser?.contact?._id) {
+      dispatch(getContact(securityUser?.customer?._id, securityUser?.contact?._id));
+    }
+  }
 
   const handleEdit = () => {
     dispatch(setSecurityUserEditFormVisibility(true));
