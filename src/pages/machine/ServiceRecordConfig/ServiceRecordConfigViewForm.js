@@ -86,7 +86,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
   const onDelete = async () => {
     try {
       await dispatch(deleteServiceRecordConfig(id));
-      enqueueSnackbar('ServiceRecordConfig Deleted Successfullty!');
+      enqueueSnackbar('Service record configuration Deleted Successfullty!');
       navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.list);
     } catch (err) {
       // if(err.Message){
@@ -96,7 +96,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
       // }else{
       //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
       // }
-      enqueueSnackbar('ServiceRecordConfig delete failed!', { variant: `error` });
+      enqueueSnackbar('Service record configuration delete failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };
@@ -120,7 +120,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
       enqueueSnackbar('Document is submitted for draft!');
     } catch (error) {
       console.log(error);
-      enqueueSnackbar(Snacks.configuration_Verification_Failed, { variant: 'error' });
+      enqueueSnackbar(error, { variant: 'error' });
     }
   };
   
@@ -131,7 +131,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
       enqueueSnackbar('Document is submitted for approval!');
     } catch (error) {
       console.log(error);
-      enqueueSnackbar(Snacks.configuration_Verification_Failed, { variant: 'error' });
+      enqueueSnackbar(error, { variant: 'error' });
     }
   };
   

@@ -64,7 +64,7 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
           </Grid>
         }
         {childRow?.historicalData && childRow?.historicalData?.length > 0 &&  <>
-            <HistoryDropDownUpIcons activeIndex={`${activeIndex || ''}`} indexValue={`${index}${childIndex}`} onClick={handleAccordianClick}/>
+            <HistoryDropDownUpIcons showTitle="Show History" hideTitle="Hide History" activeIndex={`${activeIndex || ''}`} indexValue={`${index}${childIndex}`} onClick={handleAccordianClick}/>
           </>}
       </Grid>
 
