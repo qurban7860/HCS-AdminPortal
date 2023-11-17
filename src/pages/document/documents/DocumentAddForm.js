@@ -724,25 +724,25 @@ function DocumentAddForm({
 
                 {selectedValue === 'new' && machineDrawings && (
                   <>
-
                   <Box
-                    rowGap={3}
+                    rowGap={0}
                     columnGap={2}
                     display="grid"
+                    sx={{mb:0}}
                     gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                   >
                     <RHFTextField name='stockNumber' label='Stock Number' />
                     <RHFTextField name='referenceNumber' label='Reference Number' />
-                    <RHFTextField name='versionNo' label='Version Number' /> 
-
+                    
                   </Box>
 
                     <Box
-                      rowGap={3}
+                      rowGap={2}
                       columnGap={2}
                       display="grid"
                       gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(1, 1fr)' }}
                     >
+                    <RHFTextField name='versionNo' label='Version Number' /> 
                     <RHFAutocomplete
                       // multiple 
                       value={customerVal || null}

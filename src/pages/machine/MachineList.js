@@ -91,7 +91,6 @@ export default function MachineList() {
   const { enqueueSnackbar } = useSnackbar();
 
   useLayoutEffect(() => {
-    dispatch(getMachines());
     dispatch(resetMachine());
     dispatch(resetToolInstalled());
     dispatch(resetToolsInstalled());
@@ -103,6 +102,8 @@ export default function MachineList() {
     dispatch(resetNotes());
     dispatch(resetMachineDocument());
     dispatch(resetMachineDocuments());
+    
+    dispatch(getMachines());
   }, [dispatch]);
 
   const [filterVerify, setFilterVerify] = useState(verified);

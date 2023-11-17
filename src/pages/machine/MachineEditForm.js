@@ -140,7 +140,7 @@ export default function MachineEditForm() {
       category: machine?.machineModel?.category || null,
       machineModel: machine?.machineModel || null,
       customer: machine.customer || null,
-      machineConnectionVal: machine.machineConnections.map((connection)=> connection.connectedMachine) || [],
+      machineConnectionVal: machine?.machineConnections?.map((connection)=> connection?.connectedMachine) || [],
       status: machine.status || null,
       workOrderRef: machine.workOrderRef || '',
       instalationSite: machine.instalationSite || null,
@@ -205,7 +205,6 @@ export default function MachineEditForm() {
     }
   },[dispatch, category,setValue,machineModel]);
 
-console.log("machineConnectionVal : ",machineConnectionVal)
   useLayoutEffect(() => {
     // window.history.pushState({}, null, `/products/machines/${machine._id}/edit`);
     dispatch(getActiveCustomers());
