@@ -20,7 +20,10 @@ export default function IconPopover({
   sites,
   onMapClick,
   multiAuth,
-  currentEmp
+  currentEmp,
+  isViewAllVersions,
+  isNewVersion,
+  onClick,
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const isPopoverOpen = Boolean(anchorEl);
@@ -38,15 +41,14 @@ export default function IconPopover({
       {/* isActive Icon */}
       {isActive !== undefined && (
         <>
-          
-            <Iconify
+          <Iconify
             onMouseEnter={handlePopoverOpen}
             onMouseLeave={handlePopoverClose}
-              heading={isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading}
-              icon={isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon}
-              style={{ color: isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color }}
-              width={ICONS.size}
-            />
+            heading={isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading}
+            icon={isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon}
+            style={{ color: isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color }}
+            width={ICONS.size}
+          />
           <StyledPopover
             open={isPopoverOpen}
             anchorEl={anchorEl}
@@ -71,8 +73,8 @@ export default function IconPopover({
         </>
       )}
 
-           {/* Back Link icon */}
-           {backLink && (
+      {/* Back Link icon */}
+      {backLink && (
         <>
           <IconButton
             aria-label={ICONS.BACK_LINK.heading}
@@ -101,10 +103,7 @@ export default function IconPopover({
             }}
             id="mouse-over-popover"
           >
-            <Typography
-              variant="overline"
-              color={themes.palette.primary.main}
-            >
+            <Typography variant="overline" color={themes.palette.primary.main}>
               {ICONS.BACK_LINK.heading}
             </Typography>
           </StyledPopover>
@@ -276,6 +275,72 @@ export default function IconPopover({
         </>
       )}
 
+      {/* view all versions Icon */}
+      {isViewAllVersions !== undefined && (
+        <>
+          <IconButton
+            aria-label={ICONS.VIEW_VERSIONS.heading}
+            onMouseEnter={handlePopoverOpen}
+            onMouseLeave={handlePopoverClose}
+            onClick={onClick}
+          >
+            <Iconify
+              {...ICONS.VIEW_VERSIONS}
+              // dont display if new version icon is displayed
+              iconStyle={{ display: isNewVersion ? 'none' : 'block' }}
+            />
+          </IconButton>
+          <StyledPopover
+            open={isPopoverOpen}
+            anchorEl={anchorEl}
+            onClose={handlePopoverClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'center',
+            }}
+          >
+            <Typography variant={ICONS.variant} color={themes.palette.primary.main}>
+              {ICONS.VIEW_VERSIONS.heading}
+            </Typography>
+          </StyledPopover>
+        </>
+      )}
+
+       {/* new active version Icon */}
+       {isNewVersion !== undefined && (
+        <>
+          <IconButton
+            aria-label={ICONS.ADD_NEW_VERSION.heading}
+            onMouseEnter={handlePopoverOpen}
+            onMouseLeave={handlePopoverClose}
+            onClick={onClick}
+          >
+            <Iconify {...ICONS.ADD_NEW_VERSION} />
+          </IconButton>
+          <StyledPopover
+            open={isPopoverOpen}
+            anchorEl={anchorEl}
+            onClose={handlePopoverClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'center',
+            }}
+          >
+            <Typography variant={ICONS.variant} color={themes.palette.primary.main}>
+              {ICONS.ADD_NEW_VERSION.heading}
+            </Typography>
+          </StyledPopover>
+        </>
+      )}
+
       {/* documentIsActive icon */}
       {documentIsActive !== undefined && (
         <>
@@ -324,8 +389,8 @@ export default function IconPopover({
         </>
       )}
 
-       {/* MultiAuth icon */}
-       {multiAuth !== undefined && (
+      {/* MultiAuth icon */}
+      {multiAuth !== undefined && (
         <>
           <IconButton
             aria-label={
@@ -341,9 +406,7 @@ export default function IconPopover({
               }
               icon={multiAuth ? ICONS.MULTIAUTH_ACTIVE.icon : ICONS.MULTIAUTH_INACTIVE.icon}
               style={{
-                color: multiAuth
-                  ? ICONS.MULTIAUTH_ACTIVE.color
-                  : ICONS.MULTIAUTH_INACTIVE.color,
+                color: multiAuth ? ICONS.MULTIAUTH_ACTIVE.color : ICONS.MULTIAUTH_INACTIVE.color,
               }}
               width={ICONS.size}
             />
@@ -373,8 +436,8 @@ export default function IconPopover({
         </>
       )}
 
-       {/* currentEmp icon */}
-       {currentEmp !== undefined && (
+      {/* currentEmp icon */}
+      {currentEmp !== undefined && (
         <>
           <IconButton
             aria-label={
@@ -385,14 +448,10 @@ export default function IconPopover({
             onMouseLeave={handlePopoverClose}
           >
             <Iconify
-              heading={
-                currentEmp ? ICONS.CURR_EMP_ACTIVE.heading : ICONS.CURR_EMP_INACTIVE.heading
-              }
+              heading={currentEmp ? ICONS.CURR_EMP_ACTIVE.heading : ICONS.CURR_EMP_INACTIVE.heading}
               icon={currentEmp ? ICONS.CURR_EMP_ACTIVE.icon : ICONS.CURR_EMP_INACTIVE.icon}
               style={{
-                color: currentEmp
-                  ? ICONS.CURR_EMP_ACTIVE.color
-                  : ICONS.CURR_EMP_INACTIVE.color,
+                color: currentEmp ? ICONS.CURR_EMP_ACTIVE.color : ICONS.CURR_EMP_INACTIVE.color,
               }}
               width={ICONS.size}
             />
@@ -514,7 +573,10 @@ IconPopover.propTypes = {
   customerAccess: PropTypes.bool,
   sites: PropTypes.array,
   onMapClick: PropTypes.func,
-  multiAuth:PropTypes.bool,
-  currentEmp:PropTypes.bool,
+  multiAuth: PropTypes.bool,
+  currentEmp: PropTypes.bool,
   backLink: PropTypes.func,
+  isViewAllVersions: PropTypes.bool,
+  isNewVersion: PropTypes.bool,
+  onClick: PropTypes.func,
 };
