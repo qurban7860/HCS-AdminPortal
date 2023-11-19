@@ -14,7 +14,7 @@ export function useWebSocketContext() {
 }
 
 WebSocketProvider.propTypes = {
-children: PropTypes.node,
+  children: PropTypes.node,
 };
 
 export function WebSocketProvider({ children }) {
@@ -32,10 +32,10 @@ export function WebSocketProvider({ children }) {
       if (event.data instanceof Blob) {
         // Handle Blob data here, for example, you can use FileReader to read its content
         const reader = new FileReader();
-        reader.onload = function() {
+        reader.onload = function () {
           const blobData = JSON.parse(reader.result);
-          if(blobData.eventName==="logout"){          
-            window.location.reload();  
+          if (blobData.eventName === 'logout') {
+            window.location.reload();
           }
           // Now you can work with the blobData
         };
@@ -54,21 +54,17 @@ export function WebSocketProvider({ children }) {
     share: true,
     filter: () => false,
     retryOnError: true,
-    shouldReconnect: () => true
+    shouldReconnect: () => true,
   });
 
   useEffect(() => {
-    if(isAuthenticated){
+    if (isAuthenticated) {
       const accessToken = localStorage.getItem('accessToken');
       setToken(accessToken);
     }
   }, [isAuthenticated]); // Empty dependency array ensures this effect runs once on mount
-  
+
   const contextValue = useMemo(() => ({ sendMessage, readyState }), [sendMessage, readyState]);
 
-  return (
-    <WebSocketContext.Provider value={contextValue}>
-      {children}
-    </WebSocketContext.Provider>
-  );
+  return <WebSocketContext.Provider value={contextValue}>{children}</WebSocketContext.Provider>;
 }
