@@ -1,5 +1,5 @@
 import { styled, alpha } from '@mui/material/styles';
-import { Popover, Stack, Card, Container, TableRow } from '@mui/material';
+import { Popover, Stack, Card, Chip, Container, TableRow } from '@mui/material';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { bgBlur, bgGradient } from '../../utils/cssStyles';
 
@@ -79,7 +79,20 @@ export const StyledTooltipSliding = styled(({ className, ...props }) => (
     backgroundColor: 'transparent',
   },
 }));
+export const StyledVersionChip = styled(Chip)(({ theme, pointer }) => ({
+  margin: theme.spacing(0.2),
+  backgroundColor: alpha(theme.palette.primary.main, 0.08),
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.primary.light, 0.25),
+  },
+  fontSize: '1.5rem',
+  fontWeight: 'bold',
+  color: theme.palette.primary.main,
 
+  // change mui chip padding top and bottom
+  paddingTop: theme.spacing(0.5),
+  paddingBottom: theme.spacing(0.5),
+}));
 export const StyledStack = styled(Stack)(({ theme }) => ({
   justifyContent: 'flex-end',
   flexDirection: 'row',
