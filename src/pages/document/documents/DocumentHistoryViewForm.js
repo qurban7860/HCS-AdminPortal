@@ -12,6 +12,7 @@ import {
   Button
 } from '@mui/material';
 import { ThumbnailDocButton } from '../../components/Thumbnails'
+import { StyledVersionChip } from '../../../theme/styles/default-styles';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
@@ -58,11 +59,11 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
   const { id } = useParams();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  
+
   const { documentHistory } = useSelector((state) => state.document);
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
-  
+
   useEffect(() => {
     // dispatch(resetActiveDocuments());
     if(!machinePage && !drawingPage){
@@ -150,7 +151,7 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
       navigate(PATH_DOCUMENT.document.machineDrawings.new);
       dispatch(resetDocument());
     }
-  } 
+  }
 
 const handleNewFile = async () => {
   if(customerPage || machinePage){
@@ -215,7 +216,7 @@ const handleNewFile = async () => {
           // disableEditButton={machine?.status?.slug==='transferred'}
           // disableDeleteButton={machine?.status?.slug==='transferred'}
           onDelete={machineDrawings && handleDeleteDrawing}
-          backLink={(customerPage || machinePage || drawingPage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDrawingViewFormVisibility(false));} 
+          backLink={(customerPage || machinePage || drawingPage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDrawingViewFormVisibility(false));}
           : () =>  machineDrawings ? navigate(PATH_DOCUMENT.document.machineDrawings.list) : navigate(PATH_DOCUMENT.document.list)}
       />
             <Grid container sx={{mt:2}}>
@@ -234,9 +235,11 @@ const handleNewFile = async () => {
                 heading="Active Version"
                 objectParam={
                   defaultValues.documentVersion && (
-                    <Typography display="flex">
-                      {defaultValues.versionPrefix} {defaultValues.documentVersion}
-                    </Typography>
+                    <StyledVersionChip
+                    label={defaultValues.versionPrefix + defaultValues.documentVersion}
+                    size="small"
+                    variant="outlined"
+                  />
                   )
                 }
               />
