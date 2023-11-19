@@ -2,7 +2,8 @@ import PropTypes from 'prop-types';
 import React, { useMemo, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Grid, Tooltip, Card, Button } from '@mui/material';
+import { Grid, Tooltip, Card, Button } from '@mui/material'
+import { StyledVersionChip } from '../../../theme/styles/default-styles';
 import { PATH_DOCUMENT } from '../../../routes/paths';
 import {
   deleteDocument,
@@ -164,11 +165,19 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
         <ViewFormField
           sm={6}
           heading="Version"
-          NewVersion
-          handleNewVersion={handleNewVersion}
-          ViewAllVersions
           handleAllVersion={linkDocumentView}
-          objectParam={`${defaultValues.versionPrefix} ${defaultValues.documentVersion}`}
+          handleNewVersion={handleNewVersion}
+          objectParam={
+            <StyledVersionChip
+              label={defaultValues.versionPrefix + defaultValues.documentVersion}
+              size="small"
+              variant="outlined"
+            />
+          }
+          // objectParam={`${defaultValues.versionPrefix} ${defaultValues.documentVersion}`}
+          ViewAllVersions
+          NewVersion
+          isNewVersion
         />
         {!customerPage && !machinePage && (
           <>
