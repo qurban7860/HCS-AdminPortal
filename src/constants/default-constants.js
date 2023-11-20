@@ -183,6 +183,11 @@ export const BUTTONS = {
   ADDSTATUS: 'Add Status',
   ADDTECHPARAM: 'Add Technical Parameter',
 
+  // machine
+  ADDTOOLINSTALLED: 'Add Tool Installed',
+  ADDLICENSE: 'Add License',
+  ADDPROFILE: 'Add Profile',
+
   // documents
   ADDDOCUMENT: 'Add Document',
   ADDDRAWING: 'Add Drawing',
