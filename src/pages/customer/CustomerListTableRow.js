@@ -58,14 +58,6 @@ export default function CustomerListTableRow({
   const smScreen = useScreenSize('sm')
   return (
     <StyledTableRow hover selected={selected}>
-      <TableCell align="right">
-        {type === 'SP' ? (
-          <Iconify icon="octicon:star-24" sx={{ color: 'text.disabled', mr: -2 }} width="15px" />
-        ) : (
-          ''
-        )}
-      </TableCell>
-      
       <LinkTableCellWithIcon
         align="left"
         onClick={onViewRow}
