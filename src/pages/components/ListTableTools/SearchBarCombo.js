@@ -31,6 +31,7 @@ function SearchBarCombo({
           fullWidth
           value={value}
           onChange={onChange}
+          size="small"
           placeholder="Search..."
           InputProps={{
             startAdornment: (
@@ -40,7 +41,7 @@ function SearchBarCombo({
             ),
             endAdornment: (isFiltered && (
               <InputAdornment position="end">
-                <Button fullWidth onClick={onClick} color='error' startIcon={<Iconify icon='eva:trash-2-outline' />}>
+                <Button fullWidth onClick={onClick} color='error'size='small' startIcon={<Iconify icon='eva:trash-2-outline' />}>
                   {BUTTONS.CLEAR}
                 </Button>
               </InputAdornment>
@@ -49,7 +50,7 @@ function SearchBarCombo({
           }}
         />
       </Grid>
-        {onFilterVerify && 
+        {onFilterVerify &&
           <Grid item xs={12} sm={4}>
             <Stack alignItems="flex-start">
             <FormControl fullWidth={isMobile} sx={{ml:2, width:'200px'}}>
@@ -58,6 +59,7 @@ function SearchBarCombo({
                 sx={{width:'200px'}}
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
+                size='small'
                 name="isVerified"
                 value={filterVerify}
                 label="Verified"
@@ -72,7 +74,7 @@ function SearchBarCombo({
           </Grid>
         }
 
-        {onSignInLogsFilter && 
+        {onSignInLogsFilter &&
           <Grid item xs={12} sm={4}>
             <Stack alignItems="flex-start">
             <FormControl fullWidth={isMobile} sx={{ml:2, width:'200px'}}>
@@ -81,6 +83,7 @@ function SearchBarCombo({
                 sx={{width:'200px'}}
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
+                size="small"
                 value={signInLogsFilter}
                 label="Status"
                 onChange={onSignInLogsFilter}
@@ -99,6 +102,7 @@ function SearchBarCombo({
             <Button
               fullWidth
               sx={{ p: 2}}
+              size='small'
               onClick={inviteOnClick}
               variant="contained"
               startIcon={<Iconify icon={buttonIcon || 'eva:plus-fill'} />}
@@ -108,17 +112,18 @@ function SearchBarCombo({
           </Stack>
         </Grid>}
         <Grid item xs={12} sm={2}>
-        {addButton && 
+        {addButton &&
           <Stack alignItems="flex-end">
             <Button
               disabled={transferredMachine}
               fullWidth
-              sx={{ p: 2}}
+              size='small'
+              sx={{ width: '100%', fontWeight: 'black' }}
               onClick={SubOnClick}
               variant="contained"
               startIcon={<Iconify icon={buttonIcon || 'eva:plus-fill'} />}
             >
-              {addButton}
+              {addButton.toUpperCase()}
             </Button>
           </Stack>
         }
@@ -141,7 +146,7 @@ SearchBarCombo.propTypes = {
   filterVerify:PropTypes.string,
   signInLogsFilter:PropTypes.number,
   onSignInLogsFilter:PropTypes.func,
-  transferredMachine:PropTypes.bool  
+  transferredMachine:PropTypes.bool
 };
 
 export default SearchBarCombo;
