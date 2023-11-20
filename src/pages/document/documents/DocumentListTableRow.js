@@ -52,6 +52,8 @@ export default function DocumentListTableRow({
     displayName,
     documentVersions,
     docType,
+    referenceNumber,
+    stockNumber,
     machine,
     customer,
     docCategory,
@@ -65,16 +67,15 @@ export default function DocumentListTableRow({
 
   return (
     <StyledTableRow hover selected={selected}>
-      <LinkTableCell align="left" param={displayName} onClick={onViewRow} />
-      { !customerPage && !machinePage && !machineDrawings &&  (<>
-      {  lgScreen && <TableCell align="left">{customer?.name}</TableCell>}
-      {  lgScreen && <TableCell align="left">{machine?.serialNo}</TableCell>}
-      </>)}
       {  smScreen && <TableCell align="left">{docCategory?.name}</TableCell>}
       {  smScreen && <TableCell align="left">{docType?.name}</TableCell>}
+      {  smScreen && <TableCell align="left">{referenceNumber}</TableCell>}
+      <LinkTableCell align="left" param={displayName} onClick={onViewRow} />
       {  lgScreen && <TableCell align="center">{documentVersions[0]?.versionNo}</TableCell>}
+      {  !customerPage && !machinePage && !machineDrawings && lgScreen && <TableCell align="left">{customer?.name}</TableCell>}
+      {  machineDrawings && smScreen && <TableCell align="left">{stockNumber}</TableCell>}
+      {  !customerPage && !machinePage && lgScreen && <TableCell align="left">{machine?.serialNo}</TableCell>}
       {  lgScreen && <TableCell align="center">
-        {' '}
         <Switch checked={customerAccess} disabled size="small" />{' '}
       </TableCell>}
       <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell>
