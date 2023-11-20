@@ -100,6 +100,7 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
       docCategory: documentHistory?.docCategory?.name || '',
       docType: documentHistory?.docType?.name || '',
       referenceNumber: documentHistory?.referenceNumber || '',
+      stockNumber: documentHistory?.stockNumber || '',
       customer: documentHistory?.customer?.name || '',
       site: documentHistory?.site?.name || '',
       contact: documentHistory?.contact?.name || '',
@@ -220,16 +221,9 @@ const handleNewFile = async () => {
           : () =>  machineDrawings ? navigate(PATH_DOCUMENT.document.machineDrawings.list) : navigate(PATH_DOCUMENT.document.list)}
       />
             <Grid container sx={{mt:2}}>
-              <ViewFormField sm={12} heading="Name" param={defaultValues?.displayName} />
+              <ViewFormField sm={8} heading="Name" param={defaultValues?.displayName} />
               <ViewFormField
-                sm={6}
-                heading="Document Category"
-                param={defaultValues?.docCategory}
-              />
-              <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
-              <ViewFormField sm={6} heading="Reference Number" param={defaultValues?.referenceNumber} />
-              <ViewFormField
-                sm={6}
+                sm={4}
                 NewVersion
                 handleNewVersion={handleNewVersion}
                 heading="Active Version"
@@ -243,6 +237,15 @@ const handleNewFile = async () => {
                   )
                 }
               />
+
+              <ViewFormField
+                sm={6}
+                heading="Document Category"
+                param={defaultValues?.docCategory}
+              />
+              <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
+              <ViewFormField sm={6} heading="Reference Number" param={defaultValues?.referenceNumber} />
+              <ViewFormField sm={6} heading="Stock Number" param={defaultValues?.stockNumber} />
 
               {!customerPage && !machineDrawings && !drawingPage && defaultValues.customer && (
                 <ViewFormField
