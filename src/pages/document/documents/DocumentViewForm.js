@@ -94,6 +94,7 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
       docCategory: document?.docCategory?.name || '',
       docType: document?.docType?.name || '',
       referenceNumber: document?.referenceNumber || '',
+      stockNumber: document?.stockNumber || '',
       customer: document?.customer?.name || '',
       site: document?.site?.name || '',
       contact: document?.contact?.name || '',
@@ -158,12 +159,9 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
       disableDeleteButton={machine?.status?.slug==='transferred'}
       />
       <Grid container>
-        <ViewFormField sm={12} heading="Name" param={defaultValues?.displayName} />
-        <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
-        <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
-        <ViewFormField sm={6} heading="Reference Number" param={defaultValues?.referenceNumber} />
+        <ViewFormField sm={8} heading="Name" param={defaultValues?.displayName} />
         <ViewFormField
-          sm={6}
+          sm={4}
           heading="Version"
           handleAllVersion={linkDocumentView}
           handleNewVersion={handleNewVersion}
@@ -179,6 +177,10 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
           NewVersion
           isNewVersion
         />
+        <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
+        <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
+        <ViewFormField sm={6} heading="Reference Number" param={defaultValues?.referenceNumber} />
+        <ViewFormField sm={6} heading="Stock Number" param={defaultValues?.stockNumber} />
         {!customerPage && !machinePage && (
           <>
             <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} />
