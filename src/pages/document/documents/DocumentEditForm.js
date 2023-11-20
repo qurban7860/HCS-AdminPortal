@@ -54,6 +54,7 @@ function DocumentEditForm({ customerPage, machinePage }) {
     // documentType: Yup.object().required("Document Type is required!").nullable(),
     description: Yup.string().max(10000),
     referenceNumber: Yup.string().label('Reference Number').max(20),
+    stockNumber: Yup.string().label('Stock Number').max(20),
     versionNo: Yup.string().label('Version No').max(10),
     isActive: Yup.boolean(),
   });
@@ -63,6 +64,7 @@ function DocumentEditForm({ customerPage, machinePage }) {
       displayName: document?.displayName || '',
       description: document?.description || '',
       referenceNumber: document?.referenceNumber || '',
+      stockNumber: document?.stockNumber || '',
       versionNo: document?.versionNo || '',
       isActive: document?.isActive,
     }),
@@ -171,6 +173,7 @@ function DocumentEditForm({ customerPage, machinePage }) {
                   gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                 >
                   <RHFTextField name='referenceNumber' label='Reference Number' />
+                  <RHFTextField name='stockNumber' label='Stock Number' />
                 </Box>
 
                 <RHFTextField name="description" label="Description" minRows={3} multiline />

@@ -33,7 +33,7 @@ import { PersistGate } from 'redux-persist/lib/integration/react';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 // Error Boundry
-import ErrorBoundary from './utils/ErrorBoundary'
+import ErrorBoundary from './utils/ErrorBoundary';
 
 // redux
 import { store, persistor } from './redux/store';
@@ -62,39 +62,38 @@ import { WebSocketProvider } from './auth/WebSocketContext';
 // ----------------------------------------------------------------------
 
 export default function App() {
-
   return (
-      <AuthProvider>
-        <WebSocketProvider>
-          <HelmetProvider>
-            <ReduxProvider store={store}>
-              <PersistGate loading={null} persistor={persistor}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <SettingsProvider>
-                    <BrowserRouter>
-                      <ErrorBoundary fallback={<Page500 /> } >
-                        <ScrollToTop />
-                        <MotionLazyContainer>
-                          <ThemeProvider>
-                            <ThemeSettings>
-                              <ThemeLocalization>
-                                <SnackbarProvider>
-                                  <StyledChart />
-                                  <IdleManager/>
-                                    <Router />
-                                </SnackbarProvider>
-                              </ThemeLocalization>
-                            </ThemeSettings>
-                          </ThemeProvider>
-                        </MotionLazyContainer>
-                    </ErrorBoundary>
-                    </BrowserRouter>
-                  </SettingsProvider>
-                </LocalizationProvider>
-              </PersistGate>
-            </ReduxProvider>
-          </HelmetProvider>
-        </WebSocketProvider>
-      </AuthProvider>
+    <AuthProvider>
+      <WebSocketProvider>
+        <HelmetProvider>
+          <ReduxProvider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <SettingsProvider>
+                  <BrowserRouter>
+                    <MotionLazyContainer>
+                      <ThemeProvider>
+                        <ThemeSettings>
+                          <ErrorBoundary fallback={<Page500 />}>
+                            <ScrollToTop />
+                            <ThemeLocalization>
+                              <SnackbarProvider>
+                                <StyledChart />
+                                <IdleManager />
+                                <Router />
+                              </SnackbarProvider>
+                            </ThemeLocalization>
+                          </ErrorBoundary>
+                        </ThemeSettings>
+                      </ThemeProvider>
+                    </MotionLazyContainer>
+                  </BrowserRouter>
+                </SettingsProvider>
+              </LocalizationProvider>
+            </PersistGate>
+          </ReduxProvider>
+        </HelmetProvider>
+      </WebSocketProvider>
+    </AuthProvider>
   );
 }

@@ -111,22 +111,22 @@ function DocumentAddForm({
     documentVal: Yup.object().when({
       is: () => selectedValue === "newVersion",
       then: Yup.object().nullable().required().label('Document'),
-      otherwise: Yup.object().nullable(), 
+      otherwise: Yup.object().nullable(),
     }),
     documentCategory: Yup.object().when( {
       is: () => selectedValue === "new",
       then: Yup.object().nullable().required().label('Document Category'),
-      otherwise: Yup.object().nullable(), 
+      otherwise: Yup.object().nullable(),
     }),
     documentType: Yup.object().when( {
       is: () => selectedValue === "new",
       then: Yup.object().nullable().required().label('Document Type'),
-      otherwise: Yup.object().nullable(), 
+      otherwise: Yup.object().nullable(),
     }),
     displayName: Yup.string().when( {
       is: () => selectedValue === "new",
       then: Yup.string().nullable().required().label('Document Name'),
-      otherwise: Yup.string().nullable(), 
+      otherwise: Yup.string().nullable(),
     }),
     files: Yup.mixed()
     .required('File is required!')
@@ -265,7 +265,7 @@ function DocumentAddForm({
     dispatch(resetCustomerMachines());
     dispatch(resetActiveDocumentTypes());
     dispatch(getActiveCustomers());
-    
+
     if (customerPage) {
       setValue('customerVal', customer?._id);
     }
@@ -321,7 +321,7 @@ function DocumentAddForm({
     //   dispatch(getCustomerMachines());
     // }
 
-    
+
   }, [dispatch, customer, customerPage, machineDrawings, machinePage, selectedValue ]);
 
   // ------------------------- get forMachine documents ---------------------------------------
@@ -339,7 +339,7 @@ function DocumentAddForm({
           dispatch(getMachineDrawingsDocuments());
       }
     }, [dispatch, customerPage, machineDrawings, machinePage, selectedValue]);
-  
+
   const onSubmit = async (data) => {
     data.machine = machineVal?._id;
     try {
@@ -500,7 +500,7 @@ function DocumentAddForm({
       const docFiles = files || [];
       const newFiles = acceptedFiles.map((file, index) => {
 
-          if(index===0 && docFiles.length===0){
+          if(index===0 && docFiles.length===0 && !displayName){
             setValue('displayName', removeFileExtension(file.name))
           }
 
@@ -511,7 +511,7 @@ function DocumentAddForm({
       );
       setValue('files', [...docFiles, ...newFiles], { shouldValidate: true });
     },
-    [setValue, files ]
+    [setValue, files, displayName]
   );
 
   const removeFileExtension = (filename) => {
@@ -522,7 +522,7 @@ function DocumentAddForm({
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      {!customerPage && !machinePage && 
+      {!customerPage && !machinePage &&
         <DocumentCover content={machineDrawings ? FORMLABELS.COVER.ADD_MACHINE_DRAWINGSS :  FORMLABELS.COVER.ADD_DOCUMENTS} backLink={!customerPage && !machinePage && !machineDrawings} machineDrawingsBackLink={machineDrawings} generalSettings />
       }
       <Box
@@ -587,13 +587,13 @@ function DocumentAddForm({
                           renderOption={(props, option) => ( <li {...props} key={option._id}>{`${ option.displayName ? option.displayName : ''}`}</li> )}
                           id="controllable-states-demo"
                           renderInput={(params) => (
-                            <TextField 
-                              {...params} 
-                              label="Select  Document*" 
+                            <TextField
+                              {...params}
+                              label="Select  Document*"
                               name="documentVal"
                               id="documentVal"
                               error={!!error}
-                              helperText={error?.message} 
+                              helperText={error?.message}
                               inputRef={ref}
                             />
                           )}
@@ -642,13 +642,13 @@ function DocumentAddForm({
                           renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li> )}
                           id="controllable-states-demo"
                           renderInput={(params) => (
-                            <TextField 
-                              {...params} 
-                              label="Document Category*" 
+                            <TextField
+                              {...params}
+                              label="Document Category*"
                               name="documentCategory"
-                              id="documentCategory" 
+                              id="documentCategory"
                               error={!!error}
-                              helperText={error?.message} 
+                              helperText={error?.message}
                               inputRef={ref}
                             />
                           )}
@@ -672,13 +672,13 @@ function DocumentAddForm({
                           renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>)}
                           id="controllable-states-demo"
                           renderInput={(params) => (
-                            <TextField 
-                            {...params} 
+                            <TextField
+                            {...params}
                             name="documentType"
-                            id="documentType" 
-                            label="Document Type*" 
+                            id="documentType"
+                            label="Document Type*"
                             error={!!error}
-                            helperText={error?.message} 
+                            helperText={error?.message}
                             inputRef={ref}
                             />
                           )}
@@ -702,13 +702,21 @@ function DocumentAddForm({
                 )}
 
                 {selectedValue === 'new' && (
-                      <RHFTextField  
-                        multiline 
-                        name="displayName" 
-                        id="displayName" 
-                        label="Document Name*" 
+                  <Box
+                    rowGap={3}
+                    columnGap={2}
+                    display="grid"
+                    gridTemplateColumns={{ sm: '1fr', md: '3fr 1fr' }}
+                    >
+                      <RHFTextField
+                        multiline
+                        name="displayName"
+                        id="displayName"
+                        label="Document Name*"
                         />
-                 
+                      <RHFTextField name='versionNo' label='Version Number' value={1} disabled/>
+                  </Box>
+
                 )}
 
                 {selectedValue === 'new' && !machineDrawings && (
@@ -718,9 +726,10 @@ function DocumentAddForm({
                   display="grid"
                   gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                 >
-                  <RHFTextField name='versionNo' label='Version Number' />
                   <RHFTextField name='referenceNumber' label='Reference Number' />
-                </Box>)}
+                  <RHFTextField name='stockNumber' label='Stock Number' />
+                </Box>)
+                }
 
                 {selectedValue === 'new' && machineDrawings && (
                   <>
@@ -731,9 +740,9 @@ function DocumentAddForm({
                     sx={{mb:0}}
                     gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                   >
-                    <RHFTextField name='stockNumber' label='Stock Number' />
                     <RHFTextField name='referenceNumber' label='Reference Number' />
-                    
+                    <RHFTextField name='stockNumber' label='Stock Number' />
+
                   </Box>
 
                     <Box
@@ -742,9 +751,8 @@ function DocumentAddForm({
                       display="grid"
                       gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(1, 1fr)' }}
                     >
-                    <RHFTextField name='versionNo' label='Version Number' /> 
                     <RHFAutocomplete
-                      // multiple 
+                      // multiple
                       value={customerVal || null}
                       name="customerVal"
                       label="Customer"
@@ -766,13 +774,13 @@ function DocumentAddForm({
                     />
 
                     <RHFAutocomplete
-                      // multiple 
+                      // multiple
                       value={machineVal || null}
                       name="machineVal"
                       label="Machine"
                       options={customerMachines}
                       isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
-                      getOptionLabel={(option) => option.serialNo}
+                      getOptionLabel={(option) => `${ option.serialNo} + ${option.name} `}
                       renderOption={(props, option) => (
                         <li {...props} key={option._id}>{`${option.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}</li>
                       )}

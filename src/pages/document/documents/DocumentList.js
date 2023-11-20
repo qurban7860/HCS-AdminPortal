@@ -127,11 +127,11 @@ const onChangeRowsPerPage = (event) => {
     dispatch(machineDrawingsChangeRowsPerPage(parseInt(event.target.value, 10)))
   }else if(!machineDrawings && !customerPage && !machinePage){
     dispatch(ChangePage(0));
-    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
   }
 };
 
-const  onChangePage = (event, newPage) => { 
+const  onChangePage = (event, newPage) => {
   if(machinePage){
     dispatch(machineDocumentChangePage(newPage))
   }else if(customerPage){
@@ -139,28 +139,38 @@ const  onChangePage = (event, newPage) => {
   }else if(machineDrawings){
     dispatch(machineDrawingsChangePage(newPage))
   }else if(!machineDrawings && !customerPage && !machinePage){
-    dispatch(ChangePage(newPage)) 
+    dispatch(ChangePage(newPage))
   }
 }
 
   const TABLE_HEAD = [
-    { id: 'displayName', label: 'Name', align: 'left' },
     { id: 'docCategory.name', visibility: 'xs1', label: 'Category', align: 'left' },
     { id: 'docType.name', visibility: 'xs2', label: 'Type', align: 'left' },
+    { id: 'referenceNumber', visibility: 'xs2', label: 'Ref. No.', align: 'left' },
+    { id: 'displayName', label: 'Name', align: 'left' },
     { id: 'documentVersions.versionNo.[]', visibility: 'md1', label: 'Version', align: 'center' },
     { id: 'customerAccess', visibility: 'md2', label: 'Customer Access', align: 'center' },
     { id: 'isActive', label: 'Active', align: 'center' },
     { id: 'createdAt', label: 'Created At', align: 'right' },
   ];
-  
+
   if (!customerPage && !machinePage && !machineDrawings) {
-    const insertIndex = 1; // Index after which you want to insert the new objects
-    TABLE_HEAD.splice(insertIndex, 0, // 0 indicates that we're not removing any elements
+    const insertIndex = 5; // Index after which you want to insert the new objects
+    TABLE_HEAD.splice(insertIndex, 0,// 0 indicates that we're not removing any elements
       { id: 'customer.name', visibility: 'md3', label: 'Customer', align: 'left' },
       { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left' }
     );
   }
-  
+
+  if (machineDrawings) {
+   const insertIndex = 5
+   const removeIndex = 0
+    TABLE_HEAD.splice(insertIndex, removeIndex,
+      { id: 'stockNumber', visibility: 'xs2', label: 'Stock No.', align: 'left' },
+      { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left' }
+   )
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       dispatch(resetDocuments());
@@ -298,7 +308,7 @@ const  onChangePage = (event, newPage) => {
   return (
     <>
     {/* <Container sx={{mb:3}}> */}
-      {!customerPage && !machinePage && 
+      {!customerPage && !machinePage &&
       <StyledCardContainer>
         <Cover name={machineDrawings ? FORMLABELS.COVER.MACHINE_DRAWINGS :  FORMLABELS.COVER.DOCUMENTS} />
       </StyledCardContainer>}

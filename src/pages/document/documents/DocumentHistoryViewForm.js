@@ -12,6 +12,7 @@ import {
   Button
 } from '@mui/material';
 import { ThumbnailDocButton } from '../../components/Thumbnails'
+import { StyledVersionChip } from '../../../theme/styles/default-styles';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
@@ -58,11 +59,11 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
   const { id } = useParams();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  
+
   const { documentHistory } = useSelector((state) => state.document);
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
-  
+
   useEffect(() => {
     // dispatch(resetActiveDocuments());
     if(!machinePage && !drawingPage){
@@ -99,6 +100,7 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
       docCategory: documentHistory?.docCategory?.name || '',
       docType: documentHistory?.docType?.name || '',
       referenceNumber: documentHistory?.referenceNumber || '',
+      stockNumber: documentHistory?.stockNumber || '',
       customer: documentHistory?.customer?.name || '',
       site: documentHistory?.site?.name || '',
       contact: documentHistory?.contact?.name || '',
@@ -150,7 +152,7 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
       navigate(PATH_DOCUMENT.document.machineDrawings.new);
       dispatch(resetDocument());
     }
-  } 
+  }
 
 const handleNewFile = async () => {
   if(customerPage || machinePage){
@@ -215,11 +217,27 @@ const handleNewFile = async () => {
           // disableEditButton={machine?.status?.slug==='transferred'}
           // disableDeleteButton={machine?.status?.slug==='transferred'}
           onDelete={machineDrawings && handleDeleteDrawing}
-          backLink={(customerPage || machinePage || drawingPage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDrawingViewFormVisibility(false));} 
+          backLink={(customerPage || machinePage || drawingPage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDrawingViewFormVisibility(false));}
           : () =>  machineDrawings ? navigate(PATH_DOCUMENT.document.machineDrawings.list) : navigate(PATH_DOCUMENT.document.list)}
       />
             <Grid container sx={{mt:2}}>
-              <ViewFormField sm={12} heading="Name" param={defaultValues?.displayName} />
+              <ViewFormField sm={8} heading="Name" param={defaultValues?.displayName} />
+              <ViewFormField
+                sm={4}
+                NewVersion
+                handleNewVersion={handleNewVersion}
+                heading="Active Version"
+                objectParam={
+                  defaultValues.documentVersion && (
+                    <StyledVersionChip
+                    label={defaultValues.versionPrefix + defaultValues.documentVersion}
+                    size="small"
+                    variant="outlined"
+                  />
+                  )
+                }
+              />
+
               <ViewFormField
                 sm={6}
                 heading="Document Category"
@@ -227,19 +245,7 @@ const handleNewFile = async () => {
               />
               <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
               <ViewFormField sm={6} heading="Reference Number" param={defaultValues?.referenceNumber} />
-              <ViewFormField
-                sm={6}
-                NewVersion
-                handleNewVersion={handleNewVersion}
-                heading="Active Version"
-                objectParam={
-                  defaultValues.documentVersion && (
-                    <Typography display="flex">
-                      {defaultValues.versionPrefix} {defaultValues.documentVersion}
-                    </Typography>
-                  )
-                }
-              />
+              <ViewFormField sm={6} heading="Stock Number" param={defaultValues?.stockNumber} />
 
               {!customerPage && !machineDrawings && !drawingPage && defaultValues.customer && (
                 <ViewFormField
