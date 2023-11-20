@@ -10,7 +10,6 @@ import { styled } from '@mui/material/styles';
 import { fDate } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
-
 // ----------------------------------------------------------------------
 
 NoteListTableRow.propTypes = {
@@ -40,11 +39,11 @@ export default function NoteListTableRow({
 
   return (
       <StyledTableRow hover selected={selected}>
-        
+
         <LinkTableCell align="left" param={note} onClick={onViewRow} />
         <TableCell align="center" sx={{width:'100px'}}><Switch checked={isActive} disabled size="small" /></TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>
-  
+
       </StyledTableRow>
 
   );

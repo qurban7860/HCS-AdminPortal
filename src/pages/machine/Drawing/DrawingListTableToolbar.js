@@ -6,8 +6,10 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from '../../../redux/store';
 // components
 import Iconify from '../../../components/iconify';
-// import { PATH_DOCUMENT } from '../../../routes/paths';
 import { setDrawingFormVisibility } from '../../../redux/slices/products/drawing';
+import { SearchBarCombo } from '../../components/ListTableTools';
+// constants
+import { BUTTONS } from '../../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -37,52 +39,20 @@ export default function DrawingListTableToolbar({
 
   return (
     <Stack
-      spacing={2}
-      alignItems="center"
-      direction={{ xs: 'column', md: 'row' }}
-      sx={{ px: 2.5, py: 3 }}
+    spacing={2}
+    alignItems="center"
+    direction={{ xs: 'column', md: 'row' }}
+    sx={{ px: 2.5, py: 3 }}
     >
-      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-        <Grid item xs={12} sm={9} sx={{ display: 'inline-flex' }}>
-          <TextField
-            fullWidth
-            value={filterName}
-            onChange={onFilterName}
-            placeholder="Search..."
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  {' '}
-                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />{' '}
-                </InputAdornment>
-              ),
-            }}
-          />
-          {isFiltered && (
-            <Button
-              color="error"
-              sx={{ flexShrink: 0, ml: 1 }}
-              onClick={onResetFilter}
-              startIcon={<Iconify icon="eva:trash-2-outline" />}
-            >
-              Clear
-            </Button>
-          )}
-        </Grid>
-        <Grid item xs={8} sm={3}>
-          <Stack alignItems="flex-end">
-            <Button
-              disabled={machine?.status?.slug==="transferred"}
-              sx={{ p: 2 }}
-              onClick={toggleAdd}
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-            >
-              Add Drawing
-            </Button>
-          </Stack>
-        </Grid>
-      </Grid>
-    </Stack>
-  );
+    <SearchBarCombo
+      isFiltered={isFiltered}
+      value={filterName}
+      onChange={onFilterName}
+      onClick={onResetFilter}
+      SubOnClick={toggleAdd}
+      addButton={BUTTONS.ADDDRAWING}
+      transferredMachine={machine?.status?.slug==='transferred'}
+    />
+  </Stack>
+  )
 }
