@@ -118,7 +118,7 @@ function SearchBarCombo({
               disabled={transferredMachine}
               fullWidth
               size='small'
-              sx={{ width: '100%', fontWeight: 'black' }}
+              sx={{ width: '100%', fontWeight: 'black', fontSize: '.8em' }}
               onClick={SubOnClick}
               variant="contained"
               startIcon={<Iconify icon={buttonIcon || 'eva:plus-fill'} />}
