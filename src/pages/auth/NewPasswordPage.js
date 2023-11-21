@@ -1,32 +1,39 @@
 // import { Helmet } from 'react-helmet-async';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
-import { Link, Typography } from '@mui/material';
+import { Link, Typography, Box} from '@mui/material';
 // routes
 import { PATH_AUTH } from '../../routes/paths';
 // components
 import Iconify from '../../components/iconify';
+import Logo from '../../components/logo'
 // sections
 import AuthNewPasswordForm from '../../sections/auth/AuthNewPasswordForm';
 // assets
 import { SentIcon } from '../../assets/icons';
+import { MotionContainer } from '../../components/animate';
 
 // ----------------------------------------------------------------------
 
 export default function NewPasswordPage() {
   return (
-    <>
-      <SentIcon sx={{ mb: 5, height: 96 }} />
+    <MotionContainer>
+     <Box sx={{ position: 'relative'}}>
+      <Logo
+          width={450}
+          sx={{
+            margin: 'auto',
+            filter: 'grayscale(100%) opacity(30%)',
+            pointerEvents: 'none',
+            padding: '3rem 0'
+          }}
+        />
+        <SentIcon sx={{ position: 'absolute', width: '10%', top: '100px', right: '100px', transform: 'rotate(20deg)'}}/>
+      </Box>
 
       <Typography variant="h4" paragraph>
-        Please Enter New Password!
+         Enter New Password
       </Typography>
-
-      {/* <Typography sx={{ color: 'text.secondary', mb: 5 }}>
-        We&apos;ve sent a 6-digit confirmation email to your email.
-        <br />
-        Please enter the code in below box to verify your email.
-      </Typography> */}
 
       <AuthNewPasswordForm />
 
@@ -50,6 +57,6 @@ export default function NewPasswordPage() {
         <Iconify icon="eva:chevron-left-fill" width={16} />
         Return to sign in
       </Link>
-    </>
+    </MotionContainer>
   );
 }

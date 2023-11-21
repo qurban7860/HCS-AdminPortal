@@ -214,6 +214,10 @@ export const BUTTONS = {
   ADD_SERVICE_CHECK_ITEM: 'Add Check Item',
   ADD_MACHINE_SERVICE_CONFIG: 'Add Configuration',
   ADD_MACHINE_SERVICE_RECORD: 'Add Record',
+
+  // auth
+  UPDATEPASSWORD: 'Update Password',
+  UPDATED: (param) => `${param} Updated`
 };
 
 export const BREADCRUMBS = {
@@ -260,6 +264,7 @@ export const TITLES = {
   NEWLICENSE: 'New License',
   // @root - ResetPasswordPage - forgot password
   FORGOT_PASSWORD: 'Forgot your password?',
+ CHECK_EMAIL: 'Check your E-mail',
   FORGOT_DESC:
     'Enter your email address below and we will send you instructions on how to reset your password.',
   FORGOT_RETURN: 'Return to sign in',
@@ -294,4 +299,7 @@ export const Snacks = {
   configuration_Verification_Failed: 'Verification Failed!',
   configuration_approve_Success: 'Document approved Successfully!',
   configuration_approve_Failed: 'Document approve Failed!',
+  // auth: reset
+  password_changed: 'Password update Successful',
+  password_change_failed: 'Password update Failed'
 }
