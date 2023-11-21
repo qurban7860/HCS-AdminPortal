@@ -15,7 +15,7 @@ export default function CompactLayout() {
 
   return (
     <>
-      <Header isOffset={isOffset} />
+      {/* <Header isOffset={isOffset} /> */}
 
       <Container component="main">
         <Stack
