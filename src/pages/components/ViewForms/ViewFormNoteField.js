@@ -4,9 +4,12 @@ import { Typography, Grid} from '@mui/material';
 import CopyIcon from '../Icons/CopyIcon';
 
 const ViewFormNoteField = ({ sm, heading, param }) => (
-    <Grid item xs={12} sm={sm} sx={{ px: 2, py: 1, 
+    <Grid item xs={12} sm={sm} sx={{
+    px: 2, py: 1, 
     alignItems: 'center',
-    whiteSpace: 'pre-line',
+    // whiteSpace: 'pre-line',
+    whiteSpace: 'pre-wrap',
+    fontFamily: 'monospace',
     wordBreak: 'break-word' }}>
         <Typography variant="overline" sx={{ color: 'text.disabled' }}>
             {heading || ''}
