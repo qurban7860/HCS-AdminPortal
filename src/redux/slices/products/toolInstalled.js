@@ -344,7 +344,7 @@ export function getToolsInstalled(machineId) {
         params: {
           isArchived: false,
           orderBy : {
-            createdAt:-1
+            "tool.name":-1
           }
         }
       }
