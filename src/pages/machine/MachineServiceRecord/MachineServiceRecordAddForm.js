@@ -111,7 +111,7 @@ function MachineServiceRecordAddForm() {
           dispatch(resetServiceRecordConfig())
           setValue('serviceRecordConfiguration',null)
         }
-        setActiveServiceRecordConfigs(activeServiceRecordConfigsForRecords.filter(activeRecordConfig => activeRecordConfig.recordType === docRecordType.name ))
+        setActiveServiceRecordConfigs(activeServiceRecordConfigsForRecords.filter(activeRecordConfig => activeRecordConfig?.recordType?.toLowerCase() === docRecordType?.name?.toLowerCase() ))
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[docRecordType, activeServiceRecordConfigsForRecords ])

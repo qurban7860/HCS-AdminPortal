@@ -44,6 +44,7 @@ import blockedUserReducer from './slices/securityConfig/blockedUsers';
 import blacklistIPReducer from './slices/securityConfig/blacklistIP';
 import whitelistIPReducer from './slices/securityConfig/whitelistIP';
 import departmentReducer from './slices/Department/department';
+import historicalConfigurationReducer from './slices/products/historicalConfiguration';
 
 // ----------------------------------------------------------------------
 
@@ -321,9 +322,15 @@ export const whitelistIPPersistConfig={
   blacklist: ['error', 'initial', 'responseMessage']
 }
 
-
 export const departmentPersistConfig={
-  key: 'whitelistIP',
+  key: 'department',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+
+export const historicalConfigurationPersistConfig={
+  key: 'historicalConfiguration',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
@@ -374,7 +381,7 @@ const rootReducer = combineReducers({
   blacklistIP: persistReducer(blacklistIPPersistConfig, blacklistIPReducer),
   whitelistIP: persistReducer(whitelistIPPersistConfig, whitelistIPReducer),
   department: persistReducer(departmentPersistConfig, departmentReducer),
-
+  historicalConfiguration: persistReducer(historicalConfigurationPersistConfig, historicalConfigurationReducer),
 });
 
 export default rootReducer;

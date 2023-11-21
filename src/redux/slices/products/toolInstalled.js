@@ -342,7 +342,10 @@ export function getToolsInstalled(machineId) {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled` , 
       {
         params: {
-          isArchived: false
+          isArchived: false,
+          orderBy : {
+            createdAt:-1
+          }
         }
       }
       );

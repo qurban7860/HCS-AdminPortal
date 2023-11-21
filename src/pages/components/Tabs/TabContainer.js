@@ -30,19 +30,25 @@ function TabContainer({
       width: 1,
       bottom: 0,
       zIndex: 9,
+      display:'flex',
       position: 'absolute',
       backgroundColor: theme.palette.background.paper,
       '& .MuiTabs-flexContainer': {
-        pr: { md: 3 },
-        pl: { lg: 2 },
-        justifyContent: {
-          xl: 'flex-end',
-        },
+        pr: 2.5,
+        pl: 2.5,
+        ml:'auto',
+        // justifyContent: 'flex-end' ,
       },
     },
+
   };
 
-  return <Tabs {...options}>{children}</Tabs>;
+  return <Tabs 
+  {...options}     
+  variant="scrollable"
+  scrollButtons="auto"
+  aria-label="scrollable auto tabs example" 
+  >{children}</Tabs>;
 }
 
 export default TabContainer;
