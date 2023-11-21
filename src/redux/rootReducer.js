@@ -43,6 +43,7 @@ import blockedCustomerReducer from './slices/securityConfig/blockedCustomers';
 import blockedUserReducer from './slices/securityConfig/blockedUsers';
 import blacklistIPReducer from './slices/securityConfig/blacklistIP';
 import whitelistIPReducer from './slices/securityConfig/whitelistIP';
+import departmentReducer from './slices/Department/department';
 
 // ----------------------------------------------------------------------
 
@@ -321,6 +322,14 @@ export const whitelistIPPersistConfig={
 }
 
 
+export const departmentPersistConfig={
+  key: 'whitelistIP',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+
+
 
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
@@ -363,7 +372,8 @@ const rootReducer = combineReducers({
   blockedCustomer: persistReducer(blockedCustomerPersistConfig, blockedCustomerReducer),
   blockedUser: persistReducer(blockedUserPersistConfig, blockedUserReducer),
   blacklistIP: persistReducer(blacklistIPPersistConfig, blacklistIPReducer),
-  whitelistIP: persistReducer(whitelistIPPersistConfig, whitelistIPReducer)
+  whitelistIP: persistReducer(whitelistIPPersistConfig, whitelistIPReducer),
+  department: persistReducer(departmentPersistConfig, departmentReducer),
 
 });
 

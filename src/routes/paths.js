@@ -303,6 +303,12 @@ export const PATH_SETTING = {
     view: (id) => path(ROOTS_SETTING, `/configs/${id}/view`),
     edit: (id) => path(ROOTS_SETTING, `/configs/${id}/edit`)
   },
+  departments: {
+    list: path(ROOTS_SETTING, '/departments/list'),
+    new: path(ROOTS_SETTING, '/departments/new'),
+    view: (id) => path(ROOTS_SETTING, `/departments/${id}/view`),
+    edit: (id) => path(ROOTS_SETTING, `/departments/${id}/edit`)
+  },
   invite: {
     list: path(ROOTS_SETTING, '/invite/list'),
     view: (id) => path(ROOTS_SETTING, `/invite/${id}/view`)
