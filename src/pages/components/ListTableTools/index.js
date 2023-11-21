@@ -1,0 +1,1 @@
+export {default as SearchBarCombo} from './SearchBarCombo'

@@ -36,6 +36,8 @@ export const EditContactSchema = Yup.object().shape({
   email: Yup.string()
     .trim('The contact name cannot include leading and trailing spaces')
     .email('Email must be a valid email address'),
+  reportingTo: Yup.object().nullable().label('Report to').required(),
+  department: Yup.object().nullable().label('Department').required(),
   street: Yup.string(),
   suburb: Yup.string(),
   city: Yup.string(),

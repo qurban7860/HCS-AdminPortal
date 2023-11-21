@@ -161,6 +161,11 @@ return (
                     icon={ICONS.SYSTEM_CONFIG.icon}
                     content={ICONS.SYSTEM_CONFIG.heading}
                   />
+                  <ListItem
+                    onClick={()=> navigate(PATH_SETTING.departments.list)}
+                    icon={ICONS.DEPARTMENNTS.icon}
+                    content={ICONS.DEPARTMENNTS.heading}
+                  />
                 </List>
             </StyledSettingsCardContainer>
 

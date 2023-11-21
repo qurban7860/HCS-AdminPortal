@@ -69,7 +69,7 @@ export default function HowickWelcome({ title, description, action, img, ...othe
         }}
       >
         <Typography  variant="h1"
-        // paragraph 
+        // paragraph
         // sx={{ whiteSpace: 'pre-line' }}
         >
           {title}
@@ -89,8 +89,6 @@ export default function HowickWelcome({ title, description, action, img, ...othe
       </Stack>
 
       {img && img}
-
-      <StyledBg />
     </StyledRoot>
   );
 }

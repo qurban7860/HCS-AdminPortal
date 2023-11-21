@@ -44,7 +44,7 @@ export const ICONS = {
     color: '#FF0000',
     heading: 'Not Approved',
   },
-  
+
   REQUIRED: {
     icon: 'mdi:required-circle',
     color: '#008000',
@@ -131,7 +131,27 @@ export const ICONS = {
     heading: 'Customer Access Blocked',
   },
   // ----------------------------------------------------------------
-
+  ADD_NEW_VERSION: {
+    icon: 'icon-park-outline:add',
+    color: 'primary.main',
+    heading: 'Add a New Version',
+    width: '16px',
+  },
+  // ------------------------------------------------------------
+  VIEW_VERSIONS: {
+    icon: 'mdi:archive-eye',
+    color: 'primary.main',
+    heading: 'View all Versions',
+    width: '16px',
+  },
+  // ------------------------------------------------------------
+  VIEW_PROFILE_SETS: {
+    icon: 'mdi:application-cog-outline',
+    color: 'primary.main',
+    heading: 'View Profile Sets',
+    width: '16px',
+  },
+  // ------------------------------------------------------------
   // Back Link
   BACK_LINK: {
     icon: 'vaadin:arrow-backward',
@@ -255,6 +275,10 @@ export const ICONS = {
   SYSTEM_CONFIG: {
     icon: 'icon-park-outline:setting-config',
     heading: 'System Config',
+  },
+  DEPARTMENNTS: {
+    icon: 'mingcute:department-line',
+    heading: 'Departments',
   },
 
   MOVE_MACHINE: {

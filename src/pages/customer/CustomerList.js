@@ -36,8 +36,8 @@ import { FORMLABELS } from '../../constants/default-constants';
 // sections
 import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
-import { getCustomers, ChangePage, ChangeRowsPerPage, setFilterBy, setVerified, 
-   setCustomerEditFormVisibility, 
+import { getCustomers, ChangePage, ChangeRowsPerPage, setFilterBy, setVerified,
+   setCustomerEditFormVisibility,
    createCustomerCSV} from '../../redux/slices/customer/customer';
 import { Cover } from '../components/Defaults/Cover';
 import TableCard from '../components/ListTableTools/TableCard';
@@ -49,7 +49,6 @@ import { useSnackbar } from '../../components/snackbar';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'customerType', label: '', align: 'center', width: 1.5 },
   { id: 'clientCode', label: 'Customer', align: 'left' },
   { id: 'name', label: 'Code', align: 'left' },
   { id: 'tradingName', visibility: 's1', label: 'Trading Name', align: 'left' },
@@ -82,10 +81,10 @@ export default function CustomerList() {
   const { customers, filterBy, verified, page, rowsPerPage, isLoading, responseMessage } = useSelector((state) => state.customer);
   const [filterVerify, setFilterVerify] = useState(verified);
   const [filterName, setFilterName] = useState(filterBy);
-  
+
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
-    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
   };
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
@@ -111,7 +110,7 @@ export default function CustomerList() {
 
   const handleOpenConfirm = () => setOpenConfirm(true);
   const handleCloseConfirm = () => setOpenConfirm(false);
-  
+
   const debouncedSearch = useRef(debounce((value) => {
       dispatch(ChangePage(0))
       dispatch(setFilterBy(value))
@@ -137,7 +136,7 @@ export default function CustomerList() {
   useEffect(() => {
       debouncedSearch.current.cancel();
   }, [debouncedSearch]);
-  
+
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -296,7 +295,7 @@ function applyFilter({ inputData, comparator, filterName, filterVerify, filterSt
     inputData = inputData.filter((customer)=> customer.verifications.length>0);
   else if(filterVerify==='unverified')
     inputData = inputData.filter((customer)=> customer.verifications.length===0);
-    
+
   if (filterName) {
     inputData = inputData.filter(
       (customer) =>

@@ -171,12 +171,15 @@ export default function GoogleMaps({
           </m.div>
         ))}
       {markerPositions.map((position, index) => (
-        <Marker
-          key={index}
-          position={position}
-          draggable={edit}
-          ref={(ref) => (markerRefs.current[index] = ref)}
-        />
+        <m.div>
+          <Marker
+            key={index}
+            position={position}
+            icon={{ ...ICONS.MAP_MARKER, scaledSize: new window.google.maps.Size(50, 50) }}
+            draggable={edit}
+            ref={(ref) => (markerRefs.current[index] = ref)}
+          />
+        </m.div>
       ))}
     </GoogleMap>
   ) : (

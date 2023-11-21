@@ -10,6 +10,7 @@ function ViewFormField({
   backLink,
   heading,
   param,
+  objectString,
   node,
   chipLabel,
   arrayParam,
@@ -36,6 +37,7 @@ function ViewFormField({
   userRolesChips,
   serviceParam,
   NewVersion,
+  isNewVersion,
   handleNewVersion,
   ViewAllVersions,
   handleAllVersion,
@@ -62,9 +64,10 @@ function ViewFormField({
     <Grid item xs={12} sm={sm} sx={{ px: 2, py: 1, overflowWrap: 'break-word' }}>
       <Typography variant="overline" sx={{ color: 'text.disabled' }}>
         {heading || ''}
-        </Typography>{NewVersion && <Link title='New Version' href="#" variant="subtitle1" underline='none' onClick={handleNewVersion} sx={{ fontWeight:"bold" }}> <Iconify heading="New Version" icon="icon-park-outline:add" sx={{mb:-0.8}}/></Link>}
-        {ViewAllVersions && <Link title='View all Versions' onClick={handleAllVersion} href="#" underline="none"><Iconify icon="carbon:view" sx={{mb:-1, ml:1, width:"23px", height:"23px"}}/></Link>}
-      
+        </Typography>
+        {/* {NewVersion && <Link title='New Version' href="#" variant="subtitle1" underline='none' onClick={handleNewVersion} sx={{ fontWeight:"bold" }}> <Iconify heading="New Version" icon="icon-park-outline:add" sx={{mb:-0.8}}/></Link>}
+        {ViewAllVersions && <Link title='View all Versions' onClick={handleAllVersion} href="#" underline="none"><Iconify icon="carbon:view" sx={{mb:-1, ml:1, width:"23px", height:"23px"}}/></Link>} */}
+
 
       <Typography
         variant={
@@ -105,6 +108,7 @@ function ViewFormField({
         {currentEmp !== undefined && <IconPopover currentEmp={currentEmp} />}
         {customerAccess !== undefined && <IconPopover customerAccess={customerAccess} />}
         {param && typeof param === 'string' && param.trim().length > 0 && param}
+        {objectString && typeof objectString === 'string' && objectString.length > 0 && objectString}
         {param &&
           typeof param === 'string' &&
           param.trim().length > 0 &&
@@ -121,6 +125,8 @@ function ViewFormField({
         {objectParam || ''}
         {secondObjectParam || ''}
         {numberParam || ''}
+        {ViewAllVersions && <IconPopover isViewAllVersions onClick={handleAllVersion} />}
+        {NewVersion && <IconPopover isNewVersion onClick={handleNewVersion} />}
         &nbsp;
 
       </Typography>
@@ -132,14 +138,14 @@ function ViewFormField({
               whiteSpace: 'pre-line',
               wordBreak: 'break-word',
               }} >
-            {chipLabel ? 
+            {chipLabel ?
             arrayParam.map(
               (data, index) =>
                 data?.[chipLabel] &&
                 typeof data?.[chipLabel] === 'string' &&
                 data?.[chipLabel].trim().length > 0 && <Chip key={index} label={data?.[chipLabel].length > 50    ? `${data?.[chipLabel]?.substring(0, 50)}...`
                 : data?.[chipLabel]} sx={{m:0.2}} />
-            ) : 
+            ) :
             arrayParam.map(
               (data, index) =>
                 data?.name &&
@@ -148,7 +154,7 @@ function ViewFormField({
             )
             }
             </Grid>
-        )}    
+        )}
 
         {toolType && typeof toolType === 'object' && toolType?.length > 0 && (
             <Grid container sx={{my:-2,
@@ -166,7 +172,7 @@ function ViewFormField({
             ))}
             </Grid>
         )}
-        
+
       {chipDialogArrayParam && typeof chipDialogArrayParam === 'object' && chipDialogArrayParam?.length > 0 &&
         <Grid container sx={{my:-2,
               display: 'flex',
@@ -234,11 +240,12 @@ function ViewFormField({
     </Grid>
   );
 }
-export default memo(ViewFormField) 
+export default memo(ViewFormField)
 ViewFormField.propTypes = {
   heading: PropTypes.string,
   node: PropTypes.node,
   param: PropTypes.string,
+  objectString: PropTypes.string,
   arrayParam: PropTypes.array,
   toolType: PropTypes.array,
   chipLabel: PropTypes.string,
@@ -264,6 +271,7 @@ ViewFormField.propTypes = {
   userRolesChips: PropTypes.array,
   serviceParam: PropTypes.array,
   NewVersion: PropTypes.bool,
+  isNewVersion: PropTypes.bool,
   handleNewVersion: PropTypes.func,
   ViewAllVersions: PropTypes.bool,
   handleAllVersion: PropTypes.func,

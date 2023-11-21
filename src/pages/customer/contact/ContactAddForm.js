@@ -11,7 +11,8 @@ import { Box, Card, Grid, Stack,TextField } from '@mui/material';
 // schema
 import { AddContactSchema } from './schemas/AddContactSchema';
 // slice
-import { addContact, setContactFormVisibility } from '../../../redux/slices/customer/contact';
+import { addContact, getActiveContacts, setContactFormVisibility } from '../../../redux/slices/customer/contact';
+import { getActiveDepartments } from '../../../redux/slices/Department/department';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { useAuthContext } from '../../../auth/useAuthContext';
@@ -37,13 +38,12 @@ ContactAddForm.propTypes = {
 };
 
 export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
-  const { formVisibility } = useSelector((state) => state.contact);
+  const { formVisibility, activeContacts } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
+  const { departments } = useSelector((state) => state.department);
   const { userId, user } = useAuthContext();
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  // const numberRegExp = /^[0-9]+$/;
   const [phone, setPhone] = useState('');
   const [country, setCountryVal] = useState(countries[169]);
 
@@ -57,6 +57,8 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
       isActive: true,
       // phone: '',
       email: '',
+      reportingTo: null,
+      department: null,
       loginUser: {
         userId,
         email: user.email,
@@ -82,6 +84,8 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
    watch();
 
   useEffect(() => {
+    dispatch(getActiveContacts(customer?._id));
+    dispatch(getActiveDepartments())
     reset(defaultValues);
     if (!formVisibility) {
       dispatch(setContactFormVisibility(true));
@@ -122,15 +126,15 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
         <Card sx={{ p: 3, mb: 3 }}>
           <Stack spacing={3}>
             <Box
-              rowGap={3}
+              rowGap={2}
               columnGap={2}
               display="grid"
               gridTemplateColumns={{
                 xs: 'repeat(1, 1fr)',
                 sm: 'repeat(2, 1fr)',
               }}
-              mb={2}
             >
+
               <RHFTextField name={FORMLABELS.FIRSTNAME.name} label={FORMLABELS.FIRSTNAME.label} />
               <RHFTextField name={FORMLABELS.LASTNAME.name} label={FORMLABELS.LASTNAME.label} />
               <RHFTextField name={FORMLABELS.TITLE.name} label={FORMLABELS.TITLE.label} />
@@ -156,7 +160,31 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
               />
 
               <RHFTextField name={FORMLABELS.EMAIL.name} label={FORMLABELS.EMAIL.label} />
+
+              <RHFAutocomplete
+                name={FORMLABELS.REPORTINGTO.name}
+                label={FORMLABELS.REPORTINGTO.label}
+                options={activeContacts}
+                getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}` }
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                renderOption={(props, option) => (
+                  <li {...props} key={option?._id}>{`${option?.firstName  || '' } ${option?.lastName  || '' }`}</li>
+                )}
+              /> 
+
+              <RHFAutocomplete
+                name={FORMLABELS.DEPARTMENT.name}
+                label={FORMLABELS.DEPARTMENT.label}
+                options={departments}
+                getOptionLabel={(option) => option?.departmentName || ''}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                renderOption={(props, option) => (
+                  <li {...props} key={option?._id}>{option?.departmentName || ''}</li>
+                )}
+              />
+
             </Box>
+          
           </Stack>
         </Card>
         <Card sx={{ p: 3, mb: 3 }}>
