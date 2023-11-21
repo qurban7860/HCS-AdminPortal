@@ -87,6 +87,7 @@ export default function MachineViewForm() {
   useEffect(() => {
     dispatch(setSiteDialog(false))
     dispatch(setCustomerDialog(false));
+    dispatch(setMachineDialog(false));
     dispatch(setToolInstalledEditFormVisibility(false));
     dispatch(setToolInstalledFormVisibility(false));
     const isValid = hasValidArray(latLongValues);
@@ -107,9 +108,9 @@ export default function MachineViewForm() {
       setDisableEditButton(false);
       setDisableDeleteButton(false);
     }
-    if (machine?.customer) {
-      dispatch(getCustomer(machine?.customer?._id));
-    }
+    // if (machine?.customer) {
+    //   dispatch(getCustomer(machine?.customer?._id));
+    // }
   }, [dispatch, machine, transferMachineFlag, userId, isSuperAdmin]);
 
   const handleEdit = () => {
@@ -156,7 +157,10 @@ export default function MachineViewForm() {
     }
   };
   
-  const handleCustomerDialog = () => dispatch(setCustomerDialog(true));
+  const handleCustomerDialog = (customerId) => {
+    dispatch(getCustomer(customerId));
+    dispatch(setCustomerDialog(true));
+  };
 
   const handleMachineDialog = (MachineID) => {
     dispatch(getMachineForDialog(MachineID));
@@ -260,7 +264,7 @@ export default function MachineViewForm() {
                     heading="Customer"
                     node={
                       defaultValues.customer && (
-                        <Link onClick={handleCustomerDialog} href="#" underline="none">
+                        <Link onClick={()=> handleCustomerDialog(defaultValues.customer?._id)} href="#" underline="none">
                           {defaultValues.customer?.name}
                         </Link>
                       )

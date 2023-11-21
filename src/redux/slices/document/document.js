@@ -58,12 +58,12 @@ const slice = createSlice({
     setDocumentFormVisibility(state, action){
       state.documentFormVisibility = action.payload;
     },
-    
+
     // SET TOGGLE
     setDocumentViewFormVisibility(state, action){
       state.documentViewFormVisibility = action.payload;
-    },    
-    
+    },
+
     // SET TOGGLE
     setDocumentEditFormVisibility(state, action){
       state.documentEditFormVisibility = action.payload;
@@ -130,7 +130,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    
+
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
       state.isLoading = false;
@@ -255,14 +255,14 @@ export const {
 // ----------------------------Add Document------------------------------------------
 
 export function addDocument(customerId , machineId ,  params) {
-    return async (dispatch) => { 
+    return async (dispatch) => {
         dispatch(slice.actions.startLoading());
         try {
           const formData = new FormData();
           if(customerId){
             formData.append('customer', customerId);
           }
-          
+
           if(machineId){
             formData.append('machine', machineId);
           }
@@ -284,6 +284,9 @@ export function addDocument(customerId , machineId ,  params) {
           }
           if(params?.referenceNumber){
             formData.append('referenceNumber', params.referenceNumber);
+          }
+          if(params?.stockNumber){
+            formData.append('stockNumber', params.stockNumber);
           }
           if(params?.versionNo){
             formData.append('versionNo', params.versionNo);
@@ -307,7 +310,7 @@ export function addDocument(customerId , machineId ,  params) {
               formData.append(`images`, file);
             });
           }
-          
+
       await axios.post(`${CONFIG.SERVER_URL}documents/document/`, formData );
       dispatch(slice.actions.setResponseMessage('Document saved successfully'));
       dispatch(getDocuments( customerId, machineId ));
@@ -331,6 +334,7 @@ export function updateDocument(documentId , params, customerId, machineId) {
       formData.append('isActive', params?.isActive);
       formData.append('customerAccess', params.customerAccess);
       formData.append('referenceNumber', params.referenceNumber);
+      formData.append('stockNumber', params.stockNumber);
       if(params?.versionNo){
         formData.append('versionNo', params.versionNo);
       }
@@ -395,8 +399,8 @@ export function getDocuments(customerId,machineId,drawing) {
       params.forMachine = true;
     }
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` , 
-      { 
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` ,
+      {
         params
       }
       );
@@ -416,7 +420,7 @@ export function getActiveDocumentsByType(documentCategoryId,documentTypeId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` , 
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` ,
       {
         params: {
           isActive: true,
@@ -445,7 +449,7 @@ export function getCustomerDocuments(customerId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` , 
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` ,
       {
         params: {
           isActive: true,
@@ -474,7 +478,7 @@ export function getMachineModelDocuments(machineModelId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` , 
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` ,
       {
         params: {
           isActive: true,
@@ -502,7 +506,7 @@ export function getCustomerSiteDocuments(customerSiteId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` , 
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` ,
       {
         params: {
           isActive: true,
@@ -530,7 +534,7 @@ export function getMachineDocuments(machineId, machineModelId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` , 
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` ,
       {
         params: {
           isActive: true,
@@ -558,7 +562,7 @@ export function getMachineDrawingsDocuments() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` , 
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` ,
       {
         params: {
           isActive: true,
@@ -583,7 +587,7 @@ export function getActiveDocuments() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` , 
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` ,
       {
         params: {
           isActive: true,
@@ -599,7 +603,7 @@ export function getActiveDocuments() {
       throw error;
     }
   };
-} 
+}
 
 // -------------------------------get Document---------------------------------------
 
@@ -646,9 +650,9 @@ export function deleteDocument(documentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${documentId}` , 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${documentId}` ,
       {
-          isArchived: true, 
+          isArchived: true,
       });
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
