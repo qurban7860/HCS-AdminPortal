@@ -276,6 +276,10 @@ export const ICONS = {
     icon: 'icon-park-outline:setting-config',
     heading: 'System Config',
   },
+  DEPARTMENNTS: {
+    icon: 'mingcute:department-line',
+    heading: 'Departments',
+  },
 
   MOVE_MACHINE: {
     icon: 'ri:swap-box-line',

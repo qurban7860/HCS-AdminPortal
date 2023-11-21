@@ -1,0 +1,96 @@
+import * as Yup from 'yup';
+import { useMemo } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+// form
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+// @mui
+import { Box, Card, Grid, Stack, Container } from '@mui/material';
+// slice
+import AddFormButtons from '../components/DocumentForms/AddFormButtons';
+import { addDepartment } from '../../redux/slices/Department/department';
+// routes
+import { PATH_SETTING } from '../../routes/paths';
+// components
+import { useSnackbar } from '../../components/snackbar';
+import FormProvider, { RHFTextField } from '../../components/hook-form';
+// auth
+// import { useAuthContext } from '../../../auth/useAuthContext';
+// // asset
+// import { countries } from '../../../assets/data';
+// util
+import { Cover } from '../components/Defaults/Cover';
+import { StyledCardContainer } from '../../theme/styles/default-styles';
+import ToggleButtons from '../components/DocumentForms/ToggleButtons';
+// constants
+import { FORMLABELS } from '../../constants/default-constants';
+// import { Snacks } from '../../../constants/document-constants';
+
+// ----------------------------------------------------------------------
+
+export default function DepartmentAddForm() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const defaultValues = useMemo(
+    () => ({
+      departmentName: '',
+      isActive: true,
+    }),
+    []
+  );
+
+  const DepartmentSchema = Yup.object().shape({
+    departmentName: Yup.string().min(2, 'Name must be at least 2 characters long').max(50).required('Name is required').trim(),
+    isActive: Yup.boolean(),
+  });
+
+  const methods = useForm({
+    resolver: yupResolver(DepartmentSchema),
+    defaultValues,
+  });
+
+  const {
+    reset,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = methods;
+
+  const toggleCancel = () => {
+    navigate(PATH_SETTING.departments.list);
+  };
+
+  const onSubmit = async (data) => {
+    try {
+      await dispatch(addDepartment(data));
+      reset();
+      enqueueSnackbar('Department Added Successfully!');
+      navigate(PATH_SETTING.departments.list);
+    } catch (error) {
+      enqueueSnackbar(error?.message, { variant: `error` });
+      console.error(error);
+    }
+  };
+  return (
+    <Container maxWidth={false}>
+      <StyledCardContainer><Cover name={FORMLABELS.COVER.DEPARTMENTS_ADD}/></StyledCardContainer>
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <Grid container>
+          <Grid item xs={18} md={12} sx={{ mt: 3 }}>
+            <Card sx={{ p: 3 }}>
+              <Stack spacing={2}>
+                <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)'}}>
+                  <RHFTextField name="departmentName" label="Name*" />
+                </Box>
+                <ToggleButtons isMachine name={FORMLABELS.isACTIVE.name}/>
+                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              </Stack>
+            </Card>
+          </Grid>
+        </Grid>
+      </FormProvider>
+    </Container>
+  );
+}

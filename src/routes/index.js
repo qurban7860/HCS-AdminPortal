@@ -205,6 +205,13 @@ import {
 //   
   BlankPage,
   PermissionDeniedPage,
+
+  // Departmennts
+  DepartmentAdd, 
+  DepartmentList,
+  DepartmentEdit,
+  DepartmentView,
+
 //
   Page500,
   Page403,
@@ -612,6 +619,15 @@ export default function Router() {
             { path: 'new', element: <ConfigAdd /> },
             { path: ':id/view', element: <ConfigView /> },
             { path: ':id/edit', element: <ConfigEdit /> }
+          ],
+        },
+        {
+          path: 'departments',
+          children: [
+            { path: 'list', element: <DepartmentList /> },
+            { path: 'new', element: <DepartmentAdd /> },
+            { path: ':id/view', element: <DepartmentView /> },
+            { path: ':id/edit', element: <DepartmentEdit /> }
           ],
         },
         {
