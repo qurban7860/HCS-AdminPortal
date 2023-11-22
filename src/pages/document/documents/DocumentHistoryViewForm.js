@@ -9,7 +9,9 @@ import {
   Tooltip,
   Typography,
   Link,
-  Button
+  Button,
+  CardHeader,
+  CardContent
 } from '@mui/material';
 import { ThumbnailDocButton } from '../../components/Thumbnails'
 import { StyledVersionChip } from '../../../theme/styles/default-styles';

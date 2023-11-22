@@ -60,15 +60,13 @@ import {
   machineDrawingsChangeRowsPerPage,
   deleteDocument,
 } from '../../../redux/slices/document/document';
+import { getMachineForDialog, setMachineDialog } from '../../../redux/slices/products/machine';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
-
-// ----------------------------------------------------------------------
-
-
+import MachineDialog from '../../components/Dialog/MachineDialog';
 
 // ----------------------------------------------------------------------
 DocumentList.propTypes = {
@@ -305,6 +303,11 @@ const  onChangePage = (event, newPage) => {
     setFilterStatus([]);
   };
 
+  const handleMachineDialog = (e, id) => {
+    dispatch(getMachineForDialog(id))
+    dispatch(setMachineDialog(true))
+  }
+
   return (
     <>
     {/* <Container sx={{mb:3}}> */}
@@ -355,6 +358,7 @@ const  onChangePage = (event, newPage) => {
                         customerPage={customerPage}
                         machinePage={machinePage}
                         machineDrawings={machineDrawings}
+                        handleMachineDialog={(e)=> row?.machine && handleMachineDialog(e,row?.machine?._id)}
                       />
                     ) : (
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -375,6 +379,7 @@ const  onChangePage = (event, newPage) => {
         />}
       </TableCard>
       {/* </Container> */}
+      <MachineDialog />
     </>
   );
 }
