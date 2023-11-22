@@ -20,7 +20,7 @@ export default function CopyIcon({ value }) {
       tempInput.select();
       document.execCommand('copy');
       document.body.removeChild(tempInput);
-    enqueueSnackbar("Coppied!");
+    enqueueSnackbar("Copied!");
     }catch(err){
       enqueueSnackbar('Copy Failed!');
     }

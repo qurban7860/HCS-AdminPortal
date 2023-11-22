@@ -116,7 +116,8 @@ const slice = createSlice({
 
 // Reducer
 export default slice.reducer;
-export const ProfileTypes = ['MANUFACTURER','CUSTOMER']
+
+export const ProfileTypes = ['MANUFACTURE','CUSTOMER']
 
 // Actions
 export const {

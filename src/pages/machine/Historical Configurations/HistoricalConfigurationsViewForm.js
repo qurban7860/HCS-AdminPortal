@@ -1,9 +1,9 @@
-import { useMemo, memo } from 'react';
+import { useMemo, memo, useState, useRef, useEffect } from 'react';
+import debounce from 'lodash/debounce';
 import { useDispatch, useSelector } from 'react-redux';
-import { JSONTree } from 'react-json-tree';
 import ReactJson from 'react-json-view'
 // @mui
-import {  Card, Grid } from '@mui/material';
+import {  Card, Grid, Stack } from '@mui/material';
 // redux
 import { setHistoricalConfigurationViewFormVisibility, getHistoricalConfigurationRecord, getHistoricalConfigurationRecords } from '../../../redux/slices/products/historicalConfiguration';
 // components
@@ -13,17 +13,37 @@ import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormNoteField from '../../components/ViewForms/ViewFormNoteField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-// import ObjectPrinter from './ObjectPrinter';
 import { fDate } from '../../../utils/formatTime';
+import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
+
 
 function HistoricalConfigurationsViewForm() {
 
   const { historicalConfiguration, historicalConfigurationViewFormFlag, isLoading } = useSelector((state) => state.historicalConfiguration);
   const { machine } = useSelector((state) => state.machine)
+  const [filterName, setFilterName] = useState('');
 
+  const isFiltered = filterName !== ''
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
+  const debouncedSearch = useRef(debounce((value) => {
+    // dispatch(ChangePage(0))
+  }, 500))
+
+  const handleFilterName = (event) => {
+    debouncedSearch.current(event.target.value);
+    setFilterName(event.target.value)
+  };
+  
+  const handleResetFilter = () => {
+    setFilterName('');
+  };
+
+  useEffect(() => {
+      debouncedSearch.current.cancel();
+  }, [debouncedSearch]);
+  
 
   const defaultValues = useMemo(
     () => ({
@@ -40,43 +60,20 @@ function HistoricalConfigurationsViewForm() {
   );
   
 
-  const printObject = (obj, depth = 0) => {
-    const indent = '                     '.repeat(depth);
-    const keys = Object.keys(obj);
-console.log("printObject depth :",depth)
-    return `{\n${keys.map(key => `${indent}  ${key}: ${printValue(obj[key], depth + 1)}`).join(',\n')}\n${indent}}`;
-  };
-
-  const printArray = (arr, depth) => {
-console.log("printArray depth :",depth)
-
-    const indent = '                     '.repeat(depth);
-    return `[\n${arr.map(item => `${indent}  ${printValue(item, depth + 1)}`).join(',\n')}\n${indent}]`;
-  };
-
-  const printValue = (value, depth) => {
-console.log("printValue depth :",depth)
-
-    if (typeof value === 'object' && value !== null) {
-      if (Array.isArray(value)) {
-        return printArray(value, depth);
-      } 
-        return printObject(value, depth);
-    } 
-      return JSON.stringify(value);
-    
-  };
-
   return (
     <Card sx={{ p: 2 }}>
       <Grid>
         <ViewFormEditDeleteButtons backLink={()=> dispatch(setHistoricalConfigurationViewFormVisibility(false))} />
-        <Grid container>
-          {/* <ObjectPrinter data={historicalConfiguration}/> */}
-          {/* <ViewFormNoteField sm={12} param={printObject(historicalConfiguration)} /> */}
+        <Stack spacing={2} sx={{p:2}}>
+          <SearchBarCombo
+            isFiltered={isFiltered}
+            value={filterName}
+            onChange={handleFilterName}
+            onClick={handleResetFilter}
+          />
           <ReactJson enableClipboard src={historicalConfiguration} />
+        </Stack>
           <ViewFormAudit  defaultValues={defaultValues} />
-        </Grid>
       </Grid>
     </Card>
   );

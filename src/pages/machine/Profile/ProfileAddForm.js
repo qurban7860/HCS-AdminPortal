@@ -42,6 +42,7 @@ export default function ProfileAddForm() {
       names:[],
       web:'',
       flange:'',
+      thickness:'',
       type:'CUSTOMER',
       isActive: true,
     }),
@@ -69,7 +70,7 @@ export default function ProfileAddForm() {
   
   useEffect(() => {
     const hasManufacturer = profiles.some((profile) => profile.type === 'MANUFACTURER');
-    const updatedProfileTypes = hasManufacturer?ProfileTypes.filter((type) => type !== 'MANUFACTURER'): ProfileTypes;
+    const updatedProfileTypes = hasManufacturer? ProfileTypes.filter((type) => type !== 'MANUFACTUR') : ProfileTypes;
     setProfileTypes(updatedProfileTypes);
   }, [profiles]);
 
@@ -126,6 +127,7 @@ export default function ProfileAddForm() {
 
               <RHFTextField name="web" label="Web"/>
               <RHFTextField name="flange" label="Flange"/>
+              <RHFTextField name="thickness" label="Thickness"/>
               
               <RHFSwitch name="isActive" labelPlacement="start"
                 label={
