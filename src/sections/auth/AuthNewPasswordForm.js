@@ -17,6 +17,8 @@ import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
 import axios from '../../utils/axios';
 import { CONFIG } from '../../config-global';
+// constants
+import { BUTTONS, Snacks } from '../../constants/default-constants'
 
 // ----------------------------------------------------------------------
 
@@ -24,8 +26,8 @@ export default function AuthNewPasswordForm() {
   const navigate = useNavigate();
   const { token, userId } = useParams();
   const { enqueueSnackbar } = useSnackbar();
-
   const [showPassword, setShowPassword] = useState(false);
+  const [ update, setUpdate ] = useState(false)
 
   // const emailRecovery =
   //   typeof window !== 'undefined' ? sessionStorage.getItem('email-recovery') : '';
@@ -74,10 +76,11 @@ export default function AuthNewPasswordForm() {
 
       await axios.post(`${CONFIG.SERVER_URL}security/forgetPassword/verifyToken`, DATA);
 
-      enqueueSnackbar('Change password success!');
+      setUpdate(true)
+      enqueueSnackbar(Snacks.password_changed);
       navigate(PATH_DASHBOARD.root);
     } catch (error) {
-      enqueueSnackbar("Change password Failed!", { variant: `error` })
+      enqueueSnackbar(Snacks.password_change_failed, { variant: `error` })
       console.error(error);
     }
   };
@@ -85,7 +88,6 @@ export default function AuthNewPasswordForm() {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
-        
 
         <RHFTextField
           name="password"
@@ -125,7 +127,7 @@ export default function AuthNewPasswordForm() {
           loading={isSubmitting}
           sx={{ mt: 3 }}
         >
-          Update Password
+          {update ? BUTTONS.UPDATED('Password') : BUTTONS.UPDATEPASSWORD }
         </LoadingButton>
       </Stack>
     </FormProvider>

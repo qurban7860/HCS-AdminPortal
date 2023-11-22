@@ -38,6 +38,9 @@ export const FORMLABELS = {
     ADD_DOCUMENTS: 'Add Documents',
     MACHINE_DRAWINGS: 'Machine Drawings',
     ADD_MACHINE_DRAWINGSS: 'New Machine Drawing',
+    DEPARTMENTS: 'Departments',
+    DEPARTMENTS_ADD: 'Add Department',
+    DEPARTMENTS_EDIT: 'Edit Department',
     MACHINE_CHECK_ITEM_SERVICE_CATEGORIES: 'Check Item Categories',
     MACHINE_CHECK_ITEM_SERVICE_CATEGORY_ADD: 'New Check Item Category',
     MACHINE_CHECK_ITEM_SERVICE_CATEGORY_EDIT: 'Edit Check Item Category',
@@ -183,6 +186,11 @@ export const BUTTONS = {
   ADDSTATUS: 'Add Status',
   ADDTECHPARAM: 'Add Technical Parameter',
 
+  // machine
+  ADDTOOLINSTALLED: 'Add Tool Installed',
+  ADDLICENSE: 'Add License',
+  ADDPROFILE: 'Add Profile',
+
   // documents
   ADDDOCUMENT: 'Add Document',
   ADDDRAWING: 'Add Drawing',
@@ -199,7 +207,8 @@ export const BUTTONS = {
   ADDREGION: 'Add Region',
   // module
   ADDMODULE: 'Add Module',
-
+  // note
+  ADDNOTE: 'Add Note',
   // CONFIG
   ADDCONFIG: 'Add Config',
 
@@ -208,6 +217,10 @@ export const BUTTONS = {
   ADD_SERVICE_CHECK_ITEM: 'Add Check Item',
   ADD_MACHINE_SERVICE_CONFIG: 'Add Configuration',
   ADD_MACHINE_SERVICE_RECORD: 'Add Record',
+
+  // auth
+  UPDATEPASSWORD: 'Update Password',
+  UPDATED: (param) => `${param} Updated`
 };
 
 export const BREADCRUMBS = {
@@ -254,6 +267,7 @@ export const TITLES = {
   NEWLICENSE: 'New License',
   // @root - ResetPasswordPage - forgot password
   FORGOT_PASSWORD: 'Forgot your password?',
+ CHECK_EMAIL: 'Check your E-mail',
   FORGOT_DESC:
     'Enter your email address below and we will send you instructions on how to reset your password.',
   FORGOT_RETURN: 'Return to sign in',
@@ -288,4 +302,7 @@ export const Snacks = {
   configuration_Verification_Failed: 'Verification Failed!',
   configuration_approve_Success: 'Document approved Successfully!',
   configuration_approve_Failed: 'Document approve Failed!',
+  // auth: reset
+  password_changed: 'Password update Successful',
+  password_change_failed: 'Password update Failed'
 }

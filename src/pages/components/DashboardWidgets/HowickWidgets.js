@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Typography, Box, Stack } from '@mui/material';
+import { Typography, Box, Stack, Grid, Divider } from '@mui/material';
 // utils
 import { fNumber } from '../../../utils/formatNumber';
 // components
@@ -84,12 +84,19 @@ export default function HowickWidgets({
       <Chart type="polarArea" series={[0.00]} options={chartOptions} width={86} height={86} />
 
       <Box sx={{ ml: 3 }}>
-        <Typography variant="h4"> {connectableCount?fNumber(total-connectableCount):fNumber(total)}</Typography>
-        <Typography variant="body1" sx={{ opacity: 0.72 }}>
-          {title}
-        </Typography>
-        {notVerifiedTitle && notVerifiedCount && <Typography variant="body2" sx={{ opacity: 0.72, position:'absolute', right:'10px', bottom:'1px' }}>{notVerifiedTitle} : {notVerifiedCount}</Typography>}
-        {connectableTitle && connectableCount && <Typography variant="body2" sx={{ opacity: 0.72, position:'absolute', left:'10px', bottom:'1px' }}>{connectableTitle} : {connectableCount}</Typography>}
+       <Grid container flex>
+        <Grid item textAlign='right'>
+            <Typography variant="h4"> {connectableCount?fNumber(total-connectableCount):fNumber(total)}</Typography>
+            <Typography variant="body1" sx={{ opacity: 0.72 }}>
+              {title}
+            </Typography>
+          </Grid>
+          <Divider orientation="vertical" flexItem sx={{ m: 1}} />
+          <Grid item>
+          {notVerifiedTitle && notVerifiedCount && <Typography variant="body2" sx={{ opacity: 0.72 }}>{notVerifiedTitle} : {notVerifiedCount}</Typography>}
+          {connectableTitle && connectableCount && <Typography variant="body2" sx={{ opacity: 0.72 }}>{connectableTitle} : {connectableCount}</Typography>}
+          </Grid>
+        </Grid>
       </Box>
 
       <Iconify

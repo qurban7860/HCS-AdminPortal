@@ -13,8 +13,10 @@ import {
   setContactEditFormVisibility,
   resetContact,
   getContacts,
+  getActiveContacts,
   getContact,
 } from '../../../redux/slices/customer/contact';
+import { getActiveDepartments } from '../../../redux/slices/Department/department'
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, {
@@ -42,8 +44,9 @@ ContactEditForm.propTypes = {
 };
 
 export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
-  const { contact } = useSelector((state) => state.contact);
+  const { contact, activeContacts } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
+  const { departments } = useSelector((state) => state.department);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const [phone, setPhone] = useState('');
@@ -60,6 +63,8 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
       contactTypes: contact?.contactTypes || [],
       // phone: contact?.phone || '',
       email: contact?.email || '',
+      reportingTo: contact?.reportingTo || null,
+      department: contact?.department || null,
       street: contact?.address?.street || '',
       suburb: contact?.address?.suburb || '',
       city: contact?.address?.city || '',
@@ -84,7 +89,12 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
     formState: { isSubmitting },
   } = methods;
 
-   watch();
+  watch();
+
+  useEffect(() => {
+    dispatch(getActiveContacts(customer?._id))
+    dispatch(getActiveDepartments())
+  },[dispatch, customer?._id])
 
   function filtter(data, input) {
     const filteredOutput = data.filter((obj) =>
@@ -153,6 +163,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
+
                 <RHFTextField name={FORMLABELS.FIRSTNAME.name} label={FORMLABELS.FIRSTNAME.label} />
                 <RHFTextField name={FORMLABELS.LASTNAME.name} label={FORMLABELS.LASTNAME.label} />
                 <RHFTextField name={FORMLABELS.TITLE.name} label={FORMLABELS.TITLE.label} />
@@ -177,7 +188,31 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                 />
 
                 <RHFTextField name={FORMLABELS.EMAIL.name} label={FORMLABELS.EMAIL.label} />
+
+              <RHFAutocomplete
+                  name={FORMLABELS.REPORTINGTO.name}
+                  label={FORMLABELS.REPORTINGTO.label}
+                  options={activeContacts.filter((activeContact)=> contact?._id !== activeContact?._id )}
+                  getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option?._id}>{`${option?.firstName  || '' } ${option?.lastName  || '' }`}</li>
+                  )}
+                />
+
+              <RHFAutocomplete
+                name={FORMLABELS.DEPARTMENT.name}
+                label={FORMLABELS.DEPARTMENT.label}
+                options={departments}
+                getOptionLabel={(option) => option?.departmentName || ''}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                renderOption={(props, option) => (
+                  <li {...props} key={option?._id}>{option?.departmentName || ''}</li>
+                )}
+              />
+
               </Box>
+              
             </Stack>
           </Card>
 

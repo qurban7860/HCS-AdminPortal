@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 // form
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -15,6 +16,7 @@ import { useSnackbar } from '../../components/snackbar';
 // ----------------------------------------------------------------------
 
 export default function AuthResetPasswordForm() {
+  const [ disable, setDisable ] = useState(false)
   const { enqueueSnackbar } = useSnackbar();
   const regEx = /^[4][0-9][0-9]$/;
 
@@ -39,7 +41,7 @@ export default function AuthResetPasswordForm() {
     try {
       const response = await axios.post(`${CONFIG.SERVER_URL}security/forgetPassword`, data);
       enqueueSnackbar(response.data.Message);
-
+      setDisable(true)
       // await new Promise((resolve) => setTimeout(resolve, 500));
       // sessionStorage.setItem('email-recovery', data.email);
       // navigate(PATH_AUTH.newPassword);
@@ -68,7 +70,7 @@ export default function AuthResetPasswordForm() {
         </Alert>
       )}
 
-      <RHFTextField name="email" label="Email" />
+      <RHFTextField name="email" label="Email" disabled={disable} />
 
       <LoadingButton
         fullWidth
@@ -76,9 +78,10 @@ export default function AuthResetPasswordForm() {
         type="submit"
         variant="contained"
         loading={isSubmitting}
+        disabled={disable}
         sx={{ mt: 3 }}
       >
-        {TITLES.FORGOT_REQUEST}
+        {disable ? TITLES.CHECK_EMAIL : TITLES.FORGOT_REQUEST}
       </LoadingButton>
     </FormProvider>
   );

@@ -780,7 +780,7 @@ function DocumentAddForm({
                       label="Machine"
                       options={customerMachines}
                       isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
-                      getOptionLabel={(option) => `${ option.serialNo} + ${option.name} `}
+                      getOptionLabel={(option) => `${ option.serialNo} ${option?.name ? '-' : ''} ${option?.name || ''}`}
                       renderOption={(props, option) => (
                         <li {...props} key={option._id}>{`${option.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}</li>
                       )}

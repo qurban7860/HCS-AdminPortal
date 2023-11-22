@@ -270,8 +270,13 @@ export const ConfigAdd = Loadable(lazy(() => import('../pages/config/ConfigAdd')
 export const ConfigList = Loadable(lazy(() => import('../pages/config/ConfigList')));
 export const ConfigEdit = Loadable(lazy(() => import('../pages/config/ConfigEdit')));
 export const ConfigView = Loadable(lazy(() => import('../pages/config/ConfigView')));
-// export const machineDocumentView = Loadable(lazy(()=>     import('../pages/')));
-// export const machineDocumentEdit = Loadable(lazy(()=>     import('../pages/')));
+
+// Configs
+
+export const DepartmentAdd  = Loadable(lazy(() => import('../pages/Department/DepartmentAddForm')));
+export const DepartmentList = Loadable(lazy(() => import('../pages/Department/DepartmentList')));
+export const DepartmentEdit = Loadable(lazy(() => import('../pages/Department/DepartmentEditForm')));
+export const DepartmentView = Loadable(lazy(() => import('../pages/Department/DepartmentView')));
 
 // DASHBOARD: SETTINGS
 export const Setting = Loadable(lazy(() => import('../pages/setting/Setting')));

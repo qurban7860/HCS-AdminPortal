@@ -72,6 +72,8 @@ export default function ContactViewForm({
       contactTypes: contact?.contactTypes || [],
       phone: contact?.phone || '',
       email: contact?.email || '',
+      reportingTo: contact?.reportingTo || {},
+      department: contact?.department?.departmentName || '',
       street: contact?.address?.street || '',
       suburb: contact?.address?.suburb || '',
       city: contact?.address?.city || '',
@@ -99,6 +101,8 @@ export default function ContactViewForm({
         <ViewFormField sm={6} heading="Contact Types" chips={defaultValues?.contactTypes} />
         <ViewFormField sm={6} heading="Phone" param={defaultValues?.phone} />
         <ViewFormField sm={6} heading="Email" param={defaultValues?.email} />
+        <ViewFormField sm={6} heading="Report To" param={`${defaultValues?.reportingTo?.firstName || '' } ${defaultValues?.reportingTo?.lastName || '' }`} />
+        <ViewFormField sm={6} heading="Department" param={defaultValues?.department} />
         <ViewFormField sm={6} heading="Street" param={defaultValues?.street} />
         <ViewFormField sm={6} heading="Suburb" param={defaultValues?.suburb} />
         <ViewFormField sm={6} heading="City" param={defaultValues?.city} />

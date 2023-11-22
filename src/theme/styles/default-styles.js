@@ -152,10 +152,13 @@ export const StyledTableRow = styled(TableRow)(({ theme }) => ({
 // @root - GeneralAppPage - dashboard
 
 export const StyledContainer = styled(Container)(({ theme }) => ({
-  backgroundImage: `url(../../assets/illustrations/illustration_howick_icon.svg)`,
+  backgroundImage: `url(../../assets/background/Howick_elements_bg_2.svg)`,
   backgroundRepeat: 'no-repeat',
-  backgroundPosition: 'top right',
-  backgroundSize: 'auto 80%',
+  backgroundPositionY: 'center',
+  backgroundPositionX: 'left',
+  backgroundSize: '100%',
+  backgroundBlendMode: 'multiply',
+  backgroundOpacity: 0.9,
   backgroundAttachment: 'fixed',
   display: 'flex',
   flexDirection: 'column',
@@ -163,6 +166,7 @@ export const StyledContainer = styled(Container)(({ theme }) => ({
   alignItems: 'center',
   padding: 0,
   alignContent: 'center',
+  color: 'text.primary',
 }));
 
 export const StyledGlobalCard = styled(Card)(({ theme }) => ({
@@ -188,10 +192,10 @@ export const StyledBg = styled('div')(({ theme }) => ({
   zIndex: -1,
   position: 'absolute',
   transform: 'scaleX(-1)',
-  ...bgGradient({
-    color: alpha(theme.palette.background.default, theme.palette.mode === 'light' ? 0.9 : 0.94),
-    imgUrl: '/assets/background/overlay_2.jpg',
-  }),
+  // ...bgGradient({
+  //   color: alpha(theme.palette.background.default, theme.palette.mode === 'light' ? 0.9 : 0.94),
+  //   // imgUrl: '/assets/background/overlay_2.jpg',
+  // }),
 }));
 
 export const StyledCardContainer = styled(Card)(({ theme }) => ({

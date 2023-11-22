@@ -4,6 +4,7 @@ import DocumentTagPage from '../../document/documents/DocumentTagPage';
 import MachineDrawings from '../Drawing/MachineDrawings';
 import MachineLicenses from '../License/MachineLicenses';
 import MachineServiceRecordList from '../MachineServiceRecordList';
+import HistoricalConfigurations from '../HistoricalConfigurations';
 import MachineProfiles from '../Profile/MachineProfiles';
 import MachineSetting from '../Setting/MachineSetting';
 import MachineToolInstalled from '../ToolsInstalled/MachineToolInstalled';
@@ -71,6 +72,13 @@ export const TABS = (currentComponent, showDevTabs, disableTab) => [
     label: 'Service Records',
     icon: <Iconify icon="mdi:clipboard-text-clock" />,
     component : <MachineServiceRecordList />,
+  },
+  {
+    disabled: disableTab,
+    value: 'historicalConfigurations',
+    label: 'INI',
+    icon: <Iconify icon="ic:round-manage-history" />,
+    component : <HistoricalConfigurations />,
   },
  
   // ...(showDevTabs

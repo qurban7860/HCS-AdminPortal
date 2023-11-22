@@ -10,6 +10,7 @@ function ViewFormField({
   backLink,
   heading,
   param,
+  objectString,
   node,
   chipLabel,
   arrayParam,
@@ -107,6 +108,7 @@ function ViewFormField({
         {currentEmp !== undefined && <IconPopover currentEmp={currentEmp} />}
         {customerAccess !== undefined && <IconPopover customerAccess={customerAccess} />}
         {param && typeof param === 'string' && param.trim().length > 0 && param}
+        {objectString && typeof objectString === 'string' && objectString.length > 0 && objectString}
         {param &&
           typeof param === 'string' &&
           param.trim().length > 0 &&
@@ -243,6 +245,7 @@ ViewFormField.propTypes = {
   heading: PropTypes.string,
   node: PropTypes.node,
   param: PropTypes.string,
+  objectString: PropTypes.string,
   arrayParam: PropTypes.array,
   toolType: PropTypes.array,
   chipLabel: PropTypes.string,
