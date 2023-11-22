@@ -79,8 +79,8 @@ export default function ToolInstalledList() {
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
-    filterStatus,
   });  
+  
   const denseHeight = 60;
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
@@ -202,9 +202,6 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
     );
   }
 
-  if (filterStatus.length) {
-    inputData = inputData.filter((licenseg) => filterStatus.includes(licenseg.status));
-  }
 
   return inputData;
 }
