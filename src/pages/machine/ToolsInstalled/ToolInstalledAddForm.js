@@ -533,7 +533,7 @@ function ToolsInstalledAddForm() {
                         options={engageOnConditions}
                         getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                         onChange={(event, value) => field.onChange(value)}
-                        isOptionEqualToValue={(option, value) => option?.name === value?.name}
+                        isOptionEqualToValue={(option, value) => option.name === value.name}
                         id="combo-box-demo"
                         renderInput={(params) => (
                         <TextField 
@@ -560,7 +560,7 @@ function ToolsInstalledAddForm() {
                         {...field}
                         options={engageOffConditions}
                         getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                        isOptionEqualToValue={(option, value) => option?.name === value?.name}
+                        isOptionEqualToValue={(option, value) => option.name === value.name}
                         onChange={(event, value) => field.onChange(value)}
                         id="combo-box-demo"
                         renderInput={(params) => (
@@ -790,7 +790,7 @@ function ToolsInstalledAddForm() {
                             id={`engageInstruction_${index}`}
                             options={toolsInstalled}
                             getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
-                            isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                            isOptionEqualToValue={(option, value) => option?.tool?._id === value?.tool?._id}
                             onChange={(event, value) => {
                               field.onChange(value);
                               setCompositToolVal((prevVal) => {
@@ -824,7 +824,7 @@ function ToolsInstalledAddForm() {
                             id={`disengageInstruction_${index}`}
                             options={toolsInstalled}
                             getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
-                            isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                            isOptionEqualToValue={(option, value) => option?.tool?._id === value?.tool?._id}
                             // onChange={(event, value) => field.onChange(value)}
                             onChange={(event, value) => {
                               field.onChange(value);
