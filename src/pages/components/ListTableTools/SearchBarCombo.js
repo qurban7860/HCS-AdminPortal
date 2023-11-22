@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Grid, TextField, InputAdornment, Button, Stack, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
 import { BUTTONS } from '../../../constants/default-constants';
 import Iconify from '../../../components/iconify';
+import IconPopover from '../Icons/IconPopover';
 import useResponsive from '../../../hooks/useResponsive';
 
 function SearchBarCombo({
@@ -114,6 +115,7 @@ function SearchBarCombo({
         <Grid item xs={12} sm={2}>
         {addButton &&
           <Stack alignItems="flex-end">
+           <IconPopover addBtn={addButton} isSearchBtn>
             <Button
               disabled={transferredMachine}
               fullWidth
@@ -123,8 +125,9 @@ function SearchBarCombo({
               variant="contained"
               startIcon={<Iconify icon={buttonIcon || 'eva:plus-fill'} />}
             >
-              {addButton.toUpperCase()}
+               &nbsp;
             </Button>
+            </IconPopover>
           </Stack>
         }
         </Grid>

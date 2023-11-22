@@ -24,6 +24,9 @@ export default function IconPopover({
   isViewAllVersions,
   isNewVersion,
   onClick,
+  isSearchBtn,
+  addBtn,
+  children
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const isPopoverOpen = Boolean(anchorEl);
@@ -341,6 +344,40 @@ export default function IconPopover({
         </>
       )}
 
+       {/* popovers for search buttons */}
+       {isSearchBtn !== undefined && (
+        <>
+          <IconButton
+            aria-label={ICONS.SEARCHBTN.heading(addBtn)}
+            onMouseEnter={handlePopoverOpen}
+            onMouseLeave={handlePopoverClose}
+            onClick={onClick}
+            size='small'
+            edge='start'
+            sx={{ borderRadius: '12px' }}
+          >
+           {children}
+          </IconButton>
+          <StyledPopover
+            open={isPopoverOpen}
+            anchorEl={anchorEl}
+            onClose={handlePopoverClose}
+            anchorOrigin={{
+              vertical: 'center',
+              horizontal: 'left',
+            }}
+            transformOrigin={{
+              vertical: 'center',
+              horizontal: 'right',
+            }}
+
+          >
+            <Typography variant={ICONS.variant} color={themes.palette.primary.main} mr={2}>
+              {ICONS.SEARCHBTN.heading(addBtn)}
+            </Typography>
+          </StyledPopover>
+        </>
+      )}
       {/* documentIsActive icon */}
       {documentIsActive !== undefined && (
         <>
@@ -579,4 +616,7 @@ IconPopover.propTypes = {
   isViewAllVersions: PropTypes.bool,
   isNewVersion: PropTypes.bool,
   onClick: PropTypes.func,
+  isSearchBtn: PropTypes.bool,
+  children: PropTypes.node,
+  addBtn: PropTypes.string
 };

@@ -80,6 +80,10 @@ export const ICONS = {
     color: 'red',
     heading: 'Not Verified',
   },
+  SEARCHBTN: {
+      color: 'green',
+      heading: (btnName) => btnName
+    },
   // ------------------------------------------------------------
   // isActive -Documents
   DOCUMENT_ACTIVE: {
