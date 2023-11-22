@@ -334,7 +334,7 @@ export default function SiteEditForm() {
                   // freeSolo
                   value={billingContactVal || null}
                   options={activeContacts}
-                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                  isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                   getOptionLabel={(option) => `${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
                   onChange={(event, newValue) => {
                     if (newValue) {
@@ -359,7 +359,7 @@ export default function SiteEditForm() {
                   // freeSolo
                   value={technicalContactVal || null}
                   options={activeContacts}
-                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                  isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                   getOptionLabel={(option) => `${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
                   onChange={(event, newValue) => {
                     if (newValue) {

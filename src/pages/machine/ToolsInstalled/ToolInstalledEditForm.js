@@ -892,7 +892,7 @@ function ToolsInstalledEditForm() {
                             id={`engageInstruction_${index}`}
                             options={toolsInstalled}
                             getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
-                            isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                            isOptionEqualToValue={(option, value) => option?.tool?._id === value?.tool?._id}
                             onChange={(event, value) => {
                               setCompositToolVal((prevVal) => {
                                 const updatedVal = [...prevVal];
@@ -914,7 +914,7 @@ function ToolsInstalledEditForm() {
                             id={`disengageInstruction_${index}`}
                             options={toolsInstalled}
                             getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
-                            isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                            isOptionEqualToValue={(option, value) => option?.tool?._id === value?.tool?._id}
                             onChange={(event, value) => {
                               setCompositToolVal((prevVal) => {
                                 const updatedVal = [...prevVal];

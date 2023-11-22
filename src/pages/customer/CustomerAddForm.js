@@ -483,7 +483,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     // freeSolo
                     value={accountManVal || null}
                     options={spContacts}
-                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                     getOptionLabel={(option) =>
                       `${option.firstName ? option.firstName : ''} ${
                         option.lastName ? option.lastName : ''
@@ -510,7 +510,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     // freeSolo
                     value={projectManVal || null}
                     options={spContacts}
-                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                     getOptionLabel={(option) =>
                       `${option.firstName ? option.firstName : ''} ${
                         option.lastName ? option.lastName : ''
@@ -537,7 +537,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     // freeSolo
                     value={supportManVal || null}
                     options={spContacts}
-                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                     getOptionLabel={(option) =>
                       `${option.firstName ? option.firstName : ''} ${
                         option.lastName ? option.lastName : ''
