@@ -1,20 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Card, CardContent, CardHeader } from '@mui/material';
 import { StyledCardCover } from '../../../theme/styles/document-styles';
 import { Cover } from '../Defaults/Cover';
 import { PATH_DOCUMENT } from '../../../routes/paths';
 
 export default function DocumentCover({ content, backLink, generalSettings, machineDrawingsBackLink }) {
   return (
-    <StyledCardCover>
-      <Cover
-        name={content}
-        icon="ph:users-light"
-        machineDrawingsBackLink={machineDrawingsBackLink ? PATH_DOCUMENT.document.machineDrawings.list : ''}
-        backLink={backLink ? PATH_DOCUMENT.document.list : ''}
-        generalSettings
-      />
-    </StyledCardCover>
+    <Card sx={{alignItems:'flex-end'}}>
+      <CardHeader title={content} titleTypographyProps={{variant:'h2', component:'h2'}} sx={{height:'115px', color:'white', background:'#103996cc'}} />
+      <CardContent/>
+    </Card>
   );
 }
 

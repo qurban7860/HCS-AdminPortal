@@ -6,12 +6,15 @@ import {
   TableRow,
   TableCell,
   IconButton,
+  Button,
+  Link,
 } from '@mui/material';
 // utils
-import { styled } from '@mui/material/styles';
+import { styled , alpha} from '@mui/material/styles';
 import { fDate } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
+import LinkDialogTableCell from '../../components/ListTableTools/LinkDialogTableCell';
 import { useScreenSize } from '../../../hooks/useResponsive';
 // ----------------------------------------------------------------------
 
@@ -25,7 +28,8 @@ DocumentListTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
   customerPage: PropTypes.bool,
   machinePage: PropTypes.bool,
-  machineDrawings: PropTypes.bool
+  machineDrawings: PropTypes.bool,
+  handleMachineDialog: PropTypes.func
 };
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
@@ -46,7 +50,8 @@ export default function DocumentListTableRow({
   onViewRow,
   customerPage,
   machinePage,
-  machineDrawings
+  machineDrawings,
+  handleMachineDialog
 }) {
   const {
     displayName,
@@ -74,7 +79,9 @@ export default function DocumentListTableRow({
       {  lgScreen && <TableCell align="center">{documentVersions[0]?.versionNo}</TableCell>}
       {  !customerPage && !machinePage && !machineDrawings && lgScreen && <TableCell align="left">{customer?.name}</TableCell>}
       {  machineDrawings && smScreen && <TableCell align="left">{stockNumber}</TableCell>}
-      {  !customerPage && !machinePage && lgScreen && <TableCell align="left">{machine?.serialNo}</TableCell>}
+      {  !customerPage && !machinePage && lgScreen && 
+        <LinkDialogTableCell onClick={handleMachineDialog} align='center' param={machine?.serialNo}/>
+      }
       {  lgScreen && <TableCell align="center">
         <Switch checked={customerAccess} disabled size="small" />{' '}
       </TableCell>}

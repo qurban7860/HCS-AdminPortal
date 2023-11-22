@@ -7,8 +7,6 @@ import { StyledTooltip } from '../../../theme/styles/default-styles';
 import Iconify from '../../../components/iconify';
 import { ICONS } from '../../../constants/icons/default-icons';
 
-// import { ICONS } from 'src/constants/icons/default-icons';
-
 const theme = createTheme({
   palette: {
     success: green,

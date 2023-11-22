@@ -9,7 +9,9 @@ import {
   Tooltip,
   Typography,
   Link,
-  Button
+  Button,
+  CardHeader,
+  CardContent
 } from '@mui/material';
 import { ThumbnailDocButton } from '../../components/Thumbnails'
 import { StyledVersionChip } from '../../../theme/styles/default-styles';
@@ -112,6 +114,7 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
                         ? documentHistory?.documentVersions[0]?.versionNo : '',
       versionPrefix: documentHistory?.versionPrefix || '',
       description: documentHistory?.description,
+      isArchived: documentHistory?.isArchived,
       isActive: documentHistory?.isActive,
       createdAt: documentHistory?.createdAt || '',
       createdByFullName: documentHistory?.createdBy?.name || '',
@@ -141,10 +144,11 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
       dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
       dispatch(setDocumentAddFilesViewFormVisibility(false));
       dispatch(setDocumentNewVersionFormVisibility(false));
-      navigate(PATH_DOCUMENT.document.new);
+      navigate(PATH_DOCUMENT.document.new,"drawingPage");
       dispatch(resetDocument());
     }
     else if(machineDrawings){
+      console.log('drawingPage', drawingPage)
       dispatch(setDocumentHistoryNewVersionFormVisibility(true));
       dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
       dispatch(setDocumentAddFilesViewFormVisibility(false));
@@ -224,7 +228,7 @@ const handleNewFile = async () => {
               <ViewFormField sm={8} heading="Name" param={defaultValues?.displayName} />
               <ViewFormField
                 sm={4}
-                NewVersion
+                NewVersion={!defaultValues.isArchived}
                 handleNewVersion={handleNewVersion}
                 heading="Active Version"
                 objectParam={
@@ -309,11 +313,12 @@ const handleNewFile = async () => {
                             currentDocument={documentHistory}
                             customer={customer}
                             getCallAfterDelete={callAfterDelete}
+                            hideDelete={defaultValues.isArchived}
                           />
                         </Grid>
                       </Grid>
                     ))}
-                    {index === 0 && (<ThumbnailDocButton onClick={handleNewFile}/>)}
+                    {index === 0 && !defaultValues.isArchived && (<ThumbnailDocButton onClick={handleNewFile}/>)}
                       <ViewFormAudit defaultValues={fileValues} />
                   </Grid>
                 )})}
