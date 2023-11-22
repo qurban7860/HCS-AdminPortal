@@ -287,7 +287,7 @@ export default function SiteAddForm() {
                   // freeSolo
                   value={billingContactVal || null}
                   options={contacts}
-                  isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   getOptionLabel={(option) => `${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
                   onChange={(event, newValue) => {
                     if (newValue) {
@@ -312,7 +312,7 @@ export default function SiteAddForm() {
                   // freeSolo
                   value={technicalContactVal || null}
                   options={contacts}
-                  isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   getOptionLabel={(option) => `${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
                   onChange={(event, newValue) => {
                     if (newValue) {

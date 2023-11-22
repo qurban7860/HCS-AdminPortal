@@ -142,7 +142,7 @@ export default function NoteEditForm() {
                   // freeSolo
                   value={siteVal || null}
                   options={sites}
-                  isOptionEqualToValue={(option, value) => option.name === value.name}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                   onChange={(event, newValue) => {
                     if (newValue) {
@@ -164,7 +164,7 @@ export default function NoteEditForm() {
                   // freeSolo
                   value={contactVal || null}
                   options={activeContacts}
-                  isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   getOptionLabel={(option) =>
                     `${option.firstName ? option.firstName : ''} ${
                       option.lastName ? option.lastName : ''
