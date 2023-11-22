@@ -1,10 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, TextField, InputAdornment, Button, Stack, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
+import { green } from '@mui/material/colors';
+import { createTheme } from '@mui/material/styles';
+import { Grid, TextField, InputAdornment, Button, Stack, FormControl, Select, InputLabel, MenuItem, IconButton } from '@mui/material';
 import { BUTTONS } from '../../../constants/default-constants';
 import Iconify from '../../../components/iconify';
 import IconPopover from '../Icons/IconPopover';
 import useResponsive from '../../../hooks/useResponsive';
+import IconTooltip from '../Icons/IconTooltip';
+import { StyledTooltip } from '../../../theme/styles/default-styles';
+
 
 function SearchBarCombo({
   isFiltered,
@@ -24,10 +29,15 @@ function SearchBarCombo({
   ...other
 }) {
 
+  const theme = createTheme({
+    palette: {
+      success: green,
+    },
+  });
   const isMobile = useResponsive('sm', 'down');
   return (
     <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{display:'flex', justifyContent:'space-between'}}>
-      <Grid item xs={12} sm={onFilterVerify || onSignInLogsFilter ?6:8}>
+      <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
         <TextField
           fullWidth
           value={value}
@@ -52,12 +62,11 @@ function SearchBarCombo({
         />
       </Grid>
         {onFilterVerify &&
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
             <Stack alignItems="flex-start">
-            <FormControl fullWidth={isMobile} sx={{ml:2, width:'200px'}}>
+            <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">Status</InputLabel>
               <Select
-                sx={{width:'200px'}}
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 size='small'
@@ -76,7 +85,7 @@ function SearchBarCombo({
         }
 
         {onSignInLogsFilter &&
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
             <Stack alignItems="flex-start">
             <FormControl fullWidth={isMobile} sx={{ml:2, width:'200px'}}>
               <InputLabel id="demo-simple-select-label">Status</InputLabel>
@@ -97,39 +106,37 @@ function SearchBarCombo({
             </Stack>
           </Grid>
         }
-
-        {inviteButton && <Grid item xs={12} md={2}>
-          <Stack alignItems="flex-end">
-            <Button
-              fullWidth
-              sx={{ p: 2}}
-              size='small'
-              onClick={inviteOnClick}
-              variant="contained"
-              startIcon={<Iconify icon={buttonIcon || 'eva:plus-fill'} />}
-            >
-              {inviteButton}
-            </Button>
-          </Stack>
-        </Grid>}
-        <Grid item xs={12} sm={2}>
-        {addButton &&
-          <Stack alignItems="flex-end">
-           <IconPopover addBtn={addButton} isSearchBtn>
-            <Button
-              disabled={transferredMachine}
-              fullWidth
-              size='small'
-              sx={{ width: '100%', fontWeight: 'black', fontSize: '.8em' }}
-              onClick={SubOnClick}
-              variant="contained"
-              startIcon={<Iconify icon={buttonIcon || 'eva:plus-fill'} />}
-            >
-               &nbsp;
-            </Button>
-            </IconPopover>
-          </Stack>
-        }
+          <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
+                  <Grid container rowSpacing={1} columnSpacing={2} sx={{display:'flex', justifyContent:'flex-end'}}>
+                      {inviteButton && 
+                        <Grid item>
+                          <StyledTooltip title={inviteButton} placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
+                            <IconButton onClick={inviteOnClick} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
+                              '&:hover': {
+                                background:"#103996", 
+                                color:"#fff"
+                              }
+                            }}>
+                              <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon={buttonIcon || 'mdi:user-plus'} />
+                            </IconButton>
+                          </StyledTooltip>
+                        </Grid>
+                    }
+                    {addButton &&
+                        <Grid item>
+                          <StyledTooltip title={addButton} placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
+                          <IconButton onClick={SubOnClick} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
+                            '&:hover': {
+                              background:"#103996", 
+                              color:"#fff"
+                            }
+                          }}>
+                            <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon={buttonIcon || 'eva:plus-fill'} />
+                          </IconButton>
+                        </StyledTooltip>
+                      </Grid>
+                    }
+                  </Grid>
         </Grid>
     </Grid>
   );
