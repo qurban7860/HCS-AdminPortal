@@ -34,6 +34,7 @@ export default function ProfileEditForm() {
       names:profile?.names ||[],
       web:profile?.web || '',
       flange:profile?.flange ||'',
+      thickness: profile?.thickness || '',
       type:profile?.type ||'CUSTOMER',
       isActive: profile?.isActive || false,
     }),
@@ -127,6 +128,7 @@ export default function ProfileEditForm() {
 
               <RHFTextField name="web" label="Web"/>
               <RHFTextField name="flange" label="Flange"/>
+              <RHFTextField name="thickness" label="Thickness"/>
               
               <RHFSwitch name="isActive" labelPlacement="start"
                 label={

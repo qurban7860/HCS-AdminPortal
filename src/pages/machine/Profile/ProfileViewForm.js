@@ -53,6 +53,7 @@ export default function ProfileViewForm() {
       names:profile?.names || [],
       web:profile?.web || '',
       flange:profile?.flange || '',
+      thickness: profile?.thickness || '',
       type:profile?.type || '',
       isActive: profile?.isActive || '',
       createdByFullName: profile?.createdBy?.name || '',
@@ -77,7 +78,10 @@ export default function ProfileViewForm() {
         <ViewFormField heading="Default Name" param={defaultValues.defaultName} />
         <ViewFormField heading="Other Names" chips={defaultValues.names} />
         <ViewFormField sm={6} heading="Type" param={defaultValues?.type} />
-        <ViewFormField sm={6} heading="Web x Flange" param={`${defaultValues?.web}${(defaultValues.web && defaultValues.flange)? " x ":""}${defaultValues?.flange}`} />
+        <ViewFormField sm={2} heading="Web" param={`${defaultValues?.web || '' }`} />
+        <ViewFormField sm={2} heading="Flange" param={`${defaultValues?.flange || '' }`} />
+        <ViewFormField sm={2} heading="Thickness" param={`${defaultValues?.thickness || '' } `} />
+
         <ViewFormAudit defaultValues={defaultValues} /> 
       </Grid>
     </Card>

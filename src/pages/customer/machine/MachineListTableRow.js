@@ -12,6 +12,7 @@ import { fDate } from '../../../utils/formatTime';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import IconTooltip from '../../components/Icons/IconTooltip';
 import LinkTableCellButtons from '../../components/ListTableTools/LinkTableCellButtons';
+import LinkDialogTableCell from '../../components/ListTableTools/LinkDialogTableCell';
 
 MachineListTableRow.propTypes = {
   row: PropTypes.object,
@@ -52,7 +53,7 @@ export default function MachineListTableRow({
 
   return (
       <StyledTableRow hover selected={selected}>
-        <LinkTableCell align="left" param={serialNo} onClick={ onViewRow} />
+        <LinkDialogTableCell align="left" param={serialNo} onClick={onViewRow} />
         <TableCell>{name}</TableCell>
         <TableCell>{machineModel?.name}</TableCell>
         <TableCell>

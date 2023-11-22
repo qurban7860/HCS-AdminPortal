@@ -50,7 +50,7 @@ const TABLE_HEAD = [
   { id: 'phone', visibility: 'xs2', label: 'Phone Number', align: 'left' },
   { id: 'roles.name.[]', visibility: 'md1', label: 'Roles', align: 'left' },
   { id: 'isOnline', label: 'Online', align: 'center' },
-  { id: 'currentEmployee', label: 'Employeed', align: 'center' },
+  { id: 'currentEmployee', label: 'Employed', align: 'center' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];

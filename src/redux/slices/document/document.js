@@ -398,6 +398,7 @@ export function getDocuments(customerId,machineId,drawing) {
       params.forCustomer = true;
       params.forMachine = true;
     }
+
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` ,
       {
@@ -630,7 +631,8 @@ export function getDocumentHistory(documentId) {
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/${documentId}`,{
         params: {
-          historical : true
+          historical : true,
+          isArchived : false
         }
       });
       dispatch(slice.actions.getDocumentHistorySuccess(response.data));

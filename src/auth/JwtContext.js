@@ -77,6 +77,7 @@ export function AuthProvider({ children }) {
   const storageAvailable = useMemo(() => localStorageAvailable(), []);
   
   const initialize = useCallback(async () => {
+
     try {
       const accessToken = storageAvailable ? localStorage.getItem('accessToken') : '';
 
@@ -142,7 +143,8 @@ export function AuthProvider({ children }) {
     }
   }
 
-  const login = useCallback(async (email, password) => {
+
+  const login = useCallback(async (uEmail, uPassword) => {
     localStorage.removeItem('userId');
     localStorage.removeItem('email');
     localStorage.removeItem('name');
@@ -150,8 +152,8 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('accessToken');
 
     const response = await axios.post(`${CONFIG.SERVER_URL}security/getToken`, {
-      email,
-      password,
+      email: uEmail,
+      password : uPassword,
     })
 
     if (response.data.multiFactorAuthentication){

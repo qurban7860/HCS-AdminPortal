@@ -192,7 +192,7 @@ export default function CustomerEditForm() {
                     // freeSolo
                     value={siteVal || null}
                     options={sites}
-                    isOptionEqualToValue={(option, value) => option.name === value.name}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     onChange={(event, newValue) => {
                       if (newValue) {
@@ -228,7 +228,7 @@ export default function CustomerEditForm() {
                     // freeSolo
                     value={billingContactVal || null}
                     options={activeContacts}
-                    isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) =>
                       `${option.firstName && option.firstName} ${
                         option.lastName && option.lastName
@@ -259,7 +259,7 @@ export default function CustomerEditForm() {
                     // freeSolo
                     value={technicalContactVal || null}
                     options={activeContacts}
-                    isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) =>
                       `${option.firstName ? option.firstName : ''} ${
                         option.lastName ? option.lastName : ''
@@ -300,7 +300,7 @@ export default function CustomerEditForm() {
                     // freeSolo
                     value={accountManVal || null}
                     options={filteredContacts}
-                    isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) =>
                       `${option.firstName ? option.firstName : ''} ${
                         option.lastName ? option.lastName : ''
@@ -331,7 +331,7 @@ export default function CustomerEditForm() {
                     // freeSolo
                     value={projectManVal || null}
                     options={filteredContacts}
-                    isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) =>
                       `${option.firstName && option.firstName} ${
                         option.lastName && option.lastName
@@ -361,7 +361,7 @@ export default function CustomerEditForm() {
                     // freeSolo
                     value={supportManVal || null}
                     options={filteredContacts}
-                    isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) =>
                       `${option.firstName && option.firstName} ${
                         option.lastName && option.lastName

@@ -108,7 +108,7 @@ export function AuthProvider({ children }) {
   const login = useCallback(
     createAsyncThunk('auth/login', async (credentials, { dispatch }) => {
       localStorage.removeItem('userId');
-      localStorage.removeItem('email');
+      // localStorage.removeItem('email');
       localStorage.removeItem('name');
       localStorage.removeItem('userRoles');
       localStorage.removeItem('accessToken');
@@ -147,7 +147,7 @@ export function AuthProvider({ children }) {
 
       setSession(null);
       localStorage.removeItem('userId');
-      localStorage.removeItem('email');
+      // localStorage.removeItem('email');
       localStorage.removeItem('name');
       localStorage.removeItem('userRoles');
       localStorage.removeItem('accessToken');

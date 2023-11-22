@@ -37,7 +37,8 @@ import {
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
-  setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
+  setDrawingViewFormVisibility, 
+  resetDrawings} from '../../../redux/slices/products/drawing';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
 
@@ -93,6 +94,7 @@ export default function DrawingList() {
 
   useEffect(() => {
     if(machine?._id){
+      dispatch(resetDrawings());
       dispatch(getDrawings(machine?._id));
     }
   }, [dispatch, machine]);
