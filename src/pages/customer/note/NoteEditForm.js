@@ -55,7 +55,7 @@ export default function NoteEditForm() {
   }, [note]);
 
   const EditNoteSchema = Yup.object().shape({
-    note: Yup.string().max(2000).required('Note is required!'),
+    note: Yup.string().max(5000).required('Note is required!'),
     user: Yup.string(),
     customer: Yup.string(),
     isActive: Yup.boolean(),

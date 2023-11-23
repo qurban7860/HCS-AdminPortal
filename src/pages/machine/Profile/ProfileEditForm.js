@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
-import { Box, Card, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
+import { Box, Card, Stack, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 // import { DatePicker } from '@mui/x-date-pickers';
 import { MuiChipsInput } from 'mui-chips-input';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
@@ -102,11 +102,9 @@ export default function ProfileEditForm() {
         spacing={4}>
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
-            <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)',}}>
+          <Stack spacing={2}>
+            <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}>
               <RHFTextField name="defaultName" label="Default Name"/>
-              <MuiChipsInput name="names" label="Other Names" value={chips} onChange={handleChipChange} />
-            </Box>  
-            <Box sx={{marginTop:2}} rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)',}}>
               <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">Type</InputLabel>
                 <Select
@@ -125,6 +123,14 @@ export default function ProfileEditForm() {
                 ))}
                 </Select>
               </FormControl>
+            </Box>  
+
+            <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)',}} sx={{mt:2}}>
+              <MuiChipsInput fullWidth name="names" label="Other Names" value={chips} onChange={handleChipChange} />
+            </Box>
+
+            <Box sx={{marginTop:2}} rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)',}}>
+
 
               <RHFTextField name="web" label="Web"/>
               <RHFTextField name="flange" label="Flange"/>
@@ -138,6 +144,7 @@ export default function ProfileEditForm() {
                 }
               />
             </Box>
+            </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>
         </Grid>
