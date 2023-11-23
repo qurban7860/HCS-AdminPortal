@@ -60,4 +60,4 @@ Thumbs.db
 *.wmv
 
 
-/package-lock.json
+./package-lock.json
