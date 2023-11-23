@@ -8,16 +8,15 @@ import { PATH_DOCUMENT } from '../../../routes/paths';
 export default function DocumentCover({ content, backLink, generalSettings, machineDrawingsBackLink }) {
   return (
     <Card sx={{alignItems:'flex-end'}}>
-      {/* <CardHeader title={content} sx={{height:'150px', fontSize:'30%', color:'white', background:'#103996cc'}} /> */}
       <CardContent sx={{
                         background:"#103996cc", 
                         color:'#fff', 
                         fontWeight:'bold', 
-                        fontSize:'100%', 
-                        height:'150px',
+                        fontSize:'3rem', 
                         display:'flex',
                         flexDirection:'column',
-                        justifyContent:'flex-end'
+                        justifyContent:'flex-end',
+                        fontFamily:'Yantramanav,Arimo,Calibri'
                         }}
                         >{content}</CardContent>
       <CardActions sx={{background:'#fff', height:'50px'}} />
