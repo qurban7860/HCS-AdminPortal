@@ -21,7 +21,6 @@ function MachineDialog() {
     <Dialog
       disableEnforceFocus
       maxWidth="lg"
-      minWidth="lg"
       open={ machineDialog }
       onClose={ handleMachineDialog }
       keepMounted

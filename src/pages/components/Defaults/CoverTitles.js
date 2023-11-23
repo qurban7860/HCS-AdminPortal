@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography } from '@mui/material';
 
-function CoverTitles({ name, nameTitle, serialNo, photoURL, isMobile, children, machineChildren }) {
+function CoverTitles({ name, nameTitle, serialNo, isMobile, children, machineChildren }) {
   return (
     <>
       {serialNo ? (
         <Typography
-          variant={isMobile && photoURL ? 'h3' : 'h2'}
+          variant={isMobile ? 'h3' : 'h2'}
           sx={{
             px: 3,
             color: 'common.white',
@@ -20,7 +20,7 @@ function CoverTitles({ name, nameTitle, serialNo, photoURL, isMobile, children, 
         </Typography>
       ) : (
         <Typography
-          variant={photoURL ? 'h3' : 'h2'}
+          variant={isMobile ? 'h3' : 'h2'}
           sx={{
             px: 3,
             color: 'common.white',
@@ -39,7 +39,6 @@ CoverTitles.propTypes = {
   name: PropTypes.string,
   nameTitle: PropTypes.string,
   serialNo: PropTypes.string,
-  photoURL: PropTypes.string,
   isMobile: PropTypes.bool,
   children: PropTypes.node,
   machineChildren: PropTypes.node,

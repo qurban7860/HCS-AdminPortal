@@ -58,14 +58,12 @@ export default function ProductionLog({ title, subheader, chart, ...other }) {
     <Card {...other}>
       <CardHeader
         title={title}
-        subheader="
-          Operator 1 - LFNT/Min: 0.017543859649122806"
+        subheader="Operator 1 - LFNT/Min: 0.017543859649122806"
         action={
           <CustomSmallSelect
             value={seriesData}
             onChange={(event) => setSeriesData(event.target.value)}
           >
-            <Divider />
             {series.map((option) => (
               <option key={option.day} value={option.day}>
                 {option.day}
