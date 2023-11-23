@@ -15,7 +15,7 @@ import { PATH_MACHINE } from '../../../routes/paths';
 import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete } from '../../../components/hook-form';
 import {
   getCheckItem,
-  updateCheckItem,
+  updateCheckItem
 } from '../../../redux/slices/products/machineCheckItems';
 import { getActiveServiceCategories } from '../../../redux/slices/products/serviceCategory';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
@@ -32,10 +32,11 @@ import { Snacks } from '../../../constants/machine-constants';
 export default function DocumentCategoryeEditForm() {
   const { checkItem } = useSelector((state) => state.checkItems);
   const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
-  const { inputTypes, unitTypes } = useSelector((state) => state.checkItems);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
+  const initialState = useSelector((state) => state.checkItems);
+  const { inputTypes, unitTypes} = initialState;
 
   useEffect(()=>{
     dispatch(getActiveServiceCategories())

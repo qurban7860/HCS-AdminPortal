@@ -1,8 +1,7 @@
-import React, { memo } from 'react'
+import React, { memo, useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Stack, Box, TextField, Autocomplete, Checkbox, FormControlLabel, FormGroup } from '@mui/material';
-// import { RHFTextField, RHFAutocomplete } from '../../../components/hook-form';
 
 
 const CommentsInput = ({ index, childIndex, childRow, checkParamList,
@@ -13,8 +12,11 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                     handleChangeCheckItemListChecked,
                     handleChangeCheckItemListCheckBoxValue
                 }) => {
-                    
-    const { statusTypes } = useSelector((state) => state.serviceRecordConfig);
+
+        const initialState = useSelector((state) => state.serviceRecordConfig);
+
+        const statusTypes = initialState.statusTypes;
+
   return (
     <>
     <Stack spacing={1} >
