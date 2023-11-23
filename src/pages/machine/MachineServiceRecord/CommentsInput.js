@@ -143,4 +143,4 @@ CommentsInput.propTypes = {
   };
 
 
-export default memo(CommentsInput)
+export default CommentsInput
