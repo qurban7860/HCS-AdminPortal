@@ -2,7 +2,7 @@ import React, { memo, useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Stack, Box, TextField, Autocomplete, Checkbox, FormControlLabel, FormGroup } from '@mui/material';
-
+import { statusTypes } from '../util/index'
 
 const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                     handleChangeCheckItemListValue, 
@@ -15,7 +15,6 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
 
         const initialState = useSelector((state) => state.serviceRecordConfig);
 
-        const statusTypes = initialState.statusTypes;
 
   return (
     <>
