@@ -213,8 +213,6 @@ const handleNewFile = async () => {
   };
 
   const handleEdit = async () => {
-
-    console.log('aaaaa')
     await dispatch(getDocument(documentHistory._id));
     dispatch(setDrawingViewFormVisibility(false));
     dispatch(setDrawingEditFormVisibility(true));
@@ -231,9 +229,7 @@ const handleNewFile = async () => {
           <ViewFormEditDeleteButtons
           customerAccess={defaultValues?.customerAccess}
           isActive={defaultValues.isActive}
-          handleEdit={handleEdit}
-          // disableEditButton={machine?.status?.slug==='transferred'}
-          // disableDeleteButton={machine?.status?.slug==='transferred'}
+          handleEdit={drawingPage && handleEdit}
           onDelete={machineDrawings && handleDeleteDrawing}
           backLink={(customerPage || machinePage || drawingPage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDrawingViewFormVisibility(false));}
           : () =>  machineDrawings ? navigate(PATH_DOCUMENT.document.machineDrawings.list) : navigate(PATH_DOCUMENT.document.list)}
