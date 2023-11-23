@@ -86,7 +86,7 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
                   {childRow?.inputType?.toLowerCase() === 'date' ? fDate(ItemHistory?.checkItemValue) : 
                     <> 
                       {childRow?.inputType?.toLowerCase() === 'status' ? (ItemHistory?.checkItemValue && 
-                        <Chip size="small" label={ItemHistory?.checkItemValue?.name || ''} /> || '') : 
+                        <Chip size="small" label={ItemHistory?.checkItemValue || ''} /> || '') : 
                         (childRow?.inputType?.toLowerCase() === 'number' || 
                           childRow?.inputType?.toLowerCase() === 'long text' || 
                           childRow?.inputType?.toLowerCase() === 'short text') && 
