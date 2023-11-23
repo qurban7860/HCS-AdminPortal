@@ -25,7 +25,7 @@ import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { Snacks } from '../../../constants/machine-constants';
-
+import { statusTypes, inputTypes, unitTypes, recordTypes, headerFooterTypes, status } from '../util/index'
 
 // ----------------------------------------------------------------------
 
@@ -36,7 +36,7 @@ export default function DocumentCategoryeEditForm() {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const initialState = useSelector((state) => state.checkItems);
-  const { inputTypes, unitTypes} = initialState;
+  // const { inputTypes, unitTypes} = initialState;
 
   useEffect(()=>{
     dispatch(getActiveServiceCategories())

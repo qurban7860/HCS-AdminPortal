@@ -25,11 +25,12 @@ import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { FORMLABELS } from '../../../constants/default-constants';
 import CheckItemTable from './CheckItemTable';
+import { statusTypes, inputTypes, unitTypes, recordTypes, headerFooterTypes, status } from '../util/index'
 
 // ----------------------------------------------------------------------
 
 export default function ServiceRecordConfigEditForm() {
-  const { serviceRecordConfig, recordTypes } = useSelector((state) => state.serviceRecordConfig);
+  const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
   const { activeCategories } = useSelector((state) => state.category);
 
