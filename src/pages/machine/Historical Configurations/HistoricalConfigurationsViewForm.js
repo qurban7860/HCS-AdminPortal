@@ -1,7 +1,7 @@
 import { useMemo, memo, useState, useRef, useEffect } from 'react';
 import debounce from 'lodash/debounce';
 import { useDispatch, useSelector } from 'react-redux';
-import ReactJson from 'react-json-view'
+import ReactJson from 'react18-json-view'
 // @mui
 import {  Card, Grid, Stack } from '@mui/material';
 // redux

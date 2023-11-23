@@ -87,7 +87,6 @@ export function Cover({
           name={name}
           nameTitle={nameTitle}
           serialNo={serialNo}
-          photoURL={photoURL}
           isMobile={isMobile}
           machineChildren={
             <>

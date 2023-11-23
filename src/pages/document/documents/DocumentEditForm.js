@@ -2,6 +2,8 @@ import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import {  useEffect, useMemo, useState, memo} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
+
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -18,7 +20,10 @@ import {
   setDocumentEditFormVisibility,
   getDocument,
   updateDocument,
+  getDocumentHistory,
 } from '../../../redux/slices/document/document';
+import { setDrawingEditFormVisibility, setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
+
 
 import { Snacks } from '../../../constants/document-constants';
 
@@ -26,8 +31,11 @@ import { Snacks } from '../../../constants/document-constants';
 DocumentEditForm.propTypes = {
   customerPage: PropTypes.bool,
   machinePage: PropTypes.bool,
+  drawingPage: PropTypes.bool,
 };
-function DocumentEditForm({ customerPage, machinePage }) {
+function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
+  
+  const navigate = useNavigate();
   const { document } = useSelector((state) => state.document);
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
@@ -95,12 +103,19 @@ function DocumentEditForm({ customerPage, machinePage }) {
           machinePage ? machine?._id : null
         )
       );
-      await dispatch(getDocument(document?._id));
-      enqueueSnackbar(Snacks.updatedDoc, { variant: `success` });
+      if(drawingPage){
+        await dispatch(getDocumentHistory(document?._id));
+        dispatch(setDrawingViewFormVisibility(true));
+        dispatch(setDrawingEditFormVisibility(false));
+      }else{
+        await dispatch(getDocument(document?._id));
+        setDocumentCategoryVal('');
+        setDocumentTypeVal('');
+        reset();
+      }
 
-      setDocumentCategoryVal('');
-      setDocumentTypeVal('');
-      reset();
+      enqueueSnackbar(`${drawingPage?"Drawing ":""} ${Snacks.updatedDoc}`, { variant: `success` });
+      
     } catch (err) {
       enqueueSnackbar(Snacks.failedUpdateDoc, { variant: `error` });
       console.error(err.message);
@@ -108,7 +123,12 @@ function DocumentEditForm({ customerPage, machinePage }) {
   };
 
   const toggleCancel = () => {
-    dispatch(setDocumentEditFormVisibility(false));
+    if(drawingPage){
+      dispatch(setDrawingViewFormVisibility(true));
+      dispatch(setDrawingEditFormVisibility(false));
+    }else{
+      dispatch(setDocumentEditFormVisibility(false));
+    }
   };
 
   const handleChange = () => {
@@ -124,7 +144,7 @@ function DocumentEditForm({ customerPage, machinePage }) {
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
-                <FormHeading heading="Edit Document" />
+                <FormHeading heading={`Edit ${drawingPage?"Drawing":""} Document`} />
                 <Box
                   rowGap={3}
                   columnGap={2}

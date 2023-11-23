@@ -19,5 +19,5 @@ export default function BreadcrumbsLink({ name, to }) {
 
 BreadcrumbsLink.propTypes = {
   name: PropTypes.node,
-  to: PropTypes.string,
+  to: PropTypes.any,
 };
