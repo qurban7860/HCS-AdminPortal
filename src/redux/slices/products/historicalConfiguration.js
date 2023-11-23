@@ -80,7 +80,7 @@ const slice = createSlice({
       state.historicalConfigurations = [];
       state.responseMessage = null;
       state.success = false;
-      state.isLoading = false;
+      // state.isLoading = false;
     },
 
         // Set FilterBy
@@ -141,7 +141,7 @@ export function getHistoricalConfigurationRecord(machineId, id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      await dispatch(resetHistoricalConfigurationRecord());
+      // await dispatch(resetHistoricalConfigurationRecord());
       const response = await axios.get(`${CONFIG.SERVER_URL}products/productConfigurations/${id}`,
       {
         params: {
