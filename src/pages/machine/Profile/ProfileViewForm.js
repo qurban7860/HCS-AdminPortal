@@ -75,9 +75,9 @@ export default function ProfileViewForm() {
       disableDeleteButton={machine?.status?.slug==='transferred'}
       handleEdit={handleEdit} onDelete={onDelete} backLink={() => dispatch(setProfileViewFormVisibility(false))} />
       <Grid container sx={{mt:2}}>
-        <ViewFormField heading="Default Name" param={defaultValues.defaultName} />
-        <ViewFormField heading="Other Names" chips={defaultValues.names} />
+        <ViewFormField sm={6} heading="Default Name" param={defaultValues.defaultName} />
         <ViewFormField sm={6} heading="Type" param={defaultValues?.type} />
+        <ViewFormField heading="Other Names" chips={defaultValues.names} />
         <ViewFormField sm={2} heading="Web" param={`${defaultValues?.web || '' }`} />
         <ViewFormField sm={2} heading="Flange" param={`${defaultValues?.flange || '' }`} />
         <ViewFormField sm={2} heading="Thickness" param={`${defaultValues?.thickness || '' } `} />

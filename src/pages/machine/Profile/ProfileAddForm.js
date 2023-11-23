@@ -102,12 +102,10 @@ export default function ProfileAddForm() {
         spacing={4}>
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
-            <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)',}}>
+            <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}>
               <RHFTextField name="defaultName" label="Default Name"/>
-              <MuiChipsInput name="names" label="Other Names"  value={chips} onChange={handleChipChange} />
-            </Box>  
-            <Box sx={{marginTop:2}} rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)',}}>
-              <FormControl fullWidth>
+
+              <FormControl >
               <InputLabel id="demo-simple-select-label">Type</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
@@ -124,6 +122,13 @@ export default function ProfileAddForm() {
                 ))}
                 </Select>
               </FormControl>
+
+            </Box>  
+            <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)',}} sx={{mt:2}} >
+              <MuiChipsInput fullWidth name="names" label="Other Names" value={chips} onChange={handleChipChange} />
+            </Box>
+            <Box sx={{marginTop:2}} rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)',}}>
+
 
               <RHFTextField name="web" label="Web"/>
               <RHFTextField name="flange" label="Flange"/>

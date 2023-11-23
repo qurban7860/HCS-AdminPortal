@@ -29,7 +29,7 @@ export default function NoteAddForm() {
   const { enqueueSnackbar } = useSnackbar();
 
   const AddNoteSchema = Yup.object().shape({
-    note: Yup.string().max(2000).required('Note Field is required!'),
+    note: Yup.string().max(5000).required('Note Field is required!'),
     isActive: Yup.boolean(),
   });
 

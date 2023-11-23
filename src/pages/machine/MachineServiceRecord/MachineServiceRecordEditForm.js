@@ -68,6 +68,7 @@ function MachineServiceRecordEditForm() {
                 unitType:       childRow?.unitType || '',
               })
             );
+
             return {
               ...row,
               checkItems: updatedCheckItemsList,
@@ -156,7 +157,7 @@ function MachineServiceRecordEditForm() {
               CI?.checked && checkItemLists_.push({
                 machineCheckItem: CI?._id,
                 checkItemListId:  checkParam_?._id,
-                checkItemValue:  CI?.inputType?.toLowerCase() === 'boolean' ? CI?.checkItemValue || false : CI?.checkItemValue || '',
+                checkItemValue:  CI?.inputType?.toLowerCase() === 'boolean' ? CI?.checkItemValue || false : CI?.inputType?.toLowerCase() === 'status' && CI?.checkItemValue?.name || CI?.inputType?.toLowerCase() !== 'status' &&CI?.checkItemValue || '',
                 comments:CI?.comments,
               })
               ));
