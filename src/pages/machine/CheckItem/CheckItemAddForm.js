@@ -31,8 +31,10 @@ export default function CheckItemAddForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const { inputTypes, unitTypes, filterBy } = useSelector((state) => state.checkItems);
+  const { filterBy } = useSelector((state) => state.checkItems);
   const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
+  const initialState = useSelector((state) => state.checkItems);
+  const { inputTypes, unitTypes } = initialState;
 
   useEffect(()=>{
     dispatch(getActiveServiceCategories())

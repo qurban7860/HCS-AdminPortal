@@ -4,7 +4,7 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-const initialState = {
+export const initialState = {
   intial: false,
   serviceRecordConfigFormVisibility: false,
   serviceRecordConfigEditFormVisibility: false,

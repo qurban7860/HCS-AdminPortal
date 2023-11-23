@@ -56,7 +56,7 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                                 name="comment"
                                 disabled={!checkItemLists[index]?.checkItems[childIndex]?.checked}
                                 onChange={(e) => handleChangeCheckItemListComment(index, childIndex, e.target.value)}
-                                size="small" sx={{ width: '100%', }} 
+                                size="small" sx={{ width: '100%',mt:2 }} 
                                 value={checkItemLists[index]?.checkItems[childIndex]?.comments}
                                 minRows={2} multiline
                                 InputProps={{ inputProps: { maxLength: 5000 } }}
