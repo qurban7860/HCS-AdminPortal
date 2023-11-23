@@ -26,7 +26,6 @@ export function checkValuesNotNull(obj) {
     { _id:3 , name: 'Under Service'},
     { _id:4 , name: 'Replacement Required'},
     { _id:5 , name: 'Replaced Recently'},
-    { _id:5 , name: 'Replaced Recently123'},
 
   ]
 
