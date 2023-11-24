@@ -6,6 +6,8 @@ import { Switch, TableRow, TableCell } from '@mui/material';
 import { fDate } from '../../utils/formatTime';
 // components
 import LinkTableCellWithIcon from '../components/ListTableTools/LinkTableCellWithIcon';
+import LinkTableCellWithIconTargetBlank from '../components/ListTableTools/LinkTableCellWithIconTargetBlank';
+
 import { useScreenSize } from '../../hooks/useResponsive';
 // ----------------------------------------------------------------------
 
@@ -40,7 +42,7 @@ export default function MachineListTableRow({
  
   return (
     <TableRow hover selected={selected}>
-      <LinkTableCellWithIcon
+      <LinkTableCellWithIconTargetBlank
         align="left"
         onClick={onViewRow}
         param={serialNo}
