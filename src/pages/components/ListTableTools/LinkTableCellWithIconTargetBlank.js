@@ -8,7 +8,7 @@ import OpenInNewPage from '../Icons/OpenInNewPage';
 
 export default function LinkTableCellWithIconTargetBlank({ align, onClick, param, isVerified }) {
   return (
-    <TableCell align={align}>
+    <TableCell align={align} sx={{minWidth:'130px'}}>
       <VerificationIcon isVerified={isVerified} />
       <OpenInNewPage onClick={onClick} />
       <Link
