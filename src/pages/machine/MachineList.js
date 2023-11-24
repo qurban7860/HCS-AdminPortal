@@ -170,9 +170,14 @@ export default function MachineList() {
     setFilterStatus(event.target.value);
   };
 
-  const handleViewRow = (id) => {
-    navigate(PATH_MACHINE.machines.view(id));
-  };
+  // const handleViewRow = (id) => {
+  //   navigate(PATH_MACHINE.machines.view(id));
+  // };
+
+const handleViewRow = (id) => {
+    const url = PATH_MACHINE.machines.view(id);
+    window.open(url, '_blank');
+};
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
