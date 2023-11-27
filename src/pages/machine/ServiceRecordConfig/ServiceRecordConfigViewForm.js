@@ -44,7 +44,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
   const navigate = useNavigate();
   const { serviceRecordConfig, editFormVisibility } = useSelector((state) => state.serviceRecordConfig);
   const { id } = useParams();
-  const VerificationIndex = serviceRecordConfig?.verifications?.length || 1
+  
   const dispatch = useDispatch();
   useLayoutEffect(() => {
     if (id != null) {

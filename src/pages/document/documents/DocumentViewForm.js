@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useMemo, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Grid, Tooltip, Card, Button } from '@mui/material'
+import { Grid, Card } from '@mui/material'
 import { StyledVersionChip } from '../../../theme/styles/default-styles';
 import { PATH_DOCUMENT } from '../../../routes/paths';
 import {

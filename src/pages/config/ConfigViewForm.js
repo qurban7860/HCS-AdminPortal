@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Card,Grid,Tooltip } from '@mui/material';
+import { Card, Grid } from '@mui/material';
 // redux
 import { deleteConfig } from '../../redux/slices/config/config';
 // paths

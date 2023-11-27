@@ -10,7 +10,6 @@ import {  getActiveMachineModels } from '../../redux/slices/products/model';
 import {  getCategories } from '../../redux/slices/products/category';
 // hooks
 import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
-import { StyledGlobalCard } from '../../theme/styles/default-styles';
 import ChartBar from '../components/Charts/ChartBar';
 import { Cover } from '../components/Defaults/Cover';
 import { PATH_DASHBOARD } from '../../routes/paths';

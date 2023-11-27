@@ -1,12 +1,10 @@
 import PropTypes from 'prop-types';
 // import { sentenceCase } from 'change-case';
 // @mui
-import { Stack, Button, TextField, InputAdornment, Grid } from '@mui/material';
+import { Stack } from '@mui/material';
 // import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useDispatch } from '../../../redux/store';
-// components
-import Iconify from '../../../components/iconify';
 // import { PATH_DOCUMENT } from '../../../routes/paths';
 import { setToolInstalledFormVisibility } from '../../../redux/slices/products/toolInstalled';
 import { SearchBarCombo } from '../../components/ListTableTools'

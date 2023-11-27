@@ -25,7 +25,7 @@ import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { FORMLABELS } from '../../../constants/default-constants';
 import CheckItemTable from './CheckItemTable';
-import { statusTypes, inputTypes, unitTypes, recordTypes, headerFooterTypes, status } from '../util/index'
+import { recordTypes } from '../util/index'
 
 // ----------------------------------------------------------------------
 

@@ -25,7 +25,7 @@ import CurrentIcon from '../../components/Icons/CurrentIcon';
 
 function MachineServiceParamViewForm() {
 
-  const { machineServiceRecord, isHistorical, isLoading } = useSelector((state) => state.machineServiceRecord);
+  const { machineServiceRecord, isLoading } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine)
 
   const dispatch = useDispatch();

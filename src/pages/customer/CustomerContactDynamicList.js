@@ -245,9 +245,7 @@ export default function CustomerContactList(currentContact = null) {
               disabled={contactEditFormVisibility || formVisibility}
             >
               <Grid container justifyContent="flex-start" direction="column" gap={1}>
-                {dataFiltered.map((contact, index) => {
-                  const borderTopVal = index !== 0 || null ? '0px solid white' : '';
-                  return contact._id !== activeIndex && (
+                {dataFiltered.map((contact, index) => contact._id !== activeIndex && (
                         <Grid
                           item
                           key={contact._id}
@@ -319,7 +317,7 @@ export default function CustomerContactList(currentContact = null) {
                           </StyledCardWrapper>
                         </Grid>
                       )
-                })}
+                )}
               </Grid>
             </StyledScrollbar>
           </Grid>
