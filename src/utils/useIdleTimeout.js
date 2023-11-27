@@ -8,9 +8,11 @@ import { useIdleTimer } from "react-idle-timer"
 const useIdleTimeout = ({ onIdle, idleTime = 1, isAuthenticated }) => {
     const idleTimeout = 1000 * idleTime;
     const [isIdle, setIdle] = useState(false)
+
     const handleIdle = () => {
         setIdle(true)
     }
+    
     const idleTimer = useIdleTimer({
         timeout: idleTimeout,
         promptBeforeIdle: idleTime,

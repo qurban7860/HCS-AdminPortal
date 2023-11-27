@@ -1,10 +1,11 @@
 import { useState, useEffect} from 'react';
 import { LoadingButton } from '@mui/lab';
+import { useIdleTimer } from 'react-idle-timer'
 
 import { useAuthContext } from '../../auth/useAuthContext';
 import { CONFIG } from '../../config-global';
 
-import useIdleTimeout from '../../utils/useIdleTimeout';
+// import useIdleTimeout from '../../utils/useIdleTimeout';
 import ConfirmDialog from '../confirm-dialog';
 
 // ----------------------------------------------------------------------
@@ -14,16 +15,38 @@ const IdleManager = () => {
   const { logout, isAuthenticated } = useAuthContext();
   const [showStay, setShowStay] = useState(true);
   const [countdown, setCountdown] = useState(10);
+  
+  const idleTimeout = 1000 * CONFIG.IDLE_TIME;
 
   const handleIdle = () => {
       setOpenModal(true);
   }
 
-  const idleTimer = useIdleTimeout({
-    onIdle: handleIdle,
-    idleTime: CONFIG.IDLE_TIME,
-    isAuthenticated
-  });
+  const onIdle = () => {
+    setOpenModal(false)
+  }
+  const onActive = () => {
+    setOpenModal(false);
+    resetCountdown();
+    // reset() // reset() have been replaced with activate() due to changes in idleTimer.
+  };
+
+  // const { activate } = useIdleTimeout({
+  //   onIdle: handleIdle,
+  //   idleTime: CONFIG.IDLE_TIME,
+  //   onActive,
+  //   isAuthenticated
+  // });
+
+  const { activate } = useIdleTimer({
+    // onIdle: handleIdle,
+    timeout: idleTimeout,
+    promptBeforeIdle: CONFIG.IDLE_TIME,
+    onPrompt: handleIdle,
+    debounce: 500,
+    disabled: !isAuthenticated,
+    // onActive,
+});
 
   /* eslint-disable */
   useEffect(() => {
@@ -33,6 +56,8 @@ const IdleManager = () => {
           setCountdown(countdown - 1);
         } else {
           setShowStay(false);
+          setOpenModal(false);
+          logout()
           clearInterval(timer);
         }
       }, 1000);
@@ -48,13 +73,14 @@ const IdleManager = () => {
     setCountdown(10);
   }
 
-  const stay = () => {
+
+  
+  const handleStillHere = () => {
     setOpenModal(false);
     resetCountdown();
-    if (idleTimer) {
-      idleTimer.reset();
-    }
-  };
+    activate()
+  }
+
   const handleLogout = () => {
       logout()
       setOpenModal(false);
@@ -72,7 +98,7 @@ const IdleManager = () => {
         SubButton="Logout"
         action={
           showStay ? (
-            <LoadingButton variant="contained" color="primary" onClick={stay}>
+            <LoadingButton variant="contained" color="primary" onClick={handleStillHere}>
               Stay
             </LoadingButton>
           ) : null
