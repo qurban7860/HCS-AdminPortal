@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // form
 // @mui
-import { Grid, Container, Table, TableBody, TableContainer , Tooltip, IconButton} from '@mui/material';
+import { Container, Table, TableBody, TableContainer , Tooltip, IconButton} from '@mui/material';
 import {
   useTable,
   getComparator,
@@ -173,8 +173,11 @@ export default function MachineList() {
   // const handleViewRow = (id) => {
   //   navigate(PATH_MACHINE.machines.view(id));
   // };
-
 const handleViewRow = (id) => {
+  navigate(PATH_MACHINE.machines.view(id));
+}
+
+const openInNewPage = (id) => {
     const url = PATH_MACHINE.machines.view(id);
     window.open(url, '_blank');
 };
@@ -261,6 +264,7 @@ const handleViewRow = (id) => {
                         // onDeleteRow={() => handleDeleteRow(row._id)}
                         // onEditRow={() => handleEditRow(row._id)}
                         onViewRow={() => handleViewRow(row._id)}
+                        openInNewPage={ () => openInNewPage(row._id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
                     ) : (
