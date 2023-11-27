@@ -51,7 +51,8 @@ export default function MachineViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { machine, transferMachineFlag } = useSelector((state) => state.machine);
+  const { machine, transferMachineFlag, machineDialog } = useSelector((state) => state.machine);
+  const { customerDialog } = useSelector((state) => state.customer);
   const [disableTransferButton, setDisableTransferButton] = useState(true);
   const [disableEditButton, setDisableEditButton] = useState(false);
   const [disableDeleteButton, setDisableDeleteButton] = useState(false);
@@ -428,9 +429,7 @@ export default function MachineViewForm() {
 
       {/* connected machine dialog */}      
 
-      <CustomerDialog />
-      <MachineDialog />
-
+      
       <SiteDialog
         site={defaultValues?.instalationSite}
         title="Installation Site"
@@ -440,6 +439,9 @@ export default function MachineViewForm() {
         site={defaultValues?.billingSite}
         title="Billing Site"
       />
+      {machineDialog  && <MachineDialog />}
+      {customerDialog  && <CustomerDialog />}
+      
     </>
   );
 }

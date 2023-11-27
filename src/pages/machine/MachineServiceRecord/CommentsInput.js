@@ -1,9 +1,8 @@
-import React, { memo } from 'react'
+import React, { memo, useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Stack, Box, TextField, Autocomplete, Checkbox, FormControlLabel, FormGroup } from '@mui/material';
-// import { RHFTextField, RHFAutocomplete } from '../../../components/hook-form';
-
+import { statusTypes } from '../util/index'
 
 const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                     handleChangeCheckItemListValue, 
@@ -13,8 +12,10 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                     handleChangeCheckItemListChecked,
                     handleChangeCheckItemListCheckBoxValue
                 }) => {
-                    
-    const { statusTypes } = useSelector((state) => state.serviceRecordConfig);
+
+        const initialState = useSelector((state) => state.serviceRecordConfig);
+
+
   return (
     <>
     <Stack spacing={1} >
@@ -115,10 +116,11 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
 
 
                     { childRow?.inputType === 'Status' && <Autocomplete
-                        // name={`${index}${childIndex}`} 
                         disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
-                        value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue || null }
                         options={statusTypes}
+                        value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue || null }
+                        isOptionEqualToValue={(option, value) => option?.name === value?.name}
+                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                         onChange={(event, newInputValue) =>  handleChangeCheckItemListStatus(index, childIndex, newInputValue) }
                         renderInput={(params) => <TextField {...params} label="Status" size='small' />}
                     /> }
@@ -142,4 +144,4 @@ CommentsInput.propTypes = {
   };
 
 
-export default memo(CommentsInput)
+export default CommentsInput

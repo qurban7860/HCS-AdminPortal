@@ -35,7 +35,7 @@ const slice = createSlice({
     },
     // SET EDIT TOGGLE
     setDrawingEditFormVisibility(state, action){
-      state.drawingsEditFormVisibility = action.payload;
+      state.drawingEditFormVisibility = action.payload;
     },
     // SET VIEW TOGGLE
     setDrawingViewFormVisibility(state, action){

@@ -4,7 +4,7 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-const initialState = {
+export const initialState = {
   intial: false,
   serviceRecordConfigFormVisibility: false,
   serviceRecordConfigEditFormVisibility: false,
@@ -20,13 +20,15 @@ const initialState = {
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
+  
   statusTypes: [
-    'Healthy',
-    'Service Required',
-    'Under Service',
-    'Replacement Required',
-    'Replaced Recently',
+    { _id:1 , name: 'Healthy'},
+    { _id:2 , name: 'Service Required'},
+    { _id:3 , name: 'Under Service'},
+    { _id:4 , name: 'Replacement Required'},
+    { _id:5 , name: 'Replaced Recently'},
   ],
+
   recordTypes: [
     { _id:1 , name: 'SERVICE'},
     { _id:2 , name: 'REPAIR'},

@@ -13,6 +13,7 @@ import {
   CardHeader,
   CardContent
 } from '@mui/material';
+import { Container } from '@mui/system';
 import { ThumbnailDocButton } from '../../components/Thumbnails'
 import { StyledVersionChip } from '../../../theme/styles/default-styles';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
@@ -32,6 +33,8 @@ import {
   deleteDocument,
   setDocumentViewFormVisibility,
   getDocuments,
+  getDocument,
+  setDocumentEditFormVisibility,
 } from '../../../redux/slices/document/document';
 import { getCustomer, resetCustomer, setCustomerDialog} from '../../../redux/slices/customer/customer';
 import { getMachine, getMachineForDialog, resetMachine, setMachineDialog } from '../../../redux/slices/products/machine';
@@ -41,7 +44,7 @@ import FormLabel from '../../components/DocumentForms/FormLabel';
 // import DialogLabel from '../../components/Dialog/DialogLabel';
 // import { document as documentType, Snacks } from '../../../constants/document-constants';
 import { useSnackbar } from '../../../components/snackbar';
-import { setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
+import { setDrawingEditFormVisibility, setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
 import DocumentCover from '../../components/DocumentForms/DocumentCover';
 import CustomerDialog from '../../components/Dialog/CustomerDialog';
 import MachineDialog from '../../components/Dialog/MachineDialog';
@@ -65,6 +68,7 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
   const { documentHistory } = useSelector((state) => state.document);
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
+  // const { drawingsEditFormVisibility, drawingsEditFormVisibility, drawingsEditFormVisibility, } = useSelector((state) => state.drawingPage);
 
   useEffect(() => {
     // dispatch(resetActiveDocuments());
@@ -208,18 +212,24 @@ const handleNewFile = async () => {
     }
   };
 
+  const handleEdit = async () => {
+    await dispatch(getDocument(documentHistory._id));
+    dispatch(setDrawingViewFormVisibility(false));
+    dispatch(setDrawingEditFormVisibility(true));
+  };
+
   return (
     <>
       {!customerPage && !machinePage && !drawingPage &&
-        <DocumentCover content={defaultValues?.displayName} backLink={!customerPage && !machinePage && !machineDrawings} machineDrawingsBackLink={machineDrawings}  generalSettings />
-      }
+        <DocumentCover content={defaultValues?.displayName} generalSettings />
+      } 
+
         <Grid item md={12} mt={2}>
           <Card sx={{ p: 3 }}>
           <ViewFormEditDeleteButtons
           customerAccess={defaultValues?.customerAccess}
           isActive={defaultValues.isActive}
-          // disableEditButton={machine?.status?.slug==='transferred'}
-          // disableDeleteButton={machine?.status?.slug==='transferred'}
+          handleEdit={drawingPage && handleEdit}
           onDelete={machineDrawings && handleDeleteDrawing}
           backLink={(customerPage || machinePage || drawingPage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDrawingViewFormVisibility(false));}
           : () =>  machineDrawings ? navigate(PATH_DOCUMENT.document.machineDrawings.list) : navigate(PATH_DOCUMENT.document.list)}
@@ -240,6 +250,10 @@ const handleNewFile = async () => {
                   />
                   )
                 }
+
+                // chipLabel='asdasd'
+                // chips={defaultValues.versionPrefix + defaultValues.documentVersion}
+                // param='asdasd'
               />
 
               <ViewFormField
@@ -296,7 +310,7 @@ const handleNewFile = async () => {
                       updatedIP: files?.updatedIP || '',
                     }
                  return (
-                  <Grid container>
+                  <Grid container key={index}>
                     <Grid container sx={{ pt: '2rem' }} mb={1}>
                       <FormLabel content={`Version No. ${files?.versionNo}`} />
                       {defaultValues.description !== files?.description && (
@@ -304,11 +318,11 @@ const handleNewFile = async () => {
                       )}
                     </Grid>
                     {files?.files?.map((file) => (
-                      <Grid sx={{ display: 'flex-inline', m: 0.5 }}>
+                      <Grid sx={{ display: 'flex-inline', m: 0.5 }} key={file?._id}>
                         <Grid container justifyContent="flex-start" gap={1}>
                           <Thumbnail
                             // sx={{m:2}}
-                            key={file?._id}
+                            // key={file?._id}
                             file={file}
                             currentDocument={documentHistory}
                             customer={customer}
@@ -319,7 +333,7 @@ const handleNewFile = async () => {
                       </Grid>
                     ))}
                     {index === 0 && !defaultValues.isArchived && (<ThumbnailDocButton onClick={handleNewFile}/>)}
-                      <ViewFormAudit defaultValues={fileValues} />
+                    <ViewFormAudit key={`${index}-files`} defaultValues={fileValues} />
                   </Grid>
                 )})}
             </Grid>

@@ -38,6 +38,7 @@ export default function ProfileListTableRow({
     names,
     web,
     flange,
+    thickness,
     type,
     createdAt,
   } = row;
@@ -57,7 +58,7 @@ export default function ProfileListTableRow({
           </TableCell>
         }
         { smScreen && <TableCell align="left">{type==="MANUFACTURER"?<Chip label={type} sx={{m:0.2}} color='secondary' />:<Chip label={type} sx={{m:0.2}}  />}</TableCell>}
-        <TableCell align="left">{web}{web&&flange?"X":""}{flange}</TableCell>
+        <TableCell align="left">{`${web || '___'} x ${flange || '___' } x ${thickness || '___' }`}</TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>
   
       </StyledTableRow>

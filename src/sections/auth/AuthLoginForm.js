@@ -87,14 +87,15 @@ export default function AuthLoginForm() {
         localStorage.removeItem("MFA");
       }
     } catch (error) {
-      console.error("error : ",error);
       if(regEx.test(error.MessageCode)){
+        console.error("error : ",error?.Message || '');
         reset();
         setError('afterSubmit', {
           ...error,
           message: error.Message,
         });
       }else{
+        console.error("error : ",error || '');
         setError('afterSubmit', {
           ...error,
           message: error,

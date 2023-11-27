@@ -293,8 +293,8 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                                   )}
                                   <DetailsSection
                                     content={Site.name}
-                                    content2={Site?.address?.city ? Site?.address?.city : <br />}
-                                    content3={Site?.website ? Site?.website : <br />}
+                                    content2={Site?.address?.city ? Site?.address?.city : ""}
+                                    content3={Site?.website ? Site?.website : ""}
                                   />
                                 </Grid>
                               </Link>
@@ -376,10 +376,6 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
           {shouldShowSiteEdit && <SiteEditForm />}
           {shouldShowSiteAdd && <SiteAddForm />}
         </GridBaseViewForm>
-
-        <Grid item lg={12}>
-          <TableNoData isNotFound={isNotFound} />
-        </Grid>
       </Grid>
     </>
   );

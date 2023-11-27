@@ -152,7 +152,7 @@ function MachineServiceRecordAddForm() {
   const onSubmit = async (data) => {
     try {
       const checkItemLists_ = [];
-
+console.log("checkItemLists : ",checkItemLists)
       if(checkItemLists && 
         Array.isArray(checkItemLists) && 
         checkItemLists.length>0) 
@@ -163,7 +163,7 @@ function MachineServiceRecordAddForm() {
               CI?.checked && checkItemLists_.push({
                 machineCheckItem: CI?._id,
                 checkItemListId:  checkParam_?._id,
-                checkItemValue:   CI?.inputType?.toLowerCase() === 'boolean' ? CI?.checkItemValue || false : CI?.checkItemValue || '',
+                checkItemValue:   CI?.inputType?.toLowerCase() === 'boolean' ? CI?.checkItemValue || false : CI?.inputType?.toLowerCase() === 'status' && CI?.checkItemValue?.name || CI?.inputType?.toLowerCase() !== 'status' &&CI?.checkItemValue || '',
                 comments:CI?.comments,
               })
             ));
@@ -247,7 +247,7 @@ function MachineServiceRecordAddForm() {
     };
     updatedParamObject.checkItems[childIndex] = {
       ...updatedParamObject.checkItems[childIndex],
-      checkItemValue: status
+      checkItemValue: status 
     };
     updatedCheckParams[index] = updatedParamObject;
   setCheckItemLists(updatedCheckParams);

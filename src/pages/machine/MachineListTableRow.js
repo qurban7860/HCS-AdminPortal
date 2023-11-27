@@ -5,8 +5,9 @@ import { Switch, TableRow, TableCell } from '@mui/material';
 // utils
 import { fDate } from '../../utils/formatTime';
 // components
-import LinkTableCellWithIcon from '../components/ListTableTools/LinkTableCellWithIcon';
+import LinkTableCellWithIconTargetBlank from '../components/ListTableTools/LinkTableCellWithIconTargetBlank';
 import { useScreenSize } from '../../hooks/useResponsive';
+
 // ----------------------------------------------------------------------
 
 MachineListTableRow.propTypes = {
@@ -14,6 +15,7 @@ MachineListTableRow.propTypes = {
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
   onViewRow: PropTypes.func,
+  openInNewPage: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
 };
@@ -25,6 +27,7 @@ export default function MachineListTableRow({
   onDeleteRow,
   onEditRow,
   onViewRow,
+  openInNewPage,
 }) {
   const {
     verifications,
@@ -40,9 +43,10 @@ export default function MachineListTableRow({
  
   return (
     <TableRow hover selected={selected}>
-      <LinkTableCellWithIcon
+      <LinkTableCellWithIconTargetBlank
         align="left"
-        onClick={onViewRow}
+        onViewRow={onViewRow}
+        onClick={openInNewPage}
         param={serialNo}
         isVerified={verifications?.length > 0}
       />

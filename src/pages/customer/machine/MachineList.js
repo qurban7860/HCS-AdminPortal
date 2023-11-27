@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
 import {
-  Grid,
   Table,
   TableBody,
   TableContainer,
@@ -35,6 +34,7 @@ import { getCustomerMachines, ChangeRowsPerPage,
   getMachine,
   getMachineForDialog, } from '../../../redux/slices/products/machine';
 import MachineDialog from '../../components/Dialog/MachineDialog';
+import { PATH_MACHINE } from '../../../routes/paths';
 
 export default function MachineList() {
   const {
@@ -59,6 +59,8 @@ export default function MachineList() {
     { id: 'serialNo', label: 'SerialNo'},
     { id: 'name', visibility: 'xs1', label: 'name'},
     { id: 'machineModel.name', label: 'Model'},
+    { id: 'status.name', label: 'Status'},
+    
     { id: 'instalationSite.address.country', label: 'Address'},
     { id: 'action', label: ''},
   ];
@@ -111,6 +113,11 @@ export default function MachineList() {
     setFilterStatus(event.target.value);
   };
 
+  const handleViewMachine = (machineId) => {
+    const url = PATH_MACHINE.machines.view(machineId);
+    window.open(url, '_blank');
+  };
+
   const handleViewRow = (machineId) => {
     dispatch(getMachineForDialog(machineId)); 
     dispatch(setMachineDialog(true));
@@ -161,6 +168,7 @@ export default function MachineList() {
                       <MachineListTableRow
                         key={row._id}
                         row={row}
+                        onClick={() => handleViewMachine(row?._id)}
                         onViewRow={() => handleViewRow(row?._id)}
                         onMoveMachine={() => handleMoveMachine(row?._id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
