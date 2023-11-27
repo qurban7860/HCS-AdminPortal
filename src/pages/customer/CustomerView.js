@@ -108,7 +108,6 @@ export default function CustomerView({ editPage }) {
     if (customerEditFormFlag) {
       setCurrentComponent(<CustomerEditForm />);
     } else {
-      setCustomerFlag(false);
       setCurrentComponent(<CustomerViewForm />);
     }
     /* eslint-enable */
