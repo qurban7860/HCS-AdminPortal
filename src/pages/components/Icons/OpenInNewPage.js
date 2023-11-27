@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from '@mui/material';
-import { StyledTooltip } from '../../../theme/styles/default-styles';
 import Iconify from '../../../components/iconify';
 
 export default function OpenInNewPage({ onClick }) {
@@ -11,7 +10,7 @@ export default function OpenInNewPage({ onClick }) {
         color="inherit"
         target="_blank"
         rel="noopener"
-        sx={{ cursor: 'pointer' }}
+        sx={{ cursor: 'pointer',mx: 0.5, }}
     >
       <Iconify
         icon="fluent:open-12-regular"
@@ -19,7 +18,6 @@ export default function OpenInNewPage({ onClick }) {
         width="1.5em"
         sx={{
           mb: -0.5,
-          mr: 0.5,
         }}
       />
     </Link>

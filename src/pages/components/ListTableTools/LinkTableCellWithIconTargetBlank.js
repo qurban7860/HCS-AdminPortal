@@ -1,18 +1,16 @@
 import PropTypes from 'prop-types';
 import { TableCell, Link } from '@mui/material';
 import { alpha } from '@mui/material/styles';
-// import { StyledTooltip } from '../../../theme/styles/default-styles';
 import VerificationIcon from '../Icons/VerificationIcon';
 import OpenInNewPage from '../Icons/OpenInNewPage';
 // import Iconify from '../../../components/iconify';
 
-export default function LinkTableCellWithIconTargetBlank({ align, onClick, param, isVerified }) {
+export default function LinkTableCellWithIconTargetBlank({ align, onViewRow, onClick, param, isVerified }) {
   return (
     <TableCell align={align} sx={{minWidth:'130px'}}>
       <VerificationIcon isVerified={isVerified} />
-      <OpenInNewPage onClick={onClick} />
       <Link
-        onClick={onClick}
+        onClick={onViewRow}
         color="inherit"
         sx={{
           cursor: 'pointer',
@@ -26,12 +24,14 @@ export default function LinkTableCellWithIconTargetBlank({ align, onClick, param
       >
         {param}
       </Link>
+      <OpenInNewPage onClick={onClick} /> 
     </TableCell>
   );
 }
 
 LinkTableCellWithIconTargetBlank.propTypes = {
   align: PropTypes.string,
+  onViewRow: PropTypes.func,
   onClick: PropTypes.func,
   param: PropTypes.string,
   isVerified: PropTypes.bool,

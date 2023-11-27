@@ -3,21 +3,18 @@ import PropTypes from 'prop-types';
 import {
   TableRow,
   TableCell,
-  Switch,
 } from '@mui/material';
 // utils
 import { styled } from '@mui/material/styles';
-import { fDate } from '../../../utils/formatTime';
 // components
-import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
-import IconTooltip from '../../components/Icons/IconTooltip';
 import LinkTableCellButtons from '../../components/ListTableTools/LinkTableCellButtons';
-import LinkDialogTableCell from '../../components/ListTableTools/LinkDialogTableCell';
+import LinkDialogTableCellTargetBlank from '../../components/ListTableTools/LinkDialogTableCellTargetBlank';
 
 MachineListTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onViewRow: PropTypes.func,
+  onClick: PropTypes.func,
   onMoveMachine: PropTypes.func
 };
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -33,12 +30,14 @@ export default function MachineListTableRow({
   row,
   selected,
   onViewRow,
+  onClick,
   onMoveMachine,
 }) {
   const {
     serialNo,
     name,
     machineModel,
+    status,
     instalationSite
   } = row;
 
@@ -53,9 +52,10 @@ export default function MachineListTableRow({
 
   return (
       <StyledTableRow hover selected={selected}>
-        <LinkDialogTableCell align="left" param={serialNo} onClick={onViewRow} />
-        <TableCell>{name}</TableCell>
-        <TableCell>{machineModel?.name}</TableCell>
+        <LinkDialogTableCellTargetBlank align="left" param={serialNo} onViewRow={onViewRow} onClick={onClick} />
+        <TableCell>{name || ''}</TableCell>
+        <TableCell>{machineModel?.name || ''}</TableCell>
+        <TableCell>{status?.name || ''}</TableCell>
         <TableCell>
             {Object.values(address ?? {}).map((value) => (typeof value === 'string' ? value.trim() : ''))
                           .filter((value) => value !== '').join(', ')}
