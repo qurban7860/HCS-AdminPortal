@@ -234,16 +234,17 @@ export function AuthProvider({ children }) {
   // LOGOUT
   const logout = useCallback( async () => {
     const userId  = localStorage.getItem("userId")
-    await axios.post(`${CONFIG.SERVER_URL}security/logout/${userId}`)
-
+    
     setSession(null);
     localStorage.removeItem('userId');
     localStorage.removeItem('email');
     localStorage.removeItem('name');
     localStorage.removeItem('userRoles');
     localStorage.removeItem('accessToken');
-    await dispatch(clearAllPersistedStates)
-    window.location.reload();
+    await dispatch(clearAllPersistedStates());
+
+    await axios.post(`${CONFIG.SERVER_URL}security/logout/${userId}`)
+    // window.location.reload();
     dispatch({
       type: 'LOGOUT',
     });
