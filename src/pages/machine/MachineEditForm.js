@@ -39,10 +39,6 @@ import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
 import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
 import ToggleButtons from '../components/DocumentForms/ToggleButtons';
-// styles
-// import { ListItem } from '../../theme/styles/default-styles';
-// schema
-// import { EditMachineSchema } from '../schemas/machine';
 // constants
 import { BREADCRUMBS, FORMLABELS } from '../../constants/default-constants';
 
@@ -64,25 +60,9 @@ export default function MachineEditForm() {
   const { machineConnections } = useSelector((state) => state.machineConnections);
   const { activeCategories } = useSelector((state) => state.category);
 
-  // const [parMachineVal, setParMachineVal] = useState('');
-  // const [parMachSerVal, setParMachSerVal] = useState('');
-  // const [supplierVal, setSupplierVal] = useState('');
-  // const [statusVal, setStatusVal] = useState('');
-  // const [modelVal, setModelVal] = useState('');
-  // const [customerVal, setCustomerVal] = useState('');
-  // const [installVal, setInstallVal] = useState('');
-  // const [billingVal, setBillingVal] = useState('');
   const [shippingDate, setShippingDate] = useState(null);
   const [installationDate, setInstallationDate] = useState(null);
   const [supportExpireDate, setSupportExpireDate] = useState(null);
-  // const [disableInstallationDate, setInstallationDateToggle] = useState(true);
-  // const [disableShippingDate, setShippingDateToggle] = useState(true);
-  // const [accoVal, setAccoManVal] = useState('');
-  // const [projVal, setProjManVal] = useState('');
-  // const [suppVal, setSuppManVal] = useState('');
-  // const [currTag, setCurrTag] = useState('');
-  // const [chipData, setChipData] = useState([]);
-  // const [connections, setConnections] = useState([]);
   const [chips, setChips] = useState([]);
   const isMobile = useResponsive('sm', 'down');
   
@@ -168,70 +148,43 @@ export default function MachineEditForm() {
   } = methods
 
   const {
-    // serialNo,
-    // name,
-    // previousMachine,
     parentSerialNo,
     supplier,
     category,
     machineModel,
     status,
-    // connection,
-    // workOrderRef,
     customer,
     instalationSite,
-    // billingSite,
     machineConnectionVal,
-    // installationDate,
-    // shippingDate,
-    // siteMilestone,
     accountManager,
     projectManager,
     supportManager,
-    // customerTags,
-    // description,
-    // isActive,
   } = watch();
+
   useEffect(() => {
-    if(category === null){
-      // dispatch(resetActiveMachineModels())
-      dispatch(getActiveMachineModels());
-      setValue('machineModel',null);
-    }else if(category?._id === machineModel?.category?._id){
-      dispatch(getActiveMachineModels(category?._id));
-    }else if(category?._id !== machineModel?.category?._id){
+    // if( category === null && machineModel !== null ) {
+    //   // dispatch(resetActiveMachineModels())
+    //   dispatch(getActiveMachineModels());
+    //   // setValue('machineModel',null);
+    // }else 
+    if(category && category?._id !== machineModel?.category?._id){
       dispatch(getActiveMachineModels(category?._id));
       setValue('machineModel',null);
     }
-  },[dispatch, category,setValue,machineModel]);
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[dispatch, category ]);
 
-  useLayoutEffect(() => {
-    // window.history.pushState({}, null, `/products/machines/${machine._id}/edit`);
+
+
+  useEffect(() => {
+    dispatch(getActiveSuppliers());
+    dispatch(getActiveCategories());
+    dispatch(getActiveMachineModels());
+    dispatch(getActiveMachineStatuses());
     dispatch(getActiveCustomers());
     dispatch(getActiveMachines());
-    dispatch(getActiveMachineModels());
-    dispatch(getActiveSuppliers());
-    dispatch(getActiveMachineStatuses());
     dispatch(getSPContacts());
     setChips(machine?.alias);
-    // setParMachineVal(machine?.parentMachine);
-    // setParMachSerVal(machine?.parentMachine);
-    // setStatusVal(machine?.status);
-    // setModelVal(machine?.machineModel);
-    // setSupplierVal(machine?.supplier);
-    // setCustomerVal(machine?.customer);
-    // setInstallVal(machine?.instalationSite);
-    // setBillingVal(machine?.billingSite);
-    // setChipData(machine?.customerTags);
-    // setAccoManVal(machine?.accountManager);
-    // setProjManVal(machine?.projectManager);
-    // setSuppManVal(machine?.supportManager);
-    // setMachineConnectionVal(machine?.machineConnections);
-    // setConnections(machine?.machineConnections);
-    // if(machine?.instalationSite){
-    //   setInstallationDateToggle(false);
-    //   setShippingDateToggle(false);
-    // }
     if(machine?.installationDate){
       setInstallationDate(machine?.installationDate);
     }
@@ -243,14 +196,13 @@ export default function MachineEditForm() {
     }
   }, [dispatch, machine]);
 
-  useLayoutEffect(() => {
-    if (customer !== null && customer?.id !== '') {
+  useEffect( () => {
+    if (customer && customer?._id ) {
       dispatch(getActiveSites(customer?._id));
       dispatch(getMachineConnections(customer?._id));
     }
-    //   setInstallVal(null);
-    //   setBillingVal(null);
   }, [dispatch, customer]);
+
 
 
   const toggleCancel = () => {
@@ -279,27 +231,6 @@ export default function MachineEditForm() {
   };
 
   // ----------------------handle functions----------------------
-  // const handleDelete = (data, index) => {
-  //   const arr = [...chipData];
-  //   arr.splice(index, 1);
-  //   setChipData(arr);
-  // };
-
-  // const handleKeyPress = (e) => {
-  //   setCurrTag(currTag.trim());
-  //   if (e.keyCode === 13 || e.key === 'Enter') {
-  //     e.preventDefault();
-  //     if (currTag.trim().length > 0) {
-  //       currTag.trim();
-  //       setChipData((oldState) => [...oldState, currTag.trim()]);
-  //       setCurrTag('');
-  //     }
-  //   }
-  // };
-
-  // const handleChange = (e) => {
-  //   setCurrTag(e.target.value);
-  // };
 
   const handleChipChange = (newChips) => {
     const array = [...new Set(newChips)]
