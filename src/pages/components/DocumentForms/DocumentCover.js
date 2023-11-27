@@ -18,7 +18,9 @@ export default function DocumentCover({ content, backLink, generalSettings, mach
                         justifyContent:'flex-end',
                         fontFamily:'Yantramanav,Arimo,Calibri'
                         }}
-                        >{content}</CardContent>
+                        >
+                        {content.length > 130? `${content.slice(0, content.lastIndexOf(' ', 130))} ...`: content}
+                        </CardContent>
       <CardActions sx={{background:'#fff', height:'50px'}} />
     </Card>
   );
