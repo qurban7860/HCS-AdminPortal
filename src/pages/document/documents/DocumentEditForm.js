@@ -2,7 +2,6 @@ import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import {  useEffect, useMemo, useState, memo} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router';
 
 // form
 import { useForm } from 'react-hook-form';
@@ -35,7 +34,6 @@ DocumentEditForm.propTypes = {
 };
 function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
   
-  const navigate = useNavigate();
   const { document } = useSelector((state) => state.document);
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);

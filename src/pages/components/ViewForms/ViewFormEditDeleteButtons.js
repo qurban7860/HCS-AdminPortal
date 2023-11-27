@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
-import { Badge, Box, Divider, Grid, TextField, Skeleton } from '@mui/material';
+import { Badge, Box, Divider, Grid, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { memo, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -20,7 +20,6 @@ import ViewFormMenuPopover from './ViewFormMenuPopover';
 import ViewFormApprovalsPopover from './ViewFormApprovalsPopover';
 import { ICONS } from '../../../constants/icons/default-icons';
 import { fDate, fDateTime } from '../../../utils/formatTime';
-import SkeletonIcon from '../../../components/skeleton/SkeletonIcon'
 
 function ViewFormEditDeleteButtons({
   // Icons 
@@ -82,7 +81,6 @@ function ViewFormEditDeleteButtons({
   const [openConfigDraftStatuConfirm, setOpenConfigDraftStatuConfirm] = useState(false);
   const [openConfigSubmittedStatuConfirm, setOpenConfigSubmittedStatuConfirm] = useState(false);
   const [openConfigApproveStatuConfirm, setOpenConfigApproveStatuConfirm] = useState(false);
-  const [openCopyConfigConfirm, setOpenCopyConfigConfirm] = useState(false);
   const [lockUntil, setLockUntil] = useState(''); 
   const [lockUntilError, setLockUntilError] = useState(''); 
   const theme = createTheme({
@@ -167,10 +165,6 @@ function ViewFormEditDeleteButtons({
       setOpenConfigApproveStatuConfirm(true);
     }
     
-    if (dialogType === 'copyConfiguration') {
-      setOpenCopyConfigConfirm(true);
-    }
-    
   };
 
   const handleCloseConfirm = (dialogType) => {
@@ -207,10 +201,6 @@ function ViewFormEditDeleteButtons({
     if (dialogType === 'ChangeConfigStatusToApprove') {
       setOpenConfigApproveStatuConfirm(false);
     }
-
-    if (dialogType === 'copyConfiguration') {
-      setOpenCopyConfigConfirm(false);
-    }
     
   };
 
@@ -218,14 +208,7 @@ function ViewFormEditDeleteButtons({
     handleVerification();
     handleCloseConfirm('Verification');
   };
-  // const handlePopoverOpen = (event) => {
-  //   setAnchorEl(event.currentTarget);
-  //   setIsPopoverOpen(true);
-  // };
-  // const handlePopoverClose = () => {
-  //   setAnchorEl(null);
-  //   setIsPopoverOpen(false);
-  // };
+  
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
 

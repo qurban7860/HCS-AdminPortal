@@ -36,7 +36,6 @@ export default function SettingListTableRow({
     techParam: {
       name,
       category,
-      description,
     },
     techParamValue,
     createdAt

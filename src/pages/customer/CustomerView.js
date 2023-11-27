@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
 import { Tab, Container, Box, tabsClasses } from '@mui/material';
@@ -7,7 +7,6 @@ import TabContainer from '../components/Tabs/TabContainer';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import {
-  getCustomers,
   getCustomer,
   setCustomerEditFormVisibility,
 } from '../../redux/slices/customer/customer';
@@ -15,8 +14,6 @@ import {
   setDocumentViewFormVisibility,
   setDocumentHistoryViewFormVisibility,
 } from '../../redux/slices/document/document';
-// auth
-import { useAuthContext } from '../../auth/useAuthContext';
 // components
 import UnderDevelopment from '../boundaries/UnderDevelopment';
 // sections
@@ -27,7 +24,6 @@ import CustomerEditForm from './CustomerEditForm';
 import CustomerSiteDynamicList from './CustomerSiteDynamicList';
 import CustomerContactDynamicList from './CustomerContactDynamicList';
 
-import { CONFIG } from '../../config-global';
 import Iconify from '../../components/iconify';
 import CustomerNotes from './note/CustomerNotes';
 import DocumentTagPage from '../document/documents/DocumentTagPage';
@@ -45,16 +41,12 @@ CustomerView.propTypes = {
 
 export default function CustomerView({ editPage }) {
   const { id } = useParams();
-  const environment = CONFIG.ENV.toLowerCase();
-  const showDevTabs = environment !== 'live';
+  
   const dispatch = useDispatch();
-  const { customer, customers, customerEditFormFlag } = useSelector((state) => state.customer);
-  const [editFlag, setEditFlag] = useState(false);
-  const toggleEditFlag = () => setEditFlag((value) => !value);
+  const { customer, customerEditFormFlag } = useSelector((state) => state.customer);
   const [currentTab, setCurrentTab] = useState('customer-info');
   const [currentComponent, setCurrentComponent] = useState(<CustomerViewForm />);
-  const [customerFlag, setCustomerFlag] = useState(true);
-
+  
   const TABS = [
     {
       // disabled: siteEditFormVisibility || contactEditFormVisibility || contactMoveFormVisibility || noteEditFormVisibility,

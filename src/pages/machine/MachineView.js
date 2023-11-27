@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
 import { Tab, Container, Box, tabsClasses } from '@mui/material';
@@ -7,17 +7,12 @@ import TabContainer from '../components/Tabs/TabContainer';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import {
-  getMachines,
   getMachine,
-  setMachineEditFormVisibility,
 } from '../../redux/slices/products/machine';
 import {
   setDocumentViewFormVisibility,
   setDocumentHistoryViewFormVisibility,
 } from '../../redux/slices/document/document';
-import { setAllFlagsFalse } from '../../redux/slices/products/machineServiceRecord';
-// auth
-import { useAuthContext } from '../../auth/useAuthContext';
 // components
 import UnderDevelopment from '../boundaries/UnderDevelopment';
 // sections
@@ -41,12 +36,9 @@ export default function MachineView({ editPage }) {
   const environment = CONFIG.ENV.toLowerCase();
   const showDevTabs = environment !== 'live';
   const dispatch = useDispatch();
-  const { machine, machines, machineEditFormFlag } = useSelector((state) => state.machine);
-  const [editFlag, setEditFlag] = useState(false);
-  const toggleEditFlag = () => setEditFlag((value) => !value);
+  const { machine, machineEditFormFlag } = useSelector((state) => state.machine);
   const [currentTab, setCurrentTab] = useState('Machine-info');
   const [currentComponent, setCurrentComponent] = useState(<MachineViewForm />);
-  const [machineFlag, setMachineFlag] = useState(true);
   const TABS = TABSFunc(currentComponent, showDevTabs, machineEditFormFlag );
 
   useEffect(() => {
@@ -64,7 +56,6 @@ export default function MachineView({ editPage }) {
     if (machineEditFormFlag) {
       setCurrentComponent(<MachineEditForm />);
     } else {
-      setMachineFlag(false);
       setCurrentComponent(<MachineViewForm />);
     }
     /* eslint-enable */
