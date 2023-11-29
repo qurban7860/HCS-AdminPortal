@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // @mui
 import { Stack } from '@mui/material';
 // routes
-import { setMachineServiceRecordAddFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
+import { setHistoricalConfigurationAddFormVisibility } from '../../../redux/slices/products/historicalConfiguration';
 // components
 import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 // constants
@@ -38,6 +38,9 @@ export default function HistoricalConfigurationsListTableToolbar({
 
   const { machine } = useSelector((state) => state.machine);
   
+  const toggleAdd = () => {
+    dispatch(setHistoricalConfigurationAddFormVisibility(true))
+  };
 
   return (
     <Stack {...options}>
@@ -46,6 +49,8 @@ export default function HistoricalConfigurationsListTableToolbar({
         value={filterName}
         onChange={onFilterName}
         onClick={onResetFilter}
+        SubOnClick={toggleAdd}
+        addButton={!isHistory && BUTTONS.ADD_MACHINE_INI}
         transferredMachine={machine?.status?.slug==='transferred'}
       />
     </Stack>
