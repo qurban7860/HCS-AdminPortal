@@ -9,6 +9,7 @@ import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 import { BUTTONS } from '../../../constants/default-constants';
 // styles
 import { options } from '../../../theme/styles/default-styles';
+import { setHistoricalConfigurationAddFormVisibility } from '../../../redux/slices/products/historicalConfiguration';
 
 // ----------------------------------------------------------------------
 
@@ -37,6 +38,9 @@ export default function HistoricalConfigurationsListTableToolbar({
 
   const { machine } = useSelector((state) => state.machine);
   
+  const toggleAdd = () => {
+    dispatch(setHistoricalConfigurationAddFormVisibility(true))
+  };
 
   return (
     <Stack {...options}>
