@@ -2,7 +2,7 @@ import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
-import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
+import { Card, Table, TableBody, Container, TableContainer } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
@@ -10,7 +10,6 @@ import { PATH_SECURITY } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import Scrollbar from '../../components/scrollbar';
-import ConfirmDialog from '../../components/confirm-dialog';
 import { Cover } from '../components/Defaults/Cover';
 import {
   useTable,
@@ -26,16 +25,12 @@ import SecurityUserTableToolbar from './SecurityUserTableToolbar';
 import UserTableRow from './SecurityUserTableRow';
 import {
   getSecurityUsers,
-  deleteSecurityUser,
-  setSecurityUserEditFormVisibility,
   ChangeRowsPerPage,
   ChangePage,
-  setFilterBy,
-  resetSecurityUsers
+  setFilterBy
 } from '../../redux/slices/securityUser/securityUser';
 import { fDate } from '../../utils/formatTime';
 // constants
-import { DIALOGS } from '../../constants/default-constants';
 import TableCard from '../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
@@ -60,19 +55,12 @@ const TABLE_HEAD = [
 export default function SecurityUserList() {
   const {
     dense,
-    // page,
     order,
     orderBy,
-    // rowsPerPage,
     setPage,
-    //
     selected,
-    setSelected,
     onSelectRow,
-    //
     onSort,
-    // onChangePage,
-    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'isOnline', defaultOrder: 'desc',
   });
@@ -97,7 +85,6 @@ export default function SecurityUserList() {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [tableData, setTableData] = useState([]);
-  const [openConfirm, setOpenConfirm] = useState(false);
   const [filterName, setFilterName] = useState('');
   const [filterRole, setFilterRole] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
@@ -130,10 +117,6 @@ export default function SecurityUserList() {
     (!dataFiltered.length && !!filterRole) ||
     (!dataFiltered.length && !!filterStatus) || 
     (!dataFiltered.length && !isLoading);
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
 
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))

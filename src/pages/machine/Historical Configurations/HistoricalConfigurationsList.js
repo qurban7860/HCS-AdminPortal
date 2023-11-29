@@ -46,7 +46,7 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function HistoricalConfigurationsList() {
-  const { historicalConfigurations, historicalConfigurationViewFormFlag, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.historicalConfiguration );
+  const { historicalConfigurations, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.historicalConfiguration );
   const { machine } = useSelector((state) => state.machine);
   const { enqueueSnackbar } = useSnackbar();
   const {

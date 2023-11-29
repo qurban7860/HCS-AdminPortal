@@ -96,7 +96,7 @@ export default function ModelAddForm() {
     // console.log("data : ",data)
     //  await dispatchReqAddAndList(dispatch, addMachineModel(data),  reset, navigate, PATH_MACHINE.machineModel.list, enqueueSnackbar)
     try {
-      const response = await dispatch(addMachineModel(data));
+      await dispatch(addMachineModel(data));
       reset();
       enqueueSnackbar('Create success!');
       navigate(PATH_MACHINE.machines.settings.model.list);

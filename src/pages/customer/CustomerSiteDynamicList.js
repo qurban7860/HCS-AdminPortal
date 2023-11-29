@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from '../../redux/store';
 import { PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import { TableNoData, getComparator, useTable } from '../../components/table';
+import { getComparator, useTable } from '../../components/table';
 import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
 import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
@@ -129,8 +129,6 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
     }
   }, [dispatch, customer, siteAddFormVisibility, siteEditFormVisibility]); 
 
-  const isNotFound = !sites.length && !siteAddFormVisibility && !siteEditFormVisibility;
-
   // conditions for rendering the contact view, edit, and add forms
   const shouldShowSiteView = isExpanded && !siteEditFormVisibility && !siteAddFormVisibility;
   const shouldShowSiteEdit = siteEditFormVisibility && !siteAddFormVisibility;
@@ -231,9 +229,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
               disabled={siteEditFormVisibility || siteAddFormVisibility}
             >
               <Grid container spacing={1} justifyContent="flex-start" direction="column">
-                {dataFiltered.map((Site, index) => {
-                  const borderTopVal = index !== 0 ? '0px solid white' : '';
-                  return index !== activeIndex && (
+                {dataFiltered.map((Site, index) =>  index !== activeIndex && (
                         <Grid
                           item
                           key={index}
@@ -302,8 +298,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                           </StyledCardWrapper>
                         </Grid>
                       )
-                  
-                })}
+                )}
               </Grid>
             </StyledScrollbar>
             </>

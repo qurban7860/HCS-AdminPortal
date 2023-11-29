@@ -51,14 +51,13 @@ export default function MachineViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { machine, transferMachineFlag } = useSelector((state) => state.machine);
+  const { machine, transferMachineFlag, machineDialog } = useSelector((state) => state.machine);
+  const { customerDialog } = useSelector((state) => state.customer);
   const [disableTransferButton, setDisableTransferButton] = useState(true);
   const [disableEditButton, setDisableEditButton] = useState(false);
   const [disableDeleteButton, setDisableDeleteButton] = useState(false);
   const [hasValidLatLong, setHasValidLatLong] = useState(false);
   const isMobile = useResponsive('down', 'sm');
-  
-  const [machineID, setMachineID] = useState('');
 
   const handleInstallationSiteDialog = () =>{ dispatch(resetSite()); dispatch(getSite(machine?.customer?._id, machine?.instalationSite?._id)); dispatch(setSiteDialog(true))}
   const handleBillingSiteDialog = () =>{ dispatch(resetSite()); dispatch(getSite(machine?.customer?._id, machine?.billingSite?._id)); dispatch(setSiteDialog(true))}
@@ -165,7 +164,6 @@ export default function MachineViewForm() {
   const handleMachineDialog = (MachineID) => {
     dispatch(getMachineForDialog(MachineID));
     dispatch(setMachineDialog(true)); 
-    // setMachineID(MachineID)
   };
   
   const linkedMachines = machine?.machineConnections?.map((machineConnection, index) => (
@@ -428,9 +426,7 @@ export default function MachineViewForm() {
 
       {/* connected machine dialog */}      
 
-      <CustomerDialog />
-      <MachineDialog />
-
+      
       <SiteDialog
         site={defaultValues?.instalationSite}
         title="Installation Site"
@@ -440,6 +436,9 @@ export default function MachineViewForm() {
         site={defaultValues?.billingSite}
         title="Billing Site"
       />
+      {machineDialog  && <MachineDialog />}
+      {customerDialog  && <CustomerDialog />}
+      
     </>
   );
 }

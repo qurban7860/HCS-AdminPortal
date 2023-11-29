@@ -1,10 +1,9 @@
 import { useMemo } from 'react';
 // @mui
-import {  Grid,  Table, TableBody, TableCell, TableHead, TableRow,  Paper, TableContainer,tableCellClasses , styled, Card, Tooltip } from '@mui/material';
+import {  Grid,  Table, TableBody, TableCell, TableHead, TableRow,  Paper, TableContainer,tableCellClasses , styled, Card } from '@mui/material';
 // hooks
 import { useDispatch, useSelector } from 'react-redux';
-// import { fDate } from 'src/utils/formatTime';
-import { fDate, fDateTime } from '../../../utils/formatTime';
+import { fDateTime } from '../../../utils/formatTime';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import { useSnackbar } from '../../../components/snackbar';
 // components
@@ -17,7 +16,6 @@ import {
 } from '../../../redux/slices/products/toolInstalled';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 // constants
-import { Snacks } from '../../../constants/machine-constants';
 import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
 
 export default function ToolInstalledViewForm() {

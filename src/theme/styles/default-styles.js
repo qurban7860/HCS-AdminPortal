@@ -1,7 +1,7 @@
 import { styled, alpha } from '@mui/material/styles';
 import { Popover, Stack, Card, Chip, Container, TableRow } from '@mui/material';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
-import { bgBlur, bgGradient } from '../../utils/cssStyles';
+import { bgBlur } from '../../utils/cssStyles';
 
 /**
  * @cover :components ____________________________________________________________________________________________
@@ -191,11 +191,7 @@ export const StyledBg = styled('div')(({ theme }) => ({
   bottom: 0,
   zIndex: -1,
   position: 'absolute',
-  transform: 'scaleX(-1)',
-  // ...bgGradient({
-  //   color: alpha(theme.palette.background.default, theme.palette.mode === 'light' ? 0.9 : 0.94),
-  //   // imgUrl: '/assets/background/overlay_2.jpg',
-  // }),
+  transform: 'scaleX(-1)'
 }));
 
 export const StyledCardContainer = styled(Card)(({ theme }) => ({

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 // @mui
 import { Container } from '@mui/material';
 import { useSelector } from 'react-redux';

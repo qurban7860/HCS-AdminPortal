@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Stack, Button, TextField, InputAdornment, Grid } from '@mui/material';
+import { Stack } from '@mui/material';
 // import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useDispatch } from '../../../redux/store';
 // components
-import Iconify from '../../../components/iconify';
 import { setDrawingFormVisibility } from '../../../redux/slices/products/drawing';
 import { SearchBarCombo } from '../../components/ListTableTools';
 // constants

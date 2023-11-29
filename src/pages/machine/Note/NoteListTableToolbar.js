@@ -7,8 +7,6 @@ import { Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { useDispatch } from '../../../redux/store';
 // components
-import Iconify from '../../../components/iconify';
-// import { PATH_DOCUMENT } from '../../../routes/paths';
 import { setNoteFormVisibility } from '../../../redux/slices/products/machineNote';
 import { SearchBarCombo } from '../../components/ListTableTools';
 import { BUTTONS } from '../../../constants/default-constants';

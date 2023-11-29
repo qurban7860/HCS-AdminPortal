@@ -1,15 +1,12 @@
 import PropTypes from 'prop-types';
 // @mui
 import {
-  Switch,
   TableRow,
-  TableCell,
-  Chip
+  TableCell
 } from '@mui/material';
 // utils
 import { styled } from '@mui/system';
 import { fDateTime } from '../../../../utils/formatTime';
-import { useScreenSize } from '../../../../hooks/useResponsive';
 import { StyledTooltip } from '../../../../theme/styles/default-styles';
 import Iconify from '../../../../components/iconify';
 import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
@@ -46,12 +43,7 @@ export default function BlockedUserListTableRow({
   onViewRow,
 }) {
 
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
-  const { blockedUser, customer, isActive, createdBy, createdAt } = row;
-  const smScreen = useScreenSize('sm')
-  const lgScreen = useScreenSize('lg')
+  const { blockedUser, customer, createdBy, createdAt } = row;
   return (
     <StyledTableRow hover selected={selected} sx={{cursor:'pointer'}} >
       <LinkTableCell

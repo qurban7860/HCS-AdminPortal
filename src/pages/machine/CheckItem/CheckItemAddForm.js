@@ -24,7 +24,7 @@ import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 // constants
 import { Snacks } from '../../../constants/machine-constants';
-import { statusTypes, inputTypes, unitTypes, recordTypes, headerFooterTypes, status } from '../util/index'
+import { unitTypes, inputTypes } from '../util/index'
 
 // ----------------------------------------------------------------------
 
@@ -34,8 +34,6 @@ export default function CheckItemAddForm() {
   const { enqueueSnackbar } = useSnackbar();
   const { filterBy } = useSelector((state) => state.checkItems);
   const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
-  const initialState = useSelector((state) => state.checkItems);
-  // const { inputTypes, unitTypes } = initialState;
 
   useEffect(()=>{
     dispatch(getActiveServiceCategories())
@@ -70,7 +68,7 @@ export default function CheckItemAddForm() {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-  const { inputType, unitType } = watch();
+  const { inputType } = watch();
 
   useEffect(() => {
     reset(defaultValues);

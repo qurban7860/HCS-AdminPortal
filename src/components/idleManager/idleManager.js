@@ -22,30 +22,12 @@ const IdleManager = () => {
       setOpenModal(true);
   }
 
-  const onIdle = () => {
-    setOpenModal(false)
-  }
-  const onActive = () => {
-    setOpenModal(false);
-    resetCountdown();
-    // reset() // reset() have been replaced with activate() due to changes in idleTimer.
-  };
-
-  // const { activate } = useIdleTimeout({
-  //   onIdle: handleIdle,
-  //   idleTime: CONFIG.IDLE_TIME,
-  //   onActive,
-  //   isAuthenticated
-  // });
-
   const { activate } = useIdleTimer({
-    // onIdle: handleIdle,
     timeout: idleTimeout,
     promptBeforeIdle: CONFIG.IDLE_TIME,
     onPrompt: handleIdle,
     debounce: 500,
     disabled: !isAuthenticated,
-    // onActive,
 });
 
   /* eslint-disable */

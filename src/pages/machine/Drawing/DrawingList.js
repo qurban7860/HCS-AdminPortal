@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
 import {
-  Grid,
   Table,
   Button,
   Tooltip,
@@ -51,18 +50,12 @@ import TableCard from '../../components/ListTableTools/TableCard';
 
 export default function DrawingList() {
   const {
-    // page,
     order,
     orderBy,
-    // rowsPerPage,
     setPage,
-    //
     selected,
     onSelectAllRows,
-    //
     onSort,
-    // onChangePage,
-    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'createdAt', defaultOrder: 'desc',
   });
@@ -77,9 +70,11 @@ export default function DrawingList() {
   const { drawings, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.drawing );
 
   const TABLE_HEAD = [
+    { id: 'referenceNumber', label: 'Ref', align: 'left' },
     { id: 'name', label: 'Name', align: 'left' },
-    { id: 'xs1', label: 'Category', align: 'left' },
+    { id: 'stockNumber', label: 'Stock Number', align: 'left' },
     { id: 'xs2', label: 'Type', align: 'left' },
+    { id: 'xs1', label: 'Category', align: 'left' },
     { id: 'active', label: 'Active', align: 'center' },
     { id: 'created_at', label: 'Created At', align: 'right' },
   ];
@@ -109,13 +104,13 @@ export default function DrawingList() {
     filterName,
     filterStatus,
   });
+
   const denseHeight = 60;
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   const handleOpenConfirm = () => setOpenConfirm(true);
   const handleCloseConfirm = () => setOpenConfirm(false);
-
 
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
@@ -196,15 +191,7 @@ export default function DrawingList() {
                 order={order}
                 orderBy={orderBy}
                 headLabel={TABLE_HEAD}
-                // rowCount={tableData.length}
-                // numSelected={selected.length}
                 onSort={onSort}
-                // onSelectAllRows={(checked) =>
-                //   onSelectAllRows(
-                //     checked,
-                //     tableData.map((row) => row._id)
-                //   )
-                // }
               />
 
               <TableBody>
@@ -215,10 +202,6 @@ export default function DrawingList() {
                       <DocumentListTableRow
                         key={row._id}
                         row={row}
-                        // selected={selected.includes(row._id)}
-                        // onSelectRow={() => onSelectRow(row._id)}
-                        // onDeleteRow={() => handleDeleteRow(row._id)}
-                        // onEditRow={() => handleEditRow(row._id)}
                         onViewRow={() => handleViewRow(row?.document?._id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
