@@ -26,6 +26,7 @@ function SearchBarCombo({
   inviteButton,
   buttonIcon,
   transferredMachine,
+  handleAttach,
   ...other
 }) {
 
@@ -122,6 +123,22 @@ function SearchBarCombo({
                     </StyledTooltip>
                   </Grid>
               }
+              
+              {handleAttach &&
+                  <Grid item>
+                    <StyledTooltip title="Attach Drawing" placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
+                    <IconButton onClick={handleAttach} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
+                      '&:hover': {
+                        background:"#103996", 
+                        color:"#fff"
+                      }
+                    }}>
+                      <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon='fluent:attach-arrow-right-24-filled' />
+                    </IconButton>
+                  </StyledTooltip>
+                </Grid>
+              }
+
               {addButton &&
                   <Grid item>
                     <StyledTooltip title={addButton} placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
@@ -156,7 +173,8 @@ SearchBarCombo.propTypes = {
   filterVerify:PropTypes.string,
   signInLogsFilter:PropTypes.number,
   onSignInLogsFilter:PropTypes.func,
-  transferredMachine:PropTypes.bool
+  transferredMachine:PropTypes.bool,
+  handleAttach: PropTypes.func
 };
 
 export default SearchBarCombo;

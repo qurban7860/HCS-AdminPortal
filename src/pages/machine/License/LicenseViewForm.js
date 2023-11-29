@@ -55,7 +55,7 @@ export default function LicenseViewForm() {
         production : license?.licenseDetail?.production || '',
         waste : license?.licenseDetail?.waste || '',
       },
-      isActive: license?.isActive || '',
+      isActive: license?.isActive || false,
       createdByFullName: license?.createdBy?.name || '',
       createdAt: license?.createdAt || '',
       createdIP: license?.createdIP || '',

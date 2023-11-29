@@ -31,6 +31,7 @@ import Iconify from '../../../components/iconify';
 import FormProvider, {
   RHFTextField,
   RHFSwitch,
+  RHFDatePicker,
 } from '../../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { CONFIG } from '../../../config-global'
@@ -695,13 +696,7 @@ function ToolsInstalledEditForm() {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                  <DatePicker
-                    label="Time Out"
-                    value={timeOut}
-                    // disabled={disableInstallationDate}
-                    onChange={(newValue) => setValue('timeOut',newValue)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
+                <RHFDatePicker inputFormat='dd/MM/yyyy'  name="timeOut" label="Time Out" />
               </Box>
 
               <Box

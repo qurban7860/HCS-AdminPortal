@@ -56,15 +56,9 @@ export default function CustomerEditForm() {
       id: customer?._id || '',
       code: customer?.clientCode || '',
       name: customer?.name || '',
-      // tradingName: customer?.tradingName || '',
-      // mainSite: customer?.mainSite?._id === null || customer?.mainSite?._id === undefined  ? null : customer.mainSite._id ,
-      // accountManager: customer?.accountManager?._id === null || customer?.accountManager?._id === undefined  ? null : customer.accountManager?._id,
-      // projectManager: customer?.projectManager?._id === null || customer?.projectManager?._id === undefined  ? null : customer.projectManager?._id,
-      // supportManager: customer?.supportManager?._id === null || customer?.supportManager?._id === undefined  ? null : customer.supportManager?._id,
-      // primaryBillingContact: customer?.primaryBillingContact?._id  === null || customer?.primaryBillingContact?._id  === undefined  ? null : customer.primaryBillingContact?._id ,
-      // primaryTechnicalContact: customer?.primaryTechnicalContact?._id === null || customer?.primaryTechnicalContact?._id === undefined  ? null : customer.primaryTechnicalContact._id,
       isActive: customer?.isActive,
-      supportSubscription: customer?.supportSubscription
+      supportSubscription: customer?.supportSubscription,
+      isFinancialCompany: customer?.isFinancialCompany || false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer]
@@ -412,6 +406,12 @@ export default function CustomerEditForm() {
                       Support Subscription
                     </StyledToggleButtonLabel>
                     <RHFSwitch name="supportSubscription" defaultChecked={defaultValues?.supportSubscription} />
+                      
+                    <StyledToggleButtonLabel variant="body2" p={1}>
+                      Financial Company
+                    </StyledToggleButtonLabel>
+                    <RHFSwitch name="isFinancialCompany" defaultChecked={defaultValues?.isFinancialCompany} />
+                  
                   </Grid>
 
                 </Box>

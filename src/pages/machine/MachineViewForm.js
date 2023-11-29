@@ -194,6 +194,7 @@ export default function MachineViewForm() {
       machineflange:machine?.machineProfile?.flange || '',
       status: machine?.status?.name || '',
       customer: machine?.customer || '',
+      financialCompany: machine?.financialCompany || '',
       siteMilestone: machine?.siteMilestone || '',
       instalationSite: machine?.instalationSite || '',
       billingSite: machine?.billingSite || '',
@@ -274,65 +275,27 @@ export default function MachineViewForm() {
                   <ViewFormField sm={3} heading="Profile" param={`${defaultValues?.machineProfile} ${(defaultValues?.machineweb && defaultValues?.machineflange)? `(${defaultValues?.machineweb} X ${defaultValues?.machineflange})` :""}`
                   } />
                 </Grid>
-              </Card>
+        </Card>
               
-              <Card sx={{ width: '100%', p: '1rem', mb:3 }}>
-
-          {/* <Grid display="inline-flex">
-            <Tooltip title="Active">
-              <ViewFormField sm={12} isActive={defaultValues.isActive} />
-            </Tooltip>
-            <Tooltip title="Verified By">
-              <ViewFormField
-                sm={12}
-                machineVerificationCount={machine?.verifications?.length}
-                verified
-                machineVerifiedBy={machine?.verifications}
-              />
-            </Tooltip>
-          </Grid> */}
-
+        <Card sx={{ width: '100%', p: '1rem', mb:3 }}>
           <Grid container>
-            {/* <FormLabel content={FORMLABELS.KEYDETAILS} />
-            <Grid container>
-              <Card sx={{ width: '100%', p: '1rem' }}>
-                <CardHeader title={FORMLABELS.KEYDETAILS} sx={{p:'5px 15px', m:0, color:'white', backgroundImage: (theme) =>
-            `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`}} />
-                <Grid container>
-                  <ViewFormField sm={2} heading="Serial No" param={defaultValues?.serialNo} />
-                  <ViewFormField
-                    sm={3}
-                    heading="Machine Model"
-                    param={defaultValues?.machineModel}
-                  />
-                  <ViewFormField
-                    sm={3}
-                    heading="Customer"
-                    node={
-                      defaultValues.customer && (
-                        <Link onClick={handleCustomerDialog} href="#" underline="none">
-                          {defaultValues.customer?.name}
-                        </Link>
-                      )
-                    }
-                  />
-                  <ViewFormField sm={3} heading="Profile" param={`${defaultValues?.machineProfile} ${(defaultValues?.machineweb && defaultValues?.machineflange)? `(${defaultValues?.machineweb} X ${defaultValues?.machineflange})` :""}`
-                  } />
-                </Grid>
-              </Card>
-            </Grid> */}
-
             <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
             { defaultValues?.parentSerialNo ? <ViewFormField sm={6} heading="Previous Machine" param={defaultValues?.parentSerialNo} /> : ''}
             <ViewFormField sm={12} heading="Alias" chips={defaultValues?.alias} />
             <ViewFormField sm={6} heading="Supplier" param={defaultValues?.supplier} />
             <ViewFormField sm={6} heading="Status" param={defaultValues?.status} />
+            <ViewFormField sm={6} heading="Work Order / Purchase Order" param={defaultValues?.workOrderRef}/>
 
-            <ViewFormField
-              sm={12}
-              heading="Work Order / Purchase Order"
-              param={defaultValues?.workOrderRef}
-            />
+            <ViewFormField sm={6}
+                    heading="Financial Company"
+                    node={
+                      defaultValues.financialCompany && (
+                        <Link onClick={()=> handleCustomerDialog(defaultValues.financialCompany?._id)} href="#" underline="none">
+                          {defaultValues.financialCompany?.name}
+                        </Link>
+                      )
+                    }
+                  />
 
             <ViewFormField
               sm={6}

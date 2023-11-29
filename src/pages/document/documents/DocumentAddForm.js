@@ -50,6 +50,7 @@ import {
   getCustomerMachines,
   resetCustomerMachines
 } from '../../../redux/slices/products/machine';
+import { getDrawings, resetDrawings, setDrawingAddFormVisibility } from '../../../redux/slices/products/drawing';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, {
@@ -75,6 +76,7 @@ DocumentAddForm.propTypes = {
   currentDocument: PropTypes.object,
   customerPage: PropTypes.bool,
   machinePage: PropTypes.bool,
+  drawingPage: PropTypes.bool,
   machineDrawings: PropTypes.bool,
   handleFormVisibility: PropTypes.func,
 };
@@ -83,6 +85,7 @@ function DocumentAddForm({
   currentDocument,
   customerPage,
   machinePage,
+  drawingPage,
   machineDrawings,
   handleFormVisibility,
 }) {
@@ -183,18 +186,13 @@ function DocumentAddForm({
   useEffect(()=>{
     if(customerPage){
       setCategoryBy({customer: true});
-    }else if(machinePage){
+    } else if(machinePage){
       setCategoryBy({machine: true});
-    }
-    else if(machineDrawings){
+    } else if(machineDrawings){
       setCategoryBy({drawing: true});
     }
   },[customerPage, machinePage, machineDrawings ])
 
-  // if(files){
-  //   console.log(files[0].name)
-  //   // setValue('displayName', files[0].name);
-  // }
   useEffect(() => {
     if(categoryBy){
       dispatch(getActiveDocumentCategories(categoryBy));
@@ -289,26 +287,6 @@ function DocumentAddForm({
     }
   }, [documentCategory, dispatch]);
 
-  // useEffect(() => {
-  //   if (documentDependency === 'machine' && machineModelVal) {
-  //     dispatch(getActiveModelMachines(machineModelVal._id));
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [dispatch, machineModelVal]);
-
-  // useEffect(() => {
-  //   if (customerVal?._id) {
-  //     dispatch(getActiveSites(customerVal._id));
-  //   }
-  // }, [dispatch, customerVal]);
-
-  // ------------------------- customer documents ---------------------------------------
-  // useEffect(() => {
-  //   if (!customerSiteVal && customerVal?._id && selectedValue === 'newVersion') {
-  //     dispatch(getCustomerDocuments(customerVal._id));
-  //   }
-  // }, [dispatch, customerVal, customerSiteVal, selectedValue]);
-
   // -------------------------get forCustomer documents ---------------------------------------
   useEffect(() => {
     if ( customerPage && !machinePage && !machineDrawings ) {
@@ -316,11 +294,6 @@ function DocumentAddForm({
         dispatch(getCustomerDocuments(customer?._id));
       }
     }
-
-    // if(machineDrawings){
-    //   dispatch(getCustomerMachines());
-    // }
-
 
   }, [dispatch, customer, customerPage, machineDrawings, machinePage, selectedValue ]);
 
@@ -341,17 +314,31 @@ function DocumentAddForm({
     }, [dispatch, customerPage, machineDrawings, machinePage, selectedValue]);
 
   const onSubmit = async (data) => {
-    data.machine = machineVal?._id;
+    
+    if(drawingPage){
+      data.machine = machine?._id;
+    } else {
+      data.machine = machineVal?._id;
+    }
+
     try {
       if (selectedValue === 'new') {
         // New Document Part
         await dispatch(addDocument( customerPage ? customer?._id : null, machinePage ? machine?._id : null, data));
-        enqueueSnackbar(Snacks.addedDoc);
-        if (!customerPage && !machinePage && machineDrawings) {
+        enqueueSnackbar((drawingPage || machineDrawings ?"Drawing ":"")+Snacks.addedDoc);
+        
+        if(drawingPage){
+          dispatch(resetDrawings());
+          dispatch(getDrawings(machine?._id));
+          dispatch(setDrawingAddFormVisibility(false));
+          
+        } else if (!customerPage && !machinePage && machineDrawings) {
           navigate(PATH_DOCUMENT.document.machineDrawings.list);
-        }else if(handleFormVisibility){
+        } else if(handleFormVisibility){
           handleFormVisibility();
         }
+
+
       } else if (selectedVersionValue === 'newVersion') {
         // New versions Part
         await dispatch(addDocumentVersion(documentVal._id, data));
@@ -444,7 +431,9 @@ function DocumentAddForm({
   };
 
   const toggleCancel = () => {
-    if (!customerPage && !machinePage && !documentNewVersionFormVisibility && !documentAddFilesViewFormVisibility && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility) {
+    if(drawingPage){
+      dispatch(setDrawingAddFormVisibility(false));
+    } else if (!drawingPage && !customerPage && !machinePage && !documentNewVersionFormVisibility && !documentAddFilesViewFormVisibility && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility) {
       navigate(PATH_DOCUMENT.document.machineDrawings.list);
     } else if((documentNewVersionFormVisibility || documentAddFilesViewFormVisibility)  && (customerPage || machinePage)){
       dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
@@ -502,6 +491,8 @@ function DocumentAddForm({
 
           if(index===0 && docFiles.length===0 && !displayName){
             setValue('displayName', removeFileExtension(file.name))
+            setValue('referenceNumber', getRefferenceNumber(file.name))
+            setValue('versionNo', getVersionNumber(file.name))
           }
 
           return Object.assign(file, {
@@ -519,10 +510,30 @@ function DocumentAddForm({
     return lastDotIndex !== -1 ? filename.substring(0, lastDotIndex) : filename;
   };
 
+  const getRefferenceNumber = (filename) => {
+    const words = filename.split(/\s+/);
+    return words[0] || '';
+  };
+
+  const getVersionNumber = (filename) => {
+    const lastDotIndex = filename.lastIndexOf('.');
+    filename = filename.substring(0, lastDotIndex);
+    const words = filename.split(/\s+/);
+    let version = words[words.length - 1];
+
+    if (version.toLowerCase().includes('v')) {
+      version = version.replace(/[Vv]/g, '');
+    }else{
+      version = "1";
+    }
+
+    return version;
+  };
+
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      {!customerPage && !machinePage &&
+      {!customerPage && !machinePage && !drawingPage &&
         <DocumentCover content={machineDrawings ? FORMLABELS.COVER.ADD_MACHINE_DRAWINGSS :  FORMLABELS.COVER.ADD_DOCUMENTS} backLink={!customerPage && !machinePage && !machineDrawings} machineDrawingsBackLink={machineDrawings} generalSettings />
       }
       <Box
@@ -714,7 +725,7 @@ function DocumentAddForm({
                         id="displayName"
                         label="Document Name*"
                         />
-                      <RHFTextField name='versionNo' label='Version Number' value={1} disabled/>
+                      <RHFTextField name='versionNo' label='Version Number'/>
                   </Box>
 
                 )}
@@ -745,54 +756,57 @@ function DocumentAddForm({
 
                   </Box>
 
-                    <Box
-                      rowGap={2}
-                      columnGap={2}
-                      display="grid"
-                      gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(1, 1fr)' }}
-                    >
-                    <RHFAutocomplete
-                      // multiple
-                      value={customerVal || null}
-                      name="customerVal"
-                      label="Customer"
-                      options={activeCustomers}
-                      isOptionEqualToValue={(option, value) => option._id === value._id}
-                      getOptionLabel={(option) => option.name}
-                      renderOption={(props, option) => (
-                        <li {...props} key={option._id}>{option.name}</li>
-                      )}
-                      onChange={(event, newValue) => {
-                        if (newValue) {
-                          setValue('customerVal', newValue);
-                        } else {
-                          setValue('customerVal', '');
-                        }
 
-                        handleCustomerChange(newValue);
-                      }}
-                    />
+                    {!drawingPage && 
+                      <Box
+                        rowGap={2}
+                        columnGap={2}
+                        display="grid"
+                        gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(1, 1fr)' }}
+                      >
+                      <RHFAutocomplete
+                        // multiple
+                        value={customerVal || null}
+                        name="customerVal"
+                        label="Customer"
+                        options={activeCustomers}
+                        isOptionEqualToValue={(option, value) => option._id === value._id}
+                        getOptionLabel={(option) => option.name}
+                        renderOption={(props, option) => (
+                          <li {...props} key={option._id}>{option.name}</li>
+                        )}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            setValue('customerVal', newValue);
+                          } else {
+                            setValue('customerVal', '');
+                          }
 
-                    <RHFAutocomplete
-                      // multiple
-                      value={machineVal || null}
-                      name="machineVal"
-                      label="Machine"
-                      options={customerMachines}
-                      isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
-                      getOptionLabel={(option) => `${ option.serialNo} ${option?.name ? '-' : ''} ${option?.name || ''}`}
-                      renderOption={(props, option) => (
-                        <li {...props} key={option._id}>{`${option.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}</li>
-                      )}
-                      onChange={(event, newValue) => {
-                        if (newValue) {
-                          setValue('machineVal', newValue);
-                        } else {
-                          setValue('machineVal', '');
-                        }
-                      }}
-                    />
-                  </Box>
+                          handleCustomerChange(newValue);
+                        }}
+                      />
+
+                      <RHFAutocomplete
+                        // multiple
+                        value={machineVal || null}
+                        name="machineVal"
+                        label="Machine"
+                        options={customerMachines}
+                        isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
+                        getOptionLabel={(option) => `${ option.serialNo} ${option?.name ? '-' : ''} ${option?.name || ''}`}
+                        renderOption={(props, option) => (
+                          <li {...props} key={option._id}>{`${option.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}</li>
+                        )}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            setValue('machineVal', newValue);
+                          } else {
+                            setValue('machineVal', '');
+                          }
+                        }}
+                      />
+                    </Box>
+                    }
                   </>
                 )}
 
