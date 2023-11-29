@@ -3,19 +3,14 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import {
   Card,
   Grid,
-  Stack,
-  Typography,
-  Autocomplete,
-  TextField,
   Container,
   Box,
-  Chip,
 } from '@mui/material';
 // ROUTES
 import { PATH_PAGE, PATH_SECURITY } from '../../../../routes/paths';
@@ -57,7 +52,6 @@ export default function BlacklistIPAddForm() {
 
   const {
     reset,
-    control,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;

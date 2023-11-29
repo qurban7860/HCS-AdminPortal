@@ -7,6 +7,7 @@ import { CONFIG } from '../../../config-global';
 const initialState = {
   intial: false,
   drawingFormVisibility: false,
+  drawingAddFormVisibility: false,
   drawingViewFormVisibility: false,
   drawingEditFormVisibility: false,
   responseMessage: null,
@@ -33,6 +34,12 @@ const slice = createSlice({
     setDrawingFormVisibility(state, action){
       state.drawingFormVisibility = action.payload;
     },
+
+    // SET ADD FORM TOGGLE
+    setDrawingAddFormVisibility(state, action){
+      state.drawingAddFormVisibility = action.payload;
+    },
+    
     // SET EDIT TOGGLE
     setDrawingEditFormVisibility(state, action){
       state.drawingEditFormVisibility = action.payload;
@@ -113,6 +120,7 @@ export default slice.reducer;
 // Actions
 export const {
   setDrawingFormVisibility,
+  setDrawingAddFormVisibility,
   setDrawingEditFormVisibility,
   setDrawingViewFormVisibility,
   resetDrawing,

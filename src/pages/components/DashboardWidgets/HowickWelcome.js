@@ -2,8 +2,6 @@ import PropTypes from 'prop-types';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Typography, Stack } from '@mui/material';
-// utils
-import { bgGradient } from '../../../utils/cssStyles';
 
 // ----------------------------------------------------------------------
 
@@ -19,33 +17,6 @@ const StyledRoot = styled('div')(({ theme }) => ({
     flexDirection: 'row',
   },
 }));
-
-const StyledBg = styled('div')(({ theme }) => ({
-  top: 0,
-  left: 0,
-  zIndex: -1,
-  width: '100%',
-  height: '100%',
-  position: 'absolute',
-  backgroundColor: theme.palette.common.white,
-  '&:before': {
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    position: 'absolute',
-    zIndex: -2,
-    content: '""',
-    opacity: 0.2,
-    ...bgGradient({
-      direction: '135deg',
-      startColor: theme.palette.primary.light,
-      endColor: theme.palette.primary.main,
-    }),
-  },
-}));
-
-// ----------------------------------------------------------------------
 
 HowickWelcome.propTypes = {
   img: PropTypes.node,

@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { Grid, Dialog, DialogContent, Skeleton } from '@mui/material';
+import { Grid, Dialog, DialogContent } from '@mui/material';
 import { PATH_MACHINE } from '../../../routes/paths';
 import DialogLink from './DialogLink';
 import DialogLabel from './DialogLabel';
-import ViewFormField from '../ViewForms/ViewFormField';
 import FormLabel from '../DocumentForms/FormLabel';
 import { setMachineDialog } from '../../../redux/slices/products/machine';
 import ViewFormFieldWithSkelton from '../ViewForms/ViewFormFieldWithSkelton';

@@ -17,30 +17,24 @@ import {
   Autocomplete,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
-// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-// import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { MuiChipsInput } from 'mui-chips-input';
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
-import { getActiveCustomers } from '../../redux/slices/customer/customer';
+import { getActiveCustomers, getFinancialCompanies } from '../../redux/slices/customer/customer';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import  { addMachine, getActiveMachines } from '../../redux/slices/products/machine';
 import { getActiveMachineStatuses } from '../../redux/slices/products/statuses';
-import { getActiveMachineModels, resetActiveMachineModels } from '../../redux/slices/products/model';
+import { getActiveMachineModels } from '../../redux/slices/products/model';
 import { getActiveSuppliers } from '../../redux/slices/products/supplier';
 import { getMachineConnections } from '../../redux/slices/products/machineConnections';
 import { getActiveCategories } from '../../redux/slices/products/category';
 import { Cover } from '../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
-
 // routes
 import { PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, { RHFTextField, RHFAutocomplete } from '../../components/hook-form';
-// auth
-// import { useAuthContext } from '../../auth/useAuthContext';
-// import { useSettingsContext } from '../../components/settings';
+import FormProvider, { RHFTextField, RHFAutocomplete, RHFDatePicker } from '../../components/hook-form';
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 import ToggleButtons from '../components/DocumentForms/ToggleButtons';
 import { FORMLABELS } from '../../constants/default-constants';
@@ -52,13 +46,11 @@ MachineAddForm.propTypes = {
 };
 
 export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
-  // const { userId, user } = useAuthContext();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const { activeMachines } = useSelector((state) => state.machine);
   const { activeSuppliers } = useSelector((state) => state.supplier);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
-  const { activeCustomers } = useSelector((state) => state.customer);
+  const { activeCustomers, financialCompanies } = useSelector((state) => state.customer);
   const { activeSites } = useSelector((state) => state.site);
   const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
   const { spContacts } = useSelector((state) => state.contact);
@@ -66,29 +58,14 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const { activeCategories } = useSelector((state) => state.category);
 
   const { enqueueSnackbar } = useSnackbar();
-  // const [parMachineVal, setParMachineVal] = useState('');
-  // const [parMachSerVal, setParMachSerVal] = useState('');
-  // const [supplierVal, setSupplierVal] = useState('');
-  // const [statusVal, setStatusVal] = useState('');
-  // const [modelVal, setModelVal] = useState('');
-  // const [customerVal, setCustomerVal] = useState('');
-  // const [installVal, setInstallVal] = useState('');
-  // const [billingVal, setBillingVal] = useState('');
-  // const [accoVal, setAccoManVal] = useState('');
-  // const [projVal, setProjManVal] = useState('');
-  // const [suppVal, setSuppManVal] = useState('');
-  // const [currTag, setCurrTag] = useState('');
-  const [shippingDate, setShippingDate] = useState(null);
-  const [installationDate, setInstallationDate] = useState(null);
-  const [supportExpireDate, setSupportExpireDate] = useState(null);
-  // const [disableInstallationDate, setInstallationDateToggle] = useState(true);
-  // const [disableShippingDate, setShippingDateToggle] = useState(true);
-
-  // const [chipData, setChipData] = useState([]);
+  // const [shippingDate, setShippingDate] = useState(null);
+  // const [installationDate, setInstallationDate] = useState(null);
+  // const [supportExpireDate, setSupportExpireDate] = useState(null);
   const [chips, setChips] = useState([]);
 
 
   useLayoutEffect(() => {
+    dispatch(getFinancialCompanies());
     dispatch(getActiveCustomers());
     dispatch(getActiveMachines());
     dispatch(getActiveMachineModels());
@@ -164,14 +141,15 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       category: null,
       machineModel: null,
       customer: null,
+      financialCompany: null,
       machineConnectionVal: [],
       connection: [],
       status: null,
       workOrderRef: '',
       instalationSite: null,
       billingSite: null,
-      // installationDate: null,
-      // shippingDate: null,
+      installationDate: null,
+      shippingDate: null,
       siteMilestone: '',
       accountManager: null,
       projectManager: null,
@@ -180,6 +158,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       customerTags: [],
       description: '',
       isActive: true,
+
     },
   });
 
@@ -190,10 +169,11 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     formState: { isSubmitting },
     setValue,
     control,
-  } = methods
+  } = methods;
+
+  const { financialCompany } = watch();
 
   const {
-    parentSerialNo,
     supplier,
     status,
     customer,
@@ -201,8 +181,9 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     category,
     machineModel,
     machineConnectionVal,
-    // installationDate,
-    // shippingDate,
+    installationDate,
+    shippingDate,
+    supportExpireDate,
     accountManager,
     projectManager,
     supportManager,
@@ -240,17 +221,17 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       data.alias = chips;
     }
 
-    data.installationDate = installationDate;
-    data.shippingDate = shippingDate;
-    data.supportExpireDate = supportExpireDate;
+    // data.installationDate = installationDate;
+    // data.shippingDate = shippingDate;
+    // data.supportExpireDate = supportExpireDate;
     
     try {
       await dispatch(addMachine(data));
 
       // setChipData([]);
       // setCurrTag('');
-      setShippingDate(null);
-      setInstallationDate(null);
+      // setShippingDate(null);
+      // setInstallationDate(null);
       reset();
       enqueueSnackbar('Create success!');
       navigate(PATH_MACHINE.machines.list);
@@ -260,28 +241,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     }
   };
 
-  // const handleDelete = (data,index) => {
-  //   const arr = [...chipData]
-  //   arr.splice(index,1)
-  //   setChipData(arr)
-  // };
-
-  // const handleKeyPress = (e) => {
-  //   setCurrTag(currTag.trim())
-  //   if (e.keyCode === 13 || e.key === 'Enter') {
-  //     e.preventDefault();
-  //     if(currTag.trim().length > 0){
-  //       currTag.trim();
-  //       setChipData((oldState) => [...oldState, currTag.trim()]);
-  //       setCurrTag('')
-  //     }
-  //   }
-  // };
-
-  // const handleChange = (e) => {
-  //   setCurrTag(e.target.value);
-  // };
-
   const toggleCancel = () => {
     navigate(PATH_MACHINE.machines.list);
   };
@@ -289,12 +248,11 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     const array = [...new Set(newChips)]
     setChips(array);
   };
-  // const { themeStretch } = useSettingsContext();
 
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <StyledCardContainer>
-          <Cover name="New Machine" icon="material-symbols:list-alt-outline" setting="enable" />
+          <Cover name="New Machine" setting />
         </StyledCardContainer>
         <Grid container>
           <Grid item xs={18} md={12} sx={{ mt: 3 }}>
@@ -327,59 +285,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   display="grid"
                   gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
-
-                {/* -------------------------- Parent Machines Serial No -------------------------------------- */}
-{/*                   
-                  <Controller
-                    name="parentSerialNo"
-                    clearOnBlur 
-                    clearOnEscape 
-                    control={control}
-                    defaultValue={parentSerialNo || null}
-                    render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                      <Autocomplete
-                        {...field}
-                        options={activeMachines}
-                        isOptionEqualToValue={(option, value) =>
-                          option._id === value._id && option.isActive === true
-                        }
-                        getOptionLabel={(option) => `${option?.serialNo ? option?.serialNo : ''} ${option?.name ? '-' : ''} ${option?.name ? option?.name : ''}`}
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            field.onChange(newValue);
-                            setValue('previousMachine', `${newValue.serialNo} ${newValue?.name ? '-' : ''} ${newValue?.name ? newValue?.name : ''}`);
-                            setValue('supplier', newValue.supplier);
-                            setValue('model', newValue.machineModel);
-                          } else {
-                            field.onChange(null);
-                            setValue('previousMachine', '');
-                            setValue('supplier', null);
-                            setValue('model', null);
-                          }
-                        }}
-                        renderOption={(props, option) => (
-                          <li {...props} key={option._id}>{`${option.serialNo ? option.serialNo : ''}  ${option?.name ? '-' : ''} ${option?.name ? option?.name : ''} `}</li>
-                        )}
-                        renderInput={(params) => (
-                          <TextField 
-                          {...params} 
-                          name="parentSerialNo"
-                          id="parentSerialNo"
-                          label="Previous Machine Serial No."  
-                          error={!!error}
-                          helperText={error?.message} 
-                          inputRef={ref}
-                          />
-                        )}
-                        ChipProps={{ size: 'small' }}
-                      />
-                    )}
-                  />
-
-
-                <RHFTextField name="previousMachine" label="Previous Machine" disabled/>
- */}
-
 
                   <Controller
                     name="supplier"
@@ -475,10 +380,23 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     {/* -------------------------------- Work Order/ Purchase Order -------------------------------- */}
 
                   <RHFTextField name="workOrderRef" label="Work Order/ Purchase Order" />
+                  <RHFAutocomplete
+                    // multiple 
+                    value={financialCompany}
+                    name="financialCompany"
+                    label="Financial Company"
+                    options={financialCompanies}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                    )}
+                  />
+                </Box>
+                 
+                   {/* -------------------------------- Customer -------------------------------- */}
 
-                    {/* -------------------------------- Customer -------------------------------- */}
-
-                    <Controller
+                   <Controller
                     name="customer"
                     control={control}
                     defaultValue={customer || null}
@@ -523,6 +441,13 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                       />
                     )}
                   />
+
+                <Box
+                    rowGap={2}
+                    columnGap={2}
+                    display="grid"
+                    gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
+                  >
                   
                     {/* -------------------------------- Billing Site -------------------------------- */}
 
@@ -558,14 +483,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
 
                     {/* -------------------------------- Shipping Date -------------------------------- */}
                     
-                    <DatePicker
-                    label="Shipping Date"
-                    value={shippingDate}
-                    // disabled={disableShippingDate}
-                    onChange={(newValue) => setShippingDate(newValue)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-
+                    <RHFDatePicker inputFormat='dd/MM/yyyy'  name="shippingDate" label="Shipping Date" />
+              
 
                     {/* -------------------------------- Installation Site -------------------------------- */}
 
@@ -600,14 +519,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                 />
 
                     {/* -------------------------------- Installation Date -------------------------------- */}
+                    <RHFDatePicker inputFormat='dd/MM/yyyy' name="installationDate" label="Installation Date" />
                     
-                    <DatePicker
-                    label="Installation Date"
-                    value={installationDate}
-                    // disabled={disableInstallationDate}
-                    onChange={(newValue) => setInstallationDate(newValue)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
 
 
 
@@ -617,17 +530,9 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                 {/* -------------------------------- Nearby Milestone -------------------------------- */}
 
                   <RHFTextField name="siteMilestone" label="Nearby Milestone" multiline />
+ {/* -------------------------------- Machine Connections -------------------------------- */}
 
-                <Box
-                  rowGap={2}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
-                >
-
-              {/* -------------------------------- Machine Connections -------------------------------- */}
-
-                <Controller
+ <Controller
                   name="machineConnectionVal"
                   control={control}
                   defaultValue={ machineConnectionVal || null}
@@ -657,6 +562,14 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   />
                   )}
                 />
+                <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
+                >
+
+             
 
                 {/* -------------------------------- Account Manager -------------------------------- */}
 
@@ -772,19 +685,13 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   )}
                 />
 
-                  <DatePicker
-                    label="Support Expiry Date"
-                    name="supportExpireDate"
-                    value={supportExpireDate}
-                    // disabled={disableInstallationDate}
-                    onChange={(newValue) => setSupportExpireDate(newValue)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
+<RHFDatePicker inputFormat='dd/MM/yyyy' name="supportExpireDate" label="Support Expiry Date" />
+                    
                 </Box>
 
                 {/* -------------------------------- Description -------------------------------- */}
 
-                  <RHFTextField name="description" label="Description" minRows={8} multiline />
+                  <RHFTextField name="description" label="Description" minRows={3} multiline />
 
                 {/* -------------------------------- isActive -------------------------------- */}
 

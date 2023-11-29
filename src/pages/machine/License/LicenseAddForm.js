@@ -14,7 +14,7 @@ import { LicenseSchema } from './schemas/LicenseSchema';
 import { useSnackbar } from '../../../components/snackbar';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // assets
-import FormProvider, { RHFSwitch, RHFTextField } from '../../../components/hook-form';
+import FormProvider, { RHFDatePicker, RHFSwitch, RHFTextField } from '../../../components/hook-form';
 // constants
 import { Snacks } from '../../../constants/machine-constants';
 
@@ -59,47 +59,23 @@ export default function LicenseAddForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const [extensionTime, setExtensionTime] = useState(''); // State to store the selected date
-  const [extensionTimeError, setExtensionTimeError] = useState(''); // State to manage the error message
-
-  const [requestTime, setRequestTime] = useState(''); // State to store the selected date
-  const [requestTimeError, setRequestTimeError] = useState(''); // State to manage the error message
   
-  // Function to handle date change
-  const handleExtensionTimeChange = newValue => {
-    setValue('extensionTime',newValue)
-    setExtensionTime(newValue);
-    setExtensionTimeError(''); // Clear the error when a date is selected
-  };
-
-  // Function to handle date change
-  const handleRequestTimeChange = newValue => {
-    setRequestTime(newValue);
-    setValue('requestTime',newValue)
-    setRequestTimeError(''); // Clear the error when a date is selected
-  };
-
   // Handle Type
   const handleTypeChange = (event, newValue) => {
     setValue('type', newValue);
   };
  
   const onSubmit = async (data) => {
-    if (!extensionTime) {
-      setExtensionTimeError('Extension Time is required');
-    }else if (!requestTime) {
-      setRequestTimeError('Request Time is required');
-    }else {
-      try {
-            await dispatch(addLicense(machine._id, data));
-            reset();
-            enqueueSnackbar(Snacks.licenseAdded);
-            dispatch(setLicenseFormVisibility(false));
-      } catch (err) {
-        enqueueSnackbar(Snacks.failedAddLicense, { variant: 'error' });
-        console.error(err.message);
-      }
+    try {
+          await dispatch(addLicense(machine._id, data));
+          reset();
+          enqueueSnackbar(Snacks.licenseAdded);
+          dispatch(setLicenseFormVisibility(false));
+    } catch (err) {
+      enqueueSnackbar(Snacks.failedAddLicense, { variant: 'error' });
+      console.error(err.message);
     }
+    
   };
 
   return (
@@ -126,21 +102,8 @@ export default function LicenseAddForm() {
            
               <RHFTextField name="production" label="Production"/>
               <RHFTextField name="waste" label="Waste"/>
-              <DatePicker
-                label="Extension Time"
-                name="extensionTime"
-                value={extensionTime}
-                onChange={handleExtensionTimeChange}
-                renderInput={params => <TextField {...params} error={!!extensionTimeError} helperText={extensionTimeError} />}
-              />
-
-              <DatePicker
-                label="Request Time"
-                name="requestTime"
-                value={requestTime}
-                onChange={handleRequestTimeChange}
-                renderInput={params => <TextField {...params} error={!!requestTimeError} helperText={requestTimeError} />}
-              />
+              <RHFDatePicker inputFormat='dd/MM/yyyy' name="extensionTime" label="Extension Time" />
+              <RHFDatePicker inputFormat='dd/MM/yyyy' name="requestTime" label="Request Time" />
 
               <RHFSwitch name="isActive" labelPlacement="start"
                 label={

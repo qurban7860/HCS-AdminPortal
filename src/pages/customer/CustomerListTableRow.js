@@ -11,7 +11,6 @@ import {
 import { styled } from '@mui/system';
 import { fDate } from '../../utils/formatTime';
 // components
-import Iconify from '../../components/iconify';
 import LinkTableCellWithIcon from '../components/ListTableTools/LinkTableCellWithIcon';
 import LinkTableCell from '../components/ListTableTools/LinkTableCell';
 import { useScreenSize } from '../../hooks/useResponsive';
@@ -47,7 +46,7 @@ export default function CustomerListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { clientCode, name, tradingName, mainSite, isActive, type, createdAt, verifications } = row;
+  const { clientCode, name, tradingName, mainSite, isActive, createdAt, verifications } = row;
   const address = [];
   if (mainSite?.address?.city) {
     address.push(mainSite?.address?.city);

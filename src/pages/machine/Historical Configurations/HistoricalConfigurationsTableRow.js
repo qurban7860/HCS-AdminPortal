@@ -8,13 +8,9 @@ import {
 } from '@mui/material';
 // utils
 import { styled } from '@mui/system';
-import { fDate, fDateTime } from '../../../utils/formatTime';
+import { fDateTime } from '../../../utils/formatTime';
 // components
-import { setMachineServiceRecordHistoryFormVisibility, getMachineServiceHistoryRecords } from '../../../redux/slices/products/machineServiceRecord';
-import { useDispatch, useSelector } from '../../../redux/store';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
-import HistoryIcon from '../../components/Icons/HistoryIcon';
-// import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -47,15 +43,9 @@ export default function HistoricalConfigurationsTableRow({
   onViewRow,
 }) {
 
-  const { machine } = useSelector((state) => state.machine);
   const { backupid, isActive, createdAt, createdBy } = row;
 
-  const dispatch = useDispatch();
 
-  const handleServiceRecordHistory = () => {
-    dispatch(setMachineServiceRecordHistoryFormVisibility(true));
-    dispatch(getMachineServiceHistoryRecords( machine?._id ,row?.serviceId ))
-  }
   return (
       <StyledTableRow hover selected={selected}>
         <LinkTableCell align="left" onClick={onViewRow} param={backupid} />

@@ -134,6 +134,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       type: 'Customer',
       isActive: true,
       supportSubscription:true,
+      isFinancialCompany: false,
       contactFlag,
       loginUser: {
         userId,
@@ -581,6 +582,12 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                       Support Subscription
                     </StyledToggleButtonLabel>
                     <RHFSwitch name="supportSubscription" checked={defaultValues?.supportSubscription} />
+                  
+                    <StyledToggleButtonLabel variant="body2" p={1}>
+                      Financial Company
+                    </StyledToggleButtonLabel>
+                    <RHFSwitch name="isFinancialCompany" defaultChecked={defaultValues?.isFinancialCompany} />
+                  
                   </Grid>
 
                 </Box>

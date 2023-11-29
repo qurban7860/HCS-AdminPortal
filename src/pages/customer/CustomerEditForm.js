@@ -1,13 +1,12 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Box, Card, Grid, Stack, Autocomplete, TextField, Typography, Switch } from '@mui/material';
+import { Box, Card, Grid, Stack, Autocomplete, TextField } from '@mui/material';
 import { MuiChipsInput } from 'mui-chips-input';
 // hooks
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import useResponsive from '../../hooks/useResponsive';
 import { useSnackbar } from '../../components/snackbar';
 // slice
 import {
@@ -19,15 +18,10 @@ import { getSites } from '../../redux/slices/customer/site';
 // routes
 import { PATH_CUSTOMER } from '../../routes/paths';
 // components
-import ToggleButtons from '../components/DocumentForms/ToggleButtons';
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
-import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
-import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
-import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import FormProvider, { RHFSwitch, RHFTextField } from '../../components/hook-form';
 // constants
-import { BREADCRUMBS, FORMLABELS as formLABELS } from '../../constants/default-constants';
-import { FORMLABELS, Snacks } from '../../constants/customer-constants';
+import { FORMLABELS  } from '../../constants/customer-constants';
 // schema
 import { EditCustomerSchema } from '../schemas/customer';
 import { StyledToggleButtonLabel } from '../../theme/styles/document-styles';
@@ -35,9 +29,9 @@ import { StyledToggleButtonLabel } from '../../theme/styles/document-styles';
 // ----------------------------------------------------------------------
 
 export default function CustomerEditForm() {
-  const {  customer, customerEditFormFlag } = useSelector((state) => state.customer);
+  const { customer } = useSelector((state) => state.customer);
   const { sites } = useSelector((state) => state.site);
-  const {  spContacts, activeContacts } = useSelector((state) => state.contact);
+  const { spContacts, activeContacts } = useSelector((state) => state.contact);
   const filteredContacts = spContacts.filter((contact) => contact.isActive === true);
   const [accountManVal, setAccountManVal] = useState('');
   const [supportManVal, setSupportManVal] = useState('');
@@ -50,21 +44,14 @@ export default function CustomerEditForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const isMobile = useResponsive('sm', 'down');
   const defaultValues = useMemo(
     () => ({
       id: customer?._id || '',
       code: customer?.clientCode || '',
       name: customer?.name || '',
-      // tradingName: customer?.tradingName || '',
-      // mainSite: customer?.mainSite?._id === null || customer?.mainSite?._id === undefined  ? null : customer.mainSite._id ,
-      // accountManager: customer?.accountManager?._id === null || customer?.accountManager?._id === undefined  ? null : customer.accountManager?._id,
-      // projectManager: customer?.projectManager?._id === null || customer?.projectManager?._id === undefined  ? null : customer.projectManager?._id,
-      // supportManager: customer?.supportManager?._id === null || customer?.supportManager?._id === undefined  ? null : customer.supportManager?._id,
-      // primaryBillingContact: customer?.primaryBillingContact?._id  === null || customer?.primaryBillingContact?._id  === undefined  ? null : customer.primaryBillingContact?._id ,
-      // primaryTechnicalContact: customer?.primaryTechnicalContact?._id === null || customer?.primaryTechnicalContact?._id === undefined  ? null : customer.primaryTechnicalContact._id,
       isActive: customer?.isActive,
-      supportSubscription: customer?.supportSubscription
+      supportSubscription: customer?.supportSubscription,
+      isFinancialCompany: customer?.isFinancialCompany || false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer]
@@ -77,18 +64,12 @@ export default function CustomerEditForm() {
 
   const {
     reset,
-    watch,
     setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  // const {code} = watch();
-
-  // console.log(code)
-
   useLayoutEffect(() => {
-    // window.history.pushState({}, null, `/customers/${customer._id}/edit`);
     dispatch(getActiveContacts(customer._id));
     dispatch(getSites(customer._id));
     dispatch(getSPContacts());
@@ -412,6 +393,12 @@ export default function CustomerEditForm() {
                       Support Subscription
                     </StyledToggleButtonLabel>
                     <RHFSwitch name="supportSubscription" defaultChecked={defaultValues?.supportSubscription} />
+                      
+                    <StyledToggleButtonLabel variant="body2" p={1}>
+                      Financial Company
+                    </StyledToggleButtonLabel>
+                    <RHFSwitch name="isFinancialCompany" defaultChecked={defaultValues?.isFinancialCompany} />
+                  
                   </Grid>
 
                 </Box>

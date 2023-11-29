@@ -6,7 +6,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { Box, Card, Grid, Autocomplete, TextField, Typography } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { useSnackbar } from '../../../components/snackbar';
 import { 
@@ -17,7 +16,7 @@ import {
   getLicense
 } from '../../../redux/slices/products/license';
 import { LicenseSchema } from './schemas/LicenseSchema';
-import FormProvider, { RHFSwitch, RHFTextField } from '../../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFTextField, RHFDatePicker } from '../../../components/hook-form';
 import { Snacks } from '../../../constants/machine-constants';
 
 // ----------------------------------------------------------------------
@@ -58,26 +57,6 @@ export default function LicenseEditForm() {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
-  const [extensionTime, setExtensionTime] = useState(license?.licenseDetail?.extensionTime); // State to store the selected date
-  const [extensionTimeError, setExtensionTimeError] = useState(''); // State to manage the error message
-
-  const [requestTime, setRequestTime] = useState(license?.licenseDetail?.requestTime); // State to store the selected date
-  const [requestTimeError, setRequestTimeError] = useState(''); // State to manage the error message
-
-  // Function to handle date change
-  const handleExtensionTimeChange = newValue => {
-    setValue('extensionTime',newValue)
-    setExtensionTime(newValue);
-    setExtensionTimeError(''); // Clear the error when a date is selected
-  };
-
-  // Function to handle date change
-  const handleRequestTimeChange = newValue => {
-    setRequestTime(newValue);
-    setValue('requestTime',newValue)
-    setRequestTimeError(''); // Clear the error when a date is selected
-  };
   
   const handleTypeChange = (event, newValue) => {
     setValue('type', newValue);
@@ -89,12 +68,6 @@ export default function LicenseEditForm() {
   };
 
   const onSubmit = async (data) => {
-
-    if (!extensionTime) {
-      setExtensionTimeError('Extension Time is required');
-    }else if (!requestTime) {
-      setRequestTimeError('Request Time is required');
-    }else {
       try {
         dispatch(await updateLicense(machine._id, license._id, data));
         reset();
@@ -105,7 +78,6 @@ export default function LicenseEditForm() {
         enqueueSnackbar(Snacks.failedUpdateLicense, { variant: 'error' });
         console.error(err.message);
       }
-    }
   };
 
   return (
@@ -131,22 +103,8 @@ export default function LicenseEditForm() {
             <Box sx={{marginTop:2}} rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}>
               <RHFTextField name="production" label="Production"/>
               <RHFTextField name="waste" label="Waste"/>
-              <DatePicker
-                label="Extension Time"
-                name="extensionTime"
-                value={extensionTime}
-                onChange={handleExtensionTimeChange}
-                renderInput={params => <TextField {...params} error={!!extensionTimeError} helperText={extensionTimeError} />}
-              />
-
-              <DatePicker
-                label="Request Time"
-                name="requestTime"
-                value={requestTime}
-                onChange={handleRequestTimeChange}
-                renderInput={params => <TextField {...params} error={!!requestTimeError} helperText={requestTimeError} />}
-              />
-
+              <RHFDatePicker inputFormat='dd/MM/yyyy' name="extensionTime" label="Extension Time" />
+              <RHFDatePicker inputFormat='dd/MM/yyyy' name="requestTime" label="Request Time" />
               <RHFSwitch name="isActive" labelPlacement="start"
                 label={
                   <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >

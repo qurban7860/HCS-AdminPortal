@@ -329,7 +329,7 @@ setCheckItemLists(updatedCheckParams);
                 gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
               >
 
-              <RHFDatePicker name="serviceDate" label="Service Date" />
+              <RHFDatePicker inputFormat='dd/MM/yyyy' name="serviceDate" label="Service Date" />
               <RHFTextField name="versionNo" label="Version No" disabled/>
 
               {/* <Autocomplete multiple

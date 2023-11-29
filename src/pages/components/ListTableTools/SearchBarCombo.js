@@ -1,13 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { green } from '@mui/material/colors';
-import { createTheme } from '@mui/material/styles';
 import { Grid, TextField, InputAdornment, Button, Stack, FormControl, Select, InputLabel, MenuItem, IconButton } from '@mui/material';
 import { BUTTONS } from '../../../constants/default-constants';
 import Iconify from '../../../components/iconify';
-import IconPopover from '../Icons/IconPopover';
 import useResponsive from '../../../hooks/useResponsive';
-import IconTooltip from '../Icons/IconTooltip';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
 
 
@@ -26,14 +22,10 @@ function SearchBarCombo({
   inviteButton,
   buttonIcon,
   transferredMachine,
+  handleAttach,
   ...other
 }) {
 
-  const theme = createTheme({
-    palette: {
-      success: green,
-    },
-  });
   const isMobile = useResponsive('sm', 'down');
   return (
     <Grid container rowSpacing={1} columnSpacing={1} sx={{display:'flex', justifyContent:'space-between'}}>
@@ -122,6 +114,22 @@ function SearchBarCombo({
                     </StyledTooltip>
                   </Grid>
               }
+              
+              {handleAttach &&
+                  <Grid item>
+                    <StyledTooltip title="Attach Drawing" placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
+                    <IconButton onClick={handleAttach} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
+                      '&:hover': {
+                        background:"#103996", 
+                        color:"#fff"
+                      }
+                    }}>
+                      <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon='fluent:attach-arrow-right-24-filled' />
+                    </IconButton>
+                  </StyledTooltip>
+                </Grid>
+              }
+
               {addButton &&
                   <Grid item>
                     <StyledTooltip title={addButton} placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
@@ -156,7 +164,8 @@ SearchBarCombo.propTypes = {
   filterVerify:PropTypes.string,
   signInLogsFilter:PropTypes.number,
   onSignInLogsFilter:PropTypes.func,
-  transferredMachine:PropTypes.bool
+  transferredMachine:PropTypes.bool,
+  handleAttach: PropTypes.func
 };
 
 export default SearchBarCombo;

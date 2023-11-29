@@ -4,8 +4,6 @@ import useWebSocket from 'react-use-websocket';
 import React, { createContext, useContext, useMemo, useEffect, useState } from 'react';
 import { CONFIG } from '../config-global';
 import { useAuthContext } from './useAuthContext';
-import ConfirmDialog from '../components/confirm-dialog';
-import LoadingButton from '../theme/overrides/LoadingButton';
 
 const WebSocketContext = createContext();
 
@@ -32,6 +30,7 @@ export function WebSocketProvider({ children }) {
       if (event.data instanceof Blob) {
         // Handle Blob data here, for example, you can use FileReader to read its content
         const reader = new FileReader();
+        // eslint-disable-next-line
         reader.onload = function () {
           const blobData = JSON.parse(reader.result);
           if (blobData.eventName === 'logout') {
