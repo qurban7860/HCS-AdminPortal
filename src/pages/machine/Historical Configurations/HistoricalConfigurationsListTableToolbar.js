@@ -45,6 +45,8 @@ export default function HistoricalConfigurationsListTableToolbar({
         value={filterName}
         onChange={onFilterName}
         onClick={onResetFilter}
+        SubOnClick={toggleAdd}
+        addButton={!isHistory && BUTTONS.ADD_MACHINE_INI}
         transferredMachine={machine?.status?.slug==='transferred'}
       />
     </Stack>
