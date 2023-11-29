@@ -548,7 +548,7 @@ function DocumentAddForm({
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
-                {!drawingPage &&
+                {!drawingPage && 
                   <RadioButtons
                     radioDisaled={ documentNewVersionFormVisibility || documentAddFilesViewFormVisibility || documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility }
                     value={selectedValue}
