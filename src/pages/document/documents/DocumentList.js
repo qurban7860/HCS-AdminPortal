@@ -66,15 +66,12 @@ DocumentList.propTypes = {
 };
 function DocumentList({ customerPage, machinePage, machineDrawings }) {
   const dispatch = useDispatch();
-  // const { themeStretch } = useSettingsContext();
-  // const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(100);
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  // const [documentBy, setDocumentBy] = useState({});
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
   const { documents,

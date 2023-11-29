@@ -520,7 +520,8 @@ export function addMachine(params) {
           customerTags: params?.customerTags,
           machineConnections: params?.machineConnectionVal.map(obj => obj._id),
           isActive: params?.isActive,
-          supportExpireDate : params?.supportExpireDate 
+          supportExpireDate : params?.supportExpireDate,
+          financialCompany: params?.financialCompany?._id,
         };
         const response = await axios.post(`${CONFIG.SERVER_URL}products/machines`, data);
         dispatch(slice.actions.getMachineSuccess(response.data.Machine));
@@ -562,7 +563,8 @@ export function updateMachine(machineId, params) {
         customerTags: params?.customerTags,
         machineConnections: params?.machineConnectionVal.map(obj => obj._id),
         isActive: params?.isActive,
-        supportExpireDate : params?.supportExpireDate 
+        supportExpireDate : params?.supportExpireDate,
+        financialCompany: params?.financialCompany?._id, 
       };
      /* eslint-enable */
       await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}`,
