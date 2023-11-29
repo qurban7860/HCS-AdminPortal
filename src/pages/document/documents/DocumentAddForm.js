@@ -491,6 +491,8 @@ function DocumentAddForm({
 
           if(index===0 && docFiles.length===0 && !displayName){
             setValue('displayName', removeFileExtension(file.name))
+            setValue('referenceNumber', getRefferenceNumber(file.name))
+            setValue('versionNo', getVersionNumber(file.name))
           }
 
           return Object.assign(file, {
@@ -506,6 +508,26 @@ function DocumentAddForm({
   const removeFileExtension = (filename) => {
     const lastDotIndex = filename.lastIndexOf('.');
     return lastDotIndex !== -1 ? filename.substring(0, lastDotIndex) : filename;
+  };
+
+  const getRefferenceNumber = (filename) => {
+    const words = filename.split(/\s+/);
+    return words[0] || '';
+  };
+
+  const getVersionNumber = (filename) => {
+    const lastDotIndex = filename.lastIndexOf('.');
+    filename = filename.substring(0, lastDotIndex);
+    const words = filename.split(/\s+/);
+    let version = words[words.length - 1];
+
+    if (version.toLowerCase().includes('v')) {
+      version = version.replace(/[Vv]/g, '');
+    }else{
+      version = "1";
+    }
+
+    return version;
   };
 
 
@@ -703,7 +725,7 @@ function DocumentAddForm({
                         id="displayName"
                         label="Document Name*"
                         />
-                      <RHFTextField name='versionNo' label='Version Number' value={1}/>
+                      <RHFTextField name='versionNo' label='Version Number'/>
                   </Box>
 
                 )}
