@@ -32,7 +32,7 @@ function ObjectPrinter({ data }) {
     whiteSpace: 'pre-wrap',
     fontFamily: 'monospace',
     wordBreak: 'break-word' 
-  }}>{PrintObject(data)}</div>;
+  }}><PrintObject obj={data} depth={} /></div>;
 };
 
 export default memo(ObjectPrinter);

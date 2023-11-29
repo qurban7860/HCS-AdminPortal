@@ -2,7 +2,13 @@ import PropTypes from 'prop-types';
 import React, { useState, memo } from 'react';
 // import { getColorForType , printValue } from './Utils'
 
-function PrintObject(obj, depth = 0){
+
+PrintObject.propTypes = {
+  obj: PropTypes.object,
+  depth: PropTypes.number,
+};
+
+function PrintObject({obj, depth = 0}){
     const [isOpenPrintObject, setIsOpenPrintObject] = useState(true);
   
     const toggleOpenPrintObject = () => {

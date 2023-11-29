@@ -8,6 +8,7 @@ import { CONFIG } from '../../../config-global';
 const initialState = {
   intial: false,
   historicalConfigurationViewFormFlag: false,
+  historicalConfigurationAddFormFlag: false,
   responseMessage: null,
   success: false,
   isLoading: false,
@@ -31,9 +32,22 @@ const slice = createSlice({
       state.isLoading = true;
     },
 
-    // SET TOGGLE
+    // SET VIEW TOGGLE
     setHistoricalConfigurationViewFormVisibility(state, action){
       state.historicalConfigurationViewFormFlag = action.payload;
+      state.historicalConfigurationAddFormFlag = false;
+    },
+
+    // SET ADD TOGGLE
+    setHistoricalConfigurationAddFormVisibility(state, action){
+      state.historicalConfigurationViewFormFlag = false;
+      state.historicalConfigurationAddFormFlag = action.payload;
+    },
+
+    // SET All FLAGS FALSE
+    setAllFlagFalse(state, action){
+      state.historicalConfigurationViewFormFlag = false;
+      state.historicalConfigurationAddFormFlag = false;
     },
 
     // HAS ERROR
@@ -104,6 +118,8 @@ export default slice.reducer;
 // Actions
 export const {
   setHistoricalConfigurationViewFormVisibility,
+  setHistoricalConfigurationAddFormVisibility,
+  setAllFlagFalse,
   resetHistoricalConfigurationRecords,
   resetHistoricalConfigurationRecord,
   setResponseMessage,

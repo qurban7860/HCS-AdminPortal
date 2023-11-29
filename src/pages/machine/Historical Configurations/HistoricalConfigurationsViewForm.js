@@ -16,7 +16,7 @@ import ViewFormNoteField from '../../components/ViewForms/ViewFormNoteField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import { fDate } from '../../../utils/formatTime';
 import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
-
+// import ObjectPrinter from './ObjectPrinter';
 
 function HistoricalConfigurationsViewForm() {
 
@@ -24,81 +24,32 @@ function HistoricalConfigurationsViewForm() {
   const { machine } = useSelector((state) => state.machine)
   const [jsonObjectTree, setJsonObjectTree] = useState({});
   const [filterName, setFilterName] = useState("");
-
   const isFiltered = filterName !== ''
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
- 
-    function filterJsonObjectByName(node) {
 
-      if (!node) {
-        return null;
+//  find DEPTH of the node tree
+  const findTreeDepth = (node) => {
+      if (!node || typeof node !== 'object' || Object.keys(node).length === 0) {
+        return 0;
       }
-    
-      if (Array.isArray(node)) {
-        // If node is an array, recursively filter each element
-        const filteredArray = node.map(element => filterJsonObjectByName(element, filterName)).filter(n => n);
-        return filteredArray.length ? filteredArray : null;
-      }
-    
-      if (!node.tree) {
-        // Check if any key-value pair matches the filterName
-        const matchingPairs = Object.entries(node).filter(([key, value]) =>
-          key.toLowerCase().includes(filterName.toLowerCase()) &&
-          value && typeof value === 'string' && value.toLowerCase().includes(filterName.toLowerCase())
-        );
-    
-        return matchingPairs.length ? Object.fromEntries(matchingPairs) : null;
-      }
-    
-      // Recursively filter tree property
-      node.tree = node.tree.map(childNode => filterJsonObjectByName(childNode, filterName)).filter(n => n);
-      return node.tree.length ? node : null;
-
-    // if (Array.isArray(obj)) {
-    //   // If it's an array, filter each element
-    //   const filteredArray = obj.map(element => filterJsonObjectByName(element)).filter(Boolean);
-    //   return filteredArray.length > 0 ? filteredArray : null;
-    // }
-  
-    // if (typeof obj === 'object' && obj !== null) {
-    //   // If it's an object (and not null), filter each property
-    //   const filteredObject = {};
-    //   Object.keys(obj).forEach(key => {
-    //     const filteredValue = filterJsonObjectByName(obj[key]);
-    //     if (
-    //       key.includes(filterName) ||
-    //       (filteredValue !== null && Object.keys(filteredValue).length > 0) ||
-    //       obj[key] === filterName
-    //     ) {
-    //       filteredObject[key] = filteredValue;
-    //     }
-    //   });
-    //   return Object.keys(filteredObject).length > 0 ? filteredObject : null;
-    // }
-  
-    // // Base case: leaf node, return if it matches the filter name or is null
-    // return filterName !== '' && (obj === filterName || obj === null) ? obj : null;
-  }
-
-  const handleFilterJsonTree = () => {
-    console.log("filterName outer : ",filterName)
-    // if(filterName !== '' ){
-    //   console.log("filterName iner : ",filterName)
-        const filteredValue = filterJsonObjectByName(historicalConfiguration, filterName);
-        setJsonObjectTree(filteredValue);
-    // }
+      const childDepths = Object.values(node).map(findTreeDepth);
+    return 1 + Math.max(...childDepths);
   };
-  console.log("filterName main : ",filterName)
+
+console.log(findTreeDepth(historicalConfiguration))
 
   const debouncedSearch = useRef(debounce(value => {
-    handleFilterJsonTree();
+    // handleSearch();
   }, 500)).current;
 
   const handleFilterName = event => {
     setFilterName(event.target.value );
-    debouncedSearch(event.target.value);
+    // debouncedSearch(event.target.value);
+    console.log("filterName : ",filterName)
+    window.getSelection.toString(filterName)
+    console.log(`Selected text: ${window.getSelection().toString()}`);
   };
 
   const handleResetFilter = () => {
@@ -137,12 +88,12 @@ function HistoricalConfigurationsViewForm() {
       <Grid>
         <ViewFormEditDeleteButtons backLink={()=> dispatch(setHistoricalConfigurationViewFormVisibility(false))} />
         <Stack spacing={2} sx={{p:2}}>
-          {/* <SearchBarCombo
+          <SearchBarCombo
             isFiltered={isFiltered}
             value={filterName}
             onChange={handleFilterName}
             onClick={handleResetFilter}
-          /> */}
+          />
           {isLoading ? 
           <>
             <Skeleton />
@@ -155,7 +106,9 @@ function HistoricalConfigurationsViewForm() {
             <Skeleton animation={false} />
             <Skeleton animation={false} />
           </>
-           : <JsonView displaySize src={jsonObjectTree} />}
+          : 
+            ''
+          }
         </Stack>
           <ViewFormAudit  defaultValues={defaultValues} />
       </Grid>
