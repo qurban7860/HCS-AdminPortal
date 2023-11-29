@@ -8,6 +8,7 @@ import { CONFIG } from '../../../config-global';
 const initialState = {
   intial: false,
   historicalConfigurationViewFormFlag: false,
+  historicalConfigurationAddFormFlag: false,
   responseMessage: null,
   success: false,
   isLoading: false,
@@ -31,11 +32,25 @@ const slice = createSlice({
       state.isLoading = true;
     },
 
-    // SET TOGGLE
-    setHistoricalConfigurationViewFormVisibility(state, action){
-      state.historicalConfigurationViewFormFlag = action.payload;
+    // SET ADD TOGGLE
+    setHistoricalConfigurationAddFormVisibility(state, action){
+      state.historicalConfigurationAddFormFlag = action.payload;
+      state.historicalConfigurationViewFormFlag = false;
     },
 
+    // SET VIEW TOGGLE
+    setHistoricalConfigurationViewFormVisibility(state, action){
+      state.historicalConfigurationViewFormFlag = action.payload;
+      state.historicalConfigurationAddFormFlag = false
+    },
+
+    // SET ALL TOGGLE
+    setAllFlagFalse(state, action){
+      state.historicalConfigurationViewFormFlag = false;
+      state.historicalConfigurationAddFormFlag = false
+    },
+
+        
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -103,7 +118,9 @@ export default slice.reducer;
 
 // Actions
 export const {
+  setHistoricalConfigurationAddFormVisibility,
   setHistoricalConfigurationViewFormVisibility,
+  setAllFlagFalse,
   resetHistoricalConfigurationRecords,
   resetHistoricalConfigurationRecord,
   setResponseMessage,
@@ -149,6 +166,22 @@ export function getHistoricalConfigurationRecord(machineId, id) {
         }
       });
       dispatch(slice.actions.getHistoricalConfigurationRecordSuccess(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function addHistoricalConfigurationRecord( params) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/productConfigurations/`,params?.iniJson );
+      dispatch(slice.actions.setResponseMessage(response?.data || ''));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
