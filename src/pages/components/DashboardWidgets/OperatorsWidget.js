@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 // @mui
 import { alpha } from '@mui/material/styles';
-import { Box, Stack, Card, Divider, Typography } from '@mui/material';
+import { Box, Stack, Card, Divider, Typography, CardHeader } from '@mui/material';
 // components
 import Iconify from '../../../components/iconify';
 // import Logo from '../../../components/logo-avatar/LogoAvatar';
@@ -18,19 +18,21 @@ HowickOperators.propTypes = {
   subheader: PropTypes.string,
 };
 
-export default function HowickOperators({ title, subheader, list, ...other }) {
+export default function HowickOperators({ title, subheader, list }) {
   const { spContacts } = useSelector((state) => state.contact);
+  
+  console.log(spContacts)
   return (
-    <Card {...other}>
-      {/* <CardHeader title={title} subheader={subheader} /> */}
-      <Stack sx={{ p: 2 }} bgcolor="primary.main">
-        <Typography variant="h5" fontWeight="bold" color="primary.contrastText">
-          {title}
-        </Typography>
-        <Typography variant="overline">{subheader}</Typography>
-      </Stack>
+    <Card>
+      <CardHeader 
+          title={title} 
+          titleTypographyProps={{variant:'h4', color:'#fff'}} 
+          subheader={subheader} 
+          subheaderTypographyProps={{color:'#fff', fontSize:16}} 
+          sx={{background:'#2065D1', p:2}} 
+      />
       <Divider />
-      <Stack spacing={3} sx={{ p: 3 }}>
+      <Stack sx={{p:2}}>
         {spContacts.map((operator, index) => (
           <OperatorItem key={operator._id || index} operator={operator} index={index} />
         ))}
@@ -52,26 +54,17 @@ OperatorItem.propTypes = {
 };
 
 function OperatorItem({ operator, index }) {
-  const fullName = `${operator.firstName} ${operator.lastName}`;
+  const fullName = `${operator?.firstName || ''} ${operator?.lastName || ''}`;
 
   return (
-    <Stack key={operator._id} direction="row" alignItems="center" spacing={2}>
+    <Stack key={operator._id} direction="row" alignItems="center" spacing={1} sx={{padding:'10px 0px', borderTop:'1px solid #e9e9e9' }}>
       <CustomAvatar name={fullName} />
 
-      <Box sx={{ flexGrow: 1 }}>
+      <Box sx={{ flexGrow: 1}}>
         <Typography variant="subtitle2">{fullName}</Typography>
-
-        <Typography
-          variant="caption"
-          sx={{
-            mt: 0.5,
-            display: 'flex',
-            alignItems: 'center',
-            color: 'text.secondary',
-          }}
-        >
-          <Iconify icon="mdi:account-arrow-up" width={16} sx={{ mr: 0.5 }} color="green" />
-          {operator.produced}
+        <Typography variant="caption" sx={{display: 'flex', alignItems: 'center', color: 'text.secondary'}}>
+          <Iconify icon="mdi:account-arrow-up" width={16} color="green" />
+            {operator.produced}
         </Typography>
       </Box>
 
