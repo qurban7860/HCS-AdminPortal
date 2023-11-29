@@ -24,7 +24,7 @@ import { getActiveCustomers, getFinancialCompanies } from '../../redux/slices/cu
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import  { addMachine, getActiveMachines } from '../../redux/slices/products/machine';
 import { getActiveMachineStatuses } from '../../redux/slices/products/statuses';
-import { getActiveMachineModels, resetActiveMachineModels } from '../../redux/slices/products/model';
+import { getActiveMachineModels } from '../../redux/slices/products/model';
 import { getActiveSuppliers } from '../../redux/slices/products/supplier';
 import { getMachineConnections } from '../../redux/slices/products/machineConnections';
 import { getActiveCategories } from '../../redux/slices/products/category';
@@ -174,7 +174,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const { financialCompany } = watch();
 
   const {
-    parentSerialNo,
     supplier,
     status,
     customer,

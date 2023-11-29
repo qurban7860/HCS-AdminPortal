@@ -7,7 +7,6 @@ import SearchBarCombo from '../components/ListTableTools/SearchBarCombo';
 // routes
 import { PATH_SETTING } from '../../routes/paths';
 // constants
-import { BUTTONS } from '../../constants/default-constants';
 import { options } from '../../theme/styles/default-styles';
 // ----------------------------------------------------------------------
 

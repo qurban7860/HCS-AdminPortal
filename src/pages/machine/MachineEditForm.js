@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import {  useLayoutEffect, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -17,7 +17,7 @@ import { getSPContacts } from '../../redux/slices/customer/contact';
 import {  getActiveCustomers, getFinancialCompanies } from '../../redux/slices/customer/customer';
 import {  getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import {  getActiveMachineStatuses } from '../../redux/slices/products/statuses';
-import {  getActiveMachineModels, resetMachineModels } from '../../redux/slices/products/model';
+import {  getActiveMachineModels } from '../../redux/slices/products/model';
 import {  getActiveSuppliers } from '../../redux/slices/products/supplier';
 // global
 // import { CONFIG } from '../../config-global';

@@ -51,7 +51,7 @@ export default function CheckItemListTableRow({
   onViewRow,
 }) {
 
-  const { name, printName, isRequired, inputType, category,  isActive, createdAt } = row;
+  const { name, isRequired, inputType, category,  isActive, createdAt } = row;
 
   // const [openConfirm, setOpenConfirm] = useState(false);
 

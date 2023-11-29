@@ -1,5 +1,3 @@
-import React, { useEffect, useRef } from 'react';
-// import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Dialog, DialogContent } from '@mui/material';
@@ -10,7 +8,6 @@ import DialogLink from './DialogLink';
 import DialogLabel from './DialogLabel';
 import FormLabel from '../DocumentForms/FormLabel';
 import ViewFormFieldWithSkelton from '../ViewForms/ViewFormFieldWithSkelton';
-import ViewFormField from '../ViewForms/ViewFormField';
 
 function CustomerDialog() {
   const navigate = useNavigate();

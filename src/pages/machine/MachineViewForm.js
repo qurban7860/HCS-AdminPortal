@@ -58,8 +58,6 @@ export default function MachineViewForm() {
   const [disableDeleteButton, setDisableDeleteButton] = useState(false);
   const [hasValidLatLong, setHasValidLatLong] = useState(false);
   const isMobile = useResponsive('down', 'sm');
-  
-  const [machineID, setMachineID] = useState('');
 
   const handleInstallationSiteDialog = () =>{ dispatch(resetSite()); dispatch(getSite(machine?.customer?._id, machine?.instalationSite?._id)); dispatch(setSiteDialog(true))}
   const handleBillingSiteDialog = () =>{ dispatch(resetSite()); dispatch(getSite(machine?.customer?._id, machine?.billingSite?._id)); dispatch(setSiteDialog(true))}
@@ -166,7 +164,6 @@ export default function MachineViewForm() {
   const handleMachineDialog = (MachineID) => {
     dispatch(getMachineForDialog(MachineID));
     dispatch(setMachineDialog(true)); 
-    // setMachineID(MachineID)
   };
   
   const linkedMachines = machine?.machineConnections?.map((machineConnection, index) => (

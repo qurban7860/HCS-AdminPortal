@@ -6,8 +6,6 @@ import Iconify from '../../../components/iconify';
 import CopyIcon from '../../components/Icons/CopyIcon';
 import HistoryDropDownUpIcons from '../../components/Icons/HistoryDropDownUpIcons';
 import ViewFormServiceRecordVersionAudit from '../../components/ViewForms/ViewFormServiceRecordVersionAudit';
-import { StyledTableRow } from '../../../theme/styles/default-styles';
-
 
 const StatusAndComment = ({index, childIndex, childRow}) => {
 
@@ -63,9 +61,9 @@ const StatusAndComment = ({index, childIndex, childRow}) => {
           <ViewFormServiceRecordVersionAudit value={childRow?.recordValue}/>
           </Grid>
         }
-        {childRow?.historicalData && childRow?.historicalData?.length > 0 &&  <>
+        {childRow?.historicalData && childRow?.historicalData?.length > 0 &&
             <HistoryDropDownUpIcons showTitle="Show History" hideTitle="Hide History" activeIndex={`${activeIndex || ''}`} indexValue={`${index}${childIndex}`} onClick={handleAccordianClick}/>
-          </>}
+        }
       </Grid>
 
       {activeIndex === `${index}${childIndex}` && childRow?.historicalData && childRow?.historicalData?.length > 0 && 

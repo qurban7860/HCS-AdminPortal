@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 // utils
 import { styled } from '@mui/system';
-import { fDate, fDateTime } from '../../../../utils/formatTime';
+import { fDateTime } from '../../../../utils/formatTime';
 import { StyledTooltip } from '../../../../theme/styles/default-styles';
 import Iconify from '../../../../components/iconify';
 // components

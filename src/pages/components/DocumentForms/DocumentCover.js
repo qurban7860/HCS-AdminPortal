@@ -1,9 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, CardActions, CardContent, CardHeader } from '@mui/material';
-import { StyledCardCover } from '../../../theme/styles/document-styles';
-import { Cover } from '../Defaults/Cover';
-import { PATH_DOCUMENT } from '../../../routes/paths';
+import { Card, CardActions, CardContent } from '@mui/material';
 
 export default function DocumentCover({ content, backLink, generalSettings, machineDrawingsBackLink }) {
   return (

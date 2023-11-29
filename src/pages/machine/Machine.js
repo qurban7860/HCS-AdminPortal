@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Box, Container, Grid, List } from '@mui/material';
+import { Box, Container, List } from '@mui/material';
 // routes
 import { PATH_MACHINE } from '../../routes/paths';
 // components

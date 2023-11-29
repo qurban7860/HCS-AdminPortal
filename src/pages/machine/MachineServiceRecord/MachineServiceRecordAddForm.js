@@ -37,7 +37,6 @@ function MachineServiceRecordAddForm() {
   const { activeServiceRecordConfigsForRecords, serviceRecordConfig, recordTypes, isLoadingCheckItems } = useSelector((state) => state.serviceRecordConfig);
   const [ activeServiceRecordConfigs, setActiveServiceRecordConfigs ] = useState([]);
   const [checkItemLists, setCheckItemLists] = useState([]);
-  const [docType, setDocType] = useState(null);
   const user = { _id: localStorage.getItem('userId'), name: localStorage.getItem('name') };
 
   useEffect( ()=>{
@@ -137,11 +136,7 @@ function MachineServiceRecordAddForm() {
     if(newValue != null){
     setValue('serviceRecordConfiguration',newValue)
     trigger('serviceRecordConfiguration');
-    if(newValue?.recordType==='Training'){
-      setDocType(true)
-    }else{
-      setDocType(false)
-    }
+    
     }else{
       dispatch(resetServiceRecordConfig())
       setValue('serviceRecordConfiguration',null)
