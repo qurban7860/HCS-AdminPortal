@@ -14,7 +14,7 @@ import useResponsive from '../../hooks/useResponsive';
 import { PATH_MACHINE } from '../../routes/paths';
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
-import {  getActiveCustomers } from '../../redux/slices/customer/customer';
+import {  getActiveCustomers, getFinancialCompanies } from '../../redux/slices/customer/customer';
 import {  getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import {  getActiveMachineStatuses } from '../../redux/slices/products/statuses';
 import {  getActiveMachineModels, resetMachineModels } from '../../redux/slices/products/model';
@@ -33,7 +33,7 @@ import { getActiveCategories } from '../../redux/slices/products/category';
 // hooks
 import { useSnackbar } from '../../components/snackbar';
 // components
-import FormProvider, { RHFTextField, RHFAutocomplete } from '../../components/hook-form';
+import FormProvider, { RHFTextField, RHFAutocomplete, RHFDatePicker } from '../../components/hook-form';
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
@@ -53,16 +53,13 @@ export default function MachineEditForm() {
   const { activeMachines, machine } = useSelector((state) => state.machine);
   const { activeSuppliers } = useSelector((state) => state.supplier);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
-  const { activeCustomers } = useSelector((state) => state.customer);
+  const { activeCustomers, financialCompanies } = useSelector((state) => state.customer);
   const { activeSites } = useSelector((state) => state.site);
   const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
   const { spContacts } = useSelector((state) => state.contact);
   const { machineConnections } = useSelector((state) => state.machineConnections);
   const { activeCategories } = useSelector((state) => state.category);
 
-  const [shippingDate, setShippingDate] = useState(null);
-  const [installationDate, setInstallationDate] = useState(null);
-  const [supportExpireDate, setSupportExpireDate] = useState(null);
   const [chips, setChips] = useState([]);
   const isMobile = useResponsive('sm', 'down');
   
@@ -120,13 +117,14 @@ export default function MachineEditForm() {
       category: machine?.machineModel?.category || null,
       machineModel: machine?.machineModel || null,
       customer: machine.customer || null,
+      financialCompany: machine?.financialCompany || null,
       machineConnectionVal: machine?.machineConnections?.map((connection)=> connection?.connectedMachine) || [],
       status: machine.status || null,
       workOrderRef: machine.workOrderRef || '',
       instalationSite: machine.instalationSite || null,
       billingSite: machine.billingSite || null,
-      // installationDate: null,
-      // shippingDate: null,
+      installationDate: machine.installationDate || null,
+      shippingDate: machine.shippingDate || null,
       siteMilestone: machine.siteMilestone || '',
       accountManager: machine.accountManager || null,
       projectManager: machine.projectManager || null,
@@ -154,6 +152,7 @@ export default function MachineEditForm() {
     machineModel,
     status,
     customer,
+    financialCompany,
     instalationSite,
     machineConnectionVal,
     accountManager,
@@ -162,11 +161,6 @@ export default function MachineEditForm() {
   } = watch();
 
   useEffect(() => {
-    // if( category === null && machineModel !== null ) {
-    //   // dispatch(resetActiveMachineModels())
-    //   dispatch(getActiveMachineModels());
-    //   // setValue('machineModel',null);
-    // }else 
     if(category && category?._id !== machineModel?.category?._id){
       dispatch(getActiveMachineModels(category?._id));
       setValue('machineModel',null);
@@ -177,6 +171,7 @@ export default function MachineEditForm() {
 
 
   useEffect(() => {
+    dispatch(getFinancialCompanies());
     dispatch(getActiveSuppliers());
     dispatch(getActiveCategories());
     dispatch(getActiveMachineModels());
@@ -185,15 +180,6 @@ export default function MachineEditForm() {
     dispatch(getActiveMachines());
     dispatch(getSPContacts());
     setChips(machine?.alias);
-    if(machine?.installationDate){
-      setInstallationDate(machine?.installationDate);
-    }
-    if(machine?.shippingDate){
-      setShippingDate(machine?.shippingDate);
-    }
-    if(machine?.supportExpireDate){
-      setSupportExpireDate(machine?.supportExpireDate);
-    }
   }, [dispatch, machine]);
 
   useEffect( () => {
@@ -214,14 +200,9 @@ export default function MachineEditForm() {
   const onSubmit = async (data) => {
 
     data.alias = chips;
-    data.installationDate = installationDate;
-    data.shippingDate = shippingDate;
-    data.supportExpireDate = supportExpireDate;
     try {
       await dispatch(updateMachine(machine._id ,data));
       enqueueSnackbar('Machine updated successfully!');
-      setShippingDate(null);
-      setInstallationDate(null);
       reset();
       navigate(PATH_MACHINE.machines.view(machine._id));
     } catch (error) {
@@ -429,7 +410,19 @@ export default function MachineEditForm() {
                     {/* -------------------------------- Work Order/ Purchase Order -------------------------------- */}
 
                   <RHFTextField name="workOrderRef" label="Work Order/ Purchase Order" />
-
+                  <RHFAutocomplete
+                    // multiple 
+                    value={financialCompany}
+                    name="financialCompany"
+                    label="Financial Company"
+                    options={financialCompanies}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                    )}
+                  />
+                </Box>
    {/* -------------------------------- Customer -------------------------------- */}
 
                   <Controller
@@ -479,6 +472,13 @@ export default function MachineEditForm() {
                     )}
                   />
 
+<Box
+                  rowGap={3}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
+                >
+
                     {/* -------------------------------- Billing Site -------------------------------- */}
 
                     <Controller
@@ -512,14 +512,7 @@ export default function MachineEditForm() {
                 />
 
                     {/* -------------------------------- Shipping Date -------------------------------- */}
-                    
-                    <DatePicker
-                    label="Shipping Date"
-                    value={shippingDate}
-                    // disabled={disableShippingDate}
-                    onChange={(newValue) => setShippingDate(newValue)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
+                    <RHFDatePicker inputFormat='dd/MM/yyyy'  name="shippingDate" label="Shipping Date" />
 
                     {/* -------------------------------- Installation Site -------------------------------- */}
 
@@ -555,72 +548,16 @@ export default function MachineEditForm() {
 
                     {/* -------------------------------- Installation Date -------------------------------- */}
 
-                  <DatePicker
-                    label="Installation Date"
-                    value={installationDate}
-                    // disabled={disableInstallationDate}
-                    onChange={(newValue) => setInstallationDate(newValue)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
+                    <RHFDatePicker inputFormat='dd/MM/yyyy'  name="installationDate" label="Installation Date" />
                  
-                {/* <Controller
-                  name="installationDate"
-                  control={control}
-                  defaultValue={installationDate || null}
-                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                  <DatePicker
-                    {...field}
-                    label="Installation Date"
-                    value={installationDate}
-                    // disabled={disableInstallationDate}
-                    onChange={(event, value) => field.onChange(value)}
-                    renderInput={(params) => <TextField 
-                    {...params} 
-                    name="installationDate"
-                    id="installationDate"     
-                    error={!!error}
-                    helperText={error?.message} 
-                    type="search"
-                    inputRef={ref}
-                    />}
-                  />
-                  )}
-                /> */}
-
-                  
-                {/* <Controller
-                  name="shippingDate"
-                  control={control}
-                  defaultValue={shippingDate || null}
-                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                  <DatePicker
-                    label="Shipping Date"
-                    value={shippingDate}
-                    // disabled={disableShippingDate}
-                    onChange={(event, value) => field.onChange(value)}
-                    renderInput={(params) => <TextField 
-                    {...params} 
-                      name="shippingDate"
-                    />}
-                  />
-                  )}
-                /> */}
                 </Box>
 
                 {/* -------------------------------- Nearby Milestone -------------------------------- */}
 
                   <RHFTextField name="siteMilestone" label="Nearby Milestone" multiline />
+   {/* -------------------------------- Machine Connections -------------------------------- */}
 
-                <Box
-                  rowGap={3}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
-                >
-
-                    {/* -------------------------------- Machine Connections -------------------------------- */}
-
-                    <Controller
+                  <Controller
                   name="machineConnectionVal"
                   control={control}
                   defaultValue={ machineConnectionVal || null}
@@ -650,6 +587,15 @@ export default function MachineEditForm() {
                   />
                   )}
                 />
+                <Box
+                  rowGap={3}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
+                >
+
+                 
+                   
 
                 {/* -------------------------------- Account Manager -------------------------------- */}
 
@@ -765,18 +711,13 @@ export default function MachineEditForm() {
                   )}
                 />
 
-                  <DatePicker
-                    label="Support Expiry Date"
-                    value={supportExpireDate}
-                    // disabled={disableShippingDate}
-                    onChange={(newValue) => setSupportExpireDate(newValue)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
+                  <RHFDatePicker inputFormat='dd/MM/yyyy'  name="supportExpireDate" label="Support Expire Date" />
+              
                 </Box>
 
                 {/* -------------------------------- Description -------------------------------- */}
 
-                  <RHFTextField name="description" label="Description" minRows={8} multiline />
+                  <RHFTextField name="description" label="Description" minRows={3} multiline />
 
                 {/* -------------------------------- isActive -------------------------------- */}
 

@@ -4,6 +4,8 @@ import { Snacks } from '../../../../constants/machine-constants';
 export const LicenseSchema = Yup.object().shape({
   version: Yup.string().max(50, 'Version must be at most 50 characters'),
   licenseKey: Yup.string().max(2000).required(Snacks.licenseKeyRequired),
+  extensionTime: Yup.date().typeError('Extension Time must be a date (dd/mm/yyy)').nullable().required('Extension Time is required!'),
+  requestTime: Yup.date().typeError('Request Time must be a date (dd/mm/yyy)').nullable().required('Request Time is required!'),
   production: Yup.number().max(999999999999999,'Production must be less than or equal to 999999999999999').typeError('Production must be a number').transform((value, originalValue) => {
     if (typeof originalValue === 'string' && originalValue.trim() === '') return undefined;
     return parseFloat(value);

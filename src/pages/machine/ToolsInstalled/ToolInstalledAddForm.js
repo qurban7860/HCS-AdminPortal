@@ -22,6 +22,7 @@ import Iconify from '../../../components/iconify';
 import FormProvider, {
   RHFTextField,
   RHFSwitch,
+  RHFDatePicker,
 } from '../../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { CONFIG } from '../../../config-global'
@@ -250,14 +251,14 @@ function ToolsInstalledAddForm() {
     control,
   } = methods
 
-  const { tool, engageOnCondition, engageOffCondition, movingPunchCondition, timeOut,returningDuration, twoWayCheckDelayTime, toolType } = watch();
+  const { tool, engageOnCondition, engageOffCondition, movingPunchCondition,returningDuration, twoWayCheckDelayTime, toolType } = watch();
 
   const onSubmit = async (data) => {
     try {
       if (toolType) {
         data.toolType = toolType;
       }
-      data.timeOut = timeOut;
+      // data.timeOut = timeOut;
       // data.engagingDuration = engagingDuration;
       data.returningDuration = returningDuration;
       data.twoWayCheckDelayTime = twoWayCheckDelayTime;
@@ -588,13 +589,9 @@ function ToolsInstalledAddForm() {
                       sm: 'repeat(2, 1fr)',
                     }}
                   >
-                  <DatePicker
-                    label="Time Out"
-                    value={timeOut}
-                    // disabled={disableInstallationDate}
-                    onChange={(newValue) => setValue('timeOut',newValue)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
+
+                  <RHFDatePicker inputFormat='dd/MM/yyyy'  name="timeOut" label="Time Out" />
+              
                 </Box>
                 <Box
                 rowGap={2}

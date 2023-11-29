@@ -20,8 +20,6 @@ HowickOperators.propTypes = {
 
 export default function HowickOperators({ title, subheader, list }) {
   const { spContacts } = useSelector((state) => state.contact);
-  
-  console.log(spContacts)
   return (
     <Card>
       <CardHeader 
