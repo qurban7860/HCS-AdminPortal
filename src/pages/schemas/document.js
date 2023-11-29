@@ -2,6 +2,18 @@ import * as Yup from 'yup';
 import { Snacks, fileTypesMessage, allowedExtensions } from '../../constants/document-constants';
 import validateFileType from '../document/util/validateFileType';
 
+export const AddInniSchema = Yup.object().shape({
+  iniJson: Yup.string().test("json", "Invalid JSON format", (value) => {
+    try {
+      JSON.parse(value);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }),
+  isActive: Yup.boolean(),
+});
+
 export const AddDocumentSchema = Yup.object().shape({
   displayName: Yup.string().max(40, Snacks.docMaxSize),
   // .test('length', 'Document Name must not exceed 40 characters', (value)=>  console.log("value : ",value)),
