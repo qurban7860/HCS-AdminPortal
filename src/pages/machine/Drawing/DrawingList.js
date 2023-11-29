@@ -25,8 +25,8 @@ import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
-import DocumentListTableRow from './DrawingListTableRow';
-import DocumentListTableToolbar from './DrawingListTableToolbar';
+import DrawingListTableRow from './DrawingListTableRow';
+import DrawingListTableToolbar from './DrawingListTableToolbar';
 import {
   getDocumentHistory,
   resetDocumentHistory,
@@ -151,7 +151,7 @@ export default function DrawingList() {
   return (
     <>
       <TableCard>
-        <DocumentListTableToolbar
+        <DrawingListTableToolbar
           filterName={filterName}
           filterStatus={filterStatus}
           onFilterName={handleFilterName}
@@ -199,7 +199,7 @@ export default function DrawingList() {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
-                      <DocumentListTableRow
+                      <DrawingListTableRow
                         key={row._id}
                         row={row}
                         onViewRow={() => handleViewRow(row?.document?._id)}

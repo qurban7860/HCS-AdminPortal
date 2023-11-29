@@ -15,6 +15,7 @@ const initialState = {
   error: null,
   customers: [],
   activeCustomers: [],
+  financialCompanies: [],
   allCustomers: [],
   spCustomers: [],
   customer: {},
@@ -67,6 +68,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.activeCustomers = action.payload;
+      state.initial = true;
+    },
+
+    // GET Active Customers
+    getFinancialCompaniesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.financialCompanies = action.payload;
       state.initial = true;
     },
 
@@ -247,6 +256,27 @@ export function getActiveCustomers() {
   };
 }
 
+export function getFinancialCompanies() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers`,
+      {
+        params: {
+          isActive: true,
+          isArchived: false,
+          isFinancialCompany: true
+        }
+      });
+      dispatch(slice.actions.getFinancialCompaniesSuccess(response.data));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
 
 // ---------------------------- get Active Customers------------------------------------------
 
@@ -382,6 +412,7 @@ export function addCustomer(params) {
           type: params.type,
           clientCode: params.code,
           supportSubscription: params?.supportSubscription,
+          isFinancialCompany: params?.isFinancialCompany,
         };
 
         let billingContact = {};
@@ -542,6 +573,7 @@ export function updateCustomer(params) {
         isActive: params.isActive,
         clientCode: params.code,
         supportSubscription: params?.supportSubscription,
+        isFinancialCompany: params?.isFinancialCompany,
       };
      /* eslint-enable */
       if(params.mainSite !== "null" && params.mainSite !== null){
