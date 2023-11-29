@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 // @mui
 import { Stack } from '@mui/material';
 // routes
-import { setHistoricalConfigurationAddFormVisibility } from '../../../redux/slices/products/historicalConfiguration';
 // components
 import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 // constants
+import { BUTTONS } from '../../../constants/default-constants';
+// styles
 import { options } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
@@ -32,12 +33,10 @@ export default function HistoricalConfigurationsListTableToolbar({
   onFilterStatus,
   isHistory
 }) {
- 
+  const dispatch = useDispatch()
+
   const { machine } = useSelector((state) => state.machine);
   
-  const toggleAdd = () => {
-    dispatch(setHistoricalConfigurationAddFormVisibility(true))
-  };
 
   return (
     <Stack {...options}>
