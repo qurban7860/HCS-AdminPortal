@@ -11,7 +11,6 @@ import {
 // components
 import DrawingList from './DrawingList'
 import DrawingAddForm from './DrawingAddForm'
-import DrawingEditForm from './DrawingEditForm'
 import DocumentHistoryViewForm from '../../document/documents/DocumentHistoryViewForm'
 import DocumentEditForm from '../../document/documents/DocumentEditForm';
 import DocumentAddForm from '../../document/documents/DocumentAddForm';

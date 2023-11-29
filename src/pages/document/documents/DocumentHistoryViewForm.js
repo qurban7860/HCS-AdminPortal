@@ -1,43 +1,33 @@
 import PropTypes from 'prop-types';
-import {  useMemo, useEffect, memo, useState } from 'react';
+import {  useMemo, useEffect, memo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 // import download from 'downloadjs';
 import {
   Grid,
   Card,
-  Tooltip,
-  Typography,
-  Link,
-  Button,
-  CardHeader,
-  CardContent
+  Link
 } from '@mui/material';
-import { Container } from '@mui/system';
 import { ThumbnailDocButton } from '../../components/Thumbnails'
 import { StyledVersionChip } from '../../../theme/styles/default-styles';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 
-// import { getDocumentDownload } from '../../../redux/slices/document/documentFile';
 import {
   getDocumentHistory,
   resetDocument,
   setDocumentFormVisibility,
-  setDocumentHistoryViewFormVisibility,
   setDocumentHistoryAddFilesViewFormVisibility,
   setDocumentHistoryNewVersionFormVisibility,
   setDocumentAddFilesViewFormVisibility,
   setDocumentNewVersionFormVisibility,
   deleteDocument,
-  setDocumentViewFormVisibility,
-  getDocuments,
   getDocument,
-  setDocumentEditFormVisibility,
+  setDocumentHistoryViewFormVisibility,
 } from '../../../redux/slices/document/document';
 import { getCustomer, resetCustomer, setCustomerDialog} from '../../../redux/slices/customer/customer';
-import { getMachine, getMachineForDialog, resetMachine, setMachineDialog } from '../../../redux/slices/products/machine';
+import { getMachineForDialog, resetMachine, setMachineDialog } from '../../../redux/slices/products/machine';
 import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 // import DialogLink from '../../components/Dialog/DialogLink';
@@ -67,11 +57,8 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
 
   const { documentHistory } = useSelector((state) => state.document);
   const { customer } = useSelector((state) => state.customer);
-  const { machine } = useSelector((state) => state.machine);
-  // const { drawingsEditFormVisibility, drawingsEditFormVisibility, drawingsEditFormVisibility, } = useSelector((state) => state.drawingPage);
 
   useEffect(() => {
-    // dispatch(resetActiveDocuments());
     if(!machinePage && !drawingPage){
       dispatch(resetMachine());
     }

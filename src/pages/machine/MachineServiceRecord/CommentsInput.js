@@ -1,5 +1,3 @@
-import React, { memo, useEffect } from 'react'
-import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Stack, Box, TextField, Autocomplete, Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 import { statusTypes } from '../util/index'
@@ -11,12 +9,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                     handleChangeCheckItemListComment,
                     handleChangeCheckItemListChecked,
                     handleChangeCheckItemListCheckBoxValue
-                }) => {
-
-        const initialState = useSelector((state) => state.serviceRecordConfig);
-
-
-  return (
+                }) => (
     <>
     <Stack spacing={1} >
             {childRow?.inputType === 'Short Text' && <TextField 
@@ -127,8 +120,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
             </Box>
     </Stack>
     </>
-    )
-}
+    );
 
 CommentsInput.propTypes = {
     index: PropTypes.number,

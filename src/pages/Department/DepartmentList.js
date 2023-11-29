@@ -2,7 +2,7 @@ import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import {  useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
-import { Table, Button, TableBody, Container, TableContainer } from '@mui/material';
+import { Table, TableBody, Container, TableContainer } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 // routes
@@ -22,7 +22,6 @@ import {
   TablePaginationCustom,
 } from '../../components/table';
 import Scrollbar from '../../components/scrollbar';
-import ConfirmDialog from '../../components/confirm-dialog/ConfirmDialog';
 // sections
 import ListTableRow from './DepartmentListTableRow';
 import ListTableToolbar from './DepartmentListTableToolbar';
@@ -63,9 +62,7 @@ export default function DepartmentList() {
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  const [openConfirm, setOpenConfirm] = useState(false);
   const { departments, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector((state) => state.department);
-
     
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
@@ -95,15 +92,6 @@ export default function DepartmentList() {
   const denseHeight = dense ? 60 : 80;
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
-
-  // const handleOpenConfirm = () => {
-  //   setOpenConfirm(true);
-  // };
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
-
 
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
@@ -156,7 +144,6 @@ export default function DepartmentList() {
   };
 
   return (
-    <>
       <Container maxWidth={false}>
         <StyledCardContainer>
           <Cover name={FORMLABELS.COVER.DEPARTMENTS} icon="material-symbols:list-alt-outline" generalSettings />
@@ -221,7 +208,6 @@ export default function DepartmentList() {
           />}
         </TableCard>
       </Container>
-    </>
   );
 }
 

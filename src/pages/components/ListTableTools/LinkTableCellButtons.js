@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
 import { TableCell } from '@mui/material';
-import { alpha, createTheme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { green } from '@mui/material/colors';
-import VerificationIcon from '../Icons/VerificationIcon';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
 import Iconify from '../../../components/iconify';
 import { ICONS } from '../../../constants/icons/default-icons';

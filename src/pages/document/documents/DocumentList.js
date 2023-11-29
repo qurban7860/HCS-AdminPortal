@@ -4,12 +4,8 @@ import debounce from 'lodash/debounce';
 import PropTypes from 'prop-types';
 // @mui
 import {
-  Grid,
   Table,
-  Button,
-  Tooltip,
   TableBody,
-  IconButton,
   TableContainer,
 } from '@mui/material';
 // redux
@@ -25,12 +21,9 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from '../../../components/table';
-import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
-import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import DocumentListTableRow from './DocumentListTableRow';
 import DocumentListTableToolbar from './DocumentListTableToolbar';
@@ -38,11 +31,9 @@ import {
   getDocument,
   resetDocument,
   getDocuments,
-  // deleteDocument,
   resetDocuments,
   resetDocumentHistory,
   setDocumentViewFormVisibility,
-  // document pagination
   setFilterBy,
   ChangePage,
   ChangeRowsPerPage,
@@ -58,7 +49,6 @@ import {
   setMachineDrawingsFilterBy,
   machineDrawingsChangePage,
   machineDrawingsChangeRowsPerPage,
-  deleteDocument,
 } from '../../../redux/slices/document/document';
 import { getMachineForDialog, setMachineDialog } from '../../../redux/slices/products/machine';
 import { Cover } from '../../components/Defaults/Cover';
@@ -92,20 +82,10 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
       isLoading } = useSelector((state) => state.document );
 
   const {
-    // page,
     order,
     orderBy,
-    // rowsPerPage,
-    // setPage,
-    //
     selected,
-    // setSelected,
-    onSelectRow,
-    onSelectAllRows,
-    //
     onSort,
-    // onChangePage,
-    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'createdAt', defaultOrder: 'desc',
   });

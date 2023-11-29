@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Typography, Link, Button } from '@mui/material';
+import { Grid, Button } from '@mui/material';
 import Iconify from '../../../components/iconify';
 
 function DialogLink({ onClose, onClick, content }) {

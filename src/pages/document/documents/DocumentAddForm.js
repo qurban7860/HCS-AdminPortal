@@ -45,7 +45,7 @@ import {
   addDocumentVersion,
   updateDocumentVersion,
 } from '../../../redux/slices/document/documentVersion';
-import { getActiveCustomers, resetActiveCustomers } from '../../../redux/slices/customer/customer';
+import { getActiveCustomers } from '../../../redux/slices/customer/customer';
 import {
   getCustomerMachines,
   resetCustomerMachines

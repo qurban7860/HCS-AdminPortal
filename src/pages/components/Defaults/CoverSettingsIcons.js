@@ -1,14 +1,9 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Grid, Link } from '@mui/material';
 import { useNavigate } from 'react-router';
 import Iconify from '../../../components/iconify/Iconify';
-import { PATH_DOCUMENT, PATH_MACHINE } from '../../../routes/paths';
-import { setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
-import { setLicenseViewFormVisibility } from '../../../redux/slices/products/license';
-import { setProfileViewFormVisibility } from '../../../redux/slices/products/profile';
-import { setAllFlagsFalse } from '../../../redux/slices/products/machineServiceRecord';
+import { PATH_MACHINE } from '../../../routes/paths';
 
 function CoverSettingsIcons({
   setting,
@@ -20,120 +15,11 @@ function CoverSettingsIcons({
   generalSettings,
   handleSettingsNavigate,
 }) {
-  const { documentViewFormVisibility, documentHistoryViewFormVisibility } = useSelector((state) => state.document);
-  const { machineServiceRecordViewFormFlag } = useSelector((state) => state.machineServiceRecord);
-  const { drawingViewFormVisibility } = useSelector((state) => state.drawing );
-  const { licenseViewFormVisibility } = useSelector((state) => state.license );
-  const { profileViewFormVisibility } = useSelector((state) => state.profile );
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const navigateTo= (path)=>{ navigate(path) }
 
+  const navigate = useNavigate();
+  
   return (
     <Grid style={{ flex: 1, display: 'flex', justifyContent: 'end' }}>
-      {/* {backLink && (
-        <Link
-          title="Go Back"
-          sx={{
-            ml: 'auto',
-            mr: 1,
-            mt: 'auto',
-            mb: 1,
-            color: 'common.white',
-          }}
-          component="button"
-          variant="body2"
-          onClick={handleBacklink}
-        >
-          <Iconify icon="material-symbols:arrow-back-rounded" />
-        </Link>
-      )}
-      {machineDrawingsBackLink && (
-        <Link
-          title="Go Back"
-          sx={{
-            ml: 'auto',
-            mr: 1,
-            mt: 'auto',
-            mb: 1,
-            color: 'common.white',
-          }}
-          component="button"
-          variant="body2"
-          onClick={()=> navigateTo(PATH_DOCUMENT.document.machineDrawings.list) }
-        >
-          <Iconify icon="material-symbols:arrow-back-rounded" />
-        </Link>
-      )}
-      {handleBackLinks && ( documentHistoryViewFormVisibility || documentViewFormVisibility ) && (
-        <Link
-          title="Go Back"
-          sx={{
-            ml: 'auto',
-            mr: 1,
-            mt: 'auto',
-            mb: 1,
-            color: 'common.white',
-          }}
-          component="button"
-          variant="body2"
-          onClick={handleBackLinks}
-        >
-          <Iconify icon="material-symbols:arrow-back-rounded" />
-        </Link>
-      )}
-      {handleBackLinks && machineServiceRecordViewFormFlag && (
-        <Link
-          title="Go Back"
-          sx={{
-            ml: 'auto',
-            mr: 1,
-            mt: 'auto',
-            mb: 1,
-            color: 'common.white',
-          }}
-          component="button"
-          variant="body2"
-          onClick={()=>dispatch(setAllFlagsFalse())}
-        >
-          <Iconify icon="material-symbols:arrow-back-rounded" />
-        </Link>
-      )}
-      {handleBackLinks && drawingViewFormVisibility && (
-        <Link
-          title="Go Back"
-          sx={{ ml: 'auto', mr: 1, mt: 'auto', mb: 1, color: 'common.white',}}
-          component="button"
-          variant="body2"
-          onClick={()=> dispatch(setDrawingViewFormVisibility(false))}
-        >
-          <Iconify icon="material-symbols:arrow-back-rounded" />
-        </Link>
-      )}
-
-      {handleBackLinks && licenseViewFormVisibility && (
-        <Link
-          title="Go Back"
-          sx={{ ml: 'auto', mr: 1, mt: 'auto', mb: 1, color: 'common.white',}}
-          component="button"
-          variant="body2"
-          onClick={()=> dispatch(setLicenseViewFormVisibility(false))}
-        >
-          <Iconify icon="material-symbols:arrow-back-rounded" />
-        </Link>
-      )}
-
-      {handleBackLinks && profileViewFormVisibility && (
-        <Link
-          title="Go Back"
-          sx={{ ml: 'auto', mr: 1, mt: 'auto', mb: 1, color: 'common.white',}}
-          component="button"
-          variant="body2"
-          onClick={()=> dispatch(setProfileViewFormVisibility(false))}
-        >
-          <Iconify icon="material-symbols:arrow-back-rounded" />
-        </Link>
-      )} */}
       {setting && (
         <Link
           title="Machine Setting"
