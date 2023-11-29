@@ -548,15 +548,17 @@ function DocumentAddForm({
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
-                <RadioButtons
-                  radioDisaled={ documentNewVersionFormVisibility || documentAddFilesViewFormVisibility || documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility }
-                  value={selectedValue}
-                  radioOnChange={handleRadioChange}
-                  newValue={DocRadioValue.new}
-                  newLabel={DocRadioLabel.new}
-                  secondValue={DocRadioValue.newVersion}
-                  secondLabel={DocRadioLabel.existing}
-                />
+                {!drawingPage && 
+                  <RadioButtons
+                    radioDisaled={ documentNewVersionFormVisibility || documentAddFilesViewFormVisibility || documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility }
+                    value={selectedValue}
+                    radioOnChange={handleRadioChange}
+                    newValue={DocRadioValue.new}
+                    newLabel={DocRadioLabel.new}
+                    secondValue={DocRadioValue.newVersion}
+                    secondLabel={DocRadioLabel.existing}
+                  />
+                }
 
                 {selectedValue === 'newVersion' && (
                   <Grid container item lg={12}>
