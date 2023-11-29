@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 // @mui
 import { Stack } from '@mui/material';
 // routes
-import { setMachineServiceRecordAddFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
 // components
 import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 // constants
