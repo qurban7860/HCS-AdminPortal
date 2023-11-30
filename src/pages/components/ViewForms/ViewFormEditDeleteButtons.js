@@ -52,6 +52,7 @@ function ViewFormEditDeleteButtons({
   approveHandler,
   copyConfiguration,
   onUserStatusChange,
+  financingCompany,
 
   // DISABLE
   disableTransferButton = false,
@@ -279,6 +280,14 @@ function ViewFormEditDeleteButtons({
             title={supportSubscription?`Support Subscription Enabled`:`Support Subscription Disabled`}
             color={supportSubscription?ICONS.ALLOWED.color:ICONS.DISALLOWED.color}
             icon="bx:support"
+            />
+          }
+
+          {financingCompany!==undefined &&
+            <IconTooltip
+            title={financingCompany ? `Financing Company Enabled`:`Financing Company Disabled`}
+            color={financingCompany ? ICONS.ALLOWED.color : ICONS.DISALLOWED.color}
+            icon="vaadin:office"
             />
           }
 
@@ -711,5 +720,6 @@ ViewFormEditDeleteButtons.propTypes = {
   supportSubscription: PropTypes.bool,
   userStatus:PropTypes.object,
   onUserStatusChange:PropTypes.func,
+  financingCompany: PropTypes.bool,
   isLoading: PropTypes.bool,
 };

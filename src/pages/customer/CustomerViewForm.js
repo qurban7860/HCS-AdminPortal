@@ -43,6 +43,7 @@ export default function CustomerViewForm() {
       mainSite: customer?.mainSite || null,
       primaryBillingContact: customer?.primaryBillingContact || null,
       primaryTechnicalContact: customer?.primaryTechnicalContact || null,
+      isFinancialCompany: customer?.isFinancialCompany,
       isActive: customer?.isActive,
       supportSubscription: customer?.supportSubscription,
       createdAt: customer?.createdAt || '',
@@ -91,6 +92,7 @@ export default function CustomerViewForm() {
               isActive={defaultValues.isActive}
               verifiers={customer?.verifications}
               handleVerification={handleVerification}
+              financingCompany={defaultValues.isFinancialCompany}
               handleEdit={handleEdit}
               onDelete={onDelete}
               supportSubscription={defaultValues.supportSubscription}

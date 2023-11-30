@@ -414,7 +414,7 @@ export default function MachineEditForm() {
                     // multiple 
                     value={financialCompany}
                     name="financialCompany"
-                    label="Financial Company"
+                    label="Financing Company"
                     options={financialCompanies}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}

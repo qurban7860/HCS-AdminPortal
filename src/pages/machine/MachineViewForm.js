@@ -284,7 +284,7 @@ export default function MachineViewForm() {
             <ViewFormField sm={6} heading="Work Order / Purchase Order" param={defaultValues?.workOrderRef}/>
 
             <ViewFormField sm={6}
-                    heading="Financial Company"
+                    heading="Financing Company"
                     node={
                       defaultValues.financialCompany && (
                         <Link onClick={()=> handleCustomerDialog(defaultValues.financialCompany?._id)} href="#" underline="none">
