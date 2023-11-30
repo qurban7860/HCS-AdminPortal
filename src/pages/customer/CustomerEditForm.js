@@ -408,7 +408,7 @@ export default function CustomerEditForm() {
                     <RHFSwitch name="supportSubscription" defaultChecked={defaultValues?.supportSubscription} />
                       
                     <StyledToggleButtonLabel variant="body2" p={1}>
-                      Financial Company
+                      Financing Company
                     </StyledToggleButtonLabel>
                     <RHFSwitch name="isFinancialCompany" defaultChecked={defaultValues?.isFinancialCompany} />
                   
