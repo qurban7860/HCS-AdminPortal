@@ -71,7 +71,7 @@ export default function HistoricalConfigurationsAddForm() {
   const onSubmit = async (data) => {
     try {
       const cleanedData = {
-        configurations: JSON.parse(data.iniJson),
+        configuration: JSON.parse(data.iniJson),
       };
       cleanedData.inputGUID = machine?._id;
       cleanedData.inputSerialNo = machine?.serialNo;
