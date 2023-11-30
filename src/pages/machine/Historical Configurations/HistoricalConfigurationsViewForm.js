@@ -90,7 +90,6 @@ function HistoricalConfigurationsViewForm() {
         setJsonObjectTree(filteredValue);
     // }
   };
-  console.log("filterName main : ",filterName)
 
   const debouncedSearch = useRef(debounce(value => {
     handleFilterJsonTree();
