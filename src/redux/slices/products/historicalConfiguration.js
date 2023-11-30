@@ -135,7 +135,7 @@ export function getHistoricalConfigurationRecords (machineId){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/productConfigurations/`, 
+      const response = await axios.get(`${CONFIG.SERVER_URL}apiclient/productConfigurations/`, 
       {
         params: {
           isArchived: false,
@@ -159,7 +159,7 @@ export function getHistoricalConfigurationRecord(machineId, id) {
     dispatch(slice.actions.startLoading());
     try {
       // await dispatch(resetHistoricalConfigurationRecord());
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/productConfigurations/${id}`,
+      const response = await axios.get(`${CONFIG.SERVER_URL}apiclient/productConfigurations/${id}`,
       {
         params: {
           machine: machineId,
@@ -180,7 +180,7 @@ export function addHistoricalConfigurationRecord( params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/productConfigurations/`,params );
+      const response = await axios.post(`${CONFIG.SERVER_URL}apiclient/productConfigurations/`,params );
       dispatch(slice.actions.setResponseMessage(response?.data || ''));
     } catch (error) {
       console.error(error);

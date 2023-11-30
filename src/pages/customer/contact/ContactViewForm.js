@@ -2,9 +2,11 @@ import PropTypes from 'prop-types';
 import {  useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
-import { Grid } from '@mui/material';
+import { Grid, Chip } from '@mui/material';
 // components
 import { useSnackbar } from '../../../components/snackbar';
+import { fDateTime } from '../../../utils/formatTime';
+
 
 import {
   getContacts,
@@ -80,6 +82,7 @@ export default function ContactViewForm({
       postcode: contact?.address?.postcode || '',
       region: contact?.address?.region || '',
       country: contact?.address?.country || '',
+      serviceRecords: contact?.serviceRecords || [],
       isActive: contact?.isActive,
       createdAt: contact?.createdAt || '',
       createdByFullName: contact?.createdBy?.name || '',
@@ -91,6 +94,11 @@ export default function ContactViewForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [contact]
   );
+
+  const operatorTraningsList = defaultValues?.serviceRecords?.map((item, index) => (
+    <Chip sx={{m:0.3}} label={`${item?.serviceRecordConfig?.docTitle || ''} | ${fDateTime(item?.serviceDate)}`} />
+  ));
+
   return (
     <Grid sx={{mt:1}}>
       <ViewFormEditDeleteButtons moveCustomerContact={ isSuperAdmin && handleMoveConatct } isActive={defaultValues.isActive} handleEdit={handleEdit} onDelete={onDelete} />
@@ -109,6 +117,7 @@ export default function ContactViewForm({
         <ViewFormField sm={6} heading="Region" param={defaultValues?.region} />
         <ViewFormField sm={6} heading="Post Code" param={defaultValues?.postcode} />
         <ViewFormField sm={6} heading="Country" param={defaultValues?.country} />
+        <ViewFormField sm={12} heading="Operator's Trainings" chipDialogArrayParam={operatorTraningsList} />
         <ViewFormField />
       </Grid>
       <ViewFormAudit defaultValues={defaultValues} />
