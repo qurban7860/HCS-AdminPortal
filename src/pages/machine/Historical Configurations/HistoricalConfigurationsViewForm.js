@@ -154,7 +154,7 @@ function HistoricalConfigurationsViewForm() {
             <Skeleton animation={false} />
             <Skeleton animation={false} />
           </>
-           : <JsonView displaySize src={jsonObjectTree} />}
+           : <JsonView displaySize src={jsonObjectTree?.configuration || {}} />}
         </Stack>
           <ViewFormAudit  defaultValues={defaultValues} />
       </Grid>
