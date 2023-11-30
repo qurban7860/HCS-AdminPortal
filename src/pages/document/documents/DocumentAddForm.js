@@ -140,16 +140,14 @@ function DocumentAddForm({
     ).nullable(true),
     referenceNumber: Yup.string().max(20)
     .test('Reference number', 'Reference number can not have spaces', numValue =>!(numValue.includes(' '))),
+
     versionNo: Yup.number()
     .typeError('Version number must be a number')
-    .transform((value, originalValue) => {
-    if (originalValue.trim() === '') return undefined;
-    return parseFloat(value);
-    })
-    .positive("Version number must be a positive number!")
-    .integer("Version number can't include a decimal point")
-    .test('no-spaces', 'Version number cannot have spaces', value => !(value && value.toString().includes(' ')))
-    .max(1000, 'Version number must be less than or equal to 1000').nullable(),
+    .positive("Version number must be a positive number")
+    .test('no-spaces', 'Version number cannot have spaces', value => !(value && /\s/.test(value.toString())))
+    .max(1000, 'Version number must be less than or equal to 1000')
+    .nullable(),
+
     description: Yup.string().max(10000),
     isActive: Yup.boolean(),
   });
@@ -162,7 +160,7 @@ function DocumentAddForm({
       displayName:  '',
       stockNumber:  '',
       referenceNumber:  '',
-      versionNo:  '',
+      versionNo:  null,
       documentVal:  null ,
       description:  '',
       files: null,
@@ -181,7 +179,7 @@ function DocumentAddForm({
     formState: { isSubmitting },
   } = methods;
 
-  const {  documentType, documentCategory, displayName, machineVal, customerVal, documentVal, files, isActive, customerAccess,  } = watch();
+  const {  documentType, documentCategory, displayName, versionNo, machineVal, customerVal, documentVal, files, isActive, customerAccess,  } = watch();
 
   useEffect(()=>{
     if(customerPage){
@@ -727,7 +725,9 @@ function DocumentAddForm({
                         id="displayName"
                         label="Document Name*"
                         />
-                      <RHFTextField name='versionNo' label='Version Number'/>
+                      <RHFTextField name='versionNo' label='Version Number' 
+                        InputLabelProps={{ shrink: versionNo }}
+                      />
                   </Box>
 
                 )}

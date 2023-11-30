@@ -67,17 +67,14 @@ export default function HistoricalConfigurationsAddForm() {
   const toggleCancel = () => {
     dispatch(setAllFlagFalse())
   };
-console.log("machine :",machine)
+
   const onSubmit = async (data) => {
     try {
       const cleanedData = {
-        ...data,
-        iniJson: JSON.parse(data.iniJson),
+        configurations: JSON.parse(data.iniJson),
       };
-  
-      cleanedData.iniJson.inputGUID = machine?._id;
-      cleanedData.iniJson.inputSerialNo = machine?.serialNo;
-      // console.log(cleanedData);
+      cleanedData.inputGUID = machine?._id;
+      cleanedData.inputSerialNo = machine?.serialNo;
       await dispatch(addHistoricalConfigurationRecord(cleanedData));
       reset();
       enqueueSnackbar('INI create successfully!');

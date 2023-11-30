@@ -180,7 +180,7 @@ export function addHistoricalConfigurationRecord( params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/productConfigurations/`,params?.iniJson );
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/productConfigurations/`,params );
       dispatch(slice.actions.setResponseMessage(response?.data || ''));
     } catch (error) {
       console.error(error);
