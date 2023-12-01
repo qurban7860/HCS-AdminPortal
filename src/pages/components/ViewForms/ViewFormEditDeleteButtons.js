@@ -38,6 +38,8 @@ function ViewFormEditDeleteButtons({
   handleTransfer,
   handleUpdatePassword,
   handleUserInvite,
+  handleSendPDFEmail,
+  handleDownloadPDF,
   isSubmitted,
   returnToSubmitted,
   approvers,
@@ -416,8 +418,6 @@ function ViewFormEditDeleteButtons({
           />
         )}
 
-
-
         {isSubmitted && (
           <IconTooltip
             title="Return To Draft"
@@ -483,6 +483,24 @@ function ViewFormEditDeleteButtons({
           color={theme.palette.primary.main}
           icon="eva:swap-fill"
         />}
+
+        {handleDownloadPDF && 
+          <IconTooltip
+            title="Download"
+            onClick={handleDownloadPDF}
+            color={theme.palette.primary.main}
+            icon="mdi:file-pdf-box"
+          />
+        }
+
+        {handleSendPDFEmail && 
+          <IconTooltip
+            title="Send Email"
+            onClick={handleSendPDFEmail}
+            color={theme.palette.primary.main}
+            icon="mdi:email-send-outline"
+          />
+        }
 
         {/* edit button */}
         {handleEdit && <IconTooltip
@@ -701,6 +719,8 @@ ViewFormEditDeleteButtons.propTypes = {
   handleTransfer: PropTypes.func,
   handleUpdatePassword: PropTypes.func,
   handleUserInvite: PropTypes.func,
+  handleSendPDFEmail: PropTypes.func,
+  handleDownloadPDF: PropTypes.func,
   isInviteLoading:PropTypes.bool,
   handleEdit: PropTypes.func,
   onDelete: PropTypes.func,

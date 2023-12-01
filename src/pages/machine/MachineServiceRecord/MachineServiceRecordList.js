@@ -75,6 +75,7 @@ export default function MachineServiceRecordList() {
   const [filterStatus, setFilterStatus] = useState([]);
 
   useLayoutEffect(() => {
+    dispatch(setMachineServiceRecordViewFormVisibility(false));
     dispatch(getMachineServiceRecords(machine?._id)); 
     dispatch(setDetailPageFlag(false));
   }, [dispatch, machine?._id]);
