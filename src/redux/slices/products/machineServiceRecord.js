@@ -19,6 +19,7 @@ const initialState = {
   machineServiceRecords: [],
   machineServiceRecordHistory: [],
   activeMachineServiceRecords: [],
+  sendEmailDialog:false,
   isHistorical: false,
   isDetailPage: false,
   filterBy: '',
@@ -121,6 +122,11 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // SET SEND EMAIL DIALOG
+    setSendEmailDialog(state, action) {
+      state.sendEmailDialog = action.payload;
+    },
+
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
       state.isLoading = false;
@@ -172,6 +178,7 @@ export const {
   setHistoricalFlag,
   setDetailPageFlag,
   setAllFlagsFalse,
+  setSendEmailDialog,
   resetMachineServiceRecords,
   resetMachineServiceRecord,
   setResponseMessage,
@@ -181,6 +188,24 @@ export const {
 } = slice.actions;
 
 // ----------------------------------------------------------------------
+
+export function sendEmail(machineId,data) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const formData = new FormData();
+      formData.append('email', data.email)
+      formData.append('pdf', data.pdf)
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${data.id}/sendEmail`, formData );
+      dispatch(slice.actions.setResponseMessage(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
 export function getActiveMachineServiceRecords (machineId){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
@@ -272,7 +297,6 @@ export function getMachineServiceRecord(machineId, id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      await dispatch(resetMachineServiceRecord());
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/serviceRecords/${id}`);
       dispatch(slice.actions.getMachineServiceRecordSuccess(response.data));
     } catch (error) {
