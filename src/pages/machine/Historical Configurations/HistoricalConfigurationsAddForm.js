@@ -87,18 +87,63 @@ export default function HistoricalConfigurationsAddForm() {
     }
   };
 
-  const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
-    // console.log("selectedFile : ",selectedFile)
-    if (selectedFile) {
+  function iniToJSON(iniData) {
+    const lines = iniData.split('\n');
+    let currentSection = null;
+    const result = {};
+
+    lines.forEach(line => {
+        line = line.trim();
+        // Skip comments and empty lines
+        if (line.startsWith(';') || line === '') {
+            return;
+        }
+        // Check for section header
+        const sectionMatch = line.match(/^\[([^\]]+)\]$/);
+        if (sectionMatch) {
+            currentSection = sectionMatch[1];
+            result[currentSection] = {};
+            return;
+        }
+        // Check for key-value pairs
+        const keyValueMatch = line.match(/^([^=]+)=(.+)$/);
+        if (keyValueMatch && currentSection !== null) {
+            const key = keyValueMatch[1].trim();
+            const value = keyValueMatch[2].trim();
+            result[currentSection][key] = value;
+        }
+    });
+
+    const formattedJSON = JSON.stringify(result, null, 2);
+    return formattedJSON;
+}
+
+const readFile = (selectedFile) => 
+  new Promise((resolve, reject) => {
       const reader = new FileReader();
-      // console.log("reader : ",reader)
       reader.onload = function(e) {
-        const fileContent = e.target.result;
-        // console.log('File content:', fileContent);
-          setValue('iniJson',fileContent)
+          const content = e.target.result;
+          resolve(content);
+      };
+      reader.onerror = function(error) {
+          console.log(error);
       };
       reader.readAsText(selectedFile);
+    });
+
+
+  const handleFileChange = async (event) => {
+    const selectedFile = event.target.files[0];
+    const parts = selectedFile.name.split(".");
+    const fileExtension = parts[parts.length - 1];
+
+    const fileData = await readFile(selectedFile)
+    
+    if(fileExtension === 'ini' ){
+      const parsedData = iniToJSON(fileData)
+        setValue('iniJson', parsedData)
+    }else{
+        setValue('iniJson',fileData)
     }
   };
 
