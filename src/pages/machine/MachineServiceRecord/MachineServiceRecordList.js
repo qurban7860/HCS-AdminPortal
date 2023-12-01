@@ -76,7 +76,9 @@ export default function MachineServiceRecordList() {
 
   useLayoutEffect(() => {
     dispatch(setMachineServiceRecordViewFormVisibility(false));
-    dispatch(getMachineServiceRecords(machine?._id)); 
+    if(machine?._id){
+      dispatch(getMachineServiceRecords(machine?._id));
+    }
     dispatch(setDetailPageFlag(false));
   }, [dispatch, machine?._id]);
 
