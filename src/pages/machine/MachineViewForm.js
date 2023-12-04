@@ -366,7 +366,7 @@ export default function MachineViewForm() {
 
             <ViewFormField
               sm={6}
-              heading="Suppory Expiry Date"
+              heading="Support Expiry Date"
               param={fDate(defaultValues?.supportExpireDate)}
             />
             <ViewFormField />
