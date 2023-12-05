@@ -75,7 +75,7 @@ export default function DocumentListTableRow({
       <LinkTableCell align="left" param={displayName} onClick={onViewRow} />
       {  lgScreen && <TableCell align="center">{documentVersions[0]?.versionNo}</TableCell>}
       {  !customerPage && !machinePage && !machineDrawings && lgScreen && <TableCell align="left">{customer?.name}</TableCell>}
-      {  machineDrawings && smScreen && <TableCell align="left">{stockNumber}</TableCell>}
+      {  smScreen && <TableCell align="left">{stockNumber}</TableCell>}
       {  !customerPage && !machinePage && lgScreen && 
         <LinkDialogTableCell onClick={handleMachineDialog} align='center' param={machine?.serialNo}/>
       }
