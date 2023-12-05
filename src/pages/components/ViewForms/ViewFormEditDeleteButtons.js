@@ -15,6 +15,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 import useResponsive from '../../../hooks/useResponsive';
 import { setTransferDialogBoxVisibility } from '../../../redux/slices/products/machine';
 import { getActiveMachineStatuses } from '../../../redux/slices/products/statuses';
+import { getActiveCustomers } from '../../../redux/slices/customer/customer';
 import IconPopover from '../Icons/IconPopover';
 import IconTooltip from '../Icons/IconTooltip';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
@@ -152,6 +153,7 @@ function ViewFormEditDeleteButtons({
     }
 
     if (dialogType === 'transfer') {
+      dispatch(getActiveCustomers());
       dispatch(getActiveMachineStatuses());
       dispatch(setTransferDialogBoxVisibility(true));
     }

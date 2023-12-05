@@ -138,7 +138,6 @@ export default function MachineEditForm() {
     reset,
     watch,
     handleSubmit,
-    register,
     setError,
     formState: { isSubmitting },
     setValue,
@@ -200,8 +199,6 @@ export default function MachineEditForm() {
     navigate(PATH_MACHINE.machines.view(machine._id));
     dispatch(setTransferMachineFlag(false));
   };
-
-  const [statusError, setStatusError] = useState('');
 
   const onSubmit = async (data) => {
 

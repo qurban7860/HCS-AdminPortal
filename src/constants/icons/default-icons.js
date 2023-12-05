@@ -125,12 +125,12 @@ export const ICONS = {
   // ------------------------------------------------------------
   // customerAccess
   ALLOWED: {
-    icon: 'mingcute:user-star-fill',
+    icon: 'mingcute:user-follow-2-fill',
     color: '#008000',
     heading: 'Customer Allowed',
   },
   DISALLOWED: {
-    icon: 'mingcute:user-star-fill',
+    icon: 'mingcute:user-x-line',
     color: '#878787',
     heading: 'Customer Not Allowed',
   },
