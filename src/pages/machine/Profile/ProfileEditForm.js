@@ -34,7 +34,8 @@ export default function ProfileEditForm() {
       names:profile?.names ||[],
       web:profile?.web || '',
       flange:profile?.flange ||'',
-      thickness: profile?.thickness || '',
+      thicknessStart: profile?.thicknessStart || '',
+      thicknessEnd: profile?.thicknessEnd || '',
       type:profile?.type ||'CUSTOMER',
       isActive: profile?.isActive || false,
     }),
@@ -129,13 +130,15 @@ export default function ProfileEditForm() {
               <MuiChipsInput fullWidth name="names" label="Other Names" value={chips} onChange={handleChipChange} />
             </Box>
 
-            <Box sx={{marginTop:2}} rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)',}}>
+            <Box sx={{marginTop:2}} rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(4, 1fr)',}}>
 
 
               <RHFTextField name="web" label="Web"/>
               <RHFTextField name="flange" label="Flange"/>
-              <RHFTextField name="thickness" label="Thickness"/>
+              <RHFTextField name="thicknessStart" label="Thickness Start"/>
+              <RHFTextField name="thicknessEnd" label="Thickness End"/>
               
+            </Box>
               <RHFSwitch name="isActive" labelPlacement="start"
                 label={
                   <Typography variant="subtitle2" sx={{ mx: 0, flange: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
@@ -143,7 +146,6 @@ export default function ProfileEditForm() {
                   </Typography>
                 }
               />
-            </Box>
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>
