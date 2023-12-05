@@ -56,7 +56,8 @@ export default function ProfileList() {
     { id: 'defaultName', label: 'Default Name', align: 'left' },
     { id: 'names', label: 'Other Names', align: 'left' },
     { id: 'type', label: 'Type', align: 'left' },
-    { id: 'web', label: 'Web X Flange X Thickness', align: 'left'},
+    { id: 'web', label: 'Web X Flange', align: 'left'},
+    { id: 'thicknessStart', label: 'Thickness', align: 'left'},
     { id: 'createdAt', label: 'Created At', align: 'right' },
   ];
 
@@ -198,6 +199,8 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
       (profileg) =>
         profileg?.defaultName?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         profileg?.names?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        profileg?.thicknessStart?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        profileg?.thicknessEnd?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         (`${profileg?.web}X${profileg?.flange}`.toLowerCase()).indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(profileg?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );

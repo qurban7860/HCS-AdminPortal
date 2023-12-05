@@ -63,7 +63,7 @@ export default function DrawingList() {
   const { enqueueSnackbar } = useSnackbar();
 
   const { drawings, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.drawing );
-
+console.log("drawings : ",drawings)
   const TABLE_HEAD = [
     { id: 'referenceNumber', label: 'Ref', align: 'left' },
     { id: 'name', label: 'Name', align: 'left' },
@@ -264,7 +264,8 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
         drawingg?.document?.displayName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         drawingg?.documentType?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         drawingg?.documentCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (document?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        drawingg?.document.stockNumber?.toString()?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        drawingg?.document.referenceNumber?.toString()?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(drawingg?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

@@ -3,9 +3,9 @@ import { allowedExtensions } from '../../../../constants/document-constants';
 export const validateFileType = (value, options) => {
     const { path, createError } = options;
     if (value && Array.isArray(value)) {
-      if (value.length > 10) {
+      if (value.length > 20) {
         return createError({
-          message: 'Maximum 10 files can be uploaded at a time.',
+          message: 'Maximum 20 files can be uploaded at a time.',
           path,
           value,
         });

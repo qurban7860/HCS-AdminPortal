@@ -4,8 +4,7 @@ import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import {
   Table,
   TableBody,
-  TableContainer,
-  Button,
+  TableContainer
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
@@ -216,6 +215,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
         docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         docCategory?.versionNo?.toString().indexOf(filterName.toLowerCase()) >= 0 ||
         docCategory?.createdBy?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        docCategory?.backupid?.toString()?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // (docCategory?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(docCategory?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );

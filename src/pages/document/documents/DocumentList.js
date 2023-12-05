@@ -84,7 +84,6 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
       customerDocumentsFilterBy,   customerDocumentsPage,   customerDocumentsRowsPerPage,
       machineDocumentsFilterBy,  machineDocumentsPage,  machineDocumentsRowsPerPage,
       isLoading } = useSelector((state) => state.document );
-
   const {
     order,
     orderBy,
@@ -128,6 +127,7 @@ const  onChangePage = (event, newPage) => {
     { id: 'docType.name', visibility: 'xs2', label: 'Type', align: 'left' },
     { id: 'referenceNumber', visibility: 'xs2', label: 'Ref. No.', align: 'left' },
     { id: 'displayName', label: 'Name', align: 'left' },
+    { id: 'stockNumber', visibility: 'xs2', label: 'Stock No.', align: 'left' },
     { id: 'documentVersions.versionNo.[]', visibility: 'md1', label: 'Version', align: 'center' },
     { id: 'customerAccess', visibility: 'md2', label: 'Customer Access', align: 'center' },
     { id: 'isActive', label: 'Active', align: 'center' },
@@ -142,12 +142,11 @@ const  onChangePage = (event, newPage) => {
       { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left' }
     );
   }
-
+  
   if (machineDrawings) {
    const insertIndex = 5
    const removeIndex = 0
     TABLE_HEAD.splice(insertIndex, removeIndex,
-      { id: 'stockNumber', visibility: 'xs2', label: 'Stock No.', align: 'left' },
       { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left' }
    )
   }
@@ -436,6 +435,8 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
         document?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         document?.machine?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         document?.docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.referenceNumber?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.stockNumber?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         document?.documentVersions[0].versionNo?.toString().indexOf(filterName.toLowerCase()) >= 0 ||
         // (document?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
