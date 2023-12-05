@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useLayoutEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -64,7 +64,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const [chips, setChips] = useState([]);
 
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     dispatch(getFinancialCompanies());
     dispatch(getActiveCustomers());
     dispatch(getActiveMachines());
@@ -158,7 +158,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       customerTags: [],
       description: '',
       isActive: true,
-
     },
   });
 
@@ -188,6 +187,12 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     projectManager,
     supportManager,
   } = watch();
+
+  useEffect(() => {
+    setValue('supplier',activeSuppliers.find((element) => element?.isDefault === true))
+    setValue('category',activeCategories.find((element) => element?.isDefault === true))
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
   useEffect(() => {
     if(category === null){
@@ -286,36 +291,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
 
-                  <Controller
-                    name="supplier"
-                    control={control}
-                    defaultValue={supplier || null}
-                    render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                      <Autocomplete
-                        {...field}
-                        id="controllable-states-demo"
-                        options={activeSuppliers}
-                        isOptionEqualToValue={(option, value) => option._id === value._id}
-                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                        renderOption={(props, option) => (
-                          <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                        )}
-                        onChange={(event, value) => field.onChange(value)}
-                        renderInput={(params) => (
-                          <TextField 
-                          {...params} 
-                          name="supplier"
-                          id="supplier"
-                          label="Supplier"  
-                          error={!!error}
-                          helperText={error?.message} 
-                          inputRef={ref} 
-                          />
-                        )}
-                        ChipProps={{ size: 'small' }}
-                      />
-                    )}
-                  />
 
                    {/* ----------------------------- Filter Machine Model By Category ----------------------------------- */}
 
@@ -377,9 +352,41 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   )}
                 />
 
+                    {/* -------------------------------- supplier -------------------------------- */}
+
+                  <Controller
+                    name="supplier"
+                    control={control}
+                    defaultValue={supplier || null}
+                    render={ ({field: { ref, ...field }, fieldState: { error } }) => (
+                      <Autocomplete
+                        {...field}
+                        id="controllable-states-demo"
+                        options={activeSuppliers}
+                        isOptionEqualToValue={(option, value) => option._id === value._id}
+                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                        renderOption={(props, option) => (
+                          <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                        )}
+                        onChange={(event, value) => field.onChange(value)}
+                        renderInput={(params) => (
+                          <TextField 
+                          {...params} 
+                          name="supplier"
+                          id="supplier"
+                          label="Supplier"  
+                          error={!!error}
+                          helperText={error?.message} 
+                          inputRef={ref} 
+                          />
+                        )}
+                        ChipProps={{ size: 'small' }}
+                      />
+                    )}
+                  />
+
                     {/* -------------------------------- Work Order/ Purchase Order -------------------------------- */}
 
-                  <RHFTextField name="workOrderRef" label="Work Order/ Purchase Order" />
                   <RHFAutocomplete
                     // multiple 
                     value={financialCompany}
@@ -392,6 +399,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                       <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
                   />
+                  <RHFTextField name="workOrderRef" label="Work Order/ Purchase Order" />
                 </Box>
                  
                    {/* -------------------------------- Customer -------------------------------- */}
