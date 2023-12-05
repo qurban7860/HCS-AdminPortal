@@ -10,6 +10,8 @@ import { styled, } from '@mui/material/styles';
 import { fDate } from '../../../utils/formatTime';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import { useScreenSize } from '../../../hooks/useResponsive';
+import IconTooltip from '../../components/Icons/IconTooltip';
+import { StyledStack } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -59,6 +61,11 @@ export default function DrawingListTableRow({
         { smScreen && <TableCell>{documentCategory?.name}</TableCell>}
         <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>
+        <TableCell align="center">
+          <StyledStack>
+              <IconTooltip title="Delete" onClick={onDeleteRow} color="#FF0000" icon="mdi:trash-can-outline" />
+          </StyledStack>
+        </TableCell>
       </StyledTableRow>
   );
 }

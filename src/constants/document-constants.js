@@ -192,6 +192,14 @@ export const Snacks = {
   failedUpdateDoc: 'Failed to Update Document', // Update Failed message
   failedDeleteDoc: 'Failed to Delete Document', // Delete Failed message
 
+  addedDrawing: 'Drawing Upload Successful', // Upload Success message
+  updatedDrawing: 'Drawing Update Successful', // Update Success message
+  deletedDrawing: 'Drawing Delete Successful', // Delete Success message
+
+  failedDrawing: 'Failed to Upload Drawing', // Update Failed message
+  failedUpdateDrawing: 'Failed to Update Drawing', // Update Failed message
+  failedDeleteDrawing: 'Failed to Delete Drawing', // Delete Failed message
+
   // documentAddForm -documents dashboard
   fileRequired: 'File is required',
   fileMaxSize: 'File size should be less than 10MB',
