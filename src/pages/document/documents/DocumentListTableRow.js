@@ -76,11 +76,14 @@ export default function DocumentListTableRow({
       {  smScreen && <TableCell align="left">{referenceNumber}</TableCell>}
       <LinkTableCell align="left" param={displayName} onClick={onViewRow} />
       {  lgScreen && <TableCell align="center">{documentVersions[0]?.versionNo}</TableCell>}
-      {  !customerPage && !machinePage && !machineDrawings && lgScreen && <TableCell align="left">{customer?.name}</TableCell>}
       {  smScreen && <TableCell align="left">{stockNumber}</TableCell>}
-      {  !customerPage && !machinePage && lgScreen && 
-        <LinkDialogTableCell onClick={handleMachineDialog} align='center' param={machine?.serialNo}/>
+      {  !customerPage && !machinePage && !machineDrawings && lgScreen && 
+          <>
+            <TableCell align="left">{customer?.name}</TableCell>
+            <LinkDialogTableCell onClick={handleMachineDialog} align='center' param={machine?.serialNo}/>  
+          </>
       }
+      
       {  lgScreen && <TableCell align="center">
         <Switch checked={customerAccess} disabled size="small" />{' '}
       </TableCell>}

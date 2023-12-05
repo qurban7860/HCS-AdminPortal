@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Typography, Grid, Chip } from '@mui/material';
 import IconPopover from '../Icons/IconPopover';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
+import SkeletonViewFormField from '../../../components/skeleton/SkeletonViewFormField';
 
 function ViewFormField({
   backLink,
@@ -39,6 +40,7 @@ function ViewFormField({
   handleNewVersion,
   ViewAllVersions,
   handleAllVersion,
+  isLoading
 }) {
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
@@ -60,14 +62,12 @@ function ViewFormField({
   };
   return (
     <Grid item xs={12} sm={sm} sx={{ px: 2, py: 1, overflowWrap: 'break-word' }}>
-      <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-        {heading || ''}
-        </Typography>
-        {/* {NewVersion && <Link title='New Version' href="#" variant="subtitle1" underline='none' onClick={handleNewVersion} sx={{ fontWeight:"bold" }}> <Iconify heading="New Version" icon="icon-park-outline:add" sx={{mb:-0.8}}/></Link>}
-        {ViewAllVersions && <Link title='View all Versions' onClick={handleAllVersion} href="#" underline="none"><Iconify icon="carbon:view" sx={{mb:-1, ml:1, width:"23px", height:"23px"}}/></Link>} */}
-
-
-      <Typography
+      <Typography variant="overline" sx={{ color: 'text.disabled' }}>{heading || ''}</Typography>
+      {isLoading ? (
+          <SkeletonViewFormField />
+      ) : (
+          <>
+            <Typography
         variant={
           heading === 'Serial No' ||
           heading === 'Machine Model' ||
@@ -227,6 +227,10 @@ function ViewFormField({
         ) : (
           serviceParam && typeof serviceParam === 'string' && serviceParam.trim().length > 0 && <Chip label={serviceParam} />
         )}
+          </>
+      )}
+
+      
 
       {/* popover for verification list */}
       <ViewFormMenuPopover
@@ -274,4 +278,5 @@ ViewFormField.propTypes = {
   ViewAllVersions: PropTypes.bool,
   handleAllVersion: PropTypes.func,
   backLink: PropTypes.func,
+  isLoading: PropTypes.bool,
 };

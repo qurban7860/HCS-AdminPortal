@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-// import { sentenceCase } from 'change-case';
 // @mui
 import { Stack } from '@mui/material';
 // components
@@ -15,6 +14,8 @@ MachineListTableToolbar.propTypes = {
   filterStatus: PropTypes.array,
   onFilterStatus: PropTypes.func,
   statusOptions: PropTypes.array,
+  transferStatus: PropTypes.bool,
+  handleTransferStatus: PropTypes.func,
 };
 
 export default function MachineListTableToolbar({
@@ -25,8 +26,10 @@ export default function MachineListTableToolbar({
   statusOptions,
   onResetFilter,
   onFilterStatus,
+  transferStatus,
+  handleTransferStatus
 }) {
-
+  
   return (
     <Stack
     spacing={2}
@@ -39,6 +42,8 @@ export default function MachineListTableToolbar({
       value={filterName}
       onChange={onFilterName}
       onClick={onResetFilter}
+      handleTransferStatus={handleTransferStatus}
+      transferStatus={transferStatus}
     />
   </Stack>
   );

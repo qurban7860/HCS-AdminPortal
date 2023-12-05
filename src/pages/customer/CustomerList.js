@@ -152,7 +152,11 @@ export default function CustomerList() {
   const onExportCSV = async () => {
     const response = dispatch(await createCustomerCSV());
     response.then((res) => {
-      enqueueSnackbar('CSV Generated Successfully');
+      if(res!==undefined){
+        enqueueSnackbar('CSV Generated Successfully');
+      }else{
+        enqueueSnackbar('CSV Generation Failed', { variant: `error` });
+      }
     }).catch((error) => {
       console.error(error);
       enqueueSnackbar(error.message, { variant: `error` });
