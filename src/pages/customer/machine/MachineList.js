@@ -51,6 +51,7 @@ export default function MachineList() {
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
+  const [transferStatus, setTransferStatus] = useState(false);
   
   const { customer } = useSelector((state) => state.customer);
   const { customerMachines, page, rowsPerPage, isLoading } = useSelector((state) => state.machine);
@@ -60,7 +61,6 @@ export default function MachineList() {
     { id: 'name', visibility: 'xs1', label: 'name'},
     { id: 'machineModel.name', label: 'Model'},
     { id: 'status.name', label: 'Status'},
-    
     { id: 'instalationSite.address.country', label: 'Address'},
     { id: 'action', label: ''},
   ];
@@ -87,6 +87,7 @@ export default function MachineList() {
     comparator: getComparator(order, orderBy),
     filterName,
     filterStatus,
+    transferStatus
   });  
   const denseHeight = 60;
   const isFiltered = filterName !== '' || !!filterStatus.length;
@@ -129,9 +130,12 @@ export default function MachineList() {
   };
 
   const handleResetFilter = () => {
-    // dispatch(setFilterBy(''))
     setFilterName('');
   };
+
+  const handleTransferStatus = (status) => {
+    setTransferStatus(status);
+  }
 
   return (
       <TableCard>
@@ -142,6 +146,8 @@ export default function MachineList() {
           onFilterStatus={handleFilterStatus}
           isFiltered={isFiltered}
           onResetFilter={handleResetFilter}
+          transferStatus={transferStatus}
+          handleTransferStatus={handleTransferStatus}
         />
           {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
@@ -199,7 +205,7 @@ export default function MachineList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+function applyFilter({ inputData, comparator, filterName, filterStatus, transferStatus }) {
   const stabilizedThis = inputData && inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -208,7 +214,11 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
+  if(!transferStatus)
+    inputData = inputData.filter((machine) => machine.status && machine.status.slug !== 'transferred');
+    
   if (filterName) {
+    
     inputData = inputData.filter(
       (machine) =>{
 

@@ -29,7 +29,8 @@ import {
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
-  setVerified
+  setVerified,
+  createMachineCSV
 } from '../../redux/slices/products/machine';
 import { resetToolInstalled, resetToolsInstalled } from '../../redux/slices/products/toolInstalled';
 import { resetSetting, resetSettings } from '../../redux/slices/products/machineSetting';
@@ -173,19 +174,34 @@ export default function MachineList() {
   // const handleViewRow = (id) => {
   //   navigate(PATH_MACHINE.machines.view(id));
   // };
-const handleViewRow = (id) => {
-  navigate(PATH_MACHINE.machines.view(id));
-}
+  const handleViewRow = (id) => {
+    navigate(PATH_MACHINE.machines.view(id));
+  }
 
-const openInNewPage = (id) => {
-    const url = PATH_MACHINE.machines.view(id);
-    window.open(url, '_blank');
-};
+  const openInNewPage = (id) => {
+      const url = PATH_MACHINE.machines.view(id);
+      window.open(url, '_blank');
+  };
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
     setFilterStatus([]);
+  };
+
+  const onExportCSV = async () => {
+    const response = dispatch(await createMachineCSV());
+    response.then((res) => {
+      if(res!==undefined){
+        enqueueSnackbar('CSV Generated Successfully');
+      }else{
+        enqueueSnackbar('CSV Generation Failed', { variant: `error` });
+      }
+      
+    }).catch((err) => {
+      console.error(err);
+      enqueueSnackbar(err.message, { variant: `error` });
+    });
   };
 
   return (
@@ -211,6 +227,7 @@ const openInNewPage = (id) => {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
+            onExportCSV={onExportCSV}
           />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {selected.length > 1 ? "" :

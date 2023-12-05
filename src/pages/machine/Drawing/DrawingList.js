@@ -63,7 +63,7 @@ export default function DrawingList() {
   const { enqueueSnackbar } = useSnackbar();
 
   const { drawings, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.drawing );
-console.log("drawings : ",drawings)
+
   const TABLE_HEAD = [
     { id: 'referenceNumber', label: 'Ref', align: 'left' },
     { id: 'name', label: 'Name', align: 'left' },

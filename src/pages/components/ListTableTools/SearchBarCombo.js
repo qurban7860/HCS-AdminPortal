@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, TextField, InputAdornment, Button, Stack, FormControl, Select, InputLabel, MenuItem, IconButton } from '@mui/material';
+import { Grid, TextField, InputAdornment, Button, Stack, 
+  FormControl, Select, InputLabel, MenuItem, IconButton, Switch, FormControlLabel } from '@mui/material';
 import { BUTTONS } from '../../../constants/default-constants';
 import Iconify from '../../../components/iconify';
 import useResponsive from '../../../hooks/useResponsive';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
-
 
 function SearchBarCombo({
   isFiltered,
@@ -23,6 +23,8 @@ function SearchBarCombo({
   buttonIcon,
   transferredMachine,
   handleAttach,
+  transferStatus,
+  handleTransferStatus,
   ...other
 }) {
 
@@ -73,6 +75,13 @@ function SearchBarCombo({
                 </Select>
             </FormControl>
             </Stack>
+          </Grid>
+        }
+
+        {handleTransferStatus !== undefined &&
+          <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
+              <FormControlLabel control={<Switch checked={transferStatus} 
+                onClick={(event)=>{handleTransferStatus(event.target.checked)}} />} label="Show Transferred" />
           </Grid>
         }
 
@@ -165,7 +174,9 @@ SearchBarCombo.propTypes = {
   signInLogsFilter:PropTypes.number,
   onSignInLogsFilter:PropTypes.func,
   transferredMachine:PropTypes.bool,
-  handleAttach: PropTypes.func
+  handleAttach: PropTypes.func,
+  transferStatus: PropTypes.bool,
+  handleTransferStatus: PropTypes.func
 };
 
 export default SearchBarCombo;
