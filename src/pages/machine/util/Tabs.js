@@ -27,7 +27,7 @@ export const TABS = (currentComponent, showDevTabs, disableTab) => [
   {
     disabled: disableTab,
     value: 'toolsInstalled',
-    label: 'Tools Installed',
+    label: 'Tools',
     icon: <Iconify icon="mdi:folder-wrench" />,
     component: <MachineToolInstalled />,
   },
