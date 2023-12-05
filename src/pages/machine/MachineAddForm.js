@@ -205,7 +205,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       setValue('machineModel',null);
     }
      // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ category ]);
+  },[ category, machineModel ]);
 
   useEffect(() => {
     if (customer !== null && customer._id !== undefined) {
@@ -317,6 +317,17 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                       renderOption={(props, option) => (
                         <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
+                      onChange={(event, newValue) => {
+                          if (newValue) {
+                            setValue('machineModel', newValue);
+                            if(category === null){
+                            dispatch(getActiveMachineModels(newValue?.category?._id));
+                            setValue('category', newValue?.category);
+                            }
+                          } else {
+                            setValue('machineModel', null);
+                          }
+                        }}
                     />
 
                     {/* -------------------------------- Statuses -------------------------------- */}
