@@ -13,6 +13,7 @@ function ViewFormField({
   node,
   chipLabel,
   arrayParam,
+  configArrayParam,
   toolType,
   secondParam,
   objectParam,
@@ -128,7 +129,21 @@ function ViewFormField({
         &nbsp;
 
       </Typography>
-
+      {configArrayParam && typeof configArrayParam === 'object' && configArrayParam?.length > 0 && (
+        <Grid container sx={{mt:-2,mb:2,
+              display: 'flex',
+              alignItems: 'center',
+              whiteSpace: 'pre-line',
+              wordBreak: 'break-word',
+              }} >
+              {configArrayParam.map(
+                (data, index) =>
+                  data?.docTitle &&
+                  typeof data?.docTitle === 'string' &&
+                  data?.docTitle.trim().length > 0 && <Chip key={index} label={<div style={{display:'flex',alignItems:'center'}}><Typography variant='body2'>{`${data?.docTitle || ''}`}</Typography> <Typography variant='subtitle2'>{` - v${data?.docVersionNo}`}</Typography></div>} sx={{m:0.2}} />
+              )}
+            </Grid>
+      )}
       {arrayParam && typeof arrayParam === 'object' && arrayParam?.length > 0 && (
             <Grid container sx={{mt:-2,mb:2,
               display: 'flex',
@@ -249,6 +264,7 @@ ViewFormField.propTypes = {
   param: PropTypes.string,
   objectString: PropTypes.string,
   arrayParam: PropTypes.array,
+  configArrayParam: PropTypes.array,
   toolType: PropTypes.array,
   chipLabel: PropTypes.string,
   numberParam: PropTypes.number,

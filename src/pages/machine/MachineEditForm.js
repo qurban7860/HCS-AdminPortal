@@ -160,14 +160,16 @@ export default function MachineEditForm() {
   } = watch();
 
   useEffect(() => {
-    dispatch(resetActiveMachineModels());
-    setValue('machineModel',null);
-    if(category && category?._id !== machineModel?.category?._id){
+    if(category === null && machineModel ){
+      // dispatch(resetActiveMachineModels())
+      dispatch(getActiveMachineModels());
+      setValue('machineModel',null);
+    }else if(category && category?._id !== machineModel?.category?._id){
       dispatch(getActiveMachineModels(category?._id));
+      setValue('machineModel',null);
     }
-    
      // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[dispatch, category ]);
+  },[ category, machineModel ]);
 
 
 
@@ -261,17 +263,9 @@ export default function MachineEditForm() {
                 {/* -------------------------- Alias -------------------------------------- */}
 
                   <MuiChipsInput label="Alias" value={chips} onChange={handleChipChange} />
-
-                <Box
-                  rowGap={3}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
-                >
-
-                {/* -------------------------- Parent Machines Serial No -------------------------------------- */}
+                                  {/* -------------------------- Parent Machines Serial No -------------------------------------- */}
                   
-                  {parentSerialNo && (<Controller
+                {parentSerialNo && (<Controller
                     name="parentSerialNo"
                     control={control}
                     defaultValue={parentSerialNo || null}
@@ -316,42 +310,17 @@ export default function MachineEditForm() {
                     )}
                   />)}
 
+                <Box
+                  rowGap={3}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
+                >
+
                 {/* ------------------------- Previous Machine Name --------------------------------------- */}
 
                 {/* <RHFTextField name="previousMachine" label="Previous Machine" disabled/> */}
 
-                {/* ------------------------- Previous Machine Supplier --------------------------------------- */}
-
-                  <Controller
-                    name="supplier"
-                    control={control}
-                    defaultValue={supplier || null}
-                    render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                      <Autocomplete
-                        {...field}
-                        id="controllable-states-demo"
-                        options={activeSuppliers}
-                        isOptionEqualToValue={(option, value) => option._id === value._id}
-                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                        renderOption={(props, option) => (
-                          <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                        )}
-                        onChange={(event, value) => field.onChange(value)}
-                        renderInput={(params) => (
-                          <TextField 
-                          {...params} 
-                          name="supplier"
-                          id="supplier"
-                          label="Supplier"  
-                          error={!!error}
-                          helperText={error?.message} 
-                          inputRef={ref} 
-                          />
-                        )}
-                        ChipProps={{ size: 'small' }}
-                      />
-                    )}
-                  />
 
                     {/* ----------------------------- Filter Machine Model By Category ----------------------------------- */}
 
@@ -377,6 +346,17 @@ export default function MachineEditForm() {
                       renderOption={(props, option) => (
                         <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
+                      onChange={(event, newValue) => {
+                          if (newValue) {
+                            setValue('machineModel', newValue);
+                            if(category === null){
+                            dispatch(getActiveMachineModels(newValue?.category?._id));
+                            setValue('category', newValue?.category);
+                            }
+                          } else {
+                            setValue('machineModel', null);
+                          }
+                        }}
                     />
 
                     {/* -------------------------------- Statuses -------------------------------- */}
@@ -412,10 +392,40 @@ export default function MachineEditForm() {
                   />
                   )}
                 />
+                                {/* ------------------------- Previous Machine Supplier --------------------------------------- */}
 
-                    {/* -------------------------------- Work Order/ Purchase Order -------------------------------- */}
+                                <Controller
+                    name="supplier"
+                    control={control}
+                    defaultValue={supplier || null}
+                    render={ ({field: { ref, ...field }, fieldState: { error } }) => (
+                      <Autocomplete
+                        {...field}
+                        id="controllable-states-demo"
+                        options={activeSuppliers}
+                        isOptionEqualToValue={(option, value) => option._id === value._id}
+                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                        renderOption={(props, option) => (
+                          <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                        )}
+                        onChange={(event, value) => field.onChange(value)}
+                        renderInput={(params) => (
+                          <TextField 
+                          {...params} 
+                          name="supplier"
+                          id="supplier"
+                          label="Supplier"  
+                          error={!!error}
+                          helperText={error?.message} 
+                          inputRef={ref} 
+                          />
+                        )}
+                        ChipProps={{ size: 'small' }}
+                      />
+                    )}
+                  />
 
-                  <RHFTextField name="workOrderRef" label="Work Order/ Purchase Order" />
+
                   <RHFAutocomplete
                     // multiple 
                     value={financialCompany}
@@ -428,8 +438,13 @@ export default function MachineEditForm() {
                       <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
                   />
+
+                  {/* -------------------------------- Work Order/ Purchase Order -------------------------------- */}
+
+                  <RHFTextField name="workOrderRef" label="Work Order/ Purchase Order" />
                 </Box>
-   {/* -------------------------------- Customer -------------------------------- */}
+                
+                {/* -------------------------------- Customer -------------------------------- */}
 
                   <Controller
                     name="customer"

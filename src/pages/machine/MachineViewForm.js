@@ -254,12 +254,12 @@ export default function MachineViewForm() {
                 <Grid container>
                   <ViewFormField sm={2} heading="Serial No" param={defaultValues?.serialNo} />
                   <ViewFormField
-                    sm={3}
+                    sm={5}
                     heading="Machine Model"
                     param={defaultValues?.machineModel}
                   />
                   <ViewFormField
-                    sm={3}
+                    sm={5}
                     heading="Customer"
                     node={
                       defaultValues.customer && (
@@ -269,16 +269,15 @@ export default function MachineViewForm() {
                       )
                     }
                   />
-                  <ViewFormField sm={3} heading="Profile" param={`${defaultValues?.machineProfile} ${(defaultValues?.machineweb && defaultValues?.machineflange)? `(${defaultValues?.machineweb} X ${defaultValues?.machineflange})` :""}`
-                  } />
                 </Grid>
         </Card>
               
         <Card sx={{ width: '100%', p: '1rem', mb:3 }}>
           <Grid container>
-            <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
-            { defaultValues?.parentSerialNo ? <ViewFormField sm={6} heading="Previous Machine" param={defaultValues?.parentSerialNo} /> : ''}
-            <ViewFormField sm={12} heading="Alias" chips={defaultValues?.alias} />
+            <ViewFormField sm={defaultValues?.parentSerialNo ? 6 : 12 } heading="Name" param={defaultValues?.name} />
+            { defaultValues?.parentSerialNo ? <ViewFormField sm={6} heading="Previous Machine" param={defaultValues?.parentSerialNo} /> : " "}
+            <ViewFormField sm={6} heading="Alias" chips={defaultValues?.alias} />
+            <ViewFormField sm={6} heading="Profile" param={`${defaultValues?.machineProfile} ${(defaultValues?.machineweb && defaultValues?.machineflange)? `(${defaultValues?.machineweb} X ${defaultValues?.machineflange})` :""}`} />
             <ViewFormField sm={6} heading="Supplier" param={defaultValues?.supplier} />
             <ViewFormField sm={6} heading="Status" param={defaultValues?.status} />
             <ViewFormField sm={6} heading="Work Order / Purchase Order" param={defaultValues?.workOrderRef}/>
@@ -335,9 +334,7 @@ export default function MachineViewForm() {
             />
             <ViewFormField sm={12} heading="Connected Machiness" chipDialogArrayParam={linkedMachines} />
 
-            {defaultValues?.machineConnections &&
-              <ViewFormField sm={12} heading="Parent Machiness" chipDialogArrayParam={paranetMachines} />
-            }
+            <ViewFormField sm={12} heading="Parent Machiness" chipDialogArrayParam={paranetMachines} />
             
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
             {/* <ViewFormField sm={6} heading="Tags" param={defaultValues?.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}

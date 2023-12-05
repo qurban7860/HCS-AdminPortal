@@ -139,17 +139,17 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons 
         isActive={defaultValues.isActive} 
-        approvers={serviceRecordConfig?.approvals }
+        approvers={ serviceRecordConfig?.approvals }
         approveConfiglength={`${serviceRecordConfig?.approvals?.length || 0}/${serviceRecordConfig?.noOfApprovalsRequired || 1 }`}
-        isSubmitted={!serviceRecordConfig?.approvals?.length > 0 && defaultValues?.status.toLowerCase() === 'submitted' && defaultValues?.status.toLowerCase() !== 'approved' && returnToDraft } 
-        returnToSubmitted={defaultValues?.status.toLowerCase() === 'draft' && defaultValues?.status.toLowerCase() !== 'approved' && returnToSubmitted } 
+        isSubmitted={defaultValues.isActive && !serviceRecordConfig?.approvals?.length > 0 && defaultValues?.status.toLowerCase() === 'submitted' && defaultValues?.status.toLowerCase() !== 'approved' && returnToDraft } 
+        returnToSubmitted={defaultValues.isActive && defaultValues?.status.toLowerCase() === 'draft' && defaultValues?.status.toLowerCase() !== 'approved' && returnToSubmitted } 
         approveConfig={ serviceRecordConfig?.approvals?.length >= serviceRecordConfig?.noOfApprovalsRequired} 
-        approveHandler={defaultValues?.status.toLowerCase() === 'submitted' && 
+        approveHandler={defaultValues.isActive && defaultValues?.status.toLowerCase() === 'submitted' && 
         serviceRecordConfig?.approvals?.length < serviceRecordConfig?.noOfApprovalsRequired && handleVerification}
         handleVerificationTitle="Approve"
-        copyConfiguration={defaultValues?.status.toLowerCase() === 'approved' && (() => navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.copy(serviceRecordConfig._id)))}
-        handleEdit={defaultValues?.status.toLowerCase() !== 'approved' && defaultValues?.status.toLowerCase() !== 'submitted' && toggleEdit } 
-        onDelete={onDelete} 
+        copyConfiguration={defaultValues.isActive && defaultValues?.status.toLowerCase() === 'approved' && (() => navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.copy(serviceRecordConfig._id)))}
+        handleEdit={defaultValues.isActive && defaultValues?.status.toLowerCase() !== 'approved' && defaultValues?.status.toLowerCase() !== 'submitted' && toggleEdit } 
+        onDelete={defaultValues.isActive && onDelete} 
         backLink={() => navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.list)} 
       />
       <Grid container sx={{mt:2}}>
