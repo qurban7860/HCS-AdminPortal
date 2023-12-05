@@ -160,6 +160,13 @@ export default function MachineEditForm() {
   } = watch();
 
   useEffect(() => {
+    if(status && status?.slug === 'intransfer' ){
+      setValue('status',null)
+    }
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[status])
+
+  useEffect(() => {
     if(category === null && machineModel ){
       // dispatch(resetActiveMachineModels())
       dispatch(getActiveMachineModels());
