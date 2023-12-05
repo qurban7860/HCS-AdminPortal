@@ -28,6 +28,7 @@ import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { FORMLABELS } from '../../../constants/default-constants';
 import FormHeading from '../../components/DocumentForms/FormHeading';
 import CopyIcon from '../../components/Icons/CopyIcon';
+import CodeMirror from './JsonEditor';
 
 // import { Snacks, FORMLABELS as formLABELS } from '../../../constants/document-constants';
 
@@ -50,7 +51,7 @@ export default function HistoricalConfigurationsAddForm() {
   );
 
   const methods = useForm({
-    resolver: yupResolver(AddInniSchema),
+    // resolver: yupResolver(AddInniSchema),
     defaultValues,
   });
 
@@ -69,22 +70,26 @@ export default function HistoricalConfigurationsAddForm() {
   };
 
   const onSubmit = async (data) => {
-    try {
-      const cleanedData = {
-        configuration: JSON.parse(data.iniJson),
-      };
-      cleanedData.inputGUID = machine?._id;
-      cleanedData.inputSerialNo = machine?.serialNo;
-      await dispatch(addHistoricalConfigurationRecord(cleanedData));
-      reset();
-      enqueueSnackbar('INI create successfully!');
-      dispatch(setAllFlagFalse())
-      dispatch(getHistoricalConfigurationRecords(machine?._id))
-    } catch (error) {
-      // enqueueSnackbar('Saving failed!');
-      enqueueSnackbar(error, { variant: `error` });
-      console.error(error);
+    const cleanedData = {}
+    try{
+        cleanedData.configuration= JSON.parse(data.iniJson)
+        try {
+          cleanedData.inputGUID = machine?._id;
+          cleanedData.inputSerialNo = machine?.serialNo;
+          await dispatch(addHistoricalConfigurationRecord(cleanedData));
+          reset();
+          enqueueSnackbar('INI create successfully!');
+          dispatch(setAllFlagFalse())
+          dispatch(getHistoricalConfigurationRecords(machine?._id))
+        } catch (error) {
+          // enqueueSnackbar('Saving failed!');
+          enqueueSnackbar(error, { variant: `error` });
+          console.error(error);
+        }
+    }catch(err){
+      enqueueSnackbar('JSON validation Failed!',{ variant: `error` });
     }
+    
   };
 
   function iniToJSON(iniData) {
@@ -147,7 +152,9 @@ const readFile = (selectedFile) =>
     }
   };
 
-
+const HandleChangeIniJson = async (e) => {
+  setValue('iniJson', e)
+}
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container>
@@ -164,7 +171,7 @@ const readFile = (selectedFile) =>
                 <Grid 
                 // sx={{ position: "relative" }}
                 >
-                  <RHFTextField name="iniJson" label="Configuration" minRows={7} maxRows={22} multiline 
+                  {/* <RHFTextField name="iniJson" label="Configuration" minRows={7} maxRows={22} multiline 
                   sx={{ 
               alignItems: 'center',
               whiteSpace: 'pre-line',
@@ -177,7 +184,9 @@ const readFile = (selectedFile) =>
                     //     // margin: "8px",
                     //   }}><CopyIcon value={iniJson}/></InputAdornment>,
                     // }}
-                  />
+                  /> */}
+
+                  <CodeMirror value={iniJson} HandleChangeIniJson={HandleChangeIniJson}/>                
                 </Grid>
 
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
