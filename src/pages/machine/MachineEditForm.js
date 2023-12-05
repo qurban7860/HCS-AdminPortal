@@ -160,14 +160,16 @@ export default function MachineEditForm() {
   } = watch();
 
   useEffect(() => {
-    dispatch(resetActiveMachineModels());
-    setValue('machineModel',null);
-    if(category && category?._id !== machineModel?.category?._id){
+    if(category === null && machineModel ){
+      // dispatch(resetActiveMachineModels())
+      dispatch(getActiveMachineModels());
+      setValue('machineModel',null);
+    }else if(category && category?._id !== machineModel?.category?._id){
       dispatch(getActiveMachineModels(category?._id));
+      setValue('machineModel',null);
     }
-    
      // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[dispatch, category ]);
+  },[ category, machineModel ]);
 
 
 
@@ -344,6 +346,17 @@ export default function MachineEditForm() {
                       renderOption={(props, option) => (
                         <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
+                      onChange={(event, newValue) => {
+                          if (newValue) {
+                            setValue('machineModel', newValue);
+                            if(category === null){
+                            dispatch(getActiveMachineModels(newValue?.category?._id));
+                            setValue('category', newValue?.category);
+                            }
+                          } else {
+                            setValue('machineModel', null);
+                          }
+                        }}
                     />
 
                     {/* -------------------------------- Statuses -------------------------------- */}
