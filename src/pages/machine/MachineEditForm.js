@@ -14,11 +14,11 @@ import useResponsive from '../../hooks/useResponsive';
 import { PATH_MACHINE } from '../../routes/paths';
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
-import {  getActiveCustomers, getFinancialCompanies } from '../../redux/slices/customer/customer';
-import {  getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
-import {  getActiveMachineStatuses } from '../../redux/slices/products/statuses';
-import {  getActiveMachineModels } from '../../redux/slices/products/model';
-import {  getActiveSuppliers } from '../../redux/slices/products/supplier';
+import { getActiveCustomers, getFinancialCompanies } from '../../redux/slices/customer/customer';
+import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
+import { getActiveMachineStatuses } from '../../redux/slices/products/statuses';
+import { getActiveMachineModels, resetActiveMachineModels } from '../../redux/slices/products/model';
+import { getActiveSuppliers } from '../../redux/slices/products/supplier';
 // global
 // import { CONFIG } from '../../config-global';
 // slice
@@ -62,7 +62,6 @@ export default function MachineEditForm() {
 
   const [chips, setChips] = useState([]);
   const isMobile = useResponsive('sm', 'down');
-  
 
   const AddMachineSchema = Yup.object().shape({
     serialNo: Yup.string().max(6).required('Serial Number is required').nullable(),
@@ -161,10 +160,12 @@ export default function MachineEditForm() {
   } = watch();
 
   useEffect(() => {
+    dispatch(resetActiveMachineModels());
+    setValue('machineModel',null);
     if(category && category?._id !== machineModel?.category?._id){
       dispatch(getActiveMachineModels(category?._id));
-      setValue('machineModel',null);
     }
+    
      // eslint-disable-next-line react-hooks/exhaustive-deps
   },[dispatch, category ]);
 
@@ -174,7 +175,12 @@ export default function MachineEditForm() {
     dispatch(getFinancialCompanies());
     dispatch(getActiveSuppliers());
     dispatch(getActiveCategories());
-    dispatch(getActiveMachineModels());
+    
+    dispatch(resetActiveMachineModels());
+    if(machine?.machineModel?.category?._id){
+      dispatch(getActiveMachineModels(machine?.machineModel?.category?._id));
+    }
+    
     dispatch(getActiveMachineStatuses());
     dispatch(getActiveCustomers());
     dispatch(getActiveMachines());

@@ -127,8 +127,8 @@ const  onChangePage = (event, newPage) => {
     { id: 'docType.name', visibility: 'xs2', label: 'Type', align: 'left' },
     { id: 'referenceNumber', visibility: 'xs2', label: 'Ref. No.', align: 'left' },
     { id: 'displayName', label: 'Name', align: 'left' },
-    { id: 'stockNumber', visibility: 'xs2', label: 'Stock No.', align: 'left' },
     { id: 'documentVersions.versionNo.[]', visibility: 'md1', label: 'Version', align: 'center' },
+    { id: 'stockNumber', visibility: 'xs2', label: 'Stock No.', align: 'left' },
     { id: 'customerAccess', visibility: 'md2', label: 'Customer Access', align: 'center' },
     { id: 'isActive', label: 'Active', align: 'center' },
     { id: 'createdAt', label: 'Created At', align: 'right' },
@@ -136,21 +136,13 @@ const  onChangePage = (event, newPage) => {
   ];
 
   if (!customerPage && !machinePage && !machineDrawings) {
-    const insertIndex = 5; // Index after which you want to insert the new objects
+    const insertIndex = 6; // Index after which you want to insert the new objects
     TABLE_HEAD.splice(insertIndex, 0,// 0 indicates that we're not removing any elements
       { id: 'customer.name', visibility: 'md3', label: 'Customer', align: 'left' },
       { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left' }
     );
   }
   
-  if (machineDrawings) {
-   const insertIndex = 5
-   const removeIndex = 0
-    TABLE_HEAD.splice(insertIndex, removeIndex,
-      { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left' }
-   )
-  }
-
   useEffect(() => {
     const fetchData = async () => {
       dispatch(resetDocuments());
@@ -387,22 +379,12 @@ const  onChangePage = (event, newPage) => {
         />}
       </TableCard>
       {/* </Container> */}
+      
       <MachineDialog />
 
-      
-      <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete?
-          </>
-        }
+      <ConfirmDialog open={openConfirm} onClose={handleCloseConfirm} title="Delete" content="Are you sure want to delete?"
         action={
-          <Button
-            variant="contained"
-            color="error"
+          <Button variant="contained" color="error"
             onClick={() => {
               handleDeleteRow(selected)
               handleCloseConfirm();
