@@ -116,9 +116,9 @@ export default function MachineViewForm() {
     dispatch(setMachineEditFormVisibility(true));
   };
 
-  const handleTransfer = async () => {
+  const handleTransfer = async (customerId, statusId) => {
     try {
-      const response = await dispatch(transferMachine(machine));
+      const response = await dispatch(transferMachine(machine, customerId, statusId));
       const machineId = response.data.Machine._id;
       navigate(PATH_MACHINE.machines.view(machineId));
       enqueueSnackbar(Snacks.machineTransferSuccess);

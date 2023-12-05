@@ -225,11 +225,7 @@ export default function DrawingList() {
         open={openConfirm}
         onClose={handleCloseConfirm}
         title="Delete"
-        content={
-          <>
-            Are you sure want to delete?
-          </>
-        }
+        content="Are you sure you want to delete?"
         action={
           <Button
             variant="contained"

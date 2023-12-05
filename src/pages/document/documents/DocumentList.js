@@ -292,11 +292,18 @@ const  onChangePage = (event, newPage) => {
     try {
       await dispatch(deleteDocument(id));
       dispatch(resetDocuments());
-      if(machineDrawings){
+
+      dispatch(resetDocuments());
+      if (customerPage || machinePage) {
+        if (customer?._id || machine?._id) {
+          await dispatch(getDocuments(customerPage ? customer?._id : null, machinePage ? machine?._id : null));
+        }
+      }else if(machineDrawings){
         await dispatch(getDocuments(null, null,machineDrawings));
       } else {
         await dispatch(getDocuments());
       }
+
       enqueueSnackbar(Snacks.deletedDoc, { variant: `success` });
     } catch (err) {
       console.log(err);
@@ -382,7 +389,7 @@ const  onChangePage = (event, newPage) => {
       
       <MachineDialog />
 
-      <ConfirmDialog open={openConfirm} onClose={handleCloseConfirm} title="Delete" content="Are you sure want to delete?"
+      <ConfirmDialog open={openConfirm} onClose={handleCloseConfirm} title="Delete" content="Are you sure you want to delete?"
         action={
           <Button variant="contained" color="error"
             onClick={() => {

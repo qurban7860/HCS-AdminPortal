@@ -620,7 +620,7 @@ export function updateMachine(machineId, params) {
 
 // --------------------------------------------------------------------------
 
-export function transferMachine(params) {
+export function transferMachine(params, customerId, statusId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -636,6 +636,12 @@ export function transferMachine(params) {
         description: params.description,
         customerTags: params.customerTags,
       };
+
+      if(customerId){
+        data.customer = customerId;
+        data.status = statusId;
+      }
+        
      /* eslint-enable */
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/transferMachine`,
         data
