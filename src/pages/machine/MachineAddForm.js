@@ -11,6 +11,7 @@ import {
   Box,
   Card,
   styled,
+  Container,
   Grid,
   Stack,
   TextField,
@@ -68,7 +69,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     dispatch(getFinancialCompanies());
     dispatch(getActiveCustomers());
     dispatch(getActiveMachines());
-    dispatch(getActiveMachineModels());
+    // dispatch(getActiveMachineModels());
     dispatch(getActiveSuppliers());
     dispatch(getActiveMachineStatuses());
     dispatch(getActiveCategories());
@@ -195,17 +196,16 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   },[])
 
   useEffect(() => {
-    if(category === null){
+    if(category === null ){
       // dispatch(resetActiveMachineModels())
       dispatch(getActiveMachineModels());
       setValue('machineModel',null);
-    }else if(category?._id === machineModel?.category?._id){
-      dispatch(getActiveMachineModels(category?._id));
     }else if(category?._id !== machineModel?.category?._id){
       dispatch(getActiveMachineModels(category?._id));
       setValue('machineModel',null);
     }
-  },[dispatch, category,setValue,machineModel]);
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ category ]);
 
   useEffect(() => {
     if (customer !== null && customer._id !== undefined) {
@@ -255,12 +255,13 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   };
 
   return (
+    <Container maxWidth={false} sx={{mb:3}}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <StyledCardContainer>
           <Cover name="New Machine" setting />
         </StyledCardContainer>
         <Grid container>
-          <Grid item xs={18} md={12} sx={{ mt: 3 }}>
+          <Grid item xs={18} md={12} >
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 <Box
@@ -713,5 +714,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
           </Grid>
         </Grid>
       </FormProvider>
+    </Container>
   );
 }
