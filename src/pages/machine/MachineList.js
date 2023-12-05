@@ -192,12 +192,7 @@ export default function MachineList() {
   const onExportCSV = async () => {
     const response = dispatch(await createMachineCSV());
     response.then((res) => {
-      if(res!==undefined){
         enqueueSnackbar('CSV Generated Successfully');
-      }else{
-        enqueueSnackbar('CSV Generation Failed', { variant: `error` });
-      }
-      
     }).catch((err) => {
       console.error(err);
       enqueueSnackbar(err.message, { variant: `error` });
