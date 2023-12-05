@@ -196,7 +196,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   },[])
 
   useEffect(() => {
-    if(category === null ){
+    if(category === null && machineModel ){
       // dispatch(resetActiveMachineModels())
       dispatch(getActiveMachineModels());
       setValue('machineModel',null);
