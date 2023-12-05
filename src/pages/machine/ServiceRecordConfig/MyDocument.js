@@ -202,19 +202,24 @@ export function MyDocument({machineServiceRecord}) {
   </Document>
 )};
 
+    Font.register({
+        family: 'Yantramanav',
+        fonts: [
+        { src: `${origin}/fonts/Yantramanav/Yantramanav-Regular.ttf` }, // font-style: normal, font-weight: normal
+        { src: `${origin}/fonts/Yantramanav/Yantramanav-Medium.ttf`, fontWeight: 'medium' },
+        { src: `${origin}/fonts/Yantramanav/Yantramanav-Bold.ttf`, fontWeight: 'bold' },
+        { src: `${origin}/fonts/Yantramanav/Yantramanav-Black.ttf`, fontWeight: 'black' },
+        ]
+    });
 
-Font.register({ family: 'Yantramanav', fonts: [
-    { src: 'http://localhost:3000/fonts/Yantramanav/Yantramanav-Regular.ttf' }, // font-style: normal, font-weight: normal
-    { src: 'http://localhost:3000/fonts/Yantramanav/Yantramanav-Medium.ttf', fontWeight: 'medium' },
-    { src: 'http://localhost:3000/fonts/Yantramanav/Yantramanav-Bold.ttf', fontWeight: 'bold' },
-    { src: 'http://localhost:3000/fonts/Yantramanav/Yantramanav-Black.ttf', fontWeight: 'black' },
-]});
-
-Font.register({ family: 'Arimo', fonts: [
-    { src: 'http://localhost:3000/fonts/Arimo/static/Arimo-Regular.ttf' }, // font-style: normal, font-weight: normal
-    { src: 'http://localhost:3000/fonts/Arimo/static/Arimo-Medium.ttf', fontWeight: 'medium' },
-    { src: 'http://localhost:3000/fonts/Arimo/static/Arimo-Bold.ttf', fontWeight: 'bold' },
-]});
+    Font.register({
+        family: 'Arimo',
+        fonts: [
+            { src: `${origin}/fonts/Arimo/static/Arimo-Regular.ttf` }, // font-style: normal, font-weight: normal
+            { src: `${origin}/fonts/Arimo/static/Arimo-Medium.ttf`, fontWeight: 'medium' },
+            { src: `${origin}/fonts/Arimo/static/Arimo-Bold.ttf`, fontWeight: 'bold' },
+        ]
+    });
 
   const styles = StyleSheet.create({
     body: {

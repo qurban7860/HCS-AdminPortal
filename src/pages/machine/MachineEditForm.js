@@ -6,7 +6,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, Grid, Stack, TextField, Autocomplete } from '@mui/material';
 import { MuiChipsInput } from 'mui-chips-input';
-import { DatePicker } from '@mui/x-date-pickers';
 // hook
 import { Controller, useForm } from 'react-hook-form';
 import useResponsive from '../../hooks/useResponsive';
@@ -139,6 +138,8 @@ export default function MachineEditForm() {
     reset,
     watch,
     handleSubmit,
+    register,
+    setError,
     formState: { isSubmitting },
     setValue,
     control,
@@ -160,16 +161,13 @@ export default function MachineEditForm() {
   } = watch();
 
   useEffect(() => {
-    dispatch(resetActiveMachineModels());
-    setValue('machineModel',null);
-    if(category && category?._id !== machineModel?.category?._id){
+    if(category?._id !== machineModel?.category?._id){
+      dispatch(resetActiveMachineModels());
       dispatch(getActiveMachineModels(category?._id));
+      setValue('machineModel',null);
     }
-    
      // eslint-disable-next-line react-hooks/exhaustive-deps
   },[dispatch, category ]);
-
-
 
   useEffect(() => {
     dispatch(getFinancialCompanies());
@@ -203,18 +201,33 @@ export default function MachineEditForm() {
     dispatch(setTransferMachineFlag(false));
   };
 
+  const [statusError, setStatusError] = useState('');
+
   const onSubmit = async (data) => {
 
-    data.alias = chips;
-    try {
-      await dispatch(updateMachine(machine._id ,data));
-      enqueueSnackbar('Machine updated successfully!');
-      reset();
-      navigate(PATH_MACHINE.machines.view(machine._id));
-    } catch (error) {
-      enqueueSnackbar('Saving failed!', { variant: `error` });
-      console.error(error);
+    if (data?.status?.slug === 'intransfer') {
+      // Set an error message for 'intransfer' status
+      setError('status', {
+        type: 'manual',
+        message: 'Please change status In-Transfer is not acceptable',
+      });
+    } else {
+      setError('status', null);
+      
+      data.alias = chips;
+      try {
+        await dispatch(updateMachine(machine._id ,data));
+        enqueueSnackbar('Machine updated successfully!');
+        reset();
+        navigate(PATH_MACHINE.machines.view(machine._id));
+      } catch (error) {
+        enqueueSnackbar('Saving failed!', { variant: `error` });
+        console.error(error);
+      }
+
     }
+
+    
   };
 
   // ----------------------handle functions----------------------
@@ -380,7 +393,7 @@ export default function MachineEditForm() {
                     />
 
                     {/* -------------------------------- Statuses -------------------------------- */}
-
+                  
                 <Controller
                   name="status"
                   control={control}
