@@ -4,6 +4,7 @@ import debounce from 'lodash/debounce';
 import PropTypes from 'prop-types';
 // @mui
 import {
+  Button,
   Table,
   TableBody,
   TableContainer,
@@ -13,7 +14,7 @@ import { useDispatch, useSelector } from '../../../redux/store';
 // routes
 import { PATH_DOCUMENT } from '../../../routes/paths';
 // components
-// import { useSnackbar } from '../../../components/snackbar';
+import { useSnackbar } from '../../../components/snackbar';
 // import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
@@ -49,6 +50,7 @@ import {
   setMachineDrawingsFilterBy,
   machineDrawingsChangePage,
   machineDrawingsChangeRowsPerPage,
+  deleteDocument,
 } from '../../../redux/slices/document/document';
 import { getMachineForDialog, setMachineDialog } from '../../../redux/slices/products/machine';
 import { Cover } from '../../components/Defaults/Cover';
@@ -57,6 +59,8 @@ import { FORMLABELS } from '../../../constants/default-constants';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
 import MachineDialog from '../../components/Dialog/MachineDialog';
+import { Snacks } from '../../../constants/document-constants';
+import ConfirmDialog from '../../../components/confirm-dialog';
 
 // ----------------------------------------------------------------------
 DocumentList.propTypes = {
@@ -84,6 +88,7 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
     order,
     orderBy,
     selected,
+    setSelected,
     onSort,
   } = useTable({
     defaultOrderBy: 'createdAt', defaultOrder: 'desc',
@@ -127,6 +132,7 @@ const  onChangePage = (event, newPage) => {
     { id: 'customerAccess', visibility: 'md2', label: 'Customer Access', align: 'center' },
     { id: 'isActive', label: 'Active', align: 'center' },
     { id: 'createdAt', label: 'Created At', align: 'right' },
+    { id: 'action', label: '', align: 'right' },
   ];
 
   if (!customerPage && !machinePage && !machineDrawings) {
@@ -284,6 +290,28 @@ const  onChangePage = (event, newPage) => {
     dispatch(setMachineDialog(true))
   }
 
+
+  const { enqueueSnackbar } = useSnackbar();
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const handleOpenConfirm = () => setOpenConfirm(true);
+  const handleCloseConfirm = () => setOpenConfirm(false);
+
+  const handleDeleteRow = async (id) => {
+    try {
+      await dispatch(deleteDocument(id));
+      dispatch(resetDocuments());
+      if(machineDrawings){
+        await dispatch(getDocuments(null, null,machineDrawings));
+      } else {
+        await dispatch(getDocuments());
+      }
+      enqueueSnackbar(Snacks.deletedDoc, { variant: `success` });
+    } catch (err) {
+      console.log(err);
+      enqueueSnackbar(Snacks.failedDeleteDoc, { variant: `error` });
+    }
+  };
+
   return (
     <>
     {/* <Container sx={{mb:3}}> */}
@@ -328,8 +356,12 @@ const  onChangePage = (event, newPage) => {
                       <DocumentListTableRow
                         key={row._id}
                         row={row}
-                        selected={selected.includes(row._id)}
                         onViewRow={() => handleViewRow(row._id)}
+                        onDeleteRow={() => {
+                          setSelected(row._id);
+                          handleOpenConfirm(true);
+
+                        }}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         customerPage={customerPage}
                         machinePage={machinePage}
@@ -356,6 +388,30 @@ const  onChangePage = (event, newPage) => {
       </TableCard>
       {/* </Container> */}
       <MachineDialog />
+
+      
+      <ConfirmDialog
+        open={openConfirm}
+        onClose={handleCloseConfirm}
+        title="Delete"
+        content={
+          <>
+            Are you sure want to delete?
+          </>
+        }
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              handleDeleteRow(selected)
+              handleCloseConfirm();
+            }}
+          >
+            Delete
+          </Button>
+        }
+      />
     </>
   );
 }

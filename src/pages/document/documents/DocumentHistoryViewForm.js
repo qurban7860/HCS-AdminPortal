@@ -22,7 +22,6 @@ import {
   setDocumentHistoryNewVersionFormVisibility,
   setDocumentAddFilesViewFormVisibility,
   setDocumentNewVersionFormVisibility,
-  deleteDocument,
   getDocument,
   setDocumentHistoryViewFormVisibility,
 } from '../../../redux/slices/document/document';
@@ -30,15 +29,10 @@ import { getCustomer, resetCustomer, setCustomerDialog} from '../../../redux/sli
 import { getMachineForDialog, resetMachine, setMachineDialog } from '../../../redux/slices/products/machine';
 import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
 import FormLabel from '../../components/DocumentForms/FormLabel';
-// import DialogLink from '../../components/Dialog/DialogLink';
-// import DialogLabel from '../../components/Dialog/DialogLabel';
-// import { document as documentType, Snacks } from '../../../constants/document-constants';
-import { useSnackbar } from '../../../components/snackbar';
 import { setDrawingEditFormVisibility, setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
 import DocumentCover from '../../components/DocumentForms/DocumentCover';
 import CustomerDialog from '../../components/Dialog/CustomerDialog';
 import MachineDialog from '../../components/Dialog/MachineDialog';
-import { Snacks } from '../../../constants/document-constants';
 import { PATH_DOCUMENT } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
@@ -53,8 +47,6 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
   const dispatch = useDispatch();
   const { id } = useParams();
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
-
   const { documentHistory } = useSelector((state) => state.document);
   const { customer } = useSelector((state) => state.customer);
 
@@ -117,6 +109,8 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [documentHistory]
   );
+
+  console.log("documentHistory:::::",documentHistory)
 
   // refresh the document when file deleted
   const callAfterDelete = () => {dispatch(getDocumentHistory(documentHistory._id))};
@@ -188,17 +182,6 @@ const handleNewFile = async () => {
     }
   }
 
-  const handleDeleteDrawing = async () => {
-    try {
-      await dispatch(deleteDocument(documentHistory._id));
-      navigate(PATH_DOCUMENT.document.machineDrawings.list);
-      enqueueSnackbar(`Drawing ${Snacks.deletedDoc}`, { variant: `success` });
-    } catch (err) {
-      console.log(err);
-      enqueueSnackbar(`Drawing ${Snacks.failedDeleteDoc}`, { variant: `error` });
-    }
-  };
-
   const handleEdit = async () => {
     await dispatch(getDocument(documentHistory._id));
     dispatch(setDrawingViewFormVisibility(false));
@@ -217,7 +200,6 @@ const handleNewFile = async () => {
           customerAccess={defaultValues?.customerAccess}
           isActive={defaultValues.isActive}
           handleEdit={drawingPage && handleEdit}
-          onDelete={machineDrawings && handleDeleteDrawing}
           backLink={(customerPage || machinePage || drawingPage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDrawingViewFormVisibility(false));}
           : () =>  machineDrawings ? navigate(PATH_DOCUMENT.document.machineDrawings.list) : navigate(PATH_DOCUMENT.document.list)}
       />
@@ -281,6 +263,8 @@ const handleNewFile = async () => {
               )}
 
               <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
+              <ViewFormField sm={12} heading="Machines" param='asdasdasd' />
+              
               <Grid container sx={{ mt: '1rem', mb: '-1rem' }}>
                 <ViewFormAudit defaultValues={defaultValues} />
               </Grid>

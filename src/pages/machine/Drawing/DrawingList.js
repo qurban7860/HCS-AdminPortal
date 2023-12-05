@@ -4,9 +4,7 @@ import debounce from 'lodash/debounce';
 import {
   Table,
   Button,
-  Tooltip,
   TableBody,
-  IconButton,
   TableContainer,
 } from '@mui/material';
 // redux
@@ -18,10 +16,8 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from '../../../components/table';
-import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
@@ -37,16 +33,14 @@ import {
   ChangePage,
   setFilterBy,
   setDrawingViewFormVisibility, 
-  resetDrawings} from '../../../redux/slices/products/drawing';
+  resetDrawings,
+  deleteDrawing} from '../../../redux/slices/products/drawing';
+import { useSnackbar } from '../../../components/snackbar';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
+import { Snacks } from '../../../constants/document-constants';
 
 // ----------------------------------------------------------------------
-
-
-
-// ----------------------------------------------------------------------
-
 
 export default function DrawingList() {
   const {
@@ -54,7 +48,7 @@ export default function DrawingList() {
     orderBy,
     setPage,
     selected,
-    onSelectAllRows,
+    setSelected,
     onSort,
   } = useTable({
     defaultOrderBy: 'createdAt', defaultOrder: 'desc',
@@ -66,19 +60,20 @@ export default function DrawingList() {
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
   const { machine } = useSelector((state) => state.machine);
+  const { enqueueSnackbar } = useSnackbar();
 
   const { drawings, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.drawing );
 console.log("drawings : ",drawings)
   const TABLE_HEAD = [
-    { id: 'document.referenceNumber', label: 'Ref', align: 'left' },
-    { id: 'document.displayName', label: 'Name', align: 'left' },
-    { id: 'document.stockNumber', label: 'Stock Number', align: 'left' },
-    { id: 'documentType.name', visibility: 'xs2', label: 'Type', align: 'left' },
-    { id: 'documentCategory.name', visibility: 'xs1', label: 'Category', align: 'left' },
-    { id: 'isActive', label: 'Active', align: 'center' },
-    { id: 'createdAt', label: 'Created At', align: 'right' },
+    { id: 'referenceNumber', label: 'Ref', align: 'left' },
+    { id: 'name', label: 'Name', align: 'left' },
+    { id: 'stockNumber', label: 'Stock Number', align: 'left' },
+    { id: 'xs2', label: 'Type', align: 'left' },
+    { id: 'xs1', label: 'Category', align: 'left' },
+    { id: 'active', label: 'Active', align: 'center' },
+    { id: 'created_at', label: 'Created At', align: 'right' },
+    { id: 'action', label: '', align: 'right' },
   ];
-
     
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
@@ -143,6 +138,21 @@ console.log("drawings : ",drawings)
       dispatch(setDrawingViewFormVisibility(true));
   };
 
+  const handleDeleteRow = async (drawingId) => {
+    console.log("drawingId:::::",drawingId)
+    try {
+      await dispatch(deleteDrawing(drawingId));
+      await dispatch(resetDrawings());
+      await dispatch(getDrawings(machine?._id));
+      enqueueSnackbar(Snacks.deletedDrawing, { variant: `success` });
+    } catch (err) {
+      console.log(err);
+      enqueueSnackbar(Snacks.failedDeleteDrawing, { variant: `error` });
+    }
+
+    
+  };
+
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
@@ -167,24 +177,6 @@ console.log("drawings : ",drawings)
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <TableSelectedAction
-            numSelected={selected.length}
-            rowCount={tableData.length}
-            onSelectAllRows={(checked) =>
-              onSelectAllRows(
-                checked,
-                tableData.map((row) => row._id)
-              )
-            }
-            action={
-              <Tooltip title="Delete">
-                <IconButton color="primary" onClick={handleOpenConfirm}>
-                  <Iconify icon="eva:trash-2-outline" />
-                </IconButton>
-              </Tooltip>
-            }
-          />
-
           <Scrollbar>
             <Table size="small" sx={{ minWidth: 360 }}>
               <TableHeadCustom
@@ -203,6 +195,11 @@ console.log("drawings : ",drawings)
                         key={row._id}
                         row={row}
                         onViewRow={() => handleViewRow(row?.document?._id)}
+                        onDeleteRow={() => {
+                          setSelected(row?._id);
+                          handleOpenConfirm(true);
+
+                        }}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
                     ) : (
@@ -230,7 +227,7 @@ console.log("drawings : ",drawings)
         title="Delete"
         content={
           <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
+            Are you sure want to delete?
           </>
         }
         action={
@@ -238,7 +235,7 @@ console.log("drawings : ",drawings)
             variant="contained"
             color="error"
             onClick={() => {
-              // handleDeleteRows(selected);
+              handleDeleteRow(selected)
               handleCloseConfirm();
             }}
           >
