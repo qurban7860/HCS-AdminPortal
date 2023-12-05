@@ -63,15 +63,15 @@ export default function DrawingList() {
   const { enqueueSnackbar } = useSnackbar();
 
   const { drawings, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.drawing );
-console.log("drawings : ",drawings)
+
   const TABLE_HEAD = [
-    { id: 'referenceNumber', label: 'Ref', align: 'left' },
-    { id: 'name', label: 'Name', align: 'left' },
-    { id: 'stockNumber', label: 'Stock Number', align: 'left' },
-    { id: 'xs2', label: 'Type', align: 'left' },
-    { id: 'xs1', label: 'Category', align: 'left' },
-    { id: 'active', label: 'Active', align: 'center' },
-    { id: 'created_at', label: 'Created At', align: 'right' },
+    { id: 'document.referenceNumber', label: 'Ref', align: 'left' },
+    { id: 'document.displayName', label: 'Name', align: 'left' },
+    { id: 'document.stockNumber', label: 'Stock Number', align: 'left' },
+    { id: 'documentType.name', visibility: 'xs2', label: 'Type', align: 'left' },
+    { id: 'documentCategory.name', visibility: 'xs1', label: 'Category', align: 'left' },
+    { id: 'isActive', label: 'Active', align: 'center' },
+    { id: 'createdAt', label: 'Created At', align: 'right' },
     { id: 'action', label: '', align: 'right' },
   ];
     
