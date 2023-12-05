@@ -118,15 +118,15 @@ export default function CheckItemAddForm() {
                   />
                   <RHFTextField name="name" label="Name" />
                   <RHFTextField name="printName" label="Print Name" minRows={3} multiline/>
-                  <RHFTextField name="helpHint" label="Help Hint" />
-                  <RHFTextField name="linkToUserManual" label="Link To User Manual" />
+
                   <Box
                     rowGap={2}
                     columnGap={2}
                     display="grid"
                     gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                   >
-                    
+                    <RHFTextField name="helpHint" label="Help Hint" />
+                    <RHFTextField name="linkToUserManual" label="Link To User Manual" />
                     <RHFAutocomplete 
                       name="inputType" label="Input Type"
                       options={inputTypes}
