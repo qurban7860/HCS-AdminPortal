@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
 import {
-  Grid,
   Table,
   TableBody,
   TableContainer,
@@ -120,8 +119,6 @@ export default function SettingList() {
     dispatch(setFilterBy(''))
     setFilterName('');
   };
-
-  const transferred = machine?.status?.slug==='transferred';
 
   return (
       <TableCard>

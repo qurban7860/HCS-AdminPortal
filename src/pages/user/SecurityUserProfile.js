@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector, batch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 // @mui
 import {
   Card,
@@ -54,18 +54,16 @@ export default function SecurityUserProfile() {
     dispatch(setContactDialog(false));
   }, [dispatch]);
 
-  // const handleViewCustomer = (id) => {
-  //   navigate(PATH_SECURITY.users.view(id));
-  // };
-
-  const handleCustomerDialog = () =>{
+  const handleCustomerDialog = (event) =>{
+    event.preventDefault();
     dispatch(setCustomerDialog(true))
     if (userId && securityUser?.customer?._id) {
       dispatch(getCustomer(securityUser?.customer?._id));
     }
   }
 
-  const handleContactDialog = () =>{
+  const handleContactDialog = (event) =>{
+    event.preventDefault();
     dispatch(setContactDialog(true))
     if (userId && securityUser?.contact?._id) {
       dispatch(getContact(securityUser?.customer?._id, securityUser?.contact?._id));

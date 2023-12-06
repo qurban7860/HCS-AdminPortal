@@ -71,12 +71,12 @@ export const ICONS = {
   // ------------------------------------------------------------
   // isVerified
   VERIFIED: {
-    icon: 'ic:round-verified-user',
+    icon: 'material-symbols:verified-user-outline-rounded',
     color: 'green',
     heading: 'Verified',
   },
   NOT_VERIFIED: {
-    icon: 'ic:round-verified-user',
+    icon: 'material-symbols:verified-user-outline-rounded',
     color: 'red',
     heading: 'Not Verified',
   },
@@ -125,14 +125,14 @@ export const ICONS = {
   // ------------------------------------------------------------
   // customerAccess
   ALLOWED: {
-    icon: 'mdi:book-check',
+    icon: 'mingcute:user-follow-2-fill',
     color: '#008000',
-    heading: 'Allowed',
+    heading: 'Customer Allowed',
   },
   DISALLOWED: {
-    icon: 'mdi:book-cancel-outline',
-    color: '#FF0000',
-    heading: 'Customer Access Blocked',
+    icon: 'mingcute:user-x-line',
+    color: '#878787',
+    heading: 'Customer Not Allowed',
   },
   // ----------------------------------------------------------------
   ADD_NEW_VERSION: {

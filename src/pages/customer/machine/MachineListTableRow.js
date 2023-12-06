@@ -55,12 +55,12 @@ export default function MachineListTableRow({
         <LinkDialogTableCellTargetBlank align="left" param={serialNo} onViewRow={onViewRow} onClick={onClick} />
         <TableCell>{name || ''}</TableCell>
         <TableCell>{machineModel?.name || ''}</TableCell>
-        <TableCell>{status?.name || ''}</TableCell>
+        <TableCell sx={{color:row?.status?.slug==='transferred'?'red':''}}>{status?.name || ''}</TableCell>
         <TableCell>
             {Object.values(address ?? {}).map((value) => (typeof value === 'string' ? value.trim() : ''))
                           .filter((value) => value !== '').join(', ')}
         </TableCell>
-        <LinkTableCellButtons moveIcon align="center" onClick={isSuperAdmin && onMoveMachine} />
+        <LinkTableCellButtons moveIcon align="center" onClick={row?.status?.slug!=='transferred' && isSuperAdmin && onMoveMachine} />
       </StyledTableRow>
 
   );

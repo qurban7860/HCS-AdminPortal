@@ -1,32 +1,26 @@
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { MuiChipsInput } from 'mui-chips-input';
 // form
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import {
   Card,
   Grid,
-  Stack,
-  Typography,
-  Autocomplete,
-  TextField,
   Container,
   Box,
 } from '@mui/material';
 // ROUTES
-import { PATH_PAGE, PATH_SECURITY, PATH_SETTING } from '../../../../routes/paths';
+import { PATH_PAGE, PATH_SECURITY } from '../../../../routes/paths';
 // slice
 import { getSecurityUsers, resetSecurityUsers } from '../../../../redux/slices/securityUser/securityUser';
 import { addBlockedUsers, getBlockedUsers, resetBlockedUsers } from '../../../../redux/slices/securityConfig/blockedUsers';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 // assets
-import FormProvider, { RHFAutocomplete, RHFSwitch } from '../../../../components/hook-form';
+import FormProvider, { RHFAutocomplete } from '../../../../components/hook-form';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { Cover } from '../../../components/Defaults/Cover';
 
@@ -75,7 +69,6 @@ export default function BlockedUserAddForm() {
   const {
     reset,
     watch,
-    control,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;

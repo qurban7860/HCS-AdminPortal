@@ -14,7 +14,8 @@ import {
   transferMachine,
   setMachineVerification,
   setMachineDialog,
-  getMachineForDialog
+  getMachineForDialog,
+  setTransferDialogBoxVisibility
 } from '../../redux/slices/products/machine';
 import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
 import { getSite, resetSite, setSiteDialog } from '../../redux/slices/customer/site';
@@ -43,26 +44,36 @@ import SiteDialog from '../components/Dialog/SiteDialog';
 // ----------------------------------------------------------------------
 
 export default function MachineViewForm() {
-  const userId = localStorage.getItem('userId');
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
-
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { machine, transferMachineFlag, machineDialog } = useSelector((state) => state.machine);
+  const { machine, machineDialog } = useSelector((state) => state.machine);
   const { customerDialog } = useSelector((state) => state.customer);
+  const { siteDialog } = useSelector((state) => state.site);
   const [disableTransferButton, setDisableTransferButton] = useState(true);
   const [disableEditButton, setDisableEditButton] = useState(false);
   const [disableDeleteButton, setDisableDeleteButton] = useState(false);
   const [hasValidLatLong, setHasValidLatLong] = useState(false);
   const isMobile = useResponsive('down', 'sm');
-  
-  const [machineID, setMachineID] = useState('');
 
-  const handleInstallationSiteDialog = () =>{ dispatch(resetSite()); dispatch(getSite(machine?.customer?._id, machine?.instalationSite?._id)); dispatch(setSiteDialog(true))}
-  const handleBillingSiteDialog = () =>{ dispatch(resetSite()); dispatch(getSite(machine?.customer?._id, machine?.billingSite?._id)); dispatch(setSiteDialog(true))}
+  const [siteDialogTitle, setDialogTitle] = useState('');
+
+  const handleInstallationSiteDialog = (event) =>{
+      event.preventDefault(); 
+      setDialogTitle('Installation Site');
+      dispatch(resetSite()); 
+      dispatch(getSite(machine?.customer?._id, machine?.instalationSite?._id)); 
+      dispatch(setSiteDialog(true))
+  }
+  
+  const handleBillingSiteDialog = (event) =>{
+      event.preventDefault();  
+      setDialogTitle('Billing Site');
+      dispatch(resetSite()); 
+      dispatch(getSite(machine?.customer?._id, machine?.billingSite?._id)); 
+      dispatch(setSiteDialog(true))
+  }
 
   const hasValidArray = (array) =>
     array.some((obj) => {
@@ -86,6 +97,7 @@ export default function MachineViewForm() {
   );
 
   useEffect(() => {
+    dispatch(setTransferDialogBoxVisibility(false));
     dispatch(setSiteDialog(false))
     dispatch(setCustomerDialog(false));
     dispatch(setMachineDialog(false));
@@ -96,31 +108,28 @@ export default function MachineViewForm() {
   }, [machine, latLongValues, setHasValidLatLong, dispatch ]);
 
   useLayoutEffect(() => {
+    
     dispatch(setMachineEditFormVisibility(false));
-    if (machine.transferredMachine || !machine.isActive || !isSuperAdmin) {
+    
+    if (machine?.status?.slug === 'transferred') {
       setDisableTransferButton(true);
-    } else {
-      setDisableTransferButton(false);
-    }
-    if (machine.transferredMachine) {
       setDisableEditButton(true);
       setDisableDeleteButton(true);
     } else {
+      setDisableTransferButton(false);
       setDisableEditButton(false);
       setDisableDeleteButton(false);
     }
-    // if (machine?.customer) {
-    //   dispatch(getCustomer(machine?.customer?._id));
-    // }
-  }, [dispatch, machine, transferMachineFlag, userId, isSuperAdmin]);
+    
+  }, [dispatch, machine]);
 
   const handleEdit = () => {
     dispatch(setMachineEditFormVisibility(true));
   };
 
-  const handleTransfer = async () => {
+  const handleTransfer = async (customerId, statusId) => {
     try {
-      const response = await dispatch(transferMachine(machine));
+      const response = await dispatch(transferMachine(machine, customerId, statusId));
       const machineId = response.data.Machine._id;
       navigate(PATH_MACHINE.machines.view(machineId));
       enqueueSnackbar(Snacks.machineTransferSuccess);
@@ -158,7 +167,8 @@ export default function MachineViewForm() {
     }
   };
   
-  const handleCustomerDialog = (customerId) => {
+  const handleCustomerDialog = (event, customerId) => {
+    event.preventDefault(); 
     dispatch(getCustomer(customerId));
     dispatch(setCustomerDialog(true));
   };
@@ -166,15 +176,14 @@ export default function MachineViewForm() {
   const handleMachineDialog = (MachineID) => {
     dispatch(getMachineForDialog(MachineID));
     dispatch(setMachineDialog(true)); 
-    // setMachineID(MachineID)
   };
   
   const linkedMachines = machine?.machineConnections?.map((machineConnection, index) => (
-    <Chip sx={{ml:index===0?0:1}}onClick={() => handleMachineDialog(machineConnection.connectedMachine._id)} label={machineConnection.connectedMachine.serialNo ? machineConnection.connectedMachine.serialNo : 'NA'} />
+    <Chip sx={{ml:index===0?0:1}}onClick={() => handleMachineDialog(machineConnection.connectedMachine._id)} label={`${machineConnection?.connectedMachine?.serialNo || ''} ${machineConnection?.connectedMachine?.name ? '-' : '' } ${machineConnection?.connectedMachine?.name || ''} `} />
   ));
-
+  
   const paranetMachines = machine?.parentMachines?.map((parentMachine, index) => (
-    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(parentMachine.machine._id)} label={parentMachine.machine.serialNo ? parentMachine.machine.serialNo : 'NA'} />
+    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(parentMachine.machine._id)} label={`${parentMachine?.machine?.serialNo || ''} ${parentMachine?.machine?.name ? '-' : '' } ${parentMachine?.machine?.name || ''} `} />
   ));
 
   const defaultValues = useMemo(
@@ -219,78 +228,54 @@ export default function MachineViewForm() {
   );
   return (
     <>
-      {/* <Grid container direction="row" justifyContent="space-between" alignItems="center">
-        <Grid item xs={12} md={6}>
-          <Breadcrumbs
-            aria-label="breadcrumb"
-            separator="›"
-            sx={{ fontSize: '12px', color: 'text.disabled' }}
-          >
-            <BreadcrumbsLink to={PATH_MACHINE.machines.list} name={BREADCRUMBS.MACHINES} />
-            <BreadcrumbsLink to={PATH_MACHINE.machines.view(machine._id)} name={machine.serialNo} />
-          </Breadcrumbs>
-        </Grid>
-        {!isMobile && <AddButtonAboveAccordion isCustomer />}
-      </Grid> */}
       <Grid container direction="row" mt={isMobile && 2}>
+        <Card sx={{ width: '100%', p: '1rem', mb:3 }}>
+          <ViewFormEditDeleteButtons
+              sx={{ pt: 5 }}
+              verifiers={machine?.verifications}
+              isActive={defaultValues?.isActive}
+              handleVerification={machine?.status?.slug !== 'transferred' && handleVerification}
+              disableTransferButton={disableTransferButton}
+              disableEditButton={disableEditButton}
+              disableDeleteButton={disableDeleteButton}
+              handleEdit={handleEdit}
+              onDelete={onDelete}
+              handleTransfer={handleTransfer}
+              backLink={() => navigate(PATH_MACHINE.machines.list)}
+              machineSupportDate={defaultValues?.supportExpireDate}
+            />
 
-      <Card sx={{ width: '100%', p: '1rem', mb:3 }}>
-      <ViewFormEditDeleteButtons
-            sx={{ pt: 5 }}
-            verifiers={machine?.verifications}
-            isActive={defaultValues?.isActive}
-            handleVerification={handleVerification}
-            disableTransferButton={disableTransferButton}
-            disableEditButton={disableEditButton}
-            disableDeleteButton={disableDeleteButton}
-            handleEdit={handleEdit}
-            onDelete={onDelete}
-            handleTransfer={handleTransfer}
-            backLink={() => navigate(PATH_MACHINE.machines.list)}
-            machineSupportDate={defaultValues?.supportExpireDate}
-          />
-
-          <FormLabel content={FORMLABELS.KEYDETAILS} />
-
-                {/* <CardHeader title={FORMLABELS.KEYDETAILS} sx={{p:'5px 15px', m:0, color:'white', backgroundImage: (theme) =>
-            `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`}} /> */}
-                <Grid container>
-                  <ViewFormField sm={2} heading="Serial No" param={defaultValues?.serialNo} />
-                  <ViewFormField
-                    sm={3}
-                    heading="Machine Model"
-                    param={defaultValues?.machineModel}
-                  />
-                  <ViewFormField
-                    sm={3}
-                    heading="Customer"
-                    node={
-                      defaultValues.customer && (
-                        <Link onClick={()=> handleCustomerDialog(defaultValues.customer?._id)} href="#" underline="none">
-                          {defaultValues.customer?.name}
-                        </Link>
-                      )
-                    }
-                  />
-                  <ViewFormField sm={3} heading="Profile" param={`${defaultValues?.machineProfile} ${(defaultValues?.machineweb && defaultValues?.machineflange)? `(${defaultValues?.machineweb} X ${defaultValues?.machineflange})` :""}`
-                  } />
-                </Grid>
+            <FormLabel content={FORMLABELS.KEYDETAILS} />
+            <Grid container>
+              <ViewFormField sm={4} heading="Serial No" param={defaultValues?.serialNo} />
+              <ViewFormField sm={4} heading="Machine Model" param={defaultValues?.machineModel} />
+              <ViewFormField sm={4} heading="Customer"
+                node={
+                  defaultValues.customer && (
+                    <Link onClick={(event)=> handleCustomerDialog(event, defaultValues.customer?._id)} href="#" underline="none">
+                      {defaultValues.customer?.name}
+                    </Link>
+                  )
+                }
+              />
+            </Grid>
         </Card>
               
         <Card sx={{ width: '100%', p: '1rem', mb:3 }}>
           <Grid container>
-            <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
-            { defaultValues?.parentSerialNo ? <ViewFormField sm={6} heading="Previous Machine" param={defaultValues?.parentSerialNo} /> : ''}
-            <ViewFormField sm={12} heading="Alias" chips={defaultValues?.alias} />
+            <ViewFormField sm={defaultValues?.parentSerialNo ? 6 : 12 } heading="Name" param={defaultValues?.name} />
+            { defaultValues?.parentSerialNo ? <ViewFormField sm={6} heading="Previous Machine" param={defaultValues?.parentSerialNo} /> : " "}
+            <ViewFormField sm={6} heading="Alias" chips={defaultValues?.alias} />
+            <ViewFormField sm={6} heading="Profile" param={`${defaultValues?.machineProfile} ${(defaultValues?.machineweb && defaultValues?.machineflange)? `(${defaultValues?.machineweb} X ${defaultValues?.machineflange})` :""}`} />
             <ViewFormField sm={6} heading="Supplier" param={defaultValues?.supplier} />
-            <ViewFormField sm={6} heading="Status" param={defaultValues?.status} />
+            <ViewFormField sm={6} heading="Status" textColor={machine?.status?.slug==="transferred" && 'red'} param={defaultValues?.status} />
             <ViewFormField sm={6} heading="Work Order / Purchase Order" param={defaultValues?.workOrderRef}/>
 
             <ViewFormField sm={6}
                     heading="Financing Company"
                     node={
                       defaultValues.financialCompany && (
-                        <Link onClick={()=> handleCustomerDialog(defaultValues.financialCompany?._id)} href="#" underline="none">
+                        <Link onClick={(event)=> handleCustomerDialog(event, defaultValues.financialCompany?._id)} href="#" underline="none">
                           {defaultValues.financialCompany?.name}
                         </Link>
                       )
@@ -324,7 +309,6 @@ export default function MachineViewForm() {
                 )
               }
             />
-
             <ViewFormField
               sm={6}
               heading="Installation Date"
@@ -338,9 +322,7 @@ export default function MachineViewForm() {
             />
             <ViewFormField sm={12} heading="Connected Machiness" chipDialogArrayParam={linkedMachines} />
 
-            {defaultValues?.machineConnections &&
-              <ViewFormField sm={12} heading="Parent Machiness" chipDialogArrayParam={paranetMachines} />
-            }
+            <ViewFormField sm={12} heading="Parent Machiness" chipDialogArrayParam={paranetMachines} />
             
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
             {/* <ViewFormField sm={6} heading="Tags" param={defaultValues?.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
@@ -369,7 +351,7 @@ export default function MachineViewForm() {
 
             <ViewFormField
               sm={6}
-              heading="Suppory Expiry Date"
+              heading="Support Expiry Date"
               param={fDate(defaultValues?.supportExpireDate)}
             />
             <ViewFormField />
@@ -391,17 +373,7 @@ export default function MachineViewForm() {
       </Grid>
 
       {/* connected machine dialog */}      
-
-      
-      <SiteDialog
-        site={defaultValues?.instalationSite}
-        title="Installation Site"
-      />
-
-      <SiteDialog
-        site={defaultValues?.billingSite}
-        title="Billing Site"
-      />
+      {siteDialog && <SiteDialog title={siteDialogTitle}/>}
       {machineDialog  && <MachineDialog />}
       {customerDialog  && <CustomerDialog />}
       

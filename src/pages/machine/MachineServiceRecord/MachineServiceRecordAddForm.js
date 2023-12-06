@@ -37,7 +37,6 @@ function MachineServiceRecordAddForm() {
   const { activeServiceRecordConfigsForRecords, serviceRecordConfig, recordTypes, isLoadingCheckItems } = useSelector((state) => state.serviceRecordConfig);
   const [ activeServiceRecordConfigs, setActiveServiceRecordConfigs ] = useState([]);
   const [checkItemLists, setCheckItemLists] = useState([]);
-  const [docType, setDocType] = useState(null);
   const user = { _id: localStorage.getItem('userId'), name: localStorage.getItem('name') };
 
   useEffect( ()=>{
@@ -50,6 +49,10 @@ function MachineServiceRecordAddForm() {
     dispatch(getSecurityUser(user._id))
     dispatch(resetServiceRecordConfig())
   },[dispatch, machine, user?._id])
+
+
+
+
 
   const machineDecoilers = (machine?.machineConnections || []).map((decoiler) => ({
     _id: decoiler?.connectedMachine?._id ?? null,
@@ -103,18 +106,35 @@ function MachineServiceRecordAddForm() {
   } = methods;
 
   const { decoilers, operators, serviceRecordConfiguration, docRecordType } = watch()
-  useEffect(() => {
-      if(docRecordType === null){
-        setActiveServiceRecordConfigs(activeServiceRecordConfigsForRecords)
-      }else{
-        if(docRecordType.name !== serviceRecordConfiguration?.recordType ){
+  
+  // useEffect(() => {
+
+  //     setActiveServiceRecordConfigs([]);
+
+  //     if(docRecordType !== null){
+  //       dispatch(getActiveServiceRecordConfigsForRecords(machine?._id, docRecordType))  
+  //       setActiveServiceRecordConfigs(activeServiceRecordConfigsForRecords)
+  //     }
+
+  //     setValue('serviceRecordConfiguration',null)
+
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  //   },[docRecordType])
+
+    useEffect(() => {
+      if(docRecordType?.name){
+        if(docRecordType?.name !== serviceRecordConfiguration?.recordType ){
           dispatch(resetServiceRecordConfig())
-          setValue('serviceRecordConfiguration',null)
         }
         setActiveServiceRecordConfigs(activeServiceRecordConfigsForRecords.filter(activeRecordConfig => activeRecordConfig?.recordType?.toLowerCase() === docRecordType?.name?.toLowerCase() ))
+      }else{
+        setActiveServiceRecordConfigs([])
       }
+      setValue('serviceRecordConfiguration',null)
+      
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[docRecordType, activeServiceRecordConfigsForRecords ])
+    },[docRecordType, activeServiceRecordConfigsForRecords])
+    
 
     useEffect(() =>{
       if(serviceRecordConfiguration !== null){
@@ -137,11 +157,7 @@ function MachineServiceRecordAddForm() {
     if(newValue != null){
     setValue('serviceRecordConfiguration',newValue)
     trigger('serviceRecordConfiguration');
-    if(newValue?.recordType==='Training'){
-      setDocType(true)
-    }else{
-      setDocType(false)
-    }
+    
     }else{
       dispatch(resetServiceRecordConfig())
       setValue('serviceRecordConfiguration',null)
@@ -307,10 +323,10 @@ console.log("checkItemLists : ",checkItemLists)
                     name="serviceRecordConfiguration"
                     label="Service Record Configuration"
                     options={activeServiceRecordConfigs}
-                    getOptionLabel={(option) => `${option?.docTitle ?? ''} ${option?.docTitle ? '-' : '' } ${option.recordType ? option.recordType :   ''}`}
+                    getOptionLabel={(option) => `${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     renderOption={(props, option) => (
-                    <li {...props} key={option._id}>{`${option?.docTitle ?? ''} ${option?.docTitle ? '-' : '' } ${option.recordType ? option.recordType : ''}`}</li>
+                    <li {...props} key={option._id}>{`${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}</li>
                     )}
                     onChange={handleParamChange}
                   />
@@ -398,7 +414,8 @@ console.log("checkItemLists : ",checkItemLists)
                         defaultValue={defaultValues.operators}
                         id="operator-autocomplete" options={activeContacts}
                         onChange={(event, newValue) => setValue('operators',newValue)}
-                        getOptionLabel={(option) => `${option.firstName ? option.firstName :   ''} ${option.lastName ? option.lastName :   ''}`}
+                        getOptionLabel={(option) => `${option?.firstName ||  ''} ${option.lastName || ''}`}
+                        isOptionEqualToValue={(option, value) => option?._id === value?._id}
                         renderInput={(params) => (
                           <TextField {...params} variant="outlined" label="Operators" placeholder="Select Operators"/>
                         )}

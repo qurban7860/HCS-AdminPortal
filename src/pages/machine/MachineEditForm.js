@@ -1,12 +1,11 @@
 import * as Yup from 'yup';
-import {  useLayoutEffect, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, Grid, Stack, TextField, Autocomplete } from '@mui/material';
 import { MuiChipsInput } from 'mui-chips-input';
-import { DatePicker } from '@mui/x-date-pickers';
 // hook
 import { Controller, useForm } from 'react-hook-form';
 import useResponsive from '../../hooks/useResponsive';
@@ -14,11 +13,11 @@ import useResponsive from '../../hooks/useResponsive';
 import { PATH_MACHINE } from '../../routes/paths';
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
-import {  getActiveCustomers, getFinancialCompanies } from '../../redux/slices/customer/customer';
-import {  getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
-import {  getActiveMachineStatuses } from '../../redux/slices/products/statuses';
-import {  getActiveMachineModels, resetMachineModels } from '../../redux/slices/products/model';
-import {  getActiveSuppliers } from '../../redux/slices/products/supplier';
+import { getActiveCustomers, getFinancialCompanies } from '../../redux/slices/customer/customer';
+import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
+import { getActiveMachineStatuses } from '../../redux/slices/products/statuses';
+import { getActiveMachineModels, resetActiveMachineModels } from '../../redux/slices/products/model';
+import { getActiveSuppliers } from '../../redux/slices/products/supplier';
 // global
 // import { CONFIG } from '../../config-global';
 // slice
@@ -62,7 +61,6 @@ export default function MachineEditForm() {
 
   const [chips, setChips] = useState([]);
   const isMobile = useResponsive('sm', 'down');
-  
 
   const AddMachineSchema = Yup.object().shape({
     serialNo: Yup.string().max(6).required('Serial Number is required').nullable(),
@@ -140,6 +138,7 @@ export default function MachineEditForm() {
     reset,
     watch,
     handleSubmit,
+    setError,
     formState: { isSubmitting },
     setValue,
     control,
@@ -160,21 +159,35 @@ export default function MachineEditForm() {
     supportManager,
   } = watch();
 
+  // useEffect(() => {
+  //   if(status && status?.slug === 'intransfer' ){
+  //     setValue('status',null)
+  //   }
+  //    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // },[status])
+
   useEffect(() => {
-    if(category && category?._id !== machineModel?.category?._id){
+    if(category === null && machineModel ){
+      // dispatch(resetActiveMachineModels())
+      dispatch(getActiveMachineModels());
+      setValue('machineModel',null);
+    }else if(category && category?._id !== machineModel?.category?._id){
       dispatch(getActiveMachineModels(category?._id));
       setValue('machineModel',null);
     }
      // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[dispatch, category ]);
-
-
+  },[ category, machineModel ]);
 
   useEffect(() => {
     dispatch(getFinancialCompanies());
     dispatch(getActiveSuppliers());
     dispatch(getActiveCategories());
-    dispatch(getActiveMachineModels());
+    
+    dispatch(resetActiveMachineModels());
+    if(machine?.machineModel?.category?._id){
+      dispatch(getActiveMachineModels(machine?.machineModel?.category?._id));
+    }
+    
     dispatch(getActiveMachineStatuses());
     dispatch(getActiveCustomers());
     dispatch(getActiveMachines());
@@ -199,16 +212,26 @@ export default function MachineEditForm() {
 
   const onSubmit = async (data) => {
 
-    data.alias = chips;
-    try {
-      await dispatch(updateMachine(machine._id ,data));
-      enqueueSnackbar('Machine updated successfully!');
-      reset();
-      navigate(PATH_MACHINE.machines.view(machine._id));
-    } catch (error) {
-      enqueueSnackbar('Saving failed!', { variant: `error` });
-      console.error(error);
+    if (data?.status?.slug === 'intransfer') {
+      setError('status', {
+        type: 'manual',
+        message: 'Please change status In-Transfer is not acceptable',
+      });
+    }else{
+      data.alias = chips;
+      try {
+        await dispatch(updateMachine(machine._id ,data));
+        enqueueSnackbar('Machine updated successfully!');
+        reset();
+        navigate(PATH_MACHINE.machines.view(machine._id));
+      } catch (error) {
+        enqueueSnackbar('Saving failed!', { variant: `error` });
+        console.error(error);
+      }
     }
+
+    
+    
   };
 
   // ----------------------handle functions----------------------
@@ -255,17 +278,9 @@ export default function MachineEditForm() {
                 {/* -------------------------- Alias -------------------------------------- */}
 
                   <MuiChipsInput label="Alias" value={chips} onChange={handleChipChange} />
-
-                <Box
-                  rowGap={3}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
-                >
-
-                {/* -------------------------- Parent Machines Serial No -------------------------------------- */}
+                                  {/* -------------------------- Parent Machines Serial No -------------------------------------- */}
                   
-                  {parentSerialNo && (<Controller
+                {parentSerialNo && (<Controller
                     name="parentSerialNo"
                     control={control}
                     defaultValue={parentSerialNo || null}
@@ -310,46 +325,21 @@ export default function MachineEditForm() {
                     )}
                   />)}
 
+                <Box
+                  rowGap={3}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
+                >
+
                 {/* ------------------------- Previous Machine Name --------------------------------------- */}
 
                 {/* <RHFTextField name="previousMachine" label="Previous Machine" disabled/> */}
 
-                {/* ------------------------- Previous Machine Supplier --------------------------------------- */}
-
-                  <Controller
-                    name="supplier"
-                    control={control}
-                    defaultValue={supplier || null}
-                    render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                      <Autocomplete
-                        {...field}
-                        id="controllable-states-demo"
-                        options={activeSuppliers}
-                        isOptionEqualToValue={(option, value) => option._id === value._id}
-                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                        renderOption={(props, option) => (
-                          <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                        )}
-                        onChange={(event, value) => field.onChange(value)}
-                        renderInput={(params) => (
-                          <TextField 
-                          {...params} 
-                          name="supplier"
-                          id="supplier"
-                          label="Supplier"  
-                          error={!!error}
-                          helperText={error?.message} 
-                          inputRef={ref} 
-                          />
-                        )}
-                        ChipProps={{ size: 'small' }}
-                      />
-                    )}
-                  />
 
                     {/* ----------------------------- Filter Machine Model By Category ----------------------------------- */}
 
-                                       <RHFAutocomplete 
+                    <RHFAutocomplete 
                       name="category"
                       label="Machine Category"
                       options={activeCategories}
@@ -371,10 +361,21 @@ export default function MachineEditForm() {
                       renderOption={(props, option) => (
                         <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
+                      onChange={(event, newValue) => {
+                          if (newValue) {
+                            setValue('machineModel', newValue);
+                            if(category === null){
+                            dispatch(getActiveMachineModels(newValue?.category?._id));
+                            setValue('category', newValue?.category);
+                            }
+                          } else {
+                            setValue('machineModel', null);
+                          }
+                        }}
                     />
 
                     {/* -------------------------------- Statuses -------------------------------- */}
-
+                  
                 <Controller
                   name="status"
                   control={control}
@@ -406,10 +407,40 @@ export default function MachineEditForm() {
                   />
                   )}
                 />
+                                {/* ------------------------- Previous Machine Supplier --------------------------------------- */}
 
-                    {/* -------------------------------- Work Order/ Purchase Order -------------------------------- */}
+                                <Controller
+                    name="supplier"
+                    control={control}
+                    defaultValue={supplier || null}
+                    render={ ({field: { ref, ...field }, fieldState: { error } }) => (
+                      <Autocomplete
+                        {...field}
+                        id="controllable-states-demo"
+                        options={activeSuppliers}
+                        isOptionEqualToValue={(option, value) => option._id === value._id}
+                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                        renderOption={(props, option) => (
+                          <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                        )}
+                        onChange={(event, value) => field.onChange(value)}
+                        renderInput={(params) => (
+                          <TextField 
+                          {...params} 
+                          name="supplier"
+                          id="supplier"
+                          label="Supplier"  
+                          error={!!error}
+                          helperText={error?.message} 
+                          inputRef={ref} 
+                          />
+                        )}
+                        ChipProps={{ size: 'small' }}
+                      />
+                    )}
+                  />
 
-                  <RHFTextField name="workOrderRef" label="Work Order/ Purchase Order" />
+
                   <RHFAutocomplete
                     // multiple 
                     value={financialCompany}
@@ -422,8 +453,13 @@ export default function MachineEditForm() {
                       <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
                   />
+
+                  {/* -------------------------------- Work Order/ Purchase Order -------------------------------- */}
+
+                  <RHFTextField name="workOrderRef" label="Work Order/ Purchase Order" />
                 </Box>
-   {/* -------------------------------- Customer -------------------------------- */}
+                
+                {/* -------------------------------- Customer -------------------------------- */}
 
                   <Controller
                     name="customer"

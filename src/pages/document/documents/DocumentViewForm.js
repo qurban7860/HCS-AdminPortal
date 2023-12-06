@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useMemo, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Grid, Tooltip, Card, Button } from '@mui/material'
+import { Grid, Card } from '@mui/material'
 import { StyledVersionChip } from '../../../theme/styles/default-styles';
 import { PATH_DOCUMENT } from '../../../routes/paths';
 import {
@@ -152,11 +152,14 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
   }
   return (
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} customerAccess={defaultValues?.customerAccess} handleEdit={handleEdit} onDelete={onDelete}
+      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} 
+      customerAccess={defaultValues?.customerAccess} 
+      handleEdit={handleEdit} 
+      // onDelete={onDelete}
       backLink={(customerPage || machinePage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDocumentViewFormVisibility(false))}
       : () => navigate(PATH_DOCUMENT.document.list)}
       disableEditButton={machine?.status?.slug==='transferred'}
-      disableDeleteButton={machine?.status?.slug==='transferred'}
+      // disableDeleteButton={machine?.status?.slug==='transferred'}
       />
       <Grid container>
         <ViewFormField sm={8} heading="Name" param={defaultValues?.displayName} />

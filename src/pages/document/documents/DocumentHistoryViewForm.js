@@ -1,54 +1,39 @@
 import PropTypes from 'prop-types';
-import {  useMemo, useEffect, memo, useState } from 'react';
+import {  useMemo, useEffect, memo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 // import download from 'downloadjs';
 import {
   Grid,
   Card,
-  Tooltip,
-  Typography,
   Link,
-  Button,
-  CardHeader,
-  CardContent
+  Chip
 } from '@mui/material';
-import { Container } from '@mui/system';
 import { ThumbnailDocButton } from '../../components/Thumbnails'
 import { StyledVersionChip } from '../../../theme/styles/default-styles';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 
-// import { getDocumentDownload } from '../../../redux/slices/document/documentFile';
 import {
   getDocumentHistory,
   resetDocument,
   setDocumentFormVisibility,
-  setDocumentHistoryViewFormVisibility,
   setDocumentHistoryAddFilesViewFormVisibility,
   setDocumentHistoryNewVersionFormVisibility,
   setDocumentAddFilesViewFormVisibility,
   setDocumentNewVersionFormVisibility,
-  deleteDocument,
-  setDocumentViewFormVisibility,
-  getDocuments,
   getDocument,
-  setDocumentEditFormVisibility,
+  setDocumentHistoryViewFormVisibility,
 } from '../../../redux/slices/document/document';
 import { getCustomer, resetCustomer, setCustomerDialog} from '../../../redux/slices/customer/customer';
-import { getMachine, getMachineForDialog, resetMachine, setMachineDialog } from '../../../redux/slices/products/machine';
+import { getMachineForDialog, resetMachine, setMachineDialog } from '../../../redux/slices/products/machine';
 import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
 import FormLabel from '../../components/DocumentForms/FormLabel';
-// import DialogLink from '../../components/Dialog/DialogLink';
-// import DialogLabel from '../../components/Dialog/DialogLabel';
-// import { document as documentType, Snacks } from '../../../constants/document-constants';
-import { useSnackbar } from '../../../components/snackbar';
 import { setDrawingEditFormVisibility, setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
 import DocumentCover from '../../components/DocumentForms/DocumentCover';
 import CustomerDialog from '../../components/Dialog/CustomerDialog';
 import MachineDialog from '../../components/Dialog/MachineDialog';
-import { Snacks } from '../../../constants/document-constants';
 import { PATH_DOCUMENT } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
@@ -63,15 +48,11 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
   const dispatch = useDispatch();
   const { id } = useParams();
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
-
-  const { documentHistory } = useSelector((state) => state.document);
-  const { customer } = useSelector((state) => state.customer);
+  const { documentHistory, isLoading } = useSelector((state) => state.document);
   const { machine } = useSelector((state) => state.machine);
-  // const { drawingsEditFormVisibility, drawingsEditFormVisibility, drawingsEditFormVisibility, } = useSelector((state) => state.drawingPage);
+  const { customer } = useSelector((state) => state.customer);
 
   useEffect(() => {
-    // dispatch(resetActiveDocuments());
     if(!machinePage && !drawingPage){
       dispatch(resetMachine());
     }
@@ -126,10 +107,15 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
       updatedAt: documentHistory?.updatedAt || '',
       updatedByFullName: documentHistory?.updatedBy?.name || '',
       updatedIP: documentHistory?.updatedIP || '',
+      machines: documentHistory?.productDrawings || [],
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [documentHistory]
   );
+
+  const linkedDrawingMachines = documentHistory?.productDrawings?.map((drawing, index) => drawing?.machine._id !== machine?._id && (
+    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(drawing?.machine?._id)} label={`${drawing?.machine?.serialNo || ''} ${drawing?.machine?.name ? ` - ${drawing?.machine?.name}` : '' } `} />
+  ));
 
   // refresh the document when file deleted
   const callAfterDelete = () => {dispatch(getDocumentHistory(documentHistory._id))};
@@ -194,23 +180,12 @@ const handleNewFile = async () => {
       dispatch(getCustomer(documentHistory.customer._id));
     }
   }
-  const handleMachineDialog = () =>{
-    if (documentHistory?.machine && !machinePage && !drawingPage) {
+  const handleMachineDialog = (machineId) =>{
+    // if (documentHistory?.machine && !machinePage && !drawingPage) {
       dispatch(setMachineDialog(true));
-      dispatch(getMachineForDialog(documentHistory.machine._id));
-    }
+      dispatch(getMachineForDialog(machineId));
+    // }
   }
-
-  const handleDeleteDrawing = async () => {
-    try {
-      await dispatch(deleteDocument(documentHistory._id));
-      navigate(PATH_DOCUMENT.document.machineDrawings.list);
-      enqueueSnackbar(`Drawing ${Snacks.deletedDoc}`, { variant: `success` });
-    } catch (err) {
-      console.log(err);
-      enqueueSnackbar(`Drawing ${Snacks.failedDeleteDoc}`, { variant: `error` });
-    }
-  };
 
   const handleEdit = async () => {
     await dispatch(getDocument(documentHistory._id));
@@ -230,13 +205,13 @@ const handleNewFile = async () => {
           customerAccess={defaultValues?.customerAccess}
           isActive={defaultValues.isActive}
           handleEdit={drawingPage && handleEdit}
-          onDelete={machineDrawings && handleDeleteDrawing}
+          disableEditButton={drawingPage && machine?.status?.slug==="transferred"}
           backLink={(customerPage || machinePage || drawingPage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDrawingViewFormVisibility(false));}
           : () =>  machineDrawings ? navigate(PATH_DOCUMENT.document.machineDrawings.list) : navigate(PATH_DOCUMENT.document.list)}
       />
             <Grid container sx={{mt:2}}>
-              <ViewFormField sm={8} heading="Name" param={defaultValues?.displayName} />
-              <ViewFormField
+              <ViewFormField isLoading={isLoading} sm={8} heading="Name" param={defaultValues?.displayName} />
+              <ViewFormField isLoading={isLoading}
                 sm={4}
                 NewVersion={!defaultValues.isArchived}
                 handleNewVersion={handleNewVersion}
@@ -250,23 +225,19 @@ const handleNewFile = async () => {
                   />
                   )
                 }
-
-                // chipLabel='asdasd'
-                // chips={defaultValues.versionPrefix + defaultValues.documentVersion}
-                // param='asdasd'
               />
 
-              <ViewFormField
+              <ViewFormField isLoading={isLoading}
                 sm={6}
                 heading="Document Category"
                 param={defaultValues?.docCategory}
               />
-              <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
-              <ViewFormField sm={6} heading="Reference Number" param={defaultValues?.referenceNumber} />
-              <ViewFormField sm={6} heading="Stock Number" param={defaultValues?.stockNumber} />
+              <ViewFormField isLoading={isLoading} sm={6} heading="Document Type" param={defaultValues?.docType} />
+              <ViewFormField isLoading={isLoading} sm={6} heading="Reference Number" param={defaultValues?.referenceNumber} />
+              <ViewFormField isLoading={isLoading} sm={6} heading="Stock Number" param={defaultValues?.stockNumber} />
 
               {!customerPage && !machineDrawings && !drawingPage && defaultValues.customer && (
-                <ViewFormField
+                <ViewFormField isLoading={isLoading}
                   sm={6}
                   heading="Customer"
                   objectParam={
@@ -280,12 +251,12 @@ const handleNewFile = async () => {
               )}
 
               {!machinePage && !machineDrawings && !drawingPage &&  defaultValues?.machine && (
-                <ViewFormField
+                <ViewFormField isLoading={isLoading}
                   sm={6}
                   heading="Machine"
                   objectParam={
                     defaultValues.machine && (
-                      <Link onClick={handleMachineDialog} href="#" underline="none">
+                      <Link onClick={()=> handleMachineDialog(documentHistory?.machine?._id)} href="#" underline="none">
                         {defaultValues.machine}
                       </Link>
                     )
@@ -293,7 +264,10 @@ const handleNewFile = async () => {
                 />
               )}
 
-              <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
+              <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
+              {((drawingPage && documentHistory?.productDrawings?.length > 1) || machineDrawings) && 
+                <ViewFormField isLoading={isLoading} sm={12} heading="Attached with Machines" chipDialogArrayParam={linkedDrawingMachines} />
+              }
               <Grid container sx={{ mt: '1rem', mb: '-1rem' }}>
                 <ViewFormAudit defaultValues={defaultValues} />
               </Grid>

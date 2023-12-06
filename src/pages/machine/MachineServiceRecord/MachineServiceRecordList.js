@@ -30,7 +30,8 @@ import {
   resetMachineServiceRecord,
   ChangeRowsPerPage,
   ChangePage,
-  setFilterBy
+  setFilterBy,
+  setSendEmailDialog
 } from '../../../redux/slices/products/machineServiceRecord';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
@@ -75,7 +76,11 @@ export default function MachineServiceRecordList() {
   const [filterStatus, setFilterStatus] = useState([]);
 
   useLayoutEffect(() => {
-    dispatch(getMachineServiceRecords(machine?._id)); 
+    dispatch(setSendEmailDialog(false));
+    dispatch(setMachineServiceRecordViewFormVisibility(false));
+    if(machine?._id){
+      dispatch(getMachineServiceRecords(machine?._id));
+    }
     dispatch(setDetailPageFlag(false));
   }, [dispatch, machine?._id]);
 

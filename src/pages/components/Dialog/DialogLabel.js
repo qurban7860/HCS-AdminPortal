@@ -19,11 +19,13 @@ function DialogLabel({ onClick, content }) {
       <Typography variant="h4" sx={{ px: 2 }}>
         {content}
       </Typography>
-      <DialogActions>
-        <Button onClick={onClick} sx={{ mr: -5 }}>
-          <Iconify sx={{ color: 'white' }} icon="mdi:close-circle-outline" />
-        </Button>
-      </DialogActions>
+      {onClick &&
+        <DialogActions>
+          <Button onClick={onClick} sx={{ mr: -5 }}>
+            <Iconify sx={{ color: 'white' }} icon="mdi:close-circle-outline" />
+          </Button>
+        </DialogActions>
+      }
     </Grid>
   );
 }

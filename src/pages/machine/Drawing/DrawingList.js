@@ -2,12 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
 import {
-  Grid,
   Table,
   Button,
-  Tooltip,
   TableBody,
-  IconButton,
   TableContainer,
 } from '@mui/material';
 // redux
@@ -19,10 +16,8 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from '../../../components/table';
-import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
@@ -38,16 +33,14 @@ import {
   ChangePage,
   setFilterBy,
   setDrawingViewFormVisibility, 
-  resetDrawings} from '../../../redux/slices/products/drawing';
+  resetDrawings,
+  deleteDrawing} from '../../../redux/slices/products/drawing';
+import { useSnackbar } from '../../../components/snackbar';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
+import { Snacks } from '../../../constants/document-constants';
 
 // ----------------------------------------------------------------------
-
-
-
-// ----------------------------------------------------------------------
-
 
 export default function DrawingList() {
   const {
@@ -55,7 +48,7 @@ export default function DrawingList() {
     orderBy,
     setPage,
     selected,
-    onSelectAllRows,
+    setSelected,
     onSort,
   } = useTable({
     defaultOrderBy: 'createdAt', defaultOrder: 'desc',
@@ -67,19 +60,20 @@ export default function DrawingList() {
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
   const { machine } = useSelector((state) => state.machine);
+  const { enqueueSnackbar } = useSnackbar();
 
   const { drawings, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.drawing );
 
   const TABLE_HEAD = [
-    { id: 'referenceNumber', label: 'Ref', align: 'left' },
-    { id: 'name', label: 'Name', align: 'left' },
-    { id: 'stockNumber', label: 'Stock Number', align: 'left' },
-    { id: 'xs2', label: 'Type', align: 'left' },
-    { id: 'xs1', label: 'Category', align: 'left' },
-    { id: 'active', label: 'Active', align: 'center' },
-    { id: 'created_at', label: 'Created At', align: 'right' },
+    { id: 'document.referenceNumber', label: 'Ref', align: 'left' },
+    { id: 'document.displayName', label: 'Name', align: 'left' },
+    { id: 'document.stockNumber', label: 'Stock Number', align: 'left' },
+    { id: 'documentType.name', visibility: 'xs2', label: 'Type', align: 'left' },
+    { id: 'documentCategory.name', visibility: 'xs1', label: 'Category', align: 'left' },
+    { id: 'isActive', label: 'Active', align: 'center' },
+    { id: 'createdAt', label: 'Created At', align: 'right' },
+    { id: 'action', label: '', align: 'right' },
   ];
-
     
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
@@ -144,6 +138,23 @@ export default function DrawingList() {
       dispatch(setDrawingViewFormVisibility(true));
   };
 
+  const handleDeleteRow = (id) => {
+    setSelected(id);
+    handleOpenConfirm(true);
+  };
+
+  const handleDeleteDrawing = async (drawingId) => {
+    try {
+      await dispatch(deleteDrawing(drawingId));
+      await dispatch(resetDrawings());
+      await dispatch(getDrawings(machine?._id));
+      enqueueSnackbar(Snacks.deletedDrawing, { variant: `success` });
+    } catch (err) {
+      console.log(err);
+      enqueueSnackbar(Snacks.failedDeleteDrawing, { variant: `error` });
+    }
+  };
+
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
@@ -168,24 +179,6 @@ export default function DrawingList() {
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <TableSelectedAction
-            numSelected={selected.length}
-            rowCount={tableData.length}
-            onSelectAllRows={(checked) =>
-              onSelectAllRows(
-                checked,
-                tableData.map((row) => row._id)
-              )
-            }
-            action={
-              <Tooltip title="Delete">
-                <IconButton color="primary" onClick={handleOpenConfirm}>
-                  <Iconify icon="eva:trash-2-outline" />
-                </IconButton>
-              </Tooltip>
-            }
-          />
-
           <Scrollbar>
             <Table size="small" sx={{ minWidth: 360 }}>
               <TableHeadCustom
@@ -204,6 +197,8 @@ export default function DrawingList() {
                         key={row._id}
                         row={row}
                         onViewRow={() => handleViewRow(row?.document?._id)}
+                        onDeleteRow={() => handleDeleteRow(row._id)}
+                        disabledActions={machine?.status?.slug === "transferred"}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
                     ) : (
@@ -229,17 +224,13 @@ export default function DrawingList() {
         open={openConfirm}
         onClose={handleCloseConfirm}
         title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
-          </>
-        }
+        content="Are you sure you want to delete?"
         action={
           <Button
             variant="contained"
             color="error"
             onClick={() => {
-              // handleDeleteRows(selected);
+              handleDeleteDrawing(selected)
               handleCloseConfirm();
             }}
           >
@@ -268,7 +259,8 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
         drawingg?.document?.displayName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         drawingg?.documentType?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         drawingg?.documentCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (document?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        drawingg?.document.stockNumber?.toString()?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        drawingg?.document.referenceNumber?.toString()?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(drawingg?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

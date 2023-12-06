@@ -45,7 +45,7 @@ import {
   addDocumentVersion,
   updateDocumentVersion,
 } from '../../../redux/slices/document/documentVersion';
-import { getActiveCustomers, resetActiveCustomers } from '../../../redux/slices/customer/customer';
+import { getActiveCustomers } from '../../../redux/slices/customer/customer';
 import {
   getCustomerMachines,
   resetCustomerMachines
@@ -500,16 +500,18 @@ function DocumentAddForm({
       );
       setValue('files', [...docFiles, ...newFiles], { shouldValidate: true });
     },
-    [setValue, files, displayName]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [ files, displayName]
   );
 
   const removeFileExtension = (filename) => {
     const lastDotIndex = filename.lastIndexOf('.');
     return lastDotIndex !== -1 ? filename.substring(0, lastDotIndex) : filename;
+
   };
 
   const getRefferenceNumber = (filename) => {
-    const words = filename.split(/\s+/);
+    const words = removeFileExtension(filename).split(/\s+/);
     return words[0] || '';
   };
 

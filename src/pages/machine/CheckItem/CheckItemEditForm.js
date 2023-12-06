@@ -25,7 +25,7 @@ import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { Snacks } from '../../../constants/machine-constants';
-import { statusTypes, inputTypes, unitTypes, recordTypes, headerFooterTypes, status } from '../util/index'
+import { inputTypes, unitTypes } from '../util/index'
 
 // ----------------------------------------------------------------------
 
@@ -35,8 +35,6 @@ export default function DocumentCategoryeEditForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const initialState = useSelector((state) => state.checkItems);
-  // const { inputTypes, unitTypes} = initialState;
 
   useEffect(()=>{
     dispatch(getActiveServiceCategories())
@@ -118,14 +116,15 @@ export default function DocumentCategoryeEditForm() {
                     />
                   <RHFTextField name="name" label="Name" />
                   <RHFTextField name="printName" label="Print Name" minRows={3} multiline />
-                  <RHFTextField name="helpHint" label="Help Hint" />
-                  <RHFTextField name="linkToUserManual" label="Link To User Manual" />
+  
                   <Box
                     rowGap={2}
                     columnGap={2}
                     display="grid"
                     gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                   >
+                    <RHFTextField name="helpHint" label="Help Hint" />
+                    <RHFTextField name="linkToUserManual" label="Link To User Manual" />
                   <RHFAutocomplete 
                       name="inputType" label="Input Type"
                       options={inputTypes}

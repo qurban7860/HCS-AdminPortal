@@ -5,17 +5,16 @@ import {
   Switch,
   TableRow,
   TableCell,
-  IconButton,
-  Button,
-  Link,
 } from '@mui/material';
 // utils
-import { styled , alpha} from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { fDate } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import LinkDialogTableCell from '../../components/ListTableTools/LinkDialogTableCell';
 import { useScreenSize } from '../../../hooks/useResponsive';
+import { StyledStack } from '../../../theme/styles/default-styles';
+import IconTooltip from '../../components/Icons/IconTooltip';
 // ----------------------------------------------------------------------
 
 DocumentListTableRow.propTypes = {
@@ -29,7 +28,8 @@ DocumentListTableRow.propTypes = {
   customerPage: PropTypes.bool,
   machinePage: PropTypes.bool,
   machineDrawings: PropTypes.bool,
-  handleMachineDialog: PropTypes.func
+  handleMachineDialog: PropTypes.func,
+  disabledActions:  PropTypes.bool
 };
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
@@ -51,7 +51,8 @@ export default function DocumentListTableRow({
   customerPage,
   machinePage,
   machineDrawings,
-  handleMachineDialog
+  handleMachineDialog,
+  disabledActions
 }) {
   const {
     displayName,
@@ -77,16 +78,25 @@ export default function DocumentListTableRow({
       {  smScreen && <TableCell align="left">{referenceNumber}</TableCell>}
       <LinkTableCell align="left" param={displayName} onClick={onViewRow} />
       {  lgScreen && <TableCell align="center">{documentVersions[0]?.versionNo}</TableCell>}
-      {  !customerPage && !machinePage && !machineDrawings && lgScreen && <TableCell align="left">{customer?.name}</TableCell>}
-      {  machineDrawings && smScreen && <TableCell align="left">{stockNumber}</TableCell>}
-      {  !customerPage && !machinePage && lgScreen && 
-        <LinkDialogTableCell onClick={handleMachineDialog} align='center' param={machine?.serialNo}/>
+      {  smScreen && <TableCell align="left">{stockNumber}</TableCell>}
+      {  !customerPage && !machinePage && !machineDrawings && lgScreen && 
+          <>
+            <TableCell align="left">{customer?.name}</TableCell>
+            <LinkDialogTableCell onClick={handleMachineDialog} align='center' param={machine?.serialNo}/>  
+          </>
       }
+      
       {  lgScreen && <TableCell align="center">
         <Switch checked={customerAccess} disabled size="small" />{' '}
       </TableCell>}
       <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell>
       <TableCell align="right">{fDate(createdAt)}</TableCell>
+      <TableCell align="center">
+          <StyledStack>
+              <IconTooltip title="Delete" disabled={disabledActions} onClick={onDeleteRow} 
+                           color={disabledActions?"#c3c3c3":"#FF0000"} icon="mdi:trash-can-outline" />
+          </StyledStack>
+      </TableCell>
     </StyledTableRow>
   );
 }

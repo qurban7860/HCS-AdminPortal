@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import {  Card, Grid, Tooltip } from '@mui/material';
+import {  Card, Grid } from '@mui/material';
 // redux
 import { deleteCheckItem } from '../../../redux/slices/products/machineCheckItems';
 // paths
@@ -65,22 +65,25 @@ export default function CheckItemViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [ checkItem ]
   );
+  // const revisedArray = defaultValues.utlizedInRecordConfigs.map((config) => ({
+  //   name: `${config?.docTitle || ''} ${config.docVersionNo ? ' - v' : ''}${config.docVersionNo || ''}`,
+  // }));
   return (
     <Card sx={{ p: 2 }}>
       <Grid>
         <ViewFormEditDeleteButtons isActive={defaultValues.isActive} isRequired={defaultValues.isRequired} handleEdit={handleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.checkItems.list)}  />
         <Grid container sx={{mt:2}}>
-          <ViewFormField sm={6} heading="Item Category" param={defaultValues.category} />
-          <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
+          <ViewFormField sm={12} heading="Item Category" param={defaultValues.category} />
+          <ViewFormField sm={12} heading="Name" param={defaultValues.name} />
           <ViewFormField sm={12} heading="Print Name" param={defaultValues.printName} />
-          <ViewFormField sm={12} heading="Help Hint" param={defaultValues.helpHint} />
-          <ViewFormField sm={12} heading="Link To User Manual" param={defaultValues.linkToUserManual} />
+          <ViewFormField sm={6} heading="Help Hint" param={defaultValues.helpHint} />
+          <ViewFormField sm={6} heading="Link To User Manual" param={defaultValues.linkToUserManual} />
           <ViewFormField sm={6} heading="Input Type" param={defaultValues.inputType} />
           <ViewFormField sm={6} heading="Unit Type" param={defaultValues.unitType} />
           <ViewFormField sm={6} heading="Minimum Validation" param={defaultValues.minValidation} />
           <ViewFormField sm={6} heading="Maximum Validation" param={defaultValues.maxValidation} />
           <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
-          <ViewFormField sm={12} heading="Utlized In Configs" arrayParam={defaultValues.utlizedInRecordConfigs} chipLabel='docTitle'/>
+          <ViewFormField sm={12} heading="Utlized In Configs" configArrayParam={defaultValues.utlizedInRecordConfigs} />
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
       </Grid>

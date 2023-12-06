@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "^2.0.0",
+    "@codemirror/search": "^6.5.5",
     "@emotion/cache": "^11.10.5",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
@@ -57,7 +58,11 @@
     "@mui/x-data-grid-pro": "^6.12.1",
     "@mui/x-date-pickers": "^5.0.9",
     "@react-google-maps/api": "^2.18.1",
+    "@react-pdf/renderer": "^3.1.14",
     "@reduxjs/toolkit": "^1.9.0",
+    "@uiw/codemirror-extensions-langs": "^4.21.21",
+    "@uiw/codemirror-extensions-zebra-stripes": "^4.21.21",
+    "@uiw/react-codemirror": "^4.21.21",
     "amazon-cognito-identity-js": "^6.0.1",
     "apexcharts": "^3.36.3",
     "autosuggest-highlight": "^3.3.4",
@@ -95,13 +100,12 @@
     "react-hook-form": "^7.39.5",
     "react-i18next": "^12.0.0",
     "react-idle-timer": "^5.7.2",
-    "react18-json-view": "^0.2.6",
     "react-lazy-load-image-component": "^1.5.6",
     "react-map-gl": "^7.0.19",
     "react-markdown": "^8.0.3",
     "react-material-ui-carousel": "^3.4.2",
     "react-organizational-chart": "^2.2.0",
-    "react-pdf": "^6.2.2",
+    "react-pdf": "^7.5.1",
     "react-quill": "^2.0.0",
     "react-redux": "^8.0.5",
     "react-router": "^6.4.3",
@@ -130,6 +134,7 @@
   "devDependencies": {
     "@babel/core": "^7.20.2",
     "@babel/eslint-parser": "^7.19.1",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "eslint": "^8.28.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.5.0",
@@ -140,7 +145,7 @@
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-react-hooks": "^4.6.0",
     "prettier": "^2.8.0",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.5"
   },
   "overrides": {
     "nth-check": "2.1.1"

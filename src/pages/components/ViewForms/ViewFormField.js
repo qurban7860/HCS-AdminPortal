@@ -1,10 +1,9 @@
 import React, { useEffect, useState, memo } from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Grid, Chip, Link } from '@mui/material';
+import { Typography, Grid, Chip } from '@mui/material';
 import IconPopover from '../Icons/IconPopover';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
-import Iconify from '../../../components/iconify';
-
+import SkeletonViewFormField from '../../../components/skeleton/SkeletonViewFormField';
 
 function ViewFormField({
   backLink,
@@ -14,6 +13,7 @@ function ViewFormField({
   node,
   chipLabel,
   arrayParam,
+  configArrayParam,
   toolType,
   secondParam,
   objectParam,
@@ -41,6 +41,7 @@ function ViewFormField({
   handleNewVersion,
   ViewAllVersions,
   handleAllVersion,
+  isLoading
 }) {
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
@@ -62,14 +63,12 @@ function ViewFormField({
   };
   return (
     <Grid item xs={12} sm={sm} sx={{ px: 2, py: 1, overflowWrap: 'break-word' }}>
-      <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-        {heading || ''}
-        </Typography>
-        {/* {NewVersion && <Link title='New Version' href="#" variant="subtitle1" underline='none' onClick={handleNewVersion} sx={{ fontWeight:"bold" }}> <Iconify heading="New Version" icon="icon-park-outline:add" sx={{mb:-0.8}}/></Link>}
-        {ViewAllVersions && <Link title='View all Versions' onClick={handleAllVersion} href="#" underline="none"><Iconify icon="carbon:view" sx={{mb:-1, ml:1, width:"23px", height:"23px"}}/></Link>} */}
-
-
-      <Typography
+      <Typography variant="overline" sx={{ color: 'text.disabled' }}>{heading || ''}</Typography>
+      {isLoading ? (
+          <SkeletonViewFormField />
+      ) : (
+          <>
+            <Typography
         variant={
           heading === 'Serial No' ||
           heading === 'Machine Model' ||
@@ -88,6 +87,7 @@ function ViewFormField({
           alignItems: 'center',
           whiteSpace: 'pre-line',
           wordBreak: 'break-word',
+          color:heading?.toLowerCase()==="status" && param?.toLowerCase()==="transferred" && 'red'
         }}
       >
         <IconPopover isActive={isActive} />
@@ -130,7 +130,21 @@ function ViewFormField({
         &nbsp;
 
       </Typography>
-
+      {configArrayParam && typeof configArrayParam === 'object' && configArrayParam?.length > 0 && (
+        <Grid container sx={{mt:-2,mb:2,
+              display: 'flex',
+              alignItems: 'center',
+              whiteSpace: 'pre-line',
+              wordBreak: 'break-word',
+              }} >
+              {configArrayParam.map(
+                (data, index) =>
+                  data?.docTitle &&
+                  typeof data?.docTitle === 'string' &&
+                  data?.docTitle.trim().length > 0 && <Chip key={index} label={<div style={{display:'flex',alignItems:'center'}}><Typography variant='body2'>{`${data?.docTitle || ''}`}</Typography> <Typography variant='subtitle2'>{` - v${data?.docVersionNo}`}</Typography></div>} sx={{m:0.2}} />
+              )}
+            </Grid>
+      )}
       {arrayParam && typeof arrayParam === 'object' && arrayParam?.length > 0 && (
             <Grid container sx={{mt:-2,mb:2,
               display: 'flex',
@@ -229,6 +243,10 @@ function ViewFormField({
         ) : (
           serviceParam && typeof serviceParam === 'string' && serviceParam.trim().length > 0 && <Chip label={serviceParam} />
         )}
+          </>
+      )}
+
+      
 
       {/* popover for verification list */}
       <ViewFormMenuPopover
@@ -247,6 +265,7 @@ ViewFormField.propTypes = {
   param: PropTypes.string,
   objectString: PropTypes.string,
   arrayParam: PropTypes.array,
+  configArrayParam: PropTypes.array,
   toolType: PropTypes.array,
   chipLabel: PropTypes.string,
   numberParam: PropTypes.number,
@@ -276,4 +295,5 @@ ViewFormField.propTypes = {
   ViewAllVersions: PropTypes.bool,
   handleAllVersion: PropTypes.func,
   backLink: PropTypes.func,
+  isLoading: PropTypes.bool,
 };

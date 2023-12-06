@@ -1,7 +1,8 @@
 import { useMemo, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import ReactPDF from '@react-pdf/renderer';
 // @mui
-import {  Card, Grid } from '@mui/material';
+import { Card, Grid } from '@mui/material';
 // redux
 import { deleteMachineServiceRecord, 
   setAllFlagsFalse, 
@@ -9,7 +10,8 @@ import { deleteMachineServiceRecord,
   setDetailPageFlag, 
   setMachineServiceRecordEditFormVisibility, 
   getMachineServiceRecord,
-  getMachineServiceHistoryRecords } from '../../../redux/slices/products/machineServiceRecord';
+  getMachineServiceHistoryRecords, 
+  setSendEmailDialog} from '../../../redux/slices/products/machineServiceRecord';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { FORMLABELS } from '../../../constants/default-constants';
@@ -22,10 +24,12 @@ import { fDate } from '../../../utils/formatTime';
 import ReadableCollapsibleCheckedItemRow from './ReadableCollapsibleCheckedItemRow';
 import HistoryIcon from '../../components/Icons/HistoryIcon';
 import CurrentIcon from '../../components/Icons/CurrentIcon';
+import { MachineServiceRecordPDF } from './MachineServiceRecordPDF';
+import SendEmailDialog from '../../components/Dialog/SendEmailDialog';
 
 function MachineServiceParamViewForm() {
 
-  const { machineServiceRecord, isHistorical, isLoading } = useSelector((state) => state.machineServiceRecord);
+  const { machineServiceRecord, isLoading } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine)
 
   const dispatch = useDispatch();
@@ -104,6 +108,23 @@ function MachineServiceParamViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [ machineServiceRecord]
   );
+
+  const handleSendEmail = async() => {
+      dispatch(setSendEmailDialog(true))
+  }
+
+  const handleDownloadPDF = async() => {
+    
+    const serviceDate = new Date(defaultValues.serviceDate);
+    const formattedDate = serviceDate.toISOString().split('T')[0];
+    const fileName = `${formattedDate.replaceAll('-','')}_${defaultValues?.serviceRecordConfigRecordType}_V${defaultValues.versionNo}.pdf`;
+    const blob = await ReactPDF.pdf(<MachineServiceRecordPDF key={machineServiceRecord?._id} machineServiceRecord={machineServiceRecord} />).toBlob();
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName;
+    link.click();
+  }
+  
   
   return (
     <Card sx={{ p: 2 }}>
@@ -116,9 +137,12 @@ function MachineServiceParamViewForm() {
           onDelete={!machineServiceRecord?.isHistory && machineServiceRecord?._id && onDelete} 
           backLink={() => dispatch( // isHistorical ? setMachineServiceRecordHistoryFormVisibility(true) : 
           setAllFlagsFalse())}
+          handleSendPDFEmail={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleSendEmail}
+          handleDownloadPDF={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleDownloadPDF}
         />
         
         <Grid container>
+
           {/* <ViewFormField sm={6} heading="Customer"  param={`${machine?.customer?.name ? machine?.customer?.name : ''}`} />
           <ViewFormField sm={6} heading="Machine"  param={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} />
           <ViewFormField sm={6} heading="Model Category"  param={machine?.machineModel?.category?.name || ''} />
@@ -186,6 +210,7 @@ function MachineServiceParamViewForm() {
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
       </Grid>
+      <SendEmailDialog machineServiceRecord={machineServiceRecord}/>
     </Card>
   );
 }

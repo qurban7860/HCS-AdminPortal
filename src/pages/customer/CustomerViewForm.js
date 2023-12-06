@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Grid, Tooltip } from '@mui/material';
+import { Card, Grid } from '@mui/material';
 // routes
 import { PATH_CUSTOMER } from '../../routes/paths';
 // hooks
@@ -10,21 +10,16 @@ import { useSnackbar } from '../../components/snackbar';
 import useResponsive from '../../hooks/useResponsive';
 // slices
 import {
-  getCustomer,
   setCustomerEditFormVisibility,
   deleteCustomer,
   setCustomerVerification,
 } from '../../redux/slices/customer/customer';
 // components
 import FormLabel from '../components/DocumentForms/FormLabel';
-import { TableNoData } from '../../components/table';
-import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
 import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
-import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
-import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
-import { BREADCRUMBS, FORMLABELS } from '../../constants/default-constants';
+import { FORMLABELS } from '../../constants/default-constants';
 import { Snacks, FORMLABELS as formLABELS } from '../../constants/customer-constants';
 
 // ----------------------------------------------------------------------
@@ -34,10 +29,8 @@ export default function CustomerViewForm() {
   const navigate = useNavigate();
   const isMobile = useResponsive('down', 'sm');
   const { customer, customerEditFormFlag } = useSelector((state) => state.customer);
-  const userId = localStorage.getItem('userId');
   const { enqueueSnackbar } = useSnackbar();
-  const isNotFound = !customer;
-  // ----------------------------useMemo---------------------------------
+  
   const defaultValues = useMemo(
     () => ({
       id: customer?._id || '',

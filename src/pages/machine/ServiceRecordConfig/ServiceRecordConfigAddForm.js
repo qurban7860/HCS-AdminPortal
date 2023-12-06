@@ -26,7 +26,7 @@ import { StyledCardContainer } from '../../../theme/styles/default-styles';
 // constants
 import { FORMLABELS } from '../../../constants/default-constants';
 import CheckItemTable from './CheckItemTable';
-import { statusTypes, inputTypes, unitTypes, recordTypes, headerFooterTypes, status } from '../util/index'
+import { recordTypes } from '../util/index'
 
 // ----------------------------------------------------------------------
 
@@ -38,12 +38,9 @@ export default function ServiceRecordConfigAddForm() {
   const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
   const { activeCategories } = useSelector((state) => state.category);
-  const { activeServiceCategories } = useSelector((state) => state.serviceCategory);
   const [checkParams, setCheckParams] = useState([]);
   const [checkItemList, setCheckItemList] = useState([]);
   const [isDraft, setDraft] = useState(false);
-  const initialState = useSelector((state) => state.serviceRecordConfig);
-  // const recordTypes = initialState.recordTypes;
 
   useEffect(() => {
     dispatch(getActiveCategories())

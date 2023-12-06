@@ -1,12 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { Grid, Dialog, DialogContent, Skeleton } from '@mui/material';
+import { Grid, Dialog, DialogContent, DialogTitle, Divider } from '@mui/material';
 import { PATH_MACHINE } from '../../../routes/paths';
 import DialogLink from './DialogLink';
-import DialogLabel from './DialogLabel';
-import ViewFormField from '../ViewForms/ViewFormField';
 import FormLabel from '../DocumentForms/FormLabel';
 import { setMachineDialog } from '../../../redux/slices/products/machine';
 import ViewFormFieldWithSkelton from '../ViewForms/ViewFormFieldWithSkelton';
@@ -26,8 +22,9 @@ function MachineDialog() {
       keepMounted
       aria-describedby="alert-dialog-slide-description"
     >
-      <DialogLabel onClick={ handleMachineDialog } content="Machine" />
-      <DialogContent dividers sx={{width:"1000px"}}>
+      <DialogTitle variant='h3' sx={{pb:1, pt:2}}>Machine</DialogTitle>
+      <Divider orientation="horizontal" flexItem />
+      <DialogContent dividers sx={{width:"1000px", pl:1, pr:1}}>
         <Grid container>
           <ViewFormFieldWithSkelton sm={6} variant='h4' heading="Serial No" var param={machineForDialog?.serialNo} isLoading={isLoading} />
           <ViewFormFieldWithSkelton sm={6} variant='h4' heading="Name" param={machineForDialog?.name} isLoading={isLoading}/>

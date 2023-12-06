@@ -11,7 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // import { LoadingButton } from '@mui/lab';
 import { Card, Grid, Stack, Typography, CardHeader } from '@mui/material';
 // slice
-import {moveCustomerContact, resetContact, resetContactFormsVisiblity, setContactFormVisibility, setContactMoveFormVisibility } from '../../../redux/slices/customer/contact';
+import {moveCustomerContact,setContactMoveFormVisibility } from '../../../redux/slices/customer/contact';
 import { getActiveCustomers } from '../../../redux/slices/customer/customer';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -25,7 +25,7 @@ ContactMoveForm.propTypes = {
 };
 
 export default function ContactMoveForm({setIsExpanded}) {
-  const { contact, formVisibility , contactEditFormVisibility , contactMoveFormVisibility} = useSelector((state) => state.contact);
+  const { contact } = useSelector((state) => state.contact);
   const { activeCustomers } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -51,7 +51,6 @@ export default function ContactMoveForm({setIsExpanded}) {
   });
 
   const {
-    reset,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;

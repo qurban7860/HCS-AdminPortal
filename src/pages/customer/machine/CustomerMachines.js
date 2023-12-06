@@ -1,10 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 // slice
-import { getCustomerMachines, ChangeRowsPerPage,
-  ChangePage,
-  setFilterBy,
-  setMachineDialog,
+import { getCustomerMachines, 
   setMachineMoveFormVisibility } from '../../../redux/slices/products/machine';
 // components
 import MachineList from './MachineList'

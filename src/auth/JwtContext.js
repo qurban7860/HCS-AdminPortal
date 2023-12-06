@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import storage from 'redux-persist/lib/storage';
 import { createContext, useEffect, useReducer, useCallback, useMemo } from 'react';
 import { CONFIG } from '../config-global';
 // utils
@@ -6,9 +7,7 @@ import axios from '../utils/axios';
 import localStorageAvailable from '../utils/localStorageAvailable';
 //
 import { isValidToken, setSession } from './utils';
-import { clearAllPersistedStates } from '../redux/slices/auth/clearPersistStates';
-// import { WebSocketConnection } from './WebSocketContext';
-
+import { PATH_AUTH } from '../routes/paths';
 
 
 // ----------------------------------------------------------------------
@@ -126,36 +125,18 @@ export function AuthProvider({ children }) {
     initialize();
   }, [initialize]);  
 
-  // LOGIN
-
+  // CONFIGURATIONS
   async function getConfigs(){
-    localStorage.removeItem("configurations");
-    const configsResponse = await axios.get(`${CONFIG.SERVER_URL}configs`,
-    {
-      params: {
-        isActive: true,
-        isArchived: false
-      }
-    });
+    const configsResponse = await axios.get(`${CONFIG.SERVER_URL}configs`, {  params: { isActive: true, isArchived: false } });
     if(configsResponse && Array.isArray(configsResponse.data) && configsResponse.data.length>0 ) {
       const configs = configsResponse.data.map((c)=>({name:c.name, type:c.type, value:c.value, notes:c.notes}));
       localStorage.setItem("configurations",JSON.stringify(configs));
     }
   }
 
-
+  // LOGIN
   const login = useCallback(async (uEmail, uPassword) => {
-    localStorage.removeItem('userId');
-    localStorage.removeItem('email');
-    localStorage.removeItem('name');
-    localStorage.removeItem('userRoles');
-    localStorage.removeItem('accessToken');
-
-    const response = await axios.post(`${CONFIG.SERVER_URL}security/getToken`, {
-      email: uEmail,
-      password : uPassword,
-    })
-
+    const response = await axios.post(`${CONFIG.SERVER_URL}security/getToken`, { email: uEmail, password : uPassword, })
     if (response.data.multiFactorAuthentication){
       localStorage.setItem("userId", response.data.userId);
       localStorage.setItem("MFA", true);
@@ -166,48 +147,30 @@ export function AuthProvider({ children }) {
       localStorage.setItem('name', user.displayName);
       localStorage.setItem('userId', userId);
       localStorage.setItem('userRoles', rolesArrayString);
-
       setSession(accessToken);
       await getConfigs();
-      
       dispatch({
         type: 'LOGIN',
-        payload: {
-          user,
-          userId
-        },
+        payload: { user, userId },
       });
-
-      // window.location.reload();
     }
   }, []);
 
   // MULTI FACTOR CODE
-
   const muliFactorAuthentication = useCallback(async (code, userID) => {
-
-    const response = await axios.post(`${CONFIG.SERVER_URL}security/multifactorverifyCode`, {
-      code, userID
-    })
-
+    const response = await axios.post(`${CONFIG.SERVER_URL}security/multifactorverifyCode`, {code, userID})
       const { accessToken, user, userId } = response.data;
       const rolesArrayString = JSON.stringify(user.roles);
       localStorage.setItem('email', user.email);
       localStorage.setItem('name', user.displayName);
       localStorage.setItem('userId', userId);
       localStorage.setItem('userRoles', rolesArrayString);
-
       setSession(accessToken);
       await getConfigs();
       dispatch({
         type: 'LOGIN',
-        payload: {
-          user,
-          userId
-        },
+        payload: { user, userId },
       });
-
-    
   }, []);
 
 
@@ -220,9 +183,7 @@ export function AuthProvider({ children }) {
       password,
     });
     const { accessToken, user } = response.data;
-
     localStorage.setItem('accessToken', accessToken);
-
     dispatch({
       type: 'REGISTER',
       payload: {
@@ -231,38 +192,55 @@ export function AuthProvider({ children }) {
     });
   }, []);
 
+  // Clear All persisted data and remove Items from localStorage
+  const clearAllPersistedStates = useCallback( async () => {
+    try {
+        setSession(null);
+        localStorage.removeItem('name');
+        localStorage.removeItem('email');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('userRoles');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem("configurations");
+        // dispatch({
+        //   type: 'LOGOUT',
+        // });
+        window.location.href = PATH_AUTH.login
+        const keys = Object.keys(localStorage); 
+        const reduxPersistKeys = keys.filter(  key => !(key === 'remember' || key === 'UserEmail' || key === 'UserPassword')  );
+      await Promise.all(reduxPersistKeys.map(key => storage.removeItem(key)));
+    } catch (error) {
+      console.error('Error clearing persisted states:', error);
+    }
+  },[]);
+
   // LOGOUT
   const logout = useCallback( async () => {
     const userId  = localStorage.getItem("userId")
-    
-    setSession(null);
-    localStorage.removeItem('userId');
-    localStorage.removeItem('email');
-    localStorage.removeItem('name');
-    localStorage.removeItem('userRoles');
-    localStorage.removeItem('accessToken');
-    await dispatch(clearAllPersistedStates());
-
-    await axios.post(`${CONFIG.SERVER_URL}security/logout/${userId}`)
-    // window.location.reload();
-    dispatch({
-      type: 'LOGOUT',
-    });
+    try{
+      await dispatch(clearAllPersistedStates());
+      await axios.post(`${CONFIG.SERVER_URL}security/logout/${userId}`)
+    }catch (error) {
+      console.error(error)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+// Memoization
   const memoizedValue = useMemo(
-    () => ({
-      isInitialized: state.isInitialized,
-      isAuthenticated: state.isAuthenticated,
-      user: state.user,
-      userId: state.userId,
-      method: 'jwt',
-      login,
-      register,
-      logout,
-      muliFactorAuthentication
-    }),
-    [state.isAuthenticated, state.isInitialized, state.user, state.userId, login, logout, register, muliFactorAuthentication]
+      () => ({
+        isInitialized: state.isInitialized,
+        isAuthenticated: state.isAuthenticated,
+        user: state.user,
+        userId: state.userId,
+        method: 'jwt',
+        login,
+        register,
+        logout,
+        clearAllPersistedStates,
+        muliFactorAuthentication
+      }),
+    [state.isAuthenticated, state.isInitialized, state.user, state.userId, login, logout, register, muliFactorAuthentication, clearAllPersistedStates]
   );
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;

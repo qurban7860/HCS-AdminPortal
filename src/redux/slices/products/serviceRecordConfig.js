@@ -18,6 +18,7 @@ export const initialState = {
   activeServiceRecordConfigsForRecords: [],
   serviceRecordConfig: {},
   filterBy: '',
+  filterList: 'active',
   page: 0,
   rowsPerPage: 100,
   
@@ -27,6 +28,8 @@ export const initialState = {
     { _id:3 , name: 'Under Service'},
     { _id:4 , name: 'Replacement Required'},
     { _id:5 , name: 'Replaced Recently'},
+    { _id:6 , name: 'Yes'},
+    { _id:6 , name: 'No'},
   ],
 
   recordTypes: [
@@ -130,6 +133,10 @@ const slice = createSlice({
     setFilterBy(state, action) {
       state.filterBy = action.payload;
     },
+    // Set FilterListBy
+    setFilterList(state, action) {
+      state.filterList = action.payload;
+    },
     // Set PageRowCount
     ChangeRowsPerPage(state, action) {
       state.rowsPerPage = action.payload;
@@ -151,6 +158,7 @@ export const {
   resetServiceRecordConfigs,
   setResponseMessage,
   setFilterBy,
+  setFilterList,
   ChangeRowsPerPage,
   ChangePage,
 } = slice.actions;

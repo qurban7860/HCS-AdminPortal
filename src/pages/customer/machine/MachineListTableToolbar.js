@@ -1,14 +1,8 @@
 import PropTypes from 'prop-types';
-// import { sentenceCase } from 'change-case';
 // @mui
-import { Stack, Button, TextField, InputAdornment, Grid } from '@mui/material';
-// import { useNavigate } from 'react-router-dom';
-import { useDispatch } from '../../../redux/store';
+import { Stack } from '@mui/material';
 // components
-import Iconify from '../../../components/iconify';
 import { SearchBarCombo } from '../../components/ListTableTools'
-import { setNoteFormVisibility } from '../../../redux/slices/customer/customerNote';
-import { BUTTONS } from '../../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -20,6 +14,8 @@ MachineListTableToolbar.propTypes = {
   filterStatus: PropTypes.array,
   onFilterStatus: PropTypes.func,
   statusOptions: PropTypes.array,
+  transferStatus: PropTypes.bool,
+  handleTransferStatus: PropTypes.func,
 };
 
 export default function MachineListTableToolbar({
@@ -30,10 +26,10 @@ export default function MachineListTableToolbar({
   statusOptions,
   onResetFilter,
   onFilterStatus,
+  transferStatus,
+  handleTransferStatus
 }) {
-  // const navigate = useNavigate();
-  const dispatch = useDispatch();
-  // const toggleAdd = () => dispatch(setNoteFormVisibility(true));
+  
   return (
     <Stack
     spacing={2}
@@ -46,6 +42,8 @@ export default function MachineListTableToolbar({
       value={filterName}
       onChange={onFilterName}
       onClick={onResetFilter}
+      handleTransferStatus={handleTransferStatus}
+      transferStatus={transferStatus}
     />
   </Stack>
   );

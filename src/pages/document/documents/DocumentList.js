@@ -4,12 +4,9 @@ import debounce from 'lodash/debounce';
 import PropTypes from 'prop-types';
 // @mui
 import {
-  Grid,
-  Table,
   Button,
-  Tooltip,
+  Table,
   TableBody,
-  IconButton,
   TableContainer,
 } from '@mui/material';
 // redux
@@ -17,7 +14,7 @@ import { useDispatch, useSelector } from '../../../redux/store';
 // routes
 import { PATH_DOCUMENT } from '../../../routes/paths';
 // components
-// import { useSnackbar } from '../../../components/snackbar';
+import { useSnackbar } from '../../../components/snackbar';
 // import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
@@ -25,12 +22,9 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from '../../../components/table';
-import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
-import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import DocumentListTableRow from './DocumentListTableRow';
 import DocumentListTableToolbar from './DocumentListTableToolbar';
@@ -38,11 +32,9 @@ import {
   getDocument,
   resetDocument,
   getDocuments,
-  // deleteDocument,
   resetDocuments,
   resetDocumentHistory,
   setDocumentViewFormVisibility,
-  // document pagination
   setFilterBy,
   ChangePage,
   ChangeRowsPerPage,
@@ -67,6 +59,8 @@ import { FORMLABELS } from '../../../constants/default-constants';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
 import MachineDialog from '../../components/Dialog/MachineDialog';
+import { Snacks } from '../../../constants/document-constants';
+import ConfirmDialog from '../../../components/confirm-dialog';
 
 // ----------------------------------------------------------------------
 DocumentList.propTypes = {
@@ -90,22 +84,12 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
       customerDocumentsFilterBy,   customerDocumentsPage,   customerDocumentsRowsPerPage,
       machineDocumentsFilterBy,  machineDocumentsPage,  machineDocumentsRowsPerPage,
       isLoading } = useSelector((state) => state.document );
-
   const {
-    // page,
     order,
     orderBy,
-    // rowsPerPage,
-    // setPage,
-    //
     selected,
-    // setSelected,
-    onSelectRow,
-    onSelectAllRows,
-    //
+    setSelected,
     onSort,
-    // onChangePage,
-    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'createdAt', defaultOrder: 'desc',
   });
@@ -144,28 +128,21 @@ const  onChangePage = (event, newPage) => {
     { id: 'referenceNumber', visibility: 'xs2', label: 'Ref. No.', align: 'left' },
     { id: 'displayName', label: 'Name', align: 'left' },
     { id: 'documentVersions.versionNo.[]', visibility: 'md1', label: 'Version', align: 'center' },
+    { id: 'stockNumber', visibility: 'xs2', label: 'Stock No.', align: 'left' },
     { id: 'customerAccess', visibility: 'md2', label: 'Customer Access', align: 'center' },
     { id: 'isActive', label: 'Active', align: 'center' },
     { id: 'createdAt', label: 'Created At', align: 'right' },
+    { id: 'action', label: '', align: 'right' },
   ];
 
   if (!customerPage && !machinePage && !machineDrawings) {
-    const insertIndex = 5; // Index after which you want to insert the new objects
+    const insertIndex = 6; // Index after which you want to insert the new objects
     TABLE_HEAD.splice(insertIndex, 0,// 0 indicates that we're not removing any elements
       { id: 'customer.name', visibility: 'md3', label: 'Customer', align: 'left' },
       { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left' }
     );
   }
-
-  if (machineDrawings) {
-   const insertIndex = 5
-   const removeIndex = 0
-    TABLE_HEAD.splice(insertIndex, removeIndex,
-      { id: 'stockNumber', visibility: 'xs2', label: 'Stock No.', align: 'left' },
-      { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left' }
-   )
-  }
-
+  
   useEffect(() => {
     const fetchData = async () => {
       dispatch(resetDocuments());
@@ -286,6 +263,11 @@ const  onChangePage = (event, newPage) => {
     }
   };
 
+  const handleDeleteRow = (id) => {
+    setSelected(id)
+    handleOpenConfirm(true)                        
+  };
+
   const handleResetFilter = () => {
     setFilterName('');
     if(machinePage){
@@ -304,6 +286,35 @@ const  onChangePage = (event, newPage) => {
     dispatch(getMachineForDialog(id))
     dispatch(setMachineDialog(true))
   }
+
+
+  const { enqueueSnackbar } = useSnackbar();
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const handleOpenConfirm = () => setOpenConfirm(true);
+  const handleCloseConfirm = () => setOpenConfirm(false);
+
+  const handleDeleteDoc = async (id) => {
+    try {
+      await dispatch(deleteDocument(id));
+      dispatch(resetDocuments());
+
+      dispatch(resetDocuments());
+      if (customerPage || machinePage) {
+        if (customer?._id || machine?._id) {
+          await dispatch(getDocuments(customerPage ? customer?._id : null, machinePage ? machine?._id : null));
+        }
+      }else if(machineDrawings){
+        await dispatch(getDocuments(null, null,machineDrawings));
+      } else {
+        await dispatch(getDocuments());
+      }
+
+      enqueueSnackbar(machineDrawings?Snacks.deletedDrawing:Snacks.deletedDoc, { variant: `success` });
+    } catch (err) {
+      console.log(err);
+      enqueueSnackbar(machineDrawings?Snacks.failedDeleteDrawing:Snacks.failedDeleteDoc, { variant: `error` });
+    }
+  };
 
   return (
     <>
@@ -349,8 +360,9 @@ const  onChangePage = (event, newPage) => {
                       <DocumentListTableRow
                         key={row._id}
                         row={row}
-                        selected={selected.includes(row._id)}
                         onViewRow={() => handleViewRow(row._id)}
+                        onDeleteRow={() => handleDeleteRow(row._id)}
+                        disabledActions={machine?.status?.slug === "transferred"}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         customerPage={customerPage}
                         machinePage={machinePage}
@@ -376,7 +388,21 @@ const  onChangePage = (event, newPage) => {
         />}
       </TableCard>
       {/* </Container> */}
+      
       <MachineDialog />
+
+      <ConfirmDialog open={openConfirm} onClose={handleCloseConfirm} title="Delete" content="Are you sure you want to delete?"
+        action={
+          <Button variant="contained" color="error"
+            onClick={() => {
+              handleDeleteDoc(selected)
+              handleCloseConfirm();
+            }}
+          >
+            Delete
+          </Button>
+        }
+      />
     </>
   );
 }
@@ -400,6 +426,8 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
         document?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         document?.machine?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         document?.docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.referenceNumber?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.stockNumber?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         document?.documentVersions[0].versionNo?.toString().indexOf(filterName.toLowerCase()) >= 0 ||
         // (document?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0

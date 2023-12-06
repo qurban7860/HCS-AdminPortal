@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // routes
 import { getServiceRecordConfigs, deleteServiceRecordConfig,   ChangeRowsPerPage,
   ChangePage,
-  setFilterBy, } from '../../../redux/slices/products/serviceRecordConfig';
+  setFilterBy, setFilterList } from '../../../redux/slices/products/serviceRecordConfig';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -66,29 +66,22 @@ export default function ServiceRecordConfigList() {
     // onChangeRowsPerPage,
   } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
 
+  const { serviceRecordConfigs, filterBy, filterList, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector( (state) => state.serviceRecordConfig );
   const dispatch = useDispatch();
-  // const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
-  const { serviceRecordConfigs, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector(
-    (state) => state.serviceRecordConfig
-  );
-
-    
+  const [filterListBy, setFilterListBy] = useState(filterList);
+  
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
   };
 
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
-
-  // useLayoutEffect(() => {
-  //   dispatch(getCustomers());
-  // }, [dispatch]);
 
   useLayoutEffect(() => {
     dispatch(getServiceRecordConfigs());
@@ -105,6 +98,7 @@ export default function ServiceRecordConfigList() {
     comparator: getComparator(order, orderBy),
     filterName,
     filterStatus,
+    filterListBy,
   });
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
@@ -115,14 +109,9 @@ export default function ServiceRecordConfigList() {
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
-  // const handleOpenConfirm = () => {
-  //   setOpenConfirm(true);
-  // };
-
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
   };
-
 
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
@@ -135,9 +124,21 @@ export default function ServiceRecordConfigList() {
     setPage(0);
   };
   
+  const debouncedVerified = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setFilterList(value))
+  }, 500))
+
+  const handleFilterListBy = (event) => {
+    debouncedVerified.current(event.target.value);
+    setFilterListBy(event.target.value)
+    setPage(0);
+  };
+
   useEffect(() => {
       debouncedSearch.current.cancel();
-  }, [debouncedSearch]);
+      debouncedVerified.current.cancel();
+  }, [debouncedSearch, debouncedVerified]);
   
   useEffect(()=>{
       setFilterName(filterBy)
@@ -218,6 +219,8 @@ export default function ServiceRecordConfigList() {
             onFilterName={handleFilterName}
             onFilterStatus={handleFilterStatus}
             isFiltered={isFiltered}
+            filterListBy={filterListBy}
+            onFilterListBy={handleFilterListBy}
             onResetFilter={handleResetFilter}
           />
           {!isNotFound && <TablePaginationCustom
@@ -317,7 +320,7 @@ export default function ServiceRecordConfigList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+function applyFilter({ inputData, comparator, filterName, filterStatus, filterListBy }) {
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
@@ -328,7 +331,13 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-// console.log(!'.*/.* '.includes(filterName))
+
+  if(filterListBy ==='active' )
+    inputData = inputData.filter((config)=> config.isActive === true );
+  else if(filterListBy ==='inActive' )
+    inputData = inputData.filter((config)=> config.isActive === false );
+  
+
   if (filterName.includes('.*') ){
     inputData = inputData.filter(
       (serviceConfig) =>
