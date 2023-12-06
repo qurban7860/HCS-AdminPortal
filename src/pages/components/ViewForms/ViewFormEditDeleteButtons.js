@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
-import { Badge, Box, Divider, Grid, TextField } from '@mui/material';
+import { Autocomplete, Badge, Box, Divider, Grid, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { memo, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -14,6 +14,8 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // import Iconify from '../../../components/iconify';
 import useResponsive from '../../../hooks/useResponsive';
 import { setTransferDialogBoxVisibility } from '../../../redux/slices/products/machine';
+import { getActiveMachineStatuses } from '../../../redux/slices/products/statuses';
+import { getActiveCustomers } from '../../../redux/slices/customer/customer';
 import IconPopover from '../Icons/IconPopover';
 import IconTooltip from '../Icons/IconTooltip';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
@@ -75,7 +77,9 @@ function ViewFormEditDeleteButtons({
   const userId = localStorage.getItem('userId');
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
-  const { transferDialogBoxVisibility } = useSelector((state) => state.machine);
+  const { machine, transferDialogBoxVisibility } = useSelector((state) => state.machine);
+  const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
+  const { activeCustomers } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openUserInviteConfirm, setOpenUserInviteConfirm] = useState(false);
@@ -149,6 +153,8 @@ function ViewFormEditDeleteButtons({
     }
 
     if (dialogType === 'transfer') {
+      dispatch(getActiveCustomers());
+      dispatch(getActiveMachineStatuses());
       dispatch(setTransferDialogBoxVisibility(true));
     }
 
@@ -252,6 +258,10 @@ function ViewFormEditDeleteButtons({
     date: new Date(machineSupportDate)
   }
 
+  const [customer, setCustomer] = useState(null);
+  const [status, setStatus] = useState(null);
+  const [statusError, setStatusError] = useState(null);
+  
   return (
     <Grid container justifyContent="space-between">
       <Grid item sx={{display:'flex'}}>
@@ -669,13 +679,67 @@ function ViewFormEditDeleteButtons({
           handleCloseConfirm('transfer');
         }}
         title="Ownership Transfer"
-        content="Are you sure you want to transfer machine ownership?"
+        content={
+          <Box rowGap={2} display="grid">
+            Are you sure you want to transfer machine ownership?
+            {activeCustomers &&
+              <>
+              <Autocomplete
+              // freeSolo
+              value={customer}
+              options={activeCustomers}
+              isOptionEqualToValue={(option, value) => option?._id === value?._id}
+              getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+              onChange={(event, newValue) => { setCustomer(newValue) }}
+              renderOption={(props, option) => (
+                <li {...props} key={option._id}>
+                  {option.name && option.name}
+                </li>
+              )}
+              id="controllable-states-demo"
+              renderInput={(params) => ( <TextField {...params} label="Customer" />)}
+              />
+
+              <Autocomplete
+              // freeSolo
+              value={status}
+              options={activeMachineStatuses.filter((st) => st?.slug !== 'intransfer')}
+              isOptionEqualToValue={(option, value) => option?._id === value?._id}
+              getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+              onChange={(event, newValue) => { 
+                if(newValue){
+                  setStatusError('');
+                }else if(customer){
+                  setStatusError('Status is Required');  
+                }
+                setStatus(newValue) 
+              }}
+              renderOption={(props, option) => (
+                <li {...props} key={option._id}>
+                  {option.name && option.name}
+                </li>
+              )}
+              id="controllable-states-demo"
+              renderInput={(params) => ( <TextField {...params} label="Status" error={!!statusError} helperText={statusError} />)}
+              />
+            </>
+            }
+          </Box>
+        }
+        // content="Are you sure you want to transfer machine ownership?"
         action={
           <LoadingButton
             color="error"
             variant="contained"
             loading={isLoading}
-            onClick={handleTransfer}
+            onClick={()=> { 
+              if(customer && !status){
+                setStatusError('Status is Required');
+              }else{
+                handleTransfer(customer?._id, status?._id)
+              }
+            }
+            }
           >
             Transfer
           </LoadingButton>
@@ -742,4 +806,5 @@ ViewFormEditDeleteButtons.propTypes = {
   onUserStatusChange:PropTypes.func,
   financingCompany: PropTypes.bool,
   isLoading: PropTypes.bool,
+  
 };

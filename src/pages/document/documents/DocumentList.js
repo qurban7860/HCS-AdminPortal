@@ -263,6 +263,11 @@ const  onChangePage = (event, newPage) => {
     }
   };
 
+  const handleDeleteRow = (id) => {
+    setSelected(id)
+    handleOpenConfirm(true)                        
+  };
+
   const handleResetFilter = () => {
     setFilterName('');
     if(machinePage){
@@ -288,15 +293,22 @@ const  onChangePage = (event, newPage) => {
   const handleOpenConfirm = () => setOpenConfirm(true);
   const handleCloseConfirm = () => setOpenConfirm(false);
 
-  const handleDeleteRow = async (id) => {
+  const handleDeleteDoc = async (id) => {
     try {
       await dispatch(deleteDocument(id));
       dispatch(resetDocuments());
-      if(machineDrawings){
+
+      dispatch(resetDocuments());
+      if (customerPage || machinePage) {
+        if (customer?._id || machine?._id) {
+          await dispatch(getDocuments(customerPage ? customer?._id : null, machinePage ? machine?._id : null));
+        }
+      }else if(machineDrawings){
         await dispatch(getDocuments(null, null,machineDrawings));
       } else {
         await dispatch(getDocuments());
       }
+
       enqueueSnackbar(Snacks.deletedDoc, { variant: `success` });
     } catch (err) {
       console.log(err);
@@ -349,11 +361,8 @@ const  onChangePage = (event, newPage) => {
                         key={row._id}
                         row={row}
                         onViewRow={() => handleViewRow(row._id)}
-                        onDeleteRow={() => {
-                          setSelected(row._id);
-                          handleOpenConfirm(true);
-
-                        }}
+                        onDeleteRow={() => handleDeleteRow(row._id)}
+                        disabledActions={machine?.status?.slug === "transferred"}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         customerPage={customerPage}
                         machinePage={machinePage}
@@ -382,11 +391,11 @@ const  onChangePage = (event, newPage) => {
       
       <MachineDialog />
 
-      <ConfirmDialog open={openConfirm} onClose={handleCloseConfirm} title="Delete" content="Are you sure want to delete?"
+      <ConfirmDialog open={openConfirm} onClose={handleCloseConfirm} title="Delete" content="Are you sure you want to delete?"
         action={
           <Button variant="contained" color="error"
             onClick={() => {
-              handleDeleteRow(selected)
+              handleDeleteDoc(selected)
               handleCloseConfirm();
             }}
           >

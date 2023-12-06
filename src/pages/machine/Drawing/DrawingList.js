@@ -138,8 +138,12 @@ export default function DrawingList() {
       dispatch(setDrawingViewFormVisibility(true));
   };
 
-  const handleDeleteRow = async (drawingId) => {
-    console.log("drawingId:::::",drawingId)
+  const handleDeleteRow = (id) => {
+    setSelected(id);
+    handleOpenConfirm(true);
+  };
+
+  const handleDeleteDrawing = async (drawingId) => {
     try {
       await dispatch(deleteDrawing(drawingId));
       await dispatch(resetDrawings());
@@ -149,8 +153,6 @@ export default function DrawingList() {
       console.log(err);
       enqueueSnackbar(Snacks.failedDeleteDrawing, { variant: `error` });
     }
-
-    
   };
 
   const handleResetFilter = () => {
@@ -195,11 +197,8 @@ export default function DrawingList() {
                         key={row._id}
                         row={row}
                         onViewRow={() => handleViewRow(row?.document?._id)}
-                        onDeleteRow={() => {
-                          setSelected(row?._id);
-                          handleOpenConfirm(true);
-
-                        }}
+                        onDeleteRow={() => handleDeleteRow(row._id)}
+                        disabledActions={machine?.status?.slug === "transferred"}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
                     ) : (
@@ -225,17 +224,13 @@ export default function DrawingList() {
         open={openConfirm}
         onClose={handleCloseConfirm}
         title="Delete"
-        content={
-          <>
-            Are you sure want to delete?
-          </>
-        }
+        content="Are you sure you want to delete?"
         action={
           <Button
             variant="contained"
             color="error"
             onClick={() => {
-              handleDeleteRow(selected)
+              handleDeleteDrawing(selected)
               handleCloseConfirm();
             }}
           >

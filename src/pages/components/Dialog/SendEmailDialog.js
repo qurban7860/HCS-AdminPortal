@@ -91,7 +91,7 @@ function SendEmailDialog({machineServiceRecord}) {
               <Grid container rowSpacing={1} columnSpacing={1} sx={{mt:3, display:'flex', justifyContent:'flex-end'}}>
                 <RHFTextField name="email" label="Email"/>
                 <Grid item>
-                  <Button variant='outlined' onClick={handleCloseDialog}>Cancle</Button>
+                  <Button variant='outlined' onClick={handleCloseDialog}>Cancel</Button>
                 </Grid>
                 <Grid item>
                   <LoadingButton loading={isSubmitting} type='submit' variant='contained'>Send</LoadingButton>

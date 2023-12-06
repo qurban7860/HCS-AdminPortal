@@ -6,7 +6,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, Grid, Stack, TextField, Autocomplete } from '@mui/material';
 import { MuiChipsInput } from 'mui-chips-input';
-import { DatePicker } from '@mui/x-date-pickers';
 // hook
 import { Controller, useForm } from 'react-hook-form';
 import useResponsive from '../../hooks/useResponsive';
@@ -139,6 +138,7 @@ export default function MachineEditForm() {
     reset,
     watch,
     handleSubmit,
+    setError,
     formState: { isSubmitting },
     setValue,
     control,
@@ -178,8 +178,6 @@ export default function MachineEditForm() {
      // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ category, machineModel ]);
 
-
-
   useEffect(() => {
     dispatch(getFinancialCompanies());
     dispatch(getActiveSuppliers());
@@ -214,16 +212,29 @@ export default function MachineEditForm() {
 
   const onSubmit = async (data) => {
 
-    data.alias = chips;
-    try {
-      await dispatch(updateMachine(machine._id ,data));
-      enqueueSnackbar('Machine updated successfully!');
-      reset();
-      navigate(PATH_MACHINE.machines.view(machine._id));
-    } catch (error) {
-      enqueueSnackbar('Saving failed!', { variant: `error` });
-      console.error(error);
+    if (data?.status?.slug === 'intransfer') {
+      // Set an error message for 'intransfer' status
+      setError('status', {
+        type: 'manual',
+        message: 'Please change status In-Transfer is not acceptable',
+      });
+    } else {
+      setError('status', null);
+      
+      data.alias = chips;
+      try {
+        await dispatch(updateMachine(machine._id ,data));
+        enqueueSnackbar('Machine updated successfully!');
+        reset();
+        navigate(PATH_MACHINE.machines.view(machine._id));
+      } catch (error) {
+        enqueueSnackbar('Saving failed!', { variant: `error` });
+        console.error(error);
+      }
+
     }
+
+    
   };
 
   // ----------------------handle functions----------------------
@@ -367,7 +378,7 @@ export default function MachineEditForm() {
                     />
 
                     {/* -------------------------------- Statuses -------------------------------- */}
-
+                  
                 <Controller
                   name="status"
                   control={control}
