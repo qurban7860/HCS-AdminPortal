@@ -14,7 +14,8 @@ import {
   transferMachine,
   setMachineVerification,
   setMachineDialog,
-  getMachineForDialog
+  getMachineForDialog,
+  setTransferDialogBoxVisibility
 } from '../../redux/slices/products/machine';
 import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
 import { getSite, resetSite, setSiteDialog } from '../../redux/slices/customer/site';
@@ -53,14 +54,30 @@ export default function MachineViewForm() {
   const { enqueueSnackbar } = useSnackbar();
   const { machine, transferMachineFlag, machineDialog } = useSelector((state) => state.machine);
   const { customerDialog } = useSelector((state) => state.customer);
+  const { siteDialog } = useSelector((state) => state.site);
   const [disableTransferButton, setDisableTransferButton] = useState(true);
   const [disableEditButton, setDisableEditButton] = useState(false);
   const [disableDeleteButton, setDisableDeleteButton] = useState(false);
   const [hasValidLatLong, setHasValidLatLong] = useState(false);
   const isMobile = useResponsive('down', 'sm');
 
-  const handleInstallationSiteDialog = () =>{ dispatch(resetSite()); dispatch(getSite(machine?.customer?._id, machine?.instalationSite?._id)); dispatch(setSiteDialog(true))}
-  const handleBillingSiteDialog = () =>{ dispatch(resetSite()); dispatch(getSite(machine?.customer?._id, machine?.billingSite?._id)); dispatch(setSiteDialog(true))}
+  const [siteDialogTitle, setDialogTitle] = useState('');
+
+  const handleInstallationSiteDialog = (event) =>{
+      event.preventDefault(); 
+      setDialogTitle('Installation Site');
+      dispatch(resetSite()); 
+      dispatch(getSite(machine?.customer?._id, machine?.instalationSite?._id)); 
+      dispatch(setSiteDialog(true))
+  }
+  
+  const handleBillingSiteDialog = (event) =>{
+      event.preventDefault();  
+      setDialogTitle('Billing Site');
+      dispatch(resetSite()); 
+      dispatch(getSite(machine?.customer?._id, machine?.billingSite?._id)); 
+      dispatch(setSiteDialog(true))
+  }
 
   const hasValidArray = (array) =>
     array.some((obj) => {
@@ -84,6 +101,7 @@ export default function MachineViewForm() {
   );
 
   useEffect(() => {
+    dispatch(setTransferDialogBoxVisibility(false));
     dispatch(setSiteDialog(false))
     dispatch(setCustomerDialog(false));
     dispatch(setMachineDialog(false));
@@ -107,9 +125,7 @@ export default function MachineViewForm() {
       setDisableEditButton(false);
       setDisableDeleteButton(false);
     }
-    // if (machine?.customer) {
-    //   dispatch(getCustomer(machine?.customer?._id));
-    // }
+    
   }, [dispatch, machine, transferMachineFlag, userId, isSuperAdmin]);
 
   const handleEdit = () => {
@@ -156,7 +172,8 @@ export default function MachineViewForm() {
     }
   };
   
-  const handleCustomerDialog = (customerId) => {
+  const handleCustomerDialog = (event, customerId) => {
+    event.preventDefault(); 
     dispatch(getCustomer(customerId));
     dispatch(setCustomerDialog(true));
   };
@@ -216,60 +233,37 @@ export default function MachineViewForm() {
   );
   return (
     <>
-      {/* <Grid container direction="row" justifyContent="space-between" alignItems="center">
-        <Grid item xs={12} md={6}>
-          <Breadcrumbs
-            aria-label="breadcrumb"
-            separator="›"
-            sx={{ fontSize: '12px', color: 'text.disabled' }}
-          >
-            <BreadcrumbsLink to={PATH_MACHINE.machines.list} name={BREADCRUMBS.MACHINES} />
-            <BreadcrumbsLink to={PATH_MACHINE.machines.view(machine._id)} name={machine.serialNo} />
-          </Breadcrumbs>
-        </Grid>
-        {!isMobile && <AddButtonAboveAccordion isCustomer />}
-      </Grid> */}
       <Grid container direction="row" mt={isMobile && 2}>
+        <Card sx={{ width: '100%', p: '1rem', mb:3 }}>
+          <ViewFormEditDeleteButtons
+              sx={{ pt: 5 }}
+              verifiers={machine?.verifications}
+              isActive={defaultValues?.isActive}
+              handleVerification={handleVerification}
+              disableTransferButton={disableTransferButton}
+              disableEditButton={disableEditButton}
+              disableDeleteButton={disableDeleteButton}
+              handleEdit={handleEdit}
+              onDelete={onDelete}
+              handleTransfer={handleTransfer}
+              backLink={() => navigate(PATH_MACHINE.machines.list)}
+              machineSupportDate={defaultValues?.supportExpireDate}
+            />
 
-      <Card sx={{ width: '100%', p: '1rem', mb:3 }}>
-      <ViewFormEditDeleteButtons
-            sx={{ pt: 5 }}
-            verifiers={machine?.verifications}
-            isActive={defaultValues?.isActive}
-            handleVerification={handleVerification}
-            disableTransferButton={disableTransferButton}
-            disableEditButton={disableEditButton}
-            disableDeleteButton={disableDeleteButton}
-            handleEdit={handleEdit}
-            onDelete={onDelete}
-            handleTransfer={handleTransfer}
-            backLink={() => navigate(PATH_MACHINE.machines.list)}
-            machineSupportDate={defaultValues?.supportExpireDate}
-          />
-
-          <FormLabel content={FORMLABELS.KEYDETAILS} />
-
-                {/* <CardHeader title={FORMLABELS.KEYDETAILS} sx={{p:'5px 15px', m:0, color:'white', backgroundImage: (theme) =>
-            `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`}} /> */}
-                <Grid container>
-                  <ViewFormField sm={2} heading="Serial No" param={defaultValues?.serialNo} />
-                  <ViewFormField
-                    sm={5}
-                    heading="Machine Model"
-                    param={defaultValues?.machineModel}
-                  />
-                  <ViewFormField
-                    sm={5}
-                    heading="Customer"
-                    node={
-                      defaultValues.customer && (
-                        <Link onClick={()=> handleCustomerDialog(defaultValues.customer?._id)} href="#" underline="none">
-                          {defaultValues.customer?.name}
-                        </Link>
-                      )
-                    }
-                  />
-                </Grid>
+            <FormLabel content={FORMLABELS.KEYDETAILS} />
+            <Grid container>
+              <ViewFormField sm={4} heading="Serial No" param={defaultValues?.serialNo} />
+              <ViewFormField sm={4} heading="Machine Model" param={defaultValues?.machineModel} />
+              <ViewFormField sm={4} heading="Customer"
+                node={
+                  defaultValues.customer && (
+                    <Link onClick={(event)=> handleCustomerDialog(event, defaultValues.customer?._id)} href="#" underline="none">
+                      {defaultValues.customer?.name}
+                    </Link>
+                  )
+                }
+              />
+            </Grid>
         </Card>
               
         <Card sx={{ width: '100%', p: '1rem', mb:3 }}>
@@ -286,7 +280,7 @@ export default function MachineViewForm() {
                     heading="Financing Company"
                     node={
                       defaultValues.financialCompany && (
-                        <Link onClick={()=> handleCustomerDialog(defaultValues.financialCompany?._id)} href="#" underline="none">
+                        <Link onClick={(event)=> handleCustomerDialog(event, defaultValues.financialCompany?._id)} href="#" underline="none">
                           {defaultValues.financialCompany?.name}
                         </Link>
                       )
@@ -312,7 +306,7 @@ export default function MachineViewForm() {
             <ViewFormField
               sm={6}
               heading="Installation Site"
-              node={
+              objectParam={
                 defaultValues.instalationSite && (
                   <Link onClick={ handleInstallationSiteDialog } href="#" underline="none">
                     {defaultValues.instalationSite?.name}
@@ -320,7 +314,6 @@ export default function MachineViewForm() {
                 )
               }
             />
-
             <ViewFormField
               sm={6}
               heading="Installation Date"
@@ -385,17 +378,7 @@ export default function MachineViewForm() {
       </Grid>
 
       {/* connected machine dialog */}      
-
-      
-      <SiteDialog
-        site={defaultValues?.instalationSite}
-        title="Installation Site"
-      />
-
-      <SiteDialog
-        site={defaultValues?.billingSite}
-        title="Billing Site"
-      />
+      {siteDialog && <SiteDialog title={siteDialogTitle}/>}
       {machineDialog  && <MachineDialog />}
       {customerDialog  && <CustomerDialog />}
       

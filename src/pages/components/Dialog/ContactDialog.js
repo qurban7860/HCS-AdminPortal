@@ -1,6 +1,6 @@
 // import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
-import { Grid, Dialog, DialogContent } from '@mui/material';
+import { Grid, Dialog, DialogContent, DialogTitle, Divider } from '@mui/material';
 import { setContactDialog } from '../../../redux/slices/customer/contact';
 import DialogLabel from './DialogLabel';
 import FormLabel from '../DocumentForms/FormLabel';
@@ -19,9 +19,12 @@ function ContactDialog() {
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
       >
-        <DialogLabel content="Contact" onClick={handleConttactDialog} />
-        <DialogContent dividers>
-        <Grid container >
+        <DialogTitle variant='h3' sx={{pb:1, pt:2}}>Contact</DialogTitle>
+        <Divider orientation="horizontal" flexItem />
+        {/* <DialogLabel content="Contact" onClick={handleConttactDialog} /> */}
+        <DialogContent dividers sx={{pl:1, pr:1}}>
+          <Grid container>
+
           <ViewFormFieldWithSkelton isLoading={isLoading}
             sm={6}
             heading="First Name"

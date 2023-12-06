@@ -51,152 +51,174 @@ export function MyDocument({machineServiceRecord}) {
         [ machineServiceRecord]
       );
 
+    const decoilers = defaultValues?.decoilers?.map((decoilerMachine) => (`${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`)).join(', ');
     const checkItemLists = machineServiceRecord?.serviceRecordConfig?.checkItemLists || [];
     const operators = machineServiceRecord?.operators?.map(operator => `${operator?.firstName || ''} ${operator?.lastName || ''}`).join(', ');
-
+    
     return (
     <Document>
     <Page>
-       {machineServiceRecord?.serviceRecordConfig?.header &&
-        <View style={styles.header} fixed>
-            <View style={styles.col_30}>
-                <Text style={styles.text_left}>{defaultValues.headerLeftText}</Text>
+        {machineServiceRecord?.serviceRecordConfig?.header &&
+            <View style={styles.header} fixed>
+                <View style={styles.col_30}>
+                    <Text style={styles.text_left}>{defaultValues.headerLeftText}</Text>
+                </View>
+                <View style={styles.col_40}>
+                    <Text style={styles.text_center}>{defaultValues.headerCenterText}</Text>
+                </View>
+                <View style={styles.col_30}>
+                    <Text style={styles.text_right}>{defaultValues.headerRightText}</Text>
+                </View>
             </View>
-            <View style={styles.col_40}>
-                <Text style={styles.text_center}>{defaultValues.headerCenterText}</Text>
-            </View>
-            <View style={styles.col_30}>
-                <Text style={styles.text_right}>{defaultValues.headerRightText}</Text>
-            </View>
-        </View>
         }
-    <View style={styles.body}>
-        <Text style={styles.title}>Key Details</Text>
-        <View style={styles.row}>
-            <View style={styles.col_50}>
-                <Text style={styles.lable}>SERVICE DATE</Text>
-                <Text style={[styles.text, styles.bold]}>{fDate(defaultValues?.serviceDate)}</Text>
+        <View style={styles.body}>
+            <Text style={styles.title}>Key Details</Text>
+            <View style={styles.row}>
+                <View style={styles.col_30}>
+                    <Text style={styles.lable}>SERVICE DATE</Text>
+                    <Text style={[styles.text, styles.bold]}>{fDate(defaultValues?.serviceDate)}</Text>
+                </View>
+                <View style={styles.col_40}>
+                    <Text style={styles.lable}>RECORD TYPE</Text>
+                    <Text style={[styles.text, styles.bold]}>{defaultValues?.serviceRecordConfigRecordType}</Text>
+                </View>
+                
+                <View style={styles.col_30}>
+                    <Text style={styles.lable}>VERSION</Text>
+                    <Text style={[styles.text, styles.bold]}>{defaultValues?.versionNo}</Text>
+                </View>
             </View>
-            <View style={styles.col_50}>
-                <Text style={styles.lable}>SERVICE RECORD CONFIGURATION</Text>
-                <Text style={[styles.text, styles.bold]}>{defaultValues?.serviceRecordConfig} - {defaultValues?.serviceRecordConfigRecordType}</Text>
+            <View style={styles.row}>
+                <View style={styles.col_30}>
+                    <Text style={styles.lable}>Serial No</Text>
+                    <Text style={[styles.text, styles.bold]}>{defaultValues?.machine?.serialNo}</Text>
+                </View>
+                <View style={styles.col_40}>
+                    <Text style={styles.lable}>Machine Model</Text>
+                    <Text style={[styles.text, styles.bold]}>{defaultValues?.machine?.model}</Text>
+                </View>
+                
+                <View style={styles.col_30}>
+                    <Text style={styles.lable}>Decoilers</Text>
+                    <Text style={[styles.text, styles.bold]}>{decoilers}</Text>
+                </View>
+            </View>
+            
+            <View style={styles.row}>
+                <View style={styles.col}>
+                    <Text style={styles.lable}>Customer</Text>
+                    <Text style={[styles.text, styles.bold]}>{defaultValues?.customer?.name || 'Invo Traders 20230717'}</Text>
+                </View>
+            </View>
+
+            <View style={styles.row}>
+                <View style={styles.col}>
+                    <Text style={styles.lable}>TECHNICIAN</Text>
+                    <Text style={styles.text}>{defaultValues?.technician?.name || ' '}</Text>
+                </View>
+            </View>
+
+            <View style={styles.row}>
+                <View style={styles.col}>
+                    <Text style={styles.lable}>TECHNICIAN NOTES</Text>
+                    <Text style={styles.text_sm}>{defaultValues?.technicianNotes || ' '}</Text>
+                </View>
+            </View>
+            <View style={styles.row}>
+                <View style={styles.col}>
+                    <Text style={styles.lable}>TEXT BEFORE CHECK ITEMS</Text>
+                    <Text style={styles.text_sm}>{defaultValues?.textBeforeCheckItems}</Text>
+                </View>
+            </View>
+            {/* </Page>
+            <Page style={styles.body}> */}
+        
+            <Text style={styles.title}>Check Items</Text>
+
+
+            {checkItemLists.length > 0 &&
+            checkItemLists.map((row, index) => (
+                <View key={`contatiner-${index}`} style={styles.contatiner}>
+                        <Text style={styles.text}>{index+1} - {row.ListTitle} ({row.checkItems?.length})</Text>
+                        
+                        {row?.checkItems?.map((childRow,childIndex) => (
+                            <View key={`inner_contatiner-${index}`} style={styles.inner_contatiner}>
+                                <Text style={styles.text_sm}><Text style={styles.bold}>{index+1}.{childIndex+1} -</Text> {childRow?.name}</Text>
+                                {childRow?.recordValue && 
+                                    <>
+                                        <Text style={styles.text_sm}><Text style={styles.bold}>Value:</Text>{childRow?.recordValue?.checkItemValue}</Text>
+                                        <Text style={styles.text_sm}><Text style={styles.bold}>Comments:</Text>{childRow?.recordValue?.comments}</Text>    
+                                    </>
+                                }
+                            </View>
+                        ))}
+                        
+                </View>
+            ))}
+
+            <View style={styles.row}>
+                <View style={styles.col}>
+                    <Text style={styles.lable}>TEXT AFTER CHECK ITEMS</Text>
+                    <Text style={styles.text_sm}>{defaultValues?.textAfterCheckItems}</Text>
+                </View>
+            </View>
+
+            <View style={styles.row}>
+                <View style={styles.col}>
+                    <Text style={styles.lable}>Service Note</Text>
+                    <Text style={styles.text_sm}>{defaultValues?.serviceNote}</Text>
+                </View>
+            </View>
+
+            <View style={styles.row}>
+                <View style={styles.col}>
+                    <Text style={styles.lable}>RECOMMENDATION  Note</Text>
+                    <Text style={styles.text_sm}>{defaultValues?.recommendationNote}</Text>
+                </View>
+            </View>
+
+
+            <View style={styles.row}>
+                <View style={styles.col}>
+                    <Text style={styles.lable}>SUGGESTED SPARES</Text>
+                    <Text style={styles.text_sm}>{defaultValues?.suggestedSpares}</Text>
+                </View>
+            </View>
+
+            <View style={styles.row}>
+                <View style={styles.col}>
+                    <Text style={styles.lable}>Internal SPARES</Text>
+                    <Text style={styles.text_sm}>{defaultValues?.internalNote}</Text>
+                </View>
+            </View>
+
+            <View style={styles.row}>
+                <View style={styles.col}>
+                    <Text style={styles.lable}>Operators</Text>
+                    <Text style={styles.text_sm}>{operators}</Text>
+                </View>
+            </View>
+
+            <View style={styles.row}>
+                <View style={styles.col}>
+                    <Text style={styles.lable}>Operators Notes</Text>
+                    <Text style={styles.text_sm}>{defaultValues?.operatorNotes}</Text>
+                </View>
             </View>
         </View>
-        <View style={styles.row}>
-            <View style={styles.col}>
-                <Text style={styles.lable}>Version No</Text>
-                <Text style={[styles.text, styles.bold]}>{defaultValues?.versionNo}</Text>
+        {machineServiceRecord?.serviceRecordConfig?.footer &&
+            <View style={styles.footer} fixed>
+                <View style={styles.col_30}>
+                    <Text style={styles.text_left}>{defaultValues.footerLeftText}</Text>
+                </View>
+                <View style={styles.col_40}>
+                    <Text style={styles.text_center}>{defaultValues.footerCenterText}</Text>
+                </View>
+                <View style={styles.col_30}>
+                    <Text style={styles.text_right}>{defaultValues.footerRightText}</Text>
+                </View>
             </View>
-        </View>
-
-        <View style={styles.row}>
-            <View style={styles.col}>
-                <Text style={styles.lable}>TECHNICIAN</Text>
-                <Text style={styles.text}>{defaultValues?.technician?.name || ' '}</Text>
-            </View>
-        </View>
-
-        <View style={styles.row}>
-            <View style={styles.col}>
-                <Text style={styles.lable}>TECHNICIAN NOTES</Text>
-                <Text style={styles.text_sm}>{defaultValues?.technicianNotes || ' '}</Text>
-            </View>
-        </View>
-        <View style={styles.row}>
-            <View style={styles.col}>
-                <Text style={styles.lable}>TEXT BEFORE CHECK ITEMS</Text>
-                <Text style={styles.text_sm}>{defaultValues?.textBeforeCheckItems}</Text>
-            </View>
-        </View>
-        {/* </Page>
-        <Page style={styles.body}> */}
-    
-        <Text style={styles.title}>Check Items</Text>
-
-
-        {checkItemLists.length > 0 &&
-          checkItemLists.map((row, index) => (
-            <View key={`contatiner-${index}`} style={styles.contatiner}>
-                    <Text style={styles.text}>{index+1} - {row.ListTitle} ({row.checkItems?.length})</Text>
-                    
-                    {row?.checkItems?.map((childRow,childIndex) => (
-                        <View key={`inner_contatiner-${index}`} style={styles.inner_contatiner}>
-                            <Text style={styles.text_sm}><Text style={styles.bold}>{index+1}.{childIndex+1} -</Text> {childRow?.name}</Text>
-                            {childRow?.recordValue && 
-                                <>
-                                    <Text style={styles.text_sm}><Text style={styles.bold}>Value:</Text>{childRow?.recordValue?.checkItemValue}</Text>
-                                    <Text style={styles.text_sm}><Text style={styles.bold}>Comments:</Text>{childRow?.recordValue?.comments}</Text>    
-                                </>
-                            }
-                        </View>
-                    ))}
-                    
-            </View>
-          ))}
-
-      <View style={styles.row}>
-        <View style={styles.col}>
-            <Text style={styles.lable}>TEXT AFTER CHECK ITEMS</Text>
-            <Text style={styles.text_sm}>{defaultValues?.textAfterCheckItems}</Text>
-        </View>
-      </View>
-
-      <View style={styles.row}>
-        <View style={styles.col}>
-            <Text style={styles.lable}>Service Note</Text>
-            <Text style={styles.text_sm}>{defaultValues?.serviceNote}</Text>
-        </View>
-      </View>
-
-      <View style={styles.row}>
-        <View style={styles.col}>
-            <Text style={styles.lable}>RECOMMENDATION  Note</Text>
-            <Text style={styles.text_sm}>{defaultValues?.recommendationNote}</Text>
-        </View>
-      </View>
-
-
-      <View style={styles.row}>
-        <View style={styles.col}>
-            <Text style={styles.lable}>SUGGESTED SPARES</Text>
-            <Text style={styles.text_sm}>{defaultValues?.suggestedSpares}</Text>
-        </View>
-      </View>
-
-      <View style={styles.row}>
-        <View style={styles.col}>
-            <Text style={styles.lable}>Internal SPARES</Text>
-            <Text style={styles.text_sm}>{defaultValues?.internalNote}</Text>
-        </View>
-      </View>
-
-      <View style={styles.row}>
-        <View style={styles.col}>
-            <Text style={styles.lable}>Operators</Text>
-            <Text style={styles.text_sm}>{operators}</Text>
-        </View>
-      </View>
-
-      <View style={styles.row}>
-        <View style={styles.col}>
-            <Text style={styles.lable}>Operators Notes</Text>
-            <Text style={styles.text_sm}>{defaultValues?.operatorNotes}</Text>
-        </View>
-      </View>
-    </View>
-      {machineServiceRecord?.serviceRecordConfig?.footer &&
-        <View style={styles.footer} fixed>
-            <View style={styles.col_30}>
-                <Text style={styles.text_left}>{defaultValues.footerLeftText}</Text>
-            </View>
-            <View style={styles.col_40}>
-                <Text style={styles.text_center}>{defaultValues.footerCenterText}</Text>
-            </View>
-            <View style={styles.col_30}>
-                <Text style={styles.text_right}>{defaultValues.footerRightText}</Text>
-            </View>
-        </View>
-       }
+        }
 
     </Page>
   </Document>

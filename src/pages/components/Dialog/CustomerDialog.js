@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Grid, Dialog, DialogContent } from '@mui/material';
+import { Grid, Dialog, DialogContent, DialogTitle, Divider } from '@mui/material';
 import { setCustomerDialog } from '../../../redux/slices/customer/customer';
 // import Iconify from '../../../components/iconify';
 import { PATH_CUSTOMER } from '../../../routes/paths';
@@ -24,9 +24,10 @@ function CustomerDialog() {
       aria-describedby="alert-dialog-slide-description"
       // keepMounted // for scroll lock
     >
-
-     <DialogLabel onClick={ handleCustomerDialog } content="Customer" />
-      <DialogContent dividers>
+      <DialogTitle variant='h3' sx={{pb:1, pt:2}}>Customer</DialogTitle>
+      <Divider orientation="horizontal" flexItem />
+     {/* <DialogLabel onClick={ handleCustomerDialog } content="Customer" /> */}
+      <DialogContent dividers sx={{pl:1, pr:1}}>
         <Grid item container>
           <ViewFormFieldWithSkelton isLoading={isLoading} sm={12} heading="Name" param={customer?.name} />
           <ViewFormFieldWithSkelton isLoading={isLoading} sm={12} heading="Trading Name" chips={customer?.tradingName} />
@@ -53,8 +54,6 @@ function CustomerDialog() {
               `${customer?.primaryTechnicalContact?.firstName} ${customer?.primaryTechnicalContact?.lastName}`
             }
           />
-        </Grid>
-        <Grid item container sx={{ px: 2, pb: 3 }}>
           <FormLabel content="Howick Resources" />
           
           <ViewFormFieldWithSkelton isLoading={isLoading} sm={6} heading="Account Manager"

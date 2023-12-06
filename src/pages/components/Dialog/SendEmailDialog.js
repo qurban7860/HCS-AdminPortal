@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useMemo } from 'react';
 import ReactPDF from '@react-pdf/renderer';
 import { useSelector, useDispatch } from 'react-redux';
-import { Grid, Dialog, DialogContent, Button } from '@mui/material';
+import { Grid, Dialog, DialogContent, Button, DialogTitle, Divider, DialogActions } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
@@ -27,7 +27,11 @@ function SendEmailDialog({machineServiceRecord}) {
     
   const dispatch = useDispatch();
   const { sendEmailDialog } = useSelector((state) => state.machineServiceRecord);
-  const handleCloseDialog = ()=>{ dispatch(setSendEmailDialog(false)) }
+  const handleCloseDialog = ()=>{ 
+    dispatch(setSendEmailDialog(false)) 
+    reset();
+  }
+  
   const { enqueueSnackbar } = useSnackbar();
   
   const defaultValues = useMemo(
@@ -78,29 +82,18 @@ function SendEmailDialog({machineServiceRecord}) {
   };
 
   return (
-    <Dialog
-        maxWidth="md"
-        open={sendEmailDialog}
-        onClose={handleCloseDialog}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
-      >
-        <DialogLabel content="Send Email" onClick={handleCloseDialog}/>
-        <DialogContent dividers>
-          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} mb={5}>
-              <Grid container rowSpacing={1} columnSpacing={1} sx={{mt:3, display:'flex', justifyContent:'flex-end'}}>
-                <RHFTextField name="email" label="Email"/>
-                <Grid item>
-                  <Button variant='outlined' onClick={handleCloseDialog}>Cancel</Button>
-                </Grid>
-                <Grid item>
-                  <LoadingButton loading={isSubmitting} type='submit' variant='contained'>Send</LoadingButton>
-                </Grid>
-              </Grid>         
-          </FormProvider>
-        </DialogContent>
-        
-      </Dialog>
+
+    <Dialog fullWidth maxWidth="xs" open={sendEmailDialog} onClose={handleCloseDialog}>
+      <DialogTitle variant='h3' sx={{pb:1, pt:2}}>Send Email</DialogTitle>
+      <Divider orientation="horizontal" flexItem />
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} mb={5}>
+        <DialogContent dividers sx={{pt:3}}><RHFTextField name="email" label="Email"/></DialogContent>
+        <DialogActions>
+          <Button variant='outlined' onClick={handleCloseDialog}>Cancel</Button>
+          <LoadingButton loading={isSubmitting} type='submit' variant='contained'>Send</LoadingButton>
+        </DialogActions>
+      </FormProvider>
+    </Dialog>
   );
 }
 

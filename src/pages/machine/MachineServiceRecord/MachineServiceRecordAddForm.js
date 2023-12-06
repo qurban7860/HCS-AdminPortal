@@ -40,7 +40,7 @@ function MachineServiceRecordAddForm() {
   const user = { _id: localStorage.getItem('userId'), name: localStorage.getItem('name') };
 
   useEffect( ()=>{
-    dispatch(getActiveServiceRecordConfigsForRecords(machine?._id))
+    // dispatch(getActiveServiceRecordConfigsForRecords(machine?._id))
     dispatch(resetActiveContacts())
     if(machine?.customer?._id){
       dispatch(getActiveContacts(machine?.customer?._id))
@@ -103,15 +103,16 @@ function MachineServiceRecordAddForm() {
 
   const { decoilers, operators, serviceRecordConfiguration, docRecordType } = watch()
   useEffect(() => {
-      if(docRecordType === null){
+
+      setActiveServiceRecordConfigs([]);
+
+      if(docRecordType !== null){
+        dispatch(getActiveServiceRecordConfigsForRecords(machine?._id, docRecordType))  
         setActiveServiceRecordConfigs(activeServiceRecordConfigsForRecords)
-      }else{
-        if(docRecordType.name !== serviceRecordConfiguration?.recordType ){
-          dispatch(resetServiceRecordConfig())
-          setValue('serviceRecordConfiguration',null)
-        }
-        setActiveServiceRecordConfigs(activeServiceRecordConfigsForRecords.filter(activeRecordConfig => activeRecordConfig?.recordType?.toLowerCase() === docRecordType?.name?.toLowerCase() ))
       }
+
+      setValue('serviceRecordConfiguration',null)
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[docRecordType, activeServiceRecordConfigsForRecords ])
 
