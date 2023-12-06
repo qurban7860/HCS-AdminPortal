@@ -17,6 +17,8 @@ ServiceRecordConfigListTableToolbar.propTypes = {
   onFilterName: PropTypes.func,
   onResetFilter: PropTypes.func,
   filterStatus: PropTypes.array,
+  filterListBy: PropTypes.string,
+  onFilterListBy: PropTypes.func,
   onFilterStatus: PropTypes.func,
   statusOptions: PropTypes.array,
 };
@@ -25,6 +27,8 @@ export default function ServiceRecordConfigListTableToolbar({
   isFiltered,
   filterName,
   filterStatus,
+  filterListBy,
+  onFilterListBy,
   onFilterName,
   statusOptions,
   onResetFilter,
@@ -42,6 +46,8 @@ export default function ServiceRecordConfigListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
+        filterListBy={filterListBy}
+        onFilterListBy={onFilterListBy}
         addButton={BUTTONS.ADD_MACHINE_SERVICE_CONFIG}
       />
     </Stack>

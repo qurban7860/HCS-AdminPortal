@@ -57,12 +57,11 @@ export default function ServiceRecordConfigListTableRow({
       <TableRow hover selected={selected}>
         <LinkTableCell align="left" onClick={onViewRow} param={docTitle} />
         <LinkTableCell align="left" onClick={onViewRow} param={recordType} /> 
-      { useScreenSize('lg') && <TableCell >{status || ''}</TableCell>}
-      { useScreenSize('lg') && <TableCell >{docVersionNo || ''}</TableCell>}
-      { useScreenSize('lg') && <TableCell >{`${approvals?.length || 0}/${noOfApprovalsRequired || 1}`}</TableCell>}
-      { useScreenSize('lg') && <TableCell >{(!category && !machineModel && (`* / *`)) ||  
-      (category && !machineModel && `${category?.name}/ * `) ||  (!category && machineModel && `* / ${machineModel?.name}`) || (category && machineModel && `${machineModel?.name}`) }</TableCell>}
-
+        { useScreenSize('lg') && <TableCell >{status || ''}</TableCell>}
+        { useScreenSize('lg') && <TableCell >{isActive && docVersionNo || ''}</TableCell>}
+        { useScreenSize('lg') && <TableCell >{`${approvals?.length || 0}/${noOfApprovalsRequired || 1}`}</TableCell>}
+        { useScreenSize('lg') && <TableCell >{(!category && !machineModel && (`* / *`)) ||  
+        (category && !machineModel && `${category?.name}/ * `) ||  (!category && machineModel && `* / ${machineModel?.name}`) || (category && machineModel && `${machineModel?.name}`) }</TableCell>}
         <TableCell align="center">
           <Switch checked={isActive} disabled sx={{ my: -1 }} />{' '}
         </TableCell>
