@@ -302,10 +302,10 @@ console.log("checkItemLists : ",checkItemLists)
                     name="serviceRecordConfiguration"
                     label="Service Record Configuration"
                     options={activeServiceRecordConfigs}
-                    getOptionLabel={(option) => `${option?.docTitle ?? ''} ${option?.docTitle ? '-' : '' } ${option.recordType ? option.recordType :   ''}`}
+                    getOptionLabel={(option) => `${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     renderOption={(props, option) => (
-                    <li {...props} key={option._id}>{`${option?.docTitle ?? ''} ${option?.docTitle ? '-' : '' } ${option.recordType ? option.recordType : ''}`}</li>
+                    <li {...props} key={option._id}>{`${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}</li>
                     )}
                     onChange={handleParamChange}
                   />

@@ -12,6 +12,8 @@ function SearchBarCombo({
   value,
   onFilterVerify,
   filterVerify,
+  filterListBy,
+  onFilterListBy,
   signInLogsFilter,
   onSignInLogsFilter,
   onChange,
@@ -55,7 +57,7 @@ function SearchBarCombo({
           }}
         />
       </Grid>
-        {onFilterVerify &&
+          {onFilterVerify &&
           <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
             <Stack alignItems="flex-start">
             <FormControl fullWidth>
@@ -75,8 +77,29 @@ function SearchBarCombo({
                 </Select>
             </FormControl>
             </Stack>
-          </Grid>
-        }
+          </Grid>}
+
+          {onFilterListBy &&
+          <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
+            <Stack alignItems="flex-start">
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Status</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                size='small'
+                name="isVerified"
+                value={filterListBy}
+                label="Status"
+                onChange={onFilterListBy}
+              >
+                <MenuItem key="all" value="all">All</MenuItem>
+                <MenuItem key="verified" value="active">Active</MenuItem>
+                <MenuItem key="unverified" value="inActive">In-Active</MenuItem>
+                </Select>
+            </FormControl>
+            </Stack>
+          </Grid>}
 
         {handleTransferStatus !== undefined &&
           <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
@@ -171,6 +194,8 @@ SearchBarCombo.propTypes = {
   buttonIcon: PropTypes.string,
   onFilterVerify:PropTypes.func,
   filterVerify:PropTypes.string,
+  filterListBy: PropTypes.string,
+  onFilterListBy: PropTypes.func,
   signInLogsFilter:PropTypes.number,
   onSignInLogsFilter:PropTypes.func,
   transferredMachine:PropTypes.bool,

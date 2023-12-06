@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import storage from 'redux-persist/lib/storage';
-
 import { createContext, useEffect, useReducer, useCallback, useMemo } from 'react';
 import { CONFIG } from '../config-global';
 // utils
@@ -8,7 +7,7 @@ import axios from '../utils/axios';
 import localStorageAvailable from '../utils/localStorageAvailable';
 //
 import { isValidToken, setSession } from './utils';
-
+import { PATH_AUTH } from '../routes/paths';
 
 
 // ----------------------------------------------------------------------
@@ -203,9 +202,10 @@ export function AuthProvider({ children }) {
         localStorage.removeItem('userRoles');
         localStorage.removeItem('accessToken');
         localStorage.removeItem("configurations");
-        dispatch({
-          type: 'LOGOUT',
-        });
+        // dispatch({
+        //   type: 'LOGOUT',
+        // });
+        window.location.href = PATH_AUTH.login
         const keys = Object.keys(localStorage); 
         const reduxPersistKeys = keys.filter(  key => !(key === 'remember' || key === 'UserEmail' || key === 'UserPassword')  );
       await Promise.all(reduxPersistKeys.map(key => storage.removeItem(key)));
@@ -217,8 +217,12 @@ export function AuthProvider({ children }) {
   // LOGOUT
   const logout = useCallback( async () => {
     const userId  = localStorage.getItem("userId")
-    await dispatch(clearAllPersistedStates());
-    await axios.post(`${CONFIG.SERVER_URL}security/logout/${userId}`)
+    try{
+      await dispatch(clearAllPersistedStates());
+      await axios.post(`${CONFIG.SERVER_URL}security/logout/${userId}`)
+    }catch (error) {
+      console.error(error)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
