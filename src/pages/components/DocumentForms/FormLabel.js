@@ -4,14 +4,14 @@ import { Grid, Typography } from '@mui/material';
 
 export default function FormLabel({ content }) {
   return (
-    <Grid container sx={{ pt:1 }}>
+    <Grid container sx={{ p:1 }}>
       <Grid item xs={12} sm={12}
         sx={{
           backgroundImage: (theme) => `linear-gradient(to right, ${theme.palette.primary.main} ,  #2065d142)`,
           borderRadius:'5px'
         }}
       >
-        <Typography variant="h6" sm={12} sx={{ ml: 2, p:'2px', color: 'white'}}>{content}</Typography>
+        <Typography variant="h6" sm={12} sx={{ ml: 1, p:'2px', color: 'white'}}>{content}</Typography>
       </Grid>
     </Grid>
   );

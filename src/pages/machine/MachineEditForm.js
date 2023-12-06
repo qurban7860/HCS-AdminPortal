@@ -159,12 +159,12 @@ export default function MachineEditForm() {
     supportManager,
   } = watch();
 
-  useEffect(() => {
-    if(status && status?.slug === 'intransfer' ){
-      setValue('status',null)
-    }
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[status])
+  // useEffect(() => {
+  //   if(status && status?.slug === 'intransfer' ){
+  //     setValue('status',null)
+  //   }
+  //    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // },[status])
 
   useEffect(() => {
     if(category === null && machineModel ){
@@ -213,14 +213,11 @@ export default function MachineEditForm() {
   const onSubmit = async (data) => {
 
     if (data?.status?.slug === 'intransfer') {
-      // Set an error message for 'intransfer' status
       setError('status', {
         type: 'manual',
         message: 'Please change status In-Transfer is not acceptable',
       });
-    } else {
-      setError('status', null);
-      
+    }else{
       data.alias = chips;
       try {
         await dispatch(updateMachine(machine._id ,data));
@@ -231,9 +228,9 @@ export default function MachineEditForm() {
         enqueueSnackbar('Saving failed!', { variant: `error` });
         console.error(error);
       }
-
     }
 
+    
     
   };
 

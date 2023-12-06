@@ -1,17 +1,16 @@
 import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
-import { Autocomplete, Badge, Box, Divider, Grid, TextField } from '@mui/material';
+import { Typography, Autocomplete, Badge, Box, Divider, Grid, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { memo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-// import { Button, Typography, IconButton } from '@mui/material';
 import { green } from '@mui/material/colors';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import { createTheme } from '@mui/material/styles';
+
 import { StyledStack } from '../../../theme/styles/default-styles';
 import ConfirmDialog from '../../../components/confirm-dialog';
-// import Iconify from '../../../components/iconify';
 import useResponsive from '../../../hooks/useResponsive';
 import { setTransferDialogBoxVisibility } from '../../../redux/slices/products/machine';
 import { getActiveMachineStatuses } from '../../../redux/slices/products/statuses';
@@ -263,7 +262,7 @@ function ViewFormEditDeleteButtons({
   const [statusError, setStatusError] = useState(null);
   
   return (
-    <Grid container justifyContent="space-between">
+    <Grid container justifyContent="space-between" sx={{p:1}}>
       <Grid item sx={{display:'flex'}}>
         <StyledStack>
           {backLink &&
@@ -675,10 +674,11 @@ function ViewFormEditDeleteButtons({
       />
       <ConfirmDialog
         open={transferDialogBoxVisibility}
+        // SubButton={false}
         onClose={() => {
           handleCloseConfirm('transfer');
         }}
-        title="Ownership Transfer"
+        title='Transfer Machine'
         content={
           <Box rowGap={2} display="grid">
             Are you sure you want to transfer machine ownership?
@@ -728,8 +728,9 @@ function ViewFormEditDeleteButtons({
         }
         // content="Are you sure you want to transfer machine ownership?"
         action={
+          
           <LoadingButton
-            color="error"
+            // color="error"
             variant="contained"
             loading={isLoading}
             onClick={()=> { 
@@ -743,6 +744,8 @@ function ViewFormEditDeleteButtons({
           >
             Transfer
           </LoadingButton>
+
+          
         }
       />
 

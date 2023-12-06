@@ -11,18 +11,18 @@ function DialogLink({ onClose, onClick, content }) {
               variant="outlined"
               sx={{ flexShrink: 0, ml: 1 }}
               onClick={onClose}
-              endIcon={<Iconify icon="mdi:close-circle-outline" />}
+              // endIcon={<Iconify icon="mdi:close-circle-outline" />}
             >
-              Close
+              Cancel
         </Button>
       }
 
       {onClick &&
         <Button
-              variant="outlined"
+              variant="contained"
               sx={{ flexShrink: 0, ml: 1 }}
               onClick={onClick}
-              endIcon={<Iconify icon="mdi:share" />}
+              endIcon={<Iconify icon="mdi:arrow-right" />}
             >
               {content}
         </Button>

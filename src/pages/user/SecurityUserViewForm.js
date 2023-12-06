@@ -83,8 +83,15 @@ export default function SecurityUserViewForm() {
     navigate(PATH_SECURITY.users.edit(securityUser._id));
   };
 
-  const handleCustomerDialog = () =>{dispatch(setCustomerDialog(true))}
-  const handleContactDialog = () =>{dispatch(setContactDialog(true))}
+  const handleCustomerDialog = (event) =>{
+    event.preventDefault();  
+    dispatch(setCustomerDialog(true))
+  }
+  
+  const handleContactDialog = (event) =>{
+    event.preventDefault();  
+    dispatch(setContactDialog(true))
+  }
 
   const handleUpdatePassword = () => {
     navigate(PATH_SECURITY.users.userPassword);
@@ -288,7 +295,6 @@ export default function SecurityUserViewForm() {
       </Grid>
       
       <CustomerDialog />
-
       <ContactDialog />
       
     </>
