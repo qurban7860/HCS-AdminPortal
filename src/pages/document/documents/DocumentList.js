@@ -309,10 +309,10 @@ const  onChangePage = (event, newPage) => {
         await dispatch(getDocuments());
       }
 
-      enqueueSnackbar(Snacks.deletedDoc, { variant: `success` });
+      enqueueSnackbar(machineDrawings?Snacks.deletedDrawing:Snacks.deletedDoc, { variant: `success` });
     } catch (err) {
       console.log(err);
-      enqueueSnackbar(Snacks.failedDeleteDoc, { variant: `error` });
+      enqueueSnackbar(machineDrawings?Snacks.failedDeleteDrawing:Snacks.failedDeleteDoc, { variant: `error` });
     }
   };
 

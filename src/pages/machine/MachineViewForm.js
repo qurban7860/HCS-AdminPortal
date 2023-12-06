@@ -44,15 +44,11 @@ import SiteDialog from '../components/Dialog/SiteDialog';
 // ----------------------------------------------------------------------
 
 export default function MachineViewForm() {
-  const userId = localStorage.getItem('userId');
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
-
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { machine, transferMachineFlag, machineDialog } = useSelector((state) => state.machine);
+  const { machine, machineDialog } = useSelector((state) => state.machine);
   const { customerDialog } = useSelector((state) => state.customer);
   const { siteDialog } = useSelector((state) => state.site);
   const [disableTransferButton, setDisableTransferButton] = useState(true);
@@ -112,21 +108,20 @@ export default function MachineViewForm() {
   }, [machine, latLongValues, setHasValidLatLong, dispatch ]);
 
   useLayoutEffect(() => {
+    
     dispatch(setMachineEditFormVisibility(false));
-    if (machine.transferredMachine || !machine.isActive || !isSuperAdmin) {
+    
+    if (machine?.status?.slug === 'transferred') {
       setDisableTransferButton(true);
-    } else {
-      setDisableTransferButton(false);
-    }
-    if (machine.transferredMachine) {
       setDisableEditButton(true);
       setDisableDeleteButton(true);
     } else {
+      setDisableTransferButton(false);
       setDisableEditButton(false);
       setDisableDeleteButton(false);
     }
     
-  }, [dispatch, machine, transferMachineFlag, userId, isSuperAdmin]);
+  }, [dispatch, machine]);
 
   const handleEdit = () => {
     dispatch(setMachineEditFormVisibility(true));
@@ -239,7 +234,7 @@ export default function MachineViewForm() {
               sx={{ pt: 5 }}
               verifiers={machine?.verifications}
               isActive={defaultValues?.isActive}
-              handleVerification={handleVerification}
+              handleVerification={machine?.status?.slug !== 'transferred' && handleVerification}
               disableTransferButton={disableTransferButton}
               disableEditButton={disableEditButton}
               disableDeleteButton={disableDeleteButton}
@@ -273,7 +268,7 @@ export default function MachineViewForm() {
             <ViewFormField sm={6} heading="Alias" chips={defaultValues?.alias} />
             <ViewFormField sm={6} heading="Profile" param={`${defaultValues?.machineProfile} ${(defaultValues?.machineweb && defaultValues?.machineflange)? `(${defaultValues?.machineweb} X ${defaultValues?.machineflange})` :""}`} />
             <ViewFormField sm={6} heading="Supplier" param={defaultValues?.supplier} />
-            <ViewFormField sm={6} heading="Status" param={defaultValues?.status} />
+            <ViewFormField sm={6} heading="Status" textColor={machine?.status?.slug==="transferred" && 'red'} param={defaultValues?.status} />
             <ViewFormField sm={6} heading="Work Order / Purchase Order" param={defaultValues?.workOrderRef}/>
 
             <ViewFormField sm={6}
@@ -306,7 +301,7 @@ export default function MachineViewForm() {
             <ViewFormField
               sm={6}
               heading="Installation Site"
-              objectParam={
+              node={
                 defaultValues.instalationSite && (
                   <Link onClick={ handleInstallationSiteDialog } href="#" underline="none">
                     {defaultValues.instalationSite?.name}

@@ -2,7 +2,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { Grid, Dialog, DialogContent, DialogTitle, Divider } from '@mui/material';
 import { setContactDialog } from '../../../redux/slices/customer/contact';
-import DialogLabel from './DialogLabel';
 import FormLabel from '../DocumentForms/FormLabel';
 import DialogLink from './DialogLink';
 import ViewFormFieldWithSkelton from '../ViewForms/ViewFormFieldWithSkelton';

@@ -5,7 +5,6 @@ import { setCustomerDialog } from '../../../redux/slices/customer/customer';
 // import Iconify from '../../../components/iconify';
 import { PATH_CUSTOMER } from '../../../routes/paths';
 import DialogLink from './DialogLink';
-import DialogLabel from './DialogLabel';
 import FormLabel from '../DocumentForms/FormLabel';
 import ViewFormFieldWithSkelton from '../ViewForms/ViewFormFieldWithSkelton';
 

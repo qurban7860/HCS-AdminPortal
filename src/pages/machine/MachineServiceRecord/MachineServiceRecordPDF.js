@@ -3,11 +3,11 @@ import React, { useMemo } from 'react';
 import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 import { fDate } from '../../../utils/formatTime';
 
-MyDocument.propTypes = {
+MachineServiceRecordPDF.propTypes = {
     machineServiceRecord: PropTypes.object
 };
 
-export function MyDocument({machineServiceRecord}) {
+export function MachineServiceRecordPDF({machineServiceRecord}) {
 
     const defaultValues = useMemo(
         () => ({
@@ -95,7 +95,7 @@ export function MyDocument({machineServiceRecord}) {
                 </View>
                 <View style={styles.col_40}>
                     <Text style={styles.lable}>Machine Model</Text>
-                    <Text style={[styles.text, styles.bold]}>{defaultValues?.machine?.model}</Text>
+                    <Text style={[styles.text, styles.bold]}>{defaultValues?.machine?.machineModel?.name}</Text>
                 </View>
                 
                 <View style={styles.col_30}>
@@ -344,4 +344,4 @@ export function MyDocument({machineServiceRecord}) {
     }
   });
 
-//   export MyDocument;
+//   export MachineServiceRecordPDF;
