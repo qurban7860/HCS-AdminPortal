@@ -24,7 +24,7 @@ import { fDate } from '../../../utils/formatTime';
 import ReadableCollapsibleCheckedItemRow from './ReadableCollapsibleCheckedItemRow';
 import HistoryIcon from '../../components/Icons/HistoryIcon';
 import CurrentIcon from '../../components/Icons/CurrentIcon';
-import { MyDocument } from '../ServiceRecordConfig/MyDocument';
+import { MachineServiceRecordPDF } from './MachineServiceRecordPDF';
 import SendEmailDialog from '../../components/Dialog/SendEmailDialog';
 
 function MachineServiceParamViewForm() {
@@ -114,8 +114,11 @@ function MachineServiceParamViewForm() {
   }
 
   const handleDownloadPDF = async() => {
-    const fileName = `${machineServiceRecord?.serviceRecordConfig?.docTitle}.pdf`;
-    const blob = await ReactPDF.pdf(<MyDocument key={machineServiceRecord?._id} machineServiceRecord={machineServiceRecord} />).toBlob();
+    
+    const serviceDate = new Date(defaultValues.serviceDate);
+    const formattedDate = serviceDate.toISOString().split('T')[0];
+    const fileName = `${formattedDate.replaceAll('-','')}_${defaultValues?.serviceRecordConfigRecordType}_V${defaultValues.versionNo}.pdf`;
+    const blob = await ReactPDF.pdf(<MachineServiceRecordPDF key={machineServiceRecord?._id} machineServiceRecord={machineServiceRecord} />).toBlob();
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = fileName;

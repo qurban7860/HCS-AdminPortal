@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Dialog, DialogTitle, Divider, DialogContent } from '@mui/material';
 import { setSiteDialog } from '../../../redux/slices/customer/site';
-import DialogLabel from './DialogLabel';
 import ViewFormField from '../ViewForms/ViewFormField';
 import DialogLink from './DialogLink';
 

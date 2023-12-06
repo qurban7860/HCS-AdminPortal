@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
-import { Typography, Autocomplete, Badge, Box, Divider, Grid, TextField } from '@mui/material';
+import { Autocomplete, Badge, Box, Divider, Grid, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { memo, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -76,7 +76,7 @@ function ViewFormEditDeleteButtons({
   const userId = localStorage.getItem('userId');
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
-  const { machine, transferDialogBoxVisibility } = useSelector((state) => state.machine);
+  const { transferDialogBoxVisibility } = useSelector((state) => state.machine);
   const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
   const { activeCustomers } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
@@ -697,7 +697,7 @@ function ViewFormEditDeleteButtons({
                 </li>
               )}
               id="controllable-states-demo"
-              renderInput={(params) => ( <TextField {...params} label="Customer" />)}
+              renderInput={(params) => ( <TextField {...params} label="New Customer" />)}
               />
 
               <Autocomplete
@@ -770,7 +770,7 @@ function ViewFormEditDeleteButtons({
 export default memo(ViewFormEditDeleteButtons)
 ViewFormEditDeleteButtons.propTypes = {
   backLink: PropTypes.func,
-  handleVerification: PropTypes.func,
+  handleVerification: PropTypes.any,
   handleVerificationTitle: PropTypes.string,
   verifiers: PropTypes.array,
   approvers: PropTypes.array,

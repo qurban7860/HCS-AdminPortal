@@ -2,19 +2,18 @@ import PropTypes from 'prop-types';
 import { useMemo } from 'react';
 import ReactPDF from '@react-pdf/renderer';
 import { useSelector, useDispatch } from 'react-redux';
-import { Grid, Dialog, DialogContent, Button, DialogTitle, Divider, DialogActions } from '@mui/material';
+import { Dialog, DialogContent, Button, DialogTitle, Divider, DialogActions } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
 
-import DialogLabel from './DialogLabel';
 import {  
   sendEmail,
   setSendEmailDialog,
 } from '../../../redux/slices/products/machineServiceRecord';
-import { MyDocument } from '../../machine/ServiceRecordConfig/MyDocument';
+import { MachineServiceRecordPDF } from '../../machine/MachineServiceRecord/MachineServiceRecordPDF';
 import FormProvider from '../../../components/hook-form/FormProvider';
 
 import { RHFTextField } from '../../../components/hook-form';
@@ -60,7 +59,7 @@ function SendEmailDialog({machineServiceRecord}) {
   } = methods;
   
   const onSubmit = async (data) => {    
-    const PDFBlob = await ReactPDF.pdf(<MyDocument machineServiceRecord={machineServiceRecord} />).toBlob();
+    const PDFBlob = await ReactPDF.pdf(<MachineServiceRecordPDF machineServiceRecord={machineServiceRecord} />).toBlob();
     
     try {
       const fileName = `${machineServiceRecord?.serviceRecordConfig?.docTitle}.pdf`;

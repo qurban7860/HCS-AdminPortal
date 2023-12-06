@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Grid, Dialog, DialogContent, DialogTitle, Divider } from '@mui/material';
 import { PATH_MACHINE } from '../../../routes/paths';
 import DialogLink from './DialogLink';
-import DialogLabel from './DialogLabel';
 import FormLabel from '../DocumentForms/FormLabel';
 import { setMachineDialog } from '../../../redux/slices/products/machine';
 import ViewFormFieldWithSkelton from '../ViewForms/ViewFormFieldWithSkelton';
