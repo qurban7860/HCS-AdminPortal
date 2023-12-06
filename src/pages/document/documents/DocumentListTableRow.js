@@ -28,7 +28,8 @@ DocumentListTableRow.propTypes = {
   customerPage: PropTypes.bool,
   machinePage: PropTypes.bool,
   machineDrawings: PropTypes.bool,
-  handleMachineDialog: PropTypes.func
+  handleMachineDialog: PropTypes.func,
+  disabledActions:  PropTypes.bool
 };
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
@@ -50,7 +51,8 @@ export default function DocumentListTableRow({
   customerPage,
   machinePage,
   machineDrawings,
-  handleMachineDialog
+  handleMachineDialog,
+  disabledActions
 }) {
   const {
     displayName,
@@ -91,7 +93,8 @@ export default function DocumentListTableRow({
       <TableCell align="right">{fDate(createdAt)}</TableCell>
       <TableCell align="center">
           <StyledStack>
-              <IconTooltip title="Delete" onClick={onDeleteRow} color="#FF0000" icon="mdi:trash-can-outline" />
+              <IconTooltip title="Delete" disabled={disabledActions} onClick={onDeleteRow} 
+                           color={disabledActions?"#c3c3c3":"#FF0000"} icon="mdi:trash-can-outline" />
           </StyledStack>
       </TableCell>
     </StyledTableRow>

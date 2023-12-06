@@ -80,7 +80,14 @@ export default function ToolInstalledViewForm() {
     // needs cleanup
     <Grid item md={12} mt={2}>
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} backLink={()=> dispatch(setToolInstalledViewFormVisibility(false))} handleEdit={handleEdit} onDelete={onDelete} />
+      <ViewFormEditDeleteButtons 
+        isActive={defaultValues.isActive} 
+        backLink={()=> dispatch(setToolInstalledViewFormVisibility(false))} 
+        handleEdit={handleEdit} 
+        onDelete={onDelete} 
+        disableEditButton={machine?.status?.slug==="transferred"}
+        disableDeleteButton={machine?.status?.slug==="transferred"}
+        />
       {/* <Grid display="inline-flex">
         <Tooltip>
           <ViewFormField isActive={defaultValues.isActive} />
