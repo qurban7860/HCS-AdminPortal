@@ -23,6 +23,7 @@ DrawingListTableRow.propTypes = {
   onViewRow: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
+  disabledActions: PropTypes.bool
 };
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
@@ -41,6 +42,7 @@ export default function DrawingListTableRow({
   onDeleteRow,
   onEditRow,
   onViewRow,
+  disabledActions
 }) {
   const {
     document,
@@ -51,7 +53,7 @@ export default function DrawingListTableRow({
   } = row;
 
   const smScreen = useScreenSize('sm')
-
+  
   return (
       <StyledTableRow hover selected={selected}>
         <TableCell>{document?.referenceNumber}</TableCell>
@@ -63,7 +65,8 @@ export default function DrawingListTableRow({
         <TableCell align="right">{fDate(createdAt)}</TableCell>
         <TableCell align="center">
           <StyledStack>
-              <IconTooltip title="Delete" onClick={onDeleteRow} color="#FF0000" icon="mdi:trash-can-outline" />
+              <IconTooltip title="Delete" disabled={disabledActions} onClick={onDeleteRow} 
+                           color={disabledActions?"#c3c3c3":"#FF0000"} icon="mdi:trash-can-outline" />
           </StyledStack>
         </TableCell>
       </StyledTableRow>

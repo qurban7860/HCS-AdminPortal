@@ -263,6 +263,11 @@ const  onChangePage = (event, newPage) => {
     }
   };
 
+  const handleDeleteRow = (id) => {
+    setSelected(id)
+    handleOpenConfirm(true)                        
+  };
+
   const handleResetFilter = () => {
     setFilterName('');
     if(machinePage){
@@ -288,7 +293,7 @@ const  onChangePage = (event, newPage) => {
   const handleOpenConfirm = () => setOpenConfirm(true);
   const handleCloseConfirm = () => setOpenConfirm(false);
 
-  const handleDeleteRow = async (id) => {
+  const handleDeleteDoc = async (id) => {
     try {
       await dispatch(deleteDocument(id));
       dispatch(resetDocuments());
@@ -356,11 +361,8 @@ const  onChangePage = (event, newPage) => {
                         key={row._id}
                         row={row}
                         onViewRow={() => handleViewRow(row._id)}
-                        onDeleteRow={() => {
-                          setSelected(row._id);
-                          handleOpenConfirm(true);
-
-                        }}
+                        onDeleteRow={() => handleDeleteRow(row._id)}
+                        disabledActions={machine?.status?.slug === "transferred"}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         customerPage={customerPage}
                         machinePage={machinePage}
@@ -393,7 +395,7 @@ const  onChangePage = (event, newPage) => {
         action={
           <Button variant="contained" color="error"
             onClick={() => {
-              handleDeleteRow(selected)
+              handleDeleteDoc(selected)
               handleCloseConfirm();
             }}
           >

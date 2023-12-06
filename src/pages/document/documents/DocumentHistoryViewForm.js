@@ -205,6 +205,7 @@ const handleNewFile = async () => {
           customerAccess={defaultValues?.customerAccess}
           isActive={defaultValues.isActive}
           handleEdit={drawingPage && handleEdit}
+          disableEditButton={drawingPage && machine?.status?.slug==="transferred"}
           backLink={(customerPage || machinePage || drawingPage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDrawingViewFormVisibility(false));}
           : () =>  machineDrawings ? navigate(PATH_DOCUMENT.document.machineDrawings.list) : navigate(PATH_DOCUMENT.document.list)}
       />

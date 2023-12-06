@@ -124,7 +124,7 @@ function SearchBarCombo({
                   </Grid>
               }
               
-              {handleAttach &&
+              {handleAttach && !transferredMachine &&
                   <Grid item>
                     <StyledTooltip title="Attach Drawing" placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
                     <IconButton onClick={handleAttach} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
@@ -139,7 +139,7 @@ function SearchBarCombo({
                 </Grid>
               }
 
-              {addButton &&
+              {addButton && !transferredMachine &&
                   <Grid item>
                     <StyledTooltip title={addButton} placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
                     <IconButton onClick={SubOnClick} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',

@@ -134,7 +134,7 @@ function MachineServiceParamViewForm() {
           onDelete={!machineServiceRecord?.isHistory && machineServiceRecord?._id && onDelete} 
           backLink={() => dispatch( // isHistorical ? setMachineServiceRecordHistoryFormVisibility(true) : 
           setAllFlagsFalse())}
-          // handleSendPDFEmail={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleSendEmail}
+          handleSendPDFEmail={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleSendEmail}
           handleDownloadPDF={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleDownloadPDF}
         />
         

@@ -806,4 +806,5 @@ ViewFormEditDeleteButtons.propTypes = {
   onUserStatusChange:PropTypes.func,
   financingCompany: PropTypes.bool,
   isLoading: PropTypes.bool,
+  
 };
