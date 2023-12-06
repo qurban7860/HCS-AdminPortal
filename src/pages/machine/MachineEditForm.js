@@ -160,8 +160,18 @@ export default function MachineEditForm() {
   } = watch();
 
   useEffect(() => {
-    if(category?._id !== machineModel?.category?._id){
-      dispatch(resetActiveMachineModels());
+    if(status && status?.slug === 'intransfer' ){
+      setValue('status',null)
+    }
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[status])
+
+  useEffect(() => {
+    if(category === null && machineModel ){
+      // dispatch(resetActiveMachineModels())
+      dispatch(getActiveMachineModels());
+      setValue('machineModel',null);
+    }else if(category && category?._id !== machineModel?.category?._id){
       dispatch(getActiveMachineModels(category?._id));
       setValue('machineModel',null);
     }
