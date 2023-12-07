@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector, batch } from 'react-redux';
 // @mui
-import { Card, Grid, Link, Button } from '@mui/material';
+import { Card, Grid, Link, Button, Typography } from '@mui/material';
 import ConfirmDialog from '../../components/confirm-dialog';
 // routes
 import { PATH_SECURITY } from '../../routes/paths';
@@ -209,8 +209,12 @@ export default function SecurityUserViewForm() {
               </Button>
             }
           />
-          <Grid container  >
-            <Grid  item md={6} sm={12}>
+          <Grid container sx={{display:{ md:'flex', sm: 'block' }, justifyContent:{md: 'space-between'}}} >
+          <Grid  item md={6} sm={12} sx={{p:.5}}>
+            <Grid  sx={{border: '1px solid lightgrey', borderRadius: '8px', px:1.5, height: {md: '100%'}}}>
+              <Grid display="flex">
+                <Typography variant='subtitle1' sx={{ mx:'auto',mt:1}}>Personal Information</Typography>
+              </Grid>
               <ViewFormField
                   sm={12}
                   heading="Full Name"
@@ -254,8 +258,12 @@ export default function SecurityUserViewForm() {
                     </Link>)}
               />
             </Grid>
-            <Grid item md={6} sm={12}>
-
+            </Grid>
+            <Grid item md={6} sm={12} sx={{p:.5}}>
+            <Grid  sx={{border: '1px solid lightgrey', borderRadius: '8px', px:1.5, height: {md: '100%'} }}>
+              <Grid display="flex">
+                <Typography variant='subtitle1' sx={{ mx:'auto',mt:1}}>Accessibility Information</Typography>
+              </Grid>
               <ViewFormField
                 sm={12}
                 heading="Roles"
@@ -283,8 +291,9 @@ export default function SecurityUserViewForm() {
                 arrayParam={defaultValues?.machines}
               />
             </Grid>
+            </Grid>
           </Grid>
-          <ViewFormField />
+          {/* <ViewFormField /> */}
           <Grid container>
             <ViewFormAudit defaultValues={defaultValues} />
           </Grid>
