@@ -161,7 +161,7 @@ function MachineServiceParamViewForm() {
           <ViewFormField sm={6} heading="Technician"  param={defaultValues?.technician?.name || ''} />
           <ViewFormNoteField sm={12} heading="Technician Notes" param={defaultValues.technicianNotes} />
 
-          <ViewFormNoteField sm={12} heading="Text Before Check Items" param={defaultValues.textBeforeCheckItems} />
+          {defaultValues.textBeforeCheckItems && <ViewFormNoteField sm={12}  param={defaultValues.textBeforeCheckItems} />}
 
           <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
           {machineServiceRecord?.serviceRecordConfig?.checkItemLists?.length > 0 && 
@@ -175,7 +175,7 @@ function MachineServiceParamViewForm() {
             </Grid>
           }
           
-          <ViewFormNoteField sm={12} heading="Text After Check Items" param={defaultValues.textAfterCheckItems} />
+          {defaultValues.textAfterCheckItems && <ViewFormNoteField sm={12}  param={defaultValues.textAfterCheckItems} />}
 
           {/* <Grid item md={12} >
             <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>

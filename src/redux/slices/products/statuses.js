@@ -58,14 +58,11 @@ const slice = createSlice({
 
     // GET STATUS
     getMachinestatusSuccess(state, action) {
-      
       state.isLoading = false;
       state.success = true;
       state.machinestatus = action.payload;
       state.initial = true;
     },
-
-
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
       state.isLoading = false;
@@ -117,7 +114,6 @@ export const {
   ChangePage,
 } = slice.actions;
 
-
 // ----------------------------------------------------------------------
 
 export function getMachinestatuses (){
@@ -130,7 +126,6 @@ export function getMachinestatuses (){
           isArchived: false
         }
       });
-
       dispatch(slice.actions.getMachinestatusesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('statuses loaded successfully'));
       // dispatch(slice.actions)
@@ -155,7 +150,6 @@ export function getActiveMachineStatuses (){
           isActive: true
         }
       });
-
       dispatch(slice.actions.getActiveMachineStatusesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('statuses loaded successfully'));
       // dispatch(slice.actions)
@@ -168,7 +162,7 @@ export function getActiveMachineStatuses (){
 }
 
 // ----------------------------------------------------------------------
- 
+
 export function getMachineStatus(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -212,6 +206,7 @@ export function addMachineStatus(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
+          order: params.order,
           description: params.description,
           displayOrderNo: params.displayOrderNo,
           isActive: params.isActive,
@@ -235,10 +230,10 @@ export function updateMachinestatus(params,Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-
       /* eslint-disable */
       let data = {
         name: params.name,
+        order: params.order,
         displayOrderNo: params.displayOrderNo,
         description: params.description,
         isActive: params.isActive,
