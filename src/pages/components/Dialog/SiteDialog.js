@@ -21,7 +21,7 @@ function SiteDialog({ title }) {
       >
         <DialogTitle variant='h3' sx={{pb:1, pt:2}}>{title}</DialogTitle>
         <Divider orientation="horizontal" flexItem />
-        <DialogContent dividers sx={{pl:1, pr:1}}>
+        <DialogContent dividers sx={{px:3}}>
           <Grid item container>
             <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={site?.name} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Phone" param={site?.phone} />

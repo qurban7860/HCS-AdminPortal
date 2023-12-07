@@ -113,11 +113,9 @@ function MachineServiceParamViewForm() {
       dispatch(setSendEmailDialog(true))
   }
 
+  const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceRecordConfigRecordType}_${defaultValues?.versionNo}.pdf`
+
   const handleDownloadPDF = async() => {
-    
-    const serviceDate = new Date(defaultValues.serviceDate);
-    const formattedDate = serviceDate.toISOString().split('T')[0];
-    const fileName = `${formattedDate.replaceAll('-','')}_${defaultValues?.serviceRecordConfigRecordType}_V${defaultValues.versionNo}.pdf`;
     const blob = await ReactPDF.pdf(<MachineServiceRecordPDF key={machineServiceRecord?._id} machineServiceRecord={machineServiceRecord} />).toBlob();
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
@@ -210,7 +208,7 @@ function MachineServiceParamViewForm() {
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
       </Grid>
-      <SendEmailDialog machineServiceRecord={machineServiceRecord}/>
+      <SendEmailDialog machineServiceRecord={machineServiceRecord} fileName={fileName}/>
     </Card>
   );
 }
