@@ -20,6 +20,7 @@ const initialState = {
   machineServiceRecordHistory: [],
   activeMachineServiceRecords: [],
   sendEmailDialog:false,
+  pdfViewerDialog:false,
   isHistorical: false,
   isDetailPage: false,
   filterBy: '',
@@ -74,6 +75,8 @@ const slice = createSlice({
       state.machineServiceRecordAddFormFlag = false;
       state.machineServiceRecordViewFormFlag = false;
       state.machineServiceRecordHistoryFormFlag = false;
+      state.sendEmailDialog = false;
+      state.pdfViewerDialog = false;
       state.isHistorical = false;
     },
     // SET HISTORICAL FLAG
@@ -125,6 +128,11 @@ const slice = createSlice({
     // SET SEND EMAIL DIALOG
     setSendEmailDialog(state, action) {
       state.sendEmailDialog = action.payload;
+    },
+    
+    // SET PDF DIALOG
+    setPDFViewerDialog(state, action) {
+      state.pdfViewerDialog = action.payload;
     },
 
     setResponseMessage(state, action) {
@@ -179,6 +187,7 @@ export const {
   setDetailPageFlag,
   setAllFlagsFalse,
   setSendEmailDialog,
+  setPDFViewerDialog,
   resetMachineServiceRecords,
   resetMachineServiceRecord,
   setResponseMessage,

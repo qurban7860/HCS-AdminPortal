@@ -192,8 +192,8 @@ export default function TechParamList() {
   //   navigate(PATH_MACHINE.machines.settings.technicalParameterCategories.edit(id));
   // };
 
-  const handleViewRow = async (id) => {
-    await dispatch(getTechparamcategory(id));
+  const handleViewRow = (id) => {
+    dispatch(getTechparamcategory(id));
     navigate(PATH_MACHINE.machines.settings.technicalParameterCategories.view(id));
   };
 

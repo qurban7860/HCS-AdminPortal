@@ -35,7 +35,7 @@ DocumentViewForm.propTypes = {
 };
 
 function DocumentViewForm({ customerPage, machinePage, DocId }) {
-  const { document } = useSelector((state) => state.document);
+  const { document, isLoading } = useSelector((state) => state.document);
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
   const { enqueueSnackbar } = useSnackbar();
@@ -162,8 +162,8 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
       // disableDeleteButton={machine?.status?.slug==='transferred'}
       />
       <Grid container>
-        <ViewFormField sm={8} heading="Name" param={defaultValues?.displayName} />
-        <ViewFormField
+        <ViewFormField isLoading={isLoading} sm={8} heading="Name" param={defaultValues?.displayName} />
+        <ViewFormField isLoading={isLoading}
           sm={4}
           heading="Version"
           handleAllVersion={linkDocumentView}
@@ -180,17 +180,17 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
           NewVersion
           isNewVersion
         />
-        <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
-        <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
-        <ViewFormField sm={6} heading="Reference Number" param={defaultValues?.referenceNumber} />
-        <ViewFormField sm={6} heading="Stock Number" param={defaultValues?.stockNumber} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Document Category" param={defaultValues?.docCategory} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Document Type" param={defaultValues?.docType} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Reference Number" param={defaultValues?.referenceNumber} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Stock Number" param={defaultValues?.stockNumber} />
         {!customerPage && !machinePage && (
           <>
-            <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} />
-            <ViewFormField sm={6} heading="Machine" param={defaultValues?.machine} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Customer" param={defaultValues?.customer} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Machine" param={defaultValues?.machine} />
           </>
         )}
-        <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
         <Grid item sx={{ display: 'flex-inline' }}>
           <Grid container justifyContent="flex-start" gap={1}>
             {document?.documentVersions &&

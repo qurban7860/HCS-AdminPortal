@@ -24,15 +24,10 @@ import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 // import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 
-// ----------------------------------------------------------------------
-
-ServiceCategoryViewForm.propTypes = {
-  currentCategory: PropTypes.object,
-};
 
 // ----------------------------------------------------------------------
 
-export default function ServiceCategoryViewForm({ currentCategory = null }) {
+export default function ServiceCategoryViewForm() {
   const toggleEdit = () => {
     dispatch(setServiceCategoryEditFormVisibility(true));
     navigate(PATH_MACHINE.machines.settings.serviceCategories.edit(id));
@@ -40,7 +35,7 @@ export default function ServiceCategoryViewForm({ currentCategory = null }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const navigate = useNavigate();
-  const { serviceCategory, editFormVisibility } = useSelector((state) => state.serviceCategory);
+  const { serviceCategory, editFormVisibility, isLoading } = useSelector((state) => state.serviceCategory);
   const { id } = useParams();
 
   const dispatch = useDispatch();
@@ -62,7 +57,7 @@ export default function ServiceCategoryViewForm({ currentCategory = null }) {
       updatedIP: serviceCategory?.updatedIP || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentCategory, serviceCategory]
+    [serviceCategory]
   );
 
   const onDelete = async () => {
@@ -79,8 +74,8 @@ export default function ServiceCategoryViewForm({ currentCategory = null }) {
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons isActive={defaultValues.isActive} handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.serviceCategories.list)}/>
       <Grid container sx={{mt:2}}>
-        <ViewFormField sm={12} heading="Category Name" param={defaultValues?.name} />
-        <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Category Name" param={defaultValues?.name} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>
     </Card>

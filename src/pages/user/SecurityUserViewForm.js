@@ -29,6 +29,7 @@ import CustomerDialog from '../components/Dialog/CustomerDialog';
 import ContactDialog from '../components/Dialog/ContactDialog';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 import Iconify from '../../components/iconify';
+import FormLabel from '../components/DocumentForms/FormLabel';
 
 // ----------------------------------------------------------------------
 
@@ -211,11 +212,9 @@ export default function SecurityUserViewForm() {
           />
           <Grid container sx={{display:{ md:'flex', sm: 'block' }, justifyContent:{md: 'space-between'}}} >
           <Grid  item md={6} sm={12} sx={{p:.5}}>
-            <Grid  sx={{border: '1px solid lightgrey', borderRadius: '8px', px:1.5, height: {md: '100%'}}}>
-              <Grid display="flex">
-                <Typography variant='subtitle1' sx={{ mx:'auto',mt:1}}>Personal Information</Typography>
-              </Grid>
-              <ViewFormField
+            <Grid  sx={{border: '1px solid lightgrey', borderRadius:2, px:1.5, pt:1.5, height: {md: '100%'}}}>
+            <FormLabel content='Personal Information' />
+              <ViewFormField isLoading={isLoading}
                   sm={12}
                   heading="Full Name"
                   objectParam={
@@ -231,10 +230,10 @@ export default function SecurityUserViewForm() {
                     )
                   }
               />
-              <ViewFormField sm={12} heading="Phone" param={defaultValues?.phone} />
-              <ViewFormField sm={12} heading="email" param={defaultValues?.email} />
-              <ViewFormField sm={12} heading="Login" param={defaultValues?.login} />
-              <ViewFormField
+              <ViewFormField isLoading={isLoading} sm={12} heading="Phone" param={defaultValues?.phone} />
+              <ViewFormField isLoading={isLoading} sm={12} heading="email" param={defaultValues?.email} />
+              <ViewFormField isLoading={isLoading} sm={12} heading="Login" param={defaultValues?.login} />
+              <ViewFormField isLoading={isLoading}
                 sm={12}
                 heading="Customer"
                 objectParam={
@@ -248,7 +247,7 @@ export default function SecurityUserViewForm() {
                       }
                     </Link>)}
               />
-              <ViewFormField
+              <ViewFormField isLoading={isLoading}
                 sm={12}
                 heading="Contact"
                 objectParam={
@@ -260,32 +259,30 @@ export default function SecurityUserViewForm() {
             </Grid>
             </Grid>
             <Grid item md={6} sm={12} sx={{p:.5}}>
-            <Grid  sx={{border: '1px solid lightgrey', borderRadius: '8px', px:1.5, height: {md: '100%'} }}>
-              <Grid display="flex">
-                <Typography variant='subtitle1' sx={{ mx:'auto',mt:1}}>Accessibility Information</Typography>
-              </Grid>
-              <ViewFormField
+              <Grid  sx={{border: '1px solid lightgrey', borderRadius:2, px:1.5, pt:1.5, height: {md: '100%'} }}>
+              <FormLabel content='Accessibility Information' />
+              <ViewFormField isLoading={isLoading}
                 sm={12}
                 heading="Roles"
                 userRolesChips={defaultValues?.roles}
               />
-              <ViewFormField
+              <ViewFormField isLoading={isLoading}
                 sm={12}
                 heading="Regions"
                 arrayParam={defaultValues?.regions}
               />
-              <ViewFormField
+              <ViewFormField isLoading={isLoading}
                 sm={12}
                 heading="Countries"
                 chipLabel='country_name'
                 arrayParam={defaultValues?.countries}
               />
-              <ViewFormField
+              <ViewFormField isLoading={isLoading}
                 sm={12}
                 heading="Customers"
                 arrayParam={defaultValues?.customers}
               />
-              <ViewFormField
+              <ViewFormField isLoading={isLoading}
                 sm={12}
                 heading="Machines"
                 arrayParam={defaultValues?.machines}

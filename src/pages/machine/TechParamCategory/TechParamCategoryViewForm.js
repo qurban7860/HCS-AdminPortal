@@ -32,7 +32,7 @@ export default function TechParamCategoryViewForm({ currentTechparamcategory = n
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { techparamcategory } = useSelector((state) => state.techparamcategory);
+  const { techparamcategory, isLoading } = useSelector((state) => state.techparamcategory);
 
   const { id } = useParams();
 
@@ -66,8 +66,8 @@ export default function TechParamCategoryViewForm({ currentTechparamcategory = n
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons isActive={defaultValues.isActive} handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.technicalParameterCategories.list)}  />
       <Grid container sx={{mt:2}}>
-        <ViewFormField sm={12} heading="Param Category Name" param={defaultValues?.name} />
-        <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Param Category Name" param={defaultValues?.name} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>
     </Card>

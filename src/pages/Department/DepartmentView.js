@@ -8,7 +8,6 @@ import { Cover } from '../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 /* eslint-disable */
 
-
 // ----------------------------------------------------------------------
 
 export default function DepartmentView({ editPage }) {

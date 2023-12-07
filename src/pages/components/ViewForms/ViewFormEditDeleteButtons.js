@@ -40,7 +40,7 @@ function ViewFormEditDeleteButtons({
   handleUpdatePassword,
   handleUserInvite,
   handleSendPDFEmail,
-  handleDownloadPDF,
+  handleViewPDF,
   isSubmitted,
   returnToSubmitted,
   approvers,
@@ -493,10 +493,10 @@ function ViewFormEditDeleteButtons({
           icon="eva:swap-fill"
         />}
 
-        {handleDownloadPDF && 
+        {handleViewPDF && 
           <IconTooltip
-            title="Download"
-            onClick={handleDownloadPDF}
+            title="View PDF"
+            onClick={handleViewPDF}
             color={theme.palette.primary.main}
             icon="mdi:file-pdf-box"
           />
@@ -787,7 +787,7 @@ ViewFormEditDeleteButtons.propTypes = {
   handleUpdatePassword: PropTypes.func,
   handleUserInvite: PropTypes.func,
   handleSendPDFEmail: PropTypes.func,
-  handleDownloadPDF: PropTypes.func,
+  handleViewPDF: PropTypes.func,
   isInviteLoading:PropTypes.bool,
   handleEdit: PropTypes.func,
   onDelete: PropTypes.func,

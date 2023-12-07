@@ -19,7 +19,7 @@ import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import { Snacks } from '../../../constants/machine-constants';
 
 export default function NoteViewForm() {
-  const { note } = useSelector((state) => state.machineNote);
+  const { note, isLoading } = useSelector((state) => state.machineNote);
   const { machine } = useSelector((state) => state.machine);
   const { enqueueSnackbar } = useSnackbar();
   
@@ -68,7 +68,7 @@ export default function NoteViewForm() {
       disableDeleteButton={machine?.status?.slug==='transferred'}
       />
       <Grid container>
-        <ViewFormField sm={12} heading="Note" param={defaultValues.note} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Note" param={defaultValues.note} />
         <ViewFormAudit defaultValues={defaultValues} /> 
       </Grid>
     </Card>

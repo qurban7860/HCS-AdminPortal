@@ -36,7 +36,7 @@ function SendEmailDialog({machineServiceRecord, fileName}) {
   
   const defaultValues = useMemo(
     () => ({
-      email: null,
+      email: '',
       pdf: null,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -77,7 +77,6 @@ function SendEmailDialog({machineServiceRecord, fileName}) {
   }
 
   return (
-
     <Dialog fullWidth maxWidth="xs" open={sendEmailDialog} onClose={handleCloseDialog}>
       <DialogTitle variant='h3' sx={{pb:1, pt:2}}>Send Email</DialogTitle>
       <Divider orientation="horizontal" flexItem />

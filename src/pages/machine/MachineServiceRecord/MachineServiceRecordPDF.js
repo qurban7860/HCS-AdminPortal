@@ -55,8 +55,15 @@ export function MachineServiceRecordPDF({machineServiceRecord}) {
     const checkItemLists = machineServiceRecord?.serviceRecordConfig?.checkItemLists || [];
     const operators = machineServiceRecord?.operators?.map(operator => `${operator?.firstName || ''} ${operator?.lastName || ''}`).join(', ');
     
+    const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceRecordConfigRecordType}_${defaultValues?.versionNo}`;
+
     return (
-    <Document>
+    <Document title={fileName} subject='Serevice Record'
+        author={defaultValues?.createdByFullName}
+        creator='HOWICK'
+        keywords={`Version ${defaultValues.versionNo}`}
+        producer={defaultValues?.createdByFullName}
+    >
     <Page>
         {machineServiceRecord?.serviceRecordConfig?.header &&
             <View style={styles.header} fixed>

@@ -17,7 +17,7 @@ import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDelet
 // ----------------------------------------------------------------------
 
 export default function RegionViewForm() {
-  const { region } = useSelector((state) => state.region);
+  const { region, isLoading } = useSelector((state) => state.region);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -69,9 +69,9 @@ export default function RegionViewForm() {
           backLink={() => navigate(PATH_SETTING.regions.list)}
         />
         <Grid container sx={{mt:2}}>
-          <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
-          <ViewFormField sm={12} chips heading="Countries" arrayParam={defaultValues.countries} />
-          <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues.name} />
+          <ViewFormField isLoading={isLoading} sm={12} chips heading="Countries" arrayParam={defaultValues.countries} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues.description} />
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
       </Grid>

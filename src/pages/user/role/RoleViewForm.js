@@ -17,7 +17,7 @@ import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDe
 // ----------------------------------------------------------------------
 
 export default function RoleViewForm() {
-  const { role } = useSelector((state) => state.role);
+  const { role, isLoading } = useSelector((state) => state.role);
   const { assignedUsers } = useSelector((state) => state.user);
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
@@ -86,11 +86,11 @@ export default function RoleViewForm() {
           isActive={defaultValues.isActive}
         />
         <Grid container sx={{mt:2}}>
-          <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
-          <ViewFormField sm={12} heading="Role Type" param={defaultValues.roleType} />
-          <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
-          <ViewFormField sm={12} heading="Assigned Users" arrayParam={assignedUsers} />
-          <ViewFormField sm={12}  />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues.name} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Role Type" param={defaultValues.roleType} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues.description} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Assigned Users" arrayParam={assignedUsers} />
+          <ViewFormField isLoading={isLoading} sm={12}  />
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
       </Grid>
