@@ -206,7 +206,6 @@ export function addMachineStatus(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
-          order: params.order,
           description: params.description,
           displayOrderNo: params.displayOrderNo,
           isActive: params.isActive,
@@ -233,7 +232,6 @@ export function updateMachinestatus(params,Id) {
       /* eslint-disable */
       let data = {
         name: params.name,
-        order: params.order,
         displayOrderNo: params.displayOrderNo,
         description: params.description,
         isActive: params.isActive,

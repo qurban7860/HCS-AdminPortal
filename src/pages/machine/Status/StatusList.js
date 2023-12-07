@@ -48,7 +48,7 @@ import TableCard from '../../components/ListTableTools/TableCard';
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'slug', visibility: 'xs1', label: 'Slug', align: 'left' },
-  { id: 'order', visibility: 'xs1', label: 'Order Number', align: 'left' },
+  { id: 'displayOrderNo', visibility: 'xs1', label: 'Order Number', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
@@ -72,9 +72,7 @@ export default function StatusList() {
     onSort,
     // onChangePage,
     // onChangeRowsPerPage,
-  } = useTable({
-    defaultOrderBy: 'name',
-  });
+  } = useTable({ defaultOrderBy: 'displayOrderNo' , defaultOrder: 'asc' });
 
 
   const dispatch = useDispatch();
