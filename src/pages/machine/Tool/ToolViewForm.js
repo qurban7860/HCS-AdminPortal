@@ -15,13 +15,6 @@ import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 
-// Iconify
-
-// import { fDate } from '../../../utils/formatTime';
-
-// import ToolEditForm from './ToolEditForm';
-
-// import Iconify from '../../../components/iconify/Iconify';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
@@ -35,29 +28,18 @@ ToolViewForm.propTypes = {
 // ----------------------------------------------------------------------
 
 export default function ToolViewForm({ currentTool = null }) {
-  // const [editFlag, setEditFlag] = useState(false);
-
+  
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+  const { tool, isLoading } = useSelector((state) => state.tool);
+  const { id } = useParams();
+  
+  const dispatch = useDispatch();
+  
   const handleEdit = () => {
-    // dispatch(setToolEditFormVisibility(true));
     navigate(PATH_MACHINE.machines.settings.tool.edit(id));
   };
-
-  const navigate = useNavigate();
-
-  const { enqueueSnackbar } = useSnackbar();
-
-  const { tool } = useSelector((state) => state.tool);
-  // const tool = tools
-  const { id } = useParams();
-
-  const dispatch = useDispatch();
-  // useLayoutEffect(() => {
-  //   console.log(id,"useEffectNow")
-  //   if(id != null){
-  //     dispatch(getTool(id));
-  //   }
-  // }, [dispatch, id]);
-
+  
   const defaultValues = useMemo(
     () => ({
       name: tool?.name || '',
@@ -88,8 +70,8 @@ export default function ToolViewForm({ currentTool = null }) {
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons isActive={defaultValues.isActive} handleEdit={handleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.tool.list)}/>
       <Grid container sx={{mt:2}}>
-        <ViewFormField sm={12} heading="Name" param={defaultValues?.name} />
-        <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues?.name} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>
     </Card>

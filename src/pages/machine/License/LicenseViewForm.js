@@ -20,7 +20,7 @@ import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import { Snacks } from '../../../constants/machine-constants';
 
 export default function LicenseViewForm() {
-  const { license } = useSelector((state) => state.license);
+  const { license, isLoading} = useSelector((state) => state.license);
   const { machine } = useSelector((state) => state.machine);
   const { enqueueSnackbar } = useSnackbar();
   
@@ -78,15 +78,15 @@ export default function LicenseViewForm() {
       disableDeleteButton={machine?.status?.slug==='transferred'}
       />
       <Grid container sx={{mt:2}}>
-        <ViewFormField sm={6} heading="Device GUID" param={defaultValues.licenseDetail.deviceGUID} />
-        <ViewFormField sm={6} heading="Device Name" param={defaultValues.licenseDetail.deviceName} />
-        <ViewFormField sm={6} heading="Type" param={defaultValues.licenseDetail.type} />
-        <ViewFormField sm={6} heading="Version" param={defaultValues.licenseDetail.version} />
-        <ViewFormField heading="License Key" param={defaultValues.licenseKey} />
-        <ViewFormField sm={6} heading="Production" param={defaultValues.licenseDetail.production} />
-        <ViewFormField sm={6} heading="Waste" param={defaultValues.licenseDetail.waste} />
-        <ViewFormField sm={6} heading="Extension Time" param={fDate(defaultValues.licenseDetail.extensionTime)} />
-        <ViewFormField sm={6} heading="Request Time" param={fDate(defaultValues.licenseDetail.requestTime)} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Device GUID" param={defaultValues.licenseDetail.deviceGUID} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Device Name" param={defaultValues.licenseDetail.deviceName} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Type" param={defaultValues.licenseDetail.type} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Version" param={defaultValues.licenseDetail.version} />
+        <ViewFormField isLoading={isLoading} heading="License Key" param={defaultValues.licenseKey} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Production" param={defaultValues.licenseDetail.production} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Waste" param={defaultValues.licenseDetail.waste} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Extension Time" param={fDate(defaultValues.licenseDetail.extensionTime)} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Request Time" param={fDate(defaultValues.licenseDetail.requestTime)} />
         <ViewFormAudit defaultValues={defaultValues} /> 
       </Grid>
     </Card>

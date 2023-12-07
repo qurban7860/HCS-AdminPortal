@@ -138,6 +138,7 @@ export default function MachineList() {
   }
 
   return (
+    <>
       <TableCard>
         <MachineListTableToolbar
           filterName={filterName}
@@ -197,9 +198,11 @@ export default function MachineList() {
           onRowsPerPageChange={onChangeRowsPerPage}
         />
 
-        <MachineDialog/>
+        
 
       </TableCard>
+      <MachineDialog />
+      </>
   );
 }
 

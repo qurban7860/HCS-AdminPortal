@@ -21,13 +21,13 @@ ServiceRecordConfigView.propTypes = {
 // ----------------------------------------------------------------------
 
 export default function ServiceRecordConfigView({ editPage }) {
-  const { serviceRecordConfig } = useSelector((state) => state.serviceRecordConfig);
+  const { serviceRecordConfig, isLoading } = useSelector((state) => state.serviceRecordConfig);
 
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
         <Cover
-          name={serviceRecordConfig?.docTitle}
+          name={isLoading? "" : serviceRecordConfig?.docTitle}
           setting
           backLink={PATH_MACHINE.machines.settings.serviceRecordConfigs.list}
         />

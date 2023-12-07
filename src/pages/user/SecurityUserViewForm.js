@@ -210,7 +210,7 @@ export default function SecurityUserViewForm() {
             }
           />
           <Grid container sx={{mt:2}}>
-            <ViewFormField
+            <ViewFormField isLoading={isLoading}
               sm={6}
               heading="Customer"
               objectParam={
@@ -227,7 +227,7 @@ export default function SecurityUserViewForm() {
 
               }
             />
-            <ViewFormField
+            <ViewFormField isLoading={isLoading}
               sm={6}
               heading="Contact"
               objectParam={
@@ -238,7 +238,7 @@ export default function SecurityUserViewForm() {
                 )
               }
             />
-            <ViewFormField
+            <ViewFormField isLoading={isLoading}
               sm={6}
               heading="Full Name"
               objectParam={
@@ -255,39 +255,39 @@ export default function SecurityUserViewForm() {
 
               }
             />
-            {/* <ViewFormField sm={6} heading="Full Name" param={defaultValues?.name} /> */}
-            <ViewFormField sm={6} heading="Phone" param={defaultValues?.phone} />
-            <ViewFormField sm={12} heading="email" param={defaultValues?.email} />
-            <ViewFormField sm={6} heading="Login" param={defaultValues?.login} />
+            {/* <ViewFormField isLoading={isLoading} sm={6} heading="Full Name" param={defaultValues?.name} /> */}
+            <ViewFormField isLoading={isLoading} sm={6} heading="Phone" param={defaultValues?.phone} />
+            <ViewFormField isLoading={isLoading} sm={12} heading="email" param={defaultValues?.email} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Login" param={defaultValues?.login} />
             
-            <ViewFormField
+            <ViewFormField isLoading={isLoading}
               sm={6}
               heading="Roles"
               userRolesChips={defaultValues?.roles}
             />
-            <ViewFormField
+            <ViewFormField isLoading={isLoading}
               sm={12}
               heading="Regions"
               arrayParam={defaultValues?.regions}
             />
-            <ViewFormField
+            <ViewFormField isLoading={isLoading}
               sm={12}
               heading="Countries"
               chipLabel='country_name'
               arrayParam={defaultValues?.countries}
             />
-            <ViewFormField
+            <ViewFormField isLoading={isLoading}
               sm={12}
               heading="Customers"
               arrayParam={defaultValues?.customers}
             />
-            <ViewFormField
+            <ViewFormField isLoading={isLoading}
               sm={12}
               heading="Machines"
               arrayParam={defaultValues?.machines}
             />
           </Grid>
-          <ViewFormField />
+          
           <Grid container>
             <ViewFormAudit defaultValues={defaultValues} />
           </Grid>

@@ -42,7 +42,7 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
   const { enqueueSnackbar } = useSnackbar();
 
   const navigate = useNavigate();
-  const { serviceRecordConfig, editFormVisibility } = useSelector((state) => state.serviceRecordConfig);
+  const { serviceRecordConfig, editFormVisibility, isLoading } = useSelector((state) => state.serviceRecordConfig);
   const { id } = useParams();
   
   const dispatch = useDispatch();
@@ -153,23 +153,23 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
         backLink={() => navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.list)} 
       />
       <Grid container sx={{mt:2}}>
-        <ViewFormField sm={6} heading="Document Title" param={defaultValues?.docTitle} />
-        <ViewFormField sm={6} heading="Document Type" param={defaultValues?.recordType} />
-        <ViewFormField sm={6} heading="Status" param={defaultValues?.status} />
-        <ViewFormField sm={6} heading="Version No." param={defaultValues?.docVersionNo} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Document Title" param={defaultValues?.docTitle} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Document Type" param={defaultValues?.recordType} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Status" param={defaultValues?.status} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Version No." param={defaultValues?.docVersionNo} />
       </Grid>
       <Grid container>
-        <ViewFormField sm={6} heading="Machine Category" param={defaultValues?.machineCategory} />
-        <ViewFormField sm={6} heading="Machine Model" param={defaultValues?.machineModel} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Machine Category" param={defaultValues?.machineCategory} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Machine Model" param={defaultValues?.machineModel} />
       </Grid>
       <Grid container>  
-        <ViewFormField sm={12} heading="Text Before Check Items" param={defaultValues?.textBeforeCheckItems} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Text Before Check Items" param={defaultValues?.textBeforeCheckItems} />
       </Grid>
         <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
           Check Items
         </Typography>
         {/* <Grid item md={12}>  */}
-        {defaultValues?.checkItemLists?.length > 0 ? (defaultValues?.checkItemLists.map((row, index) =>
+        {!isLoading && defaultValues?.checkItemLists?.length > 0 ? (defaultValues?.checkItemLists.map((row, index) =>
           ( typeof row?.checkItems?.length === 'number' && row?.checkItems?.length > 0 ? 
             <TableContainer >
                 <Table>
@@ -179,34 +179,34 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
                 </Table>
             </TableContainer>
             :
-            <ViewFormField />
+            <ViewFormField isLoading={isLoading} />
           ))
-        ) : <ViewFormField />
+        ) : <ViewFormField isLoading={isLoading} />
         }
         {/* </Grid> */}
-      <ViewFormField sm={12} heading="Text After Check Items" param={defaultValues?.textAfterCheckItems} />
+      <ViewFormField isLoading={isLoading} sm={12} heading="Text After Check Items" param={defaultValues?.textAfterCheckItems} />
         <Grid container>
-      <ViewFormSwitch sm={6} isActiveHeading='Enable Note' isActive={defaultValues?.enableNote} />
-      <ViewFormSwitch sm={6} isActiveHeading='Enable Maintenance Recommendations	' isActive={defaultValues?.enableMaintenanceRecommendations} />
-      <ViewFormSwitch sm={6} isActiveHeading='Is Operator Signature Required' isActive={defaultValues?.isOperatorSignatureRequired} />
-      <ViewFormSwitch sm={6} isActiveHeading='Enable Suggested Spares' isActive={defaultValues?.enableSuggestedSpares} />
+      <ViewFormSwitch isLoading={isLoading} sm={6} isActiveHeading='Enable Note' isActive={defaultValues?.enableNote} />
+      <ViewFormSwitch isLoading={isLoading} sm={6} isActiveHeading='Enable Maintenance Recommendations	' isActive={defaultValues?.enableMaintenanceRecommendations} />
+      <ViewFormSwitch isLoading={isLoading} sm={6} isActiveHeading='Is Operator Signature Required' isActive={defaultValues?.isOperatorSignatureRequired} />
+      <ViewFormSwitch isLoading={isLoading} sm={6} isActiveHeading='Enable Suggested Spares' isActive={defaultValues?.enableSuggestedSpares} />
         </Grid>
       
       <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
         Header
       </Typography>
       <Grid container>
-        <ViewFormField sm={4} heading="Header Left Text" param={defaultValues?.header?.leftText} />
-        <ViewFormField sm={4} heading="Header Center Text" param={defaultValues?.header?.centerText} />
-        <ViewFormField sm={4} heading="Header Right Text" param={defaultValues?.header?.rightText} />
+        <ViewFormField isLoading={isLoading} sm={4} heading="Header Left Text" param={defaultValues?.header?.leftText} />
+        <ViewFormField isLoading={isLoading} sm={4} heading="Header Center Text" param={defaultValues?.header?.centerText} />
+        <ViewFormField isLoading={isLoading} sm={4} heading="Header Right Text" param={defaultValues?.header?.rightText} />
       </Grid>
       <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
         Footer
       </Typography>
       <Grid container>
-        <ViewFormField sm={4} heading="Footer Left Text" param={defaultValues?.footer?.leftText} />
-        <ViewFormField sm={4} heading="Footer Center Text" param={defaultValues?.footer?.centerText} />
-        <ViewFormField sm={4} heading="Footer Right Text" param={defaultValues?.footer?.rightText} />
+        <ViewFormField isLoading={isLoading} sm={4} heading="Footer Left Text" param={defaultValues?.footer?.leftText} />
+        <ViewFormField isLoading={isLoading} sm={4} heading="Footer Center Text" param={defaultValues?.footer?.centerText} />
+        <ViewFormField isLoading={isLoading} sm={4} heading="Footer Right Text" param={defaultValues?.footer?.rightText} />
       </Grid>
         <ViewFormAprovedSubmit submittedInfo={defaultValues?.submittedInfo} approvedInfo={defaultValues.approvedInfo} />
         <ViewFormAudit defaultValues={defaultValues} />

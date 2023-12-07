@@ -27,25 +27,22 @@ ModelViewForm.propTypes = {
 // ----------------------------------------------------------------------
 
 export default function ModelViewForm({ currentMachinemodel = null }) {
-  // const [editFlag, setEditFlag] = useState(false);
-
+  
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+  const { machineModel, isLoading } = useSelector((state) => state.machinemodel);
+  const { id } = useParams();
+  
+  const dispatch = useDispatch();
   const toggleEdit = () => {
     dispatch(setMachinemodelsEditFormVisibility(true));
     navigate(PATH_MACHINE.machines.settings.model.modeledit(id));
   };
 
-  const navigate = useNavigate();
-
-  const { enqueueSnackbar } = useSnackbar();
-
-  const { machineModel } = useSelector((state) => state.machinemodel);
-  console.log('machinemodel : ', machineModel);
-  const { id } = useParams();
-
-  const dispatch = useDispatch();
-useEffect(()=>{
- dispatch(getMachineModel(id));
-},[dispatch, id])
+  useEffect(()=>{
+    dispatch(getMachineModel(id));
+  },[dispatch, id])
+  
   const defaultValues = useMemo(
     () => ({
       name: machineModel?.name || '',
@@ -78,9 +75,9 @@ useEffect(()=>{
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons isActive={defaultValues.isActive} handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.model.list)}/>
       <Grid container sx={{mt:2}}>
-        <ViewFormField sm={12} heading="Model Name" param={defaultValues?.name} />
-        <ViewFormField sm={12} heading="Category Name" param={defaultValues?.category?.name} />
-        <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Model Name" param={defaultValues?.name} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Category Name" param={defaultValues?.category?.name} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>
     </Card>

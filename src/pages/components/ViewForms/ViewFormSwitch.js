@@ -1,6 +1,7 @@
 import { useEffect, memo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Grid,Switch} from '@mui/material';
+import SkeletonViewFormField from '../../../components/skeleton/SkeletonViewFormField';
 
 ViewFormSWitch.propTypes = {
   sm: PropTypes.number,
@@ -16,9 +17,12 @@ ViewFormSWitch.propTypes = {
   drawingHeading:PropTypes.string,
   isMultiFactorAuthentication:PropTypes.string,
   isMultiFactorAuthenticationVal:PropTypes.bool,
+  isLoading: PropTypes.bool,
 };
 
-function ViewFormSWitch({sm, isActiveHeading, isActive, isMultiFactorAuthentication, isMultiFactorAuthenticationVal, customerAccessHeading, customerAccess, customer, customerHeading, machine, machineHeading, drawing, drawingHeading}) {
+function ViewFormSWitch({sm, isActiveHeading, isActive, isMultiFactorAuthentication, 
+  isMultiFactorAuthenticationVal, customerAccessHeading, customerAccess, customer, 
+  customerHeading, machine, machineHeading, drawing, drawingHeading, isLoading}) {
     const [isActiveVal, setIsActiveVal] = useState(isActive);
     const [customerAccessVal, setCustomerAccessVal] = useState(customerAccess);
     const [multiFactorAuthenticationVal, setIsMultiFactorAuthenticationVal] = useState(isMultiFactorAuthenticationVal)
@@ -44,7 +48,12 @@ function ViewFormSWitch({sm, isActiveHeading, isActive, isMultiFactorAuthenticat
 
     return (
       <Grid item xs={12} sm={sm || 12} sx={{  display: 'flex', alignContent:'center',mt:-1}}>
-       
+        {isLoading ? (
+          <Grid sx={{  display: 'flex', mx:1 }}>
+            <SkeletonViewFormField />
+          </Grid>
+        ) : (
+          <>
         {customerAccess && (
         <Grid sx={{  display: 'flex', mx:1 }}>
           <Typography
@@ -141,7 +150,8 @@ function ViewFormSWitch({sm, isActiveHeading, isActive, isMultiFactorAuthenticat
               onChange={handleIsActiveChange}
               />
               </Grid>}
-
+              </>
+      )}
       </Grid>
     );
 }

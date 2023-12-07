@@ -11,7 +11,7 @@ import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 
 export default function UserInviteViewForm() {
-  const {userInvite} = useSelector((state) => state.userInvite);
+  const { userInvite, isLoading } = useSelector((state) => state.userInvite);
   const navigate = useNavigate();
   const defaultValues = useMemo(
     () => ({
@@ -49,12 +49,12 @@ export default function UserInviteViewForm() {
         <Card sx={{ p: 2 }}>
         <ViewFormEditDeleteButtons isActive={defaultValues.isActive} backLink={() => navigate(PATH_SETTING.invite.list)} />
           <Grid container sx={{mt:2}}>
-            <ViewFormField sm={6} heading="Inveted User" param={defaultValues.username} />
-            <ViewFormField sm={6} heading="Inveted User Email" param={defaultValues.useremail} />
-            <ViewFormField sm={6} heading="Invited By " param={defaultValues.sender} />
-            <ViewFormField sm={6} heading="Status " param={defaultValues.status} />
-            <ViewFormField sm={6} heading="Invitation Time " param={fDate(defaultValues.createdAt)} />
-            <ViewFormField sm={6} heading="Expiry Time " param={fDate(defaultValues.expiry)} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Inveted User" param={defaultValues.username} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Inveted User Email" param={defaultValues.useremail} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Invited By " param={defaultValues.sender} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Status " param={defaultValues.status} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Invitation Time " param={fDate(defaultValues.createdAt)} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Expiry Time " param={fDate(defaultValues.expiry)} />
           </Grid>
         </Card>
       </Grid>

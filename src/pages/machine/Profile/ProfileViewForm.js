@@ -3,8 +3,6 @@ import { useMemo } from 'react';
 import { Card, Grid } from '@mui/material';
 // hooks
 import { useDispatch, useSelector } from 'react-redux';
-// import { fDate } from 'src/utils/formatTime';
-// import { fDate } from '../../../utils/formatTime';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import { useSnackbar } from '../../../components/snackbar';
 // components
@@ -22,8 +20,7 @@ import { getMachine } from '../../../redux/slices/products/machine';
 // import { Snacks } from '../../../constants/machine-constants';
 
 export default function ProfileViewForm() {
-  const { profile } = useSelector((state) => state.profile);
-
+  const { profile, isLoading} = useSelector((state) => state.profile);
   const { machine } = useSelector((state) => state.machine);
   const { enqueueSnackbar } = useSnackbar();
   
@@ -76,13 +73,13 @@ export default function ProfileViewForm() {
       disableDeleteButton={machine?.status?.slug==='transferred'}
       handleEdit={handleEdit} onDelete={onDelete} backLink={() => dispatch(setProfileViewFormVisibility(false))} />
       <Grid container sx={{mt:2}}>
-        <ViewFormField sm={6} heading="Default Name" param={defaultValues.defaultName} />
-        <ViewFormField sm={6} heading="Type" param={defaultValues?.type} />
-        <ViewFormField heading="Other Names" chips={defaultValues.names} />
-        <ViewFormField sm={2} heading="Web" param={`${defaultValues?.web || '' }`} />
-        <ViewFormField sm={2} heading="Flange" param={`${defaultValues?.flange || '' }`} />
-        <ViewFormField sm={2} heading="Thickness Start" param={`${defaultValues?.thicknessStart || '' } `} />
-        <ViewFormField sm={2} heading="Thickness End" param={`${defaultValues?.thicknessEnd || '' } `} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Default Name" param={defaultValues.defaultName} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Type" param={defaultValues?.type} />
+        <ViewFormField isLoading={isLoading} heading="Other Names" chips={defaultValues.names} />
+        <ViewFormField isLoading={isLoading} sm={2} heading="Web" param={`${defaultValues?.web || '' }`} />
+        <ViewFormField isLoading={isLoading} sm={2} heading="Flange" param={`${defaultValues?.flange || '' }`} />
+        <ViewFormField isLoading={isLoading} sm={2} heading="Thickness Start" param={`${defaultValues?.thicknessStart || '' } `} />
+        <ViewFormField isLoading={isLoading} sm={2} heading="Thickness End" param={`${defaultValues?.thicknessEnd || '' } `} />
 
         <ViewFormAudit defaultValues={defaultValues} /> 
       </Grid>

@@ -40,7 +40,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const navigate = useNavigate();
-  const { category, editFormVisibility } = useSelector((state) => state.category);
+  const { category, editFormVisibility, isLoading } = useSelector((state) => state.category);
   console.log("category : ", category)
   const { id } = useParams();
 
@@ -81,9 +81,9 @@ export default function CategoryViewForm({ currentCategory = null }) {
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons isActive={defaultValues.isActive} handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.categories.list)} />
       <Grid container sx={{mt:2}}>
-        <ViewFormField sm={12} heading="Category Name" param={defaultValues?.name} />
-        <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
-        <ViewFormSwitch sm={12} isActiveHeading='Connect as a child' isActive={defaultValues.connection} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Category Name" param={defaultValues?.name} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
+        <ViewFormSwitch isLoading={isLoading} sm={12} isActiveHeading='Connect as a child' isActive={defaultValues.connection} />
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>
     </Card>

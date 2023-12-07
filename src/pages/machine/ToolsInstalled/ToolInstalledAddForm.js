@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { DatePicker } from '@mui/x-date-pickers';
 import { Box, Card, Grid, Stack, Typography, Autocomplete, TextField, Button } from '@mui/material';
 import useResponsive from '../../../hooks/useResponsive'; 
 // slice
@@ -27,6 +26,7 @@ import FormProvider, {
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { CONFIG } from '../../../config-global'
 import { checkValuesNotNull } from '../util/index'
+import FormLabel from '../../components/DocumentForms/FormLabel';
 
 // ----------------------------------------------------------------------
 
@@ -247,7 +247,6 @@ function ToolsInstalledAddForm() {
     watch,
     handleSubmit,
     formState: { isSubmitting },
-    setValue,
     control,
   } = methods
 
@@ -282,12 +281,8 @@ function ToolsInstalledAddForm() {
       <Grid container spacing={4}>
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
-            <Stack spacing={3}>
-              <Stack spacing={1}>
-                <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                  New Tool
-                </Typography>
-              </Stack>
+            <Stack spacing={2}>
+              <FormLabel content='New Tool' />
               <Box
                 rowGap={2}
                 columnGap={2}

@@ -32,7 +32,7 @@ export default function ContactViewForm({
   setIsExpanded,
   setCurrentContactData,
 }) {
-  const { contact } = useSelector((state) => state.contact);
+  const { contact, isLoading } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -103,22 +103,21 @@ export default function ContactViewForm({
     <Grid sx={{mt:1}}>
       <ViewFormEditDeleteButtons moveCustomerContact={ isSuperAdmin && handleMoveConatct } isActive={defaultValues.isActive} handleEdit={handleEdit} onDelete={onDelete} />
       <Grid container>
-        <ViewFormField sm={6} heading="First Name" param={defaultValues?.firstName} />
-        <ViewFormField sm={6} heading="Last Name" param={defaultValues?.lastName} />
-        <ViewFormField sm={6} heading="Title" param={defaultValues?.title} />
-        <ViewFormField sm={6} heading="Contact Types" chips={defaultValues?.contactTypes} />
-        <ViewFormField sm={6} heading="Phone" param={defaultValues?.phone} />
-        <ViewFormField sm={6} heading="Email" param={defaultValues?.email} />
-        <ViewFormField sm={6} heading="Report To" param={`${defaultValues?.reportingTo?.firstName || '' } ${defaultValues?.reportingTo?.lastName || '' }`} />
-        <ViewFormField sm={6} heading="Department" param={defaultValues?.department} />
-        <ViewFormField sm={6} heading="Street" param={defaultValues?.street} />
-        <ViewFormField sm={6} heading="Suburb" param={defaultValues?.suburb} />
-        <ViewFormField sm={6} heading="City" param={defaultValues?.city} />
-        <ViewFormField sm={6} heading="Region" param={defaultValues?.region} />
-        <ViewFormField sm={6} heading="Post Code" param={defaultValues?.postcode} />
-        <ViewFormField sm={6} heading="Country" param={defaultValues?.country} />
-        <ViewFormField sm={12} heading="Operator's Trainings" chipDialogArrayParam={operatorTraningsList} />
-        <ViewFormField />
+        <ViewFormField isLoading={isLoading} sm={6} heading="First Name" param={defaultValues?.firstName} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Last Name" param={defaultValues?.lastName} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Title" param={defaultValues?.title} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Contact Types" chips={defaultValues?.contactTypes} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Phone" param={defaultValues?.phone} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Email" param={defaultValues?.email} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Report To" param={`${defaultValues?.reportingTo?.firstName || '' } ${defaultValues?.reportingTo?.lastName || '' }`} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Department" param={defaultValues?.department} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Street" param={defaultValues?.street} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Suburb" param={defaultValues?.suburb} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="City" param={defaultValues?.city} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Region" param={defaultValues?.region} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Post Code" param={defaultValues?.postcode} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Country" param={defaultValues?.country} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Operator's Trainings" chipDialogArrayParam={operatorTraningsList} />
       </Grid>
       <ViewFormAudit defaultValues={defaultValues} />
     </Grid>

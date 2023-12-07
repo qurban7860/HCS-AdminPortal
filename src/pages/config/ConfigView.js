@@ -22,20 +22,12 @@ export default function ConfigView() {
     dispatch(getConfig(id));
   }, [id, dispatch]);
 
-  const { config } = useSelector((state) => state.config );
-  // console.log("role : ",role)
+  const { config, isLoading } = useSelector((state) => state.config );
   return (
     <>
       <Container maxWidth={false}>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            // mt: '24px',
-          }}
-        >
-          <Cover name={config?.name} generalSettings backLink={PATH_SETTING.configs.list} />
+        <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+          <Cover name={isLoading?"":config?.name} generalSettings backLink={PATH_SETTING.configs.list} />
         </Card>
         <ConfigViewForm />
       </Container>

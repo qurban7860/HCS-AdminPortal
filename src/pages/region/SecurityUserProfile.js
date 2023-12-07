@@ -45,7 +45,7 @@ import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDelet
 export default function SecurityUserProfile() {
   const { customer } = useSelector((state) => state.customer);
   const { contact } = useSelector((state) => state.contact);
-  const { securityUser, initial } = useSelector((state) => state.user);
+  const { securityUser, initial, isLoading} = useSelector((state) => state.user);
   // console.log("securityUser : ",securityUser," contact : ", contact , " customer  : ", customer  )
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -159,7 +159,7 @@ export default function SecurityUserProfile() {
                 )
               }
             />
-            <ViewFormField
+            <ViewFormField isLoading={isLoading}
               sm={6}
               heading="Contact"
               objectParam={
@@ -170,17 +170,17 @@ export default function SecurityUserProfile() {
                 )
               }
             />
-            <ViewFormField sm={6} heading="Full Name" param={defaultValues?.name} />
-            <ViewFormField sm={6} heading="Phone" param={defaultValues?.phone} />
-            <ViewFormField sm={12} heading="email" param={defaultValues?.email} />
-            <ViewFormField sm={6} heading="Login" param={defaultValues?.login} />
-            <ViewFormField
+            <ViewFormField isLoading={isLoading} sm={6} heading="Full Name" param={defaultValues?.name} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Phone" param={defaultValues?.phone} />
+            <ViewFormField isLoading={isLoading} sm={12} heading="email" param={defaultValues?.email} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Login" param={defaultValues?.login} />
+            <ViewFormField isLoading={isLoading}
               sm={6}
               heading="Roles"
               userRolesChips={defaultValues?.roles}
             />
           </Grid>
-          <ViewFormField />
+          <ViewFormField isLoading={isLoading} />
           <Grid container>
             <ViewFormAudit defaultValues={defaultValues} />
           </Grid>
@@ -194,20 +194,20 @@ export default function SecurityUserProfile() {
       >
         <DialogLabel content="Customer" onClick={() => handleCloseCustomer()} />
         <Grid container sx={{ p: 2 }}>
-          <ViewFormField sm={12} heading="Name" param={customer?.name} />
-          <ViewFormField sm={6} heading="Trading Name" param={customer?.tradingName} />
-          <ViewFormField sm={6} heading="Phone" param={customer?.mainSite?.phone} />
-          <ViewFormField sm={6} heading="Fax" param={customer?.mainSite?.fax} />
-          <ViewFormField sm={6} heading="Email" param={customer?.mainSite?.email} />
-          <ViewFormField sm={6} heading="Site Name" param={customer?.mainSite?.name} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={customer?.name} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Trading Name" param={customer?.tradingName} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Phone" param={customer?.mainSite?.phone} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Fax" param={customer?.mainSite?.fax} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Email" param={customer?.mainSite?.email} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Site Name" param={customer?.mainSite?.name} />
           <FormLabel content="Address Information" />
-          <ViewFormField sm={6} heading="Street" param={customer?.mainSite?.address?.street} />
-          <ViewFormField sm={6} heading="Suburb" param={customer?.mainSite?.address?.suburb} />
-          <ViewFormField sm={6} heading="City" param={customer?.mainSite?.address?.city} />
-          <ViewFormField sm={6} heading="Region" param={customer?.mainSite?.address?.region} />
-          <ViewFormField sm={6} heading="Post Code" param={customer?.mainSite?.address?.postcode} />
-          <ViewFormField sm={12} heading="Country" param={customer?.mainSite?.address?.country} />
-          <ViewFormField
+          <ViewFormField isLoading={isLoading} sm={6} heading="Street" param={customer?.mainSite?.address?.street} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Suburb" param={customer?.mainSite?.address?.suburb} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="City" param={customer?.mainSite?.address?.city} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Region" param={customer?.mainSite?.address?.region} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Post Code" param={customer?.mainSite?.address?.postcode} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Country" param={customer?.mainSite?.address?.country} />
+          <ViewFormField isLoading={isLoading}
             sm={6}
             heading="Primary Biling Contact"
             param={
@@ -215,7 +215,7 @@ export default function SecurityUserProfile() {
               `${customer?.primaryBillingContact?.firstName} ${customer?.primaryBillingContact?.lastName}`
             }
           />
-          <ViewFormField
+          <ViewFormField isLoading={isLoading}
             sm={6}
             heading="Primary Technical Contact"
             param={
@@ -226,19 +226,19 @@ export default function SecurityUserProfile() {
         </Grid>
         <Grid container sx={{ px: 2, pb: 3 }}>
           <FormLabel content="Howick Resources" />
-          <ViewFormField
+          <ViewFormField isLoading={isLoading}
             sm={6}
             heading="Account Manager"
             param={customer?.accountManager?.firstName}
             secondParam={customer?.accountManager?.lastName}
           />
-          <ViewFormField
+          <ViewFormField isLoading={isLoading}
             sm={6}
             heading="Project Manager"
             param={customer?.projectManager?.firstName}
             secondParam={customer?.projectManager?.lastName}
           />
-          <ViewFormField
+          <ViewFormField isLoading={isLoading}
             sm={6}
             heading="Suppport Manager"
             param={customer?.supportManager?.firstName}
@@ -255,69 +255,69 @@ export default function SecurityUserProfile() {
       >
         <DialogLabel content="Contact" onClick={() => handleCloseContact()} />
         <Grid container sx={{ px: 2, py: 2 }}>
-          <ViewFormField
+          <ViewFormField isLoading={isLoading}
             sm={6}
             heading="First Name"
             param={contact?.firstName && contact?.firstName}
           />
-          <ViewFormField
+          <ViewFormField isLoading={isLoading}
             sm={6}
             heading="Last Name"
             param={contact?.lastName && contact?.lastName}
           />
-          <ViewFormField sm={6} heading="Title" param={contact?.title && contact?.title} />
-          <ViewFormField
+          <ViewFormField isLoading={isLoading} sm={6} heading="Title" param={contact?.title && contact?.title} />
+          <ViewFormField isLoading={isLoading}
             sm={6}
             heading="Contact Types"
             param={contact?.contactTypes && contact?.contactTypes.toString()}
           />
-          <ViewFormField sm={6} heading="Phone" param={contact?.phone && contact?.phone} />
-          <ViewFormField sm={6} heading="Email" param={contact?.email && contact?.email} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Phone" param={contact?.phone && contact?.phone} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Email" param={contact?.email && contact?.email} />
           <FormLabel content="Address Information" />
-          <ViewFormField
+          <ViewFormField isLoading={isLoading}
             sm={6}
             heading="Street"
             param={contact?.address?.street && contact?.address?.street}
           />
-          <ViewFormField
+          <ViewFormField isLoading={isLoading}
             sm={6}
             heading="Suburb"
             param={contact?.address?.suburb && contact?.address?.suburb}
           />
-          <ViewFormField
+          <ViewFormField isLoading={isLoading}
             sm={6}
             heading="City"
             param={contact?.address?.city && contact?.address?.city}
           />
-          <ViewFormField
+          <ViewFormField isLoading={isLoading}
             sm={6}
             heading="Region"
             param={contact?.address?.region && contact?.address?.region}
           />
-          <ViewFormField
+          <ViewFormField isLoading={isLoading}
             sm={6}
             heading="Post Code"
             param={contact?.address?.postcode && contact?.address?.postcode}
           />
-          <ViewFormField
+          <ViewFormField isLoading={isLoading}
             sm={6}
             heading="Country"
             param={contact?.address?.country && contact?.address?.country}
           />
-          <ViewFormField />
+          <ViewFormField isLoading={isLoading} />
         </Grid>
-        {/* <ViewFormField sm={6} heading='First Name'    param={contact?.firstName }/>
-          <ViewFormField sm={6} heading='Last Name'     param={contact?.lastName  }/>
-          <ViewFormField sm={6} heading='Title'         param={contact?.title }/>
-          <ViewFormField sm={6} heading='Contact Types' param={contact?.contactTypes}/>
-          <ViewFormField sm={6} heading='Phone'         param={contact?.phone }/>
-          <ViewFormField sm={6} heading='Email'         param={contact?.email }/>
-          <ViewFormField sm={6} heading='Street'        param={contact?.address?.street}/>
-          <ViewFormField sm={6} heading='Suburb'        param={contact?.address?.suburb}/>
-          <ViewFormField sm={6} heading='City'          param={contact?.address?.city}/>
-          <ViewFormField sm={6} heading='Region'        param={contact?.address?.region}/>
-          <ViewFormField sm={6} heading='Post Code'     param={contact?.address?.postcode}/>
-          <ViewFormField sm={6} heading='Country'       param={contact?.address?.country}/> */}
+        {/* <ViewFormField isLoading={isLoading} sm={6} heading='First Name'    param={contact?.firstName }/>
+          <ViewFormField isLoading={isLoading} sm={6} heading='Last Name'     param={contact?.lastName  }/>
+          <ViewFormField isLoading={isLoading} sm={6} heading='Title'         param={contact?.title }/>
+          <ViewFormField isLoading={isLoading} sm={6} heading='Contact Types' param={contact?.contactTypes}/>
+          <ViewFormField isLoading={isLoading} sm={6} heading='Phone'         param={contact?.phone }/>
+          <ViewFormField isLoading={isLoading} sm={6} heading='Email'         param={contact?.email }/>
+          <ViewFormField isLoading={isLoading} sm={6} heading='Street'        param={contact?.address?.street}/>
+          <ViewFormField isLoading={isLoading} sm={6} heading='Suburb'        param={contact?.address?.suburb}/>
+          <ViewFormField isLoading={isLoading} sm={6} heading='City'          param={contact?.address?.city}/>
+          <ViewFormField isLoading={isLoading} sm={6} heading='Region'        param={contact?.address?.region}/>
+          <ViewFormField isLoading={isLoading} sm={6} heading='Post Code'     param={contact?.address?.postcode}/>
+          <ViewFormField isLoading={isLoading} sm={6} heading='Country'       param={contact?.address?.country}/> */}
       </Dialog>
     </>
   );

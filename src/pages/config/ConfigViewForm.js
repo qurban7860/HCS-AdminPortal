@@ -18,7 +18,7 @@ import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDelet
 // ----------------------------------------------------------------------
 
 export default function ConfigViewForm() {
-  const { config } = useSelector((state) => state.config);
+  const { config, isLoading } = useSelector((state) => state.config);
 
   const navigate = useNavigate();
 
@@ -74,10 +74,10 @@ export default function ConfigViewForm() {
           backLink={() => navigate(PATH_SETTING.configs.list)}
         />
         <Grid container sx={{mt:2}}>
-          <ViewFormField sm={12} heading="Name" param={defaultValues.name} />
-          <ViewFormField sm={6} heading="Type" param={defaultValues.type} />
-          <ViewFormField sm={6} heading="Value" param={defaultValues.value} />
-          <ViewFormField sm={12} heading="Notes" param={defaultValues.notes} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues.name} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Type" param={defaultValues.type} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Value" param={defaultValues.value} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Notes" param={defaultValues.notes} />
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
       </Grid>

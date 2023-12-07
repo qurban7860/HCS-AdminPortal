@@ -18,7 +18,7 @@ import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import { Snacks } from '../../../constants/machine-constants';
 
 export default function SettingViewForm() {
-  const { setting } = useSelector((state) => state.machineSetting);
+  const { setting, isLoading } = useSelector((state) => state.machineSetting);
   const { machine } = useSelector((state) => state.machine);
   const { enqueueSnackbar } = useSnackbar();
   
@@ -70,9 +70,9 @@ export default function SettingViewForm() {
         disableDeleteButton={machine?.status?.slug==='transferred'}
         />
       <Grid container>
-        <ViewFormField sm={12} heading="Category Name" param={defaultValues.techParam.category.name} />
-        <ViewFormField sm={6} heading="Parameter Name" param={defaultValues.techParam.name} />
-        <ViewFormField sm={6} heading="Parameter Value" param={defaultValues.techParamValue} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Category Name" param={defaultValues.techParam.category.name} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Parameter Name" param={defaultValues.techParam.name} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Parameter Value" param={defaultValues.techParamValue} />
         <ViewFormAudit defaultValues={defaultValues} /> 
       </Grid>
     </Card>
