@@ -32,7 +32,8 @@ export default function StatusAddForm() {
   const { enqueueSnackbar } = useSnackbar();
 
   const AddStatusSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(50).required('Name is required'),
+    name: Yup.string().min(2).max(50).required('Name is required!'),
+    order: Yup.number().min(2).max(500).required('Order Number is required!'),
     description: Yup.string().max(2000),
     isActive: Yup.boolean(),
     displayOrderNo: Yup.number()
@@ -45,6 +46,7 @@ export default function StatusAddForm() {
   const defaultValues = useMemo(
     () => ({
       name: '',
+      order: '',
       description: '',
       isActive: true,
       createdAt: '',
@@ -102,6 +104,7 @@ export default function StatusAddForm() {
                   <RHFTextField name="description" label="Description" minRows={7} multiline />
                   <RHFTextField name="displayOrderNo" label="Display Order No." />
                   <RHFTextField name="slug" label="Slug" />
+                  <RHFTextField name="order" label="Order Number" />
 
                   {/* <RHFSelect native name="displayOrderNo" label="Display Order No" type='number'>
                       <option value="" defaultValue/>

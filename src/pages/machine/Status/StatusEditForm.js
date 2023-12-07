@@ -32,6 +32,7 @@ export default function StatusEditForm() {
 
   const EditStatusSchema = Yup.object().shape({
     name: Yup.string().min(2).max(50).required('Name is required'),
+    order: Yup.string().min(2).max(50).required('Name is required'),
     description: Yup.string().max(2000),
     isActive: Yup.boolean(),
     displayOrderNo: Yup.number()
@@ -44,6 +45,7 @@ export default function StatusEditForm() {
   const defaultValues = useMemo(
     () => ({
       name: machinestatus?.name || '',
+      order: machinestatus?.order || '',
       description: machinestatus?.description || '',
       displayOrderNo: machinestatus?.displayOrderNo || '',
       slug: machinestatus?.slug || '',
@@ -110,6 +112,7 @@ export default function StatusEditForm() {
                 <RHFTextField name="description" label="Description" minRows={7} multiline />
                 <RHFTextField name="displayOrderNo" label="Display Order No." type="number" />
                 <RHFTextField name="slug" label="Slug" />
+                <RHFTextField name="order" label="Order Number" />
 
                 {/* <RHFSelect native name="displayOrderNo" label="Display Order No" type='number'>
                       <option value="" defaultValue/>

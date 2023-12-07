@@ -36,6 +36,7 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
   const defaultValues = useMemo(
     () => ({
       name: machinestatus?.name || '',
+      order: machinestatus?.order || '',
       description: machinestatus?.description || '',
       displayOrderNo: machinestatus?.displayOrderNo || '',
       slug: machinestatus?.slug || '',
@@ -84,6 +85,7 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
           numberParam={defaultValues?.displayOrderNo}
         />
         <ViewFormField sm={12} heading="Slug" numberParam={defaultValues?.slug} />
+        <ViewFormField sm={12} heading="Order Number" numberParam={defaultValues?.order} />
         <Grid container>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
