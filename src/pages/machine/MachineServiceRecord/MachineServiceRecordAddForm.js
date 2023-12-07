@@ -401,9 +401,8 @@ console.log("checkItemLists : ",checkItemLists)
 
                     <RHFTextField name="textAfterCheckItems" label="Text After Check Items" minRows={3} multiline/> 
                     
-                    
                     {/* <RHFTextField name="internalComments" label="Internal Comments" minRows={3} multiline/> */}
-                    { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label="Service Note" minRows={3} multiline/> }
+                    { serviceRecordConfig?.enableNote && <RHFTextField name="serviceNote" label={`${docRecordType?.name?.charAt(0).toUpperCase()||''}${docRecordType?.name?.slice(1).toLowerCase()||''} Note`} minRows={3} multiline/> }
                     { serviceRecordConfig?.enableMaintenanceRecommendations && <RHFTextField name="recommendationNote" label="Recommendation Note" minRows={3} multiline/> }
                     { serviceRecordConfig?.enableSuggestedSpares && <RHFTextField name="suggestedSpares" label="Suggested Spares" minRows={3} multiline/> }
                     <RHFTextField name="internalNote" label="Internal Note" minRows={3} multiline/> 

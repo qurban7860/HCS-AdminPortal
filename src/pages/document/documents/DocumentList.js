@@ -128,13 +128,17 @@ const  onChangePage = (event, newPage) => {
     { id: 'referenceNumber', visibility: 'xs2', label: 'Ref. No.', align: 'left' },
     { id: 'displayName', label: 'Name', align: 'left' },
     { id: 'documentVersions.versionNo.[]', visibility: 'md1', label: 'Version', align: 'center' },
-    { id: 'stockNumber', visibility: 'xs2', label: 'Stock No.', align: 'left' },
     { id: 'customerAccess', visibility: 'md2', label: 'Customer Access', align: 'center' },
     { id: 'isActive', label: 'Active', align: 'center' },
     { id: 'createdAt', label: 'Created At', align: 'right' },
     { id: 'action', label: '', align: 'right' },
   ];
-
+  if (machineDrawings) {
+    const insertIndex = 5; // Index after which you want to insert the new objects
+    TABLE_HEAD.splice(insertIndex, 0,// 0 indicates that we're not removing any elements
+    { id: 'stockNumber', visibility: 'xs2', label: 'Stock No.', align: 'left' },
+    );
+  }
   if (!customerPage && !machinePage && !machineDrawings) {
     const insertIndex = 6; // Index after which you want to insert the new objects
     TABLE_HEAD.splice(insertIndex, 0,// 0 indicates that we're not removing any elements
@@ -142,6 +146,7 @@ const  onChangePage = (event, newPage) => {
       { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left' }
     );
   }
+
   
   useEffect(() => {
     const fetchData = async () => {
