@@ -4,7 +4,7 @@ import { Grid, Typography } from '@mui/material';
 
 export default function FormLabel({ content }) {
   return (
-    <Grid container sx={{ p:1 }}>
+    <Grid container>
       <Grid item xs={12} sm={12}
         sx={{
           backgroundImage: (theme) => `linear-gradient(to right, ${theme.palette.primary.main} ,  #2065d142)`,

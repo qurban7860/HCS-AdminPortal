@@ -126,7 +126,7 @@ export function MachineServiceRecordPDF({machineServiceRecord}) {
             </View>
             <View style={styles.row}>
                 <View style={styles.col}>
-                    <Text style={styles.lable}>TEXT BEFORE CHECK ITEMS</Text>
+                    {/* <Text style={styles.lable}>TEXT BEFORE CHECK ITEMS</Text> */}
                     <Text style={styles.text_sm}>{defaultValues?.textBeforeCheckItems}</Text>
                 </View>
             </View>
@@ -134,13 +134,16 @@ export function MachineServiceRecordPDF({machineServiceRecord}) {
             <Page style={styles.body}> */}
         
             <Text style={styles.title}>Check Items</Text>
-
+            <View style={styles.row}>
+                <View style={styles.col}>
+                    <Text style={styles.text_sm}>{defaultValues?.textBeforeCheckItems}</Text>
+                </View>
+            </View>
 
             {checkItemLists.length > 0 &&
             checkItemLists.map((row, index) => (
                 <View key={`contatiner-${index}`} style={styles.contatiner}>
                         <Text style={styles.text}>{index+1} - {row.ListTitle} ({row.checkItems?.length})</Text>
-                        
                         {row?.checkItems?.map((childRow,childIndex) => (
                             <View key={`inner_contatiner-${index}`} style={styles.inner_contatiner}>
                                 <Text style={styles.text_sm}><Text style={styles.bold}>{index+1}.{childIndex+1} -</Text> {childRow?.name}</Text>
@@ -158,7 +161,7 @@ export function MachineServiceRecordPDF({machineServiceRecord}) {
 
             <View style={styles.row}>
                 <View style={styles.col}>
-                    <Text style={styles.lable}>TEXT AFTER CHECK ITEMS</Text>
+                    {/* <Text style={styles.lable}>TEXT AFTER CHECK ITEMS</Text> */}
                     <Text style={styles.text_sm}>{defaultValues?.textAfterCheckItems}</Text>
                 </View>
             </View>
@@ -291,7 +294,7 @@ export function MachineServiceRecordPDF({machineServiceRecord}) {
         display:'flex',
         flexDirection: "row",
         marginBottom:10,
-        marginHorizontal:5,
+        paddingHorizontal:5,
         width:'100%'
     },
     contatiner: {

@@ -262,7 +262,7 @@ function ViewFormEditDeleteButtons({
   const [statusError, setStatusError] = useState(null);
   
   return (
-    <Grid container justifyContent="space-between" sx={{p:1}}>
+    <Grid container justifyContent="space-between" sx={{pb:1, px:0.5}}>
       <Grid item sx={{display:'flex'}}>
         <StyledStack>
           {backLink &&

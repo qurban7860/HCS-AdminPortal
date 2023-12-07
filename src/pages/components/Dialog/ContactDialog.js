@@ -4,7 +4,7 @@ import { Grid, Dialog, DialogContent, DialogTitle, Divider } from '@mui/material
 import { setContactDialog } from '../../../redux/slices/customer/contact';
 import FormLabel from '../DocumentForms/FormLabel';
 import DialogLink from './DialogLink';
-import ViewFormFieldWithSkelton from '../ViewForms/ViewFormFieldWithSkelton';
+import ViewFormField from '../ViewForms/ViewFormField';
 
 function ContactDialog() {
     const dispatch = useDispatch();
@@ -20,60 +20,59 @@ function ContactDialog() {
       >
         <DialogTitle variant='h3' sx={{pb:1, pt:2}}>Contact</DialogTitle>
         <Divider orientation="horizontal" flexItem />
-        {/* <DialogLabel content="Contact" onClick={handleConttactDialog} /> */}
-        <DialogContent dividers sx={{pl:1, pr:1}}>
+        <DialogContent dividers sx={{px:3}}>
           <Grid container>
 
-          <ViewFormFieldWithSkelton isLoading={isLoading}
+          <ViewFormField isLoading={isLoading}
             sm={6}
             heading="First Name"
             param={contact?.firstName && contact?.firstName}
           />
-          <ViewFormFieldWithSkelton isLoading={isLoading}
+          <ViewFormField isLoading={isLoading}
             sm={6}
             heading="Last Name"
             param={contact?.lastName && contact?.lastName}
           />
-          <ViewFormFieldWithSkelton isLoading={isLoading}  sm={6} heading="Title" param={contact?.title && contact?.title} />
-          <ViewFormFieldWithSkelton isLoading={isLoading} 
+          <ViewFormField isLoading={isLoading}  sm={6} heading="Title" param={contact?.title && contact?.title} />
+          <ViewFormField isLoading={isLoading} 
             sm={6}
             heading="Contact Types"
             param={contact?.contactTypes && contact?.contactTypes.toString()}
           />
-          <ViewFormFieldWithSkelton isLoading={isLoading}  sm={6} heading="Phone" param={contact?.phone && contact?.phone} />
-          <ViewFormFieldWithSkelton isLoading={isLoading}  sm={6} heading="Email" param={contact?.email && contact?.email} />
+          <ViewFormField isLoading={isLoading}  sm={6} heading="Phone" param={contact?.phone && contact?.phone} />
+          <ViewFormField isLoading={isLoading}  sm={6} heading="Email" param={contact?.email && contact?.email} />
           <FormLabel content="Address Information" />
-          <ViewFormFieldWithSkelton isLoading={isLoading} 
+          <ViewFormField isLoading={isLoading} 
             sm={6}
             heading="Street"
             param={contact?.address?.street && contact?.address?.street}
           />
-          <ViewFormFieldWithSkelton isLoading={isLoading} 
+          <ViewFormField isLoading={isLoading} 
             sm={6}
             heading="Suburb"
             param={contact?.address?.suburb && contact?.address?.suburb}
           />
-          <ViewFormFieldWithSkelton isLoading={isLoading} 
+          <ViewFormField isLoading={isLoading} 
             sm={6}
             heading="City"
             param={contact?.address?.city && contact?.address?.city}
           />
-          <ViewFormFieldWithSkelton isLoading={isLoading} 
+          <ViewFormField isLoading={isLoading} 
             sm={6}
             heading="Region"
             param={contact?.address?.region && contact?.address?.region}
           />
-          <ViewFormFieldWithSkelton isLoading={isLoading} 
+          <ViewFormField isLoading={isLoading} 
             sm={6}
             heading="Post Code"
             param={contact?.address?.postcode && contact?.address?.postcode}
           />
-          <ViewFormFieldWithSkelton isLoading={isLoading} 
+          <ViewFormField isLoading={isLoading} 
             sm={6}
             heading="Country"
             param={contact?.address?.country && contact?.address?.country}
           />
-          <ViewFormFieldWithSkelton isLoading={isLoading}  />
+          <ViewFormField isLoading={isLoading}  />
         </Grid>
         </DialogContent>
         <DialogLink onClose={handleConttactDialog}/>

@@ -62,7 +62,7 @@ function ViewFormField({
     setVerifiedAnchorEl(null);
   };
   return (
-    <Grid item xs={12} sm={sm} sx={{ px: 2, py: 1, overflowWrap: 'break-word' }}>
+    <Grid item xs={12} sm={sm} sx={{ px: 0.5, py: 1, overflowWrap: 'break-word' }}>
       <Typography variant="overline" sx={{ color: 'text.disabled' }}>{heading || ''}</Typography>
       {isLoading ? (
           <SkeletonViewFormField />
@@ -131,7 +131,7 @@ function ViewFormField({
 
       </Typography>
       {configArrayParam && typeof configArrayParam === 'object' && configArrayParam?.length > 0 && (
-        <Grid container sx={{mt:-2,mb:2,
+        <Grid container sx={{my:-3, mb:0,
               display: 'flex',
               alignItems: 'center',
               whiteSpace: 'pre-line',
@@ -146,7 +146,7 @@ function ViewFormField({
             </Grid>
       )}
       {arrayParam && typeof arrayParam === 'object' && arrayParam?.length > 0 && (
-            <Grid container sx={{mt:-2,mb:2,
+            <Grid container sx={{my:-3, mb:0,
               display: 'flex',
               alignItems: 'center',
               whiteSpace: 'pre-line',
@@ -171,7 +171,7 @@ function ViewFormField({
         )}
 
         {toolType && typeof toolType === 'object' && toolType?.length > 0 && (
-            <Grid container sx={{my:-2,
+            <Grid container sx={{my:-3, mb:0,
               display: 'flex',
               alignItems: 'center',
               whiteSpace: 'pre-line',
@@ -188,7 +188,7 @@ function ViewFormField({
         )}
 
       {chipDialogArrayParam && typeof chipDialogArrayParam === 'object' && chipDialogArrayParam?.length > 0 &&
-        <Grid container sx={{my:-2,
+        <Grid container sx={{my:-3, mb:0,
               display: 'flex',
               alignItems: 'center',
               whiteSpace: 'pre-line',
@@ -204,7 +204,7 @@ function ViewFormField({
       }
 
       {chips && typeof chips === 'object' && chips.length > 0 ? (
-          <Grid container sx={{my:-2,
+          <Grid container sx={{my:-3, mb:0,
               display: 'flex',
               alignItems: 'center',
               whiteSpace: 'pre-line',
@@ -219,7 +219,7 @@ function ViewFormField({
         )}
 
         {userRolesChips && typeof userRolesChips === 'object' && userRolesChips?.length > 0 ? (
-          <Grid container sx={{my:-2,
+          <Grid container sx={{my:-3, mb:0,
               display: 'flex',
               alignItems: 'center',
               whiteSpace: 'pre-line',
@@ -232,7 +232,7 @@ function ViewFormField({
         )}
 
         {serviceParam && typeof serviceParam === 'object' && serviceParam?.length > 0 ? (
-          <Grid container sx={{my:-2,
+          <Grid container sx={{my:-3, mb:0,
               display: 'flex',
               alignItems: 'center',
               whiteSpace: 'pre-line',

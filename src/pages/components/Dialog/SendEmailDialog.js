@@ -19,10 +19,11 @@ import FormProvider from '../../../components/hook-form/FormProvider';
 import { RHFTextField } from '../../../components/hook-form';
 
 SendEmailDialog.propTypes = {
-  machineServiceRecord: PropTypes.object
+  machineServiceRecord: PropTypes.object,
+  fileName: PropTypes.string,
 };
 
-function SendEmailDialog({machineServiceRecord}) {
+function SendEmailDialog({machineServiceRecord, fileName}) {
     
   const dispatch = useDispatch();
   const { sendEmailDialog } = useSelector((state) => state.machineServiceRecord);
@@ -62,9 +63,9 @@ function SendEmailDialog({machineServiceRecord}) {
     const PDFBlob = await ReactPDF.pdf(<MachineServiceRecordPDF machineServiceRecord={machineServiceRecord} />).toBlob();
     
     try {
-      const fileName = `${machineServiceRecord?.serviceRecordConfig?.docTitle}.pdf`;
+      
       data.id = machineServiceRecord?._id;
-      data.pdf = blobToFile(PDFBlob, fileName);
+      data.pdf = new File([PDFBlob], fileName, { type: PDFBlob.type });
       await dispatch(sendEmail(machineServiceRecord?.machine?._id, data))
       handleCloseDialog();
       reset();
@@ -74,11 +75,6 @@ function SendEmailDialog({machineServiceRecord}) {
       console.error(err.message);
     }
   }
-
-  const blobToFile = (blob, fileName) => {
-    const file = new File([blob], fileName, { type: blob.type });
-    return file;
-  };
 
   return (
 
