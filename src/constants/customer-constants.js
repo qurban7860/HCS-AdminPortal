@@ -2,6 +2,12 @@ export const Snacks = {
   SAVE_FAILED: 'Update FAILED',
   SAVE_SUCCESS: 'Update SUCCESS',
 
+  UPDATE_FAILED: 'Update FAILED',
+  UPDATE_SUCCESS: 'Update SUCCESS',
+
+  CREATED_FAILED: 'Created FAILED',
+  CREATED_SUCCESS: 'Created SUCCESS',
+
   // @root - CustomerViewForm
   FAILED_DELETE: 'Customer delete failed!',
   // failed verfify

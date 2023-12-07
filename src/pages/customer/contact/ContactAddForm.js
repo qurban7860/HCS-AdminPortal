@@ -11,7 +11,7 @@ import { Box, Card, Grid, Stack,TextField } from '@mui/material';
 // schema
 import { AddContactSchema } from './schemas/AddContactSchema';
 // slice
-import { addContact, getActiveContacts, setContactFormVisibility } from '../../../redux/slices/customer/contact';
+import { addContact, getActiveContacts, setContactFormVisibility, setContactEditFormVisibility, setContactMoveFormVisibility } from '../../../redux/slices/customer/contact';
 import { getActiveDepartments } from '../../../redux/slices/Department/department';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -34,10 +34,11 @@ import { AddFormLabel } from '../../components/DocumentForms/FormLabel';
 ContactAddForm.propTypes = {
   isEdit: PropTypes.bool,
   readOnly: PropTypes.bool,
+  setIsExpanded: PropTypes.func,
   currentContact: PropTypes.object,
 };
 
-export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
+export default function ContactAddForm({ isEdit, readOnly, setIsExpanded,currentContact }) {
   const { formVisibility, activeContacts } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
   const { departments } = useSelector((state) => state.department);
@@ -109,9 +110,14 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
         data.country = country.label;
       }
       await dispatch(addContact(data));
+      setIsExpanded(true);
+      // dispatch(setContactFormVisibility(false))
+      dispatch(setContactEditFormVisibility(false))
+      dispatch(setContactMoveFormVisibility(false))
+      enqueueSnackbar(Snacks.CREATED_SUCCESS);
       reset();
     } catch (error) {
-      enqueueSnackbar(Snacks.SAVE_FAILED, { variant: `error` });
+      enqueueSnackbar(Snacks.CREATED_FAILED, { variant: `error` });
       console.error(error);
     }
   };
