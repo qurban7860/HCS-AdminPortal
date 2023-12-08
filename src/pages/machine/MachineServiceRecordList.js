@@ -8,18 +8,21 @@ import MachineServiceRecordViewForm from './MachineServiceRecord/MachineServiceR
 import MachineServiceRecordListTable from './MachineServiceRecord/MachineServiceRecordList';
 import MachineServiceRecordHistoryList from './MachineServiceRecord/MachineServiceRecordHistoryList';
 
-
 // ----------------------------------------------------------------------
 
 export default function MachineServiceRecordList() {
 
-  const { machineServiceRecordEditFormFlag, machineServiceRecordAddFormFlag, machineServiceRecordViewFormFlag, machineServiceRecordHistoryFormFlag } = useSelector((state) => state.machineServiceRecord);
+  const { machineServiceRecordEditFormFlag, machineServiceRecordAddFormFlag, 
+          machineServiceRecordViewFormFlag, machineServiceRecordHistoryFormFlag,
+          resetFlags } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine);
 
   const dispatch = useDispatch();
   useEffect(()=>{
-    dispatch(setAllFlagsFalse());
-  },[dispatch, machine])
+    if(resetFlags){
+      dispatch(setAllFlagsFalse());
+    }
+  },[dispatch, machine, resetFlags])
  
   return (
     <>

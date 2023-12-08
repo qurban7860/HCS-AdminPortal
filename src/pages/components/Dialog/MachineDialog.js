@@ -4,7 +4,7 @@ import { Grid, Dialog, DialogContent, DialogTitle, Divider } from '@mui/material
 import { PATH_MACHINE } from '../../../routes/paths';
 import DialogLink from './DialogLink';
 import FormLabel from '../DocumentForms/FormLabel';
-import { setMachineDialog } from '../../../redux/slices/products/machine';
+import { setMachineDialog, setMachineTab } from '../../../redux/slices/products/machine';
 import ViewFormField from '../ViewForms/ViewFormField';
 
 function MachineDialog() {
@@ -62,7 +62,11 @@ function MachineDialog() {
       </DialogContent>
       <DialogLink
         onClose={handleMachineDialog}
-        onClick={() => {navigate(PATH_MACHINE.machines.view(machineForDialog?._id)); dispatch(setMachineDialog(false)); }}
+        onClick={() => {
+            dispatch(setMachineTab('info')); 
+            navigate(PATH_MACHINE.machines.view(machineForDialog?._id)); 
+            dispatch(setMachineDialog(false)); 
+          }}
         content="Go to machine"
       />
     </Dialog>

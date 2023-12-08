@@ -53,6 +53,7 @@ import {
   deleteDocument,
 } from '../../../redux/slices/document/document';
 import { getMachineForDialog, setMachineDialog } from '../../../redux/slices/products/machine';
+import { getCustomer, setCustomerDialog } from '../../../redux/slices/customer/customer';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { FORMLABELS } from '../../../constants/default-constants';
@@ -61,6 +62,7 @@ import TableCard from '../../components/ListTableTools/TableCard';
 import MachineDialog from '../../components/Dialog/MachineDialog';
 import { Snacks } from '../../../constants/document-constants';
 import ConfirmDialog from '../../../components/confirm-dialog';
+import CustomerDialog from '../../components/Dialog/CustomerDialog';
 
 // ----------------------------------------------------------------------
 DocumentList.propTypes = {
@@ -133,14 +135,16 @@ const  onChangePage = (event, newPage) => {
     { id: 'createdAt', label: 'Created At', align: 'right' },
     { id: 'action', label: '', align: 'right' },
   ];
+  
   if (machineDrawings) {
     const insertIndex = 5; // Index after which you want to insert the new objects
     TABLE_HEAD.splice(insertIndex, 0,// 0 indicates that we're not removing any elements
     { id: 'stockNumber', visibility: 'xs2', label: 'Stock No.', align: 'left' },
     );
   }
+
   if (!customerPage && !machinePage && !machineDrawings) {
-    const insertIndex = 6; // Index after which you want to insert the new objects
+    const insertIndex = 5; // Index after which you want to insert the new objects
     TABLE_HEAD.splice(insertIndex, 0,// 0 indicates that we're not removing any elements
       { id: 'customer.name', visibility: 'md3', label: 'Customer', align: 'left' },
       { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left' }
@@ -287,6 +291,11 @@ const  onChangePage = (event, newPage) => {
     setFilterStatus([]);
   };
 
+  const handleCustomerDialog = (e, id) => {
+    dispatch(getCustomer(id))
+    dispatch(setCustomerDialog(true))
+  }
+  
   const handleMachineDialog = (e, id) => {
     dispatch(getMachineForDialog(id))
     dispatch(setMachineDialog(true))
@@ -372,6 +381,7 @@ const  onChangePage = (event, newPage) => {
                         customerPage={customerPage}
                         machinePage={machinePage}
                         machineDrawings={machineDrawings}
+                        handleCustomerDialog={(e)=> row?.customer && handleCustomerDialog(e,row?.customer?._id)}
                         handleMachineDialog={(e)=> row?.machine && handleMachineDialog(e,row?.machine?._id)}
                       />
                     ) : (
@@ -394,6 +404,7 @@ const  onChangePage = (event, newPage) => {
       </TableCard>
       {/* </Container> */}
       
+      <CustomerDialog />
       <MachineDialog />
 
       <ConfirmDialog open={openConfirm} onClose={handleCloseConfirm} title="Delete" content="Are you sure you want to delete?"

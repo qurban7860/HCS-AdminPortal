@@ -12,7 +12,7 @@ import MachineNotes from '../Note/MachineNotes';
 
 export const TABS = (currentComponent, showDevTabs, disableTab) => [
   {
-    value: 'Machine-info',
+    value: 'info',
     label: 'Machine Info',
     icon: <Iconify icon="mdi:window-open-variant" />,
     component: currentComponent,
@@ -26,7 +26,7 @@ export const TABS = (currentComponent, showDevTabs, disableTab) => [
   },
   {
     disabled: disableTab,
-    value: 'toolsInstalled',
+    value: 'tools',
     label: 'Tools',
     icon: <Iconify icon="mdi:folder-wrench" />,
     component: <MachineToolInstalled />,
@@ -68,14 +68,14 @@ export const TABS = (currentComponent, showDevTabs, disableTab) => [
   },
   {
     disabled: disableTab,
-    value: 'checkItemRecords',
+    value: 'serviceRecords',
     label: 'Service Records',
     icon: <Iconify icon="mdi:clipboard-text-clock" />,
     component : <MachineServiceRecordList />,
   },
   {
     disabled: disableTab,
-    value: 'historicalConfigurations',
+    value: 'ini',
     label: 'INI',
     icon: <Iconify icon="ic:round-manage-history" />,
     component : <HistoricalConfigurations />,

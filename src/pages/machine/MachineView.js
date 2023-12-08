@@ -7,12 +7,14 @@ import TabContainer from '../components/Tabs/TabContainer';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import {
-  getMachine,
+  getMachine, 
+  setMachineTab,
 } from '../../redux/slices/products/machine';
 import {
   setDocumentViewFormVisibility,
   setDocumentHistoryViewFormVisibility,
 } from '../../redux/slices/document/document';
+import { setResetFlags } from '../../redux/slices/products/machineServiceRecord';
 // components
 import UnderDevelopment from '../boundaries/UnderDevelopment';
 // sections
@@ -36,8 +38,7 @@ export default function MachineView({ editPage }) {
   const environment = CONFIG.ENV.toLowerCase();
   const showDevTabs = environment !== 'live';
   const dispatch = useDispatch();
-  const { machine, machineEditFormFlag } = useSelector((state) => state.machine);
-  const [currentTab, setCurrentTab] = useState('Machine-info');
+  const { machine, machineEditFormFlag, machineTab } = useSelector((state) => state.machine);
   const [currentComponent, setCurrentComponent] = useState(<MachineViewForm />);
   const TABS = TABSFunc(currentComponent, showDevTabs, machineEditFormFlag );
 
@@ -46,8 +47,6 @@ export default function MachineView({ editPage }) {
     dispatch(setDocumentHistoryViewFormVisibility(false));
     if (id !== 'null') {
       dispatch(getMachine(id));
-      //   dispatch(getSites(id));
-      //   dispatch(getContacts(id));
     }
   }, [dispatch, id]);
 
@@ -72,8 +71,12 @@ export default function MachineView({ editPage }) {
         />
         <TabContainer
           tabsClasses={tabsClasses.scrollButtons}
-          currentTab={currentTab}
-          setCurrentTab={setCurrentTab}
+          currentTab={machineTab}
+          setCurrentTab={(tab)=> {
+            dispatch(setMachineTab(tab));
+            dispatch(setResetFlags(true));
+            }
+          }
         >
           {TABS.map((tab) => (
             <Tab
@@ -86,12 +89,12 @@ export default function MachineView({ editPage }) {
           ))}
         </TabContainer>
       </StyledCardContainer>
-      {TABS.map(
-        (tab) =>
-          tab.value === currentTab && (
-            <Box key={tab.value}> {tab.component ? tab.component : <UnderDevelopment />} </Box>
-          )
-      )}
+        {TABS.map(
+          (tab) =>
+            tab.value === machineTab && (
+              <Box key={tab.value}> {tab.component ? tab.component : <UnderDevelopment />} </Box>
+            )
+        )}
     </Container>
   );
 }
