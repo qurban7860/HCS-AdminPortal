@@ -313,7 +313,7 @@ const  onChangePage = (event, newPage) => {
 
   const handleDeleteDoc = async (id) => {
     try {
-      await dispatch(deleteDocument(id));
+      await dispatch(deleteDocument(id, machineDrawings));
       dispatch(resetDocuments());
 
       dispatch(resetDocuments());
@@ -330,7 +330,7 @@ const  onChangePage = (event, newPage) => {
       enqueueSnackbar(machineDrawings?Snacks.deletedDrawing:Snacks.deletedDoc, { variant: `success` });
     } catch (err) {
       console.log(err);
-      enqueueSnackbar(machineDrawings?Snacks.failedDeleteDrawing:Snacks.failedDeleteDoc, { variant: `error` });
+      enqueueSnackbar(err, { variant: `error` });
     }
   };
 
