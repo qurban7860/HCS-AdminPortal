@@ -648,14 +648,14 @@ export function getDocumentHistory(documentId) {
 
 // ---------------------------------archive Document -------------------------------------
 
-export function deleteDocument(documentId, machineDrawings) {
+export function deleteDocument(documentId, isCheckReference) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${documentId}` ,
       {
           isArchived: true,
-          isMachineDrawings: machineDrawings
+          checkReference : isCheckReference
       });
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
