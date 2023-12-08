@@ -36,7 +36,8 @@ import { FORMLABELS } from '../../constants/default-constants';
 import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
 import { getCustomers, ChangePage, ChangeRowsPerPage, setFilterBy, setVerified,
-   createCustomerCSV} from '../../redux/slices/customer/customer';
+   createCustomerCSV,
+   setCustomerTab} from '../../redux/slices/customer/customer';
 import { Cover } from '../components/Defaults/Cover';
 import TableCard from '../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
@@ -140,6 +141,7 @@ export default function CustomerList() {
   };
 
   const handleViewRow = (id) => {
+    dispatch(setCustomerTab('info'));
     navigate(PATH_CUSTOMER.view(id));
   };
 
