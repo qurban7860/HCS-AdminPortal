@@ -21,17 +21,26 @@ SecurityUserTableToolbar.propTypes = {
   onFilterRole: PropTypes.func,
   onResetFilter: PropTypes.func,
   optionsRole: PropTypes.arrayOf(PropTypes.string),
+  filterListBy: PropTypes.string,
+  onFilterListBy: PropTypes.func,
+  employeeFilterListBy: PropTypes.string,
+  onEmployeeFilterListBy: PropTypes.func,
 };
 
 export default function SecurityUserTableToolbar({
   isFiltered,
   filterName,
   filterRole,
+  filterListBy,
+  onFilterListBy,
+  employeeFilterListBy,
+  onEmployeeFilterListBy,
   optionsRole,
   onFilterName,
   onFilterRole,
   onResetFilter,
 }) {
+  
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const formNewVisibleToggle = () => {
@@ -53,6 +62,10 @@ export default function SecurityUserTableToolbar({
         onClick={onResetFilter}
         SubOnClick={formNewVisibleToggle}
         inviteOnClick={formInviteVisibleToggle}
+        filterListBy={filterListBy}
+        onFilterListBy={onFilterListBy}
+        employeeFilterListBy={employeeFilterListBy}
+        onEmployeeFilterListBy={onEmployeeFilterListBy}
         addButton={BUTTONS.ADDUSER}
         inviteButton={BUTTONS.INVITEUSER}
       />
