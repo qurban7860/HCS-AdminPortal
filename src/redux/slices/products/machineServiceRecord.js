@@ -7,6 +7,7 @@ import { CONFIG } from '../../../config-global';
 // ----------------------------------------------------------------------
 const initialState = {
   intial: false,
+  resetFlags: true,
   machineServiceRecordEditFormFlag: false,
   machineServiceRecordAddFormFlag: false,
   machineServiceRecordViewFormFlag: false,
@@ -38,6 +39,9 @@ const slice = createSlice({
       state.isLoading = true;
     },
 
+    setResetFlags (state, action){
+      state.resetFlags = action.payload;
+    },
     // SET TOGGLE
     setMachineServiceRecordEditFormVisibility(state, action){
       state.machineServiceRecordAddFormFlag = false;
@@ -179,6 +183,7 @@ export default slice.reducer;
 
 // Actions
 export const {
+  setResetFlags,
   setMachineServiceRecordEditFormVisibility,
   setMachineServiceRecordAddFormVisibility,
   setMachineServiceRecordViewFormVisibility,

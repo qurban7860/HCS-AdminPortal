@@ -29,6 +29,7 @@ DocumentListTableRow.propTypes = {
   machinePage: PropTypes.bool,
   machineDrawings: PropTypes.bool,
   handleMachineDialog: PropTypes.func,
+  handleCustomerDialog: PropTypes.func,
   disabledActions:  PropTypes.bool
 };
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -52,6 +53,7 @@ export default function DocumentListTableRow({
   machinePage,
   machineDrawings,
   handleMachineDialog,
+  handleCustomerDialog,
   disabledActions
 }) {
   const {
@@ -81,8 +83,9 @@ export default function DocumentListTableRow({
       {  smScreen && machineDrawings && <TableCell align="left">{stockNumber}</TableCell>}
       {  !customerPage && !machinePage && !machineDrawings && lgScreen && 
           <>
-            <TableCell align="left">{customer?.name}</TableCell>
-            <LinkDialogTableCell onClick={handleMachineDialog} align='center' param={machine?.serialNo}/>  
+            {/* <TableCell align="left">{customer?.name}</TableCell> */}
+            <LinkDialogTableCell onClick={handleCustomerDialog} align='left' param={customer?.name}/>  
+            <LinkDialogTableCell onClick={handleMachineDialog} align='left' param={machine?.serialNo}/>  
           </>
       }
       

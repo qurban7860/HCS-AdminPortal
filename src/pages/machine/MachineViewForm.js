@@ -179,7 +179,7 @@ export default function MachineViewForm() {
   };
   
   const linkedMachines = machine?.machineConnections?.map((machineConnection, index) => (
-    <Chip sx={{ml:index===0?0:1}}onClick={() => handleMachineDialog(machineConnection.connectedMachine._id)} label={`${machineConnection?.connectedMachine?.serialNo || ''} ${machineConnection?.connectedMachine?.name ? '-' : '' } ${machineConnection?.connectedMachine?.name || ''} `} />
+    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(machineConnection.connectedMachine._id)} label={`${machineConnection?.connectedMachine?.serialNo || ''} ${machineConnection?.connectedMachine?.name ? '-' : '' } ${machineConnection?.connectedMachine?.name || ''} `} />
   ));
   
   const paranetMachines = machine?.parentMachines?.map((parentMachine, index) => (

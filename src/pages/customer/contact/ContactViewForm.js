@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import {  useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 // @mui
 import { Grid, Chip } from '@mui/material';
 // components
@@ -16,9 +17,13 @@ import {
   setContactMoveFormVisibility,
   setContactFormVisibility,
 } from '../../../redux/slices/customer/contact';
+import { setMachineTab } from '../../../redux/slices/products/machine';
+import { getMachineServiceRecord, setMachineServiceRecordViewFormVisibility, setResetFlags } from '../../../redux/slices/products/machineServiceRecord';
+
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import { PATH_MACHINE } from '../../../routes/paths';
 
 
 ContactViewForm.propTypes = {
@@ -36,6 +41,7 @@ export default function ContactViewForm({
   const { customer } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
 
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
@@ -95,8 +101,17 @@ export default function ContactViewForm({
     [contact]
   );
 
-  const operatorTraningsList = defaultValues?.serviceRecords?.map((item, index) => (
-    <Chip sx={{m:0.3}} label={`${item?.serviceRecordConfig?.docTitle || ''} | ${fDateTime(item?.serviceDate)}`} />
+  const handleSericeRecordView = async (machineId, id) => {
+    await dispatch(setMachineTab('serviceRecords'));
+    await navigate(PATH_MACHINE.machines.view(machineId));
+    await dispatch(setResetFlags(false));
+    dispatch(getMachineServiceRecord(machineId, id));
+    dispatch(setMachineServiceRecordViewFormVisibility(true));
+  };
+
+  const operatorTraningsList = defaultValues?.serviceRecords?.map((item, index) => 
+  (
+    <Chip onClick={() => handleSericeRecordView(item?.machine, item?._id)} sx={{m:0.3}} label={`${item?.serviceRecordConfig?.docTitle || ''} | ${fDateTime(item?.serviceDate)}`} />
   ));
 
   return (

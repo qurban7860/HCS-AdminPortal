@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Dialog, DialogContent, DialogTitle, Divider } from '@mui/material';
-import { setCustomerDialog } from '../../../redux/slices/customer/customer';
+import { setCustomerDialog, setCustomerTab } from '../../../redux/slices/customer/customer';
 // import Iconify from '../../../components/iconify';
 import { PATH_CUSTOMER } from '../../../routes/paths';
 import DialogLink from './DialogLink';
@@ -79,7 +79,11 @@ function CustomerDialog() {
       </DialogContent>
       <DialogLink
         onClose={handleCustomerDialog}
-        onClick={() => navigate(PATH_CUSTOMER.view(customer._id))}
+        onClick={() => {
+          dispatch(setCustomerTab('info'));
+          handleCustomerDialog();
+          navigate(PATH_CUSTOMER.view(customer._id));
+        }}
         content="Go to Customer"
       />
     </Dialog>
