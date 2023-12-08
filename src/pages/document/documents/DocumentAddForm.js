@@ -272,7 +272,6 @@ function DocumentAddForm({
   }, [dispatch]);
 
   const handleCustomerChange = (custmerId) => {
-    console.log('aaaaaa', custmerId);
     dispatch(resetCustomerMachines());
     if(custmerId){
       dispatch(getCustomerMachines(custmerId));
@@ -323,7 +322,7 @@ function DocumentAddForm({
       if (selectedValue === 'new') {
         // New Document Part
         await dispatch(addDocument( customerPage ? customer?._id : null, machinePage ? machine?._id : null, data));
-        enqueueSnackbar((drawingPage || machineDrawings ?"Drawing ":"")+Snacks.addedDoc);
+        enqueueSnackbar(drawingPage || machineDrawings ?Snacks.addedDrawing:Snacks.addedDoc);
         
         if(drawingPage){
           dispatch(resetDrawings());
