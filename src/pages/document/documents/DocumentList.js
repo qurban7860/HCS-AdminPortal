@@ -77,6 +77,8 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(100);
   const [tableData, setTableData] = useState([]);
+  const [categoryVal, setCategoryVal] = useState(null);
+  const [typeVal, setTypeVal] = useState(null);
   const [filterStatus, setFilterStatus] = useState([]);
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
@@ -205,6 +207,8 @@ const  onChangePage = (event, newPage) => {
     comparator: getComparator(order, orderBy),
     filterName,
     filterStatus,
+    categoryVal, 
+    typeVal,
   });
   // const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   const denseHeight = 60;
@@ -348,6 +352,10 @@ const  onChangePage = (event, newPage) => {
           customerPage={customerPage}
           machinePage={machinePage}
           machineDrawings={machineDrawings}
+          categoryVal={categoryVal}
+          setCategoryVal={setCategoryVal}
+          typeVal={typeVal}
+          setTypeVal={setTypeVal}
         />
         {!isNotFound && <TablePaginationCustom
           count={dataFiltered.length}
@@ -425,7 +433,7 @@ const  onChangePage = (event, newPage) => {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+function applyFilter({ inputData, comparator, filterName, filterStatus, categoryVal, typeVal }) {
   const stabilizedThis = inputData && inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -434,6 +442,16 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
+
+
+  inputData = stabilizedThis.map((el) => el[0]);
+  if(categoryVal)
+    inputData = inputData.filter((drawing)=> drawing.docCategory?._id  === categoryVal?._id );
+
+  if(typeVal)
+    inputData = inputData.filter((drawing)=> drawing.docType?._id === typeVal?._id );
+
+
   if (filterName) {
     inputData = inputData.filter(
       (document) =>

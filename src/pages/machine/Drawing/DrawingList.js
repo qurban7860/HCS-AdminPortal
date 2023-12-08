@@ -27,6 +27,8 @@ import {
   getDocumentHistory,
   resetDocumentHistory,
 } from '../../../redux/slices/document/document';
+import { getActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
+import { getActiveDocumentTypes } from '../../../redux/slices/document/documentType';
 import {
   getDrawings,
   ChangeRowsPerPage,
@@ -59,6 +61,11 @@ export default function DrawingList() {
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
+
+  const [categoryVal, setCategoryVal] = useState(null);
+  const [typeVal, setTypeVal] = useState(null);
+
+
   const { machine } = useSelector((state) => state.machine);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -86,6 +93,8 @@ export default function DrawingList() {
     if(machine?._id){
       dispatch(resetDrawings());
       dispatch(getDrawings(machine?._id));
+      dispatch(getActiveDocumentCategories());
+      dispatch(getActiveDocumentTypes());
     }
   }, [dispatch, machine]);
 
@@ -98,6 +107,8 @@ export default function DrawingList() {
     comparator: getComparator(order, orderBy),
     filterName,
     filterStatus,
+    categoryVal,
+    typeVal,
   });
 
   const denseHeight = 60;
@@ -170,6 +181,10 @@ export default function DrawingList() {
           onFilterStatus={handleFilterStatus}
           isFiltered={isFiltered}
           onResetFilter={handleResetFilter}
+          categoryVal={categoryVal}
+          setCategoryVal={setCategoryVal}
+          typeVal={typeVal}
+          setTypeVal={setTypeVal}
         />
           {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
@@ -244,7 +259,7 @@ export default function DrawingList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+function applyFilter({ inputData, comparator, filterName, filterStatus, categoryVal, typeVal }) {
   const stabilizedThis = inputData && inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -253,6 +268,13 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
+  if(categoryVal)
+    inputData = inputData.filter((drawing)=> drawing.documentCategory?._id  === categoryVal?._id );
+
+  if(typeVal)
+    inputData = inputData.filter((drawing)=> drawing.documentType?._id === typeVal?._id );
+
+
   if (filterName) {
     inputData = inputData.filter(
       (drawingg) =>

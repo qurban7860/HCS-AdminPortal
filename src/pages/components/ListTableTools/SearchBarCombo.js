@@ -40,33 +40,33 @@ function SearchBarCombo({
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const isMobile = useResponsive('sm', 'down');
   return (
-    <Grid container rowSpacing={1} columnSpacing={1} sx={{display:'flex', justifyContent:'space-between'}}>
-      <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
+    <Grid container rowSpacing={1} columnSpacing={1} sx={{display:'flex', }}>
 
-        <TextField
-          fullWidth
-          value={value}
-          onChange={onChange}
-          size="small"
-          placeholder="Search..."
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Iconify  icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-              </InputAdornment>
-            ),
-            endAdornment: (isFiltered && (
-              <InputAdornment position="end">
-                <Button fullWidth onClick={onClick} color='error'size='small' startIcon={<Iconify icon='eva:trash-2-outline' />}>
-                  {BUTTONS.CLEAR}
-                </Button>
-              </InputAdornment>
-            )
-            ),
-          }}
-        />
+          <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
+            <TextField
+              fullWidth
+              value={value}
+              onChange={onChange}
+              size="small"
+              placeholder="Search..."
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify  icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                  </InputAdornment>
+                ),
+                endAdornment: (isFiltered && (
+                  <InputAdornment position="end">
+                    <Button fullWidth onClick={onClick} color='error'size='small' startIcon={<Iconify icon='eva:trash-2-outline' />}>
+                      {BUTTONS.CLEAR}
+                    </Button>
+                  </InputAdornment>
+                )
+                ),
+              }}
+            />
+          </Grid>
 
-      </Grid>
           {onFilterVerify &&
           <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
             <Stack alignItems="flex-start">
@@ -133,7 +133,7 @@ function SearchBarCombo({
             </Stack>
           </Grid>}
 
-          {setCategoryVal && <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+          { setCategoryVal &&  typeof setCategoryVal === 'function' && <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
             <Autocomplete 
               id="controllable-states-demo"
               value={categoryVal || null}
@@ -144,17 +144,17 @@ function SearchBarCombo({
                 if (newValue) {
                   setCategoryVal(newValue);
                 } else {
-                  setCategoryVal('');
+                  setCategoryVal(null);
                 }
               }}
               renderOption={(props, option) => (
                 <li {...props} key={option._id}>{option.name}</li>
               )}
-              renderInput={(params) => <TextField {...params} label="Category" />}
+              renderInput={(params) => <TextField {...params} size='small' label="Category" />}
             />
           </Grid>}
 
-          {setTypeVal && <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+          {setTypeVal &&  typeof setTypeVal === 'function'  && <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
             <Autocomplete 
               id="controllable-states-demo"
               value={typeVal || null}
@@ -165,25 +165,26 @@ function SearchBarCombo({
                 if (newValue) {
                   setTypeVal(newValue);
                 } else {
-                  setTypeVal('');
+                  setTypeVal(null);
                 }
               }}
               renderOption={(props, option) => (
                 <li {...props} key={option._id}>{option.name}</li>
               )}
-              renderInput={(params) => <TextField {...params} label="Category" />}
+              renderInput={(params) => <TextField {...params} size='small' label="Type" />}
+
             />
           </Grid>}
 
           {handleTransferStatus !== undefined &&
-            <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
+            <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
                 <FormControlLabel control={<Switch checked={transferStatus} 
                   onClick={(event)=>{handleTransferStatus(event.target.checked)}} />} label="Show Transferred" />
             </Grid>
           }
 
           {onSignInLogsFilter &&
-            <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
+            <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
               <Stack alignItems="flex-start">
               <FormControl fullWidth={isMobile} sx={{ml:2, width:'200px'}}>
                 <InputLabel id="demo-simple-select-label">Status</InputLabel>
@@ -204,7 +205,8 @@ function SearchBarCombo({
               </Stack>
             </Grid>
           }
-          <Grid item xs={12} sm={12} md={4} lg={2} xl={2}>
+
+          <Grid item xs={12} sm={6} md={4} lg={2} xl={2} sx={{ml:'auto'}}>
             <Grid container rowSpacing={1} columnSpacing={2} sx={{display:'flex', justifyContent:'flex-end'}}>
                 {inviteButton && 
                   <Grid item>
@@ -219,22 +221,21 @@ function SearchBarCombo({
                       </IconButton>
                     </StyledTooltip>
                   </Grid>
-              }
+                }
               
               {handleAttach && !transferredMachine &&
-                  <Grid item>
-                    <StyledTooltip title="Attach Drawing" placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
-                    <IconButton onClick={handleAttach} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
-                      '&:hover': {
-                        background:"#103996", 
-                        color:"#fff"
-                      }
-                    }}>
-                      <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon='fluent:attach-arrow-right-24-filled' />
-                    </IconButton>
-                  </StyledTooltip>
-                </Grid>
-              }
+                <Grid item>
+                  <StyledTooltip title="Attach Drawing" placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
+                  <IconButton onClick={handleAttach} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
+                    '&:hover': {
+                      background:"#103996", 
+                      color:"#fff"
+                    }
+                  }}>
+                    <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon='fluent:attach-arrow-right-24-filled' />
+                  </IconButton>
+                </StyledTooltip>
+              </Grid>}
 
               {addButton && !transferredMachine &&
                   <Grid item>

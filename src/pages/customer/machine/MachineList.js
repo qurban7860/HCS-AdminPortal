@@ -217,8 +217,8 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, transfer
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-  if(!transferStatus)
-    inputData = inputData.filter((machine) => machine.status && machine.status.slug !== 'transferred');
+  if(transferStatus)
+    inputData = inputData.filter((machine) => machine.status && machine.status.slug === 'transferred');
     
   if (filterName) {
     
