@@ -3,7 +3,7 @@ import { LoadingButton } from '@mui/lab';
 import { Autocomplete, Badge, Box, Divider, Grid, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { memo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { green } from '@mui/material/colors';
 import { DateTimePicker } from '@mui/x-date-pickers';
@@ -74,6 +74,7 @@ function ViewFormEditDeleteButtons({
 }) {
   const { id } = useParams();
   const userId = localStorage.getItem('userId');
+  const navigate = useNavigate();
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
   const { transferDialogBoxVisibility } = useSelector((state) => state.machine);
@@ -269,7 +270,8 @@ function ViewFormEditDeleteButtons({
             <>
               <IconTooltip
                 title='Back'
-                onClick={() => backLink()}
+                onClick={() => navigate(-1) // backLink()
+                }
                 color={theme.palette.primary.main}
                 icon="mdi:arrow-left"
               />
