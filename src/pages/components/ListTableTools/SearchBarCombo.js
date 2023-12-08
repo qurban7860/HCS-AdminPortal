@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import { Grid, TextField, InputAdornment, Button, Stack, 
-  FormControl, Select, InputLabel, MenuItem, IconButton, Switch, FormControlLabel } from '@mui/material';
+  FormControl, Select, InputLabel, MenuItem, IconButton, Switch, FormControlLabel, Autocomplete } from '@mui/material';
 import { BUTTONS } from '../../../constants/default-constants';
 import Iconify from '../../../components/iconify';
 import useResponsive from '../../../hooks/useResponsive';
@@ -16,6 +17,10 @@ function SearchBarCombo({
   onEmployeeFilterListBy,
   filterListBy,
   onFilterListBy,
+  categoryVal,
+  setCategoryVal,
+  typeVal,
+  setTypeVal,
   signInLogsFilter,
   onSignInLogsFilter,
   onChange,
@@ -31,7 +36,8 @@ function SearchBarCombo({
   handleTransferStatus,
   ...other
 }) {
-
+  const { activeDocumentTypes } = useSelector((state) => state.documentType);
+  const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const isMobile = useResponsive('sm', 'down');
   return (
     <Grid container rowSpacing={1} columnSpacing={1} sx={{display:'flex', justifyContent:'space-between'}}>
@@ -125,6 +131,48 @@ function SearchBarCombo({
                 </Select>
             </FormControl>
             </Stack>
+          </Grid>}
+
+          {setCategoryVal && <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+            <Autocomplete 
+              id="controllable-states-demo"
+              value={categoryVal || null}
+              options={activeDocumentCategories}
+              isOptionEqualToValue={(option, val) => option?._id === val?._id}
+              getOptionLabel={(option) =>  option.name }
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setCategoryVal(newValue);
+                } else {
+                  setCategoryVal('');
+                }
+              }}
+              renderOption={(props, option) => (
+                <li {...props} key={option._id}>{option.name}</li>
+              )}
+              renderInput={(params) => <TextField {...params} label="Category" />}
+            />
+          </Grid>}
+
+          {setTypeVal && <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+            <Autocomplete 
+              id="controllable-states-demo"
+              value={typeVal || null}
+              options={activeDocumentTypes}
+              isOptionEqualToValue={(option, val) => option?._id === val?._id}
+              getOptionLabel={(option) =>  option.name }
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setTypeVal(newValue);
+                } else {
+                  setTypeVal('');
+                }
+              }}
+              renderOption={(props, option) => (
+                <li {...props} key={option._id}>{option.name}</li>
+              )}
+              renderInput={(params) => <TextField {...params} label="Category" />}
+            />
           </Grid>}
 
           {handleTransferStatus !== undefined &&
@@ -222,6 +270,10 @@ SearchBarCombo.propTypes = {
   filterVerify:PropTypes.string,
   filterListBy: PropTypes.string,
   onFilterListBy: PropTypes.func,
+  categoryVal: PropTypes.object,
+  setCategoryVal: PropTypes.func,
+  typeVal: PropTypes.object,
+  setTypeVal: PropTypes.func,
   employeeFilterListBy: PropTypes.string,
   onEmployeeFilterListBy: PropTypes.func,
   signInLogsFilter:PropTypes.number,
