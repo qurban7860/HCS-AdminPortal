@@ -28,8 +28,9 @@ const initialState = {
   page: 0,
   rowsPerPage: 100,
   verifiedInvite:null,
+  activeFilterList: 'active',
+  employeeFilterList: 'employee',
 };
-
 
 const slice = createSlice({
   name: 'user',
@@ -55,6 +56,16 @@ const slice = createSlice({
     // SET VISIBILITY
     setSecurityUserEditFormVisibility(state, action){
       state.editFormVisibility = action.payload;
+    },
+
+    // SET ACTIVE FILTER LIST
+    setActiveFilterList(state, action){
+      state.activeFilterList = action.payload;
+    },
+    
+    // SET EMPLOYEE FILTER LIST
+    setEmployeeFilterList(state, action){
+      state.employeeFilterList = action.payload;
     },
 
     // SET USER PROPERTIES
@@ -179,6 +190,8 @@ export const {
   resetSecurityUsers,
   resetSecurityUser,
   setFilterBy,
+  setActiveFilterList,
+  setEmployeeFilterList,
   ChangeRowsPerPage,
   ChangePage,
 } = slice.actions;

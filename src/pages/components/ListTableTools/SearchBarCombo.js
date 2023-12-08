@@ -12,6 +12,8 @@ function SearchBarCombo({
   value,
   onFilterVerify,
   filterVerify,
+  employeeFilterListBy,
+  onEmployeeFilterListBy,
   filterListBy,
   onFilterListBy,
   signInLogsFilter,
@@ -34,6 +36,7 @@ function SearchBarCombo({
   return (
     <Grid container rowSpacing={1} columnSpacing={1} sx={{display:'flex', justifyContent:'space-between'}}>
       <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
+
         <TextField
           fullWidth
           value={value}
@@ -56,9 +59,10 @@ function SearchBarCombo({
             ),
           }}
         />
+
       </Grid>
           {onFilterVerify &&
-          <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
+          <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
             <Stack alignItems="flex-start">
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">Status</InputLabel>
@@ -79,8 +83,30 @@ function SearchBarCombo({
             </Stack>
           </Grid>}
 
+          {onEmployeeFilterListBy &&
+          <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+            <Stack alignItems="flex-start">
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Employee</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                size='small'
+                name="employee"
+                value={employeeFilterListBy}
+                label="Employee"
+                onChange={onEmployeeFilterListBy}
+              >
+                <MenuItem key="all" value="all">All</MenuItem>
+                <MenuItem key="verified" value="employee">Employee</MenuItem>
+                <MenuItem key="unverified" value="notEmployee">Not Employee</MenuItem>
+                </Select>
+            </FormControl>
+            </Stack>
+          </Grid>}
+
           {onFilterListBy &&
-          <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
+          <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
             <Stack alignItems="flex-start">
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">Status</InputLabel>
@@ -101,36 +127,36 @@ function SearchBarCombo({
             </Stack>
           </Grid>}
 
-        {handleTransferStatus !== undefined &&
-          <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
-              <FormControlLabel control={<Switch checked={transferStatus} 
-                onClick={(event)=>{handleTransferStatus(event.target.checked)}} />} label="Show Transferred" />
-          </Grid>
-        }
+          {handleTransferStatus !== undefined &&
+            <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
+                <FormControlLabel control={<Switch checked={transferStatus} 
+                  onClick={(event)=>{handleTransferStatus(event.target.checked)}} />} label="Show Transferred" />
+            </Grid>
+          }
 
-        {onSignInLogsFilter &&
-          <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
-            <Stack alignItems="flex-start">
-            <FormControl fullWidth={isMobile} sx={{ml:2, width:'200px'}}>
-              <InputLabel id="demo-simple-select-label">Status</InputLabel>
-              <Select
-                sx={{width:'200px'}}
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                size="small"
-                value={signInLogsFilter}
-                label="Status"
-                onChange={onSignInLogsFilter}
-              >
-                <MenuItem key="-1" value={-1}>All</MenuItem>
-                <MenuItem key="200" value={200}>Success</MenuItem>
-                <MenuItem key="401" value={401}>Failed</MenuItem>
-                </Select>
-            </FormControl>
-            </Stack>
-          </Grid>
-        }
-          <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
+          {onSignInLogsFilter &&
+            <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
+              <Stack alignItems="flex-start">
+              <FormControl fullWidth={isMobile} sx={{ml:2, width:'200px'}}>
+                <InputLabel id="demo-simple-select-label">Status</InputLabel>
+                <Select
+                  sx={{width:'200px'}}
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  size="small"
+                  value={signInLogsFilter}
+                  label="Status"
+                  onChange={onSignInLogsFilter}
+                >
+                  <MenuItem key="-1" value={-1}>All</MenuItem>
+                  <MenuItem key="200" value={200}>Success</MenuItem>
+                  <MenuItem key="401" value={401}>Failed</MenuItem>
+                  </Select>
+              </FormControl>
+              </Stack>
+            </Grid>
+          }
+          <Grid item xs={12} sm={12} md={4} lg={2} xl={2}>
             <Grid container rowSpacing={1} columnSpacing={2} sx={{display:'flex', justifyContent:'flex-end'}}>
                 {inviteButton && 
                   <Grid item>
@@ -196,6 +222,8 @@ SearchBarCombo.propTypes = {
   filterVerify:PropTypes.string,
   filterListBy: PropTypes.string,
   onFilterListBy: PropTypes.func,
+  employeeFilterListBy: PropTypes.string,
+  onEmployeeFilterListBy: PropTypes.func,
   signInLogsFilter:PropTypes.number,
   onSignInLogsFilter:PropTypes.func,
   transferredMachine:PropTypes.bool,
