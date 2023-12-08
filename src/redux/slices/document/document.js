@@ -268,7 +268,7 @@ export function addDocument(customerId , machineId ,  params) {
           }
 
           if(params?.machine){
-            formData.append('machine', params?.machine);
+            formData.append('drawingMachine', params?.machine);
           }
 
           formData.append('customerAccess', params.customerAccess);
