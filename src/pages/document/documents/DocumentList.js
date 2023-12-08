@@ -309,7 +309,7 @@ const  onChangePage = (event, newPage) => {
 
   const handleDeleteDoc = async (id) => {
     try {
-      await dispatch(deleteDocument(id, machineDrawings));
+      await dispatch(deleteDocument(id, (!customerPage && !machinePage )));
       dispatch(resetDocuments());
 
       dispatch(resetDocuments());
