@@ -53,6 +53,8 @@ import {
   deleteDocument,
 } from '../../../redux/slices/document/document';
 import { getMachineForDialog, setMachineDialog } from '../../../redux/slices/products/machine';
+import { getActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
+import { getActiveDocumentTypes } from '../../../redux/slices/document/documentType';
 import { getCustomer, setCustomerDialog } from '../../../redux/slices/customer/customer';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
@@ -157,6 +159,10 @@ const  onChangePage = (event, newPage) => {
   useEffect(() => {
     const fetchData = async () => {
       dispatch(resetDocuments());
+      if(machinePage){
+        dispatch(getActiveDocumentCategories());
+        dispatch(getActiveDocumentTypes());
+      }
       if (customerPage || machinePage) {
         if (customer?._id || machine?._id) {
           await dispatch(getDocuments(customerPage ? customer?._id : null, machinePage ? machine?._id : null));

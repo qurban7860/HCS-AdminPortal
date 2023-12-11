@@ -204,6 +204,11 @@ export const ICONS = {
     icon: 'mdi:tools',
     heading: 'Tools',
   },
+  // configuration information
+  Configuration: {
+    icon: 'mdi:settings-outline',
+    heading: 'Configuration',
+  },
   // service information
   MACHINE_SERVICE_CATEGORIES: {
     icon: 'mdi:cog',
