@@ -84,9 +84,9 @@ export default function DocumentListTableToolbar({
         addButton={addButton}
         transferredMachine={machine?.status?.slug==='transferred'}
         categoryVal={categoryVal}
-        setCategoryVal={machineDrawings ? setCategoryVal : null }
+        setCategoryVal={(machineDrawings || machinePage) ? setCategoryVal : null }
         typeVal={typeVal}
-        setTypeVal={machineDrawings ? setTypeVal : null }
+        setTypeVal={(machineDrawings || machinePage) ? setTypeVal : null }
       />
     </Stack>
   );
