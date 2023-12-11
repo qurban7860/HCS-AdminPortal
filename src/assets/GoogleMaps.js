@@ -131,7 +131,7 @@ export default function GoogleMaps({
             <Marker
               key={index}
               position={{ lat: parseFloat(lat), lng: parseFloat(lng) }}
-              icon={{ ...ICONS.MAP_MARKER, scaledSize: new window.google.maps.Size(50, 50) }}
+              icon={{ ...ICONS.MAP_MARKER, scaledSize: new window.google.maps.Size(25, 25) }}
               draggable={edit}
               ref={(ref) => (markerRefs.current[index] = ref)}
               onMouseOver={() => {
