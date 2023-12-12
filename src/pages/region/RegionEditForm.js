@@ -103,6 +103,7 @@ export default function RegionEditForm() {
                 <RHFTextField name="name" label="Name" required/>
                 <Autocomplete
                   multiple
+                  disableCloseOnSelect
                   id="countries-autocomplete"
                   options={countries}
                   value={selectedCountries}

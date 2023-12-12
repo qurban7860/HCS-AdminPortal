@@ -27,7 +27,9 @@ import {
   getSecurityUsers,
   ChangeRowsPerPage,
   ChangePage,
-  setFilterBy
+  setFilterBy,
+  setActiveFilterList,
+  setEmployeeFilterList,
 } from '../../redux/slices/securityUser/securityUser';
 import { fDate } from '../../utils/formatTime';
 // constants
@@ -73,7 +75,7 @@ export default function SecurityUserList() {
     initial,
     securityUserEditFormVisibility,
     securityUserFormVisibility,
-    filterBy, page, rowsPerPage, isLoading
+    filterBy, employeeFilterList, activeFilterList, page, rowsPerPage, isLoading
   } = useSelector((state) => state.user);
 
   const onChangeRowsPerPage = (event) => {
@@ -88,7 +90,8 @@ export default function SecurityUserList() {
   const [filterName, setFilterName] = useState('');
   const [filterRole, setFilterRole] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
-
+  const [activeFilterListBy, setActiveFilterListBy] = useState(activeFilterList);
+  const [employeeFilterListBy, setEmployeeFilterListBy] = useState(employeeFilterList);
   useLayoutEffect(() => {
     dispatch(getSecurityUsers());
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -106,6 +109,8 @@ export default function SecurityUserList() {
     filterName,
     filterRole,
     filterStatus,
+    activeFilterListBy,
+    employeeFilterListBy,
   });
   
 
@@ -129,7 +134,31 @@ const handleFilterName = (event) => {
   setPage(0);
 };
 
+const debouncedVerified = useRef(debounce((value) => {
+  dispatch(ChangePage(0))
+  dispatch(setActiveFilterList(value))
+}, 500))
+
+const handleFilterListBy = (event) => {
+  debouncedVerified.current(event.target.value);
+  setActiveFilterListBy(event.target.value)
+  setPage(0);
+};
+
+const debouncedEmployeeFilter= useRef(debounce((value) => {
+  dispatch(ChangePage(0))
+  dispatch(setEmployeeFilterList(value))
+}, 500))
+
+const handleEmployeeFilterListBy = (event) => {
+  debouncedEmployeeFilter.current(event.target.value);
+  setEmployeeFilterListBy(event.target.value)
+  setPage(0);
+};
+
+
 useEffect(() => {
+    debouncedVerified.current.cancel();
     debouncedSearch.current.cancel();
 }, [debouncedSearch]);
 
@@ -175,6 +204,10 @@ useEffect(()=>{
             onFilterName={handleFilterName}
             onFilterRole={handleFilterRole}
             onResetFilter={handleResetFilter}
+            filterListBy={activeFilterListBy}
+            onFilterListBy={handleFilterListBy}
+            employeeFilterListBy={employeeFilterListBy}
+            onEmployeeFilterListBy={handleEmployeeFilterListBy}
           />
 
         {!isNotFound && <TablePaginationCustom
@@ -237,7 +270,7 @@ useEffect(()=>{
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus, filterRole}) {
+function applyFilter({ inputData, comparator, filterName, filterStatus, filterRole, activeFilterListBy, employeeFilterListBy}) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
@@ -248,6 +281,16 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRo
 
   inputData = stabilizedThis.map((el) => el[0]);
 
+  if(activeFilterListBy ==='active' )
+    inputData = inputData.filter((user)=> user.isActive === true );
+  else if(activeFilterListBy ==='inActive' )
+    inputData = inputData.filter((user)=> user.isActive === false );
+  
+  if(employeeFilterListBy ==='employee' )
+    inputData = inputData.filter((user)=> user.currentEmployee === true );
+  else if(employeeFilterListBy ==='notEmployee' )
+    inputData = inputData.filter((user)=> user.currentEmployee === false );
+  
   if (filterName) {
     inputData = inputData.filter(
       (securityUser) =>

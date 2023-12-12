@@ -65,25 +65,23 @@ export default function SecurityUserTableRow({
   };
   
   return (
-    <>
       <TableRow hover selected={selected}>
-        <Stack direction="row" alignItems="center">
-          <CustomAvatar
-            name={name}
-            alt={name}
-            BadgeProps={{
-              badgeContent: <BadgeStatus status={isOnline?"online":"offline"} />,
-            }}
-            sx={{ ml: 1, my: 0.5, width: '30px', height: '30px' }}
-          />
-          <LinkTableCell align="left" onClick={onViewRow} param={name} />
-        </Stack>
-
+          <Stack direction="row" alignItems="center">
+            <CustomAvatar
+              name={name}
+              alt={name}
+              BadgeProps={{
+                badgeContent: <BadgeStatus status={isOnline?"online":"offline"} />,
+              }}
+              sx={{ ml: 1, my: 0.5, width: '30px', height: '30px' }}
+            />
+            <LinkTableCell align="left" onClick={onViewRow} param={name} />
+          </Stack>
         { smScreen && <TableCell align="left">{email}</TableCell>}
         { smScreen && <TableCell align="left">{phone || ''}</TableCell>}
         { lgScreen && 
           <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-            {roles.map((obj) => (obj.roleType === 'SuperAdmin' ? <Chip label={obj.name} sx={{m:0.2}} color='secondary' /> : <Chip label={obj.name} sx={{mx:0.3}} />))}
+            {roles.map((obj, index) => (obj.roleType === 'SuperAdmin' ? <Chip key={index} label={obj.name} sx={{m:0.2}} color='secondary' /> : <Chip  key={index} label={obj.name} sx={{mx:0.3}} />))}
           </TableCell>
         }
         <TableCell align="center" key={isOnline}>
@@ -97,46 +95,5 @@ export default function SecurityUserTableRow({
         <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>
       </TableRow>
-
-      <MenuPopover
-        open={openPopover}
-        onClose={handleClosePopover}
-        arrow="right-top"
-        sx={{ width: 140 }}
-      >
-        <MenuItem
-          onClick={() => {
-            handleOpenConfirm();
-            handleClosePopover();
-          }}
-          sx={{ color: 'error.main' }}
-        >
-          <Iconify icon="eva:trash-2-outline" />
-          Delete
-        </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            onEditRow();
-            handleClosePopover();
-          }}
-        >
-          <Iconify icon="eva:edit-fill" />
-          Edit
-        </MenuItem>
-      </MenuPopover>
-
-      <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content="Are you sure want to delete?"
-        action={
-          <Button variant="contained" color="error" onClick={onDelete}>
-            Delete
-          </Button>
-        }
-      />
-    </>
   );
 }

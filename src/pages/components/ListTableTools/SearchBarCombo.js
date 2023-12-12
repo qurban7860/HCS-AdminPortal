@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import { Grid, TextField, InputAdornment, Button, Stack, 
-  FormControl, Select, InputLabel, MenuItem, IconButton, Switch, FormControlLabel } from '@mui/material';
+  FormControl, Select, InputLabel, MenuItem, IconButton, Switch, FormControlLabel, Autocomplete } from '@mui/material';
 import { BUTTONS } from '../../../constants/default-constants';
 import Iconify from '../../../components/iconify';
 import useResponsive from '../../../hooks/useResponsive';
@@ -12,8 +13,14 @@ function SearchBarCombo({
   value,
   onFilterVerify,
   filterVerify,
+  employeeFilterListBy,
+  onEmployeeFilterListBy,
   filterListBy,
   onFilterListBy,
+  categoryVal,
+  setCategoryVal,
+  typeVal,
+  setTypeVal,
   signInLogsFilter,
   onSignInLogsFilter,
   onChange,
@@ -29,36 +36,39 @@ function SearchBarCombo({
   handleTransferStatus,
   ...other
 }) {
-
+  const { activeDocumentTypes } = useSelector((state) => state.documentType);
+  const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const isMobile = useResponsive('sm', 'down');
   return (
-    <Grid container rowSpacing={1} columnSpacing={1} sx={{display:'flex', justifyContent:'space-between'}}>
-      <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
-        <TextField
-          fullWidth
-          value={value}
-          onChange={onChange}
-          size="small"
-          placeholder="Search..."
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Iconify  icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-              </InputAdornment>
-            ),
-            endAdornment: (isFiltered && (
-              <InputAdornment position="end">
-                <Button fullWidth onClick={onClick} color='error'size='small' startIcon={<Iconify icon='eva:trash-2-outline' />}>
-                  {BUTTONS.CLEAR}
-                </Button>
-              </InputAdornment>
-            )
-            ),
-          }}
-        />
-      </Grid>
+    <Grid container rowSpacing={1} columnSpacing={1} sx={{display:'flex', }}>
+
+          <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
+            <TextField
+              fullWidth
+              value={value}
+              onChange={onChange}
+              size="small"
+              placeholder="Search..."
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify  icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                  </InputAdornment>
+                ),
+                endAdornment: (isFiltered && (
+                  <InputAdornment position="end">
+                    <Button fullWidth onClick={onClick} color='error'size='small' startIcon={<Iconify icon='eva:trash-2-outline' />}>
+                      {BUTTONS.CLEAR}
+                    </Button>
+                  </InputAdornment>
+                )
+                ),
+              }}
+            />
+          </Grid>
+
           {onFilterVerify &&
-          <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
+          <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
             <Stack alignItems="flex-start">
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">Status</InputLabel>
@@ -79,8 +89,30 @@ function SearchBarCombo({
             </Stack>
           </Grid>}
 
+          {onEmployeeFilterListBy &&
+          <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+            <Stack alignItems="flex-start">
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Employee</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                size='small'
+                name="employee"
+                value={employeeFilterListBy}
+                label="Employee"
+                onChange={onEmployeeFilterListBy}
+              >
+                <MenuItem key="all" value="all">All</MenuItem>
+                <MenuItem key="verified" value="employee">Employee</MenuItem>
+                <MenuItem key="unverified" value="notEmployee">Not Employee</MenuItem>
+                </Select>
+            </FormControl>
+            </Stack>
+          </Grid>}
+
           {onFilterListBy &&
-          <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
+          <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
             <Stack alignItems="flex-start">
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">Status</InputLabel>
@@ -101,36 +133,80 @@ function SearchBarCombo({
             </Stack>
           </Grid>}
 
-        {handleTransferStatus !== undefined &&
-          <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
-              <FormControlLabel control={<Switch checked={transferStatus} 
-                onClick={(event)=>{handleTransferStatus(event.target.checked)}} />} label="Show Transferred" />
-          </Grid>
-        }
+          { setCategoryVal &&  typeof setCategoryVal === 'function' && <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+            <Autocomplete 
+              id="controllable-states-demo"
+              value={categoryVal || null}
+              options={activeDocumentCategories}
+              isOptionEqualToValue={(option, val) => option?._id === val?._id}
+              getOptionLabel={(option) =>  option.name }
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setCategoryVal(newValue);
+                } else {
+                  setCategoryVal(null);
+                }
+              }}
+              renderOption={(props, option) => (
+                <li {...props} key={option._id}>{option.name}</li>
+              )}
+              renderInput={(params) => <TextField {...params} size='small' label="Category" />}
+            />
+          </Grid>}
 
-        {onSignInLogsFilter &&
-          <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
-            <Stack alignItems="flex-start">
-            <FormControl fullWidth={isMobile} sx={{ml:2, width:'200px'}}>
-              <InputLabel id="demo-simple-select-label">Status</InputLabel>
-              <Select
-                sx={{width:'200px'}}
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                size="small"
-                value={signInLogsFilter}
-                label="Status"
-                onChange={onSignInLogsFilter}
-              >
-                <MenuItem key="-1" value={-1}>All</MenuItem>
-                <MenuItem key="200" value={200}>Success</MenuItem>
-                <MenuItem key="401" value={401}>Failed</MenuItem>
-                </Select>
-            </FormControl>
-            </Stack>
-          </Grid>
-        }
-          <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
+          {setTypeVal &&  typeof setTypeVal === 'function'  && <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+            <Autocomplete 
+              id="controllable-states-demo"
+              value={typeVal || null}
+              options={activeDocumentTypes}
+              isOptionEqualToValue={(option, val) => option?._id === val?._id}
+              getOptionLabel={(option) =>  option.name }
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setTypeVal(newValue);
+                } else {
+                  setTypeVal(null);
+                }
+              }}
+              renderOption={(props, option) => (
+                <li {...props} key={option._id}>{option.name}</li>
+              )}
+              renderInput={(params) => <TextField {...params} size='small' label="Type" />}
+
+            />
+          </Grid>}
+
+          {handleTransferStatus !== undefined &&
+            <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+                <FormControlLabel control={<Switch checked={transferStatus} 
+                  onClick={(event)=>{handleTransferStatus(event.target.checked)}} />} label="Show Transferred" />
+            </Grid>
+          }
+
+          {onSignInLogsFilter &&
+            <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+              <Stack alignItems="flex-start">
+              <FormControl fullWidth={isMobile} sx={{ml:2, width:'200px'}}>
+                <InputLabel id="demo-simple-select-label">Status</InputLabel>
+                <Select
+                  sx={{width:'200px'}}
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  size="small"
+                  value={signInLogsFilter}
+                  label="Status"
+                  onChange={onSignInLogsFilter}
+                >
+                  <MenuItem key="-1" value={-1}>All</MenuItem>
+                  <MenuItem key="200" value={200}>Success</MenuItem>
+                  <MenuItem key="401" value={401}>Failed</MenuItem>
+                  </Select>
+              </FormControl>
+              </Stack>
+            </Grid>
+          }
+
+          <Grid item xs={12} sm={6} md={4} lg={2} xl={2} sx={{ml:'auto'}}>
             <Grid container rowSpacing={1} columnSpacing={2} sx={{display:'flex', justifyContent:'flex-end'}}>
                 {inviteButton && 
                   <Grid item>
@@ -145,22 +221,21 @@ function SearchBarCombo({
                       </IconButton>
                     </StyledTooltip>
                   </Grid>
-              }
+                }
               
               {handleAttach && !transferredMachine &&
-                  <Grid item>
-                    <StyledTooltip title="Attach Drawing" placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
-                    <IconButton onClick={handleAttach} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
-                      '&:hover': {
-                        background:"#103996", 
-                        color:"#fff"
-                      }
-                    }}>
-                      <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon='fluent:attach-arrow-right-24-filled' />
-                    </IconButton>
-                  </StyledTooltip>
-                </Grid>
-              }
+                <Grid item>
+                  <StyledTooltip title="Attach Drawing" placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
+                  <IconButton onClick={handleAttach} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
+                    '&:hover': {
+                      background:"#103996", 
+                      color:"#fff"
+                    }
+                  }}>
+                    <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon='fluent:attach-arrow-right-24-filled' />
+                  </IconButton>
+                </StyledTooltip>
+              </Grid>}
 
               {addButton && !transferredMachine &&
                   <Grid item>
@@ -196,6 +271,12 @@ SearchBarCombo.propTypes = {
   filterVerify:PropTypes.string,
   filterListBy: PropTypes.string,
   onFilterListBy: PropTypes.func,
+  categoryVal: PropTypes.object,
+  setCategoryVal: PropTypes.func,
+  typeVal: PropTypes.object,
+  setTypeVal: PropTypes.func,
+  employeeFilterListBy: PropTypes.string,
+  onEmployeeFilterListBy: PropTypes.func,
   signInLogsFilter:PropTypes.number,
   onSignInLogsFilter:PropTypes.func,
   transferredMachine:PropTypes.bool,

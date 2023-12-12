@@ -30,7 +30,8 @@ import {
   ChangePage,
   setFilterBy,
   setVerified,
-  createMachineCSV
+  createMachineCSV,
+  setMachineTab
 } from '../../redux/slices/products/machine';
 import { resetToolInstalled, resetToolsInstalled } from '../../redux/slices/products/toolInstalled';
 import { resetSetting, resetSettings } from '../../redux/slices/products/machineSetting';
@@ -41,6 +42,7 @@ import {
   resetMachineDocuments,
 } from '../../redux/slices/document/machineDocument';
 
+import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
 // routes
 import { PATH_MACHINE } from '../../routes/paths';
 // components
@@ -50,6 +52,7 @@ import { useSnackbar } from '../../components/snackbar';
 // util
 import TableCard from '../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
+import CustomerDialog from '../components/Dialog/CustomerDialog';
 
 // ----------------------------------------------------------------------
 
@@ -171,14 +174,18 @@ export default function MachineList() {
     setFilterStatus(event.target.value);
   };
 
-  // const handleViewRow = (id) => {
-  //   navigate(PATH_MACHINE.machines.view(id));
-  // };
   const handleViewRow = (id) => {
+    dispatch(setMachineTab('info'));
     navigate(PATH_MACHINE.machines.view(id));
+  }
+  
+  const handleCustomerDialog = (e, id) => {
+    dispatch(getCustomer(id))
+    dispatch(setCustomerDialog(true))
   }
 
   const openInNewPage = (id) => {
+      dispatch(setMachineTab('info'));
       const url = PATH_MACHINE.machines.view(id);
       window.open(url, '_blank');
   };
@@ -278,6 +285,7 @@ export default function MachineList() {
                         onViewRow={() => handleViewRow(row._id)}
                         openInNewPage={ () => openInNewPage(row._id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                        handleCustomerDialog={(e)=> row?.customer && handleCustomerDialog(e,row?.customer?._id)}
                       />
                     ) : (
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -297,6 +305,7 @@ export default function MachineList() {
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
         </TableCard>
+        <CustomerDialog />
     </Container>
   );
 }

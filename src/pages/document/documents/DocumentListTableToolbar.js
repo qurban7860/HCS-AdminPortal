@@ -23,6 +23,10 @@ DocumentListTableToolbar.propTypes = {
   customerPage: PropTypes.bool,
   machinePage: PropTypes.bool,
   machineDrawings: PropTypes.bool,
+  categoryVal: PropTypes.object,
+  setCategoryVal: PropTypes.func,
+  typeVal: PropTypes.object,
+  setTypeVal: PropTypes.func,
 };
 
 export default function DocumentListTableToolbar({
@@ -36,6 +40,10 @@ export default function DocumentListTableToolbar({
   customerPage,
   machinePage,
   machineDrawings,
+  categoryVal,
+  setCategoryVal,
+  typeVal,
+  setTypeVal,
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -75,6 +83,10 @@ export default function DocumentListTableToolbar({
         SubOnClick={toggleAdd}
         addButton={addButton}
         transferredMachine={machine?.status?.slug==='transferred'}
+        categoryVal={categoryVal}
+        setCategoryVal={(machineDrawings || machinePage) ? setCategoryVal : null }
+        typeVal={typeVal}
+        setTypeVal={(machineDrawings || machinePage) ? setTypeVal : null }
       />
     </Stack>
   );

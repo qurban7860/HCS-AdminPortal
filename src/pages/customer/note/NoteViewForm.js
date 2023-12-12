@@ -18,7 +18,7 @@ import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 // constants
 
 export default function NoteViewForm() {
-  const { note } = useSelector((state) => state.customerNote);
+  const { note, isLoading } = useSelector((state) => state.customerNote);
   const { customer } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
@@ -62,11 +62,11 @@ export default function NoteViewForm() {
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons isActive={defaultValues.isActive} backLink={()=> dispatch(setNoteViewFormVisibility(false))} handleEdit={handleEdit} onDelete={onDelete} />
       <Grid container sx={{mt:2}}>
-        <ViewFormField sm={6} heading="Site" param={defaultValues?.site_name} />
-        <ViewFormField sm={6} heading="Contact" param={defaultValues?.contact_firstName}
+        <ViewFormField isLoading={isLoading} sm={6} heading="Site" param={defaultValues?.site_name} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Contact" param={defaultValues?.contact_firstName}
           secondParam={defaultValues?.contact_lastName !== '' ? defaultValues.contact_lastName : ''}
         />
-        <ViewFormField sm={12} heading="Note" param={defaultValues?.note} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Note" param={defaultValues?.note} />
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>
     </Card>

@@ -53,6 +53,9 @@ import {
   deleteDocument,
 } from '../../../redux/slices/document/document';
 import { getMachineForDialog, setMachineDialog } from '../../../redux/slices/products/machine';
+import { getActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
+import { getActiveDocumentTypes } from '../../../redux/slices/document/documentType';
+import { getCustomer, setCustomerDialog } from '../../../redux/slices/customer/customer';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { FORMLABELS } from '../../../constants/default-constants';
@@ -61,6 +64,7 @@ import TableCard from '../../components/ListTableTools/TableCard';
 import MachineDialog from '../../components/Dialog/MachineDialog';
 import { Snacks } from '../../../constants/document-constants';
 import ConfirmDialog from '../../../components/confirm-dialog';
+import CustomerDialog from '../../components/Dialog/CustomerDialog';
 
 // ----------------------------------------------------------------------
 DocumentList.propTypes = {
@@ -75,6 +79,8 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(100);
   const [tableData, setTableData] = useState([]);
+  const [categoryVal, setCategoryVal] = useState(null);
+  const [typeVal, setTypeVal] = useState(null);
   const [filterStatus, setFilterStatus] = useState([]);
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
@@ -128,24 +134,35 @@ const  onChangePage = (event, newPage) => {
     { id: 'referenceNumber', visibility: 'xs2', label: 'Ref. No.', align: 'left' },
     { id: 'displayName', label: 'Name', align: 'left' },
     { id: 'documentVersions.versionNo.[]', visibility: 'md1', label: 'Version', align: 'center' },
-    { id: 'stockNumber', visibility: 'xs2', label: 'Stock No.', align: 'left' },
     { id: 'customerAccess', visibility: 'md2', label: 'Customer Access', align: 'center' },
     { id: 'isActive', label: 'Active', align: 'center' },
     { id: 'createdAt', label: 'Created At', align: 'right' },
     { id: 'action', label: '', align: 'right' },
   ];
+  
+  if (machineDrawings) {
+    const insertIndex = 5; // Index after which you want to insert the new objects
+    TABLE_HEAD.splice(insertIndex, 0,// 0 indicates that we're not removing any elements
+    { id: 'stockNumber', visibility: 'xs2', label: 'Stock No.', align: 'left' },
+    );
+  }
 
   if (!customerPage && !machinePage && !machineDrawings) {
-    const insertIndex = 6; // Index after which you want to insert the new objects
+    const insertIndex = 5; // Index after which you want to insert the new objects
     TABLE_HEAD.splice(insertIndex, 0,// 0 indicates that we're not removing any elements
       { id: 'customer.name', visibility: 'md3', label: 'Customer', align: 'left' },
       { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left' }
     );
   }
+
   
   useEffect(() => {
     const fetchData = async () => {
       dispatch(resetDocuments());
+      if(machinePage){
+        dispatch(getActiveDocumentCategories());
+        dispatch(getActiveDocumentTypes());
+      }
       if (customerPage || machinePage) {
         if (customer?._id || machine?._id) {
           await dispatch(getDocuments(customerPage ? customer?._id : null, machinePage ? machine?._id : null));
@@ -196,6 +213,8 @@ const  onChangePage = (event, newPage) => {
     comparator: getComparator(order, orderBy),
     filterName,
     filterStatus,
+    categoryVal, 
+    typeVal,
   });
   // const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   const denseHeight = 60;
@@ -282,6 +301,11 @@ const  onChangePage = (event, newPage) => {
     setFilterStatus([]);
   };
 
+  const handleCustomerDialog = (e, id) => {
+    dispatch(getCustomer(id))
+    dispatch(setCustomerDialog(true))
+  }
+  
   const handleMachineDialog = (e, id) => {
     dispatch(getMachineForDialog(id))
     dispatch(setMachineDialog(true))
@@ -295,7 +319,7 @@ const  onChangePage = (event, newPage) => {
 
   const handleDeleteDoc = async (id) => {
     try {
-      await dispatch(deleteDocument(id));
+      await dispatch(deleteDocument(id, (!customerPage && !machinePage )));
       dispatch(resetDocuments());
 
       dispatch(resetDocuments());
@@ -312,7 +336,7 @@ const  onChangePage = (event, newPage) => {
       enqueueSnackbar(machineDrawings?Snacks.deletedDrawing:Snacks.deletedDoc, { variant: `success` });
     } catch (err) {
       console.log(err);
-      enqueueSnackbar(machineDrawings?Snacks.failedDeleteDrawing:Snacks.failedDeleteDoc, { variant: `error` });
+      enqueueSnackbar(err, { variant: `error` });
     }
   };
 
@@ -334,6 +358,10 @@ const  onChangePage = (event, newPage) => {
           customerPage={customerPage}
           machinePage={machinePage}
           machineDrawings={machineDrawings}
+          categoryVal={categoryVal}
+          setCategoryVal={setCategoryVal}
+          typeVal={typeVal}
+          setTypeVal={setTypeVal}
         />
         {!isNotFound && <TablePaginationCustom
           count={dataFiltered.length}
@@ -367,6 +395,7 @@ const  onChangePage = (event, newPage) => {
                         customerPage={customerPage}
                         machinePage={machinePage}
                         machineDrawings={machineDrawings}
+                        handleCustomerDialog={(e)=> row?.customer && handleCustomerDialog(e,row?.customer?._id)}
                         handleMachineDialog={(e)=> row?.machine && handleMachineDialog(e,row?.machine?._id)}
                       />
                     ) : (
@@ -389,6 +418,7 @@ const  onChangePage = (event, newPage) => {
       </TableCard>
       {/* </Container> */}
       
+      <CustomerDialog />
       <MachineDialog />
 
       <ConfirmDialog open={openConfirm} onClose={handleCloseConfirm} title="Delete" content="Are you sure you want to delete?"
@@ -409,7 +439,7 @@ const  onChangePage = (event, newPage) => {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+function applyFilter({ inputData, comparator, filterName, filterStatus, categoryVal, typeVal }) {
   const stabilizedThis = inputData && inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -418,6 +448,16 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
+
+
+  inputData = stabilizedThis.map((el) => el[0]);
+  if(categoryVal)
+    inputData = inputData.filter((drawing)=> drawing.docCategory?._id  === categoryVal?._id );
+
+  if(typeVal)
+    inputData = inputData.filter((drawing)=> drawing.docType?._id === typeVal?._id );
+
+
   if (filterName) {
     inputData = inputData.filter(
       (document) =>

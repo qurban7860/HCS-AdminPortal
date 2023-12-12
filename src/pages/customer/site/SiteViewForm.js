@@ -32,21 +32,12 @@ SiteViewForm.propTypes = {
   setIsExpanded: PropTypes.func,
 };
 export default function SiteViewForm({ currentSite = null, handleMap, setIsExpanded }) {
-  const { site } = useSelector((state) => state.site);
+  const { site, isLoading } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
-  // const navigate = useNavigate();
   const dispatch = useDispatch();
-  // const [ setOpenConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
-  // const handleOpenConfirm = () => {
-  //   setOpenConfirm(true);
-  // };
-
-  // const handleCloseConfirm = () => {
-  //   setOpenConfirm(false);
-  // };
-
+  
   const handleClosePopover = () => {
     setOpenPopover(null);
   };
@@ -121,35 +112,36 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
         </Button>
       </Stack> */}
       <Grid container>
-        {/* <ViewFormField sm={12} isActive={defaultValues.isActive} /> */}
-        <ViewFormField sm={12} heading="Name" param={defaultValues?.name} />
-        <ViewFormField sm={6} heading="Phone" param={defaultValues?.phone} />
-        <ViewFormField sm={6} heading="Fax" param={defaultValues?.fax} />
-        <ViewFormField sm={6} heading="Email" param={defaultValues?.email} />
-        <ViewFormField sm={6} heading="Website" param={defaultValues?.website} />
-        <ViewFormField sm={6} heading="Street" param={defaultValues?.street} />
-        <ViewFormField sm={6} heading="Suburb" param={defaultValues?.suburb} />
-        <ViewFormField sm={6} heading="City" param={defaultValues?.city} />
-        <ViewFormField sm={6} heading="Region" param={defaultValues?.region} />
-        <ViewFormField sm={6} heading="Post Code" param={defaultValues?.postcode} />
-        <ViewFormField sm={6} heading="Country" param={defaultValues?.country} />
-        <ViewFormField sm={6} heading="Latitude" param={defaultValues?.lat} />
-        <ViewFormField sm={6} heading="Longitude" param={defaultValues?.long} />
+        {/* <ViewFormField isLoading={isLoading} sm={12} isActive={defaultValues.isActive} /> */}
+        <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues?.name} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Phone" param={defaultValues?.phone} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Fax" param={defaultValues?.fax} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Email" param={defaultValues?.email} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Website" param={defaultValues?.website} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Street" param={defaultValues?.street} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Suburb" param={defaultValues?.suburb} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="City" param={defaultValues?.city} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Region" param={defaultValues?.region} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Post Code" param={defaultValues?.postcode} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Country" param={defaultValues?.country} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Latitude" param={defaultValues?.lat} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Longitude" param={defaultValues?.long} />
         <Grid container>
-          <ViewFormField
+          <ViewFormField isLoading={isLoading}
             sm={6}
             heading="Primary Billing Contact"
             param={defaultValues?.primaryBillingContact?.firstName}
             secondParam={defaultValues?.primaryBillingContact?.lastName}
           />
-          <ViewFormField
+          <ViewFormField isLoading={isLoading}
             sm={6}
             heading="Primary Technical Contact"
             param={defaultValues?.primaryTechnicalContact?.firstName}
             secondParam={defaultValues?.primaryTechnicalContact?.lastName}
           />
         </Grid>
-        <ViewFormField />
+        
+        
         <Dialog
           open={openPopover}
           onClose={handleClosePopover}
@@ -160,7 +152,7 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
             {defaultValues.lat && defaultValues.long ? (
               <GoogleMaps lat={defaultValues.lat} lng={defaultValues.long} />
             ) : (
-              <ViewFormField
+              <ViewFormField isLoading={isLoading}
                 sm={6}
                 heading="No Site Locations Available"
               />)}

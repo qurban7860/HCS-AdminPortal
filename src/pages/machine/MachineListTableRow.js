@@ -7,6 +7,7 @@ import { fDate } from '../../utils/formatTime';
 // components
 import LinkTableCellWithIconTargetBlank from '../components/ListTableTools/LinkTableCellWithIconTargetBlank';
 import { useScreenSize } from '../../hooks/useResponsive';
+import LinkDialogTableCell from '../components/ListTableTools/LinkDialogTableCell';
 
 // ----------------------------------------------------------------------
 
@@ -18,6 +19,7 @@ MachineListTableRow.propTypes = {
   openInNewPage: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
+  handleCustomerDialog:PropTypes.func,
 };
 
 export default function MachineListTableRow({
@@ -28,6 +30,7 @@ export default function MachineListTableRow({
   onEditRow,
   onViewRow,
   openInNewPage,
+  handleCustomerDialog
 }) {
   const {
     verifications,
@@ -54,7 +57,12 @@ export default function MachineListTableRow({
       {  useScreenSize('lg') && <TableCell >{name || ''}</TableCell>}
       {  useScreenSize('sm') && <TableCell >{machineModel?.name || ''}</TableCell>}
       {  useScreenSize('sm') && <TableCell sx={{color: status?.slug === 'transferred' ? 'red' : 'inherit' }} >{status?.name || ''}</TableCell>}
-      {  useScreenSize('lg') && <TableCell  >{customer?.name || ''}</TableCell>}
+      {  useScreenSize('lg') && 
+      
+      // <TableCell  >{customer?.name || ''}</TableCell>
+      <LinkDialogTableCell onClick={handleCustomerDialog} align='center' param={customer?.name}/>  
+          
+      }
       {  useScreenSize('lg') && <TableCell  >{instalationSite?.name || ''}</TableCell>}
       <TableCell align="center">  <Switch checked={isActive} disabled size="small"/>  </TableCell>
       <TableCell >{fDate(createdAt)}</TableCell>

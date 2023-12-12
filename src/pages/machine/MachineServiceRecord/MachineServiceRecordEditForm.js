@@ -401,6 +401,7 @@ setCheckItemLists(updatedCheckParams);
 
                 {/* {defaultValues?.recordType==='Training' && */}
                   <Autocomplete multiple
+                  disableCloseOnSelect
                     name="operators"
                     defaultValue={defaultValues.operators}
                     id="operator-autocomplete" options={machineOperators}

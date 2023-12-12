@@ -3,7 +3,7 @@ import { LoadingButton } from '@mui/lab';
 import { Autocomplete, Badge, Box, Divider, Grid, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { memo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { green } from '@mui/material/colors';
 import { DateTimePicker } from '@mui/x-date-pickers';
@@ -40,7 +40,7 @@ function ViewFormEditDeleteButtons({
   handleUpdatePassword,
   handleUserInvite,
   handleSendPDFEmail,
-  handleDownloadPDF,
+  handleViewPDF,
   isSubmitted,
   returnToSubmitted,
   approvers,
@@ -74,6 +74,7 @@ function ViewFormEditDeleteButtons({
 }) {
   const { id } = useParams();
   const userId = localStorage.getItem('userId');
+  const navigate = useNavigate();
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
   const { transferDialogBoxVisibility } = useSelector((state) => state.machine);
@@ -262,14 +263,15 @@ function ViewFormEditDeleteButtons({
   const [statusError, setStatusError] = useState(null);
   
   return (
-    <Grid container justifyContent="space-between" sx={{p:1}}>
-      <Grid item sx={{display:'flex'}}>
+    <Grid container justifyContent="space-between" sx={{pb:1, px:0.5}}>
+      <Grid item sx={{display:'flex', mt:0.5,mr:1}}>
         <StyledStack>
           {backLink &&
             <>
               <IconTooltip
                 title='Back'
-                onClick={() => backLink()}
+                onClick={() => navigate(-1) // backLink()
+                }
                 color={theme.palette.primary.main}
                 icon="mdi:arrow-left"
               />
@@ -376,7 +378,7 @@ function ViewFormEditDeleteButtons({
         </StyledStack>
       </Grid>
 
-      <Grid item  >
+      <Grid item  sx={{ ml:'auto', mt:0.5}}>
         <StyledStack>
           {handleVerification && !(verifiers && verifiers.length > 0 && verifiers?.some((verified) => verified?.verifiedBy?._id === userId)) && (
           <IconTooltip
@@ -493,10 +495,10 @@ function ViewFormEditDeleteButtons({
           icon="eva:swap-fill"
         />}
 
-        {handleDownloadPDF && 
+        {handleViewPDF && 
           <IconTooltip
-            title="Download"
-            onClick={handleDownloadPDF}
+            title="View PDF"
+            onClick={handleViewPDF}
             color={theme.palette.primary.main}
             icon="mdi:file-pdf-box"
           />
@@ -787,7 +789,7 @@ ViewFormEditDeleteButtons.propTypes = {
   handleUpdatePassword: PropTypes.func,
   handleUserInvite: PropTypes.func,
   handleSendPDFEmail: PropTypes.func,
-  handleDownloadPDF: PropTypes.func,
+  handleViewPDF: PropTypes.func,
   isInviteLoading:PropTypes.bool,
   handleEdit: PropTypes.func,
   onDelete: PropTypes.func,

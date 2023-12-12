@@ -138,6 +138,7 @@ export default function MachineList() {
   }
 
   return (
+    <>
       <TableCard>
         <MachineListTableToolbar
           filterName={filterName}
@@ -197,9 +198,11 @@ export default function MachineList() {
           onRowsPerPageChange={onChangeRowsPerPage}
         />
 
-        <MachineDialog/>
+        
 
       </TableCard>
+      <MachineDialog />
+      </>
   );
 }
 
@@ -214,8 +217,8 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, transfer
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-  if(!transferStatus)
-    inputData = inputData.filter((machine) => machine.status && machine.status.slug !== 'transferred');
+  if(transferStatus)
+    inputData = inputData.filter((machine) => machine.status && machine.status.slug === 'transferred');
     
   if (filterName) {
     

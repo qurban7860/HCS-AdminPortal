@@ -220,7 +220,10 @@ export function getActiveRegions() {
       {
         params: {
           isArchived: false,
-          isActive: true
+          isActive: true,
+          orderBy : {
+            name:1
+          }
         }
       }
       );

@@ -17,7 +17,6 @@ import {
   TextField,
   Button,
 } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers';
 // global
 import {
   setToolInstalledEditFormVisibility,
@@ -42,16 +41,10 @@ import { checkValuesNotNull } from '../util/index'
 
 function ToolsInstalledEditForm() {
   const { toolsInstalled, toolInstalled, toolTypesObj,movingPunchConditions, engageOnConditions, engageOffConditions} = useSelector((state) => state.toolInstalled);
-  console.log("toolInstalled : ", toolInstalled)
   const { activeTools } = useSelector((state) => state.tool);
   const { machine } = useSelector((state) => state.machine);
-
   const [compositToolVal, setCompositToolVal] = useState([]);
-  console.log("compositToolVal : ",compositToolVal)
   const [compositToolNumber, setCompositToolNumber] = useState(1);
-
-  // const [toolsVal, setToolsVal] = useState([]);
-
   const dispatch = useDispatch();
   const isMobile = useResponsive('down', 'sm');
   const { enqueueSnackbar } = useSnackbar();

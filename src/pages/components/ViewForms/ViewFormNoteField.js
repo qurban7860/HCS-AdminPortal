@@ -5,7 +5,7 @@ import CopyIcon from '../Icons/CopyIcon';
 
 const ViewFormNoteField = ({ sm, heading, param }) => (
     <Grid item xs={12} sm={sm} sx={{
-    px: 2, py: 1, 
+    px: 0.5, py: 1, 
     alignItems: 'center',
     // whiteSpace: 'pre-line',
     whiteSpace: 'pre-wrap',

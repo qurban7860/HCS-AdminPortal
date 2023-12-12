@@ -29,13 +29,14 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
-  const { machinestatus } = useSelector((state) => state.machinestatus);
+  const { machinestatus, isLoading } = useSelector((state) => state.machinestatus);
   const { id } = useParams();
   const dispatch = useDispatch();
 
   const defaultValues = useMemo(
     () => ({
       name: machinestatus?.name || '',
+      order: machinestatus?.order || '',
       description: machinestatus?.description || '',
       displayOrderNo: machinestatus?.displayOrderNo || '',
       slug: machinestatus?.slug || '',
@@ -76,14 +77,15 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons isActive={defaultValues.isActive} handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.status.list)} />
       <Grid container sx={{mt:2}}>
-        <ViewFormField sm={12} heading="Name" param={defaultValues?.name} />
-        <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
-        <ViewFormField
+        <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues?.name} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
+        <ViewFormField isLoading={isLoading}
           sm={12}
           heading="Display Order No."
           numberParam={defaultValues?.displayOrderNo}
         />
-        <ViewFormField sm={12} heading="Slug" numberParam={defaultValues?.slug} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Slug" numberParam={defaultValues?.slug} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Order Number" numberParam={defaultValues?.order} />
         <Grid container>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

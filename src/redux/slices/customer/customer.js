@@ -8,6 +8,7 @@ const _ = require('lodash');
 // ---------------------------------------------------------------------
 const initialState = {
   intial: false,
+  customerTab: 'info',
   customerEditFormFlag: false,
   responseMessage: null,
   success: false,
@@ -37,6 +38,11 @@ const slice = createSlice({
     // STOP LOADING
     stopLoading(state) {
       state.isLoading = false;
+    },
+
+    // SET CUSTOMER TAB
+    setCustomerTab(state, action){
+      state.customerTab = action.payload;
     },
 
     // SET TOGGLE
@@ -159,6 +165,7 @@ export default slice.reducer;
 
 // Actions
 export const {
+  setCustomerTab,
   setCustomerEditFormVisibility,
   resetCustomer,
   resetCustomers,

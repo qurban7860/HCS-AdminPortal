@@ -1,6 +1,5 @@
 import { useMemo, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import ReactPDF from '@react-pdf/renderer';
 // @mui
 import { Card, Grid } from '@mui/material';
 // redux
@@ -11,7 +10,8 @@ import { deleteMachineServiceRecord,
   setMachineServiceRecordEditFormVisibility, 
   getMachineServiceRecord,
   getMachineServiceHistoryRecords, 
-  setSendEmailDialog} from '../../../redux/slices/products/machineServiceRecord';
+  setSendEmailDialog,
+  setPDFViewerDialog} from '../../../redux/slices/products/machineServiceRecord';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { FORMLABELS } from '../../../constants/default-constants';
@@ -24,8 +24,8 @@ import { fDate } from '../../../utils/formatTime';
 import ReadableCollapsibleCheckedItemRow from './ReadableCollapsibleCheckedItemRow';
 import HistoryIcon from '../../components/Icons/HistoryIcon';
 import CurrentIcon from '../../components/Icons/CurrentIcon';
-import { MachineServiceRecordPDF } from './MachineServiceRecordPDF';
 import SendEmailDialog from '../../components/Dialog/SendEmailDialog';
+import PDFViewerDialog from '../../components/Dialog/PDFViewerDialog';
 
 function MachineServiceParamViewForm() {
 
@@ -113,17 +113,19 @@ function MachineServiceParamViewForm() {
       dispatch(setSendEmailDialog(true))
   }
 
-  const handleDownloadPDF = async() => {
-    
-    const serviceDate = new Date(defaultValues.serviceDate);
-    const formattedDate = serviceDate.toISOString().split('T')[0];
-    const fileName = `${formattedDate.replaceAll('-','')}_${defaultValues?.serviceRecordConfigRecordType}_V${defaultValues.versionNo}.pdf`;
-    const blob = await ReactPDF.pdf(<MachineServiceRecordPDF key={machineServiceRecord?._id} machineServiceRecord={machineServiceRecord} />).toBlob();
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = fileName;
-    link.click();
+  const handlePDFViewer = async() => {
+    dispatch(setPDFViewerDialog(true))
   }
+
+  const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceRecordConfigRecordType}_${defaultValues?.versionNo}.pdf`
+
+  // const handleDownloadPDF = async() => {
+  //   const blob = await ReactPDF.pdf(<MachineServiceRecordPDF key={machineServiceRecord?._id} machineServiceRecord={machineServiceRecord} />).toBlob();
+  //   const link = document.createElement('a');
+  //   link.href = URL.createObjectURL(blob);
+  //   link.download = fileName;
+  //   link.click();
+  // }
   
   
   return (
@@ -138,44 +140,45 @@ function MachineServiceParamViewForm() {
           backLink={() => dispatch( // isHistorical ? setMachineServiceRecordHistoryFormVisibility(true) : 
           setAllFlagsFalse())}
           handleSendPDFEmail={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleSendEmail}
-          handleDownloadPDF={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleDownloadPDF}
+          handleViewPDF={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handlePDFViewer}
         />
         
         <Grid container>
+          {/* <Button onClick={handlePDFViewer}>View</Button> */}
 
-          {/* <ViewFormField sm={6} heading="Customer"  param={`${machine?.customer?.name ? machine?.customer?.name : ''}`} />
-          <ViewFormField sm={6} heading="Machine"  param={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} />
-          <ViewFormField sm={6} heading="Model Category"  param={machine?.machineModel?.category?.name || ''} />
-          <ViewFormField sm={6} heading="Machine Model"  param={machine?.machineModel?.name || ''} /> */}
+          {/* <ViewFormField isLoading={isLoading} sm={6} heading="Customer"  param={`${machine?.customer?.name ? machine?.customer?.name : ''}`} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Machine"  param={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Model Category"  param={machine?.machineModel?.category?.name || ''} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Machine Model"  param={machine?.machineModel?.name || ''} /> */}
           <FormLabel content={FORMLABELS.KEYDETAILS} />
           
-          <ViewFormField sm={3} heading="Service Date" param={fDate(defaultValues.serviceDate)} />
-          <ViewFormField sm={6} heading="Service Record Configuration" param={`${defaultValues.serviceRecordConfig} ${defaultValues.serviceRecordConfigRecordType ? '-' : ''} ${defaultValues.serviceRecordConfigRecordType ? defaultValues.serviceRecordConfigRecordType : ''}`} />
-          <ViewFormField sm={3} heading="Version No" param={
+          <ViewFormField isLoading={isLoading} sm={3} heading="Service Date" param={fDate(defaultValues.serviceDate)} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Service Record Configuration" param={`${defaultValues.serviceRecordConfig} ${defaultValues.serviceRecordConfigRecordType ? '-' : ''} ${defaultValues.serviceRecordConfigRecordType ? defaultValues.serviceRecordConfigRecordType : ''}`} />
+          <ViewFormField isLoading={isLoading} sm={3} heading="Version No" param={
             <>{defaultValues?.versionNo}{machineServiceRecord?.isHistory && <CurrentIcon callFunction={handleCurrentServiceRecord} />}
               {!machineServiceRecord?.isHistory && (machineServiceRecord?.currentVersion?.versionNo || defaultValues?.versionNo) > 1 && <HistoryIcon callFunction={handleServiceRecordHistory} /> }
             </>  
           } />
           
-          <ViewFormField sm={12} heading="Decoilers" arrayParam={defaultValues?.decoilers?.map((decoilerMachine) => ({ name: `${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`}))} />
-          <ViewFormField sm={6} heading="Technician"  param={defaultValues?.technician?.name || ''} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Decoilers" arrayParam={defaultValues?.decoilers?.map((decoilerMachine) => ({ name: `${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`}))} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Technician"  param={defaultValues?.technician?.name || ''} />
           <ViewFormNoteField sm={12} heading="Technician Notes" param={defaultValues.technicianNotes} />
 
-          <ViewFormNoteField sm={12} heading="Text Before Check Items" param={defaultValues.textBeforeCheckItems} />
 
           <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
+          {defaultValues.textBeforeCheckItems && <ViewFormNoteField sm={12}  param={defaultValues.textBeforeCheckItems} />}
           {machineServiceRecord?.serviceRecordConfig?.checkItemLists?.length > 0 && 
             <Grid item md={12} sx={{  overflowWrap: 'break-word' }}>
               <Grid item md={12} sx={{display:'flex', flexDirection:'column'}}>
                 {machineServiceRecord?.serviceRecordConfig?.checkItemLists?.length > 0 ? 
                 (machineServiceRecord?.serviceRecordConfig?.checkItemLists.map((row, index) =>
                         <ReadableCollapsibleCheckedItemRow value={row} index={index} />
-                  )) : <ViewFormField /> }
+                  )) : <ViewFormField isLoading={isLoading} /> }
               </Grid>
             </Grid>
           }
           
-          <ViewFormNoteField sm={12} heading="Text After Check Items" param={defaultValues.textAfterCheckItems} />
+          {defaultValues.textAfterCheckItems && <ViewFormNoteField sm={12}  param={defaultValues.textAfterCheckItems} />}
 
           {/* <Grid item md={12} >
             <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
@@ -183,34 +186,35 @@ function MachineServiceParamViewForm() {
             </Typography>
           </Grid>
           <Grid container>
-            <ViewFormField sm={4}   param={defaultValues?.headerLeftText} />
-            <ViewFormField sm={4}   param={defaultValues?.headerCenterText} />
-            <ViewFormField sm={4}   param={defaultValues?.headerRightText} />
+            <ViewFormField isLoading={isLoading} sm={4}   param={defaultValues?.headerLeftText} />
+            <ViewFormField isLoading={isLoading} sm={4}   param={defaultValues?.headerCenterText} />
+            <ViewFormField isLoading={isLoading} sm={4}   param={defaultValues?.headerRightText} />
           </Grid>
 
           <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
             Footer
           </Typography>
           <Grid container>
-            <ViewFormField sm={4} param={defaultValues?.footerLeftText} />
-            <ViewFormField sm={4} param={defaultValues?.footerCenterText} />
-            <ViewFormField sm={4} param={defaultValues?.footerRightText} />
+            <ViewFormField isLoading={isLoading} sm={4} param={defaultValues?.footerLeftText} />
+            <ViewFormField isLoading={isLoading} sm={4} param={defaultValues?.footerCenterText} />
+            <ViewFormField isLoading={isLoading} sm={4} param={defaultValues?.footerRightText} />
           </Grid> */}
 
-          {/* <ViewFormField sm={12} heading="Internal Comments" param={defaultValues.internalComments} /> */}
-          {machineServiceRecord?.serviceRecordConfig?.enableNote && <ViewFormNoteField sm={12} heading="Service Note" param={defaultValues.serviceNote} />}
+          {/* <ViewFormField isLoading={isLoading} sm={12} heading="Internal Comments" param={defaultValues.internalComments} /> */}
+          {machineServiceRecord?.serviceRecordConfig?.enableNote && <ViewFormNoteField sm={12} heading={`${machineServiceRecord?.serviceRecordConfig?.recordType?.charAt(0).toUpperCase()||''}${machineServiceRecord?.serviceRecordConfig?.recordType?.slice(1).toLowerCase()||''} Note`} param={defaultValues.serviceNote} />}
 
           {machineServiceRecord?.serviceRecordConfig?.enableMaintenanceRecommendations && <ViewFormNoteField sm={12} heading="Recommendation Note" param={defaultValues.recommendationNote} />}
           {machineServiceRecord?.serviceRecordConfig?.enableSuggestedSpares && <ViewFormNoteField sm={12} heading="Suggested Spares" param={defaultValues.suggestedSpares} />}
           <ViewFormNoteField sm={12} heading="Internal Note" param={defaultValues.internalNote} />
           
-          <ViewFormField sm={12} heading="Operators" arrayParam={defaultValues?.operators?.map((operator) => ({ name: `${operator?.firstName || ''} ${operator?.lastName || ''}`}))} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Operators" arrayParam={defaultValues?.operators?.map((operator) => ({ name: `${operator?.firstName || ''} ${operator?.lastName || ''}`}))} />
           <ViewFormNoteField sm={12} heading="Operator Notes" param={defaultValues.operatorNotes} />
           
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
       </Grid>
-      <SendEmailDialog machineServiceRecord={machineServiceRecord}/>
+      {!isLoading && <PDFViewerDialog machineServiceRecord={machineServiceRecord} />}
+      {!isLoading && <SendEmailDialog machineServiceRecord={machineServiceRecord} fileName={fileName}/>}
     </Card>
   );
 }

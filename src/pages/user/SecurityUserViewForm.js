@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector, batch } from 'react-redux';
 // @mui
-import { Card, Grid, Link, Button } from '@mui/material';
+import { Card, Grid, Link, Button, Typography } from '@mui/material';
 import ConfirmDialog from '../../components/confirm-dialog';
 // routes
 import { PATH_SECURITY } from '../../routes/paths';
@@ -29,6 +29,7 @@ import CustomerDialog from '../components/Dialog/CustomerDialog';
 import ContactDialog from '../components/Dialog/ContactDialog';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 import Iconify from '../../components/iconify';
+import FormLabel from '../components/DocumentForms/FormLabel';
 
 // ----------------------------------------------------------------------
 
@@ -209,85 +210,88 @@ export default function SecurityUserViewForm() {
               </Button>
             }
           />
-          <Grid container sx={{mt:2}}>
-            <ViewFormField
-              sm={6}
-              heading="Customer"
-              objectParam={
-                defaultValues?.customer && (
-                  <Link onClick={handleCustomerDialog} href="#" underline="none">
-                    {defaultValues?.customer}
-                    {blockedCustomer.length > 0 &&
-                      <StyledTooltip title="Customer is Blocked" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
-                        <Iconify color="#FF0000" sx={{height: '24px', width: '24px', verticalAlign:"middle", ml:1 }} icon="mdi:ban" />
-                      </StyledTooltip>
-                    }
-                  </Link>
-                )
+          <Grid container sx={{display:{ md:'flex', sm: 'block' }, justifyContent:{md: 'space-between'}}} >
+          <Grid  item md={6} sm={12} xs={12} sx={{p:.5}}>
+            <Grid  sx={{border: '1px solid lightgrey', borderRadius:2, px:1.5, pt:1.5, height: {md: '100%'}}}>
+            <FormLabel content='Personal Information' />
+              <ViewFormField isLoading={isLoading}
+                  sm={12}
+                  heading="Full Name"
+                  objectParam={
+                    defaultValues?.name && (
+                      <>
+                        {defaultValues?.name}
+                        {blockedUser.length > 0 &&
+                          <StyledTooltip title="User is Blocked" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
+                            <Iconify color="#FF0000" sx={{height: '24px', width: '24px', verticalAlign:"middle", ml:1 }} icon="mdi:ban" />
+                          </StyledTooltip>
+                        }
+                      </>
+                    )
+                  }
+              />
+              <ViewFormField isLoading={isLoading} sm={12} heading="Phone" param={defaultValues?.phone} />
+              <ViewFormField isLoading={isLoading} sm={12} heading="email" param={defaultValues?.email} />
+              <ViewFormField isLoading={isLoading} sm={12} heading="Login" param={defaultValues?.login} />
+              <ViewFormField isLoading={isLoading}
+                sm={12}
+                heading="Customer"
+                objectParam={
+                  defaultValues?.customer && (
+                    <Link onClick={handleCustomerDialog} href="#" underline="none">
+                      {defaultValues?.customer}
+                      {blockedCustomer.length > 0 &&
+                        <StyledTooltip title="Customer is Blocked" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
+                          <Iconify color="#FF0000" sx={{height: '24px', width: '24px', verticalAlign:"middle", ml:1 }} icon="mdi:ban" />
+                        </StyledTooltip>
+                      }
+                    </Link>)}
+              />
+              <ViewFormField isLoading={isLoading}
+                sm={12}
+                heading="Contact"
+                objectParam={
+                  defaultValues?.contact && (
+                    <Link onClick={handleContactDialog} href="#" underline="none">
+                      {defaultValues?.contact}
+                    </Link>)}
+              />
+            </Grid>
+            </Grid>
 
-              }
-            />
-            <ViewFormField
-              sm={6}
-              heading="Contact"
-              objectParam={
-                defaultValues?.contact && (
-                  <Link onClick={handleContactDialog} href="#" underline="none">
-                    {defaultValues?.contact}
-                  </Link>
-                )
-              }
-            />
-            <ViewFormField
-              sm={6}
-              heading="Full Name"
-              objectParam={
-                defaultValues?.name && (
-                  <>
-                    {defaultValues?.name}
-                    {blockedUser.length > 0 &&
-                      <StyledTooltip title="User is Blocked" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
-                        <Iconify color="#FF0000" sx={{height: '24px', width: '24px', verticalAlign:"middle", ml:1 }} icon="mdi:ban" />
-                      </StyledTooltip>
-                    }
-                  </>
-                )
-
-              }
-            />
-            <ViewFormField sm={6} heading="Full Name" param={defaultValues?.name} />
-            <ViewFormField sm={6} heading="Phone" param={defaultValues?.phone} />
-            <ViewFormField sm={12} heading="email" param={defaultValues?.email} />
-            <ViewFormField sm={6} heading="Login" param={defaultValues?.login} />
-            
-            <ViewFormField
-              sm={6}
-              heading="Roles"
-              userRolesChips={defaultValues?.roles}
-            />
-            <ViewFormField
-              sm={12}
-              heading="Regions"
-              arrayParam={defaultValues?.regions}
-            />
-            <ViewFormField
-              sm={12}
-              heading="Countries"
-              chipLabel='country_name'
-              arrayParam={defaultValues?.countries}
-            />
-            <ViewFormField
-              sm={12}
-              heading="Customers"
-              arrayParam={defaultValues?.customers}
-            />
-            <ViewFormField
-              sm={12}
-              heading="Machines"
-              arrayParam={defaultValues?.machines}
-            />
+            <Grid item md={6} sm={12} xs={12} sx={{p:.5}}>
+              <Grid  sx={{border: '1px solid lightgrey', borderRadius:2, px:1.5, pt:1.5, height: {md: '100%'} }}>
+              <FormLabel content='Accessibility Information' />
+              <ViewFormField isLoading={isLoading}
+                sm={12}
+                heading="Roles"
+                userRolesChips={defaultValues?.roles}
+              />
+              <ViewFormField isLoading={isLoading}
+                sm={12}
+                heading="Regions"
+                arrayParam={defaultValues?.regions}
+              />
+              <ViewFormField isLoading={isLoading}
+                sm={12}
+                heading="Countries"
+                chipLabel='country_name'
+                arrayParam={defaultValues?.countries}
+              />
+              <ViewFormField isLoading={isLoading}
+                sm={12}
+                heading="Customers"
+                arrayParam={defaultValues?.customers}
+              />
+              <ViewFormField isLoading={isLoading}
+                sm={12}
+                heading="Machines"
+                arrayParam={defaultValues?.machines}
+              />
+            </Grid>
+            </Grid>
           </Grid>
-          <ViewFormField />
+          {/* <ViewFormField /> */}
           <Grid container>
             <ViewFormAudit defaultValues={defaultValues} />
           </Grid>

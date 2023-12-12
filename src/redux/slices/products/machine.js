@@ -6,6 +6,7 @@ import { CONFIG } from '../../../config-global';
 // ----------------------------------------------------------------------
 const initialState = {
   intial: false,
+  machineTab:'info',
   machineEditFormFlag: false,
   machineMoveFormVisibility: false,
   transferMachineFlag: false,
@@ -42,6 +43,11 @@ const slice = createSlice({
     // STOP LOADING
     stopLoading(state) {
       state.isLoading = false;
+    },
+    
+    // SET DIALOGBOX VISIBILITY
+    setMachineTab(state, action) {
+      state.machineTab = action.payload;
     },
 
     // SET DIALOGBOX VISIBILITY
@@ -203,6 +209,7 @@ export default slice.reducer;
 
 // Actions
 export const {
+  setMachineTab,
   setMachineEditFormVisibility,
   setMachineMoveFormVisibility,
   stopLoading,

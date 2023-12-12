@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Dialog, DialogContent, DialogTitle, Divider } from '@mui/material';
-import { setCustomerDialog } from '../../../redux/slices/customer/customer';
+import { setCustomerDialog, setCustomerTab } from '../../../redux/slices/customer/customer';
 // import Iconify from '../../../components/iconify';
 import { PATH_CUSTOMER } from '../../../routes/paths';
 import DialogLink from './DialogLink';
 import FormLabel from '../DocumentForms/FormLabel';
-import ViewFormFieldWithSkelton from '../ViewForms/ViewFormFieldWithSkelton';
+import ViewFormField from '../ViewForms/ViewFormField';
 
 function CustomerDialog() {
   const navigate = useNavigate();
@@ -25,29 +25,28 @@ function CustomerDialog() {
     >
       <DialogTitle variant='h3' sx={{pb:1, pt:2}}>Customer</DialogTitle>
       <Divider orientation="horizontal" flexItem />
-     {/* <DialogLabel onClick={ handleCustomerDialog } content="Customer" /> */}
-      <DialogContent dividers sx={{pl:1, pr:1}}>
+      <DialogContent dividers sx={{px:3}}>
         <Grid item container>
-          <ViewFormFieldWithSkelton isLoading={isLoading} sm={12} heading="Name" param={customer?.name} />
-          <ViewFormFieldWithSkelton isLoading={isLoading} sm={12} heading="Trading Name" chips={customer?.tradingName} />
-          <ViewFormFieldWithSkelton isLoading={isLoading} sm={6} heading="Phone" param={customer?.mainSite?.phone} />
-          <ViewFormFieldWithSkelton isLoading={isLoading} sm={6} heading="Fax" param={customer?.mainSite?.fax} />
-          <ViewFormFieldWithSkelton isLoading={isLoading} sm={6} heading="Email" param={customer?.mainSite?.email} />
-          <ViewFormFieldWithSkelton isLoading={isLoading} sm={6} heading="Site Name" param={customer?.mainSite?.name} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={customer?.name} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Trading Name" chips={customer?.tradingName} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Phone" param={customer?.mainSite?.phone} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Fax" param={customer?.mainSite?.fax} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Email" param={customer?.mainSite?.email} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Site Name" param={customer?.mainSite?.name} />
           <FormLabel content="Address Information" />
-          <ViewFormFieldWithSkelton isLoading={isLoading} sm={6} heading="Street" param={customer?.mainSite?.address?.street} />
-          <ViewFormFieldWithSkelton isLoading={isLoading} sm={6} heading="Suburb" param={customer?.mainSite?.address?.suburb} />
-          <ViewFormFieldWithSkelton isLoading={isLoading} sm={6} heading="City" param={customer?.mainSite?.address?.city} />
-          <ViewFormFieldWithSkelton isLoading={isLoading} sm={6} heading="Region" param={customer?.mainSite?.address?.region} />
-          <ViewFormFieldWithSkelton isLoading={isLoading} sm={6} heading="Post Code" param={customer?.mainSite?.address?.postcode} />
-          <ViewFormFieldWithSkelton isLoading={isLoading} sm={12} heading="Country" param={customer?.mainSite?.address?.country} />
-          <ViewFormFieldWithSkelton isLoading={isLoading} sm={6} heading="Primary Biling Contact"
+          <ViewFormField isLoading={isLoading} sm={6} heading="Street" param={customer?.mainSite?.address?.street} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Suburb" param={customer?.mainSite?.address?.suburb} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="City" param={customer?.mainSite?.address?.city} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Region" param={customer?.mainSite?.address?.region} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Post Code" param={customer?.mainSite?.address?.postcode} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Country" param={customer?.mainSite?.address?.country} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Primary Biling Contact"
             param={
               customer?.primaryBillingContact &&
               `${customer?.primaryBillingContact?.firstName} ${customer?.primaryBillingContact?.lastName}`
             }
           />
-          <ViewFormFieldWithSkelton isLoading={isLoading} sm={6} heading="Primary Technical Contact"
+          <ViewFormField isLoading={isLoading} sm={6} heading="Primary Technical Contact"
             param={
               customer?.primaryTechnicalContact &&
               `${customer?.primaryTechnicalContact?.firstName} ${customer?.primaryTechnicalContact?.lastName}`
@@ -55,21 +54,21 @@ function CustomerDialog() {
           />
           <FormLabel content="Howick Resources" />
           
-          <ViewFormFieldWithSkelton isLoading={isLoading} sm={6} heading="Account Manager"
+          <ViewFormField isLoading={isLoading} sm={6} heading="Account Manager"
             param={
               customer?.accountManager &&
               `${customer?.accountManager?.firstName} ${customer?.accountManager?.lastName}`
             }
           />
 
-          <ViewFormFieldWithSkelton isLoading={isLoading} sm={6} heading="Project Manager"
+          <ViewFormField isLoading={isLoading} sm={6} heading="Project Manager"
             param={
               customer?.projectManager &&
               `${customer?.projectManager?.firstName} ${customer?.projectManager?.lastName}`
             }
           />
 
-          <ViewFormFieldWithSkelton isLoading={isLoading} sm={6} heading="Suppport Manager"
+          <ViewFormField isLoading={isLoading} sm={6} heading="Suppport Manager"
             param={
               customer?.supportManager &&
               `${customer?.supportManager?.firstName} ${customer?.supportManager?.lastName}`
@@ -80,7 +79,11 @@ function CustomerDialog() {
       </DialogContent>
       <DialogLink
         onClose={handleCustomerDialog}
-        onClick={() => navigate(PATH_CUSTOMER.view(customer._id))}
+        onClick={() => {
+          dispatch(setCustomerTab('info'));
+          handleCustomerDialog();
+          navigate(PATH_CUSTOMER.view(customer._id));
+        }}
         content="Go to Customer"
       />
     </Dialog>

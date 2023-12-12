@@ -19,7 +19,7 @@ import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
 
 export default function ToolInstalledViewForm() {
-  const { toolInstalled } = useSelector((state) => state.toolInstalled);
+  const { toolInstalled, isLoading } = useSelector((state) => state.toolInstalled);
   const { machine } = useSelector((state) => state.machine);
   const { enqueueSnackbar } = useSnackbar();
   
@@ -94,38 +94,38 @@ export default function ToolInstalledViewForm() {
         </Tooltip>
       </Grid> */}
       <Grid container>
-        <ViewFormField sm={6} heading="Tool" param={defaultValues?.toolName}/>
-        <ViewFormField sm={6} heading="Offset" param={defaultValues?.offset}/>
-        <ViewFormSwitch sm={6} isActiveHeading='Apply Waste' isActive={defaultValues.isApplyWaste} />
-        <ViewFormField sm={6} heading="Waste Trigger Distance" param={defaultValues?.wasteTriggerDistance}/>
-        <ViewFormSwitch sm={6} isActiveHeading='Apply Crimp' isActive={defaultValues.isApplyCrimp} />
-        <ViewFormField sm={6} heading="Crimp Trigger Distance" param={defaultValues?.crimpTriggerDistance}/>
-        <ViewFormField sm={6} heading="Operations" param={defaultValues?.operations}/>
+        <ViewFormField isLoading={isLoading} sm={6} heading="Tool" param={defaultValues?.toolName}/>
+        <ViewFormField isLoading={isLoading} sm={6} heading="Offset" param={defaultValues?.offset}/>
+        <ViewFormSwitch isLoading={isLoading} sm={6} isActiveHeading='Apply Waste' isActive={defaultValues.isApplyWaste} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Waste Trigger Distance" param={defaultValues?.wasteTriggerDistance}/>
+        <ViewFormSwitch isLoading={isLoading} sm={6} isActiveHeading='Apply Crimp' isActive={defaultValues.isApplyCrimp} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Crimp Trigger Distance" param={defaultValues?.crimpTriggerDistance}/>
+        <ViewFormField isLoading={isLoading} sm={6} heading="Operations" param={defaultValues?.operations}/>
         <Grid item sm={12} sx={{display:'flex'}}>
-          <ViewFormSwitch sm={6} isActiveHeading='Back to Back Punch' isActive={defaultValues.isBackToBackPunch} />
-          <ViewFormSwitch sm={6} isActiveHeading='Manual Select' isActive={defaultValues.isManualSelect} />
-          <ViewFormSwitch sm={6} isActiveHeading='Assign' isActive={defaultValues.isAssign} />
+          <ViewFormSwitch isLoading={isLoading} sm={6} isActiveHeading='Back to Back Punch' isActive={defaultValues.isBackToBackPunch} />
+          <ViewFormSwitch isLoading={isLoading} sm={6} isActiveHeading='Manual Select' isActive={defaultValues.isManualSelect} />
+          <ViewFormSwitch isLoading={isLoading} sm={6} isActiveHeading='Assign' isActive={defaultValues.isAssign} />
         </Grid>
-        <ViewFormField sm={12} heading="Tool Type" param={defaultValues?.toolType} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Tool Type" param={defaultValues?.toolType} />
         {toolInstalled?.toolType === 'SINGLE TOOL'  && (
           <>
-            <ViewFormField sm={6} heading="Engage Solenoid Location" param={toolInstalled?.singleToolConfig?.engageSolenoidLocation} />
-            <ViewFormField sm={6} heading="Return Solenoid Location" param={toolInstalled?.singleToolConfig?.returnSolenoidLocation} />
-            <ViewFormField sm={6} heading="Engage On Condition" param={toolInstalled?.singleToolConfig?.engageOnCondition} />
-            <ViewFormField sm={6} heading="Engage Off Condition" param={toolInstalled?.singleToolConfig?.engageOffCondition} />
-            <ViewFormField sm={12} heading="Time Out" param={fDateTime(toolInstalled?.singleToolConfig?.timeOut)} />
-            <ViewFormField sm={6} heading="Engaging Duration" param={toolInstalled?.singleToolConfig?.engagingDuration} />
-            <ViewFormField sm={6} heading="Returning Duration" param={toolInstalled?.singleToolConfig?.returningDuration} />
-            <ViewFormField sm={12} heading="Two Way Check Delay Time" param={toolInstalled?.singleToolConfig?.twoWayCheckDelayTime} />
-            <ViewFormField sm={6} heading="Home Proximity Sensor Location" param={toolInstalled?.singleToolConfig?.homeProximitySensorLocation} />
-            <ViewFormField sm={6} heading="Engaged Proximity Sensor Location" param={toolInstalled?.singleToolConfig?.engagedProximitySensorLocation} />
-            <ViewFormField sm={12} heading="Pressure Target" param={toolInstalled?.singleToolConfig?.pressureTarget} />
-            <ViewFormField sm={6} heading="Distance Sensor Location" param={toolInstalled?.singleToolConfig?.distanceSensorLocation} />
-            <ViewFormField sm={6} heading="Distance Sensor Target" param={toolInstalled?.singleToolConfig?.distanceSensorTarget} />
-            <ViewFormSwitch sm={4} isActiveHeading='Has Two Way Check' isActive={toolInstalled?.singleToolConfig?.isHasTwoWayCheck} />
-            <ViewFormSwitch sm={4} isActiveHeading='Engaging Has Enable' isActive={toolInstalled?.singleToolConfig?.isEngagingHasEnable} />
-            <ViewFormSwitch sm={4} isActiveHeading='Returning Has Enable' isActive={toolInstalled?.singleToolConfig?.isReturningHasEnable} />
-            <ViewFormField sm={6} heading="Moving Punch Condition" param={toolInstalled?.singleToolConfig?.movingPunchCondition} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Engage Solenoid Location" param={toolInstalled?.singleToolConfig?.engageSolenoidLocation} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Return Solenoid Location" param={toolInstalled?.singleToolConfig?.returnSolenoidLocation} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Engage On Condition" param={toolInstalled?.singleToolConfig?.engageOnCondition} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Engage Off Condition" param={toolInstalled?.singleToolConfig?.engageOffCondition} />
+            <ViewFormField isLoading={isLoading} sm={12} heading="Time Out" param={fDateTime(toolInstalled?.singleToolConfig?.timeOut)} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Engaging Duration" param={toolInstalled?.singleToolConfig?.engagingDuration} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Returning Duration" param={toolInstalled?.singleToolConfig?.returningDuration} />
+            <ViewFormField isLoading={isLoading} sm={12} heading="Two Way Check Delay Time" param={toolInstalled?.singleToolConfig?.twoWayCheckDelayTime} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Home Proximity Sensor Location" param={toolInstalled?.singleToolConfig?.homeProximitySensorLocation} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Engaged Proximity Sensor Location" param={toolInstalled?.singleToolConfig?.engagedProximitySensorLocation} />
+            <ViewFormField isLoading={isLoading} sm={12} heading="Pressure Target" param={toolInstalled?.singleToolConfig?.pressureTarget} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Distance Sensor Location" param={toolInstalled?.singleToolConfig?.distanceSensorLocation} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Distance Sensor Target" param={toolInstalled?.singleToolConfig?.distanceSensorTarget} />
+            <ViewFormSwitch isLoading={isLoading} sm={4} isActiveHeading='Has Two Way Check' isActive={toolInstalled?.singleToolConfig?.isHasTwoWayCheck} />
+            <ViewFormSwitch isLoading={isLoading} sm={4} isActiveHeading='Engaging Has Enable' isActive={toolInstalled?.singleToolConfig?.isEngagingHasEnable} />
+            <ViewFormSwitch isLoading={isLoading} sm={4} isActiveHeading='Returning Has Enable' isActive={toolInstalled?.singleToolConfig?.isReturningHasEnable} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Moving Punch Condition" param={toolInstalled?.singleToolConfig?.movingPunchCondition} />
           </>
         )}
 

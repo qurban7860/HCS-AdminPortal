@@ -48,7 +48,7 @@ export default function MachineViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { machine, machineDialog } = useSelector((state) => state.machine);
+  const { machine, machineDialog, isLoading } = useSelector((state) => state.machine);
   const { customerDialog } = useSelector((state) => state.customer);
   const { siteDialog } = useSelector((state) => state.site);
   const [disableTransferButton, setDisableTransferButton] = useState(true);
@@ -179,7 +179,7 @@ export default function MachineViewForm() {
   };
   
   const linkedMachines = machine?.machineConnections?.map((machineConnection, index) => (
-    <Chip sx={{ml:index===0?0:1}}onClick={() => handleMachineDialog(machineConnection.connectedMachine._id)} label={`${machineConnection?.connectedMachine?.serialNo || ''} ${machineConnection?.connectedMachine?.name ? '-' : '' } ${machineConnection?.connectedMachine?.name || ''} `} />
+    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(machineConnection.connectedMachine._id)} label={`${machineConnection?.connectedMachine?.serialNo || ''} ${machineConnection?.connectedMachine?.name ? '-' : '' } ${machineConnection?.connectedMachine?.name || ''} `} />
   ));
   
   const paranetMachines = machine?.parentMachines?.map((parentMachine, index) => (
@@ -247,9 +247,9 @@ export default function MachineViewForm() {
 
             <FormLabel content={FORMLABELS.KEYDETAILS} />
             <Grid container>
-              <ViewFormField sm={4} heading="Serial No" param={defaultValues?.serialNo} />
-              <ViewFormField sm={4} heading="Machine Model" param={defaultValues?.machineModel} />
-              <ViewFormField sm={4} heading="Customer"
+              <ViewFormField isLoading={isLoading} sm={4} heading="Serial No" param={defaultValues?.serialNo} />
+              <ViewFormField isLoading={isLoading} sm={4} heading="Machine Model" param={defaultValues?.machineModel} />
+              <ViewFormField isLoading={isLoading} sm={4} heading="Customer"
                 node={
                   defaultValues.customer && (
                     <Link onClick={(event)=> handleCustomerDialog(event, defaultValues.customer?._id)} href="#" underline="none">
@@ -263,15 +263,15 @@ export default function MachineViewForm() {
               
         <Card sx={{ width: '100%', p: '1rem', mb:3 }}>
           <Grid container>
-            <ViewFormField sm={defaultValues?.parentSerialNo ? 6 : 12 } heading="Name" param={defaultValues?.name} />
-            { defaultValues?.parentSerialNo ? <ViewFormField sm={6} heading="Previous Machine" param={defaultValues?.parentSerialNo} /> : " "}
-            <ViewFormField sm={6} heading="Alias" chips={defaultValues?.alias} />
-            <ViewFormField sm={6} heading="Profile" param={`${defaultValues?.machineProfile} ${(defaultValues?.machineweb && defaultValues?.machineflange)? `(${defaultValues?.machineweb} X ${defaultValues?.machineflange})` :""}`} />
-            <ViewFormField sm={6} heading="Supplier" param={defaultValues?.supplier} />
-            <ViewFormField sm={6} heading="Status" textColor={machine?.status?.slug==="transferred" && 'red'} param={defaultValues?.status} />
-            <ViewFormField sm={6} heading="Work Order / Purchase Order" param={defaultValues?.workOrderRef}/>
+            <ViewFormField isLoading={isLoading} sm={defaultValues?.parentSerialNo ? 6 : 12 } heading="Name" param={defaultValues?.name} />
+            { defaultValues?.parentSerialNo ? <ViewFormField isLoading={isLoading} sm={6} heading="Previous Machine" param={defaultValues?.parentSerialNo} /> : " "}
+            <ViewFormField isLoading={isLoading} sm={6} heading="Alias" chips={defaultValues?.alias} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Profile" param={`${defaultValues?.machineProfile} ${(defaultValues?.machineweb && defaultValues?.machineflange)? `(${defaultValues?.machineweb} X ${defaultValues?.machineflange})` :""}`} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Supplier" param={defaultValues?.supplier} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Status" textColor={machine?.status?.slug==="transferred" && 'red'} param={defaultValues?.status} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Work Order / Purchase Order" param={defaultValues?.workOrderRef}/>
 
-            <ViewFormField sm={6}
+            <ViewFormField isLoading={isLoading} sm={6}
                     heading="Financing Company"
                     node={
                       defaultValues.financialCompany && (
@@ -282,7 +282,7 @@ export default function MachineViewForm() {
                     }
                   />
 
-            <ViewFormField
+            <ViewFormField isLoading={isLoading}
               sm={6}
               heading="Billing Site"
               node={
@@ -293,12 +293,12 @@ export default function MachineViewForm() {
                 )
               }
             />
-            <ViewFormField
+            <ViewFormField isLoading={isLoading}
               sm={6}
               heading="Shipping Date"
               param={fDate(defaultValues?.shippingDate)}
             />
-            <ViewFormField
+            <ViewFormField isLoading={isLoading}
               sm={6}
               heading="Installation Site"
               node={
@@ -309,52 +309,49 @@ export default function MachineViewForm() {
                 )
               }
             />
-            <ViewFormField
+            <ViewFormField isLoading={isLoading}
               sm={6}
               heading="Installation Date"
               param={fDate(defaultValues?.installationDate)}
             />
 
-            <ViewFormField
+            <ViewFormField isLoading={isLoading}
               sm={12}
               heading="Nearby Milestone"
               param={defaultValues?.siteMilestone}
             />
-            <ViewFormField sm={12} heading="Connected Machiness" chipDialogArrayParam={linkedMachines} />
-
-            <ViewFormField sm={12} heading="Parent Machiness" chipDialogArrayParam={paranetMachines} />
-            
-            <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
-            {/* <ViewFormField sm={6} heading="Tags" param={defaultValues?.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
+            <ViewFormField isLoading={isLoading} sm={12} heading="Connected Machiness" chipDialogArrayParam={linkedMachines} />
+            <ViewFormField isLoading={isLoading} sm={12} heading="Parent Machiness" chipDialogArrayParam={paranetMachines} />
+            <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
           </Grid>
 
           <Grid container>
             <FormLabel content={FORMLABELS.HOWICK} />
-            <ViewFormField
+            <ViewFormField isLoading={isLoading}
               sm={6}
               heading="Account Manager"
               param={defaultValues?.accountManager?.firstName}
               secondParam={defaultValues?.accountManager?.lastName}
             />
-            <ViewFormField
+            <ViewFormField isLoading={isLoading}
               sm={6}
               heading="Project Manager"
               param={defaultValues?.projectManager?.firstName}
               secondParam={defaultValues?.projectManager?.lastName}
             />
-            <ViewFormField
+            <ViewFormField isLoading={isLoading}
               sm={6}
               heading="Suppport Manager"
               param={defaultValues?.supportManager?.firstName}
               secondParam={defaultValues?.supportManager?.lastName}
             />
 
-            <ViewFormField
+            <ViewFormField isLoading={isLoading}
               sm={6}
               heading="Support Expiry Date"
               param={fDate(defaultValues?.supportExpireDate)}
             />
-            <ViewFormField />
+            
           </Grid>
 
           <Grid container>

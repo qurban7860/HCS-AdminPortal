@@ -268,7 +268,7 @@ export function addDocument(customerId , machineId ,  params) {
           }
 
           if(params?.machine){
-            formData.append('machine', params?.machine);
+            formData.append('drawingMachine', params?.machine);
           }
 
           formData.append('customerAccess', params.customerAccess);
@@ -648,13 +648,14 @@ export function getDocumentHistory(documentId) {
 
 // ---------------------------------archive Document -------------------------------------
 
-export function deleteDocument(documentId) {
+export function deleteDocument(documentId, isCheckReference) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${documentId}` ,
       {
           isArchived: true,
+          checkReference : isCheckReference
       });
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {

@@ -20,7 +20,7 @@ import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDe
 // ----------------------------------------------------------------------
 
 export default function DocumentCategoryViewForm() {
-  const { documentCategory } = useSelector((state) => state.documentCategory);
+  const { documentCategory, isLoading } = useSelector((state) => state.documentCategory);
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -63,14 +63,14 @@ export default function DocumentCategoryViewForm() {
       <Grid>
         <ViewFormEditDeleteButtons customerAccess={defaultValues?.customerAccess} isActive={defaultValues.isActive} handleEdit={handleEdit} onDelete={onDelete} backLink={() => navigate(PATH_SETTING.documentCategory.list)}/>
         <Grid container sx={{mt:2}}>
-          <ViewFormField sm={12} heading="Category Name" param={defaultValues.name} />
-          <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
-          <ViewFormField
+          <ViewFormField isLoading={isLoading} sm={12} heading="Category Name" param={defaultValues.name} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues.description} />
+          <ViewFormField isLoading={isLoading}
             sm={12}
             heading="Document Types"
             arrayParam={defaultValues.documentTypes}
           />
-          <ViewFormSWitch 
+          <ViewFormSWitch isLoading={isLoading}
               customerHeading='Customer' 
               customer={documentCategory?.customer} 
               machineHeading='Machine' 

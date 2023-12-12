@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
-import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Font, Image } from '@react-pdf/renderer';
 import { fDate } from '../../../utils/formatTime';
 
 MachineServiceRecordPDF.propTypes = {
@@ -55,22 +55,33 @@ export function MachineServiceRecordPDF({machineServiceRecord}) {
     const checkItemLists = machineServiceRecord?.serviceRecordConfig?.checkItemLists || [];
     const operators = machineServiceRecord?.operators?.map(operator => `${operator?.firstName || ''} ${operator?.lastName || ''}`).join(', ');
     
+    const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceRecordConfigRecordType}_${defaultValues?.versionNo}`;
+
     return (
-    <Document>
-    <Page>
+    <Document title={fileName} subject='Serevice Record'
+        author={defaultValues?.createdByFullName}
+        creator='HOWICK'
+        keywords={`Version ${defaultValues.versionNo}`}
+        producer={defaultValues?.createdByFullName}
+    >
+    <Page style={styles.page}>
+        <Image fixed src={`${origin}/assets/background/pdf-background.jpg`} style={styles.backgroundImage} />
         {machineServiceRecord?.serviceRecordConfig?.header &&
             <View style={styles.header} fixed>
                 <View style={styles.col_30}>
-                    <Text style={styles.text_left}>{defaultValues.headerLeftText}</Text>
+                    <Text style={styles.text_left}>{defaultValues.headerLeftText || ' '}</Text>
                 </View>
                 <View style={styles.col_40}>
-                    <Text style={styles.text_center}>{defaultValues.headerCenterText}</Text>
+                    <Text style={styles.text_center}>{defaultValues.headerCenterText || ' '}</Text>
                 </View>
                 <View style={styles.col_30}>
-                    <Text style={styles.text_right}>{defaultValues.headerRightText}</Text>
+                    <Text style={styles.text_right}>{defaultValues.headerRightText || ' '}</Text>
                 </View>
             </View>
         }
+
+        <Image src={`${origin}/logo/HowickLogo.png`} style={styles.logo} />
+        
         <View style={styles.body}>
             <Text style={styles.title}>Key Details</Text>
             <View style={styles.row}>
@@ -126,7 +137,7 @@ export function MachineServiceRecordPDF({machineServiceRecord}) {
             </View>
             <View style={styles.row}>
                 <View style={styles.col}>
-                    <Text style={styles.lable}>TEXT BEFORE CHECK ITEMS</Text>
+                    {/* <Text style={styles.lable}>TEXT BEFORE CHECK ITEMS</Text> */}
                     <Text style={styles.text_sm}>{defaultValues?.textBeforeCheckItems}</Text>
                 </View>
             </View>
@@ -134,13 +145,16 @@ export function MachineServiceRecordPDF({machineServiceRecord}) {
             <Page style={styles.body}> */}
         
             <Text style={styles.title}>Check Items</Text>
-
+            <View style={styles.row}>
+                <View style={styles.col}>
+                    <Text style={styles.text_sm}>{defaultValues?.textBeforeCheckItems}</Text>
+                </View>
+            </View>
 
             {checkItemLists.length > 0 &&
             checkItemLists.map((row, index) => (
                 <View key={`contatiner-${index}`} style={styles.contatiner}>
                         <Text style={styles.text}>{index+1} - {row.ListTitle} ({row.checkItems?.length})</Text>
-                        
                         {row?.checkItems?.map((childRow,childIndex) => (
                             <View key={`inner_contatiner-${index}`} style={styles.inner_contatiner}>
                                 <Text style={styles.text_sm}><Text style={styles.bold}>{index+1}.{childIndex+1} -</Text> {childRow?.name}</Text>
@@ -158,7 +172,7 @@ export function MachineServiceRecordPDF({machineServiceRecord}) {
 
             <View style={styles.row}>
                 <View style={styles.col}>
-                    <Text style={styles.lable}>TEXT AFTER CHECK ITEMS</Text>
+                    {/* <Text style={styles.lable}>TEXT AFTER CHECK ITEMS</Text> */}
                     <Text style={styles.text_sm}>{defaultValues?.textAfterCheckItems}</Text>
                 </View>
             </View>
@@ -206,19 +220,23 @@ export function MachineServiceRecordPDF({machineServiceRecord}) {
                 </View>
             </View>
         </View>
-        {machineServiceRecord?.serviceRecordConfig?.footer &&
-            <View style={styles.footer} fixed>
-                <View style={styles.col_30}>
-                    <Text style={styles.text_left}>{defaultValues.footerLeftText}</Text>
+
+        <View style={styles.footer} fixed>
+            <Text style={styles.footer_line_1} fixed><Text style={styles.bold}>www.howickltd.com</Text> P: +64 9 534 5569 | 117 Vincent Street, Howick, Auckland, New Zealand</Text>
+            {machineServiceRecord?.serviceRecordConfig?.footer &&
+                <View style={styles.footer_line_2}>
+                    <View style={styles.col_30}>
+                        <Text style={styles.text_left}>{defaultValues.footerLeftText || ' '}</Text>
+                    </View>
+                    <View style={styles.col_40}>
+                        <Text style={styles.text_center}>{defaultValues.footerCenterText || ' '}</Text>
+                    </View>
+                    <View style={styles.col_30}>
+                        <Text style={styles.text_right}>{defaultValues.footerRightText || ' '}</Text>
+                    </View>
                 </View>
-                <View style={styles.col_40}>
-                    <Text style={styles.text_center}>{defaultValues.footerCenterText}</Text>
-                </View>
-                <View style={styles.col_30}>
-                    <Text style={styles.text_right}>{defaultValues.footerRightText}</Text>
-                </View>
-            </View>
-        }
+            }
+        </View>
 
     </Page>
   </Document>
@@ -244,28 +262,59 @@ export function MachineServiceRecordPDF({machineServiceRecord}) {
     });
 
   const styles = StyleSheet.create({
+    page:{
+        paddingTop:32,
+        paddingBottom:44,
+    },
     body: {
-        paddingTop: 0,
-        paddingBottom: 0,
         paddingHorizontal: 25,
     },
     header: {
         flexDirection: "row",
-        padding:5,
+        position:'absolute',
+        top:0,
         fontSize: 10,
+        paddingHorizontal:10,
+        paddingVertical:10,
         fontFamily:'Arimo',
-        color:'#c3c3c3',
-        marginBottom:5,
-        borderBottom:'1px solid #c3c3c3',
+        backgroundColor:'#2065D1', 
+        color:'#fff',
     },
     footer: {
-        flexDirection: "row",
-        padding:5,
+        position:'absolute',
+        bottom:0,
         fontSize: 10,
+        paddingHorizontal:10,
         fontFamily:'Arimo',
-        color:'#c3c3c3',
-        marginTop:5,
-        borderTop:'1px solid #c3c3c3',
+        backgroundColor:'#2065D1', 
+        color:'#fff',
+    },
+    footer_line_1:{
+        display:'flex',
+        alignSelf:'center',
+        paddingVertical:5,
+        
+    },
+    footer_line_2:{
+        display:'flex',
+        flexDirection: "row",
+        paddingVertical:5,
+        width:'100%',
+        borderTop:'1px solid #fff'
+    },
+    backgroundImage: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '110%',
+    },
+    logo: {
+        width: '150px',
+        alignSelf:'flex-start',
+        marginHorizontal:25,
+        marginTop:10,
+        marginBottom:5,
     },
     text_left:{
         textAlign:'left'
@@ -291,7 +340,7 @@ export function MachineServiceRecordPDF({machineServiceRecord}) {
         display:'flex',
         flexDirection: "row",
         marginBottom:10,
-        marginHorizontal:5,
+        paddingHorizontal:5,
         width:'100%'
     },
     contatiner: {

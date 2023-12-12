@@ -14,9 +14,6 @@ import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 // Iconify
-// import { fDate } from '../../../utils/formatTime';
-// import SupplierEditForm from './SupplierEditForm';
-// import Iconify from '../../../components/iconify/Iconify';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
@@ -30,24 +27,17 @@ SupplierViewForm.propTypes = {
 // ----------------------------------------------------------------------
 
 export default function SupplierViewForm({ currentSupplier = null }) {
-  // const { suppliers } = useSelector((state) => state.supplier);
 
-  // const [editFlag, setEditFlag] = useState(false);
-
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+  const { supplier, isLoading } = useSelector((state) => state.supplier);
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  
   const toggleEdit = () => {
-    // dispatch(setSupplierEditFormVisibility(true));
     navigate(PATH_MACHINE.machines.settings.supplier.supplieredit(id));
   };
 
-  const navigate = useNavigate();
-
-  const { enqueueSnackbar } = useSnackbar();
-
-  const { supplier } = useSelector((state) => state.supplier);
-  const { id } = useParams();
-
-  // const supplier = supplier?.find((supp)=>supp?._id === id);
-  const dispatch = useDispatch();
   useLayoutEffect(() => {
     if (id != null) {
       dispatch(getSupplier(id));
@@ -99,19 +89,19 @@ export default function SupplierViewForm({ currentSupplier = null }) {
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons isActive={defaultValues.isActive} handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.supplier.list)}  />
       <Grid container sx={{mt:2}}>
-        <ViewFormField sm={12} heading="Name" param={defaultValues?.name} />
-        <ViewFormField sm={6} heading="Contact Name" param={defaultValues?.contactName} />
-        <ViewFormField sm={6} heading="Contact Title" param={defaultValues?.contactTitle} />
-        <ViewFormField sm={6} heading="Phone" param={defaultValues?.phone} />
-        <ViewFormField sm={6} heading="Fax" param={defaultValues?.fax} />
-        <ViewFormField sm={6} heading="Email" param={defaultValues?.email} />
-        <ViewFormField sm={6} heading="Website" param={defaultValues?.website} />
-        <ViewFormField sm={6} heading="Street" param={defaultValues?.street} />
-        <ViewFormField sm={6} heading="Suburb" param={defaultValues?.suburb} />
-        <ViewFormField sm={6} heading="City" param={defaultValues?.city} />
-        <ViewFormField sm={6} heading="Post Code" param={defaultValues?.postcode} />
-        <ViewFormField sm={6} heading="Region" param={defaultValues?.region} />
-        <ViewFormField sm={6} heading="Country" param={defaultValues?.country} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues?.name} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Contact Name" param={defaultValues?.contactName} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Contact Title" param={defaultValues?.contactTitle} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Phone" param={defaultValues?.phone} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Fax" param={defaultValues?.fax} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Email" param={defaultValues?.email} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Website" param={defaultValues?.website} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Street" param={defaultValues?.street} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Suburb" param={defaultValues?.suburb} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="City" param={defaultValues?.city} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Post Code" param={defaultValues?.postcode} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Region" param={defaultValues?.region} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Country" param={defaultValues?.country} />
 
         <Grid container sx={{ mt: 2 }}>
           <ViewFormAudit defaultValues={defaultValues} />

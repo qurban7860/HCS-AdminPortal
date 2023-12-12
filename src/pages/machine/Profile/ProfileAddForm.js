@@ -84,7 +84,6 @@ export default function ProfileAddForm() {
 
   const onSubmit = async (data) => {
     data.names = chips;
-    console.log(data)
     try {
           await dispatch(addProfile(machine._id, data));
           reset();

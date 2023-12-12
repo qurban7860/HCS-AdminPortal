@@ -7,6 +7,7 @@ import { CONFIG } from '../../../config-global';
 // ----------------------------------------------------------------------
 const initialState = {
   intial: false,
+  resetFlags: true,
   machineServiceRecordEditFormFlag: false,
   machineServiceRecordAddFormFlag: false,
   machineServiceRecordViewFormFlag: false,
@@ -20,6 +21,7 @@ const initialState = {
   machineServiceRecordHistory: [],
   activeMachineServiceRecords: [],
   sendEmailDialog:false,
+  pdfViewerDialog:false,
   isHistorical: false,
   isDetailPage: false,
   filterBy: '',
@@ -37,6 +39,9 @@ const slice = createSlice({
       state.isLoading = true;
     },
 
+    setResetFlags (state, action){
+      state.resetFlags = action.payload;
+    },
     // SET TOGGLE
     setMachineServiceRecordEditFormVisibility(state, action){
       state.machineServiceRecordAddFormFlag = false;
@@ -74,6 +79,8 @@ const slice = createSlice({
       state.machineServiceRecordAddFormFlag = false;
       state.machineServiceRecordViewFormFlag = false;
       state.machineServiceRecordHistoryFormFlag = false;
+      state.sendEmailDialog = false;
+      state.pdfViewerDialog = false;
       state.isHistorical = false;
     },
     // SET HISTORICAL FLAG
@@ -126,6 +133,11 @@ const slice = createSlice({
     setSendEmailDialog(state, action) {
       state.sendEmailDialog = action.payload;
     },
+    
+    // SET PDF DIALOG
+    setPDFViewerDialog(state, action) {
+      state.pdfViewerDialog = action.payload;
+    },
 
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
@@ -171,6 +183,7 @@ export default slice.reducer;
 
 // Actions
 export const {
+  setResetFlags,
   setMachineServiceRecordEditFormVisibility,
   setMachineServiceRecordAddFormVisibility,
   setMachineServiceRecordViewFormVisibility,
@@ -179,6 +192,7 @@ export const {
   setDetailPageFlag,
   setAllFlagsFalse,
   setSendEmailDialog,
+  setPDFViewerDialog,
   resetMachineServiceRecords,
   resetMachineServiceRecord,
   setResponseMessage,

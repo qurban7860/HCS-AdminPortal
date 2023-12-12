@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from '../../redux/store';
 import {
   getCustomer,
   setCustomerEditFormVisibility,
+  setCustomerTab,
 } from '../../redux/slices/customer/customer';
 import {
   setDocumentViewFormVisibility,
@@ -43,14 +44,13 @@ export default function CustomerView({ editPage }) {
   const { id } = useParams();
   
   const dispatch = useDispatch();
-  const { customer, customerEditFormFlag } = useSelector((state) => state.customer);
-  const [currentTab, setCurrentTab] = useState('customer-info');
+  const { customer, customerEditFormFlag, customerTab } = useSelector((state) => state.customer);
   const [currentComponent, setCurrentComponent] = useState(<CustomerViewForm />);
   
   const TABS = [
     {
       // disabled: siteEditFormVisibility || contactEditFormVisibility || contactMoveFormVisibility || noteEditFormVisibility,
-      value: 'customer-info',
+      value: 'info',
       label: 'Customer Info',
       icon: <Iconify icon="mdi:badge-account" />,
       component: currentComponent,
@@ -123,8 +123,8 @@ export default function CustomerView({ editPage }) {
         />
         <TabContainer
           tabsClasses={tabsClasses.scrollButtons}
-          currentTab={currentTab}
-          setCurrentTab={setCurrentTab}
+          currentTab={customerTab}
+          setCurrentTab={(tab)=> dispatch(setCustomerTab(tab))}
         >
           {TABS.map((tab) => (
             <Tab
@@ -139,7 +139,7 @@ export default function CustomerView({ editPage }) {
       </StyledCardContainer>
       {TABS.map(
         (tab) =>
-          tab.value === currentTab && (
+          tab.value === customerTab && (
             <Box key={tab.value}> {tab.component ? tab.component : <UnderDevelopment />} </Box>
           )
       )}

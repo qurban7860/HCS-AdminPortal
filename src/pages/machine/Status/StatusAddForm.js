@@ -32,7 +32,7 @@ export default function StatusAddForm() {
   const { enqueueSnackbar } = useSnackbar();
 
   const AddStatusSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(50).required('Name is required'),
+    name: Yup.string().min(2).max(50).required('Name is required!'),
     description: Yup.string().max(2000),
     isActive: Yup.boolean(),
     displayOrderNo: Yup.number()

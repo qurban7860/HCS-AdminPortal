@@ -20,6 +20,10 @@ DrawingListTableToolbar.propTypes = {
   filterStatus: PropTypes.array,
   onFilterStatus: PropTypes.func,
   statusOptions: PropTypes.array,
+  categoryVal: PropTypes.object,
+  setCategoryVal: PropTypes.func,
+  typeVal: PropTypes.object,
+  setTypeVal: PropTypes.func,
 };
 
 export default function DrawingListTableToolbar({
@@ -30,6 +34,10 @@ export default function DrawingListTableToolbar({
   statusOptions,
   onResetFilter,
   onFilterStatus,
+  categoryVal,
+  setCategoryVal,
+  typeVal,
+  setTypeVal,
 }) {
   // const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -53,6 +61,10 @@ export default function DrawingListTableToolbar({
       addButton={BUTTONS.ADDDRAWING}
       handleAttach={toggleAattach}
       transferredMachine={machine?.status?.slug==='transferred'}
+      categoryVal={categoryVal}
+      setCategoryVal={setCategoryVal}
+      typeVal={typeVal}
+      setTypeVal={setTypeVal}
     />
   </Stack>
   )

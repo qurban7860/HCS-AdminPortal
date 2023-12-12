@@ -35,7 +35,7 @@ export default function DepartmentViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { department  } = useSelector((state) => state.department);
+  const { department, isLoading } = useSelector((state) => state.department);
 
   useLayoutEffect(() => {
     if (id != null) {
@@ -72,7 +72,7 @@ export default function DepartmentViewForm() {
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons isActive={defaultValues.isActive} handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_SETTING.departments.list)}/>
       <Grid container sx={{mt:2}}>
-        <ViewFormField sm={12} heading="Department Name" param={defaultValues?.departmentName} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Department Name" param={defaultValues?.departmentName} />
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>
     </Card>

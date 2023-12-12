@@ -456,6 +456,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
               />
             <Autocomplete
                 multiple
+                disableCloseOnSelect
                 id="regions-autocomplete"
                 options={activeRegions.length > 0 ? activeRegions : [] }
                 value={selectedRegions}
@@ -479,6 +480,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
             <Autocomplete
               // freeSolo
               multiple
+              disableCloseOnSelect
               required
               value={customersArr || null}
               options={allCustomers.length > 0 ? allCustomers : [] }
@@ -511,6 +513,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
             <Autocomplete
               // freeSolo
               multiple
+              disableCloseOnSelect
               required
               value={machinesArr || null}
               options={allMachines.length > 0 ? allMachines : [] }
