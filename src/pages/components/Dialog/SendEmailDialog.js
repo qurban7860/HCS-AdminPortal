@@ -64,14 +64,15 @@ function SendEmailDialog({machineServiceRecord, fileName}) {
       const PDFBlob = await ReactPDF.pdf(<MachineServiceRecordPDF machineServiceRecord={machineServiceRecord} />).toBlob();
       const file = new File([PDFBlob], fileName, { type: PDFBlob.type });
       
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
       data.id = machineServiceRecord?._id;
-      data.pdf = file;
+      data.pdf = file; 
+      
       await dispatch(sendEmail(machineServiceRecord?.machine?._id, data))
-      handleCloseDialog();
-      reset();
-      enqueueSnackbar("Email Sent Successfully");
+      await handleCloseDialog();
+      await reset();
+      enqueueSnackbar("Email Sent Successfully");  
+
+      
     } catch (err) {
       enqueueSnackbar("Failed Email Send", { variant: 'error' });
       console.error(err.message);
