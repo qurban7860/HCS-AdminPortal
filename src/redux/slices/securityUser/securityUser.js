@@ -29,7 +29,7 @@ const initialState = {
   rowsPerPage: 100,
   verifiedInvite:null,
   activeFilterList: 'active',
-  employeeFilterList: 'employee',
+  employeeFilterList: 'all',
 };
 
 const slice = createSlice({

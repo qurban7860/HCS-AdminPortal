@@ -558,6 +558,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   render={ ({field: { ref, ...field }, fieldState: { error } }) => (
                   <Autocomplete
                     multiple
+                    disableCloseOnSelect
                     {...field}
                     name="machineConnectionVal"
                     id="tags-outlined"

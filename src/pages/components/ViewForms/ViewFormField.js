@@ -141,7 +141,7 @@ function ViewFormField({
                 (data, index) =>
                   data?.docTitle &&
                   typeof data?.docTitle === 'string' &&
-                  data?.docTitle.trim().length > 0 && <Chip key={index} label={<div style={{display:'flex',alignItems:'center'}}><Typography variant='body2'>{`${data?.docTitle || ''}`}</Typography> <Typography variant='subtitle2'>{` - v${data?.docVersionNo}`}</Typography></div>} sx={{m:0.2}} />
+                  data?.docTitle.trim().length > 0 && <Chip key={index} sx={{m:0.2}} label={<div style={{display:'flex',alignItems:'center'}}  ><Typography variant='body2'>{`${data?.docTitle || ''}`}</Typography> <Typography variant='subtitle2'>{` - v${data?.docVersionNo}`}</Typography></div>} sx={{m:0.2}} />
               )}
             </Grid>
       )}
@@ -215,20 +215,17 @@ function ViewFormField({
             )}
           </Grid>
         ) : (
-          chips && typeof chips === 'string' && chips.trim().length > 0 && <Chip label={chips} />
+          chips && typeof chips === 'string' && chips.trim().length > 0 && <Chip label={chips} sx={{m:0.2}} />
         )}
 
         {userRolesChips && typeof userRolesChips === 'object' && userRolesChips?.length > 0 ? (
           <Grid container sx={{my:-3, mb:0,
               display: 'flex',
-              alignItems: 'center',
-              whiteSpace: 'pre-line',
-              wordBreak: 'break-word',
               }} >
-            {userRolesChips?.map((obj, index) => (obj?.roleType === 'SuperAdmin' ? <Chip key={index} label={obj?.name} sx={{mx:0.2}} color='secondary' /> : <Chip key={index} label={obj?.name} sx={{mx:0.3}} />))}
+            {userRolesChips?.map((obj, index) => (obj?.roleType === 'SuperAdmin' ? <Chip key={index} label={obj?.name} sx={{m:0.2}} color='secondary' /> : <Chip key={index} label={obj?.name} sx={{mx:0.2}} />))}
           </Grid>
         ) : (
-          userRolesChips && typeof userRolesChips === 'string' && userRolesChips.trim().length > 0 && <Chip label={userRolesChips} />
+          userRolesChips && typeof userRolesChips === 'string' && userRolesChips.trim().length > 0 && <Chip label={userRolesChips} sx={{m:0.2}} />
         )}
 
         {serviceParam && typeof serviceParam === 'object' && serviceParam?.length > 0 ? (
@@ -241,7 +238,7 @@ function ViewFormField({
             {serviceParam?.map((obj, index) => ( <Chip key={index} label={obj?.name} sx={{m:0.2}} />))}
           </Grid>
         ) : (
-          serviceParam && typeof serviceParam === 'string' && serviceParam.trim().length > 0 && <Chip label={serviceParam} />
+          serviceParam && typeof serviceParam === 'string' && serviceParam.trim().length > 0 && <Chip label={serviceParam} sx={{m:0.2}} />
         )}
           </>
       )}
