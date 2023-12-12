@@ -270,7 +270,7 @@ function ViewFormEditDeleteButtons({
             <>
               <IconTooltip
                 title='Back'
-                onClick={() => navigate(-1) // backLink()
+                onClick={() => backLink()
                 }
                 color={theme.palette.primary.main}
                 icon="mdi:arrow-left"
