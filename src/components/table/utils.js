@@ -37,13 +37,13 @@ function ascending(a, b, orderBy) {
     aValue = a[orderBy];
     bValue = b[orderBy];
     const myString = "123";
-    if (!Number.isNaN(aValue) && !Number.isNaN(bValue) ) {
-      aValueStr = Number(aValue);
-      bValueStr = Number(bValue);
-    } else {
+    // if (!Number.isNaN(aValue) && !Number.isNaN(bValue) ) {
+    //   aValueStr = Number(aValue);
+    //   bValueStr = Number(bValue);
+    // } else {
       aValueStr = String(aValue).toLowerCase().trim();
       bValueStr = String(bValue).toLowerCase().trim();
-    }
+    // }
   }
   
   if (aValueStr <= bValueStr) {
