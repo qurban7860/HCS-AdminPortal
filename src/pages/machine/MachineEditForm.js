@@ -600,6 +600,7 @@ export default function MachineEditForm() {
                   render={ ({field: { ref, ...field }, fieldState: { error } }) => (
                   <Autocomplete
                     multiple
+                    disableCloseOnSelect
                     {...field}
                     name="machineConnectionVal"
                     id="tags-outlined"

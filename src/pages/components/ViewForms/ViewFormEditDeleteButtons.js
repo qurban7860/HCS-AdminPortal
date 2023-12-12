@@ -264,7 +264,7 @@ function ViewFormEditDeleteButtons({
   
   return (
     <Grid container justifyContent="space-between" sx={{pb:1, px:0.5}}>
-      <Grid item sx={{display:'flex'}}>
+      <Grid item sx={{display:'flex', mt:0.5,mr:1}}>
         <StyledStack>
           {backLink &&
             <>
@@ -378,7 +378,7 @@ function ViewFormEditDeleteButtons({
         </StyledStack>
       </Grid>
 
-      <Grid item  >
+      <Grid item  sx={{ ml:'auto', mt:0.5}}>
         <StyledStack>
           {handleVerification && !(verifiers && verifiers.length > 0 && verifiers?.some((verified) => verified?.verifiedBy?._id === userId)) && (
           <IconTooltip

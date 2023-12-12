@@ -211,7 +211,7 @@ export default function SecurityUserViewForm() {
             }
           />
           <Grid container sx={{display:{ md:'flex', sm: 'block' }, justifyContent:{md: 'space-between'}}} >
-          <Grid  item md={6} sm={12} sx={{p:.5}}>
+          <Grid  item md={6} sm={12} xs={12} sx={{p:.5}}>
             <Grid  sx={{border: '1px solid lightgrey', borderRadius:2, px:1.5, pt:1.5, height: {md: '100%'}}}>
             <FormLabel content='Personal Information' />
               <ViewFormField isLoading={isLoading}
@@ -258,7 +258,8 @@ export default function SecurityUserViewForm() {
               />
             </Grid>
             </Grid>
-            <Grid item md={6} sm={12} sx={{p:.5}}>
+
+            <Grid item md={6} sm={12} xs={12} sx={{p:.5}}>
               <Grid  sx={{border: '1px solid lightgrey', borderRadius:2, px:1.5, pt:1.5, height: {md: '100%'} }}>
               <FormLabel content='Accessibility Information' />
               <ViewFormField isLoading={isLoading}

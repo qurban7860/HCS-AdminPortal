@@ -135,6 +135,7 @@ export default function FileDetailsDrawer({
               {toggleTags && (
                 <Autocomplete
                   multiple
+                  disableCloseOnSelect
                   freeSolo
                   limitTags={2}
                   options={item.tags.map((option) => option)}

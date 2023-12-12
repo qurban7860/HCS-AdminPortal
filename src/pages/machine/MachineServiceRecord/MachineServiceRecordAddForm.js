@@ -409,6 +409,7 @@ console.log("checkItemLists : ",checkItemLists)
 
                     {/* {docType && */}
                       <Autocomplete multiple
+                      disableCloseOnSelect
                         name="operators" 
                         defaultValue={defaultValues.operators}
                         id="operator-autocomplete" options={activeContacts}

@@ -90,7 +90,7 @@ export default function SecurityUserEditForm() {
     // userRoles
   ]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const mappedRoles = roles.map((role) => ({
       value: role?._id,
       label: role.name,
@@ -106,7 +106,7 @@ export default function SecurityUserEditForm() {
   }, [roles]);
 
   /* eslint-disable */
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (securityUser?.customer !== undefined && securityUser?.customer !== null) {
       setCustomerVal(securityUser?.customer);
     }
@@ -254,110 +254,10 @@ export default function SecurityUserEditForm() {
   };
 
 
-  //  -------------------------------DO NOT REMOVE------------------------------------
-  // const handleRegionsChange = async (event, selectedOptions) => {
-  //   setSelectedRegions(selectedOptions);
-  //   setCustomerArr([]);
-  //   setMachineArr([]);
-
-  //   if(selectedOptions.length > 0){
-  //     const selectedCountries = selectedOptions?.flatMap((region) =>
-  //     region.countries?.map((country) => country.country_name));
-
-  //     const customerResponse = await dispatch(getCustomersAgainstCountries(JSON.stringify(selectedCountries)));
-  //     const machineResponse = await dispatch(getMachinesAgainstCountries(JSON.stringify(selectedCountries)));
-  //     setFilteredMachines(machineResponse);
-  //     setFilteredCustomers(customerResponse);
-  //   }else{
-  //     setCustomerArr([]);
-  //     setMachineArr([]);
-  //     setFilteredCustomers(spCustomers);
-  //     setFilteredMachines(allMachines);
-  //   }
-  // };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
-        {/* <Grid item xs={12} md={4}>
-          <Card sx={{ pt: 10, pb: 5, px: 3 }}>
-              <Label
-                color={values.status === 'active' ? 'success' : 'error'}
-                sx={{ textTransform: 'uppercase', position: 'absolute', top: 24, right: 24 }}
-              >
-                {values.status}
-              </Label>
-            <Box sx={{ mb: 5 }}>
-              <RHFUploadAvatar
-                name="avatarUrl"
-                maxSize={3145728}
-                onDrop={handleDrop}
-                helperText={
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      mt: 2,
-                      mx: 'auto',
-                      display: 'block',
-                      textAlign: 'center',
-                      color: 'text.secondary',
-                    }}
-                  >
-                    Allowed *.jpeg, *.jpg, *.png, *.gif
-                    <br /> max size of {fData(3145728)}
-                  </Typography>
-                }
-              />
-            </Box>
-
-              <FormControlLabel
-                labelPlacement="start"
-                control={
-                  <Controller
-                    name="status"
-                    control={control}
-                    render={({ field }) => (
-                      <Switch
-                        {...field}
-                        checked={field.value !== 'active'}
-                        onChange={(event) =>
-                          field.onChange(event.target.checked ? 'Banned' : 'active')
-                        }
-                      />
-                    )}
-                  />
-                }
-                label={
-                  <>
-                    <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                      Banned
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                      Apply disable account
-                    </Typography>
-                  </>
-                }
-                sx={{ mx: 0, mb: 3, width: 1, justifyContent: 'space-between' }}
-              />
-
-
-            <RHFSwitch
-              name="isVerified"
-              labelPlacement="start"
-              label={
-                <>
-                  <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                    Email Verified
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    Disabling this will automatically send the user a verification email
-                  </Typography>
-                </>
-              }
-              sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
-            />
-          </Card>
-        </Grid> */}
 
         <Grid item xs={12} md={12}>
           <Card sx={{ p: 3 }}>
@@ -502,6 +402,7 @@ export default function SecurityUserEditForm() {
                 // freeSolo
                 sx={{ mt: 3 }}
                 multiple
+                disableCloseOnSelect
                 required
                 value={selectedRegions || null}
                 options={activeRegions}
@@ -535,6 +436,7 @@ export default function SecurityUserEditForm() {
               <Autocomplete
                 // freeSolo
                 multiple
+                disableCloseOnSelect
                 required
                 value={customersArr || null}
                 options={allCustomers}
@@ -568,6 +470,7 @@ export default function SecurityUserEditForm() {
               <Autocomplete
                 // freeSolo
                 multiple
+                disableCloseOnSelect
                 required
                 value={machinesArr || null}
                 options={allMachines}
