@@ -60,12 +60,14 @@ function SendEmailDialog({machineServiceRecord, fileName}) {
   } = methods;
   
   const onSubmit = async (data) => {    
-    const PDFBlob = await ReactPDF.pdf(<MachineServiceRecordPDF machineServiceRecord={machineServiceRecord} />).toBlob();
-    
     try {
+      const PDFBlob = await ReactPDF.pdf(<MachineServiceRecordPDF machineServiceRecord={machineServiceRecord} />).toBlob();
+      const file = new File([PDFBlob], fileName, { type: PDFBlob.type });
       
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
       data.id = machineServiceRecord?._id;
-      data.pdf = new File([PDFBlob], fileName, { type: PDFBlob.type });
+      data.pdf = file;
       await dispatch(sendEmail(machineServiceRecord?.machine?._id, data))
       handleCloseDialog();
       reset();
