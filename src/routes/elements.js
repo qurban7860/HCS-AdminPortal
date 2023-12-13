@@ -262,7 +262,11 @@ export const ModuleList = Loadable(lazy(() => import('../pages/module/ModuleList
 export const ModuleEdit = Loadable(lazy(() => import('../pages/module/ModuleEdit')));
 export const ModuleView = Loadable(lazy(() => import('../pages/module/ModuleView')));
 
-
+// Configuration
+export const ConfigurationAdd  = Loadable(lazy(() => import('../pages/machine/configuration/ConfigurationAddForm')));
+export const ConfigurationList = Loadable(lazy(() => import('../pages/machine/configuration/ConfigurationList')));
+export const ConfigurationEdit = Loadable(lazy(() => import('../pages/machine/configuration/ConfigurationEdit')));
+export const ConfigurationView = Loadable(lazy(() => import('../pages/machine/configuration/ConfigurationView')));
 
 // Configs
 

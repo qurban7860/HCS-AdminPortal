@@ -49,6 +49,9 @@ export default function Machine() {
   const linkServiceCategory = () => {
     navigate(PATH_MACHINE.machines.settings.serviceCategories.list);
   };
+  const linkConfiguration = () => {
+    navigate(PATH_MACHINE.machines.settings.configuration.list)
+  }
 
   return (
     <Container maxWidth={false}>
@@ -117,7 +120,11 @@ export default function Machine() {
                   icon={ICONS.TOOLS.icon}
                   content={ICONS.MACHINE_SERVICE_RECORD_CONFIG.heading}
                 />
-                
+                <ListItem
+                  onClick={linkConfiguration}
+                  icon={ICONS.Configuration.icon}
+                  content={ICONS.Configuration.heading}
+                />
               </List>
           </StyledSettingsCardContainer>
 
