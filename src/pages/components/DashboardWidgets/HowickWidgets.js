@@ -20,6 +20,8 @@ HowickWidgets.propTypes = {
   notVerifiedCount: PropTypes.number,
   connectableTitle: PropTypes.string,
   connectableCount: PropTypes.number,
+  activeUserCount: PropTypes.number,
+  onlineUserCount: PropTypes.number,
   icon: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
 };
 
@@ -30,6 +32,8 @@ export default function HowickWidgets({
   notVerifiedCount,
   connectableTitle,
   connectableCount,
+  activeUserCount,
+  onlineUserCount,
   icon,
   color = 'primary',
   chart,
@@ -86,7 +90,7 @@ export default function HowickWidgets({
 
       <Box sx={{ ml: 3 }}>
        <Grid container flex>
-        <Grid item textAlign='right'>
+          <Grid item textAlign='right'>
             <Typography variant="h4"> {connectableCount?fNumber(total-connectableCount):fNumber(total)}</Typography>
             <Typography variant="body1" sx={{ opacity: 0.72 }}>
               {title}
@@ -94,8 +98,10 @@ export default function HowickWidgets({
           </Grid>
           <Divider orientation="vertical" flexItem sx={{ m: 1}} />
           <Grid item>
-          {notVerifiedTitle && notVerifiedCount && <Typography variant="body2" sx={{ opacity: 0.72 }}>{notVerifiedTitle} : {notVerifiedCount}</Typography>}
-          {connectableTitle && connectableCount && <Typography variant="body2" sx={{ opacity: 0.72 }}>{connectableTitle} : {connectableCount}</Typography>}
+            {notVerifiedTitle && notVerifiedCount && <Typography variant="body2" sx={{ opacity: 0.72 }}>{notVerifiedTitle} : {notVerifiedCount}</Typography>}
+            {connectableTitle && connectableCount && <Typography variant="body2" sx={{ opacity: 0.72 }}>{connectableTitle} : {connectableCount}</Typography>}
+            {activeUserCount && <Typography variant="body2" sx={{ opacity: 0.72 }}>Active : {activeUserCount}</Typography>}
+            {onlineUserCount && <Typography variant="body2" sx={{ opacity: 0.72 }}>Online : {onlineUserCount}</Typography>}
           </Grid>
         </Grid>
       </Box>

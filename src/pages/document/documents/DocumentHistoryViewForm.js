@@ -239,6 +239,7 @@ const handleNewFile = async () => {
               {!customerPage && !machineDrawings && !drawingPage && defaultValues.customer && (
                 <ViewFormField isLoading={isLoading}
                   sm={6}
+                  variant='h4'
                   heading="Customer"
                   objectParam={
                     defaultValues.customer && (
@@ -254,6 +255,7 @@ const handleNewFile = async () => {
                 <ViewFormField isLoading={isLoading}
                   sm={6}
                   heading="Machine"
+                  variant='h4'
                   objectParam={
                     defaultValues.machine && (
                       <Link onClick={()=> handleMachineDialog(documentHistory?.machine?._id)} href="#" underline="none">

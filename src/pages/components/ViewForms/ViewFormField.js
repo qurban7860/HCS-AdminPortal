@@ -41,7 +41,8 @@ function ViewFormField({
   handleNewVersion,
   ViewAllVersions,
   handleAllVersion,
-  isLoading
+  isLoading,
+  variant
 }) {
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
@@ -67,29 +68,16 @@ function ViewFormField({
       {isLoading ? (
           <SkeletonViewFormField />
       ) : (
-          <>
-            <Typography
-        variant={
-          heading === 'Serial No' ||
-          heading === 'Machine Model' ||
-          heading === 'Customer' ||
-          heading === 'Machine' ||
-          heading === 'Profile' ||
-          heading === 'Service Date' ||
-          heading === 'Service Record Configuration' ||
-          heading === 'Version No' ||
-          heading === 'Status'
-            ? 'h4'
-            : 'body1'
-        }
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          whiteSpace: 'pre-line',
-          wordBreak: 'break-word',
-          color:heading?.toLowerCase()==="status" && param?.toLowerCase()==="transferred" && 'red'
-        }}
-      >
+      <>
+        <Typography variant={variant}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            whiteSpace: 'pre-line',
+            wordBreak: 'break-word',
+            color:heading?.toLowerCase()==="status" && param?.toLowerCase()==="transferred" && 'red'
+          }}
+        >
         <IconPopover isActive={isActive} />
         {backLink && <IconPopover backLink={backLink} />}
         {deleteDisabled !== undefined && <IconPopover deleteDisabled={deleteDisabled} />}
@@ -293,4 +281,9 @@ ViewFormField.propTypes = {
   handleAllVersion: PropTypes.func,
   backLink: PropTypes.func,
   isLoading: PropTypes.bool,
+  variant: PropTypes.string,
+};
+
+ViewFormField.defaultProps = {
+  variant: 'body1',
 };

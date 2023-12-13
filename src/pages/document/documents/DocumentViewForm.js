@@ -186,8 +186,8 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
         <ViewFormField isLoading={isLoading} sm={6} heading="Stock Number" param={defaultValues?.stockNumber} />
         {!customerPage && !machinePage && (
           <>
-            <ViewFormField isLoading={isLoading} sm={6} heading="Customer" param={defaultValues?.customer} />
-            <ViewFormField isLoading={isLoading} sm={6} heading="Machine" param={defaultValues?.machine} />
+            <ViewFormField isLoading={isLoading} sm={6} variant='h4' heading="Customer" param={defaultValues?.customer} />
+            <ViewFormField isLoading={isLoading} sm={6} variant='h4' heading="Machine" param={defaultValues?.machine} />
           </>
         )}
         <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
