@@ -99,57 +99,25 @@ export default function CustomerViewForm() {
               backLink={() => navigate(PATH_CUSTOMER.list)}
             />
 
+              <Grid container>
+                <ViewFormField isLoading={isLoading} variant='h4' sm={6} md={6} heading={formLABELS.CUSTOMER.NAME.label} param={defaultValues?.name} />
+                <ViewFormField isLoading={isLoading} variant='h4' sm={6} md={6} heading={formLABELS.CUSTOMER.CODE.label} param={defaultValues?.code} />
+                <ViewFormField isLoading={isLoading} sm={12} md={12} heading={formLABELS.CUSTOMER.TRADING_NAME.label} chips={defaultValues?.tradingName} />
+                <ViewFormField isLoading={isLoading} sm={6} md={6} heading={formLABELS.CUSTOMER.PHONE} param={defaultValues?.mainSite?.phone} />
+                <ViewFormField isLoading={isLoading} sm={6} md={6} heading={formLABELS.CUSTOMER.FAX} param={defaultValues?.mainSite?.fax} />
+                <ViewFormField isLoading={isLoading} sm={6} md={6} heading={formLABELS.CUSTOMER.EMAIL} param={defaultValues?.mainSite?.email} />
 
-
-            <Grid container sx={{mt:2}}>
-
-            <ViewFormField isLoading={isLoading}
-                sm={6}
-                md={6}
-                heading={formLABELS.CUSTOMER.NAME.label}
-                param={defaultValues?.name}
-              />
-
-              <ViewFormField isLoading={isLoading}
-                sm={6}
-                md={6}
-                heading={formLABELS.CUSTOMER.CODE.label}
-                param={defaultValues?.code}
-              />
-
-              <ViewFormField isLoading={isLoading}
-                sm={12}
-                heading={formLABELS.CUSTOMER.TRADING_NAME.label}
-                chips={defaultValues?.tradingName}
-              />
-              <ViewFormField isLoading={isLoading}
-                sm={6}
-                heading={formLABELS.CUSTOMER.PHONE}
-                param={defaultValues?.mainSite?.phone}
-              />
-              <ViewFormField isLoading={isLoading}
-                sm={6}
-                heading={formLABELS.CUSTOMER.FAX}
-                param={defaultValues?.mainSite?.fax}
-              />
-              <ViewFormField isLoading={isLoading}
-                sm={6}
-                heading={formLABELS.CUSTOMER.EMAIL}
-                param={defaultValues?.mainSite?.email}
-              />
-
-              <ViewFormField isLoading={isLoading}
-                sm={6}
-                heading={formLABELS.CUSTOMER.BILLING_CONTACT}
-                param={defaultValues?.primaryBillingContact?.firstName}
-                secondParam={defaultValues?.primaryBillingContact?.lastName}
-              />
-              <ViewFormField isLoading={isLoading}
-                sm={6}
-                heading={formLABELS.CUSTOMER.TECHNICAL_CONTACT}
-                param={defaultValues?.primaryTechnicalContact?.firstName}
-                secondParam={defaultValues?.primaryTechnicalContact?.lastName}
-              />
+                <ViewFormField isLoading={isLoading} sm={6}
+                  heading={formLABELS.CUSTOMER.BILLING_CONTACT}
+                  param={defaultValues?.primaryBillingContact?.firstName}
+                  secondParam={defaultValues?.primaryBillingContact?.lastName}
+                />
+                <ViewFormField isLoading={isLoading}
+                  sm={6}
+                  heading={formLABELS.CUSTOMER.TECHNICAL_CONTACT}
+                  param={defaultValues?.primaryTechnicalContact?.firstName}
+                  secondParam={defaultValues?.primaryTechnicalContact?.lastName}
+                />
             </Grid>
             
 
@@ -157,58 +125,19 @@ export default function CustomerViewForm() {
               <Grid container>
                 <FormLabel content={FORMLABELS.ADDRESS} />
                 <ViewFormField isLoading={isLoading} sm={6} heading="Site Name" param={defaultValues?.mainSite?.name} />
-                <ViewFormField isLoading={isLoading}
-                  sm={6}
-                  heading={formLABELS.STREET.label}
-                  param={defaultValues?.mainSite.address?.street}
-                />
-                <ViewFormField isLoading={isLoading}
-                  sm={6}
-                  heading={formLABELS.SUBURB.label}
-                  param={defaultValues?.mainSite.address?.suburb}
-                />
-                <ViewFormField isLoading={isLoading}
-                  sm={6}
-                  heading={formLABELS.CITY.label}
-                  param={defaultValues?.mainSite.address?.city}
-                />
-                <ViewFormField isLoading={isLoading}
-                  sm={6}
-                  heading={formLABELS.POSTCODE.label}
-                  param={defaultValues?.mainSite.address?.postcode}
-                />
-                <ViewFormField isLoading={isLoading}
-                  sm={6}
-                  heading={formLABELS.REGION.label}
-                  param={defaultValues?.mainSite.address?.region}
-                />
-                <ViewFormField isLoading={isLoading}
-                  sm={6}
-                  heading={formLABELS.COUNTRY.label}
-                  param={defaultValues?.mainSite.address?.country}
-                />
+                <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.STREET.label} param={defaultValues?.mainSite.address?.street} />
+                <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.SUBURB.label} param={defaultValues?.mainSite.address?.suburb} />
+                <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CITY.label} param={defaultValues?.mainSite.address?.city} />
+                <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.POSTCODE.label} param={defaultValues?.mainSite.address?.postcode} />
+                <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.REGION.label} param={defaultValues?.mainSite.address?.region} />
+                <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.COUNTRY.label} param={defaultValues?.mainSite.address?.country} />
               </Grid>
             )}
             <Grid container>
               <FormLabel content={FORMLABELS.HOWICK} />
-              <ViewFormField isLoading={isLoading}
-                sm={6}
-                heading={formLABELS.CUSTOMER.ACCOUNT}
-                param={defaultValues?.accountManager?.firstName}
-                secondParam={defaultValues?.accountManager?.lastName}
-              />
-              <ViewFormField isLoading={isLoading}
-                sm={6}
-                heading={formLABELS.CUSTOMER.PROJECT}
-                param={defaultValues?.projectManager?.firstName}
-                secondParam={defaultValues?.projectManager?.lastName}
-              />
-              <ViewFormField isLoading={isLoading}
-                sm={6}
-                heading={formLABELS.CUSTOMER.SUPPORT}
-                param={defaultValues?.supportManager?.firstName}
-                secondParam={defaultValues?.supportManager?.lastName}
-              />
+              <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.ACCOUNT} param={defaultValues?.accountManager?.firstName} secondParam={defaultValues?.accountManager?.lastName} />
+              <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.PROJECT} param={defaultValues?.projectManager?.firstName} secondParam={defaultValues?.projectManager?.lastName} />
+              <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.SUPPORT} param={defaultValues?.supportManager?.firstName} secondParam={defaultValues?.supportManager?.lastName} />
               <ViewFormAudit defaultValues={defaultValues} />
             </Grid>
               
