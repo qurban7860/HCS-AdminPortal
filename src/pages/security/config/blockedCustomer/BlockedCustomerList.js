@@ -41,8 +41,8 @@ import TableCard from '../../../components/ListTableTools/TableCard';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Customer', align: 'left' },
-  { id: 'blockedBy', label: 'Updated By', align: 'left' },
+  { id: 'blockedCustomer.name', label: 'Customer', align: 'left' },
+  { id: 'createdBy.name', label: 'Updated By', align: 'left' },
   { id: 'createdAt', label: 'Updated At', align: 'left' },
   { id: 'action', label: 'Action', align: 'right'},
 ];
@@ -64,7 +64,7 @@ export default function BlockedCustomerList() {
     // onChangePage,
     // onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'name',
+    defaultOrderBy: 'blockedCustomer', defaultOrder: 'asc'
   });
 
   const onChangeRowsPerPage = (event) => {

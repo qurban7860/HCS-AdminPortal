@@ -41,9 +41,9 @@ import TableCard from '../../../components/ListTableTools/TableCard';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Blacklist IPs', align: 'left' },
-  { id: 'AddedBy', label: 'Updated By', align: 'left' },
-  { id: 'AddedAt', label: 'Updated At', align: 'left' },
+  { id: 'blackListIP', label: 'Blacklist IPs', align: 'left' },
+  { id: 'createdBy.name', label: 'Updated By', align: 'left' },
+  { id: 'createdAt', label: 'Updated At', align: 'left' },
   { id: 'action', label: 'Action', align: 'right'},
 ];
 
@@ -62,7 +62,7 @@ export default function BlacklistIPList() {
     // onChangePage,
     // onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'name',
+    defaultOrderBy: 'blackListIP', defaultOrder: 'asc'
   });
 
   const onChangeRowsPerPage = (event) => {

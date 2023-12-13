@@ -15,7 +15,7 @@ import {
 // ROUTES
 import { PATH_PAGE, PATH_SECURITY } from '../../../../routes/paths';
 // slice
-import { getSecurityUsers, resetSecurityUsers } from '../../../../redux/slices/securityUser/securityUser';
+import { getActiveSecurityUsers, resetSecurityUsers } from '../../../../redux/slices/securityUser/securityUser';
 import { addBlockedUsers, getBlockedUsers, resetBlockedUsers } from '../../../../redux/slices/securityConfig/blockedUsers';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
@@ -27,7 +27,7 @@ import { Cover } from '../../../components/Defaults/Cover';
 
 export default function BlockedUserAddForm() {
 
-  const { securityUsers } = useSelector((state) => state.user);
+  const { activeSecurityUsers } = useSelector((state) => state.user);
   const { blockedUsers } = useSelector((state) => state.blockedUser);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -43,13 +43,15 @@ export default function BlockedUserAddForm() {
   
 
   useEffect(() => {
-    dispatch(resetSecurityUsers());
-    dispatch(getSecurityUsers());
-    dispatch(resetBlockedUsers());
+    dispatch(getActiveSecurityUsers());
     dispatch(getBlockedUsers());
+    return () => {
+      dispatch(resetSecurityUsers());
+      dispatch(resetBlockedUsers());
+    }
   },[dispatch])
 
-  const usersNotBlocked = securityUsers.filter((securityUser) => (
+  const usersNotBlocked = activeSecurityUsers.filter((securityUser) => (
     !blockedUsers.some((blockedUser) => blockedUser?.blockedUser?._id === securityUser._id)
   ));
 

@@ -40,9 +40,9 @@ import { PATH_PAGE } from '../../../../routes/paths';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Whitelist IPs', align: 'left' },
-  { id: 'AddedBy', label: 'Updated By', align: 'left' },
-  { id: 'AddedAt', label: 'Updated At', align: 'left' },
+  { id: 'whiteListIP', label: 'Whitelist IPs', align: 'left' },
+  { id: 'createdBy.name', label: 'Updated By', align: 'left' },
+  { id: 'createdAt', label: 'Updated At', align: 'left' },
   { id: 'action', label: 'Action', align: 'right'},
 ];
 
@@ -63,7 +63,7 @@ export default function WhitelistIPList() {
     // onChangePage,
     // onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'name',
+    defaultOrderBy: 'whiteListIP', defaultOrder: 'asc'
   });
 
   const onChangeRowsPerPage = (event) => {
