@@ -240,10 +240,10 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (category) =>
-        category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+      (configuration) =>
+        configuration?.collectionType?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // (category.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-        fDate(category?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+        fDate(configuration?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 
