@@ -161,8 +161,9 @@ const readFile = (selectedFile) =>
 
   return (
     <>
-      <StyledCardContainer>
+      <StyledCardContainer> 
         <Cover
+          // name={defaultValues.collectionType}
           name="Edit Configuration"
           icon="material-symbols:category-outline"
           url={PATH_MACHINE.machines.settings.categories.list}
@@ -174,7 +175,7 @@ const readFile = (selectedFile) =>
             <Card sx={{ p: 3 }}>
             <Stack spacing={2}>
                 <Grid display="flex" justifyContent="space-between" >
-                  <FormHeading heading="New INI"/>
+                  <FormHeading heading="Edit INI"/>
                   <Button variant="contained" size="small" component="label"  startIcon={<Iconify icon="eva:file-add-outline" />} sx={{m:0.5}} >  Upload
                     <input type="file" accept='.json, .ini' hidden onChange={handleFileChange} /> 
                   </Button>
