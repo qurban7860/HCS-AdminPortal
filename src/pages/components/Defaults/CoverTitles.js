@@ -16,7 +16,7 @@ function CoverTitles({ name, nameTitle, serialNo, isMobile, children, machineChi
             display: { xs: 'flex', md: 'block' },
           }}
         >
-          {machineChildren}
+          {machineChildren.length>20?`${machineChildren.substring(0,20)}...`:machineChildren}
         </Typography>
       ) : (
         <Typography
@@ -28,7 +28,7 @@ function CoverTitles({ name, nameTitle, serialNo, isMobile, children, machineChi
             display: { xs: 'flex', md: 'block' },
           }}
         >
-          {children}
+          {children.length>20?`${children.substring(0,20)}...`:children}
         </Typography>
       )}
     </>
