@@ -30,7 +30,6 @@ import {
   ChangePage,
   setFilterBy,
   setVerified,
-  createMachineCSV,
   setMachineTab
 } from '../../redux/slices/products/machine';
 import { resetToolInstalled, resetToolsInstalled } from '../../redux/slices/products/toolInstalled';
@@ -53,6 +52,7 @@ import { useSnackbar } from '../../components/snackbar';
 import TableCard from '../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
 import CustomerDialog from '../components/Dialog/CustomerDialog';
+import { exportCSV } from '../../utils/exportCSV';
 
 // ----------------------------------------------------------------------
 
@@ -114,7 +114,7 @@ export default function MachineList() {
   const [filterName, setFilterName] = useState(filterBy);
   const [filterStatus, setFilterStatus] = useState([]);
   const [setOpenConfirm] = useState(false);
-
+  
   useEffect(() => {
     if (initial) {
       setTableData(machines);
@@ -195,14 +195,21 @@ export default function MachineList() {
     setFilterName('');
     setFilterStatus([]);
   };
-
+  
+  const [exportingCSV, setExportingCSV] = useState(false);
   const onExportCSV = async () => {
-    const response = dispatch(await createMachineCSV());
+    setExportingCSV(true);
+    const params = {
+      isArchived: false,
+      orderBy : {
+        serialNo:1
+      }
+    };
+
+    const response = dispatch(await exportCSV('MachinesCSV','products/machines/export', params));
     response.then((res) => {
-        enqueueSnackbar('CSV Generated Successfully');
-    }).catch((err) => {
-      console.error(err);
-      enqueueSnackbar(err.message, { variant: `error` });
+      setExportingCSV(false);
+      enqueueSnackbar(res.message, {variant:`${res.hasError?"error":""}`});
     });
   };
 
@@ -230,6 +237,7 @@ export default function MachineList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
             onExportCSV={onExportCSV}
+            onExportingCSV={exportingCSV}
           />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {selected.length > 1 ? "" :
