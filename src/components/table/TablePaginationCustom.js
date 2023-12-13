@@ -2,6 +2,7 @@ import { memo } from 'react'
 import PropTypes from 'prop-types';
 // @mui
 import { Box, Switch, TablePagination, FormControlLabel, Button } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import Iconify from '../iconify';
 import { BUTTONS } from '../../constants/default-constants';
 
@@ -14,6 +15,7 @@ TablePaginationCustom.propTypes = {
   rowsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
   sx: PropTypes.object,
   onExportCSV: PropTypes.func,
+  onExportingCSV: PropTypes.bool,
   refresh: PropTypes.func,
 };
 
@@ -23,6 +25,7 @@ function TablePaginationCustom({
   rowsPerPageOptions = [10, 20,50,100],
   sx,
   onExportCSV,
+  onExportingCSV,
   refresh,
   ...other
 }) {
@@ -44,11 +47,11 @@ function TablePaginationCustom({
       />
 
       {isSuperAdmin && onExportCSV && (
-        <Button sx={{ top: 10, left:25, position: {md: 'absolute',}}} 
+        <LoadingButton loading={onExportingCSV} sx={{ top: 10, left:25, position: {md: 'absolute',}}} 
           onClick={onExportCSV} variant="outlined"  
           startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />}>
           {BUTTONS.EXPORT.label}
-        </Button>
+        </LoadingButton>
       )}
 
       {refresh && (
