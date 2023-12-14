@@ -15,7 +15,7 @@ import {
 // ROUTES
 import { PATH_PAGE, PATH_SECURITY } from '../../../../routes/paths';
 // slice
-import { getCustomers, resetCustomers } from '../../../../redux/slices/customer/customer';
+import { getActiveCustomers, resetCustomers } from '../../../../redux/slices/customer/customer';
 import { addBlockedCustomers, getBlockedCustomers, resetBlockedCustomers } from '../../../../redux/slices/securityConfig/blockedCustomers';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
@@ -27,7 +27,7 @@ import { Cover } from '../../../components/Defaults/Cover';
 
 export default function BlockedCustomerAddForm() {
 
-  const { customers } = useSelector((state) => state.customer);
+  const { activeCustomers } = useSelector((state) => state.customer);
   const { blockedCustomers } = useSelector((state) => state.blockedCustomer);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -45,12 +45,12 @@ export default function BlockedCustomerAddForm() {
 
   useEffect(() => {
     dispatch(resetCustomers());
-    dispatch(getCustomers());
+    dispatch(getActiveCustomers());
     dispatch(resetBlockedCustomers());
     dispatch(getBlockedCustomers());
   },[dispatch])
 
-  const customersNotBlocked = customers.filter((customer) => (
+  const customersNotBlocked = activeCustomers.filter((customer) => (
     !blockedCustomers.some((blockedCustomer) => blockedCustomer?.blockedCustomer?._id === customer._id)
   ));
  
