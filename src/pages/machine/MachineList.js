@@ -64,9 +64,12 @@ const TABLE_HEAD = [
   { id: 'machineModel.name', visibility: 'xs1', label: 'Model', align: 'left' },
   { id: 'status.name', visibility: 'xs2',  label: 'Status', align: 'left' },
   { id: 'customer.name', visibility: 'md2', label: 'Customer', align: 'left' },
-  { id: 'instalationSite.name', visibility: 'md3', label: 'Installation Site', align: 'left' },
+  // { id: 'instalationSite.name', visibility: 'md3', label: 'Installation Site', align: 'left' },
+  { id: 'installationDate', visibility: 'md3', label: 'Installation Date', align: 'left' },
+  { id: 'shippingDate', visibility: 'md3', label: 'Shipping Date', align: 'left' },
+
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'left' },
+  // { id: 'createdAt', label: 'Created At', align: 'left' },
 ];
 
 export default function MachineList() {
@@ -342,7 +345,12 @@ function applyFilter({ inputData, comparator, filterName, filterVerify, filterSt
         product?.status?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         product?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         product?.instalationSite?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        `${product?.accountManager?.firstName} ${product?.accountManager?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        `${product?.projectManager?.firstName} ${product?.projectManager?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        `${product?.supportManager?.firstName} ${product?.supportManager?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // (product?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(product?.installationDate)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(product?.shippingDate)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(product?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
