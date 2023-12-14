@@ -24,6 +24,7 @@ import {
   setDocumentAddFilesViewFormVisibility,
   setDocumentNewVersionFormVisibility,
   getDocument,
+  deleteDocument,
   setDocumentHistoryViewFormVisibility,
 } from '../../../redux/slices/document/document';
 import { getCustomer, resetCustomer, setCustomerDialog} from '../../../redux/slices/customer/customer';
@@ -35,6 +36,8 @@ import DocumentCover from '../../components/DocumentForms/DocumentCover';
 import CustomerDialog from '../../components/Dialog/CustomerDialog';
 import MachineDialog from '../../components/Dialog/MachineDialog';
 import { PATH_DOCUMENT } from '../../../routes/paths';
+import { useSnackbar } from '../../../components/snackbar';
+
 
 // ----------------------------------------------------------------------
 
@@ -47,6 +50,7 @@ DocumentHistoryViewForm.propTypes = {
 function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machineDrawings }) {
   const dispatch = useDispatch();
   const { id } = useParams();
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const { documentHistory, isLoading } = useSelector((state) => state.document);
   const { machine } = useSelector((state) => state.machine);
@@ -192,7 +196,14 @@ const handleNewFile = async () => {
     dispatch(setDrawingViewFormVisibility(false));
     dispatch(setDrawingEditFormVisibility(true));
   };
-
+const handleDelete = async () => {
+  try {
+    await  dispatch(deleteDocument(documentHistory?._id))
+    enqueueSnackbar("Document Deleted Successfully!", { variant: `success` });
+  }catch(error) {
+    enqueueSnackbar(error, { variant: `error` });
+  }
+}
   return (
     <>
       {!customerPage && !machinePage && !drawingPage &&
@@ -205,6 +216,7 @@ const handleNewFile = async () => {
           customerAccess={defaultValues?.customerAccess}
           isActive={defaultValues.isActive}
           handleEdit={drawingPage && handleEdit}
+          onDelete={machineDrawings && handleDelete }
           disableEditButton={drawingPage && machine?.status?.slug==="transferred"}
           backLink={(customerPage || machinePage || drawingPage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDrawingViewFormVisibility(false));}
           : () =>  machineDrawings ? navigate(PATH_DOCUMENT.document.machineDrawings.list) : navigate(PATH_DOCUMENT.document.list)}

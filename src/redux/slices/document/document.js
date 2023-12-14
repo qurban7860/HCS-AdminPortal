@@ -426,6 +426,7 @@ export function getActiveDocumentsByType(documentCategoryId,documentTypeId) {
         params: {
           isActive: true,
           isArchived: false,
+          isVersionNeeded: false,
           docCategory: documentCategoryId,
           docType: documentTypeId,
           machine: null,

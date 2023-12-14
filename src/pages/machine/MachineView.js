@@ -65,7 +65,7 @@ export default function MachineView({ editPage }) {
       <StyledCardContainer>
         <Cover
           name={machine?.name}
-          serialNo={`${machine?.serialNo ? machine?.serialNo : 'Serial Number'} ${machine?.machineModel?.name ? '-' : '' } ${machine?.machineModel?.name ? machine?.machineModel?.name : '' }`}
+          serialNo={`${machine?.serialNo || '' } ${machine?.machineModel?.name ? '-' : '' } ${machine?.machineModel?.name || '' }`}
           icon="et:gears"
           setting
         />

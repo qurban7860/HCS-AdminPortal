@@ -38,7 +38,9 @@ export default function MachineListTableRow({
     name,
     machineModel,
     customer,
-    instalationSite,
+    // instalationSite,
+    installationDate,
+    shippingDate,
     status,
     isActive,
     createdAt,
@@ -63,9 +65,11 @@ export default function MachineListTableRow({
       <LinkDialogTableCell onClick={handleCustomerDialog} align='center' param={customer?.name}/>  
           
       }
-      {  useScreenSize('lg') && <TableCell  >{instalationSite?.name || ''}</TableCell>}
+      {/* {  useScreenSize('lg') && <TableCell  >{instalationSite?.name || ''}</TableCell>} */}
+      {  useScreenSize('lg') && <TableCell >{fDate(installationDate)}</TableCell>}
+      {  useScreenSize('lg') && <TableCell >{fDate(shippingDate)}</TableCell>}
       <TableCell align="center">  <Switch checked={isActive} disabled size="small"/>  </TableCell>
-      <TableCell >{fDate(createdAt)}</TableCell>
+      {/* <TableCell >{fDate(createdAt)}</TableCell> */}
 
     </TableRow>
   );
