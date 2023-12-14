@@ -6,8 +6,7 @@ import { Container } from '@mui/system';
 import { Card, Grid, Autocomplete, TextField, Divider } from '@mui/material';
 // slices
 import {  getMachinesByModel } from '../../redux/slices/dashboard/count';
-import {  getActiveMachineModels } from '../../redux/slices/products/model';
-import {  getCategories } from '../../redux/slices/products/category';
+import {  getActiveCategories } from '../../redux/slices/products/category';
 // hooks
 import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
 import ChartBar from '../components/Charts/ChartBar';
@@ -23,7 +22,7 @@ export default function MachineByCountriesViewForm() {
   const navigate = useNavigate();
 
   const { machinesByModel } = useSelector((state) => state.count);
-  const { categories } = useSelector((state) => state.category);
+  const { activeCategories } = useSelector((state) => state.category);
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: currentYear - 1999 }, (_, index) => 2000 + index);
@@ -36,11 +35,9 @@ export default function MachineByCountriesViewForm() {
   const [MBMCategory, setMBMCategory] = useState(null);
   
   useLayoutEffect(() => {
-    dispatch(getCategories());
-    dispatch(getActiveMachineModels());
-    
+    dispatch(getActiveCategories());
     dispatch(getMachinesByModel());
-  }, [dispatch]);
+  }, [dispatch,MBMCategory]);
 
   if (machinesByModel.length !== 0) {
     machinesByModel.modelWiseMachineCount.map((model) => {
@@ -67,14 +64,14 @@ export default function MachineByCountriesViewForm() {
                 </Grid>
                 <Grid item xs={12} sm={2}>
                   <Autocomplete
-                          fullWidth
-                          options={categories}
-                          isOptionEqualToValue={(option, value) => option._id === value._id}
-                          getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                          renderOption={(props, option) => (<li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>)}
-                          renderInput={(params) => (<TextField {...params} label="Categories" size="small" />)}
-                          onChange={(event, newValue) =>{setMBMCategory(newValue?._id); handleGraphModel(newValue?._id, MBMYear,MBMCountry)}}
-                        />
+                    fullWidth
+                    options={activeCategories}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    renderOption={(props, option) => (<li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>)}
+                    renderInput={(params) => (<TextField {...params} label="Categories" size="small" />)}
+                    onChange={(event, newValue) =>{setMBMCategory(newValue?._id); handleGraphModel(newValue?._id, MBMYear,MBMCountry)}}
+                  />
                 </Grid>
                 <Grid item xs={12} sm={2}>
                     <Autocomplete

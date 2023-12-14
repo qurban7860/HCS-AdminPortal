@@ -1,13 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography } from '@mui/material';
+import { useScreenSize } from '../../../hooks/useResponsive';
 
 function CoverTitles({ name, nameTitle, serialNo, isMobile, children, machineChildren }) {
+  const smScreen = useScreenSize('sm');
+  const mdScreen = useScreenSize('md');
+  const lgScreen = useScreenSize('lg');
+  const xlScreen = useScreenSize('xl');
+  
+  let variant = 'h2';
+  
+  if(smScreen) variant="h4";
+  if(mdScreen) variant="h3";
+  if(lgScreen) variant="h2";
+  if(xlScreen) variant="h2";
+  
   return (
     <>
       {serialNo ? (
         <Typography
-          variant={isMobile ? 'h3' : 'h2'}
+          variant={variant}
           sx={{
             px: 3,
             color: 'common.white',
@@ -16,11 +29,11 @@ function CoverTitles({ name, nameTitle, serialNo, isMobile, children, machineChi
             display: { xs: 'flex', md: 'block' },
           }}
         >
-          {machineChildren &&  machineChildren?.length>20?`${machineChildren.substring(0,20)}...`:machineChildren}
+          {machineChildren &&  machineChildren?.length>26?`${machineChildren.substring(0,26)}...`:machineChildren}
         </Typography>
       ) : (
         <Typography
-          variant={isMobile ? 'h3' : 'h2'}
+          variant={variant}
           sx={{
             px: 3,
             color: 'common.white',
@@ -29,7 +42,7 @@ function CoverTitles({ name, nameTitle, serialNo, isMobile, children, machineChi
           }}
         >
           
-          {children && children?.length>20?`${children.substring(0,20)}...`:children}
+          {children && children?.length>26?`${children.substring(0,26)}...`:children}
         </Typography>
       )}
     </>
