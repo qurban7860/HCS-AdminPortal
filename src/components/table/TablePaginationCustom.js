@@ -14,8 +14,6 @@ TablePaginationCustom.propTypes = {
   onChangeDense: PropTypes.func,
   rowsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
   sx: PropTypes.object,
-  onExportCSV: PropTypes.func,
-  onExportingCSV: PropTypes.bool,
   refresh: PropTypes.func,
 };
 
@@ -24,8 +22,6 @@ function TablePaginationCustom({
   onChangeDense,
   rowsPerPageOptions = [10, 20,50,100],
   sx,
-  onExportCSV,
-  onExportingCSV,
   refresh,
   ...other
 }) {
@@ -45,14 +41,6 @@ function TablePaginationCustom({
         },
       }}
       />
-
-      {isSuperAdmin && onExportCSV && (
-        <LoadingButton loading={onExportingCSV} sx={{ top: 10, left:25, position: {md: 'absolute',}}} 
-          onClick={onExportCSV} variant="outlined"  
-          startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />}>
-          {BUTTONS.EXPORT.label}
-        </LoadingButton>
-      )}
 
       {refresh && (
         <Button sx={{ top: 10, left:25, position: {md: 'absolute',}}} 
