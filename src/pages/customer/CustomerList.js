@@ -42,6 +42,7 @@ import { Cover } from '../components/Defaults/Cover';
 import TableCard from '../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
 import { useSnackbar } from '../../components/snackbar';
+import { exportCSV } from '../../utils/exportCSV';
 
 // ----------------------------------------------------------------------
 
@@ -161,6 +162,23 @@ export default function CustomerList() {
     });
   };
 
+  // const [exportingCSV, setExportingCSV] = useState(false);
+  // const onExportCSV = async () => {
+  //   setExportingCSV(true);
+  //   const params = {
+  //     isArchived: false,
+  //     orderBy : {
+  //       createdAt:-1
+  //     }
+  //   };
+
+  //   const response = dispatch(await exportCSV('CustomerCSV','crm/customers/export', params));
+  //   response.then((res) => {
+  //     setExportingCSV(false);
+  //     enqueueSnackbar(res.message, {variant:`${res.hasError?"error":""}`});
+  //   });
+  // };
+
   return (
     <Container maxWidth={false}>
         <StyledCardContainer>
@@ -178,6 +196,8 @@ export default function CustomerList() {
           onResetFilter={handleResetFilter}
           customerDocList
           machineDocList
+          onExportCSV={onExportCSV}
+          // onExportLoading={exportingCSV}
         />
 
       {!isNotFound && <TablePaginationCustom
@@ -186,7 +206,6 @@ export default function CustomerList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            onExportCSV={onExportCSV}
           />}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <TableSelectedAction

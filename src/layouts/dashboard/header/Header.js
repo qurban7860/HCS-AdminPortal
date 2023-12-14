@@ -14,11 +14,7 @@ import { HEADER, NAV } from '../../../config-global';
 import Logo from '../../../components/logo';
 import Iconify from '../../../components/iconify';
 import { useSettingsContext } from '../../../components/settings';
-//
-// import Searchbar from './Searchbar';
 import AccountPopover from './AccountPopover';
-// import LanguagePopover from './LanguagePopover';
-// import ContactsPopover from './ContactsPopover';
 import NotificationsPopover from './NotificationsPopover';
 
 // ----------------------------------------------------------------------
@@ -29,49 +25,22 @@ Header.propTypes = {
 
 export default function Header({ onOpenNav }) {
   const theme = useTheme();
-
   const { themeLayout } = useSettingsContext();
-
   const isNavHorizontal = themeLayout === 'horizontal';
-
   const isNavMini = themeLayout === 'mini';
-
   const isDesktop = useResponsive('up', 'lg');
-
   const isOffset = useOffSetTop(HEADER.H_DASHBOARD_DESKTOP) && !isNavHorizontal;
-
-  // const bgcolor = CONFIG.Background_Color
+  
   const renderContent = (
     <>
       {isDesktop && isNavHorizontal && <Logo sx={{ mr: 2.5 }} />}
-
-      {/* <Typography
-        variant="h4"
-      >
-        {CONFIG.ENV}
-      </Typography> */}
       {!isDesktop && (
         <IconButton onClick={onOpenNav} sx={{ mr: 1, color: 'text.primary' }}>
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
       )}
-      {/* <Searchbar /> */}
-      {/* {CONFIG.ENV}
-      {CONFIG.Version} */}
-
-      <Stack
-        flexGrow={1}
-        direction="row"
-        alignItems="center"
-        justifyContent="flex-end"
-        spacing={{ xs: 0.5, sm: 1.5 }}
-      >
-        {/* <LanguagePopover /> */}
-
+      <Stack flexGrow={1} direction="row" alignItems="center" justifyContent="flex-end" spacing={{ xs: 0.5, sm: 1.5 }}>
         <NotificationsPopover />
-
-        {/* <ContactsPopover /> */}
-
         <AccountPopover />
       </Stack>
     </>
@@ -109,17 +78,7 @@ export default function Header({ onOpenNav }) {
         }),
       }}
     >
-
-      <Toolbar
-        sx={{
-          height: 1,
-          px: { lg: 5 },
-          color: 'text.primary',
-          position: 'sticky',
-        }}
-        >
-        {renderContent}
-      </Toolbar>
+      <Toolbar sx={{ height: 1, px: { lg: 5 }, color: 'text.primary', position: 'sticky'}} >{renderContent}</Toolbar>
     </AppBar>
   );
 }

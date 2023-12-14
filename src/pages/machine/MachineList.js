@@ -228,6 +228,8 @@ export default function MachineList() {
             onFilterStatus={handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
+            onExportCSV={onExportCSV}
+            onExportLoading={exportingCSV}
           />
 
           {!isNotFound && <TablePaginationCustom
@@ -236,8 +238,7 @@ export default function MachineList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            onExportCSV={onExportCSV}
-            onExportingCSV={exportingCSV}
+            
           />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {selected.length > 1 ? "" :
