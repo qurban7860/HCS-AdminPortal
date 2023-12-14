@@ -74,7 +74,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
       enqueueSnackbar('Category Deleted Successfullty!');
       navigate(PATH_MACHINE.machines.settings.categories.list);
     } catch (err) {
-      enqueueSnackbar('Category delete failed!', { variant: `error` });
+      enqueueSnackbar(err, { variant: `error` });
       console.log('Error:', err);
     }
   };
