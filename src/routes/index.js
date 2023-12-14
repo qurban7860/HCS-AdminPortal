@@ -27,6 +27,7 @@ import {
   SecurityUserEdit,
   SecurityUserAdd,
   SecurityUserProfile,
+  SecurityUserProfileEditForm,
   SecurityUserChangePassword,
   SecurityUserChangePasswordByAdmin,
 
@@ -519,6 +520,7 @@ export default function Router() {
           children: [
             { element: <Navigate to="/dashboard/user/profile" replace />, index: true },
             { path: 'profile', element: <SecurityUserProfile/> },
+            { path: 'editProfile', element: <SecurityUserProfileEditForm/> },
             { path: 'password', element: <SecurityUserChangePassword/> },
             { path: 'changePassword', element: <SecurityUserChangePasswordByAdmin/> },
             { path: 'list', element: <SecurityUserList /> },

@@ -236,6 +236,7 @@ export const PATH_SECURITY = {
     list: path(ROOTS_SECURITY, '/users/list'),
     cards: path(ROOTS_SECURITY, '/users/cards'),
     profile: path(ROOTS_SECURITY, '/users/profile'),
+    editProfile: path(ROOTS_SECURITY, '/users/editProfile'),
     password: path(ROOTS_SECURITY, '/users/password'),
     userPassword: path(ROOTS_SECURITY, '/users/changePassword'),
     account: path(ROOTS_SECURITY, '/users/account'),

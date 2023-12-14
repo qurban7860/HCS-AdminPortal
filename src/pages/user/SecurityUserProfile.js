@@ -71,8 +71,8 @@ export default function SecurityUserProfile() {
   }
 
   const handleEdit = () => {
-    dispatch(setSecurityUserEditFormVisibility(true));
-    navigate(PATH_SECURITY.users.edit(securityUser?._id));
+    // dispatch(setSecurityUserEditFormVisibility(true));
+    navigate(PATH_SECURITY.users.editProfile);
   };
 
   const defaultValues = useMemo(
