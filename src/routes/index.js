@@ -198,6 +198,12 @@ import {
   ConfigView,
   ConfigEdit,
 
+  // Configuration
+  ConfigurationAdd,
+  ConfigurationList,
+  ConfigurationEdit,
+  ConfigurationView, 
+
    // User Invite
    UserInvitationList,
    UserInvitationView,
@@ -465,6 +471,15 @@ export default function Router() {
                   {path: 'viewform', element: <ToolViewForm/>},
                   {path: ':id/edit', element: <ToolEdit/>}, 
                   {path: 'editform', element: <ToolEditForm/>},
+                ]
+              },
+              {
+                path: 'configuration',
+                children:[
+                  {path: 'new', element: <ConfigurationAdd/>},
+                  {path: 'list', element: <ConfigurationList/>},
+                  {path: ':id/view', element: <ConfigurationView/>},
+                  {path: ':id/edit', element: <ConfigurationEdit/>}, 
                 ]
               },
             ]
