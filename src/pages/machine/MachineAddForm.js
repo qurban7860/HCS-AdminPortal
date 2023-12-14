@@ -38,6 +38,7 @@ import FormProvider, { RHFTextField, RHFAutocomplete, RHFDatePicker } from '../.
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 import ToggleButtons from '../components/DocumentForms/ToggleButtons';
 import { FORMLABELS } from '../../constants/default-constants';
+import { futureDate, pastDate, formatDate } from './util/index'
 
 MachineAddForm.propTypes = {
   isEdit: PropTypes.bool,
@@ -75,6 +76,14 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     dispatch(getSPContacts());
   }, [dispatch]);
 
+  // const futureDateValidator = Yup.date().nullable()
+  // .test('is-future-date', 'Date must be in the future and within the next ten years', (value) => {
+  //   if (!value) { return true }
+  //   const currentDate = new Date();
+  //   const tenYearsLater = new Date();
+  //   tenYearsLater.setFullYear(currentDate.getFullYear() + 10);
+  //   return value > currentDate && value <= tenYearsLater;
+  // });
 
   const AddMachineSchema = Yup.object().shape({
     serialNo: Yup.string().max(6).required('Serial Number is required').nullable(),
@@ -108,8 +117,15 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       name: Yup.string()
     }).nullable(),
     workOrderRef: Yup.string().max(50),
-    // installationDate: Yup.date().nullable(),
-    // shippingDate: Yup.date().nullable(),
+
+    shippingDate: Yup.date()
+    .max(futureDate,`Shipping Date field must be at earlier than ${formatDate(futureDate)}!`)
+    .min(pastDate,`Shipping Date field must be at after than ${formatDate(pastDate)}!`).nullable().label('Shipping Date'),
+
+    installationDate: Yup.date()
+    .max(futureDate,`Shipping Date field must be at earlier than ${formatDate(futureDate)}!`)
+    .min(pastDate,`Shipping Date field must be at after than ${formatDate(pastDate)}!`).nullable().label('Installation Date'),
+
     instalationSite: Yup.object().shape({
       name: Yup.string()
     }).nullable(),
