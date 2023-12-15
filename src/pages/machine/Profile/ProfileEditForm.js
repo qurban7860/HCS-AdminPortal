@@ -6,7 +6,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { Box, Card, Stack, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
-// import { DatePicker } from '@mui/x-date-pickers';
 import { MuiChipsInput } from 'mui-chips-input';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { useSnackbar } from '../../../components/snackbar';
@@ -28,6 +27,11 @@ export default function ProfileEditForm() {
   const { machine } = useSelector((state) => state.machine);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
+  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
+
   const defaultValues = useMemo(
     () => ({
       defaultName: profile?.defaultName ||'',
@@ -115,7 +119,7 @@ export default function ProfileEditForm() {
                   value={selectedValue}
                   label="Type"
                   onChange={handleChange}
-                  disabled
+                  disabled={!isSuperAdmin}
                   >
                 {ProfileTypes.map((option, index) => (
                   <MenuItem key={index} value={option}>
@@ -131,12 +135,10 @@ export default function ProfileEditForm() {
             </Box>
 
             <Box sx={{marginTop:2}} rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(4, 1fr)',}}>
-
-
               <RHFTextField name="web" label="Web"/>
               <RHFTextField name="flange" label="Flange"/>
-              <RHFTextField name="thicknessStart" label="Thickness Start"/>
-              <RHFTextField name="thicknessEnd" label="Thickness End"/>
+              <RHFTextField name="thicknessStart" label="Min. Thickness"/>
+              <RHFTextField name="thicknessEnd" label="Max. Thickness"/>
               
             </Box>
               <RHFSwitch name="isActive" labelPlacement="start"

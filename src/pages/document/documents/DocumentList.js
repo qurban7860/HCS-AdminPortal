@@ -144,6 +144,7 @@ const  onChangePage = (event, newPage) => {
     const insertIndex = 5; // Index after which you want to insert the new objects
     TABLE_HEAD.splice(insertIndex, 0,// 0 indicates that we're not removing any elements
     { id: 'stockNumber', visibility: 'xs2', label: 'Stock No.', align: 'left' },
+    { id: 'productDrawings.serialNumbers', visibility: 'xs2', label: 'Machines', align: 'left' },
     );
   }
 
@@ -203,7 +204,7 @@ const  onChangePage = (event, newPage) => {
   },[customerPage, machinePage, machineDrawings, machineDocumentsRowsPerPage, customerDocumentsRowsPerPage, machineDrawingsRowsPerPage, documentRowsPerPage])
 
 
-
+console.log("documents : ",documents.filter((d) => d.name === "CustomerSites"))
   useEffect(() => {
     setTableData(documents);
   }, [documents]);
@@ -468,8 +469,8 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, category
         document?.docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         document?.referenceNumber?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         document?.stockNumber?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.productDrawings?.some((m) => m?.machine?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0) ||
         document?.documentVersions[0].versionNo?.toString().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (document?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

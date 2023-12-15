@@ -50,9 +50,13 @@ export function checkValuesNotNull(obj) {
     { _id:3 , name: 'Approved'},
   ]
 
-  const today = new Date();
+  export const today = new Date();
   export const futureDate = new Date(today);
   futureDate.setFullYear(today.getFullYear() + 5);
+
+  export const future20yearDate = new Date(today);
+  future20yearDate.setFullYear(today.getFullYear() + 20);
+
   export const pastDate = new Date(today);
   pastDate.setFullYear(today.getFullYear() - 100);
 

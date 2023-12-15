@@ -63,13 +63,14 @@ export default function DocumentListTableRow({
     referenceNumber,
     stockNumber,
     machine,
+    productDrawings,
     customer,
     docCategory,
     customerAccess,
     isActive,
     createdAt,
   } = row;
-
+console.log("productDrawings : ",productDrawings)
   const lgScreen = useScreenSize('lg')
   const smScreen = useScreenSize('sm')
 
@@ -81,6 +82,7 @@ export default function DocumentListTableRow({
       <LinkTableCell align="left" param={displayName} onClick={onViewRow} />
       {  lgScreen && <TableCell align="center">{documentVersions[0]?.versionNo}</TableCell>}
       {  smScreen && machineDrawings && <TableCell align="left">{stockNumber}</TableCell>}
+      {  smScreen && machineDrawings && <TableCell align="left">{productDrawings.map((m)=> m?.machine?.serialNo).join(', ')}</TableCell>}
       {  !customerPage && !machinePage && !machineDrawings && lgScreen && 
           <>
             {/* <TableCell align="left">{customer?.name}</TableCell> */}

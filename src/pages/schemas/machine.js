@@ -2,6 +2,12 @@ import * as Yup from 'yup';
 import { Snacks } from '../../constants/machine-constants';
 import { allowedExtensions, fileTypesMessage } from '../../constants/document-constants';
 import { NotRequiredValidateFileType } from '../document/documents/Utills/Util'
+import { today, formatDate } from '../machine/util/index';
+
+const day = today.getDate();
+const month = today.getMonth() + 1; // Months are zero-indexed, so add 1
+const year = today.getFullYear();
+const dateCheck = `${year}-${month}-${day+1}`;
 
 export const EditMachineSchema = Yup.object().shape({
   serialNo: Yup.string().required(Snacks.serialNoRequired).max(6),
@@ -54,18 +60,14 @@ export const CheckItemsSchema = Yup.object().shape({
   // maxValidation: Yup.number().min(0).max(100).label('Max Validation').nullable(),
   isActive: Yup.boolean(),
 })
-const currentDate = new Date();
-const day = currentDate.getDate();
-const month = currentDate.getMonth() + 1; // Months are zero-indexed, so add 1
-const year = currentDate.getFullYear();
 
-const dateCheck = `${year}-${month}-${day+1}`;
 export const MachineServiceRecordSchema = Yup.object().shape({
   recordType:Yup.object().label('Record Type').nullable(),
   serviceRecordConfiguration: Yup.object().label('Service Record Configuration').nullable().required(),
   // serviceDate: Yup.date().label('Service Date').nullable().required,
   serviceDate: Yup.date()
-  .max(dateCheck).nullable()
+  .typeError('Date Should be Valid!')
+  .max(formatDate(dateCheck)).nullable()
   .required().label('Service Date'),
   // customer: Yup.object().label('Customer'), 
   site: Yup.object().label('Site').nullable(),
