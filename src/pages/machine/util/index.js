@@ -49,3 +49,14 @@ export function checkValuesNotNull(obj) {
     { _id:2 , name: 'Submitted'},
     { _id:3 , name: 'Approved'},
   ]
+
+  const today = new Date();
+  export const futureDate = new Date(today);
+  futureDate.setFullYear(today.getFullYear() + 5);
+  export const pastDate = new Date(today);
+  pastDate.setFullYear(today.getFullYear() - 100);
+
+  export const formatDate = (date) => {
+    const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    return new Date(date).toLocaleDateString(undefined, options);
+  }
