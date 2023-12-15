@@ -30,7 +30,9 @@ import {
   ChangePage,
   setFilterBy,
   setVerified,
-  setMachineTab
+  setMachineTab,
+  setAccountManager,
+  setSupportManager
 } from '../../redux/slices/products/machine';
 import { resetToolInstalled, resetToolsInstalled } from '../../redux/slices/products/toolInstalled';
 import { resetSetting, resetSettings } from '../../redux/slices/products/machineSetting';
@@ -40,6 +42,7 @@ import {
   resetMachineDocument,
   resetMachineDocuments,
 } from '../../redux/slices/document/machineDocument';
+import { getSPContacts } from '../../redux/slices/customer/contact';
 
 import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
 // routes
@@ -64,9 +67,12 @@ const TABLE_HEAD = [
   { id: 'machineModel.name', visibility: 'xs1', label: 'Model', align: 'left' },
   { id: 'status.name', visibility: 'xs2',  label: 'Status', align: 'left' },
   { id: 'customer.name', visibility: 'md2', label: 'Customer', align: 'left' },
-  { id: 'instalationSite.name', visibility: 'md3', label: 'Installation Site', align: 'left' },
+  // { id: 'instalationSite.name', visibility: 'md3', label: 'Installation Site', align: 'left' },
+  { id: 'installationDate', visibility: 'md3', label: 'Installation Date', align: 'left' },
+  { id: 'shippingDate', visibility: 'md3', label: 'Shipping Date', align: 'left' },
+
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'left' },
+  // { id: 'createdAt', label: 'Created At', align: 'left' },
 ];
 
 export default function MachineList() {
@@ -90,7 +96,8 @@ export default function MachineList() {
   // const { userId, user } = useAuthContext();
   const [tableData, setTableData] = useState([]);
   const dispatch = useDispatch();
-  const { machines, verified, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector( (state) => state.machine );
+  const { machines, verified, accountManager, supportManager, filterBy, page, rowsPerPage, 
+          isLoading, error, initial, responseMessage } = useSelector( (state) => state.machine );
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -106,8 +113,8 @@ export default function MachineList() {
     dispatch(resetNotes());
     dispatch(resetMachineDocument());
     dispatch(resetMachineDocuments());
-    
     dispatch(getMachines());
+    dispatch(getSPContacts());
   }, [dispatch]);
 
   const [filterVerify, setFilterVerify] = useState(verified);
@@ -127,6 +134,8 @@ export default function MachineList() {
     filterName,
     filterVerify,
     filterStatus,
+    accountManager, 
+    supportManager
   });
 
   const isFiltered = filterName !== '' || !!filterStatus.length;
@@ -158,16 +167,29 @@ export default function MachineList() {
     setFilterVerify(event.target.value)
     setPage(0);
   };
+
+
+  const debouncedAccountManager = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+  }, 500))
+
+  const setAccountManagerFilter = (event) => {
+    debouncedAccountManager.current(event?._id)
+    dispatch(setAccountManager(event))
+  };
+
+  const debouncedSupportManager = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+  }, 500))
+
+  const setSupportManagerFilter = (event) => {
+    debouncedSupportManager.current(event?._id)
+    dispatch(setSupportManager(event))
+  };
   
   useEffect(() => {
       debouncedSearch.current.cancel();
   }, [debouncedSearch]);
-  
-  // useEffect(()=>{
-  //     setFilterName(filterBy)
-  //     setFilterVerify(verified)
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // },[])
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -216,7 +238,7 @@ export default function MachineList() {
   return (
     <Container maxWidth={false} sx={{mb:3}}>
         <StyledCardContainer>
-          <Cover title="Machines" name="Machines" icon="arcticons:materialistic" setting />
+          <Cover  name="Machines" icon="arcticons:materialistic" setting />
         </StyledCardContainer>
         <TableCard>
           <MachineListTableToolbar
@@ -228,6 +250,12 @@ export default function MachineList() {
             onFilterStatus={handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
+            onExportCSV={onExportCSV}
+            onExportLoading={exportingCSV}
+            accountManagerFilter={accountManager}
+            setAccountManagerFilter={setAccountManagerFilter}
+            supportManagerFilter={supportManager}
+            setSupportManagerFilter={setSupportManagerFilter}
           />
 
           {!isNotFound && <TablePaginationCustom
@@ -236,8 +264,7 @@ export default function MachineList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            onExportCSV={onExportCSV}
-            onExportingCSV={exportingCSV}
+            
           />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {selected.length > 1 ? "" :
@@ -317,7 +344,7 @@ export default function MachineList() {
     </Container>
   );
 }
-function applyFilter({ inputData, comparator, filterName, filterVerify, filterStatus }) {
+function applyFilter({ inputData, comparator, filterName, filterVerify, filterStatus, accountManager, supportManager }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
@@ -328,6 +355,13 @@ function applyFilter({ inputData, comparator, filterName, filterVerify, filterSt
 
   inputData = stabilizedThis.map((el) => el[0]);
 
+  if(accountManager)
+    inputData = inputData.filter((customer)=> customer.accountManager?._id===accountManager?._id);
+  
+  if(supportManager)
+    inputData = inputData.filter((customer)=> customer.supportManager?._id===supportManager?._id);
+  
+  
   if(filterVerify==='verified')
     inputData = inputData.filter((customer)=> customer.verifications.length>0);
   else if(filterVerify==='unverified')
@@ -342,7 +376,12 @@ function applyFilter({ inputData, comparator, filterName, filterVerify, filterSt
         product?.status?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         product?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         product?.instalationSite?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        `${product?.accountManager?.firstName} ${product?.accountManager?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        `${product?.projectManager?.firstName} ${product?.projectManager?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        `${product?.supportManager?.firstName} ${product?.supportManager?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // (product?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(product?.installationDate)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(product?.shippingDate)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(product?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

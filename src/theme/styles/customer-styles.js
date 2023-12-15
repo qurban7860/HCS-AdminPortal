@@ -83,7 +83,7 @@ export function StyledCardWrapper({ children, isMobile, condition, ...props }) {
       sx={{
         borderRadius:'5px',
         backgroundColor: condition && '#e9ecff',
-        height: isMobile ? '100px' : '200px',
+        height: isMobile ? '140px' : '200px',
         width: '100%',
       }}
     >
@@ -104,7 +104,8 @@ export function StyledScrollbar({ maxHeight, contacts, children, ...props }) {
     <Scrollbar
       sx={{
         height: {
-          xs: '23.5vh',
+          xs: '25.5vh',
+          sm: '35.5vh',
           lg: 'fit-content',
         },
         maxHeight:maxHeight?`${maxHeight}vh`:"82vh",

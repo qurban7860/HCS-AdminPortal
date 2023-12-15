@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import { LoadingButton } from '@mui/lab';
 import { Grid, TextField, InputAdornment, Button, Stack, 
   FormControl, Select, InputLabel, MenuItem, IconButton, Switch, FormControlLabel, Autocomplete } from '@mui/material';
 import { BUTTONS } from '../../../constants/default-constants';
@@ -13,6 +14,10 @@ function SearchBarCombo({
   value,
   onFilterVerify,
   filterVerify,
+  setAccountManagerFilter,
+  accountManagerFilter,
+  setSupportManagerFilter,
+  supportManagerFilter,
   employeeFilterListBy,
   onEmployeeFilterListBy,
   filterListBy,
@@ -34,15 +39,19 @@ function SearchBarCombo({
   handleAttach,
   transferStatus,
   handleTransferStatus,
+  onExportCSV,
+  onExportLoading,
+  onReload,
   ...other
 }) {
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
+  const { spContacts } = useSelector((state) => state.contact);
   const isMobile = useResponsive('sm', 'down');
+
   return (
     <Grid container rowSpacing={1} columnSpacing={1} sx={{display:'flex', }}>
-
-          <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
+          <Grid item xs={12} sm={12} md={12} lg={setAccountManagerFilter && setSupportManagerFilter ? 4:6} xl={setAccountManagerFilter && setSupportManagerFilter ? 4:6}>
             <TextField
               fullWidth
               value={value}
@@ -89,6 +98,64 @@ function SearchBarCombo({
             </Stack>
           </Grid>}
 
+          {setAccountManagerFilter &&
+          <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+            <Autocomplete 
+              id="controllable-states-demo"
+              value={accountManagerFilter || null}
+              options={spContacts}
+              isOptionEqualToValue={(option, val) => option?._id === val?._id}
+              getOptionLabel={(option) =>
+                `${option.firstName ? option.firstName : ''} ${
+                  option.lastName ? option.lastName : ''
+                }`
+              }
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setAccountManagerFilter(newValue);
+                } else {
+                  setAccountManagerFilter(null);
+                }
+              }}
+              renderOption={(props, option) => (
+                <li {...props} key={option._id}>{`${
+                  option.firstName ? option.firstName : ''
+                } ${option.lastName ? option.lastName : ''}`}</li>
+              )}
+              renderInput={(params) => <TextField {...params} size='small' label="Account Manager" />}
+            />  
+          
+          </Grid>}
+
+          {setSupportManagerFilter &&
+          <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+            <Autocomplete 
+              id="controllable-states-demo"
+              value={supportManagerFilter || null}
+              options={spContacts}
+              isOptionEqualToValue={(option, val) => option?._id === val?._id}
+              getOptionLabel={(option) =>
+                `${option.firstName ? option.firstName : ''} ${
+                  option.lastName ? option.lastName : ''
+                }`
+              }
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setSupportManagerFilter(newValue);
+                } else {
+                  setSupportManagerFilter(null);
+                }
+              }}
+              renderOption={(props, option) => (
+                <li {...props} key={option._id}>{`${
+                  option.firstName ? option.firstName : ''
+                } ${option.lastName ? option.lastName : ''}`}</li>
+              )}
+              renderInput={(params) => <TextField {...params} size='small' label="Support Manager" />}
+            />  
+          
+          </Grid>}
+
           {onEmployeeFilterListBy &&
           <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
             <Stack alignItems="flex-start">
@@ -133,7 +200,8 @@ function SearchBarCombo({
             </Stack>
           </Grid>}
 
-          { setCategoryVal &&  typeof setCategoryVal === 'function' && <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+          { setCategoryVal &&  typeof setCategoryVal === 'function' && 
+          <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
             <Autocomplete 
               id="controllable-states-demo"
               value={categoryVal || null}
@@ -208,6 +276,21 @@ function SearchBarCombo({
 
           <Grid item xs={12} sm={6} md={4} lg={2} xl={2} sx={{ml:'auto'}}>
             <Grid container rowSpacing={1} columnSpacing={2} sx={{display:'flex', justifyContent:'flex-end'}}>
+              {onReload && 
+                  <Grid item>
+                    <StyledTooltip title='Reload' placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
+                    <IconButton onClick={onReload} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
+                      '&:hover': {
+                        background:"#103996", 
+                        color:"#fff"
+                      }
+                    }}>
+                      <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon='mdi:reload' />
+                    </IconButton>
+                  </StyledTooltip>
+                </Grid>
+              }
+                
                 {inviteButton && 
                   <Grid item>
                     <StyledTooltip title={inviteButton} placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
@@ -236,6 +319,17 @@ function SearchBarCombo({
                   </IconButton>
                 </StyledTooltip>
               </Grid>}
+              
+
+              {onExportCSV && 
+                  <Grid item>
+                    <LoadingButton onClick={onExportCSV}  variant='contained' sx={{p:0, minWidth:'24px'}} loading={onExportLoading}>
+                      <StyledTooltip title={BUTTONS.EXPORT.label} placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
+                        <Iconify color="#fff" sx={{ height: '41px', width: '55px', p:'8px'}} icon={BUTTONS.EXPORT.icon} />
+                      </StyledTooltip>
+                    </LoadingButton>
+                </Grid>
+              }
 
               {addButton && !transferredMachine &&
                   <Grid item>
@@ -269,6 +363,10 @@ SearchBarCombo.propTypes = {
   buttonIcon: PropTypes.string,
   onFilterVerify:PropTypes.func,
   filterVerify:PropTypes.string,
+  setAccountManagerFilter:PropTypes.func,
+  accountManagerFilter:PropTypes.object,
+  setSupportManagerFilter:PropTypes.func,
+  supportManagerFilter:PropTypes.object,
   filterListBy: PropTypes.string,
   onFilterListBy: PropTypes.func,
   categoryVal: PropTypes.object,
@@ -282,7 +380,10 @@ SearchBarCombo.propTypes = {
   transferredMachine:PropTypes.bool,
   handleAttach: PropTypes.func,
   transferStatus: PropTypes.bool,
-  handleTransferStatus: PropTypes.func
+  handleTransferStatus: PropTypes.func,
+  onExportCSV: PropTypes.func,
+  onExportLoading: PropTypes.bool,
+  onReload: PropTypes.func,
 };
 
 export default SearchBarCombo;

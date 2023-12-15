@@ -18,24 +18,44 @@ export function WebSocketProvider({ children }) {
   const { isAuthenticated, clearAllPersistedStates } = useAuthContext();
   const [token, setToken] = useState(null);
   const WS_URL = token ? `${CONFIG.SOCKET_URL}/?accessToken=${token}` : null;
-  const { sendMessage, readyState } = useWebSocket(WS_URL, {
+  const [onlineUsers, setOnlineUsers] = useState(0);
+  const [notifications, setNotifications] = useState(null);
+
+  const { sendMessage, sendJsonMessage, lastMessage, lastJsonMessage, readyState } = useWebSocket(WS_URL, {
     onMessage: (event) => {
       if (event.data instanceof Blob) {
-        const reader = new FileReader();
-        reader.onload = ()=> {
-          const blobData = JSON.parse(reader.result);
-          if (blobData.eventName === 'logout') {
-            clearAllPersistedStates()
-          }
-        };
-        reader.readAsText(event.data);
+          getJsonFromBlob(event.data).then(json => {
+           
+            if (json.eventName === 'newUserLogin' || json.eventName === 'newNotification') {
+              sendJsonMessage({eventName:'getNotifications'});
+            }
+
+            if (json.eventName === 'logout') {
+              clearAllPersistedStates();
+            }
+
+            // if (json.eventName === 'newNotification') {
+            //   const updatedNotifications = [json, ...notifications];
+            //   setNotifications(updatedNotifications);
+            // }
+
+            if (json.eventName === 'onlineUsers') {
+              setOnlineUsers(json?.userIds);
+            }
+
+            if (json.eventName === 'notificationsSent') {
+              setNotifications(json.data);
+            }
+
+            if (json.eventName === 'userLoggedOut') {
+              sendJsonMessage({eventName:'getOnlineUsers'});
+            }
+
+          }).catch(error => {
+            console.error('Error parsing JSON from Blob:', error);
+          });
       } else {
-        try {
-          // const data = JSON.parse(event.data);
-          // console.log('WebSocket JSON message:', data);
-        } catch (error) {
-          console.error('Error parsing WebSocket message:', error);
-        }
+        console.error('Error parsing WebSocket message:');
       }
     },
     share: true,
@@ -49,9 +69,39 @@ export function WebSocketProvider({ children }) {
       const accessToken = localStorage.getItem('accessToken');
       setToken(accessToken);
     }
-  }, [isAuthenticated]); 
+  }, [isAuthenticated]);
 
-  const contextValue = useMemo(() => ({ sendMessage, readyState }), [sendMessage, readyState]);
+  function getJsonFromBlob(blob) {
+    return new Promise((resolve, reject) => {
+      
+      if (!(blob instanceof Blob)) {
+        reject(new Error('Invalid argument: Not a Blob.'));
+        return;
+      }
+  
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const jsonData = JSON.parse(reader.result);
+          resolve(jsonData);
+        } catch (error) {
+          reject(error);
+        }
+      };
+  
+      reader.onerror = () => {
+        reject(new Error('Error reading the Blob.'));
+      };
+  
+      reader.readAsText(blob);
+    });
+  }
+
+  const contextValue = useMemo(() => ({ 
+    sendMessage, sendJsonMessage, 
+    lastMessage, lastJsonMessage, 
+    readyState, onlineUsers, notifications
+  }), [sendMessage, sendJsonMessage, lastMessage, lastJsonMessage, readyState, onlineUsers, notifications ]);
 
   return <WebSocketContext.Provider value={contextValue}>{children}</WebSocketContext.Provider>;
 }

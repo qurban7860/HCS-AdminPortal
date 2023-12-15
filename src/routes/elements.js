@@ -57,6 +57,7 @@ export const NoteViewForm = Loadable(lazy(() => import('../pages/customer/note/N
 
 // DASHBOARD: USER
 export const SecurityUserProfile = Loadable(lazy(() => import('../pages/user/SecurityUserProfile')));
+export const SecurityUserProfileEditForm = Loadable(lazy(() => import('../pages/user/SecurityUserProfileEditForm')));
 export const SecurityUserChangePassword = Loadable(lazy(() => import('../pages/user/SecurityUserChangePassword')));
 export const SecurityUserChangePasswordByAdmin = Loadable(lazy(() => import('../pages/user/SecurityUserChangePasswordByAdmin')));
 export const SecurityUserList = Loadable(lazy(() => import('../pages/user/SecurityUserList')));
@@ -262,7 +263,11 @@ export const ModuleList = Loadable(lazy(() => import('../pages/module/ModuleList
 export const ModuleEdit = Loadable(lazy(() => import('../pages/module/ModuleEdit')));
 export const ModuleView = Loadable(lazy(() => import('../pages/module/ModuleView')));
 
-
+// Configuration
+export const ConfigurationAdd  = Loadable(lazy(() => import('../pages/machine/configuration/ConfigurationAddForm')));
+export const ConfigurationList = Loadable(lazy(() => import('../pages/machine/configuration/ConfigurationList')));
+export const ConfigurationEdit = Loadable(lazy(() => import('../pages/machine/configuration/ConfigurationEdit')));
+export const ConfigurationView = Loadable(lazy(() => import('../pages/machine/configuration/ConfigurationView')));
 
 // Configs
 

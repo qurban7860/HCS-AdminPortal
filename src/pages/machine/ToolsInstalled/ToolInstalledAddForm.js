@@ -282,7 +282,6 @@ function ToolsInstalledAddForm() {
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={2}>
-              <FormLabel content='New Tool' />
               <Box
                 rowGap={2}
                 columnGap={2}

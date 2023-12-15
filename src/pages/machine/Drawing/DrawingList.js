@@ -36,7 +36,9 @@ import {
   setFilterBy,
   setDrawingViewFormVisibility, 
   resetDrawings,
-  deleteDrawing} from '../../../redux/slices/products/drawing';
+  deleteDrawing,
+  getDrawing,
+  resetDrawing} from '../../../redux/slices/products/drawing';
 import { useSnackbar } from '../../../components/snackbar';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
@@ -79,7 +81,6 @@ export default function DrawingList() {
     { id: 'documentCategory.name', visibility: 'xs1', label: 'Category', align: 'left' },
     { id: 'isActive', label: 'Active', align: 'center' },
     { id: 'createdAt', label: 'Created At', align: 'right' },
-    { id: 'action', label: '', align: 'right' },
   ];
     
   const onChangeRowsPerPage = (event) => {
@@ -143,27 +144,12 @@ export default function DrawingList() {
     setFilterStatus(event.target.value);
   };
 
-  const handleViewRow = (documentId) => {
-      dispatch(resetDocumentHistory())
+  const handleViewRow = (drawingId, documentId) => {
+      dispatch(resetDocumentHistory());
+      dispatch(resetDrawing());
+      dispatch(getDrawing(drawingId));
       dispatch(getDocumentHistory(documentId));
       dispatch(setDrawingViewFormVisibility(true));
-  };
-
-  const handleDeleteRow = (id) => {
-    setSelected(id);
-    handleOpenConfirm(true);
-  };
-
-  const handleDeleteDrawing = async (drawingId) => {
-    try {
-      await dispatch(deleteDrawing(drawingId));
-      await dispatch(resetDrawings());
-      await dispatch(getDrawings(machine?._id));
-      enqueueSnackbar(Snacks.deletedDrawing, { variant: `success` });
-    } catch (err) {
-      console.log(err);
-      enqueueSnackbar(Snacks.failedDeleteDrawing, { variant: `error` });
-    }
   };
 
   const handleResetFilter = () => {
@@ -211,9 +197,7 @@ export default function DrawingList() {
                       <DrawingListTableRow
                         key={row._id}
                         row={row}
-                        onViewRow={() => handleViewRow(row?.document?._id)}
-                        onDeleteRow={() => handleDeleteRow(row._id)}
-                        disabledActions={machine?.status?.slug === "transferred"}
+                        onViewRow={() => handleViewRow(row._id, row?.document?._id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
                     ) : (
@@ -234,25 +218,6 @@ export default function DrawingList() {
           onRowsPerPageChange={onChangeRowsPerPage}
         />
       </TableCard>
-
-      <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content="Are you sure you want to delete?"
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteDrawing(selected)
-              handleCloseConfirm();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      />
     </>
   );
 }

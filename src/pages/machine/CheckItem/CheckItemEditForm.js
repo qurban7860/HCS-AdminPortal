@@ -103,7 +103,6 @@ export default function DocumentCategoryeEditForm() {
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
-                <FormHeading heading={FORMLABELS.COVER.MACHINE_SERVICE_PARAM_EDIT} />
                   <RHFAutocomplete 
                       name="serviceCategory"
                       label="Item Category"

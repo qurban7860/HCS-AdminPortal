@@ -40,12 +40,8 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
   const { machine } = useSelector((state) => state.machine);
   const { enqueueSnackbar } = useSnackbar();
 
-  // necessary. dont remove
-  // const theme = useTheme();
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
-
   const onDelete = async () => {
     try {
       await dispatch(deleteDocument(document._id));
@@ -154,12 +150,12 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons isActive={defaultValues.isActive} 
       customerAccess={defaultValues?.customerAccess} 
-      handleEdit={handleEdit} 
-      // onDelete={onDelete}
+      handleEdit={handleEdit}
+      onDelete={onDelete}
+      disableDeleteButton={machinePage && machine?.status?.slug==="transferred"}
       backLink={(customerPage || machinePage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDocumentViewFormVisibility(false))}
       : () => navigate(PATH_DOCUMENT.document.list)}
       disableEditButton={machine?.status?.slug==='transferred'}
-      // disableDeleteButton={machine?.status?.slug==='transferred'}
       />
       <Grid container>
         <ViewFormField isLoading={isLoading} sm={8} heading="Name" param={defaultValues?.displayName} />

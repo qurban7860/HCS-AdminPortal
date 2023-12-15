@@ -209,7 +209,7 @@ export default function ServiceRecordConfigList() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_CONFIGS} backLink='' icon="material-symbols:list-alt-outline" setting="enable" />
+          <Cover name={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_CONFIGS} icon="material-symbols:list-alt-outline" setting />
         </StyledCardContainer>
 
         <TableCard>

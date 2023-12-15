@@ -22,7 +22,13 @@ MachineListTableToolbar.propTypes = {
   onFilterStatus: PropTypes.func,
   statusOptions: PropTypes.array,
   onFilterVerify: PropTypes.func,
-  filterVerify: PropTypes.string
+  filterVerify: PropTypes.string,
+  onExportCSV:PropTypes.func,
+  onExportLoading:PropTypes.bool,
+  setAccountManagerFilter:PropTypes.func,
+  accountManagerFilter:PropTypes.object,
+  setSupportManagerFilter:PropTypes.func,
+  supportManagerFilter:PropTypes.object,
 };
 
 export default function MachineListTableToolbar({
@@ -34,7 +40,13 @@ export default function MachineListTableToolbar({
   onResetFilter,
   onFilterStatus,
   onFilterVerify,
-  filterVerify
+  filterVerify,
+  onExportCSV,
+  onExportLoading,
+  setAccountManagerFilter,
+  accountManagerFilter,
+  setSupportManagerFilter,
+  supportManagerFilter,
 }) {
   const navigate = useNavigate();
   const toggleAdd = () => {
@@ -52,6 +64,12 @@ export default function MachineListTableToolbar({
         filterVerify={filterVerify}
         SubOnClick={toggleAdd}
         addButton={BUTTONS.ADDMACHINE}
+        onExportCSV={onExportCSV}
+        onExportLoading={onExportLoading}
+        setAccountManagerFilter={setAccountManagerFilter}
+        accountManagerFilter={accountManagerFilter}
+        setSupportManagerFilter={setSupportManagerFilter}
+        supportManagerFilter={supportManagerFilter}
       />
     </Stack>
   );

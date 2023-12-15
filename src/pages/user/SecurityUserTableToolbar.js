@@ -25,6 +25,7 @@ SecurityUserTableToolbar.propTypes = {
   onFilterListBy: PropTypes.func,
   employeeFilterListBy: PropTypes.string,
   onEmployeeFilterListBy: PropTypes.func,
+  onReload: PropTypes.func,
 };
 
 export default function SecurityUserTableToolbar({
@@ -39,6 +40,7 @@ export default function SecurityUserTableToolbar({
   onFilterName,
   onFilterRole,
   onResetFilter,
+  onReload
 }) {
   
   const navigate = useNavigate();
@@ -68,6 +70,7 @@ export default function SecurityUserTableToolbar({
         onEmployeeFilterListBy={onEmployeeFilterListBy}
         addButton={BUTTONS.ADDUSER}
         inviteButton={BUTTONS.INVITEUSER}
+        onReload={onReload}
       />
     </Stack>
   );

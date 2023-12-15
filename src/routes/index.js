@@ -27,6 +27,7 @@ import {
   SecurityUserEdit,
   SecurityUserAdd,
   SecurityUserProfile,
+  SecurityUserProfileEditForm,
   SecurityUserChangePassword,
   SecurityUserChangePasswordByAdmin,
 
@@ -197,6 +198,12 @@ import {
   ConfigAdd,
   ConfigView,
   ConfigEdit,
+
+  // Configuration
+  ConfigurationAdd,
+  ConfigurationList,
+  ConfigurationEdit,
+  ConfigurationView, 
 
    // User Invite
    UserInvitationList,
@@ -467,6 +474,15 @@ export default function Router() {
                   {path: 'editform', element: <ToolEditForm/>},
                 ]
               },
+              {
+                path: 'configuration',
+                children:[
+                  {path: 'new', element: <ConfigurationAdd/>},
+                  {path: 'list', element: <ConfigurationList/>},
+                  {path: ':id/view', element: <ConfigurationView/>},
+                  {path: ':id/edit', element: <ConfigurationEdit/>}, 
+                ]
+              },
             ]
             }
           ]
@@ -504,6 +520,7 @@ export default function Router() {
           children: [
             { element: <Navigate to="/dashboard/user/profile" replace />, index: true },
             { path: 'profile', element: <SecurityUserProfile/> },
+            { path: 'editProfile', element: <SecurityUserProfileEditForm/> },
             { path: 'password', element: <SecurityUserChangePassword/> },
             { path: 'changePassword', element: <SecurityUserChangePasswordByAdmin/> },
             { path: 'list', element: <SecurityUserList /> },

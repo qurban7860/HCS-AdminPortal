@@ -147,7 +147,7 @@ export function getActiveMachineStatuses (){
       {
         params: {
           isArchived: false,
-          isActive: true
+          isActive: true,
         }
       });
       dispatch(slice.actions.getActiveMachineStatusesSuccess(response.data));

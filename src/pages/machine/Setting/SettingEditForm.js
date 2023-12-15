@@ -85,11 +85,6 @@ export default function SettingEditForm() {
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
-              <Stack spacing={1}>
-                <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                  Edit Setting
-                </Typography>
-              </Stack>
               <Box
                 rowGap={3}
                 columnGap={3}

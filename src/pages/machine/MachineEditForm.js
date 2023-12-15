@@ -40,6 +40,7 @@ import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
 import ToggleButtons from '../components/DocumentForms/ToggleButtons';
 // constants
 import { BREADCRUMBS, FORMLABELS } from '../../constants/default-constants';
+import { today, futureDate, pastDate, formatDate } from './util/index'
 
 // ----------------------------------------------------------------------
 
@@ -82,8 +83,21 @@ export default function MachineEditForm() {
       name: Yup.string()
     }).nullable(),
     workOrderRef: Yup.string().max(50),
-    // installationDate: Yup.date().nullable(),
-    // shippingDate: Yup.date().nullable(),
+
+    shippingDate: Yup.date()
+    .typeError('Date Should be Valid!')
+    .max(futureDate,`Shipping Date field must be at earlier than ${formatDate(futureDate)}!`)
+    .min(pastDate,`Shipping Date field must be at after than ${formatDate(pastDate)}!`).nullable().label('Shipping Date'),
+
+    installationDate: Yup.date()
+    .typeError('Date Should be Valid!')
+    .max(futureDate,`Shipping Date field must be at earlier than ${formatDate(futureDate)}!`)
+    .min(pastDate,`Shipping Date field must be at after than ${formatDate(pastDate)}!`).nullable().label('Installation Date'),
+
+    supportExpireDate: Yup.date()
+    .typeError('Date Should be Valid!')
+    .min(today,`Support Expiry Date field must be at after than ${formatDate(today)}!`).nullable().label('Support Expiry Date'),
+
     instalationSite: Yup.object().shape({
       name: Yup.string()
     }).nullable(),
@@ -241,6 +255,12 @@ export default function MachineEditForm() {
     setChips(array);
   };
   // ----------------------end handle functions----------------------
+  useEffect(() => {
+    setValue('accountManager', spContacts.find((item) => item?._id === customer?.accountManager))
+    setValue('productManager', spContacts.find((item) => item?._id === customer?.productManager))
+    setValue('supportManager', spContacts.find((item) => item?._id === customer?.supportManager))
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[customer])
 
   return (
     <>

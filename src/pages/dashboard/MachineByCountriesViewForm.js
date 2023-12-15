@@ -1,4 +1,4 @@
-import {  useLayoutEffect, useState } from 'react';
+import {  useEffect, useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
@@ -7,7 +7,7 @@ import { Card, Grid, Autocomplete, TextField, Divider } from '@mui/material';
 // slices
 import {  getMachinesByCountry } from '../../redux/slices/dashboard/count';
 import {  getActiveMachineModels } from '../../redux/slices/products/model';
-import {  getCategories } from '../../redux/slices/products/category';
+import {  getActiveCategories } from '../../redux/slices/products/category';
 // hooks
 import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
 import { StyledGlobalCard } from '../../theme/styles/default-styles';
@@ -24,7 +24,7 @@ export default function MachineByCountriesViewForm() {
 
   const { machinesByCountry } = useSelector((state) => state.count);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
-  const { categories } = useSelector((state) => state.category);
+  const { activeCategories } = useSelector((state) => state.category);
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: currentYear - 1999 }, (_, index) => 2000 + index);
@@ -37,11 +37,10 @@ export default function MachineByCountriesViewForm() {
   const [MBCCategory, setMBCCategory] = useState(null);
 
   useLayoutEffect(() => {
-    dispatch(getCategories());
-    dispatch(getActiveMachineModels());
-    
+    dispatch(getActiveCategories());
+    dispatch(getActiveMachineModels(MBCCategory?._id));
     dispatch(getMachinesByCountry());
-  }, [dispatch]);
+  }, [dispatch, MBCCategory]);
 
   if (machinesByCountry.length !== 0) {
     machinesByCountry.countryWiseMachineCount.map((customer) => {
@@ -68,24 +67,34 @@ export default function MachineByCountriesViewForm() {
                 <Grid item xs={12} sm={2}>
                   <Autocomplete
                     fullWidth
-                    options={categories}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    options={activeCategories}
+                    value={MBCCategory}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                    renderOption={(props, option) => (<li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>)}
+                    renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option?.name || ''}`}</li>)}
                     renderInput={(params) => (<TextField {...params} label="Categories" size="small" />)}
-                    onChange={(event, newValue) =>{setMBCCategory(newValue?._id); handleGraphCountry(newValue?._id, MBCYear,MBCModel)}}
+                    onChange={(event, newValue) =>{
+                        setMBCCategory(newValue);
+                        setMBCModel(null); 
+                        handleGraphCountry(newValue?._id, MBCYear,MBCModel)
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12} sm={2}>
-                  <Autocomplete
-                    fullWidth
-                    options={activeMachineModels}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
-                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                    renderOption={(props, option) => (<li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>)}
-                    renderInput={(params) => (<TextField {...params} label="Model" size="small" />)}
-                    onChange={(event, newValue) =>{setMBCModel(newValue?._id); handleGraphCountry(MBCCategory, MBCYear, newValue?._id)}}
-                  />
+                    <Autocomplete
+                      fullWidth
+                      options={activeMachineModels}
+                      value={MBCModel}  // Ensure that MBCModel is controlled
+                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                      getOptionLabel={(option) => `${option?.name || ''}`}
+                      renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.name || ''}`}</li>)}
+                      renderInput={(params) => (<TextField {...params} label="Model" size="small" />)}
+                      onChange={(event, newValue) => {
+                        setMBCModel(newValue);
+                        if (newValue) setMBCCategory(newValue?.category);
+                        handleGraphCountry(MBCCategory, MBCYear, newValue?._id);
+                      }}
+                    />
                 </Grid>
                 <Grid item xs={12} sm={2}>
                   <Autocomplete

@@ -34,6 +34,7 @@ export default function RHFDatePicker({ name, label, helperText, Error, ...other
             />
           )}
           {...other}
+          // InputAdornmentProps={{ style: { display: 'none' } }}
         />
       )}
     />

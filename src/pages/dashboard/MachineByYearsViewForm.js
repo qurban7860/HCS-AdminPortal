@@ -7,7 +7,7 @@ import { Card, Grid, Autocomplete, TextField, Divider } from '@mui/material';
 // slices
 import {  getMachinesByYear } from '../../redux/slices/dashboard/count';
 import {  getActiveMachineModels } from '../../redux/slices/products/model';
-import {  getCategories } from '../../redux/slices/products/category';
+import {  getActiveCategories, getCategories } from '../../redux/slices/products/category';
 // hooks
 import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
 import { StyledGlobalCard } from '../../theme/styles/default-styles';
@@ -25,7 +25,7 @@ export default function MachineByCountriesViewForm() {
 
   const { machinesByYear } = useSelector((state) => state.count);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
-  const { categories } = useSelector((state) => state.category);
+  const { activeCategories } = useSelector((state) => state.category);
 
   const yearWiseMachinesYear = [];
   const yearWiseMachinesNumber = [];
@@ -35,11 +35,11 @@ export default function MachineByCountriesViewForm() {
   const [MBYCategory, setMBYCategory] = useState(null);
   
   useLayoutEffect(() => {
-    dispatch(getCategories());
-    dispatch(getActiveMachineModels());
+    dispatch(getActiveCategories());
+    dispatch(getActiveMachineModels(MBYCategory?._id));
     
     dispatch(getMachinesByYear());
-  }, [dispatch]);
+  }, [dispatch, MBYCategory]);
 
   if (machinesByYear.length !== 0) {
     machinesByYear.yearWiseMachines.map((model) => {
@@ -61,29 +61,39 @@ export default function MachineByCountriesViewForm() {
         <StyledGlobalCard>
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{mt:2, display:'flex', justifyContent:'flex-end'}}>
                 <Grid item xs={12} sm={6}>
-                <ViewFormEditDeleteButtons backLink={() => navigate(PATH_DASHBOARD.general.app)} />
+                  <ViewFormEditDeleteButtons backLink={() => navigate(PATH_DASHBOARD.general.app)} />
                 </Grid>
                 <Grid item xs={12} sm={2}>
                   <Autocomplete
                     fullWidth
-                    options={categories}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    options={activeCategories}
+                    value={MBYCategory}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                    renderOption={(props, option) => (<li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>)}
+                    renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option?.name || ''}`}</li>)}
                     renderInput={(params) => (<TextField {...params} label="Categories" size="small" />)}
-                    onChange={(event, newValue) =>{setMBYCategory(newValue?._id); handleGraphYear(newValue?._id, MBYModel, MBYCountry)}}
+                    onChange={(event, newValue) =>{
+                        setMBYCategory(newValue);
+                        setMBYModel(null); 
+                        handleGraphYear(newValue?._id, MBYModel, MBYCountry)
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12} sm={2}>
-                  <Autocomplete
-                    fullWidth
-                    options={activeMachineModels}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
-                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                    renderOption={(props, option) => (<li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>)}
-                    renderInput={(params) => (<TextField {...params} label="Model" size="small" />)}
-                    onChange={(event, newValue) =>{setMBYModel(newValue?._id);handleGraphYear(MBYCategory, newValue?._id,MBYCountry)}}
-                  />
+                    <Autocomplete
+                      fullWidth
+                      options={activeMachineModels}
+                      value={MBYModel}  // Ensure that MBYModel is controlled
+                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                      getOptionLabel={(option) => `${option?.name || ''}`}
+                      renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.name || ''}`}</li>)}
+                      renderInput={(params) => (<TextField {...params} label="Model" size="small" />)}
+                      onChange={(event, newValue) => {
+                        setMBYModel(newValue);
+                        if (newValue) setMBYCategory(newValue?.category);
+                        handleGraphYear(MBYCategory, newValue?._id,MBYCountry)
+                      }}
+                    />
                 </Grid>
                 <Grid item xs={12} sm={2}>
                   <Autocomplete

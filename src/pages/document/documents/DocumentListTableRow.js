@@ -30,7 +30,6 @@ DocumentListTableRow.propTypes = {
   machineDrawings: PropTypes.bool,
   handleMachineDialog: PropTypes.func,
   handleCustomerDialog: PropTypes.func,
-  disabledActions:  PropTypes.bool
 };
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
@@ -53,8 +52,7 @@ export default function DocumentListTableRow({
   machinePage,
   machineDrawings,
   handleMachineDialog,
-  handleCustomerDialog,
-  disabledActions
+  handleCustomerDialog
 }) {
   const {
     displayName,
@@ -63,6 +61,7 @@ export default function DocumentListTableRow({
     referenceNumber,
     stockNumber,
     machine,
+    productDrawings,
     customer,
     docCategory,
     customerAccess,
@@ -81,6 +80,7 @@ export default function DocumentListTableRow({
       <LinkTableCell align="left" param={displayName} onClick={onViewRow} />
       {  lgScreen && <TableCell align="center">{documentVersions[0]?.versionNo}</TableCell>}
       {  smScreen && machineDrawings && <TableCell align="left">{stockNumber}</TableCell>}
+      {  smScreen && machineDrawings && <TableCell align="left">{productDrawings.map((m)=> m?.machine?.serialNo).join(', ')}</TableCell>}
       {  !customerPage && !machinePage && !machineDrawings && lgScreen && 
           <>
             {/* <TableCell align="left">{customer?.name}</TableCell> */}
@@ -89,17 +89,9 @@ export default function DocumentListTableRow({
           </>
       }
       
-      {  lgScreen && <TableCell align="center">
-        <Switch checked={customerAccess} disabled size="small" />{' '}
-      </TableCell>}
-      <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell>
+      {/* {  lgScreen && <TableCell align="center"><Switch checked={customerAccess} disabled size="small" /></TableCell>}
+      <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell> */}
       <TableCell align="right">{fDate(createdAt)}</TableCell>
-      <TableCell align="center">
-          <StyledStack>
-              <IconTooltip title="Delete" disabled={disabledActions} onClick={onDeleteRow} 
-                           color={disabledActions?"#c3c3c3":"#FF0000"} icon="mdi:trash-can-outline" />
-          </StyledStack>
-      </TableCell>
     </StyledTableRow>
   );
 }

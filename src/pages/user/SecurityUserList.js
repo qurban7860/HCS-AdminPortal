@@ -208,6 +208,7 @@ useEffect(()=>{
             onFilterListBy={handleFilterListBy}
             employeeFilterListBy={employeeFilterListBy}
             onEmployeeFilterListBy={handleEmployeeFilterListBy}
+            onReload={onRefresh}
           />
 
         {!isNotFound && <TablePaginationCustom
@@ -216,7 +217,7 @@ useEffect(()=>{
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            refresh={onRefresh}
+            // refresh={onRefresh}
           />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction

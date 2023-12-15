@@ -81,7 +81,6 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={2}>
-              <FormHeading heading="New Note" />
               <RHFTextField name="note" label="Note*" minRows={8} multiline />
               <RHFSwitch
                 name="isActive"

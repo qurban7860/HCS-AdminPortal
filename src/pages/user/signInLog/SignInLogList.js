@@ -37,13 +37,13 @@ import { PATH_PAGE, PATH_SECURITY } from '../../../routes/paths';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'xs1', visibility: 'md1', label: 'User Login', align: 'left' },
+  { id: 'requestedLogin', visibility: 'md1', label: 'User Login', align: 'left' },
   { id: 'user.name', label: 'User Name', align: 'left' },
-  { id: 'xs2', visibility: 'md2', label: 'User IP', align: 'left' },
+  { id: 'loginIP', visibility: 'md2', label: 'User IP', align: 'left' },
   { id: 'loginTime', label: 'Login Time', align: 'left' },
   { id: 'logoutTime', label: 'Logout Time', align: 'left' },
-  { id: 'logoutBy', label: 'Logout By', align: 'left' },
-  { id: 'xs3', visibility: 'xs3', label: 'Status', align: 'left' },
+  { id: 'loggedOutBy', label: 'Logout By', align: 'left' },
+  { id: 'statusCode', visibility: 'xs3', label: 'Status', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------
@@ -157,7 +157,7 @@ export default function SignInLogList() {
   return (
       <Container maxWidth={false}>
         <Card sx={{ mb: 3, height: 160, position: 'relative'}}>
-          <Cover generalSettings name="Sign In Logs" icon="ph:users-light" />
+          <Cover name="Sign In Logs" icon="ph:users-light" generalSettings />
         </Card>
 
         <TableCard>

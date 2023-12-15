@@ -25,19 +25,20 @@ import { varFade } from '../../components/animate';
 // config-global
 import { CONFIG } from '../../config-global';
 import {  getActiveMachineModels } from '../../redux/slices/products/model';
-import {  getCategories } from '../../redux/slices/products/category';
+import {  getActiveCategories } from '../../redux/slices/products/category';
 import { countries } from '../../assets/data';
 import Iconify from '../../components/iconify';
 import { PATH_DASHBOARD } from '../../routes/paths';
+import { useWebSocketContext } from '../../auth/WebSocketContext';
 // ----------------------------------------------------------------------
 
 export default function GeneralAppPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+  const { onlineUsers } = useWebSocketContext();
   const { count, machinesByCountry, machinesByYear, machinesByModel } = useSelector((state) => state.count);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
-  const { categories } = useSelector((state) => state.category);
+  const { activeCategories } = useSelector((state) => state.category);
   const enviroment = CONFIG.ENV.toLowerCase();
   const showDevGraphs = enviroment !== 'live';
 
@@ -120,7 +121,7 @@ export default function GeneralAppPage() {
   }
  
   useLayoutEffect(() => {
-    dispatch(getCategories());
+    dispatch(getActiveCategories());
     dispatch(getActiveMachineModels());
     dispatch(getCount());
     dispatch(getMachinesByCountry());
@@ -146,7 +147,7 @@ export default function GeneralAppPage() {
                 total={count?.customerCount || 0}
                 notVerifiedTitle="Not Verified"
                 notVerifiedCount={count?.nonVerifiedCustomerCount}
-                icon="mdi:account-group"
+                icon="raphael:users"
                 color="warning"
                 chart={{
                   series: countryWiseMachineCountNumber,
@@ -157,7 +158,7 @@ export default function GeneralAppPage() {
               <HowickWidgets
                 title="Sites"
                 total={count?.siteCount || 0}
-                icon="mdi:office-building-marker"
+                icon="carbon:location-company"
                 color="bronze"
                 chart={{
                   series: countryWiseSiteCountNumber,
@@ -174,7 +175,7 @@ export default function GeneralAppPage() {
                 notVerifiedCount={count?.nonVerifiedMachineCount}
                 connectableTitle="Decoilers / Kits"
                 connectableCount={count?.connectAbleMachinesCount}
-                icon="mdi:window-shutter-settings"
+                icon="vaadin:automation"
                 color="info"
                 chart={{
                   series: modelWiseMachineNumber,
@@ -183,9 +184,11 @@ export default function GeneralAppPage() {
             </Grid>
             <Grid item xs={12} sm={6} md={5} lg={4} sx={{ mt: '24px' }}>
               <HowickWidgets
-                title="Active Users"
-                total={count?.userCount || 0}
-                icon="mdi:account"
+                title="Users"
+                total={count?.userTotalCount || 0}
+                activeUserCount={count?.userActiveCount}
+                onlineUserCount={onlineUsers && onlineUsers?.length}
+                icon="mdi:account-group"
                 color="error"
                 chart={{
                   series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
@@ -203,25 +206,36 @@ export default function GeneralAppPage() {
                   title="Machine by Countries"
                   action={
                       <Box sx={{display:'flex'}}>
-                        <Autocomplete
-                          sx={{width:'140px', paddingRight:1 }}
-                          options={categories}
-                          isOptionEqualToValue={(option, value) => option._id === value._id}
-                          getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                          renderOption={(props, option) => (<li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>)}
-                          renderInput={(params) => (<TextField {...params} label="Categories" size="small" />)}
-                          onChange={(event, newValue) =>{setMBCCategory(newValue?._id); handleGraphCountry(newValue?._id, MBCYear,MBCModel)}}
-                        />
-
-                        <Autocomplete
-                          sx={{width:'120px', paddingRight:1 }}
-                          options={activeMachineModels}
-                          isOptionEqualToValue={(option, value) => option._id === value._id}
-                          getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                          renderOption={(props, option) => (<li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>)}
-                          renderInput={(params) => (<TextField {...params} label="Model" size="small" />)}
-                          onChange={(event, newValue) =>{setMBCModel(newValue?._id); handleGraphCountry(MBCCategory, MBCYear, newValue?._id)}}
-                        />
+                          <Autocomplete
+                            fullWidth
+                            sx={{ width: '140px', paddingRight:1 }}
+                            options={activeCategories}
+                            value={MBCCategory}
+                            isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                            getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                            renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option?.name || ''}`}</li>)}
+                            renderInput={(params) => (<TextField {...params} label="Categories" size="small" />)}
+                            onChange={(event, newValue) =>{
+                                setMBCCategory(newValue);
+                                setMBCModel(null); 
+                                handleGraphCountry(newValue?._id, MBCYear,MBCModel)
+                            }}
+                          />
+                            <Autocomplete
+                            sx={{ width: '130px', paddingRight:1 }}
+                              fullWidth
+                              options={activeMachineModels.filter((model) => MBCCategory ? model?.category?._id === MBCCategory?._id : model)}
+                              value={MBCModel}  // Ensure that MBCModel is controlled
+                              isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                              getOptionLabel={(option) => `${option?.name || ''}`}
+                              renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.name || ''}`}</li>)}
+                              renderInput={(params) => (<TextField {...params} label="Model" size="small" />)}
+                              onChange={(event, newValue) => {
+                                setMBCModel(newValue);
+                                if (newValue) setMBCCategory(newValue?.category);
+                                handleGraphCountry(MBCCategory, MBCYear, newValue?._id);
+                              }}
+                            />
 
                         <Autocomplete
                           sx={{ width: '120px', paddingRight:1}}
@@ -260,7 +274,7 @@ export default function GeneralAppPage() {
                     <Box sx={{display:'flex'}}>
                         <Autocomplete
                           sx={{width:'140px', paddingRight:1 }}
-                          options={categories}
+                          options={activeCategories}
                           isOptionEqualToValue={(option, value) => option._id === value._id}
                           getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                           renderOption={(props, option) => (<li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>)}
@@ -308,23 +322,35 @@ export default function GeneralAppPage() {
                   action={
                     <Box sx={{display:'flex'}}>
                         <Autocomplete
-                          sx={{width:'140px', paddingRight:1 }}
-                          options={categories}
-                          isOptionEqualToValue={(option, value) => option._id === value._id}
+                          sx={{ width: '140px', paddingRight:1 }}
+                          fullWidth
+                          options={activeCategories}
+                          value={MBYCategory}
+                          isOptionEqualToValue={(option, value) => option?._id === value?._id}
                           getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                          renderOption={(props, option) => (<li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>)}
+                          renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option?.name || ''}`}</li>)}
                           renderInput={(params) => (<TextField {...params} label="Categories" size="small" />)}
-                          onChange={(event, newValue) =>{setMBYCategory(newValue?._id); handleGraphYear(newValue?._id, MBYModel, MBYCountry)}}
+                          onChange={(event, newValue) =>{
+                              setMBYCategory(newValue);
+                              setMBYModel(null); 
+                              handleGraphYear(newValue?._id, MBYModel, MBYCountry)
+                          }}
                         />
-                        <Autocomplete
-                          sx={{width:'120px', paddingRight:1}}
-                          options={activeMachineModels}
-                          isOptionEqualToValue={(option, value) => option._id === value._id}
-                          getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                          renderOption={(props, option) => (<li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>)}
-                          renderInput={(params) => (<TextField {...params} label="Model" size="small" />)}
-                          onChange={(event, newValue) =>{setMBYModel(newValue?._id);handleGraphYear(MBYCategory, newValue?._id,MBYCountry)}}
-                        />
+                          <Autocomplete
+                            sx={{ width: '130px', paddingRight:1 }}
+                            fullWidth
+                            options={activeMachineModels.filter((model) => MBYCategory ? model?.category?._id === MBYCategory?._id : model)}
+                            value={MBYModel}  // Ensure that MBYModel is controlled
+                            isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                            getOptionLabel={(option) => `${option?.name || ''}`}
+                            renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.name || ''}`}</li>)}
+                            renderInput={(params) => (<TextField {...params} label="Model" size="small" />)}
+                            onChange={(event, newValue) => {
+                              setMBYModel(newValue);
+                              if (newValue) setMBYCategory(newValue?.category);
+                              handleGraphYear(MBYCategory, newValue?._id,MBYCountry)
+                            }}
+                          />
 
                         <Autocomplete
                           sx={{ width: '120px', paddingRight:1 }}

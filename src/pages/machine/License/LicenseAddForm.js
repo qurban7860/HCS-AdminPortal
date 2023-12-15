@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Autocomplete, Box, Card, Grid, TextField, Typography } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers';
 // slice
 import { LicenseTypes, addLicense, setLicenseFormVisibility } from '../../../redux/slices/products/license';
 // schema
@@ -102,8 +101,8 @@ export default function LicenseAddForm() {
            
               <RHFTextField name="production" label="Production"/>
               <RHFTextField name="waste" label="Waste"/>
-              <RHFDatePicker inputFormat='dd/MM/yyyy' name="extensionTime" label="Extension Time" />
-              <RHFDatePicker inputFormat='dd/MM/yyyy' name="requestTime" label="Request Time" />
+              <RHFDatePicker inputFormat='dd/MM/yyyy' name="extensionTime" label="Extension Date" />
+              <RHFDatePicker inputFormat='dd/MM/yyyy' name="requestTime" label="Request Date" />
 
               <RHFSwitch name="isActive" labelPlacement="start"
                 label={

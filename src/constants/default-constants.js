@@ -48,7 +48,7 @@ export const FORMLABELS = {
     MACHINE_CHECK_ITEM_SERVICE_PARAMS_CONSTRCTUION: 'Check Items (Under Construction)',
     MACHINE_CHECK_ITEM_SERVICE_PARAM_ADD: 'New Check Item',
     MACHINE_CHECK_ITEM_SERVICE_PARAM_EDIT: 'Edit Check Item',
-    MACHINE_CHECK_ITEM_SERVICE_CONFIGS: 'Service Doc Configurations',
+    MACHINE_CHECK_ITEM_SERVICE_CONFIGS: 'Service Doc Config',
     MACHINE_CHECK_ITEM_SERVICE_CONFIGS_ADD: 'New Service Doc Configuration',
     MACHINE_CHECK_ITEM_SERVICE_CONFIGS_EDIT: 'Edit Service Doc Configuration',
     MACHINE_CHECK_ITEM_SERVICE_RECORDS: 'Check Items Service Records',

@@ -134,16 +134,16 @@ const  onChangePage = (event, newPage) => {
     { id: 'referenceNumber', visibility: 'xs2', label: 'Ref. No.', align: 'left' },
     { id: 'displayName', label: 'Name', align: 'left' },
     { id: 'documentVersions.versionNo.[]', visibility: 'md1', label: 'Version', align: 'center' },
-    { id: 'customerAccess', visibility: 'md2', label: 'Customer Access', align: 'center' },
-    { id: 'isActive', label: 'Active', align: 'center' },
+    // { id: 'customerAccess', visibility: 'md2', label: 'Customer Access', align: 'center' },
+    // { id: 'isActive', label: 'Active', align: 'center' },
     { id: 'createdAt', label: 'Created At', align: 'right' },
-    { id: 'action', label: '', align: 'right' },
   ];
   
   if (machineDrawings) {
     const insertIndex = 5; // Index after which you want to insert the new objects
     TABLE_HEAD.splice(insertIndex, 0,// 0 indicates that we're not removing any elements
     { id: 'stockNumber', visibility: 'xs2', label: 'Stock No.', align: 'left' },
+    { id: 'productDrawings.serialNumbers', visibility: 'xs2', label: 'Machines', align: 'left' },
     );
   }
 
@@ -201,8 +201,6 @@ const  onChangePage = (event, newPage) => {
       setRowsPerPage(documentRowsPerPage)
     }
   },[customerPage, machinePage, machineDrawings, machineDocumentsRowsPerPage, customerDocumentsRowsPerPage, machineDrawingsRowsPerPage, documentRowsPerPage])
-
-
 
   useEffect(() => {
     setTableData(documents);
@@ -280,11 +278,6 @@ const  onChangePage = (event, newPage) => {
       dispatch(resetDocumentHistory())
       navigate(PATH_DOCUMENT.document.view(id));
     }
-  };
-
-  const handleDeleteRow = (id) => {
-    setSelected(id)
-    handleOpenConfirm(true)                        
   };
 
   const handleResetFilter = () => {
@@ -389,8 +382,6 @@ const  onChangePage = (event, newPage) => {
                         key={row._id}
                         row={row}
                         onViewRow={() => handleViewRow(row._id)}
-                        onDeleteRow={() => handleDeleteRow(row._id)}
-                        disabledActions={machine?.status?.slug === "transferred"}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         customerPage={customerPage}
                         machinePage={machinePage}
@@ -468,8 +459,8 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, category
         document?.docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         document?.referenceNumber?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         document?.stockNumber?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.productDrawings?.some((m) => m?.machine?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0) ||
         document?.documentVersions[0].versionNo?.toString().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (document?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

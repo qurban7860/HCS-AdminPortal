@@ -295,8 +295,6 @@ setCheckItemLists(updatedCheckParams);
       <Grid item xs={18} md={12}>
         <Card sx={{ p: 3 }}>
           <Stack spacing={2}>
-          <FormLabel content={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAMS} />
-            <FormHeading heading="Edit Service Record" />
               {/* <Grid container>
                 <ViewFormField sm={6} heading='Machine'                 param={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} label="serialNo"/>
                 <ViewFormField sm={6} heading='Machine Model Category'  param={machine?.machineModel?.category?.name} label="serialNo"/>

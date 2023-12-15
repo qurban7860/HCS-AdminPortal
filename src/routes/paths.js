@@ -191,6 +191,13 @@ export const PATH_MACHINE = {
         tooledit: (id) => path(ROOTS_MACHINE, `/machines/settings/tool/${id}/edit`),
         edit: (id) => path(ROOTS_MACHINE, `/machines/settings/tool/${id}/edit`),
       },
+      configuration: {
+        root: path(ROOTS_MACHINE, '/products/machines/settings'),
+        new: (ROOTS_MACHINE, '/products/machines/settings/configuration/new'),
+        list: (ROOTS_MACHINE, '/products/machines/settings/configuration/list'),
+        view: (id) => path(ROOTS_MACHINE, `/machines/settings/configuration/${id}/view`),
+        edit: (id) => path(ROOTS_MACHINE, `/machines/settings/configuration/${id}/edit`),
+      },
       serviceRecordConfigs: {
         new: (ROOTS_MACHINE, '/products/machines/settings/serviceRecordConfigs/new'),
         copy: (id) => path(ROOTS_MACHINE, `/machines/settings/serviceRecordConfigs/${id}/copy`),
@@ -229,6 +236,7 @@ export const PATH_SECURITY = {
     list: path(ROOTS_SECURITY, '/users/list'),
     cards: path(ROOTS_SECURITY, '/users/cards'),
     profile: path(ROOTS_SECURITY, '/users/profile'),
+    editProfile: path(ROOTS_SECURITY, '/users/editProfile'),
     password: path(ROOTS_SECURITY, '/users/password'),
     userPassword: path(ROOTS_SECURITY, '/users/changePassword'),
     account: path(ROOTS_SECURITY, '/users/account'),
