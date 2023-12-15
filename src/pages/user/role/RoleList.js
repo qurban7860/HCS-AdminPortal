@@ -215,7 +215,7 @@ export default function RoleList() {
             // mt: '24px',
           }}
         >
-          <Cover generalSettings name="Roles" icon="ph:users-light" />
+          <Cover name="Roles" icon="ph:users-light" generalSettings />
         </Card>
 
         <TableCard>

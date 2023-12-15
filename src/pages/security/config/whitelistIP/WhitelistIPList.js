@@ -186,7 +186,7 @@ export default function WhitelistIPList() {
             // mt: '24px',
           }}
         >
-          <Cover generalSettings name="Whitelist IPs" icon="ph:users-light" />
+          <Cover name="Whitelist IPs" icon="ph:users-light" generalSettings />
         </Card>
 
         <TableCard>

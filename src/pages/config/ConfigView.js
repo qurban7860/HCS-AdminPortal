@@ -27,7 +27,7 @@ export default function ConfigView() {
     <>
       <Container maxWidth={false}>
         <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
-          <Cover name={isLoading?"":config?.name} generalSettings backLink={PATH_SETTING.configs.list} />
+          <Cover name={isLoading?"":config?.name} generalSettings />
         </Card>
         <ConfigViewForm />
       </Container>

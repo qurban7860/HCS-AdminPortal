@@ -43,7 +43,7 @@ export default function UserInviteViewForm() {
   return (
     <Container maxWidth={false}>
       <Card sx={{mb: 3, height: 160, position: 'relative'}}>
-        <Cover generalSettings backLink={PATH_SETTING.invite.list} name="User Invite Detail" icon="ph:users-light" />
+        <Cover name="User Invite Detail" icon="ph:users-light" generalSettings />
       </Card>
       <Grid item md={12} mt={2}>
         <Card sx={{ p: 2 }}>

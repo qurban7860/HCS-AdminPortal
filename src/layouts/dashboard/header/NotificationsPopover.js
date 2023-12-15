@@ -17,25 +17,28 @@ import {
   ListSubheader,
   ListItemAvatar,
   ListItemButton,
+  Tooltip,
+  IconButton,
 } from '@mui/material';
 // utils
-import { fToNow } from '../../../utils/formatTime';
-// _mock_
-// import { _notifications } from '../../../_mock/arrays';
+import { fDate, fToNow } from '../../../utils/formatTime';
+
 // components
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import MenuPopover from '../../../components/menu-popover';
 import { IconButtonAnimate } from '../../../components/animate';
+import { useWebSocketContext } from '../../../auth/WebSocketContext';
+import { ICONS } from '../../../constants/icons/default-icons';
 
 // ----------------------------------------------------------------------
 
+export const userId = localStorage.getItem('userId');
+
 export default function NotificationsPopover() {
-  const [openPopover, setOpenPopover] = useState(null);
-
-  const [notifications] = useState(null);
-
-  // const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
+  const [ openPopover, setOpenPopover ] = useState(null);
+  const { notifications, sendJsonMessage } = useWebSocketContext();
+  const totalUnRead = notifications && notifications.filter((item) => item?.readBy.includes(userId) === false).length;
 
   const handleOpenPopover = (event) => {
     setOpenPopover(event.currentTarget);
@@ -45,30 +48,22 @@ export default function NotificationsPopover() {
     setOpenPopover(null);
   };
 
-  // const handleMarkAllAsRead = () => {
-  //   setNotifications(
-  //     // notifications.map((notification) => ({
-  //     //   ...notification,
-  //     //   isUnRead: false,
-  //     // }))
-  //   );
-  // };
+  const handleMarkAsRead = (id) => {
+    sendJsonMessage({eventName:'markAsRead',_id:id});
+    sendJsonMessage({eventName:'getNotification'});
+  }
+  
+  const handleMarkAllAsRead = () => {
+    sendJsonMessage({eventName:'markAsRead'});
+    sendJsonMessage({eventName:'getNotification'});
+  };
 
   return (
     <>
-      <IconButtonAnimate
-        color={openPopover ? 'primary' : 'default'}
-        onClick={handleOpenPopover}
-        sx={{ width: 40, height: 40 }}
-      >
-        <Badge
-          badgeContent={null}
-          // {totalUnRead}
-          color="error"
-        >
-          <Iconify icon={openPopover ? 'mdi:bell-ring' : 'mdi:bell'} />
-
-        </Badge>
+      <IconButtonAnimate color={openPopover ? 'primary' : 'default'} 
+      // onClick={handleOpenPopover} 
+      sx={{ width: 40, height: 40 }}>
+        <Badge badgeContent={totalUnRead} color="error" ><Iconify icon={openPopover ? 'mdi:bell-ring' : 'mdi:bell'} /></Badge>
       </IconButtonAnimate>
 
       <MenuPopover open={openPopover} onClose={handleClosePopover} sx={{ width: 360, p: 0 }}>
@@ -77,60 +72,44 @@ export default function NotificationsPopover() {
             <Typography variant="subtitle1">Notifications</Typography>
 
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {/* You have {totalUnRead} unread messages */}
+              You have {totalUnRead || 'no'} unread {totalUnRead>1?"messages":"message"}
             </Typography>
           </Box>
 
-          {/* {totalUnRead > 0 && (
+          {totalUnRead > 0 && (
             <Tooltip title=" Mark all as read">
               <IconButton color="primary" onClick={handleMarkAllAsRead}>
                 <Iconify icon="eva:done-all-fill" />
               </IconButton>
             </Tooltip>
-          )} */}
+          )}
         </Box>
-
-        <Divider sx={{ borderStyle: 'solid' }} />
-
-        <Scrollbar sx={{ height: { xs: 340, sm: 'auto' } }}>
-          <List
-            disablePadding
-            subheader={
-              <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
-                {!notifications && 'Loading...' ? 'No notifications' : 'NEW'}
-              </ListSubheader>
-            }
-          >
-            {/* {notifications.slice(0, 2).map((notification) => (
-              <NotificationItem key={notification.id} notification={notification} />
-            ))} */}
-          </List>
-
-          <List
-            disablePadding
-            subheader={
-              <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
-                {!notifications && 'Loading...' ? '' : 'OLD'}
-              </ListSubheader>
-            }
-          >
-            {/* {notifications.slice(2, 5).map((notification) => (
-              <NotificationItem key={notification.id} notification={notification} />
-            ))} */}
-          </List>
-        </Scrollbar>
-
-        <Divider sx={{ borderStyle: 'solid' }} />
-
-        {!notifications && 'Loading...' ? (
-          ''
-        ) : (
-          <Box sx={{ p: 1 }}>
-            <Button fullWidth disableRipple>
-              View All
-            </Button>
-          </Box>
-        )}
+        {notifications && notifications?.length>0 && 
+          <>
+          <Divider sx={{ borderStyle: 'solid' }} />
+          <Scrollbar sx={{ maxHeight: 300 }}>
+            <List
+              disablePadding
+              subheader={
+                <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
+                  {!notifications && 'Loading...' ? 'No notifications' : 'NEW'}
+                </ListSubheader>
+              }
+            >
+              {notifications.map((notification) => (
+                <NotificationItem handleMarkAsRead={handleMarkAsRead} key={notification?._id} notification={notification} />
+              ))}
+            </List>
+          </Scrollbar>
+          <Divider sx={{ borderStyle: 'solid' }} />
+          {!notifications && 'Loading...' ? (
+            ''
+          ) : (
+            <Box sx={{ p: 1 }}><Button fullWidth disableRipple>View All</Button></Box>
+          )}
+          </>
+        }
+        
       </MenuPopover>
     </>
   );
@@ -140,18 +119,20 @@ export default function NotificationsPopover() {
 
 NotificationItem.propTypes = {
   notification: PropTypes.shape({
-    id: PropTypes.string,
-    avatar: PropTypes.node,
-    type: PropTypes.string,
+    _id: PropTypes.string,
     title: PropTypes.string,
-    isUnRead: PropTypes.bool,
     description: PropTypes.string,
-    createdAt: PropTypes.instanceOf(Date),
+    type: PropTypes.string,
+    extraInfo : PropTypes.object,
+    readBy: PropTypes.array,
+    receivers: PropTypes.array,
+    createdAt: PropTypes.string
   }),
+  handleMarkAsRead:PropTypes.func
 };
 
-function NotificationItem({ notification }) {
-  const { avatar, title } = renderContent(notification);
+function NotificationItem({ handleMarkAsRead, notification }) {
+  const { title, icon, color } = renderNotification(notification);
 
   return (
     <ListItemButton
@@ -159,13 +140,14 @@ function NotificationItem({ notification }) {
         py: 1.5,
         px: 2.5,
         mt: '1px',
-        ...(notification.isUnRead && {
+        ...(!notification?.readBy?.includes(userId) && {
           bgcolor: 'action.selected',
         }),
       }}
+      onClick={()=> handleMarkAsRead(notification?._id)}
     >
       <ListItemAvatar>
-        <Avatar sx={{ bgcolor: 'background.neutral' }}>{avatar}</Avatar>
+        <Avatar sx={{ bgcolor: 'background.primary'}}><Iconify icon={icon} color={color} width={30} /></Avatar>
       </ListItemAvatar>
 
       <ListItemText
@@ -174,7 +156,7 @@ function NotificationItem({ notification }) {
         secondary={
           <Stack direction="row" sx={{ mt: 0.5, typography: 'caption', color: 'text.disabled' }}>
             <Iconify icon="eva:clock-fill" width={16} sx={{ mr: 0.5 }} />
-            <Typography variant="caption">{fToNow(notification.createdAt)}</Typography>
+            <Typography variant="caption">{fToNow(fDate(notification.createdAt))}</Typography>
           </Stack>
         }
       />
@@ -184,42 +166,35 @@ function NotificationItem({ notification }) {
 
 // ----------------------------------------------------------------------
 
-function renderContent(notification) {
+function renderNotification(notification) {
+  
+  const rendered = {title:'', icon:'', color:''};
+  const { extraInfo } = notification || {};
+  
   const title = (
     <Typography variant="subtitle2">
-      {notification.title}
+      {notification?.title}
       <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
-        &nbsp; {noCase(notification.description)}
+        &nbsp; {noCase(notification?.description || "")}
       </Typography>
     </Typography>
   );
 
-  if (notification.type === 'order_placed') {
-    return {
-      avatar: <img alt={notification.title} src="/assets/icons/notification/ic_package.svg" />,
-      title,
-    };
+  rendered.title = title; 
+
+  if (notification.type === 'SERVICE-CONFIG') {
+
+    const { status } = extraInfo;
+  
+    if(status==="SUBMITTED"){
+      rendered.icon = ICONS.DOCUMENT_ACTIVE.icon;
+      rendered.color = ICONS.DOCUMENT_ACTIVE.color;
+    }else{
+      rendered.icon = ICONS.DOCUMENT_ACTIVE.icon;
+      rendered.color = ICONS.DOCUMENT_ACTIVE.color;
+    }
   }
-  if (notification.type === 'order_shipped') {
-    return {
-      avatar: <img alt={notification.title} src="/assets/icons/notification/ic_shipping.svg" />,
-      title,
-    };
-  }
-  if (notification.type === 'mail') {
-    return {
-      avatar: <img alt={notification.title} src="/assets/icons/notification/ic_mail.svg" />,
-      title,
-    };
-  }
-  if (notification.type === 'chat_message') {
-    return {
-      avatar: <img alt={notification.title} src="/assets/icons/notification/ic_chat.svg" />,
-      title,
-    };
-  }
-  return {
-    avatar: notification.avatar ? <img alt={notification.title} src={notification.avatar} /> : null,
-    title,
-  };
+
+  
+  return rendered;
 }
