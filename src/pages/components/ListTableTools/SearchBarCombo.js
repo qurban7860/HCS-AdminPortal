@@ -14,6 +14,10 @@ function SearchBarCombo({
   value,
   onFilterVerify,
   filterVerify,
+  setAccountManagerFilter,
+  accountManagerFilter,
+  setSupportManagerFilter,
+  supportManagerFilter,
   employeeFilterListBy,
   onEmployeeFilterListBy,
   filterListBy,
@@ -42,11 +46,12 @@ function SearchBarCombo({
 }) {
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
+  const { spContacts } = useSelector((state) => state.contact);
   const isMobile = useResponsive('sm', 'down');
+
   return (
     <Grid container rowSpacing={1} columnSpacing={1} sx={{display:'flex', }}>
-
-          <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
+          <Grid item xs={12} sm={12} md={12} lg={setAccountManagerFilter && setSupportManagerFilter ? 4:6} xl={setAccountManagerFilter && setSupportManagerFilter ? 4:6}>
             <TextField
               fullWidth
               value={value}
@@ -93,6 +98,64 @@ function SearchBarCombo({
             </Stack>
           </Grid>}
 
+          {setAccountManagerFilter &&
+          <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+            <Autocomplete 
+              id="controllable-states-demo"
+              value={accountManagerFilter || null}
+              options={spContacts}
+              isOptionEqualToValue={(option, val) => option?._id === val?._id}
+              getOptionLabel={(option) =>
+                `${option.firstName ? option.firstName : ''} ${
+                  option.lastName ? option.lastName : ''
+                }`
+              }
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setAccountManagerFilter(newValue);
+                } else {
+                  setAccountManagerFilter(null);
+                }
+              }}
+              renderOption={(props, option) => (
+                <li {...props} key={option._id}>{`${
+                  option.firstName ? option.firstName : ''
+                } ${option.lastName ? option.lastName : ''}`}</li>
+              )}
+              renderInput={(params) => <TextField {...params} size='small' label="Account Manager" />}
+            />  
+          
+          </Grid>}
+
+          {setSupportManagerFilter &&
+          <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+            <Autocomplete 
+              id="controllable-states-demo"
+              value={supportManagerFilter || null}
+              options={spContacts}
+              isOptionEqualToValue={(option, val) => option?._id === val?._id}
+              getOptionLabel={(option) =>
+                `${option.firstName ? option.firstName : ''} ${
+                  option.lastName ? option.lastName : ''
+                }`
+              }
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setSupportManagerFilter(newValue);
+                } else {
+                  setSupportManagerFilter(null);
+                }
+              }}
+              renderOption={(props, option) => (
+                <li {...props} key={option._id}>{`${
+                  option.firstName ? option.firstName : ''
+                } ${option.lastName ? option.lastName : ''}`}</li>
+              )}
+              renderInput={(params) => <TextField {...params} size='small' label="Support Manager" />}
+            />  
+          
+          </Grid>}
+
           {onEmployeeFilterListBy &&
           <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
             <Stack alignItems="flex-start">
@@ -137,7 +200,8 @@ function SearchBarCombo({
             </Stack>
           </Grid>}
 
-          { setCategoryVal &&  typeof setCategoryVal === 'function' && <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+          { setCategoryVal &&  typeof setCategoryVal === 'function' && 
+          <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
             <Autocomplete 
               id="controllable-states-demo"
               value={categoryVal || null}
@@ -299,6 +363,10 @@ SearchBarCombo.propTypes = {
   buttonIcon: PropTypes.string,
   onFilterVerify:PropTypes.func,
   filterVerify:PropTypes.string,
+  setAccountManagerFilter:PropTypes.func,
+  accountManagerFilter:PropTypes.object,
+  setSupportManagerFilter:PropTypes.func,
+  supportManagerFilter:PropTypes.object,
   filterListBy: PropTypes.string,
   onFilterListBy: PropTypes.func,
   categoryVal: PropTypes.object,

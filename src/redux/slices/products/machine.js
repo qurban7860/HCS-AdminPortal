@@ -26,6 +26,8 @@ const initialState = {
   transferDialogBoxVisibility: false,
   filterBy: '',
   verified: 'all',
+  accountManager:null,
+  supportManager:null,
   page: 0,
   rowsPerPage: 100,
 };
@@ -192,7 +194,17 @@ const slice = createSlice({
     setVerified(state, action) {
       state.verified = action.payload;
     },
+    
+    // Set Account Manager Filter
+    setAccountManager(state, action) {
+      state.accountManager = action.payload;
+    },
 
+    // Set Support Manager Filter
+    setSupportManager(state, action) {
+      state.supportManager = action.payload;
+    },
+    
     // Set PageRowCount
     ChangeRowsPerPage(state, action) {
       state.rowsPerPage = action.payload;
@@ -222,6 +234,8 @@ export const {
   setTransferDialogBoxVisibility,
   setFilterBy,
   setVerified,
+  setAccountManager,
+  setSupportManager,
   ChangeRowsPerPage,
   ChangePage,
   setMachineDialog,
