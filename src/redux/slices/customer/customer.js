@@ -21,6 +21,7 @@ const initialState = {
   spCustomers: [],
   customer: {},
   customerDialog: false,
+  newMachineCustomer: null,
   filterBy: '',
   verified: 'all',
   page: 0,
@@ -38,6 +39,11 @@ const slice = createSlice({
     // STOP LOADING
     stopLoading(state) {
       state.isLoading = false;
+    },
+
+    // SET NEW MACHINE CUSTOMER
+    setNewMachineCustomer(state, action){
+      state.newMachineCustomer = action.payload;
     },
 
     // SET CUSTOMER TAB
@@ -165,6 +171,7 @@ export default slice.reducer;
 
 // Actions
 export const {
+  setNewMachineCustomer,
   setCustomerTab,
   setCustomerEditFormVisibility,
   resetCustomer,
