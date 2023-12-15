@@ -142,7 +142,6 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
-                <FormHeading heading={`Edit ${drawingPage?"Drawing":""} Document`} />
                 <Box
                   rowGap={3}
                   columnGap={2}

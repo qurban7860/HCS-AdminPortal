@@ -30,7 +30,6 @@ DocumentListTableRow.propTypes = {
   machineDrawings: PropTypes.bool,
   handleMachineDialog: PropTypes.func,
   handleCustomerDialog: PropTypes.func,
-  disabledActions:  PropTypes.bool
 };
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
@@ -53,8 +52,7 @@ export default function DocumentListTableRow({
   machinePage,
   machineDrawings,
   handleMachineDialog,
-  handleCustomerDialog,
-  disabledActions
+  handleCustomerDialog
 }) {
   const {
     displayName,
@@ -70,7 +68,7 @@ export default function DocumentListTableRow({
     isActive,
     createdAt,
   } = row;
-console.log("productDrawings : ",productDrawings)
+
   const lgScreen = useScreenSize('lg')
   const smScreen = useScreenSize('sm')
 
@@ -91,17 +89,9 @@ console.log("productDrawings : ",productDrawings)
           </>
       }
       
-      {  lgScreen && <TableCell align="center">
-        <Switch checked={customerAccess} disabled size="small" />{' '}
-      </TableCell>}
-      <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell>
+      {/* {  lgScreen && <TableCell align="center"><Switch checked={customerAccess} disabled size="small" /></TableCell>}
+      <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell> */}
       <TableCell align="right">{fDate(createdAt)}</TableCell>
-      <TableCell align="center">
-          <StyledStack>
-              <IconTooltip title="Delete" disabled={disabledActions} onClick={onDeleteRow} 
-                           color={disabledActions?"#c3c3c3":"#FF0000"} icon="mdi:trash-can-outline" />
-          </StyledStack>
-      </TableCell>
     </StyledTableRow>
   );
 }
