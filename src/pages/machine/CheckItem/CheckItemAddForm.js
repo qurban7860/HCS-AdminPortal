@@ -105,7 +105,6 @@ export default function CheckItemAddForm() {
           <Grid item md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
-                <FormHeading heading={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAM_ADD} />
                   <RHFAutocomplete 
                     name="serviceCategory"
                     label="Item Category"

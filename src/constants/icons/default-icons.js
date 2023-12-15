@@ -10,6 +10,10 @@ export const ICONS = {
 
   // @root - src/components/IconPopover -ViewFormFields
   // isActive
+  UPLOAD_FILE: {
+    icon: 'mingcute:file-upload-fill',
+    heading: 'Uplaod File',
+  },
   ACTIVE: {
     icon: 'mdi:check-circle-outline',
     color: '#008000',

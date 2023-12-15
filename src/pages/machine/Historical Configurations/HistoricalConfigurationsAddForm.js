@@ -29,6 +29,8 @@ import { FORMLABELS } from '../../../constants/default-constants';
 import FormHeading from '../../components/DocumentForms/FormHeading';
 import CopyIcon from '../../components/Icons/CopyIcon';
 import CodeMirror from './JsonEditor';
+import Iconify from '../../../components/iconify/Iconify';
+import { ICONS } from '../../../constants/icons/default-icons';
 
 // import { Snacks, FORMLABELS as formLABELS } from '../../../constants/document-constants';
 
@@ -162,9 +164,8 @@ const HandleChangeIniJson = async (e) => {
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
 
-                <Grid display="flex" justifyContent="space-between" >
-                  <FormHeading heading="New INI"/>
-                  <Button variant="contained" component="label" > Upload File  
+                <Grid display="flex" justifyContent="flex-end" >
+                  <Button variant="contained" component="label" startIcon={<Iconify icon={ICONS.UPLOAD_FILE.icon} />} > Upload File  
                     <input type="file" accept='.json, .ini' hidden onChange={handleFileChange} /> 
                   </Button>
                 </Grid>
