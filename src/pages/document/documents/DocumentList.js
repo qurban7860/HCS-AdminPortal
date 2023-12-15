@@ -134,10 +134,9 @@ const  onChangePage = (event, newPage) => {
     { id: 'referenceNumber', visibility: 'xs2', label: 'Ref. No.', align: 'left' },
     { id: 'displayName', label: 'Name', align: 'left' },
     { id: 'documentVersions.versionNo.[]', visibility: 'md1', label: 'Version', align: 'center' },
-    { id: 'customerAccess', visibility: 'md2', label: 'Customer Access', align: 'center' },
-    { id: 'isActive', label: 'Active', align: 'center' },
+    // { id: 'customerAccess', visibility: 'md2', label: 'Customer Access', align: 'center' },
+    // { id: 'isActive', label: 'Active', align: 'center' },
     { id: 'createdAt', label: 'Created At', align: 'right' },
-    { id: 'action', label: '', align: 'right' },
   ];
   
   if (machineDrawings) {
@@ -203,8 +202,6 @@ const  onChangePage = (event, newPage) => {
     }
   },[customerPage, machinePage, machineDrawings, machineDocumentsRowsPerPage, customerDocumentsRowsPerPage, machineDrawingsRowsPerPage, documentRowsPerPage])
 
-
-console.log("documents : ",documents.filter((d) => d.name === "CustomerSites"))
   useEffect(() => {
     setTableData(documents);
   }, [documents]);
@@ -281,11 +278,6 @@ console.log("documents : ",documents.filter((d) => d.name === "CustomerSites"))
       dispatch(resetDocumentHistory())
       navigate(PATH_DOCUMENT.document.view(id));
     }
-  };
-
-  const handleDeleteRow = (id) => {
-    setSelected(id)
-    handleOpenConfirm(true)                        
   };
 
   const handleResetFilter = () => {
@@ -390,8 +382,6 @@ console.log("documents : ",documents.filter((d) => d.name === "CustomerSites"))
                         key={row._id}
                         row={row}
                         onViewRow={() => handleViewRow(row._id)}
-                        onDeleteRow={() => handleDeleteRow(row._id)}
-                        disabledActions={machine?.status?.slug === "transferred"}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         customerPage={customerPage}
                         machinePage={machinePage}

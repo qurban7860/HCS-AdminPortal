@@ -26,18 +26,20 @@ import {
   getDocument,
   deleteDocument,
   setDocumentHistoryViewFormVisibility,
+  setDocumentEditFormVisibility,
+  setDocumentViewFormVisibility,
 } from '../../../redux/slices/document/document';
 import { getCustomer, resetCustomer, setCustomerDialog} from '../../../redux/slices/customer/customer';
 import { getMachineForDialog, resetMachine, setMachineDialog } from '../../../redux/slices/products/machine';
 import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
 import FormLabel from '../../components/DocumentForms/FormLabel';
-import { setDrawingEditFormVisibility, setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
+import { deleteDrawing, getDrawings, resetDrawings, setDrawingEditFormVisibility, setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
 import DocumentCover from '../../components/DocumentForms/DocumentCover';
 import CustomerDialog from '../../components/Dialog/CustomerDialog';
 import MachineDialog from '../../components/Dialog/MachineDialog';
 import { PATH_DOCUMENT } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
-
+import { Snacks } from '../../../constants/document-constants';
 
 // ----------------------------------------------------------------------
 
@@ -55,6 +57,7 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
   const { documentHistory, isLoading } = useSelector((state) => state.document);
   const { machine } = useSelector((state) => state.machine);
   const { customer } = useSelector((state) => state.customer);
+  const { drawing } = useSelector((state) => state.drawing);
 
   useEffect(() => {
     if(!machinePage && !drawingPage){
@@ -117,8 +120,8 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
     [documentHistory]
   );
 
-  const linkedDrawingMachines = documentHistory?.productDrawings?.map((drawing, index) => drawing?.machine._id !== machine?._id && (
-    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(drawing?.machine?._id)} label={`${drawing?.machine?.serialNo || ''} ${drawing?.machine?.name ? ` - ${drawing?.machine?.name}` : '' } `} />
+  const linkedDrawingMachines = documentHistory?.productDrawings?.map((pdrawing, index) => pdrawing?.machine._id !== machine?._id && (
+    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(pdrawing?.machine?._id)} label={`${pdrawing?.machine?.serialNo || ''} ${pdrawing?.machine?.name ? ` - ${pdrawing?.machine?.name}` : '' } `} />
   ));
 
   // refresh the document when file deleted
@@ -191,19 +194,46 @@ const handleNewFile = async () => {
     // }
   }
 
-  const handleEdit = async () => {
+  const handleEditDrawing = async () => {
     await dispatch(getDocument(documentHistory._id));
     dispatch(setDrawingViewFormVisibility(false));
     dispatch(setDrawingEditFormVisibility(true));
   };
-const handleDelete = async () => {
-  try {
-    await  dispatch(deleteDocument(documentHistory?._id))
-    enqueueSnackbar("Document Deleted Successfully!", { variant: `success` });
-  }catch(error) {
-    enqueueSnackbar(error, { variant: `error` });
+
+  const handleEditDoc = async () => {
+    await dispatch(getDocument(documentHistory._id));
+    dispatch(setDocumentFormVisibility(false));
+    dispatch(setDocumentHistoryViewFormVisibility(false));
+    dispatch(setDocumentViewFormVisibility(false));
+    dispatch(setDocumentEditFormVisibility(true));
+
+    // dispatch(setDocumentViewFormVisibility(false));
+    // dispatch(setDocumentEditFormVisibility(true));
+  };
+
+  const handleDelete = async () => {
+    try {
+      await dispatch(deleteDocument(documentHistory?._id));
+      navigate(PATH_DOCUMENT.document.machineDrawings.list);
+      enqueueSnackbar("Document Deleted Successfully!", { variant: `success` });
+    }catch(error) {
+      enqueueSnackbar(error, { variant: `error` });
+    }
   }
-}
+
+  const handleDeleteDrawing = async () => {
+    try {
+      await dispatch(deleteDrawing(drawing?._id));
+      await dispatch(resetDrawings());
+      await dispatch(getDrawings(machine?._id));
+      dispatch(setDrawingViewFormVisibility(false))
+      enqueueSnackbar(Snacks.deletedDrawing, { variant: `success` });
+    } catch (err) {
+      console.log(err);
+      enqueueSnackbar(Snacks.failedDeleteDrawing, { variant: `error` });
+    }
+  };
+
   return (
     <>
       {!customerPage && !machinePage && !drawingPage &&
@@ -215,8 +245,9 @@ const handleDelete = async () => {
           <ViewFormEditDeleteButtons
           customerAccess={defaultValues?.customerAccess}
           isActive={defaultValues.isActive}
-          handleEdit={drawingPage && handleEdit}
-          onDelete={machineDrawings && handleDelete }
+          handleEdit={drawingPage && handleEditDrawing}
+          onDelete={drawingPage?handleDeleteDrawing : handleDelete }
+          disableDeleteButton={drawingPage && machine?.status?.slug==="transferred"}
           disableEditButton={drawingPage && machine?.status?.slug==="transferred"}
           backLink={(customerPage || machinePage || drawingPage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDrawingViewFormVisibility(false));}
           : () =>  machineDrawings ? navigate(PATH_DOCUMENT.document.machineDrawings.list) : navigate(PATH_DOCUMENT.document.list)}
