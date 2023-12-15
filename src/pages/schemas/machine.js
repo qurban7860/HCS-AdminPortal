@@ -67,7 +67,7 @@ export const MachineServiceRecordSchema = Yup.object().shape({
   // serviceDate: Yup.date().label('Service Date').nullable().required,
   serviceDate: Yup.date()
   .typeError('Date Should be Valid!')
-  .max(formatDate(dateCheck)).nullable()
+  .max(dateCheck, `Service Date field must be at earlier than ${formatDate(dateCheck)}`).nullable()
   .required().label('Service Date'),
   // customer: Yup.object().label('Customer'), 
   site: Yup.object().label('Site').nullable(),
