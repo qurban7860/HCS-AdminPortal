@@ -20,7 +20,7 @@ import {
 import { MuiChipsInput } from 'mui-chips-input';
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
-import { getActiveCustomers, getFinancialCompanies } from '../../redux/slices/customer/customer';
+import { getActiveCustomers, getFinancialCompanies, setNewMachineCustomer } from '../../redux/slices/customer/customer';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import  { addMachine, getActiveMachines } from '../../redux/slices/products/machine';
 import { getActiveMachineStatuses } from '../../redux/slices/products/statuses';
@@ -51,7 +51,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const navigate = useNavigate();
   const { activeSuppliers } = useSelector((state) => state.supplier);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
-  const { activeCustomers, financialCompanies } = useSelector((state) => state.customer);
+  const { activeCustomers, financialCompanies, newMachineCustomer } = useSelector((state) => state.customer);
   const { activeSites } = useSelector((state) => state.site);
   const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
   const { spContacts } = useSelector((state) => state.contact);
@@ -197,6 +197,18 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   } = watch();
 
   useEffect(() => {
+    if(newMachineCustomer){
+      setValue('customer',newMachineCustomer);
+    }
+      setValue('accountManager', spContacts.find((item) => item?._id === newMachineCustomer?.accountManager?._id))
+      setValue('projectManager', spContacts.find((item) => item?._id === newMachineCustomer?.projectManager?._id))
+      setValue('supportManager', spContacts.find((item) => item?._id === newMachineCustomer?.supportManager?._id))
+    return ()=>{ dispatch(setNewMachineCustomer(null)) }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[newMachineCustomer])
+
+
+  useEffect(() => {
     setValue('supplier',activeSuppliers.find((element) => element?.isDefault === true))
     setValue('category',activeCategories.find((element) => element?.isDefault === true))
      // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -260,13 +272,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     const array = [...new Set(newChips)]
     setChips(array);
   };
-
-  useEffect(() => {
-    setValue('accountManager', spContacts.find((item) => item?._id === customer?.accountManager))
-    setValue('productManager', spContacts.find((item) => item?._id === customer?.productManager))
-    setValue('supportManager', spContacts.find((item) => item?._id === customer?.supportManager))
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[customer])
 
   return (
     <Container maxWidth={false} sx={{mb:3}}>
@@ -451,12 +456,18 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                             setValue('machineConnectionVal', []);
                             setValue('instalationSite', []);
                             setValue('billingSite', []);
+                            setValue('accountManager', spContacts.find((item) => item?._id === newValue?.accountManager))
+                            setValue('projectManager', spContacts.find((item) => item?._id === newValue?.projectManager))
+                            setValue('supportManager', spContacts.find((item) => item?._id === newValue?.supportManager))
                             }
                           } else {
                             field.onChange(null);
                             setValue('machineConnectionVal', []);
                             setValue('instalationSite', []);
                             setValue('billingSite', []);
+                            setValue('accountManager', null)
+                            setValue('productManager', null)
+                            setValue('supportManager', null)
                             dispatch(resetActiveSites());
                           }
                         }}

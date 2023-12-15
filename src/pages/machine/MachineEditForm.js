@@ -257,7 +257,7 @@ export default function MachineEditForm() {
   // ----------------------end handle functions----------------------
   useEffect(() => {
     setValue('accountManager', spContacts.find((item) => item?._id === customer?.accountManager))
-    setValue('productManager', spContacts.find((item) => item?._id === customer?.productManager))
+    setValue('projectManager', spContacts.find((item) => item?._id === customer?.projectManager))
     setValue('supportManager', spContacts.find((item) => item?._id === customer?.supportManager))
      // eslint-disable-next-line react-hooks/exhaustive-deps
   },[customer])
