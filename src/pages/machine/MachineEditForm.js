@@ -40,7 +40,7 @@ import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
 import ToggleButtons from '../components/DocumentForms/ToggleButtons';
 // constants
 import { BREADCRUMBS, FORMLABELS } from '../../constants/default-constants';
-import { futureDate, pastDate, formatDate } from './util/index'
+import { today, futureDate, pastDate, formatDate } from './util/index'
 
 // ----------------------------------------------------------------------
 
@@ -91,6 +91,9 @@ export default function MachineEditForm() {
     installationDate: Yup.date()
     .max(futureDate,`Shipping Date field must be at earlier than ${formatDate(futureDate)}!`)
     .min(pastDate,`Shipping Date field must be at after than ${formatDate(pastDate)}!`).nullable().label('Installation Date'),
+
+    supportExpireDate: Yup.date()
+    .min(today,`Support Expiry Date field must be at after than ${formatDate(today)}!`).nullable().label('Support Expiry Date'),
 
     instalationSite: Yup.object().shape({
       name: Yup.string()

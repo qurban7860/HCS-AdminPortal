@@ -38,7 +38,7 @@ import FormProvider, { RHFTextField, RHFAutocomplete, RHFDatePicker } from '../.
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 import ToggleButtons from '../components/DocumentForms/ToggleButtons';
 import { FORMLABELS } from '../../constants/default-constants';
-import { futureDate, pastDate, formatDate } from './util/index'
+import { today, futureDate, pastDate, formatDate } from './util/index'
 
 MachineAddForm.propTypes = {
   isEdit: PropTypes.bool,
@@ -59,9 +59,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const { activeCategories } = useSelector((state) => state.category);
 
   const { enqueueSnackbar } = useSnackbar();
-  // const [shippingDate, setShippingDate] = useState(null);
-  // const [installationDate, setInstallationDate] = useState(null);
-  // const [supportExpireDate, setSupportExpireDate] = useState(null);
   const [chips, setChips] = useState([]);
 
 
@@ -103,16 +100,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     customer: Yup.object().shape({
       name: Yup.string()
     }).nullable().required("Customer Is Required!"),
-  // ConnectedMachines: Yup.object().shape({
-  //   machineConnectionVal: Yup.string()
-  //     .test(
-  //       'max-length',
-  //       'Machine name cannot exceed 40 characters',
-  //       (value) => !value || value.length <= 40
-  //     )
-  //     .nullable()
-  //     .required("Connected Machine Is Required!"),
-  // }),    
+  
     status: Yup.object().shape({
       name: Yup.string()
     }).nullable(),
@@ -125,6 +113,9 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     installationDate: Yup.date()
     .max(futureDate,`Shipping Date field must be at earlier than ${formatDate(futureDate)}!`)
     .min(pastDate,`Shipping Date field must be at after than ${formatDate(pastDate)}!`).nullable().label('Installation Date'),
+
+    supportExpireDate: Yup.date()
+    .min(today,`Support Expiry Date field must be at after than ${formatDate(today)}!`).nullable().label('Support Expiry Date'),
 
     instalationSite: Yup.object().shape({
       name: Yup.string()
@@ -721,7 +712,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   )}
                 />
 
-<RHFDatePicker inputFormat='dd/MM/yyyy' name="supportExpireDate" label="Support Expiry Date" />
+                <RHFDatePicker inputFormat='dd/MM/yyyy' name="supportExpireDate" label="Support Expiry Date" />
                     
                 </Box>
 

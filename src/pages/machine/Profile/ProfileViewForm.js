@@ -78,8 +78,8 @@ export default function ProfileViewForm() {
         <ViewFormField isLoading={isLoading} heading="Other Names" chips={defaultValues.names} />
         <ViewFormField isLoading={isLoading} sm={2} heading="Web" param={`${defaultValues?.web || '' }`} />
         <ViewFormField isLoading={isLoading} sm={2} heading="Flange" param={`${defaultValues?.flange || '' }`} />
-        <ViewFormField isLoading={isLoading} sm={2} heading="Thickness Start" param={`${defaultValues?.thicknessStart || '' } `} />
-        <ViewFormField isLoading={isLoading} sm={2} heading="Thickness End" param={`${defaultValues?.thicknessEnd || '' } `} />
+        <ViewFormField isLoading={isLoading} sm={2} heading="Min. Thickness" param={`${defaultValues?.thicknessStart || '' } `} />
+        <ViewFormField isLoading={isLoading} sm={2} heading="Max. Thickness" param={`${defaultValues?.thicknessEnd || '' } `} />
 
         <ViewFormAudit defaultValues={defaultValues} /> 
       </Grid>

@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
-// import { DatePicker } from '@mui/x-date-pickers';
 import { MuiChipsInput } from 'mui-chips-input';
 // slice
 import { ProfileTypes, addProfile, setProfileFormVisibility } from '../../../redux/slices/products/profile';
@@ -19,8 +18,6 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import FormProvider, { RHFSwitch, RHFTextField } from '../../../components/hook-form';
 import { getMachine } from '../../../redux/slices/products/machine';
 // constants
-// import { Snacks } from '../../../constants/machine-constants';
-
 
 // ----------------------------------------------------------------------
 
@@ -132,8 +129,8 @@ export default function ProfileAddForm() {
 
               <RHFTextField name="web" label="Web"/>
               <RHFTextField name="flange" label="Flange"/>
-              <RHFTextField name="thicknessStart" label="Thickness Start"/>
-              <RHFTextField name="thicknessEnd" label="Thickness End"/>
+              <RHFTextField name="thicknessStart" label="Min. Thickness"/>
+              <RHFTextField name="thicknessEnd" label="Max. Thickness"/>
               
             </Box>
               <RHFSwitch name="isActive" labelPlacement="start"
