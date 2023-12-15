@@ -250,7 +250,7 @@ export function getActiveCustomers() {
       {
         params: {
           isActive: true,
-          isArchived: false
+          isArchived: false,
         }
       });
       dispatch(slice.actions.getActiveCustomersSuccess(response.data));
@@ -402,7 +402,7 @@ export function deleteCustomer(id) {
 
 // --------------------------------------------------------------------------
 
-export function addCustomer(params) {
+          export function addCustomer(params) {
     return async (dispatch) => {
       dispatch(slice.actions.resetCustomer());
       dispatch(slice.actions.startLoading());
@@ -581,6 +581,7 @@ export function updateCustomer(params) {
         clientCode: params.code,
         supportSubscription: params?.supportSubscription,
         isFinancialCompany: params?.isFinancialCompany,
+        updateProductManagers: params?.updateProductManagers,
       };
      /* eslint-enable */
       if(params.mainSite !== "null" && params.mainSite !== null){
