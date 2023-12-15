@@ -85,10 +85,12 @@ export default function MachineEditForm() {
     workOrderRef: Yup.string().max(50),
 
     shippingDate: Yup.date()
+    .typeError('Date Should be Valid!')
     .max(futureDate,`Shipping Date field must be at earlier than ${formatDate(futureDate)}!`)
     .min(pastDate,`Shipping Date field must be at after than ${formatDate(pastDate)}!`).nullable().label('Shipping Date'),
 
     installationDate: Yup.date()
+    .typeError('Date Should be Valid!')
     .max(futureDate,`Shipping Date field must be at earlier than ${formatDate(futureDate)}!`)
     .min(pastDate,`Shipping Date field must be at after than ${formatDate(pastDate)}!`).nullable().label('Installation Date'),
 
@@ -252,6 +254,12 @@ export default function MachineEditForm() {
     setChips(array);
   };
   // ----------------------end handle functions----------------------
+  useEffect(() => {
+    setValue('accountManager', spContacts.find((item) => item?._id === customer?.accountManager))
+    setValue('productManager', spContacts.find((item) => item?._id === customer?.productManager))
+    setValue('supportManager', spContacts.find((item) => item?._id === customer?.supportManager))
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[customer])
 
   return (
     <>

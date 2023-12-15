@@ -6,11 +6,13 @@ export const LicenseSchema = Yup.object().shape({
   version: Yup.string().max(50, 'Version must be at most 50 characters'),
   licenseKey: Yup.string().max(2000).required(Snacks.licenseKeyRequired),
   extensionTime: Yup.date()
+  .typeError('Date Should be Valid!')
   .max(future20yearDate,`Extension Date field must be at earlier than ${formatDate(future20yearDate)}!`)
   .min(pastDate,`Extension Date field must be at after than ${formatDate(pastDate)}!`)
   .nullable().required('Extension Date is required!'),
 
   requestTime: Yup.date()
+  .typeError('Date Should be Valid!')
   .max(future20yearDate,`Request Date field must be at earlier than ${formatDate(future20yearDate)}!`)
   .min(pastDate,`Request Date field must be at after than ${formatDate(pastDate)}!`)
   .nullable().required('Request Date is required!'),

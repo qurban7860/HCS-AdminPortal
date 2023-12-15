@@ -66,7 +66,8 @@ export const MachineServiceRecordSchema = Yup.object().shape({
   serviceRecordConfiguration: Yup.object().label('Service Record Configuration').nullable().required(),
   // serviceDate: Yup.date().label('Service Date').nullable().required,
   serviceDate: Yup.date()
-  .max(dateCheck).nullable()
+  .typeError('Date Should be Valid!')
+  .max(formatDate(dateCheck)).nullable()
   .required().label('Service Date'),
   // customer: Yup.object().label('Customer'), 
   site: Yup.object().label('Site').nullable(),

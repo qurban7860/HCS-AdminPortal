@@ -107,10 +107,12 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     workOrderRef: Yup.string().max(50),
 
     shippingDate: Yup.date()
+    .typeError('Date Should be Valid!')
     .max(futureDate,`Shipping Date field must be at earlier than ${formatDate(futureDate)}!`)
     .min(pastDate,`Shipping Date field must be at after than ${formatDate(pastDate)}!`).nullable().label('Shipping Date'),
 
     installationDate: Yup.date()
+    .typeError('Date Should be Valid!')
     .max(futureDate,`Shipping Date field must be at earlier than ${formatDate(futureDate)}!`)
     .min(pastDate,`Shipping Date field must be at after than ${formatDate(pastDate)}!`).nullable().label('Installation Date'),
 
@@ -177,8 +179,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     control,
   } = methods;
 
-  const { financialCompany } = watch();
-
   const {
     supplier,
     status,
@@ -193,6 +193,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     accountManager,
     projectManager,
     supportManager,
+    financialCompany,
   } = watch();
 
   useEffect(() => {
@@ -259,6 +260,13 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     const array = [...new Set(newChips)]
     setChips(array);
   };
+
+  useEffect(() => {
+    setValue('accountManager', spContacts.find((item) => item?._id === customer?.accountManager))
+    setValue('productManager', spContacts.find((item) => item?._id === customer?.productManager))
+    setValue('supportManager', spContacts.find((item) => item?._id === customer?.supportManager))
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[customer])
 
   return (
     <Container maxWidth={false} sx={{mb:3}}>
