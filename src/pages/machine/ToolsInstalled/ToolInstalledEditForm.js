@@ -364,7 +364,6 @@ function ToolsInstalledEditForm() {
     data.distanceSensorLocation = distanceSensorLocation
     data.distanceSensorTarget = distanceSensorTarget
     data.compositeToolConfig = compositToolVal;
-    console.log("tool install edit data : ", data);
     try {
       data.toolType = toolType;
       await dispatch(updateToolInstalled(machine._id, toolInstalled._id, data));
@@ -383,11 +382,6 @@ function ToolsInstalledEditForm() {
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
-              <Stack spacing={1}>
-                <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                  Edit Tool
-                </Typography>
-              </Stack>
               <Box
                 rowGap={2}
                 columnGap={2}

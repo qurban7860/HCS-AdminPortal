@@ -66,7 +66,6 @@ export default function NoteEditForm() {
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3} sx={{ mb: 3 }}>
-              <FormHeading heading="Edit Note" />
               <RHFTextField name="note" label="Note*" minRows={8} multiline />
               <RHFSwitch
                 name="isActive"

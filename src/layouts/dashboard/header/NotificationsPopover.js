@@ -63,7 +63,9 @@ export default function NotificationsPopover() {
       <IconButtonAnimate color={openPopover ? 'primary' : 'default'} 
       // onClick={handleOpenPopover} 
       sx={{ width: 40, height: 40 }}>
-        <Badge badgeContent={totalUnRead} color="error" ><Iconify icon={openPopover ? 'mdi:bell-ring' : 'mdi:bell'} /></Badge>
+        <Badge 
+        // badgeContent={totalUnRead} 
+        color="error" ><Iconify icon={openPopover ? 'mdi:bell-ring' : 'mdi:bell'} /></Badge>
       </IconButtonAnimate>
 
       <MenuPopover open={openPopover} onClose={handleClosePopover} sx={{ width: 360, p: 0 }}>

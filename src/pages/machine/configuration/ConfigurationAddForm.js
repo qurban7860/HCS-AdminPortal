@@ -22,6 +22,7 @@ import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import FormHeading from '../../components/DocumentForms/FormHeading';
 import CodeMirror from '../Historical Configurations/JsonEditor';
 import Iconify from '../../../components/iconify';
+import { ICONS } from '../../../constants/icons/default-icons';
 
 // ----------------------------------------------------------------------
 
@@ -159,22 +160,15 @@ const HandleChangeIniJson = async (e) => {
           <Grid item xs={18} md={12} >
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
-                <Grid display="flex" justifyContent="space-between" >
-                  <FormHeading heading="New INI"/>
-                  <Button variant="contained" size="small" component="label"  startIcon={<Iconify icon="eva:file-add-outline" />} sx={{m:0.5}} >  Upload
-                    <input type="file" accept='.json, .ini' hidden onChange={handleFileChange} /> 
-                  </Button>
-                </Grid>
-
-                <Grid>
-                <Box 
-                  rowGap={2}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-                >
-                <RHFTextField name="collectionType" label="Collection Type" size="small" />
-                </Box>
+                  <Grid container rowSpacing={1} columnSpacing={1} sx={{display:'flex', justifyContent:'space-between' }}>
+                    <Grid item xs={12} lg={6}>
+                      <RHFTextField name="collectionType" label="Collection Type" size="small" />
+                    </Grid>
+                    <Grid item xs={12} lg={2} sx={{display:'flex', justifyContent:'flex-end'}}>
+                      <Button variant="contained" component="label"  startIcon={<Iconify icon={ICONS.UPLOAD_FILE.icon} />} sx={{m:0.5}} >  Upload
+                          <input type="file" accept='.json, .ini' hidden onChange={handleFileChange} /> 
+                      </Button>
+                  </Grid>
                   <CodeMirror value={configJSON} HandleChangeIniJson={HandleChangeIniJson}/>                
                 </Grid>
                 <RHFSwitch name="isActive" labelPlacement="start"
