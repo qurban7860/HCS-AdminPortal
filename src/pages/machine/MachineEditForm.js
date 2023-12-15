@@ -95,6 +95,7 @@ export default function MachineEditForm() {
     .min(pastDate,`Shipping Date field must be at after than ${formatDate(pastDate)}!`).nullable().label('Installation Date'),
 
     supportExpireDate: Yup.date()
+    .typeError('Date Should be Valid!')
     .min(today,`Support Expiry Date field must be at after than ${formatDate(today)}!`).nullable().label('Support Expiry Date'),
 
     instalationSite: Yup.object().shape({
