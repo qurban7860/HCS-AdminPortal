@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { useEffect } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Stack, AppBar, Toolbar, IconButton, } from '@mui/material';
@@ -16,6 +17,7 @@ import Iconify from '../../../components/iconify';
 import { useSettingsContext } from '../../../components/settings';
 import AccountPopover from './AccountPopover';
 import NotificationsPopover from './NotificationsPopover';
+import { useWebSocketContext } from '../../../auth/WebSocketContext';
 
 // ----------------------------------------------------------------------
 
@@ -30,6 +32,13 @@ export default function Header({ onOpenNav }) {
   const isNavMini = themeLayout === 'mini';
   const isDesktop = useResponsive('up', 'lg');
   const isOffset = useOffSetTop(HEADER.H_DASHBOARD_DESKTOP) && !isNavHorizontal;
+  const { sendJsonMessage } = useWebSocketContext();
+  
+  useEffect(()=>{
+    sendJsonMessage({eventName:'getNotifications'});
+  },[sendJsonMessage])
+  
+  // console.log("notifications:::::",notifications)
   
   const renderContent = (
     <>

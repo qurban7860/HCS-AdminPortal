@@ -65,7 +65,7 @@ const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
 return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name={FORMLABELS.COVER.SETTINGS} />
+        <Cover name={FORMLABELS.COVER.SETTINGS} icon="mdi:cogs" />
       </StyledCardContainer>
 
           <Box

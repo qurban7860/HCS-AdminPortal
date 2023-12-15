@@ -116,11 +116,7 @@ export default function CustomerView({ editPage }) {
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover
-          name={customer ? customer.name : 'New Customer'}
-          photoURL={customer.name === 'HOWICK LTD.' ? <LogoAvatar /> : <CustomAvatar />}
-          icon="ph:users-light"
-        />
+        <Cover name={customer ? customer.name : 'New Customer'} avatar />
         <TabContainer
           tabsClasses={tabsClasses.scrollButtons}
           currentTab={customerTab}

@@ -182,7 +182,7 @@ export default function CustomerList() {
   return (
     <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name={FORMLABELS.COVER.CUSTOMERS} />
+          <Cover name={FORMLABELS.COVER.CUSTOMERS} icon="mdi:users" />
         </StyledCardContainer>
       <TableCard >
         <CustomerListTableToolbar

@@ -182,7 +182,7 @@ export default function BlacklistIPList() {
             // mt: '24px',
           }}
         >
-          <Cover generalSettings name="Blacklist IPs" icon="ph:users-light" />
+          <Cover name="Blacklist IPs" icon="ph:users-light" generalSettings />
         </Card>
 
         <TableCard>

@@ -219,7 +219,7 @@ export default function MachineList() {
   return (
     <Container maxWidth={false} sx={{mb:3}}>
         <StyledCardContainer>
-          <Cover title="Machines" name="Machines" icon="arcticons:materialistic" setting />
+          <Cover  name="Machines" icon="arcticons:materialistic" setting />
         </StyledCardContainer>
         <TableCard>
           <MachineListTableToolbar

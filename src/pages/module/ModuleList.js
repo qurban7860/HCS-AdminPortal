@@ -169,7 +169,7 @@ export default function ModuleList() {
     <>
       <Container maxWidth={false}>
         <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
-          <Cover generalSettings name="Modules" icon="ph:users-light" />
+          <Cover name="Modules" icon="ph:users-light" generalSettings/>
         </Card>
         <Card>
           <ModuleListTableToolbar

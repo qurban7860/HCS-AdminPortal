@@ -223,13 +223,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      {/* <Grid container spacing={3}>
-        <CustomerDashboardNavbar/>
-      </Grid> */}
-      {/* <CustomBreadcrumbs
-            heading=" New Customer "
-            sx={{ mb: -2, mt: 3 }}
-          /> */}
       <Card
         sx={{
           mb: 3,

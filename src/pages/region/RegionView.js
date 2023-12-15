@@ -35,7 +35,7 @@ export default function RegionView() {
             // mt: '24px',
           }}
         >
-          <Cover name={region?.name} generalSettings backLink={PATH_SETTING.regions.list} />
+          <Cover name={region?.name} generalSettings />
         </Card>
         <RegionViewForm />
       </Container>

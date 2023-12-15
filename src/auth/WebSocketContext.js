@@ -25,23 +25,30 @@ export function WebSocketProvider({ children }) {
     onMessage: (event) => {
       if (event.data instanceof Blob) {
           getJsonFromBlob(event.data).then(json => {
-            // console.log("OnMessageJson",json)
+           
+            if (json.eventName === 'newUserLogin' || json.eventName === 'newNotification') {
+              sendJsonMessage({eventName:'getNotifications'});
+            }
+
             if (json.eventName === 'logout') {
               clearAllPersistedStates();
             }
 
-            if (json.eventName === 'newNotification') {
-              const updatedNotifications = [json, ...notifications];
-              setNotifications(updatedNotifications);
-            }
+            // if (json.eventName === 'newNotification') {
+            //   const updatedNotifications = [json, ...notifications];
+            //   setNotifications(updatedNotifications);
+            // }
 
             if (json.eventName === 'onlineUsers') {
               setOnlineUsers(json?.userIds);
             }
 
             if (json.eventName === 'notificationsSent') {
-              console.log("notificationsSent::: all",json)
               setNotifications(json.data);
+            }
+
+            if (json.eventName === 'userLoggedOut') {
+              sendJsonMessage({eventName:'getOnlineUsers'});
             }
 
           }).catch(error => {
