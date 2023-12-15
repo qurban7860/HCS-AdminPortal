@@ -2,7 +2,7 @@ import { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Box, Card, Grid, Stack, Autocomplete, TextField } from '@mui/material';
+import { Box, Card, Grid, Stack, Autocomplete, TextField, Typography } from '@mui/material';
 import { MuiChipsInput } from 'mui-chips-input';
 // hooks
 import { useForm } from 'react-hook-form';
@@ -52,6 +52,7 @@ export default function CustomerEditForm() {
       isActive: customer?.isActive,
       supportSubscription: customer?.supportSubscription,
       isFinancialCompany: customer?.isFinancialCompany || false,
+      updateProductManagers: false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer]
@@ -96,7 +97,7 @@ export default function CustomerEditForm() {
     data.primaryTechnicalContact = technicalContactVal?._id || null;
 
     try {
-      await dispatch(updateCustomer(data));
+      await dispatch(updateCustomer(data ));
       reset();
       enqueueSnackbar('Update success!');
       navigate(PATH_CUSTOMER.view(customer._id));
@@ -366,6 +367,26 @@ export default function CustomerEditForm() {
                     )}
                     ChipProps={{ size: 'small' }}
                   />
+
+                  <RHFSwitch
+                      name="updateProductManagers"
+                      labelPlacement="start"
+                      label={
+                          <Typography
+                            variant="subtitle2"
+                            sx={{
+                              mx: 0,
+                              width: 1,
+                              justifyContent: 'space-between',
+                              mb: 0.5,
+                              color: 'text.secondary',
+                            }}
+                          >
+                            Update Customer All Machines Managers
+                          </Typography>
+                      }
+                    />
+
                 </Box>
 
                 <Box
@@ -392,7 +413,8 @@ export default function CustomerEditForm() {
                     <StyledToggleButtonLabel variant="body2" p={1}>
                       Support Subscription
                     </StyledToggleButtonLabel>
-                    <RHFSwitch name="supportSubscription" defaultChecked={defaultValues?.supportSubscription} />
+                    
+                    <RHFSwitch name="supportSubscription"  defaultChecked={defaultValues?.supportSubscription} />
                       
                     <StyledToggleButtonLabel variant="body2" p={1}>
                       Financing Company
