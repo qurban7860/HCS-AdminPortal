@@ -25,7 +25,7 @@ export const EditMachineSchema = Yup.object().shape({
   // projectManager: Yup.string(),
   // supportManager: Yup.string(),
   siteMilestone: Yup.string().max(1500),
-  description: Yup.string().max(1500),
+  description: Yup.string().max(5000),
   customerTags: Yup.array(),
   isActive: Yup.boolean(),
 });
@@ -196,12 +196,12 @@ export const ServiceRecordConfigSchema = Yup.object().shape({
   // parentConfig: Yup.object().label('Parent Configuration').nullable(),
   machineModel: Yup.object().label('Model').nullable(),
   category: Yup.object().label('Category').nullable(),
-  textBeforeCheckItems: Yup.string().max(4000),
+  textBeforeCheckItems: Yup.string().max(5000),
   // Check Params
   // paramListTitle: Yup.string().max(200).label('Item List Title').required(),
   // paramList : Yup.array(),
 
-  textAfterCheckItems: Yup.string().max(4000),
+  textAfterCheckItems: Yup.string().max(5000),
   isOperatorSignatureRequired: Yup.boolean(),
   enableNote: Yup.boolean(),
   enableMaintenanceRecommendations: Yup.boolean(),

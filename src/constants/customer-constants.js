@@ -53,6 +53,13 @@ export const FORMLABELS = {
     ACCOUNT: 'Account Manager',
     PROJECT: 'Project Manager',
     SUPPORT: 'Support Manager',
+    ADDCUSTOMER: 'Add Customer',
+    ADDRESSINFORMATION: 'Address Information',
+    EDITCUSTOMER: 'Edit Customer',
+    CUSTOMERADDRESS: 'Address Information',
+    BILLINGCONTACTINFORMATION: 'Billing Contact Information',
+    TECHNICALCONTACTINFORMATION: 'Technical Contact Information',
+    HOWICKRESOURCESS: 'Howick Recourses',
   },
 
   // @root - ContactAddForm

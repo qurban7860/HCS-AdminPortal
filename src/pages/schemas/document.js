@@ -58,7 +58,7 @@ export const AddDocumentCategorySchema = Yup.object().shape({
 
 export const EditDocumentNameSchema = Yup.object().shape({
   name: Yup.string().max(40),
-  description: Yup.string().max(1500),
+  description: Yup.string().max(5000),
   isActive: Yup.boolean(),
   customerAccess: Yup.boolean(),
 });
@@ -80,7 +80,7 @@ export const EditMachineDocumentSchema = Yup.object().shape({
 
 export const AddMachineSchema = Yup.object().shape({
   name: Yup.string().min(2).max(50).required('Name is required'),
-  description: Yup.string().max(2000),
+  description: Yup.string().max(5000),
   isActive: Yup.boolean(),
   connections: Yup.boolean(),
 });

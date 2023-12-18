@@ -47,6 +47,7 @@ import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 import { FORMLABELS } from '../../constants/customer-constants';
 import { StyledToggleButtonLabel } from '../../theme/styles/document-styles';
 // import { StyledCardContainer } from '../../theme/styles/default-styles';
+import FormLabel from '../components/DocumentForms/FormLabel';
 
 // ----------------------------------------------------------------------
 
@@ -303,9 +304,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
         <Card sx={{ p: 3, mb: 3 }}>
           <Stack spacing={3}>
-            <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
-              Address Information
-            </Typography>
+            <FormLabel content={FORMLABELS.CUSTOMER.ADDRESSINFORMATION} />
             <Box
               rowGap={3}
               columnGap={2}
@@ -370,10 +369,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
         <Card sx={{ p: 3, mb: 3 }}>
           <Stack spacing={3}>
-            <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
-              Billing Contact Information
-            </Typography>
-
+            <FormLabel content={FORMLABELS.CUSTOMER.BILLINGCONTACTINFORMATION} />
             <Box
               rowGap={3}
               columnGap={2}
@@ -411,17 +407,13 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
           <m.div variants={varBounce().in}>
             <Stack spacing={3}>
               <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={3}>
-                <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
-                  Technical Contact Information
-                </Typography>
-
+                <FormLabel content={FORMLABELS.CUSTOMER.TECHNICALCONTACTINFORMATION} />
                 <FormControlLabel
                   label="Same as billing contact"
                   control={<Checkbox checked={contactFlag} onClick={toggleCheckboxFlag} />}
                   sx={{ mb: -10 }}
                 />
               </Stack>
-
               {!contactFlag && (
                 <Box
                   rowGap={3}
@@ -433,11 +425,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   }}
                 >
                   <RHFTextField name="technicalFirstName" label="First Name" />
-
                   <RHFTextField name="technicalLastName" label="Last Name" />
-
                   <RHFTextField name="technicalTitle" label="Title" />
-
                   {/* <RHFTextField name="technicalContactPhone" label="Contact Phone" /> */}
                   <MuiTelInput
                     value={technicalContactPhone}
@@ -449,7 +438,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     forceCallingCode
                     defaultCountry="NZ"
                   />
-
                   <RHFTextField name="technicalContactEmail" label="Contact Email" />
                 </Box>
               )}
@@ -460,10 +448,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
-                <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
-                  Howick Resources
-                </Typography>
-
+                <FormLabel content={FORMLABELS.CUSTOMER.HOWICKRESOURCESS} />
                 <Box
                   rowGap={3}
                   columnGap={2}
@@ -564,7 +549,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     sm: 'repeat(2, 1fr)',
                   }}
                 >
-
                   <Grid display="flex" alignItems="center" mt={1}>
                     <StyledToggleButtonLabel variant="body2" p={1}>
                       Active
@@ -580,12 +564,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                       Financing Company
                     </StyledToggleButtonLabel>
                     <RHFSwitch name="isFinancialCompany" defaultChecked={defaultValues?.isFinancialCompany} />
-                  
                   </Grid>
-
                 </Box>
-                
-                
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>
