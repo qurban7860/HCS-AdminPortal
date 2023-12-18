@@ -52,7 +52,7 @@ export default function ModelAddForm() {
 
   const ModelAddSchema = Yup.object().shape({
     name: Yup.string().trim().max(40).required('Name is required'),
-    description: Yup.string().max(2000),
+    description: Yup.string().max(5000),
     isActive: Yup.boolean(),
     // category: Yup.string().required('Category is required'),
   });

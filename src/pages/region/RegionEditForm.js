@@ -39,7 +39,7 @@ export default function RegionEditForm() {
 
   const EditRegionSchema = Yup.object().shape({
     name: Yup.string().required('Name is required!').max(40, 'Name must not exceed 40 characters!'),
-    description: Yup.string(),
+    description: Yup.string().max(5000),
     isActive: Yup.boolean(),
   });
 

@@ -49,7 +49,7 @@ export default function ServiceCategoryAddForm() {
 
   const ServiceCategorySchema = Yup.object().shape({
     name: Yup.string().min(2, 'Name must be at least 2 characters long').max(50).required('Name is required').trim(),
-    description: Yup.string().max(2000).trim(),
+    description: Yup.string().max(5000).trim(),
     isActive: Yup.boolean(),
   });
 

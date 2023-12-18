@@ -135,7 +135,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       name: Yup.string()
     }).nullable(),
     siteMilestone: Yup.string().max(1500),
-    description: Yup.string().max(1500),
+    description: Yup.string().max(5000),
     isActive: Yup.boolean(),
   });
 
