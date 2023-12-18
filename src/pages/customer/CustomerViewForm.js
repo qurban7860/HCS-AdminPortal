@@ -15,10 +15,10 @@ import {
   setCustomerVerification,
 } from '../../redux/slices/customer/customer';
 // components
-import FormLabel from '../components/DocumentForms/FormLabel';
 import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
+import FormLabel from '../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/default-constants';
 import { Snacks, FORMLABELS as formLABELS } from '../../constants/customer-constants';
 
@@ -105,7 +105,7 @@ export default function CustomerViewForm() {
                 <ViewFormField isLoading={isLoading} sm={12} md={12} heading={formLABELS.CUSTOMER.TRADING_NAME.label} chips={defaultValues?.tradingName} />
                 <ViewFormField isLoading={isLoading} sm={6} md={6} heading={formLABELS.CUSTOMER.PHONE} param={defaultValues?.mainSite?.phone} />
                 <ViewFormField isLoading={isLoading} sm={6} md={6} heading={formLABELS.CUSTOMER.FAX} param={defaultValues?.mainSite?.fax} />
-                <ViewFormField isLoading={isLoading} sm={6} md={6} heading={formLABELS.CUSTOMER.EMAIL} param={defaultValues?.mainSite?.email} />
+                <ViewFormField isLoading={isLoading} sm={12} md={12} heading={formLABELS.CUSTOMER.EMAIL} param={defaultValues?.mainSite?.email} />
 
                 <ViewFormField isLoading={isLoading} sm={6}
                   heading={formLABELS.CUSTOMER.BILLING_CONTACT}

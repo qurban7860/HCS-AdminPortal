@@ -31,7 +31,7 @@ import { getActiveCategories } from '../../redux/slices/products/category';
 import { Cover } from '../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 // routes
-import { PATH_MACHINE } from '../../routes/paths';
+import { PATH_CUSTOMER, PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFTextField, RHFAutocomplete, RHFDatePicker } from '../../components/hook-form';
@@ -258,7 +258,11 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       // setInstallationDate(null);
       reset();
       enqueueSnackbar('Create success!');
-      navigate(PATH_MACHINE.machines.list);
+      if(newMachineCustomer){
+        navigate(PATH_CUSTOMER.view(customer._id));
+      }else{
+        navigate(PATH_MACHINE.machines.list);
+      }
     } catch (error) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(error);
@@ -266,8 +270,13 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   };
 
   const toggleCancel = () => {
-    navigate(PATH_MACHINE.machines.list);
+    if(newMachineCustomer){
+      navigate(PATH_CUSTOMER.view(customer._id));
+    }else{
+      navigate(PATH_MACHINE.machines.list);
+    }
   };
+  
   const handleChipChange = (newChips) => {
     const array = [...new Set(newChips)]
     setChips(array);
