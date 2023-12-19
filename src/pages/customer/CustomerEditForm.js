@@ -312,7 +312,11 @@ export default function CustomerEditForm() {
                     )}
                     ChipProps={{ size: 'small' }}
                   />
+
+                  <RHFSwitch name="updateProductManagers" label="Update Account, Product, and Support Manager in Machines Data" checked={defaultValues?.isActive} />
+                    
                   <Grid sx={{mt:'auto'}}>
+
                   <RHFSwitch sx={{ my:'auto',}}
                       name="updateProductManagers" labelPlacement="end"
                       label={
@@ -324,29 +328,13 @@ export default function CustomerEditForm() {
                     />
                   </Grid>
                 </Box>
+                <Grid sx={{display:{md:'flex'}}}>
+                    <RHFSwitch name="isActive" label="Active" checked={defaultValues?.isActive} />
+                    <RHFSwitch name="supportSubscription" label='Support Subscription' checked={defaultValues?.supportSubscription} />
+                    <RHFSwitch name="isFinancialCompany" label="Financing Company" defaultChecked={defaultValues?.isFinancialCompany} />
+                    <RHFSwitch name="excludeReports" label="Exclude Reporting" defaultChecked={defaultValues?.excludeReports} />
+                </Grid>
 
-                <Box
-                  rowGap={3} columnGap={2}  display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',
-                  }}
-                >
-                  <Grid display="flex" alignItems="center" mt={1}>
-                    {customer?.type !== 'SP' ? (
-                    <>
-                      <StyledToggleButtonLabel variant="body2" p={1}>Active</StyledToggleButtonLabel>
-                      <RHFSwitch name="isActive" defaultChecked={defaultValues?.isActive} />
-                    </>
-                    ) : null}
-                    <StyledToggleButtonLabel variant="body2" p={1}>Support Subscription</StyledToggleButtonLabel>
-                    <RHFSwitch name="supportSubscription"  defaultChecked={defaultValues?.supportSubscription} />
-                    <StyledToggleButtonLabel variant="body2" p={1}>Financing Company</StyledToggleButtonLabel>
-                    <RHFSwitch name="isFinancialCompany" defaultChecked={defaultValues?.isFinancialCompany} />
-
-                    <StyledToggleButtonLabel variant="body2" p={1}>Exclude Reporting</StyledToggleButtonLabel>
-                    <RHFSwitch name="excludeReports" defaultChecked={defaultValues?.excludeReports} />
-                  
-                  </Grid>
-                </Box>
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
               </Card>

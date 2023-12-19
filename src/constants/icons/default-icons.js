@@ -150,9 +150,15 @@ export const ICONS = {
   },
   // ----------------------------------------------------------------
   ADD_NEW_VERSION: {
-    icon: 'icon-park-outline:add',
+    icon: 'mdi:plus-circle',
     color: 'primary.main',
     heading: 'Add a New Version',
+    width: '16px',
+  },
+  UPDATE_VERSION: {
+    icon: 'mdi:pencil',
+    color: 'primary.main',
+    heading: 'Update Version No',
     width: '16px',
   },
   // ------------------------------------------------------------
