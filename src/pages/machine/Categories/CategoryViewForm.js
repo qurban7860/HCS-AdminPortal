@@ -55,6 +55,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
       name: category?.name || '',
       description: category?.description || '',
       isActive: category.isActive,
+      isDefault: category?.isDefault,
       connection: category.connections || false,
       models: category.models?.map((model, index) => ( <Chip sx={{ml:index===0?0:1}} onClick={()=> navigate(PATH_MACHINE.machines.settings.model.view(model?._id))} label={`${model?.name || ''}`} /> )) || [],
       createdByFullName: category?.createdBy?.name || '',
@@ -80,7 +81,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
   };
   return (
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.categories.list)} />
+      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} isDefault={defaultValues.isDefault} handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.categories.list)} />
       <Grid container sx={{mt:2}}>
         <ViewFormField isLoading={isLoading} sm={12} heading="Category Name" param={defaultValues?.name} />
         <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />

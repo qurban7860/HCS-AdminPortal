@@ -29,6 +29,7 @@ export default function ConfigEditForm() {
     name: Yup.string().required('Name is required!').min(2, 'Name must be at least 2 characters long').max(40, 'Name must not exceed 40 characters!'),
     type: Yup.string().nullable().required('Type is required!'),
     value: Yup.string().required('Value is required!').max(70, 'Value must not exceed 70 characters!'),
+    notes: Yup.string().max(5000),
     isActive: Yup.boolean(),
   });
 

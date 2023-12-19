@@ -15,6 +15,8 @@ ToggleButtons.propTypes = {
   isRHF: PropTypes.bool,
   name: PropTypes.string,
   RHFName: PropTypes.string,
+  isDefault: PropTypes.bool,
+  defaultName: PropTypes.string,
   isCONNECTABLE: PropTypes.bool,
   CONNECTName: PropTypes.string,
   isCATEGORY: PropTypes.object,
@@ -25,12 +27,14 @@ export default function ToggleButtons({
   customerAccessVal,
   handleChange,
   isActive,
+  isDefault,
   handleIsActiveChange,
   isDocument,
   isMachine,
   name,
   isRHF,
   RHFName,
+  defaultName,
   isCONNECTABLE,
   CONNECTName,
   isCATEGORY,
@@ -89,6 +93,14 @@ export default function ToggleButtons({
             {TOGGLE.CUSTOMER_ACCESS}
           </StyledToggleButtonLabel>
           <RHFSwitch name={RHFName} />
+        </Grid>
+      )}
+      {isDefault && (
+        <Grid display="flex" alignItems="center" mt={1}>
+          <StyledToggleButtonLabel variant="body2" p={1}>
+            {TOGGLE.DEFAULT}
+          </StyledToggleButtonLabel>
+          <RHFSwitch name={defaultName} />
         </Grid>
       )}
       {isCONNECTABLE && (

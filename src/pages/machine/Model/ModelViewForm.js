@@ -50,6 +50,7 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
       displayOrderNo: machineModel?.displayOrderNo || '',
       category: machineModel?.category || '',
       isActive: machineModel?.isActive,
+      isDefault: machineModel?.isDefault,
       createdByFullName: machineModel?.createdBy?.name || '',
       createdAt: machineModel?.createdAt || '',
       createdIP: machineModel?.createdIP || '',
@@ -73,7 +74,11 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
   };
   return (
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.model.list)}/>
+      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} 
+          isDefault={defaultValues.isDefault}
+          handleEdit={toggleEdit} 
+          onDelete={onDelete} 
+          backLink={() => navigate(PATH_MACHINE.machines.settings.model.list)}/>
       <Grid container sx={{mt:2}}>
         <ViewFormField isLoading={isLoading} sm={12} heading="Model Name" param={defaultValues?.name} />
         <ViewFormField isLoading={isLoading} sm={12} heading="Category Name" param={defaultValues?.category?.name} />

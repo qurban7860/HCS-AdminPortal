@@ -46,6 +46,7 @@ export default function SupplierEditForm() {
   const EditCategorySchema = Yup.object().shape({
     name: Yup.string().min(2).max(50).required('Name is required'),
     isActive: Yup.boolean(),
+    isDefault: Yup.boolean(),
     contactName: Yup.string().max(50),
     contactTitle: Yup.string().max(50),
     // phone: Yup.string().nullable(),
@@ -76,6 +77,7 @@ export default function SupplierEditForm() {
       region: supplier?.address?.region || '',
       // country: supplier?.address?.country || '',
       isActive: supplier.isActive || true,
+      isDefault: supplier?.isDefault || false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [supplier]
@@ -263,6 +265,7 @@ export default function SupplierEditForm() {
                   renderInput={(params) => <TextField {...params} label="Choose a country" />}
                 />
               </Box>
+              <Grid display="flex">
               <RHFSwitch
                 name="isActive"
                 labelPlacement="start"
@@ -282,6 +285,14 @@ export default function SupplierEditForm() {
                   </Typography>
                 }
               />
+              <RHFSwitch
+                name="isDefault"
+                labelPlacement="start"
+                label={
+                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary',}} >Default</Typography>
+                }
+              />
+              </Grid>
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>

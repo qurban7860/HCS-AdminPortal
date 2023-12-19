@@ -65,6 +65,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
       region: supplier?.address?.region || '',
       country: supplier?.address?.country || '',
       isActive: supplier?.isActive,
+      isDefault: supplier?.isDefault,
       createdByFullName: supplier?.createdBy?.name || '',
       createdAt: supplier?.createdAt || '',
       createdIP: supplier?.createdIP || '',
@@ -87,7 +88,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
   };
   return (
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.supplier.list)}  />
+      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} isDefault={defaultValues.isDefault} handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.supplier.list)}  />
       <Grid container sx={{mt:2}}>
         <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues?.name} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Contact Name" param={defaultValues?.contactName} />

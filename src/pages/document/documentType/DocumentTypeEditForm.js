@@ -64,6 +64,7 @@ export default function DocumentTypeEditForm() {
       name: documentType?.name || '',
       description: documentType?.description || '',
       isActive: documentType?.isActive,
+      isDefault: documentType?.isDefault || false,
       customerAccess: documentType?.customerAccess,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -151,6 +152,8 @@ export default function DocumentTypeEditForm() {
                   isRHF
                   name={FORMLABELS.isACTIVE.name}
                   RHFName={FORMLABELS.isCUSTOMER_ACCESS.name}
+                  isDefault
+                  defaultName='isDefault'
                 />
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

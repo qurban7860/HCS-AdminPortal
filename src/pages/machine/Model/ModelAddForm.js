@@ -54,6 +54,7 @@ export default function ModelAddForm() {
     name: Yup.string().trim().max(40).required('Name is required'),
     description: Yup.string().max(5000),
     isActive: Yup.boolean(),
+    isDefault: Yup.boolean(),
     // category: Yup.string().required('Category is required'),
   });
 
@@ -143,7 +144,7 @@ export default function ModelAddForm() {
                   <RHFTextField name="name" label="Name*"/>
 
                   <RHFTextField name="description" label="Description" minRows={7} multiline />
-
+<Grid display="flex">
                   <RHFSwitch
                     name="isActive"
                     labelPlacement="start"
@@ -162,6 +163,16 @@ export default function ModelAddForm() {
                       </Typography>
                     }
                   />
+
+                  <RHFSwitch
+                    name="isDefault"
+                    labelPlacement="start"
+                    label={
+                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary',}} >Default</Typography>
+                    }
+                  />
+</Grid>
+
                 </Box>
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>

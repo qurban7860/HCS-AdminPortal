@@ -62,6 +62,7 @@ export default function RoleAddForm({ currentRole }) {
     allModules: Yup.boolean(),
     allWriteAccess: Yup.boolean(),
     isActive: Yup.boolean(),
+    isDefault: Yup.boolean(),
     disableDelete: Yup.boolean(),
   });
   const defaultValues = useMemo(
@@ -69,6 +70,7 @@ export default function RoleAddForm({ currentRole }) {
       name: '',
       description: '',
       isActive: true,
+      isDefault: false,
       allModules: false,
       allWriteAccess: false,
       disableDelete: false,
@@ -188,20 +190,20 @@ export default function RoleAddForm({ currentRole }) {
                       </Typography>
                     }
                   />
+                  
+                  <RHFSwitch
+                    name="isDefault"
+                    labelPlacement="start"
+                    label={
+                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary',}} >Default</Typography>
+                    }
+                  />
+
                   <RHFSwitch
                     name="disableDelete"
                     labelPlacement="start"
                     label={
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          mx: 0,
-                          width: 1,
-                          justifyContent: 'space-between',
-                          mb: 0.5,
-                          color: 'text.secondary',
-                        }}
-                      >
+                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary',}} >
                         {' '}
                         Disable Delete
                       </Typography>

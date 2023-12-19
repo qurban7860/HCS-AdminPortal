@@ -59,6 +59,7 @@ export default function RoleViewForm() {
   const defaultValues = useMemo(
     () => ({
       isActive: role?.isActive,
+      isDefault: role?.isDefault,
       disableDelete: role?.disableDelete || false,
       customerAccess: role?.customerAccess,
       name: role?.name,
@@ -80,10 +81,11 @@ export default function RoleViewForm() {
       <Grid>
         <ViewFormEditDeleteButtons
           disableDeleteButton={defaultValues.disableDelete}
+          backLink={() => navigate(PATH_SETTING.role.list)}
+          isDefault={defaultValues.isDefault}
+          isActive={defaultValues.isActive}
           handleEdit={handleEdit}
           onDelete={onDelete}
-          backLink={() => navigate(PATH_SETTING.role.list)}
-          isActive={defaultValues.isActive}
         />
         <Grid container sx={{mt:2}}>
           <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues.name} />

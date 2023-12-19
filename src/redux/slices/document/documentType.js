@@ -142,6 +142,7 @@ export function addDocumentType(params) {
                 description: params.description,
                 customerAccess:params.customerAccess,
                 isActive: params.isActive,
+                isDefault: params.isDefault,
             }
       await axios.post(`${CONFIG.SERVER_URL}documents/documentType/`, data);
       dispatch(slice.actions.setResponseMessage('Document Type saved successfully'));
@@ -166,6 +167,7 @@ export function updateDocumentType(Id,params) {
         description: params.description,
         customerAccess:params.customerAccess,
         isActive: params.isActive,
+        isDefault: params.isDefault,
       }
       await axios.patch(`${CONFIG.SERVER_URL}documents/documentType/${Id}`, data, );
       dispatch(slice.actions.setResponseMessage('Document Type updated successfully'));

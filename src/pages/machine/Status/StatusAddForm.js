@@ -35,6 +35,7 @@ export default function StatusAddForm() {
     name: Yup.string().min(2).max(50).required('Name is required!'),
     description: Yup.string().max(5000),
     isActive: Yup.boolean(),
+    isDefault: Yup.boolean(),
     displayOrderNo: Yup.number()
       .typeError('Display Order No. must be a number')
       .nullable()
@@ -47,6 +48,7 @@ export default function StatusAddForm() {
       name: '',
       description: '',
       isActive: true,
+      isDefault: false,
       createdAt: '',
       displayOrderNo: '',
     }),
@@ -103,9 +105,7 @@ export default function StatusAddForm() {
                   <RHFTextField name="displayOrderNo" label="Display Order No." />
                   <RHFTextField name="slug" label="Slug" />
 
-                  {/* <RHFSelect native name="displayOrderNo" label="Display Order No" type='number'>
-                      <option value="" defaultValue/>
-                </RHFSelect> */}
+                <Grid display="flex">
                   <RHFSwitch
                     name="isActive"
                     labelPlacement="start"
@@ -125,6 +125,14 @@ export default function StatusAddForm() {
                       </Typography>
                     }
                   />
+                  <RHFSwitch
+                    name="isDefault"
+                    labelPlacement="start"
+                    label={
+                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary',}} >Default</Typography>
+                    }
+                  />
+                </Grid>
                 </Box>
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
