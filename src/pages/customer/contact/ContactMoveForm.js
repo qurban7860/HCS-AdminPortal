@@ -18,6 +18,7 @@ import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFAutocomplete } from '../../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
+import FormLabel from '../../components/DocumentForms/FormLabel';
 // ----------------------------------------------------------------------
 
 ContactMoveForm.propTypes = {
@@ -42,9 +43,6 @@ export default function ContactMoveForm({setIsExpanded}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
-
-
-  console.log("setIsExpanded::::",setIsExpanded)
   const methods = useForm({
     resolver: yupResolver(MoveMachineSchema),
     defaultValues,
@@ -81,41 +79,32 @@ export default function ContactMoveForm({setIsExpanded}) {
   };
 
   return (
-    <>
-      <Card sx={{ width: '100%', p: '0', mb:3 }}>
-        <CardHeader title="Customer Detail" sx={{p:'5px 15px', m:0, color:'white', 
-        backgroundImage: (theme) => `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`}} />
-        <Grid container>
-          <ViewFormField sm={6} heading="Name" param={`${contact?.firstName} ${contact?.lastName}`} />
-          <ViewFormField sm={6} heading="Title" param={contact?.title} />
-          <ViewFormField sm={6} heading="Email" param={contact?.email} />
-          <ViewFormField sm={6} heading="Phone" param={contact?.phone} />
-        </Grid>
-      </Card>
-      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Grid container spacing={3}>
-          <Grid item xs={18} md={12}>
-            <Card sx={{ p: 3 }}>
-              <Stack spacing={3}>
-                <Stack spacing={1}>
-                  <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>Move Contact</Typography>
+          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+            <Grid item xs={12} md={12}>
+              <Card sx={{ p: 3 }}>
+                <FormLabel content="Contact Detail" />
+                <Grid container sx={{pb:2}}>
+                  <ViewFormField sm={6} heading="Name" param={`${contact?.firstName} ${contact?.lastName}`} />
+                  <ViewFormField sm={6} heading="Title" param={contact?.title} />
+                  <ViewFormField sm={6} heading="Email" param={contact?.email} />
+                  <ViewFormField sm={6} heading="Phone" param={contact?.phone} />
+                </Grid>
+                <Stack spacing={2}>
+                  <FormLabel content="Move Contact" />
+                  <RHFAutocomplete 
+                      name="customer"
+                      label="Customer*"
+                      options={activeCustomers.filter(activeCustomer => activeCustomer._id !== id)}
+                      isOptionEqualToValue={(option, value) => option._id === value._id}
+                      getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                      renderOption={(props, option) => (
+                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                      )}
+                    />
+                  <AddFormButtons isSubmitting={isSubmitting} saveButtonName='Move' toggleCancel={toggleCancel} />
                 </Stack>
-                <RHFAutocomplete 
-                    name="customer"
-                    label="Customer*"
-                    options={activeCustomers.filter(activeCustomer => activeCustomer._id !== id)}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
-                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                    )}
-                  />
-                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
-              </Stack>
             </Card>
-          </Grid>
         </Grid>
       </FormProvider>
-    </>
   );
 }

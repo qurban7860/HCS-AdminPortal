@@ -30,14 +30,13 @@ import ContactViewForm from './contact/ContactViewForm';
 import ContactMoveForm from './contact/ContactMoveForm';
 import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
-import AvatarSection from '../components/sections/AvatarSection';
-import DetailsSection from '../components/sections/DetailsSection';
 import useResponsive from '../../hooks/useResponsive';
 import SearchInput from '../components/Defaults/SearchInput';
 import { fDate } from '../../utils/formatTime';
 import { Snacks } from '../../constants/customer-constants';
 import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
 import Iconify from '../../components/iconify';
+import ContactSiteCard from '../components/sections/ContactSiteCard';
 
 // ----------------------------------------------------------------------
 
@@ -62,8 +61,7 @@ export default function CustomerContactList(currentContact = null) {
   } = useSelector((state) => state.contact);
   const [checked, setChecked] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
-  const [activeIndex] = useState(null);
-  const [activeCardIndex, setCardActiveIndex] = useState(null);
+  const [activeCardIndex, setCardActiveIndex] = useState('');
   // for filtering contacts -------------------------------------
   const [isExpanded, setIsExpanded] = useState(false);
   const [filterName, setFilterName] = useState('');
@@ -79,10 +77,10 @@ export default function CustomerContactList(currentContact = null) {
       dispatch(setContactFormVisibility(false));
       enqueueSnackbar(Snacks.CONTACT_CLOSE_CONFIRM, {variant: 'warning'});
       setIsExpanded(false);
-      setCardActiveIndex(null);
+      setCardActiveIndex('');
     } else {
       dispatch(setContactFormVisibility(true));
-      setCardActiveIndex(null);
+      setCardActiveIndex('');
       setIsExpanded(false);
     }
   };
@@ -137,8 +135,6 @@ export default function CustomerContactList(currentContact = null) {
   }, [dispatch, checked, customer, formVisibility, contactEditFormVisibility, contactMoveFormVisibility]);
 
   const isNotFound = !contacts.length && !formVisibility && !contactEditFormVisibility;
-  const fullName = contacts.map((contact) => `${contact.firstName ? contact.firstName : ''} ${contact.lastName || ''}`);
-  // var conditions for rendering the contact view, edit, and add forms
   const shouldShowContactView = isExpanded && !contactEditFormVisibility && !contactMoveFormVisibility;
   const shouldShowContactEdit = contactEditFormVisibility && !formVisibility && !contactMoveFormVisibility;
   const shouldShowContactAdd = formVisibility && !contactEditFormVisibility && !contactMoveFormVisibility;
@@ -154,6 +150,14 @@ export default function CustomerContactList(currentContact = null) {
       enqueueSnackbar(err.message, { variant: `error` });
     });
   };
+
+  const handleCardClick = async (contact)=>{
+      await dispatch(getContact(customer._id, contact._id));
+      if (!contactMoveFormVisibility && !contactEditFormVisibility && !formVisibility) {
+        handleActiveCard(contact._id);
+        handleExpand(contact._id);
+      }
+  }
 
 
   return (
@@ -212,18 +216,12 @@ export default function CustomerContactList(currentContact = null) {
           </Grid>
         )}
         {contacts.length > 0 && (
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            md={12}
-            lg={4}
-            sx={{ display: formVisibility && isMobile && 'none' }}
-          >
+          <Grid item xs={12} sm={12} md={12} lg={5} xl={4} sx={{ display: formVisibility && isMobile && 'none' }} >
             {contacts.length > 5 && (
               <Grid item md={12}>
                 <SearchInput
-                  // searchFormVisibility={formVisibility || contactEditFormVisibility}
+                  // searchFormVisibility={formVisibility || contactEditFormVisibility || contactMoveFormVisibility}
+                  disabled={formVisibility || contactEditFormVisibility || contactMoveFormVisibility}
                   filterName={filterName}
                   handleFilterName={handleFilterName}
                   isFiltered={isFiltered}
@@ -231,7 +229,6 @@ export default function CustomerContactList(currentContact = null) {
                   toggleChecked={toggleChecked}
                   toggleCancel={toggleCancel}
                   FormVisibility={formVisibility}
-                  disabled={contactEditFormVisibility || formVisibility}
                   sx={{ position: 'fixed', top: '0px', zIndex: '1000' }}
                 />
               </Grid>
@@ -242,81 +239,17 @@ export default function CustomerContactList(currentContact = null) {
               onClick={(e) => e.stopPropagation()}
               snapAlign="start"
               contacts={contacts.length}
-              disabled={contactEditFormVisibility || formVisibility}
+              disabled={contactEditFormVisibility || formVisibility || contactMoveFormVisibility}
+              maxHeight={100}
             >
-              <Grid container justifyContent="flex-start" direction="column" gap={1}>
-                {dataFiltered.map((contact, index) => contact._id !== activeIndex && (
-                        <Grid
-                          item
-                          key={contact._id}
-                          xs={12}
-                          sm={12}
-                          md={12}
-                          lg={4}
-                          display={{ xs: 'flex', lg: 'block' }}
-                          onClick={() => {
-                            if (!contactMoveFormVisibility && !contactEditFormVisibility && !formVisibility) {
-                              handleActiveCard(contact._id);
-                              handleExpand(contact._id);
-                            }
-                          }}
-                          sx={{
-                            width: { xs: '100%', lg: '100%' },
-                          }}
-                        >
-                          
-                          <StyledCardWrapper
-                            condition={activeCardIndex === contact._id}
-                            isMobile={isMobile}
-                          >
-                            <CardActionArea
-                              active={activeIndex === contact._id}
-                              disabled={contactMoveFormVisibility || contactEditFormVisibility || formVisibility}
-                            >
-                              <Link
-                                underline="none"
-                                disabled={contactMoveFormVisibility || contactEditFormVisibility || formVisibility}
-                                onClick={async () => {
-                                  await dispatch(getContact(customer._id, contact._id));
-                                  if (!isExpanded && !formVisibility) {
-                                    handleExpand(contact._id);
-                                    setContactFormVisibility(!formVisibility);
-                                  } else if (
-                                    isExpanded &&
-                                    currentContactData !== contact &&
-                                    !formVisibility
-                                  ) {
-                                    handleExpand(contact._id);
-                                  } else {
-                                    setIsExpanded(false);
-                                    contact._id = null;
-                                  }
-                                }}
-                              >
-
-                                <Grid
-                                  container
-                                  direction="row"
-                                  justifyContent="flex-start"
-                                  alignItems="center"
-                                >
-                                  {!isMobile && (
-                                    <AvatarSection
-                                      name={fullName[index]}
-                                      image="/assets/images/covers/bg.jpg"
-                                    />
-                                  )}
-                                  <DetailsSection
-                                    content={`${contact.firstName || ''} ${contact.lastName || ''}`}
-                                    content2={contact.title ? contact.title : <br />}
-                                    content3={contact.email ? contact.email : <br />}
-                                  />
-                                </Grid>
-                              </Link>
-                            </CardActionArea>
-                          </StyledCardWrapper>
-                        </Grid>
-                      )
+              <Grid container direction="column" gap={1}>
+                {dataFiltered.map((contact, index) => (
+                  <ContactSiteCard
+                    isActive={contact._id === activeCardIndex}
+                    handleOnClick={() => handleCardClick(contact) }
+                    disableClick={contactEditFormVisibility || formVisibility || contactMoveFormVisibility}
+                    name={`${contact.firstName || ''} ${contact.lastName || ''}`} title={contact.title} email={contact.email}
+                  />)
                 )}
               </Grid>
             </StyledScrollbar>
@@ -325,7 +258,7 @@ export default function CustomerContactList(currentContact = null) {
 
         {/* Conditional View Forms */}
         {!isMobile && (
-          <GridBaseViewForm item lg={contacts.length === 0 ? 12 : 8}>
+          <GridBaseViewForm item xs={12} sm={12} md={12} lg={7} xl={8} >
             {shouldShowContactView && (
               <CardBase>
                 <ContactViewForm setIsExpanded={setIsExpanded} />

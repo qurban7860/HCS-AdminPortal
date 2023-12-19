@@ -14,6 +14,10 @@ const initialState = {
   machinesByCountry:[],
   machinesByModel:[],
   machinesByYear:[],
+  machineCategory:null,
+  machineModel:null,
+  machineCountry:null,
+  machineYear:null, 
 };
 
 const slice = createSlice({
@@ -76,6 +80,22 @@ const slice = createSlice({
       state.success = true;
       state.initial = true;
     },
+    // SET CategoryID
+    setMachineCategory(state, action) {
+      state.machineCategory = action.payload;
+    },
+    // SET Model ID
+    setMachineModel(state, action) {
+      state.machineModel = action.payload;
+    },
+    // SET Country Code
+    setMachineCountry(state, action) {
+      state.machineCountry = action.payload;
+    },
+    // SET Year
+    setMachineYear(state, action) {
+      state.machineYear = action.payload;
+    },
   },
 });
 
@@ -85,6 +105,10 @@ export default slice.reducer;
 // Actions
 export const {
   resetCounts,
+  setMachineCategory,
+  setMachineModel,
+  setMachineCountry,
+  setMachineYear
 } = slice.actions;
 
 // ----------------------------------------------------------------------
