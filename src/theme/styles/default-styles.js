@@ -167,6 +167,8 @@ export const StyledContainer = styled(Container)(({ theme }) => ({
   padding: 0,
   alignContent: 'center',
   color: 'text.primary',
+  paddingRight:24,
+  paddingLeft:24
 }));
 
 export const StyledGlobalCard = styled(Card)(({ theme }) => ({

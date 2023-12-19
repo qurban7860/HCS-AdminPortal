@@ -27,7 +27,7 @@ export default function ConfirmDialog({
 }) {
   return (
     <Dialog fullWidth maxWidth="xs" open={open} onClose={onClose} {...other}>
-      <DialogTitle variant='h3' sx={{pb:1, pt:2}}>{title}</DialogTitle>
+      <DialogTitle variant='h4' sx={{pb:1, pt:2}}>{title}</DialogTitle>
       <Divider orientation="horizontal" flexItem />
       {content && <DialogContent sx={{ typography: 'body2', pt:2 }}> {content} </DialogContent>}
       {/* <Divider orientation="horizontal" flexItem /> */}

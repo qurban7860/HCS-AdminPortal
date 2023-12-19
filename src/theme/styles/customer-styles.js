@@ -99,13 +99,12 @@ StyledCardWrapper.propTypes = {
 };
 
 export function StyledScrollbar({ maxHeight, contacts, children, ...props }) {
-  // const height = contacts*23;
   return (
     <Scrollbar
       sx={{
         height: {
-          xs: '25.5vh',
-          sm: '35.5vh',
+          xs: '14vh',
+          sm: '22vh',
           lg: 'fit-content',
         },
         maxHeight:maxHeight?`${maxHeight}vh`:"82vh",
