@@ -42,6 +42,7 @@ export default function CategoryAddForm() {
       name: '',
       description: '',
       isActive: true,
+      isDefault: false,
       connections: false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -110,6 +111,8 @@ export default function CategoryAddForm() {
                   isCONNECTABLE
                   name={FORMLABELS.isACTIVE.name}
                   CONNECTName={FORMLABELS.isCONNECTABLE.name}
+                  isDefault
+                  defaultName='isDefault'
                 />
 
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

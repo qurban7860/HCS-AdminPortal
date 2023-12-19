@@ -53,6 +53,7 @@ export const AddDocumentCategorySchema = Yup.object().shape({
   name: Yup.string().min(2).max(40).required('Name Field is required!'),
   description: Yup.string().max(10000),
   isActive: Yup.boolean(),
+  isDefault: Yup.boolean(),
   customerAccess: Yup.boolean(),
 });
 
@@ -68,6 +69,7 @@ export const AddDocumentTypeSchema = Yup.object().shape({
   name: Yup.string().min(2).max(40).required('Name is required!'),
   description: Yup.string().max(10000),
   isActive: Yup.boolean(),
+  isDefault: Yup.boolean(),
   customerAccess: Yup.boolean(),
 });
 // -------------------Machine Documents---------------------
@@ -82,5 +84,6 @@ export const AddMachineSchema = Yup.object().shape({
   name: Yup.string().min(2).max(50).required('Name is required'),
   description: Yup.string().max(5000),
   isActive: Yup.boolean(),
+  isDefault: Yup.boolean(),
   connections: Yup.boolean(),
 });

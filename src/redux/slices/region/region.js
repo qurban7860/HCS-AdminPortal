@@ -146,6 +146,7 @@ export function addRegion(param) {
       description: param.description,
       countries: param.selectedCountries,
       isActive: param.isActive,
+      isDefault: param.isDefault,
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}regions/regions`, data);
       if(regEx.test(response.status)){
@@ -171,6 +172,7 @@ export function updateRegion(param,id) {
         description: param.description,
         countries: param.selectedCountries,
         isActive: param.isActive,
+        isDefault: param.isDefault,
         }
       const response = await axios.patch(`${CONFIG.SERVER_URL}regions/regions/${id}`, data);
       dispatch(resetRegion());

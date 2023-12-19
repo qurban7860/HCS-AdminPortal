@@ -36,11 +36,11 @@ export default function RegionEditForm() {
   }, [dispatch]);
   /* eslint-enable */
 
-
   const EditRegionSchema = Yup.object().shape({
     name: Yup.string().required('Name is required!').max(40, 'Name must not exceed 40 characters!'),
     description: Yup.string().max(5000),
     isActive: Yup.boolean(),
+    isDefault: Yup.boolean(),
   });
 
   const defaultValues = useMemo(
@@ -48,6 +48,7 @@ export default function RegionEditForm() {
       name: region?.name || '',
       description: region?.description || '',
       isActive: region?.isActive || false,
+      isDefault: region?.isDefault || false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -155,6 +156,13 @@ export default function RegionEditForm() {
                         {' '}
                         Active
                       </Typography>
+                    }
+                  />
+                  <RHFSwitch
+                    name="isDefault"
+                    labelPlacement="start"
+                    label={
+                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary',}} >Default</Typography>
                     }
                   />
                 </Grid>

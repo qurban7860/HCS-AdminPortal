@@ -207,6 +207,7 @@ export function addSupplier(params) {
         id: params.id,
         name: params.name,
         isActive: params.isActive,
+        isDefault: params.isDefault,
         };
         /* eslint-enable */
         if(params.contactName){
@@ -270,6 +271,7 @@ export function updateSupplier(params,Id) {
         id: params.id,
         name: params.name,
         isActive: params.isActive,
+        isDefault: params.isDefault,
         contactName: params.contactName,
         contactTitle: params.contactTitle,
         phone: params.phone,

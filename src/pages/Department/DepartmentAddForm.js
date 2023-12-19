@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Container } from '@mui/material';
+import { Box, Card, Grid, Stack, Container, Typography } from '@mui/material';
 // slice
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 import { addDepartment } from '../../redux/slices/Department/department';
@@ -14,7 +14,7 @@ import { addDepartment } from '../../redux/slices/Department/department';
 import { PATH_SETTING } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, { RHFTextField } from '../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch } from '../../components/hook-form';
 // auth
 // import { useAuthContext } from '../../../auth/useAuthContext';
 // // asset
@@ -38,6 +38,7 @@ export default function DepartmentAddForm() {
     () => ({
       departmentName: '',
       isActive: true,
+      isDefault: false,
     }),
     []
   );
@@ -45,6 +46,7 @@ export default function DepartmentAddForm() {
   const DepartmentSchema = Yup.object().shape({
     departmentName: Yup.string().min(2, 'Name must be at least 2 characters long').max(50).required('Name is required').trim(),
     isActive: Yup.boolean(),
+    isDefault: Yup.boolean(),
   });
 
   const methods = useForm({
@@ -78,13 +80,28 @@ export default function DepartmentAddForm() {
       <StyledCardContainer><Cover name={FORMLABELS.COVER.DEPARTMENTS_ADD}/></StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container>
-          <Grid item xs={18} md={12} sx={{ mt: 3 }}>
+          <Grid item xs={18} md={12} >
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)'}}>
                   <RHFTextField name="departmentName" label="Name*" />
                 </Box>
-                <ToggleButtons isMachine name={FORMLABELS.isACTIVE.name}/>
+                <Grid display="flex" justifyContent="flex-start">
+                <RHFSwitch
+                    name="isActive"
+                    labelPlacement="start"
+                    label={
+                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary',}} >Active</Typography>
+                    }
+                  />
+                <RHFSwitch
+                    name="isDefault"
+                    labelPlacement="start"
+                    label={
+                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary',}} >Default</Typography>
+                    }
+                  />
+                </Grid>
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>

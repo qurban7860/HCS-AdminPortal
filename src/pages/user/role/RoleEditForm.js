@@ -66,6 +66,7 @@ export default function RoleEditForm() {
     allModules: Yup.boolean(),
     allWriteAccess: Yup.boolean(),
     isActive: Yup.boolean(),
+    isDefault: Yup.boolean(),
     disableDelete: Yup.boolean(),
   });
 
@@ -74,6 +75,7 @@ export default function RoleEditForm() {
       name: role?.name || '',
       description: role?.description || '',
       isActive: role?.isActive || false,
+      isDefault: role?.isDefault || false,
       allModules: role?.allModules || false,
       allWriteAccess: role?.allWriteAccess || false,
       disableDelete: role?.disableDelete || false,
@@ -198,6 +200,15 @@ export default function RoleEditForm() {
                       </Typography>
                     }
                   />
+
+                  <RHFSwitch
+                    name="isDefault"
+                    labelPlacement="start"
+                    label={
+                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary',}} >Default</Typography>
+                    }
+                  />
+
                   <RHFSwitch
                     name="disableDelete"
                     labelPlacement="start"

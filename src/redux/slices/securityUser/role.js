@@ -135,6 +135,7 @@ export function addRole(params) {
         // allWriteAccess: params.allWriteAccess,
         disableDelete: params.disableDelete,
         isActive: params.isActive,
+        isDefault: params.isDefault,
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}security/roles`, data);
       dispatch(slice.actions.setResponseMessage('Role Saved successfully'));
@@ -160,6 +161,7 @@ export function updateRole(id, params) {
         // allWriteAccess: params.allWriteAccess,
         disableDelete: params.disableDelete,
         isActive: params.isActive,
+        isDefault: params.isDefault,
       }
       await axios.patch(`${CONFIG.SERVER_URL}security/roles/${id}`, data);
       dispatch(slice.actions.setResponseMessage('Role updated successfully'));

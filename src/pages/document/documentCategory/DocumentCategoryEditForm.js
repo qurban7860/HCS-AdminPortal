@@ -94,6 +94,7 @@ export default function DocumentCategoryeEditForm() {
       name: documentCategory?.name || '',
       description: documentCategory?.description || '',
       isActive: documentCategory?.isActive,
+      isDefault: documentCategory?.isDefault || false,
       customerAccess: documentCategory?.customerAccess,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -161,6 +162,8 @@ export default function DocumentCategoryeEditForm() {
                   RHFName={FORMLABELS.isCUSTOMER_ACCESS.name}
                   isCATEGORY={state}
                   handleChangeType={handleChangeType}
+                  isDefault
+                  defaultName='isDefault'
                 />
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

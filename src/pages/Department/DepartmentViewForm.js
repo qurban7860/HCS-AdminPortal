@@ -47,6 +47,7 @@ export default function DepartmentViewForm() {
     () => ({
       departmentName: department?.departmentName || '',
       isActive: department?.isActive,
+      isDefault: department?.isDefault,
       createdByFullName: department?.createdBy?.name || '',
       createdAt: department?.createdAt || '',
       createdIP: department?.createdIP || '',
@@ -70,7 +71,7 @@ export default function DepartmentViewForm() {
   };
   return (
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_SETTING.departments.list)}/>
+      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} isDefault={defaultValues.isDefault} handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_SETTING.departments.list)}/>
       <Grid container sx={{mt:2}}>
         <ViewFormField isLoading={isLoading} sm={12} heading="Department Name" param={defaultValues?.departmentName} />
         <ViewFormAudit defaultValues={defaultValues} />

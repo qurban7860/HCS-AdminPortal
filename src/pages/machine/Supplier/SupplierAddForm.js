@@ -40,6 +40,7 @@ export default function StatusAddForm() {
   const AddMachineSchema = Yup.object().shape({
     name: Yup.string().max(50).required('Name is required'),
     isActive: Yup.boolean(),
+    isDefault: Yup.boolean(),
     contactName: Yup.string().max(50),
     contactTitle: Yup.string().max(50),
     // phone: Yup.string().nullable(),
@@ -70,6 +71,7 @@ export default function StatusAddForm() {
       city: '',
       postcode: '',
       isActive: true,
+      isDefault: false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -222,6 +224,7 @@ export default function StatusAddForm() {
                       renderInput={(params) => <TextField {...params} label="Choose a country" />}
                     />
                   </Box>
+              <Grid display="flex">
                   <RHFSwitch
                     name="isActive"
                     labelPlacement="start"
@@ -240,6 +243,14 @@ export default function StatusAddForm() {
                       </Typography>
                     }
                   />
+                  <RHFSwitch
+                    name="isDefault"
+                    labelPlacement="start"
+                    label={
+                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary',}} >Default</Typography>
+                    }
+                  />
+                </Grid>
                   <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
                 </Stack>
               </Card>
