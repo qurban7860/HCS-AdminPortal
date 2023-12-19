@@ -184,7 +184,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                   onChange={(newValue)=>setPhone(newValue)}
                   inputProps={{maxLength:13}}
                   forceCallingCode
-                  defaultCountry={country?.code}
+                  defaultCountry="NZ"
                 />
 
                 <RHFTextField name={FORMLABELS.EMAIL.name} label={FORMLABELS.EMAIL.label} />

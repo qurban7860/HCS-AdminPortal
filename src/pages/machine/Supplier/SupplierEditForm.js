@@ -199,7 +199,7 @@ export default function SupplierEditForm() {
                   onChange={(newValue)=>setPhone(newValue)}
                   inputProps={{maxLength:13}}
                   forceCallingCode
-                  defaultCountry={country?.code}
+                  defaultCountry="NZ"
                 />
                 {/* <RHFTextField name="fax" label="Fax" /> */}
                 <MuiTelInput
@@ -210,7 +210,7 @@ export default function SupplierEditForm() {
                   onChange={(newValue)=>setFaxVal(newValue)}
                   inputProps={{maxLength:13}}
                   forceCallingCode
-                  defaultCountry={country?.code}
+                  defaultCountry="NZ"
                 />
                 <RHFTextField name="email" label="Email" />
                 <RHFTextField name="website" label="Website" />
