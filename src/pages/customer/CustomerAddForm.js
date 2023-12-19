@@ -61,7 +61,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const { userId, user } = useAuthContext();
   const { spContacts } = useSelector((state) => state.contact);
   const [contactFlag, setCheckboxFlag] = useState(false);
-  const [chips, setChips] = useState([])
+  const [chips, setChips] = useState([]);
 
   const toggleCheckboxFlag = () => setCheckboxFlag((value) => !value);
   const dispatch = useDispatch();
@@ -136,6 +136,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       isActive: true,
       supportSubscription:true,
       isFinancialCompany: false,
+      excludeReports:false,
       contactFlag,
       loginUser: {
         userId,
@@ -280,7 +281,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 onChange={(newValue)=> setPhone(newValue)}
                 inputProps={{ maxLength: 13 }}
                 forceCallingCode
-                defaultCountry="NZ"
+                defaultCountry={country?.code}
               />
 
               {/* <RHFTextField name="fax" label="Fax" /> */}
@@ -292,7 +293,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 onChange={(newValue) => setFaxVal(newValue)}
                 inputProps={{ maxLength: 13 }}
                 forceCallingCode
-                defaultCountry="NZ"
+                defaultCountry={country?.code}
               />
 
               <RHFTextField name="email" label="Email" />
@@ -394,8 +395,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 onChange={(newValue) => setBillingContactPhone(newValue)}
                 inputProps={{ maxLength: 13 }}
                 forceCallingCode
-                defaultCountry="NZ"
-                onCount
+                defaultCountry={country?.code}
+                // onCount
               />
 
               <RHFTextField name="billingContactEmail" label="Contact Email" />
@@ -406,14 +407,18 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
         <Card component={MotionContainer} sx={{ p: 3, mb: 3 }}>
           <m.div variants={varBounce().in}>
             <Stack spacing={3}>
-              <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={3}>
-                <FormLabel content={FORMLABELS.CUSTOMER.TECHNICALCONTACTINFORMATION} />
-                <FormControlLabel
-                  label="Same as billing contact"
-                  control={<Checkbox checked={contactFlag} onClick={toggleCheckboxFlag} />}
-                  sx={{ mb: -10 }}
-                />
-              </Stack>
+                <Grid container direction='row'>
+                  <Grid item xs={12} sm={12} md={8} lg={9}>
+                    <FormLabel  content={FORMLABELS.CUSTOMER.TECHNICALCONTACTINFORMATION} />
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={4} lg={3}>
+                    <FormControlLabel
+                      label="Same as billing contact"
+                      control={<Checkbox checked={contactFlag} onClick={toggleCheckboxFlag} />}
+                      sx={{ ml:1}}
+                    />
+                  </Grid>
+                </Grid>
               {!contactFlag && (
                 <Box
                   rowGap={3}
@@ -436,7 +441,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     onChange={(newValue) => setTechnicalContactPhone(newValue)}
                     inputProps={{ maxLength: 13 }}
                     forceCallingCode
-                    defaultCountry="NZ"
+                    defaultCountry={country?.code}
                   />
                   <RHFTextField name="technicalContactEmail" label="Contact Email" />
                 </Box>
@@ -550,20 +555,17 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   }}
                 >
                   <Grid display="flex" alignItems="center" mt={1}>
-                    <StyledToggleButtonLabel variant="body2" p={1}>
-                      Active
-                    </StyledToggleButtonLabel>
+                    <StyledToggleButtonLabel variant="body2" p={1}>Active</StyledToggleButtonLabel>
                     <RHFSwitch name="isActive" checked={defaultValues?.isActive} />
 
-                    <StyledToggleButtonLabel variant="body2" p={1}>
-                      Support Subscription
-                    </StyledToggleButtonLabel>
+                    <StyledToggleButtonLabel variant="body2" p={1}>Support Subscription</StyledToggleButtonLabel>
                     <RHFSwitch name="supportSubscription" checked={defaultValues?.supportSubscription} />
                   
-                    <StyledToggleButtonLabel variant="body2" p={1}>
-                      Financing Company
-                    </StyledToggleButtonLabel>
+                    <StyledToggleButtonLabel variant="body2" p={1}>Financing Company</StyledToggleButtonLabel>
                     <RHFSwitch name="isFinancialCompany" defaultChecked={defaultValues?.isFinancialCompany} />
+
+                    <StyledToggleButtonLabel variant="body2" p={1}>Exclude Reporting</StyledToggleButtonLabel>
+                    <RHFSwitch name="excludeReports" defaultChecked={defaultValues?.excludeReports} />
                   </Grid>
                 </Box>
               </Stack>

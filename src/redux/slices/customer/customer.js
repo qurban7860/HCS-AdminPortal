@@ -409,7 +409,7 @@ export function deleteCustomer(id) {
 
 // --------------------------------------------------------------------------
 
-          export function addCustomer(params) {
+export function addCustomer(params) {
     return async (dispatch) => {
       dispatch(slice.actions.resetCustomer());
       dispatch(slice.actions.startLoading());
@@ -427,6 +427,7 @@ export function deleteCustomer(id) {
           clientCode: params.code,
           supportSubscription: params?.supportSubscription,
           isFinancialCompany: params?.isFinancialCompany,
+          excludeReports: params?.excludeReports,
         };
 
         let billingContact = {};
@@ -588,6 +589,7 @@ export function updateCustomer(params) {
         clientCode: params.code,
         supportSubscription: params?.supportSubscription,
         isFinancialCompany: params?.isFinancialCompany,
+        excludeReports: params?.excludeReports,
         updateProductManagers: params?.updateProductManagers,
       };
      /* eslint-enable */

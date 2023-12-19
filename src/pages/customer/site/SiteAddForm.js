@@ -171,47 +171,6 @@ export default function SiteAddForm() {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                {/* <RHFTextField name="phone" label="Phone" /> */}
-                <MuiTelInput
-                  value={phone}
-                  name="phone"
-                  label="Phone Number"
-                  flagSize="medium"
-                  defaultCountry="NZ"
-                  onChange={(newValue)=>setPhone(newValue)}
-                  inputProps={{maxLength:13}}
-                  forceCallingCode
-                />
-
-                {/* <RHFTextField name="fax" label="Fax" /> */}
-                <MuiTelInput
-                  value={fax}
-                  name="fax"
-                  label="Fax"
-                  flagSize="medium"
-                  defaultCountry="NZ"
-                  onChange={(newValue)=>setFaxVal(newValue)}
-                  inputProps={{maxLength:13}}
-                  forceCallingCode
-                />
-
-                <RHFTextField name="email" label="Email" />
-                <RHFTextField name="website" label="Website" />
-              </Box>
-
-              <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                Address Details
-              </Typography>
-
-              <Box
-                rowGap={3}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
-              >
                 <RHFTextField name="street" label="Street" />
 
                 <RHFTextField name="suburb" label="Suburb" />
@@ -268,6 +227,31 @@ export default function SiteAddForm() {
                 />
                 <RHFTextField name="lat" label="Latitude" />
                 <RHFTextField name="long" label="Longitude" />
+                <MuiTelInput
+                  value={phone}
+                  name="phone"
+                  label="Phone Number"
+                  flagSize="medium"
+                  defaultCountry={country?.code}
+                  onChange={(newValue)=>setPhone(newValue)}
+                  inputProps={{maxLength:13}}
+                  forceCallingCode
+                />
+
+                {/* <RHFTextField name="fax" label="Fax" /> */}
+                <MuiTelInput
+                  value={fax}
+                  name="fax"
+                  label="Fax"
+                  flagSize="medium"
+                  defaultCountry={country?.code}
+                  onChange={(newValue)=>setFaxVal(newValue)}
+                  inputProps={{maxLength:13}}
+                  forceCallingCode
+                />
+
+                <RHFTextField name="email" label="Email" />
+                <RHFTextField name="website" label="Website" />
               </Box>
 
               <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>

@@ -50,7 +50,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const [phone, setPhone] = useState('');
-  const [country, setCountryVal] = useState('');
+  const [country, setCountryVal] = useState(countries[169]);
 
   // --------------------------------hooks----------------------------------
   const defaultValues = useMemo(
@@ -184,7 +184,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                   onChange={(newValue)=>setPhone(newValue)}
                   inputProps={{maxLength:13}}
                   forceCallingCode
-                  defaultCountry="NZ"
+                  defaultCountry={country?.code}
                 />
 
                 <RHFTextField name={FORMLABELS.EMAIL.name} label={FORMLABELS.EMAIL.label} />

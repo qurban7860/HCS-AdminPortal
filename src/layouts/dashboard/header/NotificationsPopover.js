@@ -56,7 +56,7 @@ function NotificationsPopover() {
 
   const handleMarkAs = (id,_status) => {
     if(id){
-      sendJsonMessage({eventName:'markAs',_id:id, status:!_status});
+      sendJsonMessage({eventName:'markAs',_id:id, status:true});
     }else{
       sendJsonMessage({eventName:'markAs', status:true});
     }

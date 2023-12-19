@@ -34,7 +34,7 @@ export default function StatusAddForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const [country, setCountryVal] = useState('');
+  const [country, setCountryVal] = useState(countries[169]);
   const [phone, setPhone] = useState('');
   const [fax, setFaxVal] = useState('');
   const AddMachineSchema = Yup.object().shape({
@@ -155,7 +155,7 @@ export default function StatusAddForm() {
                   onChange={(newValue)=>setPhone(newValue)}
                   inputProps={{maxLength:13}}
                   forceCallingCode
-                  defaultCountry="NZ"
+                  defaultCountry={country?.code}
                 />
                 {/* <RHFTextField name="fax" label="Fax" /> */}
                 <MuiTelInput
@@ -166,7 +166,7 @@ export default function StatusAddForm() {
                   onChange={(newValue)=>setFaxVal(newValue)}
                   inputProps={{maxLength:13}}
                   forceCallingCode
-                  defaultCountry="NZ"
+                  defaultCountry={country?.code}
                 />
                 <RHFTextField name="email" label="Email" />
                 <RHFTextField name="website" label="Website" />
@@ -198,7 +198,7 @@ export default function StatusAddForm() {
                       name="country"
                       label="Country"
                       autoHighlight
-                      isOptionEqualToValue={(option, value) => option.lable === value.lable}
+                      isOptionEqualToValue={(option, value) => option.code === value.code}
                       onChange={(event, newValue) => {
                         if (newValue) {
                           setCountryVal(newValue);
