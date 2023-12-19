@@ -19,7 +19,7 @@ import { getSites } from '../../redux/slices/customer/site';
 import { PATH_CUSTOMER } from '../../routes/paths';
 // components
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
-import FormProvider, { RHFSwitch, RHFTextField } from '../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete } from '../../components/hook-form';
 // constants
 import { FORMLABELS  } from '../../constants/customer-constants';
 // schema
@@ -34,9 +34,6 @@ export default function CustomerEditForm() {
   const { sites } = useSelector((state) => state.site);
   const { spContacts, activeContacts } = useSelector((state) => state.contact);
   const filteredContacts = spContacts.filter((contact) => contact.isActive === true);
-  const [accountManVal, setAccountManVal] = useState('');
-  const [supportManVal, setSupportManVal] = useState('');
-  const [projectManVal, setProjectManVal] = useState('');
   const [billingContactVal, setBillingContactVal] = useState('');
   const [technicalContactVal, setTechnicalContactVal] = useState('');
   const [siteVal, setSiteVal] = useState('');
@@ -52,6 +49,9 @@ export default function CustomerEditForm() {
       name: customer?.name || '',
       isActive: customer?.isActive,
       supportSubscription: customer?.supportSubscription,
+      accountManager: customer?.accountManager || [],
+      projectManager: customer?.projectManager || [],
+      supportManager: customer?.supportManager || [],
       isFinancialCompany: customer?.isFinancialCompany || false,
       excludeReports: customer?.excludeReports || false,
       updateProductManagers: false,
@@ -78,9 +78,6 @@ export default function CustomerEditForm() {
     dispatch(getSPContacts());
     setSiteVal(customer?.mainSite);
     setChips(customer?.tradingName);
-    setAccountManVal(customer?.accountManager);
-    setSupportManVal(customer?.supportManager);
-    setProjectManVal(customer?.projectManager);
     setBillingContactVal(customer?.primaryBillingContact);
     setTechnicalContactVal(customer?.primaryTechnicalContact);
   }, [dispatch, customer]);
@@ -92,9 +89,6 @@ export default function CustomerEditForm() {
   const onSubmit = async (data) => {
     data.mainSite = siteVal?._id || null;
     data.tradingName = chips;
-    data.accountManager = accountManVal?._id || null;
-    data.projectManager = projectManVal?._id || null;
-    data.supportManager = supportManVal?._id || null;
     data.primaryBillingContact = billingContactVal?._id || null;
     data.primaryTechnicalContact = technicalContactVal?._id || null;
 
@@ -252,65 +246,49 @@ export default function CustomerEditForm() {
                 <Box rowGap={3} columnGap={2} display="grid"
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)'}}
                 >
-                  <Autocomplete
-                    // freeSolo
-                    value={accountManVal || null}
+                  <RHFAutocomplete
+                    multiple
+                    disableCloseOnSelect
+                    name="accountManager"
                     options={filteredContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                    getOptionLabel={(option) =>`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
-                    onChange={(event, newValue) => {
-                      if (newValue) {
-                        setAccountManVal(newValue);
-                      } else {
-                        setAccountManVal('');
-                      }
-                    }}
-                    renderOption={(props, option) => (<li {...props} key={option._id}>{option.firstName ? option.firstName : ''}{' '}{option.lastName ? option.lastName : ''}</li>)}
-                    id="controllable-states-demo"
-                    renderInput={(params) => (<TextField {...params} label={FORMLABELS.CUSTOMER.ACCOUNT} />)}
-                    ChipProps={{ size: 'small' }}
-                  />
-
-                  {/* project manager */}
-                  <Autocomplete
-                    // freeSolo
-                    value={projectManVal || null}
-                    options={filteredContacts}
-                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                    getOptionLabel={(option) => `${option.firstName && option.firstName} ${option.lastName && option.lastName}`}
-                    onChange={(event, newValue) => {
-                      if (newValue) {
-                        setProjectManVal(newValue);
-                      } else {
-                        setProjectManVal('');
-                      }
-                    }}
-                    renderOption={(props, option) => (<li {...props} key={option._id}>{option.firstName && option.firstName} {option.lastName && option.lastName}</li>)}
-                    id="controllable-states-demo"
-                    renderInput={(params) => (  <TextField {...params} label={FORMLABELS.CUSTOMER.PROJECT} />  )}
-                    ChipProps={{ size: 'small' }}
-                  />
-
-                  {/* support manager */}
-                  <Autocomplete
-                    // freeSolo
-                    value={supportManVal || null}
-                    options={filteredContacts}
-                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                    getOptionLabel={(option) => `${option.firstName && option.firstName} ${option.lastName && option.lastName}`}
-                    onChange={(event, newValue) => {
-                      if (newValue) {
-                        setSupportManVal(newValue);
-                      } else {
-                        setSupportManVal('');
-                      }
-                    }}
-                    renderOption={(props, option) => (<li {...props} key={option._id}>{option.firstName && option.firstName} {option.lastName && option.lastName}</li>)}
-                    id="controllable-states-demo"
-                    renderInput={(params) => (
-                      <TextField {...params} label={FORMLABELS.CUSTOMER.SUPPORT} />
+                    getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>
                     )}
+                    renderInput={(params) => <TextField {...params} label="Account Manager" />}
                     ChipProps={{ size: 'small' }}
+                    id="controllable-states-demo"
+                  />
+
+                  <RHFAutocomplete
+                    // freeSolo
+                    multiple
+                    disableCloseOnSelect
+                    name="projectManager"
+                    options={filteredContacts}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>
+                    )}
+                    renderInput={(params) => <TextField {...params} label="Project Manager" />}
+                    ChipProps={{ size: 'small' }}
+                    id="controllable-states-demo"
+                  />
+                  <RHFAutocomplete
+                    multiple
+                    disableCloseOnSelect
+                    name="supportManager"
+                    options={filteredContacts}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>
+                    )}
+                    renderInput={(params) => <TextField {...params} label="Support Manager" />}
+                    ChipProps={{ size: 'small' }}
+                    id="controllable-states-demo"
                   />
                   <Grid sx={{mt:'auto'}}>
                   <RHFSwitch sx={{ my:'auto',}}

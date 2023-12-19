@@ -211,9 +211,9 @@ export default function MachineViewForm() {
       shippingDate: machine?.shippingDate || '',
       description: machine?.description || '',
       customerTags: machine?.customerTags || '',
-      accountManager: machine?.accountManager || '',
-      projectManager: machine?.projectManager || '',
-      supportManager: machine?.supportManager || '',
+      accountManager: machine?.accountManager || [],
+      projectManager: machine?.projectManager || [],
+      supportManager: machine?.supportManager || [],
       supportExpireDate: machine?.supportExpireDate  || '',
       isActive: machine?.isActive,
       createdByFullName: machine?.createdBy?.name,
@@ -327,23 +327,23 @@ export default function MachineViewForm() {
 
           <Grid container>
             <FormLabel content={FORMLABELS.HOWICK} />
+
             <ViewFormField isLoading={isLoading}
               sm={6}
               heading="Account Manager"
-              param={defaultValues?.accountManager?.firstName}
-              secondParam={defaultValues?.accountManager?.lastName}
+              customerContacts={defaultValues?.accountManager}
             />
+
             <ViewFormField isLoading={isLoading}
               sm={6}
               heading="Project Manager"
-              param={defaultValues?.projectManager?.firstName}
-              secondParam={defaultValues?.projectManager?.lastName}
+              customerContacts={defaultValues?.projectManager}
             />
+            
             <ViewFormField isLoading={isLoading}
               sm={6}
               heading="Suppport Manager"
-              param={defaultValues?.supportManager?.firstName}
-              secondParam={defaultValues?.supportManager?.lastName}
+              customerContacts={defaultValues?.supportManager}
             />
 
             <ViewFormField isLoading={isLoading}
