@@ -82,7 +82,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
     dispatch(getAllCustomers());
     dispatch(getAllMachines());
     dispatch(getActiveRegions());
-    dispatch(getActiveSPCustomers());
+    // dispatch(getActiveSPCustomers());
     dispatch(getRoles());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
@@ -287,7 +287,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
                       <Autocomplete
                         {...field}
                         id="controllable-states-demo"
-                        options={spCustomers}
+                        options={allCustomers}
                         getOptionLabel={(option) => option.name}
                         isOptionEqualToValue={(option, value) => option._id === value._id}
                         onChange={(event, newValue) => {
