@@ -292,19 +292,6 @@ export default function CustomerEditForm() {
                   />
 
                   <RHFSwitch name="updateProductManagers" label="Update Account, Product, and Support Manager in Machines Data" checked={defaultValues?.isActive} />
-                    
-                  <Grid sx={{mt:'auto'}}>
-
-                  <RHFSwitch sx={{ my:'auto',}}
-                      name="updateProductManagers" labelPlacement="end"
-                      label={
-                          <Typography variant="subtitle2"
-                            sx={{  mx: 0,  width: 1,  justifyContent: 'space-between',   color: 'text.secondary',}}
-                          >Update Account, Product, and Support Manager in Machines Data
-                          </Typography>
-                      }
-                    />
-                  </Grid>
                 </Box>
                 <Grid sx={{display:{md:'flex'}}}>
                     <RHFSwitch name="isActive" label="Active" checked={defaultValues?.isActive} />
