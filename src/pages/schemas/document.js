@@ -59,7 +59,7 @@ export const AddDocumentCategorySchema = Yup.object().shape({
 
 export const EditDocumentNameSchema = Yup.object().shape({
   name: Yup.string().max(40),
-  description: Yup.string().max(5000),
+  description: Yup.string().max(10000),
   isActive: Yup.boolean(),
   customerAccess: Yup.boolean(),
 });
