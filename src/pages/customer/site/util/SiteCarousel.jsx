@@ -32,7 +32,7 @@ export default function SiteCarousel() {
     >
       {items.map((item, i) => (
         <Paper key={i}>
-          <img src={item.imageUrl} alt="carousel" />
+          <img src={item.imageUrl} width="100%" alt="carousel" />
         </Paper>
       ))}
     </Carousel>

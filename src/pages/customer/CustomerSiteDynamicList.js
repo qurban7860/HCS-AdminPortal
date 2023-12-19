@@ -231,6 +231,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
               <Grid container direction="column" gap={1}>
                 {dataFiltered.map((_site, index) => (
                   <ContactSiteCard
+                    key={index}
                     isActive={_site._id === activeCardIndex}
                     handleOnClick={() => handleCardClick(_site) }
                     disableClick={siteEditFormVisibility || siteAddFormVisibility}
@@ -252,6 +253,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                 <CardActionArea>
                   {site?.lat && site?.long && (
                     <GoogleMaps
+                      key={`mob-${site}`}
                       mapHeight="400px"
                       lat={site.lat ? site.lat : 0}
                       lng={site.long ? site.long : 0}
@@ -274,7 +276,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                 }}
                 setIsExpanded={setIsExpanded}
               />
-              <Grid item lg={12} spacing={3}>
+              <Grid item lg={12}>
                 {!isMobile && (
                   <Grid container direction="row" gap={4}>
                     <Grid item md={12}>
@@ -282,6 +284,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                         <Card>
                           <CardActionArea>
                             <GoogleMaps
+                              key={`desk-${site}`}
                               lat={site?.lat ? site.lat : 0}
                               lng={site?.long ? site.long : 0}
                             />
@@ -294,13 +297,14 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
 
                     <Grid item md={12}>
                       <Card>
-                        <CardActionArea>
+                      <SiteCarousel />
+                        {/* <CardActionArea>
                           <CardMedia
                             component={SiteCarousel}
                             image={<SiteCarousel />}
                             alt={sites[activeIndex]?.name}
                           />
-                        </CardActionArea>
+                        </CardActionArea> */}
                       </Card>
                     </Grid>
                   </Grid>

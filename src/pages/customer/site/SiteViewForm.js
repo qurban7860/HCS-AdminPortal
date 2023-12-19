@@ -16,10 +16,6 @@ import {
 import { useSnackbar } from '../../../components/snackbar';
 
 // paths
-// import { PATH_DASHBOARD } from '../../../routes/paths';
-// components
-// import ConfirmDialog from '../../../components/confirm-dialog';
-import GoogleMaps from '../../../assets/GoogleMaps';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
@@ -36,11 +32,6 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
   const { customer } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
-  const [openPopover, setOpenPopover] = useState(null);
-  
-  const handleClosePopover = () => {
-    setOpenPopover(null);
-  };
 
   const onDelete = async () => {
     try {
@@ -98,26 +89,13 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
           isActive={defaultValues?.isActive}
           handleEdit={handleEdit}
           onDelete={onDelete}
-          sites
+          // sites={sites}
           mainSite={customer.mainSite?._id === site?._id}
-          handleMap={handleMap}
+          // handleMap={handleMap}
         />
       </Grid>
-      {/* <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
-        <Button onClick={() => handleEdit()} variant="outlined" startIcon={<Iconify icon="eva:edit-fill" />} >
-          Edit
-        </Button>
-        <Button onClick={() => { handleOpenConfirm(); handleClosePopover(); }} variant="outlined" color="error" startIcon={<Iconify icon="eva:trash-2-fill" />} >
-          Delete
-        </Button>
-      </Stack> */}
       <Grid container>
-        {/* <ViewFormField isLoading={isLoading} sm={12} isActive={defaultValues.isActive} /> */}
         <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues?.name} />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Phone" param={defaultValues?.phone} />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Fax" param={defaultValues?.fax} />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Email" param={defaultValues?.email} />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Website" param={defaultValues?.website} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Street" param={defaultValues?.street} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Suburb" param={defaultValues?.suburb} />
         <ViewFormField isLoading={isLoading} sm={6} heading="City" param={defaultValues?.city} />
@@ -126,6 +104,10 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
         <ViewFormField isLoading={isLoading} sm={6} heading="Country" param={defaultValues?.country} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Latitude" param={defaultValues?.lat} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Longitude" param={defaultValues?.long} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Phone" param={defaultValues?.phone} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Fax" param={defaultValues?.fax} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Email" param={defaultValues?.email} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Website" param={defaultValues?.website} />
         <Grid container>
           <ViewFormField isLoading={isLoading}
             sm={6}
@@ -139,47 +121,8 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
             param={defaultValues?.primaryTechnicalContact?.firstName}
             secondParam={defaultValues?.primaryTechnicalContact?.lastName}
           />
-        </Grid>
-        
-        
-        <Dialog
-          open={openPopover}
-          onClose={handleClosePopover}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <Grid container lg={12}>
-            {defaultValues.lat && defaultValues.long ? (
-              <GoogleMaps lat={defaultValues.lat} lng={defaultValues.long} />
-            ) : (
-              <ViewFormField isLoading={isLoading}
-                sm={6}
-                heading="No Site Locations Available"
-              />)}
-          </Grid>
-          {/* {defaultValues.lat && defaultValues.long && (
-            <Grid container lg={12}>
-              <GoogleMaps
-                lat={defaultValues.lat ? defaultValues.lat : 0}
-                lng={defaultValues.long ? defaultValues.long : 0}
-              />
-            </Grid>
-          )} */}
-        </Dialog>
-        <Grid container>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
-        {/* <ConfirmDialog
-          open={openConfirm}
-          onClose={handleCloseConfirm}
-          title="Delete"
-          content="Are you sure want to delete?"
-          action={
-            <Button variant="contained" color="error" onClick={onDelete}>
-              Delete
-            </Button>
-          }
-        /> */}
       </Grid>
     </Grid>
   );

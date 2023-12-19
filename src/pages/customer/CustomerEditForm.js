@@ -53,6 +53,7 @@ export default function CustomerEditForm() {
       isActive: customer?.isActive,
       supportSubscription: customer?.supportSubscription,
       isFinancialCompany: customer?.isFinancialCompany || false,
+      excludeReports: customer?.excludeReports || false,
       updateProductManagers: false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -340,6 +341,10 @@ export default function CustomerEditForm() {
                     <RHFSwitch name="supportSubscription"  defaultChecked={defaultValues?.supportSubscription} />
                     <StyledToggleButtonLabel variant="body2" p={1}>Financing Company</StyledToggleButtonLabel>
                     <RHFSwitch name="isFinancialCompany" defaultChecked={defaultValues?.isFinancialCompany} />
+
+                    <StyledToggleButtonLabel variant="body2" p={1}>Exclude Reporting</StyledToggleButtonLabel>
+                    <RHFSwitch name="excludeReports" defaultChecked={defaultValues?.excludeReports} />
+                  
                   </Grid>
                 </Box>
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

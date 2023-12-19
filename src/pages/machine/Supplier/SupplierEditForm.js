@@ -38,7 +38,7 @@ export default function SupplierEditForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const [country, setCountryVal] = useState('');
+  const [country, setCountryVal] = useState(countries[169]);
   const [phone, setPhone] = useState('');
   const [fax, setFaxVal] = useState('');
   const { id } = useParams();
@@ -109,7 +109,8 @@ export default function SupplierEditForm() {
       setPhone(supplier.phone);
       setFaxVal(supplier.fax);
       const supplierCountry = filtter(countries, { label: supplier?.address?.country || '' });
-      setCountryVal(supplierCountry[0]);
+      if(supplierCountry.length>0)
+        setCountryVal(supplierCountry[0]);
     }
   }, [supplier]);
 
@@ -196,7 +197,7 @@ export default function SupplierEditForm() {
                   onChange={(newValue)=>setPhone(newValue)}
                   inputProps={{maxLength:13}}
                   forceCallingCode
-                  defaultCountry="NZ"
+                  defaultCountry={country?.code}
                 />
                 {/* <RHFTextField name="fax" label="Fax" /> */}
                 <MuiTelInput
@@ -207,7 +208,7 @@ export default function SupplierEditForm() {
                   onChange={(newValue)=>setFaxVal(newValue)}
                   inputProps={{maxLength:13}}
                   forceCallingCode
-                  defaultCountry="NZ"
+                  defaultCountry={country?.code}
                 />
                 <RHFTextField name="email" label="Email" />
                 <RHFTextField name="website" label="Website" />
@@ -238,7 +239,7 @@ export default function SupplierEditForm() {
                   name="country"
                   label="Country"
                   autoHighlight
-                  isOptionEqualToValue={(option, value) => option.lable === value.lable}
+                  isOptionEqualToValue={(option, value) => option.code === value.code}
                   onChange={(event, newValue) => {
                     if (newValue) {
                       setCountryVal(newValue);

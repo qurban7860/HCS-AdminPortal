@@ -51,7 +51,7 @@ export default function SiteEditForm() {
   const { customer } = useSelector((state) => state.customer);
 
   const { activeContacts } = useSelector((state) => state.contact);
-  const [countryVal, setCountryVal] = useState('');
+  const [country, setCountryVal] = useState(countries[169]);
   const dispatch = useDispatch();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -179,8 +179,8 @@ export default function SiteEditForm() {
       if (fax && fax.length > 4) {
         data.fax = fax;
       }
-      if (countryVal) {
-        data.country = countryVal?.label;
+      if (country) {
+        data.country = country?.label;
       }
       if (billingContactVal) {
         data.primaryBillingContact = billingContactVal?._id;
@@ -221,71 +221,15 @@ export default function SiteEditForm() {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                {/* <RHFTextField name="phone" label="Phone" /> */}
-                <MuiTelInput
-                  value={phone}
-                  name="phone"
-                  label="Phone Number"
-                  flagSize="medium"
-                  onChange={(newValue)=>setPhone(newValue)}
-                  inputProps={{maxLength:13}}
-                  forceCallingCode
-                  defaultCountry="NZ"
-                />
-
-                {/* <RHFTextField name="fax" label="Fax" /> */}
-                <MuiTelInput
-                  value={fax}
-                  name="fax"
-                  label="Fax"
-                  flagSize="medium"
-                  onChange={(newValue)=>setFaxVal(newValue)}
-                  inputProps={{maxLength:13}}
-                  forceCallingCode
-                  defaultCountry="NZ"
-                />
-
-                <RHFTextField name="email" label="Email" />
-
-                <RHFTextField name="website" label="Website" />
-              </Box>
-
-              <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                Address Details
-              </Typography>
-
-              <Box
-                rowGap={3}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
-              >
                 <RHFTextField name="street" label="Street" />
-
                 <RHFTextField name="suburb" label="Suburb" />
-
                 <RHFTextField name="city" label="City" />
-
                 <RHFTextField name="region" label="Region" />
-
                 <RHFTextField name="postcode" label="Post Code" />
-
-                {/* <RHFSelect native name="country" label="Country" >
-                  <option defaultValue value="null" selected >No Country Selected                  </option>
-                  {countries.map((country) => (
-                    <option key={country.code} value={country.label}>
-                      {country.label}
-                    </option>
-                  ))}
-                </RHFSelect> */}
-
                 <RHFAutocomplete
                   id="country-select-demo"
                   options={countries}
-                  value={countryVal || null}
+                  value={country || null}
                   name="country"
                   label="Country"
                   autoHighlight
@@ -313,8 +257,31 @@ export default function SiteEditForm() {
                 />
 
                 <RHFTextField name="lat" label="Latitude" />
-
                 <RHFTextField name="long" label="Longitude" />
+                <MuiTelInput
+                  value={phone}
+                  name="phone"
+                  label="Phone Number"
+                  flagSize="medium"
+                  onChange={(newValue)=>setPhone(newValue)}
+                  inputProps={{maxLength:13}}
+                  forceCallingCode
+                  defaultCountry={country?.code}
+                />
+
+                <MuiTelInput
+                  value={fax}
+                  name="fax"
+                  label="Fax"
+                  flagSize="medium"
+                  onChange={(newValue)=>setFaxVal(newValue)}
+                  inputProps={{maxLength:13}}
+                  forceCallingCode
+                  defaultCountry={country?.code}
+                />
+
+                <RHFTextField name="email" label="Email" />
+                <RHFTextField name="website" label="Website" />
               </Box>
 
               <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
