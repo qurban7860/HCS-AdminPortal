@@ -18,9 +18,9 @@ export const EditCustomerSchema = Yup.object().shape({
   // sites: Yup.array().nullable(),
   isActive: Yup.boolean(),
   // contacts: Yup.array().nullable(),
-  // accountManager: Yup.string().nullable(),
-  // projectManager: Yup.string().nullable(),
-  // supportManager: Yup.string().nullable(),
+  accountManager: Yup.array(),
+  projectManager: Yup.array(),
+  supportManager: Yup.array(),
   // primaryBillingContact: Yup.string().nullable(),
   // primaryTechnicalContact: Yup.string().nullable(),
 });

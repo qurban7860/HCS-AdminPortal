@@ -37,9 +37,9 @@ export default function CustomerViewForm() {
       code: customer?.clientCode || '',
       name: customer?.name || '',
       tradingName: customer?.tradingName || '',
-      accountManager: customer?.accountManager || '',
-      projectManager: customer?.projectManager || '',
-      supportManager: customer?.supportManager || '',
+      accountManager: customer?.accountManager || [],
+      projectManager: customer?.projectManager || [],
+      supportManager: customer?.supportManager || [],
       mainSite: customer?.mainSite || null,
       primaryBillingContact: customer?.primaryBillingContact || null,
       primaryTechnicalContact: customer?.primaryTechnicalContact || null,
@@ -135,9 +135,9 @@ export default function CustomerViewForm() {
             )}
             <Grid container>
               <FormLabel content={FORMLABELS.HOWICK} />
-              <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.ACCOUNT} param={defaultValues?.accountManager?.firstName} secondParam={defaultValues?.accountManager?.lastName} />
-              <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.PROJECT} param={defaultValues?.projectManager?.firstName} secondParam={defaultValues?.projectManager?.lastName} />
-              <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.SUPPORT} param={defaultValues?.supportManager?.firstName} secondParam={defaultValues?.supportManager?.lastName} />
+              <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.ACCOUNT} customerContacts={defaultValues?.accountManager } />
+              <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.PROJECT} customerContacts={defaultValues?.projectManager } />
+              <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.SUPPORT} customerContacts={defaultValues?.supportManager } />
               <ViewFormAudit defaultValues={defaultValues} />
             </Grid>
               

@@ -16,10 +16,8 @@ import {
   Card,
   Grid,
   Stack,
-  Typography,
   Checkbox,
   FormControlLabel,
-  Autocomplete,
   TextField,
 } from '@mui/material';
 import { MuiChipsInput } from 'mui-chips-input'
@@ -73,9 +71,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const [country, setCountryVal] = useState(countries[169]);
   const [billingContactPhone, setBillingContactPhone] = useState('');
   const [technicalContactPhone, setTechnicalContactPhone] = useState('');
-  const [accountManVal, setAccountManVal] = useState('');
-  const [supportManVal, setSupportManVal] = useState('');
-  const [projectManVal, setProjectManVal] = useState('');
 
   const AddCustomerSchema = Yup.object().shape({
     name: Yup.string().trim('Leading and trailing spaces are not allowed')
@@ -87,9 +82,9 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     mainSite: Yup.string().trim('Leading and trailing spaces are not allowed'),
     sites: Yup.array(),
     contacts: Yup.array(),
-    accountManager: Yup.string().nullable(),
-    projectManager: Yup.string().nullable(),
-    supportManager: Yup.string().nullable(),
+    accountManager: Yup.array(),
+    projectManager: Yup.array(),
+    supportManager: Yup.array(),
     // site details
     billingSite: Yup.string().trim('Leading and trailing spaces are not allowed'),
     // phone: Yup.string(),
@@ -129,9 +124,9 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       name: '',
       mainSite: '',
       // tradingName: chips   ,
-      // accountManager: null,
-      // projectManager: null,
-      // supportManager: null,
+      accountManager: [],
+      projectManager: [],
+      supportManager: [],
       type: 'Customer',
       isActive: true,
       supportSubscription:true,
@@ -189,15 +184,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       }
       if (technicalContactPhone) {
         data.technicalContactPhone = technicalContactPhone;
-      }
-      if (accountManVal) {
-        data.accountManager = accountManVal._id;
-      }
-      if (projectManVal) {
-        data.projectManager = projectManVal._id;
-      }
-      if (supportManVal) {
-        data.supportManager = supportManVal._id;
       }
 
       if(contactFlag){
@@ -463,86 +449,49 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     sm: 'repeat(2, 1fr)',
                   }}
                 >
-                  <Autocomplete
-                    // freeSolo
-                    value={accountManVal || null}
+                  <RHFAutocomplete
+                    multiple
+                    disableCloseOnSelect
+                    name="accountManager"
                     options={spContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                    getOptionLabel={(option) =>
-                      `${option.firstName ? option.firstName : ''} ${
-                        option.lastName ? option.lastName : ''
-                      }`
-                    }
-                    onChange={(event, newValue) => {
-                      if (newValue) {
-                        setAccountManVal(newValue);
-                      } else {
-                        setAccountManVal('');
-                      }
-                    }}
+                    getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
                     renderOption={(props, option) => (
-                      <li {...props} key={option._id}>
-                        {option.firstName ? option.firstName : ''}{' '}
-                        {option.lastName ? option.lastName : ''}
-                      </li>
+                      <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>
                     )}
-                    id="controllable-states-demo"
                     renderInput={(params) => <TextField {...params} label="Account Manager" />}
                     ChipProps={{ size: 'small' }}
+                    id="controllable-states-demo"
                   />
-                  <Autocomplete
+
+                  <RHFAutocomplete
                     // freeSolo
-                    value={projectManVal || null}
+                    multiple
+                    disableCloseOnSelect
+                    name="projectManager"
                     options={spContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                    getOptionLabel={(option) =>
-                      `${option.firstName ? option.firstName : ''} ${
-                        option.lastName ? option.lastName : ''
-                      }`
-                    }
-                    onChange={(event, newValue) => {
-                      if (newValue) {
-                        setProjectManVal(newValue);
-                      } else {
-                        setProjectManVal('');
-                      }
-                    }}
+                    getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
                     renderOption={(props, option) => (
-                      <li {...props} key={option._id}>
-                        {option.firstName ? option.firstName : ''}{' '}
-                        {option.lastName ? option.lastName : ''}
-                      </li>
+                      <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>
                     )}
-                    id="controllable-states-demo"
                     renderInput={(params) => <TextField {...params} label="Project Manager" />}
                     ChipProps={{ size: 'small' }}
+                    id="controllable-states-demo"
                   />
-                  <Autocomplete
-                    // freeSolo
-                    value={supportManVal || null}
+                  <RHFAutocomplete
+                    multiple
+                    disableCloseOnSelect
+                    name="supportManager"
                     options={spContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                    getOptionLabel={(option) =>
-                      `${option.firstName ? option.firstName : ''} ${
-                        option.lastName ? option.lastName : ''
-                      }`
-                    }
-                    onChange={(event, newValue) => {
-                      if (newValue) {
-                        setSupportManVal(newValue);
-                      } else {
-                        setSupportManVal('');
-                      }
-                    }}
+                    getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
                     renderOption={(props, option) => (
-                      <li {...props} key={option._id}>
-                        {option.firstName ? option.firstName : ''}{' '}
-                        {option.lastName ? option.lastName : ''}
-                      </li>
+                      <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>
                     )}
-                    id="controllable-states-demo"
                     renderInput={(params) => <TextField {...params} label="Support Manager" />}
                     ChipProps={{ size: 'small' }}
+                    id="controllable-states-demo"
                   />
                 </Box>
                 <Grid sx={{display:{md:'flex'}}}>

@@ -39,6 +39,7 @@ function ViewFormField({
   multiAuth,
   currentEmp,
   chips,
+  customerContacts,
   userRolesChips,
   serviceParam,
   NewVersion,
@@ -237,6 +238,21 @@ function ViewFormField({
           chips && typeof chips === 'string' && chips.trim().length > 0 && <Chip label={chips} sx={{m:0.2}} />
         )}
 
+        {customerContacts && typeof customerContacts === 'object' && customerContacts.length > 0 ? (
+          <Grid container sx={{my:-3, mb:0,
+              display: 'flex',
+              alignItems: 'center',
+              whiteSpace: 'pre-line',
+              wordBreak: 'break-word',
+              }} >
+            {customerContacts.map(
+              (chip,index) =>  <Chip key={index} label={`${chip?.firstName} ${chip?.lastName}`} sx={{m:0.2}}/>
+            )}
+          </Grid>
+        ) : (
+          customerContacts && typeof customerContacts === 'string' && customerContacts.trim().length > 0 && <Chip label={`${customerContacts?.firstName} ${customerContacts?.lastName}`} sx={{m:0.2}} />
+        )}
+
         {userRolesChips && typeof userRolesChips === 'object' && userRolesChips?.length > 0 ? (
           <Grid container sx={{my:-3, mb:0,
               display: 'flex',
@@ -303,6 +319,7 @@ ViewFormField.propTypes = {
   currentEmp: PropTypes.bool,
   chipDialogArrayParam: PropTypes.array,
   chips: PropTypes.any,
+  customerContacts: PropTypes.array,
   userRolesChips: PropTypes.array,
   serviceParam: PropTypes.array,
   NewVersion: PropTypes.bool,
