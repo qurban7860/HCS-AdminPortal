@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { noCase } from 'change-case';
 import { useEffect, useState, memo } from 'react';
+import { useNavigate } from 'react-router';
 // @mui
 import {
   Box,
@@ -22,7 +23,7 @@ import {
   Grid,
 } from '@mui/material';
 // utils
-import { fDate, fToNow } from '../../../utils/formatTime';
+import { fDate, fDateTime, fToNow } from '../../../utils/formatTime';
 
 // components
 import Iconify from '../../../components/iconify';
@@ -31,6 +32,7 @@ import MenuPopover from '../../../components/menu-popover';
 import { IconButtonAnimate } from '../../../components/animate';
 import { useWebSocketContext } from '../../../auth/WebSocketContext';
 import { ICONS } from '../../../constants/icons/default-icons';
+import { PATH_MACHINE } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -40,6 +42,7 @@ function NotificationsPopover() {
   const [ openPopover, setOpenPopover ] = useState(null);
   const { notifications, sendJsonMessage } = useWebSocketContext();
   const [ totalUnRead, setTotalUnRead ] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(()=>{
     setTotalUnRead(notifications && notifications.filter((item) => item?.readBy?.includes(userId) === false).length);
@@ -54,12 +57,18 @@ function NotificationsPopover() {
     setOpenPopover(null);
   };
 
-  const handleMarkAs = (id,_status) => {
-    if(id){
-      sendJsonMessage({eventName:'markAs',_id:id, status:true});
+  const handleMarkAs = (notification) => {
+    if(notification?._id){
+      setOpenPopover(null);
+      sendJsonMessage({eventName:'markAs',_id:notification?._id, status:true});
+      navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.view(notification?.extraInfo?._id));
     }else{
       sendJsonMessage({eventName:'markAs', status:true});
     }
+  }
+
+  const handleClearAll = (id) => {
+    console.log('clear')
   }
 
   return (
@@ -97,16 +106,22 @@ function NotificationsPopover() {
               // }
             >
               {notifications.map((notification) => (
+                <>
                 <NotificationItem handleMarkAs={handleMarkAs} key={notification?._id} notification={notification} />
+                <Divider sx={{ height:'10', borderStyle: 'solid' }} />
+                </>
               ))}
             </List>
           </Scrollbar>
           <Divider sx={{ borderStyle: 'solid' }} />
-          {/* {!notifications && 'Loading...' ? (
+          {!notifications && 'Loading...' ? (
             ''
           ) : (
-            <Box sx={{ p: 1 }}><Button fullWidth disableRipple>View All</Button></Box>
-          )} */}
+            <Box sx={{ p: 1 }}>
+                {` `}{/* <Button disableRipple onClick={handleClearAll} variant='outlined' startIcon={<Iconify icon='icon-park-outline:clear-format' />}>Clear</Button> */}
+                {/* <Button disableRipple>Remove All</Button> */}
+            </Box>
+          )}
           </>
         }
 
@@ -137,14 +152,14 @@ function NotificationItem({ notification, handleMarkAs}) {
   return (
     <ListItemButton
       sx={{
-        py: 1.5,
-        px: 2.5,
-        mt: '1px',
+        py: 1.0,
+        px: 1.5,
+        pb: 0.5,
         ...(!notification?.readBy?.includes(userId) && {
           bgcolor: 'action.selected',
         }),
       }}
-      onClick={()=> handleMarkAs(notification?._id, notification?.readBy?.includes(userId))}
+      onClick={()=> handleMarkAs(notification)}
     >
       <ListItemAvatar>
         <Avatar sx={{ bgcolor: 'background.primary'}}><Iconify icon={icon} color={color} width={30} /></Avatar>
@@ -155,10 +170,11 @@ function NotificationItem({ notification, handleMarkAs}) {
         primary={title}
         secondary={
           <Grid container direction="row" sx={{ typography: 'caption', color: 'text.disabled' }}>
-            <Grid item display='flex' columnGap={0.5} mt={0.1}>
+            <Grid item display='flex' columnGap={0.5} mt={0.5}>
               <Iconify icon="eva:clock-fill" width={16}/>
-              <Typography variant="caption">{fToNow(fDate(notification.createdAt))}</Typography>
+              <Typography variant="caption">{fToNow(fDateTime(notification.createdAt))}</Typography>
             </Grid>
+            
             {/* <Grid item lg={4}>
               <Typography variant="caption" align='right' alignSelf='flex-end' >Clear</Typography>
             </Grid> */}
@@ -166,6 +182,7 @@ function NotificationItem({ notification, handleMarkAs}) {
           </Grid>
         }
       />
+      
     </ListItemButton>
   );
 }
