@@ -1,9 +1,14 @@
 import React, { useEffect, useState, memo } from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Grid, Chip } from '@mui/material';
+import { Typography, Grid, Chip, createTheme, IconButton } from '@mui/material';
+import { green } from '@mui/material/colors';
 import IconPopover from '../Icons/IconPopover';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
 import SkeletonViewFormField from '../../../components/skeleton/SkeletonViewFormField';
+import IconTooltip from '../Icons/IconTooltip';
+import { StyledTooltip } from '../../../theme/styles/default-styles';
+import Iconify from '../../../components/iconify';
+import { ICONS } from '../../../constants/icons/default-icons';
 
 function ViewFormField({
   backLink,
@@ -39,6 +44,7 @@ function ViewFormField({
   NewVersion,
   isNewVersion,
   handleNewVersion,
+  handleUpdateVersion,
   ViewAllVersions,
   handleAllVersion,
   isLoading,
@@ -46,6 +52,12 @@ function ViewFormField({
 }) {
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
+
+  const theme = createTheme({
+    palette: {
+      success: green,
+    },
+  });
 
   useEffect(() => {
     if (customerVerifiedBy) {
@@ -113,8 +125,27 @@ function ViewFormField({
         {objectParam || ''}
         {secondObjectParam || ''}
         {numberParam || ''}
-        {ViewAllVersions && <IconPopover isViewAllVersions onClick={handleAllVersion} />}
-        {NewVersion && <IconPopover isNewVersion onClick={handleNewVersion} />}
+        {ViewAllVersions && 
+          <StyledTooltip title={ICONS.VIEW_VERSIONS.heading} placement="top" disableFocusListener tooltipcolor={theme.palette.primary.main} color={theme.palette.primary.main}>
+            <IconButton onClick={handleAllVersion} >
+              <Iconify color={theme.palette.primary.main} sx={{ height: '20px', width: '20px' }} icon={ICONS.VIEW_VERSIONS.icon} />
+            </IconButton>
+          </StyledTooltip>
+        }
+        {NewVersion && 
+          <StyledTooltip title={ICONS.ADD_NEW_VERSION.heading} placement="top" disableFocusListener tooltipcolor={theme.palette.primary.main} color={theme.palette.primary.main}>
+            <IconButton onClick={handleNewVersion} >
+              <Iconify color={theme.palette.primary.main} sx={{ height: '20px', width: '20px' }} icon={ICONS.ADD_NEW_VERSION.icon} />
+            </IconButton>
+          </StyledTooltip>
+        }
+        {handleUpdateVersion && 
+          <StyledTooltip title={ICONS.UPDATE_VERSION.heading} placement="top" disableFocusListener tooltipcolor={theme.palette.primary.main} color={theme.palette.primary.main}>
+            <IconButton onClick={handleUpdateVersion} >
+              <Iconify color={theme.palette.primary.main} sx={{ height: '20px', width: '20px' }} icon={ICONS.UPDATE_VERSION.icon} />
+            </IconButton>
+          </StyledTooltip>
+        }
         &nbsp;
 
       </Typography>
@@ -277,6 +308,7 @@ ViewFormField.propTypes = {
   NewVersion: PropTypes.bool,
   isNewVersion: PropTypes.bool,
   handleNewVersion: PropTypes.func,
+  handleUpdateVersion: PropTypes.func,
   ViewAllVersions: PropTypes.bool,
   handleAllVersion: PropTypes.func,
   backLink: PropTypes.func,
