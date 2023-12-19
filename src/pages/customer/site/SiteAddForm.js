@@ -232,7 +232,7 @@ export default function SiteAddForm() {
                   name="phone"
                   label="Phone Number"
                   flagSize="medium"
-                  defaultCountry={country?.code}
+                  defaultCountry="NZ"
                   onChange={(newValue)=>setPhone(newValue)}
                   inputProps={{maxLength:13}}
                   forceCallingCode
@@ -244,7 +244,7 @@ export default function SiteAddForm() {
                   name="fax"
                   label="Fax"
                   flagSize="medium"
-                  defaultCountry={country?.code}
+                  defaultCountry="NZ"
                   onChange={(newValue)=>setFaxVal(newValue)}
                   inputProps={{maxLength:13}}
                   forceCallingCode

@@ -267,7 +267,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 onChange={(newValue)=> setPhone(newValue)}
                 inputProps={{ maxLength: 13 }}
                 forceCallingCode
-                defaultCountry={country?.code}
+                defaultCountry="NZ"
               />
 
               {/* <RHFTextField name="fax" label="Fax" /> */}
@@ -279,7 +279,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 onChange={(newValue) => setFaxVal(newValue)}
                 inputProps={{ maxLength: 13 }}
                 forceCallingCode
-                defaultCountry={country?.code}
+                defaultCountry="NZ"
               />
 
               <RHFTextField name="email" label="Email" />
@@ -381,7 +381,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 onChange={(newValue) => setBillingContactPhone(newValue)}
                 inputProps={{ maxLength: 13 }}
                 forceCallingCode
-                defaultCountry={country?.code}
+                defaultCountry="NZ"
                 // onCount
               />
 
@@ -427,7 +427,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     onChange={(newValue) => setTechnicalContactPhone(newValue)}
                     inputProps={{ maxLength: 13 }}
                     forceCallingCode
-                    defaultCountry={country?.code}
+                    defaultCountry="NZ"
                   />
                   <RHFTextField name="technicalContactEmail" label="Contact Email" />
                 </Box>
