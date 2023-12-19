@@ -25,6 +25,16 @@ export const ICONS = {
     heading: 'Inactive',
   },
 
+  DEFAULT: {
+    icon: 'carbon:settings-check',
+    color: '#008000',
+    heading: 'Default',
+  },
+  CONTRAST: {
+    icon: 'carbon:settings-check',
+    color: '#FF0000',
+    heading: 'Non-Default',
+  },
   // isOnline
   ONLINE: {
     icon: 'mdi:circle',

@@ -275,7 +275,7 @@ export default function SecurityUserEditForm() {
                 required
                 disabled
                 value={customerVal || null}
-                options={spCustomers}
+                options={allCustomers}
                 getOptionLabel={(option) => option.name}
                 isOptionEqualToValue={(option, value) => option._id === value._id}
                 onChange={(event, newValue) => {

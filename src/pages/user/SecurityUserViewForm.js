@@ -44,7 +44,7 @@ export default function SecurityUserViewForm() {
   const userId = localStorage.getItem('userId');
   const [openConfirm, setOpenConfirm] = useState(false);
   const handleCloseConfirm = () => setOpenConfirm(false);
-
+console.log("securityUser :  ",securityUser);
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -242,6 +242,11 @@ export default function SecurityUserViewForm() {
                       {defaultValues?.customer}
                       {blockedCustomer.length > 0 &&
                         <StyledTooltip title="Customer is Blocked" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
+                          <Iconify color="#FF0000" sx={{height: '24px', width: '24px', verticalAlign:"middle", ml:1 }} icon="ooui:block" />
+                        </StyledTooltip>
+                      }
+                      {!securityUser?.customer?.isActive &&
+                        <StyledTooltip title="Customer is Inactive" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
                           <Iconify color="#FF0000" sx={{height: '24px', width: '24px', verticalAlign:"middle", ml:1 }} icon="mdi:ban" />
                         </StyledTooltip>
                       }
@@ -254,6 +259,11 @@ export default function SecurityUserViewForm() {
                   defaultValues?.contact && (
                     <Link onClick={handleContactDialog} href="#" underline="none">
                       {defaultValues?.contact}
+                      {!securityUser?.contact?.isActive &&
+                        <StyledTooltip title="Contact is Inactive" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
+                          <Iconify color="#FF0000" sx={{height: '24px', width: '24px', verticalAlign:"middle", ml:1 }} icon="mdi:ban" />
+                        </StyledTooltip>
+                      }
                     </Link>)}
               />
             </Grid>
