@@ -209,6 +209,7 @@ export function addMachineStatus(params) {
           description: params.description,
           displayOrderNo: params.displayOrderNo,
           isActive: params.isActive,
+          isDefault: params.isDefault,
           slug: params.slug,
         };
         /* eslint-enable */
@@ -235,6 +236,7 @@ export function updateMachinestatus(params,Id) {
         displayOrderNo: params.displayOrderNo,
         description: params.description,
         isActive: params.isActive,
+        isDefault: params.isDefault,
         slug: params.slug,
       };
      /* eslint-enable */

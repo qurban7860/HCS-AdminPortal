@@ -44,6 +44,7 @@ export default function DocumentTypeViewForm() {
   const defaultValues = useMemo(
     () => ({
       isActive: documentType?.isActive,
+      isDefault: documentType?.isDefault,
       customerAccess: documentType?.customerAccess,
       name: documentType?.name,
       category: documentType?.docCategory?.name,
@@ -62,7 +63,8 @@ export default function DocumentTypeViewForm() {
   return (
     <Card sx={{ p: 2 }}>
       <Grid>
-        <ViewFormEditDeleteButtons customerAccess={defaultValues?.customerAccess} isActive={defaultValues.isActive} handleEdit={handleEdit} onDelete={onDelete} backLink={() => navigate(PATH_SETTING.documentType.list)}/>
+          
+        <ViewFormEditDeleteButtons customerAccess={defaultValues?.customerAccess} isDefault={defaultValues.isDefault} isActive={defaultValues.isActive} handleEdit={handleEdit} onDelete={onDelete} backLink={() => navigate(PATH_SETTING.documentType.list)}/>
         <Grid container sx={{mt:2}}>
           <ViewFormField sm={12} heading="Category" param={defaultValues.category} />
           <ViewFormField sm={6} heading="Type Name" param={defaultValues.name} />

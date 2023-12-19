@@ -51,6 +51,7 @@ export default function DocumentTypeAddForm({ currentDocument }) {
       name: '',
       description: '',
       isActive: true,
+      isDefault: false,
       customerAccess: false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -146,6 +147,8 @@ export default function DocumentTypeAddForm({ currentDocument }) {
                   isRHF
                   name={FORMLABELS.isACTIVE.name}
                   RHFName={FORMLABELS.isCUSTOMER_ACCESS.name}
+                  isDefault
+                  defaultName='isDefault'
                 />
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

@@ -258,6 +258,7 @@ const handleNewFile = async () => {
                 sm={4}
                 NewVersion={!defaultValues.isArchived}
                 handleNewVersion={handleNewVersion}
+                handleUpdateVersion={handleNewVersion}
                 heading="Active Version"
                 objectParam={
                   defaultValues.documentVersion && (

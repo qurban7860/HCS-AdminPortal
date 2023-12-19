@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography } from '@mui/material';
 // slice
 import {
   updateDepartment,
@@ -15,7 +15,7 @@ import {
 import { PATH_SETTING } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, { RHFTextField } from '../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch } from '../../components/hook-form';
 import { Cover } from '../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
@@ -34,6 +34,7 @@ export default function DepartmentEditForm() {
     () => ({
       departmentName: department?.departmentName || '',
       isActive: department?.isActive,
+      isDefault: department?.isDefault || false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [department]
@@ -42,6 +43,7 @@ export default function DepartmentEditForm() {
   const departmentSchema = Yup.object().shape({
     departmentName: Yup.string().min(2).max(50).required('Name is required').trim(),
     isActive: Yup.boolean(),
+    isDefault: Yup.boolean(),
   });
 
   const methods = useForm({
@@ -93,7 +95,23 @@ export default function DepartmentEditForm() {
               <Stack spacing={3}>
                 <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}>
                   <RHFTextField name="departmentName" label="Name*" />
-                  <ToggleButtons isMachine name={FORMLABELS.isACTIVE.name}/>
+                  <Grid display="flex">
+                  <RHFSwitch
+                    name="isActive"
+                    labelPlacement="start"
+                    label={
+                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary',}} >Active</Typography>
+                    }
+                  />
+                    <RHFSwitch
+                      name="isDefault"
+                      labelPlacement="start"
+                      label={
+                        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary',}} >Default</Typography>
+                      }
+                    />
+                  </Grid>
+
                 </Box>
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

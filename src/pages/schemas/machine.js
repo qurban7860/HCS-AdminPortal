@@ -75,10 +75,10 @@ export const MachineServiceRecordSchema = Yup.object().shape({
   decoiler: Yup.object().label('Decoiler').nullable(),
   technician: Yup.object().label('Technician').nullable(),
   // checkParams:
-  serviceNote: Yup.string().label('Service Note'),
-  maintenanceRecommendation: Yup.string().label('Maintenance Recommendation'),
+  serviceNote: Yup.string().max(5000).label('Service Note'),
+  maintenanceRecommendation: Yup.string().max(5000).label('Maintenance Recommendation'),
   internalComments: Yup.string().max(5000).label('Internal Comments'),
-  suggestedSpares: Yup.string().label('Suggested Spares'),
+  suggestedSpares: Yup.string().max(5000).label('Suggested Spares'),
   files: Yup.mixed()
   .test(
     'fileType',
@@ -183,7 +183,7 @@ export const MachineServiceRecordSchema = Yup.object().shape({
     NotRequiredValidateFileType
   ).nullable(true),
   operator: Yup.object().label('Operator').nullable(),
-  operatorRemarks: Yup.string().label('Operator Remarks'),
+  operatorRemarks: Yup.string().max(5000).label('Operator Remarks'),
   isActive: Yup.boolean(),
 })
 

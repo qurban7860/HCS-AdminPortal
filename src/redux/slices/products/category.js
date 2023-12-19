@@ -219,6 +219,7 @@ export function addCategory(params) {
         let data = {
           name: params.name,
           isActive: params.isActive,
+          isDefault: params.isDefault,
           connections: params.connections
         };
         /* eslint-enable */
@@ -245,6 +246,7 @@ export function updateCategory(params,Id) {
       const data = {
         name: params.name,
         isActive: params.isActive,
+        isDefault: params.isDefault,
         description: params.description,
         connections: params.connections
       };

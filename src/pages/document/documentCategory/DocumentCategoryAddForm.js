@@ -81,12 +81,12 @@ export default function DocumentCategoryAddForm({ currentDocument }) {
     }
   },[state]);
 
-console.log("state : ", state);
   const defaultValues = useMemo(
     () => ({
       name: '',
       description: '',
       isActive: true,
+      isDefault: false,
       customerAccess: false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -153,6 +153,8 @@ console.log("state : ", state);
                   RHFName={FORMLABELS.isCUSTOMER_ACCESS.name}
                   isCATEGORY={state}
                   handleChangeType={handleChangeType}
+                  isDefault
+                  defaultName='isDefault'
                 />
                 
               </Stack>

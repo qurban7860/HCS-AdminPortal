@@ -49,6 +49,7 @@ export default function RegionViewForm() {
       description: region?.description || '',
       countries: region?.countries,
       isActive: region?.isActive,
+      isDefault: region?.isDefault,
       createdAt: region?.createdAt || '',
       createdByFullName: region?.createdBy?.name || '',
       createdIP: region?.createdIP || '',
@@ -67,6 +68,7 @@ export default function RegionViewForm() {
           handleEdit={handleEdit}
           onDelete={onDelete}
           backLink={() => navigate(PATH_SETTING.regions.list)}
+          isDefault={defaultValues.isDefault}
         />
         <Grid container sx={{mt:2}}>
           <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues.name} />

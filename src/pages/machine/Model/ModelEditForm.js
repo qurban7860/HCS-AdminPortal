@@ -56,6 +56,7 @@ export default function ModelEditForm() {
       displayOrderNo: machineModel?.displayOrderNo || '',
       // category:      machineModel?.category || '',
       isActive: machineModel?.isActive,
+      isDefault: machineModel?.isDefault || false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [machineModel]
@@ -141,7 +142,7 @@ export default function ModelEditForm() {
 
                 <RHFTextField name="description" label="Description" minRows={7} multiline />
 
-                <ToggleButtons isMachine name={FORMLABELS.isACTIVE.name} />
+                <ToggleButtons isMachine name={FORMLABELS.isACTIVE.name} isDefault defaultName='isDefault' />
               </Box>
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

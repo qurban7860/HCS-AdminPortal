@@ -494,29 +494,12 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     id="controllable-states-demo"
                   />
                 </Box>
-                <Box
-                  rowGap={3}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{
-                    xs: 'repeat(1, 1fr)',
-                    sm: 'repeat(2, 1fr)',
-                  }}
-                >
-                  <Grid display="flex" alignItems="center" mt={1}>
-                    <StyledToggleButtonLabel variant="body2" p={1}>Active</StyledToggleButtonLabel>
-                    <RHFSwitch name="isActive" checked={defaultValues?.isActive} />
-
-                    <StyledToggleButtonLabel variant="body2" p={1}>Support Subscription</StyledToggleButtonLabel>
-                    <RHFSwitch name="supportSubscription" checked={defaultValues?.supportSubscription} />
-                  
-                    <StyledToggleButtonLabel variant="body2" p={1}>Financing Company</StyledToggleButtonLabel>
-                    <RHFSwitch name="isFinancialCompany" defaultChecked={defaultValues?.isFinancialCompany} />
-
-                    <StyledToggleButtonLabel variant="body2" p={1}>Exclude Reporting</StyledToggleButtonLabel>
-                    <RHFSwitch name="excludeReports" defaultChecked={defaultValues?.excludeReports} />
-                  </Grid>
-                </Box>
+                <Grid sx={{display:{md:'flex'}}}>
+                    <RHFSwitch name="isActive" label="Active" checked={defaultValues?.isActive} />
+                    <RHFSwitch name="supportSubscription" label='Support Subscription' checked={defaultValues?.supportSubscription} />
+                    <RHFSwitch name="isFinancialCompany" label="Financing Company" defaultChecked={defaultValues?.isFinancialCompany} />
+                    <RHFSwitch name="excludeReports" label="Exclude Reporting" defaultChecked={defaultValues?.excludeReports} />
+                </Grid>
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>

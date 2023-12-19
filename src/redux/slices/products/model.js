@@ -220,6 +220,7 @@ export function addMachineModel(params) {
         let data = {
           name: params.name,
           isActive: params.isActive,
+          isDefault: params.isDefault,
           description: params.description,
         };
         /* eslint-enable */
@@ -248,6 +249,7 @@ export function updateMachineModel(params,Id) {
       let data = {
         name: params.name,
         isActive: params.isActive,
+        isDefault: params.isDefault,
         description: params.description,
       };
      /* eslint-enable */

@@ -34,6 +34,7 @@ export default function CategoryEditForm() {
     name: Yup.string().min(2).max(50).required('Name is required'),
     description: Yup.string().max(5000),
     isActive: Yup.boolean(),
+    isDefault: Yup.boolean(),
     connections: Yup.boolean(),
   });
 
@@ -42,6 +43,7 @@ export default function CategoryEditForm() {
       name: category?.name || '',
       description: category?.description || '',
       isActive: category.isActive,
+      isDefault: category?.isDefault || false,
       connections: category.connections || false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -129,6 +131,15 @@ export default function CategoryEditForm() {
                         </Typography>
                       }
                     />
+
+                  <RHFSwitch
+                    name="isDefault"
+                    labelPlacement="start"
+                    label={
+                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary',}} >Default</Typography>
+                    }
+                  />
+
                     <RHFSwitch
                       name="connections"
                       labelPlacement="start"
