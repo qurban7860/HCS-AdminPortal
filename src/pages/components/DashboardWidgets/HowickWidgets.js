@@ -13,29 +13,25 @@ import Chart, { useChart } from '../../../components/chart';
 HowickWidgets.propTypes = {
   sx: PropTypes.object,
   chart: PropTypes.object,
-  color: PropTypes.string,
   title: PropTypes.string,
   total: PropTypes.number,
-  notVerifiedTitle: PropTypes.string,
-  notVerifiedCount: PropTypes.number,
-  connectableTitle: PropTypes.string,
-  connectableCount: PropTypes.number,
-  activeUserCount: PropTypes.number,
-  onlineUserCount: PropTypes.number,
+  notVerified: PropTypes.number,
+  connectables: PropTypes.number,
+  activeUsers: PropTypes.number,
+  onlineUsers: PropTypes.number,
+  excludedCustomers: PropTypes.number,
   icon: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
 };
 
 export default function HowickWidgets({
   title,
   total,
-  notVerifiedTitle,
-  notVerifiedCount,
-  connectableTitle,
-  connectableCount,
-  activeUserCount,
-  onlineUserCount,
+  notVerified,
+  connectables,
+  activeUsers,
+  onlineUsers,
+  excludedCustomers,
   icon,
-  color = 'primary',
   chart,
   sx,
   ...other
@@ -43,7 +39,7 @@ export default function HowickWidgets({
   const theme = useTheme();
 
   const chartOptions = useChart({
-    colors: [theme.palette[color].light],
+    colors: [theme.palette.primary.light],
     chart: {
       sparkline: {
         enabled: true,
@@ -87,15 +83,16 @@ export default function HowickWidgets({
           <Grid item sx={{position:'absolute', height:'100%', opacity:0.8, display:'flex', alignItems:'center', left:10}}>
             <Chart type="polarArea" series={[0.00]} options={chartOptions} width={86} height={86} />
           </Grid>
-          <Grid sx={{borderRight:'1px solid #919eab3d',pr:1}} textAlign='right'>
-            <Typography variant="h4"> {connectableCount?fNumber(total-connectableCount):fNumber(total)}</Typography>
+          <Grid container direction='column' sx={{borderRight:'1px solid #919eab3d',pr:1}} textAlign='right'>
+            <Typography variant="h4"> {connectables?fNumber(total-connectables):fNumber(total)}</Typography>
             <Typography variant="body1" sx={{ opacity: 0.7 }}>{title}</Typography>
           </Grid>
-          <Grid alignSelf='baseline'>
-            {notVerifiedTitle && notVerifiedCount && <Typography variant="body2" sx={{ opacity: 0.72 }}>{notVerifiedTitle} : {notVerifiedCount}</Typography>}
-            {connectableTitle && connectableCount && <Typography variant="body2" sx={{ opacity: 0.72 }}>{connectableTitle} : {connectableCount}</Typography>}
-            {activeUserCount && <Typography variant="body2" sx={{ opacity: 0.7 }}>Active : {activeUserCount}</Typography>}
-            {onlineUserCount !== undefined && <Typography variant="body2" sx={{ opacity: 0.7 }}>Online : {onlineUserCount}</Typography>}
+          <Grid container direction='column'>
+            {notVerified !==undefined && <Typography variant="body2" sx={{ opacity: 0.7 }}>Not Verified : {notVerified}</Typography>}
+            {connectables!==undefined && <Typography variant="body2" sx={{ opacity: 0.7 }}>Decoilers / Kits : {connectables}</Typography>}
+            {activeUsers !==undefined && <Typography variant="body2" sx={{ opacity: 0.7 }}>Active : {activeUsers}</Typography>}
+            {onlineUsers !==undefined && <Typography variant="body2" sx={{ opacity: 0.7 }}>Online : {onlineUsers}</Typography>}
+            {excludedCustomers !==undefined && <Typography variant="body2" sx={{ opacity: 0.7 }}>Exclude Reporting : {excludedCustomers}</Typography>}
           </Grid>
           <Iconify icon={icon} sx={{ width: 120, height: 120, opacity: 0.07, position: 'absolute', right: theme.spacing(-3)}}/>
         </Box>

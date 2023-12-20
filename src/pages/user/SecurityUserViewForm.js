@@ -44,7 +44,7 @@ export default function SecurityUserViewForm() {
   const userId = localStorage.getItem('userId');
   const [openConfirm, setOpenConfirm] = useState(false);
   const handleCloseConfirm = () => setOpenConfirm(false);
-console.log("securityUser :  ",securityUser);
+
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -60,7 +60,6 @@ console.log("securityUser :  ",securityUser);
 
   useEffect(() => {
     if (userId) {
-      // disable edit button
       if (isSuperAdmin || userId === id) {
         setDisableEditButton(false);
       } else {
@@ -149,7 +148,7 @@ console.log("securityUser :  ",securityUser);
   const defaultValues = useMemo(
     () => ({
       customer: securityUser?.customer?.name || '',
-      contact: `${securityUser?.contact?.firstName ? securityUser?.contact?.firstName : ''} ${securityUser?.contact?.lastName ? securityUser?.contact?.lastName : ''}` ,
+      contact: securityUser?.contact || null,
       name: securityUser?.name || '',
       phone: securityUser?.phone || '',
       email: securityUser?.email || '',
@@ -258,8 +257,8 @@ console.log("securityUser :  ",securityUser);
                 objectParam={
                   defaultValues?.contact && (
                     <Link onClick={handleContactDialog} href="#" underline="none">
-                      {defaultValues?.contact}
-                      {!securityUser?.contact?.isActive &&
+                      {defaultValues?.contact?.firstName || ''} {defaultValues?.contact?.lastName || ''}
+                      {!defaultValues?.contact?.isActive &&
                         <StyledTooltip title="Contact is Inactive" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
                           <Iconify color="#FF0000" sx={{height: '24px', width: '24px', verticalAlign:"middle", ml:1 }} icon="mdi:ban" />
                         </StyledTooltip>
