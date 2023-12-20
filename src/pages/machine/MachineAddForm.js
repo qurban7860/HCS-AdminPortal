@@ -142,14 +142,14 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       name: '',
       parentSerialNo: null,
       previousMachine: '',
-      supplier: null,
-      category: null,
-      machineModel: null,
+      supplier: activeSuppliers.find((element) => element?.isDefault === true) || null,
+      category: activeCategories.find((element) => element?.isDefault === true) || null,
+      machineModel: activeMachineModels.find((element)=> element.isDefault === true) || null,
       customer: null,
       financialCompany: null,
       machineConnectionVal: [],
       connection: [],
-      status: null,
+      status: activeMachineStatuses.find((element)=> element.isDefault === true) || null,
       workOrderRef: '',
       instalationSite: null,
       billingSite: null,
@@ -197,12 +197,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[newMachineCustomer])
 
-
-  useEffect(() => {
-    setValue('supplier',activeSuppliers.find((element) => element?.isDefault === true))
-    setValue('category',activeCategories.find((element) => element?.isDefault === true))
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
 
   useEffect(() => {
     if(category === null && machineModel ){

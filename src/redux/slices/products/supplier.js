@@ -208,47 +208,22 @@ export function addSupplier(params) {
         name: params.name,
         isActive: params.isActive,
         isDefault: params.isDefault,
+        contactName: params.contactName,
+        contactTitle: params.contactTitle,
+        phone: params.phone,
+        email: params.email,
+        website: params.website,
+        fax: params.fax,
+        address: {
+          street: params.street,
+          suburb: params.suburb,
+          city: params.city,
+          postcode: params.postcode,
+          region: params.region,
+          country: params.country.label,
+        }
         };
         /* eslint-enable */
-        if(params.contactName){
-          data.contactName = params.contactName;
-        }
-        if(params.contactTitle){
-          data.contactTitle = params.contactTitle;
-        }
-        if(params.phone){
-          data.phone = params.phone;
-        }
-        if(params.email){
-          data.email = params.email;
-        }
-        if(params.fax){
-          data.fax = params.fax;        
-        }
-        if(params.website){
-          data.website = params.website;        
-        }
-        if(params.street || params.subrub || params.city || params.region || params.country) {
-          data.address = {}
-        }
-        if(params.street){
-          data.address.street = params.street;        
-        }
-        if(params.suburb){
-          data.address.suburb = params.suburb;        
-        }
-        if(params.city){
-          data.address.city = params.city;        
-        }
-        if(params.postcode){
-          data.address.postcode = params.postcode;        
-        }
-        if(params.region){
-          data.address.region = params.region;        
-        }
-        if(params.country){
-          data.address.country = params.country;        
-        }
         const response = await axios.post(`${CONFIG.SERVER_URL}products/suppliers`, data);
         dispatch(slice.actions.getSupplierSuccess(response.data.Supplier));
       } catch (error) {
@@ -284,7 +259,7 @@ export function updateSupplier(params,Id) {
           city: params.city,
           postcode: params.postcode,
           region: params.region,
-          country: params.country,
+          country: params.country.label,
         }
       };
      /* eslint-enable */

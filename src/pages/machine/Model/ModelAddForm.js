@@ -1,8 +1,5 @@
-import * as Yup from 'yup';
-import { useLayoutEffect, useMemo, useState, useEffect } from 'react';
-
+import {  useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-// import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 // form
 // import Select from "react-select";
@@ -12,7 +9,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // import { LoadingButton } from '@mui/lab';
 import {
   TextField,
-  Autocomplete,
   Box,
   Card,
   Grid,
@@ -25,12 +21,10 @@ import { addMachineModel } from '../../../redux/slices/products/model';
 import { getActiveCategories } from '../../../redux/slices/products/category';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
-// import { useSettingsContext } from '../../../components/settings';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
-// auth
-// import { useAuthContext } from '../../../auth/useAuthContext';
+import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete } from '../../../components/hook-form';
+import { ModelSchema } from './schemas/ModelSchema';
 // util
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
@@ -39,63 +33,42 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
 export default function ModelAddForm() {
-  // const { userId, user } = useAuthContext();
 
   const { activeCategories } = useSelector((state) => state.category);
 
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
-  const [modelVal, setModelVal] = useState(null);
 
   const { enqueueSnackbar } = useSnackbar();
-
-  const ModelAddSchema = Yup.object().shape({
-    name: Yup.string().trim().max(40).required('Name is required'),
-    description: Yup.string().max(5000),
-    isActive: Yup.boolean(),
-    isDefault: Yup.boolean(),
-    // category: Yup.string().required('Category is required'),
-  });
 
   const defaultValues = useMemo(
     () => ({
       name: '',
+      category: activeCategories.find((cat) => cat.isDefault) || null,
       description: '',
       isActive: true,
-      // category: '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
   const methods = useForm({
-    resolver: yupResolver(ModelAddSchema),
+    resolver: yupResolver(ModelSchema),
     defaultValues,
   });
 
   const {
     reset,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  // const values = watch();
-
-  useLayoutEffect(() => {
+  useEffect(() => {
     dispatch(getActiveCategories());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (modelVal && modelVal._id) {
-      setValue('category', modelVal._id);
-    }
-  }, [modelVal, setValue]);
-
   const onSubmit = async (data) => {
-    // console.log("data : ",data)
-    //  await dispatchReqAddAndList(dispatch, addMachineModel(data),  reset, navigate, PATH_MACHINE.machineModel.list, enqueueSnackbar)
     try {
       await dispatch(addMachineModel(data));
       reset();
@@ -106,12 +79,9 @@ export default function ModelAddForm() {
       console.log('Error:', error);
     }
   };
-  const toggleCancel = () => {
-    navigate(PATH_MACHINE.machines.settings.model.list);
-  };
 
-  // const { themeStretch } = useSettingsContext();
-  
+  const toggleCancel = () => { navigate(PATH_MACHINE.machines.settings.model.list) };
+
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
@@ -128,16 +98,13 @@ export default function ModelAddForm() {
                   display="grid"
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
                 >
-                  <Autocomplete
-                    value={modelVal || null}
+                  <RHFAutocomplete
+                    name="category"
+                    label="Category*"
                     options={activeCategories}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => option.name}
-                    onChange={(event, newValue) => {
-                      setModelVal(newValue);
-                    }}
                     id="controllable-states-demo"
-                    renderInput={(params) => <TextField {...params} label="Category*" />}
                     ChipProps={{ size: 'small' }}
                   />
 

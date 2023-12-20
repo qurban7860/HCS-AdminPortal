@@ -1,4 +1,3 @@
-import * as Yup from 'yup';
 import { useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -6,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Typography, Container, TextField } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Container } from '@mui/material';
 import { MuiTelInput } from 'mui-tel-input';
 // slice
 import { addSupplier } from '../../../redux/slices/products/supplier';
@@ -28,32 +27,16 @@ import { countries } from '../../../assets/data';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import { SupplierSchema } from './Supplier'
 // ----------------------------------------------------------------------
 
 export default function StatusAddForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const [country, setCountryVal] = useState(countries[169]);
   const [phone, setPhone] = useState('');
   const [fax, setFaxVal] = useState('');
-  const AddMachineSchema = Yup.object().shape({
-    name: Yup.string().max(50).required('Name is required'),
-    isActive: Yup.boolean(),
-    isDefault: Yup.boolean(),
-    contactName: Yup.string().max(50),
-    contactTitle: Yup.string().max(50),
-    // phone: Yup.string().nullable(),
-    // fax: Yup.string().nullable(),
-    email: Yup.string().email(),
-    website: Yup.string(),
-    street: Yup.string().max(50),
-    suburb: Yup.string().max(50),
-    region: Yup.string().max(50),
-    // country: Yup.string(),
-    city: Yup.string().max(50),
-    postcode: Yup.string().max(20),
-  });
+
 
   const defaultValues = useMemo(
     () => ({
@@ -67,7 +50,7 @@ export default function StatusAddForm() {
       street: '',
       suburb: '',
       region: '',
-      // country: '',
+      country: countries[169] || null,
       city: '',
       postcode: '',
       isActive: true,
@@ -78,7 +61,7 @@ export default function StatusAddForm() {
   );
 
   const methods = useForm({
-    resolver: yupResolver(AddMachineSchema),
+    resolver: yupResolver(SupplierSchema),
     defaultValues,
   });
 
@@ -99,9 +82,6 @@ export default function StatusAddForm() {
       }
       if (fax && fax.length > 4) {
         data.fax = fax;
-      }
-      if (country) {
-        data.country = country.label;
       }
       console.log(data);
       await dispatch(addSupplier(data));
@@ -193,21 +173,14 @@ export default function StatusAddForm() {
                     <RHFTextField name="city" label="City" />
                     <RHFTextField name="region" label="Region" />
                     <RHFTextField name="postcode" label="Post Code" />
+
                     <RHFAutocomplete
                       id="country-select-demo"
                       options={countries}
-                      value={country || null}
                       name="country"
                       label="Country"
                       autoHighlight
                       isOptionEqualToValue={(option, value) => option.code === value.code}
-                      onChange={(event, newValue) => {
-                        if (newValue) {
-                          setCountryVal(newValue);
-                        } else {
-                          setCountryVal('');
-                        }
-                      }}
                       getOptionLabel={(option) => `${option.label} (${option.code}) `}
                       renderOption={(props, option) => (
                         <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
@@ -221,9 +194,10 @@ export default function StatusAddForm() {
                           {option.label} ({option.code}) {option.phone}
                         </Box>
                       )}
-                      renderInput={(params) => <TextField {...params} label="Choose a country" />}
                     />
+
                   </Box>
+
               <Grid display="flex">
                   <RHFSwitch
                     name="isActive"

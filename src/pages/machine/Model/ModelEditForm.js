@@ -5,18 +5,18 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { TextField, Autocomplete, Box, Card, Grid, Stack } from '@mui/material';
+import { TextField, Box, Card, Grid, Stack } from '@mui/material';
 // slice
 import { updateMachineModel } from '../../../redux/slices/products/model';
 import { getActiveCategories } from '../../../redux/slices/products/category';
 // import { useSettingsContext } from '../../../components/settings';
 // schema
-import { EditModelSchema } from './schemas/EditModelSchema';
+import { ModelSchema } from './schemas/ModelSchema';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFTextField } from '../../../components/hook-form';
+import FormProvider, { RHFAutocomplete, RHFTextField } from '../../../components/hook-form';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
@@ -32,7 +32,6 @@ export default function ModelEditForm() {
   const dispatch = useDispatch();
   const [category, setCategory] = useState('');
   const navigate = useNavigate();
-  // console.log("machineModel : ", machineModel)
 
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
@@ -54,7 +53,7 @@ export default function ModelEditForm() {
       name: machineModel?.name || '',
       description: machineModel?.description || '',
       displayOrderNo: machineModel?.displayOrderNo || '',
-      // category:      machineModel?.category || '',
+      category:      machineModel?.category || null,
       isActive: machineModel?.isActive,
       isDefault: machineModel?.isDefault || false,
     }),
@@ -65,7 +64,7 @@ export default function ModelEditForm() {
   // const { themeStretch } = useSettingsContext();
 
   const methods = useForm({
-    resolver: yupResolver(EditModelSchema),
+    resolver: yupResolver(ModelSchema),
     defaultValues,
   });
 
@@ -121,23 +120,16 @@ export default function ModelEditForm() {
                   sm: 'repeat(1, 1fr)',
                 }}
               >
-                <Autocomplete
-                  // disabled
-                  value={category || null}
+                <RHFAutocomplete
+                  name="category"
+                  label="Category*"
                   options={activeCategories}
                   isOptionEqualToValue={(option, value) => option._id === value._id}
                   getOptionLabel={(option) => option.name}
-                  onChange={(event, newValue) => {
-                    if (newValue) {
-                      setCategory(newValue);
-                    } else {
-                      setCategory('');
-                    }
-                  }}
                   id="controllable-states-demo"
-                  renderInput={(params) => <TextField {...params} label="Category*" />}
                   ChipProps={{ size: 'small' }}
                 />
+
                 <RHFTextField name="name" label="Name*" />
 
                 <RHFTextField name="description" label="Description" minRows={7} multiline />
