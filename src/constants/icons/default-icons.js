@@ -152,7 +152,7 @@ export const ICONS = {
   ADD_NEW_VERSION: {
     icon: 'mdi:plus-circle',
     color: 'primary.main',
-    heading: 'Add a New Version',
+    heading: 'Add New Version',
     width: '16px',
   },
   UPDATE_VERSION: {
