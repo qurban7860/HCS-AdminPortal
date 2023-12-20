@@ -291,7 +291,7 @@ export default function CustomerEditForm() {
                     id="controllable-states-demo"
                   />
 
-                  <RHFSwitch name="updateProductManagers" label="Update Account, Product, and Support Manager in Machines Data" checked={defaultValues?.isActive} />
+                  <RHFSwitch name="updateProductManagers" label="Update Account, Project, and Support Manager in machine data" checked={defaultValues?.isActive} />
                 </Box>
                 <Grid sx={{display:{md:'flex'}}}>
                     <RHFSwitch name="isActive" label="Active" checked={defaultValues?.isActive} />

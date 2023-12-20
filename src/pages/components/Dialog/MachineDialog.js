@@ -41,22 +41,13 @@ function MachineDialog() {
         <Grid container>
           <FormLabel content="Howick Resources" />
           <ViewFormField isLoading={isLoading}
-            sm={6}
-            heading="Account Manager"
-            param={machineForDialog?.accountManager?.firstName}
-            secondParam={machineForDialog?.accountManager?.lastName}
+            sm={6} heading="Account Manager" customerContacts={machineForDialog?.accountManager}
           />
           <ViewFormField isLoading={isLoading}
-            sm={6}
-            heading="Project Manager"
-            param={machineForDialog?.projectManager?.firstName}
-            secondParam={machineForDialog?.projectManager?.lastName}
+            sm={6} heading="Project Manager" customerContacts={machineForDialog?.projectManager}
           />
           <ViewFormField isLoading={isLoading} 
-            sm={6}
-            heading="Suppport Manager"
-            param={machineForDialog?.supportManager?.firstName}
-            secondParam={machineForDialog?.supportManager?.lastName}
+            sm={6} heading="Suppport Manager" customerContacts={machineForDialog?.supportManager}
           />
         </Grid>
       </DialogContent>

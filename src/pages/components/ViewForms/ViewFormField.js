@@ -250,7 +250,7 @@ function ViewFormField({
             )}
           </Grid>
         ) : (
-          customerContacts && typeof customerContacts === 'string' && customerContacts.trim().length > 0 && <Chip label={`${customerContacts?.firstName} ${customerContacts?.lastName}`} sx={{m:0.2}} />
+          customerContacts && typeof customerContacts?.firstName === 'string' && <Chip label={`${customerContacts?.firstName} ${customerContacts?.lastName}`} sx={{m:0.2}} />
         )}
 
         {userRolesChips && typeof userRolesChips === 'object' && userRolesChips?.length > 0 ? (
