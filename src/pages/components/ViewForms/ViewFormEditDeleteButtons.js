@@ -71,6 +71,7 @@ function ViewFormEditDeleteButtons({
   supportSubscription,
   machineSupportDate,
   approveConfiglength,
+  excludeReports
 
 }) {
   const { id } = useParams();
@@ -309,6 +310,11 @@ function ViewFormEditDeleteButtons({
             color={financingCompany ? ICONS.ALLOWED.color : ICONS.DISALLOWED.color}
             icon="vaadin:office"
             />
+          }
+
+          {excludeReports &&
+            <IconTooltip title={ICONS.EXCLUDE_REPORTING.heading} color={ICONS.EXCLUDE_REPORTING.color} 
+            icon={ICONS.EXCLUDE_REPORTING.icon} />
           }
 
           {machineSupportDate &&
@@ -819,5 +825,5 @@ ViewFormEditDeleteButtons.propTypes = {
   onUserStatusChange:PropTypes.func,
   financingCompany: PropTypes.bool,
   isLoading: PropTypes.bool,
-  
+  excludeReports: PropTypes.bool,
 };
