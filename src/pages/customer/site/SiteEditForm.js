@@ -62,7 +62,7 @@ export default function SiteEditForm() {
   const [fax, setFaxVal] = useState('');
   const [billingContactVal, setBillingContactVal] = useState('');
   const [technicalContactVal, setTechnicalContactVal] = useState('');
-
+  console.log("phone : ",phone)
   function filtter(data, input) {
     const filteredOutput = data.filter((obj) =>
       Object.keys(input).every((filterKeys) => obj[filterKeys] === input[filterKeys])
@@ -174,7 +174,12 @@ export default function SiteEditForm() {
   };
 
   const updateCountryCode = () =>{
-    setCountryCode(country?.code)
+    const existingPhoneNumberParts = phone.split(' ');
+    const existingFaxNumberParts = fax.split(' ');
+    const newPhoneNumber = country?.phone.trim() !== '' ? `${country?.phone || '+64'} ${existingPhoneNumberParts[1] || ''}` : '';
+    const newFaxNumber = country?.phone.trim() !== '' ? `${country?.phone || '+64'} ${existingFaxNumberParts[1] || ''}` : '';
+    setPhone(newPhoneNumber);
+    setFaxVal(newFaxNumber)
   }
 
   const onSubmit = async (data) => {
@@ -211,15 +216,29 @@ export default function SiteEditForm() {
     }
   };
 
+  const handleTelInputChangePhone = (newValue, countryVal) => {
+    // setCountryCode(countryVal.dialCode);
+    if (newValue.trim() !== '') {
+      setPhone(newValue);
+    }
+  };
+
+  const handleTelInputChangeFax = (newValue, countryVal) => {
+    // setCountryCode(countryVal.dialCode);
+    if (newValue.trim() !== '') {
+      setFaxVal(newValue);
+    }
+  };
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={4}>
-        <Grid item xs={18} md={12}>
+      <Grid container >
+        <Grid item xs={12} md={12}>
           <Card sx={{ p: 3 }}>
-            <Stack spacing={3}>
+            <Stack spacing={2}>
               <RHFTextField name="name" label="Name*" />
               <Box
-                rowGap={3}
+                rowGap={2}
                 columnGap={2}
                 display="grid"
                 gridTemplateColumns={{
@@ -256,19 +275,19 @@ export default function SiteEditForm() {
                         srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
                         alt=""
                       />
-                      {option.label} ({option.code}) +{option.phone}
+                      {option.label} ({option.code}) {option.phone}
                     </Box>
                   )}
                   renderInput={(params) => <TextField {...params} label="Choose a country" />}
                   />
                 </Box>
                 
-                <Box display="flex" justifyContent='flex-end'>
-                  <Button variant='contained' size='small' color='error' onClick={updateCountryCode} startIcon={<Iconify icon="ant-design:sync-outlined" />}>Update Phones Country Code</Button>
-                </Box>
+                <Grid display="flex" justifyContent='flex-end'>
+                  <Button variant='contained' size='small' color='warning' onClick={updateCountryCode} startIcon={<Iconify icon="ant-design:sync-outlined" />}>Update Phones Country Code</Button>
+                </Grid>
 
                 <Box
-                rowGap={3}
+                rowGap={2}
                 columnGap={2}
                 display="grid"
                 gridTemplateColumns={{
@@ -279,15 +298,16 @@ export default function SiteEditForm() {
                 
                 <RHFTextField name="lat" label="Latitude" />
                 <RHFTextField name="long" label="Longitude" />
+
                 <MuiTelInput
                   value={phone}
                   name="phone"
                   label="Phone Number"
                   flagSize="medium"
-                  onChange={(newValue)=>setPhone(newValue)}
+                  onChange={(newValue, countryVal) => handleTelInputChangePhone(newValue, countryVal)}
                   inputProps={{maxLength:13}}
                   forceCallingCode
-                  defaultCountry={countryCode}
+                  defaultCountry='NZ'
                 />
 
                 <MuiTelInput
@@ -295,10 +315,10 @@ export default function SiteEditForm() {
                   name="fax"
                   label="Fax"
                   flagSize="medium"
-                  onChange={(newValue)=>setFaxVal(newValue)}
+                  onChange={(newValue, countryVal) => handleTelInputChangeFax(newValue, countryVal)}
                   inputProps={{maxLength:13}}
                   forceCallingCode
-                  defaultCountry={countryCode}
+                  // defaultCountry={countryCode}
                 />
 
                 <RHFTextField name="email" label="Email" />
@@ -310,7 +330,7 @@ export default function SiteEditForm() {
               </Typography>
 
               <Box
-                rowGap={3}
+                rowGap={2}
                 columnGap={2}
                 display="grid"
                 gridTemplateColumns={{
