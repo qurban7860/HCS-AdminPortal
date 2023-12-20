@@ -18,6 +18,7 @@ import {
   Typography,
   TextField,
   Autocomplete,
+  Button,
 } from '@mui/material';
 // global
 // import { CONFIG } from '../../../config-global';
@@ -34,7 +35,7 @@ import { getCustomer } from '../../../redux/slices/customer/customer';
 // components
 // import GoogleMaps from '../../../assets/GoogleMaps';
 import { useSnackbar } from '../../../components/snackbar';
-// import Iconify from '../../../components/iconify';
+import Iconify from '../../../components/iconify';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import FormProvider, {
   RHFSwitch,
@@ -49,9 +50,10 @@ import { countries } from '../../../assets/data';
 export default function SiteEditForm() {
   const { site } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
-
   const { activeContacts } = useSelector((state) => state.contact);
   const [country, setCountryVal] = useState(countries[169]);
+  const [countryCode, setCountryCode] = useState('NZ');
+  
   const dispatch = useDispatch();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -171,6 +173,10 @@ export default function SiteEditForm() {
     dispatch(setSiteEditFormVisibility(false));
   };
 
+  const updateCountryCode = () =>{
+    setCountryCode(country?.code)
+  }
+
   const onSubmit = async (data) => {
     try {
       if (phone && phone.length > 4) {
@@ -254,8 +260,23 @@ export default function SiteEditForm() {
                     </Box>
                   )}
                   renderInput={(params) => <TextField {...params} label="Choose a country" />}
-                />
+                  />
+                </Box>
+                
+                <Box display="flex" justifyContent='flex-end'>
+                  <Button variant='contained' size='small' color='error' onClick={updateCountryCode} startIcon={<Iconify icon="ant-design:sync-outlined" />}>Update Phones Country Code</Button>
+                </Box>
 
+                <Box
+                rowGap={3}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
+                
                 <RHFTextField name="lat" label="Latitude" />
                 <RHFTextField name="long" label="Longitude" />
                 <MuiTelInput
@@ -266,7 +287,7 @@ export default function SiteEditForm() {
                   onChange={(newValue)=>setPhone(newValue)}
                   inputProps={{maxLength:13}}
                   forceCallingCode
-                  defaultCountry={country?.code}
+                  defaultCountry={countryCode}
                 />
 
                 <MuiTelInput
@@ -277,7 +298,7 @@ export default function SiteEditForm() {
                   onChange={(newValue)=>setFaxVal(newValue)}
                   inputProps={{maxLength:13}}
                   forceCallingCode
-                  defaultCountry={country?.code}
+                  defaultCountry={countryCode}
                 />
 
                 <RHFTextField name="email" label="Email" />
@@ -347,25 +368,7 @@ export default function SiteEditForm() {
                   ChipProps={{ size: 'small' }}
                 />
               </Box>
-              <RHFSwitch
-                name="isActive"
-                labelPlacement="start"
-                label={
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      mx: 0,
-                      width: 1,
-                      justifyContent: 'space-between',
-                      mb: 0.5,
-                      color: 'text.secondary',
-                    }}
-                  >
-                    {' '}
-                    Active
-                  </Typography>
-                }
-              />
+              <RHFSwitch name="isActive" label="Active" />
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>
