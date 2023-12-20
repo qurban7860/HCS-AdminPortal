@@ -24,6 +24,7 @@ const initialState = {
   newMachineCustomer: null,
   filterBy: '',
   verified: 'all',
+  excludeReporting: 'included',
   page: 0,
   rowsPerPage: 100,
 };
@@ -155,6 +156,11 @@ const slice = createSlice({
       state.verified = action.payload;
     },
 
+    // Set Excluded
+    setExcludeReporting(state, action) {
+      state.excludeReporting = action.payload;
+    },
+
     // Set PageRowCount
     ChangeRowsPerPage(state, action) {
       state.rowsPerPage = action.payload;
@@ -180,6 +186,7 @@ export const {
   setResponseMessage,
   setFilterBy,
   setVerified,
+  setExcludeReporting,
   ChangeRowsPerPage,
   ChangePage,
   setCustomerDialog,

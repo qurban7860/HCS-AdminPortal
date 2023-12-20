@@ -790,7 +790,7 @@ ViewFormEditDeleteButtons.propTypes = {
   verifiers: PropTypes.array,
   approvers: PropTypes.array,
   isVerifiedTitle: PropTypes.string,
-  approveConfiglength: PropTypes.number,
+  approveConfiglength: PropTypes.string,
   isActive: PropTypes.bool,
   isDefault: PropTypes.bool,
   isSubmitted: PropTypes.func,
