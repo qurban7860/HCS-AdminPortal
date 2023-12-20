@@ -37,11 +37,14 @@ function SearchBarCombo({
   buttonIcon,
   transferredMachine,
   handleAttach,
-  transferStatus,
-  handleTransferStatus,
+  radioStatus,
+  radioStatusLabel,
+  handleRadioStatus,
   onExportCSV,
   onExportLoading,
   onReload,
+  filterExcludeRepoting,
+  handleExcludeRepoting,
   ...other
 }) {
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
@@ -244,12 +247,7 @@ function SearchBarCombo({
             />
           </Grid>}
 
-          {handleTransferStatus !== undefined &&
-            <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
-                <FormControlLabel control={<Switch checked={transferStatus} 
-                  onClick={(event)=>{handleTransferStatus(event.target.checked)}} />} label="Show Transferred" />
-            </Grid>
-          }
+          
 
           {onSignInLogsFilter &&
             <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
@@ -271,6 +269,36 @@ function SearchBarCombo({
                   </Select>
               </FormControl>
               </Stack>
+            </Grid>
+          }
+
+          {handleExcludeRepoting &&
+            <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+              <Stack alignItems="flex-start">
+              <FormControl fullWidth={isMobile} sx={{ml:2, width:'200px'}}>
+                <InputLabel id="demo-simple-select-label">Reporting</InputLabel>
+                <Select
+                  sx={{width:'200px'}}
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  size="small"
+                  value={filterExcludeRepoting}
+                  label="Reporting"
+                  onChange={handleExcludeRepoting}
+                >
+                  <MenuItem key="all" value='all'>All</MenuItem>
+                  <MenuItem key="excluded" value='excluded'>Exclude Reporting</MenuItem>
+                  <MenuItem key="included" value='included'>Include Reporting</MenuItem>
+                  </Select>
+              </FormControl>
+              </Stack>
+            </Grid>
+          }
+
+          {handleRadioStatus !== undefined &&
+            <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+                <FormControlLabel control={<Switch checked={radioStatus} 
+                  onClick={(event)=>{handleRadioStatus(event.target.checked)}} />} label={radioStatusLabel} />
             </Grid>
           }
 
@@ -379,11 +407,14 @@ SearchBarCombo.propTypes = {
   onSignInLogsFilter:PropTypes.func,
   transferredMachine:PropTypes.bool,
   handleAttach: PropTypes.func,
-  transferStatus: PropTypes.bool,
-  handleTransferStatus: PropTypes.func,
+  radioStatus: PropTypes.bool,
+  radioStatusLabel: PropTypes.string,
+  handleRadioStatus: PropTypes.func,
   onExportCSV: PropTypes.func,
   onExportLoading: PropTypes.bool,
   onReload: PropTypes.func,
+  filterExcludeRepoting: PropTypes.string,
+  handleExcludeRepoting: PropTypes.func,
 };
 
 export default SearchBarCombo;
