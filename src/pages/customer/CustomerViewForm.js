@@ -44,6 +44,7 @@ export default function CustomerViewForm() {
       primaryBillingContact: customer?.primaryBillingContact || null,
       primaryTechnicalContact: customer?.primaryTechnicalContact || null,
       isFinancialCompany: customer?.isFinancialCompany,
+      excludeReports: customer?.excludeReports || false,
       isActive: customer?.isActive,
       supportSubscription: customer?.supportSubscription,
       createdAt: customer?.createdAt || '',
@@ -95,6 +96,7 @@ export default function CustomerViewForm() {
               onDelete={onDelete}
               supportSubscription={defaultValues.supportSubscription}
               backLink={() => navigate(PATH_CUSTOMER.list)}
+              excludeReports={defaultValues.excludeReports}
             />
 
               <Grid container>
