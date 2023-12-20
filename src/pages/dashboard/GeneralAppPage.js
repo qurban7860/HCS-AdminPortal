@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 // @mui
 import { Grid, Card, Divider, TextField, Autocomplete, CardHeader, Box, IconButton, Typography } from '@mui/material';
 import { StyledBg, StyledContainer, StyledGlobalCard } from '../../theme/styles/default-styles';
@@ -63,7 +63,22 @@ export default function GeneralAppPage() {
   const countryWiseMachineCountCountries = [];
   const countryWiseSiteCountNumber = [];
   const countryWiseSiteCountCountries = [];
-  // const yearWiseMachines = [];
+
+  useLayoutEffect(() => {
+    dispatch(getActiveCategories());
+    dispatch(getActiveMachineModels());
+    dispatch(getCount());
+    dispatch(getMachinesByCountry());
+    dispatch(getMachinesByModel());
+    dispatch(getMachinesByYear());
+  }, [dispatch]);
+
+  useEffect(()=>{
+    const defaultCategory = activeCategories.find((cat) => cat?.isDefault === true);
+    setMBCCategory(defaultCategory);
+    setMBMCategory(defaultCategory);
+    setMBYCategory(defaultCategory);
+  },[activeCategories])
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: currentYear - 1999 }, (_, index) => 2000 + index);
@@ -130,14 +145,7 @@ export default function GeneralAppPage() {
     }
   }
  
-  useLayoutEffect(() => {
-    dispatch(getActiveCategories());
-    dispatch(getActiveMachineModels());
-    dispatch(getCount());
-    dispatch(getMachinesByCountry());
-    dispatch(getMachinesByModel());
-    dispatch(getMachinesByYear());
-  }, [dispatch]);
+  
 
   return (
     <StyledContainer maxWidth={false}>
@@ -148,26 +156,28 @@ export default function GeneralAppPage() {
             </Grid>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={3} >
               <HowickWidgets title="Customers" total={count?.customerCount || 0}
-                notVerifiedTitle="Not Verified" notVerifiedCount={count?.nonVerifiedCustomerCount}
-                icon="raphael:users" color="warning"
+                notVerified={count?.nonVerifiedCustomerCount || 0}
+                excludedCustomers={count?.excludeReportingCustomersCount || 0}
+                icon="raphael:users"
               />
             </Grid>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={3} >
               <HowickWidgets title="Sites" total={count?.siteCount || 0}
-                icon="carbon:location-company" color="bronze"
+                icon="carbon:location-company"
               />
             </Grid>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={3} >
               <HowickWidgets title="Machines" total={count?.machineCount || 0}
-                notVerifiedTitle="Not Verified" notVerifiedCount={count?.nonVerifiedMachineCount}
-                connectableTitle="Decoilers / Kits" connectableCount={count?.connectAbleMachinesCount}
-                icon="vaadin:automation" color="info"
+                notVerified={count?.nonVerifiedMachineCount || 0}
+                connectables={count?.connectAbleMachinesCount || 0}
+                icon="vaadin:automation"
               />
             </Grid>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={3} >
               <HowickWidgets title="Users" total={count?.userTotalCount || 0}
-                activeUserCount={count?.userActiveCount} onlineUserCount={onlineUsers && onlineUsers?.length}
-                icon="mdi:account-group" color="error"
+                activeUsers={count?.userActiveCount || 0} 
+                onlineUsers={onlineUsers && onlineUsers?.length || 0}
+                icon="mdi:account-group"
               />
           </Grid>    
         </Grid>
@@ -186,8 +196,7 @@ export default function GeneralAppPage() {
                             options={activeCategories}
                             value={MBCCategory}
                             isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                            getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                            renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option?.name || ''}`}</li>)}
+                            getOptionLabel={(option) => option?.name || ''}
                             renderInput={(params) => (<TextField {...params} label="Categories" size="small" />)}
                             onChange={(event, newValue) =>{
                                 setMBCCategory(newValue);
@@ -200,8 +209,7 @@ export default function GeneralAppPage() {
                               options={activeMachineModels.filter((model) => MBCCategory ? model?.category?._id === MBCCategory?._id : model)}
                               value={MBCModel}  // Ensure that MBCModel is controlled
                               isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                              getOptionLabel={(option) => `${option?.name || ''}`}
-                              renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.name || ''}`}</li>)}
+                              getOptionLabel={(option) => option?.name || ''}
                               renderInput={(params) => (<TextField {...params} label="Model" size="small" />)}
                               onChange={(event, newValue) => {
                                 setMBCModel(newValue);
@@ -213,7 +221,7 @@ export default function GeneralAppPage() {
                         <Autocomplete
                           fullWidth
                           options={years}
-                          getOptionLabel={(option) => option.toString()}
+                          getOptionLabel={(option) => option?.toString() || ''}
                           renderInput={(params) => <TextField {...params} label="Year" size="small" />}
                           onChange={(event, newValue) =>{setMBCYear(newValue); ; handleGraphCountry(MBCCategory, newValue, MBCModel)}}
                         />
@@ -241,17 +249,17 @@ export default function GeneralAppPage() {
                       <Autocomplete
                           fullWidth
                           options={activeCategories}
-                          isOptionEqualToValue={(option, value) => option._id === value._id}
-                          getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                          renderOption={(props, option) => (<li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>)}
+                          value={MBMCategory}
+                          isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                          getOptionLabel={(option) => option?.name || ''}
                           renderInput={(params) => (<TextField {...params} label="Categories" size="small" />)}
                           onChange={(event, newValue) =>{setMBMCategory(newValue); handleGraphModel(newValue, MBMYear,MBMCountry)}}
                         />
                         <Autocomplete
                           fullWidth
                           options={countries}
-                          isOptionEqualToValue={(option, value) => option.code === value.code}
-                          getOptionLabel={(option) => `${option.label ? option.label : ''}`}
+                          isOptionEqualToValue={(option, value) => option?.code === value?.code}
+                          getOptionLabel={(option) => option?.label || ''}
                           renderInput={(params) => <TextField {...params} label="Country" size="small" />}
                           onChange={(event, newValue) =>{setMBMCountry(newValue);handleGraphModel(MBMCategory, MBMYear,newValue)}}
                         />
@@ -259,7 +267,7 @@ export default function GeneralAppPage() {
                         <Autocomplete
                           fullWidth
                           options={years}
-                          getOptionLabel={(option) => option.toString()}
+                          getOptionLabel={(option) => option?.toString() || ''}
                           renderInput={(params) => <TextField {...params} label="Year" size="small" />}
                           onChange={(event, newValue) =>{setMBMYear(newValue);handleGraphModel(MBMCategory, newValue,MBMCountry)}}
                         />
@@ -291,8 +299,7 @@ export default function GeneralAppPage() {
                           options={activeCategories}
                           value={MBYCategory}
                           isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                          getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                          renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option?.name || ''}`}</li>)}
+                          getOptionLabel={(option) =>  option?.name || ''}
                           renderInput={(params) => (<TextField {...params} label="Categories" size="small" />)}
                           onChange={(event, newValue) =>{
                               setMBYCategory(newValue);
@@ -305,8 +312,7 @@ export default function GeneralAppPage() {
                             options={activeMachineModels.filter((model) => MBYCategory ? model?.category?._id === MBYCategory?._id : model)}
                             value={MBYModel}  // Ensure that MBYModel is controlled
                             isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                            getOptionLabel={(option) => `${option?.name || ''}`}
-                            renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.name || ''}`}</li>)}
+                            getOptionLabel={(option) => option?.name || ''}
                             renderInput={(params) => (<TextField {...params} label="Model" size="small" />)}
                             onChange={(event, newValue) => {
                               setMBYModel(newValue);
@@ -318,8 +324,8 @@ export default function GeneralAppPage() {
                         <Autocomplete
                           fullWidth
                           options={countries}
-                          isOptionEqualToValue={(option, value) => option.code === value.code}
-                          getOptionLabel={(option) => `${option.label ? option.label : ''}`}
+                          isOptionEqualToValue={(option, value) => option?.code === value?.code}
+                          getOptionLabel={(option) => option?.label || ''}
                           renderInput={(params) => <TextField {...params} label="Country" size="small" />}
                           onChange={(event, newValue) =>{setMBYCountry(newValue);handleGraphYear(MBYCategory, MBYModel,newValue)}}
                         />

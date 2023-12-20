@@ -57,7 +57,7 @@ function NotificationsPopover() {
 
   const handleMarkAs = (notification) => {
     if(notification?._id){
-      setOpenPopover(null);
+      // setOpenPopover(null);
       sendJsonMessage({eventName:'markAs',_id:notification?._id, status:true});
       navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.view(notification?.extraInfo?._id));
     }else{
@@ -104,10 +104,7 @@ function NotificationsPopover() {
               // }
             >
               {notifications.map((notification) => (
-                <>
                 <NotificationItem handleMarkAs={handleMarkAs} key={notification?._id} notification={notification} />
-                <Divider sx={{ height:'10', borderStyle: 'solid' }} />
-                </>
               ))}
             </List>
           </Scrollbar>
@@ -154,12 +151,13 @@ function NotificationItem({ notification, handleMarkAs}) {
         py: 1.0,
         px: 1.5,
         pb: 0.5,
+        borderBottom:'1px solid #919eab3d',
         ...(!notification?.readBy?.includes(userId) && {
           bgcolor: 'action.selected',
         }),
       }}
       onClick={()=> handleMarkAs(notification)}
-    >
+      >
       <ListItemAvatar>
         <Avatar sx={{ bgcolor: 'background.primary'}}><Iconify icon={icon} color={color} width={30} /></Avatar>
       </ListItemAvatar>
@@ -180,8 +178,7 @@ function NotificationItem({ notification, handleMarkAs}) {
             {/* <Iconify icon="eva:clock-fill" width={16} sx={{ mr: 0.5 }} /> */}
           </Grid>
         }
-      />
-      
+        />
     </ListItemButton>
   );
 }
@@ -194,8 +191,7 @@ function renderNotification(notification) {
   const { extraInfo } = notification || {};
 
   const title = (
-    <Typography variant="subtitle2">
-      {notification?.title}
+    <Typography variant="subtitle2">{notification?.title}
       <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
         &nbsp; {noCase(notification?.description || "")}
       </Typography>
