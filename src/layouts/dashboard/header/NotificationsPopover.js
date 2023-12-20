@@ -36,9 +36,8 @@ import { PATH_MACHINE } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
-export const userId = localStorage.getItem('userId');
-
 function NotificationsPopover() {
+  const userId = localStorage.getItem('userId');
   const [ openPopover, setOpenPopover ] = useState(null);
   const { notifications, sendJsonMessage } = useWebSocketContext();
   const [ totalUnRead, setTotalUnRead ] = useState(0);
@@ -46,8 +45,7 @@ function NotificationsPopover() {
 
   useEffect(()=>{
     setTotalUnRead(notifications && notifications.filter((item) => item?.readBy?.includes(userId) === false).length);
-  },[notifications])
-
+  },[notifications, userId])
 
   const handleOpenPopover = (event) => {
     setOpenPopover(event.currentTarget);
@@ -97,8 +95,8 @@ function NotificationsPopover() {
         {notifications && notifications?.length>0 &&
           <>
           <Divider sx={{ borderStyle: 'solid' }} />
-          <Scrollbar sx={{ maxHeight: 300 }}>
-            <List disablePadding
+          <Scrollbar key='scrollbar' sx={{ maxHeight: 300 }}>
+            <List key={notifications?.length} disablePadding
               // subheader={
               //   <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
               //     {!notifications && 'Loading...' ? 'No notifications' : 'NEW'}
@@ -148,6 +146,7 @@ NotificationItem.propTypes = {
 
 function NotificationItem({ notification, handleMarkAs}) {
   const { title, icon, color } = renderNotification(notification);
+  const userId = localStorage.getItem('userId');
 
   return (
     <ListItemButton
