@@ -246,11 +246,11 @@ function ViewFormField({
               wordBreak: 'break-word',
               }} >
             {customerContacts.map(
-              (chip,index) =>  <Chip key={index} label={`${chip?.firstName} ${chip?.lastName}`} sx={{m:0.2}}/>
+              (chip,index) =>  <Chip key={index} label={`${chip?.firstName || '' } ${chip?.lastName || '' }`} sx={{m:0.2}}/>
             )}
           </Grid>
         ) : (
-          customerContacts && typeof customerContacts?.firstName === 'string' && <Chip label={`${customerContacts?.firstName} ${customerContacts?.lastName}`} sx={{m:0.2}} />
+          customerContacts && typeof customerContacts?.firstName === 'string' && <Chip label={`${customerContacts?.firstName || '' } ${customerContacts?.lastName || '' }`} sx={{m:0.2}} />
         )}
 
         {userRolesChips && typeof userRolesChips === 'object' && userRolesChips?.length > 0 ? (
