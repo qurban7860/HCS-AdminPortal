@@ -81,12 +81,19 @@ export default function CategoryViewForm({ currentCategory = null }) {
   };
   return (
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} isDefault={defaultValues.isDefault} handleEdit={toggleEdit} onDelete={onDelete} backLink={() => navigate(PATH_MACHINE.machines.settings.categories.list)} />
+      <ViewFormEditDeleteButtons 
+        isActive={defaultValues.isActive} 
+        isDefault={defaultValues.isDefault} 
+        handleEdit={toggleEdit} 
+        onDelete={onDelete} 
+        backLink={() => navigate(PATH_MACHINE.machines.settings.categories.list)}
+        isConectable={defaultValues.connection}
+        />
       <Grid container sx={{mt:2}}>
         <ViewFormField isLoading={isLoading} sm={12} heading="Category Name" param={defaultValues?.name} />
         <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
         <ViewFormField isLoading={isLoading} sm={12} heading='Models' chipDialogArrayParam={defaultValues.models} />
-        <ViewFormSwitch isLoading={isLoading} sm={12} isActiveHeading='Connect as a child' isActive={defaultValues.connection} />
+        {/* <ViewFormSwitch isLoading={isLoading} sm={12} isActiveHeading='Connect as a child' isActive={defaultValues.connection} /> */}
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>
     </Card>

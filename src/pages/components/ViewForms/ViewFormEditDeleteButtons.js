@@ -71,7 +71,8 @@ function ViewFormEditDeleteButtons({
   supportSubscription,
   machineSupportDate,
   approveConfiglength,
-  excludeReports
+  excludeReports,
+  isConectable
 
 }) {
   const { id } = useParams();
@@ -387,6 +388,16 @@ function ViewFormEditDeleteButtons({
             icon={userStatus?.locked?ICONS.USER_LOCK.icon:ICONS.USER_UNLOCK.icon}
           />
           }
+
+          {isConectable !==undefined &&
+          <IconTooltip
+            title={isConectable?'Connectable As Child':"Not Connectable As Child"}
+            color={isConectable?ICONS.ALLOWED.color : ICONS.DISALLOWED.color}
+            icon={isConectable?'material-symbols:cast-connected-rounded':"material-symbols:cast-connected-rounded"}
+          />
+          }
+
+
 
         </StyledStack>
       </Grid>
@@ -826,4 +837,5 @@ ViewFormEditDeleteButtons.propTypes = {
   financingCompany: PropTypes.bool,
   isLoading: PropTypes.bool,
   excludeReports: PropTypes.bool,
+  isConectable: PropTypes.bool,
 };
