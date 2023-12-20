@@ -33,7 +33,7 @@ export const ICONS = {
   CONTRAST: {
     icon: 'carbon:settings-check',
     color: '#FF0000',
-    heading: 'Non-Default',
+    heading: 'Not-Default',
   },
   // isOnline
   ONLINE: {

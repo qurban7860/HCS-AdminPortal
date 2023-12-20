@@ -289,11 +289,11 @@ function ViewFormEditDeleteButtons({
               icon={isActive?ICONS.ACTIVE.icon:ICONS.INACTIVE.icon}
             />
           }
-          {isDefault &&
+          {isDefault !==undefined &&
             <IconTooltip
-              title={ ICONS.DEFAULT.heading }
-              color={ ICONS.DEFAULT.color }
-              icon= { ICONS.DEFAULT.icon }
+              title={isDefault?ICONS.DEFAULT.heading:ICONS.CONTRAST.heading}
+              color={isDefault?ICONS.DEFAULT.color:ICONS.CONTRAST.color}
+              icon= {isDefault?ICONS.DEFAULT.icon:ICONS.CONTRAST.icon}
             />}
           
           {supportSubscription!==undefined &&
