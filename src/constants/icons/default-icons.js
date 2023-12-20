@@ -148,6 +148,12 @@ export const ICONS = {
     color: '#878787',
     heading: 'Customer Not Allowed',
   },
+
+  EXCLUDE_REPORTING: {
+    icon: 'pepicons-pop:list-off',
+    color: '#FF0000',
+    heading: 'Exclude Reporting',
+  },
   // ----------------------------------------------------------------
   ADD_NEW_VERSION: {
     icon: 'mdi:plus-circle',
