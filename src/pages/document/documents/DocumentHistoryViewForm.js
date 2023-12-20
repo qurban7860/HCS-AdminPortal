@@ -58,7 +58,7 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
   const { id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const { documentHistory, documentVersionEditDialogVisibility, isLoading } = useSelector((state) => state.document);
+  const { documentHistory, isLoading } = useSelector((state) => state.document);
   const { machine } = useSelector((state) => state.machine);
   const { customer } = useSelector((state) => state.customer);
   const { drawing } = useSelector((state) => state.drawing);
@@ -206,16 +206,13 @@ const handleNewFile = async () => {
     dispatch(setDrawingEditFormVisibility(true));
   };
 
-  const handleEditDoc = async () => {
-    await dispatch(getDocument(documentHistory._id));
-    dispatch(setDocumentFormVisibility(false));
-    dispatch(setDocumentHistoryViewFormVisibility(false));
-    dispatch(setDocumentViewFormVisibility(false));
-    dispatch(setDocumentEditFormVisibility(true));
-
-    // dispatch(setDocumentViewFormVisibility(false));
-    // dispatch(setDocumentEditFormVisibility(true));
-  };
+  // const handleEditDoc = async () => {
+  //   await dispatch(getDocument(documentHistory._id));
+  //   dispatch(setDocumentFormVisibility(false));
+  //   dispatch(setDocumentHistoryViewFormVisibility(false));
+  //   dispatch(setDocumentViewFormVisibility(false));
+  //   dispatch(setDocumentEditFormVisibility(true));
+  // };
 
   const handleDelete = async () => {
     try {
