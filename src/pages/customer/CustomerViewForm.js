@@ -56,9 +56,7 @@ export default function CustomerViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer]
   );
-
-  // ----------------------------handle functions---------------------------------
-
+  
   const handleEdit = async () => {
     // await dispatch(getCustomer(customer._id));
     if (!customerEditFormFlag) {

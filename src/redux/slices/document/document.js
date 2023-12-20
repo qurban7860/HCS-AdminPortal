@@ -13,6 +13,7 @@ const initialState = {
   documentAddFilesViewFormVisibility: false,
   documentHistoryNewVersionFormVisibility: false,
   documentHistoryAddFilesViewFormVisibility: false,
+  documentVersionEditDialogVisibility: false,
   documentEdit: false,
   documentIntial: false,
   responseMessage: null,
@@ -130,6 +131,9 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    setDocumentVersionEditDialogVisibility(state, action){
+      state.documentVersionEditDialogVisibility = action.payload;
+    },
 
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
@@ -232,6 +236,7 @@ export const {
   setDocumentAddFilesViewFormVisibility,
   setDocumentHistoryNewVersionFormVisibility,
   setDocumentHistoryAddFilesViewFormVisibility,
+  setDocumentVersionEditDialogVisibility,
   setDocumentEdit,
   resetDocument,
   resetDocuments,
@@ -366,6 +371,20 @@ export function updateDocument(documentId , params, customerId, machineId) {
       dispatch(setDocumentFormVisibility(false));
       dispatch(setDocumentEditFormVisibility (false));
       dispatch(setDocumentViewFormVisibility (true));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+export function updateDocumentVersionNo(documentId , data) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.patch(`${CONFIG.SERVER_URL}documents/document/updatedVersion/${documentId}`, data);
+      dispatch(slice.actions.setResponseMessage('Document version updated successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
