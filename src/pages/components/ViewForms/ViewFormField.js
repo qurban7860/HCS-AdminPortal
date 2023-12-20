@@ -128,22 +128,22 @@ function ViewFormField({
         {numberParam || ''}
         {ViewAllVersions && 
           <StyledTooltip title={ICONS.VIEW_VERSIONS.heading} placement="top" disableFocusListener tooltipcolor={theme.palette.primary.main} color={theme.palette.primary.main}>
-            <IconButton size='small' onClick={handleAllVersion} >
-              <Iconify color={theme.palette.primary.main} icon={ICONS.VIEW_VERSIONS.icon} />
+            <IconButton onClick={handleAllVersion} >
+              <Iconify color={theme.palette.primary.main} sx={{ height: '20px', width: '20px' }} icon={ICONS.VIEW_VERSIONS.icon} />
             </IconButton>
           </StyledTooltip>
         }
         {NewVersion && 
           <StyledTooltip title={ICONS.ADD_NEW_VERSION.heading} placement="top" disableFocusListener tooltipcolor={theme.palette.primary.main} color={theme.palette.primary.main}>
-            <IconButton size='small' onClick={handleNewVersion} >
-              <Iconify color={theme.palette.primary.main} icon={ICONS.ADD_NEW_VERSION.icon} />
+            <IconButton onClick={handleNewVersion} >
+              <Iconify color={theme.palette.primary.main} sx={{ height: '20px', width: '20px' }} icon={ICONS.ADD_NEW_VERSION.icon} />
             </IconButton>
           </StyledTooltip>
         }
         {handleUpdateVersion && 
           <StyledTooltip title={ICONS.UPDATE_VERSION.heading} placement="top" disableFocusListener tooltipcolor={theme.palette.primary.main} color={theme.palette.primary.main}>
-            <IconButton size='small' onClick={handleUpdateVersion} >
-              <Iconify color={theme.palette.primary.main} icon={ICONS.UPDATE_VERSION.icon} />
+            <IconButton onClick={handleUpdateVersion} >
+              <Iconify color={theme.palette.primary.main} sx={{ height: '20px', width: '20px' }} icon={ICONS.UPDATE_VERSION.icon} />
             </IconButton>
           </StyledTooltip>
         }
@@ -246,11 +246,11 @@ function ViewFormField({
               wordBreak: 'break-word',
               }} >
             {customerContacts.map(
-              (chip,index) =>  <Chip key={index} label={`${chip?.firstName || ''} ${chip?.lastName || ''}`} sx={{m:0.2}}/>
+              (chip,index) =>  <Chip key={index} label={`${chip?.firstName || '' } ${chip?.lastName || '' }`} sx={{m:0.2}}/>
             )}
           </Grid>
         ) : (
-          customerContacts && typeof customerContacts === 'string' && customerContacts.trim().length > 0 && <Chip label={`${customerContacts?.firstName || ''} ${customerContacts?.lastName || ''}`} sx={{m:0.2}} />
+          customerContacts && typeof customerContacts?.firstName === 'string' && <Chip label={`${customerContacts?.firstName || '' } ${customerContacts?.lastName || '' }`} sx={{m:0.2}} />
         )}
 
         {userRolesChips && typeof userRolesChips === 'object' && userRolesChips?.length > 0 ? (
