@@ -56,7 +56,7 @@ export default function RoleListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, roleType, isActive, createdAt } = row;
+  const { name, roleType, isActive, isDefault, createdAt } = row;
 
   // const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -87,7 +87,7 @@ export default function RoleListTableRow({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
         {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
-        <LinkTableCell align="left" onClick={onViewRow} param={name} />
+        <LinkTableCell align="left" onClick={onViewRow} param={name} isDefault={isDefault}  />
         {( width === 'lg' || width === 'xl' ) &&  <TableCell align="left"> {roleType} </TableCell>}
         <TableCell align="center">
           {' '}

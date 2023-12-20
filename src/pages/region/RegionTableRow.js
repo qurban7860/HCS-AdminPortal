@@ -43,7 +43,7 @@ export default function RegionTableRow({
   onSelectRow,
   onDeleteRow,
 }) {
-  const { name, countries, createdAt, isActive } = row;
+  const { name, countries, createdAt, isActive, isDefault } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -78,7 +78,7 @@ export default function RegionTableRow({
             alt={name}
             sx={{ ml: 1, my: 0.5, width: '30px', height: '30px' }}
           />
-          <LinkTableCell align="left" onClick={onViewRow} param={name} />
+          <LinkTableCell align="left" onClick={onViewRow} param={name} isDefault={isDefault} />
         </Stack>
 
        { smScreen && <TableCell align="left" sx={{ textTransform: 'capitalize', maxWidth:"500px" }} >
