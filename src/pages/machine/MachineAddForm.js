@@ -455,9 +455,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                             setValue('machineConnectionVal', []);
                             setValue('instalationSite', []);
                             setValue('billingSite', []);
-                            setValue('accountManager', spContacts.find((item) => item?._id === newValue?.accountManager))
-                            setValue('projectManager', spContacts.find((item) => item?._id === newValue?.projectManager))
-                            setValue('supportManager', spContacts.find((item) => item?._id === newValue?.supportManager))
                             }
                           } else {
                             field.onChange(null);
@@ -495,7 +492,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   
                     {/* -------------------------------- Billing Site -------------------------------- */}
 
-                    <Controller
+                <Controller
                   name="billingSite"
                   control={control}
                   defaultValue={instalationSite || null}
