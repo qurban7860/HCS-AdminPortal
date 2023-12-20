@@ -26,11 +26,11 @@ export default function DepartmentListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { departmentName, isActive, createdAt } = row;
+  const { departmentName, isActive, isDefault, createdAt } = row;
   
   return (
       <TableRow hover selected={selected}>
-        <LinkTableCell align="left" onClick={onViewRow} param={departmentName} />
+        <LinkTableCell align="left" onClick={onViewRow} param={departmentName} isDefault={isDefault}/>
         <TableCell align="center">
           <Switch checked={isActive} disabled sx={{ my: -1 }} />{' '}
         </TableCell>
