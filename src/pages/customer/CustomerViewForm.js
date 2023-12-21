@@ -15,10 +15,10 @@ import {
   setCustomerVerification,
 } from '../../redux/slices/customer/customer';
 // components
-import FormLabel from '../components/DocumentForms/FormLabel';
 import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
+import FormLabel from '../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/default-constants';
 import { Snacks, FORMLABELS as formLABELS } from '../../constants/customer-constants';
 
@@ -37,13 +37,14 @@ export default function CustomerViewForm() {
       code: customer?.clientCode || '',
       name: customer?.name || '',
       tradingName: customer?.tradingName || '',
-      accountManager: customer?.accountManager || '',
-      projectManager: customer?.projectManager || '',
-      supportManager: customer?.supportManager || '',
+      accountManager: customer?.accountManager || [],
+      projectManager: customer?.projectManager || [],
+      supportManager: customer?.supportManager || [],
       mainSite: customer?.mainSite || null,
       primaryBillingContact: customer?.primaryBillingContact || null,
       primaryTechnicalContact: customer?.primaryTechnicalContact || null,
       isFinancialCompany: customer?.isFinancialCompany,
+      excludeReports: customer?.excludeReports || false,
       isActive: customer?.isActive,
       supportSubscription: customer?.supportSubscription,
       createdAt: customer?.createdAt || '',
@@ -56,9 +57,7 @@ export default function CustomerViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer]
   );
-
-  // ----------------------------handle functions---------------------------------
-
+  
   const handleEdit = async () => {
     // await dispatch(getCustomer(customer._id));
     if (!customerEditFormFlag) {
@@ -97,6 +96,7 @@ export default function CustomerViewForm() {
               onDelete={onDelete}
               supportSubscription={defaultValues.supportSubscription}
               backLink={() => navigate(PATH_CUSTOMER.list)}
+              excludeReports={defaultValues.excludeReports}
             />
 
               <Grid container>
@@ -105,7 +105,7 @@ export default function CustomerViewForm() {
                 <ViewFormField isLoading={isLoading} sm={12} md={12} heading={formLABELS.CUSTOMER.TRADING_NAME.label} chips={defaultValues?.tradingName} />
                 <ViewFormField isLoading={isLoading} sm={6} md={6} heading={formLABELS.CUSTOMER.PHONE} param={defaultValues?.mainSite?.phone} />
                 <ViewFormField isLoading={isLoading} sm={6} md={6} heading={formLABELS.CUSTOMER.FAX} param={defaultValues?.mainSite?.fax} />
-                <ViewFormField isLoading={isLoading} sm={6} md={6} heading={formLABELS.CUSTOMER.EMAIL} param={defaultValues?.mainSite?.email} />
+                <ViewFormField isLoading={isLoading} sm={12} md={12} heading={formLABELS.CUSTOMER.EMAIL} param={defaultValues?.mainSite?.email} />
 
                 <ViewFormField isLoading={isLoading} sm={6}
                   heading={formLABELS.CUSTOMER.BILLING_CONTACT}
@@ -135,9 +135,9 @@ export default function CustomerViewForm() {
             )}
             <Grid container>
               <FormLabel content={FORMLABELS.HOWICK} />
-              <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.ACCOUNT} param={defaultValues?.accountManager?.firstName} secondParam={defaultValues?.accountManager?.lastName} />
-              <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.PROJECT} param={defaultValues?.projectManager?.firstName} secondParam={defaultValues?.projectManager?.lastName} />
-              <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.SUPPORT} param={defaultValues?.supportManager?.firstName} secondParam={defaultValues?.supportManager?.lastName} />
+              <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.ACCOUNT} customerContacts={defaultValues?.accountManager } />
+              <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.PROJECT} customerContacts={defaultValues?.projectManager } />
+              <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.SUPPORT} customerContacts={defaultValues?.supportManager } />
               <ViewFormAudit defaultValues={defaultValues} />
             </Grid>
               

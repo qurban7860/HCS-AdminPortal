@@ -18,10 +18,12 @@ import FormProvider, { RHFAutocomplete } from '../../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import { getActiveSites, resetActiveSites } from '../../../redux/slices/customer/site';
+import FormLabel from '../../components/DocumentForms/FormLabel';
+import { FORMLABELS } from '../../../constants/default-constants';
 // ----------------------------------------------------------------------
 
 export default function MoveMachineForm() {
-  const { machine } = useSelector((state) => state.machine);
+  const { machine, isLoading } = useSelector((state) => state.machine);
   const { activeSites } = useSelector((state) => state.site);
   const { activeCustomers } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
@@ -103,28 +105,18 @@ export default function MoveMachineForm() {
   };
 
   return (
-    <>
-      <Card sx={{ width: '100%', p: '0', mb:3 }}>
-        <CardHeader title="Machine Detail" sx={{p:'5px 15px', m:0, color:'white', 
-        backgroundImage: (theme) => `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`}} />
-        
-        <Grid container>
-          <ViewFormField sm={2} heading="Serial No" param={defaultValues.serialNo} />
-          <ViewFormField sm={2} heading="Machine Model" param={defaultValues.machineModel} />
-          <ViewFormField sm={2} heading="Profile" param={defaultValues.machineProfile} />
-          {/* <ViewFormField sm={3} heading="Profile" 
-            param={`${machine?.machineProfile?.defaultName} ${(machine?.machineProfile?.web && machine?.machineProfile?.flange)? `(${machine?.machineProfile?.web} X ${machine?.machineProfile?.flange})` :""}`} 
-          /> */}
-        </Grid>
-      </Card>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
-              <Stack spacing={3}>
-                <Stack spacing={1}>
-                  <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>Move Machine</Typography>
-                </Stack>
+              <FormLabel content="Machine Detail" />
+              <Grid container>
+                <ViewFormField isLoading={isLoading} sm={4} variant='h4' heading="Serial No" param={defaultValues?.serialNo} />
+                <ViewFormField isLoading={isLoading} sm={4} variant='h4' heading="Machine Model" param={defaultValues?.machineModel} />
+                <ViewFormField isLoading={isLoading} sm={4} variant='h4' heading="Profile" param={defaultValues?.machineProfile}/>
+              </Grid>
+              <Stack spacing={2}>
+                <FormLabel content="Move Machine " />
                 <RHFAutocomplete 
                     name="customer"
                     label="Customer*"
@@ -159,12 +151,11 @@ export default function MoveMachineForm() {
                   />
 
                 </Box>
-                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+                <AddFormButtons isSubmitting={isSubmitting} saveButtonName='Move' toggleCancel={toggleCancel} />
               </Stack>
             </Card>
           </Grid>
         </Grid>
       </FormProvider>
-    </>
   );
 }

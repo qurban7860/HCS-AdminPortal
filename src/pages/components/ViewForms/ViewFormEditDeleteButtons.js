@@ -26,6 +26,7 @@ function ViewFormEditDeleteButtons({
   // Icons 
   backLink,
   isActive,
+  isDefault,
   customerAccess,
   isRequired,
   multiAuth,
@@ -70,6 +71,8 @@ function ViewFormEditDeleteButtons({
   supportSubscription,
   machineSupportDate,
   approveConfiglength,
+  excludeReports,
+  isConectable
 
 }) {
   const { id } = useParams();
@@ -287,6 +290,12 @@ function ViewFormEditDeleteButtons({
               icon={isActive?ICONS.ACTIVE.icon:ICONS.INACTIVE.icon}
             />
           }
+          {isDefault !==undefined &&
+            <IconTooltip
+              title={isDefault?ICONS.DEFAULT.heading:ICONS.CONTRAST.heading}
+              color={isDefault?ICONS.DEFAULT.color:ICONS.CONTRAST.color}
+              icon= {isDefault?ICONS.DEFAULT.icon:ICONS.CONTRAST.icon}
+            />}
           
           {supportSubscription!==undefined &&
             <IconTooltip
@@ -302,6 +311,11 @@ function ViewFormEditDeleteButtons({
             color={financingCompany ? ICONS.ALLOWED.color : ICONS.DISALLOWED.color}
             icon="vaadin:office"
             />
+          }
+
+          {excludeReports &&
+            <IconTooltip title={ICONS.EXCLUDE_REPORTING.heading} color={ICONS.EXCLUDE_REPORTING.color} 
+            icon={ICONS.EXCLUDE_REPORTING.icon} />
           }
 
           {machineSupportDate &&
@@ -374,6 +388,16 @@ function ViewFormEditDeleteButtons({
             icon={userStatus?.locked?ICONS.USER_LOCK.icon:ICONS.USER_UNLOCK.icon}
           />
           }
+
+          {isConectable !==undefined &&
+          <IconTooltip
+            title={isConectable?'Connectable As Child':"Not Connectable As Child"}
+            color={isConectable?ICONS.ALLOWED.color : ICONS.DISALLOWED.color}
+            icon={isConectable?'material-symbols:cast-connected-rounded':"material-symbols:cast-connected-rounded"}
+          />
+          }
+
+
 
         </StyledStack>
       </Grid>
@@ -777,8 +801,9 @@ ViewFormEditDeleteButtons.propTypes = {
   verifiers: PropTypes.array,
   approvers: PropTypes.array,
   isVerifiedTitle: PropTypes.string,
-  approveConfiglength: PropTypes.number,
-  isActive:PropTypes.bool,
+  approveConfiglength: PropTypes.string,
+  isActive: PropTypes.bool,
+  isDefault: PropTypes.bool,
   isSubmitted: PropTypes.func,
   returnToSubmitted: PropTypes.func,
   customerAccess:PropTypes.bool,
@@ -811,5 +836,6 @@ ViewFormEditDeleteButtons.propTypes = {
   onUserStatusChange:PropTypes.func,
   financingCompany: PropTypes.bool,
   isLoading: PropTypes.bool,
-  
+  excludeReports: PropTypes.bool,
+  isConectable: PropTypes.bool,
 };

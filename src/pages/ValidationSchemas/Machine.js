@@ -14,6 +14,6 @@ export const AddMachineSchema = Yup.object().shape({
     // projectManager: Yup.string(),
     // supportManager: Yup.string(),
     customerTags: Yup.array(),
-    description: Yup.string().max(1500),
+    description: Yup.string().max(5000),
     isDisabled : Yup.boolean(),
   });

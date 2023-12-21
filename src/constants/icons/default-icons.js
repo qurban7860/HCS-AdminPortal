@@ -25,6 +25,16 @@ export const ICONS = {
     heading: 'Inactive',
   },
 
+  DEFAULT: {
+    icon: 'carbon:settings-check',
+    color: '#008000',
+    heading: 'Default',
+  },
+  CONTRAST: {
+    icon: 'carbon:settings-check',
+    color: '#878787',
+    heading: 'Not-Default',
+  },
   // isOnline
   ONLINE: {
     icon: 'mdi:circle',
@@ -138,11 +148,23 @@ export const ICONS = {
     color: '#878787',
     heading: 'Customer Not Allowed',
   },
+
+  EXCLUDE_REPORTING: {
+    icon: 'pepicons-pop:list-off',
+    color: '#FF0000',
+    heading: 'Exclude Reporting',
+  },
   // ----------------------------------------------------------------
   ADD_NEW_VERSION: {
-    icon: 'icon-park-outline:add',
+    icon: 'mdi:plus-circle',
     color: 'primary.main',
-    heading: 'Add a New Version',
+    heading: 'Add New Version',
+    width: '16px',
+  },
+  UPDATE_VERSION: {
+    icon: 'mdi:pencil',
+    color: 'primary.main',
+    heading: 'Update Version No',
     width: '16px',
   },
   // ------------------------------------------------------------

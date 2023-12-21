@@ -34,10 +34,10 @@ export function WebSocketProvider({ children }) {
               clearAllPersistedStates();
             }
 
-            // if (json.eventName === 'newNotification') {
-            //   const updatedNotifications = [json, ...notifications];
-            //   setNotifications(updatedNotifications);
-            // }
+            if (json.eventName === 'newNotification') {
+              const updatedNotifications = [json, ...notifications];
+              setNotifications(updatedNotifications);
+            }
 
             if (json.eventName === 'onlineUsers') {
               setOnlineUsers(json?.userIds);

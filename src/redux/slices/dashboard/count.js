@@ -14,6 +14,11 @@ const initialState = {
   machinesByCountry:[],
   machinesByModel:[],
   machinesByYear:[],
+  machineCategory:null,
+  machineModel:null,
+  machineCountry:null,
+  machineYear:null,
+  erpLogs:[],
 };
 
 const slice = createSlice({
@@ -76,6 +81,30 @@ const slice = createSlice({
       state.success = true;
       state.initial = true;
     },
+    // SET CategoryID
+    setMachineCategory(state, action) {
+      state.machineCategory = action.payload;
+    },
+    // SET Model ID
+    setMachineModel(state, action) {
+      state.machineModel = action.payload;
+    },
+    // SET Country Code
+    setMachineCountry(state, action) {
+      state.machineCountry = action.payload;
+    },
+    // SET Year
+    setMachineYear(state, action) {
+      state.machineYear = action.payload;
+    },
+
+    // GET ERP Logs
+    getERPLogsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.erpLogs = action.payload;
+      state.initial = true;
+    },
   },
 });
 
@@ -85,6 +114,10 @@ export default slice.reducer;
 // Actions
 export const {
   resetCounts,
+  setMachineCategory,
+  setMachineModel,
+  setMachineCountry,
+  setMachineYear
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -141,3 +174,15 @@ export function getMachinesByYear(category, model, country) {
   };
 }
 
+export function getERPLogs(category, year, model) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}/logs/erp/graph`);
+      dispatch(slice.actions.getERPLogsSuccess(response.data));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}

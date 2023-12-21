@@ -54,8 +54,8 @@ export default function DrawingAddForm() {
     resolver: yupResolver(DrawingAddSchema),
     defaultValues:{
         document: null,
-        documentCategory: null,
-        documentType: null,
+        documentCategory: activeDocumentCategories.find((element)=> element?._id === activeDocumentTypes.find((ele)=>  ele.isDefault === true)?.docCategory?._id || element.isDefault === true) || null,
+        documentType: activeDocumentTypes.find((element)=>  element.isDefault === true) || null,
         isActive: true,
     },
   });

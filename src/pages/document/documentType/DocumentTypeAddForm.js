@@ -8,11 +8,11 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 // import { LoadingButton } from '@mui/lab';
-import { Card, Grid, Stack, Autocomplete, TextField, Container } from '@mui/material';
+import { Card, Grid, Stack, TextField, Container } from '@mui/material';
 // routes
 import { PATH_SETTING } from '../../../routes/paths';
 // schema
-import { AddDocumentTypeSchema } from '../../schemas/document';
+import { DocumentTypeSchema } from '../../schemas/document';
 // slice
 import {
   addDocumentType,
@@ -23,7 +23,7 @@ import { setCustomerDocumentFormVisibility } from '../../../redux/slices/documen
 import { getActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFTextField } from '../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFAutocomplete } from '../../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import { Cover } from '../../components/Defaults/Cover';
@@ -47,10 +47,11 @@ export default function DocumentTypeAddForm({ currentDocument }) {
 
   const defaultValues = useMemo(
     () => ({
-      category: '',
+      category: activeDocumentCategories.find((element)=> element.isDefault === true) || null,
       name: '',
       description: '',
       isActive: true,
+      isDefault: false,
       customerAccess: false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -58,14 +59,12 @@ export default function DocumentTypeAddForm({ currentDocument }) {
   );
 
   const methods = useForm({
-    resolver: yupResolver(AddDocumentTypeSchema),
+    resolver: yupResolver(DocumentTypeSchema),
     defaultValues,
   });
 
   const {
     reset,
-    // watch,
-    // setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -78,9 +77,7 @@ export default function DocumentTypeAddForm({ currentDocument }) {
 
   const onSubmit = async (data) => {
     try {
-      if (documentCategoryVal) {
-        data.docCategory = documentCategoryVal._id;
-      }
+
   await dispatch(addDocumentType(data));
       reset();
       enqueueSnackbar(Snacks.docSaved);
@@ -109,28 +106,14 @@ export default function DocumentTypeAddForm({ currentDocument }) {
               <Stack spacing={2}>
                 {/* <Grid item lg={6}> */}
                 
-                <Autocomplete
-                  // freeSolo
-                  value={documentCategoryVal || null}
+                <RHFAutocomplete
+                  name="category"
+                  label={formLABELS.DOCUMENT_CATEGORY}
                   options={activeDocumentCategories}
                   isOptionEqualToValue={(option, value) => option._id === value._id}
                   getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                  onChange={(event, newValue) => {
-                    if (newValue) {
-                      setDocumentCategoryVal(newValue);
-                    } else {
-                      setDocumentCategoryVal('');
-                    }
-                  }}
-                  renderOption={(props, option) => (
-                    <li {...props} key={option._id}>
-                      {option.name}
-                    </li>
-                  )}
+                  renderOption={(props, option) => (<li {...props} key={option._id}>{option.name}</li>)}
                   id="controllable-states-demo"
-                  renderInput={(params) => (
-                    <TextField {...params} required label={formLABELS.DOCUMENT_CATEGORY} />
-                  )}
                   ChipProps={{ size: 'small' }}
                 />
 
@@ -146,6 +129,8 @@ export default function DocumentTypeAddForm({ currentDocument }) {
                   isRHF
                   name={FORMLABELS.isACTIVE.name}
                   RHFName={FORMLABELS.isCUSTOMER_ACCESS.name}
+                  isDefault
+                  defaultName='isDefault'
                 />
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

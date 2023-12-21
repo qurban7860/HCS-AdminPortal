@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Container } from '@mui/system';
 import { Card, Grid, Autocomplete, TextField, Divider } from '@mui/material';
 // slices
-import {  getMachinesByCountry } from '../../redux/slices/dashboard/count';
+import {  getMachinesByCountry, setMachineCategory, setMachineModel, setMachineYear } from '../../redux/slices/dashboard/count';
 import {  getActiveMachineModels } from '../../redux/slices/products/model';
 import {  getActiveCategories } from '../../redux/slices/products/category';
 // hooks
@@ -21,8 +21,8 @@ export default function MachineByCountriesViewForm() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const { machinesByCountry } = useSelector((state) => state.count);
+  
+  const { machinesByCountry, machineCategory, machineModel, machineYear } = useSelector((state) => state.count);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
   const { activeCategories } = useSelector((state) => state.category);
 
@@ -32,15 +32,19 @@ export default function MachineByCountriesViewForm() {
   const countryWiseMachineCountNumber = [];  
   const countryWiseMachineCountCountries = [];
   
-  const [MBCYear, setMBCYear] = useState(null);
-  const [MBCModel, setMBCModel] = useState(null);
-  const [MBCCategory, setMBCCategory] = useState(null);
+  const [MBCYear, setMBCYear] = useState(machineYear);
+  const [MBCModel, setMBCModel] = useState(machineModel);
+  const [MBCCategory, setMBCCategory] = useState(machineCategory);
 
   useLayoutEffect(() => {
     dispatch(getActiveCategories());
-    dispatch(getActiveMachineModels(MBCCategory?._id));
-    dispatch(getMachinesByCountry());
-  }, [dispatch, MBCCategory]);
+    dispatch(getActiveMachineModels(machineCategory?._id));
+    dispatch(getMachinesByCountry(machineCategory?._id, machineYear, machineModel?._id));
+  }, [dispatch, machineCategory, machineYear, machineModel]);
+
+  useEffect(()=>{
+    dispatch(getActiveMachineModels(MBCCategory?._id));  
+  },[dispatch, MBCCategory])
 
   if (machinesByCountry.length !== 0) {
     machinesByCountry.countryWiseMachineCount.map((customer) => {
@@ -50,8 +54,11 @@ export default function MachineByCountriesViewForm() {
     });
   }
 
-  const handleGraphCountry = (category, year, model) => {
-    dispatch(getMachinesByCountry(category, year, model));
+  const handleGraphCountry = async (category, year, model) => {
+    dispatch(setMachineCategory(category));
+    dispatch(setMachineYear(year));
+    dispatch(setMachineModel(model));
+    dispatch(getMachinesByCountry(category?._id, year, model?._id));
   };
 
   return (
@@ -76,7 +83,7 @@ export default function MachineByCountriesViewForm() {
                     onChange={(event, newValue) =>{
                         setMBCCategory(newValue);
                         setMBCModel(null); 
-                        handleGraphCountry(newValue?._id, MBCYear,MBCModel)
+                        handleGraphCountry(newValue, MBCYear,MBCModel)
                     }}
                   />
                 </Grid>
@@ -92,7 +99,7 @@ export default function MachineByCountriesViewForm() {
                       onChange={(event, newValue) => {
                         setMBCModel(newValue);
                         if (newValue) setMBCCategory(newValue?.category);
-                        handleGraphCountry(MBCCategory, MBCYear, newValue?._id);
+                        handleGraphCountry(MBCCategory, MBCYear, newValue);
                       }}
                     />
                 </Grid>
@@ -100,9 +107,13 @@ export default function MachineByCountriesViewForm() {
                   <Autocomplete
                     fullWidth
                     options={years}
+                    value={MBCYear}
                     getOptionLabel={(option) => option.toString()}
                     renderInput={(params) => <TextField {...params} label="Year" size="small" />}
-                    onChange={(event, newValue) =>{setMBCYear(newValue); ; handleGraphCountry(MBCCategory, newValue, MBCModel)}}
+                    onChange={(event, newValue) =>{
+                      setMBCYear(newValue); 
+                      handleGraphCountry(MBCCategory, newValue, MBCModel)
+                    }}
                   />
                 </Grid>
             </Grid>

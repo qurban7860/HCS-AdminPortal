@@ -56,7 +56,7 @@ export default function ParameterEditForm() {
 
   const ParameterEditSchema = Yup.object().shape({
     name: Yup.string().max(40).required('Name is required'),
-    description: Yup.string().max(2000),
+    description: Yup.string().max(5000),
     isActive: Yup.boolean(),
     code: Yup.string().max(200).required('Code is required'),
   });

@@ -151,12 +151,12 @@ function DocumentAddForm({
     description: Yup.string().max(10000),
     isActive: Yup.boolean(),
   });
-
+  
   const methods = useForm({
     resolver: yupResolver(AddDocumentSchema),
     defaultValues:{
-      documentType: null,
-      documentCategory: null,
+      documentCategory: activeDocumentCategories.find((element)=> element?._id === activeDocumentTypes.find((ele)=>  ele.isDefault === true)?.docCategory?._id || element.isDefault === true) || null,
+      documentType: activeDocumentTypes.find((element)=>  element.isDefault === true) || null,
       displayName:  '',
       stockNumber:  '',
       referenceNumber:  '',
@@ -630,7 +630,7 @@ function DocumentAddForm({
                       <Controller
                         name="documentCategory"
                         control={control}
-                        defaultValue={documentCategory || null}
+                        defaultValue={documentCategory }
                         render={ ({field: { ref, ...field }, fieldState: { error } }) => (
                         <Autocomplete
                           {...field}
@@ -672,7 +672,7 @@ function DocumentAddForm({
                       <Controller
                         name="documentType"
                         control={control}
-                        defaultValue={documentType || null}
+                        defaultValue={documentType }
                         render={ ({field: { ref, ...field }, fieldState: { error } }) => (
                         <Autocomplete
                           {...field}

@@ -13,29 +13,25 @@ import Chart, { useChart } from '../../../components/chart';
 HowickWidgets.propTypes = {
   sx: PropTypes.object,
   chart: PropTypes.object,
-  color: PropTypes.string,
   title: PropTypes.string,
   total: PropTypes.number,
-  notVerifiedTitle: PropTypes.string,
-  notVerifiedCount: PropTypes.number,
-  connectableTitle: PropTypes.string,
-  connectableCount: PropTypes.number,
-  activeUserCount: PropTypes.number,
-  onlineUserCount: PropTypes.number,
+  notVerified: PropTypes.number,
+  connectables: PropTypes.number,
+  activeUsers: PropTypes.number,
+  onlineUsers: PropTypes.number,
+  excludedCustomers: PropTypes.number,
   icon: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
 };
 
 export default function HowickWidgets({
   title,
   total,
-  notVerifiedTitle,
-  notVerifiedCount,
-  connectableTitle,
-  connectableCount,
-  activeUserCount,
-  onlineUserCount,
+  notVerified,
+  connectables,
+  activeUsers,
+  onlineUsers,
+  excludedCustomers,
   icon,
-  color = 'primary',
   chart,
   sx,
   ...other
@@ -43,7 +39,7 @@ export default function HowickWidgets({
   const theme = useTheme();
 
   const chartOptions = useChart({
-    colors: [theme.palette[color].light],
+    colors: [theme.palette.primary.light],
     chart: {
       sparkline: {
         enabled: true,
@@ -70,7 +66,7 @@ export default function HowickWidgets({
           rowGap={0}
           columnGap={1}
           display="grid"
-          gridTemplateColumns = '20% 25% 55% 1fr'
+          gridTemplateColumns = '40% 60% 1fr'
           sx={{
                 width:'100%',
                 p: 3,
@@ -84,67 +80,22 @@ export default function HowickWidgets({
                 boxShadow:"0 0 2px 0 rgba(145, 158, 171, 0.2), 0 12px 24px -4px rgba(145, 158, 171, 0.12)"
               }}
               >
-          <Chart type="polarArea" series={[0.00]} options={chartOptions} width={86} height={86} />
-          <Grid sx={{borderRight:'1px solid #919eab3d',pr:1}} textAlign='right'>
-            <Typography variant="h4"> {connectableCount?fNumber(total-connectableCount):fNumber(total)}</Typography>
-            <Typography variant="body1" sx={{ opacity: 0.72 }}>{title}</Typography>
+          <Grid item sx={{position:'absolute', height:'100%', opacity:0.8, display:'flex', alignItems:'center', left:10}}>
+            <Chart type="polarArea" series={[0.00]} options={chartOptions} width={86} height={86} />
           </Grid>
-          <Grid alignSelf='baseline'>
-            {notVerifiedTitle && notVerifiedCount && <Typography variant="body2" sx={{ opacity: 0.72 }}>{notVerifiedTitle} : {notVerifiedCount}</Typography>}
-            {connectableTitle && connectableCount && <Typography variant="body2" sx={{ opacity: 0.72 }}>{connectableTitle} : {connectableCount}</Typography>}
-            {activeUserCount && <Typography variant="body2" sx={{ opacity: 0.72 }}>Active : {activeUserCount}</Typography>}
-            {onlineUserCount !== undefined && <Typography variant="body2" sx={{ opacity: 0.72 }}>Online : {onlineUserCount}</Typography>}
+          <Grid container direction='column' sx={{borderRight:'1px solid #919eab3d',pr:1}} textAlign='right'>
+            <Typography variant="h4"> {fNumber(total)}</Typography>
+            <Typography variant="body1" sx={{ opacity: 0.7 }}>{title}</Typography>
           </Grid>
-          <Iconify icon={icon} sx={{ width: 120, height: 120, opacity: 0.12, position: 'absolute', right: theme.spacing(-3),}}/>
+          <Grid container direction='column'>
+            {connectables !==undefined && <Typography variant="body2" sx={{ opacity: 0.7 }}>Verified : {total-notVerified}</Typography>}
+            {notVerified !==undefined && <Typography variant="body2" sx={{ opacity: 0.7 }}>Not Verified : {notVerified}</Typography>}
+            {connectables!==undefined && <Typography variant="body2" sx={{ opacity: 0.7 }}>Decoilers / Kits : {connectables}</Typography>}
+            {activeUsers !==undefined && <Typography variant="body2" sx={{ opacity: 0.7 }}>Active : {activeUsers}</Typography>}
+            {onlineUsers !==undefined && <Typography variant="body2" sx={{ opacity: 0.7 }}>Online : {onlineUsers}</Typography>}
+            {excludedCustomers !==undefined && <Typography variant="body2" sx={{ opacity: 0.7 }}>Exclude Reporting : {excludedCustomers}</Typography>}
+          </Grid>
+          <Iconify icon={icon} sx={{ width: 120, height: 120, opacity: 0.07, position: 'absolute', right: theme.spacing(-3)}}/>
         </Box>
-    // <Stack
-    //   direction="row"
-    //   alignItems="center"
-    //   sx={{
-    //     width:'100%',
-    //     p: 3,
-    //     height:'100%',
-    //     borderRadius: 2,
-    //     overflow: 'hidden',
-    //     position: 'relative',
-    //     color: 'primary.main',
-    //     bgcolor: 'white',
-    //     ...sx,
-    //     boxShadow:"0 0 2px 0 rgba(145, 158, 171, 0.2), 0 12px 24px -4px rgba(145, 158, 171, 0.12)"
-    //   }}
-    //   {...other}
-    // >
-    //   {/* series={series} */}
-    //   <Chart type="polarArea" series={[0.00]} options={chartOptions} width={86} height={86} />
-
-    //   <Box sx={{ ml: 3 }}>
-    //    <Grid container flex>
-    //       <Grid item textAlign='right'>
-    //         <Typography variant="h4"> {connectableCount?fNumber(total-connectableCount):fNumber(total)}</Typography>
-    //         <Typography variant="body1" sx={{ opacity: 0.72 }}>
-    //           {title}
-    //         </Typography>
-    //       </Grid>
-    //       <Divider orientation="vertical" flexItem sx={{ m: 1}} />
-    //       <Grid item>
-    //         {notVerifiedTitle && notVerifiedCount && <Typography variant="body2" sx={{ opacity: 0.72 }}>{notVerifiedTitle} : {notVerifiedCount}</Typography>}
-    //         {connectableTitle && connectableCount && <Typography variant="body2" sx={{ opacity: 0.72 }}>{connectableTitle} : {connectableCount}</Typography>}
-    //         {activeUserCount && <Typography variant="body2" sx={{ opacity: 0.72 }}>Active : {activeUserCount}</Typography>}
-    //         {onlineUserCount !== undefined && <Typography variant="body2" sx={{ opacity: 0.72 }}>Online : {onlineUserCount}</Typography>}
-    //       </Grid>
-    //     </Grid>
-    //   </Box>
-
-    //   <Iconify
-    //     icon={icon}
-    //     sx={{
-    //       width: 120,
-    //       height: 120,
-    //       opacity: 0.12,
-    //       position: 'absolute',
-    //       right: theme.spacing(-3),
-    //     }}
-    //   />
-    // </Stack>
   );
 }

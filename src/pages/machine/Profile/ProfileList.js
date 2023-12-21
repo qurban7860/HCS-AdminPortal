@@ -58,6 +58,7 @@ export default function ProfileList() {
     { id: 'type', label: 'Type', align: 'left' },
     { id: 'web', label: 'Web X Flange', align: 'left'},
     { id: 'thicknessStart', label: 'Thickness', align: 'left'},
+    { id: 'isActive', label: 'Active', align: 'left'},
     { id: 'createdAt', label: 'Created At', align: 'right' },
   ];
 

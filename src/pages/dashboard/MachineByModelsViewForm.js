@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Container } from '@mui/system';
 import { Card, Grid, Autocomplete, TextField, Divider } from '@mui/material';
 // slices
-import {  getMachinesByModel } from '../../redux/slices/dashboard/count';
+import {  getMachinesByModel, setMachineCategory, setMachineCountry, setMachineYear } from '../../redux/slices/dashboard/count';
 import {  getActiveCategories } from '../../redux/slices/products/category';
 // hooks
 import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
@@ -21,23 +21,22 @@ export default function MachineByCountriesViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { machinesByModel } = useSelector((state) => state.count);
+  const { machinesByModel, machineCategory, machineYear, machineCountry } = useSelector((state) => state.count);
   const { activeCategories } = useSelector((state) => state.category);
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: currentYear - 1999 }, (_, index) => 2000 + index);
-
   const modelWiseMachineNumber = [];
   const modelWiseMachineModel = [];
   
-  const [MBMYear, setMBMYear] = useState(null);
-  const [MBMCountry, setMBMCountry] = useState(null);
-  const [MBMCategory, setMBMCategory] = useState(null);
+  const [MBMYear, setMBMYear] = useState(machineYear);
+  const [MBMCountry, setMBMCountry] = useState(machineCountry);
+  const [MBMCategory, setMBMCategory] = useState(machineCategory);
   
   useLayoutEffect(() => {
     dispatch(getActiveCategories());
-    dispatch(getMachinesByModel());
-  }, [dispatch,MBMCategory]);
+    dispatch(getMachinesByModel(machineCategory?._id, machineYear, machineCountry?.code));
+  }, [dispatch, machineCategory, machineYear, machineCountry]);
 
   if (machinesByModel.length !== 0) {
     machinesByModel.modelWiseMachineCount.map((model) => {
@@ -47,9 +46,11 @@ export default function MachineByCountriesViewForm() {
     });
   }
   
-
   const handleGraphModel = (category, year, country) => {
-    dispatch(getMachinesByModel(category, year, country));
+    dispatch(setMachineCategory(category));
+    dispatch(setMachineYear(year));
+    dispatch(setMachineCountry(country));
+    dispatch(getMachinesByModel(category?._id, year, country?.code));
   };
 
   return (
@@ -66,33 +67,44 @@ export default function MachineByCountriesViewForm() {
                   <Autocomplete
                     fullWidth
                     options={activeCategories}
+                    value={MBMCategory}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     renderOption={(props, option) => (<li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>)}
                     renderInput={(params) => (<TextField {...params} label="Categories" size="small" />)}
-                    onChange={(event, newValue) =>{setMBMCategory(newValue?._id); handleGraphModel(newValue?._id, MBMYear,MBMCountry)}}
+                    onChange={(event, newValue) =>{
+                        setMBMCategory(newValue); 
+                        handleGraphModel(newValue, MBMYear,MBMCountry)
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12} sm={2}>
                     <Autocomplete
                           fullWidth
                           options={countries}
+                          value={MBMCountry}
                           isOptionEqualToValue={(option, value) => option.code === value.code}
                           getOptionLabel={(option) => `${option.label ? option.label : ''}`}
                           renderInput={(params) => <TextField {...params} label="Country" size="small" />}
-                          onChange={(event, newValue) =>{setMBMCountry(newValue?.code);handleGraphModel(MBMCategory, MBMYear,newValue?.code)}}
+                          onChange={(event, newValue) =>{
+                              setMBMCountry(newValue);
+                              handleGraphModel(MBMCategory, MBMYear,newValue)
+                          }}
                         />
                 </Grid>
                 <Grid item xs={12} sm={2}>
-
-                        <Autocomplete
-                          fullWidth
-                          options={years}
-                          getOptionLabel={(option) => option.toString()}
-                          renderInput={(params) => <TextField {...params} label="Year" size="small" />}
-                          onChange={(event, newValue) =>{setMBMYear(newValue);handleGraphModel(MBMCategory, newValue,MBMCountry)}}
-                        />
-                  </Grid>
+                    <Autocomplete
+                      fullWidth
+                      options={years}
+                      value={MBMYear}
+                      getOptionLabel={(option) => option.toString()}
+                      renderInput={(params) => <TextField {...params} label="Year" size="small" />}
+                      onChange={(event, newValue) =>{
+                        setMBMYear(newValue);
+                        handleGraphModel(MBMCategory, newValue,MBMCountry)
+                      }}
+                    />
+                </Grid>
             </Grid>
             <Divider sx={{paddingTop:2}} />
 

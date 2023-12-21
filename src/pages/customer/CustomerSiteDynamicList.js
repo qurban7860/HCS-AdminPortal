@@ -25,14 +25,13 @@ import { getSites, getSite, setSiteFormVisibility, resetSiteFormsVisiblity, crea
 import NothingProvided from '../components/Defaults/NothingProvided';
 import SiteAddForm from './site/SiteAddForm';
 import SiteEditForm from './site/SiteEditForm';
-import AvatarSection from '../components/sections/AvatarSection';
-import DetailsSection from '../components/sections/DetailsSection';
 import SiteViewForm from './site/SiteViewForm';
 import SearchInput from '../components/Defaults/SearchInput';
 import { fDate } from '../../utils/formatTime';
 import { Snacks } from '../../constants/customer-constants';
 import { BUTTONS, BREADCRUMBS, TITLES } from '../../constants/default-constants';
 import Iconify from '../../components/iconify';
+import ContactSiteCard from '../components/sections/ContactSiteCard';
 
 // ----------------------------------------------------------------------
 
@@ -144,6 +143,14 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
       });
   };
 
+  const handleCardClick = async (_site)=>{
+    await dispatch(getSite(customer._id, _site._id));
+    if (!siteEditFormVisibility && !siteAddFormVisibility) {
+      handleActiveCard(_site._id);
+      handleExpand(_site._id);
+    }
+}
+
   return (
     <>
       {/* <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}></Stack> */}
@@ -193,21 +200,14 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
       </Grid>
 
       <Grid container spacing={1} direction="row" justifyContent="flex-start">
-      <Grid
-            item
-            xs={12}
-            sm={12}
-            md={12}
-            lg={4}
-            sx={{ display: siteAddFormVisibility && isMobile && 'none' }}
-          >
-            
+      <Grid item xs={12} sm={12} md={12} lg={5} xl={4} sx={{ display: siteAddFormVisibility && isMobile && 'none' }} >
         {sites.length > 0 && (
           <>
             {sites.length > 5 && (
               <Grid item md={12}>
                 <SearchInput
-                  searchFormVisibility={siteAddFormVisibility || siteEditFormVisibility}
+                  // searchFormVisibility={siteAddFormVisibility || siteEditFormVisibility}
+                  disabled={siteAddFormVisibility || siteEditFormVisibility}
                   filterName={filterName}
                   handleFilterName={handleFilterName}
                   isFiltered={isFiltered}
@@ -228,78 +228,19 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
               contacts={sites.length}
               disabled={siteEditFormVisibility || siteAddFormVisibility}
             >
-              <Grid container spacing={1} justifyContent="flex-start" direction="column">
-                {dataFiltered.map((Site, index) =>  index !== activeIndex && (
-                        <Grid
-                          item
-                          key={index}
-                          xs={12}
-                          sm={12}
-                          md={12}
-                          lg={4}
-                          display={{ xs: 'flex', lg: 'block' }}
-                          onClick={() => {
-                            if (!siteEditFormVisibility && !siteAddFormVisibility) {
-                              handleActiveCard(index);
-                              handleExpand(index);
-                            }
-                          }}
-                          sx={{
-                            width: { xs: '100%', lg: '100%' },
-                          }}
-                        >
-                          <StyledCardWrapper
-                            condition={activeCardIndex === index}
-                            isMobile={isMobile}
-                          >
-                            <CardActionArea
-                              active={activeIndex === index}
-                              disabled={siteEditFormVisibility || siteAddFormVisibility}
-                            >
-                              <Link
-                                underline="none"
-                                disabled={siteEditFormVisibility || siteAddFormVisibility}
-                                onClick={async () => {
-                                  await dispatch(getSite(customer._id, Site._id));
-                                  // setOpenSite(true);
-                                  if (!isExpanded && !siteAddFormVisibility) {
-                                    handleActiveCard(!isExpanded ? index : null);
-                                    handleExpand(index);
-                                    setSiteFormVisibility(!siteAddFormVisibility);
-                                  } else if (isExpanded && site && !siteAddFormVisibility) {
-                                    handleExpand(index);
-                                  } else {
-                                    setIsExpanded(false);
-                                    index = null;
-                                  }
-                                }}
-                              >
-                                <Grid
-                                  container
-                                  direction="row"
-                                  justifyContent="flex-start"
-                                  alignItems="center"
-                                >
-                                  {!isMobile && (
-                                    <AvatarSection
-                                      // name={fullName[index]}
-                                      image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
-                                      isSite
-                                    />
-                                  )}
-                                  <DetailsSection
-                                    content={Site.name}
-                                    content2={Site?.address?.city ? Site?.address?.city : ""}
-                                    content3={Site?.website ? Site?.website : ""}
-                                  />
-                                </Grid>
-                              </Link>
-                            </CardActionArea>
-                          </StyledCardWrapper>
-                        </Grid>
-                      )
+              <Grid container direction="column" gap={1}>
+                {dataFiltered.map((_site, index) => (
+                  <ContactSiteCard
+                    key={index}
+                    isActive={_site._id === activeCardIndex}
+                    handleOnClick={() => handleCardClick(_site) }
+                    disableClick={siteEditFormVisibility || siteAddFormVisibility}
+                    name={_site?.name} title={_site?.address?.city || ""} email={_site?.website || ""}
+                    image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
+                  />)
                 )}
               </Grid>
+
             </StyledScrollbar>
             </>
         )}
@@ -312,6 +253,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                 <CardActionArea>
                   {site?.lat && site?.long && (
                     <GoogleMaps
+                      key={`mob-${site}`}
                       mapHeight="400px"
                       lat={site.lat ? site.lat : 0}
                       lng={site.long ? site.long : 0}
@@ -324,7 +266,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
         )}
 
         {/* Conditional View Forms */}
-        <GridBaseViewForm item lg={sites.length === 0 ? 12 : 8}>
+        <GridBaseViewForm item xs={12} sm={12} md={12} lg={7} xl={8}>
           {shouldShowSiteView && (
             <CardBase>
               <SiteViewForm
@@ -334,7 +276,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                 }}
                 setIsExpanded={setIsExpanded}
               />
-              <Grid item lg={12} spacing={3}>
+              <Grid item lg={12}>
                 {!isMobile && (
                   <Grid container direction="row" gap={4}>
                     <Grid item md={12}>
@@ -342,6 +284,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                         <Card>
                           <CardActionArea>
                             <GoogleMaps
+                              key={`desk-${site}`}
                               lat={site?.lat ? site.lat : 0}
                               lng={site?.long ? site.long : 0}
                             />
@@ -354,13 +297,14 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
 
                     <Grid item md={12}>
                       <Card>
-                        <CardActionArea>
+                      <SiteCarousel />
+                        {/* <CardActionArea>
                           <CardMedia
                             component={SiteCarousel}
                             image={<SiteCarousel />}
                             alt={sites[activeIndex]?.name}
                           />
-                        </CardActionArea>
+                        </CardActionArea> */}
                       </Card>
                     </Grid>
                   </Grid>

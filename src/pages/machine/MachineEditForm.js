@@ -104,17 +104,11 @@ export default function MachineEditForm() {
     billingSite: Yup.object().shape({
       name: Yup.string()
     }).nullable(),
-    accountManager: Yup.object().shape({
-      name: Yup.string()
-    }).nullable(),
-    projectManager: Yup.object().shape({
-      name: Yup.string()
-    }).nullable(),
-    supportManager: Yup.object().shape({
-      name: Yup.string()
-    }).nullable(),
+    accountManager: Yup.array(),
+    projectManager: Yup.array(),
+    supportManager: Yup.array(),
     siteMilestone: Yup.string().max(1500),
-    description: Yup.string().max(1500),
+    description: Yup.string().max(5000),
     isActive: Yup.boolean(),
   });
 
@@ -138,9 +132,9 @@ export default function MachineEditForm() {
       installationDate: machine.installationDate || null,
       shippingDate: machine.shippingDate || null,
       siteMilestone: machine.siteMilestone || '',
-      accountManager: machine.accountManager || null,
-      projectManager: machine.projectManager || null,
-      supportManager: machine.supportManager || null,
+      projectManager: machine?.projectManager || [],
+      supportManager: machine?.supportManager || [],
+      accountManager: machine?.accountManager || [],
       supportExpireDate: machine.supportExpireDate || null,
       // customerTags: [],
       description: machine.description || '',
@@ -168,9 +162,6 @@ export default function MachineEditForm() {
     financialCompany,
     instalationSite,
     machineConnectionVal,
-    accountManager,
-    projectManager,
-    supportManager,
   } = watch();
 
   // useEffect(() => {
@@ -254,13 +245,8 @@ export default function MachineEditForm() {
     const array = [...new Set(newChips)]
     setChips(array);
   };
-  // ----------------------end handle functions----------------------
-  useEffect(() => {
-    setValue('accountManager', spContacts.find((item) => item?._id === customer?.accountManager))
-    setValue('projectManager', spContacts.find((item) => item?._id === customer?.projectManager))
-    setValue('supportManager', spContacts.find((item) => item?._id === customer?.supportManager))
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[customer])
+  
+
 
   return (
     <>
@@ -500,15 +486,18 @@ export default function MachineEditForm() {
                             field.onChange(newValue);
                             if(customer?._id !== newValue._id) {
                             setValue('machineConnectionVal', []);
-                            setValue('instalationSite', []);
-                            setValue('billingSite', []);
+                            setValue('instalationSite', null);
+                            setValue('billingSite', null);
+                            setValue('accountManager', spContacts.filter(item => Array.isArray(newValue?.accountManager) && newValue?.accountManager.includes(item?._id)))
+                            setValue('projectManager', spContacts.filter(item => Array.isArray(newValue?.projectManager) && newValue?.projectManager.includes(item?._id)))
+                            setValue('supportManager', spContacts.filter(item => Array.isArray(newValue?.supportManager) && newValue?.supportManager.includes(item?._id)))
                             }
                           } else {
                             field.onChange(null);
                             dispatch(resetMachineConnections());
                             setValue('machineConnectionVal', []);
-                            setValue('instalationSite', []);
-                            setValue('billingSite', []);
+                            setValue('instalationSite', null);
+                            setValue('billingSite', null);
                             dispatch(resetActiveSites());
                           }
                         }}
@@ -656,117 +645,50 @@ export default function MachineEditForm() {
 
                 {/* -------------------------------- Account Manager -------------------------------- */}
 
-                <Controller
-                  name="accountManager"
-                  control={control}
-                  defaultValue={accountManager || null}
-                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                  <Autocomplete
-                    // freeSolo
-                    {...field}
+                <RHFAutocomplete
+                    multiple
+                    disableCloseOnSelect
+                    name="accountManager"
                     options={spContacts}
-                    isOptionEqualToValue={(option, value) =>option._id === value._id}
-                    getOptionLabel={(option) =>
-                      `${option.firstName ? option.firstName : ''} ${
-                        option.lastName ? option.lastName : ''
-                      }`
-                    }
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
                     renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${
-                        option.firstName ? option.firstName : ''
-                      } ${option.lastName ? option.lastName : ''}`}</li>
+                      <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>
                     )}
-                    id="controllable-states-demo"
-                    onChange={(event, value) => field.onChange(value)}
-                    renderInput={(params) => <TextField 
-                      {...params} 
-                      label="Account Manager"
-                      name="accountManager"
-                      id="accountManager"     
-                      error={!!error}
-                      helperText={error?.message} 
-                      inputRef={ref} 
-                    />}
+                    renderInput={(params) => <TextField {...params} label="Account Manager" />}
                     ChipProps={{ size: 'small' }}
+                    id="controllable-states-demo"
                   />
-                  )}
-                />
 
-                {/* -------------------------------- Project Manager -------------------------------- */}
-
-                <Controller
-                  name="projectManager"
-                  control={control}
-                  defaultValue={projectManager || null}
-                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                  <Autocomplete
+                  <RHFAutocomplete
                     // freeSolo
-                    {...field}
+                    multiple
+                    disableCloseOnSelect
+                    name="projectManager"
                     options={spContacts}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
-                    getOptionLabel={(option) =>
-                      `${option.firstName ? option.firstName : ''} ${
-                        option.lastName ? option.lastName : ''
-                      }`
-                    }
-                    onChange={(event, value) => field.onChange(value)}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
                     renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${
-                        option.firstName ? option.firstName : ''
-                      } ${option.lastName ? option.lastName : ''}`}</li>
+                      <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>
                     )}
-                    id="controllable-states-demo"
-                    renderInput={(params) => <TextField 
-                      {...params} 
-                      label="Project Manager" 
-                      name="projectManager"
-                      id="projectManager"     
-                      error={!!error}
-                      helperText={error?.message} 
-                      inputRef={ref}
-                    />}
+                    renderInput={(params) => <TextField {...params} label="Project Manager" />}
                     ChipProps={{ size: 'small' }}
+                    id="controllable-states-demo"
                   />
-                  )}
-                />
-
-                {/* -------------------------------- Support Manager -------------------------------- */}
-                
-                <Controller
-                  name="supportManager"
-                  control={control}
-                  defaultValue={supportManager || null}
-                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                  <Autocomplete
-                    // freeSolo
-                    {...field}
+                  <RHFAutocomplete
+                    multiple
+                    disableCloseOnSelect
+                    name="supportManager"
                     options={spContacts}
-                    isOptionEqualToValue={(option, value) => option._id === value._id }
-                    getOptionLabel={(option) =>
-                      `${option.firstName ? option.firstName : ''} ${
-                        option.lastName ? option.lastName : ''
-                      }`
-                    }
-                    onChange={(event, value) => field.onChange(value)}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
                     renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${
-                        option.firstName ? option.firstName : ''
-                      } ${option.lastName ? option.lastName : ''}`}</li>
+                      <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>
                     )}
-                    id="controllable-states-demo"
-                    renderInput={(params) => <TextField 
-                    {...params} 
-                      label="Support Manager" 
-                      name="supportManager"
-                      id="supportManager"     
-                      error={!!error}
-                      helperText={error?.message} 
-                      inputRef={ref}
-                    />}
+                    renderInput={(params) => <TextField {...params} label="Support Manager" />}
                     ChipProps={{ size: 'small' }}
+                    id="controllable-states-demo"
                   />
-                  )}
-                />
 
                   <RHFDatePicker inputFormat='dd/MM/yyyy'  name="supportExpireDate" label="Support Expire Date" />
               

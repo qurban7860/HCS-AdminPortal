@@ -220,14 +220,11 @@ export function addMachineModel(params) {
         let data = {
           name: params.name,
           isActive: params.isActive,
+          category: params?.category?._id,
+          isDefault: params.isDefault,
           description: params.description,
         };
         /* eslint-enable */
-          if(params.category !== ""){
-            data.category = params.category;
-          }else{
-            data.category = null
-          }
         const response = await axios.post(`${CONFIG.SERVER_URL}products/models`, data);
           return response
     } catch (error) {
@@ -247,15 +244,12 @@ export function updateMachineModel(params,Id) {
       /* eslint-disable */
       let data = {
         name: params.name,
+        category: params?.category?._id,
         isActive: params.isActive,
+        isDefault: params.isDefault,
         description: params.description,
       };
      /* eslint-enable */
-      if(params.category !== null && params.category !== undefined){
-        data.category = params.category._id;
-      }else{
-        data.category = null
-      }
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/models/${Id}`,
         data
       );

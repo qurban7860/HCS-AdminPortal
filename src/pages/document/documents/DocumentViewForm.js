@@ -158,9 +158,9 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
       disableEditButton={machine?.status?.slug==='transferred'}
       />
       <Grid container>
-        <ViewFormField isLoading={isLoading} sm={8} heading="Name" param={defaultValues?.displayName} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.displayName} />
         <ViewFormField isLoading={isLoading}
-          sm={4}
+          sm={6}
           heading="Version"
           handleAllVersion={linkDocumentView}
           handleNewVersion={handleNewVersion}

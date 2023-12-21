@@ -37,7 +37,8 @@ import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
 import { getCustomers, ChangePage, ChangeRowsPerPage, setFilterBy, setVerified,
    createCustomerCSV,
-   setCustomerTab} from '../../redux/slices/customer/customer';
+   setCustomerTab,
+   setExcludeReporting} from '../../redux/slices/customer/customer';
 import { Cover } from '../components/Defaults/Cover';
 import TableCard from '../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
@@ -76,8 +77,9 @@ export default function CustomerList() {
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
-  const { customers, filterBy, verified, page, rowsPerPage, isLoading } = useSelector((state) => state.customer);
+  const { customers, filterBy, verified, excludeReporting, page, rowsPerPage, isLoading } = useSelector((state) => state.customer);
   const [filterVerify, setFilterVerify] = useState(verified);
+  const [filterExcludeRepoting, setFilterExcludeRepoting] = useState(excludeReporting);
   const [filterName, setFilterName] = useState(filterBy);
 
   const onChangeRowsPerPage = (event) => {
@@ -100,6 +102,7 @@ export default function CustomerList() {
     comparator: getComparator(order, orderBy),
     filterName,
     filterVerify,
+    filterExcludeRepoting,
     filterStatus,
   });
   const denseHeight = 60;
@@ -131,8 +134,18 @@ export default function CustomerList() {
     setPage(0);
   };
 
+  const debouncedExcludeReporting = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setExcludeReporting(value))
+  }, 500))
+
+  const handleExcludeRepoting = (event)=> {
+    debouncedExcludeReporting.current(event.target.value);
+    setFilterExcludeRepoting(event?.target?.value)
+  }
+
   useEffect(() => {
-      debouncedSearch.current.cancel();
+    debouncedSearch.current.cancel();
   }, [debouncedSearch]);
 
 
@@ -161,6 +174,7 @@ export default function CustomerList() {
       enqueueSnackbar(error.message, { variant: `error` });
     });
   };
+  
 
   // const [exportingCSV, setExportingCSV] = useState(false);
   // const onExportCSV = async () => {
@@ -197,7 +211,8 @@ export default function CustomerList() {
           customerDocList
           machineDocList
           onExportCSV={onExportCSV}
-          // onExportLoading={exportingCSV}
+          filterExcludeRepoting={filterExcludeRepoting}
+          handleExcludeRepoting={handleExcludeRepoting}
         />
 
       {!isNotFound && <TablePaginationCustom
@@ -298,7 +313,7 @@ export default function CustomerList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterVerify, filterStatus }) {
+function applyFilter({ inputData, comparator, filterName, filterVerify, filterExcludeRepoting, filterStatus }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
@@ -312,6 +327,12 @@ function applyFilter({ inputData, comparator, filterName, filterVerify, filterSt
     inputData = inputData.filter((customer)=> customer.verifications.length>0);
   else if(filterVerify==='unverified')
     inputData = inputData.filter((customer)=> customer.verifications.length===0);
+  
+  if(filterExcludeRepoting==="excluded"){
+    inputData = inputData.filter((customer)=> customer.excludeReports===true);
+  }else if(filterExcludeRepoting==="included"){
+    inputData = inputData.filter((customer)=> customer.excludeReports===false);
+  }
 
   if (filterName) {
     inputData = inputData.filter(

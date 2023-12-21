@@ -1,18 +1,20 @@
 import { useNavigate } from 'react-router';
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 // @mui
-import { Grid, Card, Divider, TextField, Autocomplete, CardHeader, Box, IconButton } from '@mui/material';
+import { Grid, Card, Divider, TextField, Autocomplete, CardHeader, Box, IconButton, Typography } from '@mui/material';
 import { StyledBg, StyledContainer, StyledGlobalCard } from '../../theme/styles/default-styles';
 // sections
 import HowickWelcome from '../components/DashboardWidgets/HowickWelcome';
 import HowickWidgets from '../components/DashboardWidgets/HowickWidgets';
 // assets & hooks
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCount, getMachinesByCountry, getMachinesByModel, getMachinesByYear } from '../../redux/slices/dashboard/count';
-
+import { getCount, getERPLogs, getMachinesByCountry, 
+  getMachinesByModel, getMachinesByYear, 
+  setMachineCategory, setMachineCountry, setMachineModel, setMachineYear } from '../../redux/slices/dashboard/count';
 // components
 import ChartBar from '../components/Charts/ChartBar';
 import ProductionLog from '../components/Charts/ProductionLog';
+import ChartStacked from '../components/Charts/ChartStacked';
 import HowickOperators from '../components/DashboardWidgets/OperatorsWidget';
 import ChartColumnNegative from '../components/Charts/ChartColumnNegative';
 // constants
@@ -30,13 +32,14 @@ import { countries } from '../../assets/data';
 import Iconify from '../../components/iconify';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import { useWebSocketContext } from '../../auth/WebSocketContext';
+import { fDate } from '../../utils/formatTime';
 // ----------------------------------------------------------------------
 
 export default function GeneralAppPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { onlineUsers } = useWebSocketContext();
-  const { count, machinesByCountry, machinesByYear, machinesByModel } = useSelector((state) => state.count);
+  const { count, machinesByCountry, machinesByYear, machinesByModel, erpLogs } = useSelector((state) => state.count);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
   const { activeCategories } = useSelector((state) => state.category);
   const enviroment = CONFIG.ENV.toLowerCase();
@@ -54,6 +57,10 @@ export default function GeneralAppPage() {
   const [MBYModel, setMBYModel] = useState(null);
   const [MBYCategory, setMBYCategory] = useState(null);
 
+  const erpLogsTime = [];
+  const erpLogsLength = [];
+  const erpLogsWaste = [];
+
   const modelWiseMachineNumber = [];
   const yearWiseMachinesYear = [];
   const modelWiseMachineModel = [];
@@ -62,7 +69,27 @@ export default function GeneralAppPage() {
   const countryWiseMachineCountCountries = [];
   const countryWiseSiteCountNumber = [];
   const countryWiseSiteCountCountries = [];
-  // const yearWiseMachines = [];
+
+  useLayoutEffect(() => {
+    dispatch(getActiveCategories());
+    dispatch(getActiveMachineModels());
+    dispatch(getCount());
+    // dispatch(getMachinesByCountry());
+    // dispatch(getMachinesByModel());
+    // dispatch(getMachinesByYear());
+    dispatch(getERPLogs());
+  }, [dispatch]);
+
+  useEffect(()=>{
+    const defaultCategory = activeCategories.find((cat) => cat?.isDefault === true);
+    setMBCCategory(defaultCategory);
+    setMBMCategory(defaultCategory);
+    setMBYCategory(defaultCategory);
+
+    dispatch(getMachinesByCountry(defaultCategory?._id,null, null))
+    dispatch(getMachinesByYear(defaultCategory?._id,null, null))
+    dispatch(getMachinesByModel(defaultCategory?._id,null, null))
+  },[dispatch, activeCategories])
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: currentYear - 1999 }, (_, index) => 2000 + index);
@@ -98,149 +125,123 @@ export default function GeneralAppPage() {
     });
   }
 
+  if (erpLogs.length !== 0) {
+    erpLogs.map((log) => {
+      erpLogsTime.push(fDate(log._id));
+      erpLogsLength.push(log.componentLength);
+      erpLogsWaste.push(log.waste);
+      return null;
+    });
+  }
+
   const handleGraphCountry = (category, year, model) => {
-    dispatch(getMachinesByCountry(category, year, model));
+    dispatch(getMachinesByCountry(category?._id, year, model?._id));
   };
 
   const handleGraphModel = (category, year, country) => {
-    dispatch(getMachinesByModel(category, year, country));
+    dispatch(getMachinesByModel(category?._id, year, country?.code));
   };
 
   const handleGraphYear = (category, model, country) => {
-    dispatch(getMachinesByYear(category, model, country));
+    dispatch(getMachinesByYear(category?._id, model?._id, country?.code));
   };
 
-  const handleExpandGraph = (graph) => {
+  const handleExpandGraph = async (graph) => {
     if(graph==="country"){
+      dispatch(setMachineCategory(MBCCategory));
+      dispatch(setMachineYear(MBCYear));
+      dispatch(setMachineModel(MBCModel));
       navigate(PATH_DASHBOARD.general.machineByCountries)
     }else if(graph==="model"){
+      dispatch(setMachineCategory(MBMCategory));
+      dispatch(setMachineYear(MBMYear));
+      dispatch(setMachineCountry(MBMCountry));
       navigate(PATH_DASHBOARD.general.machineByModels)
     }else if(graph==="year"){
+      dispatch(setMachineCategory(MBYCategory));
+      dispatch(setMachineCountry(MBYCountry));
+      dispatch(setMachineModel(MBYModel));
       navigate(PATH_DASHBOARD.general.machineByYears)
     }
   }
  
-  useLayoutEffect(() => {
-    dispatch(getActiveCategories());
-    dispatch(getActiveMachineModels());
-    dispatch(getCount());
-    dispatch(getMachinesByCountry());
-    dispatch(getMachinesByModel());
-    dispatch(getMachinesByYear());
-  }, [dispatch]);
+  
 
   return (
-    <StyledContainer maxWidth={false} p={0} >
-      <Grid container item sx={{ justifyContent: 'center' }}>
-        <Grid container item xs={12} md={20} lg={20} spacing={3}>
-          <Grid item xs={12} md={10} lg={10} sx={{ height: { xs: 250, md: 400 }, position: 'relative'}}>
-            <HowickWelcome title={TITLES.WELCOME} description={TITLES.WELCOME_DESC} />
-          </Grid>
+    <StyledContainer maxWidth={false}>
+      <Grid container>
+        <Grid container spacing={3} mt={2}>
+            <Grid item xs={12}>
+              <HowickWelcome title={TITLES.WELCOME} description={TITLES.WELCOME_DESC} />
+            </Grid>
+            <Grid item xs={12} sm={6} md={6} lg={6} xl={3} >
+              <HowickWidgets title="Customers" total={count?.customerCount || 0}
+                notVerified={count?.nonVerifiedCustomerCount || 0}
+                excludedCustomers={count?.excludeReportingCustomersCount || 0}
+                icon="raphael:users"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={6} lg={6} xl={3} >
+              <HowickWidgets title="Sites" total={count?.siteCount || 0}
+                icon="carbon:location-company"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={6} lg={6} xl={3} >
+              <HowickWidgets title="Machines" total={count?.machineCount || 0}
+                notVerified={count?.nonVerifiedMachineCount || 0}
+                connectables={count?.connectAbleMachinesCount || 0}
+                icon="vaadin:automation"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={6} lg={6} xl={3} >
+              <HowickWidgets title="Users" total={count?.userTotalCount || 0}
+                activeUsers={count?.userActiveCount || 0} 
+                onlineUsers={onlineUsers && onlineUsers?.length || 0}
+                icon="mdi:account-group"
+              />
+          </Grid>    
         </Grid>
 
-        {/* dashboard customers, sites, machines, active users */}
-        <Grid container item xs={12} md={16} m={3} sx={{ justifyContent: 'center' }}>
-          <Grid container item xs={12} md={16} spacing={3}>
-            <Grid item xs={12} sm={6} md={5} lg={4} >
-              <HowickWidgets
-                title="Customers"
-                total={count?.customerCount || 0}
-                notVerifiedTitle="Not Verified"
-                notVerifiedCount={count?.nonVerifiedCustomerCount}
-                icon="raphael:users"
-                color="warning"
-                chart={{
-                  series: countryWiseMachineCountNumber,
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} md={5} lg={4}>
-              <HowickWidgets
-                title="Sites"
-                total={count?.siteCount || 0}
-                icon="carbon:location-company"
-                color="bronze"
-                chart={{
-                  series: countryWiseSiteCountNumber,
-                }}
-              />
-            </Grid>
-          </Grid>
-          <Grid container item xs={12} md={16} spacing={3}>
-            <Grid item xs={12} sm={6} md={5} lg={4} sx={{ mt: '24px' }}>
-              <HowickWidgets
-                title="Machines"
-                total={count?.machineCount || 0}
-                notVerifiedTitle="Not Verified"
-                notVerifiedCount={count?.nonVerifiedMachineCount}
-                connectableTitle="Decoilers / Kits"
-                connectableCount={count?.connectAbleMachinesCount}
-                icon="vaadin:automation"
-                color="info"
-                chart={{
-                  series: modelWiseMachineNumber,
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} md={5} lg={4} sx={{ mt: '24px' }}>
-              <HowickWidgets
-                title="Users"
-                total={count?.userTotalCount || 0}
-                activeUserCount={count?.userActiveCount}
-                onlineUserCount={onlineUsers && onlineUsers?.length}
-                icon="mdi:account-group"
-                color="error"
-                chart={{
-                  series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
-                }}
-              />
-            </Grid>
-          </Grid>
-
           {/* Global widget */}
-          <Grid container item xs={12} md={16} spacing={3} mt={2}>
-            <Grid item xs={12} md={6} lg={6}>
-              <StyledGlobalCard variants={varFade().inDown}>
-                <CardHeader
-                  sx={{padding:"15px 0px 0px"}}
-                  title="Machine by Countries"
-                  action={
-                      <Box sx={{display:'flex'}}>
+          <Grid container spacing={3} mt={2}>
+            <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
+              <StyledGlobalCard variants={varFade().inDown} >
+                  <Grid container mt={2} mb={2}>
+                    <Grid item xs={12} sm={4} display='flex' alignItems='center'>
+                      <Typography variant='h5'>Machine by Countries</Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={8} display='flex' justifyContent='flex-end' columnGap={0.5}>
                           <Autocomplete
                             fullWidth
-                            sx={{ width: '140px', paddingRight:1 }}
                             options={activeCategories}
                             value={MBCCategory}
                             isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                            getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                            renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option?.name || ''}`}</li>)}
+                            getOptionLabel={(option) => option?.name || ''}
                             renderInput={(params) => (<TextField {...params} label="Categories" size="small" />)}
                             onChange={(event, newValue) =>{
                                 setMBCCategory(newValue);
                                 setMBCModel(null); 
-                                handleGraphCountry(newValue?._id, MBCYear,MBCModel)
+                                handleGraphCountry(newValue, MBCYear,MBCModel)
                             }}
                           />
                             <Autocomplete
-                            sx={{ width: '130px', paddingRight:1 }}
                               fullWidth
                               options={activeMachineModels.filter((model) => MBCCategory ? model?.category?._id === MBCCategory?._id : model)}
                               value={MBCModel}  // Ensure that MBCModel is controlled
                               isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                              getOptionLabel={(option) => `${option?.name || ''}`}
-                              renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.name || ''}`}</li>)}
+                              getOptionLabel={(option) => option?.name || ''}
                               renderInput={(params) => (<TextField {...params} label="Model" size="small" />)}
                               onChange={(event, newValue) => {
                                 setMBCModel(newValue);
                                 if (newValue) setMBCCategory(newValue?.category);
-                                handleGraphCountry(MBCCategory, MBCYear, newValue?._id);
+                                handleGraphCountry(MBCCategory, MBCYear, newValue);
                               }}
                             />
 
                         <Autocomplete
-                          sx={{ width: '120px', paddingRight:1}}
+                          fullWidth
                           options={years}
-                          getOptionLabel={(option) => option.toString()}
+                          getOptionLabel={(option) => option?.toString() || ''}
                           renderInput={(params) => <TextField {...params} label="Year" size="small" />}
                           onChange={(event, newValue) =>{setMBCYear(newValue); ; handleGraphCountry(MBCCategory, newValue, MBCModel)}}
                         />
@@ -248,62 +249,54 @@ export default function GeneralAppPage() {
                         <IconButton size='large' color="primary" onClick={()=>{handleExpandGraph('country')}}>
                           <Iconify icon="fluent:expand-up-right-20-filled" />
                         </IconButton>
-
-                      </Box>
-                  }
-                />
-                <Divider sx={{paddingTop:2}} />
-
-                <ChartBar
-                  optionsData={countryWiseMachineCountCountries}
-                  seriesData={countryWiseMachineCountNumber}
-                  type="bar"
-                  sx={{ backgroundColor: 'transparent' }}
+                    </Grid>
+                </Grid>
+                <Divider/>
+                <ChartBar optionsData={countryWiseMachineCountCountries} seriesData={countryWiseMachineCountNumber}
+                  type="bar" sx={{ backgroundColor: 'transparent' }}
                 />
               </StyledGlobalCard>
             </Grid>
 
-            {/* Machine Performance */}
-            <Grid item xs={12} md={6} lg={6}>
+            {/* Machine by  Models */}
+            <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
               <Card sx={{ px: 3, mb: 3}} variants={varFade().inDown}>
-                <CardHeader
-                  sx={{padding:"15px 0px 0px"}}
-                  title="Machine by  Models"
-                  action={
-
-                    <Box sx={{display:'flex'}}>
-                        <Autocomplete
-                          sx={{width:'140px', paddingRight:1 }}
+                  <Grid container mt={2} mb={2}>
+                    <Grid item xs={12} sm={4} display='flex' alignItems='center'>
+                      <Typography variant='h5'>Machine by Models</Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={8} display='flex' justifyContent='flex-end' columnGap={0.5}>
+                      <Autocomplete
+                          fullWidth
                           options={activeCategories}
-                          isOptionEqualToValue={(option, value) => option._id === value._id}
-                          getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                          renderOption={(props, option) => (<li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>)}
+                          value={MBMCategory}
+                          isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                          getOptionLabel={(option) => option?.name || ''}
                           renderInput={(params) => (<TextField {...params} label="Categories" size="small" />)}
-                          onChange={(event, newValue) =>{setMBMCategory(newValue?._id); handleGraphModel(newValue?._id, MBMYear,MBMCountry)}}
+                          onChange={(event, newValue) =>{setMBMCategory(newValue); handleGraphModel(newValue, MBMYear,MBMCountry)}}
                         />
                         <Autocomplete
-                          sx={{ width: '130px',paddingRight:1 }}
+                          fullWidth
                           options={countries}
-                          isOptionEqualToValue={(option, value) => option.code === value.code}
-                          getOptionLabel={(option) => `${option.label ? option.label : ''}`}
+                          isOptionEqualToValue={(option, value) => option?.code === value?.code}
+                          getOptionLabel={(option) => option?.label || ''}
                           renderInput={(params) => <TextField {...params} label="Country" size="small" />}
-                          onChange={(event, newValue) =>{setMBMCountry(newValue?.code);handleGraphModel(MBMCategory, MBMYear,newValue?.code)}}
+                          onChange={(event, newValue) =>{setMBMCountry(newValue);handleGraphModel(MBMCategory, MBMYear,newValue)}}
                         />
 
                         <Autocomplete
-                          sx={{ width: '120px', paddingRight:1 }}
+                          fullWidth
                           options={years}
-                          getOptionLabel={(option) => option.toString()}
+                          getOptionLabel={(option) => option?.toString() || ''}
                           renderInput={(params) => <TextField {...params} label="Year" size="small" />}
                           onChange={(event, newValue) =>{setMBMYear(newValue);handleGraphModel(MBMCategory, newValue,MBMCountry)}}
                         />
                         <IconButton size='large' color="primary" onClick={()=>{handleExpandGraph('model')}}>
                           <Iconify icon="fluent:expand-up-right-20-filled" />
                         </IconButton>
-                      </Box>
-                  }
-                />
-                <Divider sx={{paddingTop:2}} />
+                    </Grid>
+                </Grid>
+                <Divider />
                 <ChartBar
                   optionsData={modelWiseMachineModel}
                   seriesData={modelWiseMachineNumber}
@@ -314,59 +307,54 @@ export default function GeneralAppPage() {
               <StyledBg />
             </Grid>
 
-            <Grid item xs={12} md={6} lg={6}>
+            <Grid item xs={12} sm={12} md={12} lg={12} xl={6} >
               <Card sx={{ px: 3, mb: 3}} variants={varFade().inDown}>
-                <CardHeader
-                  sx={{padding:"15px 0px 0px"}}
-                  title="Machine by Years"
-                  action={
-                    <Box sx={{display:'flex'}}>
+              <Grid container mt={2} mb={2}>
+                    <Grid item xs={12} sm={4} display='flex' alignItems='center'>
+                      <Typography variant='h5'>Machine by Years</Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={8} display='flex' justifyContent='flex-end' columnGap={0.5}>
                         <Autocomplete
-                          sx={{ width: '140px', paddingRight:1 }}
                           fullWidth
                           options={activeCategories}
                           value={MBYCategory}
                           isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                          getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                          renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option?.name || ''}`}</li>)}
+                          getOptionLabel={(option) =>  option?.name || ''}
                           renderInput={(params) => (<TextField {...params} label="Categories" size="small" />)}
                           onChange={(event, newValue) =>{
                               setMBYCategory(newValue);
                               setMBYModel(null); 
-                              handleGraphYear(newValue?._id, MBYModel, MBYCountry)
+                              handleGraphYear(newValue, MBYModel, MBYCountry)
                           }}
                         />
                           <Autocomplete
-                            sx={{ width: '130px', paddingRight:1 }}
                             fullWidth
                             options={activeMachineModels.filter((model) => MBYCategory ? model?.category?._id === MBYCategory?._id : model)}
                             value={MBYModel}  // Ensure that MBYModel is controlled
                             isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                            getOptionLabel={(option) => `${option?.name || ''}`}
-                            renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.name || ''}`}</li>)}
+                            getOptionLabel={(option) => option?.name || ''}
                             renderInput={(params) => (<TextField {...params} label="Model" size="small" />)}
                             onChange={(event, newValue) => {
                               setMBYModel(newValue);
                               if (newValue) setMBYCategory(newValue?.category);
-                              handleGraphYear(MBYCategory, newValue?._id,MBYCountry)
+                              handleGraphYear(MBYCategory, newValue,MBYCountry)
                             }}
                           />
 
                         <Autocomplete
-                          sx={{ width: '120px', paddingRight:1 }}
+                          fullWidth
                           options={countries}
-                          isOptionEqualToValue={(option, value) => option.code === value.code}
-                          getOptionLabel={(option) => `${option.label ? option.label : ''}`}
+                          isOptionEqualToValue={(option, value) => option?.code === value?.code}
+                          getOptionLabel={(option) => option?.label || ''}
                           renderInput={(params) => <TextField {...params} label="Country" size="small" />}
-                          onChange={(event, newValue) =>{setMBYCountry(newValue?.code);handleGraphYear(MBYCategory, MBYModel,newValue?.code)}}
+                          onChange={(event, newValue) =>{setMBYCountry(newValue);handleGraphYear(MBYCategory, MBYModel,newValue)}}
                         />
                         <IconButton size='large' color="primary" onClick={()=>{handleExpandGraph('year')}}>
                           <Iconify icon="fluent:expand-up-right-20-filled" />
                         </IconButton>
-                      </Box>
-                  }
-                />
-                <Divider sx={{paddingTop:2}} />
+                    </Grid>
+                </Grid>
+                <Divider />
                 <ChartBar
                   optionsData={yearWiseMachinesYear}
                   seriesData={yearWiseMachinesNumber}
@@ -375,6 +363,18 @@ export default function GeneralAppPage() {
                 />
               </Card>
               <StyledBg />
+            </Grid>
+
+            <Grid item xs={12} sm={12} md={12} lg={12} xl={6} >
+                  <ChartStacked 
+                    title="ERP Log"
+                    chart={{
+                      categories: erpLogsTime,
+                      series: [ { name: 'Length', data: erpLogsLength }, { name: 'Waste', data: erpLogsWaste } ]
+                    }}
+                    sx={{ bg: 'transparent' }}
+                  />
+
             </Grid>
             {/* Production Log */}
             {/* hide this in the live, but show in development and test  */}
@@ -420,7 +420,6 @@ export default function GeneralAppPage() {
              :'' }
 
           </Grid>
-        </Grid>
 
         {/* hide this in the live, but show in development and test for now  */}
         {showDevGraphs ?

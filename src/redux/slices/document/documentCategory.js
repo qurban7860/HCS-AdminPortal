@@ -141,6 +141,7 @@ export function addDocumentCategory(params) {
               description: params.description,
               customerAccess:params.customerAccess,
               isActive: params.isActive,
+              isDefault: params.isDefault,
             }
             if(params.type) {
               data.customer = params.type.customer
@@ -169,6 +170,7 @@ export function updateDocumentCategory(Id,params) {
         description: params.description,
         customerAccess:params.customerAccess,
         isActive: params.isActive,
+        isDefault: params.isDefault,
       }
       if(params.type) {
         data.customer = params.type.customer

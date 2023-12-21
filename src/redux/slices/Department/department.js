@@ -112,6 +112,7 @@ export function addDepartment(params) {
       let data = {
         departmentName: params.departmentName,
         isActive: params.isActive,
+        isDefault: params.isDefault,
       };
 
       /* eslint-enable */
@@ -141,6 +142,7 @@ export function updateDepartment(params, Id) {
       let data = {
         departmentName: params.departmentName,
         isActive: params.isActive,
+        isDefault: params.isDefault,
       };
 
       /* eslint-enable */

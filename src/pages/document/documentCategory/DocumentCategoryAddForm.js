@@ -11,7 +11,7 @@ import { useSnackbar } from '../../../components/snackbar';
 // routes
 import { PATH_SETTING } from '../../../routes/paths';
 // schema
-import { AddDocumentCategorySchema } from '../../schemas/document';
+import { DocumentCategorySchema } from '../../schemas/document';
 // slice
 import { addDocumentCategory } from '../../../redux/slices/document/documentCategory';
 // components
@@ -81,12 +81,12 @@ export default function DocumentCategoryAddForm({ currentDocument }) {
     }
   },[state]);
 
-console.log("state : ", state);
   const defaultValues = useMemo(
     () => ({
       name: '',
       description: '',
       isActive: true,
+      isDefault: false,
       customerAccess: false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -94,7 +94,7 @@ console.log("state : ", state);
   );
 
   const methods = useForm({
-    resolver: yupResolver(AddDocumentCategorySchema),
+    resolver: yupResolver(DocumentCategorySchema),
     defaultValues,
   });
 
@@ -153,6 +153,8 @@ console.log("state : ", state);
                   RHFName={FORMLABELS.isCUSTOMER_ACCESS.name}
                   isCATEGORY={state}
                   handleChangeType={handleChangeType}
+                  isDefault
+                  defaultName='isDefault'
                 />
                 
               </Stack>

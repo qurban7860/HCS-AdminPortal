@@ -43,7 +43,7 @@ export default function DocumentCategoryListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, customer, machine, drawing,  customerAccess, isActive, createdAt } = row;
+  const { name, customer, machine, drawing,  customerAccess, isActive, isDefault, createdAt } = row;
 
 
  const smScreen = useScreenSize('sm')
@@ -54,7 +54,7 @@ export default function DocumentCategoryListTableRow({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
         {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
-        <LinkTableCell align="left" onClick={onViewRow} param={name} />
+        <LinkTableCell align="left" onClick={onViewRow} param={name} isDefault={isDefault} />
         { smScreen && <TableCell>{customer ? <Chip label="Customer" sx={{m:0.2}} />: ''}{machine ? <Chip label="Machine" sx={{m:0.2}} />: ''}{drawing ? <Chip label="Drawing" sx={{m:0.2}} />: ''}</TableCell>}
         { smScreen && <TableCell align="center">
           {' '}

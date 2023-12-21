@@ -49,7 +49,7 @@ export default function DocumentTypeListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, docCategory, customerAccess, isActive, createdAt } = row;
+  const { name, docCategory, customerAccess, isActive, isDefault, createdAt } = row;
 
   // const [ setOpenConfirm] = useState(false);
 
@@ -78,7 +78,7 @@ export default function DocumentTypeListTableRow({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
         {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
-        <LinkTableCell align="left" param={name} onClick={onViewRow} />
+        <LinkTableCell align="left" param={name} onClick={onViewRow} isDefault={isDefault} />
         { smScreen && <TableCell align="left">{docCategory?.name}</TableCell>}
         { smScreen && <TableCell align="center">
           {' '}

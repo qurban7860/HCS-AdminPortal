@@ -24,14 +24,14 @@ import { getActiveCustomers, getFinancialCompanies, setNewMachineCustomer } from
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import  { addMachine, getActiveMachines } from '../../redux/slices/products/machine';
 import { getActiveMachineStatuses } from '../../redux/slices/products/statuses';
-import { getActiveMachineModels } from '../../redux/slices/products/model';
+import { getActiveMachineModels, resetActiveMachineModels } from '../../redux/slices/products/model';
 import { getActiveSuppliers } from '../../redux/slices/products/supplier';
 import { getMachineConnections } from '../../redux/slices/products/machineConnections';
-import { getActiveCategories } from '../../redux/slices/products/category';
+import { getActiveCategories, resetActiveCategories } from '../../redux/slices/products/category';
 import { Cover } from '../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 // routes
-import { PATH_MACHINE } from '../../routes/paths';
+import { PATH_CUSTOMER, PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFTextField, RHFAutocomplete, RHFDatePicker } from '../../components/hook-form';
@@ -57,20 +57,22 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const { spContacts } = useSelector((state) => state.contact);
   const { machineConnections } = useSelector((state) => state.machineConnections);
   const { activeCategories } = useSelector((state) => state.category);
-
+  const [hasEffectRun, setHasEffectRun] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const [chips, setChips] = useState([]);
+  const [landToCustomerMachinePage, setLandToCustomerMachinePage] = useState(false);
 
 
   useEffect(() => {
     dispatch(getFinancialCompanies());
     dispatch(getActiveCustomers());
     dispatch(getActiveMachines());
-    // dispatch(getActiveMachineModels());
+    dispatch(getActiveMachineModels());
     dispatch(getActiveSuppliers());
     dispatch(getActiveMachineStatuses());
     dispatch(getActiveCategories());
     dispatch(getSPContacts());
+    return ()=> { dispatch(resetActiveMachineModels()); dispatch(resetActiveCategories()); }
   }, [dispatch]);
 
   // const futureDateValidator = Yup.date().nullable()
@@ -125,17 +127,13 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     billingSite: Yup.object().shape({
       name: Yup.string()
     }).nullable(),
-    accountManager: Yup.object().shape({
-      name: Yup.string()
-    }).nullable(),
-    projectManager: Yup.object().shape({
-      name: Yup.string()
-    }).nullable(),
-    supportManager: Yup.object().shape({
-      name: Yup.string()
-    }).nullable(),
+
+    accountManager: Yup.array(),
+    projectManager: Yup.array(),
+    supportManager: Yup.array(),
+    
     siteMilestone: Yup.string().max(1500),
-    description: Yup.string().max(1500),
+    description: Yup.string().max(5000),
     isActive: Yup.boolean(),
   });
 
@@ -146,23 +144,23 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       name: '',
       parentSerialNo: null,
       previousMachine: '',
-      supplier: null,
+      supplier: activeSuppliers.find((element) => element?.isDefault === true) || null,
       category: null,
       machineModel: null,
       customer: null,
       financialCompany: null,
       machineConnectionVal: [],
       connection: [],
-      status: null,
+      status: activeMachineStatuses.find((element)=> element.isDefault === true) || null,
       workOrderRef: '',
       instalationSite: null,
       billingSite: null,
       installationDate: null,
       shippingDate: null,
       siteMilestone: '',
-      accountManager: null,
-      projectManager: null,
-      supportManager: null,
+      accountManager: [],
+      projectManager: [],
+      supportManager: [],
       supportExpireDate: null,
       customerTags: [],
       description: '',
@@ -190,49 +188,28 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     installationDate,
     shippingDate,
     supportExpireDate,
-    accountManager,
-    projectManager,
-    supportManager,
     financialCompany,
   } = watch();
 
   useEffect(() => {
     if(newMachineCustomer){
       setValue('customer',newMachineCustomer);
+      setLandToCustomerMachinePage(true);
     }
-      setValue('accountManager', spContacts.find((item) => item?._id === newMachineCustomer?.accountManager?._id))
-      setValue('projectManager', spContacts.find((item) => item?._id === newMachineCustomer?.projectManager?._id))
-      setValue('supportManager', spContacts.find((item) => item?._id === newMachineCustomer?.supportManager?._id))
     return ()=>{ dispatch(setNewMachineCustomer(null)) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[newMachineCustomer])
+  },[newMachineCustomer, spContacts])
 
-
-  useEffect(() => {
-    setValue('supplier',activeSuppliers.find((element) => element?.isDefault === true))
-    setValue('category',activeCategories.find((element) => element?.isDefault === true))
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
-
-  useEffect(() => {
-    if(category === null && machineModel ){
-      // dispatch(resetActiveMachineModels())
-      dispatch(getActiveMachineModels());
-      setValue('machineModel',null);
-    }else if(category?._id !== machineModel?.category?._id){
-      dispatch(getActiveMachineModels(category?._id));
-      setValue('machineModel',null);
-    }
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ category, machineModel ]);
 
   useEffect(() => {
     if (customer !== null && customer._id !== undefined) {
       dispatch(getActiveSites(customer._id));
-  dispatch(getMachineConnections(customer._id));
+      dispatch(getMachineConnections(customer._id));
+      setValue('accountManager', spContacts.filter(item => Array.isArray(customer?.accountManager) && customer?.accountManager.some(manager => manager._id === item?._id)))
+      setValue('projectManager', spContacts.filter(item => Array.isArray(customer?.projectManager) && customer?.projectManager.some(manager => manager._id === item?._id)))
+      setValue('supportManager', spContacts.filter(item => Array.isArray(customer?.supportManager) && customer?.supportManager.some(manager => manager._id === item?._id)))
     }
-    // setInstallVal(null);
-    // setBillingVal(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, customer]);
 
  styled('li')(({ theme }) => ({
@@ -251,14 +228,13 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     
     try {
       await dispatch(addMachine(data));
-
-      // setChipData([]);
-      // setCurrTag('');
-      // setShippingDate(null);
-      // setInstallationDate(null);
       reset();
       enqueueSnackbar('Create success!');
-      navigate(PATH_MACHINE.machines.list);
+      if(landToCustomerMachinePage){
+        await navigate(PATH_CUSTOMER.view(customer._id));
+      }else{
+        await  navigate(PATH_MACHINE.machines.list);
+      }
     } catch (error) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(error);
@@ -266,12 +242,56 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   };
 
   const toggleCancel = () => {
-    navigate(PATH_MACHINE.machines.list);
+    if(landToCustomerMachinePage){
+      navigate(PATH_CUSTOMER.view(customer._id));
+    }else{
+      navigate(PATH_MACHINE.machines.list);
+    }
   };
+  
   const handleChipChange = (newChips) => {
     const array = [...new Set(newChips)]
     setChips(array);
   };
+
+  const CategoryValHandler = (event, newValue) => {
+    if (newValue) {
+      setValue('category', newValue);
+      dispatch(getActiveMachineModels(newValue?._id));
+      if(  machineModel?.category?._id !== newValue?._id ){
+        setValue('machineModel', null);
+      }
+    } else {
+      setValue('category', null);
+      setValue('machineModel', null);
+      dispatch(getActiveMachineModels());
+    }
+  }
+
+  const MachineModelValHandler = (event, newValue) => {
+    if (newValue) {
+      setValue('machineModel', newValue);
+      if(category === null){
+      dispatch(getActiveMachineModels(newValue?.category?._id));
+      setValue('category', newValue?.category);
+      }
+    } else {
+      setValue('machineModel', null);
+    }
+  }
+
+  useEffect(() => {
+    if(activeMachineModels.length > 0 && activeCategories.length > 0 ){
+      if(!hasEffectRun){
+        if(activeMachineModels.some((element)=> element.isDefault === true)){
+          CategoryValHandler(null, activeCategories.find((ele) => ele._id === activeMachineModels.find((element)=> element.isDefault === true)?.category?._id || ele?.isDefault === true) || null ) 
+        }
+        MachineModelValHandler(null, activeMachineModels.find((element)=> element.isDefault === true) || null)
+      }
+      setHasEffectRun(true)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[activeMachineModels, activeCategories, hasEffectRun])
 
   return (
     <Container maxWidth={false} sx={{mb:3}}>
@@ -320,6 +340,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                       options={activeCategories}
                       isOptionEqualToValue={(option, value) => option._id === value._id}
                       getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                      onChange={(event, newValue) => CategoryValHandler(event, newValue)}
                       renderOption={(props, option) => (
                         <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
@@ -336,17 +357,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                       renderOption={(props, option) => (
                         <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
-                      onChange={(event, newValue) => {
-                          if (newValue) {
-                            setValue('machineModel', newValue);
-                            if(category === null){
-                            dispatch(getActiveMachineModels(newValue?.category?._id));
-                            setValue('category', newValue?.category);
-                            }
-                          } else {
-                            setValue('machineModel', null);
-                          }
-                        }}
+                      onChange={(event, newValue) => MachineModelValHandler(event, newValue)}
                     />
 
                     {/* -------------------------------- Statuses -------------------------------- */}
@@ -454,20 +465,20 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                             field.onChange(newValue);
                             if(customer?._id !== newValue._id) {
                             setValue('machineConnectionVal', []);
-                            setValue('instalationSite', []);
-                            setValue('billingSite', []);
-                            setValue('accountManager', spContacts.find((item) => item?._id === newValue?.accountManager))
-                            setValue('projectManager', spContacts.find((item) => item?._id === newValue?.projectManager))
-                            setValue('supportManager', spContacts.find((item) => item?._id === newValue?.supportManager))
+                            setValue('instalationSite', null);
+                            setValue('billingSite', null);
+                            setValue('accountManager', spContacts.filter(item => Array.isArray(newValue?.accountManager) && newValue?.accountManager.includes(item?._id)))
+                            setValue('projectManager', spContacts.filter(item => Array.isArray(newValue?.projectManager) && newValue?.projectManager.includes(item?._id)))
+                            setValue('supportManager', spContacts.filter(item => Array.isArray(newValue?.supportManager) && newValue?.supportManager.includes(item?._id)))
                             }
                           } else {
                             field.onChange(null);
                             setValue('machineConnectionVal', []);
-                            setValue('instalationSite', []);
-                            setValue('billingSite', []);
-                            setValue('accountManager', null)
-                            setValue('productManager', null)
-                            setValue('supportManager', null)
+                            setValue('instalationSite', null);
+                            setValue('billingSite', null);
+                            // setValue('accountManager', null)
+                            // setValue('productManager', null)
+                            // setValue('supportManager', null)
                             dispatch(resetActiveSites());
                           }
                         }}
@@ -496,7 +507,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   
                     {/* -------------------------------- Billing Site -------------------------------- */}
 
-                    <Controller
+                <Controller
                   name="billingSite"
                   control={control}
                   defaultValue={instalationSite || null}
@@ -615,121 +626,51 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
 
-             
-
-                {/* -------------------------------- Account Manager -------------------------------- */}
-
-                <Controller
-                  name="accountManager"
-                  control={control}
-                  defaultValue={accountManager || null}
-                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                  <Autocomplete
-                    // freeSolo
-                    {...field}
+                  <RHFAutocomplete
+                    multiple
+                    disableCloseOnSelect
+                    name="accountManager"
                     options={spContacts}
-                    isOptionEqualToValue={(option, value) =>option._id === value._id}
-                    getOptionLabel={(option) =>
-                      `${option.firstName ? option.firstName : ''} ${
-                        option.lastName ? option.lastName : ''
-                      }`
-                    }
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
                     renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${
-                        option.firstName ? option.firstName : ''
-                      } ${option.lastName ? option.lastName : ''}`}</li>
+                      <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>
                     )}
-                    id="controllable-states-demo"
-                    onChange={(event, value) => field.onChange(value)}
-                    renderInput={(params) => <TextField 
-                      {...params} 
-                      label="Account Manager"
-                      name="accountManager"
-                      id="accountManager"     
-                      error={!!error}
-                      helperText={error?.message} 
-                      inputRef={ref} 
-                    />}
+                    renderInput={(params) => <TextField {...params} label="Account Manager" />}
                     ChipProps={{ size: 'small' }}
+                    id="controllable-states-demo"
                   />
-                  )}
-                />
 
-                {/* -------------------------------- Project Manager -------------------------------- */}
-
-                <Controller
-                  name="projectManager"
-                  control={control}
-                  defaultValue={projectManager || null}
-                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                  <Autocomplete
+                  <RHFAutocomplete
                     // freeSolo
-                    {...field}
+                    multiple
+                    disableCloseOnSelect
+                    name="projectManager"
                     options={spContacts}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
-                    getOptionLabel={(option) =>
-                      `${option.firstName ? option.firstName : ''} ${
-                        option.lastName ? option.lastName : ''
-                      }`
-                    }
-                    onChange={(event, value) => field.onChange(value)}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
                     renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${
-                        option.firstName ? option.firstName : ''
-                      } ${option.lastName ? option.lastName : ''}`}</li>
+                      <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>
                     )}
-                    id="controllable-states-demo"
-                    renderInput={(params) => <TextField 
-                      {...params} 
-                      label="Project Manager" 
-                      name="projectManager"
-                      id="projectManager"     
-                      error={!!error}
-                      helperText={error?.message} 
-                      inputRef={ref}
-                    />}
+                    renderInput={(params) => <TextField {...params} label="Project Manager" />}
                     ChipProps={{ size: 'small' }}
+                    id="controllable-states-demo"
                   />
-                  )}
-                />
 
-                {/* -------------------------------- Support Manager -------------------------------- */}
-                
-                <Controller
-                  name="supportManager"
-                  control={control}
-                  defaultValue={supportManager || null}
-                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                  <Autocomplete
-                    // freeSolo
-                    {...field}
+                  <RHFAutocomplete
+                    multiple
+                    disableCloseOnSelect
+                    name="supportManager"
                     options={spContacts}
-                    isOptionEqualToValue={(option, value) => option._id === value._id }
-                    getOptionLabel={(option) =>
-                      `${option.firstName ? option.firstName : ''} ${
-                        option.lastName ? option.lastName : ''
-                      }`
-                    }
-                    onChange={(event, value) => field.onChange(value)}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
                     renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${
-                        option.firstName ? option.firstName : ''
-                      } ${option.lastName ? option.lastName : ''}`}</li>
+                      <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>
                     )}
-                    id="controllable-states-demo"
-                    renderInput={(params) => <TextField 
-                    {...params} 
-                      label="Support Manager" 
-                      name="supportManager"
-                      id="supportManager"     
-                      error={!!error}
-                      helperText={error?.message} 
-                      inputRef={ref}
-                    />}
+                    renderInput={(params) => <TextField {...params} label="Support Manager" />}
                     ChipProps={{ size: 'small' }}
+                    id="controllable-states-demo"
                   />
-                  )}
-                />
 
                 <RHFDatePicker inputFormat='dd/MM/yyyy' name="supportExpireDate" label="Support Expiry Date" />
                     

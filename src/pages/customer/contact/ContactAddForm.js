@@ -38,7 +38,7 @@ ContactAddForm.propTypes = {
   currentContact: PropTypes.object,
 };
 
-export default function ContactAddForm({ isEdit, readOnly, setIsExpanded,currentContact }) {
+export default function ContactAddForm({ isEdit, readOnly, setIsExpanded, currentContact }) {
   const { formVisibility, activeContacts } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
   const { departments } = useSelector((state) => state.department);
@@ -111,13 +111,12 @@ export default function ContactAddForm({ isEdit, readOnly, setIsExpanded,current
       }
       await dispatch(addContact(data));
       setIsExpanded(true);
-      // dispatch(setContactFormVisibility(false))
       dispatch(setContactEditFormVisibility(false))
       dispatch(setContactMoveFormVisibility(false))
-      enqueueSnackbar(Snacks.CREATED_SUCCESS);
+      enqueueSnackbar('Contact added successfully');
       reset();
     } catch (error) {
-      enqueueSnackbar(Snacks.CREATED_FAILED, { variant: `error` });
+      enqueueSnackbar("Failed : Contact adding", { variant: `error` });
       console.error(error);
     }
   };
@@ -162,7 +161,7 @@ export default function ContactAddForm({ isEdit, readOnly, setIsExpanded,current
                 onChange={(newValue)=>setPhone(newValue)}
                 inputProps={{maxLength:13}}
                 forceCallingCode
-                defaultCountry={FORMLABELS.PHONE.defaultCountry}
+                defaultCountry="NZ"
               />
 
               <RHFTextField name={FORMLABELS.EMAIL.name} label={FORMLABELS.EMAIL.label} />
@@ -235,7 +234,7 @@ export default function ContactAddForm({ isEdit, readOnly, setIsExpanded,current
                       srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
                       alt=""
                     />
-                    {option.label} ({option.code}) +{option.phone}
+                    {option.label} ({option.code}) {option.phone}
                   </Box>
                 )}
                 renderInput={(params) => (

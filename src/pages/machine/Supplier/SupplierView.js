@@ -7,21 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 // redux
-
-// import {
-//   getSuppliers,
-//   getSupplier,
-//   setSupplierEditFormVisibility,
-// } from '../../../redux/slices/products/supplier';
-// auth
-// import { useAuthContext } from '../../../auth/useAuthContext';
-// components
-
-// import Iconify from '../../../components/iconify/Iconify';
-// import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
-// sections
-// import SupplierList from './SupplierList';
 import SupplierViewForm from './SupplierViewForm';
 /* eslint-disable */
 import SupplierEditForm from './SupplierEditForm';
@@ -70,13 +56,8 @@ export default function SupplierView({ editPage }) {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover
-            name={supplier?.name}
-            setting="enable"
-            backLink={PATH_MACHINE.machines.settings.supplier.list}
-          />
+          <Cover name={supplier?.name} setting/>
         </StyledCardContainer>
-
         <SupplierViewForm />
       </Container>
     </>

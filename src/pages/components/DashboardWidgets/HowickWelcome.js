@@ -28,37 +28,11 @@ HowickWelcome.propTypes = {
 export default function HowickWelcome({ title, description, action, img, ...other }) {
   return (
     <StyledRoot {...other}>
-      <Stack
-        flexGrow={1}
-        justifyContent="center"
-        alignItems={{ xs: 'center', md: 'flex-start' }}
-        sx={{
-          pl: 5,
-          py: { xs: 5, md: 0 },
-          pr: { xs: 5, md: 0 },
-          textAlign: { xs: 'center', md: 'left' },
-        }}
-      >
-        <Typography  variant="h1"
-        // paragraph
-        // sx={{ whiteSpace: 'pre-line' }}
-        >
-          {title}
-        </Typography>
-
-        <Typography
-          variant="body"
-          sx={{
-            opacity: 0.8,
-            mb: { xs: 3, xl: 5 },
-          }}
-        >
-          {description}
-        </Typography>
-
+      <Stack flexGrow={1} sx={{textAlign: { xs: 'center', md: 'left' }, mb:{ xs:5, md:10 }, mt:{ xs:0, md:5 }}}>
+        <Typography  variant="h1">{title}</Typography>
+        <Typography variant="body" sx={{opacity: 0.8}}>{description}</Typography>
         {action && action}
       </Stack>
-
       {img && img}
     </StyledRoot>
   );

@@ -50,7 +50,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const [phone, setPhone] = useState('');
-  const [country, setCountryVal] = useState('');
+  const [country, setCountryVal] = useState(countries[169]);
 
   // --------------------------------hooks----------------------------------
   const defaultValues = useMemo(
@@ -258,7 +258,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                         srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
                         alt=""
                       />
-                      {option.label} ({option.code}) +{option.phone}
+                      {option.label} ({option.code}) {option.phone}
                     </Box>
                   )}
                   renderInput={(params) => (

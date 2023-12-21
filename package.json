@@ -64,7 +64,7 @@
     "@uiw/codemirror-extensions-zebra-stripes": "^4.21.21",
     "@uiw/react-codemirror": "^4.21.21",
     "amazon-cognito-identity-js": "^6.0.1",
-    "apexcharts": "^3.36.3",
+    "apexcharts": "^3.45.0",
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.2.0",
     "change-case": "^4.1.2",

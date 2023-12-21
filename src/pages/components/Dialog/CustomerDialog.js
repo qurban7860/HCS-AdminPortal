@@ -55,24 +55,15 @@ function CustomerDialog() {
           <FormLabel content="Howick Resources" />
           
           <ViewFormField isLoading={isLoading} sm={6} heading="Account Manager"
-            param={
-              customer?.accountManager &&
-              `${customer?.accountManager?.firstName} ${customer?.accountManager?.lastName}`
-            }
+            customerContacts={customer?.accountManager}
           />
 
           <ViewFormField isLoading={isLoading} sm={6} heading="Project Manager"
-            param={
-              customer?.projectManager &&
-              `${customer?.projectManager?.firstName} ${customer?.projectManager?.lastName}`
-            }
+            customerContacts={customer?.projectManager}
           />
 
           <ViewFormField isLoading={isLoading} sm={6} heading="Suppport Manager"
-            param={
-              customer?.supportManager &&
-              `${customer?.supportManager?.firstName} ${customer?.supportManager?.lastName}`
-            }
+            customerContacts={customer?.supportManager}
           />
 
         </Grid>

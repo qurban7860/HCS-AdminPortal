@@ -1,13 +1,11 @@
-import * as Yup from 'yup';
+
 import {  useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import TextField from '@mui/material/TextField';
 // @mui
-// import { LoadingButton } from '@mui/lab';
 import {  Box, Card, Grid, Stack, Typography } from '@mui/material';
 import { MuiTelInput } from 'mui-tel-input';
 // global
@@ -16,13 +14,11 @@ import FormProvider, {
   RHFTextField,
   RHFSwitch,
 } from '../../../components/hook-form';
-// import { CONFIG } from '../../../config-global';
 // slice
 import {
   updateSupplier,
   getSupplier,
 } from '../../../redux/slices/products/supplier';
-// import { useSettingsContext } from '../../../components/settings';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
@@ -31,6 +27,7 @@ import { countries } from '../../../assets/data';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import { SupplierSchema } from './Supplier'
 // ----------------------------------------------------------------------
 
 export default function SupplierEditForm() {
@@ -38,27 +35,9 @@ export default function SupplierEditForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const [country, setCountryVal] = useState('');
   const [phone, setPhone] = useState('');
   const [fax, setFaxVal] = useState('');
   const { id } = useParams();
-
-  const EditCategorySchema = Yup.object().shape({
-    name: Yup.string().min(2).max(50).required('Name is required'),
-    isActive: Yup.boolean(),
-    contactName: Yup.string().max(50),
-    contactTitle: Yup.string().max(50),
-    // phone: Yup.string().nullable(),
-    // fax: Yup.string().nullable(),
-    email: Yup.string().email(),
-    website: Yup.string(),
-    street: Yup.string().max(50),
-    suburb: Yup.string().max(50),
-    region: Yup.string().max(50),
-    city: Yup.string().max(50),
-    postcode: Yup.string().max(20),
-    // country: Yup.string().nullable(),
-  });
 
   const defaultValues = useMemo(
     () => ({
@@ -74,32 +53,26 @@ export default function SupplierEditForm() {
       city: supplier?.address?.city || '',
       postcode: supplier?.address?.postcode || '',
       region: supplier?.address?.region || '',
-      // country: supplier?.address?.country || '',
+      country: countries.find((cou)=> cou.label === supplier?.address?.country ) || null,
       isActive: supplier.isActive || true,
+      isDefault: supplier?.isDefault || false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [supplier]
   );
 
-  // const { themeStretch } = useSettingsContext();
-
   const methods = useForm({
-    resolver: yupResolver(EditCategorySchema),
+    resolver: yupResolver(SupplierSchema),
     defaultValues,
   });
 
   const {
     reset,
+    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  function filtter(data, input) {
-    const filteredOutput = data.filter((obj) =>
-      Object.keys(input).every((filterKeys) => obj[filterKeys] === input[filterKeys])
-    );
-    return filteredOutput;
-  }
   useLayoutEffect(() => {
     dispatch(getSupplier(id));
   }, [dispatch, id]);
@@ -108,10 +81,8 @@ export default function SupplierEditForm() {
     if (supplier) {
       setPhone(supplier.phone);
       setFaxVal(supplier.fax);
-      const supplierCountry = filtter(countries, { label: supplier?.address?.country || '' });
-      setCountryVal(supplierCountry[0]);
     }
-  }, [supplier]);
+  }, [supplier, setValue ]);
 
   useEffect(() => {
     if (supplier) {
@@ -139,12 +110,6 @@ export default function SupplierEditForm() {
       } else {
         data.fax = '';
       }
-      if (country) {
-        data.country = country.label;
-      } else {
-        data.country = '';
-      }
-      console.log(data);
       await dispatch(updateSupplier(data, id));
       reset();
       enqueueSnackbar('Update success!');
@@ -231,21 +196,14 @@ export default function SupplierEditForm() {
                 <RHFTextField name="city" label="City" />
                 <RHFTextField name="region" label="Region" />
                 <RHFTextField name="postcode" label="Post Code" />
+
                 <RHFAutocomplete
                   id="country-select-demo"
                   options={countries}
-                  value={country || null}
                   name="country"
                   label="Country"
                   autoHighlight
-                  isOptionEqualToValue={(option, value) => option.lable === value.lable}
-                  onChange={(event, newValue) => {
-                    if (newValue) {
-                      setCountryVal(newValue);
-                    } else {
-                      setCountryVal('');
-                    }
-                  }}
+                  isOptionEqualToValue={(option, value) => option.code === value.code}
                   getOptionLabel={(option) => `${option.label} (${option.code}) `}
                   renderOption={(props, option) => (
                     <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
@@ -256,12 +214,12 @@ export default function SupplierEditForm() {
                         srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
                         alt=""
                       />
-                      {option.label} ({option.code}) +{option.phone}
+                      {option.label} ({option.code}) {option.phone}
                     </Box>
                   )}
-                  renderInput={(params) => <TextField {...params} label="Choose a country" />}
                 />
               </Box>
+              <Grid display="flex">
               <RHFSwitch
                 name="isActive"
                 labelPlacement="start"
@@ -281,6 +239,14 @@ export default function SupplierEditForm() {
                   </Typography>
                 }
               />
+              <RHFSwitch
+                name="isDefault"
+                labelPlacement="start"
+                label={
+                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary',}} >Default</Typography>
+                }
+              />
+              </Grid>
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>

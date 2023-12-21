@@ -28,18 +28,22 @@ import {
   setDocumentHistoryViewFormVisibility,
   setDocumentEditFormVisibility,
   setDocumentViewFormVisibility,
+  setDocumentVersionEditDialogVisibility,
 } from '../../../redux/slices/document/document';
+import { deleteDrawing, getDrawings, resetDrawings, 
+  setDrawingEditFormVisibility, setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
+
 import { getCustomer, resetCustomer, setCustomerDialog} from '../../../redux/slices/customer/customer';
 import { getMachineForDialog, resetMachine, setMachineDialog } from '../../../redux/slices/products/machine';
 import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
 import FormLabel from '../../components/DocumentForms/FormLabel';
-import { deleteDrawing, getDrawings, resetDrawings, setDrawingEditFormVisibility, setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
 import DocumentCover from '../../components/DocumentForms/DocumentCover';
 import CustomerDialog from '../../components/Dialog/CustomerDialog';
 import MachineDialog from '../../components/Dialog/MachineDialog';
 import { PATH_DOCUMENT } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
 import { Snacks } from '../../../constants/document-constants';
+import UpdateDocumentVersionDialog from '../../components/Dialog/UpdateDocumentVersionDialog';
 
 // ----------------------------------------------------------------------
 
@@ -125,35 +129,37 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
   ));
 
   // refresh the document when file deleted
-  const callAfterDelete = () => {dispatch(getDocumentHistory(documentHistory._id))};
+const callAfterDelete = () => {dispatch(getDocumentHistory(documentHistory._id))};
 
-  const handleNewVersion = async () => {
-    if(customerPage || machinePage){
-      dispatch(setDocumentHistoryViewFormVisibility(false));
-      dispatch(setDocumentFormVisibility(true));
-      dispatch(setDocumentHistoryNewVersionFormVisibility(true));
-      dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
-      dispatch(setDocumentAddFilesViewFormVisibility(false));
-      dispatch(setDocumentNewVersionFormVisibility(false));
-      dispatch(resetDocument());
-    }else if(!customerPage && !machinePage && !machineDrawings){
-      dispatch(setDocumentHistoryNewVersionFormVisibility(true));
-      dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
-      dispatch(setDocumentAddFilesViewFormVisibility(false));
-      dispatch(setDocumentNewVersionFormVisibility(false));
-      navigate(PATH_DOCUMENT.document.new,"drawingPage");
-      dispatch(resetDocument());
-    }
-    else if(machineDrawings){
-      console.log('drawingPage', drawingPage)
-      dispatch(setDocumentHistoryNewVersionFormVisibility(true));
-      dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
-      dispatch(setDocumentAddFilesViewFormVisibility(false));
-      dispatch(setDocumentNewVersionFormVisibility(false));
-      navigate(PATH_DOCUMENT.document.machineDrawings.new);
-      dispatch(resetDocument());
-    }
+const handleNewVersion = async () => {
+  if(customerPage || machinePage){
+    dispatch(setDocumentHistoryViewFormVisibility(false));
+    dispatch(setDocumentFormVisibility(true));
+    dispatch(setDocumentHistoryNewVersionFormVisibility(true));
+    dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
+    dispatch(setDocumentAddFilesViewFormVisibility(false));
+    dispatch(setDocumentNewVersionFormVisibility(false));
+    dispatch(resetDocument());
+  }else if(!customerPage && !machinePage && !machineDrawings){
+    dispatch(setDocumentHistoryNewVersionFormVisibility(true));
+    dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
+    dispatch(setDocumentAddFilesViewFormVisibility(false));
+    dispatch(setDocumentNewVersionFormVisibility(false));
+    navigate(PATH_DOCUMENT.document.new,"drawingPage");
+    dispatch(resetDocument());
+  }else if(machineDrawings){
+    dispatch(setDocumentHistoryNewVersionFormVisibility(true));
+    dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
+    dispatch(setDocumentAddFilesViewFormVisibility(false));
+    dispatch(setDocumentNewVersionFormVisibility(false));
+    navigate(PATH_DOCUMENT.document.machineDrawings.new);
+    dispatch(resetDocument());
   }
+}
+
+const handleUpdateVersion = async () => {
+  dispatch(setDocumentVersionEditDialogVisibility(true));
+}
 
 const handleNewFile = async () => {
   if(customerPage || machinePage){
@@ -200,16 +206,13 @@ const handleNewFile = async () => {
     dispatch(setDrawingEditFormVisibility(true));
   };
 
-  const handleEditDoc = async () => {
-    await dispatch(getDocument(documentHistory._id));
-    dispatch(setDocumentFormVisibility(false));
-    dispatch(setDocumentHistoryViewFormVisibility(false));
-    dispatch(setDocumentViewFormVisibility(false));
-    dispatch(setDocumentEditFormVisibility(true));
-
-    // dispatch(setDocumentViewFormVisibility(false));
-    // dispatch(setDocumentEditFormVisibility(true));
-  };
+  // const handleEditDoc = async () => {
+  //   await dispatch(getDocument(documentHistory._id));
+  //   dispatch(setDocumentFormVisibility(false));
+  //   dispatch(setDocumentHistoryViewFormVisibility(false));
+  //   dispatch(setDocumentViewFormVisibility(false));
+  //   dispatch(setDocumentEditFormVisibility(true));
+  // };
 
   const handleDelete = async () => {
     try {
@@ -253,19 +256,18 @@ const handleNewFile = async () => {
           : () =>  machineDrawings ? navigate(PATH_DOCUMENT.document.machineDrawings.list) : navigate(PATH_DOCUMENT.document.list)}
       />
             <Grid container sx={{mt:2}}>
-              <ViewFormField isLoading={isLoading} sm={8} heading="Name" param={defaultValues?.displayName} />
+              <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.displayName} />
               <ViewFormField isLoading={isLoading}
-                sm={4}
+                sm={6}
                 NewVersion={!defaultValues.isArchived}
                 handleNewVersion={handleNewVersion}
+                handleUpdateVersion={handleUpdateVersion}
                 heading="Active Version"
                 objectParam={
                   defaultValues.documentVersion && (
-                    <StyledVersionChip
-                    label={defaultValues.versionPrefix + defaultValues.documentVersion}
-                    size="small"
-                    variant="outlined"
-                  />
+                    <StyledVersionChip label={defaultValues.versionPrefix + defaultValues.documentVersion}
+                      size="small" variant="outlined"
+                    />
                   )
                 }
               />
@@ -360,6 +362,7 @@ const handleNewFile = async () => {
         </Grid>
       <CustomerDialog />
       <MachineDialog />
+      <UpdateDocumentVersionDialog versionNo={defaultValues?.documentVersion} />
     </>
   );
 }

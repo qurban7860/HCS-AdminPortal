@@ -24,6 +24,7 @@ const initialState = {
   newMachineCustomer: null,
   filterBy: '',
   verified: 'all',
+  excludeReporting: 'included',
   page: 0,
   rowsPerPage: 100,
 };
@@ -155,6 +156,11 @@ const slice = createSlice({
       state.verified = action.payload;
     },
 
+    // Set Excluded
+    setExcludeReporting(state, action) {
+      state.excludeReporting = action.payload;
+    },
+
     // Set PageRowCount
     ChangeRowsPerPage(state, action) {
       state.rowsPerPage = action.payload;
@@ -180,6 +186,7 @@ export const {
   setResponseMessage,
   setFilterBy,
   setVerified,
+  setExcludeReporting,
   ChangeRowsPerPage,
   ChangePage,
   setCustomerDialog,
@@ -409,7 +416,7 @@ export function deleteCustomer(id) {
 
 // --------------------------------------------------------------------------
 
-          export function addCustomer(params) {
+export function addCustomer(params) {
     return async (dispatch) => {
       dispatch(slice.actions.resetCustomer());
       dispatch(slice.actions.startLoading());
@@ -427,6 +434,7 @@ export function deleteCustomer(id) {
           clientCode: params.code,
           supportSubscription: params?.supportSubscription,
           isFinancialCompany: params?.isFinancialCompany,
+          excludeReports: params?.excludeReports,
         };
 
         let billingContact = {};
@@ -588,6 +596,7 @@ export function updateCustomer(params) {
         clientCode: params.code,
         supportSubscription: params?.supportSubscription,
         isFinancialCompany: params?.isFinancialCompany,
+        excludeReports: params?.excludeReports,
         updateProductManagers: params?.updateProductManagers,
       };
      /* eslint-enable */

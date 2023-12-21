@@ -1,13 +1,13 @@
-import {  useLayoutEffect, useState } from 'react';
+import {  useEffect, useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { Container } from '@mui/system';
 import { Card, Grid, Autocomplete, TextField, Divider } from '@mui/material';
 // slices
-import {  getMachinesByYear } from '../../redux/slices/dashboard/count';
+import {  getMachinesByYear, setMachineCategory, setMachineCountry, setMachineModel } from '../../redux/slices/dashboard/count';
 import {  getActiveMachineModels } from '../../redux/slices/products/model';
-import {  getActiveCategories, getCategories } from '../../redux/slices/products/category';
+import {  getActiveCategories } from '../../redux/slices/products/category';
 // hooks
 import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
 import { StyledGlobalCard } from '../../theme/styles/default-styles';
@@ -23,23 +23,25 @@ export default function MachineByCountriesViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { machinesByYear } = useSelector((state) => state.count);
+  const { machinesByYear, machineCategory, machineModel, machineCountry } = useSelector((state) => state.count);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
   const { activeCategories } = useSelector((state) => state.category);
 
   const yearWiseMachinesYear = [];
   const yearWiseMachinesNumber = [];
 
-  const [MBYCountry, setMBYCountry] = useState(null);
-  const [MBYModel, setMBYModel] = useState(null);
-  const [MBYCategory, setMBYCategory] = useState(null);
-  
+  const [MBYCountry, setMBYCountry] = useState(machineCountry);
+  const [MBYModel, setMBYModel] = useState(machineModel);
+  const [MBYCategory, setMBYCategory] = useState(machineCategory);
+
   useLayoutEffect(() => {
+    dispatch(getMachinesByYear(machineCategory?._id, machineModel?._id, machineCountry?.code));
+  }, [dispatch, machineCategory, machineModel, machineCountry]);
+
+  useEffect(()=>{
     dispatch(getActiveCategories());
     dispatch(getActiveMachineModels(MBYCategory?._id));
-    
-    dispatch(getMachinesByYear());
-  }, [dispatch, MBYCategory]);
+  },[dispatch, MBYCategory])
 
   if (machinesByYear.length !== 0) {
     machinesByYear.yearWiseMachines.map((model) => {
@@ -50,7 +52,10 @@ export default function MachineByCountriesViewForm() {
   }
 
   const handleGraphYear = (category, model, country) => {
-    dispatch(getMachinesByYear(category, model, country));
+    dispatch(setMachineCategory(category));
+    dispatch(setMachineModel(model));
+    dispatch(setMachineCountry(country));
+    dispatch(getMachinesByYear(category?._id, model?._id, country?.code));
   };
 
   return (
@@ -75,7 +80,7 @@ export default function MachineByCountriesViewForm() {
                     onChange={(event, newValue) =>{
                         setMBYCategory(newValue);
                         setMBYModel(null); 
-                        handleGraphYear(newValue?._id, MBYModel, MBYCountry)
+                        handleGraphYear(newValue, MBYModel, MBYCountry)
                     }}
                   />
                 </Grid>
@@ -90,8 +95,8 @@ export default function MachineByCountriesViewForm() {
                       renderInput={(params) => (<TextField {...params} label="Model" size="small" />)}
                       onChange={(event, newValue) => {
                         setMBYModel(newValue);
-                        if (newValue) setMBYCategory(newValue?.category);
-                        handleGraphYear(MBYCategory, newValue?._id,MBYCountry)
+                        setMBYCategory(newValue?.category);
+                        handleGraphYear(MBYCategory, newValue, MBYCountry)
                       }}
                     />
                 </Grid>
@@ -99,10 +104,14 @@ export default function MachineByCountriesViewForm() {
                   <Autocomplete
                     fullWidth
                     options={countries}
+                    value={MBYCountry}
                     isOptionEqualToValue={(option, value) => option.code === value.code}
                     getOptionLabel={(option) => `${option.label ? option.label : ''}`}
                     renderInput={(params) => <TextField {...params} label="Country" size="small" />}
-                    onChange={(event, newValue) =>{setMBYCountry(newValue?.code);handleGraphYear(MBYCategory, MBYModel,newValue?.code)}}
+                    onChange={(event, newValue) =>{
+                        setMBYCountry(newValue);
+                        handleGraphYear(MBYCategory, MBYModel,newValue)
+                    }}
                   />
                 </Grid>
             </Grid>

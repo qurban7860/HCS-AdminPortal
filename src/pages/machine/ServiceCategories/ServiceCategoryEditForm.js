@@ -43,7 +43,7 @@ export default function ServiceCategoryEditForm() {
 
   const ServiceCategorySchema = Yup.object().shape({
     name: Yup.string().min(2).max(50).required('Name is required').trim(),
-    description: Yup.string().max(2000).trim(),
+    description: Yup.string().max(5000).trim(),
     isActive: Yup.boolean(),
   });
 

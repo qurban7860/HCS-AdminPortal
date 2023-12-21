@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector, batch } from 'react-redux';
 // @mui
-import { Card, Grid, Link, Button, Typography } from '@mui/material';
+import { Card, Grid, Link, Button } from '@mui/material';
 import ConfirmDialog from '../../components/confirm-dialog';
 // routes
 import { PATH_SECURITY } from '../../routes/paths';
@@ -60,7 +60,6 @@ export default function SecurityUserViewForm() {
 
   useEffect(() => {
     if (userId) {
-      // disable edit button
       if (isSuperAdmin || userId === id) {
         setDisableEditButton(false);
       } else {
@@ -149,7 +148,7 @@ export default function SecurityUserViewForm() {
   const defaultValues = useMemo(
     () => ({
       customer: securityUser?.customer?.name || '',
-      contact: `${securityUser?.contact?.firstName ? securityUser?.contact?.firstName : ''} ${securityUser?.contact?.lastName ? securityUser?.contact?.lastName : ''}` ,
+      contact: securityUser?.contact || null,
       name: securityUser?.name || '',
       phone: securityUser?.phone || '',
       email: securityUser?.email || '',
@@ -242,6 +241,11 @@ export default function SecurityUserViewForm() {
                       {defaultValues?.customer}
                       {blockedCustomer.length > 0 &&
                         <StyledTooltip title="Customer is Blocked" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
+                          <Iconify color="#FF0000" sx={{height: '24px', width: '24px', verticalAlign:"middle", ml:1 }} icon="ooui:block" />
+                        </StyledTooltip>
+                      }
+                      {!securityUser?.customer?.isActive &&
+                        <StyledTooltip title="Customer is Inactive" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
                           <Iconify color="#FF0000" sx={{height: '24px', width: '24px', verticalAlign:"middle", ml:1 }} icon="mdi:ban" />
                         </StyledTooltip>
                       }
@@ -253,7 +257,12 @@ export default function SecurityUserViewForm() {
                 objectParam={
                   defaultValues?.contact && (
                     <Link onClick={handleContactDialog} href="#" underline="none">
-                      {defaultValues?.contact}
+                      {defaultValues?.contact?.firstName || ''} {defaultValues?.contact?.lastName || ''}
+                      {!defaultValues?.contact?.isActive &&
+                        <StyledTooltip title="Contact is Inactive" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
+                          <Iconify color="#FF0000" sx={{height: '24px', width: '24px', verticalAlign:"middle", ml:1 }} icon="mdi:ban" />
+                        </StyledTooltip>
+                      }
                     </Link>)}
               />
             </Grid>

@@ -49,25 +49,27 @@ export const EditCustomerDocumentSchema = Yup.object().shape({
 });
 
 // ----------------- Document Category -----------------
-export const AddDocumentCategorySchema = Yup.object().shape({
+export const DocumentCategorySchema = Yup.object().shape({
   name: Yup.string().min(2).max(40).required('Name Field is required!'),
   description: Yup.string().max(10000),
   isActive: Yup.boolean(),
+  isDefault: Yup.boolean(),
   customerAccess: Yup.boolean(),
 });
 
 export const EditDocumentNameSchema = Yup.object().shape({
   name: Yup.string().max(40),
-  description: Yup.string().max(1500),
+  description: Yup.string().max(10000),
   isActive: Yup.boolean(),
   customerAccess: Yup.boolean(),
 });
 
-export const AddDocumentTypeSchema = Yup.object().shape({
-  // category: Yup.string().min(2).required("Category is required!"),
+export const DocumentTypeSchema = Yup.object().shape({
+  category: Yup.object().required().label('Document Category').nullable(),
   name: Yup.string().min(2).max(40).required('Name is required!'),
   description: Yup.string().max(10000),
   isActive: Yup.boolean(),
+  isDefault: Yup.boolean(),
   customerAccess: Yup.boolean(),
 });
 // -------------------Machine Documents---------------------
@@ -80,7 +82,8 @@ export const EditMachineDocumentSchema = Yup.object().shape({
 
 export const AddMachineSchema = Yup.object().shape({
   name: Yup.string().min(2).max(50).required('Name is required'),
-  description: Yup.string().max(2000),
+  description: Yup.string().max(5000),
   isActive: Yup.boolean(),
+  isDefault: Yup.boolean(),
   connections: Yup.boolean(),
 });

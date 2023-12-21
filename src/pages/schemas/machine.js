@@ -25,7 +25,7 @@ export const EditMachineSchema = Yup.object().shape({
   // projectManager: Yup.string(),
   // supportManager: Yup.string(),
   siteMilestone: Yup.string().max(1500),
-  description: Yup.string().max(1500),
+  description: Yup.string().max(5000),
   customerTags: Yup.array(),
   isActive: Yup.boolean(),
 });
@@ -75,10 +75,10 @@ export const MachineServiceRecordSchema = Yup.object().shape({
   decoiler: Yup.object().label('Decoiler').nullable(),
   technician: Yup.object().label('Technician').nullable(),
   // checkParams:
-  serviceNote: Yup.string().label('Service Note'),
-  maintenanceRecommendation: Yup.string().label('Maintenance Recommendation'),
+  serviceNote: Yup.string().max(5000).label('Service Note'),
+  maintenanceRecommendation: Yup.string().max(5000).label('Maintenance Recommendation'),
   internalComments: Yup.string().max(5000).label('Internal Comments'),
-  suggestedSpares: Yup.string().label('Suggested Spares'),
+  suggestedSpares: Yup.string().max(5000).label('Suggested Spares'),
   files: Yup.mixed()
   .test(
     'fileType',
@@ -183,7 +183,7 @@ export const MachineServiceRecordSchema = Yup.object().shape({
     NotRequiredValidateFileType
   ).nullable(true),
   operator: Yup.object().label('Operator').nullable(),
-  operatorRemarks: Yup.string().label('Operator Remarks'),
+  operatorRemarks: Yup.string().max(5000).label('Operator Remarks'),
   isActive: Yup.boolean(),
 })
 
@@ -196,12 +196,12 @@ export const ServiceRecordConfigSchema = Yup.object().shape({
   // parentConfig: Yup.object().label('Parent Configuration').nullable(),
   machineModel: Yup.object().label('Model').nullable(),
   category: Yup.object().label('Category').nullable(),
-  textBeforeCheckItems: Yup.string().max(4000),
+  textBeforeCheckItems: Yup.string().max(5000),
   // Check Params
   // paramListTitle: Yup.string().max(200).label('Item List Title').required(),
   // paramList : Yup.array(),
 
-  textAfterCheckItems: Yup.string().max(4000),
+  textAfterCheckItems: Yup.string().max(5000),
   isOperatorSignatureRequired: Yup.boolean(),
   enableNote: Yup.boolean(),
   enableMaintenanceRecommendations: Yup.boolean(),
