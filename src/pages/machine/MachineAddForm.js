@@ -195,6 +195,9 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     if(newMachineCustomer){
       setValue('customer',newMachineCustomer);
       setLandToCustomerMachinePage(true);
+      setValue('accountManager', spContacts.filter(item => Array.isArray(customer?.accountManager) && customer?.accountManager.some(manager => manager._id === item?._id)))
+      setValue('projectManager', spContacts.filter(item => Array.isArray(customer?.projectManager) && customer?.projectManager.some(manager => manager._id === item?._id)))
+      setValue('supportManager', spContacts.filter(item => Array.isArray(customer?.supportManager) && customer?.supportManager.some(manager => manager._id === item?._id)))
     }
     return ()=>{ dispatch(setNewMachineCustomer(null)) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -205,9 +208,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     if (customer !== null && customer._id !== undefined) {
       dispatch(getActiveSites(customer._id));
       dispatch(getMachineConnections(customer._id));
-      setValue('accountManager', spContacts.filter(item => Array.isArray(customer?.accountManager) && customer?.accountManager.some(manager => manager._id === item?._id)))
-      setValue('projectManager', spContacts.filter(item => Array.isArray(customer?.projectManager) && customer?.projectManager.some(manager => manager._id === item?._id)))
-      setValue('supportManager', spContacts.filter(item => Array.isArray(customer?.supportManager) && customer?.supportManager.some(manager => manager._id === item?._id)))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, customer]);
