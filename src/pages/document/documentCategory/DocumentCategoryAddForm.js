@@ -11,7 +11,7 @@ import { useSnackbar } from '../../../components/snackbar';
 // routes
 import { PATH_SETTING } from '../../../routes/paths';
 // schema
-import { AddDocumentCategorySchema } from '../../schemas/document';
+import { DocumentCategorySchema } from '../../schemas/document';
 // slice
 import { addDocumentCategory } from '../../../redux/slices/document/documentCategory';
 // components
@@ -94,7 +94,7 @@ export default function DocumentCategoryAddForm({ currentDocument }) {
   );
 
   const methods = useForm({
-    resolver: yupResolver(AddDocumentCategorySchema),
+    resolver: yupResolver(DocumentCategorySchema),
     defaultValues,
   });
 

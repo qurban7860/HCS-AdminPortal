@@ -66,7 +66,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     dispatch(getFinancialCompanies());
     dispatch(getActiveCustomers());
     dispatch(getActiveMachines());
-    // dispatch(getActiveMachineModels());
+    dispatch(getActiveMachineModels());
     dispatch(getActiveSuppliers());
     dispatch(getActiveMachineStatuses());
     dispatch(getActiveCategories());
@@ -143,8 +143,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       parentSerialNo: null,
       previousMachine: '',
       supplier: activeSuppliers.find((element) => element?.isDefault === true) || null,
-      category: activeCategories.find((element) => element?.isDefault === true) || null,
-      machineModel: activeMachineModels.find((element)=> element.isDefault === true) || null,
+      category: null,
+      machineModel: null,
       customer: null,
       financialCompany: null,
       machineConnectionVal: [],
@@ -197,18 +197,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[newMachineCustomer])
 
-
-  useEffect(() => {
-    if(category === null && machineModel ){
-      // dispatch(resetActiveMachineModels())
-      dispatch(getActiveMachineModels());
-      setValue('machineModel',null);
-    }else if(category?._id !== machineModel?.category?._id){
-      dispatch(getActiveMachineModels(category?._id));
-      setValue('machineModel',null);
-    }
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ category, machineModel ]);
 
   useEffect(() => {
     if (customer !== null && customer._id !== undefined) {
@@ -266,6 +254,39 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     setChips(array);
   };
 
+  const CategoryValHandler = (event, newValue) => {
+    if (newValue) {
+      setValue('category', newValue);
+      dispatch(getActiveMachineModels(newValue?._id));
+      if(  machineModel?.category?._id !== newValue?._id ){
+        setValue('machineModel', null);
+      }
+    } else {
+      setValue('category', null);
+      setValue('machineModel', null);
+      dispatch(getActiveMachineModels());
+    }
+  }
+
+  const MachineModelValHandler = (event, newValue) => {
+    if (newValue) {
+      setValue('machineModel', newValue);
+      if(category === null){
+      dispatch(getActiveMachineModels(newValue?.category?._id));
+      setValue('category', newValue?.category);
+      }
+    } else {
+      setValue('machineModel', null);
+    }
+  }
+
+  useEffect(() => {
+    // CategoryValHandler(null, activeCategories.find((ele) => ele._id === activeMachineModels.find((element)=> element.isDefault === true)?.category?._id || ele?.isDefault === true) || null )
+    MachineModelValHandler(null, activeMachineModels.find((element)=> element.isDefault === true) || null)
+    console.log("activeMachineModels.find((element)=> element.isDefault === true) : ",activeMachineModels.find((element)=> element.isDefault === true))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ ])
+
   return (
     <Container maxWidth={false} sx={{mb:3}}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -313,6 +334,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                       options={activeCategories}
                       isOptionEqualToValue={(option, value) => option._id === value._id}
                       getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                      onChange={(event, newValue) => CategoryValHandler(event, newValue)}
                       renderOption={(props, option) => (
                         <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
@@ -329,17 +351,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                       renderOption={(props, option) => (
                         <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
-                      onChange={(event, newValue) => {
-                          if (newValue) {
-                            setValue('machineModel', newValue);
-                            if(category === null){
-                            dispatch(getActiveMachineModels(newValue?.category?._id));
-                            setValue('category', newValue?.category);
-                            }
-                          } else {
-                            setValue('machineModel', null);
-                          }
-                        }}
+                      onChange={(event, newValue) => MachineModelValHandler(event, newValue)}
                     />
 
                     {/* -------------------------------- Statuses -------------------------------- */}

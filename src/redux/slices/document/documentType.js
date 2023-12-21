@@ -137,7 +137,7 @@ export function addDocumentType(params) {
         dispatch(slice.actions.startLoading());
         try {
             const data = {
-                docCategory: params.docCategory,
+                docCategory: params.category?._id,
                 name: params.name,
                 description: params.description,
                 customerAccess:params.customerAccess,
@@ -162,7 +162,7 @@ export function updateDocumentType(Id,params) {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        docCategory: params.docCategory,
+        docCategory: params.category?._id,
         name: params.name,
         description: params.description,
         customerAccess:params.customerAccess,
