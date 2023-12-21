@@ -14,23 +14,15 @@ import {
   Card,
   Grid,
   Stack,
-  // Typography,
-  // Button,
-  // DialogTitle,
-  // Dialog,
-  // InputAdornment,
-  // Link,
-  Autocomplete,
-  TextField,
   Container,
 } from '@mui/material';
 // schema
-import { EditDocumentNameSchema } from '../../schemas/document';
+import { DocumentTypeSchema } from '../../schemas/document';
 // routes
 import { PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFTextField } from '../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFAutocomplete } from '../../../components/hook-form';
 import { getDocumentTypes, updateDocumentType } from '../../../redux/slices/document/documentType';
 import { getActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
@@ -55,12 +47,12 @@ export default function DocumentTypeEditForm() {
   const navigate = useNavigate();
   useEffect(() => {
     dispatch(getActiveDocumentCategories());
-    setDocumentCategoryVal(documentType.docCategory);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   const defaultValues = useMemo(
     () => ({
+      category: documentType?.docCategory || null,
       name: documentType?.name || '',
       description: documentType?.description || '',
       isActive: documentType?.isActive,
@@ -68,22 +60,19 @@ export default function DocumentTypeEditForm() {
       customerAccess: documentType?.customerAccess,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
+    []);
 
   const methods = useForm({
-    resolver: yupResolver(EditDocumentNameSchema),
+    resolver: yupResolver(DocumentTypeSchema),
     defaultValues,
   });
 
   const {
     reset,
-    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  watch();
 
   const toggleCancel = () => {
     navigate(PATH_SETTING.documentType.view(documentType._id));
@@ -91,9 +80,6 @@ export default function DocumentTypeEditForm() {
 
   const onSubmit = async (data) => {
     try {
-      if (documentCategoryVal) {
-        data.docCategory = documentCategoryVal._id;
-      }
       await dispatch(updateDocumentType(documentType._id, data));
       dispatch(getDocumentTypes(documentType._id));
       navigate(PATH_SETTING.documentType.view(documentType._id));
@@ -116,28 +102,14 @@ export default function DocumentTypeEditForm() {
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
                 <FormHeading heading={FORMLABELS.COVER.EDIT_DOCUMENT_TYPE} />
-                <Autocomplete
-                  // freeSolo
-                  value={documentCategoryVal || null}
+                <RHFAutocomplete
+                  name="category"
+                  label={formLABELS.DOCUMENT_CATEGORY}
                   options={activeDocumentCategories}
                   isOptionEqualToValue={(option, value) => option._id === value._id}
                   getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                  onChange={(event, newValue) => {
-                    if (newValue) {
-                      setDocumentCategoryVal(newValue);
-                    } else {
-                      setDocumentCategoryVal('');
-                    }
-                  }}
-                  renderOption={(props, option) => (
-                    <li {...props} key={option._id}>
-                      {option.name}
-                    </li>
-                  )}
+                  renderOption={(props, option) => (<li {...props} key={option._id}>{option.name}</li>)}
                   id="controllable-states-demo"
-                  renderInput={(params) => (
-                    <TextField {...params} required label={formLABELS.DOCUMENT_CATEGORY} />
-                  )}
                   ChipProps={{ size: 'small' }}
                 />
                 <RHFTextField name={formLABELS.TYPE.name} label={formLABELS.TYPE.label} />

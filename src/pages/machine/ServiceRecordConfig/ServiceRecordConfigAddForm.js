@@ -59,8 +59,8 @@ export default function ServiceRecordConfigAddForm() {
       recordType: id ? {name: serviceRecordConfig?.recordType} || null : null,
       docVersionNo: id ? typeof serviceRecordConfig?.docVersionNo === 'number' && serviceRecordConfig.docVersionNo + 1   : 1,
       noOfApprovalsRequired: id ? serviceRecordConfig?.noOfVerificationsRequired || 1 : 1,
-      machineCategory: id ? serviceRecordConfig?.machineCategory || null : null,
-      machineModel:  id ? serviceRecordConfig?.machineModel || null : null,
+      machineCategory: id ? serviceRecordConfig?.machineCategory || null : activeCategories.find((ele) => ele._id === activeMachineModels.find((element)=> element.isDefault === true)?.category?._id || ele?.isDefault === true) || null,
+      machineModel:  id ? serviceRecordConfig?.machineModel || null : activeMachineModels.find((element)=> element.isDefault === true) || null,
       textBeforeCheckItems:  id ? serviceRecordConfig?.textBeforeCheckItems || '' : '',
       ListTitle: '',
       checkItemCategory: null,
@@ -107,12 +107,12 @@ export default function ServiceRecordConfigAddForm() {
   useEffect(() => {
     if(machineCategory === null){
       dispatch(resetActiveMachineModels())
-      setValue('machineModel',null);
+      // setValue('machineModel',null);
     }else if(machineCategory?._id === machineModel?.category?._id){
       dispatch(getActiveMachineModels(machineCategory?._id));
     }else if(machineCategory?._id !== machineModel?.category?._id){
       dispatch(getActiveMachineModels(machineCategory?._id));
-      // setValue('machineModel',null);
+      setValue('machineModel',null);
     }
   },[dispatch, machineCategory,setValue,machineModel]);
 

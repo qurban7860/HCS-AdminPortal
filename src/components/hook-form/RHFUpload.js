@@ -24,9 +24,6 @@ export function RHFUploadAvatar({ name, ...other }) {
       render={({ field, fieldState: { error } }) => (
         <div>
           <UploadAvatar
-            accept={{
-              'image/*': [],
-            }}
             error={!!error}
             file={field.value}
             {...other}
@@ -82,12 +79,6 @@ export function RHFUpload({ name, multiple, helperText, ...other }) {
         multiple ? (
           <Upload
             multiple
-            accept=".png, .jpeg, .jpg, .gif, .bmp, .webp, 
-            .djvu, .heic, .heif, .ico, .jfif, .jp2, .jpe, .jpeg, .jpg,
-            .jps, .mng, .nef, .nrw, .orf, .pam, .pbm, .pcd, .pcx, .pef, 
-            .pes, .pfm, .pgm, .picon, .pict, .png, .pnm, .ppm, .psd, .raf, .ras,
-            .rw2, .sfw, .sgi, .svg, .tga, .tiff, .psd, .jxr, .wbmp, .x3f, .xbm, .xcf, .xpm,
-            .xwd, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .csv, .txt, .odp, .ods, .odt, .ott, .rtf"
             files={field.value}
             error={!!error}
             helperText={
@@ -101,7 +92,6 @@ export function RHFUpload({ name, multiple, helperText, ...other }) {
           />
         ) : (
           <Upload
-            accept={{ '': [] }}
             file={field.value}
             error={!!error}
             helperText={
@@ -109,8 +99,7 @@ export function RHFUpload({ name, multiple, helperText, ...other }) {
                 <FormHelperText error={!!error} sx={{ px: 2 }}>
                   {error ? error?.message : helperText}
                 </FormHelperText>
-              )
-            }
+              )}
             {...other}
           />
         )

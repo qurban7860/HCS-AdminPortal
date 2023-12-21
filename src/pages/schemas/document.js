@@ -49,7 +49,7 @@ export const EditCustomerDocumentSchema = Yup.object().shape({
 });
 
 // ----------------- Document Category -----------------
-export const AddDocumentCategorySchema = Yup.object().shape({
+export const DocumentCategorySchema = Yup.object().shape({
   name: Yup.string().min(2).max(40).required('Name Field is required!'),
   description: Yup.string().max(10000),
   isActive: Yup.boolean(),
@@ -64,8 +64,8 @@ export const EditDocumentNameSchema = Yup.object().shape({
   customerAccess: Yup.boolean(),
 });
 
-export const AddDocumentTypeSchema = Yup.object().shape({
-  // category: Yup.string().min(2).required("Category is required!"),
+export const DocumentTypeSchema = Yup.object().shape({
+  category: Yup.object().required().label('Document Category').nullable(),
   name: Yup.string().min(2).max(40).required('Name is required!'),
   description: Yup.string().max(10000),
   isActive: Yup.boolean(),
