@@ -24,10 +24,10 @@ import { getActiveCustomers, getFinancialCompanies, setNewMachineCustomer } from
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import  { addMachine, getActiveMachines } from '../../redux/slices/products/machine';
 import { getActiveMachineStatuses } from '../../redux/slices/products/statuses';
-import { getActiveMachineModels } from '../../redux/slices/products/model';
+import { getActiveMachineModels, resetActiveMachineModels } from '../../redux/slices/products/model';
 import { getActiveSuppliers } from '../../redux/slices/products/supplier';
 import { getMachineConnections } from '../../redux/slices/products/machineConnections';
-import { getActiveCategories } from '../../redux/slices/products/category';
+import { getActiveCategories, resetActiveCategories } from '../../redux/slices/products/category';
 import { Cover } from '../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 // routes
@@ -57,7 +57,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const { spContacts } = useSelector((state) => state.contact);
   const { machineConnections } = useSelector((state) => state.machineConnections);
   const { activeCategories } = useSelector((state) => state.category);
-
+  const [hasEffectRun, setHasEffectRun] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const [chips, setChips] = useState([]);
 
@@ -71,6 +71,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     dispatch(getActiveMachineStatuses());
     dispatch(getActiveCategories());
     dispatch(getSPContacts());
+    return ()=> { dispatch(resetActiveMachineModels()); dispatch(resetActiveCategories()); }
   }, [dispatch]);
 
   // const futureDateValidator = Yup.date().nullable()
@@ -200,7 +201,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
 
   useEffect(() => {
     if (customer !== null && customer._id !== undefined) {
-      console.log("customer : ",customer)
       dispatch(getActiveSites(customer._id));
       dispatch(getMachineConnections(customer._id));
       setValue('accountManager', spContacts.filter(item => Array.isArray(customer?.accountManager) && customer?.accountManager.some(manager => manager._id === item?._id)))
@@ -284,10 +284,18 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   }
 
   useEffect(() => {
-    // CategoryValHandler(null, activeCategories.find((ele) => ele._id === activeMachineModels.find((element)=> element.isDefault === true)?.category?._id || ele?.isDefault === true) || null )
-    MachineModelValHandler(null, activeMachineModels.find((element)=> element.isDefault === true) || null)
+    if(activeMachineModels.length > 0 && activeCategories.length > 0 ){
+      if(!hasEffectRun){
+        if(activeMachineModels.some((element)=> element.isDefault === true)){
+          CategoryValHandler(null, activeCategories.find((ele) => ele._id === activeMachineModels.find((element)=> element.isDefault === true)?.category?._id || ele?.isDefault === true) || null ) 
+        }
+        console.log("activeMachineModels.find((element)=> element.isDefault === true) : ",activeMachineModels.find((element)=> element.isDefault === true))
+        MachineModelValHandler(null, activeMachineModels.find((element)=> element.isDefault === true) || null)
+      }
+      setHasEffectRun(true)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ ])
+  },[activeMachineModels, activeCategories, hasEffectRun])
 
   return (
     <Container maxWidth={false} sx={{mb:3}}>
