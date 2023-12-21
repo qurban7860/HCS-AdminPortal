@@ -74,9 +74,9 @@ export default function GeneralAppPage() {
     dispatch(getActiveCategories());
     dispatch(getActiveMachineModels());
     dispatch(getCount());
-    dispatch(getMachinesByCountry());
-    dispatch(getMachinesByModel());
-    dispatch(getMachinesByYear());
+    // dispatch(getMachinesByCountry());
+    // dispatch(getMachinesByModel());
+    // dispatch(getMachinesByYear());
     dispatch(getERPLogs());
   }, [dispatch]);
 
@@ -85,7 +85,11 @@ export default function GeneralAppPage() {
     setMBCCategory(defaultCategory);
     setMBMCategory(defaultCategory);
     setMBYCategory(defaultCategory);
-  },[activeCategories])
+
+    dispatch(getMachinesByCountry(defaultCategory?._id,null, null))
+    dispatch(getMachinesByYear(defaultCategory?._id,null, null))
+    dispatch(getMachinesByModel(defaultCategory?._id,null, null))
+  },[dispatch, activeCategories])
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: currentYear - 1999 }, (_, index) => 2000 + index);
