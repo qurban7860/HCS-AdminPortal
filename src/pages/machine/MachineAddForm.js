@@ -60,6 +60,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const [hasEffectRun, setHasEffectRun] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const [chips, setChips] = useState([]);
+  const [landToCustomerMachinePage, setLandToCustomerMachinePage] = useState(false);
 
 
   useEffect(() => {
@@ -193,6 +194,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   useEffect(() => {
     if(newMachineCustomer){
       setValue('customer',newMachineCustomer);
+      setLandToCustomerMachinePage(true);
     }
     return ()=>{ dispatch(setNewMachineCustomer(null)) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -226,17 +228,12 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     
     try {
       await dispatch(addMachine(data));
-
-      // setChipData([]);
-      // setCurrTag('');
-      // setShippingDate(null);
-      // setInstallationDate(null);
       reset();
       enqueueSnackbar('Create success!');
-      if(newMachineCustomer){
-        navigate(PATH_CUSTOMER.view(customer._id));
+      if(landToCustomerMachinePage){
+        await navigate(PATH_CUSTOMER.view(customer._id));
       }else{
-        navigate(PATH_MACHINE.machines.list);
+        await  navigate(PATH_MACHINE.machines.list);
       }
     } catch (error) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
@@ -245,7 +242,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   };
 
   const toggleCancel = () => {
-    if(newMachineCustomer){
+    if(landToCustomerMachinePage){
       navigate(PATH_CUSTOMER.view(customer._id));
     }else{
       navigate(PATH_MACHINE.machines.list);
@@ -289,7 +286,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
         if(activeMachineModels.some((element)=> element.isDefault === true)){
           CategoryValHandler(null, activeCategories.find((ele) => ele._id === activeMachineModels.find((element)=> element.isDefault === true)?.category?._id || ele?.isDefault === true) || null ) 
         }
-        console.log("activeMachineModels.find((element)=> element.isDefault === true) : ",activeMachineModels.find((element)=> element.isDefault === true))
         MachineModelValHandler(null, activeMachineModels.find((element)=> element.isDefault === true) || null)
       }
       setHasEffectRun(true)
