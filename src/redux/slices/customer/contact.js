@@ -226,7 +226,7 @@ export function addContact(params) {
       const response =  await axios.post(`${CONFIG.SERVER_URL}crm/customers/${params.customer}/contacts`,
         data,
       );
-      dispatch(slice.actions.getContactSuccess(response?.data?.customerCategory || {}))
+      dispatch(getContact(response?.data?.customerCategory?.customer, response?.data?.customerCategory?._id));
       dispatch(slice.actions.setContactFormVisibility(false));
       dispatch(slice.actions.setResponseMessage('Site saved successfully'));
 

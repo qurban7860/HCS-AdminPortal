@@ -80,7 +80,7 @@ export default function DocumentListTableRow({
       <LinkTableCell align="left" param={displayName} onClick={onViewRow} />
       {  lgScreen && <TableCell align="center">{documentVersions[0]?.versionNo}</TableCell>}
       {  smScreen && machineDrawings && <TableCell align="left">{stockNumber}</TableCell>}
-      {  smScreen && machineDrawings && <TableCell align="left">{productDrawings.map((m)=> m?.machine?.serialNo).join(', ')}</TableCell>}
+      {  smScreen && machineDrawings && <TableCell align="left">{productDrawings && productDrawings.map((m)=> m?.machine?.serialNo).join(', ')}</TableCell>}
       {  !customerPage && !machinePage && !machineDrawings && lgScreen && 
           <>
             {/* <TableCell align="left">{customer?.name}</TableCell> */}
