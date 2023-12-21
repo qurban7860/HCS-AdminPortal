@@ -84,10 +84,11 @@ export default function HowickWidgets({
             <Chart type="polarArea" series={[0.00]} options={chartOptions} width={86} height={86} />
           </Grid>
           <Grid container direction='column' sx={{borderRight:'1px solid #919eab3d',pr:1}} textAlign='right'>
-            <Typography variant="h4"> {connectables?fNumber(total-connectables):fNumber(total)}</Typography>
+            <Typography variant="h4"> {fNumber(total)}</Typography>
             <Typography variant="body1" sx={{ opacity: 0.7 }}>{title}</Typography>
           </Grid>
           <Grid container direction='column'>
+            {connectables !==undefined && <Typography variant="body2" sx={{ opacity: 0.7 }}>Verified : {total-notVerified}</Typography>}
             {notVerified !==undefined && <Typography variant="body2" sx={{ opacity: 0.7 }}>Not Verified : {notVerified}</Typography>}
             {connectables!==undefined && <Typography variant="body2" sx={{ opacity: 0.7 }}>Decoilers / Kits : {connectables}</Typography>}
             {activeUsers !==undefined && <Typography variant="body2" sx={{ opacity: 0.7 }}>Active : {activeUsers}</Typography>}
