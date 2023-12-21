@@ -62,7 +62,7 @@ export default function SiteEditForm() {
   const [fax, setFaxVal] = useState('');
   const [billingContactVal, setBillingContactVal] = useState('');
   const [technicalContactVal, setTechnicalContactVal] = useState('');
-  console.log("phone : ",phone)
+  // console.log("phone : ",phone)
   function filtter(data, input) {
     const filteredOutput = data.filter((obj) =>
       Object.keys(input).every((filterKeys) => obj[filterKeys] === input[filterKeys])
@@ -174,12 +174,13 @@ export default function SiteEditForm() {
   };
 
   const updateCountryCode = () =>{
-    const existingPhoneNumberParts = phone.split(' ');
-    const existingFaxNumberParts = fax.split(' ');
-    const newPhoneNumber = country?.phone.trim() !== '' ? `${country?.phone || '+64'} ${existingPhoneNumberParts[1] || ''}` : '';
-    const newFaxNumber = country?.phone.trim() !== '' ? `${country?.phone || '+64'} ${existingFaxNumberParts[1] || ''}` : '';
-    setPhone(newPhoneNumber);
-    setFaxVal(newFaxNumber)
+    const [firstPart, ...restParts] = phone.split(' ');
+    const modifiedPhoneNumber = `${country?.phone || '+64'} ${restParts.join(' ')}`;
+
+    const [firstPartFax, ...restPartsFax] = fax.split(' ');
+    const modifiedFaxNumber = `${country?.phone || '+64'} ${restPartsFax.join(' ')}`;
+    setPhone(modifiedPhoneNumber);
+    setFaxVal(modifiedFaxNumber)
   }
 
   const onSubmit = async (data) => {
@@ -307,7 +308,7 @@ export default function SiteEditForm() {
                   onChange={(newValue, countryVal) => handleTelInputChangePhone(newValue, countryVal)}
                   inputProps={{maxLength:13}}
                   forceCallingCode
-                  defaultCountry='NZ'
+                  defaultCountry='NZ' 
                 />
 
                 <MuiTelInput
@@ -318,7 +319,7 @@ export default function SiteEditForm() {
                   onChange={(newValue, countryVal) => handleTelInputChangeFax(newValue, countryVal)}
                   inputProps={{maxLength:13}}
                   forceCallingCode
-                  // defaultCountry={countryCode}
+                  defaultCountry='NZ'
                 />
 
                 <RHFTextField name="email" label="Email" />
