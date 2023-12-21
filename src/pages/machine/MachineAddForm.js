@@ -195,16 +195,19 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     }
     return ()=>{ dispatch(setNewMachineCustomer(null)) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[newMachineCustomer])
+  },[newMachineCustomer, spContacts])
 
 
   useEffect(() => {
     if (customer !== null && customer._id !== undefined) {
+      console.log("customer : ",customer)
       dispatch(getActiveSites(customer._id));
-  dispatch(getMachineConnections(customer._id));
+      dispatch(getMachineConnections(customer._id));
+      setValue('accountManager', spContacts.filter(item => Array.isArray(customer?.accountManager) && customer?.accountManager.some(manager => manager._id === item?._id)))
+      setValue('projectManager', spContacts.filter(item => Array.isArray(customer?.projectManager) && customer?.projectManager.some(manager => manager._id === item?._id)))
+      setValue('supportManager', spContacts.filter(item => Array.isArray(customer?.supportManager) && customer?.supportManager.some(manager => manager._id === item?._id)))
     }
-    // setInstallVal(null);
-    // setBillingVal(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, customer]);
 
  styled('li')(({ theme }) => ({
@@ -283,7 +286,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   useEffect(() => {
     // CategoryValHandler(null, activeCategories.find((ele) => ele._id === activeMachineModels.find((element)=> element.isDefault === true)?.category?._id || ele?.isDefault === true) || null )
     MachineModelValHandler(null, activeMachineModels.find((element)=> element.isDefault === true) || null)
-    console.log("activeMachineModels.find((element)=> element.isDefault === true) : ",activeMachineModels.find((element)=> element.isDefault === true))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ ])
 
@@ -459,17 +461,20 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                             field.onChange(newValue);
                             if(customer?._id !== newValue._id) {
                             setValue('machineConnectionVal', []);
-                            setValue('instalationSite', []);
-                            setValue('billingSite', []);
+                            setValue('instalationSite', null);
+                            setValue('billingSite', null);
+                            setValue('accountManager', spContacts.filter(item => Array.isArray(newValue?.accountManager) && newValue?.accountManager.includes(item?._id)))
+                            setValue('projectManager', spContacts.filter(item => Array.isArray(newValue?.projectManager) && newValue?.projectManager.includes(item?._id)))
+                            setValue('supportManager', spContacts.filter(item => Array.isArray(newValue?.supportManager) && newValue?.supportManager.includes(item?._id)))
                             }
                           } else {
                             field.onChange(null);
                             setValue('machineConnectionVal', []);
-                            setValue('instalationSite', []);
-                            setValue('billingSite', []);
-                            setValue('accountManager', null)
-                            setValue('productManager', null)
-                            setValue('supportManager', null)
+                            setValue('instalationSite', null);
+                            setValue('billingSite', null);
+                            // setValue('accountManager', null)
+                            // setValue('productManager', null)
+                            // setValue('supportManager', null)
                             dispatch(resetActiveSites());
                           }
                         }}
@@ -617,7 +622,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
 
-<RHFAutocomplete
+                  <RHFAutocomplete
                     multiple
                     disableCloseOnSelect
                     name="accountManager"
@@ -647,6 +652,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     ChipProps={{ size: 'small' }}
                     id="controllable-states-demo"
                   />
+
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect

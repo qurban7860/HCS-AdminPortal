@@ -486,15 +486,18 @@ export default function MachineEditForm() {
                             field.onChange(newValue);
                             if(customer?._id !== newValue._id) {
                             setValue('machineConnectionVal', []);
-                            setValue('instalationSite', []);
-                            setValue('billingSite', []);
+                            setValue('instalationSite', null);
+                            setValue('billingSite', null);
+                            setValue('accountManager', spContacts.filter(item => Array.isArray(newValue?.accountManager) && newValue?.accountManager.includes(item?._id)))
+                            setValue('projectManager', spContacts.filter(item => Array.isArray(newValue?.projectManager) && newValue?.projectManager.includes(item?._id)))
+                            setValue('supportManager', spContacts.filter(item => Array.isArray(newValue?.supportManager) && newValue?.supportManager.includes(item?._id)))
                             }
                           } else {
                             field.onChange(null);
                             dispatch(resetMachineConnections());
                             setValue('machineConnectionVal', []);
-                            setValue('instalationSite', []);
-                            setValue('billingSite', []);
+                            setValue('instalationSite', null);
+                            setValue('billingSite', null);
                             dispatch(resetActiveSites());
                           }
                         }}
