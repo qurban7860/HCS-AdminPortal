@@ -201,7 +201,6 @@ export function addSite(params) {
         }
         
         await axios.post(`${CONFIG.SERVER_URL}crm/customers/${params.customer}/sites`, data);
-        // await dispatch(getSites(params.customer))
         await dispatch(slice.actions.setSiteFormVisibility(false));
 
       } catch (error) {
