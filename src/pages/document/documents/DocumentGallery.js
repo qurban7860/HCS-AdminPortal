@@ -40,8 +40,8 @@ export default function DocumentGallery() {
         <Divider orientation="horizontal" flexItem />
         <DialogContent dividers sx={{px:3,py:3, background:theme.palette.grey[100]}}>
             <Grid container columnGap={2} rowGap={2}>
-              {documentHistory?.documentVersions.map((doc) => (
-                doc?.files.map((file)=>(
+              {documentHistory?.documentVersions?.map((doc) => (
+                doc?.files?.map((file)=>(
                   <Grid item key={file?._id} >
                       <Thumbnail file={file} currentDocument={documentHistory} hideDelete />
                   </Grid>
