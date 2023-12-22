@@ -9,13 +9,9 @@ import { fShortenNumber } from '../../../utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
-ERPLog.propTypes = {
-  chart: PropTypes.object,
-  title: PropTypes.string,
-  subheader: PropTypes.func,
-};
+ERPLog.propTypes = {chart: PropTypes.object};
 
-export default function ERPLog({ chart, title, subheader }) {
+export default function ERPLog({ chart }) {
   const theme = useTheme();
   const { categories, series } = chart;
   const colors = [theme.palette.primary.main, theme.palette.orange.main]
@@ -69,16 +65,5 @@ export default function ERPLog({ chart, title, subheader }) {
     }
   });
 
-  return (
-    <Card sx={{ px: 3, mb: 3}} variants={varFade().inDown}>
-      <CardHeader titleTypographyProps={{variant:'h5'}} title={title} sx={{mt:1, mb:2}} />
-      <Divider />
-      <Chart type="bar" series={series} options={chartOptions} height={chartOptions.chart.height} />        
-      {/* {series.map((item) => (
-        <Box key={item.day} sx={{ mt: 3, mx: 3 }} dir="ltr">
-        </Box>
-      ))} */}
-      <StyledBg />
-    </Card>
-  );
+  return (<Chart type="bar" series={series} options={chartOptions} height={chartOptions.chart.height} />);
 }

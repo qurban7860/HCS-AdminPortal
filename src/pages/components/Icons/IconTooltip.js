@@ -52,4 +52,5 @@ IconTooltip.propTypes = {
 
 IconTooltip.defaultProps = {
   placement: 'top',
+  color:'#1976d2'
 };

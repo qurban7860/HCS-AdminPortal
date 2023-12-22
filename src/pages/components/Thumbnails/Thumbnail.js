@@ -31,6 +31,7 @@ export function Thumbnail({
   customer,
   getCallAfterDelete,
   hideDelete = false,
+  hideView = false,
 }) {
   const [onPreview, setOnPreview] = useState(false);
   const [imageName, setImageName] = useState('');
@@ -113,6 +114,7 @@ export function Thumbnail({
   };
 
   return (
+    <>
     <ThumbnailCard>
       <ThumbnailGrid item justifyContent="center">
         <ThumbnailCardContent
@@ -136,7 +138,7 @@ export function Thumbnail({
                   }
                 />
               )}
-              {file?.fileType.startsWith('image') && (
+              {file?.fileType.startsWith('image') && !hideView && (
                 <ThumbnailIconButtonDefault
                   icon="icon-park-outline:preview-open"
                   left={76}
@@ -152,17 +154,9 @@ export function Thumbnail({
                   }}
                 />
               )}
-              {file?.fileType.startsWith('image') && (
-                <ImagePreviewDialog
-                  onPreview={onPreview}
-                  handleClosePreview={handleClosePreview}
-                  handleDownloadImage={handleDownloadImage}
-                  imageName={imageName}
-                  imageExtension={imageExtension}
-                  file={file}
-                  imageData={imageData}
-                />
-              )}
+              {/* {file?.fileType.startsWith('image') && (
+                
+              )} */}
               <ThumbnailIconButtonDefault
                 icon="line-md:download-loop"
                 left={108}
@@ -203,7 +197,7 @@ export function Thumbnail({
           )}
         </ThumbnailCardContent>
       </ThumbnailGrid>
-      <ThumbnailNameGrid item justifyContent="center">
+      <ThumbnailNameGrid item justifyContent="center" sx={{borderTop:'1px solid #ededed'}}>
         <Tooltip title={file.name} arrow>
           <Typography variant="body2">
             {file?.name?.length > 15 ? file?.name?.substring(0, 15) : file?.name}{' '}
@@ -212,6 +206,17 @@ export function Thumbnail({
         </Tooltip>
       </ThumbnailNameGrid>
     </ThumbnailCard>
+
+    <ImagePreviewDialog
+    onPreview={onPreview}
+    handleClosePreview={handleClosePreview}
+    handleDownloadImage={handleDownloadImage}
+    imageName={imageName}
+    imageExtension={imageExtension}
+    file={file}
+    imageData={imageData}
+    />
+    </>
   );
 }
 
@@ -223,6 +228,7 @@ Thumbnail.propTypes = {
   customer: PropTypes.object,
   getCallAfterDelete: PropTypes.func,
   hideDelete: PropTypes.bool,
+  hideView: PropTypes.bool,
 };
 
 export default Thumbnail;

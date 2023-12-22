@@ -7,7 +7,8 @@ import {
   Grid,
   Card,
   Link,
-  Chip
+  Chip,
+  Box
 } from '@mui/material';
 import { ThumbnailDocButton } from '../../components/Thumbnails'
 import { StyledVersionChip } from '../../../theme/styles/default-styles';
@@ -29,6 +30,7 @@ import {
   setDocumentEditFormVisibility,
   setDocumentViewFormVisibility,
   setDocumentVersionEditDialogVisibility,
+  setDocumentGalleryDialog,
 } from '../../../redux/slices/document/document';
 import { deleteDrawing, getDrawings, resetDrawings, 
   setDrawingEditFormVisibility, setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
@@ -44,6 +46,7 @@ import { PATH_DOCUMENT } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
 import { Snacks } from '../../../constants/document-constants';
 import UpdateDocumentVersionDialog from '../../components/Dialog/UpdateDocumentVersionDialog';
+import DocumentGallery from './DocumentGallery';
 
 // ----------------------------------------------------------------------
 
@@ -237,6 +240,10 @@ const handleNewFile = async () => {
     }
   };
 
+  const handleGalleryView = () => {
+    dispatch(setDocumentGalleryDialog(true));
+  };
+
   return (
     <>
       {!customerPage && !machinePage && !drawingPage &&
@@ -254,7 +261,9 @@ const handleNewFile = async () => {
           disableEditButton={drawingPage && machine?.status?.slug==="transferred"}
           backLink={(customerPage || machinePage || drawingPage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDrawingViewFormVisibility(false));}
           : () =>  machineDrawings ? navigate(PATH_DOCUMENT.document.machineDrawings.list) : navigate(PATH_DOCUMENT.document.list)}
+          hanldeViewGallery={handleGalleryView}
       />
+            <DocumentGallery />
             <Grid container sx={{mt:2}}>
               <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.displayName} />
               <ViewFormField isLoading={isLoading}
@@ -339,21 +348,20 @@ const handleNewFile = async () => {
                       )}
                     </Grid>
                     {files?.files?.map((file) => (
-                      <Grid sx={{ display: 'flex-inline', m: 0.5 }} key={file?._id}>
+                      <Grid sx={{ display: 'flex-inline', m: 0.5, mb:1 }} key={file?._id}>
                         <Grid container justifyContent="flex-start" gap={1}>
                           <Thumbnail
-                            // sx={{m:2}}
-                            // key={file?._id}
                             file={file}
                             currentDocument={documentHistory}
                             customer={customer}
                             getCallAfterDelete={callAfterDelete}
                             hideDelete={defaultValues.isArchived}
-                          />
+                            />
                         </Grid>
                       </Grid>
                     ))}
                     {index === 0 && !defaultValues.isArchived && (<ThumbnailDocButton onClick={handleNewFile}/>)}
+                    
                     <ViewFormAudit key={`${index}-files`} defaultValues={fileValues} />
                   </Grid>
                 )})}

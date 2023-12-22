@@ -366,15 +366,16 @@ export default function GeneralAppPage() {
             </Grid>
 
             <Grid item xs={12} sm={12} md={12} lg={12} xl={6} >
-                  <ChartStacked 
-                    title="ERP Log"
+              <Card sx={{ px: 3, mb: 3}} variants={varFade().inDown}>
+                <CardHeader titleTypographyProps={{variant:'h5'}} title="Erp Logs" sx={{mt:1, mb:2}} />
+                <Divider />
+                <ChartStacked 
                     chart={{
                       categories: erpLogsTime,
                       series: [ { name: 'Length', data: erpLogsLength }, { name: 'Waste', data: erpLogsWaste } ]
                     }}
-                    sx={{ bg: 'transparent' }}
-                  />
-
+                />
+              </Card>
             </Grid>
             {/* Production Log */}
             {/* hide this in the live, but show in development and test  */}
