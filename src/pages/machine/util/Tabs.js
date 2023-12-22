@@ -9,6 +9,7 @@ import MachineProfiles from '../Profile/MachineProfiles';
 import MachineSetting from '../Setting/MachineSetting';
 import MachineToolInstalled from '../ToolsInstalled/MachineToolInstalled';
 import MachineNotes from '../Note/MachineNotes';
+import MachineLogsViewForm from '../MachineLogsViewForm';
 
 export const TABS = (currentComponent, showDevTabs, disableTab) => [
   {
@@ -79,6 +80,13 @@ export const TABS = (currentComponent, showDevTabs, disableTab) => [
     label: 'INI',
     icon: <Iconify icon="ic:round-manage-history" />,
     component : <HistoricalConfigurations />,
+  },
+  {
+    disabled: disableTab,
+    value: 'logs',
+    label: 'Logs',
+    icon: <Iconify icon="entypo:bar-graph" />,
+    component : <MachineLogsViewForm />,
   },
  
   // ...(showDevTabs

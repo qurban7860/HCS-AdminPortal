@@ -8,10 +8,14 @@ import {
   CardContent,
   CardMedia,
   Button,
+  DialogTitle,
+  Divider,
+  DialogContent,
 } from '@mui/material';
 import {alpha, useTheme } from '@mui/material/styles';
 import Iconify from '../../../components/iconify';
 import { CloseButton } from '../Defaults/CloseButton';
+import DialogLink from '../Dialog/DialogLink';
 // import Image from '../../../components/image';
 
 export default function ImagePreviewDialog({
@@ -26,80 +30,18 @@ export default function ImagePreviewDialog({
   const theme = useTheme();
   return (
     <Dialog
-      maxWidth="md"
-      open={onPreview}
-      onClose={handleClosePreview}
-      keepMounted
-      aria-describedby="alert-dialog-slide-description"
-    >
-      <Grid
-        container
-        item
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          bgcolor: 'primary.main',
-          color: 'primary.contrastText',
-          height: '50px',
-          padding: '5px',
-        }}
+        maxWidth="md"
+        open={onPreview}
+        onClose={handleClosePreview}
+        aria-labelledby="keep-mounted-modal-title"
+        aria-describedby="keep-mounted-modal-description"
       >
-        <Typography
-          variant="h4"
-          title={`${imageName}.${imageExtension}`}
-          sx={{ px: 1, mr: 5, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
-        >
-          {`${imageName}.${imageExtension}`}
-        </Typography>{' '}
-        <DialogActions>
-          <Button
-            onClick={handleClosePreview}
-            sx={{
-              top: 15,
-              right: 0,
-              zIndex: 9,
-              height: '60',
-              position: 'absolute',
-            }}
-          >
-            <CloseButton onClick={handleClosePreview} />
-          </Button>
-        </DialogActions>
-      </Grid>
-      <IconButton
-        size="small"
-        onClick={() => handleDownloadImage(imageName, imageExtension)}
-        sx={{
-          top: 70,
-          right: 15,
-          zIndex: 9,
-          height: '60',
-          position: 'absolute',
-          color: alpha(theme.palette.common.white, 0.8),
-          bgcolor: alpha(theme.palette.grey[900], 0.72),
-          '&:hover': {
-            bgcolor: alpha(theme.palette.grey[900], 0.48),
-          },
-        }}
-      >
-        <Iconify icon="line-md:download-loop" width={18} />
-      </IconButton>
-      <CardContent>
-        <CardMedia
-          component="img"
-          sx={{ minWidth: '350px', minHeight: '350px' }}
-          alt={file?.name}
-          image={`data:image/png;base64, ${imageData}`}
-        />
-      </CardContent>
-      {/* <Box
-        component="img"
-        sx={{ minWidth: '350px', minHeight: '350px' }}
-        alt={file?.name}
-        src={`data:image/png;base64, ${imageData}`}
-        loading="lazy"
-      /> */}
+        <DialogTitle variant='h3' sx={{pb:1, pt:2}}>{`${imageName}.${imageExtension}`}</DialogTitle>
+        <Divider orientation="horizontal" flexItem />
+        <DialogContent dividers sx={{padding:0}}>
+          <CardMedia component="img" alt={file?.name} image={`data:image/png;base64, ${imageData}`}/>
+        </DialogContent>
+      <DialogLink icon='mdi:download' content="Download" onClick={() => handleDownloadImage(imageName, imageExtension)} onClose={handleClosePreview}/>
     </Dialog>
   );
 }
