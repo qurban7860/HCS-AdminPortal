@@ -8,12 +8,13 @@ import HowickWelcome from '../components/DashboardWidgets/HowickWelcome';
 import HowickWidgets from '../components/DashboardWidgets/HowickWidgets';
 // assets & hooks
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCount, getMachinesByCountry, 
+import { getCount, getERPLogs, getMachinesByCountry, 
   getMachinesByModel, getMachinesByYear, 
   setMachineCategory, setMachineCountry, setMachineModel, setMachineYear } from '../../redux/slices/dashboard/count';
 // components
 import ChartBar from '../components/Charts/ChartBar';
 import ProductionLog from '../components/Charts/ProductionLog';
+import ChartStacked from '../components/Charts/ChartStacked';
 import HowickOperators from '../components/DashboardWidgets/OperatorsWidget';
 import ChartColumnNegative from '../components/Charts/ChartColumnNegative';
 // constants
@@ -31,13 +32,14 @@ import { countries } from '../../assets/data';
 import Iconify from '../../components/iconify';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import { useWebSocketContext } from '../../auth/WebSocketContext';
+import { fDate } from '../../utils/formatTime';
 // ----------------------------------------------------------------------
 
 export default function GeneralAppPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { onlineUsers } = useWebSocketContext();
-  const { count, machinesByCountry, machinesByYear, machinesByModel } = useSelector((state) => state.count);
+  const { count, machinesByCountry, machinesByYear, machinesByModel, erpLogs } = useSelector((state) => state.count);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
   const { activeCategories } = useSelector((state) => state.category);
   const enviroment = CONFIG.ENV.toLowerCase();
@@ -55,6 +57,10 @@ export default function GeneralAppPage() {
   const [MBYModel, setMBYModel] = useState(null);
   const [MBYCategory, setMBYCategory] = useState(null);
 
+  const erpLogsTime = [];
+  const erpLogsLength = [];
+  const erpLogsWaste = [];
+
   const modelWiseMachineNumber = [];
   const yearWiseMachinesYear = [];
   const modelWiseMachineModel = [];
@@ -68,9 +74,10 @@ export default function GeneralAppPage() {
     dispatch(getActiveCategories());
     dispatch(getActiveMachineModels());
     dispatch(getCount());
-    dispatch(getMachinesByCountry());
-    dispatch(getMachinesByModel());
-    dispatch(getMachinesByYear());
+    // dispatch(getMachinesByCountry());
+    // dispatch(getMachinesByModel());
+    // dispatch(getMachinesByYear());
+    dispatch(getERPLogs());
   }, [dispatch]);
 
   useEffect(()=>{
@@ -78,7 +85,11 @@ export default function GeneralAppPage() {
     setMBCCategory(defaultCategory);
     setMBMCategory(defaultCategory);
     setMBYCategory(defaultCategory);
-  },[activeCategories])
+
+    dispatch(getMachinesByCountry(defaultCategory?._id,null, null))
+    dispatch(getMachinesByYear(defaultCategory?._id,null, null))
+    dispatch(getMachinesByModel(defaultCategory?._id,null, null))
+  },[dispatch, activeCategories])
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: currentYear - 1999 }, (_, index) => 2000 + index);
@@ -110,6 +121,15 @@ export default function GeneralAppPage() {
     count.countryWiseSiteCount.map((site) => {
       countryWiseSiteCountNumber.push(site.count);
       countryWiseSiteCountCountries.push(site._id);
+      return null;
+    });
+  }
+
+  if (erpLogs.length !== 0) {
+    erpLogs.map((log) => {
+      erpLogsTime.push(fDate(log._id));
+      erpLogsLength.push(log.componentLength);
+      erpLogsWaste.push(log.waste);
       return null;
     });
   }
@@ -343,6 +363,19 @@ export default function GeneralAppPage() {
                 />
               </Card>
               <StyledBg />
+            </Grid>
+
+            <Grid item xs={12} sm={12} md={12} lg={12} xl={6} >
+              <Card sx={{ px: 3, mb: 3}} variants={varFade().inDown}>
+                <CardHeader titleTypographyProps={{variant:'h5'}} title="Erp Logs" sx={{mt:1, mb:2}} />
+                <Divider />
+                <ChartStacked 
+                    chart={{
+                      categories: erpLogsTime,
+                      series: [ { name: 'Length', data: erpLogsLength }, { name: 'Waste', data: erpLogsWaste } ]
+                    }}
+                />
+              </Card>
             </Grid>
             {/* Production Log */}
             {/* hide this in the live, but show in development and test  */}

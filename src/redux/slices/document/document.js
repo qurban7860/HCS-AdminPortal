@@ -14,6 +14,7 @@ const initialState = {
   documentHistoryNewVersionFormVisibility: false,
   documentHistoryAddFilesViewFormVisibility: false,
   documentVersionEditDialogVisibility: false,
+  documentGalleryDialog: false,
   documentEdit: false,
   documentIntial: false,
   responseMessage: null,
@@ -160,6 +161,12 @@ const slice = createSlice({
       state.documentVersionEditDialogVisibility = action.payload;
     },
 
+    
+    setDocumentGalleryDialog(state, action){
+      state.documentGalleryDialog= action.payload;
+    },
+
+    
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
       state.isLoading = false;
@@ -262,9 +269,7 @@ export const {
   setDocumentHistoryNewVersionFormVisibility,
   setDocumentHistoryAddFilesViewFormVisibility,
   setDocumentVersionEditDialogVisibility,
-  setDrawingAndDocumentVisibility,
-  setViewHistoryVisiilityNoOthers,
-  setViewVisiilityNoOthers,
+  setDocumentGalleryDialog,
   setDocumentEdit,
   resetDocument,
   resetDocuments,

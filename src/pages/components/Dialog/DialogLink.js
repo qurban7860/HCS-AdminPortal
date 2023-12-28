@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Grid, Button } from '@mui/material';
 import Iconify from '../../../components/iconify';
 
-function DialogLink({ onClose, onClick, content }) {
+function DialogLink({ onClose, onClick, content, icon }) {
   return (
     <Grid item sx={{ textAlign: 'right', p:2}} sm={12}>
       {onClose && 
@@ -22,7 +22,7 @@ function DialogLink({ onClose, onClick, content }) {
               variant="contained"
               sx={{ flexShrink: 0, ml: 1 }}
               onClick={onClick}
-              endIcon={<Iconify icon="mdi:arrow-right" />}
+              endIcon={<Iconify icon={icon} />}
             >
               {content}
         </Button>
@@ -35,6 +35,11 @@ DialogLink.propTypes = {
   onClick: PropTypes.func,
   onClose: PropTypes.func,
   content: PropTypes.string,
+  icon: PropTypes.string,
+};
+
+DialogLink.defaultProps = {
+  icon: 'mdi:arrow-right',
 };
 
 export default DialogLink;

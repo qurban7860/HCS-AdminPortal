@@ -17,7 +17,8 @@ const initialState = {
   machineCategory:null,
   machineModel:null,
   machineCountry:null,
-  machineYear:null, 
+  machineYear:null,
+  erpLogs:[],
 };
 
 const slice = createSlice({
@@ -96,6 +97,14 @@ const slice = createSlice({
     setMachineYear(state, action) {
       state.machineYear = action.payload;
     },
+
+    // GET ERP Logs
+    getERPLogsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.erpLogs = action.payload;
+      state.initial = true;
+    },
   },
 });
 
@@ -165,3 +174,19 @@ export function getMachinesByYear(category, model, country) {
   };
 }
 
+export function getERPLogs(machineId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}logs/erp/graph`, 
+      {
+        params: {machine: machineId}
+      });
+
+      dispatch(slice.actions.getERPLogsSuccess(response.data));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}

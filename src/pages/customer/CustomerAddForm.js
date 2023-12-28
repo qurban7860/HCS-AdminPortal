@@ -195,10 +195,10 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       }
 
       const response = await dispatch(addCustomer(data));
-      
       reset();
-      enqueueSnackbar('Create success!');
+      enqueueSnackbar('Customer added successfully!');
       navigate(PATH_CUSTOMER.view(response.data.Customer._id));
+      
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
     }

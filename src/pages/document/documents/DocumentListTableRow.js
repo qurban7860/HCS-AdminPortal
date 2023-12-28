@@ -78,14 +78,10 @@ export default function DocumentListTableRow({
       {  smScreen && machineDrawings && <TableCell align="left">{productDrawings?.map((m)=> m?.machine?.serialNo).join(', ')}</TableCell>}
       {  !customerPage && !machinePage && !machineDrawings && lgScreen && 
           <>
-            {/* <TableCell align="left">{customer?.name}</TableCell> */}
             <LinkDialogTableCell onClick={handleCustomerDialog} align='left' param={customer?.name}/>  
             <LinkDialogTableCell onClick={handleMachineDialog} align='left' param={machine?.serialNo}/>  
           </>
       }
-      
-      {/* {  lgScreen && <TableCell align="center"><Switch checked={customerAccess} disabled size="small" /></TableCell>}
-      <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell> */}
       <TableCell align="right">{fDate(createdAt)}</TableCell>
     </StyledTableRow>
   );

@@ -71,7 +71,9 @@ function ViewFormEditDeleteButtons({
   supportSubscription,
   machineSupportDate,
   approveConfiglength,
-  excludeReports
+  excludeReports,
+  isConectable,
+  hanldeViewGallery
 
 }) {
   const { id } = useParams();
@@ -388,6 +390,16 @@ function ViewFormEditDeleteButtons({
           />
           }
 
+          {isConectable !==undefined &&
+          <IconTooltip
+            title={isConectable?'Connectable As Child':"Not Connectable As Child"}
+            color={isConectable?ICONS.ALLOWED.color : ICONS.DISALLOWED.color}
+            icon={isConectable?'material-symbols:cast-connected-rounded':"material-symbols:cast-connected-rounded"}
+          />
+          }
+
+
+
         </StyledStack>
       </Grid>
 
@@ -537,6 +549,15 @@ function ViewFormEditDeleteButtons({
           icon="mdi:pencil-outline"
         />}
 
+
+        {hanldeViewGallery && (
+          <IconTooltip
+            title="View Gallery"
+            onClick={hanldeViewGallery}
+            // color="#c3c3c3"
+            icon="ooui:image-gallery"
+          />
+        )}
         {/* delete button */}
         {id !== userId  && !mainSite && onDelete && (
           <IconTooltip
@@ -790,7 +811,7 @@ ViewFormEditDeleteButtons.propTypes = {
   verifiers: PropTypes.array,
   approvers: PropTypes.array,
   isVerifiedTitle: PropTypes.string,
-  approveConfiglength: PropTypes.number,
+  approveConfiglength: PropTypes.string,
   isActive: PropTypes.bool,
   isDefault: PropTypes.bool,
   isSubmitted: PropTypes.func,
@@ -826,4 +847,6 @@ ViewFormEditDeleteButtons.propTypes = {
   financingCompany: PropTypes.bool,
   isLoading: PropTypes.bool,
   excludeReports: PropTypes.bool,
+  isConectable: PropTypes.bool,
+  hanldeViewGallery: PropTypes.func,
 };

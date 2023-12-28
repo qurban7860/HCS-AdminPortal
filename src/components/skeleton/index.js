@@ -1,3 +1,4 @@
+export { default as SkeletonGraph } from './SkeletonGraph';
 export { default as SkeletonMap } from './SkeletonMap';
 export { default as SkeletonPostItem } from './SkeletonPostItem';
 export { default as SkeletonPostDetails } from './SkeletonPostDetails';

@@ -55,8 +55,9 @@ export default function MachineListTableToolbar({
       value={filterName}
       onChange={onFilterName}
       onClick={onResetFilter}
-      handleTransferStatus={handleTransferStatus}
-      transferStatus={transferStatus}
+      radioStatus={transferStatus}
+      radioStatusLabel='Show Transfered'
+      handleRadioStatus={handleTransferStatus}
       SubOnClick={toggleAdd}
       addButton={BUTTONS.NEWMACHINE}
     />
