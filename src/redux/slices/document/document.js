@@ -64,11 +64,36 @@ const slice = createSlice({
     setDocumentViewFormVisibility(state, action){
       state.documentViewFormVisibility = action.payload;
     },
-
     // SET TOGGLE
+    setDrawingAndDocumentVisibility(state, action){
+      state.documentHistoryAddFilesViewFormVisibility = false;
+      state.documentHistoryNewVersionFormVisibility = false;
+      state.documentAddFilesViewFormVisibility = false;
+      state.documentNewVersionFormVisibility = false;
+    },
+    // SET TOGGLE
+    setViewVisiilityNoOthers(state, action){
+      state.documentHistoryAddFilesViewFormVisibility =false;
+      state.documentHistoryNewVersionFormVisibility = false;
+      state.documentAddFilesViewFormVisibility = false;
+      state.documentNewVersionFormVisibility = false;
+      state.documentViewFormVisibility = true;
+      state.documentFormVisibility = false;
+    },
+    // // SET TOGGLE
+    setViewHistoryVisiilityNoOthers(state, action){
+      state.documentHistoryAddFilesViewFormVisibility = false;
+      state.documentHistoryNewVersionFormVisibility = false;
+      state.documentAddFilesViewFormVisibility = false;
+      state.documentNewVersionFormVisibility = false;
+      state.documentHistoryViewFormVisibility = true;
+      state.documentFormVisibility = false;
+    },
+    // // SET TOGGLE
     setDocumentEditFormVisibility(state, action){
       state.documentEditFormVisibility = action.payload;
     },
+
     // SET TOGGLE
     setDocumentHistoryViewFormVisibility(state, action){
       state.documentHistoryViewFormVisibility = action.payload;
@@ -237,6 +262,9 @@ export const {
   setDocumentHistoryNewVersionFormVisibility,
   setDocumentHistoryAddFilesViewFormVisibility,
   setDocumentVersionEditDialogVisibility,
+  setDrawingAndDocumentVisibility,
+  setViewHistoryVisiilityNoOthers,
+  setViewVisiilityNoOthers,
   setDocumentEdit,
   resetDocument,
   resetDocuments,
@@ -320,7 +348,7 @@ export function addDocument(customerId , machineId ,  params) {
       dispatch(slice.actions.setResponseMessage('Document saved successfully'));
       dispatch(getDocuments( customerId, machineId ));
       dispatch(setDocumentFormVisibility(false));
-      dispatch(setDocumentEditFormVisibility (false));
+      dispatch(setDocumentEditFormVisibility(false));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -369,8 +397,8 @@ export function updateDocument(documentId , params, customerId, machineId) {
       dispatch(getDocuments(customerId, machineId))
       dispatch(slice.actions.setResponseMessage(' Document updated successfully'));
       dispatch(setDocumentFormVisibility(false));
-      dispatch(setDocumentEditFormVisibility (false));
-      dispatch(setDocumentViewFormVisibility (true));
+      dispatch(setDocumentEditFormVisibility(false));
+      dispatch(setDocumentViewFormVisibility(true));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));

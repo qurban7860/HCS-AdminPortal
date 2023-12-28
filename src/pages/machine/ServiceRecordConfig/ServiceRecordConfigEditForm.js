@@ -2,9 +2,9 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, Typography, Autocomplete, TextField} from '@mui/material';
+import { Box, Card, Grid, Stack, Typography } from '@mui/material';
 // slice
 import {
   updateServiceRecordConfig,
@@ -89,12 +89,11 @@ export default function ServiceRecordConfigEditForm() {
     reset,
     watch,
     setValue,
-    control,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const { recordType, ListTitle, machineCategory, machineModel, checkItemCategory} = watch();
+  const { recordType, ListTitle, machineModel, checkItemCategory} = watch();
 
   /* eslint-disable */
   useLayoutEffect(() => {
@@ -178,41 +177,28 @@ export default function ServiceRecordConfigEditForm() {
                   <RHFTextField name="docVersionNo" disabled label="Version No.*" />
                   <RHFTextField name="noOfApprovalsRequired" label="Required Approvals*" />
 
-                  <Controller
-                    name="machineCategory"
-                    control={control}
-                    defaultValue={machineCategory || null}
-                    render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                      <Autocomplete
-                        {...field}
+                      <RHFAutocomplete
+                        name="machineCategory" 
+                        label="Machine Category"
                         options={activeCategories}
                         isOptionEqualToValue={(option, value) => option._id === value._id}
-                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                        renderOption={(props, option) => (
-                          <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                        )}
+                        getOptionLabel={(option) => `${option.name || ''}`}
+                        renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || ''}`}</li> )}
                         onChange={async (event, newValue) => {
                           if (newValue) {
-                            field.onChange(newValue);
+                            setValue('machineCategory',newValue);
                             if(newValue?._id !== machineModel?.category) {
                               setValue('machineModel',null)
                               await dispatch(resetActiveMachineModels())
                               await dispatch(getActiveMachineModels(newValue?._id))
                             }
                           } else {
-                            field.onChange(null);
+                            setValue('machineCategory',null);
                             setValue('machineModel',null)
                               dispatch(resetActiveMachineModels())
                           }
                         }}
-                        renderInput={(params) => (<TextField {...params} name="category" label="Machine Category" 
-                          error={!!error}
-                          helperText={error?.message} 
-                          inputRef={ref} 
-                        />)}
                     />
-                    )}
-                  />
                   
                   <RHFAutocomplete 
                     name="machineModel"
