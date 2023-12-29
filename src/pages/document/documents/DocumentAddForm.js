@@ -1,13 +1,18 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useEffect, useState, useCallback , memo} from 'react';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm, Controller } from 'react-hook-form';
+import { Worker, Document, Page, pdfjs } from 'react-pdf';
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
+
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Box,
+
   Card,
   Grid,
   Stack,
@@ -16,6 +21,7 @@ import {
   Dialog,
 } from '@mui/material';
 // PATH
+
 import { PATH_DOCUMENT } from '../../../routes/paths';
 // slice
 import {
@@ -89,7 +95,6 @@ function DocumentAddForm({
   machineDrawings,
   handleFormVisibility,
 }) {
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -481,7 +486,32 @@ function DocumentAddForm({
   const handleIsActiveChange = () => setValue('isActive' ,!isActive);
 
   const handleDropMultiFile = useCallback(
-    (acceptedFiles) => {
+    async (acceptedFiles) => {
+
+      pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+
+      console.log("acceptedFiles",acceptedFiles);
+      const pdfFile = acceptedFiles.find((f)=>f.type.indexOf('pdf')>-1);
+      console.log("pdfFile",pdfFile);
+      
+      if(pdfFile) {
+
+        const arrayBuffer = await pdfFile.arrayBuffer();
+
+        const pdfDocument = await pdfjs.getDocument(arrayBuffer).promise;
+
+        const page = await pdfDocument.getPage(1);
+        const textContent = await page.getTextContent();
+        try{
+          textContent.items.forEach((item,index) => {
+            if(item.str==='DRAWN BY')
+              setValue('stockNumber', textContent.items[index+2].str)
+          });
+        }catch(e) {
+          console.log(e)
+        }
+      }
+      
 
       const docFiles = files || [];
       const newFiles = acceptedFiles.map((file, index) => {
