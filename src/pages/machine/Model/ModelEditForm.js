@@ -1,15 +1,14 @@
-import { useEffect, useMemo, useState, useLayoutEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { TextField, Box, Card, Grid, Stack } from '@mui/material';
+import { Box, Card, Grid, Stack } from '@mui/material';
 // slice
-import { updateMachineModel } from '../../../redux/slices/products/model';
+import { getMachineModel, updateMachineModel } from '../../../redux/slices/products/model';
 import { getActiveCategories } from '../../../redux/slices/products/category';
-// import { useSettingsContext } from '../../../components/settings';
 // schema
 import { ModelSchema } from './schemas/ModelSchema';
 // routes
@@ -30,23 +29,18 @@ export default function ModelEditForm() {
   const { machineModel } = useSelector((state) => state.machinemodel);
   const { activeCategories } = useSelector((state) => state.category);
   const dispatch = useDispatch();
-  const [category, setCategory] = useState('');
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
 
-  useLayoutEffect(() => {
-    dispatch(getActiveCategories());
-  }, [dispatch]);
+  useEffect(() => {
+    dispatch(getMachineModel(id));
+  }, [ dispatch, id ]);
 
   useEffect(() => {
-    if (machineModel) {
-      reset(defaultValues);
-      setCategory(machineModel.category);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [machineModel]);
+    dispatch(getActiveCategories());
+  }, [ dispatch ]);
 
   const defaultValues = useMemo(
     () => ({
@@ -61,7 +55,6 @@ export default function ModelEditForm() {
     [machineModel]
   );
 
-  // const { themeStretch } = useSettingsContext();
 
   const methods = useForm({
     resolver: yupResolver(ModelSchema),
@@ -74,7 +67,6 @@ export default function ModelEditForm() {
     formState: { isSubmitting },
   } = methods;
 
-  // const values = watch();
 
   const toggleCancel = () => {
     navigate(PATH_MACHINE.machines.settings.model.view(id));
@@ -82,11 +74,6 @@ export default function ModelEditForm() {
 
   const onSubmit = async (data) => {
     try {
-      if (category) {
-        data.category = category;
-      } else {
-        data.category = null;
-      }
       await dispatch(updateMachineModel(data, id));
       navigate(PATH_MACHINE.machines.settings.model.view(id));
       reset();

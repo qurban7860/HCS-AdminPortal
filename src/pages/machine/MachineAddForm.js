@@ -13,9 +13,9 @@ import { getSPContacts } from '../../redux/slices/customer/contact';
 import { getActiveCustomers, getFinancialCompanies, setNewMachineCustomer } from '../../redux/slices/customer/customer';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import  { addMachine, getActiveMachines } from '../../redux/slices/products/machine';
-import { getActiveMachineStatuses } from '../../redux/slices/products/statuses';
+import { getActiveMachineStatuses, resetActiveMachineStatuses } from '../../redux/slices/products/statuses';
 import { getActiveMachineModels, resetActiveMachineModels } from '../../redux/slices/products/model';
-import { getActiveSuppliers } from '../../redux/slices/products/supplier';
+import { getActiveSuppliers, resetActiveSuppliers } from '../../redux/slices/products/supplier';
 import { getMachineConnections } from '../../redux/slices/products/machineConnections';
 import { getActiveCategories, resetActiveCategories } from '../../redux/slices/products/category';
 import { Cover } from '../components/Defaults/Cover';
@@ -47,21 +47,26 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const { spContacts } = useSelector((state) => state.contact);
   const { machineConnections } = useSelector((state) => state.machineConnections);
   const { activeCategories } = useSelector((state) => state.category);
-  const [hasEffectRun, setHasEffectRun] = useState(false);
+  const [ hasEffectRun, setHasEffectRun ] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
-  const [chips, setChips] = useState([]);
-  const [landToCustomerMachinePage, setLandToCustomerMachinePage] = useState(false);
+  const [ chips, setChips ] = useState([]);
+  const [ landToCustomerMachinePage, setLandToCustomerMachinePage ] = useState(false);
 
   useEffect(() => {
     dispatch(getFinancialCompanies());
     dispatch(getActiveCustomers());
     dispatch(getActiveMachines());
+    dispatch(getActiveCategories());
     dispatch(getActiveMachineModels());
     dispatch(getActiveSuppliers());
     dispatch(getActiveMachineStatuses());
-    dispatch(getActiveCategories());
     dispatch(getSPContacts());
-    return ()=> { dispatch(resetActiveMachineModels()); dispatch(resetActiveCategories()); }
+    return ()=> { 
+      dispatch(resetActiveMachineModels()); 
+      dispatch(resetActiveCategories()); 
+      dispatch(resetActiveMachineStatuses()); 
+      dispatch(resetActiveSuppliers()) 
+    }
   }, [dispatch]);
 
   const methods = useForm({
@@ -71,14 +76,14 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       name: '',
       parentSerialNo: null,
       previousMachine: '',
-      supplier: activeSuppliers.find((element) => element?.isDefault === true) || null,
       category: null,
       machineModel: null,
+      supplier: null,
+      status: null,
       customer: null,
       financialCompany: null,
       machineConnectionVal: [],
       connection: [],
-      status: activeMachineStatuses.find((element)=> element.isDefault === true) || null,
       workOrderRef: '',
       instalationSite: null,
       billingSite: null,
@@ -121,6 +126,16 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     return ()=>{ dispatch(setNewMachineCustomer(null)) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[newMachineCustomer, spContacts])
+
+  useEffect(() => {
+    setValue('supplier', activeSuppliers.find((element) => element?.isDefault === true) )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ activeSuppliers ])
+
+  useEffect(() => {
+    setValue('status', activeMachineStatuses.find((element)=> element.isDefault === true) )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ activeMachineStatuses ])
 
   useEffect(() => {
     if (customer !== null && customer._id !== undefined) {
@@ -243,6 +258,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                       renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || ''}`}</li> )}
                       onChange={(event, newValue) => MachineModelValHandler(event, newValue)}
                     />
+
                   <RHFAutocomplete
                     name="status" 
                     label="Status" 
