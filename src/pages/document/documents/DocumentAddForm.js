@@ -1,20 +1,11 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState, useCallback , memo} from 'react';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import {
-  Box,
-  Card,
-  Grid,
-  Stack,
-  Autocomplete,
-  TextField,
-  Dialog,
-} from '@mui/material';
+import { Box, Card, Grid, Stack, Dialog } from '@mui/material';
 // PATH
 
 import { PATH_DOCUMENT } from '../../../routes/paths';
