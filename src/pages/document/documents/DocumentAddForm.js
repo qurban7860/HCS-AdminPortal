@@ -142,7 +142,8 @@ function DocumentAddForm({
   },[ activeDocumentTypes ] )
 
   useEffect(()=>{ // Get Active Document Types Against Document Categoory
-    if( documentCategory?._id && categoryBy ){ dispatch( getActiveDocumentTypesWithCategory( documentCategory?._id, categoryBy ) ); setIsDocumentTypesLoaded( true ); }
+    if( documentCategory?._id && categoryBy ){ dispatch( getActiveDocumentTypesWithCategory( documentCategory?._id, categoryBy ) ); 
+      if(!isDocumentTypesLoaded) setIsDocumentTypesLoaded( true ); }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ documentCategory ])
 
@@ -451,7 +452,7 @@ function DocumentAddForm({
                               setValue('documentCategory', newValue);
                               if (newValue?._id !== documentType?.docCategory?._id) {
                                 dispatch(resetActiveDocumentTypes());
-                                dispatch(getActiveDocumentTypesWithCategory(newValue?._id, categoryBy ));
+                                // dispatch(getActiveDocumentTypesWithCategory(newValue?._id, categoryBy ));
                                 setValue('documentType', null);
                               }
                             } else {
