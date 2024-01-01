@@ -13,11 +13,11 @@ import { getSPContacts } from '../../redux/slices/customer/contact';
 import { getActiveCustomers, getFinancialCompanies, setNewMachineCustomer } from '../../redux/slices/customer/customer';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import  { addMachine, getActiveMachines } from '../../redux/slices/products/machine';
-import { getActiveMachineStatuses, resetActiveMachineStatuses } from '../../redux/slices/products/statuses';
+import { getActiveCategories, resetActiveCategories } from '../../redux/slices/products/category';
 import { getActiveMachineModels, resetActiveMachineModels } from '../../redux/slices/products/model';
+import { getActiveMachineStatuses, resetActiveMachineStatuses } from '../../redux/slices/products/statuses';
 import { getActiveSuppliers, resetActiveSuppliers } from '../../redux/slices/products/supplier';
 import { getMachineConnections } from '../../redux/slices/products/machineConnections';
-import { getActiveCategories, resetActiveCategories } from '../../redux/slices/products/category';
 import { Cover } from '../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 // routes
@@ -210,10 +210,11 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   useEffect(() => {
     if(activeMachineModels.length > 0 && activeCategories.length > 0 ){
       if(!hasEffectRun){
-        if(activeMachineModels.some((element)=> element.isDefault === true)){
-          CategoryValHandler(null, activeCategories.find((ele) => ele._id === activeMachineModels.find((element)=> element.isDefault === true)?.category?._id || ele?.isDefault === true) || null ) 
+        if ( activeCategories.find((ele) => ele?.isDefault === true) === activeMachineModels.find((ele)=> ele.isDefault === true)?.category?._id || !activeMachineModels.some((ele)=> ele.isDefault === true) ){
+          CategoryValHandler(null, activeCategories.find((ele) => ele?.isDefault === true) ) 
+        } else {
+          MachineModelValHandler(null, activeMachineModels.find((element)=> element.isDefault === true) )
         }
-        MachineModelValHandler(null, activeMachineModels.find((element)=> element.isDefault === true) || null)
       }
       setHasEffectRun(true)
     }
