@@ -36,7 +36,7 @@ export default function SecurityUserEditForm() {
   const { securityUser } = useSelector((state) => state.user);
   const { activeRegions } = useSelector((state) => state.region);
   const { allMachines } = useSelector((state) => state.machine)
-  const { spCustomers, allCustomers } = useSelector((state) => state.customer);
+  const { allCustomers } = useSelector((state) => state.customer);
  
   const securityUserRoles = [];
   roles.map((role) => ROLES.push({ value: role?._id, label: role.name }));
@@ -227,7 +227,6 @@ export default function SecurityUserEditForm() {
     }
 
     data.roles = submitSecurityUserRoles;
-    console.log("Security User data.....", data.roles)
     try {
       dispatch(updateSecurityUser(data, securityUser._id));
       navigate(PATH_SECURITY.users.view(securityUser._id));
