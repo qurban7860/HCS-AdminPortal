@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Worker, Document, Page, pdfjs } from 'react-pdf';
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import { Box, Card, Grid, Stack, Dialog } from '@mui/material';
 // PATH
 
@@ -319,8 +321,23 @@ function DocumentAddForm({
   const handleIsActiveChange = () => setValue('isActive' ,!isActive);
 
   const handleDropMultiFile = useCallback(
-    (acceptedFiles) => {
-
+    async (acceptedFiles) => {
+        pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+        const pdfFile = acceptedFiles.find((f)=>f.type.indexOf('pdf')>-1);
+        if(pdfFile) {
+          const arrayBuffer = await pdfFile.arrayBuffer();
+          const pdfDocument = await pdfjs.getDocument(arrayBuffer).promise;
+          const page = await pdfDocument.getPage(1);
+          const textContent = await page.getTextContent();
+          try{
+            textContent.items.forEach((item,index) => {
+              if(item.str==='DRAWN BY')
+                setValue('stockNumber', textContent.items[index+2].str)
+            });
+          }catch(e) {
+            console.log(e)
+          }
+        }
       const docFiles = files || [];
       const newFiles = acceptedFiles.map((file, index) => {
           if(index===0 && docFiles.length===0 && !displayName){
