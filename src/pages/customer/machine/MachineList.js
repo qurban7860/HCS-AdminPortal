@@ -215,36 +215,31 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, transfer
     if (order !== 0) return order;
     return a[1] - b[1];
   });
-
   inputData = stabilizedThis.map((el) => el[0]);
-  if(!transferStatus)
-    inputData = inputData.filter((machine) => machine.status && machine.status.slug !== 'transferred');
   
+  if(!transferStatus)
+    inputData = inputData.filter((machine) => machine?.status ? machine.status.slug !== 'transferred' : machine );
+
   if (filterName) {
     inputData = inputData.filter(
       (machine) =>{
-
         const address = {};
         address.city = machine?.instalationSite?.address?.city;
         address.region = machine?.instalationSite?.address?.region;
         address.country = machine?.instalationSite?.address?.country;
-
         const addressFilter = Object.values(address ?? {}).map((value) => (typeof value === 'string' ? value.trim() : ''))
         .filter((value) => value !== '').join(', ');
-
       return machine?.serialNo?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         machine?.name?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         machine?.machineModel?.name?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         addressFilter?.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(machine?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
       }
-        
     );
   }
 
   if (filterStatus.length) {
     inputData = inputData.filter((noteg) => filterStatus.includes(noteg.status));
   }
-
   return inputData;
 }
