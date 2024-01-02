@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Worker, Document, Page, pdfjs } from 'react-pdf';
+import { pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import { Box, Card, Grid, Stack, Dialog } from '@mui/material';
 // PATH
@@ -96,8 +96,8 @@ function DocumentAddForm({
       files: null,
       isActive: true,
       customerAccess:false,
-      customer: '',
-      machine: '',
+      customer: null,
+      machine: null,
     },
   });
 
