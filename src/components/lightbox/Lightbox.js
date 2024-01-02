@@ -75,7 +75,7 @@ export default function Lightbox({
           view: (index) => {
             
             // const file = slides.[index];
-            console.log('@@@@@@@@@slides',slides.[0])
+            console.log('@@@@@@@@@slides', slides[index]);
 
             // dispatch(downloadFile(image?._id))
             // .then((res) => {

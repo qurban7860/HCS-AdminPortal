@@ -276,12 +276,10 @@ export const {
   setDocumentHistoryNewVersionFormVisibility,
   setDocumentHistoryAddFilesViewFormVisibility,
   setDocumentVersionEditDialogVisibility,
-<<<<<<< Updated upstream
+  setDocumentGalleryVisibility,
   setDrawingAndDocumentVisibility,
   setViewHistoryVisiilityNoOthers,
   setViewVisiilityNoOthers,
-=======
->>>>>>> Stashed changes
   setDocumentGalleryVisibility,
   setDocumentEdit,
   resetDocument,
