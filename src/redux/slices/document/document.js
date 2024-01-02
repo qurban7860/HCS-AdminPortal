@@ -14,7 +14,8 @@ const initialState = {
   documentHistoryNewVersionFormVisibility: false,
   documentHistoryAddFilesViewFormVisibility: false,
   documentVersionEditDialogVisibility: false,
-  documentGalleryDialog: false,
+  documentGalleryVisibility: false,
+  documentGallery: [],
   documentEdit: false,
   documentIntial: false,
   responseMessage: null,
@@ -160,12 +161,18 @@ const slice = createSlice({
     setDocumentVersionEditDialogVisibility(state, action){
       state.documentVersionEditDialogVisibility = action.payload;
     },
-
     
-    setDocumentGalleryDialog(state, action){
-      state.documentGalleryDialog= action.payload;
+    setDocumentGalleryVisibility(state, action){
+      state.documentGalleryVisibility= action.payload;
     },
 
+     // GET Machine Gallery
+    getDocumentGallerySuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.documentGallery = action.payload;
+      state.initial = true;
+    },
     
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
@@ -272,7 +279,7 @@ export const {
   setDrawingAndDocumentVisibility,
   setViewHistoryVisiilityNoOthers,
   setViewVisiilityNoOthers,
-  setDocumentGalleryDialog,
+  setDocumentGalleryVisibility,
   setDocumentEdit,
   resetDocument,
   resetDocuments,
@@ -722,4 +729,25 @@ export function deleteDocument(documentId, isCheckReference) {
   };
 }
 
+export function getDocumentGallery(id, customerId, machineId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/allDocumentsAgainstFilter`,
+      {
+        params: {
+          document:id,
+          customer:customerId,
+          machine:machineId
+        }
+      });
+      dispatch(slice.actions.getDocumentGallerySuccess(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
 

@@ -45,6 +45,7 @@ function SearchBarCombo({
   onReload,
   filterExcludeRepoting,
   handleExcludeRepoting,
+  handleGalleryView,
   ...other
 }) {
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
@@ -349,6 +350,21 @@ function SearchBarCombo({
               </Grid>}
               
 
+              {handleGalleryView && 
+                <Grid item>
+                    <StyledTooltip title="View Gallery" placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
+                      <IconButton onClick={handleGalleryView} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
+                        '&:hover': {
+                          background:"#103996", 
+                          color:"#fff"
+                        }
+                      }}>
+                        <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon='ooui:image-gallery' />
+                      </IconButton>
+                    </StyledTooltip>
+                </Grid>
+              }
+
               {onExportCSV && 
                   <Grid item>
                     <LoadingButton onClick={onExportCSV}  variant='contained' sx={{p:0, minWidth:'24px'}} loading={onExportLoading}>
@@ -415,6 +431,7 @@ SearchBarCombo.propTypes = {
   onReload: PropTypes.func,
   filterExcludeRepoting: PropTypes.string,
   handleExcludeRepoting: PropTypes.func,
+  handleGalleryView: PropTypes.func,
 };
 
 export default SearchBarCombo;

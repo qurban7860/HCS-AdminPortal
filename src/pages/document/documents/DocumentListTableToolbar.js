@@ -27,6 +27,7 @@ DocumentListTableToolbar.propTypes = {
   setCategoryVal: PropTypes.func,
   typeVal: PropTypes.object,
   setTypeVal: PropTypes.func,
+  handleGalleryView: PropTypes.func,
 };
 
 export default function DocumentListTableToolbar({
@@ -44,6 +45,7 @@ export default function DocumentListTableToolbar({
   setCategoryVal,
   typeVal,
   setTypeVal,
+  handleGalleryView
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -87,6 +89,7 @@ export default function DocumentListTableToolbar({
         setCategoryVal={(machineDrawings || machinePage) ? setCategoryVal : null }
         typeVal={typeVal}
         setTypeVal={(machineDrawings || machinePage) ? setTypeVal : null }
+        handleGalleryView={handleGalleryView}
       />
     </Stack>
   );

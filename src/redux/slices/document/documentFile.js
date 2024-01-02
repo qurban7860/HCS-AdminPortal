@@ -112,6 +112,14 @@ export function getDocumentDownload(documentId,versionId,fileId) {
   };
 }
 
+export function downloadFile(fileId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    const response = await axios.get(`${CONFIG.SERVER_URL}documents/files/${fileId}/download/` );
+    return response;
+  };
+}
+
 
 // ----------------------------Add Document File------------------------------------------
 
