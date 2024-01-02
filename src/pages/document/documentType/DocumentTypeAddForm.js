@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 // import * as Yup from 'yup';
-import { useEffect,  useMemo, useState } from 'react';
+import { useEffect,  useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 // import { LoadingButton } from '@mui/lab';
-import { Card, Grid, Stack, TextField, Container } from '@mui/material';
+import { Card, Grid, Stack, Container } from '@mui/material';
 // routes
 import { PATH_SETTING } from '../../../routes/paths';
 // schema
@@ -20,7 +20,7 @@ import {
 } from '../../../redux/slices/document/documentType';
 import { setMachineDocumentFormVisibility } from '../../../redux/slices/document/machineDocument';
 import { setCustomerDocumentFormVisibility } from '../../../redux/slices/document/customerDocument';
-import { getActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
+import { getActiveDocumentCategories, resetActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFAutocomplete } from '../../../components/hook-form';
@@ -39,8 +39,6 @@ DocumentTypeAddForm.propTypes = {
 };
 export default function DocumentTypeAddForm({ currentDocument }) {
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
-
-  const [documentCategoryVal, setDocumentCategoryVal] = useState('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -72,6 +70,7 @@ export default function DocumentTypeAddForm({ currentDocument }) {
   useEffect(() => {
     dispatch(getActiveDocumentCategories());
     reset(defaultValues);
+    return () => { dispatch( resetActiveDocumentCategories() )}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 

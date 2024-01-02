@@ -14,6 +14,48 @@ export const AddInniSchema = Yup.object().shape({
   isActive: Yup.boolean(),
 });
 
+export const documentSchema = ( selectedValue ) => Yup.object().shape({
+  documentVal: Yup.object().when({
+    is: () => selectedValue === "newVersion",
+    then: Yup.object().nullable().required().label('Document'),
+    otherwise: Yup.object().nullable(),
+  }),
+  documentCategory: Yup.object().when( {
+    is: () => selectedValue === "new",
+    then: Yup.object().nullable().required().label('Document Category'),
+    otherwise: Yup.object().nullable(),
+  }),
+  documentType: Yup.object().when( {
+    is: () => selectedValue === "new",
+    then: Yup.object().nullable().required().label('Document Type'),
+    otherwise: Yup.object().nullable(),
+  }),
+  displayName: Yup.string().when( {
+    is: () => selectedValue === "new",
+    then: Yup.string().nullable().required().label('Document Name'),
+    otherwise: Yup.string().nullable(),
+  }),
+  files: Yup.mixed()
+  .required('File is required!')
+  .test(
+    'fileType',
+    'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
+    validateFileType
+  ).nullable(true),
+  referenceNumber: Yup.string().max(20)
+  .test('Reference number', 'Reference number can not have spaces', numValue =>!(numValue.includes(' '))),
+
+  versionNo: Yup.number()
+  .typeError('Version number must be a number')
+  .positive("Version number must be a positive number")
+  .test('no-spaces', 'Version number cannot have spaces', value => !(value && /\s/.test(value.toString())))
+  .max(1000, 'Version number must be less than or equal to 1000')
+  .nullable(),
+
+  description: Yup.string().max(10000),
+  isActive: Yup.boolean(),
+});
+
 export const AddDocumentSchema = Yup.object().shape({
   displayName: Yup.string().max(40, Snacks.docMaxSize),
   // .test('length', 'Document Name must not exceed 40 characters', (value)=>  console.log("value : ",value)),

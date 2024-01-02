@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
 // @mui
 import { Stack } from '@mui/material';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { PATH_SETTING } from '../../../routes/paths';
+import { resetActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
 // components
 import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 // constants
@@ -31,8 +33,10 @@ export default function DocumentTypeListTableToolbar({
   onResetFilter,
   onFilterStatus,
 }) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const toggleAdd = () => {
+    dispatch(resetActiveDocumentCategories())
     navigate(PATH_SETTING.documentType.new);
   };
   return (

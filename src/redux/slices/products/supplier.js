@@ -87,6 +87,13 @@ const slice = createSlice({
       state.success = false;
       state.isLoading = false;
     },
+    // RESET SUPPLIERS
+    resetActiveSuppliers(state){
+      state.activeSuppliers = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
     // Set FilterBy
     setFilterBy(state, action) {
       state.filterBy = action.payload;
@@ -110,6 +117,7 @@ export const {
   setSupplierEditFormVisibility,
   resetSupplier,
   resetSuppliers,
+  resetActiveSuppliers,
   setResponseMessage,
   setFilterBy,
   ChangeRowsPerPage,
@@ -254,12 +262,12 @@ export function updateSupplier(params,Id) {
         website: params.website,
         fax: params.fax,
         address: {
-          street: params.street,
-          suburb: params.suburb,
-          city: params.city,
-          postcode: params.postcode,
-          region: params.region,
-          country: params.country.label,
+          street: params?.street,
+          suburb: params?.suburb,
+          city: params?.city,
+          postcode: params?.postcode,
+          region: params?.region,
+          country: params?.country?.label,
         }
       };
      /* eslint-enable */

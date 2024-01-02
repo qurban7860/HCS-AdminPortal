@@ -1,16 +1,11 @@
 import PropTypes from 'prop-types';
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
 import { Card, Grid } from '@mui/material';
 // redux
-import {
-  setMachinemodelsEditFormVisibility,
-  deleteMachineModel,
-  getMachineModel 
-} from '../../../redux/slices/products/model';
+import { deleteMachineModel, getMachineModel } from '../../../redux/slices/products/model';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
@@ -32,12 +27,8 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
   const { enqueueSnackbar } = useSnackbar();
   const { machineModel, isLoading } = useSelector((state) => state.machinemodel);
   const { id } = useParams();
-  
   const dispatch = useDispatch();
-  const toggleEdit = () => {
-    dispatch(setMachinemodelsEditFormVisibility(true));
-    navigate(PATH_MACHINE.machines.settings.model.modeledit(id));
-  };
+  const toggleEdit = () => { navigate(PATH_MACHINE.machines.settings.model.modeledit(id)) };
 
   useEffect(()=>{
     dispatch(getMachineModel(id));
