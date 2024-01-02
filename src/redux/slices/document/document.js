@@ -276,7 +276,6 @@ export const {
   setDocumentHistoryNewVersionFormVisibility,
   setDocumentHistoryAddFilesViewFormVisibility,
   setDocumentVersionEditDialogVisibility,
-  setDocumentGalleryVisibility,
   setDrawingAndDocumentVisibility,
   setViewHistoryVisiilityNoOthers,
   setViewVisiilityNoOthers,
