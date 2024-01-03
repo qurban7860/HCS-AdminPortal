@@ -60,6 +60,7 @@ export default function MachineListTableToolbar({
       handleRadioStatus={handleTransferStatus}
       SubOnClick={toggleAdd}
       addButton={BUTTONS.NEWMACHINE}
+      machinePage
     />
   </Stack>
   );

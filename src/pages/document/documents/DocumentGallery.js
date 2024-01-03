@@ -42,8 +42,19 @@ export default function DocumentGallery({customerPage, machinePage}) {
   const [slides, setSlides] = useState([]);
   
   useEffect(()=>{
-    dispatch(getDocumentGallery(document?._id, customer?._id, machine?._id))
-  },[dispatch, document, customer, machine])
+    if(customerPage){
+      dispatch(getDocumentGallery(null, customer?._id, null))
+    }
+    
+    if(machinePage){
+      dispatch(getDocumentGallery(null, null, machine?._id))
+    }
+    
+    if(!machinePage && !customerPage){
+      dispatch(getDocumentGallery(document?._id, null, null))
+    }
+    
+  },[dispatch, document, customer, machine, customerPage, machinePage])
 
   useEffect(()=>{
     setSlides(documentGallery?.map((img) => ({
@@ -58,8 +69,6 @@ export default function DocumentGallery({customerPage, machinePage}) {
       id:img?._id,
     })));
   },[documentGallery])
-
-  console.log("documentGallery::::",documentGallery)
 
   const handleOpenLightbox = (index) => {
     console.log("index:::",index)
@@ -141,7 +150,6 @@ export default function DocumentGallery({customerPage, machinePage}) {
           open={selectedImage >= 0}
           close={handleCloseLightbox}
           onGetCurrentIndex={(index) => handleViewLightbox(index)}
-          // imageLoading
         />
       </Card>
     </Container>
