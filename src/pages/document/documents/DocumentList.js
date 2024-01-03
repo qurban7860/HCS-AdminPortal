@@ -53,10 +53,10 @@ import {
   deleteDocument,
   setDocumentGalleryVisibility,
 } from '../../../redux/slices/document/document';
-import { getMachineForDialog, setMachineDialog } from '../../../redux/slices/products/machine';
+import { getMachineForDialog, resetMachine, setMachineDialog } from '../../../redux/slices/products/machine';
 import { getActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
 import { getActiveDocumentTypes } from '../../../redux/slices/document/documentType';
-import { getCustomer, setCustomerDialog } from '../../../redux/slices/customer/customer';
+import { getCustomer, resetCustomer, setCustomerDialog } from '../../../redux/slices/customer/customer';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { FORMLABELS } from '../../../constants/default-constants';
@@ -335,9 +335,25 @@ const  onChangePage = (event, newPage) => {
   };
 
   const handleGalleryView = () => {
+    if(customerPage){
+      dispatch(resetDocument())
+      dispatch(resetMachine())
+    }
+    if(machinePage){
+      dispatch(resetDocument())
+      dispatch(resetCustomer())
+    }
+
+    if(!customerPage && !machinePage){
+      dispatch(resetCustomer())
+      dispatch(resetMachine())
+    }
+
     dispatch(setDocumentGalleryVisibility(true));
   };
 
+
+  console.log(customerPage, machinePage)
   return (
     <>
     {/* <Container sx={{mb:3}}> */}
@@ -360,7 +376,7 @@ const  onChangePage = (event, newPage) => {
           setCategoryVal={setCategoryVal}
           typeVal={typeVal}
           setTypeVal={setTypeVal}
-          handleGalleryView={!isNotFound && (customerPage || machinePage) && handleGalleryView}
+          handleGalleryView={handleGalleryView}
         />
         {!isNotFound && <TablePaginationCustom
           count={dataFiltered.length}

@@ -59,8 +59,6 @@ export default function DocumentGallery({customerPage, machinePage}) {
     })));
   },[documentGallery])
 
-  console.log("documentGallery::::",documentGallery)
-
   const handleOpenLightbox = (index) => {
     console.log("index:::",index)
     setSelectedImage(index);
@@ -141,7 +139,6 @@ export default function DocumentGallery({customerPage, machinePage}) {
           open={selectedImage >= 0}
           close={handleCloseLightbox}
           onGetCurrentIndex={(index) => handleViewLightbox(index)}
-          // imageLoading
         />
       </Card>
     </Container>

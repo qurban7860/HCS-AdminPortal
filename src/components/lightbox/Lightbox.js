@@ -76,7 +76,7 @@ export default function Lightbox({
         slides={slides}
         captions='slides'
         animation={{ swipe: 240 }}
-        carousel={{ finite: totalItems > 5 }}
+        carousel={{ finite: totalItems < 5 }}
         controller={{ closeOnBackdropClick: true }}
         plugins={getPlugins({
           disabledZoom,
