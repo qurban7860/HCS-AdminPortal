@@ -1,6 +1,6 @@
 /* eslint-disable import/no-unresolved */
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
 import ReactLightbox from 'yet-another-react-lightbox';
 import Zoom from 'yet-another-react-lightbox/plugins/zoom';
 import Video from 'yet-another-react-lightbox/plugins/video';
@@ -16,7 +16,6 @@ import { Typography } from '@mui/material';
 import Iconify from '../iconify';
 //
 import StyledLightbox from './styles';
-import { downloadFile } from '../../redux/slices/document/documentFile';
 
 // ----------------------------------------------------------------------
 
@@ -33,6 +32,7 @@ Lightbox.propTypes = {
   disabledFullscreen: PropTypes.bool,
   disabledDownload: PropTypes.bool,
   onGetCurrentIndex: PropTypes.func,
+  imageLoading: PropTypes.bool,
 };
 
 export default function Lightbox({
@@ -46,12 +46,27 @@ export default function Lightbox({
   disabledFullscreen,
   disabledDownload,
   onGetCurrentIndex,
+  imageLoading,
   ...other
 }) {
-
-  const dispatch = useDispatch();
-  const regEx = /^[^2]*/;
   const totalItems = slides ? slides.length : 0;
+  // const [loading, setLoading] = useState(true);
+
+  // useEffect(() => {
+  //   const loadingTimeout = setTimeout(() => {
+  //     setLoading(false);
+  //   }, 100); // 10 seconds timeout
+
+  //   // Cleanup the timeout in case the component unmounts before the timeout completes
+  //   return () => clearTimeout(loadingTimeout);
+  // }, []);
+
+  // if (loading) {
+  //   // Show loading state (icon, spinner, etc.)
+  //   return (
+  //     <StyledLightbox />
+  //   );
+  // }
 
   return (
     <>
@@ -59,8 +74,9 @@ export default function Lightbox({
 
       <ReactLightbox
         slides={slides}
+        captions='slides'
         animation={{ swipe: 240 }}
-        carousel={{ finite: totalItems < 5 }}
+        carousel={{ finite: totalItems > 5 }}
         controller={{ closeOnBackdropClick: true }}
         plugins={getPlugins({
           disabledZoom,
@@ -72,33 +88,11 @@ export default function Lightbox({
           disabledDownload
         })}
         on={{
-          view: (index) => {
-            
-            // const file = slides.[index];
-            console.log('@@@@@@@@@slides', slides[index]);
-
-            // dispatch(downloadFile(image?._id))
-            // .then((res) => {
-            //   if (regEx.test(res.status)) {
-            //     console.log(res.data);
-            //   } else {
-            //     enqueueSnackbar(res.statusText, { variant: `error` });
-            //   }
-            // })
-            // .catch((err) => {
-            //   if (err.Message) {
-            //     enqueueSnackbar(err.Message, { variant: `error` });
-            //   } else if (err.message) {
-            //     enqueueSnackbar(err.message, { variant: `error` });
-            //   } else {
-            //     enqueueSnackbar('Something went wrong!', { variant: `error` });
-            //   }
-            // });
-
+          view: ({index}) => {
             if (onGetCurrentIndex) {
               onGetCurrentIndex(index);
             }
-          },
+          }
         }}
         toolbar={{
           buttons: [
@@ -112,16 +106,17 @@ export default function Lightbox({
           ],
         }}
         render={{
-          iconClose: () => <Iconify width={ICON_SIZE} icon="carbon:close" />,
-          iconDownload: () => <Iconify width={ICON_SIZE} icon="carbon:download" />,
-          iconZoomIn: () => <Iconify width={ICON_SIZE} icon="carbon:zoom-in" />,
-          iconZoomOut: () => <Iconify width={ICON_SIZE} icon="carbon:zoom-out" />,
-          iconSlideshowPlay: () => <Iconify width={ICON_SIZE} icon="carbon:play" />,
-          iconSlideshowPause: () => <Iconify width={ICON_SIZE} icon="carbon:pause" />,
-          iconPrev: () => <Iconify width={ICON_SIZE + 8} icon="carbon:chevron-left" />,
-          iconNext: () => <Iconify width={ICON_SIZE + 8} icon="carbon:chevron-right" />,
-          iconExitFullscreen: () => <Iconify width={ICON_SIZE} icon="carbon:center-to-fit" />,
-          iconEnterFullscreen: () => <Iconify width={ICON_SIZE} icon="carbon:fit-to-screen" />,
+          iconLoading:  () => <Iconify width={50} color='#fff' icon="line-md:downloading-loop" />,
+          iconClose: () => <Iconify width={ICON_SIZE} icon="solar:close-square-linear" />,
+          iconDownload: () => <Iconify width={ICON_SIZE} icon="solar:download-square-linear" />,
+          iconZoomIn: () => <Iconify width={ICON_SIZE} icon="solar:magnifer-zoom-in-outline" />,
+          iconZoomOut: () => <Iconify width={ICON_SIZE} icon="solar:magnifer-zoom-out-outline" />,
+          iconSlideshowPlay: () => <Iconify width={ICON_SIZE} icon="solar:play-line-duotone" />,
+          iconSlideshowPause: () => <Iconify width={ICON_SIZE} icon="solar:pause-line-duotone" />,
+          iconPrev: () => <Iconify width={ICON_SIZE + 8} icon="solar:alt-arrow-left-bold-duotone" />,
+          iconNext: () => <Iconify width={ICON_SIZE + 8} icon="solar:alt-arrow-right-bold-duotone" />,
+          iconExitFullscreen: () => <Iconify width={ICON_SIZE} icon="solar:quit-full-screen-square-linear" />,
+          iconEnterFullscreen: () => <Iconify width={ICON_SIZE} icon="solar:full-screen-square-linear" />,
         }}
         {...other}
       />
@@ -187,10 +182,9 @@ export function DisplayTotal({ totalItems, disabledTotal, disabledCaptions }) {
     <Typography
       className="yarl__button"
       sx={{
-        pl: 3,
-        left: 0,
         position: 'fixed',
         typography: 'body2',
+        alignSelf:'center',
         ...(!disabledCaptions && {
           px: 'unset',
           minWidth: 64,

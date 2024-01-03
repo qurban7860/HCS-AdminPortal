@@ -33,28 +33,67 @@ export default function DocumentGallery({customerPage, machinePage}) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const regEx = /^[^2]*/;
   
   const { machine } = useSelector((state) => state.machine);
   const { customer } = useSelector((state) => state.customer);
   const { document, documentGallery, isLoading } = useSelector((state) => state.document);
   const [selectedImage, setSelectedImage] = useState(-1);
+  const [slides, setSlides] = useState([]);
   
-
   useEffect(()=>{
     dispatch(getDocumentGallery(document?._id, customer?._id, machine?._id))
   },[dispatch, document, customer, machine])
 
-  const imagesLightbox = documentGallery?.map((img) => ({
-    src:`data:image/png;base64, ${img?.thumbnail}`,
-    id:img?._id,
-    downloadFilename:`${img?.name}.${img?.extension}`
-  }));
+  useEffect(()=>{
+    setSlides(documentGallery?.map((img) => ({
+      src:`data:image/png;base64, ${img?.thumbnail}`,
+      downloadFilename:`${img?.name}.${img?.extension}`,
+      name:img?.name,
+      docCat:img?.docCategory?.name,
+      docType:img?.docType?.name,
+      machine:img?.machine?.serialNo,
+      customer:img?.customer?.name,
+      isLoaded:false,
+      id:img?._id,
+    })));
+  },[documentGallery])
 
-  const handleOpenLightbox = (image) => {
-    const imageIndex = imagesLightbox.findIndex((img) => img.id === image?._id);
-    setSelectedImage(imageIndex);
+  console.log("documentGallery::::",documentGallery)
+
+  const handleOpenLightbox = (index) => {
+    console.log("index:::",index)
+    setSelectedImage(index);
+    handleViewLightbox(index);
   };
 
+  const handleViewLightbox = async (index) => {
+    const image = slides[index];
+    if(!image?.isLoaded){
+      try {
+        const response = await dispatch(downloadFile(image?.id));
+        if (regEx.test(response.status)) {
+          // Update the image property in the imagesLightbox array
+          const updatedSlides = [
+            ...slides.slice(0, index), // copies slides before the updated slide
+            {
+              ...slides[index],
+              src: `data:image/png;base64, ${response.data}`,
+              isLoaded: true,
+            },
+            ...slides.slice(index + 1), // copies slides after the updated slide
+          ];
+  
+          // Update the state with the new array
+          setSlides(updatedSlides);
+          setSelectedImage(index);
+        }
+      } catch (error) {
+        console.error('Error loading full file:', error);
+      }
+    }
+  };
+  
   const handleCloseLightbox = () => {
     setSelectedImage(-1);
   };
@@ -86,11 +125,11 @@ export default function DocumentGallery({customerPage, machinePage}) {
             xl: 'repeat(5, 1fr)',
           }}
         >
-          {!isLoading ? documentGallery?.map((image) => (
+          {!isLoading ? slides?.map((slide, index) => (
             <GalleryItem
-              key={image?._id}
-              image={image}
-              onOpenLightbox={() => handleOpenLightbox(image)}
+              key={slide?.id}
+              image={slide}
+              onOpenLightbox={() => handleOpenLightbox(index)}
             />
             )):(<SkeletonGallery  />)
           }
@@ -98,9 +137,11 @@ export default function DocumentGallery({customerPage, machinePage}) {
 
         <Lightbox
           index={selectedImage}
-          slides={imagesLightbox}
+          slides={slides}
           open={selectedImage >= 0}
           close={handleCloseLightbox}
+          onGetCurrentIndex={(index) => handleViewLightbox(index)}
+          // imageLoading
         />
       </Card>
     </Container>
@@ -112,31 +153,25 @@ export default function DocumentGallery({customerPage, machinePage}) {
 GalleryItem.propTypes = {
   onOpenLightbox: PropTypes.func,
   image: PropTypes.shape({
-    displayName: PropTypes.string,
-    thumbnail: PropTypes.string,
-    path: PropTypes.string,
-    docType: PropTypes.object,
-    docCategory: PropTypes.object,
-    machine: PropTypes.object,
-    createdBy: PropTypes.object,
-    updatedBy: PropTypes.object
+    src: PropTypes.string,
+    name: PropTypes.string,
+    docCat: PropTypes.string,
+    docType: PropTypes.string,
+    machine: PropTypes.string,
+    customer: PropTypes.string,
   }),
 };
 
 function GalleryItem({ image, onOpenLightbox }) {
   const theme = useTheme();
-  const { displayName, thumbnail, path, docType, docCategory, machine, createdBy, updatedBy } = image;
-
+  const { src, name, docCat, docType, machine, customer } = image;
   return (
     <Card sx={{ cursor: 'pointer', position: 'relative' }}>
       <Image alt="gallery" ratio="1/1" 
-      src={`data:image/png;base64, ${thumbnail}`}
+      src={src}
       onClick={onOpenLightbox} />
-
       <Stack
-        spacing={2}
-        direction="row"
-        alignItems="center"
+        padding={2}
         sx={{
           ...bgBlur({
             color: theme.palette.grey[900],
@@ -146,17 +181,11 @@ function GalleryItem({ image, onOpenLightbox }) {
           bottom: 0,
           position: 'absolute',
           color: 'common.white',
-          p: theme.spacing(3, 1, 3, 3),
         }}
       >
-        <Stack flexGrow={1} spacing={1}>
-          <Typography variant="subtitle1">{displayName}</Typography>
-          <Typography variant="body2" sx={{ opacity: 0.72 }}>{docType?.name}</Typography>
-        </Stack>
-
-        {/* <IconButton color="inherit">
-          <Iconify icon="eva:more-vertical-fill" />
-        </IconButton> */}
+        <Typography variant="subtitle2">{name}</Typography>
+        <Typography variant="body2" sx={{ opacity: 0.72, marginTop:'0px'}}>{docCat}</Typography>
+        {/* <Typography variant="body2" sx={{ opacity: 0.72, marginTop:'0px'}}>{docType}</Typography> */}
       </Stack>
     </Card>
   );

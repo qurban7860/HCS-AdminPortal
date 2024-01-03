@@ -335,11 +335,7 @@ const  onChangePage = (event, newPage) => {
   };
 
   const handleGalleryView = () => {
-    if(customerPage || machinePage){
-      dispatch(setDocumentGalleryVisibility(true));
-    }else{
-      navigate(PATH_DOCUMENT.document.gallery);
-    }
+    dispatch(setDocumentGalleryVisibility(true));
   };
 
   return (
@@ -364,7 +360,7 @@ const  onChangePage = (event, newPage) => {
           setCategoryVal={setCategoryVal}
           typeVal={typeVal}
           setTypeVal={setTypeVal}
-          handleGalleryView={handleGalleryView}
+          handleGalleryView={!isNotFound && (customerPage || machinePage) && handleGalleryView}
         />
         {!isNotFound && <TablePaginationCustom
           count={dataFiltered.length}
