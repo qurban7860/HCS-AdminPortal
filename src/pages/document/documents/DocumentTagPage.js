@@ -10,6 +10,7 @@ import {
   setDocumentHistoryViewFormVisibility,
   setDocumentNewVersionFormVisibility,
   setDocumentAddFilesViewFormVisibility,
+  setDocumentGalleryVisibility,
 } from '../../../redux/slices/document/document';
 // components
 import DocumentList from './DocumentList';
@@ -17,6 +18,8 @@ import DocumentAddForm from './DocumentAddForm';
 import DocumentViewForm from './DocumentViewForm';
 import DocumentEditForm from './DocumentEditForm';
 import DocumentHistoryViewForm from './DocumentHistoryViewForm';
+import DocumentGallery from './DocumentGallery';
+import { _userGallery } from '../../../_mock/arrays';
 /* eslint-disable */
 
 // ----------------------------------------------------------------------
@@ -32,6 +35,7 @@ function DocumentTagPage(Page) {
     dispatch(setDocumentHistoryViewFormVisibility(false));
     dispatch(setDocumentNewVersionFormVisibility(false));
     dispatch(setDocumentAddFilesViewFormVisibility(false));
+    dispatch(setDocumentGalleryVisibility(false));
   }, [Page?.customerPage, Page?.machinePage]);
 
   const {
@@ -40,26 +44,39 @@ function DocumentTagPage(Page) {
     documentEditFormVisibility,
     documentViewFormVisibility,
     documentHistoryViewFormVisibility,
+    documentGalleryVisibility,
   } = useSelector((state) => state.document);
 
   const handleFormVisibility = () => {
     dispatch(setDocumentFormVisibility(false));
     dispatch(setDocumentNewVersionFormVisibility(false));
     dispatch(setDocumentAddFilesViewFormVisibility(false));
+    dispatch(setDocumentGalleryVisibility(false));
   };
+  
   const handleEditFormVisibility = () => {
     dispatch(setDocumentEditFormVisibility(true));
   };
 
   return (
     <>
-      {!documentFormVisibility &&
+      { !documentFormVisibility &&
+        !documentEditFormVisibility &&
+        !documentViewFormVisibility &&
+        !documentHistoryViewFormVisibility &&
+        !documentGalleryVisibility && (
+          <DocumentList customerPage={Page?.customerPage} machinePage={Page?.machinePage} />
+      )}
+
+      { documentGalleryVisibility &&
+        !documentFormVisibility &&
         !documentEditFormVisibility &&
         !documentViewFormVisibility &&
         !documentHistoryViewFormVisibility && (
-          <DocumentList customerPage={Page?.customerPage} machinePage={Page?.machinePage} />
-        )}
-      {documentFormVisibility &&
+          <DocumentGallery customerPage={Page?.customerPage} machinePage={Page?.machinePage} />
+      )}
+
+      { documentFormVisibility &&
         !documentEditFormVisibility &&
         !documentViewFormVisibility &&
         !documentHistoryViewFormVisibility && (

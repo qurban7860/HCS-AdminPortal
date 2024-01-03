@@ -30,7 +30,6 @@ import {
   setDocumentEditFormVisibility,
   setDocumentViewFormVisibility,
   setDocumentVersionEditDialogVisibility,
-  setDocumentGalleryDialog,
 } from '../../../redux/slices/document/document';
 import { deleteDrawing, getDrawings, resetDrawings, 
   setDrawingEditFormVisibility, setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
@@ -46,7 +45,6 @@ import { PATH_DOCUMENT } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
 import { Snacks } from '../../../constants/document-constants';
 import UpdateDocumentVersionDialog from '../../components/Dialog/UpdateDocumentVersionDialog';
-import DocumentGallery from './DocumentGallery';
 
 // ----------------------------------------------------------------------
 
@@ -209,14 +207,6 @@ const handleNewFile = async () => {
     dispatch(setDrawingEditFormVisibility(true));
   };
 
-  // const handleEditDoc = async () => {
-  //   await dispatch(getDocument(documentHistory._id));
-  //   dispatch(setDocumentFormVisibility(false));
-  //   dispatch(setDocumentHistoryViewFormVisibility(false));
-  //   dispatch(setDocumentViewFormVisibility(false));
-  //   dispatch(setDocumentEditFormVisibility(true));
-  // };
-
   const handleDelete = async () => {
     try {
       await dispatch(deleteDocument(documentHistory?._id));
@@ -240,10 +230,6 @@ const handleNewFile = async () => {
     }
   };
 
-  const handleGalleryView = () => {
-    dispatch(setDocumentGalleryDialog(true));
-  };
-
   return (
     <>
       {!customerPage && !machinePage && !drawingPage &&
@@ -261,9 +247,8 @@ const handleNewFile = async () => {
           disableEditButton={drawingPage && machine?.status?.slug==="transferred"}
           backLink={(customerPage || machinePage || drawingPage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDrawingViewFormVisibility(false));}
           : () =>  machineDrawings ? navigate(PATH_DOCUMENT.document.machineDrawings.list) : navigate(PATH_DOCUMENT.document.list)}
-          hanldeViewGallery={handleGalleryView}
+          
       />
-            <DocumentGallery />
             <Grid container sx={{mt:2}}>
               <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.displayName} />
               <ViewFormField isLoading={isLoading}

@@ -131,7 +131,7 @@
     "uuid": "^9.0.1",
     "web-vitals": "^3.1.0",
     "worker-loader": "^3.0.8",
-    "yet-another-react-lightbox": "^2.2.2",
+    "yet-another-react-lightbox": "^3.15.6",
     "yup": "^0.32.11"
   },
   "devDependencies": {

@@ -51,6 +51,7 @@ import {
   machineDrawingsChangePage,
   machineDrawingsChangeRowsPerPage,
   deleteDocument,
+  setDocumentGalleryVisibility,
 } from '../../../redux/slices/document/document';
 import { getMachineForDialog, setMachineDialog } from '../../../redux/slices/products/machine';
 import { getActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
@@ -333,6 +334,10 @@ const  onChangePage = (event, newPage) => {
     }
   };
 
+  const handleGalleryView = () => {
+    dispatch(setDocumentGalleryVisibility(true));
+  };
+
   return (
     <>
     {/* <Container sx={{mb:3}}> */}
@@ -355,6 +360,7 @@ const  onChangePage = (event, newPage) => {
           setCategoryVal={setCategoryVal}
           typeVal={typeVal}
           setTypeVal={setTypeVal}
+          handleGalleryView={!isNotFound && (customerPage || machinePage) && handleGalleryView}
         />
         {!isNotFound && <TablePaginationCustom
           count={dataFiltered.length}
