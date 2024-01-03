@@ -2,12 +2,54 @@ import * as Yup from 'yup';
 import { Snacks } from '../../constants/machine-constants';
 import { allowedExtensions, fileTypesMessage } from '../../constants/document-constants';
 import { NotRequiredValidateFileType } from '../document/documents/Utills/Util'
-import { today, formatDate } from '../machine/util/index';
+import { today, futureDate, pastDate, formatDate } from '../machine/util/index';
 
 const day = today.getDate();
 const month = today.getMonth() + 1; // Months are zero-indexed, so add 1
 const year = today.getFullYear();
 const dateCheck = `${year}-${month}-${day+1}`;
+
+export const machineSchema = Yup.object().shape({
+  serialNo: Yup.string().max(6).required('Serial Number is required').nullable(),
+  name: Yup.string().max(250),
+  parentSerialNo: Yup.object().shape({
+    serialNo: Yup.string()
+  }).nullable(),
+  previousMachine: Yup.string(),
+  supplier: Yup.object().shape({
+    serialNo: Yup.string()
+  }).nullable(),
+  machineModel: Yup.object().shape({
+    name: Yup.string()
+  }).nullable(),
+  customer: Yup.object().shape({
+    name: Yup.string()
+  }).nullable().required("Customer Is Required!"),
+  status: Yup.object().shape({
+    name: Yup.string()
+  }).nullable(),
+  workOrderRef: Yup.string().max(50),
+  shippingDate: Yup.date().typeError('Date Should be Valid!').max(futureDate,`Shipping Date field must be at earlier than ${formatDate(futureDate)}!`)
+  .min(pastDate,`Shipping Date field must be at after than ${formatDate(pastDate)}!`).nullable().label('Shipping Date'),
+  installationDate: Yup.date()
+  .typeError('Date Should be Valid!')
+  .max(futureDate,`Shipping Date field must be at earlier than ${formatDate(futureDate)}!`)
+  .min(pastDate,`Shipping Date field must be at after than ${formatDate(pastDate)}!`).nullable().label('Installation Date'),
+  supportExpireDate: Yup.date()
+  .min(today,`Support Expiry Date field must be at after than ${formatDate(today)}!`).nullable().label('Support Expiry Date'),
+  instalationSite: Yup.object().shape({
+    name: Yup.string()
+  }).nullable(),
+  billingSite: Yup.object().shape({
+    name: Yup.string()
+  }).nullable(),
+  accountManager: Yup.array(),
+  projectManager: Yup.array(),
+  supportManager: Yup.array(),
+  siteMilestone: Yup.string().max(1500),
+  description: Yup.string().max(5000),
+  isActive: Yup.boolean(),
+});
 
 export const EditMachineSchema = Yup.object().shape({
   serialNo: Yup.string().required(Snacks.serialNoRequired).max(6),

@@ -1,7 +1,13 @@
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 // @mui
 import { Stack } from '@mui/material';
+// Redux slices
+import { resetActiveCategories } from '../../redux/slices/products/category';
+import { resetActiveMachineModels } from '../../redux/slices/products/model';
+import { resetActiveMachineStatuses } from '../../redux/slices/products/statuses';
+import { resetActiveSuppliers } from '../../redux/slices/products/supplier';
 // components
 import SearchBarCombo from '../components/ListTableTools/SearchBarCombo';
 // routes
@@ -48,9 +54,14 @@ export default function MachineListTableToolbar({
   setSupportManagerFilter,
   supportManagerFilter,
 }) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const toggleAdd = () => {
     navigate(PATH_MACHINE.machines.new);
+    dispatch( resetActiveCategories() );
+    dispatch( resetActiveMachineModels() );
+    dispatch( resetActiveMachineStatuses() );
+    dispatch( resetActiveSuppliers() );
   };
 
   return (

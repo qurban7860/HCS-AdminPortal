@@ -73,7 +73,7 @@ export default function DrawingAddForm() {
 
   useEffect(() => {
     if(documentCategory?._id){
-      dispatch(getActiveDocumentTypesWithCategory(documentCategory?._id));
+      dispatch(getActiveDocumentTypesWithCategory(documentCategory?._id, { drawing: true } ));
     }
   },[ dispatch, documentCategory ]);
 

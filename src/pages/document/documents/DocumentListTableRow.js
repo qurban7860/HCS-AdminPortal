@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 // import { useState, useEffect } from 'react';
 // @mui
 import {
-  Switch,
   TableRow,
   TableCell,
 } from '@mui/material';
@@ -13,8 +12,6 @@ import { fDate } from '../../../utils/formatTime';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import LinkDialogTableCell from '../../components/ListTableTools/LinkDialogTableCell';
 import { useScreenSize } from '../../../hooks/useResponsive';
-import { StyledStack } from '../../../theme/styles/default-styles';
-import IconTooltip from '../../components/Icons/IconTooltip';
 // ----------------------------------------------------------------------
 
 DocumentListTableRow.propTypes = {
@@ -64,8 +61,6 @@ export default function DocumentListTableRow({
     productDrawings,
     customer,
     docCategory,
-    customerAccess,
-    isActive,
     createdAt,
   } = row;
 
@@ -80,17 +75,13 @@ export default function DocumentListTableRow({
       <LinkTableCell align="left" param={displayName} onClick={onViewRow} />
       {  lgScreen && <TableCell align="center">{documentVersions[0]?.versionNo}</TableCell>}
       {  smScreen && machineDrawings && <TableCell align="left">{stockNumber}</TableCell>}
-      {  smScreen && machineDrawings && <TableCell align="left">{productDrawings && productDrawings.map((m)=> m?.machine?.serialNo).join(', ')}</TableCell>}
+      {  smScreen && machineDrawings && <TableCell align="left">{productDrawings?.map((m)=> m?.machine?.serialNo).join(', ')}</TableCell>}
       {  !customerPage && !machinePage && !machineDrawings && lgScreen && 
           <>
-            {/* <TableCell align="left">{customer?.name}</TableCell> */}
             <LinkDialogTableCell onClick={handleCustomerDialog} align='left' param={customer?.name}/>  
             <LinkDialogTableCell onClick={handleMachineDialog} align='left' param={machine?.serialNo}/>  
           </>
       }
-      
-      {/* {  lgScreen && <TableCell align="center"><Switch checked={customerAccess} disabled size="small" /></TableCell>}
-      <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell> */}
       <TableCell align="right">{fDate(createdAt)}</TableCell>
     </StyledTableRow>
   );

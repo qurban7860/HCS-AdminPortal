@@ -2,23 +2,13 @@ import {  useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
-// import Select from "react-select";
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-// import { LoadingButton } from '@mui/lab';
-import {
-  TextField,
-  Box,
-  Card,
-  Grid,
-  Stack,
-  Typography,
-  Container,
-} from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Container } from '@mui/material';
 // slice
 import { addMachineModel } from '../../../redux/slices/products/model';
-import { getActiveCategories } from '../../../redux/slices/products/category';
+import { getActiveCategories, resetActiveCategories } from '../../../redux/slices/products/category';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
@@ -45,7 +35,7 @@ export default function ModelAddForm() {
   const defaultValues = useMemo(
     () => ({
       name: '',
-      category: activeCategories.find((cat) => cat.isDefault) || null,
+      category: null,
       description: '',
       isActive: true,
     }),
@@ -60,13 +50,20 @@ export default function ModelAddForm() {
 
   const {
     reset,
+    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
   useEffect(() => {
     dispatch(getActiveCategories());
+    return () => { dispatch(resetActiveCategories())}
   }, [dispatch]);
+
+  useEffect(() => { 
+    setValue('category',activeCategories.find((cat) => cat.isDefault) ) 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ activeCategories ])
 
   const onSubmit = async (data) => {
     try {
@@ -111,7 +108,7 @@ export default function ModelAddForm() {
                   <RHFTextField name="name" label="Name*"/>
 
                   <RHFTextField name="description" label="Description" minRows={7} multiline />
-<Grid display="flex">
+                <Grid display="flex">
                   <RHFSwitch
                     name="isActive"
                     labelPlacement="start"
@@ -130,7 +127,6 @@ export default function ModelAddForm() {
                       </Typography>
                     }
                   />
-
                   <RHFSwitch
                     name="isDefault"
                     labelPlacement="start"
@@ -138,8 +134,7 @@ export default function ModelAddForm() {
                       <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary',}} >Default</Typography>
                     }
                   />
-</Grid>
-
+                </Grid>
                 </Box>
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
