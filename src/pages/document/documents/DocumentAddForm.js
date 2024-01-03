@@ -331,10 +331,25 @@ function DocumentAddForm({
           const page = await pdfDocument.getPage(1);
           const textContent = await page.getTextContent();
           try{
+            let isFound = false;
             textContent.items.forEach((item,index) => {
-              if(item.str==='DRAWN BY')
+              if(item.str==='DRAWN BY'){
+                isFound = true;
                 setValue('stockNumber', textContent.items[index+2].str)
+              }
+
             });
+            if(!isFound) {
+              textContent.items.forEach((item,index) => {
+                if(item.str==='APPROVED'){
+                  isFound = true;
+                  setValue('stockNumber', textContent.items[index-2].str)
+                }
+
+              });
+            }
+
+
           }catch(e) {
             console.log(e)
           }
