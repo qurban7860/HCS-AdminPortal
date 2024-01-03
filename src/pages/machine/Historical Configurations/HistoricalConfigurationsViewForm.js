@@ -1,43 +1,27 @@
-import { useMemo, memo, useState, useRef, useEffect } from 'react';
-import debounce from 'lodash/debounce';
+import { useMemo, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
 import {  Card, Grid, Stack, Skeleton } from '@mui/material';
 import JsonEditor from './JsonEditor';
 // redux
-import { setHistoricalConfigurationViewFormVisibility, getHistoricalConfigurationRecord, getHistoricalConfigurationRecords } from '../../../redux/slices/products/historicalConfiguration';
+import { setHistoricalConfigurationViewFormVisibility } from '../../../redux/slices/products/historicalConfiguration';
 // components
-import { useSnackbar } from '../../../components/snackbar';
-import { FORMLABELS } from '../../../constants/default-constants';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
-import ViewFormField from '../../components/ViewForms/ViewFormField';
-import ViewFormNoteField from '../../components/ViewForms/ViewFormNoteField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-import { fDate } from '../../../utils/formatTime';
-import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 
 
 function HistoricalConfigurationsViewForm() {
 
-  const { historicalConfiguration, historicalConfigurationViewFormFlag, isLoading } = useSelector((state) => state.historicalConfiguration);
-  const { machine } = useSelector((state) => state.machine)
-  const [jsonObjectTree, setJsonObjectTree] = useState({});
-  const [filterName, setFilterName] = useState("");
+  const { historicalConfiguration, isLoading } = useSelector((state) => state.historicalConfiguration);
 
-  const isFiltered = filterName !== ''
   const dispatch = useDispatch();
-  const { enqueueSnackbar } = useSnackbar();
-
-
-  useEffect(() => {
-    if(!filterName){
-      setJsonObjectTree(historicalConfiguration);
-    }
-    // else{
-    //   const filteredValue = filterJsonObjectByName(historicalConfiguration, filterName);
-    //   setJsonObjectTree(filteredValue);
-    // }
-  }, [historicalConfiguration, filterName]);
+  const modifiedValue = {
+    "compilerOptions": {
+      "target": "es6",
+      "module": "commonjs",
+      "baseUrl": "."
+    },
+  }
 
 
   const defaultValues = useMemo(
@@ -73,7 +57,7 @@ function HistoricalConfigurationsViewForm() {
             <Skeleton animation={false} />
             <Skeleton animation={false} />
           </>
-           :  <JsonEditor  value={JSON.stringify(jsonObjectTree?.configuration,null,2)} readOnly />  
+           :  <JsonEditor  value={JSON.stringify( historicalConfiguration?.configuration, null, 2 )} readOnly />  
            }
         </Stack>
           <ViewFormAudit  defaultValues={defaultValues} />
