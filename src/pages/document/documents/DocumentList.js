@@ -335,20 +335,6 @@ const  onChangePage = (event, newPage) => {
   };
 
   const handleGalleryView = () => {
-    if(customerPage){
-      dispatch(resetDocument())
-      dispatch(resetMachine())
-    }
-    if(machinePage){
-      dispatch(resetDocument())
-      dispatch(resetCustomer())
-    }
-
-    if(!customerPage && !machinePage){
-      dispatch(resetCustomer())
-      dispatch(resetMachine())
-    }
-
     dispatch(setDocumentGalleryVisibility(true));
   };
 
