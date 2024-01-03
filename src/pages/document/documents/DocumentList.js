@@ -362,7 +362,7 @@ const  onChangePage = (event, newPage) => {
           setCategoryVal={setCategoryVal}
           typeVal={typeVal}
           setTypeVal={setTypeVal}
-          handleGalleryView={handleGalleryView}
+          handleGalleryView={!isNotFound && (customerPage || machinePage) && handleGalleryView}
         />
         {!isNotFound && <TablePaginationCustom
           count={dataFiltered.length}
