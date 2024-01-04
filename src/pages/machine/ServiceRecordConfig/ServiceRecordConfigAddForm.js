@@ -153,18 +153,19 @@ export default function ServiceRecordConfigAddForm() {
     }
   }
 
-  useEffect(() => { 
+  useEffect(() => {
     if(activeMachineModels.length > 0 && activeCategories.length > 0 ){
-      if(!isCategoryModelLoaded && !id ){
-        if(activeMachineModels.some((element)=> element.isDefault === true)){
-          CategoryValHandler(null, activeCategories.find((ele) => ele._id === activeMachineModels.find((element)=> element.isDefault === true)?.category?._id || ele?.isDefault === true) || null ) 
+      if(!isCategoryModelLoaded && !id){
+        if ( activeCategories.find((ele) => ele?.isDefault === true) === activeMachineModels.find((ele)=> ele.isDefault === true)?.category?._id || !activeMachineModels.some((ele)=> ele.isDefault === true) ){
+          CategoryValHandler(null, activeCategories.find((ele) => ele?.isDefault === true) ) 
+        } else {
+          MachineModelValHandler(null, activeMachineModels.find((element)=> element.isDefault === true) )
         }
-        MachineModelValHandler(null, activeMachineModels.find((element)=> element.isDefault === true) || null)
       }
       setIsCategoryModelLoaded(true)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[dispatch, activeMachineModels, activeCategories ]);
+  },[activeMachineModels, activeCategories, isCategoryModelLoaded])
 
   return (
   <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

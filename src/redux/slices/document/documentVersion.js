@@ -111,10 +111,10 @@ export function addDocumentVersion(documentId,params) {
         try {
           const formData = new FormData();
           if(params?.customer){
-            formData.append('customer', params?.customer?._id);
+            formData.append('customer', params?.customer);
           }
           if(params?.machine){
-            formData.append('machine', params?.machine?._id);
+            formData.append('machine', params?.machine);
           }
           if(params?.machineModel){
             formData.append('machineModel', params?.machineModel);

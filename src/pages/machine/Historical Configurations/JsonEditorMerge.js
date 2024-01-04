@@ -18,18 +18,22 @@ JsonEditorMerge.propTypes = {
 
 function JsonEditorMerge({value, modifiedValue, HandleChangeIniJson, readOnly }) {
   return  (<Grid>
+            <Grid item md={12} sm={6} >
+              <Typography variant='h6' >{ value?.backupid || '' }</Typography>
+              <Typography variant='h6' >{ modifiedValue?.backupid || '' }</Typography>
+            </Grid>
             <Typography variant='subtitle2' display="flex" alignItems="center">Note: <Typography variant='caption' sx={{ml:1}}> Ctrl + F / Cmd + F to find text in Code Editer</Typography></Typography>
               <div>
                 <CodeMirrorMerge orientation="a-b" gutter highlightChanges  height="600px" // collapseUnchanged={{ margin: 3, minSize: 4 }}
                 >
                   <Original 
                     readOnly
-                    value={value}  
+                    value={ JSON.stringify( value?.configuration, null, 2 ) }  
                     extensions={[ zebraStripes({ step: 2 }), langs.json(), search({top: true, searchPanelOpen: true }) ]} 
                   />
                   <Modified
                     readOnly
-                    value={modifiedValue}
+                    value={ JSON.stringify( modifiedValue?.configuration, null, 2 ) }
                     extensions={[ zebraStripes({ step: 2 }), langs.json(), search({top: true, searchPanelOpen: true }) ]} 
                   />
                 </CodeMirrorMerge>
