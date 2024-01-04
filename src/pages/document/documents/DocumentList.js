@@ -160,7 +160,7 @@ const  onChangePage = (event, newPage) => {
   useEffect(() => {
     const fetchData = async () => {
       dispatch(resetDocuments());
-      if(machinePage){
+      if(machinePage || machineDrawings ){
         dispatch(getActiveDocumentCategories());
         dispatch(getActiveDocumentTypes());
       }
