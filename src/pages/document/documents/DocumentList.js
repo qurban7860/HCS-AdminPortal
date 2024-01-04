@@ -338,8 +338,6 @@ const  onChangePage = (event, newPage) => {
     dispatch(setDocumentGalleryVisibility(true));
   };
 
-
-  console.log(customerPage, machinePage)
   return (
     <>
     {/* <Container sx={{mb:3}}> */}
