@@ -50,23 +50,6 @@ export default function Lightbox({
   ...other
 }) {
   const totalItems = slides ? slides.length : 0;
-  // const [loading, setLoading] = useState(true);
-
-  // useEffect(() => {
-  //   const loadingTimeout = setTimeout(() => {
-  //     setLoading(false);
-  //   }, 100); // 10 seconds timeout
-
-  //   // Cleanup the timeout in case the component unmounts before the timeout completes
-  //   return () => clearTimeout(loadingTimeout);
-  // }, []);
-
-  // if (loading) {
-  //   // Show loading state (icon, spinner, etc.)
-  //   return (
-  //     <StyledLightbox />
-  //   );
-  // }
 
   return (
     <>
@@ -78,6 +61,9 @@ export default function Lightbox({
         animation={{ swipe: 240 }}
         carousel={{ finite: totalItems < 5 }}
         controller={{ closeOnBackdropClick: true }}
+        zoom={{
+          maxZoomPixelRatio:5
+        }}
         plugins={getPlugins({
           disabledZoom,
           disabledVideo,
@@ -92,7 +78,16 @@ export default function Lightbox({
             if (onGetCurrentIndex) {
               onGetCurrentIndex(index);
             }
-          }
+          },
+          load: ({ index, zoomIn, zoomOut, zoom, maxZoom }) => {
+            // Update maxZoom when the image is loaded
+            maxZoom(5);
+          },
+          // zoom: (currentZoom, maxZoom) => {
+          //   // Set initial zoom level (1) and max zoom level (5)
+          //   currentZoom(1);
+          //   maxZoom(5);
+          // },
         }}
         toolbar={{
           buttons: [
@@ -106,6 +101,7 @@ export default function Lightbox({
           ],
         }}
         render={{
+          
           iconLoading:  () => <Iconify width={50} color='#fff' icon="line-md:downloading-loop" />,
           iconClose: () => <Iconify width={ICON_SIZE} icon="solar:close-square-linear" />,
           iconDownload: () => <Iconify width={ICON_SIZE} icon="solar:download-square-linear" />,
@@ -117,6 +113,29 @@ export default function Lightbox({
           iconNext: () => <Iconify width={ICON_SIZE + 8} icon="solar:alt-arrow-right-bold-duotone" />,
           iconExitFullscreen: () => <Iconify width={ICON_SIZE} icon="solar:quit-full-screen-square-linear" />,
           iconEnterFullscreen: () => <Iconify width={ICON_SIZE} icon="solar:full-screen-square-linear" />,
+          // buttonZoom: (buttonZoom) => {
+          //   // buttonZoom.maxZoom=10;
+          //   const { zoomIn, zoomOut, zoom, maxZoom } = buttonZoom; 
+          //   console.log('zoom Button', buttonZoom)
+          //   return (
+          //     <>
+          //       <button type="button" className="yarl__button" onClick={() => zoomIn(zoom * maxZoom)}>
+          //         <Iconify width={ICON_SIZE} icon="solar:magnifer-zoom-in-outline" />
+          //       </button>
+          //       <button type="button" className="yarl__button" onClick={() => zoomOut(zoom / maxZoom)}>
+          //         <Iconify width={ICON_SIZE} icon="solar:magnifer-zoom-out-outline" />
+          //       </button>
+          //     </>
+          //   );
+          // },
+          slide:(_this)=>{
+            const {slide, offset, rect, zoom, maxZoom} = _this;
+            let _slide = <Iconify width={100} color='#fff' icon="line-md:downloading-loop" />;
+            if (slide?.isLoaded) {
+              _slide = <img src={slide?.src} alt="tatatta" style={{maxHeight: '100%'}}/>;
+            }
+            return _slide;
+          }
         }}
         {...other}
       />
