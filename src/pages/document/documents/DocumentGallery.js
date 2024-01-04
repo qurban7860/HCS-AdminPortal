@@ -20,6 +20,7 @@ import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { Cover } from '../../components/Defaults/Cover';
 import { PATH_DOCUMENT } from '../../../routes/paths';
 import { SkeletonGallery } from '../../../components/skeleton';
+import EmptyContent from '../../../components/empty-content/EmptyContent';
 
 // ----------------------------------------------------------------------
 
@@ -67,16 +68,21 @@ export default function DocumentGallery({customerPage, machinePage}) {
       customer:img?.customer?.name,
       isLoaded:false,
       id:img?._id,
+      width: '100%',
+      height: '100%',
     })));
+    
   },[documentGallery])
 
+
+  
+
   const handleOpenLightbox = (index) => {
-    console.log("index:::",index)
-    setSelectedImage(index);
     handleViewLightbox(index);
   };
 
   const handleViewLightbox = async (index) => {
+    setSelectedImage(index);
     const image = slides[index];
     if(!image?.isLoaded){
       try {
@@ -131,7 +137,7 @@ export default function DocumentGallery({customerPage, machinePage}) {
             sm: 'repeat(2, 1fr)',
             md: 'repeat(3, 1fr)',
             lg: 'repeat(4, 1fr)',
-            xl: 'repeat(5, 1fr)',
+            xl: 'repeat(6, 1fr)',
           }}
         >
           {!isLoading ? slides?.map((slide, index) => (
@@ -142,6 +148,7 @@ export default function DocumentGallery({customerPage, machinePage}) {
             />
             )):(<SkeletonGallery  />)
           }
+
         </Box>
 
         <Lightbox
@@ -150,6 +157,8 @@ export default function DocumentGallery({customerPage, machinePage}) {
           open={selectedImage >= 0}
           close={handleCloseLightbox}
           onGetCurrentIndex={(index) => handleViewLightbox(index)}
+          disabledZoom
+          disabledSlideshow
         />
       </Card>
     </Container>

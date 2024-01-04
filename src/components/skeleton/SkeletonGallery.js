@@ -18,12 +18,12 @@ export default function SkeletonGallery() {
   if(smScreen) repeat=2;
   if(mdScreen) repeat=3;
   if(lgScreen) repeat=4;
-  if(xlScreen) repeat=5;
+  if(xlScreen) repeat=6;
 
   return (
     Array.from(new Array(repeat)).map((_, index) => (
       <Card sx={{ cursor: 'pointer', position: 'relative' }}>
-        <Skeleton sx={{ height: 200 }} animation="wave" variant="rectangular" />
+        <Skeleton sx={{ height: 170 }} animation="wave" variant="rectangular" />
         <CardContent>
           <Skeleton animation="wave" height={15} style={{ marginBottom: 6 }} />
           <Skeleton animation="wave" height={15} width="80%" />
