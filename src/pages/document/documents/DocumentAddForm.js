@@ -71,10 +71,11 @@ function DocumentAddForm({
   const { machine, customerMachines } = useSelector((state) => state.machine);
   const { document ,documentHistory, activeDocuments, documentAddFilesViewFormVisibility, documentNewVersionFormVisibility, documentHistoryAddFilesViewFormVisibility, documentHistoryNewVersionFormVisibility } = useSelector((state) => state.document);
   const { customer, activeCustomers } = useSelector((state) => state.customer);
-
+console.log("customer : ", customer)
   // ------------------ document values states ------------------------------
   const [ categoryBy, setCategoryBy ] = useState(null);
   const [ isDocumentTypesLoaded, setIsDocumentTypesLoaded ] = useState( false );
+  const [ isDocumentCategoryLoaded, setIsDocumentCategoryLoaded ] = useState( false );
   const [ previewVal, setPreviewVal ] = useState('');
   const [ preview, setPreview ] = useState(false);
   const [ readOnlyVal, setReadOnlyVal ] = useState(false);
@@ -112,34 +113,40 @@ function DocumentAddForm({
   const { documentCategory, documentType, displayName, versionNo, documentVal, files, isActive, customerAccess  } = watch();
 
   useEffect(() => {
-    if( customerPage && !machinePage && !machineDrawings ){ // customerPage
+    if( customerPage && !machinePage && !machineDrawings && !categoryBy ){ // customerPage
       setCategoryBy( {customer: true} )
       if( customer?._id && selectedValue === 'newVersion' ) dispatch(getCustomerDocuments(customer?._id));
-    } else if ( machinePage && !customerPage && !machineDrawings) { // machinePage 
+    } else if ( machinePage && !customerPage && !machineDrawings && !categoryBy ) { // machinePage 
       setCategoryBy( { machine: true } )
       if (machine?._id && selectedValue === 'newVersion') dispatch(getMachineDocuments(machine?._id));
-    } else if( machineDrawings && !customerPage && !machinePage ){ //  machineDrawings 
+    } else if( machineDrawings && !customerPage && !machinePage && !categoryBy ){ //  machineDrawings 
       setCategoryBy( { drawing: true } )
       if( selectedValue === 'newVersion' ) dispatch(getMachineDrawingsDocuments());
     }
-  }, [dispatch, customer, customerPage, machine, machinePage, machineDrawings, selectedValue]);
+  }, [dispatch, categoryBy, customerPage, customer, machinePage, machine, machineDrawings, selectedValue]);
   
 
   useEffect( () => { // Get Active Document Types And Active Document Categoories
-    if( categoryBy ){ dispatch( getActiveDocumentCategories( categoryBy ) );  dispatch( getActiveDocumentTypesWithCategory( null, categoryBy ) ) }
+    if( !isDocumentCategoryLoaded && categoryBy ){
+      dispatch( getActiveDocumentCategories( categoryBy ) );  dispatch( getActiveDocumentTypesWithCategory( null, categoryBy ) ) 
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ categoryBy ] )
 
-  useEffect(() => { // Set Default Document Categoory Value
-    if( activeDocumentCategories?.length > 0 ) setValue('documentCategory',activeDocumentCategories.find((el)=> el.isDefault === true))
-  },[ activeDocumentCategories, setValue ])
-
   useEffect(() => { // Set Default Document Type Value
-    if( ( activeDocumentTypes?.length > 0 ) && ( activeDocumentCategories?.length > 0 ) && !isDocumentTypesLoaded ){
-        setValue('documentType',activeDocumentTypes.find((el)=> el?.docCategory?._id === activeDocumentCategories.find((ele)=>  ele.isDefault === true)?._id ))
+    if( activeDocumentTypes?.length > 0 && activeDocumentCategories?.length > 0  && !isDocumentTypesLoaded ){
+      if(activeDocumentTypes.find((el)=> el.isDefault === true )?._id === activeDocumentCategories.find((el)=> el.isDefault === true )?._id){
+        setValue('documentType', activeDocumentTypes.find((el)=> el.isDefault === true ))
+        setValue('documentCategory', activeDocumentCategories.find((el)=>  el.isDefault === true ))
+      } else if (activeDocumentTypes.find((el)=> el.isDefault === true )){
+        setValue('documentType', activeDocumentTypes.find((el)=> el.isDefault === true ))
+        setValue('documentCategory', activeDocumentTypes.find((el)=> el.isDefault === true )?.docCategory || null )
+      } else {
+        setValue('documentCategory', activeDocumentCategories.find((el)=>  el.isDefault === true ))
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ activeDocumentTypes ] )
+  },[ activeDocumentTypes, activeDocumentCategories ] )
 
   useEffect(()=>{ // Get Active Document Types Against Document Categoory
     if( documentCategory?._id && categoryBy ){ dispatch( getActiveDocumentTypesWithCategory( documentCategory?._id, categoryBy ) ); 
@@ -158,7 +165,7 @@ function DocumentAddForm({
     if (machinePage)  setValue('machine', machine?._id);
     return () =>  { dispatch(resetActiveDocumentTypes()); dispatch(resetActiveDocumentCategories()) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+  }, [dispatch, customer, machine ]);
 
   useEffect(()=>{
     if( documentHistoryNewVersionFormVisibility ){
@@ -467,7 +474,6 @@ function DocumentAddForm({
                               setValue('documentCategory', newValue);
                               if (newValue?._id !== documentType?.docCategory?._id) {
                                 dispatch(resetActiveDocumentTypes());
-                                // dispatch(getActiveDocumentTypesWithCategory(newValue?._id, categoryBy ));
                                 setValue('documentType', null);
                               }
                             } else {
@@ -494,7 +500,6 @@ function DocumentAddForm({
                               setValue('documentType', newValue);
                               if (!documentCategory?._id || newValue?.docCategory?._id !== documentCategory?._id ) {
                               setValue('documentCategory', newValue?.docCategory );
-                              // dispatch(getActiveDocumentTypesWithCategory(newValue?._id, categoryBy));
                               }
                             } else {
                               setValue('documentType', null);
@@ -503,6 +508,7 @@ function DocumentAddForm({
                           id="controllable-states-demo"
                             ChipProps={{ size: 'small' }}
                         />
+
                         </Box>)}
 
                 {documentVal && (

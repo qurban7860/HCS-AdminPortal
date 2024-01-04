@@ -356,11 +356,10 @@ function applyFilter({ inputData, comparator, filterName, filterVerify, filterSt
   inputData = stabilizedThis.map((el) => el[0]);
 
   if(accountManager)
-    inputData = inputData.filter((customer)=> customer.accountManager?._id===accountManager?._id);
+    inputData = inputData.filter((machine) => machine?.accountManager?.some(manager => manager._id === accountManager?._id));
   
   if(supportManager)
-    inputData = inputData.filter((customer)=> customer.supportManager?._id===supportManager?._id);
-  
+    inputData = inputData.filter((machine) => machine?.supportManager?.some(manager => manager._id === supportManager?._id));
   
   if(filterVerify==='verified')
     inputData = inputData.filter((customer)=> customer.verifications.length>0);
