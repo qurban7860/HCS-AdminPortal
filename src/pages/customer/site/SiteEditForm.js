@@ -204,7 +204,7 @@ export default function SiteEditForm() {
       } else {
         data.primaryTechnicalContact = null;
       }
-      // console.log("Site Data : ",data)
+      
       await dispatch(updateSite(data, customer?._id, site?._id));
       await dispatch(getSites(customer?._id));
       await dispatch(getSite(customer?._id, site?._id));
