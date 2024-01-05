@@ -10,6 +10,7 @@ import { MuiTelInput } from 'mui-tel-input';
 import { Box,Card, Grid, Stack, Typography, TextField, Autocomplete } from '@mui/material';
 // slice
 import { addSite, getSites, setSiteFormVisibility } from '../../../redux/slices/customer/site';
+import { getActiveContacts } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 // assets
@@ -31,7 +32,7 @@ export default function SiteAddForm() {
 
   const { customer } = useSelector((state) => state.customer);
 
-  const { contacts } = useSelector((state) => state.contact);
+  const { activeContacts } = useSelector((state) => state.contact);
 
   const dispatch = useDispatch();
 
@@ -42,10 +43,11 @@ export default function SiteAddForm() {
   const [fax, setFaxVal] = useState('');
   const [billingContactVal, setBillingContactVal] = useState('');
   const [technicalContactVal, setTechnicalContactVal] = useState('');
+
   useEffect(() => {
-    // primaryBillingContact: Yup.string().nullable(),
-    // primaryTechnicalContact: Yup.string().nullable(),
-  }, []);
+    dispatch( getActiveContacts(customer?._id))
+  }, [ customer, dispatch ] );
+
   /* eslint-disable */
   const AddSiteSchema = Yup.object().shape({
     name: Yup.string().min(2).max(40).required().label('Name'),
@@ -270,7 +272,7 @@ export default function SiteAddForm() {
                 <Autocomplete
                   // freeSolo
                   value={billingContactVal || null}
-                  options={contacts}
+                  options={activeContacts}
                   isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   getOptionLabel={(option) => `${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
                   onChange={(event, newValue) => {
@@ -295,7 +297,7 @@ export default function SiteAddForm() {
                 <Autocomplete
                   // freeSolo
                   value={technicalContactVal || null}
-                  options={contacts}
+                  options={activeContacts}
                   isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   getOptionLabel={(option) => `${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
                   onChange={(event, newValue) => {

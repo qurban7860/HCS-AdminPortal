@@ -2,9 +2,10 @@ import PropTypes from 'prop-types';
 import { zebraStripes } from '@uiw/codemirror-extensions-zebra-stripes';
 import { langs } from '@uiw/codemirror-extensions-langs';
 import { search } from '@codemirror/search';
-import { Grid, Typography } from '@mui/material';
+import { Grid, Typography, Box } from '@mui/material';
 import CodeMirrorMerge from 'react-codemirror-merge';
 import './style.css';
+import ViewFormAuditBlock from '../../components/ViewForms/ViewFormAuditBlock';
 
 const Original = CodeMirrorMerge.Original;
 const Modified = CodeMirrorMerge.Modified;
@@ -17,14 +18,17 @@ JsonEditorMerge.propTypes = {
 };
 
 function JsonEditorMerge({value, modifiedValue, HandleChangeIniJson, readOnly }) {
-  return  (<Grid>
-            <Grid item md={12} sm={6} >
+  return  (<Grid sx={{p:1}}>
+              <Box
+                rowGap={2} columnGap={2} display="grid"
+                gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+              >
               <Typography variant='h6' >{ value?.backupid || '' }</Typography>
               <Typography variant='h6' >{ modifiedValue?.backupid || '' }</Typography>
-            </Grid>
+            </Box>
             <Typography variant='subtitle2' display="flex" alignItems="center">Note: <Typography variant='caption' sx={{ml:1}}> Ctrl + F / Cmd + F to find text in Code Editer</Typography></Typography>
               <div>
-                <CodeMirrorMerge orientation="a-b" gutter highlightChanges  height="600px" // collapseUnchanged={{ margin: 3, minSize: 4 }}
+                <CodeMirrorMerge orientation="a-b" gutter highlightChanges style={{ display: {md: 'flex', sm: 'block'} }} height="600px" // collapseUnchanged={{ margin: 3, minSize: 4 }}
                 >
                   <Original 
                     readOnly
@@ -38,6 +42,13 @@ function JsonEditorMerge({value, modifiedValue, HandleChangeIniJson, readOnly })
                   />
                 </CodeMirrorMerge>
               </div>
+            <Box
+              rowGap={2} columnGap={2} display="grid"
+              gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+            >
+              <ViewFormAuditBlock  defaultValues={value} />
+              <ViewFormAuditBlock  defaultValues={modifiedValue} />
+            </Box>
           </Grid>)
 } 
 

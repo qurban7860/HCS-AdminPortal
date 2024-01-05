@@ -29,6 +29,7 @@ import {
   getSite,
   getSites,
 } from '../../../redux/slices/customer/site';
+import { getActiveContacts } from '../../../redux/slices/customer/contact';
 import { getCustomer } from '../../../redux/slices/customer/customer';
 // routes
 // import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -62,13 +63,17 @@ export default function SiteEditForm() {
   const [fax, setFaxVal] = useState('');
   const [billingContactVal, setBillingContactVal] = useState('');
   const [technicalContactVal, setTechnicalContactVal] = useState('');
-  // console.log("phone : ",phone)
+  
   function filtter(data, input) {
     const filteredOutput = data.filter((obj) =>
       Object.keys(input).every((filterKeys) => obj[filterKeys] === input[filterKeys])
     );
     return filteredOutput;
   }
+
+  useEffect(() => {
+    dispatch( getActiveContacts(customer?._id))
+  }, [ customer, dispatch ] );
 
   useEffect(() => {
     if (site?.phone) {
