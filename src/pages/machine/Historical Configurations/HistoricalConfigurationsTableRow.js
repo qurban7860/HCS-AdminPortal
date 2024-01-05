@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
-// import { useState } from 'react';
+import { useState } from 'react';
 // @mui
 import {
   Switch,
+  Button,
+  Checkbox,
   TableRow,
   TableCell,
 } from '@mui/material';
@@ -18,6 +20,7 @@ HistoricalConfigurationsTableRow.propTypes = {
   row: PropTypes.object,
   style: PropTypes.object,
   selected: PropTypes.bool,
+  selectedLength: PropTypes.number,
   onEditRow: PropTypes.func,
   onViewRow: PropTypes.func,
   onSelectRow: PropTypes.func,
@@ -37,17 +40,22 @@ export default function HistoricalConfigurationsTableRow({
   row,
   style,
   selected,
+  selectedLength,
   onSelectRow,
   onDeleteRow,
   onEditRow,
   onViewRow,
 }) {
 
-  const { backupid, isActive, createdAt, createdBy } = row;
-
+  const { _id, backupid, isActive, createdAt, createdBy } = row;
 
   return (
+    <>
       <StyledTableRow hover selected={selected}>
+        <TableCell padding="checkbox">
+          <Checkbox checked={selected} onClick={ onSelectRow }  />
+        </TableCell>
+
         <LinkTableCell align="left" onClick={onViewRow} param={backupid} />
         <TableCell align="center">
           {' '}
@@ -57,5 +65,6 @@ export default function HistoricalConfigurationsTableRow({
         <TableCell align="right">{fDateTime(createdAt)}</TableCell>
       </StyledTableRow>
 
+    </>
   );
 }

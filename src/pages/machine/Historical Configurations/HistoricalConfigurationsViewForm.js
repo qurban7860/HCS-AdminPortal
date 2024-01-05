@@ -43,7 +43,7 @@ function HistoricalConfigurationsViewForm() {
     <Card sx={{ p: 2 }}>
       <Grid>
         <ViewFormEditDeleteButtons backLink={()=> dispatch(setHistoricalConfigurationViewFormVisibility(false))} />
-        <Stack spacing={2} sx={{p:2}}>
+        <Stack spacing={2} sx={{p:1}}>
 
           {isLoading ? 
           <>

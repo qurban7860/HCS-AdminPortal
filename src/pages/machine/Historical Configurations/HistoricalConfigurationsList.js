@@ -1,7 +1,12 @@
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 // @mui
+import { createTheme } from '@mui/material/styles';
+import { green } from '@mui/material/colors';
 import {
+  Button,
+  Tooltip, 
+  IconButton,
   Table,
   TableBody,
   TableContainer
@@ -15,6 +20,7 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
+  TableSelectedAction,
   TablePaginationCustom,
 } from '../../../components/table';
 import Scrollbar from '../../../components/scrollbar';
@@ -25,7 +31,9 @@ import HistoricalConfigurationsListTableToolbar from './HistoricalConfigurations
 import {
   getHistoricalConfigurationRecords,
   getHistoricalConfigurationRecord,
+  getHistoricalConfigurationRecord2,
   setHistoricalConfigurationViewFormVisibility,
+  setHistoricalConfigurationCompareViewFormVisibility,
   resetHistoricalConfigurationRecord,
   ChangeRowsPerPage,
   ChangePage,
@@ -33,6 +41,9 @@ import {
 } from '../../../redux/slices/products/historicalConfiguration';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
+import Iconify from '../../../components/iconify';
+import { StyledTooltip } from '../../../theme/styles/default-styles';
+import ConfirmDialog from '../../../components/confirm-dialog';
 
 // ----------------------------------------------------------------------
 
@@ -54,6 +65,10 @@ export default function HistoricalConfigurationsList() {
     orderBy,
     setPage,
     //
+    selected,
+    setSelected,
+    onSelectRow,
+    onSelectAllRows,
     //
     onSort,
   } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
@@ -63,12 +78,20 @@ export default function HistoricalConfigurationsList() {
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
   };
 
+  const theme = createTheme({
+    palette: {
+      success: green,
+    },
+  });
+
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
   const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
+  const [openConfirm, setOpenConfirm] = useState(false);
 
+// console.log("selected : ",selected)
   useLayoutEffect(() => {
     dispatch(getHistoricalConfigurationRecords(machine?._id)); 
     dispatch(setHistoricalConfigurationViewFormVisibility(false));
@@ -134,7 +157,14 @@ export default function HistoricalConfigurationsList() {
     setFilterName('');
   };
 
+  const getCompareInis = async (id1, id2) => {
+    dispatch(setHistoricalConfigurationCompareViewFormVisibility(true));
+    dispatch(getHistoricalConfigurationRecord( machine?._id, id1 ));
+    dispatch(getHistoricalConfigurationRecord2( machine?._id, id2 ));
+  }
+
   return (
+    <>
         <TableCard>
           <HistoricalConfigurationsListTableToolbar
             filterName={filterName}
@@ -143,6 +173,7 @@ export default function HistoricalConfigurationsList() {
             onFilterStatus={handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
+
           />
 
           {!isNotFound && <TablePaginationCustom
@@ -155,6 +186,23 @@ export default function HistoricalConfigurationsList() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
 
+          <TableSelectedAction
+              dense
+              numSelected={selected.length}
+              rowCount={tableData.length}
+              onSelectAllRows={(checked) =>
+                onSelectAllRows(
+                  checked,
+                  selected.length > 1 ? [] : tableData.slice(0, 2).map((row) => row._id)
+                )
+              }
+              action={
+                <StyledTooltip title="Compare INI's" placement='top' disableFocusListener tooltipcolor={theme.palette.primary.main} color={theme.palette.text.primary}>
+                  <Iconify onClick={() => getCompareInis(selected[0], selected[1])} color={theme.palette.primary.dark} sx={{ width: '28px', height: '28px', cursor: 'pointer' }}  icon='mdi:file-compare' />
+                </StyledTooltip>
+              }
+            />
+
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
                 <TableHeadCustom
@@ -162,6 +210,13 @@ export default function HistoricalConfigurationsList() {
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   onSort={onSort}
+                  numSelected={selected.length}
+                  onSelectAllRows={(checked) =>
+                    onSelectAllRows(
+                      checked,
+                      selected.length > 1 ? [] : tableData.slice(0, 2).map((row) => row._id)
+                    )
+                  }
                 />
 
                 <TableBody>
@@ -173,6 +228,9 @@ export default function HistoricalConfigurationsList() {
                           key={row._id}
                           row={row}
                           onViewRow={() => handleViewRow(row._id)}
+                          selected={selected.includes(row._id)}
+                          selectedLength={selected.length}
+                          onSelectRow={ ()=>  selected.length < 2 || selected.find((el) => el === row._id) ? onSelectRow(row._id) : setOpenConfirm(true) }
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         />
                       ) : (
@@ -193,6 +251,14 @@ export default function HistoricalConfigurationsList() {
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
         </TableCard>
+        <ConfirmDialog
+            open={openConfirm}
+            onClose={ () => setOpenConfirm(false) }
+            title="Compare Two INI's"
+            content="Please select two INI's  only!"
+            SubButton="Close"
+          />
+    </>
   );
 }
 

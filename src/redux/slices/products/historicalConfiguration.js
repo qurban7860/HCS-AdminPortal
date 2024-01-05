@@ -15,6 +15,7 @@ const initialState = {
   isLoading: false,
   error: null,
   historicalConfiguration: {},
+  historicalConfiguration2: {},
   historicalConfigurations: [],
   isHistorical: false,
   isDetailPage: false,
@@ -89,6 +90,14 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // GET MACHINE Active SERVICE PARAM
+    getHistoricalConfigurationRecord2Success(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.historicalConfiguration2 = action.payload;
+      state.initial = true;
+    },
+    
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
       state.isLoading = false;
@@ -183,6 +192,27 @@ export function getHistoricalConfigurationRecord(machineId, id) {
         }
       });
       dispatch(slice.actions.getHistoricalConfigurationRecordSuccess(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function getHistoricalConfigurationRecord2(machineId, id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}apiclient/productConfigurations/${id}`,
+      {
+        params: {
+          machine: machineId,
+        }
+      });
+      dispatch(slice.actions.getHistoricalConfigurationRecord2Success(response.data));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
