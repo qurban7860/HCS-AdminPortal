@@ -157,7 +157,6 @@ export default function DocumentGallery({customerPage, machinePage}) {
           open={selectedImage >= 0}
           close={handleCloseLightbox}
           onGetCurrentIndex={(index) => handleViewLightbox(index)}
-          disabledZoom
           disabledSlideshow
         />
       </Card>
