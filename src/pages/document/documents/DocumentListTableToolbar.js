@@ -27,6 +27,7 @@ DocumentListTableToolbar.propTypes = {
   setCategoryVal: PropTypes.func,
   typeVal: PropTypes.object,
   setTypeVal: PropTypes.func,
+  handleGalleryView: PropTypes.func,
 };
 
 export default function DocumentListTableToolbar({
@@ -44,6 +45,7 @@ export default function DocumentListTableToolbar({
   setCategoryVal,
   typeVal,
   setTypeVal,
+  handleGalleryView
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -59,9 +61,9 @@ export default function DocumentListTableToolbar({
 
   let addButton;
   if (machineDrawings) {
-    addButton = machineDrawings ? BUTTONS.ADDDRAWING : undefined;
+    addButton = BUTTONS.ADDDRAWING;
   } else if(customerPage || machinePage){
-    addButton = customerPage || machinePage  ? BUTTONS.ADDDOCUMENT : undefined;
+    addButton = BUTTONS.ADDDOCUMENT;
   }else{
     addButton = undefined;
   }
@@ -82,11 +84,12 @@ export default function DocumentListTableToolbar({
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
         addButton={addButton}
-        transferredMachine={machine?.status?.slug==='transferred'}
+        transferredMachine={machinePage && machine?.status?.slug==='transferred'}
         categoryVal={categoryVal}
         setCategoryVal={(machineDrawings || machinePage) ? setCategoryVal : null }
         typeVal={typeVal}
         setTypeVal={(machineDrawings || machinePage) ? setTypeVal : null }
+        handleGalleryView={handleGalleryView}
       />
     </Stack>
   );

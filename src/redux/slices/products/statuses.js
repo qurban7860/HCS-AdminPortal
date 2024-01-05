@@ -85,7 +85,14 @@ const slice = createSlice({
       state.success = false;
       state.isLoading = false;
     },
-        // Set FilterBy
+    // RESET 
+    resetActiveMachineStatuses(state){
+      state.activeMachineStatuses = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+    // Set FilterBy
     setFilterBy(state, action) {
       state.filterBy = action.payload;
     },
@@ -108,6 +115,7 @@ export const {
   setMachinestatusesEditFormVisibility,
   resetMachineStatus,
   resetMachineStatuses,
+  resetActiveMachineStatuses,
   setResponseMessage,
   setFilterBy,
   ChangeRowsPerPage,

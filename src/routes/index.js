@@ -164,7 +164,8 @@ import {
   DocumentList, 
   DocumentAddForm, 
   DocumentEditForm, 
-  DocumentViewForm, 
+  DocumentViewForm,
+  DocumentGallery, 
   
   // MachineDocumentView,
   MachineDrawings,
@@ -235,6 +236,7 @@ import {
   BlacklistIPAddForm,
   WhitelistIPList,
   WhitelistIPAddForm,
+  
 } from './elements';
 // ----------------------------------------------------------------------
 
@@ -670,6 +672,7 @@ export default function Router() {
         {path: 'new', element: <DocumentAddForm /> },
         {path: ':id/edit', element: <DocumentEditForm /> },
         {path: ':id/view', element: <DocumentViewForm /> },
+        {path: 'gallery', element: <DocumentGallery /> },
         // {path: ':id/customer',element: <CustomerDocumentView />},
         // {path: ':id/machine',element: <MachineDocumentView/>},
         {path: 'machineDrawings',

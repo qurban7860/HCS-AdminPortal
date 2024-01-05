@@ -12,9 +12,9 @@ import {
 import Iconify from '../../components/iconify';
 
 export const ThumbnailCard = styled(Card)(({ theme }) => ({
-  height: '140px',
-  width: '140px',
-  m: 1,
+  minWidth:'140px',
+  m: 0,
+  p:0
 }));
 
 export const ThumbnailCardContent = styled(CardContent)(({ theme }) => ({
@@ -38,18 +38,13 @@ export const ThumbnailCardMedia = styled(CardMedia)(({ theme }) => ({
 }));
 
 export const ThumbnailCardMediaIcon = styled(CardMedia)(({ theme }) => ({
-  height: '80px',
-  width: '60px',
-  marginLeft: '17px',
-  // display: 'block',
-  // zIndex: '-1',
-  // position: 'absolute',
+  width: '70px',
+  margin: '0 auto',
 }));
 
 export const ThumbnailGrid = styled(Grid)(({ theme, ...props }) => ({
   bgcolor: 'lightgray',
   alignContent: 'center',
-  width: '140px',
 }));
 
 export const ThumbnailIconButton = styled(IconButton)(({ theme }) => ({
@@ -62,13 +57,12 @@ export const ThumbnailIconButton = styled(IconButton)(({ theme }) => ({
 
 export const ThumbnailNameGrid = styled(Grid)(({ theme }) => ({
   textAlign: 'center',
-  width: '140px',
-  mt: 1,
 }));
 
 export const ThumbnailUploadButton = styled(Button)(({ theme }) => ({
   width: '140px',
   height: '140px',
+  margin:0.5,
   borderRadius: '16px',
   justifyContent: 'center',
   flexDirection: 'column',

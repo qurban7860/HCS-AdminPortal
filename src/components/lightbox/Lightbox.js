@@ -1,4 +1,5 @@
 /* eslint-disable import/no-unresolved */
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import ReactLightbox from 'yet-another-react-lightbox';
 import Zoom from 'yet-another-react-lightbox/plugins/zoom';
@@ -7,6 +8,7 @@ import Captions from 'yet-another-react-lightbox/plugins/captions';
 import Slideshow from 'yet-another-react-lightbox/plugins/slideshow';
 import Fullscreen from 'yet-another-react-lightbox/plugins/fullscreen';
 import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails';
+import Download from 'yet-another-react-lightbox/plugins/download';
 import { useLightboxState } from 'yet-another-react-lightbox/core';
 // @mui
 import { Typography } from '@mui/material';
@@ -28,7 +30,9 @@ Lightbox.propTypes = {
   disabledSlideshow: PropTypes.bool,
   disabledThumbnails: PropTypes.bool,
   disabledFullscreen: PropTypes.bool,
+  disabledDownload: PropTypes.bool,
   onGetCurrentIndex: PropTypes.func,
+  imageLoading: PropTypes.bool,
 };
 
 export default function Lightbox({
@@ -40,7 +44,9 @@ export default function Lightbox({
   disabledSlideshow,
   disabledThumbnails,
   disabledFullscreen,
+  disabledDownload,
   onGetCurrentIndex,
+  imageLoading,
   ...other
 }) {
   const totalItems = slides ? slides.length : 0;
@@ -51,9 +57,13 @@ export default function Lightbox({
 
       <ReactLightbox
         slides={slides}
+        captions='slides'
         animation={{ swipe: 240 }}
         carousel={{ finite: totalItems < 5 }}
         controller={{ closeOnBackdropClick: true }}
+        zoom={{
+          maxZoomPixelRatio:5
+        }}
         plugins={getPlugins({
           disabledZoom,
           disabledVideo,
@@ -61,13 +71,23 @@ export default function Lightbox({
           disabledSlideshow,
           disabledThumbnails,
           disabledFullscreen,
+          disabledDownload
         })}
         on={{
-          view: (index) => {
+          view: ({index}) => {
             if (onGetCurrentIndex) {
               onGetCurrentIndex(index);
             }
           },
+          load: ({ index, zoomIn, zoomOut, zoom, maxZoom }) => {
+            // Update maxZoom when the image is loaded
+            maxZoom(5);
+          },
+          // zoom: (currentZoom, maxZoom) => {
+          //   // Set initial zoom level (1) and max zoom level (5)
+          //   currentZoom(1);
+          //   maxZoom(5);
+          // },
         }}
         toolbar={{
           buttons: [
@@ -81,15 +101,41 @@ export default function Lightbox({
           ],
         }}
         render={{
-          iconClose: () => <Iconify width={ICON_SIZE} icon="carbon:close" />,
-          iconZoomIn: () => <Iconify width={ICON_SIZE} icon="carbon:zoom-in" />,
-          iconZoomOut: () => <Iconify width={ICON_SIZE} icon="carbon:zoom-out" />,
-          iconSlideshowPlay: () => <Iconify width={ICON_SIZE} icon="carbon:play" />,
-          iconSlideshowPause: () => <Iconify width={ICON_SIZE} icon="carbon:pause" />,
-          iconPrev: () => <Iconify width={ICON_SIZE + 8} icon="carbon:chevron-left" />,
-          iconNext: () => <Iconify width={ICON_SIZE + 8} icon="carbon:chevron-right" />,
-          iconExitFullscreen: () => <Iconify width={ICON_SIZE} icon="carbon:center-to-fit" />,
-          iconEnterFullscreen: () => <Iconify width={ICON_SIZE} icon="carbon:fit-to-screen" />,
+          
+          iconLoading:  () => <Iconify width={50} color='#fff' icon="line-md:downloading-loop" />,
+          iconClose: () => <Iconify width={ICON_SIZE} icon="solar:close-square-linear" />,
+          iconDownload: () => <Iconify width={ICON_SIZE} icon="solar:download-square-linear" />,
+          iconZoomIn: () => <Iconify width={ICON_SIZE} icon="solar:magnifer-zoom-in-outline" />,
+          iconZoomOut: () => <Iconify width={ICON_SIZE} icon="solar:magnifer-zoom-out-outline" />,
+          iconSlideshowPlay: () => <Iconify width={ICON_SIZE} icon="solar:play-line-duotone" />,
+          iconSlideshowPause: () => <Iconify width={ICON_SIZE} icon="solar:pause-line-duotone" />,
+          iconPrev: () => <Iconify width={ICON_SIZE + 8} icon="solar:alt-arrow-left-bold-duotone" />,
+          iconNext: () => <Iconify width={ICON_SIZE + 8} icon="solar:alt-arrow-right-bold-duotone" />,
+          iconExitFullscreen: () => <Iconify width={ICON_SIZE} icon="solar:quit-full-screen-square-linear" />,
+          iconEnterFullscreen: () => <Iconify width={ICON_SIZE} icon="solar:full-screen-square-linear" />,
+          // buttonZoom: (buttonZoom) => {
+          //   // buttonZoom.maxZoom=10;
+          //   const { zoomIn, zoomOut, zoom, maxZoom } = buttonZoom; 
+          //   console.log('zoom Button', buttonZoom)
+          //   return (
+          //     <>
+          //       <button type="button" className="yarl__button" onClick={() => zoomIn(zoom * maxZoom)}>
+          //         <Iconify width={ICON_SIZE} icon="solar:magnifer-zoom-in-outline" />
+          //       </button>
+          //       <button type="button" className="yarl__button" onClick={() => zoomOut(zoom / maxZoom)}>
+          //         <Iconify width={ICON_SIZE} icon="solar:magnifer-zoom-out-outline" />
+          //       </button>
+          //     </>
+          //   );
+          // },
+          slide:(_this)=>{
+            const {slide, offset, rect, zoom, maxZoom} = _this;
+            let _slide = <Iconify width={100} color='#fff' icon="line-md:downloading-loop" />;
+            if (slide?.isLoaded) {
+              _slide = <img src={slide?.src} alt="tatatta" style={{maxHeight: '100%'}}/>;
+            }
+            return _slide;
+          }
         }}
         {...other}
       />
@@ -106,8 +152,9 @@ export function getPlugins({
   disabledSlideshow,
   disabledThumbnails,
   disabledFullscreen,
+  disabledDownload,
 }) {
-  let plugins = [Captions, Fullscreen, Slideshow, Thumbnails, Video, Zoom];
+  let plugins = [Thumbnails, Captions, Fullscreen, Slideshow, Zoom, Video, Download];
 
   if (disabledThumbnails) {
     plugins = plugins.filter((plugin) => plugin !== Thumbnails);
@@ -127,6 +174,9 @@ export function getPlugins({
   if (disabledVideo) {
     plugins = plugins.filter((plugin) => plugin !== Video);
   }
+  if (disabledDownload) {
+    plugins = plugins.filter((plugin) => plugin !== Download);
+  }
 
   return plugins;
 }
@@ -141,7 +191,6 @@ DisplayTotal.propTypes = {
 
 export function DisplayTotal({ totalItems, disabledTotal, disabledCaptions }) {
   const { state } = useLightboxState();
-
   const { currentIndex } = state;
 
   if (disabledTotal) {
@@ -152,10 +201,9 @@ export function DisplayTotal({ totalItems, disabledTotal, disabledCaptions }) {
     <Typography
       className="yarl__button"
       sx={{
-        pl: 3,
-        left: 0,
         position: 'fixed',
         typography: 'body2',
+        alignSelf:'center',
         ...(!disabledCaptions && {
           px: 'unset',
           minWidth: 64,

@@ -1,21 +1,15 @@
 import PropTypes from 'prop-types';
-import * as Yup from 'yup';
 import { useEffect, useState, useCallback , memo} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import {
-  Box,
-  Card,
-  Grid,
-  Stack,
-  Autocomplete,
-  TextField,
-  Dialog,
-} from '@mui/material';
+import { pdfjs } from 'react-pdf';
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
+import { Box, Card, Grid, Stack, Dialog } from '@mui/material';
 // PATH
+
 import { PATH_DOCUMENT } from '../../../routes/paths';
 // slice
 import {
@@ -26,51 +20,30 @@ import {
   getMachineDocuments,
   getMachineDrawingsDocuments,
   addDocument,
-  setDocumentViewFormVisibility,
-  setDocumentHistoryViewFormVisibility,
-  setDocumentFormVisibility,
-  setDocumentAddFilesViewFormVisibility,
-  setDocumentNewVersionFormVisibility,
-  setDocumentHistoryAddFilesViewFormVisibility,
-  setDocumentHistoryNewVersionFormVisibility,
+  setViewVisiilityNoOthers,
+  setViewHistoryVisiilityNoOthers,
+  setDrawingAndDocumentVisibility,
 } from '../../../redux/slices/document/document';
-import {
-  getActiveDocumentCategories,
-} from '../../../redux/slices/document/documentCategory';
-import {
-  resetActiveDocumentTypes,
-  getActiveDocumentTypesWithCategory,
-} from '../../../redux/slices/document/documentType';
-import {
-  addDocumentVersion,
-  updateDocumentVersion,
-} from '../../../redux/slices/document/documentVersion';
+import { getActiveDocumentCategories, resetActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
+import { getActiveDocumentTypesWithCategory, resetActiveDocumentTypes } from '../../../redux/slices/document/documentType';
+import { addDocumentVersion, updateDocumentVersion,} from '../../../redux/slices/document/documentVersion';
 import { getActiveCustomers } from '../../../redux/slices/customer/customer';
-import {
-  getCustomerMachines,
-  resetCustomerMachines
-} from '../../../redux/slices/products/machine';
+import { getCustomerMachines, resetCustomerMachines} from '../../../redux/slices/products/machine';
 import { getDrawings, resetDrawings, setDrawingAddFormVisibility } from '../../../redux/slices/products/drawing';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, {
-  RHFAutocomplete,
-  RHFTextField,
-  RHFUpload,
-} from '../../../components/hook-form';
+import FormProvider, { RHFAutocomplete, RHFTextField, RHFUpload,} from '../../../components/hook-form';
 // assets
 import DialogLabel from '../../components/Dialog/DialogLabel';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import RadioButtons from '../../components/DocumentForms/RadioButtons';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
-import {
-  DocRadioValue,
-  DocRadioLabel,
-  Snacks,
-} from '../../../constants/document-constants';
+import { DocRadioValue, DocRadioLabel, Snacks,} from '../../../constants/document-constants';
 import DocumentCover from '../../components/DocumentForms/DocumentCover';
 import { FORMLABELS } from '../../../constants/default-constants';
-import { validateFileType } from './Utills/Util';
+import { documentSchema } from '../../schemas/document';
+
+
 // ----------------------------------------------------------------------
 DocumentAddForm.propTypes = {
   currentDocument: PropTypes.object,
@@ -89,7 +62,6 @@ function DocumentAddForm({
   machineDrawings,
   handleFormVisibility,
 }) {
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -101,62 +73,21 @@ function DocumentAddForm({
   const { customer, activeCustomers } = useSelector((state) => state.customer);
 
   // ------------------ document values states ------------------------------
-
-  const [selectedValue, setSelectedValue] = useState('new');
-  const [selectedVersionValue, setSelectedVersionValue] = useState('newVersion');
-  const [readOnlyVal, setReadOnlyVal] = useState(false);
-  const [readOnlyDocument, setReadOnlyDocument] = useState(false);
-  const [previewVal, setPreviewVal] = useState('');
-  const [preview, setPreview] = useState(false);
-  const [categoryBy, setCategoryBy] = useState('');
-
-  const AddDocumentSchema = Yup.object().shape({
-    documentVal: Yup.object().when({
-      is: () => selectedValue === "newVersion",
-      then: Yup.object().nullable().required().label('Document'),
-      otherwise: Yup.object().nullable(),
-    }),
-    documentCategory: Yup.object().when( {
-      is: () => selectedValue === "new",
-      then: Yup.object().nullable().required().label('Document Category'),
-      otherwise: Yup.object().nullable(),
-    }),
-    documentType: Yup.object().when( {
-      is: () => selectedValue === "new",
-      then: Yup.object().nullable().required().label('Document Type'),
-      otherwise: Yup.object().nullable(),
-    }),
-    displayName: Yup.string().when( {
-      is: () => selectedValue === "new",
-      then: Yup.string().nullable().required().label('Document Name'),
-      otherwise: Yup.string().nullable(),
-    }),
-    files: Yup.mixed()
-    .required('File is required!')
-    .test(
-      'fileType',
-      'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
-      validateFileType
-    ).nullable(true),
-    referenceNumber: Yup.string().max(20)
-    .test('Reference number', 'Reference number can not have spaces', numValue =>!(numValue.includes(' '))),
-
-    versionNo: Yup.number()
-    .typeError('Version number must be a number')
-    .positive("Version number must be a positive number")
-    .test('no-spaces', 'Version number cannot have spaces', value => !(value && /\s/.test(value.toString())))
-    .max(1000, 'Version number must be less than or equal to 1000')
-    .nullable(),
-
-    description: Yup.string().max(10000),
-    isActive: Yup.boolean(),
-  });
+  const [ categoryBy, setCategoryBy ] = useState(null);
+  const [ isDocumentTypesLoaded, setIsDocumentTypesLoaded ] = useState( false );
+  const [ isDocumentCategoryLoaded, setIsDocumentCategoryLoaded ] = useState( false );
+  const [ previewVal, setPreviewVal ] = useState('');
+  const [ preview, setPreview ] = useState(false);
+  const [ readOnlyVal, setReadOnlyVal ] = useState(false);
+  const [ readOnlyDocument, setReadOnlyDocument ] = useState(false);
+  const [ selectedValue, setSelectedValue ] = useState('new');
+  const [ selectedVersionValue, setSelectedVersionValue ] = useState('newVersion');
   
   const methods = useForm({
-    resolver: yupResolver(AddDocumentSchema),
+    resolver: yupResolver(documentSchema( selectedValue )),
     defaultValues:{
-      documentCategory: activeDocumentCategories.find((element)=> element?._id === activeDocumentTypes.find((ele)=>  ele.isDefault === true)?.docCategory?._id || element.isDefault === true) || null,
-      documentType: activeDocumentTypes.find((element)=>  element.isDefault === true) || null,
+      documentCategory:  null,
+      documentType:  null,
       displayName:  '',
       stockNumber:  '',
       referenceNumber:  '',
@@ -166,36 +97,75 @@ function DocumentAddForm({
       files: null,
       isActive: true,
       customerAccess:false,
-      customerVal: '',
-      machineVal: '',
+      customer: null,
+      machine: null,
     },
   });
+
   const {
     reset,
     watch,
     setValue,
-    control,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const {  documentType, documentCategory, displayName, versionNo, machineVal, customerVal, documentVal, files, isActive, customerAccess,  } = watch();
-
-  useEffect(()=>{
-    if(customerPage){
-      setCategoryBy({customer: true});
-    } else if(machinePage){
-      setCategoryBy({machine: true});
-    } else if(machineDrawings){
-      setCategoryBy({drawing: true});
-    }
-  },[customerPage, machinePage, machineDrawings ])
+  const { documentCategory, documentType, displayName, versionNo, documentVal, files, isActive, customerAccess  } = watch();
 
   useEffect(() => {
-    if(categoryBy){
-      dispatch(getActiveDocumentCategories(categoryBy));
+    if( customerPage && !machinePage && !machineDrawings && !categoryBy ){ // customerPage
+      setCategoryBy( {customer: true} )
+      if( customer?._id && selectedValue === 'newVersion' ) dispatch(getCustomerDocuments(customer?._id));
+    } else if ( machinePage && !customerPage && !machineDrawings && !categoryBy ) { // machinePage 
+      setCategoryBy( { machine: true } )
+      if (machine?._id && selectedValue === 'newVersion') dispatch(getMachineDocuments(machine?._id));
+    } else if( machineDrawings && !customerPage && !machinePage && !categoryBy ){ //  machineDrawings 
+      setCategoryBy( { drawing: true } )
+      if( selectedValue === 'newVersion' ) dispatch(getMachineDrawingsDocuments());
     }
-  },[dispatch, categoryBy])
+  }, [dispatch, categoryBy, customerPage, customer, machinePage, machine, machineDrawings, selectedValue]);
+  
+
+  useEffect( () => { // Get Active Document Types And Active Document Categoories
+    if( !isDocumentCategoryLoaded && categoryBy ){
+      dispatch( getActiveDocumentCategories( categoryBy ) );  dispatch( getActiveDocumentTypesWithCategory( null, categoryBy ) ) 
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ categoryBy ] )
+
+  useEffect(() => { // Set Default Document Type Value
+    if( activeDocumentTypes?.length > 0 && activeDocumentCategories?.length > 0  && !isDocumentTypesLoaded ){
+      if(activeDocumentTypes.find((el)=> el.isDefault === true )?._id === activeDocumentCategories.find((el)=> el.isDefault === true )?._id){
+        setValue('documentType', activeDocumentTypes.find((el)=> el.isDefault === true ))
+        setValue('documentCategory', activeDocumentCategories.find((el)=>  el.isDefault === true ))
+      } else if (activeDocumentTypes.find((el)=> el.isDefault === true )){
+        setValue('documentType', activeDocumentTypes.find((el)=> el.isDefault === true ))
+        setValue('documentCategory', activeDocumentTypes.find((el)=> el.isDefault === true )?.docCategory || null )
+      } else {
+        setValue('documentCategory', activeDocumentCategories.find((el)=>  el.isDefault === true ))
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ activeDocumentTypes, activeDocumentCategories ] )
+
+  useEffect(()=>{ // Get Active Document Types Against Document Categoory
+    if( documentCategory?._id && categoryBy ){ dispatch( getActiveDocumentTypesWithCategory( documentCategory?._id, categoryBy ) ); 
+      if(!isDocumentTypesLoaded) setIsDocumentTypesLoaded( true ); }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ documentCategory ])
+
+  useEffect(() => {
+    if (!documentNewVersionFormVisibility && !documentAddFilesViewFormVisibility && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility) {
+      reset();
+      setSelectedValue('new');
+      setReadOnlyDocument(false);
+    }
+    dispatch(resetActiveDocuments()); dispatch(resetCustomerMachines()); dispatch(getActiveCustomers());
+    if (customerPage)  setValue('customer', customer?._id);
+    if (machinePage)  setValue('machine', machine?._id);
+    return () =>  { dispatch(resetActiveDocumentTypes()); dispatch(resetActiveDocumentCategories()) }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, customer, machine ]);
 
   useEffect(()=>{
     if( documentHistoryNewVersionFormVisibility ){
@@ -251,127 +221,44 @@ function DocumentAddForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ documentNewVersionFormVisibility, documentAddFilesViewFormVisibility, document ])
 
-  useEffect(() => {
-    if (!documentNewVersionFormVisibility && !documentAddFilesViewFormVisibility && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility) {
-      reset();
-      setSelectedValue('new');
-      setReadOnlyDocument(false);
-    }
-    dispatch(resetActiveDocuments());
-    dispatch(resetCustomerMachines());
-    dispatch(resetActiveDocumentTypes());
-    dispatch(getActiveCustomers());
-
-    if (customerPage) {
-      setValue('customerVal', customer?._id);
-    }
-    if (machinePage) {
-      setValue('machineVal', machine?._id);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
-
-  const handleCustomerChange = (custmerId) => {
-    dispatch(resetCustomerMachines());
-    if(custmerId){
-      dispatch(getCustomerMachines(custmerId));
-    }
-  }
-
-  useEffect(() => {
-    if (documentCategory?._id) {
-      dispatch(getActiveDocumentTypesWithCategory(documentCategory?._id));
-    }
-  }, [documentCategory, dispatch]);
-
-  // -------------------------get forCustomer documents ---------------------------------------
-  useEffect(() => {
-    if ( customerPage && !machinePage && !machineDrawings ) {
-      if(customerPage && customer?._id && selectedValue === 'newVersion'){
-        dispatch(getCustomerDocuments(customer?._id));
-      }
-    }
-
-  }, [dispatch, customer, customerPage, machineDrawings, machinePage, selectedValue ]);
-
-  // ------------------------- get forMachine documents ---------------------------------------
-  useEffect(() => {
-    if ( !customerPage && machinePage && !machineDrawings) {
-      if(machinePage && machine?._id && selectedValue === 'newVersion'){
-        dispatch(getMachineDocuments(machine?._id));
-      }
-    }
-  }, [dispatch, machine, customerPage, machineDrawings, machinePage, selectedValue]);
-
-    // ------------------------- get forMachineDrawings documents ---------------------------------------
-    useEffect(() => {
-      if ( !customerPage && !machinePage && machineDrawings && selectedValue === 'newVersion') {
-          dispatch(getMachineDrawingsDocuments());
-      }
-    }, [dispatch, customerPage, machineDrawings, machinePage, selectedValue]);
-
   const onSubmit = async (data) => {
-    
-    if(drawingPage){
-      data.machine = machine?._id;
-    } else {
-      data.machine = machineVal?._id;
-    }
-
     try {
+      if(drawingPage){
+        data.machine = machine?._id;
+      } 
       if (selectedValue === 'new') {
         // New Document Part
         await dispatch(addDocument( customerPage ? customer?._id : null, machinePage ? machine?._id : null, data));
         enqueueSnackbar(drawingPage || machineDrawings ?Snacks.addedDrawing:Snacks.addedDoc);
-        
-        if(drawingPage){
+        if( drawingPage ){
           dispatch(resetDrawings());
           dispatch(getDrawings(machine?._id));
           dispatch(setDrawingAddFormVisibility(false));
-          
-        } else if (!customerPage && !machinePage && machineDrawings) {
+        } else if (  machineDrawings && !customerPage && !machinePage ) {
           navigate(PATH_DOCUMENT.document.machineDrawings.list);
-        } else if(handleFormVisibility){
+        } else if( handleFormVisibility ){
           handleFormVisibility();
         }
-
-
       } else if (selectedVersionValue === 'newVersion') {
         // New versions Part
         await dispatch(addDocumentVersion(documentVal._id, data));
         enqueueSnackbar(Snacks.updatedDoc);
         // page Navigation conditions for new versions
-        if (!customerPage && !machinePage && machineDrawings && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility)) {
-          dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
-          dispatch(setDocumentHistoryNewVersionFormVisibility(false))
-          dispatch(setDocumentAddFilesViewFormVisibility(false))
-          dispatch(setDocumentNewVersionFormVisibility(false))
+        if ( machineDrawings && !customerPage && !machinePage && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility) ){
+          dispatch(setDrawingAndDocumentVisibility())
           navigate(PATH_DOCUMENT.document.machineDrawings.view(documentHistory._id));
-        } else if(!customerPage && !machinePage && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility  && machineDrawings ){
+        } else if( machineDrawings && !customerPage && !machinePage && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility ){
           navigate(PATH_DOCUMENT.document.machineDrawings.list);
-        }else if(!customerPage && !machinePage && !machineDrawings && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility)){
-          dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
-          dispatch(setDocumentHistoryNewVersionFormVisibility(false))
-          dispatch(setDocumentAddFilesViewFormVisibility(false))
-          dispatch(setDocumentNewVersionFormVisibility(false))
+        } else if( (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility) && !customerPage && !machinePage && !machineDrawings ){
+          dispatch(setDrawingAndDocumentVisibility())
           navigate(PATH_DOCUMENT.document.view(documentHistory._id));
-        }else if((documentNewVersionFormVisibility || documentAddFilesViewFormVisibility) && (customerPage  || machinePage)){
-          dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
-          dispatch(setDocumentHistoryNewVersionFormVisibility(false))
-          dispatch(setDocumentAddFilesViewFormVisibility(false))
-          dispatch(setDocumentNewVersionFormVisibility(false))
-          dispatch(setDocumentViewFormVisibility(true))
-          dispatch(setDocumentFormVisibility(false))
+        } else if( (documentNewVersionFormVisibility || documentAddFilesViewFormVisibility) && (customerPage  || machinePage) ){
+          dispatch(setViewVisiilityNoOthers())
           dispatch(getDocument(documentVal._id))
-        }else if((documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility) && (customerPage  || machinePage)){
-          dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
-          dispatch(setDocumentHistoryNewVersionFormVisibility(false))
-          dispatch(setDocumentAddFilesViewFormVisibility(false))
-          dispatch(setDocumentNewVersionFormVisibility(false))
-          dispatch(setDocumentHistoryViewFormVisibility(true))
-          dispatch(setDocumentFormVisibility(false))
+        } else if( (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility) && (customerPage  || machinePage) ){
+          dispatch(setViewHistoryVisiilityNoOthers(false))
           dispatch(getDocumentHistory(documentVal._id))
-        }else if(handleFormVisibility){
+        } else if( handleFormVisibility ){
           handleFormVisibility();
         }
       } else {
@@ -379,39 +266,19 @@ function DocumentAddForm({
         await dispatch(updateDocumentVersion(documentVal._id, documentVal?.documentVersions[0]?._id, data));
         enqueueSnackbar(Snacks.updatedDoc);
         // Page Navigation conditions for update versions
-        if (!customerPage && !machinePage && machineDrawings && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility)) {
-          dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
-          dispatch(setDocumentHistoryNewVersionFormVisibility(false))
-          dispatch(setDocumentAddFilesViewFormVisibility(false))
-          dispatch(setDocumentNewVersionFormVisibility(false))
+        if (machineDrawings && !customerPage && !machinePage && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility)) {
+          dispatch(setDrawingAndDocumentVisibility())
           navigate(PATH_DOCUMENT.document.machineDrawings.view(documentHistory._id));
-        } else if(!customerPage && !machinePage && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility  && machineDrawings ){
-          dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
-          dispatch(setDocumentHistoryNewVersionFormVisibility(false))
-          dispatch(setDocumentAddFilesViewFormVisibility(false))
-          dispatch(setDocumentNewVersionFormVisibility(false))
-          navigate(PATH_DOCUMENT.document.machineDrawings.list);
+        } else if(!customerPage && !machinePage && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility ){
+          dispatch(setDrawingAndDocumentVisibility())
         }else if(!customerPage && !machinePage && !machineDrawings && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility)){
-          dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
-          dispatch(setDocumentHistoryNewVersionFormVisibility(false))
-          dispatch(setDocumentAddFilesViewFormVisibility(false))
-          dispatch(setDocumentNewVersionFormVisibility(false))
+          dispatch(setDrawingAndDocumentVisibility())
           navigate(PATH_DOCUMENT.document.view(documentHistory._id));
         }else if((documentNewVersionFormVisibility || documentAddFilesViewFormVisibility) && (customerPage  || machinePage)){
-          dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
-          dispatch(setDocumentHistoryNewVersionFormVisibility(false))
-          dispatch(setDocumentAddFilesViewFormVisibility(false))
-          dispatch(setDocumentNewVersionFormVisibility(false))
-          dispatch(setDocumentViewFormVisibility(true))
-          dispatch(setDocumentFormVisibility(false))
+          dispatch(setViewVisiilityNoOthers())
           dispatch(getDocument(documentVal._id))
         }else if((documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility) && (customerPage  || machinePage)){
-          dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
-          dispatch(setDocumentHistoryNewVersionFormVisibility(false))
-          dispatch(setDocumentAddFilesViewFormVisibility(false))
-          dispatch(setDocumentNewVersionFormVisibility(false))
-          dispatch(setDocumentHistoryViewFormVisibility(true))
-          dispatch(setDocumentFormVisibility(false))
+          dispatch(setViewHistoryVisiilityNoOthers(false))
           dispatch(getDocumentHistory(documentVal._id))
         }else if(handleFormVisibility){
           handleFormVisibility();
@@ -433,36 +300,17 @@ function DocumentAddForm({
     } else if (!drawingPage && !customerPage && !machinePage && !documentNewVersionFormVisibility && !documentAddFilesViewFormVisibility && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility) {
       navigate(PATH_DOCUMENT.document.machineDrawings.list);
     } else if((documentNewVersionFormVisibility || documentAddFilesViewFormVisibility)  && (customerPage || machinePage)){
-      dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
-      dispatch(setDocumentHistoryNewVersionFormVisibility(false))
-      dispatch(setDocumentAddFilesViewFormVisibility(false))
-      dispatch(setDocumentNewVersionFormVisibility(false))
-      dispatch(setDocumentViewFormVisibility(true))
-      dispatch(setDocumentFormVisibility(false))
+      dispatch(setViewVisiilityNoOthers())
     }else if((documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility) && (customerPage || machinePage) ){
-      dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
-      dispatch(setDocumentHistoryNewVersionFormVisibility(false))
-      dispatch(setDocumentAddFilesViewFormVisibility(false))
-      dispatch(setDocumentNewVersionFormVisibility(false))
-      dispatch(setDocumentHistoryViewFormVisibility(true))
-      dispatch(setDocumentFormVisibility(false))
+      dispatch(setViewHistoryVisiilityNoOthers(false))
     }else if(machineDrawings && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility)){
-      dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
-      dispatch(setDocumentHistoryNewVersionFormVisibility(false))
-      dispatch(setDocumentAddFilesViewFormVisibility(false))
-      dispatch(setDocumentNewVersionFormVisibility(false))
+      dispatch(setDrawingAndDocumentVisibility())
       navigate(PATH_DOCUMENT.document.machineDrawings.view(documentHistory._id))
     }else if(!machineDrawings && !customerPage && !machinePage){
-      dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
-      dispatch(setDocumentHistoryNewVersionFormVisibility(false))
-      dispatch(setDocumentAddFilesViewFormVisibility(false))
-      dispatch(setDocumentNewVersionFormVisibility(false))
+      dispatch(setDrawingAndDocumentVisibility())
       navigate(PATH_DOCUMENT.document.view(documentHistory._id))
     }else if(handleFormVisibility && !documentNewVersionFormVisibility && !documentAddFilesViewFormVisibility && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility){
-      dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
-      dispatch(setDocumentHistoryNewVersionFormVisibility(false))
-      dispatch(setDocumentAddFilesViewFormVisibility(false))
-      dispatch(setDocumentNewVersionFormVisibility(false))
+      dispatch(setDrawingAndDocumentVisibility())
       handleFormVisibility();
     }
   }
@@ -481,17 +329,45 @@ function DocumentAddForm({
   const handleIsActiveChange = () => setValue('isActive' ,!isActive);
 
   const handleDropMultiFile = useCallback(
-    (acceptedFiles) => {
+    async (acceptedFiles) => {
+        pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+        const pdfFile = acceptedFiles.find((f)=>f.type.indexOf('pdf')>-1);
+        if(pdfFile) {
+          const arrayBuffer = await pdfFile.arrayBuffer();
+          const pdfDocument = await pdfjs.getDocument(arrayBuffer).promise;
+          const page = await pdfDocument.getPage(1);
+          const textContent = await page.getTextContent();
+          try{
+            let isFound = false;
+            textContent.items.forEach((item,index) => {
+              if(item.str==='DRAWN BY'){
+                isFound = true;
+                setValue('stockNumber', textContent.items[index+2].str)
+              }
 
+            });
+            if(!isFound) {
+              textContent.items.forEach((item,index) => {
+                if(item.str==='APPROVED'){
+                  isFound = true;
+                  setValue('stockNumber', textContent.items[index-2].str)
+                }
+
+              });
+            }
+
+
+          }catch(e) {
+            console.log(e)
+          }
+        }
       const docFiles = files || [];
       const newFiles = acceptedFiles.map((file, index) => {
-
           if(index===0 && docFiles.length===0 && !displayName){
             setValue('displayName', removeFileExtension(file.name))
             setValue('referenceNumber', getRefferenceNumber(file.name))
             setValue('versionNo', getVersionNumber(file.name))
           }
-
           return Object.assign(file, {
             preview: URL.createObjectURL(file),
           })
@@ -506,7 +382,6 @@ function DocumentAddForm({
   const removeFileExtension = (filename) => {
     const lastDotIndex = filename.lastIndexOf('.');
     return lastDotIndex !== -1 ? filename.substring(0, lastDotIndex) : filename;
-
   };
 
   const getRefferenceNumber = (filename) => {
@@ -519,30 +394,20 @@ function DocumentAddForm({
     filename = filename.substring(0, lastDotIndex);
     const words = filename.split(/\s+/);
     let version = words[words.length - 1];
-
-    if (version.toLowerCase().includes('v')) {
-      version = version.replace(/[Vv]/g, '');
-    }else{
-      version = "1";
-    }
-
+      if (version.toLowerCase().includes('v')) {
+        version = version.replace(/[Vv]/g, '');
+      }else{
+        version = "1";
+      }
     return version;
   };
-
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       {!customerPage && !machinePage && !drawingPage &&
         <DocumentCover content={machineDrawings ? FORMLABELS.COVER.ADD_MACHINE_DRAWINGSS :  FORMLABELS.COVER.ADD_DOCUMENTS} backLink={!customerPage && !machinePage && !machineDrawings} machineDrawingsBackLink={machineDrawings} generalSettings />
       }
-      <Box
-        column={12}
-        rowGap={2}
-        columnGap={2}
-        // display="grid"
-        gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
-        mt={3}
-      >
+      <Box column={12} rowGap={2} columnGap={2} gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} mt={3} >
         <Grid container item xs={12} md={12} lg={12}>
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
@@ -550,41 +415,29 @@ function DocumentAddForm({
                 {!drawingPage && 
                   <RadioButtons
                     radioDisaled={ documentNewVersionFormVisibility || documentAddFilesViewFormVisibility || documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility }
-                    value={selectedValue}
-                    radioOnChange={handleRadioChange}
-                    newValue={DocRadioValue.new}
-                    newLabel={DocRadioLabel.new}
-                    secondValue={DocRadioValue.newVersion}
-                    secondLabel={DocRadioLabel.existing}
+                    value={selectedValue} radioOnChange={handleRadioChange} 
+                    newValue={DocRadioValue.new} newLabel={DocRadioLabel.new} 
+                    secondValue={DocRadioValue.newVersion} secondLabel={DocRadioLabel.existing}
                   />
                 }
-
                 {selectedValue === 'newVersion' && (
                   <Grid container item lg={12}>
                     <Grid container spacing={2}>
                       <Grid item xs={12} lg={12}>
-
-                      <Controller
-                        name="documentVal"
-                        control={control}
-                        defaultValue={documentVal || null}
-                        render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                        <Autocomplete
-                          {... field}
+                        <RHFAutocomplete
+                          label="Select  Document*"
+                          name="documentVal"
                           disabled={readOnlyDocument}
                           options={activeDocuments}
-                          isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                          getOptionLabel={(option) =>
-                            `${option.displayName ? option.displayName : ''}`
-                          }
-                          onChange={(event, value) => {
-                            field.onChange(value)
-                            if (value) {;
-                              setValue('displayName', value.displayName);
-                              setValue('documentType', value.docType);
-                              setValue('documentCategory', value.docCategory);
-                              setValue('customerAccess', value.customerAccess);
-                              setValue('isActive', value.isActive);
+                          isOptionEqualToValue={( option, value ) => option._id === value._id }
+                          getOptionLabel={(option) => `${option?.displayName || ''}`}
+                          onChange={(event, newValue) => {
+                            if (newValue) {;
+                              setValue('displayName', newValue.displayName);
+                              setValue('documentType', newValue.docType);
+                              setValue('documentCategory', newValue.docCategory);
+                              setValue('customerAccess', newValue.customerAccess);
+                              setValue('isActive', newValue.isActive);
                               setReadOnlyVal(true);
                               setSelectedVersionValue('newVersion');
                             } else {
@@ -596,150 +449,84 @@ function DocumentAddForm({
                               setReadOnlyVal(false);
                             }
                           }}
-                          renderOption={(props, option) => ( <li {...props} key={option._id}>{`${ option.displayName ? option.displayName : ''}`}</li> )}
+                          renderOption={(props, option) => ( <li {...props} key={option._id}>{`${ option.displayName || ''}`}</li> )}
                           id="controllable-states-demo"
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              label="Select  Document*"
-                              name="documentVal"
-                              id="documentVal"
-                              error={!!error}
-                              helperText={error?.message}
-                              inputRef={ref}
-                            />
-                          )}
                           ChipProps={{ size: 'small' }}
                         />
-                        )}
-                      />
                       </Grid>
                     </Grid>
                   </Grid>
                 )}
-
                 {/*  New Document */}
                 {(selectedValue === 'new' || documentVal) && (
-                      <Box
-                        rowGap={3}
-                        columnGap={2}
-                        display="grid"
+                      <Box rowGap={3} columnGap={2} display="grid"
                         gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                       >
-
-                      <Controller
-                        name="documentCategory"
-                        control={control}
-                        defaultValue={documentCategory }
-                        render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                        <Autocomplete
-                          {...field}
+                        <RHFAutocomplete
+                          label="Document Category*"
+                          name="documentCategory"
                           disabled={readOnlyVal}
                           options={activeDocumentCategories}
-                          isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                          getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                          onChange={(event, value) => {
-                            field.onChange(value)
-                            if (value) {
-                              if (value?._id !== documentCategory?._id) {
-                              dispatch(resetActiveDocumentTypes());
-                              setValue('documentType', null);
+                          isOptionEqualToValue={( option, value ) => option._id === value._id }
+                          getOptionLabel={(option) => `${option?.name || ''}`}
+                          onChange={ (event, newValue) => {
+                            if (newValue) {
+                              setValue('documentCategory', newValue);
+                              if (newValue?._id !== documentType?.docCategory?._id) {
+                                dispatch(resetActiveDocumentTypes());
+                                setValue('documentType', null);
                               }
                             } else {
                               setValue('documentCategory', null);
-                              dispatch(resetActiveDocumentTypes());
+                              setValue('documentType', null);
+                              dispatch(getActiveDocumentTypesWithCategory(null, categoryBy ));
+                            }
+                            }}
+                          renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
+                          id="controllable-states-demo"
+                          ChipProps={{ size: 'small' }}
+                        />
+
+                        <RHFAutocomplete
+                          name="documentType"
+                          label="Document Type*"
+                          disabled={readOnlyVal}
+                          options={activeDocumentTypes}
+                          isOptionEqualToValue={( option, value ) => option._id === value._id }
+                          getOptionLabel={(option) => `${option?.name || ''}`}
+                          renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.name || ''}`}</li>)}
+                          onChange={(event, newValue) => {
+                            if (newValue) {
+                              setValue('documentType', newValue);
+                              if (!documentCategory?._id || newValue?.docCategory?._id !== documentCategory?._id ) {
+                              setValue('documentCategory', newValue?.docCategory );
+                              }
+                            } else {
                               setValue('documentType', null);
                             }
                             }}
-                          renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li> )}
                           id="controllable-states-demo"
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              label="Document Category*"
-                              name="documentCategory"
-                              id="documentCategory"
-                              error={!!error}
-                              helperText={error?.message}
-                              inputRef={ref}
-                            />
-                          )}
-                          ChipProps={{ size: 'small' }}
-                        />
-                        )}
-                      />
-
-                      <Controller
-                        name="documentType"
-                        control={control}
-                        defaultValue={documentType }
-                        render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                        <Autocomplete
-                          {...field}
-                          disabled={readOnlyVal}
-                          options={activeDocumentTypes}
-                          isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                          getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                          onChange={(event, value) => field.onChange(value)}
-                          renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>)}
-                          id="controllable-states-demo"
-                          renderInput={(params) => (
-                            <TextField
-                            {...params}
-                            name="documentType"
-                            id="documentType"
-                            label="Document Type*"
-                            error={!!error}
-                            helperText={error?.message}
-                            inputRef={ref}
-                            />
-                          )}
                             ChipProps={{ size: 'small' }}
                         />
-                        )}
-                      />
 
-                        </Box>
-                )}
+                        </Box>)}
 
                 {documentVal && (
-                  <RadioButtons
-                    value={selectedVersionValue}
-                    radioOnChange={handleVersionRadioChange}
-                    newValue={DocRadioValue.newVersion}
-                    newLabel={DocRadioLabel.newVersion}
-                    secondValue={DocRadioValue.existing}
-                    secondLabel={DocRadioLabel.currentVersion}
+                  <RadioButtons value={selectedVersionValue} radioOnChange={handleVersionRadioChange} 
+                  newValue={DocRadioValue.newVersion} newLabel={DocRadioLabel.newVersion} 
+                  secondValue={DocRadioValue.existing} secondLabel={DocRadioLabel.currentVersion}
                   />
                 )}
 
                 {selectedValue === 'new' && (
-                  <Box
-                    rowGap={3}
-                    columnGap={2}
-                    display="grid"
-                    gridTemplateColumns={{ sm: '1fr', md: '3fr 1fr' }}
-                    >
-                      <RHFTextField
-                        multiline
-                        name="displayName"
-                        id="displayName"
-                        label="Document Name*"
-                        />
-                      <RHFTextField name='versionNo' label='Version Number' 
-                        InputLabelProps={{ shrink: versionNo }}
-                      />
+                  <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ sm: '1fr', md: '3fr 1fr' }} >
+                      <RHFTextField multiline name="displayName" id="displayName" label="Document Name*" />
+                      <RHFTextField name='versionNo' label='Version Number'  InputLabelProps={{ shrink: versionNo }} />
                   </Box>
-
                 )}
 
                 {selectedValue === 'new' && !machineDrawings && (
-                <Box
-                  rowGap={3}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-                >
+                <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }} >
                   <RHFTextField name='referenceNumber' label='Reference Number' />
                   <RHFTextField name='stockNumber' label='Stock Number' />
                 </Box>)
@@ -747,66 +534,37 @@ function DocumentAddForm({
 
                 {selectedValue === 'new' && machineDrawings && (
                   <>
-                  <Box
-                    rowGap={0}
-                    columnGap={2}
-                    display="grid"
-                    sx={{mb:0}}
-                    gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-                  >
+                  <Box rowGap={0} columnGap={2} display="grid" sx={{mb:0}} gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}>
                     <RHFTextField name='referenceNumber' label='Reference Number' />
                     <RHFTextField name='stockNumber' label='Stock Number' />
-
                   </Box>
 
-
                     {!drawingPage && 
-                      <Box
-                        rowGap={2}
-                        columnGap={2}
-                        display="grid"
-                        gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(1, 1fr)' }}
-                      >
+                      <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(1, 1fr)' }}>
                       <RHFAutocomplete
-                        // multiple
-                        value={customerVal || null}
-                        name="customerVal"
+                        name="customer"
                         label="Customer"
                         options={activeCustomers}
-                        isOptionEqualToValue={(option, value) => option._id === value._id}
-                        getOptionLabel={(option) => option.name}
-                        renderOption={(props, option) => (
-                          <li {...props} key={option._id}>{option.name}</li>
-                        )}
+                        isOptionEqualToValue={( option, value ) => option._id === value._id }
+                        getOptionLabel={(option) => `${option?.name || ''}`}
+                        renderOption={(props, option) => ( <li {...props} key={option._id}>{option?.name || ''}</li> )}
                         onChange={(event, newValue) => {
                           if (newValue) {
-                            setValue('customerVal', newValue);
+                            setValue('customer', newValue);
+                            dispatch(getCustomerMachines(newValue?._id));
                           } else {
-                            setValue('customerVal', '');
+                            setValue('customer', null);
+                            dispatch(resetCustomerMachines());
                           }
-
-                          handleCustomerChange(newValue);
                         }}
                       />
-
                       <RHFAutocomplete
-                        // multiple
-                        value={machineVal || null}
-                        name="machineVal"
+                        name="machine"
                         label="Machine"
                         options={customerMachines}
-                        isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
-                        getOptionLabel={(option) => `${ option.serialNo} ${option?.name ? '-' : ''} ${option?.name || ''}`}
-                        renderOption={(props, option) => (
-                          <li {...props} key={option._id}>{`${option.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}</li>
-                        )}
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            setValue('machineVal', newValue);
-                          } else {
-                            setValue('machineVal', '');
-                          }
-                        }}
+                        isOptionEqualToValue={( option, value ) => option._id === value._id }
+                        getOptionLabel={(option) => `${ option.serialNo || '' } ${option?.name ? '-' : ''} ${option?.name || ''}`}
+                        renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}</li> )}
                       />
                     </Box>
                     }
@@ -820,11 +578,7 @@ function DocumentAddForm({
 
                 {(selectedValue === 'new' || documentVal) && (
                   <Grid item xs={12} md={6} lg={12}>
-                    <RHFUpload
-                      multiple
-                      thumbnail
-                      name="files"
-                      // maxSize={3145728}
+                    <RHFUpload multiple thumbnail name="files"
                       onDrop={handleDropMultiFile}
                       onRemove={(inputFile) =>
                         files.length > 1 ?
@@ -847,7 +601,6 @@ function DocumentAddForm({
                     handleChange={handleChange}
                     isActive={isActive}
                     handleIsActiveChange={handleIsActiveChange}
-
                   />
                 )}
 
@@ -858,7 +611,6 @@ function DocumentAddForm({
         </Grid>
       </Box>
 
-      {/* dialog preview */}
       <Dialog
         maxWidth="md"
         open={preview}

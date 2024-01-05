@@ -174,11 +174,15 @@ export function getMachinesByYear(category, model, country) {
   };
 }
 
-export function getERPLogs(category, year, model) {
+export function getERPLogs(machineId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}/logs/erp/graph`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}logs/erp/graph`, 
+      {
+        params: {machine: machineId}
+      });
+
       dispatch(slice.actions.getERPLogsSuccess(response.data));
     } catch (error) {
       console.log(error);

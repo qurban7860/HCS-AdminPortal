@@ -23,6 +23,7 @@ const initialState = {
   allMachines:[],
   customerMachines:[],
   machineLatLongCoordinates: [],
+  machineGallery:[],
   transferDialogBoxVisibility: false,
   filterBy: '',
   verified: 'all',
@@ -145,7 +146,14 @@ const slice = createSlice({
       state.machineForDialog = action.payload;
       state.initial = true;
     },
-
+    
+    // GET Machine Gallery
+    getMachineGallerySuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.machineGallery = action.payload;
+      state.initial = true;
+    },
 
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
@@ -670,5 +678,4 @@ export function moveMachine(params) {
       // dispatch(slice.actions.hasError(error.Message));
     }
   };
-
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import { Grid, TextField, InputAdornment, Button, Stack, 
   FormControl, Select, InputLabel, MenuItem, IconButton, Switch, FormControlLabel, Autocomplete } from '@mui/material';
@@ -8,6 +8,7 @@ import { BUTTONS } from '../../../constants/default-constants';
 import Iconify from '../../../components/iconify';
 import useResponsive from '../../../hooks/useResponsive';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
+import { getActiveDocumentTypesWithCategory } from '../../../redux/slices/document/documentType';
 
 function SearchBarCombo({
   isFiltered,
@@ -45,13 +46,14 @@ function SearchBarCombo({
   onReload,
   filterExcludeRepoting,
   handleExcludeRepoting,
+  handleGalleryView,
   ...other
 }) {
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const { spContacts } = useSelector((state) => state.contact);
   const isMobile = useResponsive('sm', 'down');
-
+  const dispatch = useDispatch()
   return (
     <Grid container rowSpacing={1} columnSpacing={1} sx={{display:'flex', }}>
           <Grid item xs={12} sm={12} md={12} lg={setAccountManagerFilter && setSupportManagerFilter ? 4:6} xl={setAccountManagerFilter && setSupportManagerFilter ? 4:6}>
@@ -214,8 +216,14 @@ function SearchBarCombo({
               onChange={(event, newValue) => {
                 if (newValue) {
                   setCategoryVal(newValue);
+                  dispatch(getActiveDocumentTypesWithCategory(newValue?._id))
+                  if(newValue?._id !== typeVal?.docCategory?._id){
+                    setTypeVal(null);
+                  }
                 } else {
                   setCategoryVal(null);
+                  setTypeVal(null);
+                  dispatch(getActiveDocumentTypesWithCategory())
                 }
               }}
               renderOption={(props, option) => (
@@ -235,6 +243,10 @@ function SearchBarCombo({
               onChange={(event, newValue) => {
                 if (newValue) {
                   setTypeVal(newValue);
+                  if(!categoryVal){
+                    setCategoryVal(newValue?.docCategory)
+                    dispatch(getActiveDocumentTypesWithCategory(newValue?.docCategory?._id))
+                  }
                 } else {
                   setTypeVal(null);
                 }
@@ -349,6 +361,21 @@ function SearchBarCombo({
               </Grid>}
               
 
+              {handleGalleryView && 
+                <Grid item>
+                    <StyledTooltip title="View Gallery" placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
+                      <IconButton onClick={handleGalleryView} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
+                        '&:hover': {
+                          background:"#103996", 
+                          color:"#fff"
+                        }
+                      }}>
+                        <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon='ooui:image-gallery' />
+                      </IconButton>
+                    </StyledTooltip>
+                </Grid>
+              }
+
               {onExportCSV && 
                   <Grid item>
                     <LoadingButton onClick={onExportCSV}  variant='contained' sx={{p:0, minWidth:'24px'}} loading={onExportLoading}>
@@ -415,6 +442,7 @@ SearchBarCombo.propTypes = {
   onReload: PropTypes.func,
   filterExcludeRepoting: PropTypes.string,
   handleExcludeRepoting: PropTypes.func,
+  handleGalleryView: PropTypes.func,
 };
 
 export default SearchBarCombo;

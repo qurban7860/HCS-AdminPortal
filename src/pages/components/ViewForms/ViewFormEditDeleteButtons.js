@@ -72,7 +72,8 @@ function ViewFormEditDeleteButtons({
   machineSupportDate,
   approveConfiglength,
   excludeReports,
-  isConectable
+  isConectable,
+  hanldeViewGallery
 
 }) {
   const { id } = useParams();
@@ -548,6 +549,15 @@ function ViewFormEditDeleteButtons({
           icon="mdi:pencil-outline"
         />}
 
+
+        {hanldeViewGallery && (
+          <IconTooltip
+            title="View Gallery"
+            onClick={hanldeViewGallery}
+            // color="#c3c3c3"
+            icon="ooui:image-gallery"
+          />
+        )}
         {/* delete button */}
         {id !== userId  && !mainSite && onDelete && (
           <IconTooltip
@@ -838,4 +848,5 @@ ViewFormEditDeleteButtons.propTypes = {
   isLoading: PropTypes.bool,
   excludeReports: PropTypes.bool,
   isConectable: PropTypes.bool,
+  hanldeViewGallery: PropTypes.func,
 };

@@ -2,9 +2,9 @@ import { useMemo, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
 import {  Card, Grid, Stack, Skeleton } from '@mui/material';
-import JsonEditor from './JsonEditor';
+import JsonEditor from './JsonEditorMerge';
 // redux
-import { setHistoricalConfigurationViewFormVisibility } from '../../../redux/slices/products/historicalConfiguration';
+import { setHistoricalConfigurationCompareViewFormVisibility } from '../../../redux/slices/products/historicalConfiguration';
 // components
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
@@ -15,14 +15,6 @@ function HistoricalConfigurationsViewForm() {
   const { historicalConfiguration, isLoading } = useSelector((state) => state.historicalConfiguration);
 
   const dispatch = useDispatch();
-  const modifiedValue = {
-    "compilerOptions": {
-      "target": "es6",
-      "module": "commonjs",
-      "baseUrl": "."
-    },
-  }
-
 
   const defaultValues = useMemo(
     () => ({
@@ -38,13 +30,11 @@ function HistoricalConfigurationsViewForm() {
     [ historicalConfiguration]
   );
   
-
   return (
     <Card sx={{ p: 2 }}>
       <Grid>
-        <ViewFormEditDeleteButtons backLink={()=> dispatch(setHistoricalConfigurationViewFormVisibility(false))} />
+        <ViewFormEditDeleteButtons backLink={()=> dispatch(setHistoricalConfigurationCompareViewFormVisibility(false))} />
         <Stack spacing={2} sx={{p:2}}>
-
           {isLoading ? 
           <>
             <Skeleton />
@@ -57,7 +47,7 @@ function HistoricalConfigurationsViewForm() {
             <Skeleton animation={false} />
             <Skeleton animation={false} />
           </>
-           :  <JsonEditor  value={JSON.stringify( historicalConfiguration?.configuration, null, 2 )} readOnly />  
+           :  <JsonEditor  value={ historicalConfiguration } modifiedValue={ historicalConfiguration } readOnly />  
            }
         </Stack>
           <ViewFormAudit  defaultValues={defaultValues} />

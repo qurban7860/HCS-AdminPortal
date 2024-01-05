@@ -44,7 +44,7 @@ function JsonEditor({value, HandleChangeIniJson, readOnly }) {
   };
 
   return  <Grid item md={12}>
-          <Typography variant='subtitle2' display="flex" alignItems="center">Note: <Typography variant='caption' sx={{ml:1}}> Ctrl + F / Cmd + F to find text in Editer</Typography></Typography>
+          <Typography variant='subtitle2' display="flex" alignItems="center">Note: <Typography variant='caption' sx={{ml:1}}> Ctrl + F / Cmd + F to find text in Code Editer</Typography></Typography>
           <CodeMirror 
             value={value} 
             onChange={(e) => HandleChangeIniJson(e)} 

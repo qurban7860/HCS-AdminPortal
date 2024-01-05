@@ -55,8 +55,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   const [googleMapsVisibility, setGoogleMapsVisibility] = useState(false);
   const isMobile = useResponsive('down', 'sm');
   const dispatch = useDispatch();
-  const { sites, error, responseMessage, siteEditFormVisibility, siteAddFormVisibility } =
-    useSelector((state) => state.site);
+  const { sites, error, responseMessage, siteEditFormVisibility, siteAddFormVisibility } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
   // for filtering sites
   const isFiltered = filterName !== '' || !!filterStatus.length;
@@ -123,10 +122,10 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   };
 
   useEffect( () => {
-    if (!siteAddFormVisibility && !siteEditFormVisibility) {
+    // if (!siteAddFormVisibility && !siteEditFormVisibility) {
       dispatch(getSites(customer._id));
-    }
-  }, [dispatch, customer, siteAddFormVisibility, siteEditFormVisibility]); 
+    // }
+  }, [dispatch, customer]); 
 
   // conditions for rendering the contact view, edit, and add forms
   const shouldShowSiteView = isExpanded && !siteEditFormVisibility && !siteAddFormVisibility;

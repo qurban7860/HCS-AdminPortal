@@ -230,19 +230,21 @@ export function getActiveDocumentTypes() {
 
 // -----------------------------------Get Active Document Types of Categories-----------------------------------
 
-export function getActiveDocumentTypesWithCategory(typeCategory) {
+export function getActiveDocumentTypesWithCategory(typeCategory, categoryBy ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}documents/documentType/` , 
-      {
+      const query = {
         params: {
           isArchived: false,
           isActive: true,
-          docCategory:typeCategory
+          docCategory: typeCategory,
         }
       }
-      );
+      if( categoryBy ){
+        Object.assign(query.params, categoryBy)
+      }
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/documentType/`, query );
       dispatch(slice.actions.getActiveDocumentTypesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Document Types loaded successfully'));
     } catch (error) {

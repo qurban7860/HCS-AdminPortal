@@ -232,6 +232,7 @@ export const DocumentList = Loadable(lazy(() => import('../pages/document/docume
 export const DocumentAddForm = Loadable(lazy(() => import('../pages/document/documents/DocumentAddForm')));
 export const DocumentEditForm = Loadable(lazy(() => import('../pages/document/documents/DocumentEditForm')));
 export const DocumentViewForm = Loadable(lazy(() => import('../pages/document/documents/DocumentHistoryViewForm')));
+export const DocumentGallery = Loadable(lazy(() => import('../pages/document/documents/DocumentGallery')));
 
 // Machine Drawings dashboard
 export const MachineDrawings = Loadable(lazy(() => import('../pages/document/documents/MachineDrawings')));

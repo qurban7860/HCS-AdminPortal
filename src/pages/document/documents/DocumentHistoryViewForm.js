@@ -7,7 +7,8 @@ import {
   Grid,
   Card,
   Link,
-  Chip
+  Chip,
+  Box
 } from '@mui/material';
 import { ThumbnailDocButton } from '../../components/Thumbnails'
 import { StyledVersionChip } from '../../../theme/styles/default-styles';
@@ -206,14 +207,6 @@ const handleNewFile = async () => {
     dispatch(setDrawingEditFormVisibility(true));
   };
 
-  // const handleEditDoc = async () => {
-  //   await dispatch(getDocument(documentHistory._id));
-  //   dispatch(setDocumentFormVisibility(false));
-  //   dispatch(setDocumentHistoryViewFormVisibility(false));
-  //   dispatch(setDocumentViewFormVisibility(false));
-  //   dispatch(setDocumentEditFormVisibility(true));
-  // };
-
   const handleDelete = async () => {
     try {
       await dispatch(deleteDocument(documentHistory?._id));
@@ -254,6 +247,7 @@ const handleNewFile = async () => {
           disableEditButton={drawingPage && machine?.status?.slug==="transferred"}
           backLink={(customerPage || machinePage || drawingPage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDrawingViewFormVisibility(false));}
           : () =>  machineDrawings ? navigate(PATH_DOCUMENT.document.machineDrawings.list) : navigate(PATH_DOCUMENT.document.list)}
+          
       />
             <Grid container sx={{mt:2}}>
               <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.displayName} />
@@ -339,21 +333,20 @@ const handleNewFile = async () => {
                       )}
                     </Grid>
                     {files?.files?.map((file) => (
-                      <Grid sx={{ display: 'flex-inline', m: 0.5 }} key={file?._id}>
+                      <Grid sx={{ display: 'flex-inline', m: 0.5, mb:1 }} key={file?._id}>
                         <Grid container justifyContent="flex-start" gap={1}>
                           <Thumbnail
-                            // sx={{m:2}}
-                            // key={file?._id}
                             file={file}
                             currentDocument={documentHistory}
                             customer={customer}
                             getCallAfterDelete={callAfterDelete}
                             hideDelete={defaultValues.isArchived}
-                          />
+                            />
                         </Grid>
                       </Grid>
                     ))}
                     {index === 0 && !defaultValues.isArchived && (<ThumbnailDocButton onClick={handleNewFile}/>)}
+                    
                     <ViewFormAudit key={`${index}-files`} defaultValues={fileValues} />
                   </Grid>
                 )})}
