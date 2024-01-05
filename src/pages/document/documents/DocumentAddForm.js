@@ -71,7 +71,7 @@ function DocumentAddForm({
   const { machine, customerMachines } = useSelector((state) => state.machine);
   const { document ,documentHistory, activeDocuments, documentAddFilesViewFormVisibility, documentNewVersionFormVisibility, documentHistoryAddFilesViewFormVisibility, documentHistoryNewVersionFormVisibility } = useSelector((state) => state.document);
   const { customer, activeCustomers } = useSelector((state) => state.customer);
-console.log("customer : ", customer)
+
   // ------------------ document values states ------------------------------
   const [ categoryBy, setCategoryBy ] = useState(null);
   const [ isDocumentTypesLoaded, setIsDocumentTypesLoaded ] = useState( false );
