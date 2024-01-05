@@ -51,6 +51,20 @@ export default function Lightbox({
 }) {
   const totalItems = slides ? slides.length : 0;
 
+  const [zoomLevel, setZoomLevel] = useState(1);
+
+  const handleZoomIn = () => {
+    if(zoomLevel<5){
+      setZoomLevel(zoomLevel + 1); // Increase the zoom level by 0.1 (adjust as needed)
+    }
+  };
+
+  const handleZoomOut = () => {
+    if(zoomLevel>1){
+      setZoomLevel(zoomLevel - 1); // Decrease the zoom level by 0.1 (adjust as needed)
+    }
+  };
+
   return (
     <>
       <StyledLightbox />
@@ -59,11 +73,8 @@ export default function Lightbox({
         slides={slides}
         captions='slides'
         animation={{ swipe: 240 }}
-        carousel={{ finite: totalItems < 5 }}
+        carousel={{ finite: true }}
         controller={{ closeOnBackdropClick: true }}
-        zoom={{
-          maxZoomPixelRatio:5
-        }}
         plugins={getPlugins({
           disabledZoom,
           disabledVideo,
@@ -78,16 +89,7 @@ export default function Lightbox({
             if (onGetCurrentIndex) {
               onGetCurrentIndex(index);
             }
-          },
-          load: ({ index, zoomIn, zoomOut, zoom, maxZoom }) => {
-            // Update maxZoom when the image is loaded
-            maxZoom(5);
-          },
-          // zoom: (currentZoom, maxZoom) => {
-          //   // Set initial zoom level (1) and max zoom level (5)
-          //   currentZoom(1);
-          //   maxZoom(5);
-          // },
+          }
         }}
         toolbar={{
           buttons: [
@@ -100,8 +102,8 @@ export default function Lightbox({
             'close',
           ],
         }}
+        renderSlid
         render={{
-          
           iconLoading:  () => <Iconify width={50} color='#fff' icon="line-md:downloading-loop" />,
           iconClose: () => <Iconify width={ICON_SIZE} icon="solar:close-square-linear" />,
           iconDownload: () => <Iconify width={ICON_SIZE} icon="solar:download-square-linear" />,
@@ -113,29 +115,20 @@ export default function Lightbox({
           iconNext: () => <Iconify width={ICON_SIZE + 8} icon="solar:alt-arrow-right-bold-duotone" />,
           iconExitFullscreen: () => <Iconify width={ICON_SIZE} icon="solar:quit-full-screen-square-linear" />,
           iconEnterFullscreen: () => <Iconify width={ICON_SIZE} icon="solar:full-screen-square-linear" />,
-          // buttonZoom: (buttonZoom) => {
-          //   // buttonZoom.maxZoom=10;
-          //   const { zoomIn, zoomOut, zoom, maxZoom } = buttonZoom; 
-          //   console.log('zoom Button', buttonZoom)
-          //   return (
-          //     <>
-          //       <button type="button" className="yarl__button" onClick={() => zoomIn(zoom * maxZoom)}>
-          //         <Iconify width={ICON_SIZE} icon="solar:magnifer-zoom-in-outline" />
-          //       </button>
-          //       <button type="button" className="yarl__button" onClick={() => zoomOut(zoom / maxZoom)}>
-          //         <Iconify width={ICON_SIZE} icon="solar:magnifer-zoom-out-outline" />
-          //       </button>
-          //     </>
-          //   );
-          // },
-          slide:(_this)=>{
-            const {slide, offset, rect, zoom, maxZoom} = _this;
-            let _slide = <Iconify width={100} color='#fff' icon="line-md:downloading-loop" />;
-            if (slide?.isLoaded) {
-              _slide = <img src={slide?.src} alt="tatatta" style={{maxHeight: '100%'}}/>;
-            }
-            return _slide;
-          }
+          buttonZoom: (buttonZoom) => (
+              <>
+                <button type="button" className="yarl__button" onClick={handleZoomIn}>
+                  <Iconify width={ICON_SIZE} icon="solar:magnifer-zoom-in-outline" />
+                </button>
+                <button type="button" className="yarl__button" onClick={handleZoomOut}>
+                  <Iconify width={ICON_SIZE} icon="solar:magnifer-zoom-out-outline" />
+                </button>
+              </>
+          ),
+          slide: ({ slide }) =>
+          slide?.isLoaded? (
+            <img className='yarl__slide_image' src={slide?.src} alt="tatatta" style={{maxHeight: '100%', transitionDuration:'0.5s',  transform: `scale(${zoomLevel})` }}/>
+          ) : (<Iconify width={100} color='#fff' icon="line-md:downloading-loop" />),
         }}
         {...other}
       />
