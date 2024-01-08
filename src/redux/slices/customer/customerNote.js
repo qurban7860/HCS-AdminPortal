@@ -137,24 +137,10 @@ export function addNote (customerId, params){
     dispatch(slice.actions.startLoading());
     try {
       const data = {
+        site: params?.site?._id || null,
+        contact: params?.contact?._id || null,
         note: params.note,
         isActive: params.isActive,
-      }
-      if(params.customer){
-        data.customer =  params.customer;
-      }
-      if(params.site  !== "null" && params.site  !== null){
-        data.site =   params.site;
-      }else{
-        data.site =   null;
-      }
-      if(params.contact !== "null" && params.contact !== null){
-        data.contact =   params.contact;
-      }else{
-        data.contact =   null;
-      }
-      if(params.user){
-        data.user =    params.user;
       }
       await axios.post(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/`, data);
       dispatch(slice.actions.setNoteFormVisibility(false));
@@ -173,10 +159,10 @@ export function updateNote(customerId,noteId,params) {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
+        site: params?.site?._id || null,
+        contact: params?.contact?._id || null,
         note: params.note,
         isActive: params.isActive,
-        contact: params.contact,
-        site: params.site
       }
       await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/${noteId}`, data);
       dispatch(slice.actions.setResponseMessage('Note updated successfully'));

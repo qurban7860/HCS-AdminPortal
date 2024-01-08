@@ -13,7 +13,6 @@ import { addCategory } from '../../../redux/slices/products/category';
 import { AddMachineSchema } from '../../schemas/document';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
-// import { useSettingsContext } from '../../../components/settings';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField } from '../../../components/hook-form';

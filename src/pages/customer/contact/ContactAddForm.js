@@ -1,32 +1,27 @@
 import PropTypes from 'prop-types';
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-// import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MuiTelInput } from 'mui-tel-input';
-import { Box, Card, Grid, Stack,TextField } from '@mui/material';
+import { Box, Card, Grid, Stack } from '@mui/material';
 // schema
-import { AddContactSchema } from './schemas/AddContactSchema';
+import { ContactSchema } from '../../schemas/customer';
 // slice
 import { addContact, getActiveContacts, setContactFormVisibility, setContactEditFormVisibility, setContactMoveFormVisibility } from '../../../redux/slices/customer/contact';
 import { getActiveDepartments } from '../../../redux/slices/Department/department';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { useAuthContext } from '../../../auth/useAuthContext';
-import FormProvider, {
-  RHFMultiSelect,
-  RHFTextField,
-  RHFAutocomplete,
-} from '../../../components/hook-form';
+import FormProvider, { RHFMultiSelect, RHFTextField, RHFAutocomplete } from '../../../components/hook-form';
 // assets
 import { countries } from '../../../assets/data';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import { FORMLABELS as FORM_LABELS } from '../../../constants/default-constants';
-import { Snacks, FORMLABELS } from '../../../constants/customer-constants';
+import { FORMLABELS } from '../../../constants/customer-constants';
 import { AddFormLabel } from '../../components/DocumentForms/FormLabel';
 
 // ----------------------------------------------------------------------
@@ -46,7 +41,6 @@ export default function ContactAddForm({ isEdit, readOnly, setIsExpanded, curren
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const [phone, setPhone] = useState('');
-  const [country, setCountryVal] = useState(countries[169]);
 
   const defaultValues = useMemo(
     () => ({
@@ -60,6 +54,7 @@ export default function ContactAddForm({ isEdit, readOnly, setIsExpanded, curren
       email: '',
       reportingTo: null,
       department: null,
+      country: countries.find((contry)=> contry?.label?.toLocaleLowerCase() === 'New Zealand'.toLocaleLowerCase() ) || null ,
       loginUser: {
         userId,
         email: user.email,
@@ -70,7 +65,7 @@ export default function ContactAddForm({ isEdit, readOnly, setIsExpanded, curren
   );
 
   const methods = useForm({
-    resolver: yupResolver(AddContactSchema),
+    resolver: yupResolver(ContactSchema),
     defaultValues,
   });
 
@@ -94,20 +89,10 @@ export default function ContactAddForm({ isEdit, readOnly, setIsExpanded, curren
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
-  // const handlePhoneChange = (newValue) => {
-  //   matchIsValidTel(newValue)
-  //   if(newValue.length < 17){
-  //     setPhone(newValue);
-  //   }
-  // };
-
   const onSubmit = async (data) => {
     try {
       if (phone && phone.length > 7) {
         data.phone = phone;
-      }
-      if (country) {
-        data.country = country.label;
       }
       await dispatch(addContact(data));
       setIsExpanded(true);
@@ -121,9 +106,7 @@ export default function ContactAddForm({ isEdit, readOnly, setIsExpanded, curren
     }
   };
 
-  const toggleCancel = () => {
-    dispatch(setContactFormVisibility(false));
-  };
+  const toggleCancel = () => { dispatch(setContactFormVisibility(false)) };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -139,11 +122,9 @@ export default function ContactAddForm({ isEdit, readOnly, setIsExpanded, curren
                 sm: 'repeat(2, 1fr)',
               }}
             >
-
               <RHFTextField name={FORMLABELS.FIRSTNAME.name} label={FORMLABELS.FIRSTNAME.label} />
               <RHFTextField name={FORMLABELS.LASTNAME.name} label={FORMLABELS.LASTNAME.label} />
               <RHFTextField name={FORMLABELS.TITLE.name} label={FORMLABELS.TITLE.label} />
-
               <RHFMultiSelect
                 chip
                 checkbox
@@ -151,8 +132,6 @@ export default function ContactAddForm({ isEdit, readOnly, setIsExpanded, curren
                 label={FORMLABELS.CONTACT_TYPES.label}
                 options={FORMLABELS.CONTACT_TYPES.options}
               />
-
-              {/* <RHFTextField name="phone" label="Phone" /> */}
               <MuiTelInput
                 value={phone}
                 name={FORMLABELS.PHONE.name}
@@ -163,9 +142,7 @@ export default function ContactAddForm({ isEdit, readOnly, setIsExpanded, curren
                 forceCallingCode
                 defaultCountry="NZ"
               />
-
               <RHFTextField name={FORMLABELS.EMAIL.name} label={FORMLABELS.EMAIL.label} />
-
               <RHFAutocomplete
                 name={FORMLABELS.REPORTINGTO.name}
                 label={FORMLABELS.REPORTINGTO.label}
@@ -176,7 +153,6 @@ export default function ContactAddForm({ isEdit, readOnly, setIsExpanded, curren
                   <li {...props} key={option?._id}>{`${option?.firstName  || '' } ${option?.lastName  || '' }`}</li>
                 )}
               /> 
-
               <RHFAutocomplete
                 name={FORMLABELS.DEPARTMENT.name}
                 label={FORMLABELS.DEPARTMENT.label}
@@ -187,9 +163,7 @@ export default function ContactAddForm({ isEdit, readOnly, setIsExpanded, curren
                   <li {...props} key={option?._id}>{option?.departmentName || ''}</li>
                 )}
               />
-
             </Box>
-          
           </Stack>
         </Card>
         <Card sx={{ p: 3, mb: 3 }}>
@@ -211,34 +185,19 @@ export default function ContactAddForm({ isEdit, readOnly, setIsExpanded, curren
               <RHFTextField name={FORMLABELS.POSTCODE.name} label={FORMLABELS.POSTCODE.label} />
 
               <RHFAutocomplete
-                id={FORMLABELS.COUNTRY.id}
                 options={countries}
-                value={country || null}
                 name={FORMLABELS.COUNTRY.name}
                 label={FORMLABELS.COUNTRY.label}
-                autoHighlight
-                onChange={(event, newValue) => {
-                  if (newValue) {
-                    setCountryVal(newValue);
-                  } else {
-                    setCountryVal('');
-                  }
-                }}
                 getOptionLabel={(option) => `${option.label} (${option.code}) `}
+                isOptionEqualToValue={(option, value) => option?.label === value?.label }
                 renderOption={(props, option) => (
                   <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                    <img
-                      loading="lazy"
-                      width="20"
+                    <img loading="lazy" width="20" alt=""
                       src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
                       srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                      alt=""
                     />
-                    {option.label} ({option.code}) {option.phone}
+                    {option?.label || ''} ({option?.code || '' }) {option?.phone || ''}
                   </Box>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} label={FORMLABELS.COUNTRY.select} />
                 )}
               />
             </Box>

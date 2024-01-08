@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
 import { Container } from '@mui/material';
@@ -16,21 +16,14 @@ import ContactEditForm from './ContactEditForm';
 // ----------------------------------------------------------------------
 
 export default function ContactEdit() {
-  const { themeStretch } = useSettingsContext();
-
   const dispatch = useDispatch();
-
+  const { themeStretch } = useSettingsContext();
   const { id } = useParams();
-  // console.log(id);
-
-
   const { contact } = useSelector((state) => state.contact);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     dispatch(getContact(id));
   }, [dispatch, id]);
-
-
 
   return (
       <Container maxWidth={themeStretch ? false : 'lg'}>

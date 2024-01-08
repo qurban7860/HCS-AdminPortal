@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MuiTelInput } from 'mui-tel-input';
-import { Box, Card, Grid, Stack,TextField } from '@mui/material';
+import { Box, Card, Grid, Stack } from '@mui/material';
 // slice
 import {
   updateContact,
@@ -30,10 +30,11 @@ import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import { countries } from '../../../assets/data';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // schema
-import { EditContactSchema } from '../../schemas/customer';
+import { ContactSchema } from '../../schemas/customer';
 // constants
 import { FORMLABELS, Snacks } from '../../../constants/customer-constants';
 import { FORMLABELS as formLABELS } from '../../../constants/default-constants';
+
 
 // ----------------------------------------------------------------------
 
@@ -50,7 +51,6 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const [phone, setPhone] = useState('');
-  const [country, setCountryVal] = useState(countries[169]);
 
   // --------------------------------hooks----------------------------------
   const defaultValues = useMemo(
@@ -71,13 +71,13 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
       region: contact?.address?.region || '',
       postcode: contact?.address?.postcode || '',
       isActive: contact?.isActive,
-      // country: contact.address?.country === null || contact.address?.country === undefined  ? null : contact.address.country,
+      country: countries.find((contry)=> contry?.label?.toLocaleLowerCase() === contact?.address?.country?.toLocaleLowerCase() ) || null ,
     }),
     [contact]
   );
 
   const methods = useForm({
-    resolver: yupResolver(EditContactSchema),
+    resolver: yupResolver(ContactSchema),
     defaultValues,
   });
 
@@ -96,19 +96,8 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
     dispatch(getActiveDepartments())
   },[dispatch, customer?._id])
 
-  function filtter(data, input) {
-    const filteredOutput = data.filter((obj) =>
-      Object.keys(input).every((filterKeys) => obj[filterKeys] === input[filterKeys])
-    );
-    return filteredOutput;
-  }
-
   useEffect(() => {
     setPhone(contact?.phone);
-    if (contact?.address?.country) {
-      const contactCountry = filtter(countries, { label: contact.address.country });
-      setCountryVal(contactCountry[0]);
-    }
   }, [contact]);
 
   useEffect(() => {
@@ -118,9 +107,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   }, [contact, reset, defaultValues]);
 
   // -------------------------------functions---------------------------------
-  const toggleCancel = () => {
-    dispatch(setContactEditFormVisibility(false));
-  };
+  const toggleCancel = () => { dispatch(setContactEditFormVisibility(false)) };
 
   const onSubmit = async (data) => {
     try {
@@ -128,11 +115,6 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
         data.phone = phone;
       } else {
         data.phone = '';
-      }
-      if (country) {
-        data.country = country.label;
-      } else {
-        data.country = '';
       }
       await dispatch(updateContact(customer?._id, data));
       reset();
@@ -235,34 +217,18 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                 <RHFTextField name={FORMLABELS.POSTCODE.name} label={FORMLABELS.POSTCODE.label} />
 
                 <RHFAutocomplete
-                  id={FORMLABELS.COUNTRY.id}
                   options={countries}
-                  value={country || null}
                   name={FORMLABELS.COUNTRY.name}
                   label={FORMLABELS.COUNTRY.label}
-                  autoHighlight
-                  onChange={(event, newValue) => {
-                    if (newValue) {
-                      setCountryVal(newValue);
-                    } else {
-                      setCountryVal('');
-                    }
-                  }}
                   getOptionLabel={(option) => `${option.label} (${option.code}) `}
                   renderOption={(props, option) => (
                     <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      <img
-                        loading="lazy"
-                        width="20"
+                      <img loading="lazy" width="20" alt=""
                         src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
                         srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                        alt=""
                       />
-                      {option.label} ({option.code}) {option.phone}
+                      {option.label || ''} ({option.code || '' }) {option.phone || '' }
                     </Box>
-                  )}
-                  renderInput={(params) => (
-                    <TextField {...params} label={FORMLABELS.COUNTRY.select} />
                   )}
                 />
               </Box>
