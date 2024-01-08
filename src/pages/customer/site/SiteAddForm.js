@@ -1,4 +1,3 @@
-import * as Yup from 'yup';
 import { useEffect,useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
@@ -6,8 +5,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MuiTelInput } from 'mui-tel-input';
-// import { LoadingButton } from '@mui/lab';
-import { Box,Card, Grid, Stack, Typography, TextField, Autocomplete } from '@mui/material';
+import { Box,Card, Grid, Stack, Typography } from '@mui/material';
 // slice
 import { addSite, getSites, setSiteFormVisibility } from '../../../redux/slices/customer/site';
 import { getActiveContacts } from '../../../redux/slices/customer/contact';
@@ -16,76 +14,23 @@ import { useSnackbar } from '../../../components/snackbar';
 // assets
 import { countries } from '../../../assets/data';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-// import GoogleMaps from '../../../assets/GoogleMaps';
-import { isNumberLatitude , isNumberLongitude } from './util/index'
-import FormProvider, {
-  RHFSwitch,
-  // RHFSelect,
-  RHFTextField,
-  RHFAutocomplete,
-} from '../../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete } from '../../../components/hook-form';
+import { SiteSchema } from '../../schemas/customer'
 
 // ----------------------------------------------------------------------
 
 export default function SiteAddForm() {
-  // const { siteAddFormVisibility } = useSelector((state) => state.site);
 
   const { customer } = useSelector((state) => state.customer);
-
   const { activeContacts } = useSelector((state) => state.contact);
-
   const dispatch = useDispatch();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const [phone, setPhone] = useState('');
-  const [country, setCountryVal] = useState(countries[169]);
   const [fax, setFaxVal] = useState('');
-  const [billingContactVal, setBillingContactVal] = useState('');
-  const [technicalContactVal, setTechnicalContactVal] = useState('');
 
   useEffect(() => {
     dispatch( getActiveContacts(customer?._id))
   }, [ customer, dispatch ] );
-
-  /* eslint-disable */
-  const AddSiteSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(40).required().label('Name'),
-    customer: Yup.string(),
-    billingSite: Yup.string(),
-    // phone: Yup.string().matches(phoneRegExp, {message: "Please enter valid number.", excludeEmptyString: true}).max(15, "too long"),
-    email: Yup.string().trim('The contact name cannot include leading and trailing spaces'),
-    // fax: Yup.string(),
-    website: Yup.string(),
-
-    lat: Yup.string().nullable()
-    .max(25, 'Latitude must be less than or equal to 90.9999999999999999999999')
-    .test('lat-validation', 'Invalid Latitude!, Latitude must be between -90 to 90 Degree only!', (value) =>{
-      if(typeof value === 'string' && value.length > 0 && !(isNumberLatitude(value))){
-        return false;
-      }
-      return true;
-    }),
-
-    long: Yup.string().nullable()
-    .max(25, 'Longitude must be less than or equal to 180.999999999999999999999')
-    .test('long-validation', 'Invalid Longitude!, Longitude must be between -180 to 180 Degree only!', (value) =>{
-      if(typeof value === 'string' && value.length > 0 && !(isNumberLongitude(value))){
-        return false;
-      }
-      return true;
-    }),
-    street: Yup.string(),
-    suburb: Yup.string(),
-    city: Yup.string(),
-    region: Yup.string(),
-    postcode: Yup.string(),
-    // country: Yup.string().nullable(),
-    // primaryBillingContact: Yup.string().nullable(),
-    // primaryTechnicalContact: Yup.string().nullable(),
-    isActive: Yup.boolean(),
-  });
-  /* eslint-enable */
 
   const defaultValues = useMemo(
     () => ({
@@ -101,7 +46,7 @@ export default function SiteAddForm() {
       city: '',
       region: '',
       postcode: '',
-      // country: null,
+      country: countries.find((contry)=> contry?.label?.toLocaleLowerCase() === 'New Zealand'.toLocaleLowerCase() ) || null ,
       isArchived: false,
       isActive: true,
     }),
@@ -110,7 +55,7 @@ export default function SiteAddForm() {
   );
 
   const methods = useForm({
-    resolver: yupResolver(AddSiteSchema),
+    resolver: yupResolver(SiteSchema),
     defaultValues,
   });
 
@@ -134,15 +79,6 @@ export default function SiteAddForm() {
       }
       if (fax) {
         data.fax = fax;
-      }
-      if (country) {
-        data.country = country.label;
-      }
-      if (billingContactVal) {
-        data.primaryBillingContact = billingContactVal?._id;
-      }
-      if (technicalContactVal) {
-        data.primaryTechnicalContact = technicalContactVal?._id;
       }
       await dispatch(addSite(data));
       await dispatch(getSites(customer?._id))
@@ -174,58 +110,26 @@ export default function SiteAddForm() {
                 }}
               >
                 <RHFTextField name="street" label="Street" />
-
                 <RHFTextField name="suburb" label="Suburb" />
-
                 <RHFTextField name="city" label="City" />
-
                 <RHFTextField name="region" label="Region" />
-
                 <RHFTextField name="postcode" label="Post Code" />
 
-                {/* <RHFSelect native name="country" label="Country" placeholder="Country">
-                  <option defaultValue value="null" selected >No Country Selected</option>
-                  {countries.map((country) => (
-                    <option key={country.code} value={country.label}>
-                      {country.label}
-                    </option>
-                  ))}
-                </RHFSelect> */}
-                {/* <RHFAutocomplete
-                  name="country"
-                  label="Country"
-                  freeSolo
-                  options={countries.map((country) => country.label)}
-                  ChipProps={{ size: 'small' }}
-                /> */}
                 <RHFAutocomplete
-                  id="country-select-demo"
                   options={countries}
-                  value={country || null}
                   name="country"
                   label="Country"
-                  autoHighlight
-                  onChange={(event, newValue) => {
-                    if (newValue) {
-                      setCountryVal(newValue);
-                    } else {
-                      setCountryVal('');
-                    }
-                  }}
-                  getOptionLabel={(option) => `${option.label} (${option.code}) `}
+                  getOptionLabel={(option) => `${option?.label || ''} (${option.code || ''}) `}
+                  isOptionEqualToValue={(option, value) => option?.label === value?.label }
                   renderOption={(props, option) => (
                     <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      <img
-                        loading="lazy"
-                        width="20"
+                      <img loading="lazy" width="20" alt=""
                         src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
                         srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                        alt=""
                       />
-                      {option.label} ({option.code}) {option.phone}
+                      {option?.label || ''} ({option?.code || ''}) {option?.phone || ''}
                     </Box>
                   )}
-                  renderInput={(params) => <TextField {...params} label="Choose a country" />}
                 />
                 <RHFTextField name="lat" label="Latitude" />
                 <RHFTextField name="long" label="Longitude" />
@@ -240,7 +144,6 @@ export default function SiteAddForm() {
                   forceCallingCode
                 />
 
-                {/* <RHFTextField name="fax" label="Fax" /> */}
                 <MuiTelInput
                   value={fax}
                   name="fax"
@@ -269,75 +172,25 @@ export default function SiteAddForm() {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <Autocomplete
-                  // freeSolo
-                  value={billingContactVal || null}
+                <RHFAutocomplete
+                  name='primaryBillingContact'
+                  label="Primary Billing Contact" 
                   options={activeContacts}
                   isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                  getOptionLabel={(option) => `${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
-                  onChange={(event, newValue) => {
-                    if (newValue) {
-                      setBillingContactVal(newValue);
-                    } else {
-                      setBillingContactVal('');
-                    }
-                  }}
-                  renderOption={(props, option) => (
-                    <li {...props} key={option?._id}>
-                      {`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
-                    </li>
-                  )}
-                  id="controllable-states-demo"
-                  renderInput={(params) => (
-                    <TextField {...params} label="Primary Billing Contact" />
-                  )}
-                  ChipProps={{ size: 'small' }}
+                  getOptionLabel={(option) => `${option.firstName || ''} ${option.lastName || ''}`}
+                  renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.firstName || ''} ${option.lastName || ''}`}</li> )}
                 />
 
-                <Autocomplete
-                  // freeSolo
-                  value={technicalContactVal || null}
+                <RHFAutocomplete
+                  name='primaryTechnicalContact'
+                  label="Primary Technical Contact"
                   options={activeContacts}
                   isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   getOptionLabel={(option) => `${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
-                  onChange={(event, newValue) => {
-                    if (newValue) {
-                      setTechnicalContactVal(newValue);
-                    } else {
-                      setTechnicalContactVal('');
-                    }
-                  }}
-                  renderOption={(props, option) => (
-                    <li {...props} key={option?._id}>
-                        {`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
-                    </li>
-                  )}
-                  id="controllable-states-demo"
-                  renderInput={(params) => (
-                    <TextField {...params} label="Primary Technical Contact" />
-                  )}
-                  ChipProps={{ size: 'small' }}
+                  renderOption={(props, option) => ( <li {...props} key={option?._id}> {`${option.firstName || ''} ${option.lastName || ''}`}</li> )}
                 />
               </Box>
-              <RHFSwitch
-                name="isActive"
-                labelPlacement="start"
-                label={
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      mx: 0,
-                      width: 1,
-                      justifyContent: 'space-between',
-                      mb: 0.5,
-                      color: 'text.secondary',
-                    }}
-                  >
-                    {' '}
-                    Active
-                  </Typography>
-                }
-              />
+              <RHFSwitch name="isActive" label="Active" />
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>

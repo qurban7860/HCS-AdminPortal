@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Checkbox, Typography, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 
 // ----------------------------------------------------------------------
 

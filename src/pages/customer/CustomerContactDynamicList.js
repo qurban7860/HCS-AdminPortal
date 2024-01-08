@@ -1,13 +1,7 @@
-import { useState, useEffect, useLayoutEffect } from 'react';
-// import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 // @mui
-import { Stack, Grid, Link, CardActionArea, Button } from '@mui/material';
-import {
-  CardBase,
-  GridBaseViewForm,
-  StyledScrollbar,
-  StyledCardWrapper,
-} from '../../theme/styles/customer-styles';
+import { Stack, Grid, Button } from '@mui/material';
+import { CardBase, GridBaseViewForm, StyledScrollbar } from '../../theme/styles/customer-styles';
 import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -128,7 +122,7 @@ export default function CustomerContactList(currentContact = null) {
     setIsExpanded(true);
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!formVisibility && !contactEditFormVisibility && !contactMoveFormVisibility) {
       dispatch(getContacts(customer._id));
     }

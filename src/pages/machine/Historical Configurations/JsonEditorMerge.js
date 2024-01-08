@@ -7,6 +7,7 @@ import CodeMirrorMerge from 'react-codemirror-merge';
 import './style.css';
 import ViewFormAuditBlock from '../../components/ViewForms/ViewFormAuditBlock';
 
+// Please don't destrcture below code! It will not work properly.
 const Original = CodeMirrorMerge.Original;
 const Modified = CodeMirrorMerge.Modified;
 

@@ -1,25 +1,9 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Grid, Link, Chip, CardHeader, Divider} from '@mui/material';
-// routes
-import { PATH_MACHINE } from '../../routes/paths';
+import { Card, Grid, CardHeader, Divider} from '@mui/material';
 // slices
 import { getERPLogs } from '../../redux/slices/dashboard/count';
-// hooks
-import useResponsive from '../../hooks/useResponsive';
-import { useSnackbar } from '../../components/snackbar';
-// components
-import ViewFormField from '../components/ViewForms/ViewFormField';
-import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
-import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
-import FormLabel from '../components/DocumentForms/FormLabel';
-import NothingProvided from '../components/Defaults/NothingProvided';
-import GoogleMaps from '../../assets/GoogleMaps';
-// constants
-import { TITLES, FORMLABELS } from '../../constants/default-constants';
-import { Snacks } from '../../constants/machine-constants';
 // utils
 import { fDate } from '../../utils/formatTime';
 import ChartStacked from '../components/Charts/ChartStacked';
@@ -30,7 +14,6 @@ import EmptyContent from '../../components/empty-content';
 export default function MachineLogsViewForm() {
   
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { erpLogs, isLoading } = useSelector((state) => state.count);
   const { machine } = useSelector((state) => state.machine);
   
@@ -54,7 +37,7 @@ export default function MachineLogsViewForm() {
   return (
       <Grid container direction="row">
         <Card sx={{ width: '100%'}}>
-          <CardHeader titleTypographyProps={{variant:'h5'}} title="Erp Logs" sx={{mb:2}} />
+          <CardHeader titleTypographyProps={{variant:'h5'}} title="ERP Logs" sx={{mb:2}} />
           <Divider />
           <Grid container display='flex' direction='row'>
             <Grid item xs={12}>

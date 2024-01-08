@@ -200,7 +200,6 @@ export function addContact(params) {
         department: params.department?._id || null,
         isActive: params.isActive,
         address: {}
-
       };
 
       /* eslint-enable */
@@ -219,8 +218,8 @@ export function addContact(params) {
       if(params.postcode){
         data.address.postcode = params.postcode;        
       }
-      if(params.country !== "null" && params.country !== null){
-        data.address.country = params.country;        
+      if(params?.country?.label && params?.country !== null){
+        data.address.country = params.country.label;        
       }
 
       const response =  await axios.post(`${CONFIG.SERVER_URL}crm/customers/${params.customer}/contacts`,
@@ -279,8 +278,8 @@ export function updateContact(customerId,params) {
       if(params.postcode){
         data.address.postcode = params.postcode;        
       }
-      if(params.country !== "null" && params.country !== null){
-        data.address.country = params.country;        
+      if(params?.country?.label && params.country !== null){
+        data.address.country = params?.country?.label;        
       }
 
       await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/contacts/${params.id}`,

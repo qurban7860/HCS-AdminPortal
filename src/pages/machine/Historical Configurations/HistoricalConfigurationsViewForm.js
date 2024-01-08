@@ -15,14 +15,6 @@ function HistoricalConfigurationsViewForm() {
   const { historicalConfiguration, isLoading } = useSelector((state) => state.historicalConfiguration);
 
   const dispatch = useDispatch();
-  const modifiedValue = {
-    "compilerOptions": {
-      "target": "es6",
-      "module": "commonjs",
-      "baseUrl": "."
-    },
-  }
-
 
   const defaultValues = useMemo(
     () => ({

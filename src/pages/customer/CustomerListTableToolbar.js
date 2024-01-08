@@ -21,7 +21,7 @@ CustomerListTableToolbar.propTypes = {
   filterVerify:PropTypes.string,
   onExportCSV:PropTypes.func,
   onExportLoading:PropTypes.bool,
-  filterExcludeRepoting:PropTypes.bool,
+  filterExcludeRepoting:PropTypes.string,
   handleExcludeRepoting:PropTypes.func
 };
 

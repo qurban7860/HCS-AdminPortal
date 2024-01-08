@@ -1,7 +1,6 @@
-// import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 // @mui
-import { Box, Checkbox, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
+import { Box, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
 import { useWidth } from '../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------

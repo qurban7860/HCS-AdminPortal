@@ -1,79 +1,48 @@
-import * as Yup from 'yup';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 // @mui
-// import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography,TextField, Autocomplete } from '@mui/material';
-
-// global
-// import { CONFIG } from '../../../config-global';
-// slice
-import {
-  updateNote,
-  setNoteEditFormVisibility,
-} from '../../../redux/slices/customer/customerNote';
-
-// routes
-// import { PATH_DASHBOARD } from '../../../routes/paths';
+import { Box, Card, Grid, Stack, Typography } from '@mui/material';
+import { updateNote, setNoteEditFormVisibility } from '../../../redux/slices/customer/customerNote';
+import { getActiveSites } from '../../../redux/slices/customer/site';
+import { getActiveContacts } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-// import Iconify from '../../../components/iconify';
-
-import FormProvider, {
-  // RHFSelect,
-  // RHFEditor,
-  RHFTextField,
-  RHFSwitch,
-} from '../../../components/hook-form';
-
+import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete } from '../../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import { NoteSchema } from '../../schemas/customer'
 
 // ----------------------------------------------------------------------
 
 export default function NoteEditForm() {
   const { note } = useSelector((state) => state.customerNote);
-  const { sites } = useSelector((state) => state.site);
+  const { activeSites } = useSelector((state) => state.site);
   const { activeContacts } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
-  const [siteVal, setSiteVal] = useState('');
-  const [contactVal, setContactVal] = useState('');
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
-  useEffect(() => {
-    if (note?.site) {
-      setSiteVal(note?.site);
-    }
-    if (note?.contact) {
-      setContactVal(note?.contact);
-    }
-  }, [note]);
-
-  const EditNoteSchema = Yup.object().shape({
-    note: Yup.string().max(5000).required('Note is required!'),
-    user: Yup.string(),
-    customer: Yup.string(),
-    isActive: Yup.boolean(),
-  });
+  useEffect(()=>{
+    dispatch(getActiveSites(customer?._id))
+    dispatch(getActiveContacts(customer?._id))
+  },[ dispatch, customer?._id ])
 
   const defaultValues = useMemo(
     () => ({
       id: note?._id || '',
+      site: note?.site || null,
+      contact: note?.contact || null,
       note: note?.note || '',
       isActive: note?.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [note]
   );
-  // console.log(defaultValues)
 
   const methods = useForm({
-    resolver: yupResolver(EditNoteSchema),
+    resolver: yupResolver(NoteSchema),
     defaultValues,
   });
 
@@ -98,16 +67,7 @@ export default function NoteEditForm() {
   };
 
   const onSubmit = async (data) => {
-    if (siteVal) {
-      data.site = siteVal;
-    } else {
-      data.site = null;
-    }
-    if (contactVal) {
-      data.contact = contactVal;
-    } else {
-      data.contact = null;
-    }
+ 
     try {
       await dispatch(updateNote(customer._id, note._id, data));
       enqueueSnackbar('Note Updated Successfully');
@@ -138,54 +98,22 @@ export default function NoteEditForm() {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <Autocomplete
-                  // freeSolo
-                  value={siteVal || null}
-                  options={sites}
+                <RHFAutocomplete
+                  name="site"
+                  label="Site"
+                  options={activeSites}
                   isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                  getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                  onChange={(event, newValue) => {
-                    if (newValue) {
-                      setSiteVal(newValue);
-                    } else {
-                      setSiteVal('');
-                    }
-                  }}
-                  renderOption={(props, option) => (
-                    <li {...props} key={option._id}>
-                      {option.name ? option.name : ''}
-                    </li>
-                  )}
-                  id="controllable-states-demo"
-                  renderInput={(params) => <TextField {...params} label="Site" />}
-                  ChipProps={{ size: 'small' }}
+                  getOptionLabel={(option) => `${option.name || ''}`}
+                  renderOption={(props, option) => (<li {...props} key={option._id}>{option?.name || ''}</li>)}
                 />
-                <Autocomplete
-                  // freeSolo
-                  value={contactVal || null}
+
+                <RHFAutocomplete
+                  name='contact'
+                  label="Contact"
                   options={activeContacts}
-                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                  getOptionLabel={(option) =>
-                    `${option.firstName ? option.firstName : ''} ${
-                      option.lastName ? option.lastName : ''
-                    }`
-                  }
-                  onChange={(event, newValue) => {
-                    if (newValue) {
-                      setContactVal(newValue);
-                    } else {
-                      setContactVal('');
-                    }
-                  }}
-                  renderOption={(props, option) => (
-                    <li {...props} key={option._id}>
-                      {option.firstName ? option.firstName : ''}{' '}
-                      {option.lastName ? option.lastName : ''}
-                    </li>
-                  )}
-                  id="controllable-states-demo"
-                  renderInput={(params) => <TextField {...params} label="Contact" />}
-                  ChipProps={{ size: 'small' }}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id }
+                  getOptionLabel={(option) => `${option.firstName || '' } ${option.lastName || '' }`}
+                  renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.firstName || '' } ${option.lastName || '' }`}</li> )}
                 />
               </Box>
 
