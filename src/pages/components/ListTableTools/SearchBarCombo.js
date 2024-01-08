@@ -49,11 +49,13 @@ function SearchBarCombo({
   handleGalleryView,
   ...other
 }) {
+  
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const { spContacts } = useSelector((state) => state.contact);
   const isMobile = useResponsive('sm', 'down');
   const dispatch = useDispatch()
+
   return (
     <Grid container rowSpacing={1} columnSpacing={1} sx={{display:'flex', }}>
           <Grid item xs={12} sm={12} md={12} lg={setAccountManagerFilter && setSupportManagerFilter ? 4:6} xl={setAccountManagerFilter && setSupportManagerFilter ? 4:6}>

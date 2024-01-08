@@ -2,10 +2,7 @@ import { memo } from 'react'
 import PropTypes from 'prop-types';
 // @mui
 import { Box, Switch, TablePagination, FormControlLabel, Button } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
 import Iconify from '../iconify';
-import { BUTTONS } from '../../constants/default-constants';
-
 
 // ----------------------------------------------------------------------
 
@@ -26,13 +23,12 @@ function TablePaginationCustom({
   ...other
 }) {
 
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
+  // const userRolesString = localStorage.getItem('userRoles');
+  // const userRoles = JSON.parse(userRolesString);
+  // const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
 
   return (
     <Box sx={{ position: 'relative', ...sx }}>
-      
       <TablePagination labelRowsPerPage="Rows:" colSpan={2} rowsPerPageOptions={rowsPerPageOptions} component="div" showLastButton showFirstButton {...other} 
       sx={{
         '.MuiTablePagination-toolbar': {
