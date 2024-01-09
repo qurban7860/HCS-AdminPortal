@@ -70,9 +70,7 @@ export default function DocumentGallery({customerPage, machinePage}) {
       isLoaded:false,
       id:img?._id,
       width: '100%',
-      height: '100%',
-      zoom:5,
-      maxZoom:10
+      height: '100%'
     })));
     
   },[documentGallery])
@@ -97,7 +95,6 @@ export default function DocumentGallery({customerPage, machinePage}) {
   
           // Update the state with the new array
           setSlides(updatedSlides);
-          setSelectedImage(index);
         }
       } catch (error) {
         console.error('Error loading full file:', error);

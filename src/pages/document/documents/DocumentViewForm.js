@@ -203,7 +203,6 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
 
           // Update the state with the new array
           setSlides(updatedSlides);
-          setSelectedImage(index);
         }
       } catch (error) {
         console.error('Error loading full file:', error);
