@@ -509,6 +509,7 @@ const handleNewFile = async () => {
                               onOpenLightbox={()=> handleOpenLightbox(_index)}
                               onDownloadFile={()=> handleDownloadFile(documentHistory._id, version._id, file._id, file?.name, file?.extension)}
                               onDeleteFile={()=> handleDeleteFile(documentHistory._id, version._id, file._id)}
+                              toolbar
                             />
                           )
                         }
