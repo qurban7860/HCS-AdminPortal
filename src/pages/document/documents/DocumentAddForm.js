@@ -9,7 +9,6 @@ import { pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import { Box, Card, Grid, Stack, Dialog } from '@mui/material';
 // PATH
-
 import { PATH_DOCUMENT } from '../../../routes/paths';
 // slice
 import {

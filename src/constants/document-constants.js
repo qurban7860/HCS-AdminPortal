@@ -204,7 +204,7 @@ export const Snacks = {
   // documentAddForm -documents dashboard
   fileRequired: 'File is required',
   fileMaxSize: 'File size should be less than 10MB',
-  fileMaxCount: 'Maximum 10 files can be uploaded at a time.',
+  fileMaxCount: 'Maximum 20 files can be uploaded at a time.',
   docMaxSize: 'Document Name must not exceed 40 characters',
 
   // @root - DocumentViewForm - documents dashboard

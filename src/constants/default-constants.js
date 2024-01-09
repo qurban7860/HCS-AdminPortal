@@ -218,6 +218,7 @@ export const BUTTONS = {
   ADD_MACHINE_SERVICE_CONFIG: 'Add Configuration',
   ADD_MACHINE_SERVICE_RECORD: 'Add Record',
   ADD_MACHINE_INI: 'Add INI',
+  ADD_MACHINE_LOGS: 'Add Log',
 
   // auth
   UPDATEPASSWORD: 'Update Password',
