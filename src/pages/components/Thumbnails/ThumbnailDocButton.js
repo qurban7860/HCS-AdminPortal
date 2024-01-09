@@ -31,6 +31,7 @@ export default function ThumbnailDocButton({ onClick }) {
                 opacity: 1,
             },
             background:theme.palette.grey[hovered?100:400],
+            minHeight:150
             
           }}
           onMouseEnter={() => setHovered(true)}

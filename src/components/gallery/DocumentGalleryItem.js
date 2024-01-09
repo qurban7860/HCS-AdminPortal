@@ -70,6 +70,7 @@ export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFi
                         '&:hover .button-group': {
                             opacity: 1,
                         },
+                        minHeight:150,
                     }}
                     // sx={{ cursor: 'pointer', position: 'relative' }}
                 >
