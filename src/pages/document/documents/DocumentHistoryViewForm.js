@@ -258,6 +258,7 @@ const handleNewFile = async () => {
               fileType: file?.fileType,
               isLoaded: false,
               id: file?._id,
+              version:files?.versionNo,
               width: '100%',
               height: '100%',
             }
@@ -501,35 +502,20 @@ const handleNewFile = async () => {
                         xl: 'repeat(8, 1fr)',
                       }}
                     >
-                      { version?.files?.map((file, _index) =>{
-                        if (file.fileType.startsWith('image')) {
-                          return (
-                            <DocumentGalleryItem
-                              key={file?._id}
-                              image={{
-                                thumbnail: `data:image/png;base64, ${file.thumbnail}`,
-                                src: `data:image/png;base64, ${file.thumbnail}`,
-                                downloadFilename: `${file?.name}.${file?.extension}`,
-                                name: file?.name,
-                                category: file?.docCategory?.name,
-                                fileType: file?.fileType,
-                                extension: file?.extension,
-                                isLoaded: false,
-                                id: file?._id,
-                                width: '100%',
-                                height: '100%',
-                              }}
-                              isLoading={isLoading} 
-                              onOpenLightbox={() => handleOpenLightbox(index)}
-                              onDownloadFile={() => handleDownloadFile(documentHistory._id, version._id, file._id, file?.name, file?.extension)}
-                              onDeleteFile={() => handleDeleteFile(documentHistory._id, version._id, file._id)}
-                              onOpenFile={() => handleOpenFile(documentHistory._id, version._id, file._id, file)}
-                              toolbar
+                      {slides?.map((file, _index) =>{
+                        if(file?.version===version?.versionNo){
+                          return(
+                            <DocumentGalleryItem isLoading={isLoading} key={file?.id} image={file} 
+                              onOpenLightbox={()=> handleOpenLightbox(_index)}
+                              onDownloadFile={()=> handleDownloadFile(documentHistory._id, version._id, file._id, file?.name, file?.extension)}
+                              onDeleteFile={()=> handleDeleteFile(documentHistory._id, version._id, file._id)}
                             />
-                          );
+                          )
                         }
+
                         return null;
-                      })}
+                      } 
+                      )}
 
                       {version?.files?.map((file, _index) =>{
                         if (!file.fileType.startsWith('image')) {
