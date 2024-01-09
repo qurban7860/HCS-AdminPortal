@@ -466,7 +466,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, category
         document?.referenceNumber?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         document?.stockNumber?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         document?.productDrawings?.some((m) => m?.machine?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0) ||
-        document?.documentVersions[0].versionNo?.toString().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.documentVersions[0]?.versionNo?.toString().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
