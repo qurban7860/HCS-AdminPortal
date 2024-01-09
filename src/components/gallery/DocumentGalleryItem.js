@@ -72,11 +72,10 @@ export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFi
                         },
                         minHeight:150,
                     }}
-                    // sx={{ cursor: 'pointer', position: 'relative' }}
                 >
                     
                 {fileType?.startsWith('image') ? (
-                    <Image alt="gallery" ratio="1/1" src={src} onClick={onOpenLightbox} />
+                    <Image alt="gallery" sx={{height:'100%'}} ratio="1/1" src={src} onClick={onOpenLightbox} />
                 ):(
                     <CardMedia sx={{height:'90%', width:'100%', backgroundSize:'40%', backgroundPosition:'center 35%'}} image={fileThumb(extension?.toLowerCase())} onClick={onOpenFile} />
                 )}
