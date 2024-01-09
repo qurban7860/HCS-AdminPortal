@@ -366,6 +366,7 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
               onOpenLightbox={()=> handleOpenLightbox(_index)}
               onDownloadFile={()=> handleDownloadFile(document._id, document?.documentVersions[0]._id, file._id, file?.name, file?.extension)}
               onDeleteFile={()=> handleDeleteFile(document._id, document?.documentVersions[0]._id, file._id)}
+              toolbar
             />
           ))}
 
