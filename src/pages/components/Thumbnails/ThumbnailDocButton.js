@@ -35,6 +35,7 @@ export default function ThumbnailDocButton({ onClick }) {
           }}
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
+          onClick={onClick}
     >
 
         <Iconify icon="mdi:plus" color={theme.palette.grey[hovered?900:600]} width={50} />

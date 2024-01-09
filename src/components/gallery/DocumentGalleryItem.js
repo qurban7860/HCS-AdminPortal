@@ -90,11 +90,12 @@ export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFi
                             top:0,
                             opacity: isHovered ? 1 : 0,
                             transition: 'opacity 0.3s ease-in-out',
+                            width:'100%'
                         }}
                     >       
-                        <Button sx={{borderRadius:0}} disabled={!fileType?.startsWith('image')} onClick={fileType?.startsWith('image')?onOpenLightbox:onOpenFile}><Iconify icon="carbon:view" /></Button>
-                        <Button><Iconify icon="solar:download-square-linear" onClick={onDownloadFile} /></Button>
-                        <Button sx={{borderRadius:0}} color='error' onClick={onDeleteFile}><Iconify icon="radix-icons:cross-circled" /></Button>
+                        <Button sx={{width:'33%', borderRadius:0}} disabled={!fileType?.startsWith('image')} onClick={fileType?.startsWith('image')?onOpenLightbox:onOpenFile}><Iconify icon="carbon:view" /></Button>
+                        <Button sx={{width:'33%'}}><Iconify icon="solar:download-square-linear" onClick={onDownloadFile} /></Button>
+                        <Button sx={{width:'34%', borderRadius:0}} color='error' onClick={onDeleteFile}><Iconify icon="radix-icons:cross-circled" /></Button>
                     </ButtonGroup>
                 }
 
