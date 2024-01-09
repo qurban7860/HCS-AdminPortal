@@ -60,9 +60,7 @@ export const ThumbnailNameGrid = styled(Grid)(({ theme }) => ({
 }));
 
 export const ThumbnailUploadButton = styled(Button)(({ theme }) => ({
-  width: '140px',
-  height: '140px',
-  margin:0.5,
+  minHeight:'150px',
   borderRadius: '16px',
   justifyContent: 'center',
   flexDirection: 'column',
