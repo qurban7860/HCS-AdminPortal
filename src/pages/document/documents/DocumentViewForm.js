@@ -166,10 +166,11 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
               src: `data:image/png;base64, ${file.thumbnail}`,
               downloadFilename: `${file?.name}.${file?.extension}`,
               name: file?.name,
+              extension: file?.extension,
               category: file?.docCategory?.name,
               fileType: file?.fileType,
               isLoaded: false,
-              id: file?._id,
+              _id: file?._id,
               width: '100%',
               height: '100%',
             }
@@ -226,6 +227,8 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
   };
 
   const handleDownloadFile = (documentId, versionId, fileId, fileName, fileExtension) => {
+
+    console.log('aaaa')
     dispatch(getDocumentDownload(documentId, versionId, fileId))
       .then((res) => {
         if (regEx.test(res.status)) {
