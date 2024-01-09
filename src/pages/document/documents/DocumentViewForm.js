@@ -363,27 +363,58 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
         >
           {document?.documentVersions &&
               document?.documentVersions[0]?.files?.map((file, _index) =>  
-            <DocumentGalleryItem key={file?._id} image={{
-              thumbnail: `data:image/png;base64, ${file.thumbnail}`,
-              src: `data:image/png;base64, ${file.thumbnail}`,
-              downloadFilename: `${file?.name}.${file?.extension}`,
-              name: file?.name,
-              category: file?.docCategory?.name,
-              fileType: file?.fileType,
-              extension: file?.extension,
-              isLoaded: false,
-              id: file?._id,
-              width: '100%',
-              height: '100%',
-            }} isLoading={isLoading} 
-            onOpenLightbox={()=> handleOpenLightbox(_index)}
-            onDownloadFile={()=> handleDownloadFile(document._id, document?.documentVersions[0]._id, file._id, file?.name, file?.extension)}
-            onDeleteFile={()=> handleDeleteFile(document._id, document?.documentVersions[0]._id, file._id)}
-            onOpenFile={()=> handleOpenFile(document._id, document?.documentVersions[0]._id, file._id, file)}
-            toolbar
-            
-            />
-            
+              {
+                if(file.fileType.startsWith('image')){
+                  return <DocumentGalleryItem key={file?._id} image={{
+                    thumbnail: `data:image/png;base64, ${file.thumbnail}`,
+                    src: `data:image/png;base64, ${file.thumbnail}`,
+                    downloadFilename: `${file?.name}.${file?.extension}`,
+                    name: file?.name,
+                    category: file?.docCategory?.name,
+                    fileType: file?.fileType,
+                    extension: file?.extension,
+                    isLoaded: false,
+                    id: file?._id,
+                    width: '100%',
+                    height: '100%',
+                  }} isLoading={isLoading} 
+                  onOpenLightbox={()=> handleOpenLightbox(_index)}
+                  onDownloadFile={()=> handleDownloadFile(document._id, document?.documentVersions[0]._id, file._id, file?.name, file?.extension)}
+                  onDeleteFile={()=> handleDeleteFile(document._id, document?.documentVersions[0]._id, file._id)}
+                  onOpenFile={()=> handleOpenFile(document._id, document?.documentVersions[0]._id, file._id, file)}
+                  toolbar
+                  />
+                }
+                return null;
+              }
+          )}
+
+          {document?.documentVersions &&
+              document?.documentVersions[0]?.files?.map((file, _index) =>  
+              {
+                if(!file.fileType.startsWith('image')){
+                  return <DocumentGalleryItem key={file?._id} image={{
+                    thumbnail: `data:image/png;base64, ${file.thumbnail}`,
+                    src: `data:image/png;base64, ${file.thumbnail}`,
+                    downloadFilename: `${file?.name}.${file?.extension}`,
+                    name: file?.name,
+                    category: file?.docCategory?.name,
+                    fileType: file?.fileType,
+                    extension: file?.extension,
+                    isLoaded: false,
+                    id: file?._id,
+                    width: '100%',
+                    height: '100%',
+                  }} isLoading={isLoading} 
+                  // onOpenLightbox={()=> handleOpenLightbox(_index)}
+                  onDownloadFile={()=> handleDownloadFile(document._id, document?.documentVersions[0]._id, file._id, file?.name, file?.extension)}
+                  onDeleteFile={()=> handleDeleteFile(document._id, document?.documentVersions[0]._id, file._id)}
+                  onOpenFile={()=> handleOpenFile(document._id, document?.documentVersions[0]._id, file._id, file)}
+                  toolbar
+                  />
+                }
+                return null;
+              }
           )}
 
           <ThumbnailDocButton onClick={handleNewFile}/>
