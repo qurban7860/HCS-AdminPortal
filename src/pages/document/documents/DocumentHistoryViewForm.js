@@ -278,7 +278,7 @@ const handleNewFile = async () => {
 
     if(!image?.isLoaded && image?.fileType?.startsWith('image')){
       try {
-        const response = await dispatch(downloadFile(image?.id));
+        const response = await dispatch(downloadFile(image?._id));
         if (regEx.test(response.status)) {
           // Update the image property in the imagesLightbox array
           const updatedSlides = [

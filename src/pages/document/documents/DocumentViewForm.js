@@ -189,7 +189,7 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
 
     if(!image?.isLoaded && image?.fileType?.startsWith('image')){
       try {
-        const response = await dispatch(downloadFile(image?.id));
+        const response = await dispatch(downloadFile(image?._id));
         if (regEx.test(response.status)) {
           // Update the image property in the imagesLightbox array
           const updatedSlides = [
@@ -227,8 +227,6 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
   };
 
   const handleDownloadFile = (documentId, versionId, fileId, fileName, fileExtension) => {
-
-    console.log('aaaa')
     dispatch(getDocumentDownload(documentId, versionId, fileId))
       .then((res) => {
         if (regEx.test(res.status)) {
