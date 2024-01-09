@@ -336,57 +336,57 @@ const handleNewFile = async () => {
   };
 
   const handleOpenFile = (documentId, versionId, fileId, file) => {
-    dispatch(getDocumentDownload(documentId, versionId, fileId))
-      .then((res) => {
-        if (regEx.test(res.status)) {
+    // dispatch(getDocumentDownload(documentId, versionId, fileId))
+    //   .then((res) => {
+    //     if (regEx.test(res.status)) {
 
-          // const byteCharacters = atob(res.data);
-          // const byteNumbers = new Array(byteCharacters.length);
-          // for (let i = 0; i < byteCharacters.length; i++) {
-          //   byteNumbers[i] = byteCharacters.charCodeAt(i);
-          // }
-          // const byteArray = new Uint8Array(byteNumbers);
-          const decodedPDF = atob(res.data);
+    //       // const byteCharacters = atob(res.data);
+    //       // const byteNumbers = new Array(byteCharacters.length);
+    //       // for (let i = 0; i < byteCharacters.length; i++) {
+    //       //   byteNumbers[i] = byteCharacters.charCodeAt(i);
+    //       // }
+    //       // const byteArray = new Uint8Array(byteNumbers);
+    //       const decodedPDF = atob(res.data);
         
-          // Create a Blob from the decoded string
-          const blob = new Blob([decodedPDF], { type: 'application/pdf' });
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          // a.download = filename;
+    //       // Create a Blob from the decoded string
+    //       const blob = new Blob([decodedPDF], { type: 'application/pdf' });
+    //       const url = window.URL.createObjectURL(blob);
+    //       const a = document.createElement('a');
+    //       a.href = url;
+    //       // a.download = filename;
           
-          // Open in a new tab
-          a.target = '_blank';
+    //       // Open in a new tab
+    //       a.target = '_blank';
           
-          a.click();
+    //       a.click();
 
-          // // Create a data URL from the Blob
-          // const dataUrl = URL.createObjectURL(blob);
+    //       // // Create a data URL from the Blob
+    //       // const dataUrl = URL.createObjectURL(blob);
 
-          // // Open a new tab with the data URL
-          // const newTab = window.open(dataUrl, '_blank');
+    //       // // Open a new tab with the data URL
+    //       // const newTab = window.open(dataUrl, '_blank');
 
-          // // Set a timeout to release the object URL after opening the tab
-          // setTimeout(() => {
-          //   URL.revokeObjectURL(dataUrl);
-          // }, 5000); // Adjust the timeout duration as needed
+    //       // // Set a timeout to release the object URL after opening the tab
+    //       // setTimeout(() => {
+    //       //   URL.revokeObjectURL(dataUrl);
+    //       // }, 5000); // Adjust the timeout duration as needed
         
-          // // Cleanup
-          // window.URL.revokeObjectURL(url);
-          enqueueSnackbar(res.statusText);
-        } else {
-          enqueueSnackbar(res.statusText, { variant: `error` });
-        }
-      })
-      .catch((err) => {
-        if (err.Message) {
-          enqueueSnackbar(err.Message, { variant: `error` });
-        } else if (err.message) {
-          enqueueSnackbar(err.message, { variant: `error` });
-        } else {
-          enqueueSnackbar('Something went wrong!', { variant: `error` });
-        }
-      });
+    //       // // Cleanup
+    //       // window.URL.revokeObjectURL(url);
+    //       enqueueSnackbar(res.statusText);
+    //     } else {
+    //       enqueueSnackbar(res.statusText, { variant: `error` });
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     if (err.Message) {
+    //       enqueueSnackbar(err.Message, { variant: `error` });
+    //     } else if (err.message) {
+    //       enqueueSnackbar(err.message, { variant: `error` });
+    //     } else {
+    //       enqueueSnackbar('Something went wrong!', { variant: `error` });
+    //     }
+    //   });
   };
 
   return (
@@ -497,8 +497,8 @@ const handleNewFile = async () => {
                         xs: 'repeat(1, 1fr)',
                         sm: 'repeat(3, 1fr)',
                         md: 'repeat(5, 1fr)',
-                        lg: 'repeat(7, 1fr)',
-                        xl: 'repeat(9, 1fr)',
+                        lg: 'repeat(6, 1fr)',
+                        xl: 'repeat(8, 1fr)',
                       }}
                     >
                       {version?.files?.map((file, _index) => 
@@ -527,26 +527,10 @@ const handleNewFile = async () => {
 
                       {index === 0 && !defaultValues.isArchived && (<ThumbnailDocButton onClick={handleNewFile}/>)}
                     </Box>
-
-                    {/* {files?.files?.map((file) => (
-                      <Grid sx={{ display: 'flex-inline', m: 0.5, mb:1 }} key={file?._id}>
-                        <Grid container justifyContent="flex-start" gap={1}>
-                          <Thumbnail
-                            file={file}
-                            currentDocument={documentHistory}
-                            customer={customer}
-                            getCallAfterDelete={callAfterDelete}
-                            hideDelete={defaultValues.isArchived}
-                            />
-                        </Grid>
-                      </Grid>
-                    ))} */}
-
                     <ViewFormAudit key={`${index}-files`} defaultValues={fileValues} />
                   </Grid>
                 )})}
 
-{/* <StyledLightbox */}
                 <Lightbox
                   index={selectedImage}
                   slides={slides}
