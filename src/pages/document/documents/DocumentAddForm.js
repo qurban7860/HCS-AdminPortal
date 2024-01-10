@@ -425,7 +425,7 @@ function DocumentAddForm({
                     <Grid container spacing={2}>
                       <Grid item xs={12} lg={12}>
                         <RHFAutocomplete
-                          label="Select  Document*"
+                          label="Select Document*"
                           name="documentVal"
                           disabled={readOnlyDocument}
                           options={activeDocuments}

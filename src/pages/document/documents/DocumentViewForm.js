@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 import React, { useMemo, memo, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { createRoot } from 'react-dom/client';
+import { PDFViewer } from '@react-pdf/renderer';
 import { Grid, Card, Box } from '@mui/material'
 import download from 'downloadjs';
 import { StyledVersionChip } from '../../../theme/styles/default-styles';
@@ -159,7 +161,7 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
   useEffect(() => {
     // Assuming documentHistory is fetched or updated asynchronously
     if (document?.documentVersions) {
-      const newSlides = document?.documentVersions[0].files?.map((file) => {
+      const newSlides = document?.documentVersions[0]?.files?.map((file) => {
           if (file?.fileType && file.fileType.startsWith("image")) {
             return{
               thumbnail: `data:image/png;base64, ${file.thumbnail}`,
@@ -247,7 +249,34 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
       });
   };
 
-  const handleOpenFile = (documentId, versionId, fileId, file) => {
+  const [pdfUrl, setPdfUrl] = useState(null);
+  
+  const handleOpenFile = (documentId, versionId, fileId, fileName, fileExtension) => {
+    dispatch(getDocumentDownload(documentId, versionId, fileId))
+      .then((res) => {
+        if (regEx.test(res.status)) {
+          // Assuming the file content is text, you can display it in a new window or tab
+          const fileContent = atob({data:res.data});
+          console.log("fileContent:::",fileContent)
+          const blob = new Blob([fileContent], { type: 'application/pdf' });
+          const url = URL.createObjectURL(blob);
+          setPdfUrl(url);
+          enqueueSnackbar('File opened for viewing.');
+        } else {
+          enqueueSnackbar(res.statusText, { variant: 'error' });
+        }
+      })
+      .catch((err) => {
+        if (err.message) {
+          enqueueSnackbar(err.message, { variant: 'error' });
+        } else {
+          enqueueSnackbar('Something went wrong!', { variant: 'error' });
+        }
+      });
+  };
+ 
+
+  // const handleOpenFile = (documentId, versionId, fileId, file) => {
 
     // dispatch(getDocumentDownload(documentId, versionId, fileId))
     //   .then((res) => {
@@ -300,7 +329,7 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
     //       enqueueSnackbar('Something went wrong!', { variant: `error` });
     //     }
     //   });
-  };
+  // };
 
   return (
     <Card sx={{ p: 2 }}>
@@ -391,7 +420,7 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
                   // onOpenLightbox={()=> handleOpenLightbox(_index)}
                   onDownloadFile={()=> handleDownloadFile(document._id, document?.documentVersions[0]._id, file._id, file?.name, file?.extension)}
                   onDeleteFile={()=> handleDeleteFile(document._id, document?.documentVersions[0]._id, file._id)}
-                  onOpenFile={()=> handleOpenFile(document._id, document?.documentVersions[0]._id, file._id, file)}
+                  onOpenFile={()=> handleOpenFile(document._id, document?.documentVersions[0]._id, file._id, file?.name, file?.extension)}
                   toolbar
                   />
                 }
