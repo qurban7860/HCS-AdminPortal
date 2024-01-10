@@ -6,11 +6,11 @@ import FormatsChip from '../../pages/components/Defaults/FormatsChip';
 
 export default function AllowedExtensionsMenuePopover({ open, onClose }) {
   return (
-    <MenuPopover open={open} onClose={onClose} arrow="bottom-left" sx={{ p: 0, maxWidth: '900px' }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 2.5 }}>
+    <MenuPopover open={open} onClose={onClose} arrow="bottom-left" sx={{ p:0, maxWidth: '900px' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', p:2 }}>
         <Box sx={{ flexGrow: 1 }}>
-          <Typography variant="subtitle1">Allowed Formats: </Typography>
-          <Divider sx={{ borderStyle: 'solid' }} />
+          <Typography variant="subtitle2">Allowed Formats</Typography>
+          <Divider sx={{ borderStyle: 'solid', my:0.5 }} />
           <FormatsChip />
         </Box>
       </Box>

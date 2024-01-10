@@ -30,6 +30,7 @@ export default function FileThumbnail({ file, tooltip, imageView, onDownload, sx
         sx={{
               width: 1,
               height: 1,
+              pb:2.5,
               flexShrink: 0,
               objectFit: 'cover',
               ...imgSx,
@@ -40,8 +41,8 @@ export default function FileThumbnail({ file, tooltip, imageView, onDownload, sx
         component="img"
         src={fileThumb(format.toLowerCase())}
         sx={{
-          width: 62,
-          height: 62,
+          width: 70,
+          height: 70,
           flexShrink: 0,
           ...sx,
         }}
@@ -69,9 +70,18 @@ export default function FileThumbnail({ file, tooltip, imageView, onDownload, sx
   }
 
   return (
-    <>
+    <Stack
+          flexShrink={0}
+          component="span"
+          alignItems="center"
+          justifyContent="center"
+          sx={{
+            width: 'fit-content',
+            height: 'inherit',
+          }}
+        >
       {renderContent}
       {onDownload && <DownloadButton onDownload={onDownload} />}
-    </>
+    </Stack>
   );
 }

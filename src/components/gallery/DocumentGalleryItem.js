@@ -88,7 +88,7 @@ export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFi
                         sx={{
                             position: 'absolute',
                             top:0,
-                            opacity: isHovered ? 1 : 0,
+                            opacity: isHovered?1:0,
                             transition: 'opacity 0.3s ease-in-out',
                             width:'100%'
                         }}

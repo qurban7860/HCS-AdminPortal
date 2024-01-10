@@ -123,8 +123,8 @@ export default function Lightbox({
           iconZoomOut: () => <Iconify width={ICON_SIZE} icon="solar:magnifer-zoom-out-outline" />,
           iconSlideshowPlay: () => <Iconify width={ICON_SIZE} icon="solar:play-line-duotone" />,
           iconSlideshowPause: () => <Iconify width={ICON_SIZE} icon="solar:pause-line-duotone" />,
-          iconPrev: () => <Iconify width={ICON_SIZE + 20} icon="solar:round-arrow-left-bold" />,
-          iconNext: () => <Iconify width={ICON_SIZE + 20} icon="solar:round-arrow-right-bold" />,
+          iconPrev: () => totalItems>1?<Iconify width={ICON_SIZE + 20} icon="solar:round-arrow-left-bold" />:null,
+          iconNext: () => totalItems>1?<Iconify width={ICON_SIZE + 20} icon="solar:round-arrow-right-bold" />:null,
           iconExitFullscreen: () => <Iconify width={ICON_SIZE} icon="solar:quit-full-screen-square-linear" />,
           iconEnterFullscreen: () => <Iconify width={ICON_SIZE} icon="solar:full-screen-square-linear" />,
           buttonZoom: (buttonZoom) => 
