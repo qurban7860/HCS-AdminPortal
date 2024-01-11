@@ -251,7 +251,7 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getMachines() {
+export function getMachines(page, pageSize) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -261,6 +261,11 @@ export function getMachines() {
           isArchived: false,
           orderBy : {
             createdAt:-1
+          },
+          pagination:{
+            page,
+            pageSize  
+
           }
         }
       });
