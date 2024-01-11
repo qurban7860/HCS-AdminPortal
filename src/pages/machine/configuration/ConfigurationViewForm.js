@@ -18,7 +18,7 @@ import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-import CodeMirror from '../Historical Configurations/JsonEditor';
+import CodeMirror from '../../components/CodeMirror/JsonEditor';
 
 // ----------------------------------------------------------------------
 

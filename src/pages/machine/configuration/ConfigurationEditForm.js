@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Card, Grid, Stack, Typography, Button } from '@mui/material';
 // slice
 import {
   updateConfiguration,
@@ -19,8 +19,7 @@ import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import FormHeading from '../../components/DocumentForms/FormHeading';
-import CodeMirror from '../Historical Configurations/JsonEditor';
+import CodeMirror from '../../components/CodeMirror/JsonEditor';
 import Iconify from '../../../components/iconify';
 import { ICONS } from '../../../constants/icons/default-icons';
 
@@ -28,7 +27,7 @@ import { ICONS } from '../../../constants/icons/default-icons';
 
 export default function ConfigurationEditForm() {
 
-  const { configuration, isLoading } = useSelector((state) => state.configuration);
+  const { configuration } = useSelector((state) => state.configuration);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -57,13 +56,9 @@ export default function ConfigurationEditForm() {
   const {
     reset,
     setValue,
-    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
-  const { configJSON } = watch();
-
 
   useLayoutEffect(() => {
     dispatch(getConfiguration(id));
