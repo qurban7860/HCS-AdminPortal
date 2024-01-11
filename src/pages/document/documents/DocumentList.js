@@ -1,4 +1,4 @@
-import React, {  useState, useEffect, useRef } from 'react';
+import React, {  useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 import PropTypes from 'prop-types';
@@ -86,13 +86,16 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
   const { documents,
-      documentFilterBy,  documentPage,  documentRowsPerPage,
-      machineDrawingsFilterBy,  machineDrawingsPage,  machineDrawingsRowsPerPage,
-      customerDocumentsFilterBy,   customerDocumentsPage,   customerDocumentsRowsPerPage,
-      machineDocumentsFilterBy,  machineDocumentsPage,  machineDocumentsRowsPerPage,
-      isLoading } = useSelector((state) => state.document );
-  const {
-    order,
+    documentFilterBy,  documentPage,  documentRowsPerPage, documentRowsTotal,
+    machineDrawingsFilterBy,  machineDrawingsPage,  machineDrawingsRowsPerPage,
+    customerDocumentsFilterBy,   customerDocumentsPage,   customerDocumentsRowsPerPage,
+    machineDocumentsFilterBy,  machineDocumentsPage,  machineDocumentsRowsPerPage,
+    isLoading } = useSelector((state) => state.document );
+
+    const [totalRows, setTotalRows] = useState( documentRowsTotal );
+
+    const {
+      order,
     orderBy,
     selected,
     setSelected,
@@ -156,28 +159,34 @@ const  onChangePage = (event, newPage) => {
     );
   }
 
-  
+  useLayoutEffect(()=>{
+    dispatch(resetDocuments());
+  },[ dispatch ])
+
   useEffect(() => {
-    const fetchData = async () => {
-      dispatch(resetDocuments());
+    
       if(machinePage || machineDrawings ){
         dispatch(getActiveDocumentCategories());
         dispatch(getActiveDocumentTypes());
       }
+      
       if (customerPage || machinePage) {
         if (customer?._id || machine?._id) {
-          await dispatch(getDocuments(customerPage ? customer?._id : null, machinePage ? machine?._id : null));
+          dispatch(getDocuments(page, rowsPerPage,  customerPage ? customer?._id : null, machinePage ? machine?._id : null));
         }
-      }else if(machineDrawings){
-        await dispatch(getDocuments(null, null,machineDrawings));
+      } else if( machineDrawings ){
+          dispatch(getDocuments(page, rowsPerPage, null, null,machineDrawings));
       } else {
-        await dispatch(getDocuments());
+          dispatch(getDocuments(page, rowsPerPage));
       }
-    };
 
-    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, customerPage, machinePage]);
+  }, [dispatch, customerPage, machinePage, page, rowsPerPage]);
+  
+  useEffect(()=>{
+    setTotalRows( documentRowsTotal || 0 );
+  },[ documentRowsTotal ])
+
 
   useEffect(()=>{
     if(machinePage){
@@ -204,7 +213,7 @@ const  onChangePage = (event, newPage) => {
   },[customerPage, machinePage, machineDrawings, machineDocumentsRowsPerPage, customerDocumentsRowsPerPage, machineDrawingsRowsPerPage, documentRowsPerPage])
 
   useEffect(() => {
-    setTableData(documents);
+    setTableData(documents?.documents || []);
   }, [documents]);
 
   const dataFiltered = applyFilter({
@@ -218,20 +227,20 @@ const  onChangePage = (event, newPage) => {
   // const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   const denseHeight = 60;
   const isFiltered = filterName !== '' || !!filterStatus.length;
-  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+  const isNotFound = (!dataFiltered?.length && !!filterName) || (!isLoading && !dataFiltered?.length);
 
   const filterNameDebounce = (value) => {
     if(machinePage){
-      dispatch(machineDocumentChangePage(0))
+      // dispatch(machineDocumentChangePage(0))
       dispatch(setMachineDocumentFilterBy(value))
     }else if(customerPage){
-      dispatch(customerDocumentChangePage(0))
+      // dispatch(customerDocumentChangePage(0))
       dispatch(setCustomerDocumentFilterBy(value))
     }else if(machineDrawings){
-      dispatch(machineDrawingsChangePage(0))
+      // dispatch(machineDrawingsChangePage(0))
       dispatch(setMachineDrawingsFilterBy(value))
     }else if(!customerPage && !machinePage && !machineDrawings){
-      dispatch(ChangePage(0));
+      // dispatch(ChangePage(documentPage));
       dispatch(setFilterBy(value))
     }
   }
@@ -263,7 +272,7 @@ const  onChangePage = (event, newPage) => {
   // customerPage, machinePage, machineDrawings, documentFilterBy, machineDocumentsFilterBy, customerDocumentsFilterBy, machineDrawingsFilterBy
 
   const handleFilterStatus = (event) => {
-    setPage(0);
+    // setPage(0);
     setFilterStatus(event.target.value);
   };
 
@@ -305,35 +314,8 @@ const  onChangePage = (event, newPage) => {
     dispatch(setMachineDialog(true))
   }
 
-
   const { enqueueSnackbar } = useSnackbar();
-  const [openConfirm, setOpenConfirm] = useState(false);
-  const handleOpenConfirm = () => setOpenConfirm(true);
-  const handleCloseConfirm = () => setOpenConfirm(false);
-
-  const handleDeleteDoc = async (id) => {
-    try {
-      await dispatch(deleteDocument(id, (!customerPage && !machinePage )));
-      dispatch(resetDocuments());
-
-      dispatch(resetDocuments());
-      if (customerPage || machinePage) {
-        if (customer?._id || machine?._id) {
-          await dispatch(getDocuments(customerPage ? customer?._id : null, machinePage ? machine?._id : null));
-        }
-      }else if(machineDrawings){
-        await dispatch(getDocuments(null, null,machineDrawings));
-      } else {
-        await dispatch(getDocuments());
-      }
-
-      enqueueSnackbar(machineDrawings?Snacks.deletedDrawing:Snacks.deletedDoc, { variant: `success` });
-    } catch (err) {
-      console.log(err);
-      enqueueSnackbar(err, { variant: `error` });
-    }
-  };
-
+  
   const handleGalleryView = () => {
     dispatch(setDocumentGalleryVisibility(true));
   };
@@ -363,7 +345,7 @@ const  onChangePage = (event, newPage) => {
           handleGalleryView={!isNotFound && (customerPage || machinePage) && handleGalleryView}
         />
         {!isNotFound && <TablePaginationCustom
-          count={dataFiltered.length}
+          count={documentRowsTotal}
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
@@ -381,7 +363,7 @@ const  onChangePage = (event, newPage) => {
 
               <TableBody>
                 {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
                       <DocumentListTableRow
@@ -406,7 +388,7 @@ const  onChangePage = (event, newPage) => {
         </TableContainer>
 
         {!isNotFound && <TablePaginationCustom
-          count={dataFiltered.length}
+          count={totalRows}
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
@@ -418,18 +400,6 @@ const  onChangePage = (event, newPage) => {
       <CustomerDialog />
       <MachineDialog />
 
-      <ConfirmDialog open={openConfirm} onClose={handleCloseConfirm} title="Delete" content="Are you sure you want to delete?"
-        action={
-          <Button variant="contained" color="error"
-            onClick={() => {
-              handleDeleteDoc(selected)
-              handleCloseConfirm();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      />
     </>
   );
 }
@@ -437,42 +407,45 @@ const  onChangePage = (event, newPage) => {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName, filterStatus, categoryVal, typeVal }) {
-  const stabilizedThis = inputData && inputData.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
 
-  inputData = stabilizedThis.map((el) => el[0]);
-
-
-  inputData = stabilizedThis.map((el) => el[0]);
-  if(categoryVal)
-    inputData = inputData.filter((drawing)=> drawing.docCategory?._id  === categoryVal?._id );
-
-  if(typeVal)
-    inputData = inputData.filter((drawing)=> drawing.docType?._id === typeVal?._id );
-
-
-  if (filterName) {
-    inputData = inputData.filter(
-      (document) =>
-        document?.displayName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        document?.docType?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        document?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        document?.machine?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        document?.docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        document?.referenceNumber?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        document?.stockNumber?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        document?.productDrawings?.some((m) => m?.machine?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0) ||
-        document?.documentVersions[0].versionNo?.toString().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
-    );
-  }
-
-  if (filterStatus.length) {
-    inputData = inputData.filter((document) => filterStatus.includes(document.status));
+  if(inputData){
+    const stabilizedThis = inputData && inputData.map((el, index) => [el, index]);
+    stabilizedThis?.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) return order;
+      return a[1] - b[1];
+    });
+  
+    inputData = stabilizedThis?.map((el) => el[0]);
+  
+  
+    inputData = stabilizedThis?.map((el) => el[0]);
+    if(categoryVal)
+      inputData = inputData?.filter((drawing)=> drawing.docCategory?._id  === categoryVal?._id );
+  
+    if(typeVal)
+      inputData = inputData?.filter((drawing)=> drawing.docType?._id === typeVal?._id );
+  
+  
+    if (filterName) {
+      inputData = inputData.filter(
+        (document) =>
+          document?.displayName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+          document?.docType?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+          document?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+          document?.machine?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+          document?.docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+          document?.referenceNumber?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+          document?.stockNumber?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+          document?.productDrawings?.some((m) => m?.machine?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0) ||
+          document?.documentVersions[0]?.versionNo?.toString().indexOf(filterName.toLowerCase()) >= 0 ||
+          fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+      );
+    }
+  
+    if (filterStatus.length) {
+      inputData = inputData.filter((document) => filterStatus.includes(document.status));
+    }
   }
 
   return inputData;

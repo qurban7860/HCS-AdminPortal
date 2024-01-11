@@ -224,11 +224,7 @@ export default function Upload({
             top: 80,
             left: 2,
             zIndex: 9,
-            // height: "350",
             position: 'absolute',
-            // cursor: 'unset !important',
-            // color: (theme) => alpha(theme.palette.common.black, 0.8),
-            // bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
             '&:hover': {
               bgcolor: 'transparent',
             },
@@ -248,7 +244,18 @@ export default function Upload({
 
       {hasFiles && (
         <>
-          <Box sx={{ my: 3 }}>
+          <Box
+            sx={{mt:2, width:'100%'}}
+            gap={2}
+            display="grid"
+            gridTemplateColumns={{
+              xs: 'repeat(1, 1fr)',
+              sm: 'repeat(3, 1fr)',
+              md: 'repeat(5, 1fr)',
+              lg: 'repeat(6, 1fr)',
+              xl: 'repeat(8, 1fr)',
+            }}
+          >
             <MultiFilePreview files={files} thumbnail={thumbnail} onRemove={onRemove} />
           </Box>
 

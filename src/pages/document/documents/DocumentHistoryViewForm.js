@@ -1,14 +1,16 @@
 import PropTypes from 'prop-types';
-import {  useMemo, useEffect, memo } from 'react';
+import {  useMemo, useEffect, memo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-// import download from 'downloadjs';
+import download from 'downloadjs';
 import {
   Grid,
   Card,
   Link,
   Chip,
-  Box
+  Box,
+  Button,
+  Container
 } from '@mui/material';
 import { ThumbnailDocButton } from '../../components/Thumbnails'
 import { StyledVersionChip } from '../../../theme/styles/default-styles';
@@ -30,10 +32,12 @@ import {
   setDocumentEditFormVisibility,
   setDocumentViewFormVisibility,
   setDocumentVersionEditDialogVisibility,
+  setDocumentGalleryVisibility,
 } from '../../../redux/slices/document/document';
-import { deleteDrawing, getDrawings, resetDrawings, 
+import { deleteDrawing, getDrawings, resetDrawings,
   setDrawingEditFormVisibility, setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
 
+import { deleteDocumentFile, downloadFile, getDocumentDownload } from '../../../redux/slices/document/documentFile';
 import { getCustomer, resetCustomer, setCustomerDialog} from '../../../redux/slices/customer/customer';
 import { getMachineForDialog, resetMachine, setMachineDialog } from '../../../redux/slices/products/machine';
 import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
@@ -45,6 +49,11 @@ import { PATH_DOCUMENT } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
 import { Snacks } from '../../../constants/document-constants';
 import UpdateDocumentVersionDialog from '../../components/Dialog/UpdateDocumentVersionDialog';
+import DocumentGallery from './DocumentGallery';
+import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
+import Lightbox from '../../../components/lightbox/Lightbox';
+import { fileThumb } from '../../../components/file-thumbnail';
+import StyledLightbox from '../../../components/lightbox/styles';
 
 // ----------------------------------------------------------------------
 
@@ -230,11 +239,162 @@ const handleNewFile = async () => {
     }
   };
 
+  const regEx = /^[^2]*/;
+  const [selectedImage, setSelectedImage] = useState(-1);
+  const [slides, setSlides] = useState([]);
+
+  useEffect(() => {
+    // Assuming documentHistory is fetched or updated asynchronously
+    if (documentHistory) {
+      const newSlides = documentHistory?.documentVersions?.flatMap((files, index) =>
+        files?.files?.map((file, _index) => {
+          if (file?.fileType && file.fileType.startsWith("image")) {
+            return{
+              thumbnail: `data:image/png;base64, ${file.thumbnail}`,
+              src: `data:image/png;base64, ${file.thumbnail}`,
+              downloadFilename: `${file?.name}.${file?.extension}`,
+              name: file?.name,
+              extension: file?.extension,
+              category: file?.docCategory?.name,
+              fileType: file?.fileType,
+              isLoaded: false,
+              _id: file?._id,
+              version:files?.versionNo,
+              width: '100%',
+              height: '100%',
+            }
+          }
+          return null;
+        }).filter(Boolean) // Remove null entries from the array
+      );
+  
+      setSlides(newSlides);
+    }
+  }, [documentHistory]);
+
+  const handleOpenLightbox = async (index) => {
+    setSelectedImage(index);
+    const image = slides[index];
+
+    if(!image?.isLoaded && image?.fileType?.startsWith('image')){
+      try {
+        const response = await dispatch(downloadFile(image?._id));
+        if (regEx.test(response.status)) {
+          // Update the image property in the imagesLightbox array
+          const updatedSlides = [
+            ...slides.slice(0, index), // copies slides before the updated slide
+            {
+              ...slides[index],
+              src: `data:image/png;base64, ${response.data}`,
+              isLoaded: true,
+            },
+            ...slides.slice(index + 1), // copies slides after the updated slide
+          ];
+
+          // Update the state with the new array
+          setSlides(updatedSlides);
+        }
+      } catch (error) {
+        console.error('Error loading full file:', error);
+      }
+    }
+  };
+
+  const handleCloseLightbox = () => {
+    setSelectedImage(-1);
+  };
+
+  const handleDeleteFile = async (documentId, versionId, fileId) => {
+    try {
+      await dispatch(deleteDocumentFile(documentId, versionId, fileId, customer?._id));
+      await dispatch(getDocumentHistory(documentHistory._id))
+      enqueueSnackbar('File Deleted successfully');
+    } catch (err) {
+      console.log(err);
+      enqueueSnackbar('File Deletion failed!', { variant: `error` });
+    }
+  };
+
+  const handleDownloadFile = (documentId, versionId, fileId, fileName, fileExtension) => {
+    dispatch(getDocumentDownload(documentId, versionId, fileId))
+      .then((res) => {
+        if (regEx.test(res.status)) {
+          download(atob(res.data), `${fileName}.${fileExtension}`, { type: fileExtension });
+          enqueueSnackbar(res.statusText);
+        } else {
+          enqueueSnackbar(res.statusText, { variant: `error` });
+        }
+      })
+      .catch((err) => {
+        if (err.Message) {
+          enqueueSnackbar(err.Message, { variant: `error` });
+        } else if (err.message) {
+          enqueueSnackbar(err.message, { variant: `error` });
+        } else {
+          enqueueSnackbar('Something went wrong!', { variant: `error` });
+        }
+      });
+  };
+
+  const handleOpenFile = (documentId, versionId, fileId, file) => {
+    // dispatch(getDocumentDownload(documentId, versionId, fileId))
+    //   .then((res) => {
+    //     if (regEx.test(res.status)) {
+
+    //       // const byteCharacters = atob(res.data);
+    //       // const byteNumbers = new Array(byteCharacters.length);
+    //       // for (let i = 0; i < byteCharacters.length; i++) {
+    //       //   byteNumbers[i] = byteCharacters.charCodeAt(i);
+    //       // }
+    //       // const byteArray = new Uint8Array(byteNumbers);
+    //       const decodedPDF = atob(res.data);
+        
+    //       // Create a Blob from the decoded string
+    //       const blob = new Blob([decodedPDF], { type: 'application/pdf' });
+    //       const url = window.URL.createObjectURL(blob);
+    //       const a = document.createElement('a');
+    //       a.href = url;
+    //       // a.download = filename;
+          
+    //       // Open in a new tab
+    //       a.target = '_blank';
+          
+    //       a.click();
+
+    //       // // Create a data URL from the Blob
+    //       // const dataUrl = URL.createObjectURL(blob);
+
+    //       // // Open a new tab with the data URL
+    //       // const newTab = window.open(dataUrl, '_blank');
+
+    //       // // Set a timeout to release the object URL after opening the tab
+    //       // setTimeout(() => {
+    //       //   URL.revokeObjectURL(dataUrl);
+    //       // }, 5000); // Adjust the timeout duration as needed
+        
+    //       // // Cleanup
+    //       // window.URL.revokeObjectURL(url);
+    //       enqueueSnackbar(res.statusText);
+    //     } else {
+    //       enqueueSnackbar(res.statusText, { variant: `error` });
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     if (err.Message) {
+    //       enqueueSnackbar(err.Message, { variant: `error` });
+    //     } else if (err.message) {
+    //       enqueueSnackbar(err.message, { variant: `error` });
+    //     } else {
+    //       enqueueSnackbar('Something went wrong!', { variant: `error` });
+    //     }
+    //   });
+  };
+
   return (
-    <>
+    <Container maxWidth={false} sx={{padding:machineDrawings || customerPage || machinePage ?'0 !important':''}}>
       {!customerPage && !machinePage && !drawingPage &&
         <DocumentCover content={defaultValues?.displayName} generalSettings />
-      } 
+      }
 
         <Grid item md={12} mt={2}>
           <Card sx={{ p: 3 }}>
@@ -247,7 +407,7 @@ const handleNewFile = async () => {
           disableEditButton={drawingPage && machine?.status?.slug==="transferred"}
           backLink={(customerPage || machinePage || drawingPage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDrawingViewFormVisibility(false));}
           : () =>  machineDrawings ? navigate(PATH_DOCUMENT.document.machineDrawings.list) : navigate(PATH_DOCUMENT.document.list)}
-          
+
       />
             <Grid container sx={{mt:2}}>
               <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.displayName} />
@@ -306,57 +466,114 @@ const handleNewFile = async () => {
               )}
 
               <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
-              {((drawingPage && documentHistory?.productDrawings?.length > 1) || machineDrawings) && 
+              {((drawingPage && documentHistory?.productDrawings?.length > 1) || machineDrawings) &&
                 <ViewFormField isLoading={isLoading} sm={12} heading="Attached with Machines" chipDialogArrayParam={linkedDrawingMachines} />
               }
               <Grid container sx={{ mt: '1rem', mb: '-1rem' }}>
                 <ViewFormAudit defaultValues={defaultValues} />
               </Grid>
-
-
               {documentHistory &&
-                documentHistory?.documentVersions?.map((files, index) => {
+                documentHistory?.documentVersions?.map((version, index) => {
                   const fileValues = {
-                      createdAt: files?.createdAt || '',
-                      createdByFullName: files?.createdBy?.name || '',
-                      createdIP: files?.createdIP || '',
-                      updatedAt: files?.updatedAt || '',
-                      updatedByFullName: files?.updatedBy?.name || '',
-                      updatedIP: files?.updatedIP || '',
+                      createdAt: version?.createdAt || '',
+                      createdByFullName: version?.createdBy?.name || '',
+                      createdIP: version?.createdIP || '',
+                      updatedAt: version?.updatedAt || '',
+                      updatedByFullName: version?.updatedBy?.name || '',
+                      updatedIP: version?.updatedIP || '',
                     }
+
                  return (
                   <Grid container key={index}>
                     <Grid container sx={{ pt: '2rem' }} mb={1}>
-                      <FormLabel content={`Version No. ${files?.versionNo}`} />
-                      {defaultValues.description !== files?.description && (
-                        <ViewFormField sm={12} heading="Description" param={files?.description} />
+                      <FormLabel content={`Version No. ${version?.versionNo}`} />
+                      {defaultValues.description !== version?.description && (
+                        <ViewFormField sm={12} heading="Description" param={version?.description} />
                       )}
                     </Grid>
-                    {files?.files?.map((file) => (
-                      <Grid sx={{ display: 'flex-inline', m: 0.5, mb:1 }} key={file?._id}>
-                        <Grid container justifyContent="flex-start" gap={1}>
-                          <Thumbnail
-                            file={file}
-                            currentDocument={documentHistory}
-                            customer={customer}
-                            getCallAfterDelete={callAfterDelete}
-                            hideDelete={defaultValues.isArchived}
+                    <Box
+                      sx={{mt:2, width:'100%'}}
+                      gap={2}
+                      display="grid"
+                      gridTemplateColumns={{
+                        xs: 'repeat(1, 1fr)',
+                        sm: 'repeat(3, 1fr)',
+                        md: 'repeat(5, 1fr)',
+                        lg: 'repeat(6, 1fr)',
+                        xl: 'repeat(8, 1fr)',
+                      }}
+                    >
+                      {slides?.map((file, _index) =>{
+                        if(file?.version===version?.versionNo){
+                          return(
+                            <DocumentGalleryItem isLoading={isLoading} key={file?.id} image={file} 
+                              onOpenLightbox={()=> handleOpenLightbox(_index)}
+                              onDownloadFile={()=> handleDownloadFile(documentHistory._id, version._id, file._id, file?.name, file?.extension)}
+                              onDeleteFile={()=> handleDeleteFile(documentHistory._id, version._id, file._id)}
+                              toolbar
                             />
-                        </Grid>
-                      </Grid>
-                    ))}
-                    {index === 0 && !defaultValues.isArchived && (<ThumbnailDocButton onClick={handleNewFile}/>)}
-                    
+                          )
+                        }
+
+                        return null;
+                      } 
+                      )}
+
+                      {version?.files?.map((file, _index) =>{
+                        if (!file.fileType.startsWith('image')) {
+                          return (
+                            <DocumentGalleryItem
+                              key={file?._id}
+                              image={{
+                                thumbnail: `data:image/png;base64, ${file.thumbnail}`,
+                                src: `data:image/png;base64, ${file.thumbnail}`,
+                                downloadFilename: `${file?.name}.${file?.extension}`,
+                                name: file?.name,
+                                category: file?.docCategory?.name,
+                                fileType: file?.fileType,
+                                extension: file?.extension,
+                                isLoaded: false,
+                                id: file?._id,
+                                width: '100%',
+                                height: '100%',
+                              }}
+                              isLoading={isLoading} 
+                              // onOpenLightbox={() => handleOpenLightbox(index)}
+                              onDownloadFile={() => handleDownloadFile(documentHistory._id, version._id, file._id, file?.name, file?.extension)}
+                              onDeleteFile={() => handleDeleteFile(documentHistory._id, version._id, file._id)}
+                              onOpenFile={() => handleOpenFile(documentHistory._id, version._id, file._id, file)}
+                              toolbar
+                            />
+                          );
+                        }
+                        return null;
+                      })}
+
+                      {index === 0 && !defaultValues.isArchived && (<ThumbnailDocButton onClick={handleNewFile}/>)}
+                    </Box>
                     <ViewFormAudit key={`${index}-files`} defaultValues={fileValues} />
                   </Grid>
                 )})}
+
+                <Lightbox
+                  index={selectedImage}
+                  slides={slides}
+                  open={selectedImage >= 0}
+                  close={handleCloseLightbox}
+                  onGetCurrentIndex={(index) => handleOpenLightbox(index)}
+                  disabledSlideshow
+                />
+
+
             </Grid>
           </Card>
         </Grid>
       <CustomerDialog />
       <MachineDialog />
+      {/* <DocumentGallery /> */}
       <UpdateDocumentVersionDialog versionNo={defaultValues?.documentVersion} />
-    </>
+    </Container>
+     
   );
 }
 

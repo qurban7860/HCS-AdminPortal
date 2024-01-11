@@ -21,6 +21,7 @@ import { Cover } from '../../components/Defaults/Cover';
 import { PATH_DOCUMENT } from '../../../routes/paths';
 import { SkeletonGallery } from '../../../components/skeleton';
 import EmptyContent from '../../../components/empty-content/EmptyContent';
+import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
 
 // ----------------------------------------------------------------------
 
@@ -60,28 +61,21 @@ export default function DocumentGallery({customerPage, machinePage}) {
   useEffect(()=>{
     setSlides(documentGallery?.map((img) => ({
       src:`data:image/png;base64, ${img?.thumbnail}`,
+      thumbnail:`data:image/png;base64, ${img?.thumbnail}`,
       downloadFilename:`${img?.name}.${img?.extension}`,
       name:img?.name,
-      docCat:img?.docCategory?.name,
-      docType:img?.docType?.name,
-      machine:img?.machine?.serialNo,
-      customer:img?.customer?.name,
+      category:img?.docCategory?.name,
+      fileType:img?.fileType,
+      extension:img?.extension,
       isLoaded:false,
       id:img?._id,
       width: '100%',
-      height: '100%',
+      height: '100%'
     })));
     
   },[documentGallery])
 
-
-  
-
-  const handleOpenLightbox = (index) => {
-    handleViewLightbox(index);
-  };
-
-  const handleViewLightbox = async (index) => {
+  const handleOpenLightbox = async (index) => {
     setSelectedImage(index);
     const image = slides[index];
     if(!image?.isLoaded){
@@ -101,7 +95,6 @@ export default function DocumentGallery({customerPage, machinePage}) {
   
           // Update the state with the new array
           setSlides(updatedSlides);
-          setSelectedImage(index);
         }
       } catch (error) {
         console.error('Error loading full file:', error);
@@ -135,19 +128,23 @@ export default function DocumentGallery({customerPage, machinePage}) {
           gridTemplateColumns={{
             xs: 'repeat(1, 1fr)',
             sm: 'repeat(2, 1fr)',
-            md: 'repeat(3, 1fr)',
-            lg: 'repeat(4, 1fr)',
-            xl: 'repeat(6, 1fr)',
+            md: 'repeat(5, 1fr)',
+            lg: 'repeat(7, 1fr)',
+            xl: 'repeat(9, 1fr)',
           }}
         >
-          {!isLoading ? slides?.map((slide, index) => (
+          {/* {!isLoading ? slides?.map((slide, index) => (
             <GalleryItem
               key={slide?.id}
               image={slide}
               onOpenLightbox={() => handleOpenLightbox(index)}
             />
             )):(<SkeletonGallery  />)
-          }
+          } */}
+
+          {slides?.map((slide, index) => (
+            <DocumentGalleryItem isLoading={isLoading} key={slide?.id} image={slide} onOpenLightbox={() => handleOpenLightbox(index)} />
+          ))}
 
         </Box>
 
@@ -156,8 +153,10 @@ export default function DocumentGallery({customerPage, machinePage}) {
           slides={slides}
           open={selectedImage >= 0}
           close={handleCloseLightbox}
-          onGetCurrentIndex={(index) => handleViewLightbox(index)}
+          onGetCurrentIndex={(index) => handleOpenLightbox(index)}
           disabledSlideshow
+          zoom={5}
+          maxZoom={10}
         />
       </Card>
     </Container>

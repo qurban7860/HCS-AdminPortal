@@ -113,9 +113,7 @@ export default function SiteEditForm() {
       if (phone && phone.length > 4) { data.phone = phone }
       if (fax && fax.length > 4) { data.fax = fax }
       await dispatch(updateSite(data, customer?._id, site?._id));
-      await dispatch(getSites(customer?._id));
       await dispatch(getSite(customer?._id, site?._id));
-      await dispatch(getCustomer(customer?._id));
       enqueueSnackbar('Site saved Successfully!');
       reset();
     } catch (err) {

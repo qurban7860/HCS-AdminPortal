@@ -338,7 +338,7 @@ export const PATH_DOCUMENT = {
   document: {
     list: path(ROOTS_DOCUMENT, '/list'),
     new: path(ROOTS_DOCUMENT, '/new'),
-    gallery: path(ROOTS_DOCUMENT, `/gallery`),
+    gallery: (id) => path(ROOTS_DOCUMENT, `/${id}/gallery`),
     edit: (id) => path(ROOTS_DOCUMENT, `/${id}/edit`),
     view: (id) => path(ROOTS_DOCUMENT, `/${id}/view`),
     customer: (id) => path(ROOTS_DOCUMENT, `/${id}/customer`),

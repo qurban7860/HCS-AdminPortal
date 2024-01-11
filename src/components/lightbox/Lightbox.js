@@ -1,5 +1,5 @@
 /* eslint-disable import/no-unresolved */
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import ReactLightbox from 'yet-another-react-lightbox';
 import Zoom from 'yet-another-react-lightbox/plugins/zoom';
@@ -19,7 +19,7 @@ import StyledLightbox from './styles';
 
 // ----------------------------------------------------------------------
 
-const ICON_SIZE = 24;
+const ICON_SIZE = 30;
 
 Lightbox.propTypes = {
   slides: PropTypes.array,
@@ -32,7 +32,6 @@ Lightbox.propTypes = {
   disabledFullscreen: PropTypes.bool,
   disabledDownload: PropTypes.bool,
   onGetCurrentIndex: PropTypes.func,
-  imageLoading: PropTypes.bool,
 };
 
 export default function Lightbox({
@@ -46,23 +45,31 @@ export default function Lightbox({
   disabledFullscreen,
   disabledDownload,
   onGetCurrentIndex,
-  imageLoading,
   ...other
 }) {
   const totalItems = slides ? slides.length : 0;
 
+  const [transitionTime, setTransitionTime] = useState(0.5);
   const [zoomLevel, setZoomLevel] = useState(1);
+  const [rotateDeg, setRotateDeg] = useState(0);
 
   const handleZoomIn = () => {
+    setTransitionTime(0.5);
     if(zoomLevel<5){
       setZoomLevel(zoomLevel + 1); // Increase the zoom level by 0.1 (adjust as needed)
     }
   };
 
   const handleZoomOut = () => {
+    setTransitionTime(0.5);
     if(zoomLevel>1){
       setZoomLevel(zoomLevel - 1); // Decrease the zoom level by 0.1 (adjust as needed)
     }
+  };
+
+  const handleRotation = () => {
+    setTransitionTime(0.5);
+    setRotateDeg(rotateDeg + 90) // Decrease the zoom level by 0.1 (adjust as needed)
   };
 
   return (
@@ -70,6 +77,7 @@ export default function Lightbox({
       <StyledLightbox />
 
       <ReactLightbox
+      
         slides={slides}
         captions='slides'
         animation={{ swipe: 240 }}
@@ -85,9 +93,14 @@ export default function Lightbox({
           disabledDownload
         })}
         on={{
-          view: ({index}) => {
+          view: async({index}) => {
+
+            setTransitionTime(0);
+            setZoomLevel(1);
+            setRotateDeg(0);
+            
             if (onGetCurrentIndex) {
-              onGetCurrentIndex(index);
+              await onGetCurrentIndex(index);
             }
           }
         }}
@@ -102,20 +115,19 @@ export default function Lightbox({
             'close',
           ],
         }}
-        renderSlid
         render={{
-          iconLoading:  () => <Iconify width={50} color='#fff' icon="line-md:downloading-loop" />,
+          iconLoading:  () => <Iconify width={ICON_SIZE} color='#fff' icon="line-md:downloading-loop" />,
           iconClose: () => <Iconify width={ICON_SIZE} icon="solar:close-square-linear" />,
           iconDownload: () => <Iconify width={ICON_SIZE} icon="solar:download-square-linear" />,
           iconZoomIn: () => <Iconify width={ICON_SIZE} icon="solar:magnifer-zoom-in-outline" />,
           iconZoomOut: () => <Iconify width={ICON_SIZE} icon="solar:magnifer-zoom-out-outline" />,
           iconSlideshowPlay: () => <Iconify width={ICON_SIZE} icon="solar:play-line-duotone" />,
           iconSlideshowPause: () => <Iconify width={ICON_SIZE} icon="solar:pause-line-duotone" />,
-          iconPrev: () => <Iconify width={ICON_SIZE + 8} icon="solar:alt-arrow-left-bold-duotone" />,
-          iconNext: () => <Iconify width={ICON_SIZE + 8} icon="solar:alt-arrow-right-bold-duotone" />,
+          iconPrev: () => totalItems>1?<Iconify width={ICON_SIZE + 20} icon="solar:round-arrow-left-bold" />:null,
+          iconNext: () => totalItems>1?<Iconify width={ICON_SIZE + 20} icon="solar:round-arrow-right-bold" />:null,
           iconExitFullscreen: () => <Iconify width={ICON_SIZE} icon="solar:quit-full-screen-square-linear" />,
           iconEnterFullscreen: () => <Iconify width={ICON_SIZE} icon="solar:full-screen-square-linear" />,
-          buttonZoom: (buttonZoom) => (
+          buttonZoom: (buttonZoom) => 
               <>
                 <button type="button" className="yarl__button" onClick={handleZoomIn}>
                   <Iconify width={ICON_SIZE} icon="solar:magnifer-zoom-in-outline" />
@@ -123,13 +135,21 @@ export default function Lightbox({
                 <button type="button" className="yarl__button" onClick={handleZoomOut}>
                   <Iconify width={ICON_SIZE} icon="solar:magnifer-zoom-out-outline" />
                 </button>
+
+                <button type="button" className="yarl__button" onClick={handleRotation}>
+                  <Iconify width={ICON_SIZE} icon="solar:smartphone-rotate-2-broken" />
+                </button>
               </>
-          ),
-          slide: ({ slide }) =>
+          ,
+          slide: ({ slide }) => 
           slide?.isLoaded? (
-            <img className='yarl__slide_image' src={slide?.src} alt="tatatta" style={{maxHeight: '100%', transitionDuration:'0.5s',  transform: `scale(${zoomLevel})` }}/>
-          ) : (<Iconify width={100} color='#fff' icon="line-md:downloading-loop" />),
-        }}
+              <img draggable className='yarl__slide_image' src={slide?.src} alt="tatatta" 
+              style={{maxHeight: '100%', 
+              transitionDuration:`${transitionTime}s`,  
+              transform: `scale(${zoomLevel}) rotate(${rotateDeg}deg)` }}/>
+            ) : (<Iconify width={100} color='#fff' icon="line-md:downloading-loop" />)
+
+          }}
         {...other}
       />
     </>

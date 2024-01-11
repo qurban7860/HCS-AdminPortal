@@ -1,0 +1,127 @@
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+// @mui
+import { useTheme } from '@mui/material/styles';
+import { Box, Card, IconButton, Typography, Stack, CardMedia, Popover, ButtonGroup, Button } from '@mui/material';
+// utils
+import { bgBlur } from '../../utils/cssStyles';
+// components
+import Image from '../image';
+import Iconify from '../iconify';
+import Lightbox from '../lightbox';
+import { fDate } from '../../utils/formatTime';
+import { SkeletonGallery } from '../skeleton';
+import { fileThumb } from '../file-thumbnail';
+import MenuPopover from '../menu-popover';
+import { deleteDocumentFile } from '../../redux/slices/document/documentFile';
+import { useSnackbar } from '../snackbar';
+
+
+DocumentGalleryItem.propTypes = {
+    image: PropTypes.shape({
+        src: PropTypes.string,
+        thumbnail: PropTypes.string,
+        name: PropTypes.string,
+        category: PropTypes.string,
+        fileType:PropTypes.string,
+        extension:PropTypes.string,
+        postAt: PropTypes.instanceOf(Date)
+    }),
+    isLoading: PropTypes.bool,
+    onOpenLightbox: PropTypes.func,
+    onOpenFile: PropTypes.func,
+    onDownloadFile: PropTypes.func,
+    onDeleteFile: PropTypes.func,
+    toolbar: PropTypes.bool
+  };
+  
+export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFile, onDownloadFile, onDeleteFile, toolbar }) {
+
+    const dispatch = useDispatch();
+    const { enqueueSnackbar } = useSnackbar();
+
+    const [isHovered, setIsHovered] = useState(false);
+
+    const handleMouseEnter = () => {
+        setIsHovered(true);
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+    };
+
+    const theme = useTheme();
+    const { src, thumbnail, extension, name, category, fileType, postAt } = image;
+
+    return (
+        <>
+            {!isLoading ?(
+                <Card 
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    sx={{
+                        cursor: 'pointer',
+                        position: 'relative',
+                        display: 'flex',  // Make the card a flex container
+                        flexDirection: 'column',  // Stack children vertically
+                        alignItems: 'center',  // Center items horizontally
+                        justifyContent: 'center',  // Center items vertically
+                        '&:hover .button-group': {
+                            opacity: 1,
+                        },
+                        minHeight:150,
+                    }}
+                >
+                    
+                {fileType?.startsWith('image') ? (
+                    <Image alt="gallery" sx={{height:'100%'}} ratio="1/1" src={src} onClick={onOpenLightbox} />
+                ):(
+                    <CardMedia sx={{height:'90%', width:'100%', backgroundSize:'40%', backgroundPosition:'center 35%'}} image={fileThumb(extension?.toLowerCase())} onClick={onOpenFile} />
+                )}
+
+                {toolbar && 
+                    <ButtonGroup
+                        className="button-group"
+                        variant="contained"
+                        aria-label="outlined primary button group"
+                        sx={{
+                            position: 'absolute',
+                            top:0,
+                            opacity: isHovered?1:0,
+                            transition: 'opacity 0.3s ease-in-out',
+                            width:'100%'
+                        }}
+                    >       
+                        <Button sx={{width:'33%', borderRadius:0}} disabled={!fileType?.startsWith('image')} onClick={fileType?.startsWith('image')?onOpenLightbox:onOpenFile}><Iconify icon="carbon:view" /></Button>
+                        <Button sx={{width:'33%'}}><Iconify icon="solar:download-square-linear" onClick={onDownloadFile} /></Button>
+                        <Button sx={{width:'34%', borderRadius:0}} color='error' onClick={onDeleteFile}><Iconify icon="radix-icons:cross-circled" /></Button>
+                    </ButtonGroup>
+                }
+
+                <Stack
+                    padding={1}
+                    sx={{
+                    ...bgBlur({
+                        color: theme.palette.grey[900],
+                    }),
+                    width: 1,
+                    left: 0,
+                    bottom: 0,
+                    position: 'absolute',
+                    color: 'common.white',
+                    textAlign:'center'
+                    }}
+                >
+                    <Typography variant="body2">
+                        {name.length > 14 ? name?.substring(0, 14) : name}
+                        {name?.length > 14 ? '...' : null}
+                    </Typography>
+                </Stack>
+                </Card>
+            
+            ):(<SkeletonGallery  />)
+            }
+        </>
+    );
+  }

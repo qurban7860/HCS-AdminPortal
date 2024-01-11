@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Typography } from '@mui/material';
+import { Card, CardMedia, Grid, Stack, Typography } from '@mui/material';
 // styles
 import { useTheme, alpha } from '@mui/material/styles';
 import { ThumbnailUploadButton } from '../../../theme/styles/document-styles';
@@ -8,6 +8,8 @@ import { ThumbnailUploadButton } from '../../../theme/styles/document-styles';
 import Iconify from '../../../components/iconify/Iconify';
 // constants
 import { BUTTONS } from '../../../constants/default-constants';
+import { bgBlur } from '../../../utils/cssStyles';
+import IconTooltip from '../Icons/IconTooltip';
 
 ThumbnailDocButton.propTypes = {
   onClick: PropTypes.func,
@@ -17,30 +19,28 @@ export default function ThumbnailDocButton({ onClick }) {
   const [hovered, setHovered] = useState(false);
   const theme = useTheme();
   return (
-    <ThumbnailUploadButton
-      variant="contained"
-      color="inherit"
-      onClick={onClick}
-      onMouseEnter={(e) => {
-        e.target.style.backgroundColor = alpha(theme.palette.grey[900], 0.04);
-        setHovered(true);
-      }}
-      onMouseLeave={(e) => {
-        e.target.style.backgroundColor = alpha(theme.palette.grey[600], 0.2);
-        setHovered(false);
-      }}
+    <Card 
+        sx={{
+            cursor: 'pointer',
+            position: 'relative',
+            display: 'flex',  // Make the card a flex container
+            flexDirection: 'column',  // Stack children vertically
+            alignItems: 'center',  // Center items horizontally
+            justifyContent: 'center',  // Center items vertically
+            '&:hover .button-group': {
+                opacity: 1,
+            },
+            background:theme.palette.grey[hovered?100:400],
+            minHeight:150
+            
+          }}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+          onClick={onClick}
     >
-      <Grid item sx={{ display: 'block' }}>
-        {hovered && (
-          <Typography variant="overline" color={theme.palette.grey[600]} sx={{ fontSize: 12 }}>
-            {BUTTONS.THUMBNAIL_UPLOAD}
-          </Typography>
-        )}
-      </Grid>
-      <Grid item sx={{ display: 'flex' }}>
-        <Iconify icon="mdi:plus" width={48} color={theme.palette.grey[600]} />
-        &nbsp;
-      </Grid>
-    </ThumbnailUploadButton>
+
+        <Iconify icon="mdi:plus" color={theme.palette.grey[hovered?900:600]} width={50} />
+        <Typography variant="subtitle2" color={theme.palette.grey[hovered?900:600]}>Add / Upload File</Typography>
+    </Card>
   );
 }
