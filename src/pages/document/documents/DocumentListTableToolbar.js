@@ -27,7 +27,7 @@ DocumentListTableToolbar.propTypes = {
   setCategoryVal: PropTypes.func,
   typeVal: PropTypes.object,
   setTypeVal: PropTypes.func,
-  handleGalleryView: PropTypes.any,
+  handleGalleryView: PropTypes.func,
 };
 
 export default function DocumentListTableToolbar({

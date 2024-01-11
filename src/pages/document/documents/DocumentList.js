@@ -92,10 +92,10 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
     machineDocumentsFilterBy,  machineDocumentsPage,  machineDocumentsRowsPerPage,
     isLoading } = useSelector((state) => state.document );
 
-    const [totalRows, setTotalRows] = useState( documentRowsTotal );
+  const [totalRows, setTotalRows] = useState( documentRowsTotal );
 
-    const {
-      order,
+  const {
+    order,
     orderBy,
     selected,
     setSelected,
@@ -120,7 +120,7 @@ const onChangeRowsPerPage = (event) => {
   }
 };
 
-const  onChangePage = (event, newPage) => {
+const onChangePage = (event, newPage) => {
   if(machinePage){
     dispatch(machineDocumentChangePage(newPage))
   }else if(customerPage){
@@ -187,12 +187,9 @@ const  onChangePage = (event, newPage) => {
     setTotalRows( documentRowsTotal || 0 );
   },[ documentRowsTotal ])
 
-
   useEffect(()=>{
-    if(machinePage){
-      setPage(machineDocumentsPage)
-    }else if(customerPage){
-      setPage(customerDocumentsPage)
+    if(machinePage || customerPage){
+      setPage(0)
     }else if(machineDrawings){
       setPage(machineDrawingsPage)
     }else if(!customerPage && !machinePage && !machineDrawings){
@@ -342,7 +339,7 @@ const  onChangePage = (event, newPage) => {
           setCategoryVal={setCategoryVal}
           typeVal={typeVal}
           setTypeVal={setTypeVal}
-          handleGalleryView={!isNotFound && (customerPage || machinePage) && handleGalleryView}
+          handleGalleryView={!isNotFound && (customerPage || machinePage) ? handleGalleryView:undefined}
         />
         {!isNotFound && <TablePaginationCustom
           count={documentRowsTotal}
