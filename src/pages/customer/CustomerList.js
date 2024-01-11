@@ -1,4 +1,4 @@
-import { useState, useEffect , useRef } from 'react';
+import { useState, useEffect , useRef, useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
@@ -38,7 +38,8 @@ import CustomerListTableToolbar from './CustomerListTableToolbar';
 import { getCustomers, ChangePage, ChangeRowsPerPage, setFilterBy, setVerified,
    createCustomerCSV,
    setCustomerTab,
-   setExcludeReporting} from '../../redux/slices/customer/customer';
+   setExcludeReporting,
+   resetCustomers} from '../../redux/slices/customer/customer';
 import { Cover } from '../components/Defaults/Cover';
 import TableCard from '../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
@@ -86,15 +87,17 @@ export default function CustomerList() {
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
   };
-  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
+  const onChangePage = (event, newPage) => { 
+    dispatch(ChangePage(newPage)) 
+  }
 
   useEffect(() => {
-      dispatch(getCustomers());
+      dispatch(getCustomers(page, rowsPerPage));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+  }, [dispatch, page, rowsPerPage]);
 
   useEffect(() => {
-    setTableData(customers);
+    setTableData(customers?.data || []);
   }, [customers]);
 
   const dataFiltered = applyFilter({
@@ -215,15 +218,15 @@ export default function CustomerList() {
           handleExcludeRepoting={handleExcludeRepoting}
         />
 
-      {!isNotFound && <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />}
+        {!isNotFound && <TablePaginationCustom
+          count={customers?.totalCount || 0}
+          page={customers?.totalCount?page:0}
+          rowsPerPage={rowsPerPage}
+          onPageChange={onChangePage}
+          onRowsPerPageChange={onChangeRowsPerPage}
+        />}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <TableSelectedAction
+          {/* <TableSelectedAction
             numSelected={selected.length}
             rowCount={tableData.length}
             onSelectAllRows={(checked) =>
@@ -239,7 +242,7 @@ export default function CustomerList() {
                 </IconButton>
               </Tooltip>
             }
-          />
+          /> */}
 
           <Scrollbar>
             <Table size="small" sx={{ minWidth: 360 }}>
@@ -252,7 +255,7 @@ export default function CustomerList() {
 
               <TableBody>
                 {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
                       <CustomerListTableRow
@@ -277,8 +280,8 @@ export default function CustomerList() {
         </TableContainer>
 
         {!isNotFound && <TablePaginationCustom
-          count={dataFiltered.length}
-          page={page}
+          count={customers?.totalCount || 0}
+          page={customers?.totalCount? page:0}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}

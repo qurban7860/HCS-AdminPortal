@@ -231,7 +231,7 @@ export function createCustomerCSV() {
   };
 }
 
-export function getCustomers() {
+export function getCustomers(page, pageSize) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -241,6 +241,11 @@ export function getCustomers() {
           isArchived: false,
           orderBy : {
             createdAt:-1
+          },
+          pagination:{
+            page,
+            pageSize  
+
           }
         }
       });

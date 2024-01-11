@@ -441,7 +441,7 @@ export function updateDocumentVersionNo(documentId , data) {
 
 // -----------------------------------Get Documents-----------------------------------
 
-export function getDocuments(page, pageSize, customerId,machineId,drawing) {
+export function getDocuments(customerId, machineId, drawing, page, pageSize) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     const params = {

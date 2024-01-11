@@ -164,7 +164,7 @@ const onChangePage = (event, newPage) => {
   },[ dispatch ])
 
   useEffect(() => {
-    
+
       if(machinePage || machineDrawings ){
         dispatch(getActiveDocumentCategories());
         dispatch(getActiveDocumentTypes());
@@ -172,12 +172,12 @@ const onChangePage = (event, newPage) => {
       
       if (customerPage || machinePage) {
         if (customer?._id || machine?._id) {
-          dispatch(getDocuments(page, rowsPerPage,  customerPage ? customer?._id : null, machinePage ? machine?._id : null));
+          dispatch(getDocuments(customerPage ? customer?._id : null, machinePage ? machine?._id : null, null, page, rowsPerPage));
         }
       } else if( machineDrawings ){
-          dispatch(getDocuments(page, rowsPerPage, null, null,machineDrawings));
+          dispatch(getDocuments(null, null, machineDrawings, page, rowsPerPage));
       } else {
-          dispatch(getDocuments(page, rowsPerPage));
+          dispatch(getDocuments(null, null, null, page, rowsPerPage));
       }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -210,7 +210,7 @@ const onChangePage = (event, newPage) => {
   },[customerPage, machinePage, machineDrawings, machineDocumentsRowsPerPage, customerDocumentsRowsPerPage, machineDrawingsRowsPerPage, documentRowsPerPage])
 
   useEffect(() => {
-    setTableData(documents?.documents || []);
+    setTableData(documents?.data || []);
   }, [documents]);
 
   const dataFiltered = applyFilter({
