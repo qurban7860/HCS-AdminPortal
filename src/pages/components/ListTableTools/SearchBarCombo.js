@@ -444,7 +444,7 @@ SearchBarCombo.propTypes = {
   onReload: PropTypes.func,
   filterExcludeRepoting: PropTypes.string,
   handleExcludeRepoting: PropTypes.func,
-  handleGalleryView: PropTypes.func,
+  handleGalleryView: PropTypes.any,
 };
 
 export default SearchBarCombo;
