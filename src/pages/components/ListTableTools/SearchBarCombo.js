@@ -503,7 +503,6 @@ SearchBarCombo.propTypes = {
   setDateFrom: PropTypes.func,
   dateTo: PropTypes.object,
   setDateTo: PropTypes.func,
-  handleGalleryView: PropTypes.any,
 };
 
 export default SearchBarCombo;
