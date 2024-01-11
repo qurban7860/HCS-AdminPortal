@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 // @mui
-import { Card, Grid, Stack, Button, Container, Typography, Box } from '@mui/material';
+import { Card, Grid, Stack, Button, Container, Typography } from '@mui/material';
 // slice
 import { yupResolver } from '@hookform/resolvers/yup';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
@@ -19,8 +19,7 @@ import FormProvider, {  RHFSwitch, RHFTextField } from '../../../components/hook
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 // constants
-import FormHeading from '../../components/DocumentForms/FormHeading';
-import CodeMirror from '../Historical Configurations/JsonEditor';
+import CodeMirror from '../../components/CodeMirror/JsonEditor';
 import Iconify from '../../../components/iconify';
 import { ICONS } from '../../../constants/icons/default-icons';
 

@@ -20,7 +20,6 @@ import {
   getDocumentDownload,
   deleteDocumentFile,
 } from '../../../redux/slices/document/documentFile';
-// import { document } from '../../../constants/document-constants';
 import { fileThumb } from '../../../components/file-thumbnail/utils';
 
 export function Thumbnail({

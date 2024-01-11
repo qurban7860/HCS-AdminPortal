@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { Card, Grid, Stack, Button } from '@mui/material';
 // slice
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import { setAllFlagFalse, getHistoricalConfigurationRecords, addHistoricalConfigurationRecord } from '../../../redux/slices/products/historicalConfiguration';
+import { setAllVisibilityFalse, getMachineErpLogRecords, addMachineErpLogRecord } from '../../../redux/slices/products/machineErpLogs';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider from '../../../components/hook-form';
@@ -15,11 +15,9 @@ import CodeMirror from '../../components/CodeMirror/JsonEditor';
 import Iconify from '../../../components/iconify/Iconify';
 import { ICONS } from '../../../constants/icons/default-icons';
 
-// import { Snacks, FORMLABELS as formLABELS } from '../../../constants/document-constants';
-
 // ----------------------------------------------------------------------
 
-export default function HistoricalConfigurationsAddForm() {
+export default function MultiMachineLogsAddForm() {
 
   const { machine } = useSelector((state) => state.machine);
   const dispatch = useDispatch();
@@ -27,7 +25,7 @@ export default function HistoricalConfigurationsAddForm() {
 
   const defaultValues = useMemo(
     () => ({
-      iniJson: '',
+      erpLog: '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -46,33 +44,24 @@ export default function HistoricalConfigurationsAddForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const { iniJson } = watch();
-
-  const toggleCancel = () => {
-    dispatch(setAllFlagFalse())
-  };
-
+  const { erpLog } = watch();
+  const toggleCancel = () => { dispatch(setAllVisibilityFalse()) };
   const onSubmit = async (data) => {
-    const cleanedData = {}
     try{
-        cleanedData.configuration= JSON.parse(data.iniJson)
+        JSON.parse(data.erpLog)
         try {
-          cleanedData.inputGUID = machine?._id;
-          cleanedData.inputSerialNo = machine?.serialNo;
-          await dispatch(addHistoricalConfigurationRecord(cleanedData));
+          await dispatch(addMachineErpLogRecord(machine?._id, data.erpLog));
           reset();
           enqueueSnackbar('INI create successfully!');
-          dispatch(setAllFlagFalse())
-          dispatch(getHistoricalConfigurationRecords(machine?._id))
+          dispatch(setAllVisibilityFalse())
+          dispatch(getMachineErpLogRecords(machine?._id))
         } catch (error) {
-          // enqueueSnackbar('Saving failed!');
           enqueueSnackbar(error, { variant: `error` });
           console.error(error);
         }
     }catch(err){
       enqueueSnackbar('JSON validation Failed!',{ variant: `error` });
     }
-    
   };
 
   function iniToJSON(iniData) {
@@ -101,7 +90,6 @@ export default function HistoricalConfigurationsAddForm() {
             result[currentSection][key] = value;
         }
     });
-
     const formattedJSON = JSON.stringify(result, null, 2);
     return formattedJSON;
 }
@@ -109,11 +97,11 @@ export default function HistoricalConfigurationsAddForm() {
 const readFile = (selectedFile) => 
   new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = (e)=> {
+      reader.onload = (e) => {
           const content = e.target.result;
           resolve(content);
       };
-      reader.onerror = (error)=> {
+      reader.onerror = (error) => {
           console.log(error);
       };
       reader.readAsText(selectedFile);
@@ -124,53 +112,32 @@ const readFile = (selectedFile) =>
     const selectedFile = event.target.files[0];
     const parts = selectedFile.name.split(".");
     const fileExtension = parts[parts.length - 1];
-
     const fileData = await readFile(selectedFile)
     
-    if(fileExtension === 'ini' ){
+    if(fileExtension.toLowerCase() === 'txt' ){
       const parsedData = iniToJSON(fileData)
-        setValue('iniJson', parsedData)
+        setValue('erpLog', parsedData)
     }else{
-        setValue('iniJson',fileData)
+        setValue('erpLog',fileData)
     }
   };
 
-const HandleChangeIniJson = async (e) => {
-  setValue('iniJson', e)
-}
+const HandleChangeIniJson = async (e) => { setValue('iniJson', e) }
+
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container>
           <Grid item xs={18} md={12} >
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
-
-                <Grid display="flex" justifyContent="flex-end" >
-                  <Button variant="contained" component="label" startIcon={<Iconify icon={ICONS.UPLOAD_FILE.icon} />} > Upload File  
-                    <input type="file" accept='.json, .ini' hidden onChange={handleFileChange} /> 
-                  </Button>
+                <Grid >
+                  <Grid display="flex" justifyContent="flex-end" >
+                    <Button variant="contained" component="label" startIcon={<Iconify icon={ICONS.UPLOAD_FILE.icon} />} > Upload File  
+                      <input type="file" accept='.json, .txt' hidden onChange={handleFileChange} /> 
+                    </Button>
+                  </Grid>
+                  <CodeMirror value={erpLog} HandleChangeIniJson={HandleChangeIniJson}/>                
                 </Grid>
-                <Grid 
-                // sx={{ position: "relative" }}
-                >
-                  {/* <RHFTextField name="iniJson" label="Configuration" minRows={7} maxRows={22} multiline 
-                  sx={{ 
-              alignItems: 'center',
-              whiteSpace: 'pre-line',
-              wordBreak: 'break-word' }}
-                    // InputProps={{
-                    //   endAdornment: <InputAdornment position="end" sx={{
-                    //     position: "absolute",
-                    //     top: 12,
-                    //     right: 6,
-                    //     // margin: "8px",
-                    //   }}><CopyIcon value={iniJson}/></InputAdornment>,
-                    // }}
-                  /> */}
-
-                  <CodeMirror value={iniJson} HandleChangeIniJson={HandleChangeIniJson}/>                
-                </Grid>
-
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>
