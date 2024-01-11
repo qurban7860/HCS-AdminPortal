@@ -2,24 +2,24 @@ import { memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
 import {  Card, Grid, Stack, Skeleton } from '@mui/material';
-import JsonEditor from '../../components/CodeMirror/JsonEditorMerge';
+import JsonEditor from '../../components/CodeMirror/JsonEditor';
 // redux
-import { setHistoricalConfigurationCompareViewFormVisibility } from '../../../redux/slices/products/historicalConfiguration';
+import { setAllVisibilityFalse } from '../../../redux/slices/products/machineErpLogs';
 // components
+import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 
 
-function HistoricalConfigurationsViewForm() {
+function MachineLogsViewForm() {
 
-  const { historicalConfiguration, historicalConfiguration2, isLoading } = useSelector((state) => state.historicalConfiguration);
-
+  const { machineErpLog, isLoading } = useSelector((state) => state.machineErpLogs);
   const dispatch = useDispatch();
-  
+
   return (
     <Card sx={{ p: 2 }}>
       <Grid>
-        <ViewFormEditDeleteButtons backLink={()=> dispatch(setHistoricalConfigurationCompareViewFormVisibility(false))} />
-        <Stack spacing={2} >
+        <ViewFormEditDeleteButtons backLink={()=> dispatch(setAllVisibilityFalse(false))} />
+        <Stack spacing={2} sx={{p:1}}>
           {isLoading ? 
           <>
             <Skeleton />
@@ -32,13 +32,13 @@ function HistoricalConfigurationsViewForm() {
             <Skeleton animation={false} />
             <Skeleton animation={false} />
           </>
-           :  <JsonEditor  value={ historicalConfiguration } modifiedValue={ historicalConfiguration2 } readOnly />  
-           }
+            :  <JsonEditor  value={JSON.stringify( machineErpLog, null, 2 )} readOnly />  
+            }
         </Stack>
-
+          <ViewFormAudit  defaultValues={machineErpLog} />
       </Grid>
     </Card>
   );
 }
 
-export default memo(HistoricalConfigurationsViewForm)
+export default memo(MachineLogsViewForm)

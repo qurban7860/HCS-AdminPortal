@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
+import { DatePicker } from '@mui/x-date-pickers';
 import { Grid, TextField, InputAdornment, Button, Stack, 
   FormControl, Select, InputLabel, MenuItem, IconButton, Switch, FormControlLabel, Autocomplete } from '@mui/material';
 import { BUTTONS } from '../../../constants/default-constants';
@@ -32,6 +33,7 @@ function SearchBarCombo({
   onChange,
   onClick,
   SubOnClick,
+  openGraph,
   addButton,
   inviteOnClick,
   inviteButton,
@@ -47,6 +49,10 @@ function SearchBarCombo({
   filterExcludeRepoting,
   handleExcludeRepoting,
   handleGalleryView,
+  dateFrom,
+  setDateFrom,
+  dateTo,
+  setDateTo,
   ...other
 }) {
   
@@ -55,6 +61,14 @@ function SearchBarCombo({
   const { spContacts } = useSelector((state) => state.contact);
   const isMobile = useResponsive('sm', 'down');
   const dispatch = useDispatch()
+
+  const onChangeStartDate = (newValue) => {
+    setDateFrom(newValue);
+  };
+
+  const onChangeEndDate = (newValue) => {
+    setDateTo(newValue);
+  };
 
   return (
     <Grid container rowSpacing={1} columnSpacing={1} sx={{display:'flex', }}>
@@ -133,6 +147,30 @@ function SearchBarCombo({
             />  
           
           </Grid>}
+
+          { setDateFrom && 
+            <Grid item xs={12} sm={6} md={4} lg={2} xl={2}  >
+              <DatePicker
+                size="small"
+                label="Start date"
+                value={dateFrom}
+                onChange={onChangeStartDate}
+                renderInput={(params) => <TextField {...params} size="small" />}
+              />
+            </Grid>
+          }
+
+          { setDateTo && 
+            <Grid item xs={12} sm={6} md={4} lg={2} xl={2} >
+              <DatePicker
+                size="small"
+                label="End date"
+                value={dateTo}
+                onChange={onChangeEndDate}
+                renderInput={(params) => <TextField {...params} size="small" />}
+              />
+            </Grid>
+          }
 
           {setSupportManagerFilter &&
           <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
@@ -361,7 +399,6 @@ function SearchBarCombo({
                   </IconButton>
                 </StyledTooltip>
               </Grid>}
-              
 
               {handleGalleryView && 
                 <Grid item>
@@ -388,6 +425,21 @@ function SearchBarCombo({
                 </Grid>
               }
 
+              {openGraph && 
+              <Grid item>
+                <StyledTooltip title="Log Graph" placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
+                    <IconButton onClick={openGraph} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
+                        '&:hover': {
+                            background:"#103996", 
+                            color:"#fff"
+                        }
+                    }}>
+                        <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon='mdi:graph-bar' />
+                    </IconButton>
+                </StyledTooltip>
+              </Grid>
+              }
+
               {addButton && !transferredMachine &&
                   <Grid item>
                     <StyledTooltip title={addButton} placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
@@ -402,6 +454,7 @@ function SearchBarCombo({
                   </StyledTooltip>
                 </Grid>
               }
+
             </Grid>
         </Grid>
     </Grid>
@@ -428,6 +481,7 @@ SearchBarCombo.propTypes = {
   onFilterListBy: PropTypes.func,
   categoryVal: PropTypes.object,
   setCategoryVal: PropTypes.func,
+  openGraph: PropTypes.func,
   typeVal: PropTypes.object,
   setTypeVal: PropTypes.func,
   employeeFilterListBy: PropTypes.string,
@@ -445,6 +499,10 @@ SearchBarCombo.propTypes = {
   filterExcludeRepoting: PropTypes.string,
   handleExcludeRepoting: PropTypes.func,
   handleGalleryView: PropTypes.func,
+  dateFrom: PropTypes.object,
+  setDateFrom: PropTypes.func,
+  dateTo: PropTypes.object,
+  setDateTo: PropTypes.func,
 };
 
 export default SearchBarCombo;

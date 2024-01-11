@@ -5,7 +5,7 @@ import { search } from '@codemirror/search';
 import { Grid, Typography, Box } from '@mui/material';
 import CodeMirrorMerge from 'react-codemirror-merge';
 import './style.css';
-import ViewFormAuditBlock from '../../components/ViewForms/ViewFormAuditBlock';
+import ViewFormAuditBlock from '../ViewForms/ViewFormAuditBlock';
 
 // Please don't destrcture below code! It will not work properly.
 const Original = CodeMirrorMerge.Original;

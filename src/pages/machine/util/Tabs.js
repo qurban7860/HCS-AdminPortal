@@ -9,7 +9,7 @@ import MachineProfiles from '../Profile/MachineProfiles';
 import MachineSetting from '../Setting/MachineSetting';
 import MachineToolInstalled from '../ToolsInstalled/MachineToolInstalled';
 import MachineNotes from '../Note/MachineNotes';
-import MachineLogsViewForm from '../MachineLogsViewForm';
+import MachineERPLogsList from '../MachineERPLogsList';
 
 export const TABS = (currentComponent, showDevTabs, disableTab) => [
   {
@@ -86,7 +86,7 @@ export const TABS = (currentComponent, showDevTabs, disableTab) => [
     value: 'logs',
     label: 'Logs',
     icon: <Iconify icon="entypo:bar-graph" />,
-    component : <MachineLogsViewForm />,
+    component : <MachineERPLogsList />,
   },
  
   // ...(showDevTabs
