@@ -185,7 +185,9 @@ export const BUTTONS = {
   ADDSUPPLIER: 'Add Supplier',
   ADDSTATUS: 'Add Status',
   ADDTECHPARAM: 'Add Technical Parameter',
-
+  // Service settings
+  ADDSERVICESETTING: 'Add Service Setting',
+  EDITSERVICESETTING: 'Edit Service Setting',
   // machine
   ADDTOOLINSTALLED: 'Add Tool Installed',
   ADDLICENSE: 'Add License',

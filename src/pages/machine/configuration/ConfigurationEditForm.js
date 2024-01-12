@@ -159,8 +159,7 @@ const readFile = (selectedFile) =>
     <>
       <StyledCardContainer> 
         <Cover
-          // name={defaultValues.collectionType}
-          name="Edit Configuration"
+          name="Edit Service Setting"
           icon="material-symbols:category-outline"
           url={PATH_MACHINE.machines.settings.categories.list}
         />

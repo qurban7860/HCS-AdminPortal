@@ -36,7 +36,6 @@ const TABLE_HEAD = [
   { id: 'date', label: 'Date', align: 'left' },
   { id: 'waste', label: 'Waste', align: 'left' },
   { id: 'componentLength', label: 'Length', align: 'left' },
-  { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdBy.name', label: 'Created By', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
@@ -57,7 +56,6 @@ export default function MachineLogsList(){
     onSort,
   } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
 
-  console.log("isLoading : ",isLoading)
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
@@ -70,10 +68,14 @@ export default function MachineLogsList(){
   const [filterStatus, setFilterStatus] = useState([]);
   const [ dateFrom, setDateFrom ] = useState(null);
   const [ dateTo, setDateTo ] = useState(null);
-
+// console.log("dateFrom",dateFrom.getUTCDate(), "dateTo", dateTo )
   useLayoutEffect(() => {
-    if(machine?._id && dateFrom && dateTo ){
-      dispatch(getMachineErpLogRecords(machine?._id)); 
+    if (machine?._id) {
+      if (dateFrom && dateTo) {
+        dispatch(getMachineErpLogRecords(machine?._id, dateFrom, dateTo));
+      } else if(!dateFrom && !dateTo) {
+        dispatch(getMachineErpLogRecords(machine?._id));
+      }
     }
   }, [dispatch, machine?._id, dateFrom, dateTo ]);
 

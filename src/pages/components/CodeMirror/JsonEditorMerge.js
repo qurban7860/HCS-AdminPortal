@@ -19,6 +19,9 @@ JsonEditorMerge.propTypes = {
 };
 
 function JsonEditorMerge({value, modifiedValue, HandleChangeIniJson, readOnly }) {
+
+
+
   return  (<Grid sx={{p:1}}>
               <Box
                 rowGap={2} columnGap={2} display="grid"
@@ -29,17 +32,17 @@ function JsonEditorMerge({value, modifiedValue, HandleChangeIniJson, readOnly })
             </Box>
             <Typography variant='subtitle2' display="flex" alignItems="center">Note: <Typography variant='caption' sx={{ml:1}}> Ctrl + F / Cmd + F to find text in Code Editer</Typography></Typography>
               <div>
-                <CodeMirrorMerge orientation="a-b" gutter highlightChanges style={{ display: {md: 'flex', sm: 'block'} }} height="600px" // collapseUnchanged={{ margin: 3, minSize: 4 }}
+                <CodeMirrorMerge orientation="a-b" gutter highlightChanges collapseUnchanged={{ margin: 0, minSize: 1 }}
                 >
                   <Original 
                     readOnly
                     value={ JSON.stringify( value?.configuration, null, 2 ) }  
-                    extensions={[ zebraStripes({ step: 2 }), langs.json(), search({top: true, searchPanelOpen: true }) ]} 
+                    extensions={[ langs.json(), search({top: true, searchPanelOpen: true }) ]} 
                   />
                   <Modified
                     readOnly
                     value={ JSON.stringify( modifiedValue?.configuration, null, 2 ) }
-                    extensions={[ zebraStripes({ step: 2 }), langs.json(), search({top: true, searchPanelOpen: true }) ]} 
+                    extensions={[ langs.json(), search({top: true, searchPanelOpen: true }) ]} 
                   />
                 </CodeMirrorMerge>
               </div>
