@@ -47,10 +47,6 @@ export default function MachineLogsTableRow({
         <LinkTableCell align="left" onClick={onViewRow} param={fDateTime(date)} />
         <TableCell align="left">{waste || ''}</TableCell>
         <TableCell align="left">{componentLength || ''}</TableCell>
-        <TableCell align="center">
-          {' '}
-          <Switch checked={isActive} disabled size="small" />{' '}
-        </TableCell>
         <TableCell align="left">{createdBy?.name || ''}</TableCell>
         <TableCell align="right">{fDateTime(createdAt)}</TableCell>
       </StyledTableRow>

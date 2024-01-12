@@ -45,10 +45,10 @@ function JsonEditor({value, HandleChangeIniJson, readOnly }) {
           <Typography variant='subtitle2' display="flex" alignItems="center">Note: <Typography variant='caption' sx={{ml:1}}> Ctrl + F / Cmd + F to find text in Code Editer</Typography></Typography>
           <CodeMirror 
             value={value} 
-            onChange={(e) => HandleChangeIniJson(e)} 
+            onChange={(e) => HandleChangeIniJson(e)}
             height="600px" 
             width='auto' 
-            extensions={[zebraStripes({ step: 2 }), langs.json(),   search({top: true, searchPanelOpen: true,}) ]} 
+            extensions={[ langs.json(),   search({top: true, searchPanelOpen: true,}) ]} 
             options={codeMirrorOptions}
             readOnly={readOnly}
           />

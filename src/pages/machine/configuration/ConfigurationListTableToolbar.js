@@ -42,7 +42,7 @@ export default function ConfigurationListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        addButton={BUTTONS.ADDCATEGORY}
+        addButton={BUTTONS.ADDSERVICESETTING}
       />
     </Stack>
   );

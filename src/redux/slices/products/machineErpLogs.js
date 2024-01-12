@@ -178,7 +178,7 @@ export function getMachineErpLogRecord(machineId, id) {
 
 // -------------------------- GET RECORD'S ----------------------------------------------------------------------
 
-export function getMachineErpLogRecords(machineId){
+export function getMachineErpLogRecords(machineId, fromDate, toDate) {
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
@@ -186,7 +186,9 @@ export function getMachineErpLogRecords(machineId){
       {
         params: {
           isArchived: false,
-          machine: machineId
+          machine: machineId,
+          fromDate,
+          toDate,
         }
       }
       );
