@@ -7,6 +7,7 @@ import rootReducer, { rootPersistConfig } from './rootReducer';
 
 const store = configureStore({
   reducer: persistReducer(rootPersistConfig, rootReducer),
+  devTools: false,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,

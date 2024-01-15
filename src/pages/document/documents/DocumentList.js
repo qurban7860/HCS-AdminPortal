@@ -342,7 +342,7 @@ const onChangePage = (event, newPage) => {
           handleGalleryView={!isNotFound && (customerPage || machinePage) ? handleGalleryView:undefined}
         />
         {!isNotFound && <TablePaginationCustom
-          count={documentRowsTotal}
+          count={ filterName || categoryVal || typeVal ? dataFiltered.length : documentRowsTotal }
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}

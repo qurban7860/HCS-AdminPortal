@@ -151,6 +151,7 @@ function SearchBarCombo({
           { setDateFrom && 
             <Grid item xs={12} sm={6} md={4} lg={2} xl={2}  >
               <DatePicker
+                inputFormat='dd/MM/yyyy'
                 size="small"
                 label="Start date"
                 value={dateFrom}
@@ -163,6 +164,7 @@ function SearchBarCombo({
           { setDateTo && 
             <Grid item xs={12} sm={6} md={4} lg={2} xl={2} >
               <DatePicker
+                inputFormat='dd/MM/yyyy'
                 size="small"
                 label="End date"
                 value={dateTo}
