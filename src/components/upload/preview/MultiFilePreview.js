@@ -14,6 +14,7 @@ import FileThumbnail, { fileData } from '../../file-thumbnail';
 import ImagePreviewDialog from './ImagePreviewDialog'
 import Image from '../../image';
 import Lightbox from '../../lightbox/Lightbox';
+import AlreadyExistMenuPopover from '../AlreadyExistMenuPopover';
 
 // ----------------------------------------------------------------------
 
@@ -23,12 +24,34 @@ MultiFilePreview.propTypes = {
   onRemove: PropTypes.func,
   onPreview: PropTypes.func,
   thumbnail: PropTypes.bool,
+  machine:PropTypes.string,
+  drawingPage: PropTypes.bool,
 };
 
-function MultiFilePreview({ thumbnail, files, onRemove, sx }) {
+function MultiFilePreview({ thumbnail, files, onRemove, sx, machine, drawingPage }) {
   
   const theme = useTheme();
   const [selectedFile, setSelectedFile] = useState([]);
+  
+  const [fileFound, setFileFound] = useState(null);
+  const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
+
+  const handleExtensionsPopoverOpen = (event, file) => {
+      setVerifiedAnchorEl(event.currentTarget);
+      
+      /* eslint-disable */
+      let data = file?.found;
+      
+      /* eslint-disable */
+      data.machine = machine?._id || null;
+      
+      setFileFound(data);
+  };
+
+  const handleExtensionsPopoverClose = () => {
+    setVerifiedAnchorEl(null);
+    setFileFound(null);
+  };
 
   if (!files?.length) {
     return null;
@@ -44,7 +67,7 @@ function MultiFilePreview({ thumbnail, files, onRemove, sx }) {
   };
   
   const FORMAT_IMG_VISIBBLE = ['jpg', 'jpeg', 'gif', 'bmp', 'png', 'svg', 'webp', 'ico', 'jpe'];
-
+        
   return (
     <AnimatePresence initial={false}>
       {files.map((file) => {
@@ -64,7 +87,8 @@ function MultiFilePreview({ thumbnail, files, onRemove, sx }) {
                     '&:hover .button-group': {
                         opacity: 1,
                     },
-                    minHeight:190,
+                    width:'100%',
+                    height:180,
                   }}
               >
                 <CardMedia onClick={()=> FORMAT_IMG_VISIBBLE.some(format => fileType.match(format)) && previewHandle(file)}>
@@ -90,8 +114,10 @@ function MultiFilePreview({ thumbnail, files, onRemove, sx }) {
                       padding={1}
                       sx={{
                       ...bgBlur({
-                          color: theme.palette.grey[900],
+                          color: file?.found && drawingPage ?'#cc3300':theme.palette.grey[900],
+                          // opacity:1
                       }),
+                      // background:theme.palette.error,
                       width: 1,
                       left: 0,
                       bottom: 0,
@@ -103,7 +129,22 @@ function MultiFilePreview({ thumbnail, files, onRemove, sx }) {
                       <Typography variant="body2">
                           {name.length > 14 ? name?.substring(0, 14) : name}
                           {name?.length > 14 ? '...' : null}
-                      </Typography>
+                      
+                          {file?.found && drawingPage &&
+                            <Iconify
+                              onClick={(event)=> handleExtensionsPopoverOpen(event,file)}
+                              icon="iconamoon:question-mark-circle-bold"
+                              sx={{ cursor: 'pointer', verticalAlign:'bottom', float:'right' }}
+                            />
+                          }
+                    </Typography>
+                    {file?.found && drawingPage &&
+                      <AlreadyExistMenuPopover
+                        open={verifiedAnchorEl}
+                        onClose={handleExtensionsPopoverClose}
+                        fileFound={fileFound}
+                      />
+                    }
                   </Stack>
             </Card>
           );

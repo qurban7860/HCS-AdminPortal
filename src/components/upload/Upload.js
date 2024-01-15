@@ -52,6 +52,8 @@ Upload.propTypes = {
   thumbnail: PropTypes.bool,
   helperText: PropTypes.node,
   onRemoveAll: PropTypes.func,
+  machine:PropTypes.string,
+  drawingPage:PropTypes.bool
 };
 
 export default function Upload({
@@ -69,6 +71,8 @@ export default function Upload({
   onUpload,
   onRemove,
   onRemoveAll,
+  machine,
+  drawingPage,
   sx,
   ...other
 }) {
@@ -137,7 +141,7 @@ export default function Upload({
         variant="body2"
         sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', ml: 2, mt: 0.5 }}
       >
-        Allowed Formats:{' '}
+        Allowed Formats:
         <Iconify
           onClick={handleExtensionsPopoverOpen}
           icon="iconamoon:question-mark-circle-bold"
@@ -256,7 +260,7 @@ export default function Upload({
               xl: 'repeat(8, 1fr)',
             }}
           >
-            <MultiFilePreview files={files} thumbnail={thumbnail} onRemove={onRemove} />
+            <MultiFilePreview machine={machine||''} drawingPage files={files} thumbnail={thumbnail} onRemove={onRemove} />
           </Box>
 
           <Stack direction="row" justifyContent="flex-end" spacing={1.5}>

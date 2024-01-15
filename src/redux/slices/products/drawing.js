@@ -234,7 +234,11 @@ export function addDrawing(params) {
         /* eslint-enable */
         if(params.description){
             data.description = params.description;
-          }
+        }
+
+        if(params.documentId){
+          data.documentId = params.documentId;
+        }
         const response = await axios.post(`${CONFIG.SERVER_URL}products/drawings`, data);
         dispatch(slice.actions.setResponseMessage(response.data.drawing));
       } catch (error) {
