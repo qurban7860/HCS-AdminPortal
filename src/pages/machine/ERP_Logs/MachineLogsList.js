@@ -66,8 +66,7 @@ export default function MachineLogsList(){
   const [filterStatus, setFilterStatus] = useState([]);
   const [ dateFrom, setDateFrom ] = useState( new Date( Date.now() - 10 * 24 * 60 * 60 * 1000) ) ;
   const [ dateTo, setDateTo ] = useState( new Date( Date.now() ));
-console.log("tableData : ",tableData)
-console.log("machineErpLogstotalCount : ",machineErpLogstotalCount)
+
   useLayoutEffect(() => {
     if (machine?._id) {
       if (dateFrom && dateTo) {
@@ -206,7 +205,6 @@ console.log("machineErpLogstotalCount : ",machineErpLogstotalCount)
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   const stabilizedThis =  inputData && inputData.map((el, index) => [el, index]);
-  console.log("stabilizedThis : ",stabilizedThis)
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;

@@ -56,7 +56,7 @@ export default function MachineLogsAddForm() {
           reset();
           enqueueSnackbar(`Log's uploaded successfully!`);
           dispatch(setAllVisibilityFalse())
-          dispatch(getMachineErpLogRecords(machine?._id))
+          // dispatch(getMachineErpLogRecords(machine?._id))
         } catch (error) {
           enqueueSnackbar(error, { variant: `error` });
           console.error(error);
