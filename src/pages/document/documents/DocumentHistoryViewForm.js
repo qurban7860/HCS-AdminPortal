@@ -391,7 +391,7 @@ const handleNewFile = async () => {
   };
 
   return (
-    <Container maxWidth={false} sx={{padding:machineDrawings || customerPage || machinePage ?'0 !important':''}}>
+    <Container maxWidth={false} sx={{padding:(machineDrawings || customerPage || machinePage || drawingPage) ?'0 !important':''}}>
       {!customerPage && !machinePage && !drawingPage &&
         <DocumentCover content={defaultValues?.displayName} generalSettings />
       }

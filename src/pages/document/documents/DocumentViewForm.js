@@ -249,18 +249,22 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
       });
   };
 
-  const [pdfUrl, setPdfUrl] = useState(null);
+
+  const [pdf, setPDF] = useState(null);
   
-  const handleOpenFile = (documentId, versionId, fileId, fileName, fileExtension) => {
-    dispatch(getDocumentDownload(documentId, versionId, fileId))
+  const handleOpenFile = async (documentId, versionId, fileId, fileName, fileExtension) => {
+    // let fileURL = null;
+    await dispatch(getDocumentDownload(documentId, versionId, fileId))
       .then((res) => {
         if (regEx.test(res.status)) {
           // Assuming the file content is text, you can display it in a new window or tab
-          const fileContent = atob({data:res.data});
-          console.log("fileContent:::",fileContent)
-          const blob = new Blob([fileContent], { type: 'application/pdf' });
-          const url = URL.createObjectURL(blob);
-          setPdfUrl(url);
+
+          // below code is working
+          // const pdf_newTab = window.open("");
+          // pdf_newTab.document.write(
+          //     `<iframe width='100%' style="margin:-8px; width:calc(100% + 12px); height:calc(100% + 12px)" height='100%' src='data:application/pdf;base64,${encodeURI(res.data)}'></iframe>`
+          // );
+          
           enqueueSnackbar('File opened for viewing.');
         } else {
           enqueueSnackbar(res.statusText, { variant: 'error' });

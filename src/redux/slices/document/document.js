@@ -681,6 +681,24 @@ export function getActiveDocuments() {
 
 // -------------------------------get Document---------------------------------------
 
+export function checkDocument(eTags) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/checkFileExistenceByETag`,
+      {
+        params: {eTags}
+      });
+
+      return response?.data;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
 export function getDocument(documentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
