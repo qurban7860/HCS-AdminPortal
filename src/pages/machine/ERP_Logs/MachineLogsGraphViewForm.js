@@ -6,7 +6,7 @@ import { Card, Grid, CardHeader, Divider, IconButton } from '@mui/material';
 import { getERPLogs } from '../../../redux/slices/dashboard/count';
 import { setMachineErpLogAddFormVisibility, setMachineErpLogListViewFormVisibility } from '../../../redux/slices/products/machineErpLogs';
 // utils
-import { fDate } from '../../../utils/formatTime';
+import { fQuarterYearDate } from '../../../utils/formatTime';
 import ChartStacked from '../../components/Charts/ChartStacked';
 import { SkeletonGraph } from '../../../components/skeleton';
 import EmptyContent from '../../../components/empty-content';
@@ -31,7 +31,7 @@ export default function MachineLogsGraphViewForm() {
     
     if (erpLogs.length !== 0) {
         erpLogs.map((log) => {
-            erpLogsTime.push(fDate(log._id,'MMM yyyy'));
+            erpLogsTime.push(fQuarterYearDate(log._id,'MMM yyyy'));
             erpLogsLength.push(log.componentLength);
             erpLogsWaste.push(log.waste);
             return null;

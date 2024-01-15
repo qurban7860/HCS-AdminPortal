@@ -8,6 +8,7 @@ const initialState = {
   intial: false,
   machineTab:'info',
   machineEditFormFlag: false,
+  machineTransferDialog: false,
   machineMoveFormVisibility: false,
   transferMachineFlag: false,
   responseMessage: null,

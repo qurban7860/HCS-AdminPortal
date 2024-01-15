@@ -32,7 +32,7 @@ import { countries } from '../../assets/data';
 import Iconify from '../../components/iconify';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import { useWebSocketContext } from '../../auth/WebSocketContext';
-import { fDate } from '../../utils/formatTime';
+import { fQuarterYearDate } from '../../utils/formatTime';
 // ----------------------------------------------------------------------
 
 export default function GeneralAppPage() {
@@ -127,7 +127,7 @@ export default function GeneralAppPage() {
 
   if (erpLogs.length !== 0) {
     erpLogs.map((log) => {
-      erpLogsTime.push(fDate(log._id));
+      erpLogsTime.push(fQuarterYearDate(log._id, 'MMM yyyy'));
       erpLogsLength.push(log.componentLength);
       erpLogsWaste.push(log.waste);
       return null;
