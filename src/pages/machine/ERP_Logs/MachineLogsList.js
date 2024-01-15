@@ -66,9 +66,8 @@ export default function MachineLogsList(){
   const [filterStatus, setFilterStatus] = useState([]);
   const [ dateFrom, setDateFrom ] = useState( new Date( Date.now() - 10 * 24 * 60 * 60 * 1000) ) ;
   const [ dateTo, setDateTo ] = useState( new Date( Date.now() ));
-
-  console.log("dateFrom : ",dateFrom, "dateTo : ",dateTo, "Date.now() : ",Date.now() )
-
+console.log("tableData : ",tableData)
+console.log("machineErpLogstotalCount : ",machineErpLogstotalCount)
   useLayoutEffect(() => {
     if (machine?._id) {
       if (dateFrom && dateTo) {
@@ -81,7 +80,7 @@ export default function MachineLogsList(){
 
   useEffect(() => {
     if (initial) {
-      setTableData(machineErpLogs.data);
+      setTableData(machineErpLogs?.data || []);
     }
   }, [machineErpLogs, initial]);
 
@@ -152,7 +151,7 @@ export default function MachineLogsList(){
           />
 
           {!isNotFound && <TablePaginationCustom
-            count={ filterName ? dataFiltered.length : machineErpLogstotalCount }
+            count={ filterName ? dataFiltered.length : ( machineErpLogstotalCount || 0 ) }
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
@@ -207,7 +206,8 @@ export default function MachineLogsList(){
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   const stabilizedThis =  inputData && inputData.map((el, index) => [el, index]);
-  stabilizedThis?.sort((a, b) => {
+  console.log("stabilizedThis : ",stabilizedThis)
+  stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];

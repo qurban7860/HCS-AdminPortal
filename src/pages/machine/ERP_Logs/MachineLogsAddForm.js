@@ -118,7 +118,6 @@ const readFile = (selectedFile) =>
     if (event.target.files.length === 1) {
       selectedFile = await readFile(event.target.files[0]);
       txtToJson(selectedFile).then(result => {
-        console.log("result : ",result)
         if(result.length > 0) {
         const stringifyJSON = JSON.stringify(result, null, 2)
           setValue('erpLog', stringifyJSON )
