@@ -32,8 +32,7 @@ function JsonEditorMerge({value, modifiedValue, HandleChangeIniJson, readOnly })
             </Box>
             <Typography variant='subtitle2' display="flex" alignItems="center">Note: <Typography variant='caption' sx={{ml:1}}> Ctrl + F / Cmd + F to find text in Code Editer</Typography></Typography>
               <div>
-                <CodeMirrorMerge orientation="a-b" gutter highlightChanges collapseUnchanged={{ margin: 0, minSize: 1 }}
-                >
+                <CodeMirrorMerge orientation="a-b" gutter highlightChanges >
                   <Original 
                     readOnly
                     value={ JSON.stringify( value?.configuration, null, 2 ) }  

@@ -16,6 +16,7 @@ const initialState = {
   error: null,
   machineErpLog: {},
   machineErpLogs: [],
+  machineErpLogstotalCount: 0,
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
@@ -72,6 +73,7 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.machineErpLogs = action.payload;
+      state.machineErpLogstotalCount = action?.payload?.totalCount;
       state.initial = true;
     },
     // RESPONSE MESSAGE
@@ -93,6 +95,7 @@ const slice = createSlice({
       state.machineErpLogs = [];
       state.responseMessage = null;
       state.success = false;
+      state.machineErpLogstotalCount = 0;
       // state.isLoading = false;
     },
     // Set FilterBy
@@ -178,20 +181,21 @@ export function getMachineErpLogRecord(machineId, id) {
 
 // -------------------------- GET RECORD'S ----------------------------------------------------------------------
 
-export function getMachineErpLogRecords(machineId, fromDate, toDate) {
+export function getMachineErpLogRecords(machineId, page, pageSize, fromDate, toDate ) {
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}logs/erp/`, 
-      {
-        params: {
-          isArchived: false,
-          machine: machineId,
-          fromDate,
-          toDate,
-        }
+      const params= {
+        isArchived: false,
+        machine: machineId,
+        fromDate,
+        toDate,
       }
-      );
+      params.pagination = {
+        page,
+        pageSize  
+      }
+      const response = await axios.get(`${CONFIG.SERVER_URL}logs/erp/`, { params } );
       dispatch(slice.actions.getMachineErpLogRecordsSuccess(response.data));
     } catch (error) {
       console.log(error);

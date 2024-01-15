@@ -43,16 +43,14 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function MachineLogsList(){
-  const { machineErpLogs, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineErpLogs );
+  const { machineErpLogs, machineErpLogstotalCount, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineErpLogs );
   const { machine } = useSelector((state) => state.machine);
   const { enqueueSnackbar } = useSnackbar();
   const {
     order,
     orderBy,
     setPage,
-    //
     selected,
-    //
     onSort,
   } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
 
@@ -66,22 +64,24 @@ export default function MachineLogsList(){
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  const [ dateFrom, setDateFrom ] = useState(null);
-  const [ dateTo, setDateTo ] = useState(null);
-// console.log("dateFrom",dateFrom.getUTCDate(), "dateTo", dateTo )
+  const [ dateFrom, setDateFrom ] = useState( new Date( Date.now() - 10 * 24 * 60 * 60 * 1000) ) ;
+  const [ dateTo, setDateTo ] = useState( new Date( Date.now() ));
+
+  console.log("dateFrom : ",dateFrom, "dateTo : ",dateTo, "Date.now() : ",Date.now() )
+
   useLayoutEffect(() => {
     if (machine?._id) {
       if (dateFrom && dateTo) {
-        dispatch(getMachineErpLogRecords(machine?._id, dateFrom, dateTo));
+        dispatch(getMachineErpLogRecords(machine?._id, page, rowsPerPage, dateFrom, dateTo ));
       } else if(!dateFrom && !dateTo) {
-        dispatch(getMachineErpLogRecords(machine?._id));
+        dispatch(getMachineErpLogRecords(machine?._id, page, rowsPerPage));
       }
     }
-  }, [dispatch, machine?._id, dateFrom, dateTo ]);
+  }, [dispatch, machine?._id, page, rowsPerPage, dateFrom, dateTo ]);
 
   useEffect(() => {
     if (initial) {
-      setTableData(machineErpLogs);
+      setTableData(machineErpLogs.data);
     }
   }, [machineErpLogs, initial]);
 
@@ -152,7 +152,7 @@ export default function MachineLogsList(){
           />
 
           {!isNotFound && <TablePaginationCustom
-            count={dataFiltered.length}
+            count={ filterName ? dataFiltered.length : machineErpLogstotalCount }
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
@@ -206,8 +206,8 @@ export default function MachineLogsList(){
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
+  const stabilizedThis =  inputData && inputData.map((el, index) => [el, index]);
+  stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
