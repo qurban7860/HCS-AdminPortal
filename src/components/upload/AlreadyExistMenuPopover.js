@@ -83,7 +83,7 @@ export default function AlreadyExistMenuPopover({ open, onClose, fileFound }) {
             }
           </>
         }
-        SubButton="Cancle"
+        SubButton="Cancel"
       />
     </>
   );

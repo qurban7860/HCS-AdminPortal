@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createRoot } from 'react-dom/client';
 import { PDFViewer } from '@react-pdf/renderer';
-import { Grid, Card, Box } from '@mui/material'
+import { Document, Page, pdfjs, GlobalWorkerOptions } from 'react-pdf';
+import { Grid, Card, Box, Dialog, DialogTitle, Button, DialogContent, Divider, Typography } from '@mui/material'
 import download from 'downloadjs';
 import { StyledVersionChip } from '../../../theme/styles/default-styles';
 import { PATH_DOCUMENT } from '../../../routes/paths';
@@ -34,6 +35,7 @@ import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDe
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
 import Lightbox from '../../../components/lightbox/Lightbox';
 import FormLabel from '../../components/DocumentForms/FormLabel';
+import { SkeletonDocument } from '../../../components/skeleton';
 
 DocumentViewForm.propTypes = {
   customerPage: PropTypes.bool,
@@ -249,35 +251,69 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
       });
   };
 
-
   const [pdf, setPDF] = useState(null);
-  
-  const handleOpenFile = async (documentId, versionId, fileId, fileName, fileExtension) => {
-    // let fileURL = null;
-    await dispatch(getDocumentDownload(documentId, versionId, fileId))
-      .then((res) => {
-        if (regEx.test(res.status)) {
-          // Assuming the file content is text, you can display it in a new window or tab
+  const [pages, setPages] = useState(null);
+  const [PDFViewerDialog, setPDFViewerDialog] = useState(false);
 
-          // below code is working
-          // const pdf_newTab = window.open("");
-          // pdf_newTab.document.write(
-          //     `<iframe width='100%' style="margin:-8px; width:calc(100% + 12px); height:calc(100% + 12px)" height='100%' src='data:application/pdf;base64,${encodeURI(res.data)}'></iframe>`
-          // );
-          
-          enqueueSnackbar('File opened for viewing.');
-        } else {
-          enqueueSnackbar(res.statusText, { variant: 'error' });
-        }
-      })
-      .catch((err) => {
-        if (err.message) {
-          enqueueSnackbar(err.message, { variant: 'error' });
-        } else {
-          enqueueSnackbar('Something went wrong!', { variant: 'error' });
-        }
-      });
+  pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+
+  const handleOpenFile = async (documentId, versionId, fileId, fileName, fileExtension) => {
+    setPDFViewerDialog(true);
+    setPDF(null);
+    try {
+      const response = await dispatch(getDocumentDownload(documentId, versionId, fileId));
+
+      if (regEx.test(response.status)) {
+        const pdfData = `data:application/pdf;base64,${encodeURI(response.data)}`;
+        setPDF(pdfData);
+      } else {
+        enqueueSnackbar(response.statusText, { variant: 'error' });
+      }
+    } catch (error) {
+      if (error.message) {
+        enqueueSnackbar(error.message, { variant: 'error' });
+      } else {
+        enqueueSnackbar('Something went wrong!', { variant: 'error' });
+      }
+    }
   };
+
+  const onDocumentLoadSuccess = ({ numPages }) => {
+    setPages(numPages);
+  };
+
+
+  // const [pdf, setPDF] = useState(null);
+  
+  // const handleOpenFile = async (documentId, versionId, fileId, fileName, fileExtension) => {
+  //   // let fileURL = null;
+  //   await dispatch(getDocumentDownload(documentId, versionId, fileId))
+  //     .then((res) => {
+  //       if (regEx.test(res.status)) {
+  //         // Assuming the file content is text, you can display it in a new window or tab
+
+  //         setPDF(`data:application/pdf;base64,${encodeURI(res.data)}`);
+
+          
+  //         // below code is working
+  //         // const pdf_newTab = window.open("");
+  //         // pdf_newTab.document.write(
+  //         //     `<iframe width='100%' style="margin:-8px; width:calc(100% + 12px); height:calc(100% + 12px)" height='100%' src='data:application/pdf;base64,${encodeURI(res.data)}'></iframe>`
+  //         // );
+          
+  //         enqueueSnackbar('File opened for viewing.');
+  //       } else {
+  //         enqueueSnackbar(res.statusText, { variant: 'error' });
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       if (err.message) {
+  //         enqueueSnackbar(err.message, { variant: 'error' });
+  //       } else {
+  //         enqueueSnackbar('Something went wrong!', { variant: 'error' });
+  //       }
+  //     });
+  // };
  
 
   // const handleOpenFile = (documentId, versionId, fileId, file) => {
@@ -347,6 +383,24 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
       disableEditButton={machine?.status?.slug==='transferred'}
       />
       <Grid container>
+      {PDFViewerDialog && (
+        <Dialog fullWidth maxWidth='md' open={PDFViewerDialog} style={{marginBottom:10}} onClose={()=> setPDFViewerDialog(false)}>
+          <DialogTitle variant='h3' sx={{pb:1, pt:2, display:'flex', justifyContent:'space-between'}}>
+              PDF View
+              <Button variant='outlined' onClick={()=> setPDFViewerDialog(false)}>Close</Button>
+          </DialogTitle>
+          <Divider variant='fullWidth' />
+          <DialogContent dividers sx={{height:'-webkit-fill-available'}}>
+            {pdf?(
+              <Document file={pdf} onLoadSuccess={onDocumentLoadSuccess}>
+                {Array.from(new Array(pages), (el, index) => (
+                  <Page width={840} key={`page_${index + 1}`} renderTextLayer={false} pageNumber={index + 1} />
+                ))}
+              </Document>
+            ):(<Typography variant='body1' sx={{mt:2}}>Loading PDF....</Typography>)}
+          </DialogContent>
+        </Dialog>
+      )}
         <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.displayName} />
         <ViewFormField isLoading={isLoading}
           sm={6}
@@ -421,7 +475,6 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
                     width: '100%',
                     height: '100%',
                   }} isLoading={isLoading} 
-                  // onOpenLightbox={()=> handleOpenLightbox(_index)}
                   onDownloadFile={()=> handleDownloadFile(document._id, document?.documentVersions[0]._id, file._id, file?.name, file?.extension)}
                   onDeleteFile={()=> handleDeleteFile(document._id, document?.documentVersions[0]._id, file._id)}
                   onOpenFile={()=> handleOpenFile(document._id, document?.documentVersions[0]._id, file._id, file?.name, file?.extension)}
