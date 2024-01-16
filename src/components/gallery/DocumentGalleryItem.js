@@ -16,6 +16,7 @@ import { fileThumb } from '../file-thumbnail';
 import MenuPopover from '../menu-popover';
 import { deleteDocumentFile } from '../../redux/slices/document/documentFile';
 import { useSnackbar } from '../snackbar';
+import ConfirmDialog from '../confirm-dialog';
 
 
 DocumentGalleryItem.propTypes = {
@@ -39,6 +40,7 @@ DocumentGalleryItem.propTypes = {
 export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFile, onDownloadFile, onDeleteFile, toolbar }) {
 
     const dispatch = useDispatch();
+    const [deleteConfirm, seDeleteConfirm] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
 
     const [isHovered, setIsHovered] = useState(false);
@@ -95,7 +97,7 @@ export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFi
                     >       
                         <Button sx={{width:'33%', borderRadius:0}} disabled={!fileType?.startsWith('image')} onClick={fileType?.startsWith('image')?onOpenLightbox:onOpenFile}><Iconify icon="carbon:view" /></Button>
                         <Button sx={{width:'33%'}}><Iconify icon="solar:download-square-linear" onClick={onDownloadFile} /></Button>
-                        <Button sx={{width:'34%', borderRadius:0}} color='error' onClick={onDeleteFile}><Iconify icon="radix-icons:cross-circled" /></Button>
+                        <Button sx={{width:'34%', borderRadius:0}} color='error' onClick={()=> seDeleteConfirm(true)}><Iconify icon="radix-icons:cross-circled" /></Button>
                     </ButtonGroup>
                 }
 
@@ -122,6 +124,18 @@ export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFi
             
             ):(<SkeletonGallery  />)
             }
+
+            <ConfirmDialog
+                open={deleteConfirm}
+                onClose={()=> seDeleteConfirm(false)}
+                title='Delete'
+                content='Are you sure you want to delete?'
+                action={
+                    <Button variant='contained' onClick={onDeleteFile} color='error'>Delete</Button>
+                  }
+                SubButton="Cancel"
+            />
+
         </>
     );
   }

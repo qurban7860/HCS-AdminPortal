@@ -77,76 +77,87 @@ function MultiFilePreview({ thumbnail, files, onRemove, sx, machine, drawingPage
 
         if (thumbnail) {
           return (
-            <Card key={key} sx={{
-                    cursor: 'pointer',
-                    position: 'relative',
-                    display: 'flex',  // Make the card a flex container
-                    flexDirection: 'column',  // Stack children vertically
-                    alignItems: 'center',  // Center items horizontally
-                    justifyContent: 'center',  // Center items vertically
-                    '&:hover .button-group': {
-                        opacity: 1,
-                    },
-                    width:'100%',
-                    height:180,
-                  }}
-              >
-                <CardMedia onClick={()=> FORMAT_IMG_VISIBBLE.some(format => fileType.match(format)) && previewHandle(file)}>
-                  <FileThumbnail imageView file={file} sx={{ position: 'absolute' }} imgSx={{ position: 'absolute' }}/>
-                </CardMedia>
-                <ButtonGroup
-                        className="button-group"
-                        variant="contained"
-                        aria-label="outlined primary button group"
-                        sx={{
-                            position: 'absolute',
-                            top:0,
-                            opacity: 0,
-                            transition: 'opacity 0.3s ease-in-out',
-                            width:'100%'
-                        }}
-                    >       
-                        {FORMAT_IMG_VISIBBLE.some(format => fileType.match(format))  && <Button sx={{width:'50%', borderRadius:0}} onClick={()=>previewHandle(file)}><Iconify icon="carbon:view" /></Button>}
-                        <Button sx={{width:FORMAT_IMG_VISIBBLE.some(format => fileType.match(format))?'50%':'100%', borderRadius:0}} color='error' onClick={() => onRemove(file)}><Iconify icon="radix-icons:cross-circled" /></Button>
-                    </ButtonGroup>
-                    
-                    <Stack
-                      padding={1}
-                      sx={{
-                      ...bgBlur({
-                          color: file?.found && drawingPage ?'#cc3300':theme.palette.grey[900],
-                          // opacity:1
-                      }),
-                      // background:theme.palette.error,
-                      width: 1,
-                      left: 0,
-                      bottom: 0,
-                      position: 'absolute',
-                      color: 'common.white',
-                      textAlign:'center'
-                      }}
-                  >
-                      <Typography variant="body2">
-                          {name.length > 14 ? name?.substring(0, 14) : name}
-                          {name?.length > 14 ? '...' : null}
+            <>
+            
+              <Card key={key} sx={{
+                      cursor: 'pointer',
+                      position: 'relative',
+                      display: 'flex',  // Make the card a flex container
+                      flexDirection: 'column',  // Stack children vertically
+                      alignItems: 'center',  // Center items horizontally
+                      justifyContent: 'center',  // Center items vertically
+                      '&:hover .button-group': {
+                          opacity: 1,
+                      },
+                      width:'100%',
+                      height:180,
+                    }}
+                >
+                  <CardMedia onClick={()=> FORMAT_IMG_VISIBBLE.some(format => fileType.match(format)) && previewHandle(file)}>
+                    <FileThumbnail imageView file={file} sx={{ position: 'absolute' }} imgSx={{ position: 'absolute' }}/>
+                  </CardMedia>
+                  <ButtonGroup
+                          className="button-group"
+                          variant="contained"
+                          aria-label="outlined primary button group"
+                          sx={{
+                              position: 'absolute',
+                              top:0,
+                              opacity: 0,
+                              transition: 'opacity 0.3s ease-in-out',
+                              width:'100%'
+                          }}
+                      >       
+                          {FORMAT_IMG_VISIBBLE.some(format => fileType.match(format))  && <Button sx={{width:'50%', borderRadius:0}} onClick={()=>previewHandle(file)}><Iconify icon="carbon:view" /></Button>}
+                          <Button sx={{width:FORMAT_IMG_VISIBBLE.some(format => fileType.match(format))?'50%':'100%', borderRadius:0}} color='error' onClick={() => onRemove(file)}><Iconify icon="radix-icons:cross-circled" /></Button>
+                      </ButtonGroup>
                       
-                          {file?.found && drawingPage &&
-                            <Iconify
-                              onClick={(event)=> handleExtensionsPopoverOpen(event,file)}
-                              icon="iconamoon:question-mark-circle-bold"
-                              sx={{ cursor: 'pointer', verticalAlign:'bottom', float:'right' }}
-                            />
-                          }
-                    </Typography>
+                      <Stack
+                        padding={1}
+                        sx={{
+                        ...bgBlur({
+                            color: theme.palette.grey[900],
+                            // opacity:1
+                        }),
+                        // background:theme.palette.error,
+                        width: 1,
+                        left: 0,
+                        bottom: 0,
+                        position: 'absolute',
+                        color: 'common.white',
+                        textAlign:'center'
+                        }}
+                    >
+                        <Typography variant="body2">
+                            {name.length > 14 ? name?.substring(0, 14) : name}
+                            {name?.length > 14 ? '...' : null}
+                        
+                            {/* {file?.found && drawingPage &&
+                              <Iconify
+                                onClick={(event)=> handleExtensionsPopoverOpen(event,file)}
+                                icon="iconamoon:question-mark-circle-bold"
+                                sx={{ cursor: 'pointer', verticalAlign:'bottom', float:'right' }}
+                              />
+                            } */}
+                      </Typography>
+                      {file?.found && drawingPage &&
+                        <AlreadyExistMenuPopover
+                          key={file?.found}
+                          open={verifiedAnchorEl}
+                          onClose={handleExtensionsPopoverClose}
+                          fileFound={fileFound}
+                        />
+                      }
+                    </Stack>
                     {file?.found && drawingPage &&
-                      <AlreadyExistMenuPopover
-                        open={verifiedAnchorEl}
-                        onClose={handleExtensionsPopoverClose}
-                        fileFound={fileFound}
-                      />
+                      <Button
+                      onClick={(event)=> handleExtensionsPopoverOpen(event,file)}
+                      variant='contained' size='small' color='error' 
+                      endIcon={<Iconify icon="solar:question-circle-outline"/>}
+                      >Already Exists</Button>
                     }
-                  </Stack>
-            </Card>
+              </Card>
+            </>
           );
         }
 
