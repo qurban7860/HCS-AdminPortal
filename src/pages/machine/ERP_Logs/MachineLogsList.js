@@ -66,7 +66,6 @@ export default function MachineLogsList(){
   const [filterStatus, setFilterStatus] = useState([]);
   const [ dateFrom, setDateFrom ] = useState( new Date( Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] ) ;
   const [ dateTo, setDateTo ] = useState( new Date(Date.now()).toISOString().split('T')[0]);
-  console.log("dateTo : ",dateTo,"dateFrom : ",dateFrom)
 
   useLayoutEffect(() => {
     if (machine?._id) {
