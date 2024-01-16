@@ -79,7 +79,7 @@ export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFi
                 {fileType?.startsWith('image') ? (
                     <Image alt="gallery" sx={{height:'100%'}} ratio="1/1" src={src} onClick={onOpenLightbox} />
                 ):(
-                    <CardMedia sx={{height:'90%', width:'100%', backgroundSize:'40%', backgroundPosition:'center 35%'}} image={fileThumb(extension?.toLowerCase())} onClick={onOpenFile} />
+                    <CardMedia sx={{height:'90%', width:'100%', backgroundSize:'40%', backgroundPosition:'center 35%'}} image={fileThumb(extension?.toLowerCase())} onClick={()=> fileType?.startsWith('application/pdf')?onOpenFile():null} />
                 )}
 
                 {toolbar && 
@@ -95,7 +95,7 @@ export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFi
                             width:'100%'
                         }}
                     >       
-                        <Button sx={{width:'33%', borderRadius:0}} disabled={!fileType?.startsWith('image')} onClick={fileType?.startsWith('image')?onOpenLightbox:onOpenFile}><Iconify icon="carbon:view" /></Button>
+                        <Button sx={{width:'33%', borderRadius:0}} disabled={!(fileType?.startsWith('image') || fileType?.startsWith('application/pdf'))} onClick={fileType?.startsWith('image')?onOpenLightbox:onOpenFile}><Iconify icon="carbon:view" /></Button>
                         <Button sx={{width:'33%'}}><Iconify icon="solar:download-square-linear" onClick={onDownloadFile} /></Button>
                         <Button sx={{width:'34%', borderRadius:0}} color='error' onClick={()=> seDeleteConfirm(true)}><Iconify icon="radix-icons:cross-circled" /></Button>
                     </ButtonGroup>
@@ -131,7 +131,10 @@ export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFi
                 title='Delete'
                 content='Are you sure you want to delete?'
                 action={
-                    <Button variant='contained' onClick={onDeleteFile} color='error'>Delete</Button>
+                    <Button variant='contained' onClick={()=> {
+                        onDeleteFile()
+                        seDeleteConfirm(false);
+                    }} color='error'>Delete</Button>
                   }
                 SubButton="Cancel"
             />

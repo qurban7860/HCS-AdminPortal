@@ -680,8 +680,8 @@ function DocumentAddForm({
       <ConfirmDialog
         open={duplicate}
         onClose={()=> setDuplicate(false)}
-        title='Duplicate files found'
-        content='Please check selected files'
+        title='Duplicate Files Detected'
+        content='Kindly review the files that already exist.'
         SubButton="Close"
       />
     </FormProvider>

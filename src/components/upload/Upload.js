@@ -263,24 +263,13 @@ export default function Upload({
             <MultiFilePreview machine={machine||''} drawingPage files={files} thumbnail={thumbnail} onRemove={onRemove} />
           </Box>
 
-          <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
+          <Stack direction="row" justifyContent="flex-end" spacing={1.5} sx={{mt:1}}>
             {onRemoveAll && (
-              <Button color="inherit" variant="outlined" size="small" onClick={onRemoveAll}>
+              <Button color="error" variant="outlined" size="small" onClick={onRemoveAll}>
                 Remove all
               </Button>
             )}
-            {/*
-            {onRemove && (
-              <Button color="inherit" variant="outlined" size="small" onClick={onRemove}>
-                Remove
-              </Button>
-            )}
-
-            {onUpload && (
-              <Button size="small" variant="contained" onClick={onUpload}>
-                Upload files
-              </Button>
-            )} */}
+            
           </Stack>
         </>
       )}

@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import {  useMemo, useEffect, memo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { Document, Page, pdfjs } from 'react-pdf';
 import download from 'downloadjs';
 import {
   Grid,
@@ -10,7 +11,12 @@ import {
   Chip,
   Box,
   Button,
-  Container
+  Container,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Typography,
+  Divider
 } from '@mui/material';
 import { ThumbnailDocButton } from '../../components/Thumbnails'
 import { StyledVersionChip } from '../../../theme/styles/default-styles';
@@ -336,60 +342,37 @@ const handleNewFile = async () => {
       });
   };
 
-  const handleOpenFile = (documentId, versionId, fileId, file) => {
-    // dispatch(getDocumentDownload(documentId, versionId, fileId))
-    //   .then((res) => {
-    //     if (regEx.test(res.status)) {
+  const [pdf, setPDF] = useState(null);
+  const [pages, setPages] = useState(null);
+  const [PDFViewerDialog, setPDFViewerDialog] = useState(false);
 
-    //       // const byteCharacters = atob(res.data);
-    //       // const byteNumbers = new Array(byteCharacters.length);
-    //       // for (let i = 0; i < byteCharacters.length; i++) {
-    //       //   byteNumbers[i] = byteCharacters.charCodeAt(i);
-    //       // }
-    //       // const byteArray = new Uint8Array(byteNumbers);
-    //       const decodedPDF = atob(res.data);
-        
-    //       // Create a Blob from the decoded string
-    //       const blob = new Blob([decodedPDF], { type: 'application/pdf' });
-    //       const url = window.URL.createObjectURL(blob);
-    //       const a = document.createElement('a');
-    //       a.href = url;
-    //       // a.download = filename;
-          
-    //       // Open in a new tab
-    //       a.target = '_blank';
-          
-    //       a.click();
+  pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
-    //       // // Create a data URL from the Blob
-    //       // const dataUrl = URL.createObjectURL(blob);
+  const handleOpenFile = async (documentId, versionId, fileId, fileName, fileExtension) => {
+    setPDFViewerDialog(true);
+    setPDF(null);
+    try {
+      const response = await dispatch(getDocumentDownload(documentId, versionId, fileId));
 
-    //       // // Open a new tab with the data URL
-    //       // const newTab = window.open(dataUrl, '_blank');
-
-    //       // // Set a timeout to release the object URL after opening the tab
-    //       // setTimeout(() => {
-    //       //   URL.revokeObjectURL(dataUrl);
-    //       // }, 5000); // Adjust the timeout duration as needed
-        
-    //       // // Cleanup
-    //       // window.URL.revokeObjectURL(url);
-    //       enqueueSnackbar(res.statusText);
-    //     } else {
-    //       enqueueSnackbar(res.statusText, { variant: `error` });
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     if (err.Message) {
-    //       enqueueSnackbar(err.Message, { variant: `error` });
-    //     } else if (err.message) {
-    //       enqueueSnackbar(err.message, { variant: `error` });
-    //     } else {
-    //       enqueueSnackbar('Something went wrong!', { variant: `error` });
-    //     }
-    //   });
+      if (regEx.test(response.status)) {
+        const pdfData = `data:application/pdf;base64,${encodeURI(response.data)}`;
+        setPDF(pdfData);
+      } else {
+        enqueueSnackbar(response.statusText, { variant: 'error' });
+      }
+    } catch (error) {
+      if (error.message) {
+        enqueueSnackbar(error.message, { variant: 'error' });
+      } else {
+        enqueueSnackbar('Something went wrong!', { variant: 'error' });
+      }
+    }
   };
 
+  const onDocumentLoadSuccess = ({ numPages }) => {
+    setPages(numPages);
+  };
+  
   return (
     <Container maxWidth={false} sx={{padding:(machineDrawings || customerPage || machinePage || drawingPage) ?'0 !important':''}}>
       {!customerPage && !machinePage && !drawingPage &&
@@ -410,6 +393,24 @@ const handleNewFile = async () => {
 
       />
             <Grid container sx={{mt:2}}>
+            {PDFViewerDialog && (
+              <Dialog fullWidth maxWidth='md' open={PDFViewerDialog} style={{marginBottom:10}} onClose={()=> setPDFViewerDialog(false)}>
+                <DialogTitle variant='h3' sx={{pb:1, pt:2, display:'flex', justifyContent:'space-between'}}>
+                    PDF View
+                    <Button variant='outlined' onClick={()=> setPDFViewerDialog(false)}>Close</Button>
+                </DialogTitle>
+                <Divider variant='fullWidth' />
+                <DialogContent dividers sx={{height:'-webkit-fill-available'}}>
+                  {pdf?(
+                    <Document file={pdf} onLoadSuccess={onDocumentLoadSuccess}>
+                      {Array.from(new Array(pages), (el, index) => (
+                        <Page width={840} key={`page_${index + 1}`} renderTextLayer={false} pageNumber={index + 1} />
+                      ))}
+                    </Document>
+                  ):(<Typography variant='body1' sx={{mt:2}}>Loading PDF....</Typography>)}
+                </DialogContent>
+              </Dialog>
+            )}
               <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.displayName} />
               <ViewFormField isLoading={isLoading}
                 sm={6}

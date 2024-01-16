@@ -8,3 +8,4 @@ export { default as SkeletonKanbanColumn } from './SkeletonKanbanColumn';
 export { default as SkeletonProductDetails } from './SkeletonProductDetails';
 export { default as SkeletonConversationItem } from './SkeletonConversationItem';
 export { default as SkeletonGallery } from './SkeletonGallery';
+export { default as SkeletonDocument } from './SkeletonDocument';
