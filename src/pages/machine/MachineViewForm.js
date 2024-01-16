@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import { Card, Grid, Link, Chip} from '@mui/material';
 // routes
-import { PATH_MACHINE } from '../../routes/paths';
+import { PATH_CUSTOMER, PATH_MACHINE } from '../../routes/paths';
 // slices
 import {
   getMachines,
@@ -40,6 +40,7 @@ import { fDate } from '../../utils/formatTime';
 import MachineDialog from '../components/Dialog/MachineDialog'
 import CustomerDialog from '../components/Dialog/CustomerDialog';
 import SiteDialog from '../components/Dialog/SiteDialog';
+import OpenInNewPage from '../components/Icons/OpenInNewPage';
 
 // ----------------------------------------------------------------------
 
@@ -66,7 +67,7 @@ export default function MachineViewForm() {
       dispatch(getSite(machine?.customer?._id, machine?.instalationSite?._id)); 
       dispatch(setSiteDialog(true))
   }
-  
+
   const handleBillingSiteDialog = (event) =>{
       event.preventDefault();  
       setDialogTitle('Billing Site');
@@ -252,9 +253,12 @@ export default function MachineViewForm() {
               <ViewFormField isLoading={isLoading} sm={4} variant='h4' heading="Customer"
                 node={
                   defaultValues.customer && (
-                    <Link onClick={(event)=> handleCustomerDialog(event, defaultValues.customer?._id)} href="#" underline="none">
+                    <>
+                    <Link onClick={(event)=> handleCustomerDialog(event, defaultValues.customer?._id)} underline="none" sx={{ cursor: 'pointer'}}>
                       {defaultValues.customer?.name}
                     </Link>
+                      <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(defaultValues.customer?._id), '_blank' ) }/>
+                    </>
                   )
                 }
               />
@@ -275,7 +279,7 @@ export default function MachineViewForm() {
                     heading="Financing Company"
                     node={
                       defaultValues.financialCompany && (
-                        <Link onClick={(event)=> handleCustomerDialog(event, defaultValues.financialCompany?._id)} href="#" underline="none">
+                        <Link onClick={(event)=> handleCustomerDialog(event, defaultValues.financialCompany?._id)} underline="none" sx={{ cursor: 'pointer'}} >
                           {defaultValues.financialCompany?.name}
                         </Link>
                       )
@@ -287,7 +291,7 @@ export default function MachineViewForm() {
               heading="Billing Site"
               node={
                 defaultValues.billingSite && (
-                  <Link onClick={ handleBillingSiteDialog } href="#" underline="none">
+                  <Link onClick={ handleBillingSiteDialog } underline="none" sx={{ cursor: 'pointer'}} >
                     {defaultValues.billingSite?.name}
                   </Link>
                 )
@@ -303,7 +307,7 @@ export default function MachineViewForm() {
               heading="Installation Site"
               node={
                 defaultValues.instalationSite && (
-                  <Link onClick={ handleInstallationSiteDialog } href="#" underline="none">
+                  <Link onClick={ handleInstallationSiteDialog } underline="none" sx={{ cursor: 'pointer'}} >
                     {defaultValues.instalationSite?.name}
                   </Link>
                 )
@@ -317,7 +321,7 @@ export default function MachineViewForm() {
 
             <ViewFormField isLoading={isLoading}
               sm={12}
-              heading="Nearby Milestone"
+              heading="Landmark"
               param={defaultValues?.siteMilestone}
             />
             <ViewFormField isLoading={isLoading} sm={12} heading="Connected Machines" chipDialogArrayParam={linkedMachines} />

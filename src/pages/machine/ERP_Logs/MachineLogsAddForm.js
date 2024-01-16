@@ -1,9 +1,9 @@
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 // @mui
-import { Card, Grid, Stack, Button } from '@mui/material';
+import { Card, Grid, Stack, Button, FormHelperText } from '@mui/material';
 // slice
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { setAllVisibilityFalse, getMachineErpLogRecords, addMachineErpLogRecord } from '../../../redux/slices/products/machineErpLogs';
@@ -23,7 +23,7 @@ export default function MachineLogsAddForm() {
   const { machine } = useSelector((state) => state.machine);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-
+  const [ error, setError ] = useState(false);
   const defaultValues = useMemo(
     () => ({
       erpLog: '',
@@ -47,19 +47,27 @@ export default function MachineLogsAddForm() {
 
   const { erpLog } = watch();
 
+  useEffect(() => {
+          setError(false);
+  },[ erpLog ])
+
   const toggleCancel = () => { dispatch(setAllVisibilityFalse()) };
   const onSubmit = async (data) => {
     try{
         const csvData = JSON.parse(data.erpLog)
-        try {
-          await dispatch(addMachineErpLogRecord(machine?._id, machine?.customer?._id, csvData));
-          reset();
-          enqueueSnackbar(`Log's uploaded successfully!`);
-          dispatch(setAllVisibilityFalse())
-          // dispatch(getMachineErpLogRecords(machine?._id))
-        } catch (error) {
-          enqueueSnackbar(error, { variant: `error` });
-          console.error(error);
+        if(Array.isArray(csvData) && csvData?.length > 1500){
+          setError(true)
+        }else{
+          setError(false);
+          try {
+            await dispatch(addMachineErpLogRecord(machine?._id, machine?.customer?._id, csvData));
+            reset();
+            enqueueSnackbar(`Log's uploaded successfully!`);
+            dispatch(setAllVisibilityFalse())
+          } catch (err) {
+            enqueueSnackbar(err, { variant: `error` });
+            console.error(err);
+          }
         }
     }catch(err){
       enqueueSnackbar('JSON validation Failed!',{ variant: `error` });
@@ -104,8 +112,8 @@ const readFile = (selectedFile) =>
           const content = e.target.result;
           resolve(content);
       };
-      reader.onerror = (error) => {
-          console.log(error);
+      reader.onerror = (err) => {
+          console.log(err);
         enqueueSnackbar( "Found error while Reading File!",{ variant: `error` } )
       };
       reader.readAsText(selectedFile);
@@ -125,18 +133,16 @@ const readFile = (selectedFile) =>
           enqueueSnackbar( "No Data Found to Import!",{ variant: `error` } )
           setValue('erpLog', '' )
         }
-      }).catch(error => {
+      }).catch(err => {
         enqueueSnackbar( "Found error While Converting text to json!",{ variant: `error` } )
       });
     } else if (event.target.files.length > 1) {
       selectedFile = await Promise.all(Array.from(event.target.files).map(file => readFile(file)));
-        console.log("multiple selected Files : ",selectedFile)
         const multipleSelectedFiles = [];
         await Promise.all(Array.from(selectedFile.map((file) =>{
           txtToJson(file).then(result => {
-            console.log("multiple Selected Files result : ",result)
             multipleSelectedFiles.push(...result)
-            }).catch(error => {
+            }).catch(err => {
               enqueueSnackbar( "Found error While Converting text to json!",{ variant: `error` } )
             });
             return null;
@@ -148,7 +154,6 @@ const readFile = (selectedFile) =>
   };
 
 const HandleChangeIniJson = async (e) => { setValue('erpLog', e) }
-
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container>
@@ -157,12 +162,13 @@ const HandleChangeIniJson = async (e) => { setValue('erpLog', e) }
               <Stack spacing={2}>
                 <Grid >
                   <Grid display="flex" justifyContent="flex-end" >
-                    <Button variant="contained" component="label" startIcon={<Iconify icon={ICONS.UPLOAD_FILE.icon} />} > Upload File  
+                    <Button variant="contained" component="label" startIcon={<Iconify icon={ICONS.UPLOAD_FILE.icon} />} > Select Files  
                       <input type="file" accept='.txt' multiple hidden onChange={handleFileChange} /> 
                     </Button>
                   </Grid>
                   <CodeMirror value={erpLog} HandleChangeIniJson={HandleChangeIniJson}/>                
                 </Grid>
+                { error && <FormHelperText error >Json Size should not be greater than 1500 Objects.</FormHelperText> }
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>

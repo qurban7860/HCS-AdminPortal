@@ -6,7 +6,7 @@ import { search } from '@codemirror/search';
 import { Grid, Typography } from '@mui/material';
 
 JsonEditor.propTypes = {
-  value: PropTypes.object,
+  value: PropTypes.string,
   HandleChangeIniJson: PropTypes.func,
   readOnly: PropTypes.bool,
 };
@@ -46,7 +46,7 @@ function JsonEditor({value, HandleChangeIniJson, readOnly }) {
           <CodeMirror 
             value={value} 
             onChange={(e) => HandleChangeIniJson(e)}
-            height="600px" 
+            height="500px" 
             width='auto' 
             extensions={[ langs.json(),   search({top: true, searchPanelOpen: true,}) ]} 
             options={codeMirrorOptions}

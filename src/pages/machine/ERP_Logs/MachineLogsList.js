@@ -52,7 +52,7 @@ export default function MachineLogsList(){
     setPage,
     selected,
     onSort,
-  } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
+  } = useTable({ defaultOrderBy: 'date', defaultOrder: 'asc' });
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
@@ -64,8 +64,9 @@ export default function MachineLogsList(){
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  const [ dateFrom, setDateFrom ] = useState( new Date( Date.now() - 10 * 24 * 60 * 60 * 1000) ) ;
-  const [ dateTo, setDateTo ] = useState( new Date( Date.now() ));
+  const [ dateFrom, setDateFrom ] = useState( new Date( Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] ) ;
+  const [ dateTo, setDateTo ] = useState( new Date(Date.now()).toISOString().split('T')[0]);
+  console.log("dateTo : ",dateTo,"dateFrom : ",dateFrom)
 
   useLayoutEffect(() => {
     if (machine?._id) {
@@ -79,7 +80,7 @@ export default function MachineLogsList(){
 
   useEffect(() => {
     if (initial) {
-      setTableData(machineErpLogs?.data || []);
+      setTableData(machineErpLogs?.data || [] );
     }
   }, [machineErpLogs, initial]);
 
@@ -150,7 +151,7 @@ export default function MachineLogsList(){
           />
 
           {!isNotFound && <TablePaginationCustom
-            count={ filterName ? dataFiltered.length : ( machineErpLogstotalCount || 0 ) }
+            count={ machineErpLogstotalCount || 0 }
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
@@ -169,7 +170,6 @@ export default function MachineLogsList(){
                 />
                 <TableBody>
                   {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
                         <MachineLogsTableRow
@@ -178,7 +178,6 @@ export default function MachineLogsList(){
                           onViewRow={() => handleViewRow(row._id)}
                           selected={selected.includes(row._id)}
                           selectedLength={selected.length}
-                          // onSelectRow={ ()=>  selected.length < 2 || selected.find((el) => el === row._id) ? onSelectRow(row._id) : setOpenConfirm(true) }
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         />
                       ) : (
@@ -191,7 +190,7 @@ export default function MachineLogsList(){
             </Scrollbar>
           </TableContainer>
           {!isNotFound && <TablePaginationCustom
-            count={dataFiltered.length}
+            count={ machineErpLogstotalCount || 0 }
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}

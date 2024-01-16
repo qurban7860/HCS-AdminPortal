@@ -22,9 +22,9 @@ MachineLogsListTableToolbar.propTypes = {
   onFilterStatus: PropTypes.func,
   statusOptions: PropTypes.array,
   isHistory: PropTypes.bool,
-  dateFrom: PropTypes.object,
+  dateFrom: PropTypes.string,
   setDateFrom: PropTypes.func,
-  dateTo: PropTypes.object,
+  dateTo: PropTypes.string,
   setDateTo: PropTypes.func,
 };
 

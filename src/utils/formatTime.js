@@ -18,8 +18,6 @@ export function fQuarterYearDate(startDate, newFormat) {
 
     const formattedStartDate = format(start, 'MMM');
     const formattedEndDate = format(end, 'MMM yyyy')
-    console.log("formattedEndDate : ",formattedEndDate)
-    console.log(" formattedStartDate formattedEndDate : ",formattedStartDate, formattedEndDate )
     return `${formattedStartDate}-${formattedEndDate}`;
   }
 

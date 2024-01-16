@@ -161,7 +161,7 @@ const HandleChangeIniJson = async (e) => {
               <Stack spacing={2}>
                 <Grid container rowSpacing={1} columnSpacing={1} sx={{display:'flex', justifyContent:'space-between' }}>
                   <Grid item xs={12} lg={12} sx={{display:'flex', justifyContent:'flex-end'}}>
-                    <Button variant="contained" component="label"  startIcon={<Iconify icon={ICONS.UPLOAD_FILE.icon} />} sx={{m:0.5}} >  Upload
+                    <Button variant="contained" component="label"  startIcon={<Iconify icon={ICONS.UPLOAD_FILE.icon} />} sx={{m:0.5}} >Select File
                         <input type="file" accept='.json, .ini' hidden onChange={handleFileChange} /> 
                     </Button>
                   </Grid>

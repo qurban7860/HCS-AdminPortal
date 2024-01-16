@@ -327,7 +327,7 @@ export default function MachineEditForm() {
                   />
                   <RHFDatePicker inputFormat='dd/MM/yyyy'  name="installationDate" label="Installation Date" />
                 </Box>
-                  <RHFTextField name="siteMilestone" label="Nearby Milestone" multiline />
+                  <RHFTextField name="siteMilestone" label="Landmark" multiline />
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect
