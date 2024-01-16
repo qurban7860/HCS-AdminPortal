@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { Container } from '@mui/system';
-import { Card, Grid, Autocomplete, TextField, Divider } from '@mui/material';
+import { Card, Grid, Autocomplete, TextField, Divider, Paper } from '@mui/material';
 // slices
 import {  getMachinesByModel, setMachineCategory, setMachineCountry, setMachineYear } from '../../redux/slices/dashboard/count';
 import {  getActiveCategories } from '../../redux/slices/products/category';
@@ -35,7 +35,7 @@ export default function MachineByCountriesViewForm() {
   
   useLayoutEffect(() => {
     dispatch(getActiveCategories());
-    dispatch(getMachinesByModel(machineCategory?._id, machineYear, machineCountry?.code));
+    dispatch(getMachinesByModel(machineCategory?._id, machineYear, machineCountry?.code, true));
   }, [dispatch, machineCategory, machineYear, machineCountry]);
 
   if (machinesByModel.length !== 0) {
@@ -50,7 +50,7 @@ export default function MachineByCountriesViewForm() {
     dispatch(setMachineCategory(category));
     dispatch(setMachineYear(year));
     dispatch(setMachineCountry(country));
-    dispatch(getMachinesByModel(category?._id, year, country?.code));
+    dispatch(getMachinesByModel(category?._id, year, country?.code, true));
   };
 
   return (
@@ -107,7 +107,8 @@ export default function MachineByCountriesViewForm() {
                 </Grid>
             </Grid>
             <Divider sx={{paddingTop:2}} />
-
+          <Grid item sx={{ height: '600px', overflow: 'auto' }} >
+          <Paper style={{ height: '100%', padding: '20px' }}>
             <ChartBar
               optionsData={modelWiseMachineModel}
               seriesData={modelWiseMachineNumber}
@@ -115,6 +116,8 @@ export default function MachineByCountriesViewForm() {
               type="bar"
               sx={{ backgroundColor: 'transparent' }}
             />
+          </Paper>
+          </Grid>
       </Card>          
     </Container>
   )}
