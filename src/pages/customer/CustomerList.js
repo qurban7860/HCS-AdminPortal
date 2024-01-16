@@ -49,8 +49,8 @@ import { exportCSV } from '../../utils/exportCSV';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'clientCode', label: 'Customer', align: 'left' },
-  { id: 'name', label: 'Code', align: 'left' },
+  { id: 'name', label: 'Customer', align: 'left' },
+  { id: 'clientCode', label: 'Code', align: 'left' },
   { id: 'tradingName', visibility: 's1', label: 'Trading Name', align: 'left' },
   { id: 'mainSite.address.country', visibility: 'xs2', label: 'Address', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },

@@ -10,6 +10,7 @@ import Iconify from '../../../components/iconify';
 import useResponsive from '../../../hooks/useResponsive';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
 import { getActiveDocumentTypesWithCategory } from '../../../redux/slices/document/documentType';
+import { fDate } from '../../../utils/formatTime';
 
 function SearchBarCombo({
   isFiltered,
@@ -62,14 +63,13 @@ function SearchBarCombo({
   const isMobile = useResponsive('sm', 'down');
   const dispatch = useDispatch()
 
-  const onChangeStartDate = (newValue) => {
-    setDateFrom(newValue);
+  const onChangeStartDate = (e) => {
+    setDateFrom(e.target.value);
   };
 
-  const onChangeEndDate = (newValue) => {
-    setDateTo(newValue);
+  const onChangeEndDate = (e) => {
+    setDateTo(e.target.value);
   };
-
   return (
     <Grid container rowSpacing={1} columnSpacing={1} sx={{display:'flex', }}>
           <Grid item xs={12} sm={12} md={12} lg={setAccountManagerFilter && setSupportManagerFilter ? 4:6} xl={setAccountManagerFilter && setSupportManagerFilter ? 4:6}>
@@ -150,27 +150,35 @@ function SearchBarCombo({
 
           { setDateFrom && 
             <Grid item xs={12} sm={6} md={4} lg={2} xl={2}  >
-              <DatePicker
-                inputFormat='dd/MM/yyyy'
-                size="small"
-                label="Start date"
-                value={dateFrom}
-                onChange={onChangeStartDate}
-                renderInput={(params) => <TextField {...params} size="small" />}
-              />
+                <TextField  
+                  value={dateFrom} 
+                  type="date"
+                  format={dateFrom ?? "dd/mm/yyyy"}
+                  label="Start date"
+                  sx={{width: '100%'}}
+                  onChange={onChangeStartDate} 
+                  error={ dateFrom && dateTo && dateTo < dateFrom } 
+                  helperText={ dateFrom && dateTo && dateTo < dateFrom && `Start Date should be less than End date ${fDate(dateTo)}`} 
+                  size="small" 
+                  InputLabelProps={{ shrink: true }}
+                />
             </Grid>
           }
 
           { setDateTo && 
             <Grid item xs={12} sm={6} md={4} lg={2} xl={2} >
-              <DatePicker
-                inputFormat='dd/MM/yyyy'
-                size="small"
-                label="End date"
-                value={dateTo}
-                onChange={onChangeEndDate}
-                renderInput={(params) => <TextField {...params} size="small" />}
-              />
+                <TextField  
+                  value={dateTo} 
+                  type="date"
+                  format={ dateTo ?? "dd/mm/yyyy"} 
+                  label="End date"
+                  sx={{width: '100%'}}
+                  onChange={onChangeEndDate} 
+                  error={ dateFrom && dateTo && dateFrom > dateTo } 
+                  helperText={dateFrom && dateTo && dateFrom > dateTo && `End Date should be greater than Start date ${fDate(dateFrom)}`} 
+                  size="small" 
+                  InputLabelProps={{ shrink: true }}
+                />
             </Grid>
           }
 
@@ -501,9 +509,9 @@ SearchBarCombo.propTypes = {
   filterExcludeRepoting: PropTypes.string,
   handleExcludeRepoting: PropTypes.func,
   handleGalleryView: PropTypes.func,
-  dateFrom: PropTypes.object,
+  dateFrom: PropTypes.string,
   setDateFrom: PropTypes.func,
-  dateTo: PropTypes.object,
+  dateTo: PropTypes.string,
   setDateTo: PropTypes.func,
 };
 
