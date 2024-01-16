@@ -43,6 +43,7 @@ import { DocRadioValue, DocRadioLabel, Snacks,} from '../../../constants/documen
 import DocumentCover from '../../components/DocumentForms/DocumentCover';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { documentSchema } from '../../schemas/document';
+import ConfirmDialog from '../../../components/confirm-dialog';
 
 
 // ----------------------------------------------------------------------
@@ -331,6 +332,7 @@ function DocumentAddForm({
 
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [machineVal, setMachineVal] = useState(null);
+  const [duplicate, setDuplicate] = useState(false);
 
   const handleDropMultiFile = useCallback(
     async (acceptedFiles) => {
@@ -373,6 +375,8 @@ function DocumentAddForm({
         const _files_MD5 = await hashFilesMD5(acceptedFiles);
         _files = await dispatch(checkDocument(_files_MD5));
       }
+
+      setDuplicate(_files.some((fff => fff.status===409)));
       
       const newFiles = acceptedFiles.map((file, index) => {
         if(index===0 && docFiles.length===0 && !displayName){
@@ -420,49 +424,7 @@ function DocumentAddForm({
       throw error;
     }
   };
-
-  // const hashFilesMD5 = async (_files) => {
-  //   const hashPromises = _files.map((file) => {
-  //     console.log('files')
-  //     return new Promise((resolve, reject) => {
-  //       const reader = new FileReader();
-  
-  //       reader.onload = () => {
-  //         const arrayBuffer = reader.result;
-  //         const wordArray = MD5(lib.WordArray.create(arrayBuffer));
-  //         const hashHex = wordArray.toString(enc.Hex);
-  //         resolve(hashHex);
-  //       };
-  
-  //       reader.onerror = () => {
-  //         reject(new Error(`Error reading file: ${file.name}`));
-  //       };
-  
-  //       reader.readAsArrayBuffer(file);
-  //     });
-  //   });
-  
-  //   return Promise.all(hashPromises);
-  // };
-  
-  const hashFile = async (file) => new Promise((resolve, reject) => {
-      const reader = new FileReader();      
-      reader.onload = () => {
-        const arrayBuffer = reader.result;
-        const wordArray = MD5(lib.WordArray.create(arrayBuffer));
-        const hashHex = wordArray.toString(enc.Hex);
-        resolve(hashHex);
-      };
-
-      reader.onerror = () => {
-        reject(new Error('Error reading file'));
-      };
-
-      reader.readAsArrayBuffer(file);
-  });
-
-  
-  
+    
   const removeFileExtension = (filename) => {
     const lastDotIndex = filename.lastIndexOf('.');
     return lastDotIndex !== -1 ? filename.substring(0, lastDotIndex) : filename;
@@ -714,6 +676,14 @@ function DocumentAddForm({
           src={previewVal}
         />
       </Dialog>
+      
+      <ConfirmDialog
+        open={duplicate}
+        onClose={()=> setDuplicate(false)}
+        title='Duplicate files found'
+        content='Please check selected files'
+        SubButton="Close"
+      />
     </FormProvider>
   );
 }
