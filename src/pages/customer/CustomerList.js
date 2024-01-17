@@ -36,7 +36,6 @@ import { FORMLABELS } from '../../constants/default-constants';
 import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
 import { getCustomers, ChangePage, ChangeRowsPerPage, setFilterBy, setVerified,
-   createCustomerCSV,
    setCustomerTab,
    setExcludeReporting,
    resetCustomers} from '../../redux/slices/customer/customer';
@@ -166,35 +165,24 @@ export default function CustomerList() {
     dispatch(setFilterBy(''))
     setFilterName('');
     setFilterStatus([]);
-  };
+  }; 
 
+  const [exportingCSV, setExportingCSV] = useState(false);
   const onExportCSV = async () => {
-    const response = dispatch(await createCustomerCSV());
+    setExportingCSV(true);
+    const params = {
+      isArchived: false,
+      orderBy : {
+        createdAt:-1
+      }
+    };
+
+    const response = dispatch(await exportCSV('CustomerCSV','crm/customers/export', params));
     response.then((res) => {
-        enqueueSnackbar('CSV Generated Successfully');
-    }).catch((error) => {
-      console.error(error);
-      enqueueSnackbar(error.message, { variant: `error` });
+      setExportingCSV(false);
+      enqueueSnackbar(res.message, {variant:`${res.hasError?"error":""}`});
     });
   };
-  
-
-  // const [exportingCSV, setExportingCSV] = useState(false);
-  // const onExportCSV = async () => {
-  //   setExportingCSV(true);
-  //   const params = {
-  //     isArchived: false,
-  //     orderBy : {
-  //       createdAt:-1
-  //     }
-  //   };
-
-  //   const response = dispatch(await exportCSV('CustomerCSV','crm/customers/export', params));
-  //   response.then((res) => {
-  //     setExportingCSV(false);
-  //     enqueueSnackbar(res.message, {variant:`${res.hasError?"error":""}`});
-  //   });
-  // };
 
   return (
     <Container maxWidth={false}>
@@ -214,6 +202,7 @@ export default function CustomerList() {
           customerDocList
           machineDocList
           onExportCSV={onExportCSV}
+          onExportLoading={exportingCSV}
           filterExcludeRepoting={filterExcludeRepoting}
           handleExcludeRepoting={handleExcludeRepoting}
         />
