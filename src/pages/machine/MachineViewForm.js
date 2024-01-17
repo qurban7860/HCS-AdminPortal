@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Grid, Link, Chip} from '@mui/material';
+import { Card, Grid, Link, Chip, Typography} from '@mui/material';
 // routes
 import { PATH_CUSTOMER, PATH_MACHINE } from '../../routes/paths';
 // slices
@@ -203,6 +203,7 @@ export default function MachineViewForm() {
       machineweb:machine?.machineProfile?.web || '',
       machineflange:machine?.machineProfile?.flange || '',
       status: machine?.status?.name || '',
+      transferredMachine: machine?.transferredMachine?.customer[0]?.name || '',
       customer: machine?.customer || '',
       financialCompany: machine?.financialCompany || '',
       siteMilestone: machine?.siteMilestone || '',
@@ -227,6 +228,7 @@ export default function MachineViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [machine]
   );
+
   return (
     <>
       <Grid container direction="row" mt={isMobile && 2}>
@@ -272,7 +274,12 @@ export default function MachineViewForm() {
             <ViewFormField isLoading={isLoading} sm={6} heading="Alias" chips={defaultValues?.alias} />
             <ViewFormField isLoading={isLoading} sm={6} variant='h4' heading="Profile" param={`${defaultValues?.machineProfile} ${(defaultValues?.machineweb && defaultValues?.machineflange)? `(${defaultValues?.machineweb} X ${defaultValues?.machineflange})` :""}`} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Supplier" param={defaultValues?.supplier} />
-            <ViewFormField isLoading={isLoading} sm={6} variant='h4' heading="Status" textColor={machine?.status?.slug==="transferred" && 'red'} param={defaultValues?.status} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Status"
+            node={
+            <Grid display="flex">
+              <Typography variant='h4' sx={{mr: 1,color: machine?.status?.slug === "transferred" && 'red'  }}>{ defaultValues?.status }</Typography>
+              { defaultValues?.transferredMachine && <Typography sx={{mt: 0.5}}>{` to customer ${defaultValues?.transferredMachine}`}</Typography> }
+            </Grid>} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Work Order / Purchase Order" param={defaultValues?.workOrderRef}/>
 
             <ViewFormField isLoading={isLoading} sm={6}

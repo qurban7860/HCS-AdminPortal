@@ -65,12 +65,11 @@ const TABLE_HEAD = [
   // { id: 'previousMachine', label: 'Previous Machine', align: 'left' },
   { id: 'name', visibility: 'md1',label: 'Name', align: 'left' },
   { id: 'machineModel.name', visibility: 'xs1', label: 'Model', align: 'left' },
-  { id: 'status.name', visibility: 'xs2',  label: 'Status', align: 'left' },
   { id: 'customer.name', visibility: 'md2', label: 'Customer', align: 'left' },
   // { id: 'instalationSite.name', visibility: 'md3', label: 'Installation Site', align: 'left' },
   { id: 'installationDate', visibility: 'md3', label: 'Installation Date', align: 'left' },
   { id: 'shippingDate', visibility: 'md3', label: 'Shipping Date', align: 'left' },
-
+  { id: 'status.name', visibility: 'xs2',  label: 'Status', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   // { id: 'createdAt', label: 'Created At', align: 'left' },
 ];
