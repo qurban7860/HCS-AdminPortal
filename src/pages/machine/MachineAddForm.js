@@ -138,6 +138,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   },[ activeMachineStatuses ])
 
   useEffect(() => {
+    dispatch(resetActiveSites());
     if (customer !== null && customer._id !== undefined) {
       dispatch(getActiveSites(customer._id));
       dispatch(getMachineConnections(customer._id));
