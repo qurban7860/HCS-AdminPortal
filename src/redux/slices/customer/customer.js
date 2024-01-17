@@ -345,6 +345,7 @@ export function getActiveSPCustomers() {
 export function getCustomer(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.setCustomerTab('info'));
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${id}` ,
       {

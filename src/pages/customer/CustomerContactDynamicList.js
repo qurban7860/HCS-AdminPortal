@@ -160,10 +160,9 @@ export default function CustomerContactList(currentContact = null) {
       }
   }
 
-
   return (
     <>
-      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+      <Grid container direction="row" justifyContent="space-between" alignItems="center" sx={{mb:2}}>
         <Grid item xs={12} md={6}>
           <BreadcrumbsProvider>
             <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
