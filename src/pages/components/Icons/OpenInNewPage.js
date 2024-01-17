@@ -14,17 +14,8 @@ export default function OpenInNewPage({ onClick  }) {
           tooltipcolor="#103996" 
           color="#103996"
         >
-          <Link
-              onClick={onClick}
-              color="inherit"
-              target="_blank"
-              rel="noopener"
-              sx={{ cursor: 'pointer',mx: 0.5, }}
-          >
-            <Iconify
-              icon="fluent:open-12-regular"
-              sx={{  mb: -0.5,with: '25px', height:'25px' }}
-            />
+          <Link onClick={onClick} color="inherit" target="_blank" rel="noopener" sx={{ cursor: 'pointer',mx: 0.5}}>
+            <Iconify icon="fluent:open-12-regular" sx={{position:'relative', bottom:'-5px'}} />
           </Link>
         </StyledTooltip>
   );

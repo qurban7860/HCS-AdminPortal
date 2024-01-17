@@ -227,7 +227,10 @@ function DocumentAddForm({
     try {
       if(drawingPage){
         data.machine = machine?._id;
-      } 
+      } else{
+        data.machine = null;  
+      }
+
       if (selectedValue === 'new') {
         // New Document Part
         await dispatch(addDocument( customerPage ? customer?._id : null, machinePage ? machine?._id : null, data));

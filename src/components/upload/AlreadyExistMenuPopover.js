@@ -24,7 +24,7 @@ export default function AlreadyExistMenuPopover({ open, onClose, fileFound }) {
     /* eslint-disable */
     let data = {
         machine: machine?._id,
-        documentId: selected?.version?.document,
+        documentId: selected?.version?.document?._id,
         isActive:true
     };
 
@@ -56,7 +56,7 @@ export default function AlreadyExistMenuPopover({ open, onClose, fileFound }) {
               <Grid display="inline-flex" p={0.1}>
                 <Chip
                   key={index}
-                  label={file?.name}
+                  label={file?.version?.document?.displayName || file?.version?.document?.name}
                   size="small"
                   sx={{color: 'primary.main'}}
                   clickable

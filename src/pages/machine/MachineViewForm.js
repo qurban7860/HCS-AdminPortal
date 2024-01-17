@@ -203,7 +203,7 @@ export default function MachineViewForm() {
       machineweb:machine?.machineProfile?.web || '',
       machineflange:machine?.machineProfile?.flange || '',
       status: machine?.status?.name || '',
-      transferredMachine: machine?.transferredMachine?.customer[0]?.name || '',
+      transferredMachine: machine?.transferredMachine?.customer || null,
       customer: machine?.customer || '',
       financialCompany: machine?.financialCompany || '',
       siteMilestone: machine?.siteMilestone || '',
@@ -278,7 +278,16 @@ export default function MachineViewForm() {
             node={
             <Grid display="flex">
               <Typography variant='h4' sx={{mr: 1,color: machine?.status?.slug === "transferred" && 'red'  }}>{ defaultValues?.status }</Typography>
-              { defaultValues?.transferredMachine && <Typography sx={{mt: 0.5}}>{` to customer ${defaultValues?.transferredMachine}`}</Typography> }
+              { defaultValues?.transferredMachine && 
+                <Typography variant='h4' >
+                    {`to `}
+                    <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredMachine?._id)} underline="none" sx={{ cursor: 'pointer'}}>
+                      {defaultValues?.transferredMachine?.name}
+                    </Link>
+                      <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(defaultValues?.transferredMachine?._id), '_blank' ) }/>
+                  
+                </Typography> 
+              }
             </Grid>} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Work Order / Purchase Order" param={defaultValues?.workOrderRef}/>
 

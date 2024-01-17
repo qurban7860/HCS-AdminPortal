@@ -163,7 +163,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   return (
     <>
       {/* <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}></Stack> */}
-      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+      <Grid container direction="row" justifyContent="space-between" alignItems="center" sx={{mb:2}}>
         <Grid item xs={12} md={6}>
           <BreadcrumbsProvider>
             <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
@@ -181,7 +181,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
           </BreadcrumbsProvider>
         </Grid>
         <Grid item xs={12} md={6} style={{display:'flex', justifyContent:'flex-end'}}>
-          <Stack direction='row' alignContent='flex-end' spacing={1}>
+          <Stack direction='row' alignContent='flex-end' spacing={1} >
             {isSuperAdmin && sites.length>0 &&
               <LoadingButton variant='contained' onClick={onExportCSV} loading={exportingCSV} startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />} >
                   {BUTTONS.EXPORT.label}
