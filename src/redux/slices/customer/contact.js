@@ -322,43 +322,6 @@ export function getSPContacts() {
 
 // ----------------------------------------------------------------------
 
-export function createCustomerContactsCSV(customerID ) {
-  return async (dispatch) => {
-    try {
-       const response = axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts/export` , 
-        {
-          params: {
-            isArchived: false,
-            orderBy : {
-              createdAt:-1
-            }
-          }
-        }
-        );
-
-        
-        response.then((res) => {
-          const fileName = "CustomerContacts.csv";
-          const blob = new Blob([res.data], { type: 'text/csv;charset=utf-8' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = fileName;
-          document.body.appendChild(a);
-          a.click();
-          window.URL.revokeObjectURL(url);
-          dispatch(slice.actions.setResponseMessage('Customer Contacts CSV generated successfully'));
-        }).catch((error) => {
-          console.error(error);
-        });
-    } catch (error) {
-      console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
-      throw error;
-    }
-  };
-}
-
 export function getContacts(customerID ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
