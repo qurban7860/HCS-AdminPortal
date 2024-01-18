@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 // @mui
-import { Card, Grid, Stack, Button, FormHelperText } from '@mui/material';
+import { Card, Grid, Stack, Button, FormHelperText, Checkbox, Typography } from '@mui/material';
 // slice
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { setAllVisibilityFalse, getMachineErpLogRecords, addMachineErpLogRecord } from '../../../redux/slices/products/machineErpLogs';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider from '../../../components/hook-form';
+  import FormProvider from '../../../components/hook-form';
 // constants
 import CodeMirror from '../../components/CodeMirror/JsonEditor';
 import Iconify from '../../../components/iconify/Iconify';
@@ -24,6 +24,18 @@ export default function MachineLogsAddForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const [ error, setError ] = useState(false);
+
+  const [selectedCheckbox, setSelectedCheckbox] = useState(null);
+
+  const handleCheckboxChange = (index) => {
+    setSelectedCheckbox(index === selectedCheckbox ? null : index);
+  };
+
+  const checkboxes = [
+    { label: 'Skip', value: 'skip' },
+    { label: 'Update', value: 'update' },
+  ];
+
   const defaultValues = useMemo(
     () => ({
       erpLog: '',
@@ -48,19 +60,27 @@ export default function MachineLogsAddForm() {
   const { erpLog } = watch();
 
   useEffect(() => {
-          setError(false);
+    if(error) setError(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ erpLog ])
 
   const toggleCancel = () => { dispatch(setAllVisibilityFalse()) };
   const onSubmit = async (data) => {
     try{
+
         const csvData = JSON.parse(data.erpLog)
-        if(Array.isArray(csvData) && csvData?.length > 1500){
+        if(Array.isArray(csvData) && csvData?.length > 5000){
           setError(true)
         }else{
           setError(false);
           try {
-            await dispatch(addMachineErpLogRecord(machine?._id, machine?.customer?._id, csvData));
+            const action = {}
+            if( selectedCheckbox === 0 ){
+              action.skip = true;
+            } else if( selectedCheckbox){
+              action.update = true;
+            }
+            await dispatch(addMachineErpLogRecord(machine?._id, machine?.customer?._id, csvData, action));
             reset();
             enqueueSnackbar(`Log's uploaded successfully!`);
             dispatch(setAllVisibilityFalse())
@@ -161,12 +181,25 @@ const HandleChangeIniJson = async (e) => { setValue('erpLog', e) }
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 <Grid >
-                  <Grid display="flex" justifyContent="flex-end" >
-                    <Button variant="contained" component="label" startIcon={<Iconify icon={ICONS.UPLOAD_FILE.icon} />} > Select Files  
-                      <input type="file" accept='.txt' multiple hidden onChange={handleFileChange} /> 
-                    </Button>
+                  <Grid item md={12} sx={{ display: 'flex', justifyContent: 'flex-end' }} >
+                      <Button variant="contained" component="label" startIcon={<Iconify icon={ICONS.UPLOAD_FILE.icon} />} > Import Files  
+                        <input type="file" accept='.txt' multiple hidden onChange={handleFileChange} /> 
+                      </Button>
                   </Grid>
-                  <CodeMirror value={erpLog} HandleChangeIniJson={HandleChangeIniJson}/>                
+                  <CodeMirror value={erpLog} HandleChangeIniJson={HandleChangeIniJson}/>     
+                  <Grid sx={{ display: 'flex', alignItems: 'center' }} >
+                      <Typography variant="subtitle2" >Action to perform on existing records?  </Typography>
+                        {checkboxes.map((checkbox, index) => (
+                          <Typography variant="subtitle2" sx={{ml: 2}} >{checkbox.label}
+                            <Checkbox
+                              key={index}
+                              checked={index === selectedCheckbox}
+                              onChange={() => handleCheckboxChange(index)}
+                              label={checkbox.label}
+                            />
+                          </Typography>
+                        ))}
+                  </Grid>           
                 </Grid>
                 { error && <FormHelperText error >Json Size should not be greater than 1500 Objects.</FormHelperText> }
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
