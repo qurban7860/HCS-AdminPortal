@@ -150,7 +150,6 @@ export function getMachinesByCountry(category, year, model, allRecords) {
 
 export function getMachinesByModel(category, year, country, allRecords) {
   return async (dispatch) => {
-    console.log("allRecords : ",allRecords)
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}dashboard/machineModel?category=${category}&year=${year}&country=${country}&allRecords=${allRecords}`);

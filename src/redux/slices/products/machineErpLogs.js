@@ -132,7 +132,7 @@ export const {
 
 // ------------------------- ADD RECORD ---------------------------------------------
 
-export function addMachineErpLogRecord( machine, customer, csvData) {
+export function addMachineErpLogRecord( machine, customer, csvData, action) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -142,9 +142,13 @@ export function addMachineErpLogRecord( machine, customer, csvData) {
         data.machine = machine
         data.customer = customer
         data.csvData = csvData
+        data.skip = action?.skip
+        data.update = action?.update
         response = await axios.post(`${CONFIG.SERVER_URL}logs/erp/multi/`,data );
       }else if(Object.keys(csvData).length !== 0){
         data = csvData
+        data.skip = action?.skip
+        data.update = action?.update
         data.machine = machine
         data.customer = customer
         response = await axios.post(`${CONFIG.SERVER_URL}logs/erp/`,data );
