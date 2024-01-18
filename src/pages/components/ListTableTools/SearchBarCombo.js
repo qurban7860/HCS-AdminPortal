@@ -53,6 +53,7 @@ function SearchBarCombo({
   handleGalleryView,
   dateFrom,
   dateTo,
+  isDateFromDateTo,
   ...other
 }) {
   
@@ -148,7 +149,7 @@ function SearchBarCombo({
           
           </Grid>}
 
-          { setDateFrom && 
+          { isDateFromDateTo && 
             <Grid item xs={12} sm={6} md={4} lg={2} xl={2}  >
                 <TextField  
                   value={dateFrom} 
@@ -165,7 +166,7 @@ function SearchBarCombo({
             </Grid>
           }
 
-          { setDateTo && 
+          { isDateFromDateTo && 
             <Grid item xs={12} sm={6} md={4} lg={2} xl={2} >
                 <TextField  
                   value={dateTo} 
@@ -511,6 +512,7 @@ SearchBarCombo.propTypes = {
   handleGalleryView: PropTypes.func,
   dateFrom: PropTypes.string,
   dateTo: PropTypes.string,
+  isDateFromDateTo: PropTypes.bool,
 };
 
 export default SearchBarCombo;

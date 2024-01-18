@@ -53,6 +53,7 @@ export default function MachineLogsListTableToolbar({
         SubOnClick={ toggleAdd }
         dateFrom={ dateFrom }
         dateTo={ dateTo }
+        isDateFromDateTo
         openGraph={ toggleGraph }
         addButton={ !isHistory && BUTTONS.ADD_MACHINE_LOGS }
         transferredMachine={ machine?.status?.slug==='transferred' }
