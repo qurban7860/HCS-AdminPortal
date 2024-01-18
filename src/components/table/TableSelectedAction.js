@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Checkbox, Typography, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -47,13 +47,13 @@ export default function TableSelectedAction({
       }}
       {...other}
     >
-      <Checkbox
+      {/* <Checkbox
         indeterminate={numSelected > 0 && numSelected < rowCount}
         checked={rowCount > 0 && numSelected === rowCount}
         onChange={(event) => onSelectAllRows(event.target.checked)}
-      />
+      /> */}
 
-      <Typography
+      {/* <Typography
         variant="subtitle1"
         sx={{
           ml: 2,
@@ -65,7 +65,7 @@ export default function TableSelectedAction({
         }}
       >
         {numSelected} selected
-      </Typography>
+      </Typography> */}
 
       {action && action}
     </Stack>

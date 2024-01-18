@@ -65,12 +65,11 @@ const TABLE_HEAD = [
   // { id: 'previousMachine', label: 'Previous Machine', align: 'left' },
   { id: 'name', visibility: 'md1',label: 'Name', align: 'left' },
   { id: 'machineModel.name', visibility: 'xs1', label: 'Model', align: 'left' },
-  { id: 'status.name', visibility: 'xs2',  label: 'Status', align: 'left' },
   { id: 'customer.name', visibility: 'md2', label: 'Customer', align: 'left' },
   // { id: 'instalationSite.name', visibility: 'md3', label: 'Installation Site', align: 'left' },
   { id: 'installationDate', visibility: 'md3', label: 'Installation Date', align: 'left' },
   { id: 'shippingDate', visibility: 'md3', label: 'Shipping Date', align: 'left' },
-
+  { id: 'status.name', visibility: 'xs2',  label: 'Status', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   // { id: 'createdAt', label: 'Created At', align: 'left' },
 ];
@@ -93,7 +92,6 @@ export default function MachineList() {
 
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
-  // const { userId, user } = useAuthContext();
   const [tableData, setTableData] = useState([]);
   const dispatch = useDispatch();
   const { machines, verified, accountManager, supportManager, filterBy, page, rowsPerPage, 
@@ -113,9 +111,12 @@ export default function MachineList() {
     dispatch(resetNotes());
     dispatch(resetMachineDocument());
     dispatch(resetMachineDocuments());
-    dispatch(getMachines());
     dispatch(getSPContacts());
   }, [dispatch]);
+  
+  useEffect(()=>{
+    dispatch(getMachines(page, rowsPerPage));
+  },[dispatch, page, rowsPerPage])
 
   const [filterVerify, setFilterVerify] = useState(verified);
   const [filterName, setFilterName] = useState(filterBy);
@@ -124,7 +125,7 @@ export default function MachineList() {
   
   useEffect(() => {
     if (initial) {
-      setTableData(machines);
+      setTableData(machines?.data || []);
     }
   }, [machines, error, responseMessage, enqueueSnackbar, initial]);
 
@@ -259,8 +260,8 @@ export default function MachineList() {
           />
 
           {!isNotFound && <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
+            count={machines.totalCount || 0}
+            page={machines.totalCount?page:0}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
@@ -307,7 +308,7 @@ export default function MachineList() {
 
               <TableBody>
                 {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
                       <MachineListTableRow
@@ -333,8 +334,8 @@ export default function MachineList() {
           </TableContainer>
 
           {!isNotFound && <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
+            count={machines.totalCount || 0}
+            page={machines.totalCount?page:0}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
@@ -363,7 +364,8 @@ function applyFilter({ inputData, comparator, filterName, filterVerify, filterSt
   
   if(filterVerify==='verified')
     inputData = inputData.filter((customer)=> customer.verifications.length>0);
-  else if(filterVerify==='unverified')
+  
+  if(filterVerify==='unverified')
     inputData = inputData.filter((customer)=> customer.verifications.length===0);
     
   if (filterName) {

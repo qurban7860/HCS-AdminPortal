@@ -1,4 +1,4 @@
-import { useState, useEffect , useRef } from 'react';
+import { useState, useEffect , useRef, useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
@@ -36,9 +36,9 @@ import { FORMLABELS } from '../../constants/default-constants';
 import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
 import { getCustomers, ChangePage, ChangeRowsPerPage, setFilterBy, setVerified,
-   createCustomerCSV,
    setCustomerTab,
-   setExcludeReporting} from '../../redux/slices/customer/customer';
+   setExcludeReporting,
+   resetCustomers} from '../../redux/slices/customer/customer';
 import { Cover } from '../components/Defaults/Cover';
 import TableCard from '../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
@@ -48,8 +48,8 @@ import { exportCSV } from '../../utils/exportCSV';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'clientCode', label: 'Customer', align: 'left' },
-  { id: 'name', label: 'Code', align: 'left' },
+  { id: 'name', label: 'Customer', align: 'left' },
+  { id: 'clientCode', label: 'Code', align: 'left' },
   { id: 'tradingName', visibility: 's1', label: 'Trading Name', align: 'left' },
   { id: 'mainSite.address.country', visibility: 'xs2', label: 'Address', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
@@ -86,15 +86,17 @@ export default function CustomerList() {
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
   };
-  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
+  const onChangePage = (event, newPage) => { 
+    dispatch(ChangePage(newPage)) 
+  }
 
   useEffect(() => {
-      dispatch(getCustomers());
+      dispatch(getCustomers(page, rowsPerPage));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+  }, [dispatch, page, rowsPerPage]);
 
   useEffect(() => {
-    setTableData(customers);
+    setTableData(customers?.data || []);
   }, [customers]);
 
   const dataFiltered = applyFilter({
@@ -163,35 +165,24 @@ export default function CustomerList() {
     dispatch(setFilterBy(''))
     setFilterName('');
     setFilterStatus([]);
-  };
+  }; 
 
+  const [exportingCSV, setExportingCSV] = useState(false);
   const onExportCSV = async () => {
-    const response = dispatch(await createCustomerCSV());
+    setExportingCSV(true);
+    const params = {
+      isArchived: false,
+      orderBy : {
+        createdAt:-1
+      }
+    };
+
+    const response = dispatch(await exportCSV('CustomerCSV','crm/customers/export', params));
     response.then((res) => {
-        enqueueSnackbar('CSV Generated Successfully');
-    }).catch((error) => {
-      console.error(error);
-      enqueueSnackbar(error.message, { variant: `error` });
+      setExportingCSV(false);
+      enqueueSnackbar(res.message, {variant:`${res.hasError?"error":""}`});
     });
   };
-  
-
-  // const [exportingCSV, setExportingCSV] = useState(false);
-  // const onExportCSV = async () => {
-  //   setExportingCSV(true);
-  //   const params = {
-  //     isArchived: false,
-  //     orderBy : {
-  //       createdAt:-1
-  //     }
-  //   };
-
-  //   const response = dispatch(await exportCSV('CustomerCSV','crm/customers/export', params));
-  //   response.then((res) => {
-  //     setExportingCSV(false);
-  //     enqueueSnackbar(res.message, {variant:`${res.hasError?"error":""}`});
-  //   });
-  // };
 
   return (
     <Container maxWidth={false}>
@@ -211,19 +202,20 @@ export default function CustomerList() {
           customerDocList
           machineDocList
           onExportCSV={onExportCSV}
+          onExportLoading={exportingCSV}
           filterExcludeRepoting={filterExcludeRepoting}
           handleExcludeRepoting={handleExcludeRepoting}
         />
 
-      {!isNotFound && <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />}
+        {!isNotFound && <TablePaginationCustom
+          count={customers?.totalCount || 0}
+          page={customers?.totalCount?page:0}
+          rowsPerPage={rowsPerPage}
+          onPageChange={onChangePage}
+          onRowsPerPageChange={onChangeRowsPerPage}
+        />}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <TableSelectedAction
+          {/* <TableSelectedAction
             numSelected={selected.length}
             rowCount={tableData.length}
             onSelectAllRows={(checked) =>
@@ -239,7 +231,7 @@ export default function CustomerList() {
                 </IconButton>
               </Tooltip>
             }
-          />
+          /> */}
 
           <Scrollbar>
             <Table size="small" sx={{ minWidth: 360 }}>
@@ -252,7 +244,7 @@ export default function CustomerList() {
 
               <TableBody>
                 {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
                       <CustomerListTableRow
@@ -277,8 +269,8 @@ export default function CustomerList() {
         </TableContainer>
 
         {!isNotFound && <TablePaginationCustom
-          count={dataFiltered.length}
-          page={page}
+          count={customers?.totalCount || 0}
+          page={customers?.totalCount? page:0}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}

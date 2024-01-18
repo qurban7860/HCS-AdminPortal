@@ -194,44 +194,7 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function createCustomerCSV() {
-  return async (dispatch) => {
-    try {
-      const response = axios.get(`${CONFIG.SERVER_URL}crm/customers/export`,
-      {
-        params: {
-          isArchived: false,
-          orderBy : {
-            createdAt:-1
-          }
-        }
-      });
-      response.then((res) => {
-        const fileName = "Customers.csv";
-        const blob = new Blob([res.data], { type: 'text/csv;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        dispatch(slice.actions.setResponseMessage('Customers CSV generated successfully'));
-      }).catch((error) => {
-        console.error(error);
-      });
-
-      // console.log()
-      
-    } catch (error) {
-      console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
-      throw error;
-    }
-  };
-}
-
-export function getCustomers() {
+export function getCustomers(page, pageSize) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -241,6 +204,11 @@ export function getCustomers() {
           isArchived: false,
           orderBy : {
             createdAt:-1
+          },
+          pagination:{
+            page,
+            pageSize  
+
           }
         }
       });
@@ -377,6 +345,7 @@ export function getActiveSPCustomers() {
 export function getCustomer(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.setCustomerTab('info'));
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${id}` ,
       {

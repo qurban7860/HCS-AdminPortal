@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Box, Card, Typography, Stack, Container } from '@mui/material';
+import { Box, Card, Typography, Stack, Container, TablePagination, Grid } from '@mui/material';
 // utils
 import { bgBlur } from '../../../utils/cssStyles';
 // components
@@ -21,6 +21,7 @@ import { Cover } from '../../components/Defaults/Cover';
 import { PATH_DOCUMENT } from '../../../routes/paths';
 import { SkeletonGallery } from '../../../components/skeleton';
 import EmptyContent from '../../../components/empty-content/EmptyContent';
+import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
 
 // ----------------------------------------------------------------------
 
@@ -41,47 +42,52 @@ export default function DocumentGallery({customerPage, machinePage}) {
   const { document, documentGallery, isLoading } = useSelector((state) => state.document);
   const [selectedImage, setSelectedImage] = useState(-1);
   const [slides, setSlides] = useState([]);
+
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(15);
+
+  const handleChangePage = ( event, newPage ) => {
+    setPage(newPage);
+  };
+
+  const handleChangePageSize = (event) => {
+    setPageSize(parseInt(event.target.value, 10));
+    setPage(0);
+  };
   
   useEffect(()=>{
     if(customerPage){
-      dispatch(getDocumentGallery(null, customer?._id, null))
+      dispatch(getDocumentGallery(null, customer?._id, null, page, pageSize))
     }
     
     if(machinePage){
-      dispatch(getDocumentGallery(null, null, machine?._id))
+      dispatch(getDocumentGallery(null, null, machine?._id, page, pageSize))
     }
     
     if(!machinePage && !customerPage){
-      dispatch(getDocumentGallery(document?._id, null, null))
+      dispatch(getDocumentGallery(document?._id, null, null, page, pageSize))
     }
     
-  },[dispatch, document, customer, machine, customerPage, machinePage])
+  },[dispatch, document, customer, machine, customerPage, machinePage, page, pageSize])
 
   useEffect(()=>{
-    setSlides(documentGallery?.map((img) => ({
+    setSlides(documentGallery?.data?.map((img) => ({
       src:`data:image/png;base64, ${img?.thumbnail}`,
+      thumbnail:`data:image/png;base64, ${img?.thumbnail}`,
       downloadFilename:`${img?.name}.${img?.extension}`,
       name:img?.name,
-      docCat:img?.docCategory?.name,
-      docType:img?.docType?.name,
-      machine:img?.machine?.serialNo,
-      customer:img?.customer?.name,
+      category:img?.docCategory?.name,
+      fileType:img?.fileType,
+      extension:img?.extension,
       isLoaded:false,
       id:img?._id,
       width: '100%',
-      height: '100%',
+      height: '100%'
     })));
     
   },[documentGallery])
 
-
-  
-
-  const handleOpenLightbox = (index) => {
-    handleViewLightbox(index);
-  };
-
-  const handleViewLightbox = async (index) => {
+  const handleOpenLightbox = async (index) => {
     setSelectedImage(index);
     const image = slides[index];
     if(!image?.isLoaded){
@@ -101,7 +107,6 @@ export default function DocumentGallery({customerPage, machinePage}) {
   
           // Update the state with the new array
           setSlides(updatedSlides);
-          setSelectedImage(index);
         }
       } catch (error) {
         console.error('Error loading full file:', error);
@@ -122,43 +127,43 @@ export default function DocumentGallery({customerPage, machinePage}) {
       }
 
       <Card sx={{p:2}}>
-        <ViewFormEditDeleteButtons
-            backLink={(customerPage || machinePage ) ? 
-              ()=>{dispatch(setDocumentGalleryVisibility(false))}
-            : () =>  navigate(PATH_DOCUMENT.document.list)}
-        />
-        <FormLabel content={`${customerPage? "Customer":`${machinePage?"Machine":"Document"}`} Gallery`} />
-        <Box
-          sx={{mt:2}}
-          gap={2}
-          display="grid"
-          gridTemplateColumns={{
-            xs: 'repeat(1, 1fr)',
-            sm: 'repeat(2, 1fr)',
-            md: 'repeat(3, 1fr)',
-            lg: 'repeat(4, 1fr)',
-            xl: 'repeat(6, 1fr)',
-          }}
-        >
-          {!isLoading ? slides?.map((slide, index) => (
-            <GalleryItem
-              key={slide?.id}
-              image={slide}
-              onOpenLightbox={() => handleOpenLightbox(index)}
+        <ViewFormEditDeleteButtons backLink={(customerPage || machinePage ) ? ()=>{dispatch(setDocumentGalleryVisibility(false))}: () =>  navigate(PATH_DOCUMENT.document.list)}/>
+        {slides?.length>0 ?(
+          <>
+            <Grid container sx={{borderTop:'solid 1px rgba(145, 158, 171, 0.24)', borderBottom:'solid 1px rgba(145, 158, 171, 0.24)'}}>
+              <Grid item md={12} lg={6} >
+                <Typography variant='h4' sx={{mt:2}}>{`${customerPage? "Customer":`${machinePage?"Machine":"Document"}`} Gallery`}</Typography>
+              </Grid>
+              <Grid item md={12} lg={6} >
+                <TablePagination component="div" labelRowsPerPage="Images / Page" sx={{border:'none'}}
+                  rowsPerPageOptions={[15,30]} showLastButton showFirstButton
+                  count={documentGallery?.totalCount} page={page} rowsPerPage={pageSize}  
+                  onPageChange={handleChangePage} onRowsPerPageChange={handleChangePageSize}
+                />
+              </Grid>
+            </Grid>
+
+            <Box sx={{mt:2}} gap={2} display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
+                md: 'repeat(5, 1fr)',
+                lg: 'repeat(6, 1fr)',
+                xl: 'repeat(8, 1fr)',
+              }}
+            >
+              {slides?.map((slide, index) => (
+                <DocumentGalleryItem isLoading={isLoading} key={slide?.id} image={slide} onOpenLightbox={() => handleOpenLightbox(index)} />
+              ))}
+            </Box>
+
+            <Lightbox index={selectedImage} slides={slides}
+              open={selectedImage >= 0} close={handleCloseLightbox}
+              onGetCurrentIndex={(index) => handleOpenLightbox(index)}
+              disabledSlideshow zoom={5} maxZoom={10}
             />
-            )):(<SkeletonGallery  />)
-          }
-
-        </Box>
-
-        <Lightbox
-          index={selectedImage}
-          slides={slides}
-          open={selectedImage >= 0}
-          close={handleCloseLightbox}
-          onGetCurrentIndex={(index) => handleViewLightbox(index)}
-          disabledSlideshow
-        />
+          </>
+        ):(<EmptyContent title="Empty" sx={{ color: '#DFDFDF'}}/>)}
       </Card>
     </Container>
   );

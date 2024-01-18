@@ -2,9 +2,9 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Grid, Link, Chip} from '@mui/material';
+import { Card, Grid, Link, Chip, Typography} from '@mui/material';
 // routes
-import { PATH_MACHINE } from '../../routes/paths';
+import { PATH_CUSTOMER, PATH_MACHINE } from '../../routes/paths';
 // slices
 import {
   getMachines,
@@ -40,6 +40,7 @@ import { fDate } from '../../utils/formatTime';
 import MachineDialog from '../components/Dialog/MachineDialog'
 import CustomerDialog from '../components/Dialog/CustomerDialog';
 import SiteDialog from '../components/Dialog/SiteDialog';
+import OpenInNewPage from '../components/Icons/OpenInNewPage';
 
 // ----------------------------------------------------------------------
 
@@ -66,7 +67,7 @@ export default function MachineViewForm() {
       dispatch(getSite(machine?.customer?._id, machine?.instalationSite?._id)); 
       dispatch(setSiteDialog(true))
   }
-  
+
   const handleBillingSiteDialog = (event) =>{
       event.preventDefault();  
       setDialogTitle('Billing Site');
@@ -202,6 +203,7 @@ export default function MachineViewForm() {
       machineweb:machine?.machineProfile?.web || '',
       machineflange:machine?.machineProfile?.flange || '',
       status: machine?.status?.name || '',
+      transferredMachine: machine?.transferredMachine?.customer || null,
       customer: machine?.customer || '',
       financialCompany: machine?.financialCompany || '',
       siteMilestone: machine?.siteMilestone || '',
@@ -226,6 +228,7 @@ export default function MachineViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [machine]
   );
+
   return (
     <>
       <Grid container direction="row" mt={isMobile && 2}>
@@ -252,9 +255,12 @@ export default function MachineViewForm() {
               <ViewFormField isLoading={isLoading} sm={4} variant='h4' heading="Customer"
                 node={
                   defaultValues.customer && (
-                    <Link onClick={(event)=> handleCustomerDialog(event, defaultValues.customer?._id)} href="#" underline="none">
+                    <>
+                    <Link onClick={(event)=> handleCustomerDialog(event, defaultValues.customer?._id)} underline="none" sx={{ cursor: 'pointer'}}>
                       {defaultValues.customer?.name}
                     </Link>
+                      <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(defaultValues.customer?._id), '_blank' ) }/>
+                    </>
                   )
                 }
               />
@@ -268,14 +274,28 @@ export default function MachineViewForm() {
             <ViewFormField isLoading={isLoading} sm={6} heading="Alias" chips={defaultValues?.alias} />
             <ViewFormField isLoading={isLoading} sm={6} variant='h4' heading="Profile" param={`${defaultValues?.machineProfile} ${(defaultValues?.machineweb && defaultValues?.machineflange)? `(${defaultValues?.machineweb} X ${defaultValues?.machineflange})` :""}`} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Supplier" param={defaultValues?.supplier} />
-            <ViewFormField isLoading={isLoading} sm={6} variant='h4' heading="Status" textColor={machine?.status?.slug==="transferred" && 'red'} param={defaultValues?.status} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Status"
+            node={
+            <Grid display="flex">
+              <Typography variant='h4' sx={{mr: 1,color: machine?.status?.slug === "transferred" && 'red'  }}>{ defaultValues?.status }</Typography>
+              { defaultValues?.transferredMachine && 
+                <Typography variant='h4' >
+                    {`to `}
+                    <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredMachine?._id)} underline="none" sx={{ cursor: 'pointer'}}>
+                      {defaultValues?.transferredMachine?.name}
+                    </Link>
+                      <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(defaultValues?.transferredMachine?._id), '_blank' ) }/>
+                  
+                </Typography> 
+              }
+            </Grid>} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Work Order / Purchase Order" param={defaultValues?.workOrderRef}/>
 
             <ViewFormField isLoading={isLoading} sm={6}
                     heading="Financing Company"
                     node={
                       defaultValues.financialCompany && (
-                        <Link onClick={(event)=> handleCustomerDialog(event, defaultValues.financialCompany?._id)} href="#" underline="none">
+                        <Link onClick={(event)=> handleCustomerDialog(event, defaultValues.financialCompany?._id)} underline="none" sx={{ cursor: 'pointer'}} >
                           {defaultValues.financialCompany?.name}
                         </Link>
                       )
@@ -287,7 +307,7 @@ export default function MachineViewForm() {
               heading="Billing Site"
               node={
                 defaultValues.billingSite && (
-                  <Link onClick={ handleBillingSiteDialog } href="#" underline="none">
+                  <Link onClick={ handleBillingSiteDialog } underline="none" sx={{ cursor: 'pointer'}} >
                     {defaultValues.billingSite?.name}
                   </Link>
                 )
@@ -303,7 +323,7 @@ export default function MachineViewForm() {
               heading="Installation Site"
               node={
                 defaultValues.instalationSite && (
-                  <Link onClick={ handleInstallationSiteDialog } href="#" underline="none">
+                  <Link onClick={ handleInstallationSiteDialog } underline="none" sx={{ cursor: 'pointer'}} >
                     {defaultValues.instalationSite?.name}
                   </Link>
                 )
@@ -317,7 +337,7 @@ export default function MachineViewForm() {
 
             <ViewFormField isLoading={isLoading}
               sm={12}
-              heading="Nearby Milestone"
+              heading="Landmark"
               param={defaultValues?.siteMilestone}
             />
             <ViewFormField isLoading={isLoading} sm={12} heading="Connected Machines" chipDialogArrayParam={linkedMachines} />

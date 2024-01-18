@@ -2,15 +2,19 @@ import PropTypes from 'prop-types';
 import { useState, memo } from 'react';
 import { m, AnimatePresence } from 'framer-motion';
 // @mui
-import { alpha } from '@mui/material/styles';
-import { IconButton, Stack, Typography } from '@mui/material';
+import { useTheme, alpha } from '@mui/material/styles';
+import { Button, ButtonGroup, Card, CardMedia, IconButton, Stack, Typography } from '@mui/material';
 // utils
 import { fData } from '../../../utils/formatNumber';
+import { bgBlur } from '../../../utils/cssStyles';
 //
 import Iconify from '../../iconify';
 import { varFade } from '../../animate';
 import FileThumbnail, { fileData } from '../../file-thumbnail';
 import ImagePreviewDialog from './ImagePreviewDialog'
+import Image from '../../image';
+import Lightbox from '../../lightbox/Lightbox';
+import AlreadyExistMenuPopover from '../AlreadyExistMenuPopover';
 
 // ----------------------------------------------------------------------
 
@@ -20,22 +24,50 @@ MultiFilePreview.propTypes = {
   onRemove: PropTypes.func,
   onPreview: PropTypes.func,
   thumbnail: PropTypes.bool,
+  machine:PropTypes.string,
+  drawingPage: PropTypes.bool,
 };
 
-function MultiFilePreview({ thumbnail, files, onRemove, sx }) {
-  const [ preview, setPreview] = useState(false)
-  const [selectedFile, setSelectedFile] = useState(null);
+function MultiFilePreview({ thumbnail, files, onRemove, sx, machine, drawingPage }) {
+  
+  const theme = useTheme();
+  const [selectedFile, setSelectedFile] = useState([]);
+  
+  const [fileFound, setFileFound] = useState(null);
+  const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
+
+  const handleExtensionsPopoverOpen = (event, file) => {
+      setVerifiedAnchorEl(event.currentTarget);
+      
+      /* eslint-disable */
+      let data = file?.found;
+      
+      /* eslint-disable */
+      data.machine = machine?._id || null;
+      
+      setFileFound(data);
+  };
+
+  const handleExtensionsPopoverClose = () => {
+    setVerifiedAnchorEl(null);
+    setFileFound(null);
+  };
 
   if (!files?.length) {
     return null;
   }
-  const previewHandle = (file) => {
-    setPreview(true);
-    setSelectedFile(file);
-  };
-  const handleClosePreview = () => { setPreview(false);setSelectedFile(null); };
-  const FORMAT_IMG_VISIBBLE = ['jpg', 'jpeg', 'gif', 'bmp', 'png', 'svg', 'webp', 'ico', 'jpe'];
 
+  const previewHandle = (file) => {
+    const img = [{
+          src:file?.preview,
+          isLoaded:true
+      }]
+
+    setSelectedFile(img);
+  };
+  
+  const FORMAT_IMG_VISIBBLE = ['jpg', 'jpeg', 'gif', 'bmp', 'png', 'svg', 'webp', 'ico', 'jpe'];
+        
   return (
     <AnimatePresence initial={false}>
       {files.map((file) => {
@@ -45,72 +77,87 @@ function MultiFilePreview({ thumbnail, files, onRemove, sx }) {
 
         if (thumbnail) {
           return (
-            <Stack
-              key={key}
-              component={m.div}
-              {...varFade().inUp}
-              alignItems="center"
-              display="inline-flex"
-              justifyContent="center"
-              sx={{
-                m: 0.5,
-                width: 100,
-                height:100,
-                borderRadius: 1.25,
-                overflow: 'hidden',
-                position: 'relative',
-                border: (theme) => `solid 1px ${theme.palette.divider}`,
-                ...sx,
-              }}
-            >
-              <FileThumbnail
-                tooltip
-                imageView
-                file={file}
-                sx={{ position: 'absolute' }}
-                imgSx={{ position: 'absolute' }}
-              />
-
-              {onRemove && (
-                <IconButton
-                  size="small"
-                  onClick={() => onRemove(file)}
-                  sx={{
-                    top: 4,
-                    right: 4,
-                    p: '1px',
-                    position: 'absolute',
-                    color: (theme) => alpha(theme.palette.common.white, 0.7),
-                    bgcolor: (theme) => alpha(theme.palette.grey[900], 0.38),
-                    '&:hover': {
-                      bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
-                    },
-                  }}
-                >
-                  <Iconify icon="eva:close-fill" width={16} />
-                </IconButton>
-              )}
-
-              {FORMAT_IMG_VISIBBLE.some(format => fileType.match(format))  && (
-                  <IconButton
-                    size="small"
-                    onClick={()=>previewHandle(file)}
-                    sx={{
-                      top: 4,
-                      right: 25,
-                      p: '1px',
-                      position: 'absolute',
-                      color: (theme) => alpha(theme.palette.common.white, 0.7),
-                      bgcolor: (theme) => alpha(theme.palette.grey[900], 0.38),
-                      '&:hover': {
-                        bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
+            <>
+            
+              <Card key={key} sx={{
+                      cursor: 'pointer',
+                      position: 'relative',
+                      display: 'flex',  // Make the card a flex container
+                      flexDirection: 'column',  // Stack children vertically
+                      alignItems: 'center',  // Center items horizontally
+                      justifyContent: 'center',  // Center items vertically
+                      '&:hover .button-group': {
+                          opacity: 1,
                       },
+                      width:'100%',
+                      height:180,
                     }}
-                  >
-                    <Iconify icon="icon-park-outline:preview-open" width={18} />
-                  </IconButton>
-              )}
-            </Stack>
+                >
+                  <CardMedia onClick={()=> FORMAT_IMG_VISIBBLE.some(format => fileType.match(format)) && previewHandle(file)}>
+                    <FileThumbnail imageView file={file} sx={{ position: 'absolute' }} imgSx={{ position: 'absolute' }}/>
+                  </CardMedia>
+                  <ButtonGroup
+                          className="button-group"
+                          variant="contained"
+                          aria-label="outlined primary button group"
+                          sx={{
+                              position: 'absolute',
+                              top:0,
+                              opacity: 0,
+                              transition: 'opacity 0.3s ease-in-out',
+                              width:'100%'
+                          }}
+                      >       
+                          {FORMAT_IMG_VISIBBLE.some(format => fileType.match(format))  && <Button sx={{width:'50%', borderRadius:0}} onClick={()=>previewHandle(file)}><Iconify icon="carbon:view" /></Button>}
+                          <Button sx={{width:FORMAT_IMG_VISIBBLE.some(format => fileType.match(format))?'50%':'100%', borderRadius:0}} color='error' onClick={() => onRemove(file)}><Iconify icon="radix-icons:cross-circled" /></Button>
+                      </ButtonGroup>
+                      
+                      <Stack
+                        padding={1}
+                        sx={{
+                        ...bgBlur({
+                            color: theme.palette.grey[900],
+                            // opacity:1
+                        }),
+                        // background:theme.palette.error,
+                        width: 1,
+                        left: 0,
+                        bottom: 0,
+                        position: 'absolute',
+                        color: 'common.white',
+                        textAlign:'center'
+                        }}
+                    >
+                        <Typography variant="body2">
+                            {name.length > 14 ? name?.substring(0, 14) : name}
+                            {name?.length > 14 ? '...' : null}
+                        
+                            {/* {file?.found && drawingPage &&
+                              <Iconify
+                                onClick={(event)=> handleExtensionsPopoverOpen(event,file)}
+                                icon="iconamoon:question-mark-circle-bold"
+                                sx={{ cursor: 'pointer', verticalAlign:'bottom', float:'right' }}
+                              />
+                            } */}
+                      </Typography>
+                      {file?.found && drawingPage &&
+                        <AlreadyExistMenuPopover
+                          key={file?.found}
+                          open={verifiedAnchorEl}
+                          onClose={handleExtensionsPopoverClose}
+                          fileFound={fileFound}
+                        />
+                      }
+                    </Stack>
+                    {file?.found && drawingPage &&
+                      <Button
+                      onClick={(event)=> handleExtensionsPopoverOpen(event,file)}
+                      variant='contained' size='small' color='error' 
+                      endIcon={<Iconify icon="solar:question-circle-outline"/>}
+                      >Already Exists</Button>
+                    }
+              </Card>
+            </>
           );
         }
 
@@ -127,7 +174,7 @@ function MultiFilePreview({ thumbnail, files, onRemove, sx }) {
               px: 1,
               py: 0.75,
               borderRadius: 0.75,
-              border: (theme) => `solid 1px ${theme.palette.divider}`,
+              border:`solid 1px ${theme.palette.divider}`,
               ...sx,
             }}
           >
@@ -151,9 +198,16 @@ function MultiFilePreview({ thumbnail, files, onRemove, sx }) {
           </Stack>
         );
       })}
-      {selectedFile && (
-      <ImagePreviewDialog file={selectedFile} preview={preview} closePreview={handleClosePreview} />
-      )}
+
+      <Lightbox
+          index={0}
+          slides={selectedFile}
+          open={selectedFile?.length>0}
+          close={() => setSelectedFile(null)}
+          disabledTotal
+          disabledDownload
+          disabledSlideshow
+        />
     </AnimatePresence>
   );
 }

@@ -1,34 +1,17 @@
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Container, Button, InputAdornment } from '@mui/material';
+import { Card, Grid, Stack, Button } from '@mui/material';
 // slice
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { setAllFlagFalse, getHistoricalConfigurationRecords, addHistoricalConfigurationRecord } from '../../../redux/slices/products/historicalConfiguration';
-// schema
-import { AddInniSchema } from '../../schemas/document';
-// routes
-import { PATH_MACHINE } from '../../../routes/paths';
-// import { useSettingsContext } from '../../../components/settings';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFTextField } from '../../../components/hook-form';
-// auth
-// import { useAuthContext } from '../../../auth/useAuthContext';
-// // asset
-// import { countries } from '../../../assets/data';
-// util
-import { Cover } from '../../components/Defaults/Cover';
-import { StyledCardContainer } from '../../../theme/styles/default-styles';
+import FormProvider from '../../../components/hook-form';
 // constants
-import { FORMLABELS } from '../../../constants/default-constants';
-import FormHeading from '../../components/DocumentForms/FormHeading';
-import CopyIcon from '../../components/Icons/CopyIcon';
-import CodeMirror from './JsonEditor';
+import CodeMirror from '../../components/CodeMirror/JsonEditor';
 import Iconify from '../../../components/iconify/Iconify';
 import { ICONS } from '../../../constants/icons/default-icons';
 
@@ -39,9 +22,7 @@ import { ICONS } from '../../../constants/icons/default-icons';
 export default function HistoricalConfigurationsAddForm() {
 
   const { machine } = useSelector((state) => state.machine);
-
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
   const defaultValues = useMemo(
@@ -128,11 +109,11 @@ export default function HistoricalConfigurationsAddForm() {
 const readFile = (selectedFile) => 
   new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = (e)=> {
           const content = e.target.result;
           resolve(content);
       };
-      reader.onerror = function(error) {
+      reader.onerror = (error)=> {
           console.log(error);
       };
       reader.readAsText(selectedFile);

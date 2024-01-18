@@ -138,6 +138,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   },[ activeMachineStatuses ])
 
   useEffect(() => {
+    dispatch(resetActiveSites());
     if (customer !== null && customer._id !== undefined) {
       dispatch(getActiveSites(customer._id));
       dispatch(getMachineConnections(customer._id));
@@ -347,7 +348,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   />
                   <RHFDatePicker inputFormat='dd/MM/yyyy' name="installationDate" label="Installation Date" />
                 </Box>
-                  <RHFTextField name="siteMilestone" label="Nearby Milestone" multiline />
+                  <RHFTextField name="siteMilestone" label="Landmark" multiline />
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect

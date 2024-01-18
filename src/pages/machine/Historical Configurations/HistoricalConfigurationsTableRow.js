@@ -1,9 +1,7 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
 // @mui
 import {
   Switch,
-  Button,
   Checkbox,
   TableRow,
   TableCell,
@@ -47,15 +45,13 @@ export default function HistoricalConfigurationsTableRow({
   onViewRow,
 }) {
 
-  const { _id, backupid, isActive, createdAt, createdBy } = row;
+  const { backupid, isActive, createdAt, createdBy } = row;
 
   return (
-    <>
       <StyledTableRow hover selected={selected}>
         <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={ onSelectRow }  />
         </TableCell>
-
         <LinkTableCell align="left" onClick={onViewRow} param={backupid} />
         <TableCell align="center">
           {' '}
@@ -64,7 +60,5 @@ export default function HistoricalConfigurationsTableRow({
         <TableCell align="left">{createdBy.name}</TableCell>
         <TableCell align="right">{fDateTime(createdAt)}</TableCell>
       </StyledTableRow>
-
-    </>
   );
 }

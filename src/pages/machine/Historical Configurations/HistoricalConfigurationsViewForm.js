@@ -2,7 +2,7 @@ import { useMemo, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
 import {  Card, Grid, Stack, Skeleton } from '@mui/material';
-import JsonEditor from './JsonEditor';
+import JsonEditor from '../../components/CodeMirror/JsonEditor';
 // redux
 import { setHistoricalConfigurationViewFormVisibility } from '../../../redux/slices/products/historicalConfiguration';
 // components
@@ -15,14 +15,6 @@ function HistoricalConfigurationsViewForm() {
   const { historicalConfiguration, isLoading } = useSelector((state) => state.historicalConfiguration);
 
   const dispatch = useDispatch();
-  const modifiedValue = {
-    "compilerOptions": {
-      "target": "es6",
-      "module": "commonjs",
-      "baseUrl": "."
-    },
-  }
-
 
   const defaultValues = useMemo(
     () => ({

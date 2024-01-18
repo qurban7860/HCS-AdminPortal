@@ -3,10 +3,7 @@ import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 // @mui
 import { createTheme } from '@mui/material/styles';
 import { green } from '@mui/material/colors';
-import {
-  Button,
-  Tooltip, 
-  IconButton,
+import { 
   Table,
   TableBody,
   TableContainer
@@ -49,6 +46,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 
 
 const TABLE_HEAD = [
+  { id: 'checkboxes', label: ' ', align: 'left' },
   { id: 'backupid', label: 'Backup Id', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdBy.name', label: 'Created By', align: 'left' },
@@ -66,7 +64,6 @@ export default function HistoricalConfigurationsList() {
     setPage,
     //
     selected,
-    setSelected,
     onSelectRow,
     onSelectAllRows,
     //
@@ -93,7 +90,9 @@ export default function HistoricalConfigurationsList() {
 
 // console.log("selected : ",selected)
   useLayoutEffect(() => {
-    dispatch(getHistoricalConfigurationRecords(machine?._id)); 
+    if(machine?._id){
+      dispatch(getHistoricalConfigurationRecords(machine?._id)); 
+    }
     dispatch(setHistoricalConfigurationViewFormVisibility(false));
   }, [dispatch, machine?._id]);
 
@@ -149,7 +148,6 @@ export default function HistoricalConfigurationsList() {
       enqueueSnackbar(e, { variant: `error` });
       console.error(e);
     }
-
   };
 
   const handleResetFilter = () => {
@@ -173,7 +171,6 @@ export default function HistoricalConfigurationsList() {
             onFilterStatus={handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
-
           />
 
           {!isNotFound && <TablePaginationCustom
@@ -186,7 +183,7 @@ export default function HistoricalConfigurationsList() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
 
-          <TableSelectedAction
+          {selected.length === 2 && <TableSelectedAction
               dense
               numSelected={selected.length}
               rowCount={tableData.length}
@@ -198,10 +195,10 @@ export default function HistoricalConfigurationsList() {
               }
               action={
                 <StyledTooltip title="Compare INI's" placement='top' disableFocusListener tooltipcolor={theme.palette.primary.main} color={theme.palette.text.primary}>
-                  <Iconify onClick={() => getCompareInis(selected[0], selected[1])} color={theme.palette.primary.dark} sx={{ width: '28px', height: '28px', cursor: 'pointer' }}  icon='mdi:file-compare' />
+                  <Iconify onClick={() => getCompareInis(selected[0], selected[1])} color={theme.palette.primary.dark} sx={{ width: '42px', height: '29px', cursor: 'pointer' }}  icon='mdi:file-compare' />
                 </StyledTooltip>
               }
-            />
+            />}
 
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>

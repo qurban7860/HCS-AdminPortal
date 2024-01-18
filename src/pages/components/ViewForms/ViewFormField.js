@@ -88,7 +88,7 @@ function ViewFormField({
             alignItems: 'center',
             whiteSpace: 'pre-line',
             wordBreak: 'break-word',
-            color:heading?.toLowerCase()==="status" && param?.toLowerCase()==="transferred" && 'red'
+            // color:heading?.toLowerCase()==="status" && param?.toLowerCase()==="transferred" && 'red'
           }}
         >
         <IconPopover isActive={isActive} />
@@ -119,9 +119,9 @@ function ViewFormField({
           '  '}
         {param && typeof param !== 'string' && param}
         {secondParam &&
-          typeof secondParam === 'string' &&
-          secondParam.trim().length > 0 &&
-          secondParam}
+        typeof secondParam === 'string' &&
+        secondParam.trim().length > 0 &&
+        secondParam}
         {node || ''}
         {objectParam || ''}
         {secondObjectParam || ''}

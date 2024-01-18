@@ -35,7 +35,7 @@ export default function MachineByCountriesViewForm() {
   const [MBYCategory, setMBYCategory] = useState(machineCategory);
 
   useLayoutEffect(() => {
-    dispatch(getMachinesByYear(machineCategory?._id, machineModel?._id, machineCountry?.code));
+    dispatch(getMachinesByYear(machineCategory?._id, machineModel?._id, machineCountry?.code, true ));
   }, [dispatch, machineCategory, machineModel, machineCountry]);
 
   useEffect(()=>{
@@ -55,7 +55,7 @@ export default function MachineByCountriesViewForm() {
     dispatch(setMachineCategory(category));
     dispatch(setMachineModel(model));
     dispatch(setMachineCountry(country));
-    dispatch(getMachinesByYear(category?._id, model?._id, country?.code));
+    dispatch(getMachinesByYear(category?._id, model?._id, country?.code, true));
   };
 
   return (
@@ -95,7 +95,9 @@ export default function MachineByCountriesViewForm() {
                       renderInput={(params) => (<TextField {...params} label="Model" size="small" />)}
                       onChange={(event, newValue) => {
                         setMBYModel(newValue);
-                        setMBYCategory(newValue?.category);
+                        if(newValue){
+                          setMBYCategory(newValue?.category);
+                        }
                         handleGraphYear(MBYCategory, newValue, MBYCountry)
                       }}
                     />

@@ -1,8 +1,8 @@
-import { useMemo, memo } from 'react';
+import { memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
-import {  Card, Grid, Box, Stack, Skeleton } from '@mui/material';
-import JsonEditor from './JsonEditorMerge';
+import {  Card, Grid, Stack, Skeleton } from '@mui/material';
+import JsonEditor from '../../components/CodeMirror/JsonEditorMerge';
 // redux
 import { setHistoricalConfigurationCompareViewFormVisibility } from '../../../redux/slices/products/historicalConfiguration';
 // components
@@ -14,20 +14,6 @@ function HistoricalConfigurationsViewForm() {
   const { historicalConfiguration, historicalConfiguration2, isLoading } = useSelector((state) => state.historicalConfiguration);
 
   const dispatch = useDispatch();
-
-  const defaultValues = useMemo(
-    () => ({
-      isActive:                             historicalConfiguration?.isActive,
-      createdAt:                            historicalConfiguration?.createdAt || '',
-      createdByFullName:                    historicalConfiguration?.createdBy?.name || '',
-      createdIP:                            historicalConfiguration?.createdIP || '',
-      updatedAt:                            historicalConfiguration?.updatedAt || '',
-      updatedByFullName:                    historicalConfiguration?.updatedBy?.name || '',
-      updatedIP:                            historicalConfiguration?.updatedIP || '',
-    }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [ historicalConfiguration]
-  );
   
   return (
     <Card sx={{ p: 2 }}>

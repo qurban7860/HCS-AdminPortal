@@ -1,0 +1,2 @@
+export const HeaderArr = ['date','operator','coilBatchName','ccThickness','coilLength','frameSet','componentLabel','webWidth','flangeHeight','profileShape','componentLength','waste','time'];
+export const unitHeaders = ['ccThickness','coilLength','webWidth','flangeHeight','componentLength','waste','time'];

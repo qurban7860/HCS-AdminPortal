@@ -135,11 +135,11 @@ export function getCount() {
   };
 }
 
-export function getMachinesByCountry(category, year, model) {
+export function getMachinesByCountry(category, year, model, allRecords) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}dashboard/machineCountries?category=${category}&year=${year}&model=${model}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}dashboard/machineCountries?category=${category}&year=${year}&model=${model}&allRecords=${allRecords}`);
       dispatch(slice.actions.getMachinesByCountrySuccess(response.data));
     } catch (error) {
       console.log(error);
@@ -148,11 +148,11 @@ export function getMachinesByCountry(category, year, model) {
   };
 }
 
-export function getMachinesByModel(category, year, country) {
+export function getMachinesByModel(category, year, country, allRecords) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}dashboard/machineModel?category=${category}&year=${year}&country=${country}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}dashboard/machineModel?category=${category}&year=${year}&country=${country}&allRecords=${allRecords}`);
       dispatch(slice.actions.getMachinesByModelSuccess(response.data));
     } catch (error) {
       console.log(error);
@@ -161,11 +161,11 @@ export function getMachinesByModel(category, year, country) {
   };
 }
 
-export function getMachinesByYear(category, model, country) {
+export function getMachinesByYear(category, model, country, allRecords ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}dashboard/machineYear?category=${category}&model=${model}&country=${country}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}dashboard/machineYear?category=${category}&model=${model}&country=${country}&allRecords=${allRecords}`);
       dispatch(slice.actions.getMachinesByYearSuccess(response.data));
     } catch (error) {
       console.log(error);

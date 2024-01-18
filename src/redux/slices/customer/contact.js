@@ -200,7 +200,6 @@ export function addContact(params) {
         department: params.department?._id || null,
         isActive: params.isActive,
         address: {}
-
       };
 
       /* eslint-enable */
@@ -219,8 +218,8 @@ export function addContact(params) {
       if(params.postcode){
         data.address.postcode = params.postcode;        
       }
-      if(params.country !== "null" && params.country !== null){
-        data.address.country = params.country;        
+      if(params?.country?.label && params?.country !== null){
+        data.address.country = params.country.label;        
       }
 
       const response =  await axios.post(`${CONFIG.SERVER_URL}crm/customers/${params.customer}/contacts`,
@@ -279,8 +278,8 @@ export function updateContact(customerId,params) {
       if(params.postcode){
         data.address.postcode = params.postcode;        
       }
-      if(params.country !== "null" && params.country !== null){
-        data.address.country = params.country;        
+      if(params?.country?.label && params.country !== null){
+        data.address.country = params?.country?.label;        
       }
 
       await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/contacts/${params.id}`,
@@ -322,43 +321,6 @@ export function getSPContacts() {
 }
 
 // ----------------------------------------------------------------------
-
-export function createCustomerContactsCSV(customerID ) {
-  return async (dispatch) => {
-    try {
-       const response = axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts/export` , 
-        {
-          params: {
-            isArchived: false,
-            orderBy : {
-              createdAt:-1
-            }
-          }
-        }
-        );
-
-        
-        response.then((res) => {
-          const fileName = "CustomerContacts.csv";
-          const blob = new Blob([res.data], { type: 'text/csv;charset=utf-8' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = fileName;
-          document.body.appendChild(a);
-          a.click();
-          window.URL.revokeObjectURL(url);
-          dispatch(slice.actions.setResponseMessage('Customer Contacts CSV generated successfully'));
-        }).catch((error) => {
-          console.error(error);
-        });
-    } catch (error) {
-      console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
-      throw error;
-    }
-  };
-}
 
 export function getContacts(customerID ) {
   return async (dispatch) => {

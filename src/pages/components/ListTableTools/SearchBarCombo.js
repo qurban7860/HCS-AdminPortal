@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
+import { DatePicker } from '@mui/x-date-pickers';
 import { Grid, TextField, InputAdornment, Button, Stack, 
   FormControl, Select, InputLabel, MenuItem, IconButton, Switch, FormControlLabel, Autocomplete } from '@mui/material';
 import { BUTTONS } from '../../../constants/default-constants';
@@ -9,6 +10,8 @@ import Iconify from '../../../components/iconify';
 import useResponsive from '../../../hooks/useResponsive';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
 import { getActiveDocumentTypesWithCategory } from '../../../redux/slices/document/documentType';
+import { fDate } from '../../../utils/formatTime';
+import { setDateFrom, setDateTo } from '../../../redux/slices/products/machineErpLogs';
 
 function SearchBarCombo({
   isFiltered,
@@ -32,6 +35,7 @@ function SearchBarCombo({
   onChange,
   onClick,
   SubOnClick,
+  openGraph,
   addButton,
   inviteOnClick,
   inviteButton,
@@ -47,13 +51,26 @@ function SearchBarCombo({
   filterExcludeRepoting,
   handleExcludeRepoting,
   handleGalleryView,
+  dateFrom,
+  dateTo,
+  isDateFromDateTo,
   ...other
 }) {
+  
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const { spContacts } = useSelector((state) => state.contact);
   const isMobile = useResponsive('sm', 'down');
   const dispatch = useDispatch()
+
+  const onChangeStartDate = (e) => {
+    dispatch(setDateFrom(e.target.value));
+  };
+
+  const onChangeEndDate = (e) => {
+    dispatch(setDateTo(e.target.value));
+  };
+
   return (
     <Grid container rowSpacing={1} columnSpacing={1} sx={{display:'flex', }}>
           <Grid item xs={12} sm={12} md={12} lg={setAccountManagerFilter && setSupportManagerFilter ? 4:6} xl={setAccountManagerFilter && setSupportManagerFilter ? 4:6}>
@@ -131,6 +148,40 @@ function SearchBarCombo({
             />  
           
           </Grid>}
+
+          { isDateFromDateTo && 
+            <Grid item xs={12} sm={6} md={4} lg={2} xl={2}  >
+                <TextField  
+                  value={dateFrom} 
+                  type="date"
+                  format={dateFrom ?? "dd/mm/yyyy"}
+                  label="Start date"
+                  sx={{width: '100%'}}
+                  onChange={onChangeStartDate} 
+                  error={ dateFrom && dateTo && dateTo < dateFrom } 
+                  helperText={ dateFrom && dateTo && dateTo < dateFrom && `Start Date should be less than End date ${fDate(dateTo)}`} 
+                  size="small" 
+                  InputLabelProps={{ shrink: true }}
+                />
+            </Grid>
+          }
+
+          { isDateFromDateTo && 
+            <Grid item xs={12} sm={6} md={4} lg={2} xl={2} >
+                <TextField  
+                  value={dateTo} 
+                  type="date"
+                  format={ dateTo ?? "dd/mm/yyyy"} 
+                  label="End date"
+                  sx={{width: '100%'}}
+                  onChange={onChangeEndDate} 
+                  error={ dateFrom && dateTo && dateFrom > dateTo } 
+                  helperText={dateFrom && dateTo && dateFrom > dateTo && `End Date should be greater than Start date ${fDate(dateFrom)}`} 
+                  size="small" 
+                  InputLabelProps={{ shrink: true }}
+                />
+            </Grid>
+          }
 
           {setSupportManagerFilter &&
           <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
@@ -359,7 +410,6 @@ function SearchBarCombo({
                   </IconButton>
                 </StyledTooltip>
               </Grid>}
-              
 
               {handleGalleryView && 
                 <Grid item>
@@ -386,6 +436,21 @@ function SearchBarCombo({
                 </Grid>
               }
 
+              {openGraph && 
+              <Grid item>
+                <StyledTooltip title="Log Graph" placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
+                    <IconButton onClick={openGraph} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
+                        '&:hover': {
+                            background:"#103996", 
+                            color:"#fff"
+                        }
+                    }}>
+                        <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon='mdi:graph-bar' />
+                    </IconButton>
+                </StyledTooltip>
+              </Grid>
+              }
+
               {addButton && !transferredMachine &&
                   <Grid item>
                     <StyledTooltip title={addButton} placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
@@ -400,6 +465,7 @@ function SearchBarCombo({
                   </StyledTooltip>
                 </Grid>
               }
+
             </Grid>
         </Grid>
     </Grid>
@@ -426,6 +492,7 @@ SearchBarCombo.propTypes = {
   onFilterListBy: PropTypes.func,
   categoryVal: PropTypes.object,
   setCategoryVal: PropTypes.func,
+  openGraph: PropTypes.func,
   typeVal: PropTypes.object,
   setTypeVal: PropTypes.func,
   employeeFilterListBy: PropTypes.string,
@@ -443,6 +510,9 @@ SearchBarCombo.propTypes = {
   filterExcludeRepoting: PropTypes.string,
   handleExcludeRepoting: PropTypes.func,
   handleGalleryView: PropTypes.func,
+  dateFrom: PropTypes.string,
+  dateTo: PropTypes.string,
+  isDateFromDateTo: PropTypes.bool,
 };
 
 export default SearchBarCombo;

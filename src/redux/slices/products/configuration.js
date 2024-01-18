@@ -121,7 +121,7 @@ export function addConfiguration(params){
         configJSON: params.configJSON,
         isActive: params.isActive,
       };
-      await axios.post(`${CONFIG.SERVER_URL}configs/metaSchemas/`,data);
+      await axios.post(`${CONFIG.SERVER_URL}configs/serviceSettings/`,data);
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -136,7 +136,7 @@ export function getConfiguration(id){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}configs/metaSchemas/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}configs/serviceSettings/${id}`);
       if(regEx.test(response.status)){
         dispatch(slice.actions.getConfigurationSuccess(response.data));
       }
@@ -154,7 +154,7 @@ export function getConfigurations(){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}configs/metaSchemas`,
+      const response = await axios.get(`${CONFIG.SERVER_URL}configs/serviceSettings`,
       {
         params: {
           isArchived: false,
@@ -177,7 +177,7 @@ export function getActiveConfigurations(){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}configs/metaSchemas`,
+      const response = await axios.get(`${CONFIG.SERVER_URL}configs/serviceSettings`,
       {
         params: {
           isActive: true,
@@ -210,7 +210,7 @@ export function updateConfiguration(params,Id) {
         isActive: params.isActive,
       };
      /* eslint-enable */
-      await axios.patch(`${CONFIG.SERVER_URL}configs/metaSchemas/${Id}`,data);
+      await axios.patch(`${CONFIG.SERVER_URL}configs/serviceSettings/${Id}`,data);
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -225,7 +225,7 @@ export function deleteConfiguration(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{
-      await axios.patch(`${CONFIG.SERVER_URL}configs/metaSchemas/${id}`, 
+      await axios.patch(`${CONFIG.SERVER_URL}configs/serviceSettings/${id}`, 
       {
           isArchived: true, 
       });

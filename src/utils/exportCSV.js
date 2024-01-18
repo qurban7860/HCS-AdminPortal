@@ -1,4 +1,5 @@
 
+import { format } from 'date-fns';
 import axios from './axios';
 import { CONFIG } from '../config-global';
 
@@ -18,8 +19,10 @@ export function exportCSV(fileName, api, params) {
         const url = URL.createObjectURL(blob);
         downloadLink.href = url;
 
+        const timestamp = format(Date.now(), 'yyyyMMddHHmmss');
+
         // Step 4: Simulate a click to trigger the download
-        downloadLink.setAttribute('download', `${fileName}.csv`);
+        downloadLink.setAttribute('download', `${fileName}_${timestamp}.csv`);
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);

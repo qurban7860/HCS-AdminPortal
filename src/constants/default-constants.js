@@ -185,7 +185,9 @@ export const BUTTONS = {
   ADDSUPPLIER: 'Add Supplier',
   ADDSTATUS: 'Add Status',
   ADDTECHPARAM: 'Add Technical Parameter',
-
+  // Service settings
+  ADDSERVICESETTING: 'Add Service Setting',
+  EDITSERVICESETTING: 'Edit Service Setting',
   // machine
   ADDTOOLINSTALLED: 'Add Tool Installed',
   ADDLICENSE: 'Add License',
@@ -218,6 +220,7 @@ export const BUTTONS = {
   ADD_MACHINE_SERVICE_CONFIG: 'Add Configuration',
   ADD_MACHINE_SERVICE_RECORD: 'Add Record',
   ADD_MACHINE_INI: 'Add INI',
+  ADD_MACHINE_LOGS: 'Add Log',
 
   // auth
   UPDATEPASSWORD: 'Update Password',

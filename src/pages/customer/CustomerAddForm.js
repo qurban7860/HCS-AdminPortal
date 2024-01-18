@@ -23,7 +23,7 @@ import {
 import { MuiChipsInput } from 'mui-chips-input'
 
 // slice
-import { addCustomer } from '../../redux/slices/customer/customer';
+import { addCustomer, setCustomerTab } from '../../redux/slices/customer/customer';
 import { getSPContacts } from '../../redux/slices/customer/contact';
 // routes
 import { PATH_CUSTOMER } from '../../routes/paths';
@@ -193,7 +193,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
         data.technicalTitle = data?.billingTitle;
         data.technicalContactEmail = data?.billingContactEmail;
       }
-
+      await dispatch(setCustomerTab('info'));
       const response = await dispatch(addCustomer(data));
       reset();
       enqueueSnackbar('Customer added successfully!');

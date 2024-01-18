@@ -8,6 +8,7 @@ const initialState = {
   intial: false,
   machineTab:'info',
   machineEditFormFlag: false,
+  machineTransferDialog: false,
   machineMoveFormVisibility: false,
   transferMachineFlag: false,
   responseMessage: null,
@@ -251,7 +252,7 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getMachines() {
+export function getMachines(page, pageSize) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -261,6 +262,11 @@ export function getMachines() {
           isArchived: false,
           orderBy : {
             createdAt:-1
+          },
+          pagination:{
+            page,
+            pageSize  
+
           }
         }
       });

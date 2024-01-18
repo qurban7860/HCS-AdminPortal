@@ -233,7 +233,7 @@ export const ICONS = {
   // configuration information
   Configuration: {
     icon: 'mdi:settings-outline',
-    heading: 'Configuration',
+    heading: 'Service Settings',
   },
   // service information
   MACHINE_SERVICE_CATEGORIES: {

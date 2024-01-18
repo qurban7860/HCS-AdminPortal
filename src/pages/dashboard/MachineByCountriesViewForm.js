@@ -39,7 +39,7 @@ export default function MachineByCountriesViewForm() {
   useLayoutEffect(() => {
     dispatch(getActiveCategories());
     dispatch(getActiveMachineModels(machineCategory?._id));
-    dispatch(getMachinesByCountry(machineCategory?._id, machineYear, machineModel?._id));
+    dispatch(getMachinesByCountry(machineCategory?._id, machineYear, machineModel?._id, true ));
   }, [dispatch, machineCategory, machineYear, machineModel]);
 
   useEffect(()=>{

@@ -1,68 +1,34 @@
-import * as Yup from 'yup';
+
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-// import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 // @mui
 import { MuiTelInput } from 'mui-tel-input';
-// import { LoadingButton } from '@mui/lab';
-import {
-  Box,
-  Card,
-  Grid,
-  Stack,
-  Typography,
-  TextField,
-  Autocomplete,
-  Button,
-} from '@mui/material';
-// global
-// import { CONFIG } from '../../../config-global';
+import { Box, Card, Grid, Stack, Typography, Button } from '@mui/material';
 // slice
-import {
-  updateSite,
-  setSiteEditFormVisibility,
-  getSite,
-  getSites,
-} from '../../../redux/slices/customer/site';
+import { updateSite, setSiteEditFormVisibility, getSite, getSites,} from '../../../redux/slices/customer/site';
 import { getActiveContacts } from '../../../redux/slices/customer/contact';
 import { getCustomer } from '../../../redux/slices/customer/customer';
-// routes
-// import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
-// import GoogleMaps from '../../../assets/GoogleMaps';
 import { useSnackbar } from '../../../components/snackbar';
 import Iconify from '../../../components/iconify';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import FormProvider, {
-  RHFSwitch,
-  RHFTextField,
-  RHFAutocomplete,
-} from '../../../components/hook-form';
-import { isNumberLatitude , isNumberLongitude } from './util/index'
+import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete } from '../../../components/hook-form';
 import { countries } from '../../../assets/data';
-
+import { SiteSchema } from '../../schemas/customer'
 // ----------------------------------------------------------------------
 
 export default function SiteEditForm() {
+  const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
   const { site } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
   const { activeContacts } = useSelector((state) => state.contact);
   const [country, setCountryVal] = useState(countries[169]);
-  const [countryCode, setCountryCode] = useState('NZ');
-  
-  const dispatch = useDispatch();
-
-  const { enqueueSnackbar } = useSnackbar();
-
   const [phone, setPhone] = useState('');
   const [fax, setFaxVal] = useState('');
-  const [billingContactVal, setBillingContactVal] = useState('');
-  const [technicalContactVal, setTechnicalContactVal] = useState('');
   
   function filtter(data, input) {
     const filteredOutput = data.filter((obj) =>
@@ -79,12 +45,6 @@ export default function SiteEditForm() {
     if (site?.phone) {
       setPhone(site.phone);
     }
-    if (site?.primaryBillingContact) {
-      setBillingContactVal(site?.primaryBillingContact);
-    }
-    if (site?.primaryTechnicalContact) {
-      setTechnicalContactVal(site?.primaryTechnicalContact);
-    }
     if (site?.address?.country) {
       const siteCountry = filtter(countries, { label: site?.address?.country || '' });
       setCountryVal(siteCountry[0]);
@@ -93,44 +53,6 @@ export default function SiteEditForm() {
     }
     setFaxVal(site.fax);
   }, [site]);
-
-  /* eslint-disable */
-  const EditSiteSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(40).required().label('Name'),
-    customer: Yup.string(),
-    billingSite: Yup.string(),
-    // phone: Yup.string().matches(phoneRegExp, {message: "Please enter valid number.", excludeEmptyString: true}).max(15, "too long"),
-    email: Yup.string().trim('The contact name cannot include leading and trailing spaces'),
-    // fax: Yup.string(),
-    website: Yup.string(),
-    lat: Yup.string().nullable()
-    .max(25, 'Latitude must be less than or equal to 90.9999999999999999999999')
-    .test('lat-validation', 'Invalid Latitude!, Latitude must be between -90 to 90 Degree only!', (value) =>{
-      if(typeof value === 'string' && value.length > 0 && !(isNumberLatitude(value))){
-        return false;
-      }
-      return true;
-    }),
-
-    long: Yup.string().nullable()
-    .max(25, 'Longitude must be less than or equal to 180.999999999999999999999')
-    .test('long-validation', 'Invalid Longitude!, Longitude must be between -180 to 180 Degree only!', (value) =>{
-      if(typeof value === 'string' && value.length > 0 && !(isNumberLongitude(value))){
-        return false;
-      }
-      return true;
-    }),
-    street: Yup.string(),
-    suburb: Yup.string(),
-    city: Yup.string(),
-    region: Yup.string(),
-    postcode: Yup.string(),
-    country: Yup.string().nullable(),
-    // primaryBillingContact: Yup.string().nullable(),
-    // primaryTechnicalContact: Yup.string().nullable(),
-    isActive: Yup.boolean(),
-  });
-  /* eslint-enable */
 
   const defaultValues = useMemo(
     () => ({
@@ -145,17 +67,17 @@ export default function SiteEditForm() {
       city: site?.address?.city || '',
       region: site?.address?.region || '',
       postcode: site?.address?.postcode || '',
-      country: site?.address?.country || '',
+      country: countries.find((contry)=> contry?.label?.toLocaleLowerCase() === site?.address?.country?.toLocaleLowerCase() ) || null ,
       isActive: site?.isActive,
-      // primaryBillingContact: site?.primaryBillingContact?._id  === null || site?.primaryBillingContact?._id  === undefined  ? null : site.primaryBillingContact?._id ,
-      // primaryTechnicalContact: site?.primaryTechnicalContact?._id === null || site?.primaryTechnicalContact?._id === undefined  ? null : site.primaryTechnicalContact._id,
+      primaryBillingContact: site?.primaryBillingContact || null,
+      primaryTechnicalContact: site?.primaryTechnicalContact || null,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [site]
   );
 
   const methods = useForm({
-    resolver: yupResolver(EditSiteSchema),
+    resolver: yupResolver(SiteSchema),
     defaultValues,
   });
 
@@ -174,46 +96,33 @@ export default function SiteEditForm() {
     }
   }, [site, reset, defaultValues]);
 
-  const toggleCancel = () => {
-    dispatch(setSiteEditFormVisibility(false));
-  };
+  const toggleCancel = () => { dispatch(setSiteEditFormVisibility(false)) };
 
   const updateCountryCode = () =>{
-    const [firstPart, ...restParts] = phone.split(' ');
-    const modifiedPhoneNumber = `${country?.phone || '+64'} ${restParts.join(' ')}`;
+    if(phone){
+      const [firstPart, ...restParts] = phone.split(' ');
+      const modifiedPhoneNumber = `${country?.phone || '+64'} ${restParts.join(' ')}`;
+      setPhone(modifiedPhoneNumber);
+    }else{
+      setPhone(country?.phone||'+64');
+    }
 
-    const [firstPartFax, ...restPartsFax] = fax.split(' ');
-    const modifiedFaxNumber = `${country?.phone || '+64'} ${restPartsFax.join(' ')}`;
-    setPhone(modifiedPhoneNumber);
-    setFaxVal(modifiedFaxNumber)
+    if(fax){
+      const [firstPartFax, ...restPartsFax] = fax.split(' ');
+      const modifiedFaxNumber = `${country?.phone || '+64'} ${restPartsFax.join(' ')}`;
+      setFaxVal(modifiedFaxNumber)
+    }else{
+      setFaxVal(country?.phone || '+64')
+    }
   }
 
   const onSubmit = async (data) => {
+    data.country = country;
     try {
-      if (phone && phone.length > 4) {
-        data.phone = phone;
-      }
-      if (fax && fax.length > 4) {
-        data.fax = fax;
-      }
-      if (country) {
-        data.country = country?.label;
-      }
-      if (billingContactVal) {
-        data.primaryBillingContact = billingContactVal?._id;
-      } else {
-        data.primaryBillingContact = null;
-      }
-      if (technicalContactVal) {
-        data.primaryTechnicalContact = technicalContactVal?._id;
-      } else {
-        data.primaryTechnicalContact = null;
-      }
-      
+      if (phone && phone.length > 4) { data.phone = phone }
+      if (fax && fax.length > 4) { data.fax = fax }
       await dispatch(updateSite(data, customer?._id, site?._id));
-      await dispatch(getSites(customer?._id));
       await dispatch(getSite(customer?._id, site?._id));
-      await dispatch(getCustomer(customer?._id));
       enqueueSnackbar('Site saved Successfully!');
       reset();
     } catch (err) {
@@ -223,17 +132,11 @@ export default function SiteEditForm() {
   };
 
   const handleTelInputChangePhone = (newValue, countryVal) => {
-    // setCountryCode(countryVal.dialCode);
-    if (newValue.trim() !== '') {
-      setPhone(newValue);
-    }
+    if (newValue.trim() !== '') { setPhone(newValue) }
   };
 
   const handleTelInputChangeFax = (newValue, countryVal) => {
-    // setCountryCode(countryVal.dialCode);
-    if (newValue.trim() !== '') {
-      setFaxVal(newValue);
-    }
+    if (newValue.trim() !== '') { setFaxVal(newValue) }
   };
 
   return (
@@ -242,50 +145,36 @@ export default function SiteEditForm() {
         <Grid item xs={12} md={12}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={2}>
+
               <RHFTextField name="name" label="Name*" />
-              <Box
-                rowGap={2}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
+              <Box rowGap={2} columnGap={2} display="grid"
+                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)'}}
               >
                 <RHFTextField name="street" label="Street" />
                 <RHFTextField name="suburb" label="Suburb" />
                 <RHFTextField name="city" label="City" />
                 <RHFTextField name="region" label="Region" />
                 <RHFTextField name="postcode" label="Post Code" />
+
                 <RHFAutocomplete
-                  id="country-select-demo"
-                  options={countries}
-                  value={country || null}
                   name="country"
                   label="Country"
-                  autoHighlight
-                  onChange={(event, newValue) => {
-                    if (newValue) {
-                      setCountryVal(newValue);
-                    } else {
-                      setCountryVal('');
-                    }
-                  }}
+                  options={countries}
+                  value={country}
                   getOptionLabel={(option) => `${option.label} (${option.code}) `}
+                  isOptionEqualToValue={(option, value) => option?.label === value?.label }
+                  onChange={(event, newValue)=> setCountryVal(newValue)}
                   renderOption={(props, option) => (
                     <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      <img
-                        loading="lazy"
-                        width="20"
+                      <img loading="lazy" width="20" alt=""
                         src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
                         srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                        alt=""
                       />
-                      {option.label} ({option.code}) {option.phone}
+                      {option?.label || ''} ({option?.code || ''}) {option?.phone || ''}
                     </Box>
                   )}
-                  renderInput={(params) => <TextField {...params} label="Choose a country" />}
-                  />
+                />
+
                 </Box>
                 
                 <Grid display="flex" justifyContent='flex-end'>
@@ -335,64 +224,31 @@ export default function SiteEditForm() {
                 Contact Details
               </Typography>
 
-              <Box
-                rowGap={2}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
+              <Box rowGap={2} columnGap={2} display="grid"
+                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
               >
-                <Autocomplete
-                  // freeSolo
-                  value={billingContactVal || null}
+                <RHFAutocomplete
+                  name="primaryBillingContact"
+                  label="Primary Billing Contact"
                   options={activeContacts}
                   isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                  getOptionLabel={(option) => `${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
-                  onChange={(event, newValue) => {
-                    if (newValue) {
-                      setBillingContactVal(newValue);
-                    } else {
-                      setBillingContactVal('');
-                    }
-                  }}
-                  renderOption={(props, option) => (
-                    <li {...props} key={option?._id}>
-                      {`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
-                    </li>
-                  )}
+                  getOptionLabel={(option) => `${option.firstName || ''} ${option.lastName || ''}`}
+                  renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.firstName || ''} ${option.lastName || ''}`}</li>)}
                   id="controllable-states-demo"
-                  renderInput={(params) => (
-                    <TextField {...params} label="Primary Billing Contact" />
-                  )}
                   ChipProps={{ size: 'small' }}
                 />
 
-                <Autocomplete
-                  // freeSolo
-                  value={technicalContactVal || null}
+                <RHFAutocomplete
+                  name="primaryTechnicalContact"
+                  label="Primary Technical Contact"
                   options={activeContacts}
                   isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                  getOptionLabel={(option) => `${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
-                  onChange={(event, newValue) => {
-                    if (newValue) {
-                      setTechnicalContactVal(newValue);
-                    } else {
-                      setTechnicalContactVal('');
-                    }
-                  }}
-                  renderOption={(props, option) => (
-                    <li {...props} key={option?._id}>
-                      {`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
-                    </li>
-                  )}
+                  getOptionLabel={(option) => `${option.firstName || ''} ${option.lastName || ''}`}
+                  renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.firstName || ''} ${option.lastName || ''}`}</li>)}
                   id="controllable-states-demo"
-                  renderInput={(params) => (
-                    <TextField {...params} label="Primary Technical Contact" />
-                  )}
                   ChipProps={{ size: 'small' }}
                 />
+
               </Box>
               <RHFSwitch name="isActive" label="Active" />
             </Stack>

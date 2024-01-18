@@ -8,6 +8,22 @@ export function fDate(date, newFormat) {
   return date ? format(new Date(date), fm) : '';
 }
 
+export function fQuarterYearDate(startDate, newFormat) {
+  const formatQuarterYear = newFormat || 'MMM yyyy';
+
+  if (startDate) {
+    const start = new Date(startDate);
+    const end = new Date(start);
+    end.setMonth(start.getMonth() + 2); // Add 2 months to get the end of the quarter
+
+    const formattedStartDate = format(start, 'MMM');
+    const formattedEndDate = format(end, 'MMM yyyy')
+    return `${formattedStartDate}-${formattedEndDate}`;
+  }
+
+  return '';
+}
+
 export function fDateTime(date, newFormat) {
   const fm = newFormat || 'dd MMM yyyy p';
 

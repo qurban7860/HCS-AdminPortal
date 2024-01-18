@@ -30,11 +30,12 @@ const initialState = {
   documentFilterBy: '',
   documentPage: 0,
   documentRowsPerPage: 100,
+  documentRowsTotal: 0,
 
   machineDrawingsFilterBy: '',
   machineDrawingsPage: 0,
   machineDrawingsRowsPerPage: 100,
-
+  
   customerDocumentsFilterBy: '',
   customerDocumentsPage: 0,
   customerDocumentsRowsPerPage: 100,
@@ -131,6 +132,7 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.documents = action.payload;
+      state.documentRowsTotal = action.payload?.totalCount;
       state.initial = true;
     },
 
@@ -194,6 +196,7 @@ const slice = createSlice({
     resetDocuments(state){
       state.documents = [];
       state.responseMessage = null;
+      state.documentRowsTotal = 0 ;
       state.success = false;
       state.isLoading = false;
     },
@@ -438,7 +441,7 @@ export function updateDocumentVersionNo(documentId , data) {
 
 // -----------------------------------Get Documents-----------------------------------
 
-export function getDocuments(customerId,machineId,drawing) {
+export function getDocuments(customerId, machineId, drawing, page, pageSize) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     const params = {
@@ -461,12 +464,19 @@ export function getDocuments(customerId,machineId,drawing) {
       params.forMachine = true;
     }
 
+    params.pagination = {
+      page,
+      pageSize  
+    }
+
     try {
+
       const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` ,
       {
         params
       }
       );
+
       dispatch(slice.actions.getDocumentsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Document loaded successfully'));
     } catch (error) {
@@ -671,6 +681,24 @@ export function getActiveDocuments() {
 
 // -------------------------------get Document---------------------------------------
 
+export function checkDocument(eTags) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/checkFileExistenceByETag`,
+      {
+        params: {eTags}
+      });
+
+      return response?.data;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
 export function getDocument(documentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -729,7 +757,7 @@ export function deleteDocument(documentId, isCheckReference) {
   };
 }
 
-export function getDocumentGallery(id, customerId, machineId) {
+export function getDocumentGallery(id, customerId, machineId, page, pageSize) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -739,7 +767,12 @@ export function getDocumentGallery(id, customerId, machineId) {
         params: {
           document:id,
           customer:customerId,
-          machine:machineId
+          machine:machineId,
+          pagination:{
+              page,
+              pageSize  
+  
+          }
         }
       });
       dispatch(slice.actions.getDocumentGallerySuccess(response.data));

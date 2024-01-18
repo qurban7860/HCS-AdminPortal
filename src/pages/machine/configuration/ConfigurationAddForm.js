@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 // @mui
-import { Card, Grid, Stack, Button, Container, Typography, Box } from '@mui/material';
+import { Card, Grid, Stack, Button, Container, Typography } from '@mui/material';
 // slice
 import { yupResolver } from '@hookform/resolvers/yup';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
@@ -19,8 +19,7 @@ import FormProvider, {  RHFSwitch, RHFTextField } from '../../../components/hook
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 // constants
-import FormHeading from '../../components/DocumentForms/FormHeading';
-import CodeMirror from '../Historical Configurations/JsonEditor';
+import CodeMirror from '../../components/CodeMirror/JsonEditor';
 import Iconify from '../../../components/iconify';
 import { ICONS } from '../../../constants/icons/default-icons';
 
@@ -32,13 +31,13 @@ export default function HistoricalConfigurationsAddForm() {
   const { enqueueSnackbar } = useSnackbar();
 
   const configurationAddSchema = Yup.object().shape({
-    collectionType: Yup.string().min(2).max(50).label('Configuration Type'),
+    // collectionType: Yup.string().min(2).max(50).label('Configuration Type'),
     isActive: Yup.boolean(),
   });
 
   const defaultValues = useMemo(
     () => ({
-      collectionType: '',
+      // collectionType: '',
       configJSON: '',
       isActive: true,
     }),
@@ -151,23 +150,20 @@ const HandleChangeIniJson = async (e) => {
     <Container maxWidth={false}>
       <StyledCardContainer>
         <Cover
-          name="New Configuration"
+          name="New Service Setting"
           url={PATH_MACHINE.machines.settings}
         />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container>
           <Grid item xs={18} md={12} >
-            <Card sx={{ p: 3 }}>
+            <Card sx={{ p: 2 }}>
               <Stack spacing={2}>
-                  <Grid container rowSpacing={1} columnSpacing={1} sx={{display:'flex', justifyContent:'space-between' }}>
-                    <Grid item xs={12} lg={6}>
-                      <RHFTextField name="collectionType" label="Collection Type" size="small" />
-                    </Grid>
-                    <Grid item xs={12} lg={2} sx={{display:'flex', justifyContent:'flex-end'}}>
-                      <Button variant="contained" component="label"  startIcon={<Iconify icon={ICONS.UPLOAD_FILE.icon} />} sx={{m:0.5}} >  Upload
-                          <input type="file" accept='.json, .ini' hidden onChange={handleFileChange} /> 
-                      </Button>
+                <Grid container rowSpacing={1} columnSpacing={1} sx={{display:'flex', justifyContent:'space-between' }}>
+                  <Grid item xs={12} lg={12} sx={{display:'flex', justifyContent:'flex-end'}}>
+                    <Button variant="contained" component="label"  startIcon={<Iconify icon={ICONS.UPLOAD_FILE.icon} />} sx={{m:0.5}} >Select File
+                        <input type="file" accept='.json, .ini' hidden onChange={handleFileChange} /> 
+                    </Button>
                   </Grid>
                   <CodeMirror value={configJSON} HandleChangeIniJson={HandleChangeIniJson}/>                
                 </Grid>

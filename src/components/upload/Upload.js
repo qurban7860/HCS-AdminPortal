@@ -52,6 +52,8 @@ Upload.propTypes = {
   thumbnail: PropTypes.bool,
   helperText: PropTypes.node,
   onRemoveAll: PropTypes.func,
+  machine:PropTypes.string,
+  drawingPage:PropTypes.bool
 };
 
 export default function Upload({
@@ -69,6 +71,8 @@ export default function Upload({
   onUpload,
   onRemove,
   onRemoveAll,
+  machine,
+  drawingPage,
   sx,
   ...other
 }) {
@@ -137,7 +141,7 @@ export default function Upload({
         variant="body2"
         sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', ml: 2, mt: 0.5 }}
       >
-        Allowed Formats:{' '}
+        Allowed Formats:
         <Iconify
           onClick={handleExtensionsPopoverOpen}
           icon="iconamoon:question-mark-circle-bold"
@@ -224,11 +228,7 @@ export default function Upload({
             top: 80,
             left: 2,
             zIndex: 9,
-            // height: "350",
             position: 'absolute',
-            // cursor: 'unset !important',
-            // color: (theme) => alpha(theme.palette.common.black, 0.8),
-            // bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
             '&:hover': {
               bgcolor: 'transparent',
             },
@@ -248,28 +248,28 @@ export default function Upload({
 
       {hasFiles && (
         <>
-          <Box sx={{ my: 3 }}>
-            <MultiFilePreview files={files} thumbnail={thumbnail} onRemove={onRemove} />
+          <Box
+            sx={{mt:2, width:'100%'}}
+            gap={2}
+            display="grid"
+            gridTemplateColumns={{
+              xs: 'repeat(1, 1fr)',
+              sm: 'repeat(3, 1fr)',
+              md: 'repeat(5, 1fr)',
+              lg: 'repeat(6, 1fr)',
+              xl: 'repeat(8, 1fr)',
+            }}
+          >
+            <MultiFilePreview machine={machine||''} drawingPage files={files} thumbnail={thumbnail} onRemove={onRemove} />
           </Box>
 
-          <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
+          <Stack direction="row" justifyContent="flex-end" spacing={1.5} sx={{mt:1}}>
             {onRemoveAll && (
-              <Button color="inherit" variant="outlined" size="small" onClick={onRemoveAll}>
+              <Button color="error" variant="outlined" size="small" onClick={onRemoveAll}>
                 Remove all
               </Button>
             )}
-            {/*
-            {onRemove && (
-              <Button color="inherit" variant="outlined" size="small" onClick={onRemove}>
-                Remove
-              </Button>
-            )}
-
-            {onUpload && (
-              <Button size="small" variant="contained" onClick={onUpload}>
-                Upload files
-              </Button>
-            )} */}
+            
           </Stack>
         </>
       )}

@@ -140,7 +140,7 @@ export default function ConfigurationList() {
   return (
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Configurations" icon="material-symbols:list-alt-outline" setting />
+          <Cover name="Service Settings" icon="material-symbols:list-alt-outline" setting />
         </StyledCardContainer>
 
         <TableCard>

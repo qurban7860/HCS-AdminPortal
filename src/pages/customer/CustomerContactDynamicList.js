@@ -1,13 +1,8 @@
-import { useState, useEffect, useLayoutEffect } from 'react';
-// import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 // @mui
-import { Stack, Grid, Link, CardActionArea, Button } from '@mui/material';
-import {
-  CardBase,
-  GridBaseViewForm,
-  StyledScrollbar,
-  StyledCardWrapper,
-} from '../../theme/styles/customer-styles';
+import { Stack, Grid, Button } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import { CardBase, GridBaseViewForm, StyledScrollbar } from '../../theme/styles/customer-styles';
 import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -22,7 +17,6 @@ import {
   setContactFormVisibility,
   getContact,
   resetContactFormsVisiblity,
-  createCustomerContactsCSV,
 } from '../../redux/slices/customer/contact';
 import ContactAddForm from './contact/ContactAddForm';
 import ContactEditForm from './contact/ContactEditForm';
@@ -37,6 +31,7 @@ import { Snacks } from '../../constants/customer-constants';
 import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
 import Iconify from '../../components/iconify';
 import ContactSiteCard from '../components/sections/ContactSiteCard';
+import { exportCSV } from '../../utils/exportCSV';
 
 // ----------------------------------------------------------------------
 
@@ -128,7 +123,7 @@ export default function CustomerContactList(currentContact = null) {
     setIsExpanded(true);
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!formVisibility && !contactEditFormVisibility && !contactMoveFormVisibility) {
       dispatch(getContacts(customer._id));
     }
@@ -139,15 +134,21 @@ export default function CustomerContactList(currentContact = null) {
   const shouldShowContactEdit = contactEditFormVisibility && !formVisibility && !contactMoveFormVisibility;
   const shouldShowContactAdd = formVisibility && !contactEditFormVisibility && !contactMoveFormVisibility;
   const shouldShowContactMove = contactMoveFormVisibility && !formVisibility && !contactEditFormVisibility;
-
-
+  
+  const [exportingCSV, setExportingCSV] = useState(false);
   const onExportCSV = async () => {
-    const response = dispatch(await createCustomerContactsCSV(customer?._id));
+    setExportingCSV(true);
+    const params = {
+      isArchived: false,
+      orderBy : {
+        createdAt:-1
+      }
+    };
+    
+    const response = dispatch(await exportCSV('CustomerContactsCSV',`crm/customers/${customer?._id}/contacts/export`, params));
     response.then((res) => {
-      enqueueSnackbar('CSV Generated Successfully');
-    }).catch((err) => {
-      console.error(err);
-      enqueueSnackbar(err.message, { variant: `error` });
+      setExportingCSV(false);
+      enqueueSnackbar(res.message, {variant:`${res.hasError?"error":""}`});
     });
   };
 
@@ -159,10 +160,9 @@ export default function CustomerContactList(currentContact = null) {
       }
   }
 
-
   return (
     <>
-      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+      <Grid container direction="row" justifyContent="space-between" alignItems="center" sx={{mb:2}}>
         <Grid item xs={12} md={6}>
           <BreadcrumbsProvider>
             <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
@@ -181,33 +181,22 @@ export default function CustomerContactList(currentContact = null) {
             />
           </BreadcrumbsProvider>
         </Grid>
-
         <Grid item xs={12} md={6} style={{display:'flex', justifyContent:"flex-end"}}>
-         
-          {isSuperAdmin && contacts.length>0 && <Button
-              sx={{
-                mb: { xs: 0, md: 2 },
-                my: { xs: 1 },
-                mr:1
-              }}
-              onClick={onExportCSV}
-              variant="contained"
-              startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />}
-            >
-              {BUTTONS.EXPORT.label}
-            </Button>
-          }
-            
-            <AddButtonAboveAccordion
+          <Stack direction='row' alignContent='flex-end' spacing={1}>
+            {isSuperAdmin && contacts.length>0 &&
+              <LoadingButton variant='contained' onClick={onExportCSV} loading={exportingCSV} startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />} >
+                  {BUTTONS.EXPORT.label}
+              </LoadingButton>
+            }
+             <AddButtonAboveAccordion
               name={BUTTONS.NEWCONTACT}
               toggleChecked={toggleChecked}
               FormVisibility={formVisibility}
               toggleCancel={toggleCancel}
               disabled={contactEditFormVisibility || contactMoveFormVisibility}
             />
+          </Stack>            
         </Grid>
-
-        
       </Grid>
       <Grid container spacing={1} direction="row" justifyContent="flex-start">
         {contacts.length === 0 && (

@@ -166,6 +166,8 @@ export function addSite(params) {
           website: params.website,
           lat: params.lat,
           long: params.long,
+          primaryBillingContact: params.primaryBillingContact?._id || null,
+          primaryTechnicalContact: params.primaryTechnicalContact?._id || null,
           isActive: params.isActive,
           address: {}
         };
@@ -187,17 +189,7 @@ export function addSite(params) {
           data.address.postcode = params.postcode;        
         }
         if(params.country ){
-          data.address.country = params.country;        
-        }
-        if(params.primaryBillingContact  !== "null" && params.primaryBillingContact !== null){
-          data.primaryBillingContact = params.primaryBillingContact;        
-        }else{
-          data.primaryBillingContact = null;
-        }
-        if(params.primaryTechnicalContact !== "null" && params.primaryTechnicalContact !== null){
-          data.primaryTechnicalContact = params.primaryTechnicalContact;        
-        }else{
-          data.primaryTechnicalContact = null;
+          data.address.country = params?.country?.label;        
         }
         
         await axios.post(`${CONFIG.SERVER_URL}crm/customers/${params.customer}/sites`, data);
@@ -229,6 +221,8 @@ export function updateSite(params,customerId,Id) {
           lat: params.lat,
           long: params.long,
           isActive: params.isActive,
+          primaryBillingContact: params.primaryBillingContact?._id || null,
+          primaryTechnicalContact: params.primaryTechnicalContact?._id || null,
           address: {}
         };
         /* eslint-enable */
@@ -248,20 +242,10 @@ export function updateSite(params,customerId,Id) {
           data.address.postcode = params.postcode;        
         }
         if(params.country){
-          data.address.country = params.country;        
+          data.address.country = params.country.label;        
         }
-        if(params.primaryBillingContact !== "null" && params.primaryBillingContact !== null ){
-          data.primaryBillingContact = params.primaryBillingContact;        
-        }else{
-          data.primaryBillingContact = null;        
-        }
-        if(params.primaryTechnicalContact !== "null" && params.primaryTechnicalContact !== null){
-          data.primaryTechnicalContact = params.primaryTechnicalContact;        
-        }else{
-          data.primaryTechnicalContact = null;        
-        }
-        await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/sites/${Id}`
-         , data);
+
+        await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/sites/${Id}`, data);
         dispatch(slice.actions.setSiteEditFormVisibility(false));
 
       } catch (error) {
