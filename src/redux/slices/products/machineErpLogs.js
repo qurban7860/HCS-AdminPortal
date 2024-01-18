@@ -17,6 +17,8 @@ const initialState = {
   machineErpLog: {},
   machineErpLogs: [],
   machineErpLogstotalCount: 0,
+  dateFrom: new Date( Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+  dateTo: new Date(Date.now()).toISOString().split('T')[0],
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
@@ -54,6 +56,14 @@ const slice = createSlice({
       state.machineErpLogListViewForm = false;
       state.machineErpLogViewForm = false;
       state.machineErpLogAddForm = false;
+    },
+    // SET ERP LOG FROM DATE
+    setDateFrom(state, action){
+      state.dateFrom = action.payload;
+    },
+    // SET ERP LOG TO DATE
+    setDateTo(state, action){
+      state.dateTo = action.payload;
     },
     // HAS ERROR
     hasError(state, action) {
@@ -121,6 +131,8 @@ export const {
   setMachineErpLogAddFormVisibility,
   setMachineErpLogViewFormVisibility,
   setMachineErpLogListViewFormVisibility,
+  setDateFrom,
+  setDateTo,
   setAllVisibilityFalse,
   resetMachineErpLogRecords,
   resetMachineErpLogRecord,
@@ -142,13 +154,13 @@ export function addMachineErpLogRecord( machine, customer, csvData, action) {
         data.machine = machine
         data.customer = customer
         data.csvData = csvData
-        data.skip = action?.skip
-        data.update = action?.update
+        data.skipExistingRecords = action?.skipExistingRecords
+        data.updateExistingRecords = action?.updateExistingRecords
         response = await axios.post(`${CONFIG.SERVER_URL}logs/erp/multi/`,data );
       }else if(Object.keys(csvData).length !== 0){
         data = csvData
-        data.skip = action?.skip
-        data.update = action?.update
+        data.skipExistingRecords = action?.skipExistingRecords
+        data.updateExistingRecords = action?.updateExistingRecords
         data.machine = machine
         data.customer = customer
         response = await axios.post(`${CONFIG.SERVER_URL}logs/erp/`,data );

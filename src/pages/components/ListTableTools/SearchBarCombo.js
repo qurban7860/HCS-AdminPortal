@@ -11,6 +11,7 @@ import useResponsive from '../../../hooks/useResponsive';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
 import { getActiveDocumentTypesWithCategory } from '../../../redux/slices/document/documentType';
 import { fDate } from '../../../utils/formatTime';
+import { setDateFrom, setDateTo } from '../../../redux/slices/products/machineErpLogs';
 
 function SearchBarCombo({
   isFiltered,
@@ -51,9 +52,7 @@ function SearchBarCombo({
   handleExcludeRepoting,
   handleGalleryView,
   dateFrom,
-  setDateFrom,
   dateTo,
-  setDateTo,
   ...other
 }) {
   
@@ -64,12 +63,13 @@ function SearchBarCombo({
   const dispatch = useDispatch()
 
   const onChangeStartDate = (e) => {
-    setDateFrom(e.target.value);
+    dispatch(setDateFrom(e.target.value));
   };
 
   const onChangeEndDate = (e) => {
-    setDateTo(e.target.value);
+    dispatch(setDateTo(e.target.value));
   };
+
   return (
     <Grid container rowSpacing={1} columnSpacing={1} sx={{display:'flex', }}>
           <Grid item xs={12} sm={12} md={12} lg={setAccountManagerFilter && setSupportManagerFilter ? 4:6} xl={setAccountManagerFilter && setSupportManagerFilter ? 4:6}>
@@ -510,9 +510,7 @@ SearchBarCombo.propTypes = {
   handleExcludeRepoting: PropTypes.func,
   handleGalleryView: PropTypes.func,
   dateFrom: PropTypes.string,
-  setDateFrom: PropTypes.func,
   dateTo: PropTypes.string,
-  setDateTo: PropTypes.func,
 };
 
 export default SearchBarCombo;

@@ -23,9 +23,7 @@ MachineLogsListTableToolbar.propTypes = {
   statusOptions: PropTypes.array,
   isHistory: PropTypes.bool,
   dateFrom: PropTypes.string,
-  setDateFrom: PropTypes.func,
   dateTo: PropTypes.string,
-  setDateTo: PropTypes.func,
 };
 
 export default function MachineLogsListTableToolbar({
@@ -38,9 +36,7 @@ export default function MachineLogsListTableToolbar({
   onFilterStatus,
   isHistory,
   dateFrom,
-  setDateFrom,
   dateTo,
-  setDateTo,
 }) {
 
   const dispatch = useDispatch();
@@ -56,9 +52,7 @@ export default function MachineLogsListTableToolbar({
         onClick={ onResetFilter }
         SubOnClick={ toggleAdd }
         dateFrom={ dateFrom }
-        setDateFrom={ setDateFrom }
         dateTo={ dateTo }
-        setDateTo={ setDateTo }
         openGraph={ toggleGraph }
         addButton={ !isHistory && BUTTONS.ADD_MACHINE_LOGS }
         transferredMachine={ machine?.status?.slug==='transferred' }
