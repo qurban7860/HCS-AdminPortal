@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { Card, Grid, Stack, Button, FormHelperText, Checkbox, Typography } from '@mui/material';
 // slice
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import { setAllVisibilityFalse, getMachineErpLogRecords, addMachineErpLogRecord } from '../../../redux/slices/products/machineErpLogs';
+import { setMachineErpLogListViewFormVisibility, getMachineErpLogRecords, addMachineErpLogRecord } from '../../../redux/slices/products/machineErpLogs';
 // components
 import { useSnackbar } from '../../../components/snackbar';
   import FormProvider from '../../../components/hook-form';
@@ -64,7 +64,7 @@ export default function MachineLogsAddForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ erpLog ])
 
-  const toggleCancel = () => { dispatch(setAllVisibilityFalse()) };
+  const toggleCancel = () => { dispatch(setMachineErpLogListViewFormVisibility(true)) };
   const onSubmit = async (data) => {
     try{
 
@@ -76,14 +76,14 @@ export default function MachineLogsAddForm() {
           try {
             const action = {}
             if( selectedCheckbox === 0 ){
-              action.skip = true;
+              action.skipExistingRecords = true;
             } else if( selectedCheckbox){
-              action.update = true;
+              action.updateExistingRecords = true;
             }
             await dispatch(addMachineErpLogRecord(machine?._id, machine?.customer?._id, csvData, action));
             reset();
             enqueueSnackbar(`Log's uploaded successfully!`);
-            dispatch(setAllVisibilityFalse())
+            dispatch(setMachineErpLogListViewFormVisibility(true))
           } catch (err) {
             enqueueSnackbar(err, { variant: `error` });
             console.error(err);
@@ -201,7 +201,7 @@ const HandleChangeIniJson = async (e) => { setValue('erpLog', e) }
                         ))}
                   </Grid>           
                 </Grid>
-                { error && <FormHelperText error >Json Size should not be greater than 1500 Objects.</FormHelperText> }
+                { error && <FormHelperText error >Json Size should not be greater than 5000 Objects.</FormHelperText> }
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>

@@ -43,7 +43,7 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function MachineLogsList(){
-  const { machineErpLogs, machineErpLogstotalCount, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineErpLogs );
+  const { machineErpLogs, machineErpLogstotalCount, dateFrom, dateTo, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineErpLogs );
   const { machine } = useSelector((state) => state.machine);
   const { enqueueSnackbar } = useSnackbar();
   const {
@@ -64,8 +64,6 @@ export default function MachineLogsList(){
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  const [ dateFrom, setDateFrom ] = useState( new Date( Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] ) ;
-  const [ dateTo, setDateTo ] = useState( new Date(Date.now()).toISOString().split('T')[0]);
 
   useLayoutEffect(() => {
     if (machine?._id) {
@@ -144,9 +142,7 @@ export default function MachineLogsList(){
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
             dateFrom={dateFrom}
-            setDateFrom={setDateFrom}
             dateTo={dateTo}
-            setDateTo={setDateTo}
           />
 
           {!isNotFound && <TablePaginationCustom

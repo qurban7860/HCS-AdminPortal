@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {  Card, Grid, Stack, Skeleton } from '@mui/material';
 import JsonEditor from '../../components/CodeMirror/JsonEditor';
 // redux
-import { setAllVisibilityFalse } from '../../../redux/slices/products/machineErpLogs';
+import { setMachineErpLogListViewFormVisibility } from '../../../redux/slices/products/machineErpLogs';
 // components
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
@@ -18,7 +18,7 @@ function MachineLogsViewForm() {
   return (
     <Card sx={{ p: 2 }}>
       <Grid>
-        <ViewFormEditDeleteButtons backLink={()=> dispatch(setAllVisibilityFalse(false))} />
+        <ViewFormEditDeleteButtons backLink={()=> dispatch(setMachineErpLogListViewFormVisibility(true))} />
         <Stack spacing={2} sx={{p:1}}>
           {isLoading ? 
           <>
