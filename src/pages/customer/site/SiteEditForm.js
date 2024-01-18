@@ -99,16 +99,25 @@ export default function SiteEditForm() {
   const toggleCancel = () => { dispatch(setSiteEditFormVisibility(false)) };
 
   const updateCountryCode = () =>{
-    const [firstPart, ...restParts] = phone.split(' ');
-    const modifiedPhoneNumber = `${country?.phone || '+64'} ${restParts.join(' ')}`;
+    if(phone){
+      const [firstPart, ...restParts] = phone.split(' ');
+      const modifiedPhoneNumber = `${country?.phone || '+64'} ${restParts.join(' ')}`;
+      setPhone(modifiedPhoneNumber);
+    }else{
+      setPhone(country?.phone||'+64');
+    }
 
-    const [firstPartFax, ...restPartsFax] = fax.split(' ');
-    const modifiedFaxNumber = `${country?.phone || '+64'} ${restPartsFax.join(' ')}`;
-    setPhone(modifiedPhoneNumber);
-    setFaxVal(modifiedFaxNumber)
+    if(fax){
+      const [firstPartFax, ...restPartsFax] = fax.split(' ');
+      const modifiedFaxNumber = `${country?.phone || '+64'} ${restPartsFax.join(' ')}`;
+      setFaxVal(modifiedFaxNumber)
+    }else{
+      setFaxVal(country?.phone || '+64')
+    }
   }
 
   const onSubmit = async (data) => {
+    data.country = country;
     try {
       if (phone && phone.length > 4) { data.phone = phone }
       if (fax && fax.length > 4) { data.fax = fax }
@@ -151,8 +160,10 @@ export default function SiteEditForm() {
                   name="country"
                   label="Country"
                   options={countries}
+                  value={country}
                   getOptionLabel={(option) => `${option.label} (${option.code}) `}
                   isOptionEqualToValue={(option, value) => option?.label === value?.label }
+                  onChange={(event, newValue)=> setCountryVal(newValue)}
                   renderOption={(props, option) => (
                     <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
                       <img loading="lazy" width="20" alt=""
