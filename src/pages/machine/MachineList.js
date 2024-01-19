@@ -112,11 +112,12 @@ export default function MachineList() {
     dispatch(resetMachineDocument());
     dispatch(resetMachineDocuments());
     dispatch(getSPContacts());
+    dispatch(getMachines());
   }, [dispatch]);
   
-  useEffect(()=>{
-    dispatch(getMachines(page, rowsPerPage));
-  },[dispatch, page, rowsPerPage])
+  // useEffect(()=>{
+  //   dispatch(getMachines(page, rowsPerPage));
+  // },[dispatch, page, rowsPerPage])
 
   const [filterVerify, setFilterVerify] = useState(verified);
   const [filterName, setFilterName] = useState(filterBy);
@@ -125,7 +126,7 @@ export default function MachineList() {
   
   useEffect(() => {
     if (initial) {
-      setTableData(machines?.data || []);
+      setTableData(machines || []);
     }
   }, [machines, error, responseMessage, enqueueSnackbar, initial]);
 
@@ -260,8 +261,8 @@ export default function MachineList() {
           />
 
           {!isNotFound && <TablePaginationCustom
-            count={machines.totalCount || 0}
-            page={machines.totalCount?page:0}
+            count={machines? machines.length : 0}
+            page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
@@ -308,7 +309,7 @@ export default function MachineList() {
 
               <TableBody>
                 {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                  // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
                       <MachineListTableRow
