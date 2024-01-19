@@ -91,12 +91,17 @@ export default function CustomerList() {
   }
 
   useEffect(() => {
-      dispatch(getCustomers(page, rowsPerPage));
+    dispatch(getCustomers());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, page, rowsPerPage]);
+  }, [dispatch]);
+
+  // useEffect(() => {
+  //     dispatch(getCustomers(page, rowsPerPage));
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [dispatch, page, rowsPerPage]);
 
   useEffect(() => {
-    setTableData(customers?.data || []);
+    setTableData(customers || []);
   }, [customers]);
 
   const dataFiltered = applyFilter({
@@ -208,8 +213,8 @@ export default function CustomerList() {
         />
 
         {!isNotFound && <TablePaginationCustom
-          count={customers?.totalCount || 0}
-          page={customers?.totalCount?page:0}
+          count={customers?customers.length : 0}
+          page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
