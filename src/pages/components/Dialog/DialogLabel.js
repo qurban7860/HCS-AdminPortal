@@ -1,31 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Typography, DialogActions, Button } from '@mui/material';
+import { Grid, DialogTitle } from '@mui/material';
+import { createTheme } from '@mui/material/styles';
+import { green } from '@mui/material/colors';
 import Iconify from '../../../components/iconify';
+import { StyledTooltip } from '../../../theme/styles/default-styles';
 
 function DialogLabel({ onClick, content }) {
+
+  const theme = createTheme({
+    palette: {
+      success: green,
+    },
+  });
+
   return (
-    <Grid
-      sx={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        bgcolor: 'primary.main',
-        color: 'primary.contrastText',
-        height: '50px',
-        p: 2,
-      }}
-    >
-      <Typography variant="h4" sx={{ px: 2 }}>
-        {content}
-      </Typography>
-      {onClick &&
-        <DialogActions>
-          <Button onClick={onClick} sx={{ mr: -5 }}>
-            <Iconify sx={{ color: 'white' }} icon="mdi:close-circle-outline" />
-          </Button>
-        </DialogActions>
-      }
+    <Grid display="flex" justifyContent="space-between">
+      <DialogTitle variant='h4' sx={{ ml: -0.5, my:-1.0 }} id="customized-dialog-title">{content}</DialogTitle>
+      <StyledTooltip
+        title="Close"
+        placement="top" 
+        disableFocusListener 
+        tooltipcolor={theme.palette.primary.main} 
+      >
+        <Iconify onClick={onClick} sx={{ width: "25px", height:"25px", cursor: "pointer", mr: 2.5, mt:2.5 }} icon="mdi:close" />
+      </StyledTooltip>
     </Grid>
   );
 }

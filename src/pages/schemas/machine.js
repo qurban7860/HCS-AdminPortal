@@ -51,6 +51,28 @@ export const machineSchema = Yup.object().shape({
   isActive: Yup.boolean(),
 });
 
+export const machineTransferSchema = Yup.object().shape({
+  financialCompany: Yup.object().shape({
+    name: Yup.string()
+  }).nullable(),
+
+  customer: Yup.object().shape({
+    name: Yup.string()
+  }).nullable(),
+
+  status: Yup.object().shape({
+    name: Yup.string()
+  }).nullable().required("Status Is Required!"),
+
+  instalationSite: Yup.object().shape({
+    name: Yup.string()
+  }).nullable(),
+
+  billingSite: Yup.object().shape({
+    name: Yup.string()
+  }).nullable(),
+});
+
 export const EditMachineSchema = Yup.object().shape({
   serialNo: Yup.string().required(Snacks.serialNoRequired).max(6),
   name: Yup.string().max(50),

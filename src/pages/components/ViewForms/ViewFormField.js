@@ -5,7 +5,6 @@ import { green } from '@mui/material/colors';
 import IconPopover from '../Icons/IconPopover';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
 import SkeletonViewFormField from '../../../components/skeleton/SkeletonViewFormField';
-import IconTooltip from '../Icons/IconTooltip';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
 import Iconify from '../../../components/iconify';
 import { ICONS } from '../../../constants/icons/default-icons';
@@ -30,6 +29,7 @@ function ViewFormField({
   deleteDisabled,
   customerVerificationCount,
   machineVerificationCount,
+  machineConnectionArrayChip,
   verified,
   chipDialogArrayParam,
   customerVerifiedBy,
@@ -189,7 +189,23 @@ function ViewFormField({
             }
             </Grid>
         )}
-
+      { machineConnectionArrayChip && Array.isArray(machineConnectionArrayChip) && machineConnectionArrayChip.length > 0 && (
+        <Grid container sx={{
+            display: 'flex',
+            alignItems: 'center',
+            whiteSpace: 'pre-line',
+            wordBreak: 'break-word',
+            mt:-1,
+            mb:1,
+            }} >
+          { machineConnectionArrayChip?.map(
+            (data, index) =>
+              data?.serialNo &&
+              typeof data?.serialNo === 'string' &&
+              data?.serialNo.trim().length > 0 && <Chip key={index} label={`${data?.serialNo || '' } ${data?.name ? '-' : '' } ${data?.name || '' }`} sx={{m:0.2}} />
+          )}
+        </Grid>
+      )}
         {toolType && typeof toolType === 'object' && toolType?.length > 0 && (
             <Grid container sx={{my:-3, mb:0,
               display: 'flex',
@@ -310,6 +326,7 @@ ViewFormField.propTypes = {
   deleteDisabled: PropTypes.bool,
   customerVerificationCount: PropTypes.number,
   machineVerificationCount: PropTypes.number,
+  machineConnectionArrayChip: PropTypes.array,
   verified: PropTypes.bool,
   machineVerifiedBy: PropTypes.array,
   customerVerifiedBy: PropTypes.array,

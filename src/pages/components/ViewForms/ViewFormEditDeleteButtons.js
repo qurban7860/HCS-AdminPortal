@@ -446,9 +446,7 @@ function ViewFormEditDeleteButtons({
           <IconTooltip
             title="Transfer Ownership"
             disabled={disableTransferButton}
-            onClick={() => {
-              handleOpenConfirm('transfer');
-            }}
+            onClick={() => { handleTransfer() }}
             color={disableTransferButton?"#c3c3c3":theme.palette.primary.main}
             icon="mdi:cog-transfer-outline"
           />
@@ -706,82 +704,6 @@ function ViewFormEditDeleteButtons({
           >
             Delete
           </LoadingButton>
-        }
-      />
-      <ConfirmDialog
-        open={transferDialogBoxVisibility}
-        // SubButton={false}
-        onClose={() => {
-          handleCloseConfirm('transfer');
-        }}
-        title='Transfer Machine'
-        content={
-          <Box rowGap={2} display="grid">
-            Are you sure you want to transfer machine ownership?
-            {activeCustomers &&
-              <>
-              <Autocomplete
-              // freeSolo
-              value={customer}
-              options={activeCustomers}
-              isOptionEqualToValue={(option, value) => option?._id === value?._id}
-              getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-              onChange={(event, newValue) => { setCustomer(newValue) }}
-              renderOption={(props, option) => (
-                <li {...props} key={option._id}>
-                  {option.name && option.name}
-                </li>
-              )}
-              id="controllable-states-demo"
-              renderInput={(params) => ( <TextField {...params} label="New Customer" />)}
-              />
-
-              <Autocomplete
-              // freeSolo
-              value={status}
-              options={activeMachineStatuses.filter((st) => st?.slug !== 'intransfer')}
-              isOptionEqualToValue={(option, value) => option?._id === value?._id}
-              getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-              onChange={(event, newValue) => { 
-                if(newValue){
-                  setStatusError('');
-                }else if(customer){
-                  setStatusError('Status is Required');  
-                }
-                setStatus(newValue) 
-              }}
-              renderOption={(props, option) => (
-                <li {...props} key={option._id}>
-                  {option.name && option.name}
-                </li>
-              )}
-              id="controllable-states-demo"
-              renderInput={(params) => ( <TextField {...params} label="Status" error={!!statusError} helperText={statusError} />)}
-              />
-            </>
-            }
-          </Box>
-        }
-        // content="Are you sure you want to transfer machine ownership?"
-        action={
-          
-          <LoadingButton
-            // color="error"
-            variant="contained"
-            loading={isLoading}
-            onClick={()=> { 
-              if(customer && !status){
-                setStatusError('Status is Required');
-              }else{
-                handleTransfer(customer?._id, status?._id)
-              }
-            }
-            }
-          >
-            Transfer
-          </LoadingButton>
-
-          
         }
       />
 
