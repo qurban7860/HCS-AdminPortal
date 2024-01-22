@@ -278,15 +278,25 @@ export default function MachineViewForm() {
             node={
             <Grid display="flex">
               <Typography variant='h4' sx={{mr: 1,color: machine?.status?.slug === "transferred" && 'red'  }}>{ defaultValues?.status }</Typography>
-              { defaultValues?.transferredMachine && 
-                <Typography variant='h4' >
-                    {`to `}
+              { (defaultValues?.transferredMachine && 
+                <Typography variant='body2' sx={{mt: 0.5}} >
+                    {` to `}
                     <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredMachine?._id)} underline="none" sx={{ cursor: 'pointer'}}>
-                      {defaultValues?.transferredMachine?.name}
+                      <b>{defaultValues?.transferredMachine?.name}</b>
+                    </Link>
+                      <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(defaultValues?.transferredMachine?._id), '_blank' ) }/>
+                  
+                </Typography> ) || 
+                ( defaultValues?.transferredFrom && 
+                  <Typography variant='body2' sx={{mt: 0.5}} >
+                    {` - Transfered from `}
+                    <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredMachine?._id)} underline="none" sx={{ cursor: 'pointer'}}>
+                      <b>{defaultValues?.transferredFrom?.name}</b>
                     </Link>
                       <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(defaultValues?.transferredMachine?._id), '_blank' ) }/>
                   
                 </Typography> 
+                )
               }
             </Grid>} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Work Order / Purchase Order" param={defaultValues?.workOrderRef}/>
@@ -340,6 +350,7 @@ export default function MachineViewForm() {
               heading="Landmark"
               param={defaultValues?.siteMilestone}
             />
+
             <ViewFormField isLoading={isLoading} sm={12} heading="Connected Machines" chipDialogArrayParam={linkedMachines} />
             <ViewFormField isLoading={isLoading} sm={12} heading="Parent Machines" chipDialogArrayParam={paranetMachines} />
             <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
