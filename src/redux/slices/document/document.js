@@ -441,7 +441,7 @@ export function updateDocumentVersionNo(documentId , data) {
 
 // -----------------------------------Get Documents-----------------------------------
 
-export function getDocuments(customerId, machineId, drawing, page, pageSize) {
+export function getDocuments(customerId, machineId, drawing, page, pageSize, cancelToken) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     const params = {
@@ -473,7 +473,8 @@ export function getDocuments(customerId, machineId, drawing, page, pageSize) {
 
       const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` ,
       {
-        params
+        params,
+        cancelToken: cancelToken?.token,
       }
       );
 

@@ -1,21 +1,19 @@
-import React, {  useState, useEffect, useLayoutEffect, useRef } from 'react';
+import React, {  useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 import PropTypes from 'prop-types';
 // @mui
 import {
-  Button,
   Table,
   TableBody,
   TableContainer,
 } from '@mui/material';
+import axios from 'axios';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
 import { PATH_DOCUMENT } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../../components/snackbar';
-// import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -50,21 +48,18 @@ import {
   setMachineDrawingsFilterBy,
   machineDrawingsChangePage,
   machineDrawingsChangeRowsPerPage,
-  deleteDocument,
   setDocumentGalleryVisibility,
 } from '../../../redux/slices/document/document';
-import { getMachineForDialog, resetMachine, setMachineDialog } from '../../../redux/slices/products/machine';
+import { getMachineForDialog,  setMachineDialog } from '../../../redux/slices/products/machine';
 import { getActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
 import { getActiveDocumentTypes } from '../../../redux/slices/document/documentType';
-import { getCustomer, resetCustomer, setCustomerDialog } from '../../../redux/slices/customer/customer';
+import { getCustomer, setCustomerDialog } from '../../../redux/slices/customer/customer';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
 import MachineDialog from '../../components/Dialog/MachineDialog';
-import { Snacks } from '../../../constants/document-constants';
-import ConfirmDialog from '../../../components/confirm-dialog';
 import CustomerDialog from '../../components/Dialog/CustomerDialog';
 
 // ----------------------------------------------------------------------
@@ -73,9 +68,12 @@ DocumentList.propTypes = {
   machinePage: PropTypes.bool,
   machineDrawings: PropTypes.bool,
 };
+
 function DocumentList({ customerPage, machinePage, machineDrawings }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const cancelTokenSource = axios.CancelToken.source();
+
   const [filterName, setFilterName] = useState('');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(100);
@@ -97,8 +95,6 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
   const {
     order,
     orderBy,
-    selected,
-    setSelected,
     onSort,
   } = useTable({
     defaultOrderBy: 'createdAt', defaultOrder: 'desc',
@@ -159,27 +155,24 @@ const onChangePage = (event, newPage) => {
     );
   }
 
-  useLayoutEffect(()=>{
-    dispatch(resetDocuments());
-  },[ dispatch ])
 
   useEffect(() => {
 
       if(machinePage || machineDrawings ){
-        dispatch(getActiveDocumentCategories());
-        dispatch(getActiveDocumentTypes());
+        dispatch(getActiveDocumentCategories(null, cancelTokenSource));
+        dispatch(getActiveDocumentTypes(cancelTokenSource));
       }
       
       if (customerPage || machinePage) {
         if (customer?._id || machine?._id) {
-          dispatch(getDocuments(customerPage ? customer?._id : null, machinePage ? machine?._id : null, null, page, rowsPerPage));
+          dispatch(getDocuments(customerPage ? customer?._id : null, machinePage ? machine?._id : null, null, page, rowsPerPage, cancelTokenSource));
         }
       } else if( machineDrawings ){
-          dispatch(getDocuments(null, null, machineDrawings, page, rowsPerPage));
+          dispatch(getDocuments(null, null, machineDrawings, page, rowsPerPage, cancelTokenSource));
       } else {
-          dispatch(getDocuments(null, null, null, page, rowsPerPage));
+          dispatch(getDocuments(null, null, null, page, rowsPerPage, cancelTokenSource));
       }
-
+      return()=>{ cancelTokenSource.cancel(); dispatch(resetDocuments()) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, customerPage, machinePage, page, rowsPerPage]);
   
@@ -311,8 +304,6 @@ const onChangePage = (event, newPage) => {
     dispatch(setMachineDialog(true))
   }
 
-  const { enqueueSnackbar } = useSnackbar();
-  
   const handleGalleryView = () => {
     dispatch(setDocumentGalleryVisibility(true));
   };

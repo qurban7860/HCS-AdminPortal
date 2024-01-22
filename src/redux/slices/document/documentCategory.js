@@ -230,7 +230,7 @@ export function getDocumentCategory(Id) {
 
 // -----------------------------------Get Active Document Categories-----------------------------------
 
-export function getActiveDocumentCategories(categoryBy) {
+export function getActiveDocumentCategories(categoryBy, cancelToken) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -238,7 +238,8 @@ export function getActiveDocumentCategories(categoryBy) {
         params: {
           isArchived: false,
           isActive: true,
-        }
+        },
+        cancelToken: cancelToken?.token,
       }
       Object.assign(query.params, categoryBy)
       const response = await axios.get(`${CONFIG.SERVER_URL}documents/categories/` , query );

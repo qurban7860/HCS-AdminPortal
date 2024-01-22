@@ -252,7 +252,7 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getMachines(page, pageSize) {
+export function getMachines(page, pageSize, cancelToken ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -266,10 +266,10 @@ export function getMachines(page, pageSize) {
           pagination:{
             page,
             pageSize  
-
           }
-        }
-      });
+        },
+        cancelToken: cancelToken?.token
+      } );
       dispatch(slice.actions.getMachinesSuccess(response.data));
       // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
     } catch (error) {

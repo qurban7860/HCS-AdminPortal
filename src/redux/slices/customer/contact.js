@@ -297,7 +297,7 @@ export function updateContact(customerId,params) {
 
 // ----------------------------------------------------------------------
 
-export function getSPContacts() {
+export function getSPContacts( cancelToken ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -306,7 +306,8 @@ export function getSPContacts() {
         params: {
           isArchived: false,
           isActive: true
-        }
+        },
+        cancelToken: cancelToken?.token,
       }
       );
       dispatch(slice.actions.getSPContactsSuccess(response.data));

@@ -1,6 +1,7 @@
 import { useLayoutEffect, useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import debounce from 'lodash/debounce';
 // form
 // @mui
@@ -94,6 +95,9 @@ export default function MachineList() {
 
   const [tableData, setTableData] = useState([]);
   const dispatch = useDispatch();
+  
+  const cancelTokenSource = axios.CancelToken.source();
+
   const { machines, verified, accountManager, supportManager, filterBy, page, rowsPerPage, 
           isLoading, error, initial, responseMessage } = useSelector( (state) => state.machine );
   const navigate = useNavigate();
@@ -111,11 +115,14 @@ export default function MachineList() {
     dispatch(resetNotes());
     dispatch(resetMachineDocument());
     dispatch(resetMachineDocuments());
-    dispatch(getSPContacts());
+    dispatch(getSPContacts(cancelTokenSource));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
   
   useEffect(()=>{
-    dispatch(getMachines(page, rowsPerPage));
+    dispatch(getMachines(page, rowsPerPage, cancelTokenSource));
+    return()=>{ cancelTokenSource.cancel(); }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[dispatch, page, rowsPerPage])
 
   const [filterVerify, setFilterVerify] = useState(verified);
