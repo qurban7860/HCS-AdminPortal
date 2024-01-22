@@ -291,10 +291,10 @@ export default function MachineViewForm() {
                 ( defaultValues?.transferredFrom && 
                   <Typography variant='body2' sx={{mt: 0.5}} >
                     {` - Transfered from `}
-                    <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredMachine?._id)} underline="none" sx={{ cursor: 'pointer'}}>
+                    <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredFrom?._id)} underline="none" sx={{ cursor: 'pointer'}}>
                       <b>{defaultValues?.transferredFrom?.name}</b>
                     </Link>
-                      <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(defaultValues?.transferredMachine?._id), '_blank' ) }/>
+                      <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(defaultValues?.transferredFrom?._id), '_blank' ) }/>
                   
                 </Typography> 
                 )
