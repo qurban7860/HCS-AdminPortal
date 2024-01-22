@@ -15,7 +15,8 @@ import {
   setMachineVerification,
   setMachineDialog,
   getMachineForDialog,
-  setTransferDialogBoxVisibility
+  setTransferDialogBoxVisibility,
+  setMachineTransferDialog
 } from '../../redux/slices/products/machine';
 import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
 import { getSite, resetSite, setSiteDialog } from '../../redux/slices/customer/site';
@@ -38,6 +39,7 @@ import { Snacks } from '../../constants/machine-constants';
 import { fDate } from '../../utils/formatTime';
 // dialog
 import MachineDialog from '../components/Dialog/MachineDialog'
+import MachineTransferDialog from '../components/Dialog/MachineTransferDialog'
 import CustomerDialog from '../components/Dialog/CustomerDialog';
 import SiteDialog from '../components/Dialog/SiteDialog';
 import OpenInNewPage from '../components/Icons/OpenInNewPage';
@@ -49,7 +51,7 @@ export default function MachineViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { machine, machineDialog, isLoading } = useSelector((state) => state.machine);
+  const { machine, machineDialog, machineTransferDialog, isLoading } = useSelector((state) => state.machine);
   const { customerDialog } = useSelector((state) => state.customer);
   const { siteDialog } = useSelector((state) => state.site);
   const [disableTransferButton, setDisableTransferButton] = useState(true);
@@ -128,23 +130,23 @@ export default function MachineViewForm() {
     dispatch(setMachineEditFormVisibility(true));
   };
 
-  const handleTransfer = async (customerId, statusId) => {
-    try {
-      const response = await dispatch(transferMachine(machine, customerId, statusId));
-      const machineId = response.data.Machine._id;
-      navigate(PATH_MACHINE.machines.view(machineId));
-      enqueueSnackbar(Snacks.machineTransferSuccess);
-    } catch (error) {
-      if (error?.Message) {
-        enqueueSnackbar(error?.Message, { variant: `error` });
-      } else if (error?.message) {
-        enqueueSnackbar(error?.message, { variant: `error` });
-      } else {
-        enqueueSnackbar(Snacks.machineFailedTransfer, { variant: `error` });
-      }
-      console.error(error);
-    }
-  };
+  // const handleTransfer = async (customerId, statusId) => {
+  //   try {
+  //     const response = await dispatch(transferMachine(machine, customerId, statusId));
+  //     const machineId = response.data.Machine._id;
+  //     navigate(PATH_MACHINE.machines.view(machineId));
+  //     enqueueSnackbar(Snacks.machineTransferSuccess);
+  //   } catch (error) {
+  //     if (error?.Message) {
+  //       enqueueSnackbar(error?.Message, { variant: `error` });
+  //     } else if (error?.message) {
+  //       enqueueSnackbar(error?.message, { variant: `error` });
+  //     } else {
+  //       enqueueSnackbar(Snacks.machineFailedTransfer, { variant: `error` });
+  //     }
+  //     console.error(error);
+  //   }
+  // };
 
   const onDelete = async () => {
     try {
@@ -180,11 +182,11 @@ export default function MachineViewForm() {
   };
   
   const linkedMachines = machine?.machineConnections?.map((machineConnection, index) => (
-    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(machineConnection.connectedMachine._id)} label={`${machineConnection?.connectedMachine?.serialNo || ''} ${machineConnection?.connectedMachine?.name ? '-' : '' } ${machineConnection?.connectedMachine?.name || ''} `} />
+    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(machineConnection?.connectedMachine?._id || '' )} label={`${machineConnection?.connectedMachine?.serialNo || ''} ${machineConnection?.connectedMachine?.name ? '-' : '' } ${machineConnection?.connectedMachine?.name || ''} `} />
   ));
   
   const paranetMachines = machine?.parentMachines?.map((parentMachine, index) => (
-    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(parentMachine.machine._id)} label={`${parentMachine?.machine?.serialNo || ''} ${parentMachine?.machine?.name ? '-' : '' } ${parentMachine?.machine?.name || ''} `} />
+    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(parentMachine?.machine?._id || '' )} label={`${parentMachine?.machine?.serialNo || ''} ${parentMachine?.machine?.name ? '-' : '' } ${parentMachine?.machine?.name || ''} `} />
   ));
 
   const defaultValues = useMemo(
@@ -198,6 +200,7 @@ export default function MachineViewForm() {
       supplier: machine?.supplier?.name || '',
       workOrderRef: machine?.workOrderRef || '',
       machineModel: machine?.machineModel?.name || '',
+      manufactureDate: machine?.manufactureDate || '',
       machineConnections: machine?.machineModel?.category?.connections || false,
       machineProfile: machine?.machineProfile?.defaultName || '',
       machineweb:machine?.machineProfile?.web || '',
@@ -243,7 +246,7 @@ export default function MachineViewForm() {
               disableDeleteButton={disableDeleteButton}
               handleEdit={handleEdit}
               onDelete={onDelete}
-              handleTransfer={handleTransfer}
+              handleTransfer={()=> dispatch(setMachineTransferDialog(true))}
               backLink={() => navigate(PATH_MACHINE.machines.list)}
               machineSupportDate={defaultValues?.supportExpireDate}
             />
@@ -252,6 +255,7 @@ export default function MachineViewForm() {
             <Grid container>
               <ViewFormField isLoading={isLoading} sm={4} variant='h4' heading="Serial No" param={defaultValues?.serialNo} />
               <ViewFormField isLoading={isLoading} sm={4} variant='h4' heading="Machine Model" param={defaultValues?.machineModel} />
+              <ViewFormField isLoading={isLoading} sm={6} heading="Manufacture Date" param={fDate(defaultValues?.manufactureDate)} />
               <ViewFormField isLoading={isLoading} sm={4} variant='h4' heading="Customer"
                 node={
                   defaultValues.customer && (
@@ -315,11 +319,6 @@ export default function MachineViewForm() {
             />
             <ViewFormField isLoading={isLoading}
               sm={6}
-              heading="Shipping Date"
-              param={fDate(defaultValues?.shippingDate)}
-            />
-            <ViewFormField isLoading={isLoading}
-              sm={6}
               heading="Installation Site"
               node={
                 defaultValues.instalationSite && (
@@ -329,17 +328,25 @@ export default function MachineViewForm() {
                 )
               }
             />
+
+            <ViewFormField isLoading={isLoading}
+              sm={12}
+              heading="Landmark for Installation site"
+              param={defaultValues?.siteMilestone}
+            />
+
+            <ViewFormField isLoading={isLoading}
+              sm={6}
+              heading="Shipping Date"
+              param={fDate(defaultValues?.shippingDate)}
+            />
+
             <ViewFormField isLoading={isLoading}
               sm={6}
               heading="Installation Date"
               param={fDate(defaultValues?.installationDate)}
             />
 
-            <ViewFormField isLoading={isLoading}
-              sm={12}
-              heading="Landmark"
-              param={defaultValues?.siteMilestone}
-            />
             <ViewFormField isLoading={isLoading} sm={12} heading="Connected Machines" chipDialogArrayParam={linkedMachines} />
             <ViewFormField isLoading={isLoading} sm={12} heading="Parent Machines" chipDialogArrayParam={paranetMachines} />
             <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
@@ -392,6 +399,7 @@ export default function MachineViewForm() {
       {/* connected machine dialog */}      
       {siteDialog && <SiteDialog title={siteDialogTitle}/>}
       {machineDialog  && <MachineDialog />}
+      {machineTransferDialog && <MachineTransferDialog />}
       {customerDialog  && <CustomerDialog />}
       
     </>

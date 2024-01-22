@@ -62,6 +62,7 @@ export default function MachineEditForm() {
       supplier: machine.supplier || null,
       category: machine?.machineModel?.category || null,
       machineModel: machine?.machineModel || null,
+      manufactureDate: machine?.manufactureDate || null,
       customer: machine.customer || null,
       financialCompany: machine?.financialCompany || null,
       machineConnectionVal: machine?.machineConnections?.map((connection)=> connection?.connectedMachine) || [],
@@ -220,6 +221,7 @@ export default function MachineEditForm() {
                       getOptionLabel={(option) => `${option.name || ''}`}
                       renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || ''}`}</li> )}
                     />
+
                     <RHFAutocomplete 
                       name="machineModel"
                       label="Machine Model"
@@ -239,6 +241,9 @@ export default function MachineEditForm() {
                           }
                         }}
                     />
+
+                  <RHFDatePicker inputFormat='dd/MM/yyyy' name="manufactureDate" label="Manufacture Date" />
+
                   <RHFAutocomplete
                     name="status"
                     label="Status" 
@@ -250,6 +255,7 @@ export default function MachineEditForm() {
                     id="controllable-states-demo"
                     ChipProps={{ size: 'small' }}
                   />
+
                   <RHFAutocomplete
                     name="supplier"
                     label="Supplier"
@@ -260,6 +266,40 @@ export default function MachineEditForm() {
                     renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || ''}`}</li> )}
                     ChipProps={{ size: 'small' }}
                   />
+
+                  <RHFTextField name="workOrderRef" label="Work Order/ Purchase Order" />
+
+                  <RHFAutocomplete
+                    name="customer"
+                    label="Customer*" 
+                    id="controllable-states-demo"
+                    options={activeCustomers}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option.name || ''}`}
+                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || ''}`}</li> )}
+                    onChange={(event, newValue) => {
+                      if (newValue) {
+                        setValue('customer',newValue);
+                        if(customer?._id !== newValue._id) {
+                        setValue('machineConnectionVal', []);
+                        setValue('instalationSite', null);
+                        setValue('billingSite', null);
+                        setValue('accountManager', spContacts.filter(item => Array.isArray(newValue?.accountManager) && newValue?.accountManager.includes(item?._id)))
+                        setValue('projectManager', spContacts.filter(item => Array.isArray(newValue?.projectManager) && newValue?.projectManager.includes(item?._id)))
+                        setValue('supportManager', spContacts.filter(item => Array.isArray(newValue?.supportManager) && newValue?.supportManager.includes(item?._id)))
+                        }
+                      } else {
+                        setValue('customer',null);
+                        dispatch(resetMachineConnections());
+                        setValue('machineConnectionVal', []);
+                        setValue('instalationSite', null);
+                        setValue('billingSite', null);
+                        dispatch(resetActiveSites());
+                      }
+                    }}
+                    ChipProps={{ size: 'small' }}
+                  />
+
                   <RHFAutocomplete
                     value={financialCompany}
                     name="financialCompany"
@@ -269,41 +309,7 @@ export default function MachineEditForm() {
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || '' }`}</li> )}
                   />
-                  <RHFTextField name="workOrderRef" label="Work Order/ Purchase Order" />
-                </Box>
-                      <RHFAutocomplete
-                        name="customer"
-                        label="Customer*" 
-                        id="controllable-states-demo"
-                        options={activeCustomers}
-                        isOptionEqualToValue={(option, value) => option._id === value._id}
-                        getOptionLabel={(option) => `${option.name || ''}`}
-                        renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || ''}`}</li> )}
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            setValue('customer',newValue);
-                            if(customer?._id !== newValue._id) {
-                            setValue('machineConnectionVal', []);
-                            setValue('instalationSite', null);
-                            setValue('billingSite', null);
-                            setValue('accountManager', spContacts.filter(item => Array.isArray(newValue?.accountManager) && newValue?.accountManager.includes(item?._id)))
-                            setValue('projectManager', spContacts.filter(item => Array.isArray(newValue?.projectManager) && newValue?.projectManager.includes(item?._id)))
-                            setValue('supportManager', spContacts.filter(item => Array.isArray(newValue?.supportManager) && newValue?.supportManager.includes(item?._id)))
-                            }
-                          } else {
-                            setValue('customer',null);
-                            dispatch(resetMachineConnections());
-                            setValue('machineConnectionVal', []);
-                            setValue('instalationSite', null);
-                            setValue('billingSite', null);
-                            dispatch(resetActiveSites());
-                          }
-                        }}
-                        ChipProps={{ size: 'small' }}
-                      />
-                <Box rowGap={3} columnGap={2} display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
-                >
+
                   <RHFAutocomplete
                     name="billingSite"
                     label="Billing Site" 
@@ -314,7 +320,7 @@ export default function MachineEditForm() {
                     id="controllable-states-demo"
                     ChipProps={{ size: 'small' }}
                   />
-                  <RHFDatePicker inputFormat='dd/MM/yyyy'  name="shippingDate" label="Shipping Date" />
+
                   <RHFAutocomplete
                     name="instalationSite"
                     label="Installation Site" 
@@ -325,9 +331,19 @@ export default function MachineEditForm() {
                     id="controllable-states-demo"
                     ChipProps={{ size: 'small' }}
                   />
-                  <RHFDatePicker inputFormat='dd/MM/yyyy'  name="installationDate" label="Installation Date" />
                 </Box>
-                  <RHFTextField name="siteMilestone" label="Landmark" multiline />
+
+                  <RHFTextField name="siteMilestone" label="Landmark for Installation site" multiline />
+
+                <Box rowGap={2} columnGap={2} display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
+
+                  <RHFDatePicker inputFormat='dd/MM/yyyy'  name="shippingDate" label="Shipping Date" />
+
+                  <RHFDatePicker inputFormat='dd/MM/yyyy'  name="installationDate" label="Installation Date" />
+
+                </Box>
+                  <RHFTextField name="siteMilestone" label="Landmark for Installation site" multiline />
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect
