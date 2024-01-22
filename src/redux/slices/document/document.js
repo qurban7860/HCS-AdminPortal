@@ -483,7 +483,7 @@ export function getDocuments(customerId, machineId, drawing, page, pageSize, can
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
-      throw error;
+      // throw error;
     }
   };
 }
@@ -513,7 +513,7 @@ export function getActiveDocumentsByType(documentCategoryId,documentTypeId) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
-      throw error;
+      // throw error;
     }
   };
 }

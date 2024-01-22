@@ -316,7 +316,7 @@ export function getSPContacts( cancelToken ) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
-      throw error;
+      // throw error;
     }
   };
 }

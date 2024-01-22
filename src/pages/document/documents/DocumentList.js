@@ -72,7 +72,8 @@ DocumentList.propTypes = {
 function DocumentList({ customerPage, machinePage, machineDrawings }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const cancelTokenSource = axios.CancelToken.source();
+  const axiosToken = () => axios.CancelToken.source();
+  const cancelTokenSource = axiosToken();
 
   const [filterName, setFilterName] = useState('');
   const [page, setPage] = useState(0);

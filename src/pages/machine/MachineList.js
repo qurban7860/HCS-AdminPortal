@@ -95,8 +95,10 @@ export default function MachineList() {
 
   const [tableData, setTableData] = useState([]);
   const dispatch = useDispatch();
-  
-  const cancelTokenSource = axios.CancelToken.source();
+  const axiosToken = () => axios.CancelToken.source();
+  const cancelTokenSource = axiosToken();
+
+console.log("cancelTokenSource token : ",cancelTokenSource?.token);
 
   const { machines, verified, accountManager, supportManager, filterBy, page, rowsPerPage, 
           isLoading, error, initial, responseMessage } = useSelector( (state) => state.machine );
@@ -120,7 +122,8 @@ export default function MachineList() {
   }, [dispatch]);
   
   useEffect(()=>{
-    dispatch(getMachines(page, rowsPerPage, cancelTokenSource ));
+    dispatch(getMachines(null, null, cancelTokenSource ));
+    return ()=>{ cancelTokenSource.cancel() };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[dispatch, page, rowsPerPage])
 
@@ -134,6 +137,7 @@ export default function MachineList() {
       setTableData(machines || []);
     }
   }, [machines, error, responseMessage, enqueueSnackbar, initial]);
+
 
   const dataFiltered = applyFilter({
     inputData: tableData,
