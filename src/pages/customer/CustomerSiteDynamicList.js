@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 // @mui
 import { Stack, Card, CardMedia, Grid, CardActionArea, Link, Button } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import {
   CardBase,
   GridBaseViewForm,
@@ -32,6 +33,7 @@ import { Snacks } from '../../constants/customer-constants';
 import { BUTTONS, BREADCRUMBS, TITLES } from '../../constants/default-constants';
 import Iconify from '../../components/iconify';
 import ContactSiteCard from '../components/sections/ContactSiteCard';
+import { exportCSV } from '../../utils/exportCSV';
 
 // ----------------------------------------------------------------------
 
@@ -132,15 +134,23 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   const shouldShowSiteEdit = siteEditFormVisibility && !siteAddFormVisibility;
   const shouldShowSiteAdd = siteAddFormVisibility && !siteEditFormVisibility;
 
+  const [exportingCSV, setExportingCSV] = useState(false);
   const onExportCSV = async () => {
-    const response = dispatch(await createCustomerStiesCSV(customer?._id));
-      response.then((res) => {
-        enqueueSnackbar('CSV Generated Successfully');
-      }).catch((err) => {
-        console.error(err);
-        enqueueSnackbar(err.message, { variant: `error` });
-      });
+    setExportingCSV(true);
+    const params = {
+      isArchived: false,
+      orderBy : {
+        createdAt:-1
+      }
+    };
+    
+    const response = dispatch(await exportCSV('CustomerSitesCSV',`crm/customers/${customer?._id}/sites/export`, params));
+    response.then((res) => {
+      setExportingCSV(false);
+      enqueueSnackbar(res.message, {variant:`${res.hasError?"error":""}`});
+    });
   };
+
 
   const handleCardClick = async (_site)=>{
     await dispatch(getSite(customer._id, _site._id));
@@ -153,7 +163,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   return (
     <>
       {/* <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}></Stack> */}
-      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+      <Grid container direction="row" justifyContent="space-between" alignItems="center" sx={{mb:2}}>
         <Grid item xs={12} md={6}>
           <BreadcrumbsProvider>
             <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
@@ -170,32 +180,22 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
             />
           </BreadcrumbsProvider>
         </Grid>
-        <Grid item xs={12} md={6} style={{display:'flex', justifyContent:"flex-end"}}>
-          {isSuperAdmin && sites.length>0 &&
-            <Button
-              sx={{
-                mb: { xs: 0, md: 2 },
-                my: { xs: 1 },
-                mr:1
-              }}
-              onClick={onExportCSV}
-              variant="contained"
-              startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />}
-              >
-                {BUTTONS.EXPORT.label}
-            </Button>
-          }
-          
-            
+        <Grid item xs={12} md={6} style={{display:'flex', justifyContent:'flex-end'}}>
+          <Stack direction='row' alignContent='flex-end' spacing={1} >
+            {isSuperAdmin && sites.length>0 &&
+              <LoadingButton variant='contained' onClick={onExportCSV} loading={exportingCSV} startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />} >
+                  {BUTTONS.EXPORT.label}
+              </LoadingButton>
+            }
             <AddButtonAboveAccordion
-            name={BUTTONS.NEWSITE}
-            toggleChecked={toggleChecked}
-            FormVisibility={siteAddFormVisibility}
-            toggleCancel={toggleCancel}
-            disabled={siteEditFormVisibility}
-          />
+              name={BUTTONS.NEWSITE}
+              toggleChecked={toggleChecked}
+              FormVisibility={siteAddFormVisibility}
+              toggleCancel={toggleCancel}
+              disabled={siteEditFormVisibility}
+            />
+          </Stack>
         </Grid>
-        
       </Grid>
 
       <Grid container spacing={1} direction="row" justifyContent="flex-start">

@@ -95,7 +95,9 @@ export default function MachineByCountriesViewForm() {
                       renderInput={(params) => (<TextField {...params} label="Model" size="small" />)}
                       onChange={(event, newValue) => {
                         setMBYModel(newValue);
-                        setMBYCategory(newValue?.category);
+                        if(newValue){
+                          setMBYCategory(newValue?.category);
+                        }
                         handleGraphYear(MBYCategory, newValue, MBYCountry)
                       }}
                     />

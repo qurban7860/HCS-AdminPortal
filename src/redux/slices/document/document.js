@@ -682,6 +682,24 @@ export function getActiveDocuments() {
 
 // -------------------------------get Document---------------------------------------
 
+export function checkDocument(eTags) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/checkFileExistenceByETag`,
+      {
+        params: {eTags}
+      });
+
+      return response?.data;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
 export function getDocument(documentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -740,7 +758,7 @@ export function deleteDocument(documentId, isCheckReference) {
   };
 }
 
-export function getDocumentGallery(id, customerId, machineId) {
+export function getDocumentGallery(id, customerId, machineId, page, pageSize) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -750,7 +768,12 @@ export function getDocumentGallery(id, customerId, machineId) {
         params: {
           document:id,
           customer:customerId,
-          machine:machineId
+          machine:machineId,
+          pagination:{
+              page,
+              pageSize  
+  
+          }
         }
       });
       dispatch(slice.actions.getDocumentGallerySuccess(response.data));

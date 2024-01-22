@@ -66,9 +66,11 @@ RHFUpload.propTypes = {
   name: PropTypes.string,
   multiple: PropTypes.bool,
   helperText: PropTypes.node,
+  machine:PropTypes.string,
+  drawingPage:PropTypes.bool
 };
 
-export function RHFUpload({ name, multiple, helperText, ...other }) {
+export function RHFUpload({ name, multiple, helperText, machine, drawingPage, ...other }) {
   const { control } = useFormContext();
 
   return (
@@ -79,6 +81,8 @@ export function RHFUpload({ name, multiple, helperText, ...other }) {
         multiple ? (
           <Upload
             multiple
+            drawingPage
+            machine={machine}
             files={field.value}
             error={!!error}
             helperText={
@@ -92,6 +96,8 @@ export function RHFUpload({ name, multiple, helperText, ...other }) {
           />
         ) : (
           <Upload
+            drawingPage
+            machine={machine}
             file={field.value}
             error={!!error}
             helperText={

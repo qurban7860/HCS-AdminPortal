@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { AES, SHA256, enc, MD5, lib } from 'crypto-js';
 import { pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import { Box, Card, Grid, Stack, Dialog } from '@mui/material';
@@ -22,6 +23,7 @@ import {
   setViewVisiilityNoOthers,
   setViewHistoryVisiilityNoOthers,
   setDrawingAndDocumentVisibility,
+  checkDocument,
 } from '../../../redux/slices/document/document';
 import { getActiveDocumentCategories, resetActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
 import { getActiveDocumentTypesWithCategory, resetActiveDocumentTypes } from '../../../redux/slices/document/documentType';
@@ -41,6 +43,7 @@ import { DocRadioValue, DocRadioLabel, Snacks,} from '../../../constants/documen
 import DocumentCover from '../../components/DocumentForms/DocumentCover';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { documentSchema } from '../../schemas/document';
+import ConfirmDialog from '../../../components/confirm-dialog';
 
 
 // ----------------------------------------------------------------------
@@ -224,7 +227,10 @@ function DocumentAddForm({
     try {
       if(drawingPage){
         data.machine = machine?._id;
-      } 
+      } else{
+        data.machine = null;  
+      }
+
       if (selectedValue === 'new') {
         // New Document Part
         await dispatch(addDocument( customerPage ? customer?._id : null, machinePage ? machine?._id : null, data));
@@ -327,6 +333,10 @@ function DocumentAddForm({
   const handleVersionRadioChange = (event) => setSelectedVersionValue(event.target.value);
   const handleIsActiveChange = () => setValue('isActive' ,!isActive);
 
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [machineVal, setMachineVal] = useState(null);
+  const [duplicate, setDuplicate] = useState(false);
+
   const handleDropMultiFile = useCallback(
     async (acceptedFiles) => {
         pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
@@ -361,14 +371,26 @@ function DocumentAddForm({
           }
         }
       const docFiles = files || [];
+      
+      let _files = [];
+
+      if(drawingPage || machineDrawings){
+        const _files_MD5 = await hashFilesMD5(acceptedFiles);
+        _files = await dispatch(checkDocument(_files_MD5));
+      }
+
+      setDuplicate(_files.some((fff => fff.status===409)));
+      
       const newFiles = acceptedFiles.map((file, index) => {
-          if(index===0 && docFiles.length===0 && !displayName){
+        if(index===0 && docFiles.length===0 && !displayName){
             setValue('displayName', removeFileExtension(file.name))
             setValue('referenceNumber', getRefferenceNumber(file.name))
             setValue('versionNo', getVersionNumber(file.name))
           }
           return Object.assign(file, {
             preview: URL.createObjectURL(file),
+            found: _files[index]?.status===200?null:_files[index],
+            machine:machineVal?._id
           })
         }
       );
@@ -378,6 +400,34 @@ function DocumentAddForm({
     [ files, displayName]
   );
 
+  const hashFilesMD5 = async (_files) => {
+    const hashPromises = _files.map((file) => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+  
+      reader.onload = () => {
+        const arrayBuffer = reader.result;
+        const wordArray = MD5(lib.WordArray.create(arrayBuffer));
+        const hashHex = wordArray.toString(enc.Hex);
+        resolve(hashHex);
+      };
+  
+      reader.onerror = () => {
+        reject(new Error(`Error reading file: ${file.name}`));
+      };
+  
+      reader.readAsArrayBuffer(file);
+    }));
+  
+    try {
+      const hashes = await Promise.all(hashPromises);
+      return hashes;
+    } catch (error) {
+      // Handle errors if needed
+      console.error(error);
+      throw error;
+    }
+  };
+    
   const removeFileExtension = (filename) => {
     const lastDotIndex = filename.lastIndexOf('.');
     return lastDotIndex !== -1 ? filename.substring(0, lastDotIndex) : filename;
@@ -561,8 +611,10 @@ function DocumentAddForm({
                         name="machine"
                         label="Machine"
                         options={customerMachines}
+                        value={machineVal}
                         isOptionEqualToValue={( option, value ) => option._id === value._id }
                         getOptionLabel={(option) => `${ option.serialNo || '' } ${option?.name ? '-' : ''} ${option?.name || ''}`}
+                        onChange={(eve, newValue)=> setMachineVal(newValue)}
                         renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}</li> )}
                       />
                     </Box>
@@ -589,6 +641,8 @@ function DocumentAddForm({
                         ): setValue('files', '', { shouldValidate: true })
                       }
                       onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
+                      machine={machineVal}
+                      drawingPage={drawingPage || machineDrawings}
                     />
                   </Grid>
                 )}
@@ -625,6 +679,14 @@ function DocumentAddForm({
           src={previewVal}
         />
       </Dialog>
+      
+      <ConfirmDialog
+        open={duplicate}
+        onClose={()=> setDuplicate(false)}
+        title='Duplicate Files Detected'
+        content='Kindly review the files that already exist.'
+        SubButton="Close"
+      />
     </FormProvider>
   );
 }

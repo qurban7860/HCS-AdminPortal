@@ -115,13 +115,12 @@ export default function MachineList() {
     dispatch(resetNotes());
     dispatch(resetMachineDocument());
     dispatch(resetMachineDocuments());
-    dispatch(getSPContacts(cancelTokenSource));
+    dispatch(getSPContacts( cancelTokenSource ));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
   
   useEffect(()=>{
-    dispatch(getMachines(page, rowsPerPage, cancelTokenSource));
-    return()=>{ cancelTokenSource.cancel(); }
+    dispatch(getMachines(page, rowsPerPage, cancelTokenSource ));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[dispatch, page, rowsPerPage])
 
@@ -132,7 +131,7 @@ export default function MachineList() {
   
   useEffect(() => {
     if (initial) {
-      setTableData(machines?.data || []);
+      setTableData(machines || []);
     }
   }, [machines, error, responseMessage, enqueueSnackbar, initial]);
 
@@ -267,8 +266,8 @@ export default function MachineList() {
           />
 
           {!isNotFound && <TablePaginationCustom
-            count={machines.totalCount || 0}
-            page={machines.totalCount?page:0}
+            count={machines? machines.length : 0}
+            page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
@@ -315,7 +314,7 @@ export default function MachineList() {
 
               <TableBody>
                 {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                  // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
                       <MachineListTableRow

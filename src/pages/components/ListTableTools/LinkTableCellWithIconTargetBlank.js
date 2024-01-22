@@ -13,6 +13,7 @@ export default function LinkTableCellWithIconTargetBlank({ align, onViewRow, onC
         onClick={onViewRow}
         color="inherit"
         sx={{
+          mt:0.5,
           cursor: 'pointer',
           textDecoration: 'underline',
           textDecorationStyle: 'dotted',
