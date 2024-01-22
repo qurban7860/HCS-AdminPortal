@@ -204,6 +204,7 @@ export default function MachineViewForm() {
       machineflange:machine?.machineProfile?.flange || '',
       status: machine?.status?.name || '',
       transferredMachine: machine?.transferredMachine?.customer || null,
+      transferredFrom: machine?.transferredFrom?.customer || null,
       customer: machine?.customer || '',
       financialCompany: machine?.financialCompany || '',
       siteMilestone: machine?.siteMilestone || '',
