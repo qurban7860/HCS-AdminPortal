@@ -15,8 +15,7 @@ import {
   setMachineVerification,
   setMachineDialog,
   getMachineForDialog,
-  setTransferDialogBoxVisibility,
-  setMachineTransferDialog
+  setTransferDialogBoxVisibility
 } from '../../redux/slices/products/machine';
 import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
 import { getSite, resetSite, setSiteDialog } from '../../redux/slices/customer/site';
@@ -26,11 +25,11 @@ import { setToolInstalledFormVisibility, setToolInstalledEditFormVisibility } fr
 import useResponsive from '../../hooks/useResponsive';
 import { useSnackbar } from '../../components/snackbar';
 // components
-import ViewFormField from '../../components/ViewForms/ViewFormField';
-import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-import FormLabel from '../../components/DocumentForms/FormLabel';
-import NothingProvided from '../../components/Defaults/NothingProvided';
+import ViewFormField from '../components/ViewForms/ViewFormField';
+import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
+import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
+import FormLabel from '../components/DocumentForms/FormLabel';
+import NothingProvided from '../components/Defaults/NothingProvided';
 import GoogleMaps from '../../assets/GoogleMaps';
 // constants
 import { TITLES, FORMLABELS } from '../../constants/default-constants';
@@ -38,11 +37,10 @@ import { Snacks } from '../../constants/machine-constants';
 // utils
 import { fDate } from '../../utils/formatTime';
 // dialog
-import MachineDialog from '../../components/Dialog/MachineDialog'
-import MachineTransferDialog from '../../components/Dialog/MachineTransferDialog'
-import CustomerDialog from '../../components/Dialog/CustomerDialog';
-import SiteDialog from '../../components/Dialog/SiteDialog';
-import OpenInNewPage from '../../components/Icons/OpenInNewPage';
+import MachineDialog from '../components/Dialog/MachineDialog'
+import CustomerDialog from '../components/Dialog/CustomerDialog';
+import SiteDialog from '../components/Dialog/SiteDialog';
+import OpenInNewPage from '../components/Icons/OpenInNewPage';
 
 // ----------------------------------------------------------------------
 
@@ -51,7 +49,7 @@ export default function MachineViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { machine, machineDialog, machineTransferDialog, isLoading } = useSelector((state) => state.machine);
+  const { machine, machineDialog, isLoading } = useSelector((state) => state.machine);
   const { customerDialog } = useSelector((state) => state.customer);
   const { siteDialog } = useSelector((state) => state.site);
   const [disableTransferButton, setDisableTransferButton] = useState(true);
@@ -130,23 +128,23 @@ export default function MachineViewForm() {
     dispatch(setMachineEditFormVisibility(true));
   };
 
-  // const handleTransfer = async (customerId, statusId) => {
-  //   try {
-  //     const response = await dispatch(transferMachine(machine, customerId, statusId));
-  //     const machineId = response.data.Machine._id;
-  //     navigate(PATH_MACHINE.machines.view(machineId));
-  //     enqueueSnackbar(Snacks.machineTransferSuccess);
-  //   } catch (error) {
-  //     if (error?.Message) {
-  //       enqueueSnackbar(error?.Message, { variant: `error` });
-  //     } else if (error?.message) {
-  //       enqueueSnackbar(error?.message, { variant: `error` });
-  //     } else {
-  //       enqueueSnackbar(Snacks.machineFailedTransfer, { variant: `error` });
-  //     }
-  //     console.error(error);
-  //   }
-  // };
+  const handleTransfer = async (customerId, statusId) => {
+    try {
+      const response = await dispatch(transferMachine(machine, customerId, statusId));
+      const machineId = response.data.Machine._id;
+      navigate(PATH_MACHINE.machines.view(machineId));
+      enqueueSnackbar(Snacks.machineTransferSuccess);
+    } catch (error) {
+      if (error?.Message) {
+        enqueueSnackbar(error?.Message, { variant: `error` });
+      } else if (error?.message) {
+        enqueueSnackbar(error?.message, { variant: `error` });
+      } else {
+        enqueueSnackbar(Snacks.machineFailedTransfer, { variant: `error` });
+      }
+      console.error(error);
+    }
+  };
 
   const onDelete = async () => {
     try {
@@ -182,11 +180,11 @@ export default function MachineViewForm() {
   };
   
   const linkedMachines = machine?.machineConnections?.map((machineConnection, index) => (
-    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(machineConnection?.connectedMachine?._id || '' )} label={`${machineConnection?.connectedMachine?.serialNo || ''} ${machineConnection?.connectedMachine?.name ? '-' : '' } ${machineConnection?.connectedMachine?.name || ''} `} />
+    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(machineConnection.connectedMachine._id)} label={`${machineConnection?.connectedMachine?.serialNo || ''} ${machineConnection?.connectedMachine?.name ? '-' : '' } ${machineConnection?.connectedMachine?.name || ''} `} />
   ));
   
   const paranetMachines = machine?.parentMachines?.map((parentMachine, index) => (
-    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(parentMachine?.machine?._id || '' )} label={`${parentMachine?.machine?.serialNo || ''} ${parentMachine?.machine?.name ? '-' : '' } ${parentMachine?.machine?.name || ''} `} />
+    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(parentMachine.machine._id)} label={`${parentMachine?.machine?.serialNo || ''} ${parentMachine?.machine?.name ? '-' : '' } ${parentMachine?.machine?.name || ''} `} />
   ));
 
   const defaultValues = useMemo(
@@ -200,13 +198,13 @@ export default function MachineViewForm() {
       supplier: machine?.supplier?.name || '',
       workOrderRef: machine?.workOrderRef || '',
       machineModel: machine?.machineModel?.name || '',
-      manufactureDate: machine?.manufactureDate || '',
       machineConnections: machine?.machineModel?.category?.connections || false,
       machineProfile: machine?.machineProfile?.defaultName || '',
       machineweb:machine?.machineProfile?.web || '',
       machineflange:machine?.machineProfile?.flange || '',
       status: machine?.status?.name || '',
       transferredMachine: machine?.transferredMachine?.customer || null,
+      transferredFrom: machine?.transferredFrom?.customer || null,
       customer: machine?.customer || '',
       financialCompany: machine?.financialCompany || '',
       siteMilestone: machine?.siteMilestone || '',
@@ -246,7 +244,7 @@ export default function MachineViewForm() {
               disableDeleteButton={disableDeleteButton}
               handleEdit={handleEdit}
               onDelete={onDelete}
-              handleTransfer={()=> dispatch(setMachineTransferDialog(true))}
+              handleTransfer={handleTransfer}
               backLink={() => navigate(PATH_MACHINE.machines.list)}
               machineSupportDate={defaultValues?.supportExpireDate}
             />
@@ -255,7 +253,6 @@ export default function MachineViewForm() {
             <Grid container>
               <ViewFormField isLoading={isLoading} sm={4} variant='h4' heading="Serial No" param={defaultValues?.serialNo} />
               <ViewFormField isLoading={isLoading} sm={4} variant='h4' heading="Machine Model" param={defaultValues?.machineModel} />
-              <ViewFormField isLoading={isLoading} sm={6} heading="Manufacture Date" param={fDate(defaultValues?.manufactureDate)} />
               <ViewFormField isLoading={isLoading} sm={4} variant='h4' heading="Customer"
                 node={
                   defaultValues.customer && (
@@ -282,15 +279,25 @@ export default function MachineViewForm() {
             node={
             <Grid display="flex">
               <Typography variant='h4' sx={{mr: 1,color: machine?.status?.slug === "transferred" && 'red'  }}>{ defaultValues?.status }</Typography>
-              { defaultValues?.transferredMachine && 
-                <Typography variant='h4' >
-                    {`to `}
+              { (defaultValues?.transferredMachine && 
+                <Typography variant='body2' sx={{mt: 0.5}} >
+                    {` to `}
                     <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredMachine?._id)} underline="none" sx={{ cursor: 'pointer'}}>
-                      {defaultValues?.transferredMachine?.name}
+                      <b>{defaultValues?.transferredMachine?.name}</b>
                     </Link>
                       <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(defaultValues?.transferredMachine?._id), '_blank' ) }/>
                   
+                </Typography> ) || 
+                ( defaultValues?.transferredFrom && 
+                  <Typography variant='body2' sx={{mt: 0.5}} >
+                    {` - Transfered from `}
+                    <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredFrom?._id)} underline="none" sx={{ cursor: 'pointer'}}>
+                      <b>{defaultValues?.transferredFrom?.name}</b>
+                    </Link>
+                      <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(defaultValues?.transferredFrom?._id), '_blank' ) }/>
+                  
                 </Typography> 
+                )
               }
             </Grid>} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Work Order / Purchase Order" param={defaultValues?.workOrderRef}/>
@@ -319,6 +326,11 @@ export default function MachineViewForm() {
             />
             <ViewFormField isLoading={isLoading}
               sm={6}
+              heading="Shipping Date"
+              param={fDate(defaultValues?.shippingDate)}
+            />
+            <ViewFormField isLoading={isLoading}
+              sm={6}
               heading="Installation Site"
               node={
                 defaultValues.instalationSite && (
@@ -328,23 +340,16 @@ export default function MachineViewForm() {
                 )
               }
             />
-
-            <ViewFormField isLoading={isLoading}
-              sm={12}
-              heading="Landmark for Installation site"
-              param={defaultValues?.siteMilestone}
-            />
-
-            <ViewFormField isLoading={isLoading}
-              sm={6}
-              heading="Shipping Date"
-              param={fDate(defaultValues?.shippingDate)}
-            />
-
             <ViewFormField isLoading={isLoading}
               sm={6}
               heading="Installation Date"
               param={fDate(defaultValues?.installationDate)}
+            />
+
+            <ViewFormField isLoading={isLoading}
+              sm={12}
+              heading="Landmark"
+              param={defaultValues?.siteMilestone}
             />
 
             <ViewFormField isLoading={isLoading} sm={12} heading="Connected Machines" chipDialogArrayParam={linkedMachines} />
@@ -399,7 +404,6 @@ export default function MachineViewForm() {
       {/* connected machine dialog */}      
       {siteDialog && <SiteDialog title={siteDialogTitle}/>}
       {machineDialog  && <MachineDialog />}
-      {machineTransferDialog && <MachineTransferDialog />}
       {customerDialog  && <CustomerDialog />}
       
     </>
