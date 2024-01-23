@@ -15,8 +15,7 @@ import { PATH_SECURITY } from '../../routes/paths';
 import { useAuthContext } from '../../auth/useAuthContext';
 // _mock_
 import {
-  getSecurityUser,
-  setSecurityUserEditFormVisibility,
+  getSecurityUser
 } from '../../redux/slices/securityUser/securityUser';
 // components
 import ViewFormField from '../../components/ViewForms/ViewFormField';

@@ -11,7 +11,6 @@ import { updateNote, setNoteEditFormVisibility } from '../../../redux/slices/pro
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
-import FormHeading from '../../../components/DocumentForms/FormHeading';
 
 // ----------------------------------------------------------------------
 export default function NoteEditForm() {

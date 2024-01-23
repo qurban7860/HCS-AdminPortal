@@ -319,7 +319,7 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
           heading="Version"
           handleAllVersion={linkDocumentView}
           handleNewVersion={handleNewVersion}
-          objectParam={
+          param={
             <StyledVersionChip
               label={defaultValues.versionPrefix + defaultValues.documentVersion}
               size="small"

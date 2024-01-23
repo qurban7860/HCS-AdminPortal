@@ -194,7 +194,7 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getCustomers(page, pageSize) {
+export function getCustomers(page, pageSize, cancelToken ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -210,7 +210,8 @@ export function getCustomers(page, pageSize) {
             pageSize  
 
           }
-        }
+        },
+        cancelToken: cancelToken?.token
       });
       dispatch(slice.actions.getCustomersSuccess(response.data));
       // dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));

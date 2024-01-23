@@ -26,7 +26,6 @@ import FormProvider, {
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { CONFIG } from '../../../config-global'
 import { checkValuesNotNull } from '../util/index'
-import FormLabel from '../../../components/DocumentForms/FormLabel';
 
 // ----------------------------------------------------------------------
 

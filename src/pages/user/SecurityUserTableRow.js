@@ -1,19 +1,14 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
 // @mui
 import {
   Switch,
   Stack,
-  Button,
   TableRow,
-  MenuItem,
   TableCell,
   Chip
 } from '@mui/material';
 // components
 import Iconify from '../../components/iconify';
-import MenuPopover from '../../components/menu-popover';
-import ConfirmDialog from '../../components/confirm-dialog';
 import { fDate } from '../../utils/formatTime';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
@@ -42,27 +37,9 @@ export default function SecurityUserTableRow({
   onDeleteRow,
 }) {
   const { email, name, roles, phone, createdAt, currentEmployee, isActive, isOnline } = row;
-  const [openConfirm, setOpenConfirm] = useState(false);
-  const [openPopover, setOpenPopover] = useState(null);
 
   const smScreen = useScreenSize('sm')
   const lgScreen = useScreenSize('lg')
-
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
-
-  const handleClosePopover = () => {
-    setOpenPopover(null);
-  };
-  const onDelete = () => {
-    onDeleteRow();
-    setOpenConfirm(false);
-  };
   
   return (
       <TableRow hover selected={selected}>

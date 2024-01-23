@@ -18,7 +18,6 @@ import { addNote, setNoteFormVisibility } from '../../../redux/slices/products/m
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
-import FormHeading from '../../../components/DocumentForms/FormHeading';
 
 // ----------------------------------------------------------------------
 

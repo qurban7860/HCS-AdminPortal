@@ -12,6 +12,7 @@ import {
   TableContainer,
   // Stack,
 } from '@mui/material';
+import axios from 'axios';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
@@ -74,6 +75,9 @@ export default function CustomerList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const axiosToken = () => axios.CancelToken.source();
+  const cancelTokenSource = axiosToken();
+
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
@@ -91,7 +95,7 @@ export default function CustomerList() {
   }
 
   useEffect(() => {
-    dispatch(getCustomers());
+    dispatch(getCustomers( null, null, cancelTokenSource ));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
@@ -220,23 +224,6 @@ export default function CustomerList() {
           onRowsPerPageChange={onChangeRowsPerPage}
         />}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          {/* <TableSelectedAction
-            numSelected={selected.length}
-            rowCount={tableData.length}
-            onSelectAllRows={(checked) =>
-              onSelectAllRows(
-                checked,
-                tableData.map((row) => row._id)
-              )
-            }
-            action={
-              <Tooltip title="Delete">
-                <IconButton color="primary" onClick={handleOpenConfirm}>
-                  <Iconify icon="eva:trash-2-outline" />
-                </IconButton>
-              </Tooltip>
-            }
-          /> */}
 
           <Scrollbar>
             <Table size="small" sx={{ minWidth: 360 }}>

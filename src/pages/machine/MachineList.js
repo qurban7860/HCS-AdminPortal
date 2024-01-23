@@ -98,8 +98,6 @@ export default function MachineList() {
   const axiosToken = () => axios.CancelToken.source();
   const cancelTokenSource = axiosToken();
 
-console.log("cancelTokenSource token : ",cancelTokenSource?.token);
-
   const { machines, verified, accountManager, supportManager, filterBy, page, rowsPerPage, 
           isLoading, error, initial, responseMessage } = useSelector( (state) => state.machine );
   const navigate = useNavigate();

@@ -43,7 +43,7 @@ export default function MachineListTableRow({
     shippingDate,
     status,
     isActive,
-    createdAt,
+    // createdAt,
   } = row;
  
   return (

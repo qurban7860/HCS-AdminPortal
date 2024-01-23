@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { Card, Grid, Stack, Button, FormHelperText, Checkbox, Typography } from '@mui/material';
 // slice
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import { setMachineErpLogListViewFormVisibility, getMachineErpLogRecords, addMachineErpLogRecord } from '../../../redux/slices/products/machineErpLogs';
+import { setMachineErpLogListViewFormVisibility, addMachineErpLogRecord } from '../../../redux/slices/products/machineErpLogs';
 // components
 import { useSnackbar } from '../../../components/snackbar';
   import FormProvider from '../../../components/hook-form';

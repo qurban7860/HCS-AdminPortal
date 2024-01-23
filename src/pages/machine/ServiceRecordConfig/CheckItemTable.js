@@ -175,7 +175,6 @@ const CheckItemTable = ({ checkParams, setCheckParams, checkItemList, setCheckIt
 
                       <RHFAutocomplete
                         multiple
-                        disableCloseOnSelect
                         name="paramList"
                         label="Select Items"
                         value={checkItemList}

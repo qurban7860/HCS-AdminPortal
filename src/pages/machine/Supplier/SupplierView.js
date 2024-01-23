@@ -4,8 +4,6 @@ import { useParams } from 'react-router-dom';
 // @mui
 import { Container } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-// routes
-import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 import { useSettingsContext } from '../../../components/settings';
 import SupplierViewForm from './SupplierViewForm';

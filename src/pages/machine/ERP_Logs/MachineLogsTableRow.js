@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Switch, TableRow, TableCell } from '@mui/material';
+import { TableRow, TableCell } from '@mui/material';
 // utils
 import { styled } from '@mui/system';
 import { fDateTime } from '../../../utils/formatTime';
@@ -40,7 +40,7 @@ export default function MachineLogsTableRow({
   onViewRow,
 }) {
 
-  const { date, waste, componentLength, isActive, createdAt, createdBy } = row;
+  const { date, waste, componentLength, createdAt, createdBy } = row;
 
   return (
       <StyledTableRow hover selected={selected}>

@@ -14,7 +14,7 @@ import { addConfiguration } from '../../../redux/slices/products/configuration';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, {  RHFSwitch, RHFTextField } from '../../../components/hook-form';
+import FormProvider, {  RHFSwitch } from '../../../components/hook-form';
 // util
 import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
