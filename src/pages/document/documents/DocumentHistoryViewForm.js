@@ -140,9 +140,9 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
     [documentHistory]
   );
 
-  const linkedDrawingMachines = documentHistory?.productDrawings?.map((pdrawing, index) => pdrawing?.machine._id !== machine?._id && (
-    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(pdrawing?.machine?._id)} label={`${pdrawing?.machine?.serialNo || ''} ${pdrawing?.machine?.name ? ` - ${pdrawing?.machine?.name}` : '' } `} />
-  ));
+  const linkedDrawingMachines = documentHistory?.productDrawings?.map((pdrawing, index) =>  
+    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(pdrawing?.machine?._id)} label={`${pdrawing?.machine?.serialNo || '' } ${pdrawing?.machine?.name ? '-' : '' } ${pdrawing?.machine?.name || '' } `} />
+  );
 
   // refresh the document when file deleted
 const callAfterDelete = () => {dispatch(getDocumentHistory(documentHistory._id))};
