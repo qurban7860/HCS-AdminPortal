@@ -12,6 +12,7 @@ import { useSnackbar } from '../../components/snackbar';
 import {
   updateCustomer,
   setCustomerEditFormVisibility,
+  setCustomerTab,
 } from '../../redux/slices/customer/customer';
 import { getActiveContacts, getSPContacts } from '../../redux/slices/customer/contact';
 import { getSites } from '../../redux/slices/customer/site';
@@ -93,7 +94,8 @@ export default function CustomerEditForm() {
     data.primaryTechnicalContact = technicalContactVal?._id || null;
 
     try {
-      await dispatch(updateCustomer(data ));
+      await dispatch(updateCustomer(data));
+      await dispatch(setCustomerTab('info'));
       reset();
       enqueueSnackbar('Update success!');
       navigate(PATH_CUSTOMER.view(customer._id));
