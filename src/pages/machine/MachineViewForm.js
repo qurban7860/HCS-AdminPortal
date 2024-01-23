@@ -25,11 +25,11 @@ import { setToolInstalledFormVisibility, setToolInstalledEditFormVisibility } fr
 import useResponsive from '../../hooks/useResponsive';
 import { useSnackbar } from '../../components/snackbar';
 // components
-import ViewFormField from '../components/ViewForms/ViewFormField';
-import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
-import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
-import FormLabel from '../components/DocumentForms/FormLabel';
-import NothingProvided from '../components/Defaults/NothingProvided';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import FormLabel from '../../components/DocumentForms/FormLabel';
+import NothingProvided from '../../components/Defaults/NothingProvided';
 import GoogleMaps from '../../assets/GoogleMaps';
 // constants
 import { TITLES, FORMLABELS } from '../../constants/default-constants';
@@ -37,10 +37,10 @@ import { Snacks } from '../../constants/machine-constants';
 // utils
 import { fDate } from '../../utils/formatTime';
 // dialog
-import MachineDialog from '../components/Dialog/MachineDialog'
-import CustomerDialog from '../components/Dialog/CustomerDialog';
-import SiteDialog from '../components/Dialog/SiteDialog';
-import OpenInNewPage from '../components/Icons/OpenInNewPage';
+import MachineDialog from '../../components/Dialog/MachineDialog'
+import CustomerDialog from '../../components/Dialog/CustomerDialog';
+import SiteDialog from '../../components/Dialog/SiteDialog';
+import OpenInNewPage from '../../components/Icons/OpenInNewPage';
 
 // ----------------------------------------------------------------------
 
