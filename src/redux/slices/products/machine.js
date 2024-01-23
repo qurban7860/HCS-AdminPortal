@@ -632,18 +632,21 @@ export function transferMachine( machineId, params ) {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        machine: params._id,
+        machine: machineId,
         customer: params.customer?._id || null,
-        status: params.status?._id || null,
         financialCompany: params?.financialCompany?._id || null,
-        installationSite: params?.installationSite?._id || null,
         billingSite: params?.billingSite?._id || null,
-        allSettings: params?.allSettings,
-        allTools: params?.allTools,
-        allDrawings: params?.allDrawings,
-        allProfiles: params?.allProfiles,
-        allINIs: params?.allINIs,
-        machineConnectionVal: params?.machineConnectionVal && params?.machineConnectionVal?.length > 0 && params?.machineConnectionVal?.map((m)=> m?._id) || [],
+        installationSite: params?.installationSite?._id || null,
+        shippingDate: params?.shippingDate || null,
+        installationDate: params?.installationDate || null,
+        status: params.status?._id || null,
+        isAllSettings: params?.isAllSettings,
+        isAllTools:    params?.isAllTools,
+        isAllDrawings: params?.isAllDrawings,
+        isAllProfiles: params?.isAllProfiles,
+        isAllINIs:     params?.isAllINIs,
+        machineConnection: params?.machineConnection && params?.machineConnection?.length > 0 && params?.machineConnection?.map((m)=> m?._id) || [],
+        machineDocuments: params?.machineDocuments && params?.machineDocuments?.length > 0 && params?.machineDocuments?.map((m)=> m?._id) || [],
       };
         
      /* eslint-enable */

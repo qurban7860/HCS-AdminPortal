@@ -147,7 +147,7 @@ export function getMachinestatuses (){
 
 // ----------------------------------------------------------------------
 
-export function getActiveMachineStatuses (){
+export function getActiveMachineStatuses ( cancelToken ){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
@@ -156,7 +156,8 @@ export function getActiveMachineStatuses (){
         params: {
           isArchived: false,
           isActive: true,
-        }
+        },
+        cancelToken: cancelToken?.token,
       });
       dispatch(slice.actions.getActiveMachineStatusesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('statuses loaded successfully'));
