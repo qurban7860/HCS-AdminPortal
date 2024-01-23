@@ -10,7 +10,7 @@ import { Box, Card, styled, Container, Grid, Stack, TextField } from '@mui/mater
 import { MuiChipsInput } from 'mui-chips-input';
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
-import { getActiveCustomers, getFinancialCompanies, setNewMachineCustomer } from '../../redux/slices/customer/customer';
+import { getActiveCustomers, getCustomer, getFinancialCompanies, setCustomerTab, setNewMachineCustomer } from '../../redux/slices/customer/customer';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import  { addMachine, getActiveMachines } from '../../redux/slices/products/machine';
 import { getActiveCategories, resetActiveCategories } from '../../redux/slices/products/category';
@@ -65,7 +65,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       dispatch(resetActiveMachineModels()); 
       dispatch(resetActiveCategories()); 
       dispatch(resetActiveMachineStatuses()); 
-      dispatch(resetActiveSuppliers()) 
+      dispatch(resetActiveSuppliers())
+      dispatch(setNewMachineCustomer(null)); 
     }
   }, [dispatch]);
 
@@ -117,6 +118,13 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   } = watch();
 
   useEffect(() => {
+    dispatch(resetMachineConnections());
+    dispatch(resetActiveSites());
+    dispatch(getActiveSites(customer?._id));
+    dispatch(getMachineConnections(customer?._id));
+  },[dispatch, customer, spContacts, setValue])
+
+  useEffect(() => {
     if(newMachineCustomer){
       setValue('customer',newMachineCustomer);
       setLandToCustomerMachinePage(true);
@@ -124,7 +132,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       setValue('projectManager', spContacts.filter(item => Array.isArray(customer?.projectManager) && customer?.projectManager.some(manager => manager._id === item?._id)))
       setValue('supportManager', spContacts.filter(item => Array.isArray(customer?.supportManager) && customer?.supportManager.some(manager => manager._id === item?._id)))
     }
-    return ()=>{ dispatch(setNewMachineCustomer(null)) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[newMachineCustomer, spContacts])
 
@@ -161,9 +168,10 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     }
   };
 
-  const toggleCancel = () => {
+  const toggleCancel = async() => {
     if(landToCustomerMachinePage){
-      navigate(PATH_CUSTOMER.view(customer._id));
+      await dispatch(setCustomerTab('machines'));
+      navigate(PATH_CUSTOMER.view(newMachineCustomer._id));
     }else{
       navigate(PATH_MACHINE.machines.list);
     }
@@ -290,27 +298,19 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || ''}`}</li> )}
                     onChange={async (event, newValue) => {
-                      if (newValue) {
-                        if(customer?._id !== newValue._id) {
-                        await dispatch(resetMachineConnections())
-                        await dispatch(resetActiveSites());
-                        setValue('machineConnectionVal', []);
-                        setValue('instalationSite', null);
-                        setValue('billingSite', null);
-                        await dispatch(getActiveSites(newValue._id));
-                        await dispatch(getMachineConnections(newValue._id));
+                      setValue('customer',newValue);
+                      setValue('instalationSite', null);
+                      setValue('billingSite', null);
+                      setValue('machineConnectionVal', []);
+                      setValue('accountManager', [])
+                      setValue('projectManager', [])
+                      setValue('supportManager', [])  
+                      
+                      if(newValue){
+                        // setValue('customer',newValue);
                         setValue('accountManager', spContacts.filter(item => Array.isArray(newValue?.accountManager) && newValue?.accountManager.includes(item?._id)))
                         setValue('projectManager', spContacts.filter(item => Array.isArray(newValue?.projectManager) && newValue?.projectManager.includes(item?._id)))
                         setValue('supportManager', spContacts.filter(item => Array.isArray(newValue?.supportManager) && newValue?.supportManager.includes(item?._id)))
-                        }
-                        setValue('customer',newValue);
-                      } else {
-                        setValue('customer',null);
-                        setValue('machineConnectionVal', []);
-                        setValue('instalationSite', null);
-                        setValue('billingSite', null);
-                        await dispatch(resetActiveSites());
-                        await dispatch(resetMachineConnections())
                       }
                     }}
                     ChipProps={{ size: 'small' }}
