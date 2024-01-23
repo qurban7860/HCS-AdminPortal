@@ -4,44 +4,62 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
+import axios from 'axios';
 import { Box, Grid, Dialog, DialogContent,  Divider, Stepper, Step, TextField, Button,  StepLabel, StepContent } from '@mui/material';
 import { PATH_MACHINE } from '../../routes/paths';
 import DialogLabel from './DialogLabel';
 import ViewFormField from '../ViewForms/ViewFormField';
 import { setMachineTransferDialog, transferMachine } from '../../redux/slices/products/machine';
-import { getActiveMachineStatuses } from '../../redux/slices/products/statuses';
-import { getActiveCustomers, getFinancialCompanies } from '../../redux/slices/customer/customer';
+import { getActiveMachineStatuses, resetActiveMachineStatuses } from '../../redux/slices/products/statuses';
+import { getActiveCustomers, getFinancialCompanies, resetActiveCustomers, resetFinancingCompanies } from '../../redux/slices/customer/customer';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import { getMachineConnections, resetMachineConnections } from '../../redux/slices/products/machineConnections';
+import { getActiveMachineDocuments, resetActiveMachineDocuments } from '../../redux/slices/document/machineDocument';
 import { useSnackbar } from '../snackbar';
-import FormProvider, { RHFAutocomplete, RHFCheckbox } from '../hook-form';
+import FormProvider, { RHFAutocomplete, RHFCheckbox, RHFDatePicker } from '../hook-form';
 import { machineTransferSchema } from '../../pages/schemas/machine'
 import { Snacks } from '../../constants/machine-constants';
 import { useScreenSize } from '../../hooks/useResponsive';
+import { fDate } from '../../utils/formatTime';
+import FormLabel from '../DocumentForms/FormLabel';
 
 
 function MachineTransferDialog() {
 
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  
+  const axiosToken = () => axios.CancelToken.source();
+  const cancelTokenSource = axiosToken();
+
   const navigate = useNavigate();
   const smScreen = useScreenSize('sm');
   const mdScreen = useScreenSize('md');
+  const lgScreen = useScreenSize('lg');
+
 
   const { machine, machineTransferDialog } = useSelector((state) => state.machine);
   const { machineConnections } = useSelector((state) => state.machineConnections);
   const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
   const { activeCustomers, financialCompanies } = useSelector((state) => state.customer);
   const { activeSites } = useSelector((state) => state.site);
-
+  const { activeMachineDocuments } = useSelector((state) => state.machineDocument );
   const [activeStep, setActiveStep] = useState(0);
 
   useEffect(()=> {
-    dispatch(getActiveMachineStatuses())
-    dispatch(getActiveCustomers())
-    dispatch(getFinancialCompanies())
-    dispatch(getActiveSites())
-    return ()=>{ dispatch(resetActiveSites()); resetMachineConnections() }
+    dispatch(getActiveMachineStatuses(cancelTokenSource))
+    dispatch(getActiveCustomers(cancelTokenSource))
+    dispatch(getFinancialCompanies(cancelTokenSource))
+    dispatch(getActiveMachineDocuments(machine?._id, cancelTokenSource))
+    return ()=>{  
+      // cancelTokenSource.cancel()
+      dispatch(resetActiveCustomers())
+      dispatch(resetFinancingCompanies())
+      dispatch(resetActiveSites())
+      dispatch(resetMachineConnections())
+      dispatch(resetActiveMachineDocuments()) 
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ dispatch ])
 
 
@@ -50,16 +68,19 @@ function MachineTransferDialog() {
     resolver: yupResolver(machineTransferSchema),
     defaultValues: {
       customer: null,
-      status: null,
       financialCompany: null,
-      installationSite: null,
       billingSite: null,
-      allSettings: false,
-      allTools: false,
-      allDrawings: false,
-      allProfiles: false,
-      allINIs: false,
-      machineConnectionVal: [],
+      installationSite: null,
+      shippingDate: null,
+      installationDate: null,
+      status: null,
+      isAllSettings: false,
+      isAllTools: false,
+      isAllDrawings: false,
+      isAllProfiles: false,
+      isAllINIs: false,
+      machineConnection: [],
+      machineDocuments: [],
     },
   });
 
@@ -72,12 +93,11 @@ function MachineTransferDialog() {
     formState: { isSubmitting },
   } = methods;
 
-  const { customer, status, financialCompany, installationSite, billingSite, machineConnectionVal } =watch();
+  const { customer, status, financialCompany, installationSite, billingSite, shippingDate, installationDate, machineConnection, machineDocuments } =watch();
 
   const handleMachineDialog = ()=>{ dispatch(setMachineTransferDialog(false)) }
 
   const onSubmit = async (data) => {
-    // const handleTransfer = async (customerId, statusId) => {
       try {
         const response = await dispatch(transferMachine(machine?._id, data ));
         const machineId = response.data.Machine._id;
@@ -86,15 +106,14 @@ function MachineTransferDialog() {
         navigate(PATH_MACHINE.machines.view(machineId));
         handleMachineDialog()
       } catch (error) {
-        // Snacks.machineFailedTransfer
-          enqueueSnackbar( error, { variant: `error` });
+        enqueueSnackbar( error, { variant: `error` });
         console.error(error);
       }
   };
 
   const handleNext = async () => {
     await trigger().then((response) => {
-      if( activeStep < 3 && response ) setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      if( activeStep < 4 && response ) setActiveStep((prevActiveStep) => prevActiveStep + 1);
     })
   };
 
@@ -102,21 +121,41 @@ function MachineTransferDialog() {
     if( activeStep > 0 ) setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
+  useEffect(()=>{
+    if(customer?._id){
+          setValue('customer',customer);
+          setValue('machineConnection', []);
+          setValue('installationSite', null);
+          setValue('billingSite', null);
+          dispatch(resetActiveSites());
+          dispatch(resetMachineConnections());
+          dispatch(getActiveSites(customer?._id, cancelTokenSource));
+          dispatch(getMachineConnections(customer?._id, cancelTokenSource));
+    }else{
+      setValue('customer',null);
+      setValue('machineConnection', []);
+      setValue('installationSite', null);
+      setValue('billingSite', null);
+      dispatch(resetActiveSites());
+      dispatch(resetMachineConnections());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ customer?._id ])
+
   return (
     <Dialog
       disableEnforceFocus
       fullWidth
-      maxWidth={ smScreen && !mdScreen && 'sm' || mdScreen &&  'md' }
+      maxWidth={ smScreen && !mdScreen && !lgScreen && 'sm' || mdScreen && !lgScreen && 'md' || lgScreen && 'lg' }
       open={ machineTransferDialog }
       onClose={ handleMachineDialog }
       aria-describedby="alert-dialog-slide-description"
     >
-      {/* <DialogTitle variant='h3' sx={{pb:1, pt:2}}>Transfer Machine</DialogTitle> */}
       <DialogLabel content="Transfer Ownership" onClick={ handleMachineDialog } />
       <Divider orientation="horizontal" flexItem />
-      <DialogContent dividers sx={{ height: '670px', p:2 }}>
+      <DialogContent dividers >
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
-          <Box >
+          <Box sx={{ p:2, height: '700px'  }}>
             <Stepper activeStep={activeStep} orientation="vertical">
               <Step key={0}>
                 <StepLabel>Informaton</StepLabel>
@@ -128,41 +167,10 @@ function MachineTransferDialog() {
                       size="small"
                       name="customer"
                       label="Customer"
-                      options={activeCustomers}
+                      options={activeCustomers.filter((cstmr)=> cstmr?._id !== machine?.customer?._id )}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name || ''}`}
-                      onChange={ async (event, newValue) => {
-                          if (newValue) {
-                            if(customer?._id !== newValue?._id) {
-                            setValue('machineConnectionVal', []);
-                            setValue('installationSite', null);
-                            setValue('billingSite', null);
-                            await dispatch(resetActiveSites());
-                            await dispatch(resetMachineConnections());
-                            await dispatch(getActiveSites(newValue?._id));
-                            await dispatch(getMachineConnections(newValue?._id));
-                            }
-                            setValue('customer',newValue);
-                          } else {
-                            setValue('customer',null);
-                            setValue('machineConnectionVal', []);
-                            setValue('installationSite', null);
-                            setValue('billingSite', null);
-                            await dispatch(resetActiveSites());
-                            await dispatch(resetMachineConnections());
-                          }
-                        }}
                       renderOption={(props, option) => ( <li {...props} key={option._id}> {option.name && option.name} </li> )}
-                      />
-
-                    <RHFAutocomplete
-                      size="small"
-                      name="status"
-                      label="Status"
-                      options={activeMachineStatuses.filter((st) => st?.slug !== 'intransfer')}
-                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                      getOptionLabel={(option) => `${option.name || ''}`}
-                      renderOption={(props, option) => (<li {...props} key={option._id}> {option.name && option.name} </li> )}
                     />
 
                     <RHFAutocomplete
@@ -170,6 +178,16 @@ function MachineTransferDialog() {
                       name="financialCompany"
                       label="Financing Company"
                       options={financialCompanies}
+                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                      getOptionLabel={(option) => `${option.name || ''}`}
+                      renderOption={(props, option) => ( <li {...props} key={option._id}> {option.name && option.name} </li> )}
+                    />
+
+                    <RHFAutocomplete
+                      size="small"
+                      name="billingSite"
+                      label="Billing Site"
+                      options={activeSites}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name || ''}`}
                       renderOption={(props, option) => ( <li {...props} key={option._id}> {option.name && option.name} </li> )}
@@ -185,20 +203,24 @@ function MachineTransferDialog() {
                       renderOption={(props, option) => (<li {...props} key={option._id}> {option.name && option.name} </li> )}
                     />
 
+                    <RHFDatePicker size="small" inputFormat='dd/MM/yyyy' name="shippingDate" label="Shipping Date" />
+
+                    <RHFDatePicker size="small" inputFormat='dd/MM/yyyy' name="installationDate" label="Installation Date" />
+
                     <RHFAutocomplete
                       size="small"
-                      name="billingSite"
-                      label="Billing Site"
-                      options={activeSites}
+                      name="status"
+                      label="Status"
+                      options={activeMachineStatuses.filter((st) => st?.slug !== 'intransfer')}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name || ''}`}
-                      renderOption={(props, option) => ( <li {...props} key={option._id}> {option.name && option.name} </li> )}
-                      />
+                      renderOption={(props, option) => (<li {...props} key={option._id}> {option.name && option.name} </li> )}
+                    />
 
                   </Box>
-                  <Box sx={{ mb: 2 }}>
+                  <Box sx={{ mb: 2, display:'flex', justifyContent: 'flex-end' }}>
                       <Button disabled={activeStep === 0} variant="outlined" onClick={handleBack} sx={{ mt: 1, mr: 1 }} > Back </Button>
-                      <Button variant="contained" onClick={handleNext} sx={{ mt: 1, mr: 1 }} >Continue</Button>
+                      <Button variant="contained" onClick={handleNext} sx={{ mt: 1, mr: 1 }} >Next</Button>
                   </Box>
                 </StepContent>
               </Step>
@@ -216,19 +238,42 @@ function MachineTransferDialog() {
                       wordBreak: 'break-word',
                       flexWrap: 'wrap', 
                     }} >
-                    <RHFCheckbox name="allSettings" label="All Settings"/>
-                    <RHFCheckbox name="allTools" label="All Tools"/>
-                    <RHFCheckbox name="allDrawings" label="All Drawings"/>
-                    <RHFCheckbox name="allProfiles" label="All Profiles"/>
-                    <RHFCheckbox name="allINIs" label="All INIs"/>
+                    <RHFCheckbox name="isAllSettings" label="All Settings"/>
+                    <RHFCheckbox name="isAllTools" label="All Tools"/>
+                    <RHFCheckbox name="isAllDrawings" label="All Drawings"/>
+                    <RHFCheckbox name="isAllProfiles" label="All Profiles"/>
+                    <RHFCheckbox name="isAllINIs" label="All INIs"/>
                   </Grid>
-                  <Box sx={{ mb: 2 }}>
+                  <Box sx={{ mb: 2, display:'flex', justifyContent: 'flex-end'  }}>
                       <Button variant="outlined" onClick={handleBack} sx={{ mt: 1, mr: 1 }} >Back</Button>
-                      <Button variant="contained" onClick={handleNext} sx={{ mt: 1, mr: 1 }} >Continue</Button>
+                      <Button variant="contained" onClick={handleNext} sx={{ mt: 1, mr: 1 }} >Next</Button>
                   </Box>
                 </StepContent>
               </Step>
               <Step key={2}>
+                <StepLabel>Machine Documents</StepLabel>
+                <StepContent>
+                  <RHFAutocomplete
+                    size="small"
+                    multiple
+                    disableCloseOnSelect
+                    filterSelectedOptions
+                    name="machineDocuments"
+                    id="tags-outlined"
+                    options={activeMachineDocuments}
+                    getOptionLabel={(option) => `${option?.displayName || ''}`}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    renderInput={(params) => ( <TextField  {...params}  label="Machine Documents"   placeholder="Search"  /> )}
+                  />
+                  <Box sx={{ mb: 2, display:'flex', justifyContent: 'flex-end'  }}>
+                    <div>
+                        <Button variant="outlined" onClick={handleBack} sx={{ mt: 1, mr: 1 }} >Back</Button>
+                        <Button variant="contained" onClick={handleNext} sx={{ mt: 1, mr: 1 }} >Next</Button>
+                    </div>
+                  </Box>
+                </StepContent>
+              </Step>
+              <Step key={3}>
                 <StepLabel>Connected Machines</StepLabel>
                 <StepContent>
                   <RHFAutocomplete
@@ -236,33 +281,37 @@ function MachineTransferDialog() {
                     multiple
                     disableCloseOnSelect
                     filterSelectedOptions
-                    name="machineConnectionVal"
+                    name="machineConnection"
                     id="tags-outlined"
                     options={machineConnections}
                     getOptionLabel={(option) => `${option.serialNo || ''} ${option.name ? '-' : ''} ${option.name || ''}`}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     renderInput={(params) => ( <TextField  {...params}  label="Connected Machines"   placeholder="Search"  /> )}
                   />
-                  <Box sx={{ mb: 2 }}>
+                  <Box sx={{ mb: 2,display:'flex', justifyContent: 'flex-end'}}>
                     <div>
                         <Button variant="outlined" onClick={handleBack} sx={{ mt: 1, mr: 1 }} >Back</Button>
-                        <Button variant="contained" onClick={handleNext} sx={{ mt: 1, mr: 1 }} >Continue</Button>
+                        <Button variant="contained" onClick={handleNext} sx={{ mt: 1, mr: 1 }} >Next</Button>
                     </div>
                   </Box>
                 </StepContent>
               </Step>
-              <Step key={3}>
-                <StepLabel>Confirmation</StepLabel>
+              <Step key={4}>
+                <StepLabel>Review Details</StepLabel>
                 <StepContent>
+                <FormLabel content='Information' />
                 <Box display="grid"
                   gridTemplateColumns={{ md: 'repeat(2, 1fr)', sm: 'repeat(1, 1fr)' }}
                 >
                   <ViewFormField heading="Customer" param={ customer?.name || '' } />
-                  <ViewFormField heading="Status" param={ status?.name  || '' } />
                   <ViewFormField heading="Financing Company" param={ financialCompany?.name || '' } />
-                  <ViewFormField heading="Installation Site" param={ installationSite?.name || '' } />
                   <ViewFormField heading="Billing Site" param={ billingSite?.name || '' } />
+                  <ViewFormField heading="Installation Site" param={ installationSite?.name || '' } />
+                  <ViewFormField heading="Shipping Date" param={ fDate(shippingDate) } />
+                  <ViewFormField heading="Installation Date" param={ fDate(installationDate) } />
+                  <ViewFormField heading="Status" param={ status?.name  || '' } />
                 </Box>
+                <FormLabel content='Configuration' />
                 <Grid
                     container
                     direction="row"
@@ -274,17 +323,20 @@ function MachineTransferDialog() {
                       wordBreak: 'break-word',
                       flexWrap: 'wrap', 
                     }} >
-                    <RHFCheckbox disabled name="allSettings" label="All Settings"/>
-                    <RHFCheckbox disabled name="allTools" label="All Tools"/>
-                    <RHFCheckbox disabled name="allDrawings" label="All Drawings"/>
-                    <RHFCheckbox disabled name="allProfiles" label="All Profiles"/>
-                    <RHFCheckbox disabled name="allINIs" label="All INIs"/>
+                    <RHFCheckbox disabled name="isAllSettings" label="All Settings"/>
+                    <RHFCheckbox disabled name="isAllTools" label="All Tools"/>
+                    <RHFCheckbox disabled name="isAllDrawings" label="All Drawings"/>
+                    <RHFCheckbox disabled name="isAllProfiles" label="All Profiles"/>
+                    <RHFCheckbox disabled name="isAllINIs" label="All INIs"/>
                   </Grid>
-                  <ViewFormField heading="Connected Machines" machineConnectionArrayChip={ machineConnectionVal || [] } />
-                  <Box sx={{ mb: 2, mt:3.5 }}>
+                  <FormLabel content='Machine Documents' />
+                  <ViewFormField  machineDocumentsArrayChip={ machineDocuments || [] } />
+                  <FormLabel content='Connected Machines' />
+                  <ViewFormField machineConnectionArrayChip={ machineConnection || [] } />
+                  <Box sx={{ mb: 2, mt:3.5, display:'flex', justifyContent: 'flex-end' }}>
                     <div>
                       <Button variant="outlined" onClick={handleBack} sx={{ mr: 1 }} >Back</Button>
-                      <LoadingButton variant="contained" type="submit" loading={isSubmitting} >Confirm</LoadingButton>
+                      <LoadingButton variant="contained" type="submit" loading={isSubmitting} >Transfer</LoadingButton>
                     </div>
                   </Box>
                 </StepContent>

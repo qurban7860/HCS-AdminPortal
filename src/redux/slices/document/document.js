@@ -658,7 +658,7 @@ export function getMachineDrawingsDocuments() {
 
 // -----------------------------------Get Active Documents-----------------------------------
 
-export function getActiveDocuments() {
+export function getActiveDocuments(machineId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -667,6 +667,7 @@ export function getActiveDocuments() {
         params: {
           isActive: true,
           isArchived: false,
+          machiine: machineId,
         }
       }
       );

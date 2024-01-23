@@ -102,7 +102,6 @@ const slice = createSlice({
       state.initial = true;
     },
 
-
     // RESET Machine Document
     resetMachineDocument(state){
       state.machineDocument = {};
@@ -118,7 +117,13 @@ const slice = createSlice({
       state.success = false;
       state.isLoading = false;
     },
-
+    // RESET ACTIVE Machine Documents
+    resetActiveMachineDocuments(state){
+      state.activeMachineDocuments = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
   },
 });
 
@@ -134,6 +139,7 @@ export const {
   setMachineDocumentEdit,
   resetMachineDocument,
   resetMachineDocuments,
+  resetActiveMachineDocuments,
   setResponseMessage,
 } = slice.actions;
 
@@ -274,7 +280,7 @@ export function getMachineDocuments(machineId) {
 
 // -----------------------------------Get Active Machine Document-----------------------------------
 
-export function getActiveMachineDocuments(machineId) {
+export function getActiveMachineDocuments(machineId, cancelToken ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -284,7 +290,8 @@ export function getActiveMachineDocuments(machineId) {
           isActive: true,
           isArchived: false,
           machine: machineId
-        }
+        },
+        cancelToken: cancelToken?.token,
       }
       );
       dispatch(slice.actions.getActiveMachineDocumentsSuccess(response.data));

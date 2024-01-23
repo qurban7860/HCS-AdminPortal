@@ -325,7 +325,7 @@ export function getSites(customerID) {
 
 // ----------------------------------------------------------------------
 
-export function getActiveSites(customerID) {
+export function getActiveSites(customerID, cancelToken) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -336,7 +336,8 @@ export function getActiveSites(customerID) {
           params: {
             isActive: true,
             isArchived: false
-          }
+          },
+        cancelToken: cancelToken?.token,
         }
         );
         dispatch(slice.actions.getActiveSitesSuccess(response.data));

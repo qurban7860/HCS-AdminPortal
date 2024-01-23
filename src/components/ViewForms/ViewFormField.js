@@ -30,6 +30,7 @@ function ViewFormField({
   customerVerificationCount,
   machineVerificationCount,
   machineConnectionArrayChip,
+  machineDocumentsArrayChip,
   verified,
   chipDialogArrayParam,
   customerVerifiedBy,
@@ -206,6 +207,23 @@ function ViewFormField({
           )}
         </Grid>
       )}
+      { machineDocumentsArrayChip && Array.isArray(machineDocumentsArrayChip) && machineDocumentsArrayChip.length > 0 && (
+        <Grid container sx={{
+            display: 'flex',
+            alignItems: 'center',
+            whiteSpace: 'pre-line',
+            wordBreak: 'break-word',
+            mt:-1,
+            mb:1,
+            }} >
+          { machineDocumentsArrayChip?.map(
+            (data, index) =>
+              data?.displayName &&
+              typeof data?.displayName === 'string' &&
+              data?.displayName.trim().length > 0 && <Chip key={index} label={`${data?.displayName || '' }`} sx={{m:0.2}} />
+          )}
+        </Grid>
+      )}
         {toolType && typeof toolType === 'object' && toolType?.length > 0 && (
             <Grid container sx={{my:-3, mb:0,
               display: 'flex',
@@ -327,6 +345,7 @@ ViewFormField.propTypes = {
   customerVerificationCount: PropTypes.number,
   machineVerificationCount: PropTypes.number,
   machineConnectionArrayChip: PropTypes.array,
+  machineDocumentsArrayChip: PropTypes.array,
   verified: PropTypes.bool,
   machineVerifiedBy: PropTypes.array,
   customerVerifiedBy: PropTypes.array,
