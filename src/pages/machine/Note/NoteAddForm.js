@@ -12,13 +12,13 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 // slice
 import { addNote, setNoteFormVisibility } from '../../../redux/slices/products/machineNote';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
-import FormHeading from '../../components/DocumentForms/FormHeading';
+import FormHeading from '../../../components/DocumentForms/FormHeading';
 
 // ----------------------------------------------------------------------
 

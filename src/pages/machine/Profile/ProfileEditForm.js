@@ -7,7 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, Stack, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import { MuiChipsInput } from 'mui-chips-input';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { useSnackbar } from '../../../components/snackbar';
 import { 
   setProfileEditFormVisibility, 

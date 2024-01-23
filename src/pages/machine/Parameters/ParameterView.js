@@ -13,7 +13,7 @@ import { PATH_MACHINE } from '../../../routes/paths';
 
 // import ParameterList from './ParameterList';
 import ParameterViewForm from './ParameterViewForm';
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 // import ParameterEditForm from './ParameterEditForm';
 

@@ -5,8 +5,8 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Card, Grid, Stack, Typography, TextField,  Autocomplete,   Skeleton } from '@mui/material';
 
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import FormHeading from '../../components/DocumentForms/FormHeading';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
+import FormHeading from '../../../components/DocumentForms/FormHeading';
 import { FORMLABELS } from '../../../constants/default-constants';
 // slice
 import { addMachineServiceRecord, setMachineServiceRecordAddFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
@@ -23,7 +23,7 @@ import FormProvider, {
 } from '../../../components/hook-form';
 import { getActiveSecurityUsers, getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
 import CollapsibleCheckedItemInputRow from './CollapsibleCheckedItemInputRow';
-import FormLabel from '../../components/DocumentForms/FormLabel';
+import FormLabel from '../../../components/DocumentForms/FormLabel';
 
 // ----------------------------------------------------------------------
 

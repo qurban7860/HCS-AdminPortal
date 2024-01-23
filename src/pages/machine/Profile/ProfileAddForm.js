@@ -12,7 +12,7 @@ import { ProfileTypes, addProfile, setProfileFormVisibility } from '../../../red
 import { ProfileSchema } from './schemas/ProfileSchema';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 
 // assets
 import FormProvider, { RHFSwitch, RHFTextField } from '../../../components/hook-form';

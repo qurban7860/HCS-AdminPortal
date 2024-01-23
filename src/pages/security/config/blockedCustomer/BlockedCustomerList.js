@@ -34,9 +34,9 @@ import { getBlockedCustomers , deleteBlockedCustomer,
   ChangePage,
   setFilterBy,
  } from '../../../../redux/slices/securityConfig/blockedCustomers';
-import { Cover } from '../../../components/Defaults/Cover';
+import { Cover } from '../../../../components/Defaults/Cover';
 import { fDate } from '../../../../utils/formatTime';
-import TableCard from '../../../components/ListTableTools/TableCard';
+import TableCard from '../../../../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 

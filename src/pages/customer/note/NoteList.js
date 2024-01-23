@@ -32,7 +32,7 @@ import {
   setFilterBy,
   setNoteViewFormVisibility } from '../../../redux/slices/customer/customerNote';
 import { fDate } from '../../../utils/formatTime';
-import TableCard from '../../components/ListTableTools/TableCard';
+import TableCard from '../../../components/ListTableTools/TableCard';
 
 export default function NoteList() {
   const {

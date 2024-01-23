@@ -7,7 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, Grid, Stack, Container } from '@mui/material';
 // slice
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { addCategory } from '../../../redux/slices/products/category';
 // schema
 import { AddMachineSchema } from '../../schemas/document';
@@ -21,9 +21,9 @@ import FormProvider, { RHFTextField } from '../../../components/hook-form';
 // // asset
 // import { countries } from '../../../assets/data';
 // util
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
-import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
+import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
 // constants
 import { FORMLABELS } from '../../../constants/default-constants';
 // import { Snacks, FORMLABELS as formLABELS } from '../../../constants/document-constants';

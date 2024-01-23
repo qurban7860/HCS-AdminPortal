@@ -51,7 +51,7 @@ import { resetCustomerMachines } from '../../redux/slices/products/machine';
 // hooks
 import { useSettingsContext } from '../../components/settings';
 import useResponsive from '../../hooks/useResponsive';
-import { Cover } from '../components/Defaults/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../utils/formatTime';
 import { DIALOGS, BUTTONS, FORMLABELS } from '../../constants/default-constants';
 // ----------------------------------------------------------------------

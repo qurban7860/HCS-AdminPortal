@@ -5,7 +5,7 @@ import { Stack } from '@mui/material';
 // redux
 // import { useDispatch } from '../../redux/store';
 // components
-import SearchBarCombo from '../components/ListTableTools/SearchBarCombo';
+import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 // import Iconify from '../../components/iconify';
 import { PATH_SETTING } from '../../routes/paths';
 import { BUTTONS } from '../../constants/default-constants';

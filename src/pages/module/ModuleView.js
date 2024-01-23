@@ -8,7 +8,7 @@ import { PATH_SETTING } from '../../routes/paths';
 // redux
 import { getModule } from '../../redux/slices/module/module';
 // sections
-import { Cover } from '../components/Defaults/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import ModuleViewForm from './ModuleViewForm';
 /* eslint-disable */
 

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 // @mui
 import { Stack } from '@mui/material';
-import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
+import SearchBarCombo from '../../../components/ListTableTools/SearchBarCombo';
 import { options } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------

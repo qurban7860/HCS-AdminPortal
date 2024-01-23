@@ -10,7 +10,7 @@ import { PATH_SETTING } from '../../../routes/paths';
 import { getRole } from '../../../redux/slices/securityUser/role';
 import { getAssignedSecurityUsers } from '../../../redux/slices/securityUser/securityUser';
 // sections
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import RoleViewForm from './RoleViewForm';
 /* eslint-disable */
 

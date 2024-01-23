@@ -11,7 +11,7 @@ import { PATH_SETTING } from '../../routes/paths';
 // import { useSnackbar } from '../../components/snackbar';
 import Scrollbar from '../../components/scrollbar';
 import ConfirmDialog from '../../components/confirm-dialog';
-import { Cover } from '../components/Defaults/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import {
   useTable,
   getComparator,

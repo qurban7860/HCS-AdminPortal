@@ -32,7 +32,7 @@ import {
   setFilterBy,
   setToolInstalledViewFormVisibility } from '../../../redux/slices/products/toolInstalled';
 import { fDate } from '../../../utils/formatTime';
-import TableCard from '../../components/ListTableTools/TableCard';
+import TableCard from '../../../components/ListTableTools/TableCard';
 
 export default function ToolInstalledList() {
   const {

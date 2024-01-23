@@ -8,7 +8,7 @@ import { PATH_SETTING } from '../../routes/paths';
 // redux
 import { getRegion } from '../../redux/slices/region/region';
 // sections
-import { Cover } from '../components/Defaults/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import RegionViewForm from './RegionViewForm';
 /* eslint-disable */
 

@@ -24,11 +24,11 @@ import FormProvider, {
   RHFMultiSelect,
   RHFTextField,
 } from '../../../components/hook-form';
-import { AddFormLabel } from '../../components/DocumentForms/FormLabel';
-import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
+import { AddFormLabel } from '../../../components/DocumentForms/FormLabel';
+import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
 // assets
 import { countries } from '../../../assets/data';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 // schema
 import { ContactSchema } from '../../schemas/customer';
 // constants

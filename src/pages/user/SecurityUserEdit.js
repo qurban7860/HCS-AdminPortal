@@ -2,7 +2,7 @@
 import { Container, Card } from '@mui/material';
 // redux
 import UserEditForm from './SecurityUserEditForm';
-import { Cover } from '../components/Defaults/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 
 // ----------------------------------------------------------------------
 

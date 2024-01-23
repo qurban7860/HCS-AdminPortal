@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 // components
-import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
+import SearchBarCombo from '../../../components/ListTableTools/SearchBarCombo';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 // constants

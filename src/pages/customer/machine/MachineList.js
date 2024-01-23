@@ -25,7 +25,7 @@ import MachineListTableRow from './MachineListTableRow';
 import MachineListTableToolbar from './MachineListTableToolbar';
 
 import { fDate } from '../../../utils/formatTime';
-import TableCard from '../../components/ListTableTools/TableCard';
+import TableCard from '../../../components/ListTableTools/TableCard';
 import { getCustomerMachines, ChangeRowsPerPage,
   ChangePage,
   // setFilterBy,
@@ -33,7 +33,7 @@ import { getCustomerMachines, ChangeRowsPerPage,
   setMachineMoveFormVisibility,
   getMachine,
   getMachineForDialog, } from '../../../redux/slices/products/machine';
-import MachineDialog from '../../components/Dialog/MachineDialog';
+import MachineDialog from '../../../components/Dialog/MachineDialog';
 import { PATH_MACHINE } from '../../../routes/paths';
 
 export default function MachineList() {

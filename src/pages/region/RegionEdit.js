@@ -2,7 +2,7 @@
 import { Container, Card } from '@mui/material';
 // sections
 import RegionEditForm from './RegionEditForm';
-import { Cover } from '../components/Defaults/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 
 // ----------------------------------------------------------------------
 

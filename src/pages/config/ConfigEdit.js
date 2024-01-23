@@ -7,7 +7,7 @@ import { Container, Card } from '@mui/material';
 // import { getSecurityUser } from '../../redux/slices/securityUser/securityUser';
 // sections
 import ConfigEditForm from './ConfigEditForm';
-import { Cover } from '../components/Defaults/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 
 // ----------------------------------------------------------------------
 

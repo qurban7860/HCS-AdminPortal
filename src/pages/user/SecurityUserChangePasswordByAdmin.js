@@ -12,9 +12,9 @@ import { Stack, Card, Container, IconButton, InputAdornment, Grid } from '@mui/m
 import Iconify from '../../components/iconify';
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
-import { Cover } from '../components/Defaults/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import { SecurityUserPasswordUpdate } from '../../redux/slices/securityUser/securityUser';
-import AddFormButtons from '../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { PATH_SECURITY } from '../../routes/paths';
 
 // ----------------------------------------------------------------------

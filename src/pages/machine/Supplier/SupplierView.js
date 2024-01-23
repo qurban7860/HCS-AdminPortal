@@ -11,7 +11,7 @@ import { useSettingsContext } from '../../../components/settings';
 import SupplierViewForm from './SupplierViewForm';
 /* eslint-disable */
 import SupplierEditForm from './SupplierEditForm';
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 
 SupplierView.propTypes = {

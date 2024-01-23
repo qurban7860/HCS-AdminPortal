@@ -35,12 +35,12 @@ import { getDrawings, resetDrawings, setDrawingAddFormVisibility } from '../../.
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFAutocomplete, RHFTextField, RHFUpload,} from '../../../components/hook-form';
 // assets
-import DialogLabel from '../../components/Dialog/DialogLabel';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import RadioButtons from '../../components/DocumentForms/RadioButtons';
-import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
+import DialogLabel from '../../../components/Dialog/DialogLabel';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
+import RadioButtons from '../../../components/DocumentForms/RadioButtons';
+import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
 import { DocRadioValue, DocRadioLabel, Snacks,} from '../../../constants/document-constants';
-import DocumentCover from '../../components/DocumentForms/DocumentCover';
+import DocumentCover from '../../../components/DocumentForms/DocumentCover';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { documentSchema } from '../../schemas/document';
 import ConfirmDialog from '../../../components/confirm-dialog';

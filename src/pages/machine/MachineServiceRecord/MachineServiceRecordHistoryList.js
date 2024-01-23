@@ -40,8 +40,8 @@ import {
   setFilterBy
 } from '../../../redux/slices/products/machineServiceRecord';
 import { fDate } from '../../../utils/formatTime';
-import TableCard from '../../components/ListTableTools/TableCard';
-import IconTooltip from '../../components/Icons/IconTooltip';
+import TableCard from '../../../components/ListTableTools/TableCard';
+import IconTooltip from '../../../components/Icons/IconTooltip';
 import { StyledStack } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------

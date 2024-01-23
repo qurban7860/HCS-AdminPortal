@@ -21,8 +21,8 @@ import { addBlockedCustomers, getBlockedCustomers, resetBlockedCustomers } from 
 import { useSnackbar } from '../../../../components/snackbar';
 // assets
 import FormProvider, { RHFAutocomplete } from '../../../../components/hook-form';
-import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import { Cover } from '../../../components/Defaults/Cover';
+import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
+import { Cover } from '../../../../components/Defaults/Cover';
 
 
 export default function BlockedCustomerAddForm() {

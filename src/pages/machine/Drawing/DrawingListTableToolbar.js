@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from '../../../redux/store';
 // components
 import { setDrawingAddFormVisibility, setDrawingFormVisibility } from '../../../redux/slices/products/drawing';
-import { SearchBarCombo } from '../../components/ListTableTools';
+import { SearchBarCombo } from '../../../components/ListTableTools';
 // constants
 import { BUTTONS } from '../../../constants/default-constants';
 

@@ -20,7 +20,7 @@ import Iconify from '../../components/iconify';
 import MachineListTableRow from './MachineListTableRow';
 import MachineListTableToolbar from './MachineListTableToolbar';
 
-import { Cover } from '../components/Defaults/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 
 // slice
@@ -53,9 +53,9 @@ import { useSnackbar } from '../../components/snackbar';
 // auth
 // asset
 // util
-import TableCard from '../components/ListTableTools/TableCard';
+import TableCard from '../../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
-import CustomerDialog from '../components/Dialog/CustomerDialog';
+import CustomerDialog from '../../components/Dialog/CustomerDialog';
 import { exportCSV } from '../../utils/exportCSV';
 
 // ----------------------------------------------------------------------

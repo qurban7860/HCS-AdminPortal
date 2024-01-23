@@ -26,10 +26,10 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 // sections
 import ListTableRow from './ServiceCategoryListTableRow';
 import ListTableToolbar from './ServiceCategoryListTableToolbar';
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
-import TableCard from '../../components/ListTableTools/TableCard';
+import TableCard from '../../../components/ListTableTools/TableCard';
 import { FORMLABELS } from '../../../constants/default-constants';
 
 // ----------------------------------------------------------------------

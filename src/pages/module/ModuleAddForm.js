@@ -23,7 +23,7 @@ import FormProvider, { RHFSwitch, RHFTextField } from '../../components/hook-for
 // slice
 import { AddModule } from '../../redux/slices/module/module';
 // current user
-import AddFormButtons from '../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
 export default function ModuleAddForm() {

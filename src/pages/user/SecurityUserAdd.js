@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Container, Card } from '@mui/material';
 // sections
 import SecurityUserAddForm from './SecurityUserAddForm';
-import { Cover } from '../components/Defaults/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 // ----------------------------------------------------------------------
 
 SecurityUserAdd.propTypes = {

@@ -27,8 +27,8 @@ import FormProvider, {
   RHFSwitch,
 } from '../../../components/hook-form';
 import { getRole, updateRole } from '../../../redux/slices/securityUser/role';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import { Cover } from '../../components/Defaults/Cover';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
+import { Cover } from '../../../components/Defaults/Cover';
 
 // ----------------------------------------------------------------------
 

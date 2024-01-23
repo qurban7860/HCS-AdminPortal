@@ -18,15 +18,15 @@ import { getActiveMachineModels, resetActiveMachineModels } from '../../redux/sl
 import { getActiveMachineStatuses, resetActiveMachineStatuses } from '../../redux/slices/products/statuses';
 import { getActiveSuppliers, resetActiveSuppliers } from '../../redux/slices/products/supplier';
 import { getMachineConnections, resetMachineConnections } from '../../redux/slices/products/machineConnections';
-import { Cover } from '../components/Defaults/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 // routes
 import { PATH_CUSTOMER, PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFTextField, RHFAutocomplete, RHFDatePicker } from '../../components/hook-form';
-import AddFormButtons from '../components/DocumentForms/AddFormButtons';
-import ToggleButtons from '../components/DocumentForms/ToggleButtons';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import { FORMLABELS } from '../../constants/default-constants';
 import { machineSchema } from '../schemas/machine'
 
@@ -137,17 +137,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     setValue('status', activeMachineStatuses.find((element)=> element.isDefault === true) )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ activeMachineStatuses ])
-
-  useEffect(() => {
-    dispatch(resetActiveSites());
-    if (customer !== null && customer._id !== undefined) {
-      dispatch(getActiveSites(customer._id));
-      dispatch(getMachineConnections(customer._id));
-    }else{
-      dispatch(resetMachineConnections())
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, customer]);
 
  styled('li')(({ theme }) => ({
     margin: theme.spacing(0.5),
@@ -300,12 +289,16 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || ''}`}</li> )}
-                    onChange={(event, newValue) => {
+                    onChange={async (event, newValue) => {
                       if (newValue) {
                         if(customer?._id !== newValue._id) {
+                        await dispatch(resetMachineConnections())
+                        await dispatch(resetActiveSites());
                         setValue('machineConnectionVal', []);
                         setValue('instalationSite', null);
                         setValue('billingSite', null);
+                        await dispatch(getActiveSites(newValue._id));
+                        await dispatch(getMachineConnections(newValue._id));
                         setValue('accountManager', spContacts.filter(item => Array.isArray(newValue?.accountManager) && newValue?.accountManager.includes(item?._id)))
                         setValue('projectManager', spContacts.filter(item => Array.isArray(newValue?.projectManager) && newValue?.projectManager.includes(item?._id)))
                         setValue('supportManager', spContacts.filter(item => Array.isArray(newValue?.supportManager) && newValue?.supportManager.includes(item?._id)))
@@ -316,7 +309,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                         setValue('machineConnectionVal', []);
                         setValue('instalationSite', null);
                         setValue('billingSite', null);
-                        dispatch(resetActiveSites());
+                        await dispatch(resetActiveSites());
+                        await dispatch(resetMachineConnections())
                       }
                     }}
                     ChipProps={{ size: 'small' }}

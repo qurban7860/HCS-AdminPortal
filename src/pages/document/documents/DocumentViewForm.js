@@ -26,15 +26,15 @@ import {
 } from '../../../redux/slices/document/document';
 import { deleteDocumentFile, downloadFile, getDocumentDownload } from '../../../redux/slices/document/documentFile';
 // components
-import { Thumbnail, ThumbnailDocButton } from '../../components/Thumbnails';
+import { Thumbnail, ThumbnailDocButton } from '../../../components/Thumbnails';
 import { useSnackbar } from '../../../components/snackbar';
 import { Snacks } from '../../../constants/document-constants';
-import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
-import ViewFormField from '../../components/ViewForms/ViewFormField';
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../../../components/ViewForms/ViewFormField';
+import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
 import Lightbox from '../../../components/lightbox/Lightbox';
-import FormLabel from '../../components/DocumentForms/FormLabel';
+import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { SkeletonDocument } from '../../../components/skeleton';
 
 DocumentViewForm.propTypes = {

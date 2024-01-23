@@ -5,13 +5,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Typography, Card, Grid, Stack } from '@mui/material';
-import UpdateFormButtons from '../../components/DocumentForms/UpdateFormButtons';
+import UpdateFormButtons from '../../../components/DocumentForms/UpdateFormButtons';
 // Slice
 import { updateNote, setNoteEditFormVisibility } from '../../../redux/slices/products/machineNote';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
-import FormHeading from '../../components/DocumentForms/FormHeading';
+import FormHeading from '../../../components/DocumentForms/FormHeading';
 
 // ----------------------------------------------------------------------
 export default function NoteEditForm() {

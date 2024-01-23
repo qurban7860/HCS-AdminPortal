@@ -314,5 +314,5 @@ export const MaintenancePage = Loadable(lazy(() => import('../pages/MaintenanceP
 export const ErrorPage = Loadable(lazy(() => import('../pages/ErrorPage')));
 export const UserInviteLanding = Loadable(lazy(() => import('../pages/UserInviteLanding')));
 export const ComponentsOverviewPage = Loadable(
-  lazy(() => import('../pages/components/Defaults/ComponentsOverviewPage'))
+  lazy(() => import('../components/Defaults/ComponentsOverviewPage'))
 );

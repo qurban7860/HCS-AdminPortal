@@ -10,7 +10,7 @@ import { PATH_MACHINE } from '../../../routes/paths';
 
 // import ServiceRecordConfigList from './ServiceRecordConfigList';
 import ServiceRecordConfigViewForm from './ServiceRecordConfigViewForm';
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 /* eslint-disable */
 

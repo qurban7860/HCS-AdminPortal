@@ -5,17 +5,17 @@ import { Card, Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 // import { fDate } from 'src/utils/formatTime';
 import { fDate } from '../../../utils/formatTime';
-import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import { useSnackbar } from '../../../components/snackbar';
 // components
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import {
   setLicenseEditFormVisibility,
   getLicense,
   deleteLicense,
   setLicenseViewFormVisibility,
 } from '../../../redux/slices/products/license';
-import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 // constants
 import { Snacks } from '../../../constants/machine-constants';
 

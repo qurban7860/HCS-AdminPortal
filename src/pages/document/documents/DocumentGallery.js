@@ -10,14 +10,14 @@ import { bgBlur } from '../../../utils/cssStyles';
 // components
 import Image from '../../../components/image';
 import Lightbox from '../../../components/lightbox';
-import FormLabel from '../../components/DocumentForms/FormLabel';
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import FormLabel from '../../../components/DocumentForms/FormLabel';
+import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import { getDocumentGallery, setDocumentGalleryVisibility } from '../../../redux/slices/document/document';
 import { downloadFile } from '../../../redux/slices/document/documentFile';
 import { useSnackbar } from '../../../components/snackbar';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import { PATH_DOCUMENT } from '../../../routes/paths';
 import { SkeletonGallery } from '../../../components/skeleton';
 import EmptyContent from '../../../components/empty-content/EmptyContent';

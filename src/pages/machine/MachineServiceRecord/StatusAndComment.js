@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { Grid, Divider, Chip, TableRow, Typography } from '@mui/material';
 import { fDate } from '../../../utils/formatTime';
 import Iconify from '../../../components/iconify';
-import CopyIcon from '../../components/Icons/CopyIcon';
-import HistoryDropDownUpIcons from '../../components/Icons/HistoryDropDownUpIcons';
-import ViewFormServiceRecordVersionAudit from '../../components/ViewForms/ViewFormServiceRecordVersionAudit';
+import CopyIcon from '../../../components/Icons/CopyIcon';
+import HistoryDropDownUpIcons from '../../../components/Icons/HistoryDropDownUpIcons';
+import ViewFormServiceRecordVersionAudit from '../../../components/ViewForms/ViewFormServiceRecordVersionAudit';
 
 const StatusAndComment = ({index, childIndex, childRow}) => {
 

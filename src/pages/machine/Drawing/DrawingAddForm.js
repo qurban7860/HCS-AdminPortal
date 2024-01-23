@@ -16,7 +16,7 @@ import { resetActiveDocuments, getActiveDocumentsByType } from '../../../redux/s
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, {  RHFSwitch } from '../../../components/hook-form';
 // util
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
 

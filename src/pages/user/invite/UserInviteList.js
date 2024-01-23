@@ -11,7 +11,7 @@ import {
 import { useNavigate } from 'react-router';
 import { PATH_PAGE, PATH_SETTING } from '../../../routes/paths';
 
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
@@ -37,7 +37,7 @@ import {
   ChangePage,
   setFilterBy } from '../../../redux/slices/securityUser/invite';
 import { fDate } from '../../../utils/formatTime';
-import TableCard from '../../components/ListTableTools/TableCard';
+import TableCard from '../../../components/ListTableTools/TableCard';
 
 export default function UserInviteList() {
   const {

@@ -7,8 +7,8 @@ import {
 // utils
 import { styled } from '@mui/material/styles';
 // components
-import LinkTableCellButtons from '../../components/ListTableTools/LinkTableCellButtons';
-import LinkDialogTableCellTargetBlank from '../../components/ListTableTools/LinkDialogTableCellTargetBlank';
+import LinkTableCellButtons from '../../../components/ListTableTools/LinkTableCellButtons';
+import LinkDialogTableCellTargetBlank from '../../../components/ListTableTools/LinkDialogTableCellTargetBlank';
 
 MachineListTableRow.propTypes = {
   row: PropTypes.object,

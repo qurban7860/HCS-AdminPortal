@@ -14,7 +14,7 @@ import { getCheckItem } from '../../../redux/slices/products/machineCheckItems';
 // import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 // import { useSettingsContext } from '../../../components/settings';
 // sections
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import CheckItemViewForm from './CheckItemViewForm';
 /* eslint-disable */
 

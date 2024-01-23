@@ -7,7 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, Grid, Stack, Typography, Container } from '@mui/material';
 // slice
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { addServiceRecordConfig } from '../../../redux/slices/products/serviceRecordConfig';
 import { getActiveMachineModels, resetActiveMachineModels } from '../../../redux/slices/products/model';
 import { getActiveCategories, resetActiveCategories } from '../../../redux/slices/products/category';
@@ -21,7 +21,7 @@ import { PATH_MACHINE } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete} from '../../../components/hook-form';
 // util
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 // constants
 import { FORMLABELS } from '../../../constants/default-constants';

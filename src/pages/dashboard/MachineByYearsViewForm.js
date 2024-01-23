@@ -9,10 +9,10 @@ import {  getMachinesByYear, setMachineCategory, setMachineCountry, setMachineMo
 import {  getActiveMachineModels } from '../../redux/slices/products/model';
 import {  getActiveCategories } from '../../redux/slices/products/category';
 // hooks
-import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import { StyledGlobalCard } from '../../theme/styles/default-styles';
-import ChartBar from '../components/Charts/ChartBar';
-import { Cover } from '../components/Defaults/Cover';
+import ChartBar from '../../components/Charts/ChartBar';
+import { Cover } from '../../components/Defaults/Cover';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import { countries } from '../../assets/data';
 

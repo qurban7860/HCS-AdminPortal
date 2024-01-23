@@ -1,4 +1,4 @@
-import { regExp } from '../../../components/RegularExpression/regularExpression'
+import { regExp } from '../../../../components/RegularExpression/regularExpression'
 
 export { default as SiteCover } from './SiteCover';
 

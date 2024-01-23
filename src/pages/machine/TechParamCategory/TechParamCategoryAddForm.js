@@ -15,11 +15,11 @@ import { PATH_MACHINE } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField } from '../../../components/hook-form';
 // util
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
+import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
 // constants
 import { FORMLABELS } from '../../../constants/default-constants';
 // ----------------------------------------------------------------------

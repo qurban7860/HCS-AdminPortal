@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from '../../../redux/store';
 // components
 import { setNoteFormVisibility } from '../../../redux/slices/products/machineNote';
-import { SearchBarCombo } from '../../components/ListTableTools';
+import { SearchBarCombo } from '../../../components/ListTableTools';
 import { BUTTONS } from '../../../constants/default-constants';
 
 // ----------------------------------------------------------------------

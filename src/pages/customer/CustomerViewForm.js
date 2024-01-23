@@ -15,10 +15,10 @@ import {
   setCustomerVerification,
 } from '../../redux/slices/customer/customer';
 // components
-import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
-import ViewFormField from '../components/ViewForms/ViewFormField';
-import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
-import FormLabel from '../components/DocumentForms/FormLabel';
+import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import FormLabel from '../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/default-constants';
 import { Snacks, FORMLABELS as formLABELS } from '../../constants/customer-constants';
 

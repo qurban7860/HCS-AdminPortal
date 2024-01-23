@@ -15,12 +15,12 @@ import {
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFAutocomplete, RHFTextField } from '../../../components/hook-form';
-import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
+import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
 // constants
 import { Snacks } from '../../../constants/machine-constants';
 // schema
 import { AddSettingSchema } from './schemas/AddSettingSchema';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
 

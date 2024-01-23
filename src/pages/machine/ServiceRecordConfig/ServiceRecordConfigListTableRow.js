@@ -3,7 +3,7 @@ import { useState } from 'react';
 // @mui
 import { Switch, Button, TableRow, MenuItem, TableCell } from '@mui/material';
 // components
-import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
+import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 import MenuPopover from '../../../components/menu-popover/MenuPopover';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // utils

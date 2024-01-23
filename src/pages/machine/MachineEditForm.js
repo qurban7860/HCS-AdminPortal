@@ -25,11 +25,11 @@ import { getActiveCategories } from '../../redux/slices/products/category';
 import { useSnackbar } from '../../components/snackbar';
 // components
 import FormProvider, { RHFTextField, RHFAutocomplete, RHFDatePicker } from '../../components/hook-form';
-import AddFormButtons from '../components/DocumentForms/AddFormButtons';
-import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
-import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
-import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
-import ToggleButtons from '../components/DocumentForms/ToggleButtons';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
+import AddButtonAboveAccordion from '../../components/Defaults/AddButtonAboveAcoordion';
+import BreadcrumbsProvider from '../../components/Breadcrumbs/BreadcrumbsProvider';
+import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 // constants
 import { BREADCRUMBS, FORMLABELS } from '../../constants/default-constants';
 import { machineSchema } from '../schemas/machine'
@@ -124,13 +124,6 @@ export default function MachineEditForm() {
     dispatch(getSPContacts());
     setChips(machine?.alias);
   }, [dispatch, machine]);
-
-  useEffect( () => {
-    if (customer && customer?._id ) {
-      dispatch(getActiveSites(customer?._id));
-      dispatch(getMachineConnections(customer?._id));
-    }
-  }, [dispatch, customer]);
 
   const toggleCancel = () => {
     dispatch(setMachineEditFormVisibility(false));
@@ -277,24 +270,28 @@ export default function MachineEditForm() {
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || ''}`}</li> )}
-                    onChange={(event, newValue) => {
+                    onChange={async (event, newValue) => {
                       if (newValue) {
                         setValue('customer',newValue);
                         if(customer?._id !== newValue._id) {
-                        setValue('machineConnectionVal', []);
-                        setValue('instalationSite', null);
-                        setValue('billingSite', null);
-                        setValue('accountManager', spContacts.filter(item => Array.isArray(newValue?.accountManager) && newValue?.accountManager.includes(item?._id)))
-                        setValue('projectManager', spContacts.filter(item => Array.isArray(newValue?.projectManager) && newValue?.projectManager.includes(item?._id)))
-                        setValue('supportManager', spContacts.filter(item => Array.isArray(newValue?.supportManager) && newValue?.supportManager.includes(item?._id)))
+                          await dispatch(resetMachineConnections());
+                          await dispatch(resetActiveSites());
+                          setValue('machineConnectionVal', []);
+                          setValue('instalationSite', null);
+                          setValue('billingSite', null);
+                          setValue('accountManager', spContacts.filter(item => Array.isArray(newValue?.accountManager) && newValue?.accountManager.includes(item?._id)))
+                          setValue('projectManager', spContacts.filter(item => Array.isArray(newValue?.projectManager) && newValue?.projectManager.includes(item?._id)))
+                          setValue('supportManager', spContacts.filter(item => Array.isArray(newValue?.supportManager) && newValue?.supportManager.includes(item?._id)))
+                          await dispatch(getActiveSites(newValue?._id));
+                          await dispatch(getMachineConnections(newValue?._id));
                         }
                       } else {
                         setValue('customer',null);
-                        dispatch(resetMachineConnections());
                         setValue('machineConnectionVal', []);
                         setValue('instalationSite', null);
                         setValue('billingSite', null);
-                        dispatch(resetActiveSites());
+                        await dispatch(resetMachineConnections());
+                        await dispatch(resetActiveSites());
                       }
                     }}
                     ChipProps={{ size: 'small' }}

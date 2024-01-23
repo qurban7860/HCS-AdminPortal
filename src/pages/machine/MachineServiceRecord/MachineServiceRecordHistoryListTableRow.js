@@ -10,7 +10,7 @@ import {
 import { styled } from '@mui/system';
 import { fDate } from '../../../utils/formatTime';
 // components
-import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
+import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 
 // ----------------------------------------------------------------------
 

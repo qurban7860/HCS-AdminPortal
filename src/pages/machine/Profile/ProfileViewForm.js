@@ -3,10 +3,10 @@ import { useMemo } from 'react';
 import { Card, Grid } from '@mui/material';
 // hooks
 import { useDispatch, useSelector } from 'react-redux';
-import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import { useSnackbar } from '../../../components/snackbar';
 // components
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import {
   setProfileEditFormVisibility,
   getProfile,
@@ -14,7 +14,7 @@ import {
   setProfileViewFormVisibility,
   getProfiles,
 } from '../../../redux/slices/products/profile';
-import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import { getMachine } from '../../../redux/slices/products/machine';
 // constants
 // import { Snacks } from '../../../constants/machine-constants';

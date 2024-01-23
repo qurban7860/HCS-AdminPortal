@@ -21,7 +21,7 @@ import MenuPopover from '../../components/menu-popover';
 import ConfirmDialog from '../../components/confirm-dialog';
 import { fDate } from '../../utils/formatTime';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
-import LinkTableCell from '../components/ListTableTools/LinkTableCell';
+import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import { useScreenSize } from '../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------

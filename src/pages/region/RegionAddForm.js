@@ -24,7 +24,7 @@ import FormProvider, { RHFSwitch, RHFTextField } from '../../components/hook-for
 import { getRoles } from '../../redux/slices/securityUser/role';
 import { addRegion, getCountries } from '../../redux/slices/region/region';
 // current user
-import AddFormButtons from '../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
 RegionAddForm.propTypes = {

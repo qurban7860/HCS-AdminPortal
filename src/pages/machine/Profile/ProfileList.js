@@ -32,7 +32,7 @@ import {
   setFilterBy,
   setProfileViewFormVisibility } from '../../../redux/slices/products/profile';
 import { fDate } from '../../../utils/formatTime';
-import TableCard from '../../components/ListTableTools/TableCard';
+import TableCard from '../../../components/ListTableTools/TableCard';
 
 export default function ProfileList() {
   const {

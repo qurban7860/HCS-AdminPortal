@@ -32,7 +32,7 @@ import {
   setFilterBy,
   setLicenseViewFormVisibility } from '../../../redux/slices/products/license';
 import { fDate } from '../../../utils/formatTime';
-import TableCard from '../../components/ListTableTools/TableCard';
+import TableCard from '../../../components/ListTableTools/TableCard';
 
 export default function LicenseList() {
   const {

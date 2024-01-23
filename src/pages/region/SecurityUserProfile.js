@@ -29,17 +29,17 @@ import {
 // components
 // import { ProfileCover} from '../../sections/@dashboard/user/profile';
 import { useSnackbar } from '../../components/snackbar';
-import ViewFormField from '../components/ViewForms/ViewFormField';
-import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import { getCustomer } from '../../redux/slices/customer/customer';
 import { getContact } from '../../redux/slices/customer/contact';
-import { Cover } from '../components/Defaults/Cover';
-import DialogLabel from '../components/Dialog/DialogLabel';
-import DialogLink from '../components/Dialog/DialogLink';
-import FormLabel from '../components/DocumentForms/FormLabel';
+import { Cover } from '../../components/Defaults/Cover';
+import DialogLabel from '../../components/Dialog/DialogLabel';
+import DialogLink from '../../components/Dialog/DialogLink';
+import FormLabel from '../../components/DocumentForms/FormLabel';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
-import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 // ----------------------------------------------------------------------
 
 export default function SecurityUserProfile() {

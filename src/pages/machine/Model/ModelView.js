@@ -22,7 +22,7 @@ import {
 
 // import ModelList from './ModelList';
 import ModelViewForm from './ModelViewForm';
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 // import ModelEditForm from './ModelEditForm';
 

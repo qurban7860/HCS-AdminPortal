@@ -11,7 +11,7 @@ import { LicenseTypes, addLicense, setLicenseFormVisibility } from '../../../red
 import { LicenseSchema } from './schemas/LicenseSchema';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 // assets
 import FormProvider, { RHFDatePicker, RHFSwitch, RHFTextField } from '../../../components/hook-form';
 // constants

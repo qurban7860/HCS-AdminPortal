@@ -35,7 +35,7 @@ import { getRoles } from '../../redux/slices/securityUser/role';
 import { getActiveRegions } from '../../redux/slices/region/region';
 import { getAllMachines } from '../../redux/slices/products/machine';
 
-import AddFormButtons from '../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
 SecurityUserAddForm.propTypes = {

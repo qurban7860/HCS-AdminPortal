@@ -54,13 +54,13 @@ import { getMachineForDialog,  setMachineDialog } from '../../../redux/slices/pr
 import { getActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
 import { getActiveDocumentTypes } from '../../../redux/slices/document/documentType';
 import { getCustomer, setCustomerDialog } from '../../../redux/slices/customer/customer';
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { fDate } from '../../../utils/formatTime';
-import TableCard from '../../components/ListTableTools/TableCard';
-import MachineDialog from '../../components/Dialog/MachineDialog';
-import CustomerDialog from '../../components/Dialog/CustomerDialog';
+import TableCard from '../../../components/ListTableTools/TableCard';
+import MachineDialog from '../../../components/Dialog/MachineDialog';
+import CustomerDialog from '../../../components/Dialog/CustomerDialog';
 
 // ----------------------------------------------------------------------
 DocumentList.propTypes = {

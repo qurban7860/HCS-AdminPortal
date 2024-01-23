@@ -5,10 +5,10 @@ import { useNavigate } from 'react-router-dom';
 // hooks
 import { useSelector } from 'react-redux';
 import { PATH_PAGE, PATH_SETTING } from '../../../routes/paths';
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
-import ViewFormField from '../../components/ViewForms/ViewFormField';
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormField from '../../../components/ViewForms/ViewFormField';
+import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 
 export default function UserInviteViewForm() {
   const { userInvite, isLoading } = useSelector((state) => state.userInvite);

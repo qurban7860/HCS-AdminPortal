@@ -20,8 +20,8 @@ import { addBlacklistIPs } from '../../../../redux/slices/securityConfig/blackli
 import { useSnackbar } from '../../../../components/snackbar';
 // assets
 import FormProvider, { RHFTextField } from '../../../../components/hook-form';
-import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import { Cover } from '../../../components/Defaults/Cover';
+import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
+import { Cover } from '../../../../components/Defaults/Cover';
 
 export default function BlacklistIPAddForm() {
 

@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { Box, Card, Grid, Autocomplete, TextField, Typography } from '@mui/material';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { useSnackbar } from '../../../components/snackbar';
 import { 
   setLicenseEditFormVisibility, 

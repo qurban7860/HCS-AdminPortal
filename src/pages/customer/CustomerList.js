@@ -39,8 +39,8 @@ import { getCustomers, ChangePage, ChangeRowsPerPage, setFilterBy, setVerified,
    setCustomerTab,
    setExcludeReporting,
    resetCustomers} from '../../redux/slices/customer/customer';
-import { Cover } from '../components/Defaults/Cover';
-import TableCard from '../components/ListTableTools/TableCard';
+import { Cover } from '../../components/Defaults/Cover';
+import TableCard from '../../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
 import { useSnackbar } from '../../components/snackbar';
 import { exportCSV } from '../../utils/exportCSV';
