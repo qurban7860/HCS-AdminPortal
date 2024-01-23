@@ -37,7 +37,6 @@ function MachineTransferDialog() {
   const mdScreen = useScreenSize('md');
   const lgScreen = useScreenSize('lg');
 
-
   const { machine, machineTransferDialog } = useSelector((state) => state.machine);
   const { machineConnections } = useSelector((state) => state.machineConnections);
   const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
@@ -149,13 +148,17 @@ function MachineTransferDialog() {
       maxWidth={ smScreen && !mdScreen && !lgScreen && 'sm' || mdScreen && !lgScreen && 'md' || lgScreen && 'lg' }
       open={ machineTransferDialog }
       onClose={ handleMachineDialog }
+      PaperProps={{ style: {
+        minHeight: '90%',
+        maxHeight: '90%',
+      }}}
       aria-describedby="alert-dialog-slide-description"
     >
       <DialogLabel content="Transfer Ownership" onClick={ handleMachineDialog } />
       <Divider orientation="horizontal" flexItem />
-      <DialogContent dividers >
+      <DialogContent dividers style={{ p:2, height: '85%'  }}>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
-          <Box sx={{ p:2, height: '700px'  }}>
+          <Box >
             <Stepper activeStep={activeStep} orientation="vertical">
               <Step key={0}>
                 <StepLabel>Informaton</StepLabel>
