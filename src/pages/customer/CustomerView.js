@@ -87,7 +87,7 @@ export default function CustomerView({ editPage }) {
     {
       // disabled:
       //   customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility || contactMoveFormVisibility || noteEditFormVisibility,
-      value: 'customers',
+      value: 'machines',
       label: 'Machines',
       icon: <Iconify icon="mdi:greenhouse" />,
       component: <CustomerMachines />,

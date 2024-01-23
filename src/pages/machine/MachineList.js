@@ -342,12 +342,13 @@ export default function MachineList() {
           </TableContainer>
 
           {!isNotFound && <TablePaginationCustom
-            count={machines.totalCount || 0}
-            page={machines.totalCount?page:0}
+            count={machines? machines.length : 0}
+            page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
+
         </TableCard>
         <CustomerDialog />
     </Container>

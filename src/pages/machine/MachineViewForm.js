@@ -41,6 +41,7 @@ import CustomerDialog from '../../components/Dialog/CustomerDialog';
 import MachineTransferDialog from '../../components/Dialog/MachineTransferDialog';
 import SiteDialog from '../../components/Dialog/SiteDialog';
 import OpenInNewPage from '../../components/Icons/OpenInNewPage';
+import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -162,11 +163,27 @@ export default function MachineViewForm() {
   };
   
   const linkedMachines = machine?.machineConnections?.map((machineConnection, index) => (
-    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(machineConnection.connectedMachine._id)} label={`${machineConnection?.connectedMachine?.serialNo || ''} ${machineConnection?.connectedMachine?.name ? '-' : '' } ${machineConnection?.connectedMachine?.name || ''} `} />
+      <Chip 
+        sx={{ml:index===0?0:1}} 
+        onClick={() => handleMachineDialog(machineConnection.connectedMachine._id)} 
+        deleteIcon={<Iconify icon="fluent:open-12-regular"/>}
+        onDelete={()=> {
+          window.open(PATH_MACHINE.machines.view(machineConnection.connectedMachine._id), '_blank');
+        }}
+        label={`${machineConnection?.connectedMachine?.serialNo || ''} ${machineConnection?.connectedMachine?.name ? '-' : '' } ${machineConnection?.connectedMachine?.name || ''} `} 
+      />
   ));
   
-  const paranetMachines = machine?.parentMachines?.map((parentMachine, index) => (
-    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(parentMachine.machine._id)} label={`${parentMachine?.machine?.serialNo || ''} ${parentMachine?.machine?.name ? '-' : '' } ${parentMachine?.machine?.name || ''} `} />
+  const paranetMachines = machine?.parentMachines?.map((parentMachine, index) => (  
+    <Chip 
+        sx={{ml:index===0?0:1}} 
+        onClick={() => handleMachineDialog(parentMachine.machine._id)} 
+        deleteIcon={<Iconify icon="fluent:open-12-regular"/>}
+        onDelete={()=> {
+          window.open(PATH_MACHINE.machines.view(parentMachine.machine._id), '_blank');
+        }}  
+        label={`${parentMachine?.machine?.serialNo || ''} ${parentMachine?.machine?.name ? '-' : '' } ${parentMachine?.machine?.name || ''} `} 
+      />
   ));
   const defaultValues = useMemo(
     () => ({
@@ -271,7 +288,7 @@ export default function MachineViewForm() {
                 </Typography> ) || 
                 ( defaultValues?.transferredFrom && 
                   <Typography variant='body2' sx={{mt: 0.5}} >
-                    {` - Transfered from `}
+                    {` - Transferred from `}
                     <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredFrom?._id)} underline="none" sx={{ cursor: 'pointer'}}>
                       <b>{defaultValues?.transferredFrom?.name}</b>
                     </Link>

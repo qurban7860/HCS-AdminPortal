@@ -100,6 +100,13 @@ export default function MachineEditForm() {
   } = watch();
 
   useEffect(() => {
+      dispatch(resetMachineConnections());
+      dispatch(resetActiveSites());
+      dispatch(getActiveSites(customer?._id));
+      dispatch(getMachineConnections(customer?._id));
+  },[dispatch, customer, spContacts, setValue])
+
+  useEffect(() => {
     if(category === null && machineModel ){
       dispatch(getActiveMachineModels());
       setValue('machineModel',null);
@@ -271,27 +278,20 @@ export default function MachineEditForm() {
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || ''}`}</li> )}
                     onChange={async (event, newValue) => {
-                      if (newValue) {
-                        setValue('customer',newValue);
-                        if(customer?._id !== newValue._id) {
-                          await dispatch(resetMachineConnections());
-                          await dispatch(resetActiveSites());
-                          setValue('machineConnectionVal', []);
-                          setValue('instalationSite', null);
-                          setValue('billingSite', null);
-                          setValue('accountManager', spContacts.filter(item => Array.isArray(newValue?.accountManager) && newValue?.accountManager.includes(item?._id)))
-                          setValue('projectManager', spContacts.filter(item => Array.isArray(newValue?.projectManager) && newValue?.projectManager.includes(item?._id)))
-                          setValue('supportManager', spContacts.filter(item => Array.isArray(newValue?.supportManager) && newValue?.supportManager.includes(item?._id)))
-                          await dispatch(getActiveSites(newValue?._id));
-                          await dispatch(getMachineConnections(newValue?._id));
-                        }
-                      } else {
-                        setValue('customer',null);
-                        setValue('machineConnectionVal', []);
-                        setValue('instalationSite', null);
-                        setValue('billingSite', null);
-                        await dispatch(resetMachineConnections());
-                        await dispatch(resetActiveSites());
+                      
+                      setValue('customer',newValue);
+                      setValue('instalationSite', null);
+                      setValue('billingSite', null);
+                      setValue('machineConnectionVal', []);
+                      setValue('accountManager', [])
+                      setValue('projectManager', [])
+                      setValue('supportManager', [])  
+                      
+                      if(newValue){
+                        // setValue('customer',newValue);
+                        setValue('accountManager', spContacts.filter(item => Array.isArray(newValue?.accountManager) && newValue?.accountManager.includes(item?._id)))
+                        setValue('projectManager', spContacts.filter(item => Array.isArray(newValue?.projectManager) && newValue?.projectManager.includes(item?._id)))
+                        setValue('supportManager', spContacts.filter(item => Array.isArray(newValue?.supportManager) && newValue?.supportManager.includes(item?._id)))
                       }
                     }}
                     ChipProps={{ size: 'small' }}
@@ -340,7 +340,6 @@ export default function MachineEditForm() {
                   <RHFDatePicker inputFormat='dd/MM/yyyy'  name="installationDate" label="Installation Date" />
 
                 </Box>
-                  <RHFTextField name="siteMilestone" label="Landmark for Installation site" multiline />
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect
