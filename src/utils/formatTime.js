@@ -1,15 +1,14 @@
-import { format, getTime, formatDistanceToNow } from 'date-fns';
+import { format, isValid, getTime, formatDistanceToNow } from 'date-fns';
 
 // ----------------------------------------------------------------------
 
 export function fDate(date, newFormat) {
+
   const fm = newFormat || 'dd MMM yyyy';
-  // Check if the input date is a valid date
-  if (date instanceof Date && !Number.isNaN(date)) {
+  if(isValid(date)){
     return date ? format(date, fm) : '';
   }
-
-    return ''
+    return date
 }
 
 export function fQuarterYearDate(startDate, newFormat) {
@@ -30,12 +29,17 @@ export function fQuarterYearDate(startDate, newFormat) {
 
 export function fDateTime(date, newFormat) {
   const fm = newFormat || 'dd MMM yyyy p';
-
-  return date ? format(new Date(date), fm) : '';
+  if(isValid(date)){
+    return date ? format(new Date(date), fm) : '';
+  }
+  return date
 }
 
 export function fTimestamp(date) {
-  return date ? getTime(new Date(date)) : '';
+  if(isValid(date)){
+    return date ? getTime(new Date(date)) : '';
+  }
+  return date
 }
 
 export function fToNow(date) {
