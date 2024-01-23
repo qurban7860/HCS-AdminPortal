@@ -5,7 +5,7 @@ import { Stack } from '@mui/material';
 // routes
 import { setMachineServiceRecordAddFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
 // components
-import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
+import SearchBarCombo from '../../../components/ListTableTools/SearchBarCombo';
 // constants
 import { BUTTONS } from '../../../constants/default-constants';
 // styles

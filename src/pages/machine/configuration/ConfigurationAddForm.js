@@ -8,18 +8,18 @@ import { useForm } from 'react-hook-form';
 import { Card, Grid, Stack, Button, Container, Typography } from '@mui/material';
 // slice
 import { yupResolver } from '@hookform/resolvers/yup';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { addConfiguration } from '../../../redux/slices/products/configuration';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, {  RHFSwitch, RHFTextField } from '../../../components/hook-form';
+import FormProvider, {  RHFSwitch } from '../../../components/hook-form';
 // util
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 // constants
-import CodeMirror from '../../components/CodeMirror/JsonEditor';
+import CodeMirror from '../../../components/CodeMirror/JsonEditor';
 import Iconify from '../../../components/iconify';
 import { ICONS } from '../../../constants/icons/default-icons';
 

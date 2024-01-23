@@ -18,14 +18,14 @@ import { getSites } from '../../redux/slices/customer/site';
 // routes
 import { PATH_CUSTOMER } from '../../routes/paths';
 // components
-import AddFormButtons from '../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete } from '../../components/hook-form';
 // constants
 import { FORMLABELS  } from '../../constants/customer-constants';
 // schema
 import { EditCustomerSchema } from '../schemas/customer';
 import { StyledToggleButtonLabel } from '../../theme/styles/document-styles';
-import FormLabel from '../components/DocumentForms/FormLabel';
+import FormLabel from '../../components/DocumentForms/FormLabel';
 
 // ----------------------------------------------------------------------
 

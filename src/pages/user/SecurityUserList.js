@@ -10,7 +10,7 @@ import { PATH_SECURITY } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import Scrollbar from '../../components/scrollbar';
-import { Cover } from '../components/Defaults/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import {
   useTable,
   getComparator,
@@ -33,7 +33,7 @@ import {
 } from '../../redux/slices/securityUser/securityUser';
 import { fDate } from '../../utils/formatTime';
 // constants
-import TableCard from '../components/ListTableTools/TableCard';
+import TableCard from '../../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 

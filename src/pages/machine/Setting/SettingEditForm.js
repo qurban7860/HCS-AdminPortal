@@ -26,7 +26,7 @@ import {
   setSettingViewFormVisibility,
   updateSetting,
 } from '../../../redux/slices/products/machineSetting';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
 

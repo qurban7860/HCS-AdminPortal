@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Stack } from '@mui/material';
 // routes
 // components
-import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
+import SearchBarCombo from '../../../components/ListTableTools/SearchBarCombo';
 // constants
 import { BUTTONS } from '../../../constants/default-constants';
 // styles

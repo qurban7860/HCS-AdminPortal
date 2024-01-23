@@ -11,7 +11,7 @@ import { PATH_MACHINE } from '../../../routes/paths';
 // import { useSettingsContext } from '../../../components/settings';
 // sections
 import StatusViewForm from './StatusViewForm';
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 // import StatusEditForm from './StatusEditForm';
 

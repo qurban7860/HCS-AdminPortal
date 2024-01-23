@@ -18,7 +18,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // import Label from '../../../components/label';
 import { fDate } from '../../../utils/formatTime';
 // import { useSelector } from '../../../redux/store';
-import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
+import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 
 // ----------------------------------------------------------------------
 

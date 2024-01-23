@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form';
 import { useSnackbar } from '../../../components/snackbar';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
-import FormHeading from '../../components/DocumentForms/FormHeading';
+import FormHeading from '../../../components/DocumentForms/FormHeading';
 import { FORMLABELS } from '../../../constants/default-constants';
 // schema
 import { CheckItemsSchema } from '../../schemas/machine';
@@ -18,8 +18,8 @@ import { addCheckItem } from '../../../redux/slices/products/machineCheckItems';
 import { getActiveServiceCategories } from '../../../redux/slices/products/serviceCategory';
 // components
 import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete } from '../../../components/hook-form';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import { Cover } from '../../components/Defaults/Cover';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
+import { Cover } from '../../../components/Defaults/Cover';
 // styles
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 // constants

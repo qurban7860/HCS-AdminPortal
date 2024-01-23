@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Switch, TableRow,  TableCell } from '@mui/material';
 // components;
 import { fDate } from '../../../utils/formatTime';
-import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
+import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------

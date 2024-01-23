@@ -15,17 +15,17 @@ import { deleteMachineServiceRecord,
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { FORMLABELS } from '../../../constants/default-constants';
-import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
-import ViewFormField from '../../components/ViewForms/ViewFormField';
-import ViewFormNoteField from '../../components/ViewForms/ViewFormNoteField';
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-import FormLabel from '../../components/DocumentForms/FormLabel';
+import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../../../components/ViewForms/ViewFormField';
+import ViewFormNoteField from '../../../components/ViewForms/ViewFormNoteField';
+import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
+import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { fDate } from '../../../utils/formatTime';
 import ReadableCollapsibleCheckedItemRow from './ReadableCollapsibleCheckedItemRow';
-import HistoryIcon from '../../components/Icons/HistoryIcon';
-import CurrentIcon from '../../components/Icons/CurrentIcon';
-import SendEmailDialog from '../../components/Dialog/SendEmailDialog';
-import PDFViewerDialog from '../../components/Dialog/PDFViewerDialog';
+import HistoryIcon from '../../../components/Icons/HistoryIcon';
+import CurrentIcon from '../../../components/Icons/CurrentIcon';
+import SendEmailDialog from '../../../components/Dialog/SendEmailDialog';
+import PDFViewerDialog from '../../../components/Dialog/PDFViewerDialog';
 
 function MachineServiceParamViewForm() {
 

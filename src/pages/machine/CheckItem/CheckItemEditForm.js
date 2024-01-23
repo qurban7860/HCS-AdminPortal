@@ -18,9 +18,9 @@ import {
   updateCheckItem
 } from '../../../redux/slices/products/machineCheckItems';
 import { getActiveServiceCategories } from '../../../redux/slices/products/serviceCategory';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import FormHeading from '../../components/DocumentForms/FormHeading';
-import { Cover } from '../../components/Defaults/Cover';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
+import FormHeading from '../../../components/DocumentForms/FormHeading';
+import { Cover } from '../../../components/Defaults/Cover';
 // styles
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { FORMLABELS } from '../../../constants/default-constants';

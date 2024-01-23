@@ -18,18 +18,18 @@ import { getBlockedCustomer } from '../../redux/slices/securityConfig/blockedCus
 import { getBlockedUser } from '../../redux/slices/securityConfig/blockedUsers';
 import { getCustomer , setCustomerDialog } from '../../redux/slices/customer/customer';
 import { getContact , setContactDialog } from '../../redux/slices/customer/contact';
-import ViewFormField from '../components/ViewForms/ViewFormField';
-import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
-import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
-import { Cover } from '../components/Defaults/Cover';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import { Cover } from '../../components/Defaults/Cover';
 import { useSnackbar } from '../../components/snackbar';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
-import CustomerDialog from '../components/Dialog/CustomerDialog';
-import ContactDialog from '../components/Dialog/ContactDialog';
+import CustomerDialog from '../../components/Dialog/CustomerDialog';
+import ContactDialog from '../../components/Dialog/ContactDialog';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 import Iconify from '../../components/iconify';
-import FormLabel from '../components/DocumentForms/FormLabel';
+import FormLabel from '../../components/DocumentForms/FormLabel';
 
 // ----------------------------------------------------------------------
 

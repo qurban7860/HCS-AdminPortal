@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getDocumentCategory } from '../../../redux/slices/document/documentCategory';
 // components
 import DocumentViewForm from './DocumentHistoryViewForm';
-import DocumentCover from '../../components/DocumentForms/DocumentCover';
+import DocumentCover from '../../../components/DocumentForms/DocumentCover';
 /* eslint-disable */
 
 // ----------------------------------------------------------------------

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 import { Box, Table, TableBody, TableCell, TableRow,  IconButton, Collapse } from '@mui/material';
 import Iconify from '../../../components/iconify';
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons'
+import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons'
 
 const CollapsibleCheckedItemRow = ({value, index, toggleEdit, deleteIndex, handleListDragStart, handleListDrop }) => {
   const [open, setOpen] = useState(true);

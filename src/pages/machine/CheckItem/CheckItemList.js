@@ -36,9 +36,9 @@ import {
   ChangePage,
   setFilterBy
 } from '../../../redux/slices/products/machineCheckItems';
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
-import TableCard from '../../components/ListTableTools/TableCard';
+import TableCard from '../../../components/ListTableTools/TableCard';
 import { FORMLABELS } from '../../../constants/default-constants';
 
 // ----------------------------------------------------------------------

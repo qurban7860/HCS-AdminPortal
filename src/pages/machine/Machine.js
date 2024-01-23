@@ -4,10 +4,10 @@ import { Box, Container, List } from '@mui/material';
 import { PATH_MACHINE } from '../../routes/paths';
 // components
 import { StyledSettingsCardContainer } from '../../theme/styles/machine-styles';
-import { Cover } from '../components/Defaults/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
-import ListItem from '../components/ListTableTools/ListItem';
-import ListItemsHeader from '../components/ListTableTools/ListItemsHeader';
+import ListItem from '../../components/ListTableTools/ListItem';
+import ListItemsHeader from '../../components/ListTableTools/ListItemsHeader';
 // constants
 import { FORMLABELS } from '../../constants/default-constants';
 import { ICONS } from '../../constants/icons/default-icons';

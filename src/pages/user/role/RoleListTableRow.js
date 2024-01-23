@@ -22,7 +22,7 @@ import { fDate } from '../../../utils/formatTime';
 // import MenuPopover from '../../../components/menu-popover';
 // import ConfirmDialog from '../../../components/confirm-dialog';
 // import Label from '../../../components/label';
-import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
+import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 // import { useSelector } from '../../../redux/store';
 import { useWidth } from '../../../hooks/useResponsive';
 

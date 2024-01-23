@@ -24,9 +24,9 @@ import { getActiveDocumentCategories, resetActiveDocumentCategories } from '../.
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFAutocomplete } from '../../../components/hook-form';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
-import { Cover } from '../../components/Defaults/Cover';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
+import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
+import { Cover } from '../../../components/Defaults/Cover';
 // constants
 import { FORMLABELS } from '../../../constants/default-constants';
 import { Snacks, FORMLABELS as formLABELS } from '../../../constants/document-constants';

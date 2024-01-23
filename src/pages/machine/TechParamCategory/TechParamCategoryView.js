@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { PATH_MACHINE } from '../../../routes/paths';
 // sections
 import TechParamCategoryViewForm from './TechParamCategoryViewForm';
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 /* eslint-disable */
 

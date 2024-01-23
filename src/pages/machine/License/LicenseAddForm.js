@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
@@ -11,7 +11,7 @@ import { LicenseTypes, addLicense, setLicenseFormVisibility } from '../../../red
 import { LicenseSchema } from './schemas/LicenseSchema';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 // assets
 import FormProvider, { RHFDatePicker, RHFSwitch, RHFTextField } from '../../../components/hook-form';
 // constants

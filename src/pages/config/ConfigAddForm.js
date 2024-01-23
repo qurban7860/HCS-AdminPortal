@@ -21,7 +21,7 @@ import FormProvider, { RHFAutocomplete, RHFSwitch, RHFTextField } from '../../co
 // slice
 import { addConfig, ConfigTypes } from '../../redux/slices/config/config';
 // current user
-import AddFormButtons from '../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
 export default function ConfigAddForm() {

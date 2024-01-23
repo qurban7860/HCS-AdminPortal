@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
 import { Tab, Container, Box, tabsClasses } from '@mui/material';
-import TabContainer from '../components/Tabs/TabContainer';
+import TabContainer from '../../components/Tabs/TabContainer';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import {
@@ -18,7 +18,7 @@ import {
 // components
 import UnderDevelopment from '../boundaries/UnderDevelopment';
 // sections
-import { Cover } from '../components/Defaults/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 import CustomerViewForm from './CustomerViewForm';
 import CustomerEditForm from './CustomerEditForm';

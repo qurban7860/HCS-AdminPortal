@@ -16,10 +16,10 @@ import { PATH_SETTING } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../components/hook-form';
-import { Cover } from '../components/Defaults/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
-import AddFormButtons from '../components/DocumentForms/AddFormButtons';
-import ToggleButtons from '../components/DocumentForms/ToggleButtons';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import { FORMLABELS } from '../../constants/default-constants';
 // ----------------------------------------------------------------------
 

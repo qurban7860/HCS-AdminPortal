@@ -11,7 +11,7 @@ import { PATH_SECURITY, PATH_SETTING } from '../../routes/paths';
 import { useSnackbar } from '../../components/snackbar';
 import Scrollbar from '../../components/scrollbar';
 import ConfirmDialog from '../../components/confirm-dialog';
-import { Cover } from '../components/Defaults/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import {
   useTable,
   getComparator,
@@ -34,7 +34,7 @@ import {
 import { fDate } from '../../utils/formatTime';
 // constants
 import { DIALOGS } from '../../constants/default-constants';
-import TableCard from '../components/ListTableTools/TableCard';
+import TableCard from '../../components/ListTableTools/TableCard';
 // ----------------------------------------------------------------------
 
 // const STATUS_OPTIONS = ['all', 'active', 'banned'];

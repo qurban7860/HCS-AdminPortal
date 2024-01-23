@@ -2,11 +2,11 @@ import { memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
 import {  Card, Grid, Stack, Skeleton } from '@mui/material';
-import JsonEditor from '../../components/CodeMirror/JsonEditorMerge';
+import JsonEditor from '../../../components/CodeMirror/JsonEditorMerge';
 // redux
 import { setHistoricalConfigurationCompareViewFormVisibility } from '../../../redux/slices/products/historicalConfiguration';
 // components
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 
 
 function HistoricalConfigurationsViewForm() {

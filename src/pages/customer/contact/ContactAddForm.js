@@ -18,11 +18,11 @@ import { useAuthContext } from '../../../auth/useAuthContext';
 import FormProvider, { RHFMultiSelect, RHFTextField, RHFAutocomplete } from '../../../components/hook-form';
 // assets
 import { countries } from '../../../assets/data';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
+import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
 import { FORMLABELS as FORM_LABELS } from '../../../constants/default-constants';
 import { FORMLABELS } from '../../../constants/customer-constants';
-import { AddFormLabel } from '../../components/DocumentForms/FormLabel';
+import { AddFormLabel } from '../../../components/DocumentForms/FormLabel';
 
 // ----------------------------------------------------------------------
 

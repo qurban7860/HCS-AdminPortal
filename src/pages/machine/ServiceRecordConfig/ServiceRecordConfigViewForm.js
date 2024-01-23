@@ -18,11 +18,11 @@ import { useSnackbar } from '../../../components/snackbar';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 //  components
-import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
-import ViewFormAprovedSubmit from '../../components/ViewForms/ViewFormAprovedSubmit';
-import ViewFormField from '../../components/ViewForms/ViewFormField';
-import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
+import ViewFormAprovedSubmit from '../../../components/ViewForms/ViewFormAprovedSubmit';
+import ViewFormField from '../../../components/ViewForms/ViewFormField';
+import ViewFormSwitch from '../../../components/ViewForms/ViewFormSwitch';
+import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import CollapsibleCheckedItemRow from './CollapsibleCheckedItemRow';
 import { Snacks } from '../../../constants/default-constants';
 

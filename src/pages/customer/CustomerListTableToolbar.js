@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import { Stack } from '@mui/material';
 // components
-import SearchBarCombo from '../components/ListTableTools/SearchBarCombo';
+import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 import { PATH_CUSTOMER } from '../../routes/paths';
 import { BUTTONS } from '../../constants/default-constants';
 import { options } from '../../theme/styles/default-styles';

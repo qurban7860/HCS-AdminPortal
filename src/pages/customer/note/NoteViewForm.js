@@ -4,17 +4,17 @@ import { Card, Grid } from '@mui/material';
 // hooks
 import { useDispatch, useSelector } from 'react-redux';
 // import { fDate } from 'src/utils/formatTime';
-import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import { useSnackbar } from '../../../components/snackbar';
 // components
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import {
   setNoteEditFormVisibility,
   getNote,
   deleteNote,
   setNoteViewFormVisibility,
 } from '../../../redux/slices/customer/customerNote';
-import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 // constants
 
 export default function NoteViewForm() {

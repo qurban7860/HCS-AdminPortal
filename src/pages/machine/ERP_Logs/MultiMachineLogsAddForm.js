@@ -5,13 +5,13 @@ import { useForm } from 'react-hook-form';
 // @mui
 import { Card, Grid, Stack, Button } from '@mui/material';
 // slice
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { setAllVisibilityFalse, getMachineErpLogRecords, addMachineErpLogRecord } from '../../../redux/slices/products/machineErpLogs';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider from '../../../components/hook-form';
 // constants
-import CodeMirror from '../../components/CodeMirror/JsonEditor';
+import CodeMirror from '../../../components/CodeMirror/JsonEditor';
 import Iconify from '../../../components/iconify/Iconify';
 import { ICONS } from '../../../constants/icons/default-icons';
 

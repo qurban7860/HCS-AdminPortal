@@ -1,6 +1,7 @@
 import { useLayoutEffect, useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import debounce from 'lodash/debounce';
 // form
 // @mui
@@ -19,7 +20,7 @@ import Iconify from '../../components/iconify';
 import MachineListTableRow from './MachineListTableRow';
 import MachineListTableToolbar from './MachineListTableToolbar';
 
-import { Cover } from '../components/Defaults/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 
 // slice
@@ -52,9 +53,9 @@ import { useSnackbar } from '../../components/snackbar';
 // auth
 // asset
 // util
-import TableCard from '../components/ListTableTools/TableCard';
+import TableCard from '../../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
-import CustomerDialog from '../components/Dialog/CustomerDialog';
+import CustomerDialog from '../../components/Dialog/CustomerDialog';
 import { exportCSV } from '../../utils/exportCSV';
 
 // ----------------------------------------------------------------------
@@ -94,6 +95,9 @@ export default function MachineList() {
 
   const [tableData, setTableData] = useState([]);
   const dispatch = useDispatch();
+  const axiosToken = () => axios.CancelToken.source();
+  const cancelTokenSource = axiosToken();
+
   const { machines, verified, accountManager, supportManager, filterBy, page, rowsPerPage, 
           isLoading, error, initial, responseMessage } = useSelector( (state) => state.machine );
   const navigate = useNavigate();
@@ -111,13 +115,15 @@ export default function MachineList() {
     dispatch(resetNotes());
     dispatch(resetMachineDocument());
     dispatch(resetMachineDocuments());
-    dispatch(getSPContacts());
-    dispatch(getMachines());
+    dispatch(getSPContacts( cancelTokenSource ));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
   
-  // useEffect(()=>{
-  //   dispatch(getMachines(page, rowsPerPage));
-  // },[dispatch, page, rowsPerPage])
+  useEffect(()=>{
+    dispatch(getMachines(null, null, cancelTokenSource ));
+    return ()=>{ cancelTokenSource.cancel() };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[dispatch, page, rowsPerPage])
 
   const [filterVerify, setFilterVerify] = useState(verified);
   const [filterName, setFilterName] = useState(filterBy);
@@ -129,6 +135,7 @@ export default function MachineList() {
       setTableData(machines || []);
     }
   }, [machines, error, responseMessage, enqueueSnackbar, initial]);
+
 
   const dataFiltered = applyFilter({
     inputData: tableData,

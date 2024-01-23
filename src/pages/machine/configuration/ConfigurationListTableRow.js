@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 // @mui
 import { Switch, TableRow, TableCell } from '@mui/material';
 // components
-import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
+import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 // utils
 import { fDate } from '../../../utils/formatTime';
 

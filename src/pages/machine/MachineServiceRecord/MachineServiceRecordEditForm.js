@@ -5,17 +5,13 @@ import { useForm, } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, Grid, Stack, Typography, TextField, Autocomplete, Skeleton } from '@mui/material';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 // slice
 import { updateMachineServiceRecord, setMachineServiceRecordViewFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
 import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
-// routes
-// import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-// import Iconify from '../../../components/iconify';
-import FormHeading from '../../components/DocumentForms/FormHeading';
-import FormLabel from '../../components/DocumentForms/FormLabel';
+import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { MachineServiceRecordSchema } from '../../schemas/machine';
 import FormProvider, {

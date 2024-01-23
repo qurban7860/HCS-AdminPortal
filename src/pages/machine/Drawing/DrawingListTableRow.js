@@ -8,10 +8,8 @@ import {
 // utils
 import { styled, } from '@mui/material/styles';
 import { fDate } from '../../../utils/formatTime';
-import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
+import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 import { useScreenSize } from '../../../hooks/useResponsive';
-import IconTooltip from '../../components/Icons/IconTooltip';
-import { StyledStack } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 

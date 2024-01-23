@@ -77,6 +77,10 @@ const slice = createSlice({
     setMachineDialog(state, action){
       state.machineDialog = action.payload;
     },
+    // SET TOGGLE
+    setMachineTransferDialog(state, action){
+      state.machineTransferDialog = action.payload;
+    },
     
     // HAS ERROR
     hasError(state, action) {
@@ -235,6 +239,7 @@ export const {
   setMachineMoveFormVisibility,
   stopLoading,
   setTransferMachineFlag,
+  setMachineTransferDialog,
   resetCustomerMachines,
   resetMachine,
   resetMachines,
@@ -252,7 +257,7 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getMachines(page, pageSize) {
+export function getMachines(page, pageSize, cancelToken ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -266,16 +271,16 @@ export function getMachines(page, pageSize) {
           pagination:{
             page,
             pageSize  
-
           }
-        }
-      });
+        },
+        cancelToken: cancelToken?.token
+      } );
       dispatch(slice.actions.getMachinesSuccess(response.data));
       // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
-      throw error;
+      // throw error;
     }
   };
 }
@@ -540,6 +545,7 @@ export function addMachine(params) {
           parentMachine: params?.parentSerialNo?.name,
           supplier: params?.supplier?._id || null,
           machineModel: params?.machineModel?._id || null,
+          manufactureDate: params?.manufactureDate || null,
           customer: params?.customer?._id || null,
           status: params?.status?._id || null,
           workOrderRef: params?.workOrderRef,
@@ -583,6 +589,7 @@ export function updateMachine(machineId, params) {
         parentMachine: params?.parentSerialNo?.name,
         supplier: params?.supplier?._id || null,
         machineModel: params?.machineModel?._id || null,
+        manufactureDate: params?.manufactureDate || null,
         customer: params?.customer?._id || null,
         status: params?.status?._id || null,
         workOrderRef: params?.workOrderRef,
@@ -620,27 +627,24 @@ export function updateMachine(machineId, params) {
 
 // --------------------------------------------------------------------------
 
-export function transferMachine(params, customerId, statusId) {
+export function transferMachine( machineId, params ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
         machine: params._id,
-        name: params.name,
-        supplier: params.supplier,
-        workOrderRef: params.workOrderRef,
-        siteMilestone: params.siteMilestone,
-        accountManager: params.accountManager,
-        projectManager: params.projectManager,
-        supportManager: params.supportManager,
-        description: params.description,
-        customerTags: params.customerTags,
+        customer: params.customer?._id || null,
+        status: params.status?._id || null,
+        financialCompany: params?.financialCompany?._id || null,
+        installationSite: params?.installationSite?._id || null,
+        billingSite: params?.billingSite?._id || null,
+        allSettings: params?.allSettings,
+        allTools: params?.allTools,
+        allDrawings: params?.allDrawings,
+        allProfiles: params?.allProfiles,
+        allINIs: params?.allINIs,
+        machineConnectionVal: params?.machineConnectionVal && params?.machineConnectionVal?.length > 0 && params?.machineConnectionVal?.map((m)=> m?._id) || [],
       };
-
-      if(customerId){
-        data.customer = customerId;
-        data.status = statusId;
-      }
         
      /* eslint-enable */
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/transferMachine`,

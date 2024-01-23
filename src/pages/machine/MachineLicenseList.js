@@ -20,8 +20,8 @@ import useResponsive from '../../hooks/useResponsive';
 import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
 // components
-import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
-import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
+import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
+import AddButtonAboveAccordion from '../../components/Defaults/AddButtonAboveAcoordion';
 import { useTable, getComparator, TableNoData } from '../../components/table';
 import Iconify from '../../components/iconify';
 // sections

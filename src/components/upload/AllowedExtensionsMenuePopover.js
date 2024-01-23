@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Divider,Typography } from '@mui/material';
 import MenuPopover from '../menu-popover/MenuPopover';
-import FormatsChip from '../../pages/components/Defaults/FormatsChip';
+import FormatsChip from '../Defaults/FormatsChip';
 
 export default function AllowedExtensionsMenuePopover({ open, onClose }) {
   return (

@@ -24,7 +24,7 @@ import { getAllMachines } from '../../redux/slices/products/machine';
 import { getRoles } from '../../redux/slices/securityUser/role';
 import { getActiveRegions } from '../../redux/slices/region/region';
 // current user
-import AddFormButtons from '../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
 

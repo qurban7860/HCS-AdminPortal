@@ -2,12 +2,12 @@ import { memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
 import {  Card, Grid, Stack, Skeleton } from '@mui/material';
-import JsonEditor from '../../components/CodeMirror/JsonEditor';
+import JsonEditor from '../../../components/CodeMirror/JsonEditor';
 // redux
 import { setMachineErpLogListViewFormVisibility } from '../../../redux/slices/products/machineErpLogs';
 // components
-import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
+import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 
 
 function MachineLogsViewForm() {

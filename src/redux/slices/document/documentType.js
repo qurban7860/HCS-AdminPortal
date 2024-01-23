@@ -206,7 +206,7 @@ export function getDocumentTypes() {
 
 // -----------------------------------Get Active Document Types-----------------------------------
 
-export function getActiveDocumentTypes() {
+export function getActiveDocumentTypes(cancelToken) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -215,7 +215,8 @@ export function getActiveDocumentTypes() {
         params: {
           isArchived: false,
           isActive: true,
-        }
+        },
+        cancelToken: cancelToken?.token,
       }
       );
       dispatch(slice.actions.getActiveDocumentTypesSuccess(response.data));
@@ -223,7 +224,7 @@ export function getActiveDocumentTypes() {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
-      throw error;
+      // throw error;
     }
   };
 }

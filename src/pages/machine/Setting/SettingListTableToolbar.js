@@ -6,7 +6,7 @@ import { Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { useDispatch } from '../../../redux/store';
 // components
-import { SearchBarCombo } from '../../components/ListTableTools'
+import { SearchBarCombo } from '../../../components/ListTableTools'
 // import { PATH_DOCUMENT } from '../../../routes/paths';
 import { setSettingFormVisibility } from '../../../redux/slices/products/machineSetting';
 // constants

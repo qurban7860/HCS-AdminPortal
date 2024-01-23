@@ -18,11 +18,11 @@ import { CONFIG } from '../../config-global';
 import axios from '../../utils/axios';
 import EmailListTableRow from './EmailListTableRow';
 import EmailListTableToolbar from './EmailListTableToolbar';
-import { Cover } from '../components/Defaults/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 // import { Email } from 'src/routes/elements';
 import { PATH_EMAIL } from '../../routes/paths';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
-import LinkTableCell from '../components/ListTableTools/LinkTableCell';
+import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 // import { email } from 'src/_mock/assets';
 
 const TABLE_HEAD = [

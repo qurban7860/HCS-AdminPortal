@@ -7,7 +7,7 @@ import { getERPLogs } from '../../../redux/slices/dashboard/count';
 import { setMachineErpLogAddFormVisibility, setMachineErpLogListViewFormVisibility } from '../../../redux/slices/products/machineErpLogs';
 // utils
 import { fQuarterYearDate } from '../../../utils/formatTime';
-import ChartStacked from '../../components/Charts/ChartStacked';
+import ChartStacked from '../../../components/Charts/ChartStacked';
 import { SkeletonGraph } from '../../../components/skeleton';
 import EmptyContent from '../../../components/empty-content';
 import Iconify from '../../../components/iconify/Iconify';

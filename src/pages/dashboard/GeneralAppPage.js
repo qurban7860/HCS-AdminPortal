@@ -4,19 +4,19 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 import { Grid, Card, Divider, TextField, Autocomplete, CardHeader, Box, IconButton, Typography } from '@mui/material';
 import { StyledBg, StyledContainer, StyledGlobalCard } from '../../theme/styles/default-styles';
 // sections
-import HowickWelcome from '../components/DashboardWidgets/HowickWelcome';
-import HowickWidgets from '../components/DashboardWidgets/HowickWidgets';
+import HowickWelcome from '../../components/DashboardWidgets/HowickWelcome';
+import HowickWidgets from '../../components/DashboardWidgets/HowickWidgets';
 // assets & hooks
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCount, getERPLogs, getMachinesByCountry, 
   getMachinesByModel, getMachinesByYear, 
   setMachineCategory, setMachineCountry, setMachineModel, setMachineYear } from '../../redux/slices/dashboard/count';
 // components
-import ChartBar from '../components/Charts/ChartBar';
-import ProductionLog from '../components/Charts/ProductionLog';
-import ChartStacked from '../components/Charts/ChartStacked';
-import HowickOperators from '../components/DashboardWidgets/OperatorsWidget';
-import ChartColumnNegative from '../components/Charts/ChartColumnNegative';
+import ChartBar from '../../components/Charts/ChartBar';
+import ProductionLog from '../../components/Charts/ProductionLog';
+import ChartStacked from '../../components/Charts/ChartStacked';
+import HowickOperators from '../../components/DashboardWidgets/OperatorsWidget';
+import ChartColumnNegative from '../../components/Charts/ChartColumnNegative';
 // constants
 import { TITLES } from '../../constants/default-constants';
 // dummy data

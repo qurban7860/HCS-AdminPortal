@@ -25,10 +25,10 @@ import Scrollbar from '../../components/scrollbar';
 // sections
 import ListTableRow from './DepartmentListTableRow';
 import ListTableToolbar from './DepartmentListTableToolbar';
-import { Cover } from '../components/Defaults/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 import { fDate } from '../../utils/formatTime';
-import TableCard from '../components/ListTableTools/TableCard';
+import TableCard from '../../components/ListTableTools/TableCard';
 import { FORMLABELS } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------

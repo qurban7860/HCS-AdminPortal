@@ -9,7 +9,7 @@ import {
 import { styled } from '@mui/material/styles';
 import { fDate } from '../../../utils/formatTime';
 // components
-import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
+import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 // ----------------------------------------------------------------------
 
 NoteListTableRow.propTypes = {

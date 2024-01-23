@@ -23,9 +23,9 @@ import { useSnackbar } from '../../../components/snackbar';
 //   RHFSwitch,
 // } from '../../../components/hook-form';
 
-import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
+import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormField from '../../../components/ViewForms/ViewFormField';
 
 // ----------------------------------------------------------------------
 

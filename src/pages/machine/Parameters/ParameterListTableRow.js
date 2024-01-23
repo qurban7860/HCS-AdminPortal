@@ -16,7 +16,7 @@ import MenuPopover from '../../../components/menu-popover/MenuPopover';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // import Label from '../../../components/label';
 import { fDate } from '../../../utils/formatTime';
-import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
+import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 // import { useSelector } from '../../../redux/store';
 import { useScreenSize } from '../../../hooks/useResponsive';
 

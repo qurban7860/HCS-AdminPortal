@@ -16,7 +16,7 @@ import { getActiveContacts } from '../../redux/slices/customer/contact';
 // components
 import Iconify from '../../components/iconify';
 // sections
-import { Cover } from '../components/Defaults/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 
 // import useResponsive from '../../hooks/useResponsive';
 import UnderDevelopment from '../boundaries/UnderDevelopment';

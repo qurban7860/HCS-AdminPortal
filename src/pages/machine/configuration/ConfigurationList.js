@@ -25,10 +25,10 @@ import Scrollbar from '../../../components/scrollbar';
 // sections
 import ConfigurationListTableRow from './ConfigurationListTableRow';
 import ConfigurationListTableToolbar from './ConfigurationListTableToolbar';
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
-import TableCard from '../../components/ListTableTools/TableCard';
+import TableCard from '../../../components/ListTableTools/TableCard';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [

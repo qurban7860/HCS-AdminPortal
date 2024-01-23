@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 // components
 import { fDateTime } from '../../utils/formatTime';
-import LinkTableCell from '../components/ListTableTools/LinkTableCell';
+import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import { useScreenSize } from '../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------

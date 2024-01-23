@@ -5,7 +5,7 @@ import { Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { useDispatch } from '../../../redux/store';
 // components
-import { SearchBarCombo } from '../../components/ListTableTools'
+import { SearchBarCombo } from '../../../components/ListTableTools'
 import { setProfileFormVisibility } from '../../../redux/slices/products/profile';
 // constants
 import { BUTTONS } from '../../../constants/default-constants';
