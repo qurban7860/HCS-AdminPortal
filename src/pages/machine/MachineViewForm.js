@@ -288,7 +288,7 @@ export default function MachineViewForm() {
                 </Typography> ) || 
                 ( defaultValues?.transferredFrom && 
                   <Typography variant='body2' sx={{mt: 0.5}} >
-                    {` - Transfered from `}
+                    {` - Transferred from `}
                     <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredFrom?._id)} underline="none" sx={{ cursor: 'pointer'}}>
                       <b>{defaultValues?.transferredFrom?.name}</b>
                     </Link>
