@@ -120,6 +120,11 @@ function MachineTransferDialog() {
     if( activeStep > 0 ) setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
+  useEffect(() => { 
+    trigger() 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ shippingDate, installationDate ]);
+
   useEffect(()=>{
     if(customer?._id){
           setValue('customer',customer);
