@@ -77,15 +77,21 @@ export default function DocumentGallery({customerPage, machinePage}) {
       downloadFilename:`${img?.name}.${img?.extension}`,
       name:img?.name,
       category:img?.docCategory?.name,
+      title:<Grid>
+              <Typography variant='h4'>{machine?.serialNo} - {machine?.name}</Typography>
+              <Typography variant='body2'>{img?.displayName}</Typography>
+              <Typography variant='body2'>{img?.docCategory?.name}</Typography>
+            </Grid>,
       fileType:img?.fileType,
       extension:img?.extension,
       isLoaded:false,
       id:img?._id,
       width: '100%',
-      height: '100%'
+      height: '100%',
+      transform:'scale(10)'
     })));
     
-  },[documentGallery])
+  },[documentGallery, machine])
 
   const handleOpenLightbox = async (index) => {
     setSelectedImage(index);
@@ -101,6 +107,7 @@ export default function DocumentGallery({customerPage, machinePage}) {
               ...slides[index],
               src: `data:image/png;base64, ${response.data}`,
               isLoaded: true,
+              rotate:'90deg'
             },
             ...slides.slice(index + 1), // copies slides after the updated slide
           ];
@@ -160,7 +167,7 @@ export default function DocumentGallery({customerPage, machinePage}) {
             <Lightbox index={selectedImage} slides={slides}
               open={selectedImage >= 0} close={handleCloseLightbox}
               onGetCurrentIndex={(index) => handleOpenLightbox(index)}
-              disabledSlideshow zoom={5} maxZoom={10}
+              disabledSlideshow
             />
           </>
         ):(<EmptyContent title="Empty" sx={{ color: '#DFDFDF'}}/>)}

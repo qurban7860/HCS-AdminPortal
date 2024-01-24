@@ -15,13 +15,14 @@ ContactSiteCard.propTypes = {
   name: PropTypes.string,
   title: PropTypes.string,
   email: PropTypes.string,
+  phone: PropTypes.string,
   image: PropTypes.string,
   handleOnClick:PropTypes.func,
   disableClick:PropTypes.bool,
   isActive:PropTypes.bool
 };
 
-export default function ContactSiteCard({name, title, email, image, handleOnClick, disableClick, isActive}) {
+export default function ContactSiteCard({name, title, email, phone, image, handleOnClick, disableClick, isActive}) {
   const theme = useTheme();
   const smScreen = useScreenSize('sm');
   const mdScreen = useScreenSize('md');
@@ -31,7 +32,7 @@ export default function ContactSiteCard({name, title, email, image, handleOnClic
   let _name = name?.length>20 ?`${name.substring(0,20)}...`:name;
   let _title = title?.length>20 ?`${title.substring(0,20)}...`:title;
   let _email = email?.length>20 ?`${email.substring(0,20)}...`:email;
-
+  
   if(mdScreen){
     _name = name?.length>30 ?`${name.substring(0,30)}...`:name;
     _title = title?.length>30 ?`${title.substring(0,30)}...`:title;
@@ -41,7 +42,7 @@ export default function ContactSiteCard({name, title, email, image, handleOnClic
   if(lgScreen){
     _name = name?.length>20?`${name.substring(0,20)}...`:name;
     _title = title?.length>20?`${title.substring(0,20)}...`:title;
-    _email = email?.length>20?`${email.substring(0,20)}...`:email;    
+    _email = email?.length>20?`${email.substring(0,20)}...`:email;
   }
 
   if(xlScreen){
@@ -68,6 +69,7 @@ export default function ContactSiteCard({name, title, email, image, handleOnClic
             <Typography variant="h4" color="#2065d1" component="div">{_name}</Typography>
             <Typography variant="body1" color="text.secondary" component="div">{_title}</Typography>
             <Typography variant="overline" color="text.secondary" component="div">{_email}</Typography>
+            <Typography variant="overline" color="text.secondary" component="div">{phone}</Typography>
           </CardContent>
       </CardActionArea>
     </Card>
