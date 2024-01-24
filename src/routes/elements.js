@@ -79,6 +79,7 @@ export const MachineAdd = Loadable(lazy(() => import('../pages/machine/MachineAd
 export const MachineList = Loadable(lazy(() => import('../pages/machine/MachineList')));
 export const MachineView = Loadable(lazy(() => import('../pages/machine/MachineView')));
 export const MachineEdit = Loadable(lazy(() => import('../pages/machine/MachineEdit')));
+export const MachineTransfer = Loadable(lazy(() => import('../pages/machine/MachineTransfer')));
 
 // Supplier
 export const SupplierAddForm = Loadable(

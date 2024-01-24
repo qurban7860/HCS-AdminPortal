@@ -242,7 +242,7 @@ export default function MachineViewForm() {
               disableDeleteButton={disableDeleteButton}
               handleEdit={handleEdit}
               onDelete={onDelete}
-              handleTransfer={ () => dispatch(setMachineTransferDialog(true))}
+              handleTransfer={ () => navigate(PATH_MACHINE.machines.transfer(machine?._id))}
               backLink={() => navigate(PATH_MACHINE.machines.list)}
               machineSupportDate={defaultValues?.supportExpireDate}
             />

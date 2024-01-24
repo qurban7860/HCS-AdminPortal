@@ -5,8 +5,8 @@ import { format, isValid, getTime, formatDistanceToNow } from 'date-fns';
 export function fDate(date, newFormat) {
 
   const fm = newFormat || 'dd MMM yyyy';
-  if(isValid(date)){
-    return date ? format(date, fm) : '';
+  if(isValid(new Date(date))){
+    return date ? format(new Date(date), fm) : '';
   }
     return date
 }
@@ -29,7 +29,7 @@ export function fQuarterYearDate(startDate, newFormat) {
 
 export function fDateTime(date, newFormat) {
   const fm = newFormat || 'dd MMM yyyy p';
-  if(isValid(date)){
+  if(isValid(new Date(date))){
     return date ? format(new Date(date), fm) : '';
   }
   return date

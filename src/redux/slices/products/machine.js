@@ -645,8 +645,8 @@ export function transferMachine( machineId, params ) {
         isAllDrawings: params?.isAllDrawings,
         isAllProfiles: params?.isAllProfiles,
         isAllINIs:     params?.isAllINIs,
-        machineConnection: params?.machineConnection && params?.machineConnection?.length > 0 && params?.machineConnection?.map((m)=> m?._id) || [],
-        machineDocuments: params?.machineDocuments && params?.machineDocuments?.length > 0 && params?.machineDocuments?.map((m)=> m?._id) || [],
+        machineConnections: params?.machineConnection && params?.machineConnection?.length > 0 && params?.machineConnection?.map((m)=> m?._id) || [],
+        machineDocuments: params?.machineDocuments?.length > 0 && params?.machineDocuments || [],
       };
         
      /* eslint-enable */

@@ -44,6 +44,8 @@ import {
   MachineList,
   MachineView,
   MachineEdit,
+  MachineTransfer,
+
   // Supplier
   SupplierAddForm,
   SupplierList,
@@ -364,6 +366,7 @@ export default function Router() {
             { path: 'list', element: <MachineList /> }, 
             { path: ':id/view', element: <MachineView /> }, 
             { path: ':id/edit', element: <MachineEdit /> }, 
+            { path: ':id/transfer', element: <MachineTransfer />},
             { path: 'settings',
               children: [
               {path: 'app', element: <MachineSetting />},
