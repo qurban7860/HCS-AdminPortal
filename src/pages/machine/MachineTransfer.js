@@ -103,11 +103,7 @@ function MachineTransfer() {
       }
   };
   
-  console.log("machineDoc : ",machineDoc)
-  console.log("activeMachineDocuments?.length",activeMachineDocuments?.length , "machineDoc?.length ",machineDoc?.length)
-
   const handleSelectAll = (inputString) => {
-    console.log("activeMachineDocuments?.length , machineDoc?.length ",activeMachineDocuments?.length, machineDoc?.length)
     if(activeMachineDocuments?.length > 0) {
       setMachineDoc(() => activeMachineDocuments?.map((d) => d?._id));
     }
@@ -241,11 +237,11 @@ function MachineTransfer() {
                   </Grid>
 
                 <FormLabel content='Machine Documents'/>
-                  
-                  <Grid sx={{display:"flex", alignItems:"center" }}><Checkbox onClick={ handleSelectAll } checked={ activeMachineDocuments?.length === machineDoc?.length }/><Typography variant='body2'>Select all Documents</Typography> </Grid>
+                  {activeMachineDocuments?.length === 0 && <Typography variant='body2'>No Document Available</Typography>}
+                  { activeMachineDocuments?.length > 1 && <Grid sx={{display:"flex", alignItems:"center" }}><Checkbox onClick={ handleSelectAll } checked={ activeMachineDocuments?.length === machineDoc?.length }/><Typography variant='body2'>Select all Documents</Typography> </Grid>}
                 
                 <Grid >
-                  {activeMachineDocuments?.map(( doc, index ) =>(
+                  {activeMachineDocuments && activeMachineDocuments.length > 0 && activeMachineDocuments?.map(( doc, index ) =>(
                     <Grid item md={12} sx={{ display: "flex", alignItems:'center'}} >{`${Number(index)+1} - ` }<Checkbox onClick={()=> handleMachineDoc(doc?._id)} checked={machineDoc?.find((d)=> d === doc?._id)} /><Typography variant='body2'>{doc?.displayName}</Typography></Grid>
                   ))}
                 </Grid>
