@@ -238,6 +238,7 @@ export default function CustomerContactList(currentContact = null) {
                     handleOnClick={() => handleCardClick(contact) }
                     disableClick={contactEditFormVisibility || formVisibility || contactMoveFormVisibility}
                     name={`${contact.firstName || ''} ${contact.lastName || ''}`} title={contact.title} email={contact.email}
+                    phone={contact?.phone}
                   />)
                 )}
               </Grid>

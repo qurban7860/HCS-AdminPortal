@@ -170,6 +170,11 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
               src: `data:image/png;base64, ${file.thumbnail}`,
               downloadFilename: `${file?.name}.${file?.extension}`,
               name: file?.name,
+              title:<Grid>
+                <Typography variant='h4'>{document?.machine?.serialNo} - {document?.machine?.name}</Typography>
+                <Typography variant='body2'>{document?.displayName}</Typography>
+                <Typography variant='body2'>{document?.docCategory?.name}</Typography>
+              </Grid>,
               extension: file?.extension,
               category: file?.docCategory?.name,
               fileType: file?.fileType,

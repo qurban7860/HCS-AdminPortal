@@ -372,10 +372,10 @@ function applyFilter({ inputData, comparator, filterName, filterVerify, filterSt
     inputData = inputData.filter((machine) => machine?.supportManager?.some(manager => manager._id === supportManager?._id));
   
   if(filterVerify==='verified')
-    inputData = inputData.filter((customer)=> customer.verifications.length>0);
+    inputData = inputData.filter((machine)=> machine?.verifications?.length>0);
   
   if(filterVerify==='unverified')
-    inputData = inputData.filter((customer)=> customer.verifications.length===0);
+    inputData = inputData.filter((machine)=> machine?.verifications?.length===0);
     
   if (filterName) {
     inputData = inputData.filter(
