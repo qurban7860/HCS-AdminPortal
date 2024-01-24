@@ -1,7 +1,7 @@
 /* eslint-disable import/no-unresolved */
 import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import ReactLightbox, { ImageSlide, SLIDE_STATUS_COMPLETE, SLIDE_STATUS_LOADING, useLightboxProps, useNavigationState } from 'yet-another-react-lightbox';
+import ReactLightbox, { ImageSlide } from 'yet-another-react-lightbox';
 import Zoom from 'yet-another-react-lightbox/plugins/zoom';
 import Video from 'yet-another-react-lightbox/plugins/video';
 import Captions from 'yet-another-react-lightbox/plugins/captions';
@@ -106,9 +106,6 @@ export default function Lightbox({
         }}
         toolbar={{
           buttons: [
-            // <button type="button" className="yarl__button" onClick={handleRotation}>
-            //   <Iconify width={ICON_SIZE} icon="solar:smartphone-rotate-2-broken" />
-            // </button>,
             <DisplayTotal
               key={0}
               totalItems={totalItems}
@@ -153,40 +150,7 @@ export default function Lightbox({
                 </button>
               </>
           ,
-          // slide: ({ slide }) => !slide?.isLoaded && <Iconify width={100} color='#fff' icon="line-md:downloading-loop" /> 
-           
           slide: ({slide}) => <LightboxSlide slide={slide} transitionTime={transitionTime} zoomLevel={zoomLevel} rotateDeg={rotateDeg} />
-          // slide:(_slide)=> 
-          // {
-
-          //   const {slide} = _slide;
-
-          //   // const SLIDE_STATUS_LOADING;
-          //   console.log("SLIDE_STATUS_LOADING::",SLIDE_STATUS_LOADING)
-          //   // _slide.maxZoom=20;
-          //   console.log("_slide::::::",_slide)
-
-          //   const { nextDisabled } = useNavigationState();          
-
-          //   console.log("nav state:::",nextDisabled)
-            
-          //   // return !slide?.isLoaded && <Iconify width={100} color='#fff' icon="line-md:downloading-loop" />
-          //   return slide?.isLoaded? (
-          //     <ImageSlide 
-          //       style={{maxHeight: '100%', marginTop:100, 
-          //         transitionDuration:`${transitionTime}s`,  
-          //         transform: `scale(${zoomLevel}) rotate(${rotateDeg}deg)` }}
-                
-          //         slide={_slide.slide}  />
-          //       // <div className='yarl__slide'>
-          //       //   <img draggable className='yarl__slide_image' src={slide?.src} alt="tatatta" 
-          //       //   style={{maxHeight: '100%', marginTop:100, 
-          //       //   transitionDuration:`${transitionTime}s`,  
-          //       //   transform: `scale(${zoomLevel}) rotate(${rotateDeg}deg)` }}/>
-          //       // </div>
-          //     ) : (<Iconify width={100} color='#fff' icon="line-md:downloading-loop" />)
-          // }
-
           }}
         {...other}
       />
