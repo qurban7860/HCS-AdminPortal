@@ -3,21 +3,21 @@ import { regExp } from '../../../../components/RegularExpression/regularExpressi
 export { default as SiteCover } from './SiteCover';
 
 export function isNumberString(str) {
-    return regExp.numberCheckRegex.test(str);
+    return regExp.numberCheckRegex.test(str.trim());
 }
 
 export function isNumberLatitude(str) {
     if(!(isNumberString(str))){
     return false;
 }
-    return regExp.latitudeRegex.test(str);
+    return regExp.latitudeRegex.test(str.trim());
 }
 
 export function isNumberLongitude(str) {
     if(!(isNumberString(str))){
         return false;
     }
-    return regExp.longitudeRegex.test(str);
+    return regExp.longitudeRegex.test(str.trim());
 }
 
 export function checkValuesNotNull(obj) {
