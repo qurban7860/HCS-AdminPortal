@@ -184,7 +184,7 @@ export default function SecurityUserViewForm() {
         <Card sx={{ p: 3 }}>
           <ViewFormEditDeleteButtons
             handleEdit={handleEdit}
-            handleUserInvite={securityUser?.invitationStatus && handleUserInvite}
+            handleUserInvite={securityUser?.invitationStatus ? handleUserInvite : undefined }
             handleUpdatePassword={handleUpdatePassword}
             onDelete={onDelete}
             isInviteLoading={isLoading}
@@ -216,7 +216,7 @@ export default function SecurityUserViewForm() {
               <ViewFormField isLoading={isLoading}
                   sm={12}
                   heading="Full Name"
-                  objectParam={
+                  node={
                     defaultValues?.name && (
                       <>
                         {defaultValues?.name}
@@ -235,7 +235,7 @@ export default function SecurityUserViewForm() {
               <ViewFormField isLoading={isLoading}
                 sm={12}
                 heading="Customer"
-                objectParam={
+                node={
                   defaultValues?.customer && (
                     <Link onClick={handleCustomerDialog} href="#" underline="none">
                       {defaultValues?.customer}
@@ -254,7 +254,7 @@ export default function SecurityUserViewForm() {
               <ViewFormField isLoading={isLoading}
                 sm={12}
                 heading="Contact"
-                objectParam={
+                node={
                   defaultValues?.contact && (
                     <Link onClick={handleContactDialog} href="#" underline="none">
                       {defaultValues?.contact?.firstName || ''} {defaultValues?.contact?.lastName || ''}

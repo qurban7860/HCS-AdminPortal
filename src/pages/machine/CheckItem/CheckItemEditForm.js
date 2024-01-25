@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Card, Grid, Box, Stack, Typography, Container } from '@mui/material';
+import { Card, Grid, Box, Stack, Container } from '@mui/material';
 // hooks
 import { useForm } from 'react-hook-form';
 import { useSnackbar } from '../../../components/snackbar';
@@ -19,7 +19,6 @@ import {
 } from '../../../redux/slices/products/machineCheckItems';
 import { getActiveServiceCategories } from '../../../redux/slices/products/serviceCategory';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import FormHeading from '../../../components/DocumentForms/FormHeading';
 import { Cover } from '../../../components/Defaults/Cover';
 // styles
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
@@ -148,25 +147,9 @@ export default function DocumentCategoryeEditForm() {
                 </Box>
                   <RHFTextField name="description" label="Description" minRows={7} multiline />
                 <Grid container display="flex">
-                  <RHFSwitch
-                    name="isRequired"
-                    labelPlacement="start"
-                    label={
-                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
-                        Required
-                      </Typography>
-                    }
-                  />
+                  <RHFSwitch name="isRequired" label="Required"/>
 
-                  <RHFSwitch
-                    name="isActive"
-                    labelPlacement="start"
-                    label={
-                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
-                        Active
-                      </Typography>
-                    }
-                  />
+                  <RHFSwitch name="isActive" label="Required"/>
                 </Grid>
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

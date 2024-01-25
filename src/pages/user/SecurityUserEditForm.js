@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MuiTelInput } from 'mui-tel-input';
-import { Box, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
+import { Box, Card, Grid, Stack, Autocomplete, TextField } from '@mui/material';
 // routes
 import { PATH_SECURITY } from '../../routes/paths';
 // components
@@ -502,47 +502,9 @@ export default function SecurityUserEditForm() {
 
             </Box>
             <Grid item md={12} display="flex">
-              <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
-              <RHFSwitch
-                name="multiFactorAuthentication"
-                labelPlacement="start"
-                label={
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      mx: 0,
-                      width: 1,
-                      justifyContent: 'space-between',
-                      mb: 0.5,
-                      color: 'text.secondary',
-                    }}
-                  >
-                    {' '}
-                    Multi-Factor Authentication
-                  </Typography>
-                }
-              />
-
-              <RHFSwitch
-                name="currentEmployee"
-                labelPlacement="start"
-                label={
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      mx: 0,
-                      width: 1,
-                      justifyContent: 'space-between',
-                      mb: 0.5,
-                      color: 'text.secondary',
-                    }}
-                  >
-                    {' '}
-                    Current Employee
-                  </Typography>
-                }
-              />
-
+              <RHFSwitch name="isActive" labelPlacement="start" label="Active" />
+              <RHFSwitch name="multiFactorAuthentication" label="Multi-Factor Authentication" />
+              <RHFSwitch name="currentEmployee" label="Current Employee" />
             </Grid>
 
             <Stack sx={{ mt: 3 }}>

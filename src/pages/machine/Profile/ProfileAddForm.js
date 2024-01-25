@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
+import { Box, Card, FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
 import { MuiChipsInput } from 'mui-chips-input';
 // slice
 import { ProfileTypes, addProfile, setProfileFormVisibility } from '../../../redux/slices/products/profile';
@@ -133,13 +133,7 @@ export default function ProfileAddForm() {
               <RHFTextField name="thicknessEnd" label="Max. Thickness"/>
               
             </Box>
-              <RHFSwitch name="isActive" labelPlacement="start"
-                label={
-                  <Typography variant="subtitle2" sx={{ mx: 0, flange: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
-                    Active
-                  </Typography>
-                }
-              />
+              <RHFSwitch name="isActive"label="Active" />
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>
         </Grid>

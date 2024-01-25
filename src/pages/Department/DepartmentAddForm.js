@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Container, Typography } from '@mui/material';
+import { Box, Card, Grid, Stack, Container } from '@mui/material';
 // slice
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { addDepartment } from '../../redux/slices/Department/department';
@@ -22,7 +22,6 @@ import FormProvider, { RHFTextField, RHFSwitch } from '../../components/hook-for
 // util
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
-import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 // constants
 import { FORMLABELS } from '../../constants/default-constants';
 // import { Snacks } from '../../../constants/document-constants';
@@ -87,20 +86,8 @@ export default function DepartmentAddForm() {
                   <RHFTextField name="departmentName" label="Name*" />
                 </Box>
                 <Grid display="flex" justifyContent="flex-start">
-                <RHFSwitch
-                    name="isActive"
-                    labelPlacement="start"
-                    label={
-                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary',}} >Active</Typography>
-                    }
-                  />
-                <RHFSwitch
-                    name="isDefault"
-                    labelPlacement="start"
-                    label={
-                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary',}} >Default</Typography>
-                    }
-                  />
+                <RHFSwitch name="isActive" label="Active"/>
+                <RHFSwitch name="isDefault" label="Default"/>
                 </Grid>
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>

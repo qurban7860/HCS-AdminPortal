@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, Typography } from '@mui/material';
+import { Box, Card, Grid, Stack } from '@mui/material';
 // slice
 import {
   updateDepartment,
@@ -19,7 +19,6 @@ import FormProvider, { RHFTextField, RHFSwitch } from '../../components/hook-for
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import { FORMLABELS } from '../../constants/default-constants';
 // ----------------------------------------------------------------------
 
@@ -96,20 +95,8 @@ export default function DepartmentEditForm() {
                 <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}>
                   <RHFTextField name="departmentName" label="Name*" />
                   <Grid display="flex">
-                  <RHFSwitch
-                    name="isActive"
-                    labelPlacement="start"
-                    label={
-                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary',}} >Active</Typography>
-                    }
-                  />
-                    <RHFSwitch
-                      name="isDefault"
-                      labelPlacement="start"
-                      label={
-                        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary',}} >Default</Typography>
-                      }
-                    />
+                    <RHFSwitch name="isActive" label="Active"/>
+                    <RHFSwitch name="isDefault" label="Default"/>
                   </Grid>
 
                 </Box>

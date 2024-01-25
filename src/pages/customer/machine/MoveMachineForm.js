@@ -7,8 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-// import { LoadingButton } from '@mui/lab';
-import { Box,Card, Grid, Stack, Typography, CardHeader } from '@mui/material';
+import { Box,Card, Grid, Stack } from '@mui/material';
 // slice
 import {moveMachine, setMachineMoveFormVisibility } from '../../../redux/slices/products/machine';
 import { getActiveCustomers } from '../../../redux/slices/customer/customer';
@@ -19,7 +18,6 @@ import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import { getActiveSites, resetActiveSites } from '../../../redux/slices/customer/site';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
-import { FORMLABELS } from '../../../constants/default-constants';
 // ----------------------------------------------------------------------
 
 export default function MoveMachineForm() {

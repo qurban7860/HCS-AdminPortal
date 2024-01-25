@@ -13,7 +13,6 @@ import {
   Card,
   Grid,
   Stack,
-  Typography,
   IconButton,
   InputAdornment,
   Autocomplete,
@@ -547,67 +546,11 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
              <Grid item md={12} display="flex">
                 {(!isInvite &&(
                   <>
-                  <RHFSwitch
-                    name="isActive"
-                    labelPlacement="start"
-                    label={
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          mx: 0,
-                          width: 1,
-                          justifyContent: 'space-between',
-                          mb: 0.5,
-                          color: 'text.secondary',
-                        }}
-                      >
-                        {' '}
-                        Active
-                      </Typography>
-                    }
-                  />
-
-                  <RHFSwitch
-                    name="multiFactorAuthentication"
-                    labelPlacement="start"
-                    label={
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          mx: 0,
-                          width: 1,
-                          justifyContent: 'space-between',
-                          mb: 0.5,
-                          color: 'text.secondary',
-                        }}
-                      >
-                        {' '}
-                        Multi-Factor Authentication
-                      </Typography>
-                    }
-                  />
+                  <RHFSwitch name="isActive" label="Active" />
+                  <RHFSwitch name="multiFactorAuthentication" label="Multi-Factor Authentication" />
                   </>
                ))}
-
-              <RHFSwitch
-                name="currentEmployee"
-                labelPlacement="start"
-                label={
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      mx: 0,
-                      width: 1,
-                      justifyContent: 'space-between',
-                      mb: 0.5,
-                      color: 'text.secondary',
-                    }}
-                  >
-                    {' '}
-                    Current Employee
-                  </Typography>
-                }
-              />
+              <RHFSwitch name="currentEmployee" label="Current Employee" />
             </Grid>
             <Stack sx={{ mt: 3 }}>
               <AddFormButtons saveButtonName={isInvite?"Invite":"Save"} isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

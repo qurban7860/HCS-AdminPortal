@@ -142,7 +142,7 @@ export default function SecurityUserProfile() {
             <ViewFormField
               sm={6}
               heading="Customer"
-              objectParam={
+              node={
                 defaultValues?.customer && (
                   <Link onClick={ handleCustomerDialog } href="#" underline="none">
                     {defaultValues?.customer}
@@ -153,7 +153,7 @@ export default function SecurityUserProfile() {
             <ViewFormField
               sm={6}
               heading="Contact"
-              objectParam={
+              node={
                 defaultValues?.contact && (
                   <Link onClick={ handleContactDialog } href="#" underline="none">
                     {defaultValues?.contact}

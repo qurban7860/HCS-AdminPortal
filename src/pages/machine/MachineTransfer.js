@@ -31,7 +31,6 @@ function MachineTransfer() {
   const navigate = useNavigate();
 
   const { machine } = useSelector((state) => state.machine);
-  const { machineConnections } = useSelector((state) => state.machineConnections);
   const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
   const { activeCustomers, financialCompanies } = useSelector((state) => state.customer);
   const { activeSites } = useSelector((state) => state.site);

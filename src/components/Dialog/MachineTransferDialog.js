@@ -56,6 +56,7 @@ function MachineTransferDialog() {
       dispatch(resetFinancingCompanies())
       dispatch(resetActiveSites())
       dispatch(resetMachineConnections())
+      dispatch(resetActiveMachineStatuses())
       dispatch(resetActiveMachineDocuments()) 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
