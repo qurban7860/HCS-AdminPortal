@@ -146,6 +146,14 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
+    // RESET FINANCING COMPANIES
+    resetFinancingCompanies(state){
+      state.financialCompanies = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
     // Set FilterBy
     setFilterBy(state, action) {
       state.filterBy = action.payload;
@@ -183,6 +191,7 @@ export const {
   resetCustomer,
   resetCustomers,
   resetActiveCustomers,
+  resetFinancingCompanies,
   setResponseMessage,
   setFilterBy,
   setVerified,
@@ -194,7 +203,7 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getCustomers(page, pageSize) {
+export function getCustomers(page, pageSize, cancelToken ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -210,7 +219,8 @@ export function getCustomers(page, pageSize) {
             pageSize  
 
           }
-        }
+        },
+        cancelToken: cancelToken?.token
       });
       dispatch(slice.actions.getCustomersSuccess(response.data));
       // dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
@@ -224,7 +234,7 @@ export function getCustomers(page, pageSize) {
 
 // ---------------------------- get Active Customers------------------------------------------
 
-export function getActiveCustomers() {
+export function getActiveCustomers(cancelToken) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -233,7 +243,8 @@ export function getActiveCustomers() {
         params: {
           isActive: true,
           isArchived: false,
-        }
+        },
+        cancelToken: cancelToken?.token,
       });
       dispatch(slice.actions.getActiveCustomersSuccess(response.data));
       // dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
@@ -245,7 +256,7 @@ export function getActiveCustomers() {
   };
 }
 
-export function getFinancialCompanies() {
+export function getFinancialCompanies( cancelToken ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -255,7 +266,8 @@ export function getFinancialCompanies() {
           isActive: true,
           isArchived: false,
           isFinancialCompany: true
-        }
+        },
+        cancelToken: cancelToken?.token,
       });
       dispatch(slice.actions.getFinancialCompaniesSuccess(response.data));
     } catch (error) {
@@ -345,7 +357,6 @@ export function getActiveSPCustomers() {
 export function getCustomer(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    dispatch(slice.actions.setCustomerTab('info'));
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${id}` ,
       {

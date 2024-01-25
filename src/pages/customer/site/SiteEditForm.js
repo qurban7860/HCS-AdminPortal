@@ -14,7 +14,7 @@ import { getCustomer } from '../../../redux/slices/customer/customer';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import Iconify from '../../../components/iconify';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete } from '../../../components/hook-form';
 import { countries } from '../../../assets/data';
 import { SiteSchema } from '../../schemas/customer'
@@ -174,12 +174,16 @@ export default function SiteEditForm() {
                     </Box>
                   )}
                 />
-
-                </Box>
-                
-                <Grid display="flex" justifyContent='flex-end'>
-                  <Button variant='contained' size='small' color='warning' onClick={updateCountryCode} startIcon={<Iconify icon="ant-design:sync-outlined" />}>Update Phones Country Code</Button>
-                </Grid>
+              </Box>
+              
+                {(country?.phone!==phone?.split(' ')[0]) && (country?.phone!==fax?.split(' ')[0]) &&
+                  <Grid display="flex" justifyContent='flex-end'>
+                    <Typography variant='body2' sx={{mr:1,lineHeight:2, color:'gray'}}>Update country code in phone/fax</Typography>
+                    <Button variant='contained' sx={{minWidth:'auto', px:1}} color='secondary' onClick={updateCountryCode}>
+                      <Iconify icon="icon-park-outline:update-rotation"  />
+                    </Button>
+                  </Grid>
+                }
 
                 <Box
                 rowGap={2}

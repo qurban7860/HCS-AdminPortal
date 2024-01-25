@@ -19,7 +19,7 @@ import ListSubheader from '@mui/material/ListSubheader';
 // import { searchSites } from '../../redux/slices/customer/site';
 import { getMachineLatLongData } from '../../redux/slices/products/machine';
 import { useDispatch, useSelector } from '../../redux/store';
-import { Cover } from '../components/Defaults/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 // import Iconify from '../../components/iconify';
 import GoogleMaps from '../../assets/GoogleMaps';
 

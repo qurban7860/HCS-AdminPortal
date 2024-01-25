@@ -24,8 +24,8 @@ import { addRole } from '../../../redux/slices/securityUser/role';
 import { useSnackbar } from '../../../components/snackbar';
 // assets
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import { Cover } from '../../components/Defaults/Cover';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
+import { Cover } from '../../../components/Defaults/Cover';
 
 // ----------------------------------------------------------------------
 RoleAddForm.propTypes = {

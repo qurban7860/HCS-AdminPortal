@@ -26,15 +26,15 @@ import {
 } from '../../../redux/slices/document/document';
 import { deleteDocumentFile, downloadFile, getDocumentDownload } from '../../../redux/slices/document/documentFile';
 // components
-import { Thumbnail, ThumbnailDocButton } from '../../components/Thumbnails';
+import { Thumbnail, ThumbnailDocButton } from '../../../components/Thumbnails';
 import { useSnackbar } from '../../../components/snackbar';
 import { Snacks } from '../../../constants/document-constants';
-import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
-import ViewFormField from '../../components/ViewForms/ViewFormField';
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../../../components/ViewForms/ViewFormField';
+import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
 import Lightbox from '../../../components/lightbox/Lightbox';
-import FormLabel from '../../components/DocumentForms/FormLabel';
+import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { SkeletonDocument } from '../../../components/skeleton';
 
 DocumentViewForm.propTypes = {
@@ -170,6 +170,11 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
               src: `data:image/png;base64, ${file.thumbnail}`,
               downloadFilename: `${file?.name}.${file?.extension}`,
               name: file?.name,
+              title:<Grid>
+                <Typography variant='h4'>{document?.machine?.serialNo} - {document?.machine?.name}</Typography>
+                <Typography variant='body2'>{document?.displayName}</Typography>
+                <Typography variant='body2'>{document?.docCategory?.name}</Typography>
+              </Grid>,
               extension: file?.extension,
               category: file?.docCategory?.name,
               fileType: file?.fileType,
@@ -319,7 +324,7 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
           heading="Version"
           handleAllVersion={linkDocumentView}
           handleNewVersion={handleNewVersion}
-          objectParam={
+          param={
             <StyledVersionChip
               label={defaultValues.versionPrefix + defaultValues.documentVersion}
               size="small"

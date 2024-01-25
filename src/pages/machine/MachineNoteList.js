@@ -21,14 +21,14 @@ import { PATH_MACHINE } from '../../routes/paths';
 import { useSnackbar } from '../../components/snackbar';
 // components
 import { useTable, getComparator } from '../../components/table';
-import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
-import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
+import BreadcrumbsProvider from '../../components/Breadcrumbs/BreadcrumbsProvider';
+import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
 import Iconify from '../../components/iconify';
 // sections
 import NotesViewForm from './Note/NotesViewForm';
 import NoteEditForm from './Note/NoteEditForm';
 import NoteAddForm from './Note/NoteAddForm';
-import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
+import AddButtonAboveAccordion from '../../components/Defaults/AddButtonAboveAcoordion';
 import {
   getNotes,
   setNoteFormVisibility,

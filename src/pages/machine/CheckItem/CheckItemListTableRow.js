@@ -17,7 +17,7 @@ import { fDate } from '../../../utils/formatTime';
 // import Label from '../../../components/label';
 
 // import { useSelector } from '../../../redux/store';
-import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
+import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------

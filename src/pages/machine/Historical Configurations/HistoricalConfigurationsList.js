@@ -37,7 +37,7 @@ import {
   setFilterBy
 } from '../../../redux/slices/products/historicalConfiguration';
 import { fDate } from '../../../utils/formatTime';
-import TableCard from '../../components/ListTableTools/TableCard';
+import TableCard from '../../../components/ListTableTools/TableCard';
 import Iconify from '../../../components/iconify';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
 import ConfirmDialog from '../../../components/confirm-dialog';

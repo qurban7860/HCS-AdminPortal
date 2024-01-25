@@ -22,9 +22,9 @@ import { useSnackbar } from '../../components/snackbar';
 // import { useSettingsContext } from '../../components/settings';
 import { useTable, getComparator, TableNoData } from '../../components/table';
 import Iconify from '../../components/iconify';
-import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
-import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
-import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
+import BreadcrumbsProvider from '../../components/Breadcrumbs/BreadcrumbsProvider';
+import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
+import AddButtonAboveAccordion from '../../components/Defaults/AddButtonAboveAcoordion';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
 import NotesViewForm from './note/NotesViewForm';

@@ -32,7 +32,7 @@ import FormProvider, {
   RHFSwitch,
   RHFDatePicker,
 } from '../../../components/hook-form';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { CONFIG } from '../../../config-global'
 import { checkValuesNotNull } from '../util/index'
 
@@ -307,7 +307,6 @@ function ToolsInstalledEditForm() {
     engageOnCondition, 
     engageOffCondition, 
     movingPunchCondition, 
-    timeOut,
     engagingDuration, 
     returningDuration, 
     twoWayCheckDelayTime, 

@@ -17,7 +17,7 @@ import {
 import { styled } from '@mui/system';
 import {  fDateTime } from '../../../utils/formatTime';
 import { useScreenSize } from '../../../hooks/useResponsive';
-import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
+import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 
 // ----------------------------------------------------------------------
 

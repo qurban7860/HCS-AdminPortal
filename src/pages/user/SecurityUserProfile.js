@@ -15,20 +15,19 @@ import { PATH_SECURITY } from '../../routes/paths';
 import { useAuthContext } from '../../auth/useAuthContext';
 // _mock_
 import {
-  getSecurityUser,
-  setSecurityUserEditFormVisibility,
+  getSecurityUser
 } from '../../redux/slices/securityUser/securityUser';
 // components
-import ViewFormField from '../components/ViewForms/ViewFormField';
-import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import { getCustomer , setCustomerDialog } from '../../redux/slices/customer/customer';
 import { getContact , setContactDialog } from '../../redux/slices/customer/contact';
-import { Cover } from '../components/Defaults/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
-import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
-import CustomerDialog from '../components/Dialog/CustomerDialog';
-import ContactDialog from '../components/Dialog/ContactDialog';
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import CustomerDialog from '../../components/Dialog/CustomerDialog';
+import ContactDialog from '../../components/Dialog/ContactDialog';
 
 // ----------------------------------------------------------------------
 

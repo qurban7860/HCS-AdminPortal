@@ -5,7 +5,7 @@ import { Stack } from '@mui/material';
 // redux
 import { useDispatch } from '../../redux/store';
 // components
-import SearchBarCombo from '../components/ListTableTools/SearchBarCombo';
+import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 import { PATH_SECURITY } from '../../routes/paths';
 import { setSecurityUserFormVisibility } from '../../redux/slices/securityUser/securityUser';
 import { BUTTONS } from '../../constants/default-constants';

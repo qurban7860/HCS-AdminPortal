@@ -15,7 +15,7 @@ import FormProvider, { RHFSwitch, RHFTextField } from '../../components/hook-for
 // slice
 import { getRegion, updateRegion } from '../../redux/slices/region/region';
 // current user
-import AddFormButtons from '../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
 

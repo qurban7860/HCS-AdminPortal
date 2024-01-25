@@ -116,6 +116,7 @@ export const PATH_MACHINE = {
     list: path(ROOTS_MACHINE, '/machines/list'),
     view: (id) => path(ROOTS_MACHINE, `/machines/${id}/view`),
     edit: (id) => path(ROOTS_MACHINE, `/machines/${id}/edit`),
+    transfer: (id) => path(ROOTS_MACHINE, `/machines/${id}/transfer`),
     settings: {
       app: path(ROOTS_MACHINE, '/machines/settings/app'),
 

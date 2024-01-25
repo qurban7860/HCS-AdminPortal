@@ -57,8 +57,7 @@ export function checkValuesNotNull(obj) {
   export const future20yearDate = new Date(today);
   future20yearDate.setFullYear(today.getFullYear() + 20);
 
-  export const pastDate = new Date(today);
-  pastDate.setFullYear(today.getFullYear() - 100);
+  export const pastDate = new Date(2000, 0, 1);
 
   export const formatDate = (date) => {
     const options = { day: '2-digit', month: '2-digit', year: 'numeric' };

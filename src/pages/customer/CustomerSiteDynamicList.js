@@ -16,23 +16,23 @@ import { PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { getComparator, useTable } from '../../components/table';
-import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
-import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
-import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
+import AddButtonAboveAccordion from '../../components/Defaults/AddButtonAboveAcoordion';
+import BreadcrumbsProvider from '../../components/Breadcrumbs/BreadcrumbsProvider';
+import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
 import GoogleMaps from '../../assets/GoogleMaps';
 import useResponsive from '../../hooks/useResponsive';
 import { getSites, getSite, setSiteFormVisibility, resetSiteFormsVisiblity, createCustomerStiesCSV } from '../../redux/slices/customer/site';
 // import { getActiveContacts } from '../../redux/slices/customer/contact';
-import NothingProvided from '../components/Defaults/NothingProvided';
+import NothingProvided from '../../components/Defaults/NothingProvided';
 import SiteAddForm from './site/SiteAddForm';
 import SiteEditForm from './site/SiteEditForm';
 import SiteViewForm from './site/SiteViewForm';
-import SearchInput from '../components/Defaults/SearchInput';
+import SearchInput from '../../components/Defaults/SearchInput';
 import { fDate } from '../../utils/formatTime';
 import { Snacks } from '../../constants/customer-constants';
 import { BUTTONS, BREADCRUMBS, TITLES } from '../../constants/default-constants';
 import Iconify from '../../components/iconify';
-import ContactSiteCard from '../components/sections/ContactSiteCard';
+import ContactSiteCard from '../../components/sections/ContactSiteCard';
 import { exportCSV } from '../../utils/exportCSV';
 
 // ----------------------------------------------------------------------

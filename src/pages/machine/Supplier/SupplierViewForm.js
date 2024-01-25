@@ -14,9 +14,9 @@ import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 // Iconify
-import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
+import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormField from '../../../components/ViewForms/ViewFormField';
 
 // ----------------------------------------------------------------------
 

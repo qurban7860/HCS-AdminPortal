@@ -8,7 +8,7 @@ import { PATH_SETTING } from '../../routes/paths';
 // redux
 import { getConfig } from '../../redux/slices/config/config';
 // sections
-import { Cover } from '../components/Defaults/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import ConfigViewForm from './ConfigViewForm';
 /* eslint-disable */
 

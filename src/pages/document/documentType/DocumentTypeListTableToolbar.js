@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { PATH_SETTING } from '../../../routes/paths';
 import { resetActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
 // components
-import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
+import SearchBarCombo from '../../../components/ListTableTools/SearchBarCombo';
 // constants
 import { BUTTONS } from '../../../constants/default-constants';
 // styles

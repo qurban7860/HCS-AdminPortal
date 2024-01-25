@@ -30,10 +30,10 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 // sections
 import ParameterListTableRow from './ParameterListTableRow';
 import ParameterListTableToolbar from './ParameterListTableToolbar';
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
-import TableCard from '../../components/ListTableTools/TableCard';
+import TableCard from '../../../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 

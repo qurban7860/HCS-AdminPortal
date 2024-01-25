@@ -3,14 +3,12 @@ import { useParams } from 'react-router-dom';
 // @mui
 import { Card, Container } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-// routes
-import { PATH_SETTING } from '../../../routes/paths';
 // redux
 
 import { getRole } from '../../../redux/slices/securityUser/role';
 import { getAssignedSecurityUsers } from '../../../redux/slices/securityUser/securityUser';
 // sections
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import RoleViewForm from './RoleViewForm';
 /* eslint-disable */
 

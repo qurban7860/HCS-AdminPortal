@@ -9,7 +9,7 @@ import { styled } from '@mui/system';
 import { fDateTime } from '../../../../utils/formatTime';
 import { StyledTooltip } from '../../../../theme/styles/default-styles';
 import Iconify from '../../../../components/iconify';
-import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
+import LinkTableCell from '../../../../components/ListTableTools/LinkTableCell';
 // components
 
 // ----------------------------------------------------------------------

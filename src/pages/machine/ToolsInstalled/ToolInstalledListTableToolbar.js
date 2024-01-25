@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from '../../../redux/store';
 // import { PATH_DOCUMENT } from '../../../routes/paths';
 import { setToolInstalledFormVisibility } from '../../../redux/slices/products/toolInstalled';
-import { SearchBarCombo } from '../../components/ListTableTools'
+import { SearchBarCombo } from '../../../components/ListTableTools'
 // constants
 import { BUTTONS } from '../../../constants/default-constants';
 // ----------------------------------------------------------------------

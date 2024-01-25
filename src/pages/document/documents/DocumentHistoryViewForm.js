@@ -18,11 +18,11 @@ import {
   Typography,
   Divider
 } from '@mui/material';
-import { ThumbnailDocButton } from '../../components/Thumbnails'
+import { ThumbnailDocButton } from '../../../components/Thumbnails'
 import { StyledVersionChip } from '../../../theme/styles/default-styles';
-import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
-import ViewFormField from '../../components/ViewForms/ViewFormField';
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../../../components/ViewForms/ViewFormField';
+import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 
 import {
   getDocumentHistory,
@@ -46,15 +46,15 @@ import { deleteDrawing, getDrawings, resetDrawings,
 import { deleteDocumentFile, downloadFile, getDocumentDownload } from '../../../redux/slices/document/documentFile';
 import { getCustomer, resetCustomer, setCustomerDialog} from '../../../redux/slices/customer/customer';
 import { getMachineForDialog, resetMachine, setMachineDialog } from '../../../redux/slices/products/machine';
-import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
-import FormLabel from '../../components/DocumentForms/FormLabel';
-import DocumentCover from '../../components/DocumentForms/DocumentCover';
-import CustomerDialog from '../../components/Dialog/CustomerDialog';
-import MachineDialog from '../../components/Dialog/MachineDialog';
+import { Thumbnail } from '../../../components/Thumbnails/Thumbnail';
+import FormLabel from '../../../components/DocumentForms/FormLabel';
+import DocumentCover from '../../../components/DocumentForms/DocumentCover';
+import CustomerDialog from '../../../components/Dialog/CustomerDialog';
+import MachineDialog from '../../../components/Dialog/MachineDialog';
 import { PATH_DOCUMENT } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
 import { Snacks } from '../../../constants/document-constants';
-import UpdateDocumentVersionDialog from '../../components/Dialog/UpdateDocumentVersionDialog';
+import UpdateDocumentVersionDialog from '../../../components/Dialog/UpdateDocumentVersionDialog';
 import DocumentGallery from './DocumentGallery';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
 import Lightbox from '../../../components/lightbox/Lightbox';
@@ -140,9 +140,9 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
     [documentHistory]
   );
 
-  const linkedDrawingMachines = documentHistory?.productDrawings?.map((pdrawing, index) => pdrawing?.machine._id !== machine?._id && (
-    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(pdrawing?.machine?._id)} label={`${pdrawing?.machine?.serialNo || ''} ${pdrawing?.machine?.name ? ` - ${pdrawing?.machine?.name}` : '' } `} />
-  ));
+  const linkedDrawingMachines = documentHistory?.productDrawings?.map((pdrawing, index) =>  
+    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(pdrawing?.machine?._id)} label={`${pdrawing?.machine?.serialNo || '' } ${pdrawing?.machine?.name ? '-' : '' } ${pdrawing?.machine?.name || '' } `} />
+  );
 
   // refresh the document when file deleted
 const callAfterDelete = () => {dispatch(getDocumentHistory(documentHistory._id))};
@@ -260,6 +260,11 @@ const handleNewFile = async () => {
               src: `data:image/png;base64, ${file.thumbnail}`,
               downloadFilename: `${file?.name}.${file?.extension}`,
               name: file?.name,
+              title:<Grid>
+                <Typography variant='h4'>{documentHistory?.machine?.serialNo} - {documentHistory?.machine?.name}</Typography>
+                <Typography variant='body2'>{documentHistory?.displayName}</Typography>
+                <Typography variant='body2'>{documentHistory?.docCategory?.name}</Typography>
+              </Grid>,
               extension: file?.extension,
               category: file?.docCategory?.name,
               fileType: file?.fileType,

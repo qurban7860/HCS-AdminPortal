@@ -9,8 +9,8 @@ import {
 import { styled } from '@mui/material/styles';
 import { fDate } from '../../../utils/formatTime';
 // components
-import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
-import LinkDialogTableCell from '../../components/ListTableTools/LinkDialogTableCell';
+import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
+import LinkDialogTableCell from '../../../components/ListTableTools/LinkDialogTableCell';
 import { useScreenSize } from '../../../hooks/useResponsive';
 // ----------------------------------------------------------------------
 

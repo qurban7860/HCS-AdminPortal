@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'; 
 import { Card, Grid } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import ViewFormField from '../components/ViewForms/ViewFormField';
-import { Cover } from '../components/Defaults/Cover';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
+import { Cover } from '../../components/Defaults/Cover';
 import { CONFIG } from '../../config-global';
 import axios from '../../utils/axios';
 

@@ -18,7 +18,7 @@ import { getDocumentCategory } from '../../../redux/slices/document/documentCate
 // import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 // import { useSettingsContext } from '../../../components/settings';
 // sections
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import DocumentCategoryViewForm from './DocumentCategoryViewForm';
 /* eslint-disable */
 

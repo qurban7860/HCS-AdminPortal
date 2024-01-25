@@ -14,11 +14,11 @@ import { PATH_MACHINE } from '../../../routes/paths';
 // Iconify
 // import Iconify from '../../../components/iconify/Iconify';
 //  components
-import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
-import ViewFormField from '../../components/ViewForms/ViewFormField';
-import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-import CodeMirror from '../../components/CodeMirror/JsonEditor';
+import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../../../components/ViewForms/ViewFormField';
+import ViewFormSwitch from '../../../components/ViewForms/ViewFormSwitch';
+import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
+import CodeMirror from '../../../components/CodeMirror/JsonEditor';
 
 // ----------------------------------------------------------------------
 

@@ -16,9 +16,9 @@ import { DocumentCategorySchema } from '../../schemas/document';
 import { addDocumentCategory } from '../../../redux/slices/document/documentCategory';
 // components
 import FormProvider, { RHFTextField } from '../../../components/hook-form';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import { Cover } from '../../components/Defaults/Cover';
-import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
+import { Cover } from '../../../components/Defaults/Cover';
+import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
 // assets
 // import { countries } from '../../../assets/data';
 // styles

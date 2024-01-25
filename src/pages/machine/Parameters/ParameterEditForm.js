@@ -34,9 +34,9 @@ import FormProvider, {
   RHFTextField,
   RHFSwitch,
 } from '../../../components/hook-form';
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
 

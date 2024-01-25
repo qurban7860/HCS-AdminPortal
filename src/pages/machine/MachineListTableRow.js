@@ -5,9 +5,9 @@ import { Switch, TableRow, TableCell } from '@mui/material';
 // utils
 import { fDate } from '../../utils/formatTime';
 // components
-import LinkTableCellWithIconTargetBlank from '../components/ListTableTools/LinkTableCellWithIconTargetBlank';
+import LinkTableCellWithIconTargetBlank from '../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
 import { useScreenSize } from '../../hooks/useResponsive';
-import LinkDialogTableCell from '../components/ListTableTools/LinkDialogTableCell';
+import LinkDialogTableCell from '../../components/ListTableTools/LinkDialogTableCell';
 
 // ----------------------------------------------------------------------
 
@@ -43,7 +43,7 @@ export default function MachineListTableRow({
     shippingDate,
     status,
     isActive,
-    createdAt,
+    // createdAt,
   } = row;
  
   return (

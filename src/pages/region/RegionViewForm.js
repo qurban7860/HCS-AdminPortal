@@ -10,9 +10,9 @@ import { deleteRegion } from '../../redux/slices/region/region';
 import { PATH_SETTING } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
-import ViewFormField from '../components/ViewForms/ViewFormField';
-import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
 

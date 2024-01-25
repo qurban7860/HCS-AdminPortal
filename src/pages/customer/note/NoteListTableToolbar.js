@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Stack } from '@mui/material';
 import { useDispatch } from '../../../redux/store';
 // components
-import { SearchBarCombo } from '../../components/ListTableTools';
+import { SearchBarCombo } from '../../../components/ListTableTools';
 // import { PATH_DOCUMENT } from '../../../routes/paths';
 import { setNoteFormVisibility } from '../../../redux/slices/customer/customerNote';
 // constants

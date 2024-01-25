@@ -2,7 +2,7 @@
 import { Container, Card } from '@mui/material';
 // sections
 import ConfigAddForm from './ConfigAddForm';
-import { Cover } from '../components/Defaults/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 // ----------------------------------------------------------------------
 
 export default function RegionAdd() {

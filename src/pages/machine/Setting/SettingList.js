@@ -32,7 +32,7 @@ import {
   setFilterBy,
   setSettingViewFormVisibility } from '../../../redux/slices/products/machineSetting';
 import { fDate } from '../../../utils/formatTime';
-import TableCard from '../../components/ListTableTools/TableCard';
+import TableCard from '../../../components/ListTableTools/TableCard';
 
 export default function SettingList() {
   const {

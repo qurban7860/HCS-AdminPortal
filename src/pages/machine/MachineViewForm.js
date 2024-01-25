@@ -11,11 +11,10 @@ import {
   getMachine,
   deleteMachine,
   setMachineEditFormVisibility,
-  transferMachine,
   setMachineVerification,
   setMachineDialog,
   getMachineForDialog,
-  setTransferDialogBoxVisibility
+  setMachineTransferDialog
 } from '../../redux/slices/products/machine';
 import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
 import { getSite, resetSite, setSiteDialog } from '../../redux/slices/customer/site';
@@ -25,11 +24,11 @@ import { setToolInstalledFormVisibility, setToolInstalledEditFormVisibility } fr
 import useResponsive from '../../hooks/useResponsive';
 import { useSnackbar } from '../../components/snackbar';
 // components
-import ViewFormField from '../components/ViewForms/ViewFormField';
-import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
-import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
-import FormLabel from '../components/DocumentForms/FormLabel';
-import NothingProvided from '../components/Defaults/NothingProvided';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import FormLabel from '../../components/DocumentForms/FormLabel';
+import NothingProvided from '../../components/Defaults/NothingProvided';
 import GoogleMaps from '../../assets/GoogleMaps';
 // constants
 import { TITLES, FORMLABELS } from '../../constants/default-constants';
@@ -37,10 +36,12 @@ import { Snacks } from '../../constants/machine-constants';
 // utils
 import { fDate } from '../../utils/formatTime';
 // dialog
-import MachineDialog from '../components/Dialog/MachineDialog'
-import CustomerDialog from '../components/Dialog/CustomerDialog';
-import SiteDialog from '../components/Dialog/SiteDialog';
-import OpenInNewPage from '../components/Icons/OpenInNewPage';
+import MachineDialog from '../../components/Dialog/MachineDialog'
+import CustomerDialog from '../../components/Dialog/CustomerDialog';
+import MachineTransferDialog from '../../components/Dialog/MachineTransferDialog';
+import SiteDialog from '../../components/Dialog/SiteDialog';
+import OpenInNewPage from '../../components/Icons/OpenInNewPage';
+import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -49,7 +50,7 @@ export default function MachineViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { machine, machineDialog, isLoading } = useSelector((state) => state.machine);
+  const { machine, machineDialog, machineTransferDialog, isLoading } = useSelector((state) => state.machine);
   const { customerDialog } = useSelector((state) => state.customer);
   const { siteDialog } = useSelector((state) => state.site);
   const [disableTransferButton, setDisableTransferButton] = useState(true);
@@ -98,7 +99,7 @@ export default function MachineViewForm() {
   );
 
   useEffect(() => {
-    dispatch(setTransferDialogBoxVisibility(false));
+    dispatch(setMachineTransferDialog(false));
     dispatch(setSiteDialog(false))
     dispatch(setCustomerDialog(false));
     dispatch(setMachineDialog(false));
@@ -126,24 +127,6 @@ export default function MachineViewForm() {
 
   const handleEdit = () => {
     dispatch(setMachineEditFormVisibility(true));
-  };
-
-  const handleTransfer = async (customerId, statusId) => {
-    try {
-      const response = await dispatch(transferMachine(machine, customerId, statusId));
-      const machineId = response.data.Machine._id;
-      navigate(PATH_MACHINE.machines.view(machineId));
-      enqueueSnackbar(Snacks.machineTransferSuccess);
-    } catch (error) {
-      if (error?.Message) {
-        enqueueSnackbar(error?.Message, { variant: `error` });
-      } else if (error?.message) {
-        enqueueSnackbar(error?.message, { variant: `error` });
-      } else {
-        enqueueSnackbar(Snacks.machineFailedTransfer, { variant: `error` });
-      }
-      console.error(error);
-    }
   };
 
   const onDelete = async () => {
@@ -180,13 +163,28 @@ export default function MachineViewForm() {
   };
   
   const linkedMachines = machine?.machineConnections?.map((machineConnection, index) => (
-    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(machineConnection.connectedMachine._id)} label={`${machineConnection?.connectedMachine?.serialNo || ''} ${machineConnection?.connectedMachine?.name ? '-' : '' } ${machineConnection?.connectedMachine?.name || ''} `} />
+      <Chip 
+        sx={{ml:index===0?0:1}} 
+        onClick={() => handleMachineDialog(machineConnection.connectedMachine._id)} 
+        deleteIcon={<Iconify icon="fluent:open-12-regular"/>}
+        onDelete={()=> {
+          window.open(PATH_MACHINE.machines.view(machineConnection.connectedMachine._id), '_blank');
+        }}
+        label={`${machineConnection?.connectedMachine?.serialNo || ''} ${machineConnection?.connectedMachine?.name ? '-' : '' } ${machineConnection?.connectedMachine?.name || ''} `} 
+      />
   ));
   
-  const paranetMachines = machine?.parentMachines?.map((parentMachine, index) => (
-    <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(parentMachine.machine._id)} label={`${parentMachine?.machine?.serialNo || ''} ${parentMachine?.machine?.name ? '-' : '' } ${parentMachine?.machine?.name || ''} `} />
+  const paranetMachines = machine?.parentMachines?.map((parentMachine, index) => (  
+    <Chip 
+        sx={{ml:index===0?0:1}} 
+        onClick={() => handleMachineDialog(parentMachine.machine._id)} 
+        deleteIcon={<Iconify icon="fluent:open-12-regular"/>}
+        onDelete={()=> {
+          window.open(PATH_MACHINE.machines.view(parentMachine.machine._id), '_blank');
+        }}  
+        label={`${parentMachine?.machine?.serialNo || ''} ${parentMachine?.machine?.name ? '-' : '' } ${parentMachine?.machine?.name || ''} `} 
+      />
   ));
-
   const defaultValues = useMemo(
     () => ({
       id: machine?._id || '',
@@ -244,7 +242,7 @@ export default function MachineViewForm() {
               disableDeleteButton={disableDeleteButton}
               handleEdit={handleEdit}
               onDelete={onDelete}
-              handleTransfer={handleTransfer}
+              handleTransfer={ () => navigate(PATH_MACHINE.machines.transfer(machine?._id))}
               backLink={() => navigate(PATH_MACHINE.machines.list)}
               machineSupportDate={defaultValues?.supportExpireDate}
             />
@@ -290,7 +288,7 @@ export default function MachineViewForm() {
                 </Typography> ) || 
                 ( defaultValues?.transferredFrom && 
                   <Typography variant='body2' sx={{mt: 0.5}} >
-                    {` - Transfered from `}
+                    {` - Transferred from `}
                     <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredFrom?._id)} underline="none" sx={{ cursor: 'pointer'}}>
                       <b>{defaultValues?.transferredFrom?.name}</b>
                     </Link>
@@ -400,11 +398,11 @@ export default function MachineViewForm() {
           </Grid>
         </Card>
       </Grid>
-
-      {/* connected machine dialog */}      
-      {siteDialog && <SiteDialog title={siteDialogTitle}/>}
-      {machineDialog  && <MachineDialog />}
-      {customerDialog  && <CustomerDialog />}
+      
+      { siteDialog && <SiteDialog title={siteDialogTitle}/>}
+      { machineDialog  && <MachineDialog />}
+      { customerDialog  && <CustomerDialog />}
+      { machineTransferDialog && <MachineTransferDialog />}
       
     </>
   );

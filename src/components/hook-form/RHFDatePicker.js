@@ -8,11 +8,12 @@ import {
 RHFDatePicker.propTypes = {
   name: PropTypes.string,
   label: PropTypes.string,
+  size: PropTypes.string,
   helperText: PropTypes.node,
   Error: PropTypes.bool,
 };
 
-export default function RHFDatePicker({ name, label, helperText, Error, ...other }) {
+export default function RHFDatePicker({ name, label, size, helperText, Error, ...other }) {
 
   const { control } = useFormContext();
 
@@ -29,6 +30,7 @@ export default function RHFDatePicker({ name, label, helperText, Error, ...other
           renderInput={params => (
             <TextField
               {...params}
+              size={size}
               error={!!error || !!Error}
               helperText={error ? error?.message : helperText}
             />

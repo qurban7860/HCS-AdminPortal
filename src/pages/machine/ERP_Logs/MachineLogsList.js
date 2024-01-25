@@ -28,7 +28,7 @@ import {
   setFilterBy
 } from '../../../redux/slices/products/machineErpLogs';
 import { fDateTime } from '../../../utils/formatTime';
-import TableCard from '../../components/ListTableTools/TableCard';
+import TableCard from '../../../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 

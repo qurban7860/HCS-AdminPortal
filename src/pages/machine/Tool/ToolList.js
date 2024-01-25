@@ -28,12 +28,12 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 // sections
 import ToolListTableRow from './ToolListTableRow';
 import ToolListTableToolbar from './ToolListTableToolbar';
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
 // constants
 import { FORMLABELS, DIALOGS, BUTTONS } from '../../../constants/default-constants';
-import TableCard from '../../components/ListTableTools/TableCard';
+import TableCard from '../../../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 

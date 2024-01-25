@@ -441,7 +441,7 @@ export function updateDocumentVersionNo(documentId , data) {
 
 // -----------------------------------Get Documents-----------------------------------
 
-export function getDocuments(customerId, machineId, drawing, page, pageSize) {
+export function getDocuments(customerId, machineId, drawing, page, pageSize, cancelToken) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     const params = {
@@ -473,7 +473,8 @@ export function getDocuments(customerId, machineId, drawing, page, pageSize) {
 
       const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` ,
       {
-        params
+        params,
+        cancelToken: cancelToken?.token,
       }
       );
 
@@ -482,7 +483,7 @@ export function getDocuments(customerId, machineId, drawing, page, pageSize) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
-      throw error;
+      // throw error;
     }
   };
 }
@@ -512,7 +513,7 @@ export function getActiveDocumentsByType(documentCategoryId,documentTypeId) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
-      throw error;
+      // throw error;
     }
   };
 }
@@ -657,7 +658,7 @@ export function getMachineDrawingsDocuments() {
 
 // -----------------------------------Get Active Documents-----------------------------------
 
-export function getActiveDocuments() {
+export function getActiveDocuments(machineId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -666,6 +667,7 @@ export function getActiveDocuments() {
         params: {
           isActive: true,
           isArchived: false,
+          machiine: machineId,
         }
       }
       );

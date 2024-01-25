@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Stack, Grid, Button } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { CardBase, GridBaseViewForm, StyledScrollbar } from '../../theme/styles/customer-styles';
-import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
+import AddButtonAboveAccordion from '../../components/Defaults/AddButtonAboveAcoordion';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
@@ -22,15 +22,15 @@ import ContactAddForm from './contact/ContactAddForm';
 import ContactEditForm from './contact/ContactEditForm';
 import ContactViewForm from './contact/ContactViewForm';
 import ContactMoveForm from './contact/ContactMoveForm';
-import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
-import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
+import BreadcrumbsProvider from '../../components/Breadcrumbs/BreadcrumbsProvider';
+import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
 import useResponsive from '../../hooks/useResponsive';
-import SearchInput from '../components/Defaults/SearchInput';
+import SearchInput from '../../components/Defaults/SearchInput';
 import { fDate } from '../../utils/formatTime';
 import { Snacks } from '../../constants/customer-constants';
 import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
 import Iconify from '../../components/iconify';
-import ContactSiteCard from '../components/sections/ContactSiteCard';
+import ContactSiteCard from '../../components/sections/ContactSiteCard';
 import { exportCSV } from '../../utils/exportCSV';
 
 // ----------------------------------------------------------------------
@@ -238,6 +238,7 @@ export default function CustomerContactList(currentContact = null) {
                     handleOnClick={() => handleCardClick(contact) }
                     disableClick={contactEditFormVisibility || formVisibility || contactMoveFormVisibility}
                     name={`${contact.firstName || ''} ${contact.lastName || ''}`} title={contact.title} email={contact.email}
+                    phone={contact?.phone}
                   />)
                 )}
               </Grid>

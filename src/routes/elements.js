@@ -79,6 +79,7 @@ export const MachineAdd = Loadable(lazy(() => import('../pages/machine/MachineAd
 export const MachineList = Loadable(lazy(() => import('../pages/machine/MachineList')));
 export const MachineView = Loadable(lazy(() => import('../pages/machine/MachineView')));
 export const MachineEdit = Loadable(lazy(() => import('../pages/machine/MachineEdit')));
+export const MachineTransfer = Loadable(lazy(() => import('../pages/machine/MachineTransfer')));
 
 // Supplier
 export const SupplierAddForm = Loadable(
@@ -314,5 +315,5 @@ export const MaintenancePage = Loadable(lazy(() => import('../pages/MaintenanceP
 export const ErrorPage = Loadable(lazy(() => import('../pages/ErrorPage')));
 export const UserInviteLanding = Loadable(lazy(() => import('../pages/UserInviteLanding')));
 export const ComponentsOverviewPage = Loadable(
-  lazy(() => import('../pages/components/Defaults/ComponentsOverviewPage'))
+  lazy(() => import('../components/Defaults/ComponentsOverviewPage'))
 );

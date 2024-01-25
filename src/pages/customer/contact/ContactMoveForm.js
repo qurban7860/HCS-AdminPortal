@@ -16,9 +16,9 @@ import { getActiveCustomers } from '../../../redux/slices/customer/customer';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFAutocomplete } from '../../../components/hook-form';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import ViewFormField from '../../components/ViewForms/ViewFormField';
-import FormLabel from '../../components/DocumentForms/FormLabel';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
+import ViewFormField from '../../../components/ViewForms/ViewFormField';
+import FormLabel from '../../../components/DocumentForms/FormLabel';
 // ----------------------------------------------------------------------
 
 ContactMoveForm.propTypes = {

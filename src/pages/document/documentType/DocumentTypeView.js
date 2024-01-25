@@ -18,7 +18,7 @@ import { getDocumentType } from '../../../redux/slices/document/documentType';
 // import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 // import { useSettingsContext } from '../../../components/settings';
 // sections
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import DocumentTypeViewForm from './DocumentTypeViewForm';
 /* eslint-disable */
 

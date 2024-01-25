@@ -29,13 +29,13 @@ import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect } from '../../components/hook-form';
 // slice
 import { addSecurityUser } from '../../redux/slices/securityUser/securityUser';
-import { getActiveSPCustomers, getAllCustomers } from '../../redux/slices/customer/customer';
+import { getAllCustomers } from '../../redux/slices/customer/customer';
 import { resetContacts, getActiveContacts } from '../../redux/slices/customer/contact';
 import { getRoles } from '../../redux/slices/securityUser/role';
 import { getActiveRegions } from '../../redux/slices/region/region';
 import { getAllMachines } from '../../redux/slices/products/machine';
 
-import AddFormButtons from '../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
 SecurityUserAddForm.propTypes = {
@@ -48,9 +48,9 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
   const userRolesString = localStorage.getItem('userRoles');
 
   // eslint-disable-next-line
-  const [userRoles, setUserRoles] = useState(JSON.parse(userRolesString));
+  const [ userRoles, setUserRoles] = useState(JSON.parse(userRolesString));
 
-  const { spCustomers, allCustomers } = useSelector((state) => state.customer);
+  const { allCustomers } = useSelector((state) => state.customer);
   const { roles } = useSelector((state) => state.role);
   const { activeRegions } = useSelector((state) => state.region);
   const { activeContacts } = useSelector((state) => state.contact);

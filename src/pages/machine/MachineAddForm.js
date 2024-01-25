@@ -10,23 +10,23 @@ import { Box, Card, styled, Container, Grid, Stack, TextField } from '@mui/mater
 import { MuiChipsInput } from 'mui-chips-input';
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
-import { getActiveCustomers, getFinancialCompanies, setNewMachineCustomer } from '../../redux/slices/customer/customer';
+import { getActiveCustomers, getCustomer, getFinancialCompanies, setCustomerTab, setNewMachineCustomer } from '../../redux/slices/customer/customer';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import  { addMachine, getActiveMachines } from '../../redux/slices/products/machine';
 import { getActiveCategories, resetActiveCategories } from '../../redux/slices/products/category';
 import { getActiveMachineModels, resetActiveMachineModels } from '../../redux/slices/products/model';
 import { getActiveMachineStatuses, resetActiveMachineStatuses } from '../../redux/slices/products/statuses';
 import { getActiveSuppliers, resetActiveSuppliers } from '../../redux/slices/products/supplier';
-import { getMachineConnections } from '../../redux/slices/products/machineConnections';
-import { Cover } from '../components/Defaults/Cover';
+import { getMachineConnections, resetMachineConnections } from '../../redux/slices/products/machineConnections';
+import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 // routes
 import { PATH_CUSTOMER, PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFTextField, RHFAutocomplete, RHFDatePicker } from '../../components/hook-form';
-import AddFormButtons from '../components/DocumentForms/AddFormButtons';
-import ToggleButtons from '../components/DocumentForms/ToggleButtons';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import { FORMLABELS } from '../../constants/default-constants';
 import { machineSchema } from '../schemas/machine'
 
@@ -65,7 +65,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       dispatch(resetActiveMachineModels()); 
       dispatch(resetActiveCategories()); 
       dispatch(resetActiveMachineStatuses()); 
-      dispatch(resetActiveSuppliers()) 
+      dispatch(resetActiveSuppliers())
+      dispatch(setNewMachineCustomer(null)); 
     }
   }, [dispatch]);
 
@@ -78,6 +79,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       previousMachine: '',
       category: null,
       machineModel: null,
+      manufactureDate: null,
       supplier: null,
       status: null,
       customer: null,
@@ -116,6 +118,13 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   } = watch();
 
   useEffect(() => {
+    dispatch(resetMachineConnections());
+    dispatch(resetActiveSites());
+    dispatch(getActiveSites(customer?._id));
+    dispatch(getMachineConnections(customer?._id));
+  },[dispatch, customer, spContacts, setValue])
+
+  useEffect(() => {
     if(newMachineCustomer){
       setValue('customer',newMachineCustomer);
       setLandToCustomerMachinePage(true);
@@ -123,7 +132,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       setValue('projectManager', spContacts.filter(item => Array.isArray(customer?.projectManager) && customer?.projectManager.some(manager => manager._id === item?._id)))
       setValue('supportManager', spContacts.filter(item => Array.isArray(customer?.supportManager) && customer?.supportManager.some(manager => manager._id === item?._id)))
     }
-    return ()=>{ dispatch(setNewMachineCustomer(null)) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[newMachineCustomer, spContacts])
 
@@ -136,15 +144,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     setValue('status', activeMachineStatuses.find((element)=> element.isDefault === true) )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ activeMachineStatuses ])
-
-  useEffect(() => {
-    dispatch(resetActiveSites());
-    if (customer !== null && customer._id !== undefined) {
-      dispatch(getActiveSites(customer._id));
-      dispatch(getMachineConnections(customer._id));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, customer]);
 
  styled('li')(({ theme }) => ({
     margin: theme.spacing(0.5),
@@ -169,9 +168,10 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     }
   };
 
-  const toggleCancel = () => {
+  const toggleCancel = async() => {
     if(landToCustomerMachinePage){
-      navigate(PATH_CUSTOMER.view(customer._id));
+      await dispatch(setCustomerTab('machines'));
+      navigate(PATH_CUSTOMER.view(newMachineCustomer._id));
     }else{
       navigate(PATH_MACHINE.machines.list);
     }
@@ -224,7 +224,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
 
   return (
     <Container maxWidth={false} sx={{mb:3}}>
-      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
         <StyledCardContainer>
           <Cover name="New Machine" setting />
         </StyledCardContainer>
@@ -251,6 +251,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                       onChange={(event, newValue) => CategoryValHandler(event, newValue)}
                       renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || ''}`}</li> )}
                     />
+
                     <RHFAutocomplete 
                       name="machineModel"
                       label="Machine Model"
@@ -260,6 +261,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                       renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || ''}`}</li> )}
                       onChange={(event, newValue) => MachineModelValHandler(event, newValue)}
                     />
+
+                  <RHFDatePicker inputFormat='dd/MM/yyyy' name="manufactureDate" label="Manufacture Date" />
 
                   <RHFAutocomplete
                     name="status" 
@@ -272,6 +275,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     id="controllable-states-demo"
                     ChipProps={{ size: 'small' }}
                   />
+
                   <RHFAutocomplete
                     name="supplier"
                     label="Supplier"
@@ -282,6 +286,36 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option?.name || ''}`}</li> )}
                     ChipProps={{ size: 'small' }}
                   />
+
+                  <RHFTextField name="workOrderRef" label="Work Order/ Purchase Order" />
+
+                  <RHFAutocomplete
+                    name="customer"
+                    label="Customer*"  
+                    id="controllable-states-demo"
+                    options={activeCustomers}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    getOptionLabel={(option) => `${option.name || ''}`}
+                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || ''}`}</li> )}
+                    onChange={async (event, newValue) => {
+                      setValue('customer',newValue);
+                      setValue('instalationSite', null);
+                      setValue('billingSite', null);
+                      setValue('machineConnectionVal', []);
+                      setValue('accountManager', [])
+                      setValue('projectManager', [])
+                      setValue('supportManager', [])  
+                      
+                      if(newValue){
+                        // setValue('customer',newValue);
+                        setValue('accountManager', spContacts.filter(item => Array.isArray(newValue?.accountManager) && newValue?.accountManager.includes(item?._id)))
+                        setValue('projectManager', spContacts.filter(item => Array.isArray(newValue?.projectManager) && newValue?.projectManager.includes(item?._id)))
+                        setValue('supportManager', spContacts.filter(item => Array.isArray(newValue?.supportManager) && newValue?.supportManager.includes(item?._id)))
+                      }
+                    }}
+                    ChipProps={{ size: 'small' }}
+                  />
+
                   <RHFAutocomplete
                     value={financialCompany}
                     name="financialCompany"
@@ -291,40 +325,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || ''}`}</li> )}
                   />
-                  <RHFTextField name="workOrderRef" label="Work Order/ Purchase Order" />
-                </Box>
-                      <RHFAutocomplete
-                        name="customer"
-                        label="Customer*"  
-                        id="controllable-states-demo"
-                        options={activeCustomers}
-                        isOptionEqualToValue={(option, value) => option._id === value._id}
-                        getOptionLabel={(option) => `${option.name || ''}`}
-                        renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || ''}`}</li> )}
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            setValue('customer',newValue);
-                            if(customer?._id !== newValue._id) {
-                            setValue('machineConnectionVal', []);
-                            setValue('instalationSite', null);
-                            setValue('billingSite', null);
-                            setValue('accountManager', spContacts.filter(item => Array.isArray(newValue?.accountManager) && newValue?.accountManager.includes(item?._id)))
-                            setValue('projectManager', spContacts.filter(item => Array.isArray(newValue?.projectManager) && newValue?.projectManager.includes(item?._id)))
-                            setValue('supportManager', spContacts.filter(item => Array.isArray(newValue?.supportManager) && newValue?.supportManager.includes(item?._id)))
-                            }
-                          } else {
-                            setValue('customer',null);
-                            setValue('machineConnectionVal', []);
-                            setValue('instalationSite', null);
-                            setValue('billingSite', null);
-                            dispatch(resetActiveSites());
-                          }
-                        }}
-                        ChipProps={{ size: 'small' }}
-                      />
-                <Box rowGap={2} columnGap={2} display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
-                >
+
                   <RHFAutocomplete
                     name="billingSite"    
                     label="Billing Site" 
@@ -335,7 +336,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     id="controllable-states-demo"
                     ChipProps={{ size: 'small' }}
                   />
-                  <RHFDatePicker inputFormat='dd/MM/yyyy'  name="shippingDate" label="Shipping Date" />
+
                   <RHFAutocomplete
                     name="instalationSite"  
                     label="Installation Site" 
@@ -346,9 +347,21 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     id="controllable-states-demo"
                     ChipProps={{ size: 'small' }}
                   />
-                  <RHFDatePicker inputFormat='dd/MM/yyyy' name="installationDate" label="Installation Date" />
                 </Box>
-                  <RHFTextField name="siteMilestone" label="Landmark" multiline />
+
+                  <RHFTextField name="siteMilestone" label="Landmark for Installation site" multiline />
+                  
+                <Box rowGap={2} columnGap={2} display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
+                >
+                  
+                  <RHFDatePicker inputFormat='dd/MM/yyyy'  name="shippingDate" label="Shipping Date" />
+
+                  <RHFDatePicker inputFormat='dd/MM/yyyy' name="installationDate" label="Installation Date" />
+
+                </Box>
+
+
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect

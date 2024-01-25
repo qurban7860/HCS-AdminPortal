@@ -12,20 +12,21 @@ import { useSnackbar } from '../../components/snackbar';
 import {
   updateCustomer,
   setCustomerEditFormVisibility,
+  setCustomerTab,
 } from '../../redux/slices/customer/customer';
 import { getActiveContacts, getSPContacts } from '../../redux/slices/customer/contact';
 import { getSites } from '../../redux/slices/customer/site';
 // routes
 import { PATH_CUSTOMER } from '../../routes/paths';
 // components
-import AddFormButtons from '../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete } from '../../components/hook-form';
 // constants
 import { FORMLABELS  } from '../../constants/customer-constants';
 // schema
 import { EditCustomerSchema } from '../schemas/customer';
 import { StyledToggleButtonLabel } from '../../theme/styles/document-styles';
-import FormLabel from '../components/DocumentForms/FormLabel';
+import FormLabel from '../../components/DocumentForms/FormLabel';
 
 // ----------------------------------------------------------------------
 
@@ -93,7 +94,8 @@ export default function CustomerEditForm() {
     data.primaryTechnicalContact = technicalContactVal?._id || null;
 
     try {
-      await dispatch(updateCustomer(data ));
+      await dispatch(updateCustomer(data));
+      await dispatch(setCustomerTab('info'));
       reset();
       enqueueSnackbar('Update success!');
       navigate(PATH_CUSTOMER.view(customer._id));

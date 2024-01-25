@@ -10,10 +10,10 @@ import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 // import { fDate, fDateTime } from '../../../utils/formatTime';
-import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
-import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../../../components/ViewForms/ViewFormField';
 // import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
 

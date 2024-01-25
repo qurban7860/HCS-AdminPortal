@@ -10,9 +10,9 @@ import { Box, Card, Grid, Stack, Autocomplete, TextField } from '@mui/material';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField } from '../../../components/hook-form';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import FormHeading from '../../components/DocumentForms/FormHeading';
-import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
+import FormHeading from '../../../components/DocumentForms/FormHeading';
+import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
 
 // slice
 import {

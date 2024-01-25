@@ -51,6 +51,41 @@ export const machineSchema = Yup.object().shape({
   isActive: Yup.boolean(),
 });
 
+export const machineTransferSchema = Yup.object().shape({
+  customer: Yup.object().shape({
+    name: Yup.string()
+  }).nullable().required("Customer Is Required!"),
+  
+  financialCompany: Yup.object().shape({
+    name: Yup.string()
+  }).nullable(),
+
+  billingSite: Yup.object().shape({
+    name: Yup.string()
+  }).nullable(),
+
+  instalationSite: Yup.object().shape({
+    name: Yup.string()
+  }).nullable(),
+
+  shippingDate: Yup.date().typeError('Date Should be Valid!').max(futureDate,`Shipping Date field must be at earlier than ${formatDate(futureDate)}!`)
+  .min(pastDate,`Shipping Date field must be at after than ${formatDate(pastDate)}!`).nullable().label('Shipping Date'),
+  
+  installationDate: Yup.date()
+  .typeError('Date Should be Valid!')
+  .max(futureDate,`Shipping Date field must be at earlier than ${formatDate(futureDate)}!`)
+  .min(pastDate,`Shipping Date field must be at after than ${formatDate(pastDate)}!`).nullable().label('Installation Date'),
+
+  status: Yup.object().shape({
+    name: Yup.string()
+  }).nullable().required("Status Is Required!"),
+
+  machineConnection: Yup.array().nullable(),
+
+  machineDocuments: Yup.array().nullable(),
+
+});
+
 export const EditMachineSchema = Yup.object().shape({
   serialNo: Yup.string().required(Snacks.serialNoRequired).max(6),
   name: Yup.string().max(50),

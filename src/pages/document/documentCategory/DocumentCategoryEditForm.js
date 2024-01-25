@@ -17,10 +17,10 @@ import {
   getDocumentCategory,
   updateDocumentCategory,
 } from '../../../redux/slices/document/documentCategory';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import FormHeading from '../../components/DocumentForms/FormHeading';
-import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
-import { Cover } from '../../components/Defaults/Cover';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
+import FormHeading from '../../../components/DocumentForms/FormHeading';
+import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
+import { Cover } from '../../../components/Defaults/Cover';
 // styles
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { FORMLABELS } from '../../../constants/default-constants';

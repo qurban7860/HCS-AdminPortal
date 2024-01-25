@@ -4,19 +4,19 @@ import {  Grid,  Table, TableBody, TableCell, TableHead, TableRow,  Paper, Table
 // hooks
 import { useDispatch, useSelector } from 'react-redux';
 import { fDateTime } from '../../../utils/formatTime';
-import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import { useSnackbar } from '../../../components/snackbar';
 // components
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import {
   setToolInstalledEditFormVisibility,
   getToolInstalled,
   deleteToolInstalled,
   setToolInstalledViewFormVisibility,
 } from '../../../redux/slices/products/toolInstalled';
-import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 // constants
-import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
+import ViewFormSwitch from '../../../components/ViewForms/ViewFormSwitch';
 
 export default function ToolInstalledViewForm() {
   const { toolInstalled, isLoading } = useSelector((state) => state.toolInstalled);

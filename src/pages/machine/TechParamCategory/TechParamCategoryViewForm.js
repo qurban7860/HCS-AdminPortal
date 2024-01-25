@@ -13,9 +13,9 @@ import { useSnackbar } from '../../../components/snackbar';
 import { deleteTechparamcategory } from '../../../redux/slices/products/machineTechParamCategory';
 // import { fDate } from '../../../utils/formatTime';
 // import Iconify from '../../../components/iconify/Iconify';
-import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
+import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormField from '../../../components/ViewForms/ViewFormField';
 // ----------------------------------------------------------------------
 
 TechParamCategoryViewForm.propTypes = {

@@ -7,7 +7,7 @@ import { getActiveCheckItems } from '../../../redux/slices/products/machineCheck
 import { RHFTextField, RHFAutocomplete} from '../../../components/hook-form';
 import useResponsive from '../../../hooks/useResponsive';
 import { useSnackbar } from '../../../components/snackbar';
-import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import CollapsibleCheckedItemRow from './CollapsibleCheckedItemRow'
 
 const CheckItemTable = ({ checkParams, setCheckParams, checkItemList, setCheckItemList, ListTitle, setValue, checkItemCategory }) => {
@@ -175,7 +175,6 @@ const CheckItemTable = ({ checkParams, setCheckParams, checkItemList, setCheckIt
 
                       <RHFAutocomplete
                         multiple
-                        disableCloseOnSelect
                         name="paramList"
                         label="Select Items"
                         value={checkItemList}

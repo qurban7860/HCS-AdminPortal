@@ -6,7 +6,7 @@ export const Snacks = {
   machineFailedVerification: 'Failed to Verify Machine',
   machineDeleted: 'Machine Deleted',
   machineFailedDelete: 'Failed to Delete Machine',
-  machineTransferSuccess: 'Machine Transferred',
+  machineTransferSuccess: 'Machine Transferred Successfully!',
   machineFailedTransfer: 'Failed to Transfer Machine',
   
   // @root Machine Service Parameter

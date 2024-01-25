@@ -4,7 +4,7 @@ import { Stack } from '@mui/material';
 // hooks
 import { useNavigate } from 'react-router-dom';
 // components
-import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
+import SearchBarCombo from '../../../components/ListTableTools/SearchBarCombo';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 // constants

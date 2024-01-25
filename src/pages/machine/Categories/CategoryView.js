@@ -10,7 +10,7 @@ import { PATH_MACHINE } from '../../../routes/paths';
 
 // import CategoryList from './CategoryList';
 import CategoryViewForm from './CategoryViewForm';
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 /* eslint-disable */
 

@@ -46,10 +46,10 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 import ModelListTableRow from './ModelListTableRow';
 import ModelListTableToolbar from './ModelListTableToolbar';
 // import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
-import TableCard from '../../components/ListTableTools/TableCard';
+import TableCard from '../../../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 

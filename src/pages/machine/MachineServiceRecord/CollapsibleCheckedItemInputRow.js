@@ -2,7 +2,7 @@ import { memo } from 'react'
 import PropTypes from 'prop-types';
 import { Table, TableBody, Grid, TextField, Checkbox, Typography, Stack, Divider } from '@mui/material';
 import CommentsInput from './CommentsInput';
-import ViewFormServiceRecordVersionAudit from '../../components/ViewForms/ViewFormServiceRecordVersionAudit';
+import ViewFormServiceRecordVersionAudit from '../../../components/ViewForms/ViewFormServiceRecordVersionAudit';
 import { StyledTableRow } from '../../../theme/styles/default-styles';
 
 const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue, 

@@ -20,7 +20,7 @@ import { useSettingsContext } from '../../../components/settings';
 
 // import ToolList from './ToolList';
 import ToolViewForm from './ToolViewForm';
-import { Cover } from '../../components/Defaults/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import ToolEditForm from './ToolEditForm';
 /* eslint-disable */

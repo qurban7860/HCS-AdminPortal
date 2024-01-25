@@ -9,7 +9,7 @@ import { resetActiveMachineModels } from '../../redux/slices/products/model';
 import { resetActiveMachineStatuses } from '../../redux/slices/products/statuses';
 import { resetActiveSuppliers } from '../../redux/slices/products/supplier';
 // components
-import SearchBarCombo from '../components/ListTableTools/SearchBarCombo';
+import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 // routes
 import { PATH_MACHINE } from '../../routes/paths';
 // constants

@@ -34,7 +34,7 @@ import {
   setSendEmailDialog
 } from '../../../redux/slices/products/machineServiceRecord';
 import { fDate } from '../../../utils/formatTime';
-import TableCard from '../../components/ListTableTools/TableCard';
+import TableCard from '../../../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 

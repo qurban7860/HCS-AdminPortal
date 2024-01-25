@@ -3,12 +3,10 @@ import { useParams } from 'react-router-dom';
 // @mui
 import { Card, Container } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-// routes
-import { PATH_SETTING } from '../../routes/paths';
 // redux
 import { getRegion } from '../../redux/slices/region/region';
 // sections
-import { Cover } from '../components/Defaults/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import RegionViewForm from './RegionViewForm';
 /* eslint-disable */
 

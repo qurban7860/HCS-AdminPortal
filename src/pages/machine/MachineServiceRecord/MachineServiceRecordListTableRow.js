@@ -12,8 +12,8 @@ import { fDate } from '../../../utils/formatTime';
 // components
 import { setMachineServiceRecordHistoryFormVisibility, getMachineServiceHistoryRecords } from '../../../redux/slices/products/machineServiceRecord';
 import { useDispatch, useSelector } from '../../../redux/store';
-import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
-import HistoryIcon from '../../components/Icons/HistoryIcon';
+import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
+import HistoryIcon from '../../../components/Icons/HistoryIcon';
 // import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------

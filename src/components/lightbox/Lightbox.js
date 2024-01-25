@@ -1,7 +1,7 @@
 /* eslint-disable import/no-unresolved */
 import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import ReactLightbox from 'yet-another-react-lightbox';
+import ReactLightbox, { ImageSlide } from 'yet-another-react-lightbox';
 import Zoom from 'yet-another-react-lightbox/plugins/zoom';
 import Video from 'yet-another-react-lightbox/plugins/video';
 import Captions from 'yet-another-react-lightbox/plugins/captions';
@@ -48,11 +48,11 @@ export default function Lightbox({
   ...other
 }) {
   const totalItems = slides ? slides.length : 0;
-
   const [transitionTime, setTransitionTime] = useState(0.5);
   const [zoomLevel, setZoomLevel] = useState(1);
   const [rotateDeg, setRotateDeg] = useState(0);
-
+  const [navigation, setNavigation] = useState(false);
+  
   const handleZoomIn = () => {
     setTransitionTime(0.5);
     if(zoomLevel<5){
@@ -77,12 +77,10 @@ export default function Lightbox({
       <StyledLightbox />
 
       <ReactLightbox
-      
         slides={slides}
-        captions='slides'
-        animation={{ swipe: 240 }}
+        animation={{ swipe: 240, zoom: 0.5  }}
         carousel={{ finite: true }}
-        controller={{ closeOnBackdropClick: true }}
+        // controller={{ closeOnBackdropClick: navigation }}
         plugins={getPlugins({
           disabledZoom,
           disabledVideo,
@@ -94,15 +92,17 @@ export default function Lightbox({
         })}
         on={{
           view: async({index}) => {
-
             setTransitionTime(0);
             setZoomLevel(1);
             setRotateDeg(0);
-            
+            await setNavigation(false);
+
             if (onGetCurrentIndex) {
               await onGetCurrentIndex(index);
+              await setNavigation(true);
             }
-          }
+
+          }, 
         }}
         toolbar={{
           buttons: [
@@ -113,6 +113,7 @@ export default function Lightbox({
               disabledCaptions={disabledCaptions}
             />,
             'close',
+            
           ],
         }}
         render={{
@@ -123,11 +124,19 @@ export default function Lightbox({
           iconZoomOut: () => <Iconify width={ICON_SIZE} icon="solar:magnifer-zoom-out-outline" />,
           iconSlideshowPlay: () => <Iconify width={ICON_SIZE} icon="solar:play-line-duotone" />,
           iconSlideshowPause: () => <Iconify width={ICON_SIZE} icon="solar:pause-line-duotone" />,
-          iconPrev: () => totalItems>1?<Iconify width={ICON_SIZE + 20} icon="solar:round-arrow-left-bold" />:null,
-          iconNext: () => totalItems>1?<Iconify width={ICON_SIZE + 20} icon="solar:round-arrow-right-bold" />:null,
+          iconPrev: () => <Iconify width={ICON_SIZE + 20} icon="solar:round-arrow-left-bold" />,
+          iconNext: () => <Iconify width={ICON_SIZE + 20} icon="solar:round-arrow-right-bold" />,
           iconExitFullscreen: () => <Iconify width={ICON_SIZE} icon="solar:quit-full-screen-square-linear" />,
           iconEnterFullscreen: () => <Iconify width={ICON_SIZE} icon="solar:full-screen-square-linear" />,
-          buttonZoom: (buttonZoom) => 
+          buttonPrev: !navigation || totalItems===1? () => 
+                      <button disabled type="button" className="yarl__button yarl__navigation_prev" >
+                        <Iconify width={ICON_SIZE+20} icon="solar:round-arrow-left-bold" />
+                      </button> : undefined,
+          buttonNext: !navigation || totalItems===1? () => 
+                      <button disabled type="button" className="yarl__button yarl__navigation_next" >
+                        <Iconify width={ICON_SIZE+20} icon="solar:round-arrow-right-bold" />
+                      </button> : undefined,
+          buttonZoom: () => 
               <>
                 <button type="button" className="yarl__button" onClick={handleZoomIn}>
                   <Iconify width={ICON_SIZE} icon="solar:magnifer-zoom-in-outline" />
@@ -141,14 +150,7 @@ export default function Lightbox({
                 </button>
               </>
           ,
-          slide: ({ slide }) => 
-          slide?.isLoaded? (
-              <img draggable className='yarl__slide_image' src={slide?.src} alt="tatatta" 
-              style={{maxHeight: '100%', 
-              transitionDuration:`${transitionTime}s`,  
-              transform: `scale(${zoomLevel}) rotate(${rotateDeg}deg)` }}/>
-            ) : (<Iconify width={100} color='#fff' icon="line-md:downloading-loop" />)
-
+          slide: ({slide}) => <LightboxSlide slide={slide} transitionTime={transitionTime} zoomLevel={zoomLevel} rotateDeg={rotateDeg} />
           }}
         {...other}
       />
@@ -228,4 +230,28 @@ export function DisplayTotal({ totalItems, disabledTotal, disabledCaptions }) {
       <strong> {currentIndex + 1} </strong> / {totalItems}
     </Typography>
   );
+}
+
+LightboxSlide.propTypes = {
+  slide: PropTypes.object,
+  transitionTime: PropTypes.number,
+  zoomLevel: PropTypes.number,
+  rotateDeg: PropTypes.number
+};
+
+export function LightboxSlide ({ slide, transitionTime, zoomLevel, rotateDeg }) {
+
+  return slide?.isLoaded ? (
+     <ImageSlide
+       style={{
+         maxHeight: '100%',
+         marginTop: 100,
+         transitionDuration: `${transitionTime}s`,
+         transform: `scale(${zoomLevel}) rotate(${rotateDeg}deg)`
+       }}
+       slide={slide}
+     />
+   ) : (
+     <Iconify width={100} color='#fff' icon="line-md:downloading-loop" />
+   );
 }

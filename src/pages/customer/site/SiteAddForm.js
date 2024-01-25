@@ -13,7 +13,7 @@ import { getActiveContacts } from '../../../redux/slices/customer/contact';
 import { useSnackbar } from '../../../components/snackbar';
 // assets
 import { countries } from '../../../assets/data';
-import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete } from '../../../components/hook-form';
 import { SiteSchema } from '../../schemas/customer'
 

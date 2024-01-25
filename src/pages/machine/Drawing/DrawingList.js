@@ -3,7 +3,6 @@ import debounce from 'lodash/debounce';
 // @mui
 import {
   Table,
-  Button,
   TableBody,
   TableContainer,
 } from '@mui/material';
@@ -19,7 +18,6 @@ import {
   TablePaginationCustom,
 } from '../../../components/table';
 import Scrollbar from '../../../components/scrollbar';
-import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import DrawingListTableRow from './DrawingListTableRow';
 import DrawingListTableToolbar from './DrawingListTableToolbar';
@@ -36,13 +34,10 @@ import {
   setFilterBy,
   setDrawingViewFormVisibility, 
   resetDrawings,
-  deleteDrawing,
   getDrawing,
   resetDrawing} from '../../../redux/slices/products/drawing';
-import { useSnackbar } from '../../../components/snackbar';
 import { fDate } from '../../../utils/formatTime';
-import TableCard from '../../components/ListTableTools/TableCard';
-import { Snacks } from '../../../constants/document-constants';
+import TableCard from '../../../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 
@@ -51,8 +46,6 @@ export default function DrawingList() {
     order,
     orderBy,
     setPage,
-    selected,
-    setSelected,
     onSort,
   } = useTable({
     defaultOrderBy: 'createdAt', defaultOrder: 'desc',
@@ -62,15 +55,10 @@ export default function DrawingList() {
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  const [openConfirm, setOpenConfirm] = useState(false);
-
   const [categoryVal, setCategoryVal] = useState(null);
   const [typeVal, setTypeVal] = useState(null);
 
-
   const { machine } = useSelector((state) => state.machine);
-  const { enqueueSnackbar } = useSnackbar();
-
   const { drawings, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.drawing );
 
   const TABLE_HEAD = [
@@ -116,9 +104,6 @@ export default function DrawingList() {
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
-  const handleOpenConfirm = () => setOpenConfirm(true);
-  const handleCloseConfirm = () => setOpenConfirm(false);
-
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
     dispatch(setFilterBy(value))
@@ -158,7 +143,6 @@ export default function DrawingList() {
   };
 
   return (
-    <>
       <TableCard>
         <DrawingListTableToolbar
           filterName={filterName}
@@ -218,7 +202,6 @@ export default function DrawingList() {
           onRowsPerPageChange={onChangeRowsPerPage}
         />
       </TableCard>
-    </>
   );
 }
 

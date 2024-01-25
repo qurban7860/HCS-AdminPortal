@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
-import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
+import SearchBarCombo from '../../../components/ListTableTools/SearchBarCombo';
 // constants
 import { BUTTONS } from '../../../constants/default-constants';
 // styles
