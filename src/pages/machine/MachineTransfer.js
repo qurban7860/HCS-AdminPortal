@@ -6,11 +6,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Box, Container, Grid, TextField, Card, Stack, Checkbox, Typography } from '@mui/material';
 import { PATH_MACHINE } from '../../routes/paths';
-import { setMachineTransferDialog, transferMachine } from '../../redux/slices/products/machine';
+import { setMachineTransferDialog, transferMachine , getMachine} from '../../redux/slices/products/machine';
 import { getActiveMachineStatuses, resetActiveMachineStatuses } from '../../redux/slices/products/statuses';
 import { getActiveCustomers, getFinancialCompanies, resetActiveCustomers, resetFinancingCompanies } from '../../redux/slices/customer/customer';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
-import { getMachineConnections, resetMachineConnections } from '../../redux/slices/products/machineConnections';
 import { getActiveMachineDocuments, resetActiveMachineDocuments } from '../../redux/slices/document/machineDocument';
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFAutocomplete, RHFCheckbox, RHFDatePicker } from '../../components/hook-form';
@@ -42,19 +41,36 @@ function MachineTransfer() {
   useEffect(()=> {
     dispatch(getActiveMachineStatuses(cancelTokenSource))
     dispatch(getActiveCustomers(cancelTokenSource))
-    dispatch(getFinancialCompanies(cancelTokenSource))
-    if(id) dispatch(getActiveMachineDocuments(id, cancelTokenSource))
     return ()=>{  
       // cancelTokenSource.cancel()
       dispatch(resetActiveCustomers())
-      dispatch(resetFinancingCompanies())
       dispatch(resetActiveSites())
-      dispatch(resetMachineConnections())
       dispatch(resetActiveMachineDocuments()) 
       dispatch(resetActiveMachineStatuses())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ dispatch ])
+  },[ dispatch])
+
+  useEffect(()=> {
+    if(id){
+      dispatch(getMachine(id))
+      dispatch(getActiveMachineDocuments(id, cancelTokenSource))
+    } 
+    return ()=>{  
+      // cancelTokenSource.cancel()
+      dispatch(resetActiveMachineDocuments()) 
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ dispatch, id ])
+
+  useEffect(()=>{
+    dispatch(getFinancialCompanies(cancelTokenSource))
+    return ()=>{  
+      // cancelTokenSource.cancel()
+      dispatch(resetFinancingCompanies())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ activeCustomers ])
 
   const methods = useForm({
     resolver: yupResolver(machineTransferSchema),
@@ -128,16 +144,15 @@ function MachineTransfer() {
           setValue('installationSite', null);
           setValue('billingSite', null);
           dispatch(resetActiveSites());
-          dispatch(resetMachineConnections());
           dispatch(getActiveSites(customer?._id, cancelTokenSource));
-          dispatch(getMachineConnections(customer?._id, cancelTokenSource));
+          // dispatch(getMachineConnections(customer?._id, cancelTokenSource));
     }else{
       setValue('customer',null);
       setValue('machineConnection', []);
       setValue('installationSite', null);
       setValue('billingSite', null);
       dispatch(resetActiveSites());
-      dispatch(resetMachineConnections());
+      // dispatch(resetMachineConnections());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ customer?._id ])
@@ -217,9 +232,9 @@ function MachineTransfer() {
                     filterSelectedOptions
                     name="machineConnection"
                     id="tags-outlined"
-                    options={machineConnections}
-                    getOptionLabel={(option) => `${option.serialNo || ''} ${option.name ? '-' : ''} ${option.name || ''}`}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    options={ machine?.machineConnections || [] }
+                    getOptionLabel={(option) => `${option?.connectedMachine?.serialNo || ''} ${option?.connectedMachine?.name ? '-' : ''} ${option?.connectedMachine?.name || ''}`}
+                    isOptionEqualToValue={(option, value) => option?.connectedMachine?._id === value?.connectedMachine?._id}
                     renderInput={(params) => ( <TextField  {...params}  label="Connected Machines"   placeholder="Search"  /> )}
                   />
 
@@ -237,8 +252,8 @@ function MachineTransfer() {
                   </Grid>
 
                 <FormLabel content='Machine Documents'/>
-                  {activeMachineDocuments?.length === 0 && <Typography variant='body2'>No Document Available</Typography>}
-                  { activeMachineDocuments?.length > 1 && <Grid sx={{display:"flex", alignItems:"center" }}><Checkbox onClick={ handleSelectAll } checked={ activeMachineDocuments?.length === machineDoc?.length }/><Typography variant='body2'>Select all Documents</Typography> </Grid>}
+                  { activeMachineDocuments && activeMachineDocuments?.length === 0 && <Typography variant='body2'>No Document Available</Typography>}
+                  { activeMachineDocuments && activeMachineDocuments?.length > 1 && <Grid sx={{display:"flex", alignItems:"center" }}><Checkbox onClick={ handleSelectAll } checked={ activeMachineDocuments?.length === machineDoc?.length }/><Typography variant='body2'>Select all Documents</Typography> </Grid>}
                 
                 <Grid >
                   {activeMachineDocuments && activeMachineDocuments.length > 0 && activeMachineDocuments?.map(( doc, index ) =>(
