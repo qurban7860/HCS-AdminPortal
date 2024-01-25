@@ -10,7 +10,7 @@ import { Box, Card, styled, Container, Grid, Stack, TextField } from '@mui/mater
 import { MuiChipsInput } from 'mui-chips-input';
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
-import { getActiveCustomers, getCustomer, getFinancialCompanies, setCustomerTab, setNewMachineCustomer } from '../../redux/slices/customer/customer';
+import { getActiveCustomers, getFinancialCompanies, setCustomerTab, setNewMachineCustomer } from '../../redux/slices/customer/customer';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import  { addMachine, getActiveMachines } from '../../redux/slices/products/machine';
 import { getActiveCategories, resetActiveCategories } from '../../redux/slices/products/category';
@@ -53,7 +53,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const [ landToCustomerMachinePage, setLandToCustomerMachinePage ] = useState(false);
 
   useEffect(() => {
-    dispatch(getFinancialCompanies());
     dispatch(getActiveCustomers());
     dispatch(getActiveMachines());
     dispatch(getActiveCategories());
@@ -69,6 +68,11 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       dispatch(setNewMachineCustomer(null)); 
     }
   }, [dispatch]);
+
+  useEffect(()=>{
+    dispatch(getFinancialCompanies());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ activeCustomers ])
 
   const methods = useForm({
     resolver: yupResolver(machineSchema),

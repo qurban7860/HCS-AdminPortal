@@ -118,7 +118,6 @@ export default function MachineEditForm() {
   },[ category, machineModel ]);
 
   useEffect(() => {
-    dispatch(getFinancialCompanies());
     dispatch(getActiveSuppliers());
     dispatch(getActiveCategories());
     dispatch(resetActiveMachineModels());
@@ -131,6 +130,11 @@ export default function MachineEditForm() {
     dispatch(getSPContacts());
     setChips(machine?.alias);
   }, [dispatch, machine]);
+
+  useEffect(()=>{
+    dispatch(getFinancialCompanies());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ activeCustomers ])
 
   const toggleCancel = () => {
     dispatch(setMachineEditFormVisibility(false));
