@@ -8,9 +8,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { MuiTelInput } from 'mui-tel-input';
 import { Box, Card, Grid, Stack, Typography, Button } from '@mui/material';
 // slice
-import { updateSite, setSiteEditFormVisibility, getSite, getSites,} from '../../../redux/slices/customer/site';
+import { updateSite, setSiteEditFormVisibility, getSite } from '../../../redux/slices/customer/site';
 import { getActiveContacts } from '../../../redux/slices/customer/contact';
-import { getCustomer } from '../../../redux/slices/customer/customer';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import Iconify from '../../../components/iconify';

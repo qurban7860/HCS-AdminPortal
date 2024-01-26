@@ -151,7 +151,7 @@ export default function SecurityUserProfile() {
             <ViewFormField
               sm={6}
               heading="Customer"
-              objectParam={
+              node={
                 defaultValues?.customer && (
                   <Link onClick={handleOpenCustomer} href="#" underline="none">
                     {defaultValues?.customer}

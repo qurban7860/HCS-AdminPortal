@@ -6,7 +6,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 // import { LoadingButton } from '@mui/lab';
-import { TextField, Autocomplete, Box, Card, Grid, Stack, Typography } from '@mui/material';
+import { TextField, Autocomplete, Box, Card, Grid, Stack } from '@mui/material';
 // slice
 import { addDrawing, setDrawingFormVisibility } from '../../../redux/slices/products/drawing';
 import { getActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
@@ -234,24 +234,7 @@ export default function DrawingAddForm() {
                 />
                 </Box>
 
-                    <RHFSwitch
-                        name="isActive"
-                        labelPlacement="start"
-                        label={
-                            <Typography
-                                variant="subtitle2"
-                                sx={{
-                                    mx: 0,
-                                    width: 1,
-                                    justifyContent: 'space-between',
-                                    mb: 0.5,
-                                    color: 'text.secondary',
-                                }}
-                            >
-                                Active
-                            </Typography>
-                        }
-                    />
+                    <RHFSwitch name="isActive" label="Active"/>
 
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>

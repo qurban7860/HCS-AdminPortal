@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Chip, alpha } from '@mui/material';
+import { Grid, Chip } from '@mui/material';
 import { allowedExtensions } from '../../constants/document-constants';
 
 export default function FormatsChip() {

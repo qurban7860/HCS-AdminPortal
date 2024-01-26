@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 // @mui
-import { Card, Grid, Stack, Button, Container, Typography } from '@mui/material';
+import { Card, Grid, Stack, Button, Container } from '@mui/material';
 // slice
 import { yupResolver } from '@hookform/resolvers/yup';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
@@ -167,15 +167,7 @@ const HandleChangeIniJson = async (e) => {
                   </Grid>
                   <CodeMirror value={configJSON} HandleChangeIniJson={HandleChangeIniJson}/>                
                 </Grid>
-                <RHFSwitch name="isActive" labelPlacement="start"
-                        label={
-                            <Typography  variant="subtitle2"
-                                sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}
-                            >
-                                Active
-                            </Typography>
-                        }
-                    />
+                <RHFSwitch name="isActive" label="Active" />
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>

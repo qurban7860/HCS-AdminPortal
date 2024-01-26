@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router';
 import { useEffect, useLayoutEffect, useState } from 'react';
 // @mui
-import { Grid, Card, Divider, TextField, Autocomplete, CardHeader, Box, IconButton, Typography } from '@mui/material';
+import { Grid, Card, Divider, TextField, Autocomplete, CardHeader, IconButton, Typography } from '@mui/material';
 import { StyledBg, StyledContainer, StyledGlobalCard } from '../../theme/styles/default-styles';
 // sections
 import HowickWelcome from '../../components/DashboardWidgets/HowickWelcome';

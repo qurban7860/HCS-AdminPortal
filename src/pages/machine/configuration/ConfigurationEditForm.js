@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Card, Grid, Stack, Button } from '@mui/material';
 // slice
 import {
   updateConfiguration,
@@ -180,15 +180,7 @@ const readFile = (selectedFile) =>
                   </Grid>
                   <CodeMirror value={defaultValues?.configJSON} HandleChangeIniJson={HandleChangeIniJson}/>                
                 </Grid>
-                <RHFSwitch name="isActive" labelPlacement="start"
-                        label={
-                            <Typography  variant="subtitle2"
-                                sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}
-                            >
-                                Active
-                            </Typography>
-                        }
-                    />
+                <RHFSwitch name="isActive" labelPlacement="start" label="Active"/>
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>

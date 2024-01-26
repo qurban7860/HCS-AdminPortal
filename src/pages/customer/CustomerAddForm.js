@@ -43,8 +43,6 @@ import { countries } from '../../assets/data';
 import { Cover } from '../../components/Defaults/Cover';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { FORMLABELS } from '../../constants/customer-constants';
-import { StyledToggleButtonLabel } from '../../theme/styles/document-styles';
-// import { StyledCardContainer } from '../../theme/styles/default-styles';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 
 // ----------------------------------------------------------------------

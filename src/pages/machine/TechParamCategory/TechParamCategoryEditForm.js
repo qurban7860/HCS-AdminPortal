@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Typography } from '@mui/material';
+import { Box, Card, Grid, Stack } from '@mui/material';
 // slice
 import {
   updateTechparamcategory,
@@ -104,25 +104,7 @@ export default function TechParamCategoryEditForm() {
               >
                 <RHFTextField name="name" label="Name*" />
                 <RHFTextField name="description" label="Description" minRows={7} multiline />
-                <RHFSwitch
-                  name="isActive"
-                  labelPlacement="start"
-                  label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary',
-                      }}
-                    >
-                      {' '}
-                      Active
-                    </Typography>
-                  }
-                />
+                <RHFSwitch name="isActive" label="Active" />
               </Box>
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

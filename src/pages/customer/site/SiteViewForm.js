@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Grid,Dialog } from '@mui/material';
+import { Grid } from '@mui/material';
 // redux
 import {
   deleteSite,

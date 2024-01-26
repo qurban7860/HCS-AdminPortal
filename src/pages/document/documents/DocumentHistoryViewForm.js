@@ -35,10 +35,7 @@ import {
   getDocument,
   deleteDocument,
   setDocumentHistoryViewFormVisibility,
-  setDocumentEditFormVisibility,
-  setDocumentViewFormVisibility,
-  setDocumentVersionEditDialogVisibility,
-  setDocumentGalleryVisibility,
+  setDocumentVersionEditDialogVisibility
 } from '../../../redux/slices/document/document';
 import { deleteDrawing, getDrawings, resetDrawings,
   setDrawingEditFormVisibility, setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
@@ -46,7 +43,6 @@ import { deleteDrawing, getDrawings, resetDrawings,
 import { deleteDocumentFile, downloadFile, getDocumentDownload } from '../../../redux/slices/document/documentFile';
 import { getCustomer, resetCustomer, setCustomerDialog} from '../../../redux/slices/customer/customer';
 import { getMachineForDialog, resetMachine, setMachineDialog } from '../../../redux/slices/products/machine';
-import { Thumbnail } from '../../../components/Thumbnails/Thumbnail';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import DocumentCover from '../../../components/DocumentForms/DocumentCover';
 import CustomerDialog from '../../../components/Dialog/CustomerDialog';
@@ -55,11 +51,8 @@ import { PATH_DOCUMENT } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
 import { Snacks } from '../../../constants/document-constants';
 import UpdateDocumentVersionDialog from '../../../components/Dialog/UpdateDocumentVersionDialog';
-import DocumentGallery from './DocumentGallery';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
 import Lightbox from '../../../components/lightbox/Lightbox';
-import { fileThumb } from '../../../components/file-thumbnail';
-import StyledLightbox from '../../../components/lightbox/styles';
 
 // ----------------------------------------------------------------------
 
@@ -143,9 +136,6 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
   const linkedDrawingMachines = documentHistory?.productDrawings?.map((pdrawing, index) =>  
     <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(pdrawing?.machine?._id)} label={`${pdrawing?.machine?.serialNo || '' } ${pdrawing?.machine?.name ? '-' : '' } ${pdrawing?.machine?.name || '' } `} />
   );
-
-  // refresh the document when file deleted
-const callAfterDelete = () => {dispatch(getDocumentHistory(documentHistory._id))};
 
 const handleNewVersion = async () => {
   if(customerPage || machinePage){
@@ -423,7 +413,7 @@ const handleNewFile = async () => {
                 handleNewVersion={handleNewVersion}
                 handleUpdateVersion={handleUpdateVersion}
                 heading="Active Version"
-                objectParam={
+                node={
                   defaultValues.documentVersion && (
                     <StyledVersionChip label={defaultValues.versionPrefix + defaultValues.documentVersion}
                       size="small" variant="outlined"
@@ -461,7 +451,7 @@ const handleNewFile = async () => {
                   sm={6}
                   heading="Machine"
                   variant='h4'
-                  objectParam={
+                  node={
                     defaultValues.machine && (
                       <Link onClick={()=> handleMachineDialog(documentHistory?.machine?._id)} href="#" underline="none">
                         {defaultValues.machine}

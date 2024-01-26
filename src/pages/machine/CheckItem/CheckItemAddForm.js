@@ -3,13 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Card, Grid, Box, Stack, Typography, Container } from '@mui/material';
+import { Card, Grid, Box, Stack, Container } from '@mui/material';
 // hooks
 import { useForm } from 'react-hook-form';
 import { useSnackbar } from '../../../components/snackbar';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
-import FormHeading from '../../../components/DocumentForms/FormHeading';
 import { FORMLABELS } from '../../../constants/default-constants';
 // schema
 import { CheckItemsSchema } from '../../schemas/machine';
@@ -161,25 +160,9 @@ export default function CheckItemAddForm() {
                   <RHFTextField name="description" label="Description" minRows={7} multiline />
 
                 <Grid container display="flex">
-                  <RHFSwitch
-                    name="isRequired"
-                    labelPlacement="start"
-                    label={
-                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
-                        Required
-                      </Typography>
-                    }
-                  />
+                  <RHFSwitch name="isRequired" label="Required"/>
 
-                  <RHFSwitch
-                    name="isActive"
-                    labelPlacement="start"
-                    label={
-                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
-                        Active
-                      </Typography>
-                    }
-                  />
+                  <RHFSwitch name="isActive" label="Active"/>
                 </Grid>
 
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

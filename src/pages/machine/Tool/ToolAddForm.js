@@ -13,7 +13,6 @@ import {
   Card,
   Grid,
   Stack,
-  Typography,
   Container,
   // Checkbox,
   // DialogTitle,
@@ -119,24 +118,7 @@ export default function ToolAddForm() {
                   >
                     <RHFTextField name="name" label="Name" required />
                     <RHFTextField name="description" label="Description" minRows={7} multiline />
-                    <RHFSwitch
-                      name="isActive"
-                      labelPlacement="start"
-                      label={
-                          <Typography
-                            variant="subtitle2"
-                            sx={{
-                              mx: 0,
-                              width: 1,
-                              justifyContent: 'space-between',
-                              mb: 0.5,
-                              color: 'text.secondary',
-                            }}
-                          >
-                            Active
-                          </Typography>
-                      }
-                    />
+                    <RHFSwitch name="isActive" label="Active" />
                   </Box>
                 </Stack>
 

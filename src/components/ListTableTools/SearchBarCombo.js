@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
-import { DatePicker } from '@mui/x-date-pickers';
 import { Grid, TextField, InputAdornment, Button, Stack, 
   FormControl, Select, InputLabel, MenuItem, IconButton, Switch, FormControlLabel, Autocomplete } from '@mui/material';
 import { BUTTONS } from '../../constants/default-constants';
