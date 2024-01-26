@@ -196,6 +196,7 @@ export default function MachineViewForm() {
       supplier: machine?.supplier?.name || '',
       workOrderRef: machine?.workOrderRef || '',
       machineModel: machine?.machineModel?.name || '',
+      manufactureDate: machine?.manufactureDate || '',
       machineConnections: machine?.machineModel?.category?.connections || false,
       machineProfile: machine?.machineProfile?.defaultName || '',
       machineweb:machine?.machineProfile?.web || '',
@@ -251,6 +252,7 @@ export default function MachineViewForm() {
             <Grid container>
               <ViewFormField isLoading={isLoading} sm={4} variant='h4' heading="Serial No" param={defaultValues?.serialNo} />
               <ViewFormField isLoading={isLoading} sm={4} variant='h4' heading="Machine Model" param={defaultValues?.machineModel} />
+              <ViewFormField isLoading={isLoading} sm={6} heading="Manufacture Date" param={fDate(defaultValues?.manufactureDate)} />
               <ViewFormField isLoading={isLoading} sm={4} variant='h4' heading="Customer"
                 node={
                   defaultValues.customer && (
