@@ -98,7 +98,6 @@ export default function DepartmentEditForm() {
                     <RHFSwitch name="isActive" label="Active"/>
                     <RHFSwitch name="isDefault" label="Default"/>
                   </Grid>
-
                 </Box>
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

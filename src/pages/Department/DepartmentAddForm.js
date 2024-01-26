@@ -15,16 +15,11 @@ import { PATH_SETTING } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../components/hook-form';
-// auth
-// import { useAuthContext } from '../../../auth/useAuthContext';
-// // asset
-// import { countries } from '../../../assets/data';
 // util
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 // constants
 import { FORMLABELS } from '../../constants/default-constants';
-// import { Snacks } from '../../../constants/document-constants';
 
 // ----------------------------------------------------------------------
 

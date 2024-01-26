@@ -7,7 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getConfig } from '../../redux/slices/config/config';
 // sections
 import ConfigViewForm from './ConfigViewForm';
-/* eslint-disable */
+import { Cover } from '../../components/Defaults/Cover';
+
 
 // ----------------------------------------------------------------------
 
@@ -21,13 +22,11 @@ export default function ConfigView() {
 
   const { config, isLoading } = useSelector((state) => state.config );
   return (
-    <>
       <Container maxWidth={false}>
         <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
           <Cover name={isLoading?"":config?.name} generalSettings />
         </Card>
         <ConfigViewForm />
       </Container>
-    </>
   );
 }
