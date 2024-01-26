@@ -502,7 +502,7 @@ export default function SecurityUserEditForm() {
 
             </Box>
             <Grid item md={12} display="flex">
-              <RHFSwitch name="isActive" labelPlacement="start" label="Active" />
+              <RHFSwitch name="isActive" label="Active" />
               <RHFSwitch name="multiFactorAuthentication" label="Multi-Factor Authentication" />
               <RHFSwitch name="currentEmployee" label="Current Employee" />
             </Grid>

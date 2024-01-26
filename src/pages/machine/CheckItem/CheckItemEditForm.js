@@ -149,7 +149,7 @@ export default function DocumentCategoryeEditForm() {
                 <Grid container display="flex">
                   <RHFSwitch name="isRequired" label="Required"/>
 
-                  <RHFSwitch name="isActive" label="Required"/>
+                  <RHFSwitch name="isActive" label="Active"/>
                 </Grid>
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
