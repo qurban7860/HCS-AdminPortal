@@ -645,7 +645,7 @@ export function transferMachine( machineId, params ) {
         isAllDrawings: params?.isAllDrawings,
         isAllProfiles: params?.isAllProfiles,
         isAllINIs:     params?.isAllINIs,
-        machineConnections: params?.machineConnection && params?.machineConnection?.length > 0 && params?.machineConnection?.map((m)=> m?._id) || [],
+        machineConnections: params?.machineConnection && params?.machineConnection?.length > 0 && params?.machineConnection?.map((m)=> m?.connectedMachine?._id) || [],
         machineDocuments: params?.machineDocuments?.length > 0 && params?.machineDocuments || [],
       };
         
