@@ -100,7 +100,7 @@ export default function CategoryGroupAddForm() {
                 >
                   <RHFTextField name="name" label="Name*" />
                   <RHFAutocomplete
-                    // multiple
+                    multiple
                     name="categories"
                     label="Categories*"
                     // filterSelectedOptions
