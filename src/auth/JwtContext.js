@@ -16,6 +16,8 @@ const initialState = {
   isInitialized: false,
   isAuthenticated: false,
   user: null,
+  isSuperAdmin: false,
+  userId: null,
   // resetTokenTime: null,
 };
 
@@ -27,14 +29,17 @@ const reducer = (state, action) => {
         isInitialized: true,
         isAuthenticated: action.payload.isAuthenticated,
         user: action.payload.user,
+        userId: action.payload.userId,
+        isSuperAdmin: action.payload.isSuperAdmin,
         // resetTokenTime: action.payload.resetTokenTime, // keeps track to avoid repeating the request
       };
     }
     case 'LOGIN': {
-      const { user, userId } = action.payload;
+      const { user, userId, isSuperAdmin  } = action.payload;
       return {
         ...state,
         isAuthenticated: true,
+        isSuperAdmin,
         user,
         userId,
       };
@@ -51,7 +56,9 @@ const reducer = (state, action) => {
       return {
         ...state,
         isAuthenticated: false,
+        isSuperAdmin: false,
         user: null,
+        userId: null,
         // resetTokenTime: null, // reset the timeout ID when logging out
       };
     }
@@ -82,21 +89,23 @@ export function AuthProvider({ children }) {
 
       if (accessToken && isValidToken(accessToken)) {
         setSession(accessToken);
-
         const user = {
           email: localStorage.getItem('email'),
           displayName: localStorage.getItem('name'),
         };
+
         const userId = localStorage.getItem('userId');
+        const isSuperAdmin = await JSON.parse(localStorage.getItem('userRoles'))?.some((role) => role.roleType === 'SuperAdmin')
 
         dispatch({
           type: 'INITIAL',
           payload: {
             isAuthenticated: true,
             user,
+            isSuperAdmin,
             userId,
             // resetTokenTime, // added the timeout ID to the payload
-           },
+          },
         });
       } else {
         dispatch({
@@ -104,6 +113,7 @@ export function AuthProvider({ children }) {
           payload: {
             isAuthenticated: false,
             user: null,
+            isSuperAdmin: false,
             // resetTokenTime: null, // reset the timeout ID when not authenticated
           },
         });
@@ -115,6 +125,7 @@ export function AuthProvider({ children }) {
         payload: {
           isAuthenticated: false,
           user: null,
+          isSuperAdmin: false,
           // resetTokenTime: null,
         },
       });
@@ -142,6 +153,8 @@ export function AuthProvider({ children }) {
       localStorage.setItem("MFA", true);
     } else{
       const { accessToken, user, userId } = response.data;
+      const isSuperAdmin = user.roles?.some((role) => role.roleType === 'SuperAdmin')
+
       const rolesArrayString = JSON.stringify(user.roles);
       localStorage.setItem('email', user.email);
       localStorage.setItem('name', user.displayName);
@@ -151,7 +164,7 @@ export function AuthProvider({ children }) {
       await getConfigs();
       dispatch({
         type: 'LOGIN',
-        payload: { user, userId },
+        payload: { user, userId, isSuperAdmin },
       });
     }
   }, []);
@@ -231,6 +244,7 @@ export function AuthProvider({ children }) {
       () => ({
         isInitialized: state.isInitialized,
         isAuthenticated: state.isAuthenticated,
+        isSuperAdmin: state.isSuperAdmin,
         user: state.user,
         userId: state.userId,
         method: 'jwt',
@@ -240,7 +254,7 @@ export function AuthProvider({ children }) {
         clearAllPersistedStates,
         muliFactorAuthentication
       }),
-    [state.isAuthenticated, state.isInitialized, state.user, state.userId, login, logout, register, muliFactorAuthentication, clearAllPersistedStates]
+    [state.isAuthenticated, state.isInitialized, state.isSuperAdmin, state.user, state.userId, login, logout, register, muliFactorAuthentication, clearAllPersistedStates]
   );
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;

@@ -38,6 +38,9 @@ import { fQuarterYearDate } from '../../utils/formatTime';
 export default function GeneralAppPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const isSuperAdmin = JSON.parse(localStorage.getItem('userRoles'))?.some((role) => role.roleType === 'SuperAdmin');
+
   const { onlineUsers } = useWebSocketContext();
   const { count, machinesByCountry, machinesByYear, machinesByModel, erpLogs } = useSelector((state) => state.count);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
@@ -74,9 +77,6 @@ export default function GeneralAppPage() {
     dispatch(getActiveCategories());
     dispatch(getActiveMachineModels());
     dispatch(getCount());
-    // dispatch(getMachinesByCountry());
-    // dispatch(getMachinesByModel());
-    // dispatch(getMachinesByYear());
     dispatch(getERPLogs());
   }, [dispatch]);
 
@@ -170,7 +170,7 @@ export default function GeneralAppPage() {
   return (
     <StyledContainer maxWidth={false}>
       <Grid container>
-        <Grid container spacing={3} mt={2}>
+        { isSuperAdmin && <Grid container spacing={3} mt={2}>
             <Grid item xs={12}>
               <HowickWelcome title={TITLES.WELCOME} description={TITLES.WELCOME_DESC} />
             </Grid>
@@ -200,7 +200,7 @@ export default function GeneralAppPage() {
                 icon="mdi:account-group"
               />
           </Grid>    
-        </Grid>
+        </Grid>}
 
           {/* Global widget */}
           <Grid container spacing={3} mt={2}>

@@ -16,6 +16,9 @@ import { ICONS } from '../../constants/icons/default-icons';
 // ----------------------------------------------------------------------
 
 export default function Setting() {
+
+const isSuperAdmin = JSON.parse(localStorage.getItem('userRoles'))?.some((role) => role.roleType === 'SuperAdmin');
+
   const navigate = useNavigate();
   // Functions to navigate to different pages
   const linkDocumentType = () => {
@@ -59,8 +62,6 @@ export default function Setting() {
   }
 
 const userRolesString = localStorage.getItem('userRoles');
-const userRoles = userRolesString ? JSON.parse(userRolesString) : [];
-const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
 
 return (
     <Container maxWidth={false}>
@@ -147,11 +148,11 @@ return (
                     content={ICONS.REGION.heading}
                   />
                   
-                  <ListItem
+                  { isSuperAdmin && <ListItem
                     onClick={linkConfigs}
                     icon={ICONS.SYSTEM_CONFIG.icon}
                     content={ICONS.SYSTEM_CONFIG.heading}
-                  />
+                  />}
                   <ListItem
                     onClick={()=> navigate(PATH_SETTING.departments.list)}
                     icon={ICONS.DEPARTMENNTS.icon}

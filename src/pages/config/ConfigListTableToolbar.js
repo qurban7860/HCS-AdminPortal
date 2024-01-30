@@ -33,6 +33,7 @@ export default function ConfigListTableToolbar({
   onResetFilter,
 }) {
   const navigate = useNavigate();
+  
   // const dispatch = useDispatch();
   const linkTo = () => {
     navigate(PATH_SETTING.configs.new);

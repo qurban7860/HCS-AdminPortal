@@ -11,6 +11,7 @@ import SvgColor from '../../../components/svg-color';
 const userRolesString = localStorage.getItem('userRoles');
 const userRoles = userRolesString ? JSON.parse(userRolesString) : [];
 const userEmailRole = userRoles?.some((role) => role.roleType === 'Email');
+const isSuperAdmin = JSON.parse(localStorage.getItem('userRoles'))?.some((role) => role.roleType === 'SuperAdmin');
 
 const icon = (name) => (
   <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
@@ -60,22 +61,13 @@ const navConfig = [
       { title: 'Documents', path: PATH_DOCUMENT.document.list, icon: ICONS.document },
       { title: 'Machine Drawings', path: PATH_DOCUMENT.document.machineDrawings.list, icon: ICONS.document },
       { title: 'Settings', path: PATH_SETTING.app, icon: ICONS.setting },
-      { title: 'Security', path: PATH_SECURITY.users.list, icon: ICONS.user },
       { title: 'Sites Map', path: PATH_SITEMAP.app, icon: ICONS.reports },
-      // {
-      //   title: 'Button Title',
-      //   path: '/PATH_DASHBOARD.customer.new',
-      //   // icon: <Button variant="contained" color="primary">Add Customer</Button>,
-      // },
-      // deleted components
-      // { title: 'ecommerce', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
-      // { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
-      // { title: 'booking', path: PATH_DASHBOARD.general.booking, icon: ICONS.booking },
-      // { title: 'file', path: PATH_DASHBOARD.general.file, icon: ICONS.file },
     ],
   },
 ]
-
+if(isSuperAdmin){
+  navConfig[0].items.splice(6, 0, { title: 'Security', path: PATH_SECURITY.users.list, icon: ICONS.user });
+}
 if (userEmailRole) {
   navConfig.map((obj) => obj.items?.push({ title: 'Email', path: PATH_EMAIL.email.list, icon: ICONS.email }));
 } 

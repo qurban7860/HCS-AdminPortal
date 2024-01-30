@@ -21,6 +21,7 @@ import ViewFormMenuPopover from './ViewFormMenuPopover';
 import ViewFormApprovalsPopover from './ViewFormApprovalsPopover';
 import { ICONS } from '../../constants/icons/default-icons';
 import { fDate, fDateTime } from '../../utils/formatTime';
+import { useAuthContext } from '../../auth/useAuthContext';
 
 function ViewFormEditDeleteButtons({
   // Icons 
@@ -78,6 +79,7 @@ function ViewFormEditDeleteButtons({
 }) {
   const { id } = useParams();
   const userId = localStorage.getItem('userId');
+  const { isSuperAdmin } = useAuthContext();
   const navigate = useNavigate();
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
@@ -100,11 +102,7 @@ function ViewFormEditDeleteButtons({
     },
   });
   
-  const disableDelete = userRoles?.some((role) => role?.disableDelete === true);
 
-  if (disableDelete) {
-    disableDeleteButton = true;
-  }
 
   // Function to handle date change
   const handleLockUntilChange = newValue => {
@@ -152,7 +150,7 @@ function ViewFormEditDeleteButtons({
       setOpenVerificationConfirm(true);
     }
 
-    if (dialogType === 'delete' && !disableDeleteButton) {
+    if (dialogType === 'delete' && isSuperAdmin ) {
       setOpenConfirm(true);
     }
 
@@ -428,7 +426,7 @@ function ViewFormEditDeleteButtons({
           {handleUserInvite && id!==userId &&(
             <IconTooltip
             title="Resend Invitation"
-            disabled={disableDeleteButton}
+            disabled={ !isSuperAdmin }
             color={disableDeleteButton?"#c3c3c3":theme.palette.secondary.main}
             icon={ICONS.USER_INVITE.icon}
             onClick={() => {
@@ -560,11 +558,11 @@ function ViewFormEditDeleteButtons({
         {id !== userId  && !mainSite && onDelete && (
           <IconTooltip
             title="Delete"
-            disabled={disableDeleteButton}
+            disabled={!isSuperAdmin}
             onClick={() => {
               handleOpenConfirm('delete');
             }}
-            color={disableDeleteButton?"#c3c3c3":"#FF0000"}
+            color={!isSuperAdmin?"#c3c3c3":"#FF0000"}
             icon="mdi:trash-can-outline"
           />
         )}
