@@ -11,6 +11,7 @@ import machineReducer from './slices/products/machine';
 import supplierReducer from './slices/products/supplier';
 import licenseReducer from './slices/products/license';
 import profileReducer from './slices/products/profile';
+import categoryGroupReducer from './slices/products/categoryGroup';
 import categoryReducer from './slices/products/category';
 import toolReducer from './slices/products/tools';
 import techparamcategoryReducer from './slices/products/machineTechParamCategory';
@@ -119,6 +120,12 @@ export const licensePersistConfig = {
 };
 export const profilePersistConfig = {
   key: 'profile',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+export const categoryGroupPersistConfig = {
+  key: 'categoryGroup',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
@@ -365,6 +372,7 @@ const rootReducer = combineReducers({
   license: persistReducer(licensePersistConfig,licenseReducer),
   profile: persistReducer(profilePersistConfig,profileReducer),
   category: persistReducer(categoryPersistConfig,categoryReducer),
+  categoryGroup: persistReducer(categoryGroupPersistConfig,categoryGroupReducer),
   tool: persistReducer(toolPersistConfig,toolReducer),
   techparamcategory: persistReducer(techparamcategoryPersistConfig,techparamcategoryReducer),
   machineNote: persistReducer(machineNotePersistConfig, machinenoteReducer),
