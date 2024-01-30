@@ -93,19 +93,14 @@ export default function DocumentTypeList() {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   const dispatch = useDispatch();
-  // const { themeStretch } = useSettingsContext();
-  // const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
-  // const { customer } = useSelector((state) => state.customer);
   const { documentTypes, filterBy, page, rowsPerPage, isLoading , initial } = useSelector(
     (state) => state.documentType
   );
-
-  // console.log("documentTypes : ", documentTypes )
 
   useLayoutEffect(() => {
     dispatch(getDocumentTypes());
@@ -163,7 +158,6 @@ export default function DocumentTypeList() {
 
   const handleDeleteRow = async (id) => {
     try {
-      // console.log(id);
       await dispatch(deleteDocumentType(id));
       dispatch(getDocumentTypes());
       setSelected([]);
@@ -258,15 +252,7 @@ export default function DocumentTypeList() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  // rowCount={tableData.length}
-                  // numSelected={selected.length}
                   onSort={onSort}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row) => row._id)
-                  //   )
-                  // }
                 />
 
                 <TableBody>
@@ -280,7 +266,6 @@ export default function DocumentTypeList() {
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         />
@@ -288,11 +273,6 @@ export default function DocumentTypeList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
-
-                  {/* <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  /> */}
 
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>

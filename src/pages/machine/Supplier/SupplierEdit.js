@@ -6,29 +6,16 @@ import { useDispatch } from 'react-redux';
 import { getSupplier } from '../../../redux/slices/products/supplier';
 
 import SupplierEditForm from './SupplierEditForm';
-// redux
-
-// routes
-// import { PATH_MACHINE } from '../../../routes/paths';
-// // components
-// import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
-// import { useSettingsContext } from '../../../components/settings';
-// sections
 
 
 
 // ----------------------------------------------------------------------
 
 export default function SupplierEdit() {
-  // const { themeStretch } = useSettingsContext();
 
   const dispatch = useDispatch();
 
   const { id } = useParams(); 
-  // console.log(id);
-
-
-  // const { supplier } = useSelector((state) => state.supplier);
 
   useLayoutEffect(() => {
     if(id){

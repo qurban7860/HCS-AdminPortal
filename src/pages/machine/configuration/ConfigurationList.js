@@ -12,7 +12,6 @@ import { getConfigurations,  ChangeRowsPerPage,
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-// import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -43,24 +42,17 @@ const TABLE_HEAD = [
 export default function ConfigurationList() {
   const {
     dense,
-    // page,
     order,
     orderBy,
-    // rowsPerPage,
     setPage,
-    //
     selected,
     onSelectRow,
-    //
     onSort,
-    // onChangePage,
-    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'name',
   });
 
   const dispatch = useDispatch();
-  // const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
@@ -92,7 +84,6 @@ export default function ConfigurationList() {
     filterStatus,
   });
 
-  // const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   const denseHeight = dense ? 60 : 80;
 
@@ -160,24 +151,6 @@ export default function ConfigurationList() {
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            {/* <TableSelectedAction
-
-              numSelected={selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row._id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            /> */}
 
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
@@ -198,8 +171,6 @@ export default function ConfigurationList() {
                           row={row}
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
-                          // onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                         />
                       ) : (

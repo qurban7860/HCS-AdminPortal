@@ -131,6 +131,7 @@ function DocumentAddForm({
   useEffect( () => { // Get Active Document Types And Active Document Categoories
     if( !isDocumentCategoryLoaded && categoryBy ){
       dispatch( getActiveDocumentCategories( categoryBy ) );  dispatch( getActiveDocumentTypesWithCategory( null, categoryBy ) ) 
+      setIsDocumentCategoryLoaded( true )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ categoryBy ] )

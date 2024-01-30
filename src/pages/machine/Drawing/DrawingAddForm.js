@@ -1,11 +1,9 @@
 import * as Yup from 'yup';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-// import { useNavigate } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-// import { LoadingButton } from '@mui/lab';
 import { TextField, Autocomplete, Box, Card, Grid, Stack } from '@mui/material';
 // slice
 import { addDrawing, setDrawingFormVisibility } from '../../../redux/slices/products/drawing';

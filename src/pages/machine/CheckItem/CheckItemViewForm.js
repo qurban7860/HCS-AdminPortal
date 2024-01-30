@@ -9,10 +9,8 @@ import { deleteCheckItem } from '../../../redux/slices/products/machineCheckItem
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-// import { fDate, fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
-// import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
@@ -65,9 +63,7 @@ export default function CheckItemViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [ checkItem ]
   );
-  // const revisedArray = defaultValues.utlizedInRecordConfigs.map((config) => ({
-  //   name: `${config?.docTitle || ''} ${config.docVersionNo ? ' - v' : ''}${config.docVersionNo || ''}`,
-  // }));
+
   return (
     <Card sx={{ p: 2 }}>
       <Grid>

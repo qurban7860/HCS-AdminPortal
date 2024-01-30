@@ -156,7 +156,6 @@ export default function RoleList() {
 
   const handleDeleteRow = async (id) => {
     try {
-      // console.log(id);
       await dispatch(deleteRole(id));
       dispatch(getRoles());
       setSelected([]);

@@ -38,8 +38,6 @@ export default function Header({ onOpenNav }) {
     sendJsonMessage({eventName:'getNotifications'});
   },[sendJsonMessage])
   
-  // console.log("notifications:::::",notifications)
-  
   const renderContent = (
     <>
       {isDesktop && isNavHorizontal && <Logo sx={{ mr: 2.5 }} />}

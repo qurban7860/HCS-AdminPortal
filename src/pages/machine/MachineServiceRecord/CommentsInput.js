@@ -71,7 +71,6 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                         format="dd/mm/yyyy"
                         disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
                         value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue || null}
-                        // InputProps={{ inputComponent: NumericFormatCustom }}
                         onChange={(e) =>  handleChangeCheckItemListDate(index, childIndex, e.target.value) } 
                         size="small" 
                         required={childRow?.isRequired}
@@ -86,7 +85,6 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                         type="number"
                         disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
                         value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue}
-                        // onWheel={(e) => e.target.blur()}
                         onChange={(e) => {
                             const inputValue = e.target.value;
                             if (/^\d*$/.test(inputValue)) {

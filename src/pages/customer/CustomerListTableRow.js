@@ -1,19 +1,18 @@
 import PropTypes from 'prop-types';
-// import { useState, useEffect } from 'react';
 // @mui
 import {
   Switch,
-  TableRow,
   TableCell,
   Chip,
 } from '@mui/material';
 // utils
-import { styled } from '@mui/system';
 import { fDate } from '../../utils/formatTime';
 // components
 import LinkTableCellWithIcon from '../../components/ListTableTools/LinkTableCellWithIcon';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import { useScreenSize } from '../../hooks/useResponsive';
+import { StyledTableRow } from '../../theme/styles/default-styles'
+
 
 // ----------------------------------------------------------------------
 
@@ -26,15 +25,6 @@ CustomerListTableRow.propTypes = {
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
 };
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: 'white',
-  },
-  '&:nth-of-type(even)': {
-    backgroundColor: '#f4f6f866',
-  },
-}));
 
 
 export default function CustomerListTableRow({

@@ -53,7 +53,7 @@ export default function ProfileViewForm() {
       thicknessStart: profile?.thicknessStart || '',
       thicknessEnd: profile?.thicknessEnd || '',
       type:profile?.type || '',
-      isActive: profile?.isActive || '',
+      isActive: profile?.isActive,
       createdByFullName: profile?.createdBy?.name || '',
       createdAt: profile?.createdAt || '',
       createdIP: profile?.createdIP || '',

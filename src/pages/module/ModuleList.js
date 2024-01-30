@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from '../../redux/store';
 // routes
 import { PATH_SETTING } from '../../routes/paths';
 // components
-// import { useSnackbar } from '../../components/snackbar';
 import Scrollbar from '../../components/scrollbar';
 import ConfirmDialog from '../../components/confirm-dialog';
 import { Cover } from '../../components/Defaults/Cover';
@@ -23,17 +22,12 @@ import {
 // sections
 import ModuleListTableToolbar from './ModuleListTableTolbar';
 import ModuleListTableRow from './ModuleListTableRow';
-// import { deleteModule } from '../../redux/slices/module/module';
 import { getModules, ChangeRowsPerPage,
    ChangePage, setFilterBy } from '../../redux/slices/module/module';
 
 import { fDate } from '../../utils/formatTime';
 // constants
 import { DIALOGS } from '../../constants/default-constants';
-
-// ----------------------------------------------------------------------
-
-// const STATUS_OPTIONS = ['all', 'active', 'banned'];
 
 const ROLE_OPTIONS = ['Administrator', 'Normal User', 'Guest User', 'Restriced User'];
 
@@ -49,18 +43,12 @@ const TABLE_HEAD = [
 export default function ModuleList() {
   const {
     dense,
-    // page,
     order,
     orderBy,
-    // rowsPerPage,
     setPage,
-    //
     selected,
     onSelectRow,
-    //
     onSort,
-    // onChangePage,
-    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'createdAt', defaultOrder: 'desc',
   });
@@ -80,9 +68,7 @@ export default function ModuleList() {
     moduleEditFormVisibility,
     moduleAddFormVisibility,
   } = useSelector((state) => state.module);
-  // console.log("modules", modules);
 
-  // const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [tableData, setTableData] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);

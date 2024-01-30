@@ -23,7 +23,6 @@ export function MachineServiceRecordPDF({machineServiceRecord}) {
           technician:                           machineServiceRecord?.technician || null,
           textBeforeCheckItems:                 machineServiceRecord?.textBeforeCheckItems || '',
           textAfterCheckItems:                  machineServiceRecord?.textAfterCheckItems || '',
-          // checkParams:
           headerLeftText:                       machineServiceRecord?.serviceRecordConfig?.header?.leftText || '',
           headerCenterText:                     machineServiceRecord?.serviceRecordConfig?.header?.centerText || '',
           headerRightText:                      machineServiceRecord?.serviceRecordConfig?.header?.rightText || '',
@@ -396,5 +395,3 @@ export function MachineServiceRecordPDF({machineServiceRecord}) {
         fontWeight:'bold',
     }
   });
-
-//   export MachineServiceRecordPDF;

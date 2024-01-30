@@ -8,22 +8,9 @@ import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
-// import style from '../../style/style.css'
 // @mui
 import { LoadingButton } from '@mui/lab';
-import {
-  Box,
-  Card,
-  Grid,
-  Stack,
-  Typography,
-  Container,
-  Checkbox,
-  DialogTitle,
-  Dialog,
-  InputAdornment,
-} from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Container, Checkbox, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
 import { saveSupplier } from '../../../redux/slices/products/supplier';
 // routes
@@ -32,15 +19,7 @@ import { useSettingsContext } from '../../../components/settings';
 // components
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, {
-  RHFSelect,
-  RHFAutocomplete,
-  RHFTextField,
-  RHFSwitch,
-  RHFMultiSelect,
-  RHFEditor,
-  RHFUpload,
-} from '../../../components/hook-form';
+import FormProvider, { RHFSelect, RHFAutocomplete, RHFTextField, RHFSwitch, RHFMultiSelect, RHFEditor, RHFUpload,} from '../../../components/hook-form';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
 // asset
@@ -114,35 +93,13 @@ export default function MachineSuppliers() {
 
   const values = watch();
 
-  // useLayoutEffect(() => {
-  //   dispatch(getSPContacts());
-  // }, [dispatch]);
-
   const onSubmit = async (data) => {
     try {
-      //   const finaldata= {
-      //     name: data.name,
-      //     contactName:data.Contact_Name,
-      //     contactTitle:data.contactTitle ,
-      //     phone:data.phone ,
-      //     email:data.email ,
-      //     website:data.website ,
-      //     fax: data.fax,
-      //     address:{
-      //         street:data.street ,
-      //         suburb:data.suburb ,
-      //         city:data.city ,
-      //         region:data.region ,
-      //         country:data.country ,
-      //     }
-      // }
       await dispatch(saveSupplier(data));
       reset();
       enqueueSnackbar('Create success!');
       navigate(PATH_MACHINE.machines.settings.supplier.list);
-      // console.log(PATH_MACHINE.tool.list)
     } catch (error) {
-      // enqueueSnackbar('Saving failed!');
       enqueueSnackbar(error?.message, { variant: `error` });
       console.error(error);
     }

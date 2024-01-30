@@ -12,7 +12,6 @@ import { getCategories, deleteCategory,   ChangeRowsPerPage,
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-// import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -45,10 +44,8 @@ const TABLE_HEAD = [
 export default function CategoryList() {
   const {
     dense,
-    // page,
     order,
     orderBy,
-    // rowsPerPage,
     setPage,
     //
     selected,
@@ -56,14 +53,11 @@ export default function CategoryList() {
     onSelectRow,
     //
     onSort,
-    // onChangePage,
-    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'name',
   });
 
   const dispatch = useDispatch();
-  // const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
@@ -82,12 +76,7 @@ export default function CategoryList() {
 
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
-  // useLayoutEffect(() => {
-  //   dispatch(getCustomers());
-  // }, [dispatch]);
-
   useLayoutEffect(() => {
-    // console.log('Testing done')
     dispatch(getCategories());
   }, [dispatch]);
 
@@ -112,9 +101,6 @@ export default function CategoryList() {
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
-  // const handleOpenConfirm = () => {
-  //   setOpenConfirm(true);
-  // };
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
@@ -149,8 +135,6 @@ export default function CategoryList() {
   const handleDeleteRow = async (id) => {
     await dispatch(deleteCategory(id));
     try {
-      // console.log(id);
-      // await dispatch(deleteSupplier(id));
       dispatch(getCategories());
       setSelected([]);
 
@@ -164,33 +148,6 @@ export default function CategoryList() {
     }
   };
 
-  // const handleDeleteRows = async (selectedRows, handleClose) => {
-  //   // console.log(selectedRows)
-  //   const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-  //   setSelected([]);
-  //   setTableData(deleteRows);
-
-  //   if (page > 0) {
-  //     if (selectedRows.length === dataInPage.length) {
-  //       setPage(page - 1);
-  //     } else if (selectedRows.length === dataFiltered.length) {
-  //       setPage(0);
-  //     } else if (selectedRows.length > dataInPage.length) {
-  //       const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-  //       setPage(newPage);
-  //     }
-  //   }
-
-  //   // dispatch delete supplier
-  //   // await dispatch(deleteSuppliers(selectedRows));
-  //   // await dispatch(getCategoriess())
-  //   handleClose();
-  // };
-
-  // const handleEditRow = (id) => {
-  //   // console.log(id);
-  //   navigate(PATH_MACHINE.machines.settings.categories.edit(id));
-  // };
 
   const handleViewRow = (id) => {
     navigate(PATH_MACHINE.machines.settings.categories.view(id));
@@ -264,7 +221,6 @@ export default function CategoryList() {
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                         />
                       ) : (
@@ -330,7 +286,6 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
     inputData = inputData.filter(
       (category) =>
         category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (category.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(category?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

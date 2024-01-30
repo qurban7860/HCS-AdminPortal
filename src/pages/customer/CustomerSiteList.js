@@ -37,22 +37,8 @@ const TABLE_HEAD = [
   { id: 'action', label: 'Actions', align: 'left' },
 ];
 
-const STATUS_OPTIONS = [
-  // { id: '1', value: 'Order Received' },
-  // { id: '2', value: 'In Progress' },
-  // { id: '3', value: 'Ready For Transport' },
-  // { id: '4', value: 'In Freight' },
-  // { id: '5', value: 'Deployed' },
-  // { id: '6', value: 'Archived' },
-];
+const STATUS_OPTIONS = [];
 
-// const STATUS_OPTIONS = [
-//   { value: 'all_sites', label: 'All Sites' },
-//   { value: 'deployable', label: 'All Deployable' },
-//   { value: 'pending', label: 'All Pending' },
-//   { value: 'archived', label: 'All Archived' },
-//   { value: 'undeployable', label: 'All Undeployable' }
-// ];
 
 const _accordions = [...Array(8)].map((_, index) => ({
   id: _mock.id(index),
@@ -123,7 +109,6 @@ export default function CustomerSiteList() {
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
-    // console.log("Expended : ",expanded)
   };
 
   useEffect(() => {
@@ -134,15 +119,11 @@ export default function CustomerSiteList() {
 
   useEffect(() => {
     if (initial) {
-      // if (sites && !error) {
-      //   enqueueSnackbar(responseMessage);
-      // } else {
-      //   enqueueSnackbar(error, { variant: `error` });
-      // }
       setTableData(sites);
     }
   }, [sites, error, responseMessage, enqueueSnackbar, initial]);
-  // console.log("sites", sites);
+
+  
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),

@@ -92,14 +92,12 @@ export default function SupplierEditForm() {
   }, [supplier]);
 
   const toggleCancel = () => {
-    // dispatch(setSupplierEditFormVisibility(false));
     navigate(PATH_MACHINE.machines.settings.supplier.view(id));
   };
  
 
   const onSubmit = async (data) => {
     try {
-      // console.log(typeof phone);
       if (phone && phone.length > 4) {
         data.phone = phone;
       } else {

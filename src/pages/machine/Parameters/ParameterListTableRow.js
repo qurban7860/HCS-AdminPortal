@@ -55,9 +55,6 @@ export default function ParameterListTableRow({
     setOpenConfirm(false);
   };
 
-  // const handleOpenPopover = (event) => {
-  //   setOpenPopover(event.currentTarget);
-  // };
 
   const handleClosePopover = () => {
     setOpenPopover(null);
@@ -66,13 +63,9 @@ export default function ParameterListTableRow({
   return (
     <>
       <TableRow hover selected={selected}>
-        {/* <TableCell padding="checkbox">
-          <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell> */}
 
         <LinkTableCell onClick={onViewRow} align="left" param={name} />
         { smScreen && <TableCell>{category?.name || ''}</TableCell>}
-        {/* <TableCell>category</TableCell> */}
         <TableCell align="center">
           {' '}
           <Switch checked={isActive} disabled size="small" sx={{ my: -1 }} />{' '}

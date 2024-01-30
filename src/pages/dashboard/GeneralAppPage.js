@@ -74,9 +74,6 @@ export default function GeneralAppPage() {
     dispatch(getActiveCategories());
     dispatch(getActiveMachineModels());
     dispatch(getCount());
-    // dispatch(getMachinesByCountry());
-    // dispatch(getMachinesByModel());
-    // dispatch(getMachinesByYear());
     dispatch(getERPLogs());
   }, [dispatch]);
 

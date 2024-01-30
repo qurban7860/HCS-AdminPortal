@@ -21,7 +21,6 @@ import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
 import GoogleMaps from '../../assets/GoogleMaps';
 import useResponsive from '../../hooks/useResponsive';
 import { getSites, getSite, setSiteFormVisibility, resetSiteFormsVisiblity } from '../../redux/slices/customer/site';
-// import { getActiveContacts } from '../../redux/slices/customer/contact';
 import NothingProvided from '../../components/Defaults/NothingProvided';
 import SiteAddForm from './site/SiteAddForm';
 import SiteEditForm from './site/SiteEditForm';
@@ -120,7 +119,6 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   };
 
   useEffect( () => {
-    // if (!siteAddFormVisibility && !siteEditFormVisibility) {
       dispatch(getSites(customer._id));
     // }
   }, [dispatch, customer]); 
@@ -201,7 +199,6 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
             {sites.length > 5 && (
               <Grid item md={12}>
                 <SearchInput
-                  // searchFormVisibility={siteAddFormVisibility || siteEditFormVisibility}
                   disabled={siteAddFormVisibility || siteEditFormVisibility}
                   filterName={filterName}
                   handleFilterName={handleFilterName}

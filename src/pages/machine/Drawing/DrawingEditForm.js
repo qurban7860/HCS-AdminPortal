@@ -1,11 +1,9 @@
 import * as Yup from 'yup';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-// import { useNavigate } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-// import { LoadingButton } from '@mui/lab';
 import { TextField, Autocomplete, Box, Card, Grid, Stack, Typography } from '@mui/material';
 // slice
 import { updateDrawing } from '../../../redux/slices/products/drawing';
@@ -28,7 +26,6 @@ export default function DrawingEditForm() {
     useSelector((state) => state.drawing );
 
     const dispatch = useDispatch();
-    // const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {

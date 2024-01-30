@@ -96,7 +96,6 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
   useEffect(() => {
     if (documentHistory?.customer && !customerPage) {
       dispatch(setCustomerDialog(false));
-      // dispatch(getCustomer(documentHistory.customer._id));
     }
   }, [documentHistory, customerPage, dispatch]);
 

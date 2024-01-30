@@ -76,7 +76,6 @@ export default function DocumentCategoryeEditForm() {
 
   const onSubmit = async (data) => {
     try {
-      console.log("data : ", data);
       await dispatch(updateCheckItem(checkItem._id, data));
       dispatch(getCheckItem(checkItem._id))
       navigate(PATH_MACHINE.machines.settings.checkItems.view(checkItem._id));

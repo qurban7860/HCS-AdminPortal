@@ -19,16 +19,13 @@ import axios from '../../utils/axios';
 import EmailListTableRow from './EmailListTableRow';
 import EmailListTableToolbar from './EmailListTableToolbar';
 import { Cover } from '../../components/Defaults/Cover';
-// import { Email } from 'src/routes/elements';
 import { PATH_EMAIL } from '../../routes/paths';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
-// import { email } from 'src/_mock/assets';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'email' ,align: 'center',},
   { id: 'subject', label: 'subject '  },
-  // { id: 'body', label: 'body' , align: 'center'},
   { id: 'fromEmail', label: 'from email',align:'center', },
   { id: 'toEmails', label: 'to email',align:'center',},
   { id: 'created_at', label: 'Created At'},
@@ -159,15 +156,7 @@ export default function App() {
             order={order}
             orderBy={orderBy}
             headLabel={TABLE_HEAD}
-            // rowCount={tableData.length}
-            // numSelected={selected.length}
             onSort={onSort}
-            // onSelectAllRows={(checked) =>
-            //   onSelectAllRows(
-            //     checked,
-            //     tableData.map((row) => row._id)
-            //   )
-            // }
           />
 
 

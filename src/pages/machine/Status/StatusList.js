@@ -103,9 +103,7 @@ export default function StatusList() {
 
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
-// console.log("machinestatuses : ", machinestatuses)
   useLayoutEffect(() => {
-    // console.log('Testing done')
     dispatch(getMachinestatuses());
   }, [dispatch]);
 
@@ -122,8 +120,6 @@ export default function StatusList() {
     filterStatus,
   });
 
-  // console.log(machinestatuses, "testingggg")
-
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   const denseHeight = dense ? 60 : 80;
@@ -131,10 +127,6 @@ export default function StatusList() {
   const isFiltered = filterName !== '' || !!filterStatus.length;
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
-
-  // const handleOpenConfirm = () => {
-  //   setOpenConfirm(true);
-  // };
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
@@ -180,29 +172,6 @@ export default function StatusList() {
       console.log(err.message);
     }
   };
-
-  // const handleDeleteRows = async (selectedRows, handleClose) => {
-  //   // console.log(selectedRows)
-  //   const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-  //   setSelected([]);
-  //   setTableData(deleteRows);
-  //   if (page > 0) {
-  //     if (selectedRows.length === dataInPage.length) {
-  //       setPage(page - 1);
-  //     } else if (selectedRows.length === dataFiltered.length) {
-  //       setPage(0);
-  //     } else if (selectedRows.length > dataInPage.length) {
-  //       const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-  //       setPage(newPage);
-  //     }
-  //   }
-  //   handleClose();
-  // };
-
-  // const handleEditRow = async (id) => {
-  //   await dispatch(getMachineStatus(id));
-  //   navigate(PATH_MACHINE.machines.settings.status.edit(id));
-  // };
 
   const handleViewRow = (id) => {
     dispatch(getMachineStatus(id));

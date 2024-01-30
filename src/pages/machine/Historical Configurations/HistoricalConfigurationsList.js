@@ -88,7 +88,6 @@ export default function HistoricalConfigurationsList() {
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
 
-// console.log("selected : ",selected)
   useLayoutEffect(() => {
     if(machine?._id){
       dispatch(getHistoricalConfigurationRecords(machine?._id)); 
@@ -270,7 +269,6 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-  // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
 
   if (filterName) {
     inputData = inputData.filter(
@@ -279,7 +277,6 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
         docCategory?.versionNo?.toString().indexOf(filterName.toLowerCase()) >= 0 ||
         docCategory?.createdBy?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         docCategory?.backupid?.toString()?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (docCategory?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(docCategory?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

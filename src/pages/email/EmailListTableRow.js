@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types';
 import {
-  TableRow,
   TableCell,
 } from '@mui/material';
 // utils
-import { styled } from '@mui/system';
 import { fDate } from '../../utils/formatTime';
+import { StyledTableRow } from '../../theme/styles/default-styles'
 
 // ----------------------------------------------------------------------
 
@@ -14,15 +13,6 @@ EmailListTableRow.propTypes = {
   selected: PropTypes.bool,
   onViewRow: PropTypes.func,
 };
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: "white",
-  },
-  '&:nth-of-type(even)': {
-    backgroundColor: "#f4f6f866",
-  },
-}));
 
 export default function EmailListTableRow({
   row,
@@ -37,7 +27,6 @@ export default function EmailListTableRow({
   return (
     <StyledTableRow hover selected={selected}>
       <TableCell align="right"/>
-     
       <TableCell>{fDate(createdAt)}</TableCell>
     </StyledTableRow>
   );

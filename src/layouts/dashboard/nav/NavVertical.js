@@ -84,7 +84,6 @@ export default function NavVertical({ openNav, onCloseNav }) {
       <NavDocs />
     </Scrollbar>
   );
-      // console.log({ themeLayout, isDesktop })
   return (
     <Box component="nav" sx={{ flexShrink: { lg: 0 }, width: { lg: NAV.W_DASHBOARD }}}>
       <NavToggleButton sx={{top: 22}}/>

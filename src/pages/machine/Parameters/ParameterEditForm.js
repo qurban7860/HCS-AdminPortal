@@ -105,7 +105,6 @@ export default function ParameterEditForm() {
       if (paramVal !== null && paramVal !== '') {
         data.category = paramVal?._id;
       }
-      console.log('Submit Data : ', data);
       await dispatch(updateTechparam(data, techparam._id));
       reset();
       enqueueSnackbar('Update success!');

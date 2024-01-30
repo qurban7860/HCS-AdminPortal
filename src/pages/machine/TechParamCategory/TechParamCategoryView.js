@@ -24,7 +24,7 @@ export default function TechParamCategoryView() {
       <StyledCardContainer>
         <Cover
           name={techparamcategory?.name}
-          setting="enable"
+          setting
           backLink={PATH_MACHINE.machines.settings.technicalParameterCategories.list}
         />
       </StyledCardContainer>

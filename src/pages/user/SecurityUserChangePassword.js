@@ -22,7 +22,6 @@ import { PATH_DASHBOARD, PATH_SECURITY } from '../../routes/paths';
 export default function SecurityUserChangePassword() {
   const userId = localStorage.getItem('userId');
   const navigate = useNavigate();
-  // console.log("userId : " , userId)
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);

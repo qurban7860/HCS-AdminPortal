@@ -70,14 +70,6 @@ export default function ProfileEditForm() {
     dispatch(setProfileViewFormVisibility(true));
   };
 
-  // const [profileTypes, setProfileTypes] = useState([]);
-
-  // useEffect(() => {
-  //   const hasManufacturer = profiles.some((p) => p.type === 'MANUFACTURER');
-  //   const updatedProfileTypes = hasManufacturer?ProfileTypes.filter((type) => type !== 'MANUFACTURER'): ProfileTypes;
-  //   setProfileTypes(updatedProfileTypes);
-  // }, [profiles]);
-
    // Handle Type
   const [selectedValue, setSelectedValue] = useState(defaultValues?.type);
   const handleChange = (event) => {

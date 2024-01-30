@@ -1,47 +1,28 @@
 import * as Yup from 'yup';
 import { useEffect, useLayoutEffect, useMemo } from 'react';
 import { useSelector,useDispatch } from 'react-redux';
-// import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-// import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Card,
   Grid,
   Stack,
   Typography,
-  // Button,
-  // DialogTitle,
-  // Dialog,
-  // InputAdornment,
-  // Link,
 } from '@mui/material';
 // slice
 import {
   updateTool,
   getTool,
 } from '../../../redux/slices/products/tools';
-// import { useSettingsContext } from '../../../components/settings';
-// import { CONFIG } from '../../../config-global';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-// import Iconify from '../../../components/iconify/Iconify';
-// import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
-import FormProvider, {
-  // RHFSelect,
-  // RHFAutocomplete,
-  RHFTextField,
-  RHFSwitch,
-  // RHFMultiSelect,
-  // RHFEditor,
-  // RHFUpload,
-} from '../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
 import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
@@ -52,10 +33,7 @@ export default function ToolEditForm() {
   const { tool } = useSelector((state) => state.tool);
 
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
-  // console.log(navigate, 'test')
-
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
 
@@ -75,8 +53,6 @@ export default function ToolEditForm() {
     [tool]
   );
 
-  // const { themeStretch } = useSettingsContext();
-
   const methods = useForm({
     resolver: yupResolver(EditToolSchema),
     defaultValues,
@@ -84,18 +60,13 @@ export default function ToolEditForm() {
 
   const {
     reset,
-    // watch,
-    // setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  // const values = watch();
 
   useLayoutEffect(() => {
-    dispatch(getTool(id));
-    // dispatch(getSites(customer._id));
-    // dispatch(getSPContacts());
+    dispatch(getTool(id));;
   }, [dispatch, id]);
 
   useEffect(() => {
@@ -104,15 +75,12 @@ export default function ToolEditForm() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tool]);
-  // console.log(id, 'testing id')
 
   const toggleCancel = () => {
-    // dispatch(setToolEditFormVisibility(false));
     navigate(PATH_MACHINE.machines.settings.tool.view(id));
   };
 
   const onSubmit = async (data) => {
-    // console.log(data);
     try {
       await dispatch(updateTool({ ...data, id }));
       reset();

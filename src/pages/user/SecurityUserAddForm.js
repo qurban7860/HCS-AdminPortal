@@ -46,7 +46,7 @@ SecurityUserAddForm.propTypes = {
 export default function SecurityUserAddForm({ isEdit = false, currentUser, isInvite }) {
   const userRolesString = localStorage.getItem('userRoles');
 
-  // eslint-disable-next-line
+
   const [ userRoles, setUserRoles] = useState(JSON.parse(userRolesString));
 
   const { allCustomers } = useSelector((state) => state.customer);
@@ -56,8 +56,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
   const { allMachines } = useSelector((state) => state.machine);
 
   const [selectedRegions, setSelectedRegions] = useState([]);
-  // const [filteredCustomers, setFilteredCustomers] = useState(spCustomers);
-  // const [filteredMachines, setFilteredMachines] = useState(allMachines);
   const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState('');
   const [customerVal, setCustomerVal] = useState('');
@@ -70,7 +68,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
   const ROLES = [];
   roles.map((role) => ROLES.push({ value: role?._id, label: role.name }));
 
-  // eslint-disable-next-line
   const [roleVal, setRoleVal] = useState('');
 
   const dispatch = useDispatch();
@@ -81,7 +78,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
     dispatch(getAllCustomers());
     dispatch(getAllMachines());
     dispatch(getActiveRegions());
-    // dispatch(getActiveSPCustomers());
     dispatch(getRoles());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
@@ -94,7 +90,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
   }, [
     dispatch,
     customerVal,
-    // userRoles
   ]);
 
   useEffect(() => {
@@ -172,8 +167,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
     setValue('name', event || '');
     trigger('name');
   };
-
-  // console.log(customerVal);
 
   const onSubmit = async (data) => {
 

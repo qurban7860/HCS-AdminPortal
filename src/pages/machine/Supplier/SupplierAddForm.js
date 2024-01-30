@@ -83,19 +83,16 @@ export default function StatusAddForm() {
       if (fax && fax.length > 4) {
         data.fax = fax;
       }
-      console.log(data);
       await dispatch(addSupplier(data));
       reset();
       enqueueSnackbar('Create success!');
       navigate(PATH_MACHINE.machines.settings.supplier.list);
     } catch (error) {
-      // enqueueSnackbar('Saving failed!');
       enqueueSnackbar(error, { variant: `error` });
       console.error(error);
     }
   };
 
-  // const { themeStretch } = useSettingsContext();
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>

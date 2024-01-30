@@ -60,16 +60,13 @@ export default function MachineListTableRow({
       {  useScreenSize('sm') && <TableCell >{machineModel?.name || ''}</TableCell>}
       {  useScreenSize('lg') && 
       
-      // <TableCell  >{customer?.name || ''}</TableCell>
       <LinkDialogTableCell onClick={handleCustomerDialog} align='center' param={customer?.name}/>  
           
       }
-      {/* {  useScreenSize('lg') && <TableCell  >{instalationSite?.name || ''}</TableCell>} */}
       {  useScreenSize('lg') && <TableCell >{fDate(installationDate)}</TableCell>}
       {  useScreenSize('lg') && <TableCell >{fDate(shippingDate)}</TableCell>}
       {  useScreenSize('sm') && <TableCell sx={{color: status?.slug === 'transferred' ? 'red' : 'inherit' }} >{status?.name || ''}</TableCell>}
       <TableCell align="center">  <Switch checked={isActive} disabled size="small"/>  </TableCell>
-      {/* <TableCell >{fDate(createdAt)}</TableCell> */}
 
     </TableRow>
   );

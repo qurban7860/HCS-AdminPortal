@@ -56,7 +56,6 @@ function MachineTransfer() {
       dispatch(getActiveMachineDocuments(id, cancelTokenSource))
     } 
     return ()=>{  
-      // cancelTokenSource.cancel()
       dispatch(resetActiveMachineDocuments()) 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -65,7 +64,6 @@ function MachineTransfer() {
   useEffect(()=>{
     dispatch(getFinancialCompanies(cancelTokenSource))
     return ()=>{  
-      // cancelTokenSource.cancel()
       dispatch(resetFinancingCompanies())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

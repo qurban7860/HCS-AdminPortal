@@ -17,21 +17,16 @@ import { PATH_MACHINE } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField } from '../../../components/hook-form';
 // auth
-// import { useAuthContext } from '../../../auth/useAuthContext';
-// // asset
-// import { countries } from '../../../assets/data';
 // util
 import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
 // constants
 import { FORMLABELS } from '../../../constants/default-constants';
-// import { Snacks, FORMLABELS as formLABELS } from '../../../constants/document-constants';
 
 // ----------------------------------------------------------------------
 
 export default function CategoryAddForm() {
-  // const [open] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -55,8 +50,6 @@ export default function CategoryAddForm() {
 
   const {
     reset,
-    // watch,
-    // setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -71,9 +64,7 @@ export default function CategoryAddForm() {
       reset();
       enqueueSnackbar('Create success!');
       navigate(PATH_MACHINE.machines.settings.categories.list);
-      // console.log(PATH_MACHINE.supplier.list)
     } catch (error) {
-      // enqueueSnackbar('Saving failed!');
       enqueueSnackbar(error?.message, { variant: `error` });
       console.error(error);
     }

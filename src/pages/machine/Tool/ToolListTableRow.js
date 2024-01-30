@@ -45,8 +45,6 @@ export default function ToolListTableRow({
 
   const [openPopover, setOpenPopover] = useState(null);
 
-  // console.log('dep', departmentName);
-
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
   };
@@ -55,10 +53,6 @@ export default function ToolListTableRow({
     setOpenConfirm(false);
   };
 
-  // const handleOpenPopover = (event) => {
-  //   setOpenPopover(event.currentTarget);
-  // };
-
   const handleClosePopover = () => {
     setOpenPopover(null);
   };
@@ -66,10 +60,6 @@ export default function ToolListTableRow({
   return (
     <>
       <TableRow hover selected={selected}>
-        {/* <TableCell padding="checkbox">
-          <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell> */}
-
         <LinkTableCell align="left" onClick={onViewRow} param={name} />
         <TableCell align="center">
           <Switch checked={isActive} disabled size="small" sx={{ my: -1 }} />{' '}

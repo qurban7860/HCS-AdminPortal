@@ -58,7 +58,6 @@ export const documentSchema = ( selectedValue ) => Yup.object().shape({
 
 export const AddDocumentSchema = Yup.object().shape({
   displayName: Yup.string().max(40, Snacks.docMaxSize),
-  // .test('length', 'Document Name must not exceed 40 characters', (value)=>  console.log("value : ",value)),
   description: Yup.string().max(10000),
   multiUpload: Yup.mixed()
     .required(Snacks.fileRequired)
