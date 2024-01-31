@@ -12,15 +12,16 @@ import ListItem from '../../components/ListTableTools/ListItem';
 // constants
 import { FORMLABELS } from '../../constants/default-constants';
 import { ICONS } from '../../constants/icons/default-icons';
+import { useAuthContext } from '../../auth/useAuthContext';
 
 // ----------------------------------------------------------------------
 
 export default function Setting() {
 
-const isSuperAdmin = JSON.parse(localStorage.getItem('userRoles'))?.some((role) => role.roleType === 'SuperAdmin');
+  const { isSettingAccessAllowed } = useAuthContext()
 
   const navigate = useNavigate();
-  // Functions to navigate to different pages
+
   const linkDocumentType = () => {
     navigate(PATH_SETTING.documentType.list);
   };
@@ -61,7 +62,6 @@ const isSuperAdmin = JSON.parse(localStorage.getItem('userRoles'))?.some((role) 
     navigate(PATH_SECURITY.config.whitelistIP.list);
   }
 
-const userRolesString = localStorage.getItem('userRoles');
 
 return (
     <Container maxWidth={false}>
@@ -79,7 +79,7 @@ return (
                 lg: 'repeat(3, 1fr)',
               }}
             >
-            {isSuperAdmin &&
+            { isSettingAccessAllowed &&
             <StyledSettingsCardContainer>
                 <List
                   component="nav"
@@ -148,7 +148,7 @@ return (
                     content={ICONS.REGION.heading}
                   />
                   
-                  { isSuperAdmin && <ListItem
+                  { isSettingAccessAllowed && <ListItem
                     onClick={linkConfigs}
                     icon={ICONS.SYSTEM_CONFIG.icon}
                     content={ICONS.SYSTEM_CONFIG.heading}

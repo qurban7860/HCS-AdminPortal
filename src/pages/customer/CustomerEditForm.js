@@ -60,7 +60,7 @@ export default function CustomerEditForm() {
     [customer]
   );
   const methods = useForm({
-    resolver: yupResolver(EditCustomerSchema),
+    resolver: yupResolver( EditCustomerSchema ),
     defaultValues,
   });
 

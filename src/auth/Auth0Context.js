@@ -18,6 +18,11 @@ const initialState = {
   user: null,
   userId: null,
   isSuperAdmin: false,
+  isDisableDelete: true,
+  isSettingAccessAllowed: false,
+  isSecurityUserAccessAllowed: false,
+  isDocumentAccessAllowed: false,
+  isDrawingAccessAllowed: false,
 };
 
 const reducer = (state, action) => {
@@ -28,6 +33,11 @@ const reducer = (state, action) => {
       user: action.payload.user,
       userId: action.payload.userId,
       isSuperAdmin: action.payload.isSuperAdmin,
+      isDisableDelete: action.payload.isDisableDelete,
+      isSettingAccessAllowed: action.payload.isSettingAccessAllowed,
+      isSecurityUserAccessAllowed: action.payload.isSecurityUserAccessAllowed,
+      isDocumentAccessAllowed: action.payload.isDocumentAccessAllowed,
+      isDrawingAccessAllowed: action.payload.isDrawingAccessAllowed,
     };
   }
   if (action.type === 'LOGIN') {
@@ -37,6 +47,12 @@ const reducer = (state, action) => {
       user: action.payload.user,
       userId: action.payload.userId,
       isSuperAdmin: action.payload.isSuperAdmin,
+      isDisableDelete: action.payload.isDisableDelete,
+      isConfigReadOnly: action.payload.isConfigReadOnly,
+      isSettingAccessAllowed: action.payload.isSettingAccessAllowed,
+      isSecurityUserAccessAllowed: action.payload.isSecurityUserAccessAllowed,
+      isDocumentAccessAllowed: action.payload.isDocumentAccessAllowed,
+      isDrawingAccessAllowed: action.payload.isDrawingAccessAllowed,
     };
   }
   if (action.type === 'LOGOUT') {
@@ -46,6 +62,12 @@ const reducer = (state, action) => {
       user: null,
       userId: null,
       isSuperAdmin: false,
+      isDisableDelete: true,
+      isConfigReadOnly: true,
+      isSettingAccessAllowed: false,
+      isSecurityUserAccessAllowed: false,
+      isDocumentAccessAllowed: false,
+      isDrawingAccessAllowed: false,
     };
   }
 
@@ -92,6 +114,12 @@ export function AuthProvider({ children }) {
               ...user,
               ...userId,
               ...isSuperAdmin,
+              ...isDisableDelete,
+              ...isConfigReadOnly,
+              ...isSettingAccessAllowed,
+              ...isSecurityUserAccessAllowed,
+              ...isDocumentAccessAllowed,
+              ...isDrawingAccessAllowed,
               displayName: user?.name,
               photoURL: user?.picture,
             },
@@ -105,6 +133,12 @@ export function AuthProvider({ children }) {
             user: null,
             userId: null,
             isSuperAdmin,
+            isDisableDelete,
+            isConfigReadOnly,
+            isSettingAccessAllowed,
+            isSecurityUserAccessAllowed,
+            isDocumentAccessAllowed,
+            isDrawingAccessAllowed,
           },
         });
       }
@@ -117,6 +151,12 @@ export function AuthProvider({ children }) {
           user: null,
           userId: null,
           isSuperAdmin: false,
+          isDisableDelete: true,
+          isConfigReadOnly: true,
+          isSettingAccessAllowed: false,
+          isSecurityUserAccessAllowed: false,
+          isDocumentAccessAllowed: false,
+          isDrawingAccessAllowed: false,
         },
       });
     }
@@ -143,6 +183,12 @@ export function AuthProvider({ children }) {
             userId: user?._id,
             displayName: user?.name,
             isSuperAdmin: user?.roles?.some((role) => role.roleType === 'SuperAdmin'),
+            isDisableDelete: user?.roles?.some((role) => role.roleType === 'SuperAdmin'),
+            isConfigReadOnly: user?.roles?.some((role) => role.roleType === 'SuperAdmin'),
+            isSettingAccessAllowed: user?.roles?.some((role) => role.roleType === 'SuperAdmin'),
+            isSecurityUserAccessAllowed: user?.roles?.some((role) => role.roleType === 'SuperAdmin'),
+            isDocumentAccessAllowed: user?.roles?.some((role) => role.roleType === 'SuperAdmin'),
+            isDrawingAccessAllowed: user?.roles?.some((role) => role.roleType === 'SuperAdmin'),
             photoURL: user?.picture,
           },
         },
@@ -164,12 +210,26 @@ export function AuthProvider({ children }) {
       isAuthenticated: state.isAuthenticated,
       user: state.user,
       isSuperAdmin: state.isSuperAdmin,
+      isDisableDelete: state.isDisableDelete,  
+      isConfigReadOnly: state.isConfigReadOnly, 
+      isSettingAccessAllowed: state.isSettingAccessAllowed, 
+      isSecurityUserAccessAllowed: state.isSecurityUserAccessAllowed, 
+      isDocumentAccessAllowed: state.isDocumentAccessAllowed, 
+      isDrawingAccessAllowed: state.isDrawingAccessAllowed, 
       userId: state.userId,
       method: 'auth0',
       login,
       logout,
     }),
-    [state.isAuthenticated, state.isInitialized, state.user, state.isSuperAdmin, state.userId, login, logout]
+    [state.isAuthenticated, state.isInitialized, state.user, 
+      state.isSuperAdmin, 
+      state.isDisableDelete,  
+      state.isConfigReadOnly, 
+      state.isSettingAccessAllowed, 
+      state.isSecurityUserAccessAllowed, 
+      state.isDocumentAccessAllowed, 
+      state.isDrawingAccessAllowed, 
+      state.userId, login, logout]
   );
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;

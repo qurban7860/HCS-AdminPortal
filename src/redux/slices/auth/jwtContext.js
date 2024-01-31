@@ -22,12 +22,34 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setInitial(state, action) {
-      const { isAuthenticated, user, isSuperAdmin, resetTokenTime } = action.payload;
+      const { 
+        isAuthenticated, 
+        user, 
+        isAllAccessAllowed,
+        isDisableDelete,
+        isDashboardAccessLimited,
+        isDocumentAccessAllowed,
+        isDrawingAccessAllowed,
+        isSettingReadOnly,
+        isSecurityReadOnly,
+        isSettingAccessAllowed,
+        isSecurityUserAccessAllowed,
+        isEmailAccessAllowed,
+        resetTokenTime } = action.payload;
+
       state.isInitialized = true;
       state.isAuthenticated = isAuthenticated;
       state.user = user;
-      state.isSuperAdmin = isSuperAdmin;
-      state.resetTokenTime = resetTokenTime;
+      state.isAllAccessAllowed = isAllAccessAllowed;
+      state.isDisableDelete = isDisableDelete;
+      state.isDashboardAccessLimited = isDashboardAccessLimited;
+      state.isDocumentAccessAllowed = isDocumentAccessAllowed;
+      state.isDrawingAccessAllowed = isDrawingAccessAllowed;
+      state.isSettingReadOnly = isSettingReadOnly;
+      state.isSecurityReadOnly = isSettingReadOnly;
+      state.isSettingAccessAllowed = isSettingAccessAllowed;
+      state.isSecurityUserAccessAllowed = isSecurityUserAccessAllowed;
+      state.isEmailAccessAllowed = isEmailAccessAllowed;
     },
     login(state, action) {
       const { user, userId } = action.payload;
@@ -75,7 +97,20 @@ export function AuthProvider({ children }) {
           displayName: localStorage.getItem('name'),
         };
         const userId = localStorage.getItem('userId');
-        const isSuperAdmin = await JSON.parse(localStorage.getItem('userRoles'))?.some((role) => role.roleType === 'SuperAdmin');
+
+        const {
+          isAllAccessAllowed,
+          isDisableDelete,
+          isDashboardAccessLimited,
+          isDocumentAccessAllowed,
+          isDrawingAccessAllowed,
+          isSettingReadOnly,
+          isSecurityReadOnly,
+          isSettingAccessAllowed,
+          isSecurityUserAccessAllowed,
+          isEmailAccessAllowed,
+      } = await getUserAccess()
+      
         const tokenExpTime = jwtDecode(accessToken).exp * 1000;
         const tokenRefreshTime = tokenExpTime - 20 * 60 * 1000;
         const resetTokenTime = setTimeout(async () => {
@@ -87,13 +122,30 @@ export function AuthProvider({ children }) {
 
             localStorage.setItem('accessToken', newAccessToken);
 
-            dispatch(setInitial({ isAuthenticated: true, user, userId, isSuperAdmin, resetTokenTime }));
+            dispatch(setInitial({ 
+                  isAuthenticated: true, 
+                  user, 
+                  userId, 
+
+                  isAllAccessAllowed,
+                  isDisableDelete,
+                  isDashboardAccessLimited,
+                  isDocumentAccessAllowed,
+                  isDrawingAccessAllowed,
+                  isSettingReadOnly,
+                  isSecurityReadOnly,
+                  isSettingAccessAllowed,
+                  isSecurityUserAccessAllowed,
+                  isEmailAccessAllowed,
+
+                  resetTokenTime 
+            }));
           } catch (error) {
             console.error(error);
           }
         }, tokenRefreshTime - Date.now() + 30 * 1000);
 
-        dispatch(setInitial({ isAuthenticated: true, user, userId, isSuperAdmin , resetTokenTime }));
+        dispatch(setInitial({ isAuthenticated: true, user, userId, isSuperAdmin, isDisableDelete, isGloalReadOnly, isConfigReadOnly, isSettingAccessAllowed, isSecurityUserAccessAllowed, isDocumentAccessAllowed, isDrawingAccessAllowed, resetTokenTime }));
       } else {
         dispatch(setInitial({ isAuthenticated: false, user: null, userId: null, resetTokenTime: null }));
       }
@@ -124,7 +176,6 @@ export function AuthProvider({ children }) {
       localStorage.setItem('name', user.displayName);
       localStorage.setItem('userId', userId);
       localStorage.setItem('userRoles', rolesArrayString);
-
       setSession(accessToken);
 
       dispatch(login({ user, userId }));
@@ -162,9 +213,20 @@ export function AuthProvider({ children }) {
     () => ({
       isInitialized: state => state.auth.isInitialized,
       isAuthenticated: state => state.auth.isAuthenticated,
-      isSuperAdmin: state => state.auth.isSuperAdmin,
       user: state => state.auth.user,
       userId: state => state.auth.userId,
+
+      isAllAccessAllowed: state => state.auth.isAllAccessAllowed,
+      isDisableDelete: state => state.auth.isDisableDelete,
+      isDashboardAccessLimited: state => state.auth.isDashboardAccessLimited,
+      isDocumentAccessAllowed: state => state.auth.isDocumentAccessAllowed,
+      isDrawingAccessAllowed: state => state.auth.isDrawingAccessAllowed,
+      isSettingReadOnly: state => state.auth.isSettingReadOnly,
+      isSecurityReadOnly: state => state.auth.isSecurityReadOnly,
+      isSettingAccessAllowed: state => state.auth.isSettingAccessAllowed,
+      isSecurityUserAccessAllowed: state => state.auth.isSecurityUserAccessAllowed,
+      isEmailAccessAllowed: state => state.auth.isEmailAccessAllowed,
+
       method: 'jwt',
       login,
       register,

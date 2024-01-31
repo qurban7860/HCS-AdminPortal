@@ -72,16 +72,19 @@ export const ICONS = {
 
   // ------------------------------------------------------------
   // deleteDisabled
-  DELETE_DISABLED: {
-    icon: 'mdi:delete-forever',
-    color: 'green',
-    heading: 'Delete Disabled',
-  },
+
   DELETE_ENABLED: {
-    icon: 'mdi:delete',
-    color: 'red',
+    icon: 'mdi:trash-can-outline',
+    color: '#008000',
     heading: 'Delete Enabled',
   },
+
+  DELETE_DISABLED: {
+    icon: 'mdi:delete-off',
+    color: '#FF0000',
+    heading: 'Delete Disabled',
+  },
+
   // ------------------------------------------------------------
   // isVerified
   VERIFIED: {

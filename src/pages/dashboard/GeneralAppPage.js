@@ -33,13 +33,15 @@ import Iconify from '../../components/iconify';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import { useWebSocketContext } from '../../auth/WebSocketContext';
 import { fQuarterYearDate } from '../../utils/formatTime';
+import { useAuthContext } from '../../auth/useAuthContext';
+
 // ----------------------------------------------------------------------
 
 export default function GeneralAppPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const isSuperAdmin = JSON.parse(localStorage.getItem('userRoles'))?.some((role) => role.roleType === 'SuperAdmin');
+  const { isDashboardAccessLimited } = useAuthContext()
 
   const { onlineUsers } = useWebSocketContext();
   const { count, machinesByCountry, machinesByYear, machinesByModel, erpLogs } = useSelector((state) => state.count);
@@ -170,7 +172,7 @@ export default function GeneralAppPage() {
   return (
     <StyledContainer maxWidth={false}>
       <Grid container>
-        { isSuperAdmin && <Grid container spacing={3} mt={2}>
+        { !isDashboardAccessLimited && <Grid container spacing={3} mt={2}>
             <Grid item xs={12}>
               <HowickWelcome title={TITLES.WELCOME} description={TITLES.WELCOME_DESC} />
             </Grid>
