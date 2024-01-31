@@ -59,29 +59,30 @@ const navConfig = [
       { title: 'Dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
       { title: 'Customers', path: PATH_CUSTOMER.list, icon: ICONS.users },
       { title: 'Machines', path: PATH_MACHINE.machines.list, icon: ICONS.machines },
-      { title: 'Sites Map', path: PATH_SITEMAP.app, icon: ICONS.reports },
     ],
   },
 ]
+navConfig[0].items.splice(7, 0, { title: 'Sites Map', path: PATH_SITEMAP.app, icon: ICONS.reports } );
+
 
 if ( isDocumentAccessAllowed ) {
-  navConfig[0].items.splice(3, 0, { title: 'Documents', path: PATH_DOCUMENT.document.list, icon: ICONS.document });
+  navConfig[0].items.splice(3, 0, { title: 'Documents', path: PATH_DOCUMENT.document.list, icon: ICONS.document } );
 }
 
 if ( isDrawingAccessAllowed ) {
-  navConfig[0].items.splice(4, 0, { title: 'Machine Drawings', path: PATH_DOCUMENT.document.machineDrawings.list, icon: ICONS.document });
+  navConfig[0].items.splice(4, 0, { title: 'Machine Drawings', path: PATH_DOCUMENT.document.machineDrawings.list, icon: ICONS.document } );
 }
 
 if (isSettingAccessAllowed) {
-  navConfig[0].items.splice(5, 0, { title: 'Settings', path: PATH_SETTING.app, icon: ICONS.setting });
+  navConfig[0].items.splice(5, 0, { title: 'Settings', path: PATH_SETTING.app, icon: ICONS.setting } );
 }
 
 if (isSecurityUserAccessAllowed) {
-  navConfig[0].items.splice(6, 0, { title: 'Security', path: PATH_SECURITY.users.list, icon: ICONS.user });
+  navConfig[0].items.splice(6, 0, { title: 'Security', path: PATH_SECURITY.users.list, icon: ICONS.user } );
 }
 
 if (isEmailAccessAllowed) {
-  navConfig.map((obj) => obj.items?.push({ title: 'Email', path: PATH_EMAIL.email.list, icon: ICONS.email }));
+  navConfig.map((obj) => obj.items?.push({ title: 'Email', path: PATH_EMAIL.email.list, icon: ICONS.email }) );
 } 
 
 
