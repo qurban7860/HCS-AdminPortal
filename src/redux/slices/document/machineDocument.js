@@ -173,7 +173,6 @@ export function addMachineDocument(customerId , machineId , params) {
           if(params?.images){
             formData.append('images', params?.images);
           }
-          // console.log("formData", formData);
       await axios.post(`${CONFIG.SERVER_URL}documents/document/`, formData );
       dispatch(slice.actions.setResponseMessage('Document saved successfully'));
       dispatch(getMachineDocuments(machineId));
@@ -236,7 +235,6 @@ export function updateMachineDocument(machineDocumentId , machineId , params) {
       }
 
       await axios.patch(`${CONFIG.SERVER_URL}documents/document/${machineDocumentId}`, formData);
-      console.log("machineId : ", machineId)
       dispatch(getMachineDocuments(machineId))
       dispatch(slice.actions.setResponseMessage('Machine Document updated successfully'));
       dispatch(setMachineDocumentFormVisibility(false));
@@ -267,7 +265,6 @@ export function getMachineDocuments(machineId) {
         }
       }
       );
-      console.log(response);
       dispatch(slice.actions.getMachineDocumentsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Machine Document loaded successfully'));
     } catch (error) {
@@ -312,7 +309,6 @@ export function getMachineDocument(machineDocumentId) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/${machineDocumentId}`);
-      // console.log("machine document : ", response)
       dispatch(slice.actions.getMachineDocumentSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Machine Document Loaded Successfuly'));
     } catch (error) {
@@ -334,7 +330,6 @@ export function getMachineDocumentHistory(machineDocumentId) {
           historical : true
         }
       });
-      // console.log("machine document : ", response)
       dispatch(slice.actions.getMachineDocumentHistorySuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Machine Document History Loaded Successfuly'));
     } catch (error) {
@@ -356,7 +351,6 @@ export function deleteMachineDocument(machineDocumentId) {
       {
           isArchived: true, 
       });
-      // console.log("response : ", response)
       dispatch(slice.actions.setResponseMessage(response.data));
     dispatch(slice.actions.stopLoading());
 

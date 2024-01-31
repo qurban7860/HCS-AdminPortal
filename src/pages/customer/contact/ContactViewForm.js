@@ -60,10 +60,6 @@ export default function ContactViewForm({
     dispatch(setContactMoveFormVisibility(true))
   };
 
-  // useEffect(()=>{
-  //   dispatch(getContact(customer?._id, contact?._id));
-  // },[dispatch, customer, contact])
-
   const onDelete = async () => {
     try {
       await dispatch(deleteContact(customer?._id, contact?._id));

@@ -41,9 +41,6 @@ function ToolsInstalledAddForm() {
   const [toolsVal, setToolsVal] = useState([]);
   const [compositToolVal, setCompositToolVal] = useState([]);
   const [compositToolNumber, setCompositToolNumber] = useState(1);
-  // console.log("compositToolVal : ", compositToolVal )
-  // console.log("toolsInstalled : ",toolsInstalled)
-  // const [toolType, setToolType] = useState(toolTypesObj[0]);
 
   useLayoutEffect(() => {
     dispatch(getActiveTools());
@@ -128,14 +125,7 @@ function ToolsInstalledAddForm() {
       .transform((value, originalValue) => {
       if (originalValue.trim() === '') return undefined;
       return parseFloat(value);
-      }).test('no-spaces', 'Return Solenoid Location cannot have spaces', value => !(value && value.toString().includes(' '))),
-
-    // engageOnCondition: Yup.object().shape({
-    //   label: Yup.string()
-    // }).nullable().label('Engage On Condition'),
-    // engageOffCondition: Yup.object().shape({
-    //   label: Yup.string()
-    // }).nullable().label('Engage Off Condition'),  
+      }).test('no-spaces', 'Return Solenoid Location cannot have spaces', value => !(value && value.toString().includes(' '))), 
     homeProximitySensorLocation: Yup.number()
       .typeError('Home Proximity Sensor Location must be a number')
       .transform((value, originalValue) => {
@@ -173,8 +163,6 @@ function ToolsInstalledAddForm() {
       label: Yup.string()
     }).nullable().label('Moving Punch Condition'),
     // -------------------------------- composite Tool Config --------------------------------
-    // engageInstruction_1: Yup.object().shape().nullable().label('Engage Instructuion').required(),
-    // disengageInstruction: Yup.object()
     engagingDuration: Yup.number()
     .typeError('Engaging Duration must be a number')
       .transform((value, originalValue) => {
@@ -209,8 +197,6 @@ function ToolsInstalledAddForm() {
       isAssign: false,
       operations: '',
       toolType: { name: 'GENERIC TOOL'} ,
-
-      // singleToolConfig {label: 'PASS'} {label: 'NO CONDITION'}
       engageSolenoidLocation: '',
       returnSolenoidLocation: '',
       engageOnCondition: { name: 'NO CONDITION'},
@@ -224,9 +210,7 @@ function ToolsInstalledAddForm() {
       isHasTwoWayCheck: false,
       isEngagingHasEnable: true,
       isReturningHasEnable: false,
-      movingPunchCondition: { name: 'NO PUNCH' },
-
-      // compositeToolConfig  
+      movingPunchCondition: { name: 'NO PUNCH' }, 
       engageInstruction: [],
       disengageInstruction: [],
 
@@ -256,12 +240,9 @@ function ToolsInstalledAddForm() {
       if (toolType) {
         data.toolType = toolType;
       }
-      // data.timeOut = timeOut;
-      // data.engagingDuration = engagingDuration;
       data.returningDuration = returningDuration;
       data.twoWayCheckDelayTime = twoWayCheckDelayTime;
       data.compositeToolConfig = compositToolVal;
-      console.log("Data", data);
       await dispatch(addToolInstalled(machine._id, data));
       reset();
       dispatch(setToolInstalledFormVisibility(false));
@@ -274,7 +255,7 @@ function ToolsInstalledAddForm() {
   const toggleCancel = () => {
     dispatch(setToolInstalledFormVisibility(false));
   };
-// console.log('toolsInstalled : ',toolsInstalled)
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={4}>

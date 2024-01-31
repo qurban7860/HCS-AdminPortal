@@ -55,8 +55,6 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
 
   const EditDocumentSchema = Yup.object().shape({
     displayName: Yup.string().max(500).label('Document Name').required(),
-    // documentCategory: Yup.object().required("Document Category is required!").nullable(),
-    // documentType: Yup.object().required("Document Type is required!").nullable(),
     description: Yup.string().max(10000),
     referenceNumber: Yup.string().label('Reference Number').max(20),
     stockNumber: Yup.string().label('Stock Number').max(20),

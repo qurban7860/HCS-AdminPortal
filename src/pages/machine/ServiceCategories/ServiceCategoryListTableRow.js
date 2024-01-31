@@ -9,7 +9,6 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // utils
 import Iconify from '../../../components/iconify/Iconify';
 import { fDate } from '../../../utils/formatTime';
-// import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -42,9 +41,6 @@ export default function ListTableRow({
     setOpenConfirm(false);
   };
 
-  // const handleOpenPopover = (event) => {
-  //   setOpenPopover(event.currentTarget);
-  // };
 
   const handleClosePopover = () => {
     setOpenPopover(null);

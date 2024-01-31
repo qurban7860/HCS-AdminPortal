@@ -93,11 +93,6 @@ export default function CustomerList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
-  // useEffect(() => {
-  //     dispatch(getCustomers(page, rowsPerPage));
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [dispatch, page, rowsPerPage]);
-
   useEffect(() => {
     setTableData(customers || []);
   }, [customers]);
@@ -229,7 +224,6 @@ export default function CustomerList() {
 
               <TableBody>
                 {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                  // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
                       <CustomerListTableRow
@@ -237,8 +231,6 @@ export default function CustomerList() {
                         row={row}
                         selected={selected.includes(row._id)}
                         onSelectRow={() => onSelectRow(row._id)}
-                        // onDeleteRow={() => handleDeleteRow(row._id)}
-                        // onEditRow={() => handleEditRow(row._id)}
                         onViewRow={() => handleViewRow(row._id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />

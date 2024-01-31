@@ -165,29 +165,6 @@ export default function StatusList() {
     }
   };
 
-  // const handleDeleteRows = async (selectedRows, handleClose) => {
-  //   const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-  //   setSelected([]);
-  //   setTableData(deleteRows);
-
-  //   if (page > 0) {
-  //     if (selectedRows.length === dataInPage.length) {
-  //       setPage(page - 1);
-  //     } else if (selectedRows.length === dataFiltered.length) {
-  //       setPage(0);
-  //     } else if (selectedRows.length > dataInPage.length) {
-  //       const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-  //       setPage(newPage);
-  //     }
-  //   }
-  //   handleClose();
-  // };
-
-  // const handleEditRow = async (id) => {
-  //   await dispatch(getTechparam(id));
-  //   navigate(PATH_MACHINE.machines.settings.parameters.edit(id));
-  // };
-
   const handleViewRow = async (id) => {
     await dispatch(getTechparam(id));
     navigate(PATH_MACHINE.machines.settings.parameters.view(id));
@@ -225,24 +202,6 @@ export default function StatusList() {
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            {/* <TableSelectedAction
-
-              numSelected={selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row._id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            /> */}
 
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
@@ -250,15 +209,7 @@ export default function StatusList() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  // rowCount={tableData.length}
-                  // numSelected={selected.length}
                   onSort={onSort}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row) => row._id)
-                  //   )
-                  // }
                 />
 
                 <TableBody>

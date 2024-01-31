@@ -1,5 +1,3 @@
-// import { Helmet } from 'react-helmet-async';
-// import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
@@ -13,11 +11,9 @@ import {
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
-// import { getMachine } from '../../../redux/slices/products/machine';
 // routes
 import {
   getMachineModels,
-  // getMachineModel,
   deleteMachineModel,
   ChangeRowsPerPage,
   ChangePage,
@@ -26,26 +22,19 @@ import {
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-// import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
-  // emptyRows,
   TableNoData,
   TableSkeleton,
-  // TableEmptyRows,
   TableHeadCustom,
-  // TableSelectedAction,
   TablePaginationCustom,
 } from '../../../components/table';
-// import Iconify from '../../../components/iconify/Iconify';
 import Scrollbar from '../../../components/scrollbar';
-// import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 // sections
 import ModelListTableRow from './ModelListTableRow';
 import ModelListTableToolbar from './ModelListTableToolbar';
-// import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
@@ -66,28 +55,18 @@ export default function ModelList() {
   const [tableData, setTableData] = useState([]);
   const {
     dense,
-    // page,
     order,
     orderBy,
-    // rowsPerPage,
     setPage,
-    //
     selected,
     setSelected,
     onSelectRow,
-    // onSelectAllRows,
-    //
     onSort,
-    // onChangeDense,
-    // onChangePage,
-    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'name',
   });
 
   const dispatch = useDispatch();
-
-  // const { themeStretch } = useSettingsContext();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -111,7 +90,6 @@ export default function ModelList() {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useLayoutEffect(() => {
-    // console.log('Testing done')
     dispatch(getMachineModels());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
@@ -136,10 +114,6 @@ export default function ModelList() {
   const isFiltered = filterName !== '' || !!filterStatus.length;
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
-
-  // const handleOpenConfirm = () => {
-  //   setOpenConfirm(true);
-  // };
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
@@ -186,31 +160,6 @@ export default function ModelList() {
     }
   };
 
-  // const handleDeleteRows = async (selectedRows, handleClose) => {
-  //   // console.log(selectedRows)
-  //   const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-  //   setSelected([]);
-  //   setTableData(deleteRows);
-
-  //   if (page > 0) {
-  //     if (selectedRows.length === dataInPage.length) {
-  //       setPage(page - 1);
-  //     } else if (selectedRows.length === dataFiltered.length) {
-  //       setPage(0);
-  //     } else if (selectedRows.length > dataInPage.length) {
-  //       const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-  //       setPage(newPage);
-  //     }
-  //   }
-  //   handleClose();
-  // };
-
-  // const handleEditRow = async (id) => {
-  //   // console.log(id);
-
-  //   await dispatch(getMachineModel(id));
-  //   navigate(PATH_MACHINE.machines.settings.model.edit(id));
-  // };
 
   const handleViewRow = async (id) => {
       navigate(PATH_MACHINE.machines.settings.model.view(id));
@@ -244,24 +193,6 @@ export default function ModelList() {
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            {/* <TableSelectedAction
-
-              numSelected={selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row._id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            /> */}
 
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
@@ -269,15 +200,7 @@ export default function ModelList() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  // rowCount={tableData.length}
-                  // numSelected={selected.length}
                   onSort={onSort}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row) => row._id)
-                  //   )
-                  // }
                 />
 
                 <TableBody>
@@ -291,7 +214,6 @@ export default function ModelList() {
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                         />
                       ) : (

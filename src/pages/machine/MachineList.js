@@ -50,8 +50,6 @@ import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/cust
 import { PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-// auth
-// asset
 // util
 import TableCard from '../../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
@@ -61,18 +59,14 @@ import { exportCSV } from '../../utils/exportCSV';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  // { id: 'havePrevious', label: '', align: 'center', width: 1.5 },
   { id: 'serialNo', label: 'Serial Number', align: 'left' },
-  // { id: 'previousMachine', label: 'Previous Machine', align: 'left' },
   { id: 'name', visibility: 'md1',label: 'Name', align: 'left' },
   { id: 'machineModel.name', visibility: 'xs1', label: 'Model', align: 'left' },
   { id: 'customer.name', visibility: 'md2', label: 'Customer', align: 'left' },
-  // { id: 'instalationSite.name', visibility: 'md3', label: 'Installation Site', align: 'left' },
   { id: 'installationDate', visibility: 'md3', label: 'Installation Date', align: 'left' },
   { id: 'shippingDate', visibility: 'md3', label: 'Shipping Date', align: 'left' },
   { id: 'status.name', visibility: 'xs2',  label: 'Status', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  // { id: 'createdAt', label: 'Created At', align: 'left' },
 ];
 
 export default function MachineList() {
@@ -303,15 +297,7 @@ export default function MachineList() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  // rowCount={tableData.length}
-                  // numSelected={selected.length}
                   onSort={onSort}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row) => row._id)
-                  //   )
-                  // }
                 />
 
               <TableBody>
@@ -324,8 +310,6 @@ export default function MachineList() {
                         row={row}
                         selected={selected.includes(row._id)}
                         onSelectRow={() => onSelectRow(row._id)}
-                        // onDeleteRow={() => handleDeleteRow(row._id)}
-                        // onEditRow={() => handleEditRow(row._id)}
                         onViewRow={() => handleViewRow(row._id)}
                         openInNewPage={ () => openInNewPage(row._id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}

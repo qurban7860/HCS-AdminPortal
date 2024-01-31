@@ -72,21 +72,13 @@ export default function ToolAddForm() {
     formState: { isSubmitting },
   } = methods;
 
-  // const values = watch();
-
-  // useLayoutEffect(() => {
-  //   dispatch(getSPContacts());
-  // }, [dispatch]);
-
   const onSubmit = async (data) => {
     try {
       await dispatch(addTool(data));
       reset();
       enqueueSnackbar('Create success!');
       navigate(PATH_MACHINE.machines.settings.tool.list);
-      // console.log(PATH_MACHINE.tool.list)
     } catch (error) {
-      // enqueueSnackbar('Saving failed!');
       enqueueSnackbar(error, { variant: `error` });
       console.error(error);
     }
@@ -96,7 +88,6 @@ export default function ToolAddForm() {
     navigate(PATH_MACHINE.machines.settings.tool.list);
   };
 
-  // const { themeStretch } = useSettingsContext();
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Container maxWidth={false}>

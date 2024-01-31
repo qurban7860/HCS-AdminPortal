@@ -70,7 +70,6 @@ export default function AccountGeneral() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
       enqueueSnackbar('Update success!');
-      // console.log('DATA', data);
     } catch (error) {
       enqueueSnackbar("Update Failed!", { variant: `error` })
       console.error(error);

@@ -21,7 +21,6 @@ import { PATH_SECURITY } from '../../routes/paths';
 
 export default function SecurityUserChangePassword() {
   const navigate = useNavigate();
-  // console.log("userId : " , userId)
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { securityUser } = useSelector((state) => state.user);

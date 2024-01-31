@@ -8,7 +8,6 @@ import { getModule } from '../../redux/slices/module/module';
 // sections
 import { Cover } from '../../components/Defaults/Cover';
 import ModuleViewForm from './ModuleViewForm';
-/* eslint-disable */
 
 // ----------------------------------------------------------------------
 
@@ -21,16 +20,13 @@ export default function ModuleView() {
   }, [id, dispatch]);
 
   const { module } = useSelector((state) => state.module );
-  // console.log("role : ",role)
   return (
-    <>
       <Container maxWidth={false}>
         <Card
           sx={{
             mb: 3,
             height: 160,
             position: 'relative',
-            // mt: '24px',
           }}
         >
           <Cover name={module?.name} generalSettings />
@@ -38,6 +34,5 @@ export default function ModuleView() {
         </Card>
         <ModuleViewForm />
       </Container>
-    </>
   );
 }

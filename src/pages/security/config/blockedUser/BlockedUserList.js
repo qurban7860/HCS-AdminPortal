@@ -53,18 +53,12 @@ const TABLE_HEAD = [
 
 export default function BlockedUserList() {
   const {
-    // page,
     order,
     orderBy,
-    // rowsPerPage,
     setPage,
-    //
     selected,
     setSelected,
-    //
     onSort,
-    // onChangePage,
-    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'blockedUser.name', defaultOrder: 'asc'
   });

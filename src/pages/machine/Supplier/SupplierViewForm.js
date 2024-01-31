@@ -44,10 +44,6 @@ export default function SupplierViewForm({ currentSupplier = null }) {
     }
   }, [dispatch, id]);
 
-  // const  handleEdit = async () => {
-  //   await dispatch(getSuppliers(currentSupplier._id));
-  //   // dispatch(setEditFormVisibility(true));
-  // };
 
   const defaultValues = useMemo(
     () => ({

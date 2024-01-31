@@ -7,12 +7,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 import { getCheckItem } from '../../../redux/slices/products/machineCheckItems';
-// auth
-// import { useAuthContext } from '../../../auth/useAuthContext';
-// components
-// import Iconify from '../../../components/iconify/Iconify';
-// import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
-// import { useSettingsContext } from '../../../components/settings';
 // sections
 import { Cover } from '../../../components/Defaults/Cover';
 import CheckItemViewForm from './CheckItemViewForm';

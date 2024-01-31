@@ -506,14 +506,10 @@ export function getActiveDocumentsByType(documentCategoryId,documentTypeId) {
         }
       }
       );
-      // console.log("response : ", response);
-      // if(regEx.test(response.status)){
       dispatch(slice.actions.getActiveDocumentsSuccess(response.data));
-      // }
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
-      // throw error;
     }
   };
 }
@@ -535,10 +531,7 @@ export function getCustomerDocuments(customerId) {
         }
       }
       );
-      // console.log("response : ", response);
-      // if(regEx.test(response.status)){
       dispatch(slice.actions.getActiveDocumentsSuccess(response.data));
-      // }
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -562,10 +555,7 @@ export function getMachineModelDocuments(machineModelId) {
         }
       }
       );
-      // console.log("response : ", response);
-      // if(regEx.test(response.status)){
       dispatch(slice.actions.getActiveDocumentsSuccess(response.data));
-      // }
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -591,10 +581,7 @@ export function getCustomerSiteDocuments(customerSiteId) {
         }
       }
       );
-      // console.log("response : ", response);
-      // if(regEx.test(response.status)){
       dispatch(slice.actions.getActiveDocumentsSuccess(response.data));
-      // }
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -620,7 +607,6 @@ export function getMachineDocuments(machineId, machineModelId) {
         }
       }
       );
-      console.log(response);
       dispatch(slice.actions.getActiveDocumentsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Machine Document loaded successfully'));
     } catch (error) {

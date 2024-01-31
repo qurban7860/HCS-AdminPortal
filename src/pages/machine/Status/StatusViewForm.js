@@ -25,7 +25,6 @@ StatusViewForm.propTypes = {
 // ----------------------------------------------------------------------
 
 export default function StatusViewForm({ currentMachinestatus = null }) {
-  // const [editFlag, setEditFlag] = useState(false);
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -58,13 +57,6 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
       dispatch(deleteMachinestatus(id));
       navigate(PATH_MACHINE.machines.settings.status.list);
     } catch (err) {
-      // if(err.Message){
-      //   enqueueSnackbar(err.Message,{ variant: `error` })
-      // }else if(err.message){
-      //   enqueueSnackbar(err.message,{ variant: `error` })
-      // }else{
-      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
-      // }
       enqueueSnackbar('Status delete failed!', { variant: `error` });
       console.log('Error:', err);
     }
@@ -85,8 +77,8 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
           heading="Display Order No."
           numberParam={defaultValues?.displayOrderNo}
         />
-        <ViewFormField isLoading={isLoading} sm={12} heading="Slug" numberParam={defaultValues?.slug} />
-        <ViewFormField isLoading={isLoading} sm={12} heading="Order Number" numberParam={defaultValues?.order} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Slug" param={defaultValues?.slug} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Order Number" param={defaultValues?.order} />
         <Grid container>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

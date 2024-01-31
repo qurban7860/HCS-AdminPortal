@@ -45,14 +45,9 @@ import { FORMLABELS } from '../../../constants/default-constants';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  // { id: 'xs2', label: 'Help Hint', align: 'center' },
-  // { id: 'xs3', label: 'Link To User Manual', align: 'center' },
   { id: 'inputType', visibility: 'xs5', label: 'Input Type', align: 'left' },
   { id: 'category.name', visibility: 'xs3', label: 'Item Category', align: 'left' },
   { id: 'isRequired', visibility: 'xs4', label: 'Required', align: 'center' },
-  // { id: 'sm1', label: 'Unit Type', align: 'left' },
-  // { id: 'sm2', label: 'Min Validation', align: 'center' },
-  // { id: 'sm3', label: 'Max Validation', align: 'center' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
@@ -250,7 +245,6 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-  // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
 
   if (filterName) {
     inputData = inputData.filter(
@@ -259,7 +253,6 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
         docCategory?.printName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         docCategory?.inputType?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         docCategory?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (docCategory?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(docCategory?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

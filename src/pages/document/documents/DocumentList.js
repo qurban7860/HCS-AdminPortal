@@ -135,8 +135,6 @@ const onChangePage = (event, newPage) => {
     { id: 'referenceNumber', visibility: 'xs2', label: 'Ref. No.', align: 'left' },
     { id: 'displayName', label: 'Name', align: 'left' },
     { id: 'documentVersions.versionNo.[]', visibility: 'md1', label: 'Version', align: 'center' },
-    // { id: 'customerAccess', visibility: 'md2', label: 'Customer Access', align: 'center' },
-    // { id: 'isActive', label: 'Active', align: 'center' },
     { id: 'createdAt', label: 'Created At', align: 'right' },
   ];
   
@@ -215,23 +213,19 @@ const onChangePage = (event, newPage) => {
     categoryVal, 
     typeVal,
   });
-  // const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  
   const denseHeight = 60;
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered?.length && !!filterName) || (!isLoading && !dataFiltered?.length);
 
   const filterNameDebounce = (value) => {
     if(machinePage){
-      // dispatch(machineDocumentChangePage(0))
       dispatch(setMachineDocumentFilterBy(value))
     }else if(customerPage){
-      // dispatch(customerDocumentChangePage(0))
       dispatch(setCustomerDocumentFilterBy(value))
     }else if(machineDrawings){
-      // dispatch(machineDrawingsChangePage(0))
       dispatch(setMachineDrawingsFilterBy(value))
     }else if(!customerPage && !machinePage && !machineDrawings){
-      // dispatch(ChangePage(documentPage));
       dispatch(setFilterBy(value))
     }
   }

@@ -11,7 +11,6 @@ import { deleteDocumentCategory } from '../../../redux/slices/document/documentC
 import { PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-// import { fDate, fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import ViewFormSWitch from '../../../components/ViewForms/ViewFormSwitch';

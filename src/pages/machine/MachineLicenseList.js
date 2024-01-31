@@ -35,16 +35,6 @@ import { BREADCRUMBS, BUTTONS } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
-// const _accordions = [...Array(8)].map((_, index) => ({
-//   id: _mock.id(index),
-//   value: `panel${index + 1}`,
-//   heading: `Site ${index + 1}`,
-//   subHeading: _mock.text.title(index),
-//   detail: _mock.text.description(index),
-// }));
-
-// ----------------------------------------------------------------------
-
 export default function MachineLicenseList() {
   const { dense, page, order, orderBy, rowsPerPage } = useTable({
     defaultOrderBy: 'createdAt',

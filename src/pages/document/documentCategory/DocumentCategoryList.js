@@ -1,5 +1,3 @@
-// import { Helmet } from 'react-helmet-async';
-// import { paramCase } from 'change-case';
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -22,8 +20,6 @@ import { useDispatch, useSelector } from '../../../redux/store';
 // routes
 import { PATH_SETTING } from '../../../routes/paths';
 // components
-// import { useSnackbar } from '../../../components/snackbar';
-// import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -64,10 +60,8 @@ const TABLE_HEAD = [
 
 export default function DocumentCategoryList() {
   const {
-    // page,
     order,
     orderBy,
-    // rowsPerPage,
     setPage,
     //
     selected,
@@ -76,8 +70,6 @@ export default function DocumentCategoryList() {
     onSelectAllRows,
     //
     onSort,
-    // onChangePage,7
-    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'name',
   });
@@ -90,11 +82,6 @@ export default function DocumentCategoryList() {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   const dispatch = useDispatch();
-
-  // const { themeStretch } = useSettingsContext();
-
-  // const { enqueueSnackbar } = useSnackbar();
-
   const navigate = useNavigate();
 
   const [filterName, setFilterName] = useState('');
@@ -105,12 +92,9 @@ export default function DocumentCategoryList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  // const { customer } = useSelector((state) => state.customer);
   const { documentCategories, filterBy, page, rowsPerPage, isLoading, initial } = useSelector(
     (state) => state.documentCategory
   );
-
-  // console.log("documentCategories : ", documentCategories )
 
   useLayoutEffect(() => {
     dispatch(getDocumentCategories());
@@ -172,7 +156,6 @@ export default function DocumentCategoryList() {
 
   const handleDeleteRow = async (id) => {
     try {
-      // console.log(id);
       await dispatch(deleteDocumentCategory(id));
       dispatch(getDocumentCategories());
       setSelected([]);
@@ -267,15 +250,7 @@ export default function DocumentCategoryList() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  // rowCount={tableData.length}
-                  // numSelected={selected.length}
                   onSort={onSort}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row) => row._id)
-                  //   )
-                  // }
                 />
 
                 <TableBody>
@@ -289,7 +264,6 @@ export default function DocumentCategoryList() {
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         />

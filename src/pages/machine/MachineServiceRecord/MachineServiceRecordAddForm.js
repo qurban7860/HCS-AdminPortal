@@ -105,20 +105,6 @@ function MachineServiceRecordAddForm() {
   } = methods;
 
   const { decoilers, operators, serviceRecordConfiguration, docRecordType } = watch()
-  
-  // useEffect(() => {
-
-  //     setActiveServiceRecordConfigs([]);
-
-  //     if(docRecordType !== null){
-  //       dispatch(getActiveServiceRecordConfigsForRecords(machine?._id, docRecordType))  
-  //       setActiveServiceRecordConfigs(activeServiceRecordConfigsForRecords)
-  //     }
-
-  //     setValue('serviceRecordConfiguration',null)
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   },[docRecordType])
 
     useEffect(() => {
       if(docRecordType?.name){
@@ -167,7 +153,6 @@ function MachineServiceRecordAddForm() {
   const onSubmit = async (data) => {
     try {
       const checkItemLists_ = [];
-console.log("checkItemLists : ",checkItemLists)
       if(checkItemLists && 
         Array.isArray(checkItemLists) && 
         checkItemLists.length>0) 

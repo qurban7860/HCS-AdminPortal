@@ -68,7 +68,6 @@ export default function StatusAddForm() {
   } = methods;
 
   const onSubmit = async (data) => {
-    console.log('Data : ', data);
     try {
       await dispatch(addMachineStatus(data));
       reset();

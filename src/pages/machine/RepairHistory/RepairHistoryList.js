@@ -53,14 +53,7 @@ const TABLE_HEAD = [
 
 ];
 
-const STATUS_OPTIONS = [
-  // { id: '1', value: 'Order Received' },
-  // { id: '2', value: 'In Progress' },
-  // { id: '3', value: 'Ready For Transport' },
-  // { id: '4', value: 'In Freight' },
-  // { id: '5', value: 'Deployed' },
-  // { id: '6', value: 'Archived' },
-];
+const STATUS_OPTIONS = [];
 
 // ----------------------------------------------------------------------
 
@@ -149,7 +142,6 @@ export default function RepairHistoryList() {
 
   const handleDeleteRow = async (id) => {
     try {
-      console.log(id);
       await dispatch(deleteSite(id));
       dispatch(getSites());
       setSelected([]);
@@ -182,7 +174,6 @@ export default function RepairHistoryList() {
   };
 
   const handleEditRow = (id) => {
-    console.log(id);
     navigate(PATH_DASHBOARD.site.edit(id));
   };
 

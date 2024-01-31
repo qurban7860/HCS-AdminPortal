@@ -7,7 +7,6 @@ import {
   IconButton,
   Button,
   Typography,
-  TableRow,
 } from '@mui/material';
 import Iconify from '../../components/iconify';
 
@@ -66,15 +65,6 @@ export const ThumbnailUploadButton = styled(Button)(({ theme }) => ({
   flexDirection: 'column',
 }));
 
-// @root - DocumentListTableRow - src/pages/document/dashboard/documents/DocumentListTableRow.js
-export const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: 'white',
-  },
-  '&:nth-of-type(even)': {
-    backgroundColor: '#f4f6f866',
-  },
-}));
 export const ThumbnailIconify = styled(Iconify)(({ theme }) => ({
   height: '90px',
   opacity: '0.6',

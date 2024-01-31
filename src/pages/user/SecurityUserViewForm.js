@@ -283,12 +283,6 @@ export default function SecurityUserViewForm() {
               />
               <ViewFormField isLoading={isLoading}
                 sm={12}
-                heading="Countries"
-                chipLabel='country_name'
-                arrayParam={defaultValues?.countries}
-              />
-              <ViewFormField isLoading={isLoading}
-                sm={12}
                 heading="Customers"
                 arrayParam={defaultValues?.customers}
               />

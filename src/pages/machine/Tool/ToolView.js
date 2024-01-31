@@ -63,7 +63,7 @@ export default function ToolView({ editPage }) {
       setCurrentComponent(<ToolViewForm />);
     }
   }, [editPage, toolEditFormFlag, tool]);
-  // console.log( "muzna")
+
   return (
     <>
       <Container maxWidth={false}>

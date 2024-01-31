@@ -203,7 +203,6 @@ export default function SecurityUserProfileEditForm() {
     }else{
       data.machines = [];
     }
-    // submitSecurityUserRoles.push(role?._id,role.name)
     const submitSecurityUserRoles = data.roles.filter((role) =>
       ROLES.some((Role) => Role.value === role)
     );
@@ -215,7 +214,6 @@ export default function SecurityUserProfileEditForm() {
     }
 
     data.roles = submitSecurityUserRoles;
-    console.log("Security User data.....", data.roles)
     try {
       await  dispatch(updateSecurityUser(data, securityUser._id));
       await  dispatch(getSecurityUser(securityUser._id));

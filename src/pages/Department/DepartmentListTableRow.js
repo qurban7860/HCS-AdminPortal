@@ -5,7 +5,6 @@ import { Switch, TableRow, TableCell } from '@mui/material';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 // utils
 import { fDate } from '../../utils/formatTime';
-// import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 

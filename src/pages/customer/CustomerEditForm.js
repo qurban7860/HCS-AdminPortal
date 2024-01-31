@@ -59,7 +59,6 @@ export default function CustomerEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer]
   );
-  // customer. === null || customer. === undefined  ? null : customer.,
   const methods = useForm({
     resolver: yupResolver(EditCustomerSchema),
     defaultValues,

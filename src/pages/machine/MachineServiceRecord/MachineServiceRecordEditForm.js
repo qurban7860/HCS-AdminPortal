@@ -38,7 +38,6 @@ function MachineServiceRecordEditForm() {
   const { activeSecurityUsers } = useSelector((state) => state.user);
 
   useEffect( ()=>{
-    // dispatch(getActiveServiceRecordConfigsForRecords(machine?._id))
     dispatch(resetActiveContacts())
     if(machine?.customer?._id){
       dispatch(getActiveContacts(machine?.customer?._id))
@@ -96,7 +95,6 @@ function MachineServiceRecordEditForm() {
       serviceRecordConfiguration: machineServiceRecord?.serviceRecordConfig || null,
       serviceDate:                machineServiceRecord?.serviceDate || new Date(),
       versionNo:                  Number(machineServiceRecord?.versionNo) + 1 || 1,
-      // customer:                   machineServiceRecord?.customer || null,
       site:                       machineServiceRecord?.site || null,
       machine:                    machineServiceRecord?.machine || null,
       decoilers:                  defaultDecoilers || [],
@@ -111,7 +109,6 @@ function MachineServiceRecordEditForm() {
       internalNote:               machineServiceRecord?.internalNote || '',
       operators:                  machineServiceRecord?.operators || [],
       operatorNotes:              machineServiceRecord?.operatorNotes || '',
-      // files: machineServiceRecord?.files || [],
       isActive:                   machineServiceRecord?.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -164,7 +161,6 @@ function MachineServiceRecordEditForm() {
       data.serviceId = machineServiceRecord?.serviceId || null
       data.operators = operators;
       await dispatch(updateMachineServiceRecord(machine?._id ,machineServiceRecord?._id , data));
-      // await dispatch(getMachineServiceRecord(machine?._id, machineServiceRecord?._id))
       reset();
       dispatch(setMachineServiceRecordViewFormVisibility(true));
     } catch (err) {
