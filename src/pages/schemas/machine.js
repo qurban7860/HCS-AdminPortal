@@ -2,12 +2,8 @@ import * as Yup from 'yup';
 import { Snacks } from '../../constants/machine-constants';
 import { allowedExtensions, fileTypesMessage } from '../../constants/document-constants';
 import { NotRequiredValidateFileType } from '../document/documents/Utills/Util'
-import { today, futureDate, pastDate, formatDate } from '../machine/util/index';
-
-const day = today.getDate();
-const month = today.getMonth() + 1; // Months are zero-indexed, so add 1
-const year = today.getFullYear();
-const dateCheck = `${year}-${month}-${day+1}`;
+import { today, futureDate, pastDate } from '../machine/util/index';
+import { fDate } from '../../utils/formatTime';
 
 export const machineSchema = Yup.object().shape({
   serialNo: Yup.string().max(6).required('Serial Number is required').nullable(),
@@ -29,14 +25,14 @@ export const machineSchema = Yup.object().shape({
     name: Yup.string()
   }).nullable(),
   workOrderRef: Yup.string().max(50),
-  shippingDate: Yup.date().typeError('Date Should be Valid!').max(futureDate,`Shipping Date field must be at earlier than ${formatDate(futureDate)}!`)
-  .min(pastDate,`Shipping Date field must be at after than ${formatDate(pastDate)}!`).nullable().label('Shipping Date'),
+  shippingDate: Yup.date().typeError('Date Should be Valid!').max(futureDate,`Shipping Date field must be at earlier than ${fDate(futureDate,'dd/MM/yyyy')}!`)
+  .min(pastDate,`Shipping Date field must be at after than ${fDate(pastDate, 'dd/MM/yyyy')}!`).nullable().label('Shipping Date'),
   installationDate: Yup.date()
   .typeError('Date Should be Valid!')
-  .max(futureDate,`Shipping Date field must be at earlier than ${formatDate(futureDate)}!`)
-  .min(pastDate,`Shipping Date field must be at after than ${formatDate(pastDate)}!`).nullable().label('Installation Date'),
+  .max(futureDate,`Shipping Date field must be at earlier than ${fDate(futureDate, 'dd/MM/yyyy')}!`)
+  .min(pastDate,`Shipping Date field must be at after than ${fDate(pastDate, 'dd/MM/yyyy')}!`).nullable().label('Installation Date'),
   supportExpireDate: Yup.date()
-  .min(today,`Support Expiry Date field must be at after than ${formatDate(today)}!`).nullable().label('Support Expiry Date'),
+  .min(today,`Support Expiry Date field must be at after than ${fDate(today, 'dd/MM/yyyy')}!`).nullable().label('Support Expiry Date'),
   instalationSite: Yup.object().shape({
     name: Yup.string()
   }).nullable(),
@@ -68,13 +64,13 @@ export const machineTransferSchema = Yup.object().shape({
     name: Yup.string()
   }).nullable(),
 
-  shippingDate: Yup.date().typeError('Date Should be Valid!').max(futureDate,`Shipping Date field must be at earlier than ${formatDate(futureDate)}!`)
-  .min(pastDate,`Shipping Date field must be at after than ${formatDate(pastDate)}!`).nullable().label('Shipping Date'),
+  shippingDate: Yup.date().typeError('Date Should be Valid!').max(futureDate,`Shipping Date field must be at earlier than ${fDate(futureDate, 'dd/MM/yyyy')}!`)
+  .min(pastDate,`Shipping Date field must be at after than ${fDate(pastDate, 'dd/MM/yyyy')}!`).nullable().label('Shipping Date'),
   
   installationDate: Yup.date()
   .typeError('Date Should be Valid!')
-  .max(futureDate,`Shipping Date field must be at earlier than ${formatDate(futureDate)}!`)
-  .min(pastDate,`Shipping Date field must be at after than ${formatDate(pastDate)}!`).nullable().label('Installation Date'),
+  .max(futureDate,`Shipping Date field must be at earlier than ${fDate(futureDate, 'dd/MM/yyyy')}!`)
+  .min(pastDate,`Shipping Date field must be at after than ${fDate(pastDate, 'dd/MM/yyyy')}!`).nullable().label('Installation Date'),
 
   status: Yup.object().shape({
     name: Yup.string()
@@ -144,7 +140,7 @@ export const MachineServiceRecordSchema = Yup.object().shape({
   // serviceDate: Yup.date().label('Service Date').nullable().required,
   serviceDate: Yup.date()
   .typeError('Date Should be Valid!')
-  .max(dateCheck, `Service Date field must be at earlier than ${formatDate(dateCheck)}`).nullable()
+  .max(today, `Service Date field must be at earlier than ${fDate(today,'dd/MM/yyyy')}`).nullable()
   .required().label('Service Date'),
   // customer: Yup.object().label('Customer'), 
   site: Yup.object().label('Site').nullable(),
