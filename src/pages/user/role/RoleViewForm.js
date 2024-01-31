@@ -51,7 +51,6 @@ export default function RoleViewForm() {
       console.log('Error:', error);
     }
   };
-
   const handleEdit = async () => {
     navigate(PATH_SETTING.role.edit(role._id));
   };
@@ -75,15 +74,16 @@ export default function RoleViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [role]
   );
+  console.log("defaultValues.disableDelete : ",defaultValues.disableDelete)
 
   return (
     <Card sx={{ p: 2 }}>
       <Grid>
         <ViewFormEditDeleteButtons
-          disableDeleteButton={defaultValues.disableDelete}
           backLink={() => navigate(PATH_SETTING.role.list)}
           isDefault={defaultValues.isDefault}
           isActive={defaultValues.isActive}
+          isDeleteDisabled={!defaultValues.disableDelete}
           handleEdit={handleEdit}
           onDelete={onDelete}
         />

@@ -28,6 +28,7 @@ function ViewFormEditDeleteButtons({
   backLink,
   isActive,
   isDefault,
+  isDeleteDisabled,
   customerAccess,
   isRequired,
   multiAuth,
@@ -79,7 +80,8 @@ function ViewFormEditDeleteButtons({
 }) {
   const { id } = useParams();
   const userId = localStorage.getItem('userId');
-  const { isSuperAdmin } = useAuthContext();
+  const { isDisableDelete, isSecurityReadOnly } = useAuthContext();
+
   const navigate = useNavigate();
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
@@ -150,7 +152,7 @@ function ViewFormEditDeleteButtons({
       setOpenVerificationConfirm(true);
     }
 
-    if (dialogType === 'delete' && isSuperAdmin ) {
+    if (dialogType === 'delete' && !isDisableDelete ) {
       setOpenConfirm(true);
     }
 
@@ -289,6 +291,15 @@ function ViewFormEditDeleteButtons({
               icon={isActive?ICONS.ACTIVE.icon:ICONS.INACTIVE.icon}
             />
           }
+
+          {isDeleteDisabled !==undefined &&
+            <IconTooltip
+              title= { isDeleteDisabled ? ICONS.DELETE_ENABLED.heading:ICONS.DELETE_DISABLED.heading}
+              color= { isDeleteDisabled ? ICONS.DELETE_ENABLED.color:ICONS.DELETE_DISABLED.color}
+              icon=  { isDeleteDisabled ? ICONS.DELETE_ENABLED.icon:ICONS.DELETE_DISABLED.icon}
+            />
+          }
+          
           {isDefault !==undefined &&
             <IconTooltip
               title={isDefault?ICONS.DEFAULT.heading:ICONS.CONTRAST.heading}
@@ -426,7 +437,7 @@ function ViewFormEditDeleteButtons({
           {handleUserInvite && id!==userId &&(
             <IconTooltip
             title="Resend Invitation"
-            disabled={ !isSuperAdmin }
+            disabled={ !isSecurityReadOnly }
             color={disableDeleteButton?"#c3c3c3":theme.palette.secondary.main}
             icon={ICONS.USER_INVITE.icon}
             onClick={() => {
@@ -558,11 +569,11 @@ function ViewFormEditDeleteButtons({
         {id !== userId  && !mainSite && onDelete && (
           <IconTooltip
             title="Delete"
-            disabled={!isSuperAdmin}
+            disabled={ isDisableDelete }
             onClick={() => {
               handleOpenConfirm('delete');
             }}
-            color={!isSuperAdmin?"#c3c3c3":"#FF0000"}
+            color={( isDisableDelete )?"#c3c3c3":"#FF0000"}
             icon="mdi:trash-can-outline"
           />
         )}
@@ -733,6 +744,7 @@ ViewFormEditDeleteButtons.propTypes = {
   isVerifiedTitle: PropTypes.string,
   approveConfiglength: PropTypes.string,
   isActive: PropTypes.bool,
+  isDeleteDisabled: PropTypes.bool,
   isDefault: PropTypes.bool,
   isSubmitted: PropTypes.func,
   returnToSubmitted: PropTypes.func,

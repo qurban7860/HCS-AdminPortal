@@ -26,7 +26,6 @@ const initialState = {
   isInitialized: false,
   user: null,
   userId: null,
-  isSuperAdmin: false,
 };
 
 const reducer = (state, action) => {
@@ -36,7 +35,6 @@ const reducer = (state, action) => {
       isAuthenticated: action.payload.isAuthenticated,
       user: action.payload.user,
       userId: action.payload.userId,
-      isSuperAdmin: action.payload.isSuperAdmin,
     };
   }
   if (action.type === 'LOGOUT') {
@@ -45,7 +43,6 @@ const reducer = (state, action) => {
       isAuthenticated: false,
       user: null,
       userId: null,
-      isSuperAdmin: false,
     };
   }
 

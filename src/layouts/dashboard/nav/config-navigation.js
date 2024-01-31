@@ -1,17 +1,20 @@
-// routes
-// import { Button } from '@mui/material';
 import { PATH_CUSTOMER, PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_SETTING, PATH_SITEMAP, PATH_SECURITY, PATH_EMAIL } from '../../../routes/paths';
 // components
-// import Label from '../../../components/label';
 import Iconify from '../../../components/iconify';
 import SvgColor from '../../../components/svg-color';
+import { getUserAccess } from '../../../auth/utils';
+
 
 // ----------------------------------------------------------------------
 
-const userRolesString = localStorage.getItem('userRoles');
-const userRoles = userRolesString ? JSON.parse(userRolesString) : [];
-const userEmailRole = userRoles?.some((role) => role.roleType === 'Email');
-const isSuperAdmin = JSON.parse(localStorage.getItem('userRoles'))?.some((role) => role.roleType === 'SuperAdmin');
+const { 
+  isDocumentAccessAllowed, 
+  isDrawingAccessAllowed, 
+  isSettingAccessAllowed, 
+  isSecurityUserAccessAllowed, 
+  isEmailAccessAllowed 
+} = getUserAccess();
+
 
 const icon = (name) => (
   <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
@@ -50,25 +53,34 @@ const ICONS = {
 };
 
 const navConfig = [
-  // GENERAL
-  // ----------------------------------------------------------------------
   {
     subheader: 'general',
     items: [
       { title: 'Dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
       { title: 'Customers', path: PATH_CUSTOMER.list, icon: ICONS.users },
       { title: 'Machines', path: PATH_MACHINE.machines.list, icon: ICONS.machines },
-      { title: 'Documents', path: PATH_DOCUMENT.document.list, icon: ICONS.document },
-      { title: 'Machine Drawings', path: PATH_DOCUMENT.document.machineDrawings.list, icon: ICONS.document },
-      { title: 'Settings', path: PATH_SETTING.app, icon: ICONS.setting },
       { title: 'Sites Map', path: PATH_SITEMAP.app, icon: ICONS.reports },
     ],
   },
 ]
-if(isSuperAdmin){
+
+if ( isDocumentAccessAllowed ) {
+  navConfig[0].items.splice(3, 0, { title: 'Documents', path: PATH_DOCUMENT.document.list, icon: ICONS.document });
+}
+
+if ( isDrawingAccessAllowed ) {
+  navConfig[0].items.splice(4, 0, { title: 'Machine Drawings', path: PATH_DOCUMENT.document.machineDrawings.list, icon: ICONS.document });
+}
+
+if (isSettingAccessAllowed) {
+  navConfig[0].items.splice(5, 0, { title: 'Settings', path: PATH_SETTING.app, icon: ICONS.setting });
+}
+
+if (isSecurityUserAccessAllowed) {
   navConfig[0].items.splice(6, 0, { title: 'Security', path: PATH_SECURITY.users.list, icon: ICONS.user });
 }
-if (userEmailRole) {
+
+if (isEmailAccessAllowed) {
   navConfig.map((obj) => obj.items?.push({ title: 'Email', path: PATH_EMAIL.email.list, icon: ICONS.email }));
 } 
 

@@ -6,7 +6,7 @@ import { CONFIG } from '../config-global';
 import axios from '../utils/axios';
 import localStorageAvailable from '../utils/localStorageAvailable';
 //
-import { isValidToken, setSession } from './utils';
+import { isValidToken, setSession, getUserAccess } from './utils';
 import { PATH_AUTH } from '../routes/paths';
 
 
@@ -16,8 +16,17 @@ const initialState = {
   isInitialized: false,
   isAuthenticated: false,
   user: null,
-  isSuperAdmin: false,
   userId: null,
+  isAllAccessAllowed: false,
+  isDisableDelete:  true,
+  isDashboardAccessLimited:  true,
+  isDocumentAccessAllowed: false,
+  isDrawingAccessAllowed: false,
+  isSettingReadOnly:  true,
+  isSecurityReadOnly:  true,
+  isSettingAccessAllowed: false,
+  isSecurityUserAccessAllowed: false,
+  isEmailAccessAllowed: false,
   // resetTokenTime: null,
 };
 
@@ -30,18 +39,49 @@ const reducer = (state, action) => {
         isAuthenticated: action.payload.isAuthenticated,
         user: action.payload.user,
         userId: action.payload.userId,
-        isSuperAdmin: action.payload.isSuperAdmin,
+        isAllAccessAllowed: action.payload.isAllAccessAllowed,
+        isDisableDelete:action.payload.isDisableDelete,
+        isDashboardAccessLimited: action.payload.isDashboardAccessLimited,
+        isDocumentAccessAllowed: action.payload.isDocumentAccessAllowed,
+        isDrawingAccessAllowed: action.payload.isDrawingAccessAllowed,
+        isSettingReadOnly: action.payload.isSettingReadOnly,
+        isSecurityReadOnly: action.payload.isSecurityReadOnly,
+        isSettingAccessAllowed: action.payload.isSettingAccessAllowed,
+        isSecurityUserAccessAllowed: action.payload.isSecurityUserAccessAllowed,
+        isEmailAccessAllowed: action.payload.isEmailAccessAllowed,
         // resetTokenTime: action.payload.resetTokenTime, // keeps track to avoid repeating the request
       };
     }
     case 'LOGIN': {
-      const { user, userId, isSuperAdmin  } = action.payload;
+      const { 
+              user, 
+              userId, 
+              isAllAccessAllowed,
+              isDisableDelete,
+              isDashboardAccessLimited,
+              isDocumentAccessAllowed,
+              isDrawingAccessAllowed,
+              isSettingReadOnly,
+              isSecurityReadOnly,
+              isSettingAccessAllowed,
+              isSecurityUserAccessAllowed,
+              isEmailAccessAllowed,
+            } = action.payload;
       return {
         ...state,
         isAuthenticated: true,
-        isSuperAdmin,
         user,
         userId,
+        isAllAccessAllowed,
+        isDisableDelete,
+        isDashboardAccessLimited,
+        isDocumentAccessAllowed,
+        isDrawingAccessAllowed,
+        isSettingReadOnly,
+        isSecurityReadOnly,
+        isSettingAccessAllowed,
+        isSecurityUserAccessAllowed,
+        isEmailAccessAllowed,
       };
     }
     case 'REGISTER': {
@@ -56,9 +96,18 @@ const reducer = (state, action) => {
       return {
         ...state,
         isAuthenticated: false,
-        isSuperAdmin: false,
         user: null,
         userId: null,
+        isAllAccessAllowed: false,
+        isDisableDelete:  true,
+        isDashboardAccessLimited:  true,
+        isDocumentAccessAllowed: false,
+        isDrawingAccessAllowed: false,
+        isSettingReadOnly:  true,
+        isSecurityReadOnly:  true,
+        isSettingAccessAllowed: false,
+        isSecurityUserAccessAllowed: false,
+        isEmailAccessAllowed: false,
         // resetTokenTime: null, // reset the timeout ID when logging out
       };
     }
@@ -90,20 +139,41 @@ export function AuthProvider({ children }) {
       if (accessToken && isValidToken(accessToken)) {
         setSession(accessToken);
         const user = {
-          email: localStorage.getItem('email'),
-          displayName: localStorage.getItem('name'),
-        };
+                  email: localStorage.getItem('email'),
+                  displayName: localStorage.getItem('name'),
+              };
 
         const userId = localStorage.getItem('userId');
-        const isSuperAdmin = await JSON.parse(localStorage.getItem('userRoles'))?.some((role) => role.roleType === 'SuperAdmin')
+
+        const {
+                isAllAccessAllowed,
+                isDisableDelete,
+                isDashboardAccessLimited,
+                isDocumentAccessAllowed,
+                isDrawingAccessAllowed,
+                isSettingReadOnly,
+                isSecurityReadOnly,
+                isSettingAccessAllowed,
+                isSecurityUserAccessAllowed,
+                isEmailAccessAllowed,
+            } = await getUserAccess()
 
         dispatch({
           type: 'INITIAL',
           payload: {
             isAuthenticated: true,
             user,
-            isSuperAdmin,
             userId,
+            isAllAccessAllowed,
+            isDisableDelete,
+            isDashboardAccessLimited,
+            isDocumentAccessAllowed,
+            isDrawingAccessAllowed,
+            isSettingReadOnly,
+            isSecurityReadOnly,
+            isSettingAccessAllowed,
+            isSecurityUserAccessAllowed,
+            isEmailAccessAllowed,
             // resetTokenTime, // added the timeout ID to the payload
           },
         });
@@ -113,7 +183,16 @@ export function AuthProvider({ children }) {
           payload: {
             isAuthenticated: false,
             user: null,
-            isSuperAdmin: false,
+            isAllAccessAllowed: false,
+            isDisableDelete:  true,
+            isDashboardAccessLimited:  true,
+            isDocumentAccessAllowed: false,
+            isDrawingAccessAllowed: false,
+            isSettingReadOnly:  true,
+            isSecurityReadOnly:  true,
+            isSettingAccessAllowed: false,
+            isSecurityUserAccessAllowed: false,
+            isEmailAccessAllowed: false,
             // resetTokenTime: null, // reset the timeout ID when not authenticated
           },
         });
@@ -125,7 +204,16 @@ export function AuthProvider({ children }) {
         payload: {
           isAuthenticated: false,
           user: null,
-          isSuperAdmin: false,
+          isAllAccessAllowed: false,
+          isDisableDelete:  true,
+          isDashboardAccessLimited:  true,
+          isDocumentAccessAllowed: false,
+          isDrawingAccessAllowed: false,
+          isSettingReadOnly:  true,
+          isSecurityReadOnly:  true,
+          isSettingAccessAllowed: false,
+          isSecurityUserAccessAllowed: false,
+          isEmailAccessAllowed: false,
           // resetTokenTime: null,
         },
       });
@@ -153,7 +241,19 @@ export function AuthProvider({ children }) {
       localStorage.setItem("MFA", true);
     } else{
       const { accessToken, user, userId } = response.data;
-      const isSuperAdmin = user.roles?.some((role) => role.roleType === 'SuperAdmin')
+
+      const {
+        isAllAccessAllowed,
+        isDisableDelete,
+        isDashboardAccessLimited,
+        isDocumentAccessAllowed,
+        isDrawingAccessAllowed,
+        isSettingReadOnly,
+        isSecurityReadOnly,
+        isSettingAccessAllowed,
+        isSecurityUserAccessAllowed,
+        isEmailAccessAllowed,
+    } = await getUserAccess( user?.roles || [] )
 
       const rolesArrayString = JSON.stringify(user.roles);
       localStorage.setItem('email', user.email);
@@ -164,7 +264,20 @@ export function AuthProvider({ children }) {
       await getConfigs();
       dispatch({
         type: 'LOGIN',
-        payload: { user, userId, isSuperAdmin },
+        payload: { 
+                user, 
+                userId, 
+                isAllAccessAllowed,
+                isDisableDelete,
+                isDashboardAccessLimited,
+                isDocumentAccessAllowed,
+                isDrawingAccessAllowed,
+                isSettingReadOnly,
+                isSecurityReadOnly,
+                isSettingAccessAllowed,
+                isSecurityUserAccessAllowed,
+                isEmailAccessAllowed,
+              },
       });
     }
   }, []);
@@ -173,6 +286,20 @@ export function AuthProvider({ children }) {
   const muliFactorAuthentication = useCallback(async (code, userID) => {
     const response = await axios.post(`${CONFIG.SERVER_URL}security/multifactorverifyCode`, {code, userID})
       const { accessToken, user, userId } = response.data;
+
+      const {
+        isAllAccessAllowed,
+        isDisableDelete,
+        isDashboardAccessLimited,
+        isDocumentAccessAllowed,
+        isDrawingAccessAllowed,
+        isSettingReadOnly,
+        isSecurityReadOnly,
+        isSettingAccessAllowed,
+        isSecurityUserAccessAllowed,
+        isEmailAccessAllowed,
+    } = await getUserAccess( user?.roles || [] )
+
       const rolesArrayString = JSON.stringify(user.roles);
       localStorage.setItem('email', user.email);
       localStorage.setItem('name', user.displayName);
@@ -182,7 +309,20 @@ export function AuthProvider({ children }) {
       await getConfigs();
       dispatch({
         type: 'LOGIN',
-        payload: { user, userId },
+        payload: { 
+          user, 
+          userId,
+          isAllAccessAllowed,
+          isDisableDelete,
+          isDashboardAccessLimited,
+          isDocumentAccessAllowed,
+          isDrawingAccessAllowed,
+          isSettingReadOnly,
+          isSecurityReadOnly,
+          isSettingAccessAllowed,
+          isSecurityUserAccessAllowed,
+          isEmailAccessAllowed,
+        },
       });
   }, []);
 
@@ -197,6 +337,7 @@ export function AuthProvider({ children }) {
     });
     const { accessToken, user } = response.data;
     localStorage.setItem('accessToken', accessToken);
+
     dispatch({
       type: 'REGISTER',
       payload: {
@@ -244,9 +385,18 @@ export function AuthProvider({ children }) {
       () => ({
         isInitialized: state.isInitialized,
         isAuthenticated: state.isAuthenticated,
-        isSuperAdmin: state.isSuperAdmin,
         user: state.user,
         userId: state.userId,
+        isAllAccessAllowed: state.isAllAccessAllowed,
+        isDisableDelete:  state.isDisableDelete,
+        isDashboardAccessLimited: state.isDashboardAccessLimited,
+        isDocumentAccessAllowed: state.isDocumentAccessAllowed,
+        isDrawingAccessAllowed: state.isDrawingAccessAllowed,
+        isSettingReadOnly: state.isSettingReadOnly,
+        isSecurityReadOnly: state.isSecurityReadOnly,
+        isSettingAccessAllowed: state.isSettingAccessAllowed,
+        isSecurityUserAccessAllowed: state.isSecurityUserAccessAllowed,
+        isEmailAccessAllowed: state.isEmailAccessAllowed,
         method: 'jwt',
         login,
         register,
@@ -254,7 +404,18 @@ export function AuthProvider({ children }) {
         clearAllPersistedStates,
         muliFactorAuthentication
       }),
-    [state.isAuthenticated, state.isInitialized, state.isSuperAdmin, state.user, state.userId, login, logout, register, muliFactorAuthentication, clearAllPersistedStates]
+    [state.isAuthenticated, state.isInitialized, 
+      state.isAllAccessAllowed,
+      state.isDisableDelete,
+      state.isDashboardAccessLimited,
+      state.isDocumentAccessAllowed,
+      state.isDrawingAccessAllowed,
+      state.isSettingReadOnly,
+      state.isSecurityReadOnly,
+      state.isSettingAccessAllowed,
+      state.isSecurityUserAccessAllowed,
+      state.isEmailAccessAllowed,
+      state.user, state.userId, login, logout, register, muliFactorAuthentication, clearAllPersistedStates]
   );
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;
