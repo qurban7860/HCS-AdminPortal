@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Card, Grid, Stack, Typography } from '@mui/material';
+import { Card, Grid, Stack } from '@mui/material';
 // routes
 import { PATH_SETTING } from '../../routes/paths';
 // components
@@ -122,25 +122,7 @@ export default function ModuleEditForm() {
             
                 <RHFTextField name="description" label="Description" minRows={8} multiline />
                 <Grid display="flex" alignItems="end">
-                  <RHFSwitch
-                    name="isActive"
-                    labelPlacement="start"
-                    label={
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          mx: 0,
-                          width: 1,
-                          justifyContent: 'space-between',
-                          mb: 0.5,
-                          color: 'text.secondary',
-                        }}
-                      >
-                        {' '}
-                        Active
-                      </Typography>
-                    }
-                  />
+                  <RHFSwitch name="isActive" label="Active" />
                 </Grid>
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

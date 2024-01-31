@@ -199,24 +199,7 @@ export default function DrawingEditForm() {
                     />
                 </Box>
 
-                  <RHFSwitch
-                        name="isActive"
-                        labelPlacement="start"
-                        label={
-                            <Typography
-                                variant="subtitle2"
-                                sx={{
-                                    mx: 0,
-                                    width: 1,
-                                    justifyContent: 'space-between',
-                                    mb: 0.5,
-                                    color: 'text.secondary',
-                                }}
-                            >
-                                Active
-                            </Typography>
-                        }
-                    />
+                  <RHFSwitch name="isActive" label="Active"/>
 
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>

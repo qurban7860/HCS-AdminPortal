@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { AES, SHA256, enc, MD5, lib } from 'crypto-js';
+import { enc, MD5, lib } from 'crypto-js';
 import { pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import { Box, Card, Grid, Stack, Dialog } from '@mui/material';
@@ -333,7 +333,6 @@ function DocumentAddForm({
   const handleVersionRadioChange = (event) => setSelectedVersionValue(event.target.value);
   const handleIsActiveChange = () => setValue('isActive' ,!isActive);
 
-  const [selectedFiles, setSelectedFiles] = useState([]);
   const [machineVal, setMachineVal] = useState(null);
   const [duplicate, setDuplicate] = useState(false);
 

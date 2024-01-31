@@ -1,21 +1,15 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Box, Card, IconButton, Typography, Stack, CardMedia, Popover, ButtonGroup, Button } from '@mui/material';
+import { Card, Typography, Stack, CardMedia, ButtonGroup, Button } from '@mui/material';
 // utils
 import { bgBlur } from '../../utils/cssStyles';
 // components
 import Image from '../image';
 import Iconify from '../iconify';
-import Lightbox from '../lightbox';
-import { fDate } from '../../utils/formatTime';
 import { SkeletonGallery } from '../skeleton';
 import { fileThumb } from '../file-thumbnail';
-import MenuPopover from '../menu-popover';
-import { deleteDocumentFile } from '../../redux/slices/document/documentFile';
-import { useSnackbar } from '../snackbar';
 import ConfirmDialog from '../confirm-dialog';
 
 
@@ -39,10 +33,7 @@ DocumentGalleryItem.propTypes = {
   
 export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFile, onDownloadFile, onDeleteFile, toolbar }) {
 
-    const dispatch = useDispatch();
     const [deleteConfirm, seDeleteConfirm] = useState(false);
-    const { enqueueSnackbar } = useSnackbar();
-
     const [isHovered, setIsHovered] = useState(false);
 
     const handleMouseEnter = () => {
@@ -54,7 +45,7 @@ export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFi
     };
 
     const theme = useTheme();
-    const { src, thumbnail, extension, name, category, fileType, postAt } = image;
+    const { src, extension, name, fileType } = image;
 
     return (
         <>

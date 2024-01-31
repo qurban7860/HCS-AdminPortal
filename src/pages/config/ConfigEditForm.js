@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Typography } from '@mui/material';
+import { Box, Card, Grid } from '@mui/material';
 // routes
 import { PATH_SETTING } from '../../routes/paths';
 // components
@@ -82,7 +82,7 @@ export default function ConfigEditForm() {
        <Grid container spacing={3}>
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
-            < Box sx={{marginTop:2}}  rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)',}}>
+              <Box sx={{marginTop:2}}  rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)',}}>
                 <RHFTextField name="name" label="Name*"/>
               </Box>
               <Box rowGap={2} sx={{marginTop:2}} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}>
@@ -103,13 +103,7 @@ export default function ConfigEditForm() {
               </Box>
               <Box sx={{marginTop:2}}  rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)',}}>
                 <RHFTextField name='notes' label='Notes' minRows={5} multiline/>
-                <RHFSwitch name="isActive" labelPlacement="start"
-                label={
-                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
-                    Active
-                  </Typography>
-                }
-              />
+                <RHFSwitch name="isActive" labelPlacement="start" label="Active" />
               </Box>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>

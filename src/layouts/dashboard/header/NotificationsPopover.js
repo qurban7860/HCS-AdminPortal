@@ -5,17 +5,12 @@ import { useNavigate } from 'react-router';
 // @mui
 import {
   Box,
-  Stack,
   List,
   Badge,
-  Button,
   Avatar,
-  // Tooltip,
   Divider,
-  // IconButton,
   Typography,
   ListItemText,
-  ListSubheader,
   ListItemAvatar,
   ListItemButton,
   Tooltip,
@@ -23,7 +18,7 @@ import {
   Grid,
 } from '@mui/material';
 // utils
-import { fDate, fDateTime, fToNow } from '../../../utils/formatTime';
+import { fDateTime, fToNow } from '../../../utils/formatTime';
 
 // components
 import Iconify from '../../../components/iconify';
@@ -63,10 +58,6 @@ function NotificationsPopover() {
     }else{
       sendJsonMessage({eventName:'markAs', status:true});
     }
-  }
-
-  const handleClearAll = (id) => {
-    console.log('clear')
   }
 
   return (

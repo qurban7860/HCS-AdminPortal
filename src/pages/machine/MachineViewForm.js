@@ -196,6 +196,7 @@ export default function MachineViewForm() {
       supplier: machine?.supplier?.name || '',
       workOrderRef: machine?.workOrderRef || '',
       machineModel: machine?.machineModel?.name || '',
+      manufactureDate: machine?.manufactureDate || '',
       machineConnections: machine?.machineModel?.category?.connections || false,
       machineProfile: machine?.machineProfile?.defaultName || '',
       machineweb:machine?.machineProfile?.web || '',
@@ -268,7 +269,8 @@ export default function MachineViewForm() {
               
         <Card sx={{ width: '100%', p: '1rem', mb:3 }}>
           <Grid container>
-            <ViewFormField isLoading={isLoading} sm={defaultValues?.parentSerialNo ? 6 : 12 } heading="Name" param={defaultValues?.name} />
+            <ViewFormField isLoading={isLoading} sm={6 } heading="Name" param={defaultValues?.name} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Manufacture Date" param={fDate(defaultValues?.manufactureDate)} />
             { defaultValues?.parentSerialNo ? <ViewFormField isLoading={isLoading} sm={6} heading="Previous Machine" param={defaultValues?.parentSerialNo} /> : " "}
             <ViewFormField isLoading={isLoading} sm={6} heading="Alias" chips={defaultValues?.alias} />
             <ViewFormField isLoading={isLoading} sm={6} variant='h4' heading="Profile" param={`${defaultValues?.machineProfile} ${(defaultValues?.machineweb && defaultValues?.machineflange)? `(${defaultValues?.machineweb} X ${defaultValues?.machineflange})` :""}`} />
@@ -346,7 +348,7 @@ export default function MachineViewForm() {
 
             <ViewFormField isLoading={isLoading}
               sm={12}
-              heading="Landmark"
+              heading="Landmark for Installation site"
               param={defaultValues?.siteMilestone}
             />
 

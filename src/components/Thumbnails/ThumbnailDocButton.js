@@ -1,15 +1,10 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, CardMedia, Grid, Stack, Typography } from '@mui/material';
+import { Card, Typography } from '@mui/material';
 // styles
-import { useTheme, alpha } from '@mui/material/styles';
-import { ThumbnailUploadButton } from '../../theme/styles/document-styles';
+import { useTheme } from '@mui/material/styles';
 // components
 import Iconify from '../iconify/Iconify';
-// constants
-import { BUTTONS } from '../../constants/default-constants';
-import { bgBlur } from '../../utils/cssStyles';
-import IconTooltip from '../Icons/IconTooltip';
 
 ThumbnailDocButton.propTypes = {
   onClick: PropTypes.func,

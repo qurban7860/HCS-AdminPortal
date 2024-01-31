@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Typography } from '@mui/material';
+import { Box, Card, Grid, Stack, } from '@mui/material';
 // slice
 import { updateMachinestatus, getMachineStatus } from '../../../redux/slices/products/statuses';
 // routes
@@ -114,32 +114,8 @@ export default function StatusEditForm() {
                 <RHFTextField name="slug" label="Slug" />
 
                 <Grid display="flex">
-                <RHFSwitch
-                  name="isActive"
-                  labelPlacement="start"
-                  label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary',
-                      }}
-                    >
-                      {' '}
-                      Active
-                    </Typography>
-                  }
-                />
-                <RHFSwitch
-                  name="isDefault"
-                  labelPlacement="start"
-                  label={
-                    <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary',}} >Default</Typography>
-                  }
-                />
+                <RHFSwitch name="isActive" label="Active" />
+                <RHFSwitch name="isDefault" label="Default" />
               </Grid>
               </Box>
             </Stack>

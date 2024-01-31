@@ -12,7 +12,6 @@ import {
   Card,
   Grid,
   Stack,
-  Typography,
   Autocomplete,
   Container,
 } from '@mui/material';
@@ -182,52 +181,9 @@ export default function RoleEditForm() {
                 </Autocomplete>
                 <RHFTextField name="description" label="Description" minRows={8} multiline />
                 <Grid display="flex">
-                  <RHFSwitch
-                    name="isActive"
-                    labelPlacement="start"
-                    label={
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          mx: 0,
-                          width: 1,
-                          justifyContent: 'space-between',
-                          mb: 0.5,
-                          color: 'text.secondary',
-                        }}
-                      >
-                        Active
-                      </Typography>
-                    }
-                  />
-
-                  <RHFSwitch
-                    name="isDefault"
-                    labelPlacement="start"
-                    label={
-                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary',}} >Default</Typography>
-                    }
-                  />
-
-                  <RHFSwitch
-                    name="disableDelete"
-                    labelPlacement="start"
-                    label={
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          mx: 0,
-                          width: 1,
-                          justifyContent: 'space-between',
-                          mb: 0.5,
-                          color: 'text.secondary',
-                        }}
-                      >
-                        {' '}
-                        Disable Delete
-                      </Typography>
-                    }
-                  />
+                  <RHFSwitch name="isActive" label="Active" />
+                  <RHFSwitch name="isDefault" label="Default" />
+                  <RHFSwitch name="disableDelete" label="Disable Delete" />
                 </Grid>
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

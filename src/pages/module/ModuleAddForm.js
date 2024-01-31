@@ -10,8 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Card,
   Grid,
-  Stack,
-  Typography,
+  Stack
 } from '@mui/material';
 // import { getValues } from '@mui/system';
 // routes
@@ -115,25 +114,7 @@ export default function ModuleAddForm() {
                 {/* <RHFTextField name="value" label="Value" required/> */}
                 <RHFTextField name="description" label="Description" minRows={8} multiline />
                 <Grid display="flex" alignItems="end">
-                  <RHFSwitch
-                    name="isActive"
-                    labelPlacement="start"
-                    label={
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          mx: 0,
-                          width: 1,
-                          justifyContent: 'space-between',
-                          mb: 0.5,
-                          color: 'text.secondary',
-                        }}
-                      >
-                        {' '}
-                        Active
-                      </Typography>
-                    }
-                  />
+                  <RHFSwitch name="isActive" label="Active" />
                 </Grid>
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

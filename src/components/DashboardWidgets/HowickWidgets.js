@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Typography, Box, Stack, Grid, Divider } from '@mui/material';
+import { Typography, Box, Grid } from '@mui/material';
 // utils
 import { fNumber } from '../../utils/formatNumber';
 // components

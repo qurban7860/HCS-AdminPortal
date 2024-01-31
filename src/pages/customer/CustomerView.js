@@ -24,13 +24,10 @@ import CustomerViewForm from './CustomerViewForm';
 import CustomerEditForm from './CustomerEditForm';
 import CustomerSiteDynamicList from './CustomerSiteDynamicList';
 import CustomerContactDynamicList from './CustomerContactDynamicList';
-
 import Iconify from '../../components/iconify';
 import CustomerNotes from './note/CustomerNotes';
 import DocumentTagPage from '../document/documents/DocumentTagPage';
 import CustomerMachines from './machine/CustomerMachines';
-import LogoAvatar from '../../components/logo-avatar';
-import { CustomAvatar } from '../../components/custom-avatar';
 
 // ----------------------------------------------------------------------
 

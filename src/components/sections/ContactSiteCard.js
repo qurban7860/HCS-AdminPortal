@@ -1,11 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { CardActionArea, Grid } from '@mui/material';
 import { CustomAvatarBase } from '../../theme/styles/customer-styles';
@@ -23,7 +20,7 @@ ContactSiteCard.propTypes = {
 };
 
 export default function ContactSiteCard({name, title, email, phone, image, handleOnClick, disableClick, isActive}) {
-  const theme = useTheme();
+
   const smScreen = useScreenSize('sm');
   const mdScreen = useScreenSize('md');
   const lgScreen = useScreenSize('lg');

@@ -1,6 +1,6 @@
 // import PropTypes from 'prop-types';
 // import * as Yup from 'yup';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
@@ -38,7 +38,6 @@ import { FORMLABELS as formLABELS } from '../../../constants/document-constants'
 export default function DocumentTypeEditForm() {
   const { documentType } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
-  const [documentCategoryVal, setDocumentCategoryVal] = useState('');
 
   const dispatch = useDispatch();
 
