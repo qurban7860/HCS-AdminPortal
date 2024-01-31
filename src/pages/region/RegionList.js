@@ -37,18 +37,13 @@ import { DIALOGS } from '../../constants/default-constants';
 import TableCard from '../../components/ListTableTools/TableCard';
 // ----------------------------------------------------------------------
 
-// const STATUS_OPTIONS = ['all', 'active', 'banned'];
-
 const ROLE_OPTIONS = ['Administrator', 'Normal User', 'Guest User', 'Restriced User'];
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'countries.country_name.[]', visibility: 'xs1', label: 'countries', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  // { id: 'isVerified', label: 'Verified', align: 'center' },
-  // { id: 'status', label: 'Status', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
-  // { id: '' },
 ];
 
 // ----------------------------------------------------------------------
@@ -56,19 +51,13 @@ const TABLE_HEAD = [
 export default function RegionList() {
   const {
     dense,
-    // page,
     order,
     orderBy,
-    // rowsPerPage,
     setPage,
-    //
     selected,
     setSelected,
     onSelectRow,
-    //
     onSort,
-    // onChangePage,
-    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'createdAt', defaultOrder: 'desc',
   });
@@ -91,7 +80,6 @@ export default function RegionList() {
     regionEditFormVisibility,
     regionAddFormVisibility,
   } = useSelector((state) => state.region);
-  // console.log("regions", regions);
 
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
@@ -194,8 +182,6 @@ export default function RegionList() {
   };
 
   const handleEditRow = (id) => {
-    // console.log('id', id);
-    // console.log('edit');
     dispatch(setRegionEditFormVisibility(true));
     navigate(PATH_SECURITY.users.edit(id));
   };

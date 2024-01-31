@@ -13,7 +13,6 @@ import {
   Card,
   Grid,
   Stack,
-  Typography,
   Container,
   // Checkbox,
   // DialogTitle,
@@ -73,21 +72,13 @@ export default function ToolAddForm() {
     formState: { isSubmitting },
   } = methods;
 
-  // const values = watch();
-
-  // useLayoutEffect(() => {
-  //   dispatch(getSPContacts());
-  // }, [dispatch]);
-
   const onSubmit = async (data) => {
     try {
       await dispatch(addTool(data));
       reset();
       enqueueSnackbar('Create success!');
       navigate(PATH_MACHINE.machines.settings.tool.list);
-      // console.log(PATH_MACHINE.tool.list)
     } catch (error) {
-      // enqueueSnackbar('Saving failed!');
       enqueueSnackbar(error, { variant: `error` });
       console.error(error);
     }
@@ -97,7 +88,6 @@ export default function ToolAddForm() {
     navigate(PATH_MACHINE.machines.settings.tool.list);
   };
 
-  // const { themeStretch } = useSettingsContext();
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Container maxWidth={false}>
@@ -119,24 +109,7 @@ export default function ToolAddForm() {
                   >
                     <RHFTextField name="name" label="Name" required />
                     <RHFTextField name="description" label="Description" minRows={7} multiline />
-                    <RHFSwitch
-                      name="isActive"
-                      labelPlacement="start"
-                      label={
-                          <Typography
-                            variant="subtitle2"
-                            sx={{
-                              mx: 0,
-                              width: 1,
-                              justifyContent: 'space-between',
-                              mb: 0.5,
-                              color: 'text.secondary',
-                            }}
-                          >
-                            Active
-                          </Typography>
-                      }
-                    />
+                    <RHFSwitch name="isActive" label="Active" />
                   </Box>
                 </Stack>
 

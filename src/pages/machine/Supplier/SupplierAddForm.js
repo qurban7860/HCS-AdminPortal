@@ -83,19 +83,16 @@ export default function StatusAddForm() {
       if (fax && fax.length > 4) {
         data.fax = fax;
       }
-      console.log(data);
       await dispatch(addSupplier(data));
       reset();
       enqueueSnackbar('Create success!');
       navigate(PATH_MACHINE.machines.settings.supplier.list);
     } catch (error) {
-      // enqueueSnackbar('Saving failed!');
       enqueueSnackbar(error, { variant: `error` });
       console.error(error);
     }
   };
 
-  // const { themeStretch } = useSettingsContext();
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
@@ -199,31 +196,8 @@ export default function StatusAddForm() {
                   </Box>
 
               <Grid display="flex">
-                  <RHFSwitch
-                    name="isActive"
-                    labelPlacement="start"
-                    label={
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          mx: 0,
-                          width: 1,
-                          justifyContent: 'space-between',
-                          mb: 0.5,
-                          color: 'text.secondary',
-                        }}
-                      >
-                        Active
-                      </Typography>
-                    }
-                  />
-                  <RHFSwitch
-                    name="isDefault"
-                    labelPlacement="start"
-                    label={
-                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary',}} >Default</Typography>
-                    }
-                  />
+                  <RHFSwitch name="isActive" label="Active" />
+                  <RHFSwitch name="isDefault" label="Default" />
                 </Grid>
                   <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
                 </Stack>

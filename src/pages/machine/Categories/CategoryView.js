@@ -2,13 +2,11 @@ import PropTypes from 'prop-types';
 // @mui
 import { Container } from '@mui/material';
 import {  useSelector } from 'react-redux';
-// import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 
 // sections
 
-// import CategoryList from './CategoryList';
 import CategoryViewForm from './CategoryViewForm';
 import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';

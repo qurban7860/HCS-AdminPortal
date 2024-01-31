@@ -1,20 +1,11 @@
 import PropTypes from 'prop-types';
 import {
-  Typography,
   Dialog,
-  DialogActions,
-  Grid,
-  IconButton,
-  CardContent,
   CardMedia,
-  Button,
   DialogTitle,
   Divider,
   DialogContent,
 } from '@mui/material';
-import {alpha, useTheme } from '@mui/material/styles';
-import Iconify from '../iconify';
-import { CloseButton } from '../Defaults/CloseButton';
 import DialogLink from '../Dialog/DialogLink';
 // import Image from '../../../components/image';
 
@@ -27,7 +18,6 @@ export default function ImagePreviewDialog({
   file,
   imageData,
 }) {
-  const theme = useTheme();
   return (
     <Dialog
         maxWidth="md"

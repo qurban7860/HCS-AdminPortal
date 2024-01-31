@@ -91,7 +91,6 @@ export default function ConfigList() {
     configEditFormVisibility,
     configAddFormVisibility,
   } = useSelector((state) => state.config);
-  // console.log("configs", configs);
 
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
@@ -172,7 +171,7 @@ export default function ConfigList() {
         console.log(err);
       }
     } catch (err) {
-      console.log(err.message);
+      console.log(err);
     }
   };
 
@@ -194,8 +193,6 @@ export default function ConfigList() {
   };
 
   const handleEditRow = (id) => {
-    // console.log('id', id);
-    // console.log('edit');
     dispatch(setConfigEditFormVisibility(true));
     navigate(PATH_SECURITY.users.edit(id));
   };

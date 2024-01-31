@@ -55,17 +55,8 @@ export default function ComponentsOverviewPage() {
               </i>
             </Typography>
           </Stack>
-
-          <Grid>
-            {/* {orderBy(mui, ['name'], ['asc']).map((item) => ( */}
-              {/* // <ComponentCard key={item.name} item={item} /> */}
-            {/* ))} */}
-          </Grid>
         </Stack>
-
         <Divider sx={{ borderStyle: 'solid', my: 8 }} />
-
-
       </Container>
     </>
   );

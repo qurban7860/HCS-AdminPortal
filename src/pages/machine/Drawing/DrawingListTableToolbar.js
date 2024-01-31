@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 // @mui
 import { Stack } from '@mui/material';
-// import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useDispatch } from '../../../redux/store';
 // components
@@ -39,7 +38,6 @@ export default function DrawingListTableToolbar({
   typeVal,
   setTypeVal,
 }) {
-  // const navigate = useNavigate();
   const dispatch = useDispatch();
   const toggleAattach = () => dispatch(setDrawingFormVisibility(true));
   const toggleAdd = () => dispatch(setDrawingAddFormVisibility(true));

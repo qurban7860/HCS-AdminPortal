@@ -29,10 +29,7 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
 export default function SecurityUserProfileEditForm() {
-  const userRolesString = localStorage.getItem('userRoles');
   const ROLES = [];
-  // const userRoles = JSON.parse(userRolesString);
-  const [userRoles] = useState(JSON.parse(userRolesString));
   const { roles } = useSelector((state) => state.role);
   const { securityUser } = useSelector((state) => state.user);
   const { activeRegions } = useSelector((state) => state.region);
@@ -45,10 +42,7 @@ export default function SecurityUserProfileEditForm() {
     securityUser?.roles.map((role) => securityUserRoles.push(role?._id, role.name));
   }
   
-  const [roleTypesDisabled, setDisableRoleTypes] = useState(false);
   const [selectedRegions, setSelectedRegions] = useState([]);
-  // const [filteredCustomers, setFilteredCustomers] = useState(spCustomers);
-  // const [filteredMachines, setFilteredMachines] = useState(allMachines);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [customerVal, setCustomerVal] = useState('');
@@ -76,13 +70,6 @@ export default function SecurityUserProfileEditForm() {
   useEffect(() => {
     if (customerVal) {
       dispatch(getActiveContacts(customerVal._id));
-    }
-    if (userRoles) {
-      if (userRoles.some((role) => role?.roleType === 'SuperAdmin')) {
-        setDisableRoleTypes(false);
-      } else {
-        setDisableRoleTypes(true);
-      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -216,7 +203,6 @@ export default function SecurityUserProfileEditForm() {
     }else{
       data.machines = [];
     }
-    // submitSecurityUserRoles.push(role?._id,role.name)
     const submitSecurityUserRoles = data.roles.filter((role) =>
       ROLES.some((Role) => Role.value === role)
     );
@@ -228,7 +214,6 @@ export default function SecurityUserProfileEditForm() {
     }
 
     data.roles = submitSecurityUserRoles;
-    console.log("Security User data.....", data.roles)
     try {
       await  dispatch(updateSecurityUser(data, securityUser._id));
       await  dispatch(getSecurityUser(securityUser._id));
@@ -510,47 +495,8 @@ export default function SecurityUserProfileEditForm() {
             </Box>
             <Grid item md={12} display="flex">
               <RHFSwitch name="isActive" labelPlacement="start" disabled label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
-              <RHFSwitch
-                name="multiFactorAuthentication"
-                labelPlacement="start"
-                label={
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      mx: 0,
-                      width: 1,
-                      justifyContent: 'space-between',
-                      mb: 0.5,
-                      color: 'text.secondary',
-                    }}
-                  >
-                    {' '}
-                    Multi-Factor Authentication
-                  </Typography>
-                }
-              />
-
-              <RHFSwitch
-                name="currentEmployee"
-                labelPlacement="start"
-                disabled
-                label={
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      mx: 0,
-                      width: 1,
-                      justifyContent: 'space-between',
-                      mb: 0.5,
-                      color: 'text.secondary',
-                    }}
-                  >
-                    {' '}
-                    Current Employee
-                  </Typography>
-                }
-              />
-
+              <RHFSwitch name="multiFactorAuthentication" label="Multi-Factor Authentication" />
+              <RHFSwitch name="currentEmployee" disabled label="Current Employee" />
             </Grid>
 
             <Stack sx={{ mt: 3 }}>

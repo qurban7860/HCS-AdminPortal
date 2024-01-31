@@ -5,7 +5,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 // @mui
 import { Card, Grid, Chip } from '@mui/material';
-// import { RHFSwitch } from '../../../components/hook-form';
 // redux
 import {
   getCategory,
@@ -15,14 +14,10 @@ import {
 import { useSnackbar } from '../../../components/snackbar';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
-// Iconify
-// import Iconify from '../../../components/iconify/Iconify';
 //  components
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
-import ViewFormSwitch from '../../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
-// import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 
 // ----------------------------------------------------------------------
 
@@ -41,7 +36,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
 
   const navigate = useNavigate();
   const { category, editFormVisibility, isLoading } = useSelector((state) => state.category);
-  // console.log("category : ", category)
+
   const { id } = useParams();
 
   const dispatch = useDispatch();

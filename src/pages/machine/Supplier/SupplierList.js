@@ -100,7 +100,6 @@ export default function SupplierList() {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useLayoutEffect(() => {
-    // console.log('Testing done')
     dispatch(getSuppliers());
   }, [dispatch]);
   useEffect(() => {
@@ -163,8 +162,6 @@ export default function SupplierList() {
   const handleDeleteRow = async (id) => {
     await dispatch(deleteSupplier(id));
     try {
-      // console.log(id);
-      // await dispatch(deleteSupplier(id));
       dispatch(getSuppliers());
       setSelected([]);
 
@@ -178,36 +175,7 @@ export default function SupplierList() {
     }
   };
 
-  // const handleDeleteRows = async (selectedRows, handleClose) => {
-  //   // console.log(selectedRows)
-  //   const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-  //   setSelected([]);
-  //   setTableData(deleteRows);
-
-  //   if (page > 0) {
-  //     if (selectedRows.length === dataInPage.length) {
-  //       setPage(page - 1);
-  //     } else if (selectedRows.length === dataFiltered.length) {
-  //       setPage(0);
-  //     } else if (selectedRows.length > dataInPage.length) {
-  //       const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-  //       setPage(newPage);
-  //     }
-  //   }
-
-  //   // dispatch delete supplier
-  //   // await dispatch(deleteSuppliers(selectedRows));
-  //   // await dispatch(getSuppliers())
-  //   handleClose();
-  // };
-
-  // const handleEditRow = (id) => {
-  //   // console.log(id);
-  //   navigate(PATH_MACHINE.machines.settings.supplier.edit(id));
-  // };
-
   const handleViewRow = (id) => {
-    // console.log(id,PATH_MACHINE.supplier.view(id));
     navigate(PATH_MACHINE.machines.settings.supplier.view(id));
   };
 
@@ -240,24 +208,6 @@ export default function SupplierList() {
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            {/* <TableSelectedAction
-
-              numSelected={selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row._id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            /> */}
 
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
@@ -265,15 +215,7 @@ export default function SupplierList() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  // rowCount={tableData.length}
-                  // numSelected={selected.length}
                   onSort={onSort}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row) => row._id)
-                  //   )
-                  // }
                 />
 
                 <TableBody>
@@ -287,7 +229,6 @@ export default function SupplierList() {
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                         />
                       ) : (

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Typography, Card, Grid, Stack } from '@mui/material';
+import { Card, Grid, Stack } from '@mui/material';
 import UpdateFormButtons from '../../../components/DocumentForms/UpdateFormButtons';
 // Slice
 import { updateNote, setNoteEditFormVisibility } from '../../../redux/slices/products/machineNote';
@@ -66,25 +66,7 @@ export default function NoteEditForm() {
           <Card sx={{ p: 3 }}>
             <Stack spacing={3} sx={{ mb: 3 }}>
               <RHFTextField name="note" label="Note*" minRows={8} multiline />
-              <RHFSwitch
-                name="isActive"
-                labelPlacement="start"
-                label={
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      mx: 0,
-                      width: 1,
-                      justifyContent: 'space-between',
-                      mb: 0.5,
-                      color: 'text.secondary',
-                    }}
-                  >
-                    {' '}
-                    Active
-                  </Typography>
-                }
-              />
+              <RHFSwitch name="isActive" label="Active"/>
             </Stack>
             <UpdateFormButtons toggleCancel={toggleCancel} isSubmitting={isSubmitting} />
           </Card>

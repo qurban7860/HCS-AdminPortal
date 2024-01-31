@@ -8,7 +8,6 @@ import { getRegion } from '../../redux/slices/region/region';
 // sections
 import { Cover } from '../../components/Defaults/Cover';
 import RegionViewForm from './RegionViewForm';
-/* eslint-disable */
 
 // ----------------------------------------------------------------------
 
@@ -21,22 +20,18 @@ export default function RegionView() {
   }, [id, dispatch]);
 
   const { region } = useSelector((state) => state.region );
-  // console.log("role : ",role)
   return (
-    <>
       <Container maxWidth={false}>
         <Card
           sx={{
             mb: 3,
             height: 160,
             position: 'relative',
-            // mt: '24px',
           }}
         >
           <Cover name={region?.name} generalSettings />
         </Card>
         <RegionViewForm />
       </Container>
-    </>
   );
 }

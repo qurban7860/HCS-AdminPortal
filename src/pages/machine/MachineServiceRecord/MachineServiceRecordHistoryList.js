@@ -51,7 +51,6 @@ MachineServiceRecordHistoryList.propTypes = {
 };
 
 const TABLE_HEAD = [
-  // { id: 'technician.name', visibility: 'xs5', label: 'Technician', align: 'left' },
   { id: 'serviceDate', label: 'Service Date', align: 'left' },
   { id: 'versionNo', visibility: 'xs5', label: 'Version', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
@@ -232,7 +231,6 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-  // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
 
   if (filterName) {
     inputData = inputData.filter(
@@ -240,7 +238,6 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
         docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         docCategory?.versionNo?.toString().indexOf(filterName.toLowerCase()) >= 0 ||
         docCategory?.createdBy?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (docCategory?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(docCategory?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

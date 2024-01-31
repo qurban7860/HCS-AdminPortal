@@ -11,7 +11,6 @@ import { Box, Card, Grid, Stack, Autocomplete, TextField } from '@mui/material';
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField } from '../../../components/hook-form';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import FormHeading from '../../../components/DocumentForms/FormHeading';
 import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
 
 // slice
@@ -56,8 +55,6 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
 
   const EditDocumentSchema = Yup.object().shape({
     displayName: Yup.string().max(500).label('Document Name').required(),
-    // documentCategory: Yup.object().required("Document Category is required!").nullable(),
-    // documentType: Yup.object().required("Document Type is required!").nullable(),
     description: Yup.string().max(10000),
     referenceNumber: Yup.string().label('Reference Number').max(20),
     stockNumber: Yup.string().label('Stock Number').max(20),

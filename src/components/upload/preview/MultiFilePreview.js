@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useState, memo } from 'react';
 import { m, AnimatePresence } from 'framer-motion';
 // @mui
-import { useTheme, alpha } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { Button, ButtonGroup, Card, CardMedia, IconButton, Stack, Typography } from '@mui/material';
 // utils
 import { fData } from '../../../utils/formatNumber';
@@ -11,8 +11,6 @@ import { bgBlur } from '../../../utils/cssStyles';
 import Iconify from '../../iconify';
 import { varFade } from '../../animate';
 import FileThumbnail, { fileData } from '../../file-thumbnail';
-import ImagePreviewDialog from './ImagePreviewDialog'
-import Image from '../../image';
 import Lightbox from '../../lightbox/Lightbox';
 import AlreadyExistMenuPopover from '../AlreadyExistMenuPopover';
 

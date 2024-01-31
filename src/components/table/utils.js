@@ -36,7 +36,6 @@ function ascending(a, b, orderBy) {
 }else{
     aValue = a[orderBy];
     bValue = b[orderBy];
-    const myString = "123";
     // if (!Number.isNaN(aValue) && !Number.isNaN(bValue) ) {
     //   aValueStr = Number(aValue);
     //   bValueStr = Number(bValue);

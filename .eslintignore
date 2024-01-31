@@ -1,4 +1,4 @@
-// .eslintignore
+.eslintignore
 build/*
 public/*
 src/reportWebVitals.js

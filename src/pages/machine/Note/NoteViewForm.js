@@ -44,7 +44,7 @@ export default function NoteViewForm() {
   const defaultValues = useMemo(
     () => ({
       note: note?.note || '',
-      isActive: note?.isActive || '',
+      isActive: note?.isActive,
       createdByFullName: note?.createdBy?.name || '',
       createdAt: note?.createdAt || '',
       createdIP: note?.createdIP || '',

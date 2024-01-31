@@ -123,6 +123,12 @@ export const WhitelistIPAddForm = Loadable(lazy(() => import('../pages/security/
 // export const MachineLicenses = Loadable(lazy(()=> import('../pages/machine/License/MachineLicenses')));
 // export const LicenseList = Loadable(lazy(()=> import('../pages/machine/License/LicenseList')));
 
+// Machine Category Groups
+export const CategoryGroupAddForm = Loadable(lazy(() => import('../pages/machine/CategoryGroups/CategoryGroupAddForm')));
+export const CategoryGroupList = Loadable(lazy(() => import('../pages/machine/CategoryGroups/CategoryGroupList')));
+export const CategoryGroupViewForm = Loadable(lazy(() => import('../pages/machine/CategoryGroups/CategoryGroupViewForm')));
+export const CategoryGroupEditForm = Loadable(lazy(() => import('../pages/machine/CategoryGroups/CategoryGroupEditForm')));
+
 // Machine Categories
 export const CategoryAddForm = Loadable(lazy(() => import('../pages/machine/Categories/CategoryAddForm')));
 export const CategoryList = Loadable(lazy(() => import('../pages/machine/Categories/CategoryList')));

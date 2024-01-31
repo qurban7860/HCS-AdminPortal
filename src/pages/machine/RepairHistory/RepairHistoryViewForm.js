@@ -53,15 +53,7 @@ export default function RepairHistoryViewForm({ currentSite = null }) {
       await dispatch(deleteSite(customer._id, currentSite._id));
       handleCloseConfirm();
       dispatch(getSites(customer._id));
-      // dispatch(getContacts());
     } catch (err) {
-      // if(err.Message){
-      //   enqueueSnackbar(err.Message,{ variant: `error` })
-      // }else if(err.message){
-      //   enqueueSnackbar(err.message,{ variant: `error` })
-      // }else{
-      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
-      // }
       enqueueSnackbar("Repair history delete failed!",{ variant: `error` })
       console.log("Error:", err);
     }

@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import * as Yup from 'yup';
 import { useEffect, useMemo, useState, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -7,24 +6,19 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import {
-  Card,
-  Grid,
-  Stack,
-  Typography,
-  Autocomplete,
-  TextField,
-} from '@mui/material';
+import { Card, Grid, Stack } from '@mui/material';
 // routes
 import { PATH_SETTING } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, { RHFSwitch, RHFTextField } from '../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete } from '../../components/hook-form';
 // slice
 import { getRoles } from '../../redux/slices/securityUser/role';
 import { addRegion, getCountries } from '../../redux/slices/region/region';
 // current user
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import { regionSchema } from '../schemas/setting';
+
 // ----------------------------------------------------------------------
 
 RegionAddForm.propTypes = {
@@ -34,12 +28,12 @@ RegionAddForm.propTypes = {
 
 export default function RegionAddForm({ isEdit = false, currentUser }) {
 
-  const [selectedCountries, setSelectedCountries] = useState([]);
   const { roles } = useSelector((state) => state.role);
   const { countries } = useSelector((state) => state.region);
-  // eslint-disable-next-line
   const [sortedRoles, setSortedRoles] = useState([]);
+
   const ROLES = [];
+
   roles.map((role) => ROLES.push({ value: role?._id, label: role.name }));
 
   const dispatch = useDispatch();
@@ -65,25 +59,8 @@ export default function RegionAddForm({ isEdit = false, currentUser }) {
       const nameB = b.label.toUpperCase();
       return nameA.localeCompare(nameB);
     });
-
     setSortedRoles(sortedRolesTemp);
   }, [roles]);
-
-
-  // useEffect(() => {
-  //   countries.forEach((country) => {
-  //     const img = new Image();
-  //     img.src = `https://flagcdn.com/w20/${country.country_code.toLowerCase()}.png`;
-  //     img.srcSet = `https://flagcdn.com/w40/${country.country_code.toLowerCase()}.png 2x`;
-  //   });
-  // }, [countries]);
-
-  const NewUserSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required!').max(40, 'Name must not exceed 40 characters!'),
-    description: Yup.string().max(5000),
-    isActive: Yup.boolean(),
-    isDefault: Yup.boolean(),
-  });
 
   const defaultValues = useMemo(
     () => ({
@@ -98,7 +75,7 @@ export default function RegionAddForm({ isEdit = false, currentUser }) {
   );
 
   const methods = useForm({
-    resolver: yupResolver(NewUserSchema),
+    resolver: yupResolver( regionSchema ),
     defaultValues,
   });
 
@@ -109,89 +86,41 @@ export default function RegionAddForm({ isEdit = false, currentUser }) {
   } = methods;
 
   const onSubmit = async (data) => {
-    if(selectedCountries.length > 0){
-      const selectedCountriesIDs = selectedCountries.map((country) => country._id);
-      data.selectedCountries = selectedCountriesIDs;
-    }
     try {
       const response = await dispatch(addRegion(data));
       // await dispatch(resetContacts());
       reset();
       navigate(PATH_SETTING.regions.view(response.data.Region._id));
     } catch (error) {
-      if (error.Message) {
-        enqueueSnackbar(error.Message, { variant: `error` });
-      } else if (error.message) {
-        enqueueSnackbar(error.message, { variant: `error` });
-      } else {
-        enqueueSnackbar('Something went wrong!', { variant: `error` });
-      }
+      enqueueSnackbar(error, { variant: `error` });
       console.log('Error:', error);
     }
   };
 
-  const toggleCancel = () => {
-    navigate(PATH_SETTING.regions.list);
-  };
-
-  const handleCountriesChange = (event, selectedOptions) => {
-    setSelectedCountries(selectedOptions);
-  };
+  const toggleCancel = () => { navigate(PATH_SETTING.regions.list) };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-       <Grid container spacing={3}>
+        <Grid container spacing={3}>
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 <RHFTextField name="name" label="Name*" />
-                <Autocomplete
+                <RHFAutocomplete
                   multiple
+                  filterSelectedOptions
                   disableCloseOnSelect
+                  name="countries"
+                  label="Countries"
                   id="countries-autocomplete"
                   options={countries}
-                  value={selectedCountries}
-                  onChange={handleCountriesChange}
-                  getOptionLabel={(option) => 
-                    `(${option.country_code}) ${option.country_name}`
-                  }
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      variant="outlined"
-                      label="Countries"
-                      placeholder="Select countries"
-                    />
-                  )}
+                  getOptionLabel={(option) =>  `(${option.country_code}) ${option.country_name}` }
+                  isOptionEqualToValue={(option, value) => option?.country_name === value?.country_name }
                 />
                 <RHFTextField name="description" label="Description" minRows={8} multiline />
                 <Grid display="flex" alignItems="end">
-                  <RHFSwitch
-                    name="isActive"
-                    labelPlacement="start"
-                    label={
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          mx: 0,
-                          width: 1,
-                          justifyContent: 'space-between',
-                          mb: 0.5,
-                          color: 'text.secondary',
-                        }}
-                      >
-                        {' '}
-                        Active
-                      </Typography>
-                    }
-                  />
-                  <RHFSwitch
-                    name="isDefault"
-                    labelPlacement="start"
-                    label={
-                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary',}} >Default</Typography>
-                    }
-                  />
+                  <RHFSwitch name="isActive" label="Active" />
+                  <RHFSwitch name="isDefault" label="Default" />
                 </Grid>
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

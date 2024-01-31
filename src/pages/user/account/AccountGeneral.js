@@ -70,7 +70,6 @@ export default function AccountGeneral() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
       enqueueSnackbar('Update success!');
-      // console.log('DATA', data);
     } catch (error) {
       enqueueSnackbar("Update Failed!", { variant: `error` })
       console.error(error);
@@ -117,13 +116,7 @@ export default function AccountGeneral() {
                 </Typography>
               }
             />
-
-            <RHFSwitch
-              name="isPublic"
-              labelPlacement="start"
-              label="Public Profile"
-              sx={{ mt: 5 }}
-            />
+            <RHFSwitch name="isPublic" label="Public Profile" sx={{ mt: 5 }}/>
           </Card>
         </Grid>
 

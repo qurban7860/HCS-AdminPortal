@@ -31,7 +31,6 @@ function MachineTransfer() {
   const navigate = useNavigate();
 
   const { machine } = useSelector((state) => state.machine);
-  const { machineConnections } = useSelector((state) => state.machineConnections);
   const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
   const { activeCustomers, financialCompanies } = useSelector((state) => state.customer);
   const { activeSites } = useSelector((state) => state.site);
@@ -57,7 +56,6 @@ function MachineTransfer() {
       dispatch(getActiveMachineDocuments(id, cancelTokenSource))
     } 
     return ()=>{  
-      // cancelTokenSource.cancel()
       dispatch(resetActiveMachineDocuments()) 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -66,7 +64,6 @@ function MachineTransfer() {
   useEffect(()=>{
     dispatch(getFinancialCompanies(cancelTokenSource))
     return ()=>{  
-      // cancelTokenSource.cancel()
       dispatch(resetFinancingCompanies())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

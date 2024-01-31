@@ -1,5 +1,5 @@
 /* eslint-disable import/no-unresolved */
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import ReactLightbox, { ImageSlide } from 'yet-another-react-lightbox';
 import Zoom from 'yet-another-react-lightbox/plugins/zoom';

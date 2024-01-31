@@ -1,30 +1,11 @@
 import PropTypes from 'prop-types';
-// import { useState } from 'react';
-// import { sentenceCase } from 'change-case';
 // @mui
-import {
-  Switch,
-  // Stack,
-  // Button,
-  TableRow,
-  // Checkbox,
-  // MenuItem,
-  TableCell,
-  // IconButton,
-  // Link,
-} from '@mui/material';
+import { Switch, TableCell } from '@mui/material';
 // utils
-import { styled } from '@mui/system';
 import { fDate } from '../../../utils/formatTime';
-// import { fCurrency } from '../../../utils/formatNumber';
-// components
-// import Iconify from '../../../components/iconify';
-// import MenuPopover from '../../../components/menu-popover';
-// import ConfirmDialog from '../../../components/confirm-dialog';
-// import Label from '../../../components/label';
 import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
-// import { useSelector } from '../../../redux/store';
 import { useWidth } from '../../../hooks/useResponsive';
+import { StyledTableRow } from '../../../theme/styles/default-styles'
 
 // ----------------------------------------------------------------------
 
@@ -37,15 +18,6 @@ RoleListTableRow.propTypes = {
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
 };
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: 'white',
-  },
-  '&:nth-of-type(even)': {
-    backgroundColor: '#f4f6f866',
-  },
-}));
 
 export default function RoleListTableRow({
   row,

@@ -153,8 +153,6 @@ export default function ServiceRecordConfigList() {
   const handleDeleteRow = async (id) => {
     await dispatch(deleteServiceRecordConfig(id));
     try {
-      // console.log(id);
-      // await dispatch(deleteSupplier(id));
       dispatch(getServiceRecordConfigs());
       setSelected([]);
 
@@ -167,34 +165,6 @@ export default function ServiceRecordConfigList() {
       console.log(err.message);
     }
   };
-
-  // const handleDeleteRows = async (selectedRows, handleClose) => {
-  //   // console.log(selectedRows)
-  //   const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-  //   setSelected([]);
-  //   setTableData(deleteRows);
-
-  //   if (page > 0) {
-  //     if (selectedRows.length === dataInPage.length) {
-  //       setPage(page - 1);
-  //     } else if (selectedRows.length === dataFiltered.length) {
-  //       setPage(0);
-  //     } else if (selectedRows.length > dataInPage.length) {
-  //       const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-  //       setPage(newPage);
-  //     }
-  //   }
-
-  //   // dispatch delete supplier
-  //   // await dispatch(deleteSuppliers(selectedRows));
-  //   // await dispatch(getServiceRecordConfigss())
-  //   handleClose();
-  // };
-
-  // const handleEditRow = (id) => {
-  //   // console.log(id);
-  //   navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.edit(id));
-  // };
 
   const handleViewRow = (id) => {
     navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.view(id));

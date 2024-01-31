@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
-import { Box, Card, Stack, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
+import { Box, Card, Stack, FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
 import { MuiChipsInput } from 'mui-chips-input';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { useSnackbar } from '../../../components/snackbar';
@@ -70,14 +70,6 @@ export default function ProfileEditForm() {
     dispatch(setProfileViewFormVisibility(true));
   };
 
-  // const [profileTypes, setProfileTypes] = useState([]);
-
-  // useEffect(() => {
-  //   const hasManufacturer = profiles.some((p) => p.type === 'MANUFACTURER');
-  //   const updatedProfileTypes = hasManufacturer?ProfileTypes.filter((type) => type !== 'MANUFACTURER'): ProfileTypes;
-  //   setProfileTypes(updatedProfileTypes);
-  // }, [profiles]);
-
    // Handle Type
   const [selectedValue, setSelectedValue] = useState(defaultValues?.type);
   const handleChange = (event) => {
@@ -141,13 +133,7 @@ export default function ProfileEditForm() {
               <RHFTextField name="thicknessEnd" label="Max. Thickness"/>
               
             </Box>
-              <RHFSwitch name="isActive" labelPlacement="start"
-                label={
-                  <Typography variant="subtitle2" sx={{ mx: 0, flange: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
-                    Active
-                  </Typography>
-                }
-              />
+              <RHFSwitch name="isActive" label="Active" />
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>

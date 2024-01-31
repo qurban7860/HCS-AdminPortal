@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import {  useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 // @mui
@@ -59,10 +59,6 @@ export default function ContactViewForm({
     dispatch(setContactEditFormVisibility(false))
     dispatch(setContactMoveFormVisibility(true))
   };
-
-  // useEffect(()=>{
-  //   dispatch(getContact(customer?._id, contact?._id));
-  // },[dispatch, customer, contact])
 
   const onDelete = async () => {
     try {

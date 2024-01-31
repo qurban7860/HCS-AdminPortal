@@ -92,14 +92,12 @@ export default function SupplierEditForm() {
   }, [supplier]);
 
   const toggleCancel = () => {
-    // dispatch(setSupplierEditFormVisibility(false));
     navigate(PATH_MACHINE.machines.settings.supplier.view(id));
   };
  
 
   const onSubmit = async (data) => {
     try {
-      // console.log(typeof phone);
       if (phone && phone.length > 4) {
         data.phone = phone;
       } else {
@@ -220,32 +218,8 @@ export default function SupplierEditForm() {
                 />
               </Box>
               <Grid display="flex">
-              <RHFSwitch
-                name="isActive"
-                labelPlacement="start"
-                label={
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      mx: 0,
-                      width: 1,
-                      justifyContent: 'space-between',
-                      mb: 0.5,
-                      color: 'text.secondary',
-                    }}
-                  >
-                    {' '}
-                    Active
-                  </Typography>
-                }
-              />
-              <RHFSwitch
-                name="isDefault"
-                labelPlacement="start"
-                label={
-                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary',}} >Default</Typography>
-                }
-              />
+              <RHFSwitch name="isActive" label="Active" />
+              <RHFSwitch name="isDefault" label="Default"/>
               </Grid>
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

@@ -1,5 +1,3 @@
-// import { Helmet } from 'react-helmet-async';
-// import PropTypes from 'prop-types';
 import {  useLayoutEffect } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
@@ -10,13 +8,7 @@ import { PATH_SETTING } from '../../../routes/paths';
 // redux
 
 import { getDocumentCategory } from '../../../redux/slices/document/documentCategory';
-// auth
-// import { useAuthContext } from '../../../auth/useAuthContext';
-// components
 
-// import Iconify from '../../../components/iconify/Iconify';
-// import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
-// import { useSettingsContext } from '../../../components/settings';
 // sections
 import { Cover } from '../../../components/Defaults/Cover';
 import DocumentCategoryViewForm from './DocumentCategoryViewForm';
@@ -33,7 +25,7 @@ export default function DocumentCategoryView() {
   }, [id, dispatch]);
 
   const { documentCategory } = useSelector((state) => state.documentCategory);
-  // console.log("documentCategory : ",documentCategory)
+  
   return (
     <>
       <Container maxWidth={false}>

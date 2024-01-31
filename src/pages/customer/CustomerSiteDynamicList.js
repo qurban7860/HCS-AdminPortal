@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 // @mui
-import { Stack, Card, CardMedia, Grid, CardActionArea, Link, Button } from '@mui/material';
+import { Stack, Card, Grid, CardActionArea } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import {
   CardBase,
   GridBaseViewForm,
   StyledScrollbar,
-  StyledCardWrapper,
 } from '../../theme/styles/customer-styles';
 import SiteCarousel from './site/util/SiteCarousel';
 // redux
@@ -21,8 +20,7 @@ import BreadcrumbsProvider from '../../components/Breadcrumbs/BreadcrumbsProvide
 import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
 import GoogleMaps from '../../assets/GoogleMaps';
 import useResponsive from '../../hooks/useResponsive';
-import { getSites, getSite, setSiteFormVisibility, resetSiteFormsVisiblity, createCustomerStiesCSV } from '../../redux/slices/customer/site';
-// import { getActiveContacts } from '../../redux/slices/customer/contact';
+import { getSites, getSite, setSiteFormVisibility, resetSiteFormsVisiblity } from '../../redux/slices/customer/site';
 import NothingProvided from '../../components/Defaults/NothingProvided';
 import SiteAddForm from './site/SiteAddForm';
 import SiteEditForm from './site/SiteEditForm';
@@ -44,17 +42,14 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
   
   const { order, orderBy } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
-  // const [ setChecked] = useState(false);
-  // const [ setOpenSite] = useState(false);
   const { site } = useSelector((state) => state.site);
   const { enqueueSnackbar } = useSnackbar();
-  const [activeIndex] = useState(null);
-  const [activeCardIndex, setCardActiveIndex] = useState(null);
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [filterName, setFilterName] = useState('');
-  const [filterStatus, setFilterStatus] = useState([]);
-  const [tableData, setTableData] = useState([]);
-  const [googleMapsVisibility, setGoogleMapsVisibility] = useState(false);
+  const [ activeCardIndex, setCardActiveIndex ] = useState(null);
+  const [ isExpanded, setIsExpanded ] = useState(false);
+  const [ filterName, setFilterName ] = useState('');
+  const [ filterStatus, setFilterStatus ] = useState([]);
+  const [ tableData, setTableData ] = useState([]);
+  const [ googleMapsVisibility, setGoogleMapsVisibility ] = useState(false);
   const isMobile = useResponsive('down', 'sm');
   const dispatch = useDispatch();
   const { sites, error, responseMessage, siteEditFormVisibility, siteAddFormVisibility } = useSelector((state) => state.site);
@@ -124,7 +119,6 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   };
 
   useEffect( () => {
-    // if (!siteAddFormVisibility && !siteEditFormVisibility) {
       dispatch(getSites(customer._id));
     // }
   }, [dispatch, customer]); 
@@ -205,7 +199,6 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
             {sites.length > 5 && (
               <Grid item md={12}>
                 <SearchInput
-                  // searchFormVisibility={siteAddFormVisibility || siteEditFormVisibility}
                   disabled={siteAddFormVisibility || siteEditFormVisibility}
                   filterName={filterName}
                   handleFilterName={handleFilterName}

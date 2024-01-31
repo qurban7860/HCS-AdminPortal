@@ -229,44 +229,13 @@ export default function ServiceRecordConfigEditForm() {
                   }}
                 >
                   
-                  <RHFSwitch
-                    name="enableNote"
-                    labelPlacement="start"
-                    label={
-                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
-                        Enable Note
-                      </Typography>
-                    }
-                  />
-                  <RHFSwitch
-                    name="enableMaintenanceRecommendations"
-                    labelPlacement="start"
-                    label={
-                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
-                        Enable Maintenance Recommendations
-                      </Typography>
-                    }
-                  />
+                  <RHFSwitch  name="enableNote" label="Enable Note" />
 
-                  <RHFSwitch
-                    name="enableSuggestedSpares"
-                    labelPlacement="start"
-                    label={
-                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
-                        Enable Suggested Spares
-                      </Typography>
-                    }
-                  /> 
+                  <RHFSwitch name="enableMaintenanceRecommendations" label="Enable Maintenance Recommendations" />
 
-                  <RHFSwitch
-                    name="isOperatorSignatureRequired"
-                    labelPlacement="start"
-                    label={
-                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
-                        Is Operator Signature Required
-                      </Typography>
-                    }
-                  />
+                  <RHFSwitch name="enableSuggestedSpares" label="Enable Suggested Spares" /> 
+
+                  <RHFSwitch name="isOperatorSignatureRequired" label="Is Operator Signature Required" />
 
                 </Box>
                 <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
@@ -304,15 +273,7 @@ export default function ServiceRecordConfigEditForm() {
                   <RHFTextField name="footerRightText" label="Footer Right Text" />
                 </Box>
 
-                  <RHFSwitch
-                    name="isActive"
-                    labelPlacement="start"
-                    label={
-                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
-                        Active
-                      </Typography>
-                    }
-                  />
+                  <RHFSwitch name="isActive" label="Active" />
 
                 <AddFormButtons saveAsDraft={() => setDraft(true)} isDraft={isDraft} saveButtonName='submit' isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>

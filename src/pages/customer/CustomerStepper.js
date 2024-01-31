@@ -52,21 +52,6 @@ export default function CustomerStepper() {
 
   return (
     <>
-      {/* <Stepper activeStep={activeStep} alternativeLabel>
-        {steps.map((label, index) => {
-          const stepProps = {};
-          const labelProps = {};
-
-          if (isStepSkipped(index)) {
-            stepProps.completed = false;
-          }
-          // return (
-          //   // <Step key={label} {...stepProps}>
-          //   //   <StepLabel {...labelProps}>{label}</StepLabel>
-          //   // </Step>
-          // );
-        })}
-      </Stepper> */}
       {activeStep === steps.length ? (
         <>
           <Paper

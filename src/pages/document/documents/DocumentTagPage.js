@@ -19,7 +19,6 @@ import DocumentViewForm from './DocumentViewForm';
 import DocumentEditForm from './DocumentEditForm';
 import DocumentHistoryViewForm from './DocumentHistoryViewForm';
 import DocumentGallery from './DocumentGallery';
-import { _userGallery } from '../../../_mock/arrays';
 /* eslint-disable */
 
 // ----------------------------------------------------------------------

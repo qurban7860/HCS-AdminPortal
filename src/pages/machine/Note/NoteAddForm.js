@@ -9,8 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Card,
   Grid,
-  Stack,
-  Typography,
+  Stack
 } from '@mui/material';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 // slice
@@ -81,25 +80,7 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
           <Card sx={{ p: 3 }}>
             <Stack spacing={2}>
               <RHFTextField name="note" label="Note*" minRows={8} multiline />
-              <RHFSwitch
-                name="isActive"
-                labelPlacement="start"
-                label={
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      mx: 0,
-                      width: 1,
-                      justifyContent: 'space-between',
-                      mb: 0.5,
-                      color: 'text.secondary',
-                    }}
-                  >
-                    {' '}
-                    Active
-                  </Typography>
-                }
-              />
+              <RHFSwitch name="isActive" label="Active"/>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Stack>
           </Card>

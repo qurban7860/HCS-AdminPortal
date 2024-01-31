@@ -14,7 +14,6 @@ import { getTools, getTool, deleteTool,
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-// import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -49,25 +48,18 @@ const TABLE_HEAD = [
 export default function ToolList() {
   const {
     dense,
-    // page,
     order,
     orderBy,
-    // rowsPerPage,
     setPage,
-    //
     selected,
     setSelected,
     onSelectRow,
-    //
     onSort,
-    // onChangePage,
-    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'name',
   });
 
   const dispatch = useDispatch();
-  // const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
@@ -84,7 +76,6 @@ export default function ToolList() {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useLayoutEffect(() => {
-    // console.log('Testing done')
     dispatch(getTools());
   }, [dispatch]);
 
@@ -143,8 +134,6 @@ export default function ToolList() {
   const handleDeleteRow = async (id) => {
     await dispatch(deleteTool(id));
     try {
-      // console.log(id);
-      // await dispatch(deleteSupplier(id));
       dispatch(getTools());
       setSelected([]);
 
@@ -157,13 +146,6 @@ export default function ToolList() {
       console.log(err.message);
     }
   };
-
-  // const handleEditRow = async (id) => {
-  //   // console.log(id);
-  //   // dispatch(getTool(id));
-  //   await dispatch(getTool(id));
-  //   navigate(PATH_MACHINE.machines.settings.tool.edit(id));
-  // };
 
   const handleViewRow = async (id) => {
     navigate(PATH_MACHINE.machines.settings.tool.view(id));

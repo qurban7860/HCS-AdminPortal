@@ -19,8 +19,6 @@ import FormProvider, { RHFTextField } from '../../../components/hook-form';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { Cover } from '../../../components/Defaults/Cover';
 import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
-// assets
-// import { countries } from '../../../assets/data';
 // styles
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 // constants
@@ -44,7 +42,6 @@ export default function DocumentCategoryAddForm({ currentDocument }) {
 
   const handleChangeType = (event) => {
     if (event.target.name === "all" && event.target.checked === true) {
-      // const allValue = event.target.checked;
       setState({
         customer: true,
         machine: true,

@@ -4,13 +4,11 @@ import { useParams } from 'react-router-dom';
 import { Card, Container } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 // redux
-
 import { getRole } from '../../../redux/slices/securityUser/role';
 import { getAssignedSecurityUsers } from '../../../redux/slices/securityUser/securityUser';
 // sections
 import { Cover } from '../../../components/Defaults/Cover';
 import RoleViewForm from './RoleViewForm';
-/* eslint-disable */
 
 // ----------------------------------------------------------------------
 
@@ -24,7 +22,6 @@ export default function RoleView() {
   }, [id, dispatch]);
 
   const { role } = useSelector((state) => state.role);
-  // console.log("role : ",role)
   return (
     <Container maxWidth={false}>
       <Card
@@ -32,7 +29,6 @@ export default function RoleView() {
           mb: 3,
           height: 160,
           position: 'relative',
-          // mt: '24px',
         }}
       >
         <Cover name={role?.name} generalSettings />

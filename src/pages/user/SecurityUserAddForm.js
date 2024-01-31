@@ -13,7 +13,6 @@ import {
   Card,
   Grid,
   Stack,
-  Typography,
   IconButton,
   InputAdornment,
   Autocomplete,
@@ -47,7 +46,7 @@ SecurityUserAddForm.propTypes = {
 export default function SecurityUserAddForm({ isEdit = false, currentUser, isInvite }) {
   const userRolesString = localStorage.getItem('userRoles');
 
-  // eslint-disable-next-line
+
   const [ userRoles, setUserRoles] = useState(JSON.parse(userRolesString));
 
   const { allCustomers } = useSelector((state) => state.customer);
@@ -57,8 +56,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
   const { allMachines } = useSelector((state) => state.machine);
 
   const [selectedRegions, setSelectedRegions] = useState([]);
-  // const [filteredCustomers, setFilteredCustomers] = useState(spCustomers);
-  // const [filteredMachines, setFilteredMachines] = useState(allMachines);
   const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState('');
   const [customerVal, setCustomerVal] = useState('');
@@ -71,7 +68,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
   const ROLES = [];
   roles.map((role) => ROLES.push({ value: role?._id, label: role.name }));
 
-  // eslint-disable-next-line
   const [roleVal, setRoleVal] = useState('');
 
   const dispatch = useDispatch();
@@ -82,7 +78,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
     dispatch(getAllCustomers());
     dispatch(getAllMachines());
     dispatch(getActiveRegions());
-    // dispatch(getActiveSPCustomers());
     dispatch(getRoles());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
@@ -95,7 +90,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
   }, [
     dispatch,
     customerVal,
-    // userRoles
   ]);
 
   useEffect(() => {
@@ -173,8 +167,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
     setValue('name', event || '');
     trigger('name');
   };
-
-  // console.log(customerVal);
 
   const onSubmit = async (data) => {
 
@@ -547,67 +539,11 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
              <Grid item md={12} display="flex">
                 {(!isInvite &&(
                   <>
-                  <RHFSwitch
-                    name="isActive"
-                    labelPlacement="start"
-                    label={
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          mx: 0,
-                          width: 1,
-                          justifyContent: 'space-between',
-                          mb: 0.5,
-                          color: 'text.secondary',
-                        }}
-                      >
-                        {' '}
-                        Active
-                      </Typography>
-                    }
-                  />
-
-                  <RHFSwitch
-                    name="multiFactorAuthentication"
-                    labelPlacement="start"
-                    label={
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          mx: 0,
-                          width: 1,
-                          justifyContent: 'space-between',
-                          mb: 0.5,
-                          color: 'text.secondary',
-                        }}
-                      >
-                        {' '}
-                        Multi-Factor Authentication
-                      </Typography>
-                    }
-                  />
+                  <RHFSwitch name="isActive" label="Active" />
+                  <RHFSwitch name="multiFactorAuthentication" label="Multi-Factor Authentication" />
                   </>
                ))}
-
-              <RHFSwitch
-                name="currentEmployee"
-                labelPlacement="start"
-                label={
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      mx: 0,
-                      width: 1,
-                      justifyContent: 'space-between',
-                      mb: 0.5,
-                      color: 'text.secondary',
-                    }}
-                  >
-                    {' '}
-                    Current Employee
-                  </Typography>
-                }
-              />
+              <RHFSwitch name="currentEmployee" label="Current Employee" />
             </Grid>
             <Stack sx={{ mt: 3 }}>
               <AddFormButtons saveButtonName={isInvite?"Invite":"Save"} isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

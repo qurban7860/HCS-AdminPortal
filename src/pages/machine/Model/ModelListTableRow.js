@@ -1,18 +1,13 @@
 import PropTypes from 'prop-types';
-// import { sentenceCase } from 'change-case';
 // @mui
 import {
   Switch,
   TableRow,
   TableCell,
 } from '@mui/material';
-// utils
-// import { fData, fCurrency } from '../../../utils/formatNumber';
 // components
-// import Label from '../../../components/label';
 import { fDate } from '../../../utils/formatTime';
 import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
-// import { useSelector } from '../../../redux/store';
 import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------

@@ -3,14 +3,13 @@ import PropTypes from 'prop-types';
 import {
   Switch,
   Checkbox,
-  TableRow,
   TableCell,
 } from '@mui/material';
 // utils
-import { styled } from '@mui/system';
 import { fDateTime } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
+import { StyledTableRow } from '../../../theme/styles/default-styles'
 
 // ----------------------------------------------------------------------
 
@@ -25,14 +24,6 @@ HistoricalConfigurationsTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: 'white',
-  },
-  '&:nth-of-type(even)': {
-    backgroundColor: '#f4f6f866',
-  },
-}));
 
 export default function HistoricalConfigurationsTableRow({
   row,

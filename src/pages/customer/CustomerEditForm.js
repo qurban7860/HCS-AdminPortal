@@ -2,7 +2,7 @@ import { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Box, Card, Grid, Stack, Autocomplete, TextField, Typography } from '@mui/material';
+import { Box, Card, Grid, Stack, Autocomplete, TextField } from '@mui/material';
 import { MuiChipsInput } from 'mui-chips-input';
 // hooks
 import { useForm } from 'react-hook-form';
@@ -25,7 +25,6 @@ import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete } from '../../co
 import { FORMLABELS  } from '../../constants/customer-constants';
 // schema
 import { EditCustomerSchema } from '../schemas/customer';
-import { StyledToggleButtonLabel } from '../../theme/styles/document-styles';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 
 // ----------------------------------------------------------------------
@@ -60,7 +59,6 @@ export default function CustomerEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer]
   );
-  // customer. === null || customer. === undefined  ? null : customer.,
   const methods = useForm({
     resolver: yupResolver(EditCustomerSchema),
     defaultValues,

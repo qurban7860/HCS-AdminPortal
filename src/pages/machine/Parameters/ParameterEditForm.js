@@ -14,8 +14,7 @@ import {
   Box,
   Card,
   Grid,
-  Stack,
-  Typography,
+  Stack
 } from '@mui/material';
 // global
 
@@ -106,7 +105,6 @@ export default function ParameterEditForm() {
       if (paramVal !== null && paramVal !== '') {
         data.category = paramVal?._id;
       }
-      console.log('Submit Data : ', data);
       await dispatch(updateTechparam(data, techparam._id));
       reset();
       enqueueSnackbar('Update success!');
@@ -158,25 +156,7 @@ export default function ParameterEditForm() {
                 gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
               >
                 <RHFTextField name="description" label="Description" minRows={7} multiline />
-                <RHFSwitch
-                  name="isActive"
-                  labelPlacement="start"
-                  label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary',
-                      }}
-                    >
-                      {' '}
-                      Active
-                    </Typography>
-                  }
-                />
+                <RHFSwitch name="isActive" label="Active"/>
               </Box>
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

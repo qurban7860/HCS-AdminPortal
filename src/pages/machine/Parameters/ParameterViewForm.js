@@ -1,28 +1,15 @@
-import { useLayoutEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
 import {  Card, Grid } from '@mui/material';
 // redux
-import { getTechparam, deleteTechparams } from '../../../redux/slices/products/machineTechParam';
+import { deleteTechparams } from '../../../redux/slices/products/machineTechParam';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-
-// Iconify
-
-// import { fDate } from '../../../utils/formatTime';
-
-// import Iconify from '../../../components/iconify/Iconify';
-// import FormProvider, {
-//   RHFSelect,
-//   RHFAutocomplete,
-//   RHFTextField,
-//   RHFSwitch,
-// } from '../../../components/hook-form';
-
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
@@ -32,7 +19,7 @@ import ViewFormField from '../../../components/ViewForms/ViewFormField';
 // ----------------------------------------------------------------------
 
 export default function ParameterViewForm() {
-  // const [editFlag, setEditFlag] = useState(false);
+
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -42,10 +29,6 @@ export default function ParameterViewForm() {
   const toggleEdit = () => {
     navigate(PATH_MACHINE.machines.settings.parameters.edit(techparam._id));
   };
-
-  useLayoutEffect(() => {
-    dispatch(getTechparam(techparam._id));
-  }, [dispatch, techparam._id]);
 
   const defaultValues = useMemo(
     () => ({
@@ -70,13 +53,6 @@ export default function ParameterViewForm() {
       dispatch(deleteTechparams(id));
       navigate(PATH_MACHINE.machines.settings.parameters.list);
     } catch (err) {
-      // if(err.Message){
-      //   enqueueSnackbar(err.Message,{ variant: `error` })
-      // }else if(err.message){
-      //   enqueueSnackbar(err.message,{ variant: `error` })
-      // }else{
-      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
-      // }
       enqueueSnackbar('Parameter value delete failed!', { variant: `error` });
       console.log('Error:', err);
     }

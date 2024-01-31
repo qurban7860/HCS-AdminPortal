@@ -46,7 +46,6 @@ export default function SecurityUserProfile() {
   const { customer } = useSelector((state) => state.customer);
   const { contact } = useSelector((state) => state.contact);
   const { securityUser, initial, isLoading} = useSelector((state) => state.user);
-  // console.log("securityUser : ",securityUser," contact : ", contact , " customer  : ", customer  )
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -140,9 +139,6 @@ export default function SecurityUserProfile() {
               },
             }}
           >
-            {/* {TABS.map((tab) => (
-              <Tab key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
-            ))} */}
           </Tabs>
         </Card>
         <Card sx={{ p: 3 }}>
@@ -151,7 +147,7 @@ export default function SecurityUserProfile() {
             <ViewFormField
               sm={6}
               heading="Customer"
-              objectParam={
+              node={
                 defaultValues?.customer && (
                   <Link onClick={handleOpenCustomer} href="#" underline="none">
                     {defaultValues?.customer}
@@ -306,18 +302,6 @@ export default function SecurityUserProfile() {
           />
           <ViewFormField isLoading={isLoading} />
         </Grid>
-        {/* <ViewFormField isLoading={isLoading} sm={6} heading='First Name'    param={contact?.firstName }/>
-          <ViewFormField isLoading={isLoading} sm={6} heading='Last Name'     param={contact?.lastName  }/>
-          <ViewFormField isLoading={isLoading} sm={6} heading='Title'         param={contact?.title }/>
-          <ViewFormField isLoading={isLoading} sm={6} heading='Contact Types' param={contact?.contactTypes}/>
-          <ViewFormField isLoading={isLoading} sm={6} heading='Phone'         param={contact?.phone }/>
-          <ViewFormField isLoading={isLoading} sm={6} heading='Email'         param={contact?.email }/>
-          <ViewFormField isLoading={isLoading} sm={6} heading='Street'        param={contact?.address?.street}/>
-          <ViewFormField isLoading={isLoading} sm={6} heading='Suburb'        param={contact?.address?.suburb}/>
-          <ViewFormField isLoading={isLoading} sm={6} heading='City'          param={contact?.address?.city}/>
-          <ViewFormField isLoading={isLoading} sm={6} heading='Region'        param={contact?.address?.region}/>
-          <ViewFormField isLoading={isLoading} sm={6} heading='Post Code'     param={contact?.address?.postcode}/>
-          <ViewFormField isLoading={isLoading} sm={6} heading='Country'       param={contact?.address?.country}/> */}
       </Dialog>
     </>
   );
