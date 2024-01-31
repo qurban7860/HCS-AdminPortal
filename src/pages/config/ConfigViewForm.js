@@ -19,6 +19,7 @@ import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDe
 
 export default function ConfigViewForm() {
   const { config, isLoading } = useSelector((state) => state.config);
+  const isSuperAdmin = JSON.parse(localStorage.getItem('userRoles'))?.some((role) => role.roleType === 'SuperAdmin');
 
   const navigate = useNavigate();
 
@@ -70,6 +71,7 @@ export default function ConfigViewForm() {
       <Grid>
         <ViewFormEditDeleteButtons isActive={defaultValues.isActive}
           handleEdit={handleEdit}
+          disableEditButton={!isSuperAdmin}
           onDelete={onDelete}
           backLink={() => navigate(PATH_SETTING.configs.list)}
         />

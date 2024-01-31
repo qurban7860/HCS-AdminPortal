@@ -230,7 +230,7 @@ const handleNewFile = async () => {
       enqueueSnackbar(Snacks.deletedDrawing, { variant: `success` });
     } catch (err) {
       console.log(err);
-      enqueueSnackbar(Snacks.failedDeleteDrawing, { variant: `error` });
+      enqueueSnackbar(err, { variant: `error` });
     }
   };
 

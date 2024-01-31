@@ -13,6 +13,7 @@ const initialState = {
   isInitialized: false,
   isAuthenticated: false,
   user: null,
+  isSuperAdmin: false,
   resetTokenTime: null,
 };
 
@@ -21,10 +22,11 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setInitial(state, action) {
-      const { isAuthenticated, user, resetTokenTime } = action.payload;
+      const { isAuthenticated, user, isSuperAdmin, resetTokenTime } = action.payload;
       state.isInitialized = true;
       state.isAuthenticated = isAuthenticated;
       state.user = user;
+      state.isSuperAdmin = isSuperAdmin;
       state.resetTokenTime = resetTokenTime;
     },
     login(state, action) {
@@ -73,7 +75,7 @@ export function AuthProvider({ children }) {
           displayName: localStorage.getItem('name'),
         };
         const userId = localStorage.getItem('userId');
-
+        const isSuperAdmin = await JSON.parse(localStorage.getItem('userRoles'))?.some((role) => role.roleType === 'SuperAdmin');
         const tokenExpTime = jwtDecode(accessToken).exp * 1000;
         const tokenRefreshTime = tokenExpTime - 20 * 60 * 1000;
         const resetTokenTime = setTimeout(async () => {
@@ -85,19 +87,19 @@ export function AuthProvider({ children }) {
 
             localStorage.setItem('accessToken', newAccessToken);
 
-            dispatch(setInitial({ isAuthenticated: true, user, userId, resetTokenTime }));
+            dispatch(setInitial({ isAuthenticated: true, user, userId, isSuperAdmin, resetTokenTime }));
           } catch (error) {
             console.error(error);
           }
         }, tokenRefreshTime - Date.now() + 30 * 1000);
 
-        dispatch(setInitial({ isAuthenticated: true, user, userId, resetTokenTime }));
+        dispatch(setInitial({ isAuthenticated: true, user, userId, isSuperAdmin , resetTokenTime }));
       } else {
-        dispatch(setInitial({ isAuthenticated: false, user: null, resetTokenTime: null }));
+        dispatch(setInitial({ isAuthenticated: false, user: null, userId: null, resetTokenTime: null }));
       }
     } catch (error) {
       console.error(error);
-      dispatch(setInitial({ isAuthenticated: false, user: null, resetTokenTime: null }));
+      dispatch(setInitial({ isAuthenticated: false, user: null, userId: null, resetTokenTime: null }));
     }
   }, [storageAvailable]);
 
@@ -160,6 +162,7 @@ export function AuthProvider({ children }) {
     () => ({
       isInitialized: state => state.auth.isInitialized,
       isAuthenticated: state => state.auth.isAuthenticated,
+      isSuperAdmin: state => state.auth.isSuperAdmin,
       user: state => state.auth.user,
       userId: state => state.auth.userId,
       method: 'jwt',

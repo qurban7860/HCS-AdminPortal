@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
-import { Badge, Box, Divider, Grid, TextField } from '@mui/material';
-import { useDispatch } from 'react-redux';
+import { Autocomplete, Badge, Box, Divider, Grid, TextField } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 import { memo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { green } from '@mui/material/colors';
 import { DateTimePicker } from '@mui/x-date-pickers';
@@ -21,6 +21,7 @@ import ViewFormMenuPopover from './ViewFormMenuPopover';
 import ViewFormApprovalsPopover from './ViewFormApprovalsPopover';
 import { ICONS } from '../../constants/icons/default-icons';
 import { fDate, fDateTime } from '../../utils/formatTime';
+import { useAuthContext } from '../../auth/useAuthContext';
 
 function ViewFormEditDeleteButtons({
   // Icons 
@@ -78,8 +79,13 @@ function ViewFormEditDeleteButtons({
 }) {
   const { id } = useParams();
   const userId = localStorage.getItem('userId');
+  const { isSuperAdmin } = useAuthContext();
+  const navigate = useNavigate();
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
+  const { transferDialogBoxVisibility } = useSelector((state) => state.machine);
+  const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
+  const { activeCustomers } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openUserInviteConfirm, setOpenUserInviteConfirm] = useState(false);
@@ -96,11 +102,7 @@ function ViewFormEditDeleteButtons({
     },
   });
   
-  const disableDelete = userRoles?.some((role) => role?.disableDelete === true);
 
-  if (disableDelete) {
-    disableDeleteButton = true;
-  }
 
   // Function to handle date change
   const handleLockUntilChange = newValue => {
@@ -148,7 +150,7 @@ function ViewFormEditDeleteButtons({
       setOpenVerificationConfirm(true);
     }
 
-    if (dialogType === 'delete' && !disableDeleteButton) {
+    if (dialogType === 'delete' && isSuperAdmin ) {
       setOpenConfirm(true);
     }
 
@@ -258,6 +260,10 @@ function ViewFormEditDeleteButtons({
     date: new Date(machineSupportDate)
   }
 
+  const [customer, setCustomer] = useState(null);
+  const [status, setStatus] = useState(null);
+  const [statusError, setStatusError] = useState(null);
+  
   return (
     <Grid container justifyContent="space-between" sx={{pb:1, px:0.5}}>
       <Grid item sx={{display:'flex', mt:0.5,mr:1}}>
@@ -420,7 +426,7 @@ function ViewFormEditDeleteButtons({
           {handleUserInvite && id!==userId &&(
             <IconTooltip
             title="Resend Invitation"
-            disabled={disableDeleteButton}
+            disabled={ !isSuperAdmin }
             color={disableDeleteButton?"#c3c3c3":theme.palette.secondary.main}
             icon={ICONS.USER_INVITE.icon}
             onClick={() => {
@@ -552,11 +558,11 @@ function ViewFormEditDeleteButtons({
         {id !== userId  && !mainSite && onDelete && (
           <IconTooltip
             title="Delete"
-            disabled={disableDeleteButton}
+            disabled={!isSuperAdmin}
             onClick={() => {
               handleOpenConfirm('delete');
             }}
-            color={disableDeleteButton?"#c3c3c3":"#FF0000"}
+            color={!isSuperAdmin?"#c3c3c3":"#FF0000"}
             icon="mdi:trash-can-outline"
           />
         )}

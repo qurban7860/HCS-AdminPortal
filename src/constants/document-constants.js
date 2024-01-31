@@ -199,7 +199,7 @@ export const Snacks = {
 
   failedDrawing: 'Failed to Upload Drawing', // Update Failed message
   failedUpdateDrawing: 'Failed to Update Drawing', // Update Failed message
-  failedDeleteDrawing: 'Failed to Deleted Drawing', // Delete Failed message
+  failedDeleteDrawing: 'Failed to Delete Drawing', // Delete Failed message
 
   // documentAddForm -documents dashboard
   fileRequired: 'File is required',
