@@ -540,13 +540,13 @@ function ViewFormEditDeleteButtons({
         }
 
         {/* edit button */}
-        {handleEdit && !machineSettingPage && !settingPage && !securityUserPage && !isSettingReadOnly && !isSecurityReadOnly && <IconTooltip
+        {handleEdit && <IconTooltip
           title="Edit"
-          disabled={disableEditButton}
+          disabled={disableEditButton || ( !machineSettingPage && !settingPage && !securityUserPage && !isSettingReadOnly && !isSecurityReadOnly )}
           onClick={() => {
             handleEdit();
           }}
-          color={disableEditButton?"#c3c3c3":theme.palette.primary.main}
+          color={disableEditButton || ( !machineSettingPage && !settingPage && !securityUserPage && !isSettingReadOnly && !isSecurityReadOnly ) ?"#c3c3c3":theme.palette.primary.main}
           icon="mdi:pencil-outline"
         />}
 

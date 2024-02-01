@@ -24,6 +24,7 @@ import { useSnackbar } from '../../../../components/snackbar';
 import FormProvider, {
   RHFTextField,
   RHFSwitch,
+  RHFAutocomplete,
 } from '../../../../components/hook-form';
 import { getRole, updateRole } from '../../../../redux/slices/securityUser/role';
 import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
@@ -32,36 +33,16 @@ import { Cover } from '../../../../components/Defaults/Cover';
 // ----------------------------------------------------------------------
 
 export default function RoleEditForm() {
-  const { role, userRoleTypes } = useSelector((state) => state.role);
-  const [roleType, setRoleType] = useState('');
-
-  const roleTypesArray = useMemo(
-    () =>
-      Object.keys(userRoleTypes).map((key) => ({
-        key,
-        name: userRoleTypes[key],
-      })),
-    [userRoleTypes]
-  );
+  const { role, userRoleTypes } = useSelector((state) => state.role);;
 
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const isSuperAdmin = userRoles?.some((rolee) => rolee.roleType === 'SuperAdmin');
-
   const EditRoleSchema = Yup.object().shape({
     name: Yup.string().min(2).max(50).required('Name Field is required!'),
     description: Yup.string().max(10000),
-    /* eslint-disable */
-    roleTypes: Yup.string().when('roleType', {
-      is: (roleType) => roleType !== '',
-      then: Yup.string().required('Role type is required!'),
-      otherwise: Yup.string().notRequired(),
-    }),
-    /* eslint-enable */
+    roleType: Yup.object().nullable().required('Role Type'),
     allModules: Yup.boolean(),
     allWriteAccess: Yup.boolean(),
     isActive: Yup.boolean(),
@@ -72,6 +53,7 @@ export default function RoleEditForm() {
   const defaultValues = useMemo(
     () => ({
       name: role?.name || '',
+      roleType: userRoleTypes.find((uRole)=> uRole.value === role.roleType ) || null, 
       description: role?.description || '',
       isActive: role?.isActive || false,
       isDefault: role?.isDefault || false,
@@ -90,42 +72,21 @@ export default function RoleEditForm() {
 
   const {
     reset,
-    setValue,
+    watch,
     handleSubmit,
     formState: { isSubmitting },
-    trigger,
   } = methods;
 
-  useEffect(() => {
-    if(!isSuperAdmin){
-      navigate(PATH_PAGE.page403)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigate, isSuperAdmin]);
-
-  useLayoutEffect(() => {
-    const filteredRole = roleTypesArray.find((x) => x.key === role?.roleType);
-    if (filteredRole) {
-      setRoleType(filteredRole);
-      setValue('roleTypes', filteredRole?.name);
-    }
-  }, [role, roleTypesArray, setValue]);
+  const { roleType }= watch();
+console.log("roleType : ",roleType)
+console.log("roleType original : ",role.roleType)
 
   const toggleCancel = () => {
     navigate(PATH_SETTING.role.view(role._id));
   };
 
-  const handleRoleTypeChange = (event, newValue) => {
-    setRoleType(newValue);
-    setValue('roleTypes', newValue?.name || '');
-    trigger('roleTypes');
-  };
-
   const onSubmit = async (data) => {
     try {
-      if (roleType) {
-        data.roleType = roleType.key;
-      }
       await dispatch(updateRole(role._id, data));
       dispatch(getRole(role._id));
       navigate(PATH_SETTING.role.view(role._id));
@@ -154,32 +115,20 @@ export default function RoleEditForm() {
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
-                <RHFTextField name="name" label="Name" />
-                <Autocomplete
-                  required
-                  value={roleType || null}
-                  options={roleTypesArray}
+
+                <RHFTextField name="name" label="Name*" />
+
+                <RHFAutocomplete
+                  name="roleType" 
+                  label="Role Type*"
+                  options={userRoleTypes}
                   getOptionLabel={(option) => option.name}
                   isOptionEqualToValue={(option, value) => option.name === value.name}
-                  onChange={handleRoleTypeChange}
-                  id="controllable-states-demo"
-                  renderOption={(props, option) => (
-                    <li {...props} key={option.key}>
-                      {option.name}
-                    </li>
-                  )}
-                  renderInput={(params) => (
-                    <RHFTextField {...params} name="roleTypes" label="Role Types" />
-                  )}
-                  ChipProps={{ size: 'small' }}
-                >
-                  {(option) => (
-                    <div key={option.key}>
-                      <span>{option.name}</span>
-                    </div>
-                  )}
-                </Autocomplete>
+                  renderOption={(props, option) => ( <li {...props} key={option.key}>{option?.name || ''} </li>)}
+                />
+
                 <RHFTextField name="description" label="Description" minRows={8} multiline />
+
                 <Grid display="flex">
                   <RHFSwitch name="isActive" label="Active" />
                   <RHFSwitch name="isDefault" label="Default" />

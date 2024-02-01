@@ -1,10 +1,9 @@
-import PropTypes from 'prop-types';
 import {  useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
 // @mui
-import { Card, Grid, Chip, Container } from '@mui/material';
+import { Card, Grid, Container } from '@mui/material';
 // import { RHFSwitch } from '../../../components/hook-form';
 // redux
 import {
@@ -17,7 +16,6 @@ import { PATH_MACHINE } from '../../../../routes/paths';
 //  components
 import ViewFormAudit from '../../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../../components/ViewForms/ViewFormField';
-import ViewFormSwitch from '../../../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../../../components/ViewForms/ViewFormEditDeleteButtons';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 import { Cover } from '../../../../components/Defaults/Cover';
