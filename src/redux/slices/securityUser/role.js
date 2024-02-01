@@ -17,6 +17,7 @@ const initialState = {
   role: null,
   userRoleTypes: [
               { name: 'Super Admin', value: 'SuperAdmin'},
+              { name: 'Developer', value: 'Developer'},
               { name: 'Global Manager', value: 'GlobalManager'},
               { name: 'Regional Manager', value: 'RegionalManager'},
               { name: 'Support Manager', value: 'SupportManager'},
