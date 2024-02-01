@@ -18,7 +18,7 @@ function NavigationConfig() {
     cart: icon('ic_cart'),
     chat: icon('ic_chat'),
     mail: icon('ic_mail'),
-    user: <Iconify icon="mdi:account" />,
+    user: icon('ic_user'),
     file: icon('ic_file'),
     lock: icon('ic_lock'),
     label: icon('ic_label'),
@@ -38,11 +38,13 @@ function NavigationConfig() {
     dashboard: <Iconify icon="mdi:view-dashboard" />,
     setting: <Iconify icon="ant-design:setting-filled" />,
     email: <Iconify icon ="eva:email-fill"/>,
-    document: <Iconify icon="basil:document-solid" />,
+    document: <Iconify icon="lets-icons:file-dock-fill" />,
+    drawing: <Iconify icon="streamline:hand-held-tablet-drawing-solid" />,
     reports: <Iconify icon="mdi:report-box-outline" />,
-    map: <Iconify icon="mdi:map-legend" />,
+    map: <Iconify icon="mdi:map-marker" />,
     machines: <Iconify icon="mdi:gate-open" />,
     users: <Iconify icon="mdi:account-group" />,
+    security: <Iconify icon="mdi:security-account" />,
   };
 
   const { 
@@ -74,14 +76,14 @@ console.log(
   useEffect(() => {
     const updatedConfig = [...navConfig];
 
-    updatedConfig[0].items.splice(7, 0, { title: 'Sites Map', path: PATH_SITEMAP.app, icon: ICONS.reports });
+    updatedConfig[0].items.splice(7, 0, { title: 'Sites Map', path: PATH_SITEMAP.app, icon: ICONS.map });
 
     if (isDocumentAccessAllowed) {
       updatedConfig[0].items.splice(3, 0, { title: 'Documents', path: PATH_DOCUMENT.document.list, icon: ICONS.document });
     }
 
     if (isDrawingAccessAllowed) {
-      updatedConfig[0].items.splice(4, 0, { title: 'Machine Drawings', path: PATH_DOCUMENT.document.machineDrawings.list, icon: ICONS.document });
+      updatedConfig[0].items.splice(4, 0, { title: 'Machine Drawings', path: PATH_DOCUMENT.document.machineDrawings.list, icon: ICONS.drawing });
     }
 
     if (isSettingAccessAllowed) {
@@ -89,7 +91,7 @@ console.log(
     }
 
     if (isSecurityUserAccessAllowed) {
-      updatedConfig[0].items.splice(6, 0, { title: 'Security', path: PATH_SECURITY.users.list, icon: ICONS.user });
+      updatedConfig[0].items.splice(6, 0, { title: 'Security', path: PATH_SECURITY.users.list, icon: ICONS.security });
     }
 
     if (isEmailAccessAllowed) {
