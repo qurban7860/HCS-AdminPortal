@@ -20,10 +20,10 @@ export const LicenseSchema = Yup.object().shape({
   production: Yup.number().max(999999999999999,'Production must be less than or equal to 999999999999999').typeError('Production must be a number').transform((value, originalValue) => {
     if (typeof originalValue === 'string' && originalValue.trim() === '') return undefined;
     return parseFloat(value);
-  }).test('no-spaces', 'Production cannot have spaces', value => (value && value.toString().includes(' '))),
-  waste: Yup.number().max(999999999999999,'Production must be less than or equal to 999999999999999').typeError('Waste must be a number').transform((value, originalValue) => {
+  }),
+  waste: Yup.number().max(999999999999999,'Waste must be less than or equal to 999999999999999').typeError('Waste must be a number').transform((value, originalValue) => {
     if (typeof originalValue === 'string' &&  originalValue.trim() === '') return undefined;
     return parseFloat(value);
-  }).test('no-spaces', 'Waste cannot have spaces', value => (value && value.toString().includes(' '))),
+  }),
   isActive: Yup.boolean(),
 });
