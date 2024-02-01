@@ -170,40 +170,44 @@ export default function GeneralAppPage() {
   return (
     <StyledContainer maxWidth={false}>
       <Grid container>
-        { !isDashboardAccessLimited && <Grid container spacing={3} mt={2}>
+        <Grid container spacing={3} mt={2}>
             <Grid item xs={12}>
               <HowickWelcome title={TITLES.WELCOME} description={TITLES.WELCOME_DESC} />
             </Grid>
+        { !isDashboardAccessLimited && 
             <Grid item xs={12} sm={6} md={6} lg={6} xl={3} >
               <HowickWidgets title="Customers" total={count?.customerCount || 0}
                 notVerified={count?.nonVerifiedCustomerCount || 0}
                 excludedCustomers={count?.excludeReportingCustomersCount || 0}
                 icon="raphael:users"
               />
-            </Grid>
+            </Grid>}
+        { !isDashboardAccessLimited && 
             <Grid item xs={12} sm={6} md={6} lg={6} xl={3} >
               <HowickWidgets title="Sites" total={count?.siteCount || 0}
                 icon="carbon:location-company"
               />
-            </Grid>
+            </Grid>}
+        { !isDashboardAccessLimited && 
             <Grid item xs={12} sm={6} md={6} lg={6} xl={3} >
               <HowickWidgets title="Machines" total={count?.machineCount || 0}
                 notVerified={count?.nonVerifiedMachineCount || 0}
                 connectables={count?.connectAbleMachinesCount || 0}
                 icon="vaadin:automation"
               />
-            </Grid>
+            </Grid>}
+        { !isDashboardAccessLimited && 
             <Grid item xs={12} sm={6} md={6} lg={6} xl={3} >
               <HowickWidgets title="Users" total={count?.userTotalCount || 0}
                 activeUsers={count?.userActiveCount || 0} 
                 onlineUsers={onlineUsers && onlineUsers?.length || 0}
                 icon="mdi:account-group"
               />
-          </Grid>    
-        </Grid>}
+          </Grid>}  
+        </Grid>
 
           {/* Global widget */}
-          <Grid container spacing={3} mt={2}>
+          { !isDashboardAccessLimited && <Grid container spacing={3} mt={2}>
             <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
               <StyledGlobalCard variants={varFade().inDown} >
                   <Grid container mt={2} mb={2}>
@@ -420,10 +424,10 @@ export default function GeneralAppPage() {
             </Grid>
              :'' }
 
-          </Grid>
+          </Grid>}
 
         {/* hide this in the live, but show in development and test for now  */}
-        {showDevGraphs ?
+        {showDevGraphs && !isDashboardAccessLimited ?
         <Grid item xs={12} md={6} lg={12}>
           <ChartColumnNegative optionsData={modelWiseMachineModel} />
           <StyledBg />

@@ -387,16 +387,25 @@ function SearchBarCombo({
                 </Grid>
               }
                 
-                {inviteButton && isAllAccessAllowed && 
+                {inviteButton && 
                   <Grid item>
-                    <StyledTooltip title={inviteButton} placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
-                      <IconButton onClick={inviteOnClick} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
+                    <StyledTooltip title={inviteButton} placement="top" disableFocusListener 
+                      tooltipcolor={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#103996"} 
+                      color={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#103996"} 
+                    >
+                      <IconButton onClick={inviteOnClick} 
+                        disabled={ ( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) } 
+                        color={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#fff"}
+                        sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
                         '&:hover': {
                           background:"#103996", 
                           color:"#fff"
                         }
                       }}>
-                        <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon={buttonIcon || 'mdi:user-plus'} />
+                        <Iconify 
+                          color={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#fff"} 
+                          sx={{ height: '24px', width: '24px'}} icon={buttonIcon || 'mdi:user-plus'} 
+                        />
                       </IconButton>
                     </StyledTooltip>
                   </Grid>

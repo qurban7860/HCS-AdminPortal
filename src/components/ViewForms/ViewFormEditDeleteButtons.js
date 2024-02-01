@@ -259,7 +259,7 @@ function ViewFormEditDeleteButtons({
     status:new Date(machineSupportDate).getTime() > new Date().getTime(),
     date: new Date(machineSupportDate)
   }
-  
+
   return (
     <Grid container justifyContent="space-between" sx={{pb:1, px:0.5}}>
       <Grid item sx={{display:'flex', mt:0.5,mr:1}}>
@@ -418,7 +418,7 @@ function ViewFormEditDeleteButtons({
           )}
 
           {/* User Status Change */}
-          {onUserStatusChange && id!==userId &&(
+          {onUserStatusChange && !isSecurityReadOnly && id!==userId &&(
             <IconTooltip
             title={userStatus?.locked?ICONS.USER_UNLOCK.heading:ICONS.USER_LOCK.heading}
             color={userStatus?.locked?ICONS.USER_UNLOCK.color:ICONS.USER_LOCK.color}
