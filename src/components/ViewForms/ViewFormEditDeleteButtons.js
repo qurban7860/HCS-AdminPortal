@@ -150,7 +150,7 @@ function ViewFormEditDeleteButtons({
       setOpenVerificationConfirm(true);
     }
 
-    if (dialogType === 'delete' && !isDisableDelete ) {
+    if (dialogType === 'delete' && ( !isDisableDelete || !disableDeleteButton ) ) {
       setOpenConfirm(true);
     }
 
@@ -259,7 +259,7 @@ function ViewFormEditDeleteButtons({
     status:new Date(machineSupportDate).getTime() > new Date().getTime(),
     date: new Date(machineSupportDate)
   }
-
+  
   return (
     <Grid container justifyContent="space-between" sx={{pb:1, px:0.5}}>
       <Grid item sx={{display:'flex', mt:0.5,mr:1}}>
@@ -431,8 +431,8 @@ function ViewFormEditDeleteButtons({
           {handleUserInvite && id!==userId &&(
             <IconTooltip
             title="Resend Invitation"
-            disabled={ !isSecurityReadOnly }
-            color={disableDeleteButton?"#c3c3c3":theme.palette.secondary.main}
+            disabled={ isSecurityReadOnly }
+            color={ isSecurityReadOnly ? "#c3c3c3":theme.palette.secondary.main}
             icon={ICONS.USER_INVITE.icon}
             onClick={() => {
               handleOpenConfirm('UserInvite');
@@ -542,11 +542,11 @@ function ViewFormEditDeleteButtons({
         {/* edit button */}
         {handleEdit && <IconTooltip
           title="Edit"
-          disabled={disableEditButton || ( !machineSettingPage && !settingPage && !securityUserPage && !isSettingReadOnly && !isSecurityReadOnly )}
+          disabled={disableEditButton || (( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ))}
           onClick={() => {
             handleEdit();
           }}
-          color={disableEditButton || ( !machineSettingPage && !settingPage && !securityUserPage && !isSettingReadOnly && !isSecurityReadOnly ) ?"#c3c3c3":theme.palette.primary.main}
+          color={disableEditButton || (( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly )) ?"#c3c3c3":theme.palette.primary.main}
           icon="mdi:pencil-outline"
         />}
 
@@ -563,11 +563,9 @@ function ViewFormEditDeleteButtons({
         {id !== userId  && !mainSite && onDelete && (
           <IconTooltip
             title="Delete"
-            disabled={ isDisableDelete }
-            onClick={() => {
-              handleOpenConfirm('delete');
-            }}
-            color={( isDisableDelete )?"#c3c3c3":"#FF0000"}
+            disabled={ isDisableDelete || disableDeleteButton }
+            onClick={() => {  handleOpenConfirm('delete') }}
+            color={( isDisableDelete || disableDeleteButton ) ? "#c3c3c3":"#FF0000"}
             icon="mdi:trash-can-outline"
           />
         )}

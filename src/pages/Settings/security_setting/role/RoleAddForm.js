@@ -55,6 +55,7 @@ export default function RoleAddForm({ currentRole }) {
   const defaultValues = useMemo(
     () => ({
       name: '',
+      roleType: null,
       description: '',
       isActive: true,
       isDefault: false,
@@ -84,9 +85,9 @@ export default function RoleAddForm({ currentRole }) {
       reset();
       enqueueSnackbar('Role Save Successfully!');
       navigate(PATH_SETTING.role.list);
-    } catch (error) {
-      enqueueSnackbar('Role Save failed!', { variant: `error` });
-      console.error(error);
+    } catch ( error ) {
+      enqueueSnackbar( error, { variant: `error` });
+      console.error( error );
     }
   };
 
