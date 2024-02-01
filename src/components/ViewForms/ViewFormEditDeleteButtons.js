@@ -84,7 +84,6 @@ function ViewFormEditDeleteButtons({
   const userId = localStorage.getItem('userId');
 
   const { isDisableDelete, isSettingReadOnly, isSecurityReadOnly } = useAuthContext();
-
   const dispatch = useDispatch();
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openUserInviteConfirm, setOpenUserInviteConfirm] = useState(false);

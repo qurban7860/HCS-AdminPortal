@@ -125,7 +125,7 @@ export const getUserAccess = ( roles ) => {
     } else if(userRoles?.some((role) => role?.roleType?.toLowerCase() === 'globalmanager')){
 
         isAllAccessAllowed = true
-        isDisableDelete = userRoles?.some((role) => role?.disableDelete || false )
+        isDisableDelete = userRoles?.some((role) => role?.disableDelete || true )
         isDashboardAccessLimited = false
         isDocumentAccessAllowed = true
         isDrawingAccessAllowed = true

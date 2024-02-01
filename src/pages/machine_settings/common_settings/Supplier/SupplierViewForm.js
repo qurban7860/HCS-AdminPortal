@@ -89,7 +89,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
         isDefault={defaultValues.isDefault} 
         handleEdit={toggleEdit} 
         onDelete={onDelete} b
-        ackLink={() => navigate(PATH_MACHINE.machines.settings.supplier.list)}  
+        backLink={() => navigate(PATH_MACHINE.machines.settings.supplier.list)}  
         machineSettingPage
       />
       <Grid container sx={{mt:2}}>
