@@ -123,11 +123,11 @@ export const WhitelistIPAddForm = Loadable(lazy(() => import('../pages/Settings/
 // export const MachineLicenses = Loadable(lazy(()=> import('../pages/machine/License/MachineLicenses')));
 // export const LicenseList = Loadable(lazy(()=> import('../pages/machine/License/LicenseList')));
 
-// Machine Category Groups
-export const CategoryGroupAddForm = Loadable(lazy(() => import('../pages/machine_settings/common_settings/category_groups/CategoryGroupAddForm')));
-export const CategoryGroupList = Loadable(lazy(() => import('../pages/machine_settings/common_settings/category_groups/CategoryGroupList')));
-export const CategoryGroupViewForm = Loadable(lazy(() => import('../pages/machine_settings/common_settings/category_groups/CategoryGroupViewForm')));
-export const CategoryGroupEditForm = Loadable(lazy(() => import('../pages/machine_settings/common_settings/category_groups/CategoryGroupEditForm')));
+// Machine Groups
+export const GroupAddForm = Loadable(lazy(() => import('../pages/machine_settings/common_settings/groups/GroupAddForm')));
+export const GroupList = Loadable(lazy(() => import('../pages/machine_settings/common_settings/groups/GroupList')));
+export const GroupViewForm = Loadable(lazy(() => import('../pages/machine_settings/common_settings/groups/GroupViewForm')));
+export const GroupEditForm = Loadable(lazy(() => import('../pages/machine_settings/common_settings/groups/GroupEditForm')));
 
 // Machine Categories
 export const CategoryAddForm = Loadable(lazy(() => import('../pages/machine_settings/common_settings/categories/CategoryAddForm')));

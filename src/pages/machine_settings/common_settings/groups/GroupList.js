@@ -6,7 +6,7 @@ import { Table, Button, TableBody, Container, TableContainer } from '@mui/materi
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 // routes
-import { getCategoryGroups, ChangePage, ChangeRowsPerPage, setFilterBy } from '../../../../redux/slices/products/categoryGroup';
+import { getGroups, ChangePage, ChangeRowsPerPage, setFilterBy } from '../../../../redux/slices/products/group';
 import { PATH_MACHINE } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
@@ -22,12 +22,13 @@ import {
 import Scrollbar from '../../../../components/scrollbar';
 import ConfirmDialog from '../../../../components/confirm-dialog/ConfirmDialog';
 // sections
-import CategoryGroupListTableRow from './CategoryGroupListTableRow';
-import CategoryGroupListTableToolbar from './CategoryGroupListTableToolbar';
+import GroupListTableRow from './GroupListTableRow';
+import GroupListTableToolbar from './GroupListTableToolbar';
 import { Cover } from '../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 import { fDate } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
+import { ICONS } from '../../../../constants/icons/default-icons';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -39,7 +40,7 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-export default function CategoryGroupList() {
+export default function GroupList() {
   const {
     dense,
     order,
@@ -56,8 +57,8 @@ export default function CategoryGroupList() {
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
-  const { categoryGroups, filterBy, page, rowsPerPage, 
-          isLoading, error, initial, responseMessage } = useSelector((state) => state.categoryGroup);
+  const { groups, filterBy, page, rowsPerPage, 
+          isLoading, error, initial, responseMessage } = useSelector((state) => state.group);
     
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
@@ -67,14 +68,14 @@ export default function CategoryGroupList() {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useLayoutEffect(() => {
-    dispatch(getCategoryGroups());
+    dispatch(getGroups());
   },[dispatch]);
 
   useEffect(() => {
     if (initial) {
-      setTableData(categoryGroups);
+      setTableData(groups);
     }
-  }, [categoryGroups, error, responseMessage, enqueueSnackbar, initial]);
+  }, [groups, error, responseMessage, enqueueSnackbar, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -112,7 +113,7 @@ export default function CategoryGroupList() {
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_MACHINE.machines.settings.categoryGroups.view(id));
+    navigate(PATH_MACHINE.machines.settings.groups.view(id));
   };
 
   const handleResetFilter = () => {
@@ -123,11 +124,11 @@ export default function CategoryGroupList() {
   return (
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name="Category Groups" setting />
+          <Cover name={ICONS.MACHINE_GROUPS.heading} setting />
         </StyledCardContainer>
 
         <TableCard>
-          <CategoryGroupListTableToolbar
+          <GroupListTableToolbar
             filterName={filterName}
             onFilterName={handleFilterName}
             isFiltered={isFiltered}
@@ -155,7 +156,7 @@ export default function CategoryGroupList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <CategoryGroupListTableRow
+                        <GroupListTableRow
                           key={row._id}
                           row={row}
                           selected={selected.includes(row._id)}

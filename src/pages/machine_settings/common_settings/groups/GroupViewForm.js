@@ -7,9 +7,9 @@ import { Card, Grid, Container } from '@mui/material';
 // import { RHFSwitch } from '../../../components/hook-form';
 // redux
 import {
-  getCategoryGroup,
-  deleteCategoryGroup,
-} from '../../../../redux/slices/products/categoryGroup';
+  getGroup,
+  deleteGroup,
+} from '../../../../redux/slices/products/group';
 import { useSnackbar } from '../../../../components/snackbar';
 // paths
 import { PATH_MACHINE } from '../../../../routes/paths';
@@ -22,46 +22,46 @@ import { Cover } from '../../../../components/Defaults/Cover';
 
 // ----------------------------------------------------------------------
 
-export default function CategoryGroupViewForm() {
+export default function GroupViewForm() {
  
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { categoryGroup, isLoading } = useSelector((state) => state.categoryGroup);
+  const { group, isLoading } = useSelector((state) => state.group);
 
   useLayoutEffect(() => {
     if (id != null) {
-      dispatch(getCategoryGroup(id));
+      dispatch(getGroup(id));
     }
   }, [dispatch, id]);
 
   const defaultValues = useMemo(
     () => ({
-      name: categoryGroup?.name || '',
-      categories: categoryGroup?.categories || '',
-      isActive: categoryGroup.isActive,
-      isDefault: categoryGroup?.isDefault,
-      createdByFullName: categoryGroup?.createdBy?.name || '',
-      createdAt: categoryGroup?.createdAt || '',
-      createdIP: categoryGroup?.createdIP || '',
-      updatedByFullName: categoryGroup?.updatedBy?.name || '',
-      updatedAt: categoryGroup?.updatedAt || '',
-      updatedIP: categoryGroup?.updatedIP || '',
+      name: group?.name || '',
+      categories: group?.categories || [],
+      isActive: group.isActive,
+      isDefault: group?.isDefault,
+      createdByFullName: group?.createdBy?.name || '',
+      createdAt: group?.createdAt || '',
+      createdIP: group?.createdIP || '',
+      updatedByFullName: group?.updatedBy?.name || '',
+      updatedAt: group?.updatedAt || '',
+      updatedIP: group?.updatedIP || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [categoryGroup]
+    [group]
   );
 
   const handleEdit = () => {
-    navigate(PATH_MACHINE.machines.settings.categoryGroups.edit(categoryGroup?._id));
+    navigate(PATH_MACHINE.machines.settings.groups.edit(group?._id));
   };
 
   const handleDelete = async () => {
     try {
-      await dispatch(deleteCategoryGroup(id));
+      await dispatch(deleteGroup(id));
       enqueueSnackbar('Category Group Deleted Successfully!');
-      navigate(PATH_MACHINE.machines.settings.categoryGroups.list);
+      navigate(PATH_MACHINE.machines.settings.groups.list);
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });
       console.log('Error:', err);
@@ -77,12 +77,12 @@ export default function CategoryGroupViewForm() {
             isDefault={defaultValues.isDefault} 
             handleEdit={handleEdit} 
             onDelete={handleDelete} 
-            backLink={() => navigate(PATH_MACHINE.machines.settings.categoryGroups.list)}
+            backLink={() => navigate(PATH_MACHINE.machines.settings.groups.list)}
             machineSettingPage
             />
           <Grid container sx={{mt:2}}>
             <ViewFormField isLoading={isLoading} sm={12} heading="Group" param={defaultValues?.name} />
-            <ViewFormField isLoading={isLoading} sm={12} heading="Categories" chips={defaultValues?.categories?.map(category => category?.name)} />
+            <ViewFormField isLoading={isLoading} sm={12} heading="Categories" chips={defaultValues?.categories.map(category => category?.name)} />
             <ViewFormAudit defaultValues={defaultValues} />
           </Grid>
         </Card>

@@ -9,7 +9,7 @@ import { useScreenSize } from '../../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
-CategoryGroupListTableRow.propTypes = {
+GroupListTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
@@ -18,7 +18,7 @@ CategoryGroupListTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
-export default function CategoryGroupListTableRow({
+export default function GroupListTableRow({
   row,
   selected,
   onSelectRow,

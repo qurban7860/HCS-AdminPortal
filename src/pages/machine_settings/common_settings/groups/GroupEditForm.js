@@ -1,57 +1,58 @@
-import { useLayoutEffect, useMemo } from 'react';
+import * as Yup from 'yup';
+import { useEffect, useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
-import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-// @mui
-import { Box, Card, Grid, Stack, Container } from '@mui/material';
-import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
-// redux
-import { addCategoryGroup } from '../../../../redux/slices/products/categoryGroup';
+import { Box, Card, Container, Grid, Stack, Typography } from '@mui/material';
+// slice
 import { getActiveCategories } from '../../../../redux/slices/products/category';
+import { getGroup, updateGroup } from '../../../../redux/slices/products/group';
 // routes
 import { PATH_MACHINE } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
-import FormProvider, { RHFAutocomplete, RHFSwitch, RHFTextField } from '../../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete } from '../../../../components/hook-form';
 import { Cover } from '../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
-
+import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
-export default function CategoryGroupAddForm() {
+export default function GroupEditForm() {
+  const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { activeCategories } = useSelector((state) => state.category);
+  const { group, isLoading } = useSelector((state) => state.group);
 
   useLayoutEffect(() => {
     dispatch(getActiveCategories());
-  },[dispatch]);
+    dispatch(getGroup(id));
+  },[dispatch, id]);
 
   const defaultValues = useMemo(
     () => ({
-      name: '',
-      categories: [],
-      isActive: true,
-      isDefault: false,
+      name: group?.name || '',
+      categories: group?.categories || [],
+      isActive: group.isActive,
+      isDefault: group.isDefault,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
-  const AddCategoryGroupSchema = Yup.object().shape({
-    name: Yup.string().min(2, 'Name is required').max(50, 'Maximum 50 characters').required('Name is required'),
+  const EditGroupSchema = Yup.object().shape({
+    name: Yup.string().min(2, 'Minimum 2 characters').max(50, 'Maximum 50 characters').required('Name is required'),
     categories: Yup.array().min(1, 'Category is required').nullable('Category is required').required('Category is required'),
     isActive: Yup.boolean(),
     isDefault: Yup.boolean(),
   });
 
   const methods = useForm({
-    resolver: yupResolver(AddCategoryGroupSchema),
+    resolver: yupResolver(EditGroupSchema),
     defaultValues,
   });
 
@@ -62,24 +63,25 @@ export default function CategoryGroupAddForm() {
   } = methods;
 
   const toggleCancel = () => {
-    navigate(PATH_MACHINE.machines.settings.categoryGroups.list);
+    navigate(PATH_MACHINE.machines.settings.groups.view(id));
   };
 
   const onSubmit = async (data) => {
     data.categories = data.categories.map(category => category._id);
     try {
-      await dispatch(addCategoryGroup(data));
+      await dispatch(updateGroup(data, id));
       reset();
-      enqueueSnackbar('Category Group Added Successfully!');
-      navigate(PATH_MACHINE.machines.settings.categoryGroups.list);
-    } catch (error) {
-      enqueueSnackbar(error?.message, { variant: `error` });
-      console.error(error);
+      enqueueSnackbar('Category Group Updated Successfully!');
+      navigate(PATH_MACHINE.machines.settings.groups.view(id));
+    } catch (err) {
+      enqueueSnackbar('Saving failed!', { variant: `error` });
+      console.error(err.message);
     }
   };
+
   return (
     <Container maxWidth={false}>
-      <StyledCardContainer><Cover name="New Category Group"/></StyledCardContainer>
+      <StyledCardContainer><Cover name="Edit Machine Group"/></StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container>
           <Grid item xs={18} md={12} >
@@ -94,7 +96,7 @@ export default function CategoryGroupAddForm() {
                     sm: 'repeat(1, 1fr)',
                   }}
                 >
-                  <RHFTextField name="name" label="Name*" />
+                  <RHFTextField name="name" label="Group Name*" />
                   <RHFAutocomplete
                     multiple
                     name="categories"
@@ -116,9 +118,9 @@ export default function CategoryGroupAddForm() {
                     md: 'repeat(8, 1fr)',
                     lg: 'repeat(10, 1fr)',
                   }}
-                >
-                <RHFSwitch key='isActive' name="isActive" label="Active" />
-                <RHFSwitch key='isDefault' name="isDefault" label="Default" />
+                  >
+                  <RHFSwitch key='isActive' name="isActive" label="Active" />
+                  <RHFSwitch key='isDefault' name="isDefault" label="Default" />
                 </Box>
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
