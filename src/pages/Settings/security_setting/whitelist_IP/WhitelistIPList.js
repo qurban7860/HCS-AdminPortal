@@ -80,24 +80,16 @@ export default function WhitelistIPList() {
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
   const { whitelistIPs, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.whitelistIP);
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
 
   useLayoutEffect(() => {
     dispatch(getWhitelistIPs());
   }, [dispatch]);
 
   useEffect(() => {
-    
-    if(!isSuperAdmin){
-      navigate(PATH_PAGE.page403)
-    }
-
     if (initial) {
       setTableData(whitelistIPs);
     }
-  }, [whitelistIPs, initial, navigate, isSuperAdmin]);
+  }, [whitelistIPs, initial ]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,

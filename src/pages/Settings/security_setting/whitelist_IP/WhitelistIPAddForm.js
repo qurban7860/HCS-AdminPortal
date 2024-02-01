@@ -30,15 +30,6 @@ export default function WhitelistIPAddForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
-  useEffect(() => {
-    if(!isSuperAdmin){
-      navigate(PATH_PAGE.page403)
-    }
-  }, [navigate, isSuperAdmin]);
-
   const WhitelistIPSchema = Yup.object().shape({
     whiteListIP: Yup.string().required('IP is required to whitelist!'),
   });

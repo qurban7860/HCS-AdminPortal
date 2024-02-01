@@ -100,14 +100,10 @@ export default function RoleList() {
 
   useEffect(() => {
 
-    if(!isSuperAdmin){
-      navigate(PATH_PAGE.page403)
-    }
-
     if (initial) {
       setTableData(roles);
     }
-  }, [roles, initial, navigate, isSuperAdmin]);
+  }, [roles, initial ]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,

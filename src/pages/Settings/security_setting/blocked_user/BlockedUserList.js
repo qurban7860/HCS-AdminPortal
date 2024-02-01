@@ -78,23 +78,15 @@ export default function BlockedUserList() {
   const [openConfirm, setOpenConfirm] = useState(false);
   const { blockedUsers, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.blockedUser);
 
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
-
   useLayoutEffect(() => {
     dispatch(getBlockedUsers());
   }, [dispatch]);
 
   useEffect(() => {
-    if(!isSuperAdmin){
-      navigate(PATH_PAGE.page403)
-    }
-
     if (initial) {
       setTableData(blockedUsers);
     }
-  }, [blockedUsers, initial, navigate, isSuperAdmin]);
+  }, [blockedUsers, initial ]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,

@@ -29,15 +29,6 @@ export default function BlacklistIPAddForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
-  useEffect(() => {
-    if(!isSuperAdmin){
-      navigate(PATH_PAGE.page403)
-    }
-  }, [navigate, isSuperAdmin]);
-
   const BlacklistIPSchema = Yup.object().shape({
     blackListIP: Yup.string().required('IP is required to blacklist!'),
   });

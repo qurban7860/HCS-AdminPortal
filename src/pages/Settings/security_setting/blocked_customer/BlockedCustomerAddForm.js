@@ -33,16 +33,6 @@ export default function BlockedCustomerAddForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
-  useEffect(() => {
-    if(!isSuperAdmin){
-      navigate(PATH_PAGE.page403)
-    }
-  }, [navigate, isSuperAdmin]);
-  
-
   useEffect(() => {
     dispatch(resetCustomers());
     dispatch(getActiveCustomers());
