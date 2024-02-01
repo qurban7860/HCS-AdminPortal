@@ -76,22 +76,26 @@ export default function GeneralAppPage() {
   const countryWiseSiteCountCountries = [];
 
   useLayoutEffect(() => {
-    dispatch(getActiveCategories());
-    dispatch(getActiveMachineModels());
-    dispatch(getCount());
-    dispatch(getERPLogs());
-  }, [dispatch]);
+    if(!isDashboardAccessLimited){
+      dispatch(getActiveCategories());
+      dispatch(getActiveMachineModels());
+      dispatch(getCount());
+      dispatch(getERPLogs());
+    }
+  }, [dispatch, isDashboardAccessLimited]);
 
   useEffect(()=>{
-    const defaultCategory = activeCategories.find((cat) => cat?.isDefault === true);
-    setMBCCategory(defaultCategory);
-    setMBMCategory(defaultCategory);
-    setMBYCategory(defaultCategory);
-
-    dispatch(getMachinesByCountry(defaultCategory?._id,null, null))
-    dispatch(getMachinesByYear(defaultCategory?._id,null, null))
-    dispatch(getMachinesByModel(defaultCategory?._id,null, null))
-  },[dispatch, activeCategories])
+    if(!isDashboardAccessLimited){
+      const defaultCategory = activeCategories.find((cat) => cat?.isDefault === true);
+      setMBCCategory(defaultCategory);
+      setMBMCategory(defaultCategory);
+      setMBYCategory(defaultCategory);
+      
+      dispatch(getMachinesByCountry(defaultCategory?._id,null, null))
+      dispatch(getMachinesByYear(defaultCategory?._id,null, null))
+      dispatch(getMachinesByModel(defaultCategory?._id,null, null))
+    }
+  },[dispatch, activeCategories, isDashboardAccessLimited])
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: currentYear - 1999 }, (_, index) => 2000 + index);
@@ -149,17 +153,17 @@ export default function GeneralAppPage() {
   };
 
   const handleExpandGraph = async (graph) => {
-    if(graph==="country"){
+    if(graph==="country" && !isDashboardAccessLimited){
       dispatch(setMachineCategory(MBCCategory));
       dispatch(setMachineYear(MBCYear));
       dispatch(setMachineModel(MBCModel));
       navigate(PATH_DASHBOARD.general.machineByCountries)
-    }else if(graph==="model"){
+    }else if(graph==="model" && !isDashboardAccessLimited ){
       dispatch(setMachineCategory(MBMCategory));
       dispatch(setMachineYear(MBMYear));
       dispatch(setMachineCountry(MBMCountry));
       navigate(PATH_DASHBOARD.general.machineByModels)
-    }else if(graph==="year"){
+    }else if(graph==="year" && !isDashboardAccessLimited){
       dispatch(setMachineCategory(MBYCategory));
       dispatch(setMachineCountry(MBYCountry));
       dispatch(setMachineModel(MBYModel));
