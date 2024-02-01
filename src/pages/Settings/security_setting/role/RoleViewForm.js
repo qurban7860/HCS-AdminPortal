@@ -40,14 +40,7 @@ export default function RoleViewForm() {
       navigate(PATH_SETTING.role.list);
       enqueueSnackbar('Role delete Successfully!');
     } catch (error) {
-      if (error.Message) {
-        enqueueSnackbar(error.Message, { variant: `error` });
-      } else if (error.message) {
-        enqueueSnackbar(error.message, { variant: `error` });
-      } else {
-        enqueueSnackbar('Something went wrong!', { variant: `error` });
-      }
-      enqueueSnackbar('Role delete failed!', { variant: `error` });
+      enqueueSnackbar(error, { variant: `error` });
       console.log('Error:', error);
     }
   };

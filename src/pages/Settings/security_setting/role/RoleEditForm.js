@@ -78,8 +78,6 @@ export default function RoleEditForm() {
   } = methods;
 
   const { roleType }= watch();
-console.log("roleType : ",roleType)
-console.log("roleType original : ",role.roleType)
 
   const toggleCancel = () => {
     navigate(PATH_SETTING.role.view(role._id));
@@ -92,9 +90,9 @@ console.log("roleType original : ",role.roleType)
       navigate(PATH_SETTING.role.view(role._id));
       enqueueSnackbar('Role updated Successfully!');
       reset();
-    } catch (err) {
-      enqueueSnackbar('Role Updating failed!', { variant: `error` });
-      console.error(err.message);
+    } catch ( err ) {
+      enqueueSnackbar( err, { variant: `error` });
+      console.error( err );
     }
   };
 

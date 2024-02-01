@@ -66,7 +66,7 @@ function SearchBarCombo({
   const isMobile = useResponsive('sm', 'down');
   const dispatch = useDispatch()
 
-  const { isSettingReadOnly, isSecurityReadOnly } = useAuthContext();
+  const { isAllAccessAllowed, isSettingReadOnly, isSecurityReadOnly } = useAuthContext();
 
   const onChangeStartDate = (e) => {
     dispatch(setDateFrom(e.target.value));
@@ -125,7 +125,7 @@ function SearchBarCombo({
             </Stack>
           </Grid>}
 
-          {setAccountManagerFilter &&
+          {setAccountManagerFilter && isAllAccessAllowed &&
           <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
             <Autocomplete 
               id="controllable-states-demo"
@@ -188,7 +188,7 @@ function SearchBarCombo({
             </Grid>
           }
 
-          {setSupportManagerFilter &&
+          {setSupportManagerFilter && isAllAccessAllowed &&
           <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
             <Autocomplete 
               id="controllable-states-demo"
@@ -387,7 +387,7 @@ function SearchBarCombo({
                 </Grid>
               }
                 
-                {inviteButton && 
+                {inviteButton && isAllAccessAllowed && 
                   <Grid item>
                     <StyledTooltip title={inviteButton} placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
                       <IconButton onClick={inviteOnClick} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
@@ -431,7 +431,7 @@ function SearchBarCombo({
                 </Grid>
               }
 
-              {onExportCSV && 
+              {onExportCSV && isAllAccessAllowed && 
                   <Grid item>
                     <LoadingButton onClick={onExportCSV}  variant='contained' sx={{p:0, minWidth:'24px'}} loading={onExportLoading}>
                       <StyledTooltip title={BUTTONS.EXPORT.label} placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
@@ -456,22 +456,29 @@ function SearchBarCombo({
               </Grid>
               }
 
-              {addButton && 
-              !transferredMachine && 
-              !machineSettingPage && 
-              !settingPage && 
-              !securityUserPage && 
-              !isSettingReadOnly && 
-              !isSecurityReadOnly 
-              &&  <Grid item >
-                    <StyledTooltip title={addButton} placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
-                    <IconButton onClick={SubOnClick} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
+              {addButton && !transferredMachine && 
+                <Grid item >
+                    <StyledTooltip 
+                      title={addButton} 
+                      placement="top" 
+                      disableFocusListener 
+                      tooltipcolor={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#103996"} 
+                      color={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#103996"} 
+                    >
+                    <IconButton 
+                      disabled={ ( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) } 
+                      color={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#fff"}
+                      onClick={SubOnClick} 
+                      sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
                       '&:hover': {
                         background:"#103996", 
                         color:"#fff"
                       }
                     }}>
-                      <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon={buttonIcon || 'eva:plus-fill'} />
+                      <Iconify 
+                        color={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#fff"} 
+                        sx={{ height: '24px', width: '24px'}} icon={buttonIcon || 'eva:plus-fill'} 
+                      />
                     </IconButton>
                   </StyledTooltip>
                 </Grid>

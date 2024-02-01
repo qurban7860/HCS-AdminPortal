@@ -44,10 +44,6 @@ SecurityUserAddForm.propTypes = {
 };
 
 export default function SecurityUserAddForm({ isEdit = false, currentUser, isInvite }) {
-  const userRolesString = localStorage.getItem('userRoles');
-
-
-  const [ userRoles, setUserRoles] = useState(JSON.parse(userRolesString));
 
   const { allCustomers } = useSelector((state) => state.customer);
   const { roles } = useSelector((state) => state.role);
@@ -67,8 +63,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
 
   const ROLES = [];
   roles.map((role) => ROLES.push({ value: role?._id, label: role.name }));
-
-  const [roleVal, setRoleVal] = useState('');
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -193,11 +187,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
       data.name = data.email;
     }
 
-    if (roleVal) {
-      const roleId = [];
-      roleVal.map((role) => roleId.push(role?._id));
-      data.roles = roleId;
-    }
     if(selectedRegions.length > 0){
       const selectedRegionsIDs = selectedRegions.map((region) => region._id);
       data.selectedRegions = selectedRegionsIDs;
@@ -210,7 +199,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
         data.passwordConfirmation = "sjhreywuidfsajchfdsgfkdfgsljhffjklgdhsg";
         data.isActive = true;
         data.isInvite = true;
-       }
+      }
 
       const response = await dispatch(addSecurityUser(data, isInvite));
       await dispatch(resetContacts());
@@ -233,28 +222,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
   const toggleCancel = () => {
     navigate(PATH_SECURITY.users.list);
   };
-
-  //  -------------------------------DO NOT REMOVE------------------------------------
-  // const handleRegionsChange = async (event, selectedOptions) => {
-  //   setSelectedRegions(selectedOptions);
-    // setCustomerArr([]);
-    // setMachineArr([]);
-
-    // if(selectedOptions.length > 0){
-    //   const selectedCountries = selectedOptions?.flatMap((region) =>
-    //   region.countries?.map((country) => country.country_name));
-
-    //   const customerResponse = await dispatch(getCustomersAgainstCountries(JSON.stringify(selectedCountries)));
-    //   const machineResponse = await dispatch(getMachinesAgainstCountries(JSON.stringify(selectedCountries)));
-    //   setFilteredMachines(machineResponse);
-    //   setFilteredCustomers(customerResponse);
-    // }else{
-    //   setCustomerArr([]);
-    //   setMachineArr([]);
-    //   setFilteredCustomers(spCustomers);
-    //   setFilteredMachines(allMachines);
-    // }
-  // };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -358,7 +325,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
                 onChange={(e) => handleNameChange(e.target.value)}
                 value={name}
               />
-              {/* <RHFTextField name="phone" label="Phone" /> */}
+              
               <MuiTelInput
                 value={phone}
                 name="phone"
@@ -371,9 +338,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
               />
             </Box>
             <Box
-              rowGap={3}
-              columnGap={2}
-              display="grid"
+              rowGap={3} columnGap={2} display="grid"
               gridTemplateColumns={{
                 xs: 'repeat(1, 1fr)',
                 sm: 'repeat(1, 1fr)',
