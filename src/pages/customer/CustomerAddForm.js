@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import * as Yup from 'yup';
 import { m } from 'framer-motion';
 import { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
