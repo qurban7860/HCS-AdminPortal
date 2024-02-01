@@ -167,8 +167,6 @@ export default function GeneralAppPage() {
     }
   }
  
-  
-
   return (
     <StyledContainer maxWidth={false}>
       <Grid container>

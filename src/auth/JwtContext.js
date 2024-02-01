@@ -156,7 +156,7 @@ export function AuthProvider({ children }) {
                 isSettingAccessAllowed,
                 isSecurityUserAccessAllowed,
                 isEmailAccessAllowed,
-            } = await getUserAccess()
+            } = getUserAccess()
 
         dispatch({
           type: 'INITIAL',
@@ -253,7 +253,7 @@ export function AuthProvider({ children }) {
         isSettingAccessAllowed,
         isSecurityUserAccessAllowed,
         isEmailAccessAllowed,
-    } = await getUserAccess( user?.roles || [] )
+    } = getUserAccess( user?.roles )
 
       const rolesArrayString = JSON.stringify(user.roles);
       localStorage.setItem('email', user.email);
@@ -298,7 +298,7 @@ export function AuthProvider({ children }) {
         isSettingAccessAllowed,
         isSecurityUserAccessAllowed,
         isEmailAccessAllowed,
-    } = await getUserAccess( user?.roles || [] )
+    } = getUserAccess( user?.roles )
 
       const rolesArrayString = JSON.stringify(user.roles);
       localStorage.setItem('email', user.email);
