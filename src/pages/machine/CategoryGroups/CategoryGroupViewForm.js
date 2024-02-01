@@ -83,7 +83,7 @@ export default function CategoryGroupViewForm() {
             />
           <Grid container sx={{mt:2}}>
             <ViewFormField isLoading={isLoading} sm={12} heading="Group" param={defaultValues?.name} />
-            <ViewFormField isLoading={isLoading} sm={12} heading="Categories" chips={defaultValues?.categories.map(category => category.name)} />
+            <ViewFormField isLoading={isLoading} sm={12} heading="Categories" chips={defaultValues?.categories?.map(category => category?.name)} />
             <ViewFormAudit defaultValues={defaultValues} />
           </Grid>
         </Card>
