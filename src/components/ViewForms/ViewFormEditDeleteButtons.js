@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
-import { Autocomplete, Badge, Box, Divider, Grid, TextField } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
+import { Badge, Box, Divider, Grid, TextField } from '@mui/material';
+import { useDispatch } from 'react-redux';
 import { memo, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { green } from '@mui/material/colors';
 import { DateTimePicker } from '@mui/x-date-pickers';
@@ -33,7 +33,9 @@ function ViewFormEditDeleteButtons({
   isRequired,
   multiAuth,
   currentEmp,
-
+  machineSettingPage,
+  settingPage,
+  securityUserPage,
   // Handlers
   handleVerification,
   handleVerificationTitle,
@@ -80,14 +82,9 @@ function ViewFormEditDeleteButtons({
 }) {
   const { id } = useParams();
   const userId = localStorage.getItem('userId');
-  const { isDisableDelete, isSecurityReadOnly } = useAuthContext();
 
-  const navigate = useNavigate();
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const { transferDialogBoxVisibility } = useSelector((state) => state.machine);
-  const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
-  const { activeCustomers } = useSelector((state) => state.customer);
+  const { isDisableDelete, isSettingReadOnly, isSecurityReadOnly } = useAuthContext();
+
   const dispatch = useDispatch();
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openUserInviteConfirm, setOpenUserInviteConfirm] = useState(false);
@@ -98,6 +95,7 @@ function ViewFormEditDeleteButtons({
   const [openConfigApproveStatuConfirm, setOpenConfigApproveStatuConfirm] = useState(false);
   const [lockUntil, setLockUntil] = useState(''); 
   const [lockUntilError, setLockUntilError] = useState(''); 
+
   const theme = createTheme({
     palette: {
       success: green,
@@ -262,10 +260,6 @@ function ViewFormEditDeleteButtons({
     date: new Date(machineSupportDate)
   }
 
-  const [customer, setCustomer] = useState(null);
-  const [status, setStatus] = useState(null);
-  const [statusError, setStatusError] = useState(null);
-  
   return (
     <Grid container justifyContent="space-between" sx={{pb:1, px:0.5}}>
       <Grid item sx={{display:'flex', mt:0.5,mr:1}}>
@@ -546,7 +540,7 @@ function ViewFormEditDeleteButtons({
         }
 
         {/* edit button */}
-        {handleEdit && <IconTooltip
+        {handleEdit && !machineSettingPage && !settingPage && !securityUserPage && !isSettingReadOnly && !isSecurityReadOnly && <IconTooltip
           title="Edit"
           disabled={disableEditButton}
           onClick={() => {
@@ -780,5 +774,8 @@ ViewFormEditDeleteButtons.propTypes = {
   isLoading: PropTypes.bool,
   excludeReports: PropTypes.bool,
   isConectable: PropTypes.bool,
+  machineSettingPage: PropTypes.bool,
+  settingPage: PropTypes.bool,
+  securityUserPage: PropTypes.bool,
   hanldeViewGallery: PropTypes.func,
 };

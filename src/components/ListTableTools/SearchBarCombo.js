@@ -11,6 +11,7 @@ import { StyledTooltip } from '../../theme/styles/default-styles';
 import { getActiveDocumentTypesWithCategory } from '../../redux/slices/document/documentType';
 import { fDate } from '../../utils/formatTime';
 import { setDateFrom, setDateTo } from '../../redux/slices/products/machineErpLogs';
+import { useAuthContext } from '../../auth/useAuthContext';
 
 function SearchBarCombo({
   isFiltered,
@@ -52,6 +53,9 @@ function SearchBarCombo({
   handleGalleryView,
   dateFrom,
   dateTo,
+  machineSettingPage,
+  securityUserPage,
+  settingPage,
   isDateFromDateTo,
   ...other
 }) {
@@ -61,6 +65,8 @@ function SearchBarCombo({
   const { spContacts } = useSelector((state) => state.contact);
   const isMobile = useResponsive('sm', 'down');
   const dispatch = useDispatch()
+
+  const { isSettingReadOnly, isSecurityReadOnly } = useAuthContext();
 
   const onChangeStartDate = (e) => {
     dispatch(setDateFrom(e.target.value));
@@ -450,8 +456,8 @@ function SearchBarCombo({
               </Grid>
               }
 
-              {addButton && !transferredMachine &&
-                  <Grid item>
+              {addButton && !transferredMachine && !machineSettingPage && !settingPage && !securityUserPage && !isSettingReadOnly && !isSecurityReadOnly &&
+                  <Grid item >
                     <StyledTooltip title={addButton} placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
                     <IconButton onClick={SubOnClick} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
                       '&:hover': {
@@ -512,6 +518,9 @@ SearchBarCombo.propTypes = {
   dateFrom: PropTypes.string,
   dateTo: PropTypes.string,
   isDateFromDateTo: PropTypes.bool,
+  machineSettingPage: PropTypes.bool,
+  securityUserPage: PropTypes.bool,
+  settingPage: PropTypes.bool,
 };
 
 export default SearchBarCombo;
