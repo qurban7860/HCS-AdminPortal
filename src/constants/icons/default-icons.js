@@ -203,9 +203,9 @@ export const ICONS = {
 
   // @root - Machine - settings
   // common settings
-  MACHINE_CATEGORY_GROUPS: {
+  MACHINE_GROUPS: {
     icon: 'uil:layer-group',
-    heading: 'Machine Category Groups',
+    heading: 'Machine Groups',
   },
   MACHINE_CATEGORIES: {
     icon: 'mdi:shape-plus',

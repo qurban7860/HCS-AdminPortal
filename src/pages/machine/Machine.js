@@ -18,8 +18,10 @@ export default function Machine() {
   const navigate = useNavigate();
 
   // Functions to navigate to different pages
-  const linkCategoryGroups = () => {
-    navigate(PATH_MACHINE.machines.settings.categoryGroups.list);
+  const linkGroup = () => {
+    console.log('hiii',PATH_MACHINE.machines.settings.groups.list)
+    navigate(PATH_MACHINE.machines.settings.groups.list);
+    // navigate(PATH_MACHINE.machines.settings.groups.list);
   };
 
   const linkCategory = () => {
@@ -81,9 +83,9 @@ export default function Machine() {
               >
 
                 <ListItem
-                  onClick={linkCategoryGroups}
-                  icon={ICONS.MACHINE_CATEGORY_GROUPS.icon}
-                  content={ICONS.MACHINE_CATEGORY_GROUPS.heading}
+                  onClick={linkGroup}
+                  icon={ICONS.MACHINE_GROUPS.icon}
+                  content={ICONS.MACHINE_GROUPS.heading}
                 />
                 <ListItem
                   onClick={linkCategory}
