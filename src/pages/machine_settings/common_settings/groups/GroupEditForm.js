@@ -8,7 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Card, Container, Grid, Stack, Typography } from '@mui/material';
 // slice
 import { getActiveCategories } from '../../../../redux/slices/products/category';
-import { getCategoryGroup, updateCategoryGroup } from '../../../../redux/slices/products/categoryGroup';
+import { getGroup, updateGroup } from '../../../../redux/slices/products/group';
 // routes
 import { PATH_MACHINE } from '../../../../routes/paths';
 // components
@@ -20,31 +20,31 @@ import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons'
 
 // ----------------------------------------------------------------------
 
-export default function CategoryGroupEditForm() {
+export default function GroupEditForm() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { activeCategories } = useSelector((state) => state.category);
-  const { categoryGroup, isLoading } = useSelector((state) => state.categoryGroup);
+  const { group, isLoading } = useSelector((state) => state.group);
 
   useLayoutEffect(() => {
     dispatch(getActiveCategories());
-    dispatch(getCategoryGroup(id));
+    dispatch(getGroup(id));
   },[dispatch, id]);
 
   const defaultValues = useMemo(
     () => ({
-      name: categoryGroup?.name || '',
-      categories: categoryGroup?.categories || [],
-      isActive: categoryGroup.isActive,
-      isDefault: categoryGroup.isDefault,
+      name: group?.name || '',
+      categories: group?.categories || [],
+      isActive: group.isActive,
+      isDefault: group.isDefault,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
-  const EditCategoryGroupSchema = Yup.object().shape({
+  const EditGroupSchema = Yup.object().shape({
     name: Yup.string().min(2, 'Minimum 2 characters').max(50, 'Maximum 50 characters').required('Name is required'),
     categories: Yup.array().min(1, 'Category is required').nullable('Category is required').required('Category is required'),
     isActive: Yup.boolean(),
@@ -52,7 +52,7 @@ export default function CategoryGroupEditForm() {
   });
 
   const methods = useForm({
-    resolver: yupResolver(EditCategoryGroupSchema),
+    resolver: yupResolver(EditGroupSchema),
     defaultValues,
   });
 
@@ -63,16 +63,16 @@ export default function CategoryGroupEditForm() {
   } = methods;
 
   const toggleCancel = () => {
-    navigate(PATH_MACHINE.machines.settings.categoryGroups.view(id));
+    navigate(PATH_MACHINE.machines.settings.groups.view(id));
   };
 
   const onSubmit = async (data) => {
     data.categories = data.categories.map(category => category._id);
     try {
-      await dispatch(updateCategoryGroup(data, id));
+      await dispatch(updateGroup(data, id));
       reset();
-      enqueueSnackbar('Category Group Updated Successfully!');
-      navigate(PATH_MACHINE.machines.settings.categoryGroups.view(id));
+      enqueueSnackbar('Group Updated Successfully!');
+      navigate(PATH_MACHINE.machines.settings.groups.view(id));
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
@@ -81,7 +81,7 @@ export default function CategoryGroupEditForm() {
 
   return (
     <Container maxWidth={false}>
-      <StyledCardContainer><Cover name="Edit Category Group"/></StyledCardContainer>
+      <StyledCardContainer><Cover name="Edit Machine Group"/></StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container>
           <Grid item xs={18} md={12} >
@@ -96,7 +96,7 @@ export default function CategoryGroupEditForm() {
                     sm: 'repeat(1, 1fr)',
                   }}
                 >
-                  <RHFTextField name="name" label="Name*" />
+                  <RHFTextField name="name" label="Group Name*" />
                   <RHFAutocomplete
                     multiple
                     name="categories"

@@ -58,8 +58,3 @@ export function checkValuesNotNull(obj) {
   future20yearDate.setFullYear(today.getFullYear() + 20);
 
   export const pastDate = new Date(2000, 0, 1);
-
-  export const formatDate = (date) => {
-    const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-    return new Date(date).toLocaleDateString(undefined, options);
-  }

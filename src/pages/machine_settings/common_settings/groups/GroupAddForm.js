@@ -9,7 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Card, Grid, Stack, Container } from '@mui/material';
 import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
 // redux
-import { addCategoryGroup } from '../../../../redux/slices/products/categoryGroup';
+import { addGroup } from '../../../../redux/slices/products/group';
 import { getActiveCategories } from '../../../../redux/slices/products/category';
 // routes
 import { PATH_MACHINE } from '../../../../routes/paths';
@@ -22,7 +22,7 @@ import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
-export default function CategoryGroupAddForm() {
+export default function GroupAddForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -43,7 +43,7 @@ export default function CategoryGroupAddForm() {
     []
   );
 
-  const AddCategoryGroupSchema = Yup.object().shape({
+  const AddGroupSchema = Yup.object().shape({
     name: Yup.string().min(2, 'Name is required').max(50, 'Maximum 50 characters').required('Name is required'),
     categories: Yup.array().min(1, 'Category is required').nullable('Category is required').required('Category is required'),
     isActive: Yup.boolean(),
@@ -51,7 +51,7 @@ export default function CategoryGroupAddForm() {
   });
 
   const methods = useForm({
-    resolver: yupResolver(AddCategoryGroupSchema),
+    resolver: yupResolver(AddGroupSchema),
     defaultValues,
   });
 
@@ -62,16 +62,16 @@ export default function CategoryGroupAddForm() {
   } = methods;
 
   const toggleCancel = () => {
-    navigate(PATH_MACHINE.machines.settings.categoryGroups.list);
+    navigate(PATH_MACHINE.machines.settings.groups.list);
   };
 
   const onSubmit = async (data) => {
     data.categories = data.categories.map(category => category._id);
     try {
-      await dispatch(addCategoryGroup(data));
+      await dispatch(addGroup(data));
       reset();
-      enqueueSnackbar('Category Group Added Successfully!');
-      navigate(PATH_MACHINE.machines.settings.categoryGroups.list);
+      enqueueSnackbar('Group Added Successfully!');
+      navigate(PATH_MACHINE.machines.settings.groups.list);
     } catch (error) {
       enqueueSnackbar(error?.message, { variant: `error` });
       console.error(error);
@@ -79,7 +79,7 @@ export default function CategoryGroupAddForm() {
   };
   return (
     <Container maxWidth={false}>
-      <StyledCardContainer><Cover name="New Category Group"/></StyledCardContainer>
+      <StyledCardContainer><Cover name="New Machine Group"/></StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container>
           <Grid item xs={18} md={12} >
@@ -94,7 +94,7 @@ export default function CategoryGroupAddForm() {
                     sm: 'repeat(1, 1fr)',
                   }}
                 >
-                  <RHFTextField name="name" label="Name*" />
+                  <RHFTextField name="name" label="Group Name*" />
                   <RHFAutocomplete
                     multiple
                     name="categories"

@@ -120,11 +120,11 @@ export const PATH_MACHINE = {
     settings: {
       app: path(ROOTS_MACHINE, '/machines/settings/app'),
 
-      categoryGroups: {
-        new: (ROOTS_MACHINE, '/products/machines/settings/categoryGroups/new'),
-        list: (ROOTS_MACHINE, '/products/machines/settings/categoryGroups/list'),
-        view: (id) => path(ROOTS_MACHINE, `/machines/settings/categoryGroups/${id}/view`),
-        edit: (id) => path(ROOTS_MACHINE, `/machines/settings/categoryGroups/${id}/edit`),
+      groups: {
+        new: (ROOTS_MACHINE, '/products/machines/settings/groups/new'),
+        list: (ROOTS_MACHINE, '/products/machines/settings/groups/list'),
+        view: (id) => path(ROOTS_MACHINE, `/machines/settings/groups/${id}/view`),
+        edit: (id) => path(ROOTS_MACHINE, `/machines/settings/groups/${id}/edit`),
       },
 
       categories: {

@@ -10,16 +10,16 @@ const initialState = {
   success: false,
   isLoading: false,
   error: null,
-  categoryGroup: {},
-  categoryGroups: [],
-  activeCategoryGroups: [],
+  group: {},
+  groups: [],
+  activeGroups: [],
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
 };
 
 const slice = createSlice({
-  name: 'categoryGroup',
+  name: 'group',
   initialState,
   reducers: {
     
@@ -33,24 +33,24 @@ const slice = createSlice({
       state.initial = true;
     },
     
-    getCategoryGroupsSuccess(state, action) {
+    getGroupsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.categoryGroups = action.payload;
+      state.groups = action.payload;
       state.initial = true;
     },
     
-    getActiveCategoriesSuccess(state, action) {
+    getActiveGroupsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.activeCategoryGroups = action.payload;
+      state.activeGroups = action.payload;
       state.initial = true;
     },
     
-    getCategorySuccess(state, action) {
+    getGroupSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.categoryGroup = action.payload;
+      state.group = action.payload;
       state.initial = true;
     },
 
@@ -61,22 +61,22 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    resetCategoryGroup(state){
-      state.categoryGroup = {};
+    resetGroup(state){
+      state.group = {};
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
 
-    resetCategoryGroups(state){
-      state.categoryGroups = [];
+    resetGroups(state){
+      state.groups = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
 
-    resetActiveCategoryGroups(state){
-      state.activeCategoryGroups = [];
+    resetActiveGroups(state){
+      state.activeGroups = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
@@ -100,11 +100,9 @@ const slice = createSlice({
 export default slice.reducer;
 // Actions
 export const {
-  setCategoryFormVisibility,
-  setCategoryEditFormVisibility,
-  resetCategoryGroup,
-  resetCategoryGroups,
-  resetActiveCategoryGroups,
+  resetGroup,
+  resetGroups,
+  resetActiveGroups,
   setResponseMessage,
   setFilterBy,
   ChangeRowsPerPage,
@@ -113,7 +111,7 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getCategoryGroups(){
+export function getGroups(){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
@@ -123,8 +121,8 @@ export function getCategoryGroups(){
           isArchived: false
         }
       });
-      dispatch(slice.actions.getCategoryGroupsSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Category Groups loaded successfully'));
+      dispatch(slice.actions.getGroupsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Groups loaded successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -135,7 +133,7 @@ export function getCategoryGroups(){
 
 // ----------------------------------------------------------------------
 
-export function getActiveCategoryGroups(){
+export function getActiveGroups(){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
@@ -146,8 +144,8 @@ export function getActiveCategoryGroups(){
           isActive: true
         }
       });
-      dispatch(slice.actions.getActiveCategoriesSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Active Category Groups loaded successfully'));
+      dispatch(slice.actions.getActiveGroupsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Active Groups loaded successfully'));
       // dispatch(slice.actions)
     } catch (error) {
       console.log(error);
@@ -159,12 +157,12 @@ export function getActiveCategoryGroups(){
 
 // ----------------------------------------------------------------------
 
-export function getCategoryGroup(id) {
+export function getGroup(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/groups/${id}`);
-      dispatch(slice.actions.getCategorySuccess(response.data));
+      dispatch(slice.actions.getGroupSuccess(response.data));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -175,7 +173,7 @@ export function getCategoryGroup(id) {
 
 //------------------------------------------------------------------------------
 
-export function deleteCategoryGroup(id) {
+export function deleteGroup(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -194,9 +192,9 @@ export function deleteCategoryGroup(id) {
 
 // --------------------------------------------------------------------------
 
-export function addCategoryGroup(data) {
+export function addGroup(data) {
     return async (dispatch) => {
-      dispatch(slice.actions.resetCategoryGroup());
+      dispatch(slice.actions.resetGroup());
       dispatch(slice.actions.startLoading());
       try {
         const response = await axios.post(`${CONFIG.SERVER_URL}products/groups`, data);
@@ -211,7 +209,7 @@ export function addCategoryGroup(data) {
 
 // --------------------------------------------------------------------------
 
-export function updateCategoryGroup(data,Id) {
+export function updateGroup(data,Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {

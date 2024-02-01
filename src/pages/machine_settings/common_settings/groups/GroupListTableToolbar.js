@@ -11,14 +11,14 @@ import { BUTTONS } from '../../../../constants/default-constants';
 import { options } from '../../../../theme/styles/default-styles';
 // ----------------------------------------------------------------------
 
-CategoryGroupListTableToolbar.propTypes = {
+GroupListTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
   onResetFilter: PropTypes.func,
 };
 
-export default function CategoryGroupListTableToolbar({
+export default function GroupListTableToolbar({
   isFiltered,
   filterName,
   onFilterName,
@@ -26,7 +26,7 @@ export default function CategoryGroupListTableToolbar({
 }) {
   const navigate = useNavigate();
   const toggleAdd = () => {
-    navigate(PATH_MACHINE.machines.settings.categoryGroups.new);
+    navigate(PATH_MACHINE.machines.settings.groups.new);
   };
   return (
     <Stack {...options}>

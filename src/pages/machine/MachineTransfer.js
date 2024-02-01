@@ -137,7 +137,6 @@ function MachineTransfer() {
   useEffect(()=>{
     if(customer?._id){
           setValue('customer',customer);
-          setValue('machineConnection', []);
           setValue('installationSite', null);
           setValue('billingSite', null);
           dispatch(resetActiveSites());
@@ -145,7 +144,6 @@ function MachineTransfer() {
           // dispatch(getMachineConnections(customer?._id, cancelTokenSource));
     }else{
       setValue('customer',null);
-      setValue('machineConnection', []);
       setValue('installationSite', null);
       setValue('billingSite', null);
       dispatch(resetActiveSites());
@@ -168,7 +166,6 @@ function MachineTransfer() {
                     gridTemplateColumns={{ md: 'repeat(2, 1fr)', sm: 'repeat(1, 1fr)' }}
                   >
                     <RHFAutocomplete
-                      size="small"
                       name="customer"
                       label="Customer"
                       options={activeCustomers.filter((cstmr)=> cstmr?._id !== machine?.customer?._id )}
@@ -178,7 +175,6 @@ function MachineTransfer() {
                     />
 
                     <RHFAutocomplete
-                      size="small"
                       name="financialCompany"
                       label="Financing Company"
                       options={financialCompanies}
@@ -188,7 +184,6 @@ function MachineTransfer() {
                     />
 
                     <RHFAutocomplete
-                      size="small"
                       name="billingSite"
                       label="Billing Site"
                       options={activeSites}
@@ -198,7 +193,6 @@ function MachineTransfer() {
                     />
 
                     <RHFAutocomplete
-                      size="small"
                       name="installationSite"
                       label="Installation Site"
                       options={activeSites}
@@ -207,12 +201,11 @@ function MachineTransfer() {
                       renderOption={(props, option) => (<li {...props} key={option._id}> {option.name && option.name} </li> )}
                     />
 
-                    <RHFDatePicker size="small" inputFormat='dd/MM/yyyy' name="shippingDate" label="Shipping Date" />
+                    <RHFDatePicker inputFormat='dd/MM/yyyy' name="shippingDate" label="Shipping Date" />
 
-                    <RHFDatePicker size="small" inputFormat='dd/MM/yyyy' name="installationDate" label="Installation Date" />
+                    <RHFDatePicker inputFormat='dd/MM/yyyy' name="installationDate" label="Installation Date" />
 
                     <RHFAutocomplete
-                      size="small"
                       name="status"
                       label="Status"
                       options={activeMachineStatuses.filter((st) => st?.slug !== 'intransfer')}
@@ -223,7 +216,6 @@ function MachineTransfer() {
                   </Box>
 
                   <RHFAutocomplete
-                    size="small"
                     multiple
                     disableCloseOnSelect
                     filterSelectedOptions
@@ -248,9 +240,13 @@ function MachineTransfer() {
                     <RHFCheckbox name="isAllINIs" label="All INIs"/>
                   </Grid>
 
-                <FormLabel content='Machine Documents'/>
-                  { activeMachineDocuments && activeMachineDocuments?.length === 0 && <Typography variant='body2'>No Document Available</Typography>}
-                  { activeMachineDocuments && activeMachineDocuments?.length > 1 && <Grid sx={{display:"flex", alignItems:"center" }}><Checkbox onClick={ handleSelectAll } checked={ activeMachineDocuments?.length === machineDoc?.length }/><Typography variant='body2'>Select all Documents</Typography> </Grid>}
+                  { activeMachineDocuments && activeMachineDocuments?.length > 0 && <FormLabel content='Machine Documents'/> }
+                  { activeMachineDocuments && activeMachineDocuments?.length > 1 && 
+                    <Grid sx={{display:"flex", alignItems:"center" }}>
+                      <Checkbox onClick={ handleSelectAll } checked={ activeMachineDocuments?.length === machineDoc?.length }/>
+                      <Typography variant='body2'>Select all Documents</Typography> 
+                    </Grid>
+                  }
                 
                 <Grid >
                   {activeMachineDocuments && activeMachineDocuments.length > 0 && activeMachineDocuments?.map(( doc, index ) =>(
