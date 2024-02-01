@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { m } from 'framer-motion';
 import { useDispatch } from 'react-redux';
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
-import { Grid, IconButton } from '@mui/material';
+import { Button, Grid, IconButton, Typography } from '@mui/material';
 import Iconify from '../components/iconify/Iconify';
 import { setLatLongCoordinates } from '../redux/slices/customer/site';
 import { CONFIG } from '../config-global';
@@ -65,6 +65,7 @@ export default function GoogleMaps({
   }, [map, lat, lng]);
 
   const handleZoomClick = (newZoomLevel) => {
+    console.log('aaaa')
     setZoomLevel(newZoomLevel);
     map.setZoom(newZoomLevel);
   };
@@ -144,25 +145,18 @@ export default function GoogleMaps({
                     setIsOpen(false);
                   }}
                 >
-                  <Grid container justify="center" spacing={0} sx={{ margin: 0 }}>
-                    <p>
-                      {`${infoWindowData?.serialNo} (${infoWindowData?.customerName})`}
-                      <br />
-                      {infoWindowData?.stringAddress}
-                    </p>
-                    <Grid container justifyContent="center" direction="row">
-                      <IconButton
-                        size="small"
+                  <Grid container spacing={0} sx={{ margin: 0 }}>
+                    <Grid item maxWidth={300} textAlign='center'>
+                      <Typography variant='h6' textAlign='left'>{`${infoWindowData?.serialNo} (${infoWindowData?.customerName})`}</Typography>
+                      <Typography variant='body2' textAlign='left'>{infoWindowData?.stringAddress}</Typography>  
+                      <Button variant='' disableRipple
                         onClick={() => {
                           handleZoomClick(zoomLevel !== 15 ? 15 : 2);
                           map.setCenter({ lat: parseFloat(lat), lng: parseFloat(lng) });
                         }}
-                      >
-                        <Iconify
-                          icon={zoomLevel !== 15 ? 'mdi:loupe' : 'mdi:magnify-minus-cursor'}
-                        />
-                        &nbsp; {zoomLevel !== 15 ? 'ZOOM HERE' : 'ZOOM OUT'}
-                      </IconButton>
+                        startIcon={<Iconify icon={zoomLevel !== 15 ? 'iconamoon:zoom-in-bold' : 'iconamoon:zoom-out-bold'} />}>
+                          {zoomLevel !== 15 ? ' Zoom In' : ' Zoom Out'}
+                      </Button>
                     </Grid>
                   </Grid>
                 </InfoWindow>
