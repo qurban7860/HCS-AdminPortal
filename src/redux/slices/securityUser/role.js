@@ -155,7 +155,7 @@ export function updateRole(id, params) {
     try {
       const data = {
         name: params.name,
-        roleType: params.roleType,
+        roleType: params.roleType.value,
         description: params.description,
         // allModules:  params.allModules,
         // allWriteAccess: params.allWriteAccess,
