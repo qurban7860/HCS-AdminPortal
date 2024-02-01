@@ -71,7 +71,7 @@ export default function GroupEditForm() {
     try {
       await dispatch(updateGroup(data, id));
       reset();
-      enqueueSnackbar('Category Group Updated Successfully!');
+      enqueueSnackbar('Group Updated Successfully!');
       navigate(PATH_MACHINE.machines.settings.groups.view(id));
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
