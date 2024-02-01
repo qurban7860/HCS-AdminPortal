@@ -22,7 +22,7 @@ import { addRole } from '../../../../redux/slices/securityUser/role';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 // assets
-import FormProvider, { RHFTextField, RHFSwitch } from '../../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete } from '../../../../components/hook-form';
 import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
 import { Cover } from '../../../../components/Defaults/Cover';
 
@@ -33,30 +33,18 @@ RoleAddForm.propTypes = {
 
 export default function RoleAddForm({ currentRole }) {
 
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
-
   const { userRoleTypes } = useSelector((state) => state.role);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const [roleType, setRoleType] = useState('');
-  const mappedUserRoleTypes = Object.keys(userRoleTypes).map((key) => ({
-    key,
-    name: userRoleTypes[key],
-  }));
 
   // a note can be archived.
   const AddRoleSchema = Yup.object().shape({
     name: Yup.string().min(2).max(50).required('Name Field is required!'),
     description: Yup.string().max(10000),
     /* eslint-disable */
-    roleTypes: Yup.string().when('roleType', {
-      is: (roleType) => roleType !== '',
-      then: Yup.string().required('Role type is required!'),
-      otherwise: Yup.string().notRequired(),
-    }),
+    roleType:  Yup.object().nullable().required().label('Role Type'),
     /* eslint-enable */
     allModules: Yup.boolean(),
     allWriteAccess: Yup.boolean(),
@@ -85,32 +73,13 @@ export default function RoleAddForm({ currentRole }) {
 
   const {
     reset,
-    // watch,
     setValue,
     handleSubmit,
     formState: { isSubmitting },
-    trigger,
   } = methods;
-
-  useEffect(() => {
-    if(!isSuperAdmin){
-      navigate(PATH_PAGE.page403)
-    }
-    reset(defaultValues);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigate, isSuperAdmin]);
-
-  const handleRoleTypeChange = (event, newValue) => {
-    setRoleType(newValue);
-    setValue('roleTypes', newValue?.name || '');
-    trigger('roleTypes');
-  };
 
   const onSubmit = async (data) => {
     try {
-      if (roleType) {
-        data.roleType = roleType.key;
-      }
       await dispatch(addRole(data));
       reset();
       enqueueSnackbar('Role Save Successfully!');
@@ -142,33 +111,20 @@ export default function RoleAddForm({ currentRole }) {
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
+
                 <RHFTextField name="name" label="Name" />
-                <Autocomplete
-                  // freeSolo
-                  required
-                  value={roleType || null}
-                  options={mappedUserRoleTypes}
-                  getOptionLabel={(option) => option.name}
+
+                <RHFAutocomplete
+                  name="roleType" 
+                  label="Role Type"
+                  options={userRoleTypes}
+                  getOptionLabel={(option) => option?.name || ''}
                   isOptionEqualToValue={(option, value) => option.name === value.name}
-                  onChange={handleRoleTypeChange}
-                  id="controllable-states-demo"
-                  renderOption={(props, option) => (
-                    <li {...props} key={option.key}>
-                      {option.name}
-                    </li>
-                  )}
-                  renderInput={(params) => (
-                    <RHFTextField {...params} name="roleTypes" label="Role Types" />
-                  )}
-                  ChipProps={{ size: 'small' }}
-                >
-                  {(option) => (
-                    <div key={option.key}>
-                      <span>{option.name}</span>
-                    </div>
-                  )}
-                </Autocomplete>
+                  renderOption={(props, option) => (<li {...props} key={option.key}> {option.name || ''}</li>)}
+                />
+
                 <RHFTextField name="description" label="Description" minRows={8} multiline />
+
                 <Grid display="flex" alignItems="end">
                   <RHFSwitch name="isActive" label="Active" />
                   <RHFSwitch name="isDefault" label="Default" />

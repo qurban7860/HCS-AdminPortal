@@ -56,8 +56,8 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
   const EditDocumentSchema = Yup.object().shape({
     displayName: Yup.string().max(500).label('Document Name').required(),
     description: Yup.string().max(10000),
-    referenceNumber: Yup.string().label('Reference Number').max(20),
-    stockNumber: Yup.string().label('Stock Number').max(20),
+    referenceNumber: Yup.string().label('Reference Number').max(200),
+    stockNumber: Yup.string().label('Stock Number').max(200),
     versionNo: Yup.string().label('Version No').max(10),
     isActive: Yup.boolean(),
   });

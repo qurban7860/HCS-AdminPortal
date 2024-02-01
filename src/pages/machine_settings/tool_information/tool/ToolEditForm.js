@@ -11,7 +11,6 @@ import {
   Card,
   Grid,
   Stack,
-  Typography,
 } from '@mui/material';
 // slice
 import {
