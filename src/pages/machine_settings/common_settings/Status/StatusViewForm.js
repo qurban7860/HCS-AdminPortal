@@ -73,7 +73,7 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
         isDefault={defaultValues.isDefault} 
         handleEdit={toggleEdit} 
         onDelete={onDelete} b
-        ackLink={() => navigate(PATH_MACHINE.machines.settings.status.list)} 
+        backLink={() => navigate(PATH_MACHINE.machines.settings.status.list)} 
         machineSettingPage
       />
       <Grid container sx={{mt:2}}>

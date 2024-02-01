@@ -76,7 +76,7 @@ export default function SecurityUserChangePassword() {
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Container maxWidth={false}>
         <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
-          <Cover name="Change User Password" icon="mdi:user-circle" />
+          <Cover name="Change Password" icon="mdi:user-circle" />
         </Card>
         <Grid container spacing={2} sx={{ justifyContent: 'center', allignItem: 'center' }}>
           <Grid item xs={12} md={8}>
@@ -117,7 +117,7 @@ export default function SecurityUserChangePassword() {
                 />
                 <RHFTextField
                   name="confirmNewPassword"
-                  label="Confirm New Password"
+                  label="Confirm Password"
                   type={showConfirmPassword ? 'text' : 'password'}
                   InputProps={{
                     endAdornment: (

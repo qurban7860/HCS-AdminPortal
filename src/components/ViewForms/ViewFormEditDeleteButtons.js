@@ -502,10 +502,11 @@ function ViewFormEditDeleteButtons({
         {handleUpdatePassword && (
           <IconTooltip
             title="Change Password"
+            disabled={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly )}
             onClick={() => {
               handleUpdatePassword();
             }}
-            color={disablePasswordButton?"#c3c3c3":theme.palette.secondary.main}
+            color={(disablePasswordButton || ( ( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ))?"#c3c3c3":theme.palette.secondary.main}
             icon="solar:key-broken"
           />
         )}

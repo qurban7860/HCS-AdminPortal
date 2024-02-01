@@ -35,12 +35,11 @@ import FormLabel from '../../../components/DocumentForms/FormLabel';
 
 export default function SecurityUserViewForm() {
   const [disableEditButton, setDisableEditButton] = useState(false);
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
+
   const { securityUser, isLoading} = useSelector((state) => state.user);
   const { blockedCustomer } = useSelector((state) => state.blockedCustomer);
   const { blockedUser } = useSelector((state) => state.blockedUser);
+  
   const userId = localStorage.getItem('userId');
   const [openConfirm, setOpenConfirm] = useState(false);
   const handleCloseConfirm = () => setOpenConfirm(false);
@@ -57,17 +56,6 @@ export default function SecurityUserViewForm() {
     dispatch(getBlockedUser(securityUser?._id))
   },[dispatch, securityUser]);
 
-
-  useEffect(() => {
-    if (userId) {
-      if (isSuperAdmin || userId === id) {
-        setDisableEditButton(false);
-      } else {
-        setDisableEditButton(true);
-      }
-    }
-  }, [id, userId, isSuperAdmin]);
-  
   useEffect(() => {
     batch(() => {
       if (securityUser && securityUser?.customer && securityUser?.customer?._id) {
@@ -188,8 +176,8 @@ export default function SecurityUserViewForm() {
             handleUpdatePassword={handleUpdatePassword}
             onDelete={onDelete}
             isInviteLoading={isLoading}
-            disablePasswordButton={!isSuperAdmin}
-            disableDeleteButton={!isSuperAdmin}
+            // disablePasswordButton={!isSuperAdmin}
+            // disableDeleteButton={!isSuperAdmin}
             disableEditButton={disableEditButton}
             backLink={() => navigate(PATH_SECURITY.users.list)}
             isActive={defaultValues.isActive}
