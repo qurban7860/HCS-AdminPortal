@@ -28,17 +28,6 @@ export default function UserInviteViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [userInvite]
   );
-
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
-
-  useEffect(() => {
-    if(!isSuperAdmin){
-      navigate(PATH_PAGE.page403)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigate, isSuperAdmin]);
   
   return (
     <Container maxWidth={false}>

@@ -19,20 +19,10 @@ import ViewFormEditDeleteButtons from '../../../../components/ViewForms/ViewForm
 export default function RoleViewForm() {
   const { role, isLoading } = useSelector((state) => state.role);
   const { assignedUsers } = useSelector((state) => state.user);
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const isSuperAdmin = userRoles?.some((rolee) => rolee.roleType === 'SuperAdmin');
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-
-  useEffect(() => {
-    if(!isSuperAdmin){
-      navigate(PATH_PAGE.page403)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigate, isSuperAdmin]);
 
   const onDelete = async () => {
     try {

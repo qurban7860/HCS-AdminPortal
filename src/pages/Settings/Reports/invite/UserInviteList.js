@@ -65,10 +65,6 @@ export default function UserInviteList() {
     { id: 'createdAt', visibility: 'xs2', label: 'Created At', align: 'left' },
   ];
 
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
-
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
@@ -81,15 +77,10 @@ export default function UserInviteList() {
   }, [dispatch]);
 
   useEffect(() => {
-    
-    if(!isSuperAdmin){
-      navigate(PATH_PAGE.page403)
-    }
-
     if (initial) {
       setTableData(userInvites);
     }
-  }, [initial, userInvites, navigate, isSuperAdmin]);
+  }, [initial, userInvites ]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,

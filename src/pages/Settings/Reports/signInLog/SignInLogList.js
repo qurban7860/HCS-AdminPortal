@@ -76,24 +76,15 @@ export default function SignInLogList() {
 
   const { signInLogs, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.user);
 
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
-
   useLayoutEffect(() => {
     dispatch(getSignInLogs(userId));
   }, [dispatch, userId]);
 
   useEffect(() => {
-
-    if(!isSuperAdmin){
-      navigate(PATH_PAGE.page403)
-    }
-
     if (initial) {
       setTableData(signInLogs);
     }
-  }, [signInLogs, initial, isSuperAdmin, navigate]);
+  }, [signInLogs, initial ]);
 
   const reloadList = () => {
     dispatch(getSignInLogs(userId));

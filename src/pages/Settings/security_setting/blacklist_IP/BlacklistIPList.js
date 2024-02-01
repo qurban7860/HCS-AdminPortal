@@ -80,22 +80,15 @@ export default function BlacklistIPList() {
   const [openConfirm, setOpenConfirm] = useState(false);
   const { blacklistIPs, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.blacklistIP);
 
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
-
   useLayoutEffect(() => {
     dispatch(getBlacklistIPs());
   }, [dispatch]);
 
   useEffect(() => {
-    if(!isSuperAdmin){
-      navigate(PATH_PAGE.page403)
-    }
     if (initial) {
       setTableData(blacklistIPs);
     }
-  }, [blacklistIPs, initial, navigate, isSuperAdmin]);
+  }, [blacklistIPs, initial ]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,

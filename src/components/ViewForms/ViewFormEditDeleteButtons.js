@@ -84,7 +84,6 @@ function ViewFormEditDeleteButtons({
   const userId = localStorage.getItem('userId');
 
   const { isDisableDelete, isSettingReadOnly, isSecurityReadOnly } = useAuthContext();
-
   const dispatch = useDispatch();
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openUserInviteConfirm, setOpenUserInviteConfirm] = useState(false);
@@ -503,10 +502,11 @@ function ViewFormEditDeleteButtons({
         {handleUpdatePassword && (
           <IconTooltip
             title="Change Password"
+            disabled={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly )}
             onClick={() => {
               handleUpdatePassword();
             }}
-            color={disablePasswordButton?"#c3c3c3":theme.palette.secondary.main}
+            color={(disablePasswordButton || ( ( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ))?"#c3c3c3":theme.palette.secondary.main}
             icon="solar:key-broken"
           />
         )}
