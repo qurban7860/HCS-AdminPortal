@@ -115,7 +115,7 @@ export default function BlockedCustomerAddForm() {
                     )}
                   />
               </Box>
-              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              <AddFormButtons settingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>
           </Grid>
         </Grid>

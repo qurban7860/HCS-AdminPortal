@@ -2,13 +2,12 @@ import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
 import { Badge, Box, Divider, Grid, TextField } from '@mui/material';
 import { useDispatch } from 'react-redux';
-import { memo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { memo, useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { green } from '@mui/material/colors';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import { createTheme } from '@mui/material/styles';
-
 import { StyledStack } from '../../theme/styles/default-styles';
 import ConfirmDialog from '../confirm-dialog';
 import useResponsive from '../../hooks/useResponsive';
@@ -22,6 +21,7 @@ import ViewFormApprovalsPopover from './ViewFormApprovalsPopover';
 import { ICONS } from '../../constants/icons/default-icons';
 import { fDate, fDateTime } from '../../utils/formatTime';
 import { useAuthContext } from '../../auth/useAuthContext';
+import { PATH_DASHBOARD } from '../../routes/paths';
 
 function ViewFormEditDeleteButtons({
   // Icons 
@@ -36,6 +36,7 @@ function ViewFormEditDeleteButtons({
   machineSettingPage,
   settingPage,
   securityUserPage,
+  drawingPage,
   // Handlers
   handleVerification,
   handleVerificationTitle,
@@ -81,9 +82,16 @@ function ViewFormEditDeleteButtons({
 
 }) {
   const { id } = useParams();
+  const navigate = useNavigate()
   const userId = localStorage.getItem('userId');
-
-  const { isDisableDelete, isSettingReadOnly, isSecurityReadOnly } = useAuthContext();
+  const { 
+    isDisableDelete, 
+    isSettingReadOnly, 
+    isSecurityReadOnly, 
+    isDocumentAccessAllowed, 
+    isDrawingAccessAllowed,
+    isSettingAccessAllowed,
+    isSecurityUserAccessAllowed, } = useAuthContext();
   const dispatch = useDispatch();
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openUserInviteConfirm, setOpenUserInviteConfirm] = useState(false);
@@ -138,6 +146,21 @@ function ViewFormEditDeleteButtons({
     setLockUntil('');
   };
 
+  useEffect(()=>{
+    if(( machineSettingPage || settingPage || securityUserPage || drawingPage ) && ( !isSettingAccessAllowed || !isSecurityUserAccessAllowed || !isDocumentAccessAllowed || !isDrawingAccessAllowed )){
+      navigate(PATH_DASHBOARD.general.app)
+    }
+  },[ 
+    machineSettingPage, 
+    settingPage, 
+    securityUserPage, 
+    drawingPage, 
+    isSettingAccessAllowed,
+    isSecurityUserAccessAllowed, 
+    isDocumentAccessAllowed, 
+    isDrawingAccessAllowed ,
+    navigate
+  ])
 
   const handleOpenConfirm = (dialogType) => {
 
@@ -775,5 +798,6 @@ ViewFormEditDeleteButtons.propTypes = {
   machineSettingPage: PropTypes.bool,
   settingPage: PropTypes.bool,
   securityUserPage: PropTypes.bool,
+  drawingPage: PropTypes.bool,
   hanldeViewGallery: PropTypes.func,
 };

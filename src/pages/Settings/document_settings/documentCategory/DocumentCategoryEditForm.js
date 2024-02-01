@@ -166,7 +166,7 @@ export default function DocumentCategoryeEditForm() {
                   defaultName='isDefault'
                 />
               </Stack>
-              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              <AddFormButtons settingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>
           </Grid>
         </Grid>

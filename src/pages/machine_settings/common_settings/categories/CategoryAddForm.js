@@ -105,7 +105,7 @@ export default function CategoryAddForm() {
                   defaultName='isDefault'
                 />
 
-                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+                <AddFormButtons machineSettingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>
           </Grid>

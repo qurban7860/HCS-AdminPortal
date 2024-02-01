@@ -87,7 +87,7 @@ export default function WhitelistIPAddForm() {
                     pattern:"^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\/(3[0-2]|[12]?[0-9])$|^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
                   }} />
                 </Box>
-              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              <AddFormButtons settingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>
           </Grid>
         </Grid>

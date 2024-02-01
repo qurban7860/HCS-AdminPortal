@@ -139,7 +139,7 @@ export default function SecurityUserChangePassword() {
                     Change Password
                   </LoadingButton> */}
               </Stack>
-              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              <AddFormButtons securityUserPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>
           </Grid>
         </Grid>

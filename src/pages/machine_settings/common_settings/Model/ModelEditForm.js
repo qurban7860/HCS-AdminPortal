@@ -124,7 +124,7 @@ export default function ModelEditForm() {
                 <ToggleButtons isMachine name={FORMLABELS.isACTIVE.name} isDefault defaultName='isDefault' />
               </Box>
             </Stack>
-            <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+            <AddFormButtons machineSettingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>
         </Grid>
       </Grid>

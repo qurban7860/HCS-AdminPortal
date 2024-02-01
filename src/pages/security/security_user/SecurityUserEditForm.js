@@ -508,7 +508,7 @@ export default function SecurityUserEditForm() {
             </Grid>
 
             <Stack sx={{ mt: 3 }}>
-              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              <AddFormButtons securityUserPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Stack>
           </Card>
         </Grid>

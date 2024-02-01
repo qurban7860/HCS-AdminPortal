@@ -511,7 +511,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
               <RHFSwitch name="currentEmployee" label="Current Employee" />
             </Grid>
             <Stack sx={{ mt: 3 }}>
-              <AddFormButtons saveButtonName={isInvite?"Invite":"Save"} isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              <AddFormButtons securityUserPage saveButtonName={isInvite?"Invite":"Save"} isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Stack>
           </Card>
         </Grid>

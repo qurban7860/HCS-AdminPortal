@@ -287,6 +287,7 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
       backLink={(customerPage || machinePage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDocumentViewFormVisibility(false))}
       : () => navigate(PATH_DOCUMENT.document.list)}
       disableEditButton={machine?.status?.slug==='transferred'}
+      drawingPage={ !customerPage || !machinePage }
       />
       <Grid container>
       {PDFViewerDialog && (

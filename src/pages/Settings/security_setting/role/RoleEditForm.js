@@ -133,7 +133,7 @@ export default function RoleEditForm() {
                   <RHFSwitch name="disableDelete" label="Disable Delete" />
                 </Grid>
               </Stack>
-              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              <AddFormButtons settingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>
           </Grid>
         </Grid>

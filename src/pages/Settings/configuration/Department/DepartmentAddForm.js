@@ -84,7 +84,7 @@ export default function DepartmentAddForm() {
                 <RHFSwitch name="isActive" label="Active"/>
                 <RHFSwitch name="isDefault" label="Default"/>
                 </Grid>
-                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+                <AddFormButtons settingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>
           </Grid>

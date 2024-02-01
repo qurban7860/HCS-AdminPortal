@@ -105,7 +105,7 @@ export default function ConfigEditForm() {
                 <RHFTextField name='notes' label='Notes' minRows={5} multiline/>
                 <RHFSwitch name="isActive" label="Active" />
               </Box>
-              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              <AddFormButtons settingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>
           </Grid>
         </Grid>

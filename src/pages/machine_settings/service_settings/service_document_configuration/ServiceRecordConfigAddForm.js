@@ -257,7 +257,7 @@ export default function ServiceRecordConfigAddForm() {
                 
                   <RHFSwitch name="isActive" label="Active" />
 
-                <AddFormButtons saveAsDraft={() => setDraft(true)} isDisabled={checkItemList.length > 0} isDraft={isDraft} saveButtonName='submit' isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+                <AddFormButtons machineSettingPage saveAsDraft={() => setDraft(true)} isDisabled={checkItemList.length > 0} isDraft={isDraft} saveButtonName='submit' isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>
           </Grid>
