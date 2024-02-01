@@ -159,7 +159,7 @@ export default function ParameterEditForm() {
                 <RHFSwitch name="isActive" label="Active"/>
               </Box>
             </Stack>
-            <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+            <AddFormButtons machineSettingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>
         </Grid>
       </Grid>

@@ -151,7 +151,7 @@ export default function DocumentCategoryeEditForm() {
                   <RHFSwitch name="isActive" label="Active"/>
                 </Grid>
               </Stack>
-              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              <AddFormButtons machineSettingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>
           </Grid>
         </Grid>

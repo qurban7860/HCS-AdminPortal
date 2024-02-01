@@ -200,7 +200,7 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
                     handleIsActiveChange={handleIsActiveChange}
                   />
 
-                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+                <AddFormButtons drawingPage={ !customerPage && !machinePage } isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>
           </Grid>

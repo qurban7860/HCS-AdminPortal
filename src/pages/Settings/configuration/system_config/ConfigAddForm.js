@@ -117,7 +117,7 @@ export default function ConfigAddForm() {
                 <RHFTextField name='notes' label='Notes' minRows={5} multiline/>
                 <RHFSwitch name="isActive" label="Active" />
               </Box>
-              <AddFormButtons isActive isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              <AddFormButtons settingPage isActive isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>
           </Grid>
         </Grid>

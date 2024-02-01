@@ -222,7 +222,7 @@ export default function SupplierEditForm() {
               <RHFSwitch name="isDefault" label="Default"/>
               </Grid>
             </Stack>
-            <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+            <AddFormButtons machineSettingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>
         </Grid>
       </Grid>

@@ -168,7 +168,7 @@ const HandleChangeIniJson = async (e) => {
                   <CodeMirror value={configJSON} HandleChangeIniJson={HandleChangeIniJson}/>                
                 </Grid>
                 <RHFSwitch name="isActive" label="Active" />
-                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+                <AddFormButtons machineSettingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>
           </Grid>

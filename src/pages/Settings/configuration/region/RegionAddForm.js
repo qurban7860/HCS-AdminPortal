@@ -123,7 +123,7 @@ export default function RegionAddForm({ isEdit = false, currentUser }) {
                   <RHFSwitch name="isDefault" label="Default" />
                 </Grid>
               </Stack>
-              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              <AddFormButtons settingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>
           </Grid>
         </Grid>

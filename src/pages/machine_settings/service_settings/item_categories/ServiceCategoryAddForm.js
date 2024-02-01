@@ -92,7 +92,7 @@ export default function ServiceCategoryAddForm() {
                   <RHFTextField name="description" label="Description" minRows={7} multiline />
                 </Box>
                 <ToggleButtons isMachine name={FORMLABELS.isACTIVE.name}/>
-                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+                <AddFormButtons machineSettingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>
           </Grid>

@@ -113,7 +113,7 @@ export default function ModelAddForm() {
                   <RHFSwitch name="isDefault" label="Default"/>
                 </Grid>
                 </Box>
-                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+                <AddFormButtons machineSettingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>
           </Grid>

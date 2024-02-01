@@ -199,7 +199,7 @@ export default function StatusAddForm() {
                   <RHFSwitch name="isActive" label="Active" />
                   <RHFSwitch name="isDefault" label="Default" />
                 </Grid>
-                  <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+                  <AddFormButtons machineSettingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
                 </Stack>
               </Card>
             </Grid>

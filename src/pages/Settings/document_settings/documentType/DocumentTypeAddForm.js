@@ -132,7 +132,7 @@ export default function DocumentTypeAddForm({ currentDocument }) {
                   defaultName='isDefault'
                 />
               </Stack>
-              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              <AddFormButtons settingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>
           </Grid>
         </Grid>

@@ -122,7 +122,7 @@ export default function GroupEditForm() {
                   <RHFSwitch key='isActive' name="isActive" label="Active" />
                   <RHFSwitch key='isDefault' name="isDefault" label="Default" />
                 </Box>
-                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+                <AddFormButtons machineSettingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>
           </Grid>
