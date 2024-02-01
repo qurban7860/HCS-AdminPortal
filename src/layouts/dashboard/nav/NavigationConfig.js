@@ -52,12 +52,14 @@ function NavigationConfig() {
     isSecurityUserAccessAllowed, 
     isEmailAccessAllowed 
   } = useAuthContext();
+
 console.log(
     "isDocumentAccessAllowed : ", isDocumentAccessAllowed, 
     "isDrawingAccessAllowed : ",  isDrawingAccessAllowed,
     "isSettingAccessAllowed : ",  isSettingAccessAllowed,
     "isSecurityUserAccessAllowed : ", isSecurityUserAccessAllowed,
     )
+    
   const [navConfig, setConfig] = useState([
     {
       subheader: 'general',
