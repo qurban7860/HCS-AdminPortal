@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
-import { useState, useEffect } from 'react';
+import { useState, useLayoutEffect } from 'react';
 import { Button, Grid, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import ConfirmDialog from '../confirm-dialog';
@@ -54,7 +54,7 @@ export default function AddFormButtons({
     toggleCancel();
   };
 
-  useEffect(()=>{
+  useLayoutEffect(()=>{
     if(( machineSettingPage || settingPage || securityUserPage || drawingPage ) && ( isSettingReadOnly || isSecurityReadOnly || !isDocumentAccessAllowed || !isDrawingAccessAllowed )){
       navigate(PATH_DASHBOARD.general.app)
     }
