@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
 import { Badge, Box, Divider, Grid, TextField } from '@mui/material';
 import { useDispatch } from 'react-redux';
-import { memo, useState, useEffect } from 'react';
+import { memo, useState, useLayoutEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { green } from '@mui/material/colors';
@@ -146,7 +146,7 @@ function ViewFormEditDeleteButtons({
     setLockUntil('');
   };
 
-  useEffect(()=>{
+  useLayoutEffect(()=>{
     if(( machineSettingPage || settingPage || securityUserPage || drawingPage ) && ( !isSettingAccessAllowed || !isSecurityUserAccessAllowed || !isDocumentAccessAllowed || !isDrawingAccessAllowed )){
       navigate(PATH_DASHBOARD.general.app)
     }
