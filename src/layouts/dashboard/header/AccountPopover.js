@@ -48,7 +48,7 @@ export default function AccountPopover() {
   const theme = useTheme();
   const navigate = useNavigate();
   const { user, logout } = useAuthContext();
-  // console.log("user : ",user)
+
   const email = localStorage.getItem('email')
   const displayName = localStorage.getItem('name')
 

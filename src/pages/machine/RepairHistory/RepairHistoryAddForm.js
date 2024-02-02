@@ -88,20 +88,15 @@ export default function RepairHistoryAddForm() {
 
   useEffect(() => {
     reset(defaultValues);
-    // if (!siteAddFormVisibility) {
-    //   dispatch(setsiteAddFormVisibility(true));
-    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   const onChange = (event) => {
     const value = event.target.value;
-    console.log('value----->',value);
   };
 
   const onSubmit = async (data) => {
     try {
-      console.log('params',data);
       await dispatch(saveSite(data));
       reset();
 

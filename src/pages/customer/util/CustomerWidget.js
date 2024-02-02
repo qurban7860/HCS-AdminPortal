@@ -4,7 +4,6 @@ import { alpha, useTheme } from '@mui/material/styles';
 import { Card, Typography, Grid } from '@mui/material';
 // utils
 import { bgGradient } from '../../../utils/cssStyles';
-// import { fShortenNumber } from '../../../utils/formatNumber';
 // components
 import Iconify from '../../../components/iconify';
 

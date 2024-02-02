@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router';
 import { useEffect, useLayoutEffect, useState } from 'react';
 // @mui
-import { Grid, Card, Divider, TextField, Autocomplete, CardHeader, Box, IconButton, Typography } from '@mui/material';
+import { Grid, Card, Divider, TextField, Autocomplete, CardHeader, IconButton, Typography } from '@mui/material';
 import { StyledBg, StyledContainer, StyledGlobalCard } from '../../theme/styles/default-styles';
 // sections
 import HowickWelcome from '../../components/DashboardWidgets/HowickWelcome';
@@ -33,11 +33,16 @@ import Iconify from '../../components/iconify';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import { useWebSocketContext } from '../../auth/WebSocketContext';
 import { fQuarterYearDate } from '../../utils/formatTime';
+import { useAuthContext } from '../../auth/useAuthContext';
+
 // ----------------------------------------------------------------------
 
 export default function GeneralAppPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { isDashboardAccessLimited } = useAuthContext()
+
   const { onlineUsers } = useWebSocketContext();
   const { count, machinesByCountry, machinesByYear, machinesByModel, erpLogs } = useSelector((state) => state.count);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
@@ -71,25 +76,26 @@ export default function GeneralAppPage() {
   const countryWiseSiteCountCountries = [];
 
   useLayoutEffect(() => {
-    dispatch(getActiveCategories());
-    dispatch(getActiveMachineModels());
-    dispatch(getCount());
-    // dispatch(getMachinesByCountry());
-    // dispatch(getMachinesByModel());
-    // dispatch(getMachinesByYear());
-    dispatch(getERPLogs());
-  }, [dispatch]);
+    if(!isDashboardAccessLimited){
+      dispatch(getActiveCategories());
+      dispatch(getActiveMachineModels());
+      dispatch(getCount());
+      dispatch(getERPLogs());
+    }
+  }, [dispatch, isDashboardAccessLimited]);
 
   useEffect(()=>{
-    const defaultCategory = activeCategories.find((cat) => cat?.isDefault === true);
-    setMBCCategory(defaultCategory);
-    setMBMCategory(defaultCategory);
-    setMBYCategory(defaultCategory);
-
-    dispatch(getMachinesByCountry(defaultCategory?._id,null, null))
-    dispatch(getMachinesByYear(defaultCategory?._id,null, null))
-    dispatch(getMachinesByModel(defaultCategory?._id,null, null))
-  },[dispatch, activeCategories])
+    if(!isDashboardAccessLimited){
+      const defaultCategory = activeCategories.find((cat) => cat?.isDefault === true);
+      setMBCCategory(defaultCategory);
+      setMBMCategory(defaultCategory);
+      setMBYCategory(defaultCategory);
+      
+      dispatch(getMachinesByCountry(defaultCategory?._id,null, null))
+      dispatch(getMachinesByYear(defaultCategory?._id,null, null))
+      dispatch(getMachinesByModel(defaultCategory?._id,null, null))
+    }
+  },[dispatch, activeCategories, isDashboardAccessLimited])
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: currentYear - 1999 }, (_, index) => 2000 + index);
@@ -147,17 +153,17 @@ export default function GeneralAppPage() {
   };
 
   const handleExpandGraph = async (graph) => {
-    if(graph==="country"){
+    if(graph==="country" && !isDashboardAccessLimited){
       dispatch(setMachineCategory(MBCCategory));
       dispatch(setMachineYear(MBCYear));
       dispatch(setMachineModel(MBCModel));
       navigate(PATH_DASHBOARD.general.machineByCountries)
-    }else if(graph==="model"){
+    }else if(graph==="model" && !isDashboardAccessLimited ){
       dispatch(setMachineCategory(MBMCategory));
       dispatch(setMachineYear(MBMYear));
       dispatch(setMachineCountry(MBMCountry));
       navigate(PATH_DASHBOARD.general.machineByModels)
-    }else if(graph==="year"){
+    }else if(graph==="year" && !isDashboardAccessLimited){
       dispatch(setMachineCategory(MBYCategory));
       dispatch(setMachineCountry(MBYCountry));
       dispatch(setMachineModel(MBYModel));
@@ -165,8 +171,6 @@ export default function GeneralAppPage() {
     }
   }
  
-  
-
   return (
     <StyledContainer maxWidth={false}>
       <Grid container>
@@ -174,36 +178,40 @@ export default function GeneralAppPage() {
             <Grid item xs={12}>
               <HowickWelcome title={TITLES.WELCOME} description={TITLES.WELCOME_DESC} />
             </Grid>
+        { !isDashboardAccessLimited && 
             <Grid item xs={12} sm={6} md={6} lg={6} xl={3} >
               <HowickWidgets title="Customers" total={count?.customerCount || 0}
                 notVerified={count?.nonVerifiedCustomerCount || 0}
                 excludedCustomers={count?.excludeReportingCustomersCount || 0}
                 icon="raphael:users"
               />
-            </Grid>
+            </Grid>}
+        { !isDashboardAccessLimited && 
             <Grid item xs={12} sm={6} md={6} lg={6} xl={3} >
               <HowickWidgets title="Sites" total={count?.siteCount || 0}
                 icon="carbon:location-company"
               />
-            </Grid>
+            </Grid>}
+        { !isDashboardAccessLimited && 
             <Grid item xs={12} sm={6} md={6} lg={6} xl={3} >
               <HowickWidgets title="Machines" total={count?.machineCount || 0}
                 notVerified={count?.nonVerifiedMachineCount || 0}
                 connectables={count?.connectAbleMachinesCount || 0}
                 icon="vaadin:automation"
               />
-            </Grid>
+            </Grid>}
+        { !isDashboardAccessLimited && 
             <Grid item xs={12} sm={6} md={6} lg={6} xl={3} >
               <HowickWidgets title="Users" total={count?.userTotalCount || 0}
                 activeUsers={count?.userActiveCount || 0} 
                 onlineUsers={onlineUsers && onlineUsers?.length || 0}
                 icon="mdi:account-group"
               />
-          </Grid>    
+          </Grid>}  
         </Grid>
 
           {/* Global widget */}
-          <Grid container spacing={3} mt={2}>
+          { !isDashboardAccessLimited && <Grid container spacing={3} mt={2}>
             <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
               <StyledGlobalCard variants={varFade().inDown} >
                   <Grid container mt={2} mb={2}>
@@ -420,10 +428,10 @@ export default function GeneralAppPage() {
             </Grid>
              :'' }
 
-          </Grid>
+          </Grid>}
 
         {/* hide this in the live, but show in development and test for now  */}
-        {showDevGraphs ?
+        {showDevGraphs && !isDashboardAccessLimited ?
         <Grid item xs={12} md={6} lg={12}>
           <ChartColumnNegative optionsData={modelWiseMachineModel} />
           <StyledBg />

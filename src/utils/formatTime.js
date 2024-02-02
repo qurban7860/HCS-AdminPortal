@@ -12,7 +12,6 @@ export function fDate(date, newFormat) {
 }
 
 export function fQuarterYearDate(startDate, newFormat) {
-  const formatQuarterYear = newFormat || 'MMM yyyy';
 
   if (startDate) {
     const start = new Date(startDate);

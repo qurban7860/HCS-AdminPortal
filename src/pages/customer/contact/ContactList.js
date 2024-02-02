@@ -46,18 +46,9 @@ const TABLE_HEAD = [
   { id: 'customer', label: 'Customer', align: 'left' },
   { id: 'phone', label: 'Phone', align: 'left' },
   { id: 'created_at', label: 'Created At', align: 'left' },
-  // { id: 'action', label: 'Actions', align: 'left' },
-
 ];
 
-const STATUS_OPTIONS = [
-  // { id: '1', value: 'Order Received' },
-  // { id: '2', value: 'In Progress' },
-  // { id: '3', value: 'Ready For Transport' },
-  // { id: '4', value: 'In Freight' },
-  // { id: '5', value: 'Deployed' },
-  // { id: '6', value: 'Archived' },
-];
+const STATUS_OPTIONS = [];
 
 
 // ----------------------------------------------------------------------
@@ -100,11 +91,6 @@ export default function ContactList() {
 
   useEffect(() => {
     if (initial) {
-      // if (contacts && !error) {
-      //   enqueueSnackbar(responseMessage);
-      // } else {
-      //   enqueueSnackbar(error, { variant: `error` });
-      // }
       setTableData(contacts);
     }
   }, [contacts, error, responseMessage, enqueueSnackbar, initial]);
@@ -141,7 +127,6 @@ export default function ContactList() {
 
   const handleDeleteRow = async (id) => {
     try {
-      // console.log(id);
       await dispatch(deleteContact(id));
       dispatch(getContacts());
       setSelected([]);
@@ -174,7 +159,6 @@ export default function ContactList() {
   };
 
   const handleEditRow = (customerID, contactID) => {
-    // console.log(customerID);
     navigate(PATH_DASHBOARD.customer.view(customerID, contactID));
   };
 
@@ -234,12 +218,6 @@ export default function ContactList() {
                   rowCount={tableData.length}
                   numSelected={selected.length}
                   onSort={onSort}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row) => row?._id)
-                  //   )
-                  // }
                 />
 
                 <TableBody>

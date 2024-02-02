@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import * as Yup from 'yup';
 import { m } from 'framer-motion';
 import { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,7 +23,7 @@ import { MuiChipsInput } from 'mui-chips-input'
 
 // slice
 import { addCustomer, setCustomerTab } from '../../redux/slices/customer/customer';
-import { getSPContacts } from '../../redux/slices/customer/contact';
+import { getActiveSPContacts } from '../../redux/slices/customer/contact';
 // routes
 import { PATH_CUSTOMER } from '../../routes/paths';
 // components
@@ -43,9 +42,9 @@ import { countries } from '../../assets/data';
 import { Cover } from '../../components/Defaults/Cover';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { FORMLABELS } from '../../constants/customer-constants';
-import { StyledToggleButtonLabel } from '../../theme/styles/document-styles';
-// import { StyledCardContainer } from '../../theme/styles/default-styles';
 import FormLabel from '../../components/DocumentForms/FormLabel';
+import { AddCustomerSchema } from '../schemas/customer';
+
 
 // ----------------------------------------------------------------------
 
@@ -57,7 +56,7 @@ CustomerAddForm.propTypes = {
 
 export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const { userId, user } = useAuthContext();
-  const { spContacts } = useSelector((state) => state.contact);
+  const { activeSpContacts } = useSelector((state) => state.contact);
   const [contactFlag, setCheckboxFlag] = useState(false);
   const [chips, setChips] = useState([]);
 
@@ -71,52 +70,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const [country, setCountryVal] = useState(countries[169]);
   const [billingContactPhone, setBillingContactPhone] = useState('');
   const [technicalContactPhone, setTechnicalContactPhone] = useState('');
-
-  const AddCustomerSchema = Yup.object().shape({
-    name: Yup.string().trim('Leading and trailing spaces are not allowed')
-    .min(2, 'Name must be at least 2 characters long')
-    .max(40, 'Name must not exceed 40 characters')
-    .required('Name is required'),
-    
-    // tradingName: Yup.string(),
-    mainSite: Yup.string().trim('Leading and trailing spaces are not allowed'),
-    sites: Yup.array(),
-    contacts: Yup.array(),
-    accountManager: Yup.array(),
-    projectManager: Yup.array(),
-    supportManager: Yup.array(),
-    // site details
-    billingSite: Yup.string().trim('Leading and trailing spaces are not allowed'),
-    // phone: Yup.string(),
-    email: Yup.string()
-      .trim('The contact name cannot include leading and trailing spaces')
-      .email('Email must be a valid email address'),
-    // fax: Yup.string(),
-    website: Yup.string().trim('Leading and trailing spaces are not allowed'),
-    street: Yup.string().trim('Leading and trailing spaces are not allowed'),
-    suburb: Yup.string().trim('Leading and trailing spaces are not allowed'),
-    city: Yup.string().trim('Leading and trailing spaces are not allowed'),
-    postcode: Yup.string().trim('Leading and trailing spaces are not allowed'),
-    region: Yup.string().trim('Leading and trailing spaces are not allowed'),
-    // country: Yup.string().nullable(true),
-
-    // billing contact details
-    billingFirstName: Yup.string().trim('Leading and trailing spaces are not allowed'),
-    billingLastName: Yup.string().trim('Leading and trailing spaces are not allowed'),
-    billingTitle: Yup.string().trim('Leading and trailing spaces are not allowed'),
-    billingContactTypes: Yup.array(),
-    // billingContactPhone: Yup.string(),
-    billingContactEmail: Yup.string().email('Email must be a valid email address').trim('Leading and trailing spaces are not allowed'),
-
-    // technical contact details
-    technicalFirstName: Yup.string().trim('Leading and trailing spaces are not allowed'),
-    technicalLastName: Yup.string().trim('Leading and trailing spaces are not allowed'),
-    technicalTitle: Yup.string().trim('Leading and trailing spaces are not allowed'),
-    technicalContactTypes: Yup.array(),
-    // technicalContactPhone: Yup.string(),
-    technicalContactEmail: Yup.string().email('Email must be a valid email address').trim('Leading and trailing spaces are not allowed'),
-    isActive: Yup.boolean(),
-  });
 
   const defaultValues = useMemo(
     () => ({
@@ -157,7 +110,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     watch();
 
   useLayoutEffect(() => {
-    dispatch(getSPContacts());
+    dispatch(getActiveSPContacts());
   }, [dispatch]);
 
   
@@ -311,16 +264,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
               <RHFTextField name="region" label="Region" />
 
-              {/* <RHFAutocomplete
-                  name="country"
-                  label="Country"
-                  freeSolo
-                  options={countries.map((country) => country.label)}
-                  // getOptionLabel={(option) => option.title}
-
-                  ChipProps={{ size: 'small' }}
-                />  */}
-
               <RHFAutocomplete
                 id="country-select-demo"
                 options={countries}
@@ -372,7 +315,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
               <RHFTextField name="billingTitle" label="Title" />
 
-              {/* <RHFTextField name="billingContactPhone" label="Contact Phone" /> */}
               <MuiTelInput
                 value={billingContactPhone}
                 name="billingContactPhone"
@@ -418,7 +360,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   <RHFTextField name="technicalFirstName" label="First Name" />
                   <RHFTextField name="technicalLastName" label="Last Name" />
                   <RHFTextField name="technicalTitle" label="Title" />
-                  {/* <RHFTextField name="technicalContactPhone" label="Contact Phone" /> */}
                   <MuiTelInput
                     value={technicalContactPhone}
                     name="technicalContactPhone"
@@ -453,7 +394,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     multiple
                     disableCloseOnSelect
                     name="accountManager"
-                    options={spContacts}
+                    options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
                     renderOption={(props, option) => (
@@ -469,7 +410,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     multiple
                     disableCloseOnSelect
                     name="projectManager"
-                    options={spContacts}
+                    options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
                     renderOption={(props, option) => (
@@ -483,7 +424,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     multiple
                     disableCloseOnSelect
                     name="supportManager"
-                    options={spContacts}
+                    options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
                     renderOption={(props, option) => (

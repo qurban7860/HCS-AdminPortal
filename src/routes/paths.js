@@ -120,6 +120,13 @@ export const PATH_MACHINE = {
     settings: {
       app: path(ROOTS_MACHINE, '/machines/settings/app'),
 
+      groups: {
+        new: (ROOTS_MACHINE, '/products/machines/settings/groups/new'),
+        list: (ROOTS_MACHINE, '/products/machines/settings/groups/list'),
+        view: (id) => path(ROOTS_MACHINE, `/machines/settings/groups/${id}/view`),
+        edit: (id) => path(ROOTS_MACHINE, `/machines/settings/groups/${id}/edit`),
+      },
+
       categories: {
         new: (ROOTS_MACHINE, '/products/machines/settings/categories/new'),
         list: (ROOTS_MACHINE, '/products/machines/settings/categories/list'),

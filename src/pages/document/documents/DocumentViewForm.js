@@ -2,9 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useMemo, memo, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { createRoot } from 'react-dom/client';
-import { PDFViewer } from '@react-pdf/renderer';
-import { Document, Page, pdfjs, GlobalWorkerOptions } from 'react-pdf';
+import { Document, Page, pdfjs } from 'react-pdf';
 import { Grid, Card, Box, Dialog, DialogTitle, Button, DialogContent, Divider, Typography } from '@mui/material'
 import download from 'downloadjs';
 import { StyledVersionChip } from '../../../theme/styles/default-styles';
@@ -26,7 +24,7 @@ import {
 } from '../../../redux/slices/document/document';
 import { deleteDocumentFile, downloadFile, getDocumentDownload } from '../../../redux/slices/document/documentFile';
 // components
-import { Thumbnail, ThumbnailDocButton } from '../../../components/Thumbnails';
+import { ThumbnailDocButton } from '../../../components/Thumbnails';
 import { useSnackbar } from '../../../components/snackbar';
 import { Snacks } from '../../../constants/document-constants';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
@@ -35,7 +33,6 @@ import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEdi
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
 import Lightbox from '../../../components/lightbox/Lightbox';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
-import { SkeletonDocument } from '../../../components/skeleton';
 
 DocumentViewForm.propTypes = {
   customerPage: PropTypes.bool,
@@ -83,14 +80,6 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
     dispatch(resetDocumentHistory())
     await dispatch(getDocumentHistory(document?._id));
   };
-
-  const callAfterDelete = async () => {
-    await dispatch(getDocument(document._id));
-  };
-
-  // useEffect(() => {
-  //   dispatch(resetDocument());
-  // }, [dispatch]);
 
   const defaultValues = useMemo(
     () => ({
@@ -298,6 +287,7 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
       backLink={(customerPage || machinePage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDocumentViewFormVisibility(false))}
       : () => navigate(PATH_DOCUMENT.document.list)}
       disableEditButton={machine?.status?.slug==='transferred'}
+      drawingPage={ !customerPage || !machinePage }
       />
       <Grid container>
       {PDFViewerDialog && (

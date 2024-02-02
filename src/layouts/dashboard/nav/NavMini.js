@@ -9,13 +9,14 @@ import { hideScrollbarX } from '../../../utils/cssStyles';
 import Logo from '../../../components/logo';
 import { NavSectionMini } from '../../../components/nav-section';
 //
-import navConfig from './config-navigation';
+import NavigationConfig from './NavigationConfig';
 import NavToggleButton from './NavToggleButton';
 
 // ----------------------------------------------------------------------
 
 export default function NavMini() {
   const [envColor, setEnvColor]= useState('#897A69');
+  const navConfig = NavigationConfig();
 
   useEffect(() => {
     if (CONFIG.ENV.toLocaleLowerCase() === 'dev' || CONFIG.ENV.toLocaleLowerCase === 'development' ) {

@@ -59,7 +59,6 @@ export default function CustomerViewForm() {
   );
   
   const handleEdit = async () => {
-    // await dispatch(getCustomer(customer._id));
     if (!customerEditFormFlag) {
       dispatch(setCustomerEditFormVisibility(true));
     }

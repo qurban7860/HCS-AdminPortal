@@ -1,7 +1,4 @@
-// import { Helmet } from 'react-helmet-async';
-// import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
-// import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
   Card,
@@ -19,7 +16,6 @@ import { useDispatch, useSelector } from '../../redux/store';
 import { PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-// import { useSettingsContext } from '../../components/settings';
 import { useTable, getComparator, TableNoData } from '../../components/table';
 import Iconify from '../../components/iconify';
 import BreadcrumbsProvider from '../../components/Breadcrumbs/BreadcrumbsProvider';
@@ -30,9 +26,9 @@ import ConfirmDialog from '../../components/confirm-dialog';
 import NotesViewForm from './note/NotesViewForm';
 import NoteEditForm from './note/NoteEditForm';
 import NoteAddForm from './note/NoteAddForm';
-import { getNotes, deleteNote, setNoteFormVisibility } from '../../redux/slices/customer/note';
-import { getActiveSites } from '../../redux/slices/customer/site';
-import { getActiveContacts } from '../../redux/slices/customer/contact';
+import { getNotes, resetNotes, deleteNote, setNoteFormVisibility } from '../../redux/slices/customer/customerNote';
+import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
+import { getActiveContacts, resetActiveContacts, resetContacts } from '../../redux/slices/customer/contact';
 import { BUTTONS, BREADCRUMBS, DIALOGS } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
@@ -59,9 +55,7 @@ export default function CustomerNoteList() {
     defaultOrderBy: 'createdAt', defaultOrder: 'desc',
   });
   const dispatch = useDispatch();
-  // const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
-  // const navigate = useNavigate();
   const [filterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus] = useState([]);
@@ -98,8 +92,13 @@ export default function CustomerNoteList() {
       dispatch(getActiveContacts(customer._id));
       dispatch(getActiveSites(customer._id));
     }
+    return ()=>{
+      dispatch(resetNotes());
+      dispatch(resetContacts());
+      dispatch(resetActiveSites());
+    }
   }, [dispatch, customer._id, noteEditFormVisibility, formVisibility]);
-  // console.log(customer._id)
+
   useEffect(() => {
     if (initial) {
       setTableData(notes);
@@ -118,7 +117,7 @@ export default function CustomerNoteList() {
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
-    // console.log("Expended : ",expanded)
+
   };
 
   const handleCloseConfirm = () => {
@@ -131,7 +130,6 @@ export default function CustomerNoteList() {
 
   const handleDeleteRow = async (id) => {
     try {
-      // console.log(id);
       await dispatch(deleteNote(id));
       setExpanded(false);
       dispatch(getNotes());

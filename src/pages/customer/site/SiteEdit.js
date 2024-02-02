@@ -21,8 +21,6 @@ export default function SiteEdit() {
   const dispatch = useDispatch();
 
   const { id } = useParams();
-  // console.log(id);
-
 
   const { site } = useSelector((state) => state.site);
 

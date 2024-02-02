@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, Typography, TextField,  Autocomplete,   Skeleton } from '@mui/material';
+import { Box, Card, Grid, Stack, TextField,  Autocomplete,   Skeleton } from '@mui/material';
 
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { FORMLABELS } from '../../../constants/default-constants';
@@ -105,20 +105,6 @@ function MachineServiceRecordAddForm() {
   } = methods;
 
   const { decoilers, operators, serviceRecordConfiguration, docRecordType } = watch()
-  
-  // useEffect(() => {
-
-  //     setActiveServiceRecordConfigs([]);
-
-  //     if(docRecordType !== null){
-  //       dispatch(getActiveServiceRecordConfigsForRecords(machine?._id, docRecordType))  
-  //       setActiveServiceRecordConfigs(activeServiceRecordConfigsForRecords)
-  //     }
-
-  //     setValue('serviceRecordConfiguration',null)
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   },[docRecordType])
 
     useEffect(() => {
       if(docRecordType?.name){
@@ -167,7 +153,6 @@ function MachineServiceRecordAddForm() {
   const onSubmit = async (data) => {
     try {
       const checkItemLists_ = [];
-console.log("checkItemLists : ",checkItemLists)
       if(checkItemLists && 
         Array.isArray(checkItemLists) && 
         checkItemLists.length>0) 
@@ -424,15 +409,7 @@ console.log("checkItemLists : ",checkItemLists)
                     <RHFTextField name="operatorNotes" label="Operator Notes" minRows={3} multiline/> 
 
                   <Grid container display="flex">
-                    <RHFSwitch
-                      name="isActive"
-                      labelPlacement="start"
-                      label={
-                        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary', }} >
-                          Active
-                        </Typography>
-                      }
-                    />
+                    <RHFSwitch name="isActive" label="Active"/>
                   </Grid>
                   <AddFormButtons isDisabled={docRecordType === null} isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>

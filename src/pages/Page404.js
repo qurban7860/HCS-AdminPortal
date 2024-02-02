@@ -21,7 +21,6 @@ export default function Page404() {
     []
   );
 
-  console.log("content::::::",content)
 
   return (
     <MotionContainer>

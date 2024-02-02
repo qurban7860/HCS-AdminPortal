@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
-import { DatePicker } from '@mui/x-date-pickers';
 import { Grid, TextField, InputAdornment, Button, Stack, 
   FormControl, Select, InputLabel, MenuItem, IconButton, Switch, FormControlLabel, Autocomplete } from '@mui/material';
 import { BUTTONS } from '../../constants/default-constants';
@@ -12,6 +11,7 @@ import { StyledTooltip } from '../../theme/styles/default-styles';
 import { getActiveDocumentTypesWithCategory } from '../../redux/slices/document/documentType';
 import { fDate } from '../../utils/formatTime';
 import { setDateFrom, setDateTo } from '../../redux/slices/products/machineErpLogs';
+import { useAuthContext } from '../../auth/useAuthContext';
 
 function SearchBarCombo({
   isFiltered,
@@ -53,6 +53,9 @@ function SearchBarCombo({
   handleGalleryView,
   dateFrom,
   dateTo,
+  machineSettingPage,
+  securityUserPage,
+  settingPage,
   isDateFromDateTo,
   ...other
 }) {
@@ -62,6 +65,8 @@ function SearchBarCombo({
   const { spContacts } = useSelector((state) => state.contact);
   const isMobile = useResponsive('sm', 'down');
   const dispatch = useDispatch()
+
+  const { isAllAccessAllowed, isSettingReadOnly, isSecurityReadOnly } = useAuthContext();
 
   const onChangeStartDate = (e) => {
     dispatch(setDateFrom(e.target.value));
@@ -120,7 +125,7 @@ function SearchBarCombo({
             </Stack>
           </Grid>}
 
-          {setAccountManagerFilter &&
+          {setAccountManagerFilter && isAllAccessAllowed &&
           <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
             <Autocomplete 
               id="controllable-states-demo"
@@ -183,7 +188,7 @@ function SearchBarCombo({
             </Grid>
           }
 
-          {setSupportManagerFilter &&
+          {setSupportManagerFilter && isAllAccessAllowed &&
           <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
             <Autocomplete 
               id="controllable-states-demo"
@@ -384,14 +389,23 @@ function SearchBarCombo({
                 
                 {inviteButton && 
                   <Grid item>
-                    <StyledTooltip title={inviteButton} placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
-                      <IconButton onClick={inviteOnClick} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
+                    <StyledTooltip title={inviteButton} placement="top" disableFocusListener 
+                      tooltipcolor={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#103996"} 
+                      color={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#103996"} 
+                    >
+                      <IconButton onClick={inviteOnClick} 
+                        disabled={ ( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) } 
+                        color={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#fff"}
+                        sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
                         '&:hover': {
                           background:"#103996", 
                           color:"#fff"
                         }
                       }}>
-                        <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon={buttonIcon || 'mdi:user-plus'} />
+                        <Iconify 
+                          color={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#fff"} 
+                          sx={{ height: '24px', width: '24px'}} icon={buttonIcon || 'mdi:user-plus'} 
+                        />
                       </IconButton>
                     </StyledTooltip>
                   </Grid>
@@ -426,7 +440,7 @@ function SearchBarCombo({
                 </Grid>
               }
 
-              {onExportCSV && 
+              {onExportCSV && isAllAccessAllowed && 
                   <Grid item>
                     <LoadingButton onClick={onExportCSV}  variant='contained' sx={{p:0, minWidth:'24px'}} loading={onExportLoading}>
                       <StyledTooltip title={BUTTONS.EXPORT.label} placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
@@ -451,16 +465,29 @@ function SearchBarCombo({
               </Grid>
               }
 
-              {addButton && !transferredMachine &&
-                  <Grid item>
-                    <StyledTooltip title={addButton} placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
-                    <IconButton onClick={SubOnClick} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
+              {addButton && !transferredMachine && 
+                <Grid item >
+                    <StyledTooltip 
+                      title={addButton} 
+                      placement="top" 
+                      disableFocusListener 
+                      tooltipcolor={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#103996"} 
+                      color={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#103996"} 
+                    >
+                    <IconButton 
+                      disabled={ ( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) } 
+                      color={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#fff"}
+                      onClick={SubOnClick} 
+                      sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
                       '&:hover': {
                         background:"#103996", 
                         color:"#fff"
                       }
                     }}>
-                      <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon={buttonIcon || 'eva:plus-fill'} />
+                      <Iconify 
+                        color={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#fff"} 
+                        sx={{ height: '24px', width: '24px'}} icon={buttonIcon || 'eva:plus-fill'} 
+                      />
                     </IconButton>
                   </StyledTooltip>
                 </Grid>
@@ -513,6 +540,9 @@ SearchBarCombo.propTypes = {
   dateFrom: PropTypes.string,
   dateTo: PropTypes.string,
   isDateFromDateTo: PropTypes.bool,
+  machineSettingPage: PropTypes.bool,
+  securityUserPage: PropTypes.bool,
+  settingPage: PropTypes.bool,
 };
 
 export default SearchBarCombo;

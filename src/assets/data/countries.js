@@ -15,7 +15,7 @@ export const countries = [
   { code: 'AU', label: 'Australia',  phone: '+61' },
   { code: 'AT', label: 'Austria', phone: '+43' },
   { code: 'AZ', label: 'Azerbaijan', phone: '+994' },
-  { code: 'BS', label: 'Bahamas', phone: '+1 242' },
+  { code: 'BS', label: 'Bahamas', phone: '+1' },
   { code: 'BH', label: 'Bahrain', phone: '+973' },
   { code: 'BD', label: 'Bangladesh', phone: '+880' },
   { code: 'BB', label: 'Barbados', phone: '+1-246' },

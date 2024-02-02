@@ -1,14 +1,13 @@
 import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
-import { Autocomplete, Badge, Box, Divider, Grid, TextField } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import { memo, useState } from 'react';
+import { Badge, Box, Divider, Grid, TextField } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { memo, useState, useLayoutEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { green } from '@mui/material/colors';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import { createTheme } from '@mui/material/styles';
-
 import { StyledStack } from '../../theme/styles/default-styles';
 import ConfirmDialog from '../confirm-dialog';
 import useResponsive from '../../hooks/useResponsive';
@@ -21,17 +20,23 @@ import ViewFormMenuPopover from './ViewFormMenuPopover';
 import ViewFormApprovalsPopover from './ViewFormApprovalsPopover';
 import { ICONS } from '../../constants/icons/default-icons';
 import { fDate, fDateTime } from '../../utils/formatTime';
+import { useAuthContext } from '../../auth/useAuthContext';
+import { PATH_DASHBOARD } from '../../routes/paths';
 
 function ViewFormEditDeleteButtons({
   // Icons 
   backLink,
   isActive,
   isDefault,
+  isDeleteDisabled,
   customerAccess,
   isRequired,
   multiAuth,
   currentEmp,
-
+  machineSettingPage,
+  settingPage,
+  securityUserPage,
+  drawingPage,
   // Handlers
   handleVerification,
   handleVerificationTitle,
@@ -77,13 +82,16 @@ function ViewFormEditDeleteButtons({
 
 }) {
   const { id } = useParams();
+  const navigate = useNavigate()
   const userId = localStorage.getItem('userId');
-  const navigate = useNavigate();
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const { transferDialogBoxVisibility } = useSelector((state) => state.machine);
-  const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
-  const { activeCustomers } = useSelector((state) => state.customer);
+  const { 
+    isDisableDelete, 
+    isSettingReadOnly, 
+    isSecurityReadOnly, 
+    isDocumentAccessAllowed, 
+    isDrawingAccessAllowed,
+    isSettingAccessAllowed,
+    isSecurityUserAccessAllowed, } = useAuthContext();
   const dispatch = useDispatch();
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openUserInviteConfirm, setOpenUserInviteConfirm] = useState(false);
@@ -94,17 +102,14 @@ function ViewFormEditDeleteButtons({
   const [openConfigApproveStatuConfirm, setOpenConfigApproveStatuConfirm] = useState(false);
   const [lockUntil, setLockUntil] = useState(''); 
   const [lockUntilError, setLockUntilError] = useState(''); 
+
   const theme = createTheme({
     palette: {
       success: green,
     },
   });
   
-  const disableDelete = userRoles?.some((role) => role?.disableDelete === true);
 
-  if (disableDelete) {
-    disableDeleteButton = true;
-  }
 
   // Function to handle date change
   const handleLockUntilChange = newValue => {
@@ -141,6 +146,21 @@ function ViewFormEditDeleteButtons({
     setLockUntil('');
   };
 
+  useLayoutEffect(()=>{
+    if(( machineSettingPage || settingPage || securityUserPage || drawingPage ) && ( !isSettingAccessAllowed || !isSecurityUserAccessAllowed || !isDocumentAccessAllowed || !isDrawingAccessAllowed )){
+      navigate(PATH_DASHBOARD.general.app)
+    }
+  },[ 
+    machineSettingPage, 
+    settingPage, 
+    securityUserPage, 
+    drawingPage, 
+    isSettingAccessAllowed,
+    isSecurityUserAccessAllowed, 
+    isDocumentAccessAllowed, 
+    isDrawingAccessAllowed ,
+    navigate
+  ])
 
   const handleOpenConfirm = (dialogType) => {
 
@@ -152,7 +172,7 @@ function ViewFormEditDeleteButtons({
       setOpenVerificationConfirm(true);
     }
 
-    if (dialogType === 'delete' && !disableDeleteButton) {
+    if (dialogType === 'delete' && ( !isDisableDelete || !disableDeleteButton ) ) {
       setOpenConfirm(true);
     }
 
@@ -262,10 +282,6 @@ function ViewFormEditDeleteButtons({
     date: new Date(machineSupportDate)
   }
 
-  const [customer, setCustomer] = useState(null);
-  const [status, setStatus] = useState(null);
-  const [statusError, setStatusError] = useState(null);
-  
   return (
     <Grid container justifyContent="space-between" sx={{pb:1, px:0.5}}>
       <Grid item sx={{display:'flex', mt:0.5,mr:1}}>
@@ -291,6 +307,15 @@ function ViewFormEditDeleteButtons({
               icon={isActive?ICONS.ACTIVE.icon:ICONS.INACTIVE.icon}
             />
           }
+
+          {isDeleteDisabled !==undefined &&
+            <IconTooltip
+              title= { isDeleteDisabled ? ICONS.DELETE_ENABLED.heading:ICONS.DELETE_DISABLED.heading}
+              color= { isDeleteDisabled ? ICONS.DELETE_ENABLED.color:ICONS.DELETE_DISABLED.color}
+              icon=  { isDeleteDisabled ? ICONS.DELETE_ENABLED.icon:ICONS.DELETE_DISABLED.icon}
+            />
+          }
+          
           {isDefault !==undefined &&
             <IconTooltip
               title={isDefault?ICONS.DEFAULT.heading:ICONS.CONTRAST.heading}
@@ -415,7 +440,7 @@ function ViewFormEditDeleteButtons({
           )}
 
           {/* User Status Change */}
-          {onUserStatusChange && id!==userId &&(
+          {onUserStatusChange && !isSecurityReadOnly && id!==userId &&(
             <IconTooltip
             title={userStatus?.locked?ICONS.USER_UNLOCK.heading:ICONS.USER_LOCK.heading}
             color={userStatus?.locked?ICONS.USER_UNLOCK.color:ICONS.USER_LOCK.color}
@@ -428,8 +453,8 @@ function ViewFormEditDeleteButtons({
           {handleUserInvite && id!==userId &&(
             <IconTooltip
             title="Resend Invitation"
-            disabled={disableDeleteButton}
-            color={disableDeleteButton?"#c3c3c3":theme.palette.secondary.main}
+            disabled={ isSecurityReadOnly }
+            color={ isSecurityReadOnly ? "#c3c3c3":theme.palette.secondary.main}
             icon={ICONS.USER_INVITE.icon}
             onClick={() => {
               handleOpenConfirm('UserInvite');
@@ -500,10 +525,11 @@ function ViewFormEditDeleteButtons({
         {handleUpdatePassword && (
           <IconTooltip
             title="Change Password"
+            disabled={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly )}
             onClick={() => {
               handleUpdatePassword();
             }}
-            color={disablePasswordButton?"#c3c3c3":theme.palette.secondary.main}
+            color={(disablePasswordButton || ( ( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ))?"#c3c3c3":theme.palette.secondary.main}
             icon="solar:key-broken"
           />
         )}
@@ -539,11 +565,11 @@ function ViewFormEditDeleteButtons({
         {/* edit button */}
         {handleEdit && <IconTooltip
           title="Edit"
-          disabled={disableEditButton}
+          disabled={disableEditButton || (( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ))}
           onClick={() => {
             handleEdit();
           }}
-          color={disableEditButton?"#c3c3c3":theme.palette.primary.main}
+          color={disableEditButton || (( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly )) ?"#c3c3c3":theme.palette.primary.main}
           icon="mdi:pencil-outline"
         />}
 
@@ -560,11 +586,9 @@ function ViewFormEditDeleteButtons({
         {id !== userId  && !mainSite && onDelete && (
           <IconTooltip
             title="Delete"
-            disabled={disableDeleteButton}
-            onClick={() => {
-              handleOpenConfirm('delete');
-            }}
-            color={disableDeleteButton?"#c3c3c3":"#FF0000"}
+            disabled={ isDisableDelete || disableDeleteButton }
+            onClick={() => {  handleOpenConfirm('delete') }}
+            color={( isDisableDelete || disableDeleteButton ) ? "#c3c3c3":"#FF0000"}
             icon="mdi:trash-can-outline"
           />
         )}
@@ -735,6 +759,7 @@ ViewFormEditDeleteButtons.propTypes = {
   isVerifiedTitle: PropTypes.string,
   approveConfiglength: PropTypes.string,
   isActive: PropTypes.bool,
+  isDeleteDisabled: PropTypes.bool,
   isDefault: PropTypes.bool,
   isSubmitted: PropTypes.func,
   returnToSubmitted: PropTypes.func,
@@ -770,5 +795,9 @@ ViewFormEditDeleteButtons.propTypes = {
   isLoading: PropTypes.bool,
   excludeReports: PropTypes.bool,
   isConectable: PropTypes.bool,
+  machineSettingPage: PropTypes.bool,
+  settingPage: PropTypes.bool,
+  securityUserPage: PropTypes.bool,
+  drawingPage: PropTypes.bool,
   hanldeViewGallery: PropTypes.func,
 };

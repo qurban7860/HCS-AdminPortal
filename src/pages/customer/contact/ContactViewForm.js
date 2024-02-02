@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import {  useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 // @mui
@@ -7,7 +7,7 @@ import { Grid, Chip } from '@mui/material';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { fDateTime } from '../../../utils/formatTime';
-
+import { useAuthContext } from '../../../auth/useAuthContext';
 
 import {
   getContacts,
@@ -39,13 +39,10 @@ export default function ContactViewForm({
 }) {
   const { contact, isLoading } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
+  const { isAllAccessAllowed } = useAuthContext()
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin'); 
 
   const handleEdit = async () => {
     await dispatch(getContact(customer?._id, contact?._id));
@@ -59,10 +56,6 @@ export default function ContactViewForm({
     dispatch(setContactEditFormVisibility(false))
     dispatch(setContactMoveFormVisibility(true))
   };
-
-  // useEffect(()=>{
-  //   dispatch(getContact(customer?._id, contact?._id));
-  // },[dispatch, customer, contact])
 
   const onDelete = async () => {
     try {
@@ -120,7 +113,7 @@ export default function ContactViewForm({
 
   return (
     <Grid sx={{mt:1}}>
-      <ViewFormEditDeleteButtons moveCustomerContact={ isSuperAdmin && handleMoveConatct } isActive={defaultValues.isActive} handleEdit={handleEdit} onDelete={onDelete} />
+      <ViewFormEditDeleteButtons moveCustomerContact={ isAllAccessAllowed && handleMoveConatct } isActive={defaultValues.isActive} handleEdit={handleEdit} onDelete={onDelete} />
       <Grid container>
         <ViewFormField isLoading={isLoading} sm={6} heading="First Name" param={defaultValues?.firstName} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Last Name" param={defaultValues?.lastName} />

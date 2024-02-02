@@ -23,10 +23,6 @@ function TablePaginationCustom({
   ...other
 }) {
 
-  // const userRolesString = localStorage.getItem('userRoles');
-  // const userRoles = JSON.parse(userRolesString);
-  // const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
-
   return (
     <Box sx={{ position: 'relative', ...sx }}>
       <TablePagination labelRowsPerPage="Rows:" colSpan={2} rowsPerPageOptions={rowsPerPageOptions} component="div" showLastButton showFirstButton {...other} 

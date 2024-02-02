@@ -1,9 +1,12 @@
 import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
-import { useState } from 'react';
+import { useState, useLayoutEffect } from 'react';
 import { Button, Grid, Stack } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import ConfirmDialog from '../confirm-dialog';
 import { BUTTONS, DIALOGS } from '../../constants/default-constants';
+import { useAuthContext } from '../../auth/useAuthContext';
+import { PATH_DASHBOARD } from '../../routes/paths';
 
 AddFormButtons.propTypes = {
   saveAsDraft: PropTypes.func,
@@ -14,6 +17,10 @@ AddFormButtons.propTypes = {
   toggleCancel: PropTypes.func,
   isSubmitting: PropTypes.bool,
   isDisabled: PropTypes.bool,
+  machineSettingPage: PropTypes.bool,
+  settingPage: PropTypes.bool,
+  securityUserPage: PropTypes.bool,
+  drawingPage: PropTypes.bool,
 };
 
 export default function AddFormButtons({
@@ -25,9 +32,15 @@ export default function AddFormButtons({
   isSubmitting,
   cancelButtonName,
   isDisabled,
+  machineSettingPage,
+  settingPage,
+  securityUserPage,
+  drawingPage,
 }) {
+  const navigate = useNavigate()
   const [openConfirm, setOpenConfirm] = useState(false);
-
+  const { isSettingReadOnly, isSecurityReadOnly, isDocumentAccessAllowed, isDrawingAccessAllowed } = useAuthContext();
+  
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
   };
@@ -40,6 +53,23 @@ export default function AddFormButtons({
     setOpenConfirm(false);
     toggleCancel();
   };
+
+  useLayoutEffect(()=>{
+    if(( machineSettingPage || settingPage || securityUserPage || drawingPage ) && ( isSettingReadOnly || isSecurityReadOnly || !isDocumentAccessAllowed || !isDrawingAccessAllowed )){
+      navigate(PATH_DASHBOARD.general.app)
+    }
+  },[ 
+    machineSettingPage, 
+    settingPage, 
+    securityUserPage, 
+    drawingPage, 
+    isSettingReadOnly, 
+    isSecurityReadOnly, 
+    isDocumentAccessAllowed, 
+    isDrawingAccessAllowed ,
+    navigate
+  ])
+
   return (
     <>
       <Stack justifyContent="flex-end" direction="row" spacing={2}>
@@ -52,7 +82,8 @@ export default function AddFormButtons({
                 variant="contained"
                 size="large"
                 fullWidth
-                disabled={isDisabled}
+                // disabled={isDisabled || ( ( machineSettingPage || settingPage || securityUserPage || drawingPage ) && ( isSettingReadOnly || isSecurityReadOnly || !isDocumentAccessAllowed || !isDrawingAccessAllowed ))}
+                disabled
                 loading={isDraft && isSubmitting}
                 onClick={saveAsDraft}
               >

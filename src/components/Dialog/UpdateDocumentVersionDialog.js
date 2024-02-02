@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Dialog, DialogContent, Button, DialogTitle, Divider, DialogActions } from '@mui/material';
@@ -17,7 +16,7 @@ function UpdateDocumentVersionDialog() {
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   
-  const { documentHistory, documentVersionEditDialogVisibility, isLoading } = useSelector((state) => state.document);
+  const { documentHistory, documentVersionEditDialogVisibility } = useSelector((state) => state.document);
 
   const handleCloseDialog = ()=>{ 
     dispatch(setDocumentVersionEditDialogVisibility(false));

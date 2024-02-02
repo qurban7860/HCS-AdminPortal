@@ -4,6 +4,7 @@ import { Grid, Link } from '@mui/material';
 import { useNavigate } from 'react-router';
 import Iconify from '../iconify/Iconify';
 import { PATH_MACHINE } from '../../routes/paths';
+import { useAuthContext } from '../../auth/useAuthContext';
 
 function CoverSettingsIcons({
   setting,
@@ -16,11 +17,12 @@ function CoverSettingsIcons({
   handleSettingsNavigate,
 }) {
 
+  const { isSettingAccessAllowed } = useAuthContext()
   const navigate = useNavigate();
   
   return (
     <Grid style={{ flex: 1, display: 'flex', justifyContent: 'end' }}>
-      {setting && (
+      {setting && isSettingAccessAllowed && (
         <Link
           title="Machine Setting"
           sx={{

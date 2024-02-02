@@ -232,31 +232,4 @@ Thumbnail.propTypes = {
 
 export default Thumbnail;
 
-// _____________________________________________________________________________________________
-
-// whats this {downloadBase64File} for?
-
-//   const downloadBase64File = (base64Data, fileName) => {
-//     // Decode the Base64 file
-//     const decodedString = atob(base64Data);
-//     // Convert the decoded string to a Uint8Array
-//     const byteNumbers = new Array(decodedString.length);
-//     for (let i = 0; i < decodedString.length; i += 1) {
-//       byteNumbers[i] = decodedString.charCodeAt(i);
-//     }
-//     const byteArray = new Uint8Array(byteNumbers);
-//     // Create a Blob object from the Uint8Array
-//     const blob = new Blob([byteArray]);
-//     const link = React.createElement('a');
-//     link.href = window.URL.createObjectURL(blob);
-//     link.download = fileName;
-//     link.target = '_blank';
-//     link.click();
-//   };
-
-//   // download file
-//   const handleDownloadFile = (base64) => {
-//     const base64Data = base64;
-//     const fileName = 'your_file_name.ext';
-//     downloadBase64File(base64Data, fileName);
-//   };
+// ____________________________________________________________________________________________

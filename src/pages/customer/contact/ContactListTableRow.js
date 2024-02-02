@@ -44,8 +44,6 @@ export default function ContactListTableRow({
 
   const [openPopover, setOpenPopover] = useState(null);
 
-  // console.log('dep', departmentName);
-
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
   };
@@ -54,9 +52,6 @@ export default function ContactListTableRow({
     setOpenConfirm(false);
   };
 
-  // const handleOpenPopover = (event) => {
-  //   setOpenPopover(event.currentTarget);
-  // };
 
   const handleClosePopover = () => {
     setOpenPopover(null);

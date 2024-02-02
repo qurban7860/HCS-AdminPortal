@@ -24,14 +24,12 @@ export default function CustomerEdit() {
   const dispatch = useDispatch();
 
   const { id } = useParams();
-  // console.log(id);
 
   const { customer } = useSelector((state) => state.customer);
 
   useLayoutEffect(() => {
     dispatch(getCustomer(id));
     dispatch(getSites());
-    // dispatch(getContacts());
   }, [dispatch, id]);
 
   return (

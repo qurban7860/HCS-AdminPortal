@@ -467,7 +467,6 @@ export function updateServiceRecordConfig(params,Id) {
       }else{
         data.checkItemLists = [];
       }
-      // console.log("data : ", data)
       await axios.patch(`${CONFIG.SERVER_URL}products/serviceRecordsConfig/${Id}`,
         data
       );

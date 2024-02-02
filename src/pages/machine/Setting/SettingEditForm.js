@@ -10,8 +10,7 @@ import {
   Box,
   Card,
   Grid,
-  Stack,
-  Typography,
+  Stack
 } from '@mui/material';
 // global
 import { useSnackbar } from '../../../components/snackbar';
@@ -98,15 +97,7 @@ export default function SettingEditForm() {
                 <RHFTextField name="techParam" label="Technical Parameters" disabled/>
               </Box>
               <RHFTextField name="techParamValue" label="Technical Parameter Value" />
-              <RHFSwitch
-                name="isActive"
-                labelPlacement="start"
-                label={
-                    <Typography variant="subtitle2" 
-                    sx={{mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary'}}
-                    >Active</Typography>
-                }
-              />
+              <RHFSwitch name="isActive" label="Active" />
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} disabled={isSubmitting} toggleCancel={toggleCancel} />
           </Card>

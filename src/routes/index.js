@@ -238,6 +238,10 @@ import {
   BlacklistIPAddForm,
   WhitelistIPList,
   WhitelistIPAddForm,
+  GroupAddForm,
+  GroupViewForm,
+  GroupEditForm,
+  GroupList
   
 } from './elements';
 // ----------------------------------------------------------------------
@@ -370,6 +374,15 @@ export default function Router() {
             { path: 'settings',
               children: [
               {path: 'app', element: <MachineSetting />},
+              {
+                path: 'groups',
+                children:[
+                  {path: 'new', element: <GroupAddForm />},
+                  {path: 'list', element: <GroupList />},
+                  {path: ':id/view', element: <GroupViewForm />},
+                  {path: ':id/edit', element: <GroupEditForm />},
+                ]
+              },
               {
                 path: 'categories',
                 children:[

@@ -144,7 +144,7 @@ export function addRegion(param) {
       const data = {
       name: param.name,
       description: param.description,
-      countries: param.selectedCountries,
+      countries: param.countries,
       isActive: param.isActive,
       isDefault: param.isDefault,
       }
@@ -170,7 +170,7 @@ export function updateRegion(param,id) {
       const data = {
         name: param.name,
         description: param.description,
-        countries: param.selectedCountries,
+        countries: param.countries,
         isActive: param.isActive,
         isDefault: param.isDefault,
         }
@@ -285,7 +285,6 @@ export function deleteRegion(id) {
 // ----------------------------------------------------------------------
 
 export function getCountries() {
-  console.log('path working');
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{ 

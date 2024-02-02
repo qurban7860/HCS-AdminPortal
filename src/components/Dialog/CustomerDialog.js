@@ -27,19 +27,19 @@ function CustomerDialog() {
       <Divider orientation="horizontal" flexItem />
       <DialogContent dividers sx={{px:3}}>
         <Grid item container>
-          <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={customer?.name} />
-          <ViewFormField isLoading={isLoading} sm={12} heading="Trading Name" chips={customer?.tradingName} />
-          <ViewFormField isLoading={isLoading} sm={6} heading="Phone" param={customer?.mainSite?.phone} />
-          <ViewFormField isLoading={isLoading} sm={6} heading="Fax" param={customer?.mainSite?.fax} />
-          <ViewFormField isLoading={isLoading} sm={6} heading="Email" param={customer?.mainSite?.email} />
-          <ViewFormField isLoading={isLoading} sm={6} heading="Site Name" param={customer?.mainSite?.name} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={customer?.name || ''} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Trading Name" chips={customer?.tradingName || ''} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Phone" param={customer?.mainSite?.phone || ''} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Fax" param={customer?.mainSite?.fax || ''} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Email" param={customer?.mainSite?.email || ''} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Site Name" param={customer?.mainSite?.name || ''} />
           <FormLabel content="Address Information" />
-          <ViewFormField isLoading={isLoading} sm={6} heading="Street" param={customer?.mainSite?.address?.street} />
-          <ViewFormField isLoading={isLoading} sm={6} heading="Suburb" param={customer?.mainSite?.address?.suburb} />
-          <ViewFormField isLoading={isLoading} sm={6} heading="City" param={customer?.mainSite?.address?.city} />
-          <ViewFormField isLoading={isLoading} sm={6} heading="Region" param={customer?.mainSite?.address?.region} />
-          <ViewFormField isLoading={isLoading} sm={6} heading="Post Code" param={customer?.mainSite?.address?.postcode} />
-          <ViewFormField isLoading={isLoading} sm={12} heading="Country" param={customer?.mainSite?.address?.country} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Street" param={customer?.mainSite?.address?.street || ''} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Suburb" param={customer?.mainSite?.address?.suburb || ''} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="City" param={customer?.mainSite?.address?.city || ''} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Region" param={customer?.mainSite?.address?.region || ''} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Post Code" param={customer?.mainSite?.address?.postcode || ''} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Country" param={customer?.mainSite?.address?.country || ''} />
           <ViewFormField isLoading={isLoading} sm={6} heading="Primary Biling Contact"
             param={
               customer?.primaryBillingContact &&

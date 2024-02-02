@@ -92,22 +92,18 @@ function AppNewInvoiceRow({ row }) {
 
   const handleDownload = () => {
     handleClosePopover();
-    console.log('DOWNLOAD', row.id);
   };
 
   const handlePrint = () => {
     handleClosePopover();
-    console.log('PRINT', row.id);
   };
 
   const handleShare = () => {
     handleClosePopover();
-    console.log('SHARE', row.id);
   };
 
   const handleDelete = () => {
     handleClosePopover();
-    console.log('DELETE', row.id);
   };
 
   return (

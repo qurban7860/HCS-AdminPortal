@@ -1,14 +1,14 @@
 import PropTypes from 'prop-types';
 // @mui
 import {
-  TableRow,
   TableCell,
 } from '@mui/material';
 // utils
-import { styled } from '@mui/material/styles';
 // components
 import LinkTableCellButtons from '../../../components/ListTableTools/LinkTableCellButtons';
 import LinkDialogTableCellTargetBlank from '../../../components/ListTableTools/LinkDialogTableCellTargetBlank';
+import { StyledTableRow } from '../../../theme/styles/default-styles'
+import { useAuthContext } from '../../../auth/useAuthContext';
 
 MachineListTableRow.propTypes = {
   row: PropTypes.object,
@@ -17,14 +17,7 @@ MachineListTableRow.propTypes = {
   onClick: PropTypes.func,
   onMoveMachine: PropTypes.func
 };
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: 'white',
-  },
-  '&:nth-of-type(even)': {
-    backgroundColor: '#f4f6f866',
-  },
-}));
+
 
 export default function MachineListTableRow({
   row,
@@ -41,10 +34,8 @@ export default function MachineListTableRow({
     instalationSite
   } = row;
 
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
   const address = {};
+  const { isAllAccessAllowed } = useAuthContext()
 
   address.country = instalationSite?.address?.country;
   address.region = instalationSite?.address?.region;
@@ -60,7 +51,7 @@ export default function MachineListTableRow({
             {Object.values(address ?? {}).map((value) => (typeof value === 'string' ? value.trim() : ''))
                           .filter((value) => value !== '').join(', ')}
         </TableCell>
-        <LinkTableCellButtons moveIcon align="center" onClick={row?.status?.slug!=='transferred' && isSuperAdmin && onMoveMachine} />
+        <LinkTableCellButtons moveIcon align="center" onClick={row?.status?.slug!=='transferred' && isAllAccessAllowed && onMoveMachine} />
       </StyledTableRow>
 
   );

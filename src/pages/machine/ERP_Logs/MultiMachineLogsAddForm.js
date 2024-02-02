@@ -133,7 +133,7 @@ const HandleChangeIniJson = async (e) => { setValue('iniJson', e) }
                 <Grid >
                   <Grid display="flex" justifyContent="flex-end" >
                     <Button variant="contained" component="label" startIcon={<Iconify icon={ICONS.UPLOAD_FILE.icon} />} > Upload File  
-                      <input type="file" accept='.json, .txt' hidden onChange={handleFileChange} /> 
+                      <input type="file" hidden onChange={handleFileChange} /> 
                     </Button>
                   </Grid>
                   <CodeMirror value={erpLog} HandleChangeIniJson={HandleChangeIniJson}/>                

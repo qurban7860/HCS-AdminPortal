@@ -12,7 +12,6 @@ import {
   Card,
   Grid,
   Stack,
-  Typography,
   Autocomplete,
   TextField,
   Button,
@@ -426,47 +425,11 @@ function ToolsInstalledEditForm() {
 
                 {/* <RHFTextField name="toolType" label="Tool Type" /> */}
 
-                <RHFSwitch
-                  name="isApplyWaste"
-                  labelPlacement="start"
-                  label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary',
-                      }}
-                    >
-                      {' '}
-                      Apply Waste
-                    </Typography>
-                  }
-                />
+                <RHFSwitch name="isApplyWaste" label="Apply Waste" />
 
                 <RHFTextField name="wasteTriggerDistance" label="Waste Trigger Distance" inputMode="numeric" pattern="[0-9]*" />
 
-                <RHFSwitch
-                  name="isApplyCrimp"
-                  labelPlacement="start"
-                  label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary',
-                      }}
-                    >
-                      {' '}
-                      Apply Crimp
-                    </Typography>
-                  }
-                />
+                <RHFSwitch name="isApplyCrimp" label="Apply Crimp" />
 
                 <RHFTextField name="crimpTriggerDistance" label="Crimp Trigger Distance" inputMode="numeric" pattern="[0-9]*" />
                 
@@ -484,63 +447,9 @@ function ToolsInstalledEditForm() {
                 }}
               >
 
-                <RHFSwitch
-                  name="isBackToBackPunch"
-                  labelPlacement="start"
-                  label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary',
-                      }}
-                    >
-                      {' '}
-                      Back To Back Punch
-                    </Typography>
-                  }
-                />
-                <RHFSwitch
-                  name="isManualSelect"
-                  labelPlacement="start"
-                  label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary',
-                      }}
-                    >
-                      {' '}
-                      Manual Select
-                    </Typography>
-                  }
-                />
-                <RHFSwitch
-                  name="isAssign"
-                  labelPlacement="start"
-                  label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary',
-                      }}
-                    >
-                      {' '}
-                      Assign
-                    </Typography>
-                  }
-                />
+                <RHFSwitch name="isBackToBackPunch" label="Back To Back Punch" />
+                <RHFSwitch name="isManualSelect" label="Manual Select" />
+                <RHFSwitch name="isAssign" label="Assign" />
 
               </Box>
 
@@ -756,66 +665,9 @@ function ToolsInstalledEditForm() {
                   sm: 'repeat(3, 1fr)',
                 }}
               >
-                <RHFSwitch
-                  name="isHasTwoWayCheck"
-                  labelPlacement="start"
-                  label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary',
-                      }}
-                    >
-                      {' '}
-                      Has Two Way Check
-                    </Typography>
-                  }
-                />
-
-                <RHFSwitch
-                  name="isEngagingHasEnable"
-                  labelPlacement="start"
-                  label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary',
-                      }}
-                    >
-                      {' '}
-                      Engaging Has Enabled
-                    </Typography>
-                  }
-                />
-
-
-                <RHFSwitch
-                  name="isReturningHasEnable"
-                  labelPlacement="start"
-                  label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary',
-                      }}
-                    >
-                      {' '}
-                      Returning Has Enabled
-                    </Typography>
-                  }
-                />
+                <RHFSwitch name="isHasTwoWayCheck" label="Has Two Way Check" />
+                <RHFSwitch name="isEngagingHasEnable" label="Engaging Has Enabled" />
+                <RHFSwitch name="isReturningHasEnable" label="Returning Has Enabled" />
                 </Box>
               <Box
                 rowGap={2}
@@ -914,26 +766,7 @@ function ToolsInstalledEditForm() {
                   </Box>)
                   )}
               
-              <RHFSwitch
-                  name="isActive"
-                  labelPlacement="start"
-                  label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary',
-                      }}
-                    >
-                      {' '}
-                      Active
-                    </Typography>
-                  }
-                />
-
+              <RHFSwitch name="isActive" label="Active" />
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>

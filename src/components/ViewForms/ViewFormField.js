@@ -149,7 +149,6 @@ function ViewFormField({
           </StyledTooltip>
         }
         &nbsp;
-
       </Typography>
       {configArrayParam && typeof configArrayParam === 'object' && configArrayParam?.length > 0 && (
         <Grid container sx={{my:-3, mb:0,
@@ -162,10 +161,11 @@ function ViewFormField({
                 (data, index) =>
                   data?.docTitle &&
                   typeof data?.docTitle === 'string' &&
-                  data?.docTitle.trim().length > 0 && <Chip key={index} sx={{m:0.2}} label={<div style={{display:'flex',alignItems:'center'}}  ><Typography variant='body2'>{`${data?.docTitle || ''}`}</Typography> <Typography variant='subtitle2'>{` - v${data?.docVersionNo}`}</Typography></div>} sx={{m:0.2}} />
+                  data?.docTitle.trim().length > 0 && <Chip key={index} sx={{m:0.2}} label={<div style={{display:'flex',alignItems:'center'}}  ><Typography variant='body2'>{`${data?.docTitle || ''}`}</Typography> <Typography variant='subtitle2'>{` - v${data?.docVersionNo}`}</Typography></div>} />
               )}
             </Grid>
       )}
+      
       {arrayParam && typeof arrayParam === 'object' && arrayParam?.length > 0 && (
             <Grid container sx={{my:-3, mb:0,
               display: 'flex',
@@ -186,135 +186,123 @@ function ViewFormField({
                 data?.name &&
                 typeof data?.name === 'string' &&
                 data?.name.trim().length > 0 && <Chip key={index} label={data?.name} sx={{m:0.2}} />
-            )
+            )}
+            </Grid>
+        )}
+
+            { machineConnectionArrayChip && Array.isArray(machineConnectionArrayChip) && machineConnectionArrayChip.length > 0 && (
+              <Grid container sx={{
+                  display: 'flex',  alignItems: 'center',  whiteSpace: 'pre-line',
+                  wordBreak: 'break-word',  mt:-1,  mb:1,
+                  }} 
+              >
+                { machineConnectionArrayChip?.map(
+                  (data, index) =>
+                    data?.serialNo &&
+                    typeof data?.serialNo === 'string' &&
+                    data?.serialNo.trim().length > 0 && <Chip key={index} label={`${data?.serialNo || '' } ${data?.name ? '-' : '' } ${data?.name || '' }`} sx={{m:0.2}} />
+                )}
+              </Grid>
+            )}
+
+            { machineDocumentsArrayChip && Array.isArray(machineDocumentsArrayChip) && machineDocumentsArrayChip.length > 0 && (
+              <Grid container sx={{
+                  display: 'flex',  alignItems: 'center',
+                  whiteSpace: 'pre-line',
+                  wordBreak: 'break-word', mt:-1, mb:1,
+                  }} 
+              >
+                { machineDocumentsArrayChip?.map(
+                  (data, index) =>
+                    data?.displayName &&
+                    typeof data?.displayName === 'string' &&
+                    data?.displayName.trim().length > 0 && <Chip key={index} label={`${data?.displayName || '' }`} sx={{m:0.2}} />
+                )}
+              </Grid>
+            )}
+
+            {toolType && typeof toolType === 'object' && toolType?.length > 0 && (
+                <Grid container sx={{my:-3, mb:0,
+                  display: 'flex',  alignItems: 'center',
+                  whiteSpace: 'pre-line',  wordBreak: 'break-word',
+                  }} 
+                >
+                    {toolType.map((type, index) => (
+                      type?.tool?.name &&
+                      typeof type.tool.name === 'string' &&
+                      type?.tool?.name.trim().length > 0 && (
+                      <Chip key={index} label={type.tool.name} sx={{ m: 0.2 }} />
+                      )))
+                    }
+                </Grid>
+            )}
+
+            {chipDialogArrayParam && typeof chipDialogArrayParam === 'object' && chipDialogArrayParam?.length > 0 &&
+              <Grid container sx={{my:-3, mb:0,
+                    display: 'flex',  alignItems: 'center',
+                    whiteSpace: 'pre-line',  wordBreak: 'break-word',
+                    }} 
+              >
+                  {chipDialogArrayParam.map((item, index) => (
+                    <React.Fragment key={index}>
+                      {item}
+                      {index !== chipDialogArrayParam.length - 1}
+                    </React.Fragment>)
+                  )}
+              </Grid>
             }
-            </Grid>
-        )}
-      { machineConnectionArrayChip && Array.isArray(machineConnectionArrayChip) && machineConnectionArrayChip.length > 0 && (
-        <Grid container sx={{
-            display: 'flex',
-            alignItems: 'center',
-            whiteSpace: 'pre-line',
-            wordBreak: 'break-word',
-            mt:-1,
-            mb:1,
-            }} >
-          { machineConnectionArrayChip?.map(
-            (data, index) =>
-              data?.serialNo &&
-              typeof data?.serialNo === 'string' &&
-              data?.serialNo.trim().length > 0 && <Chip key={index} label={`${data?.serialNo || '' } ${data?.name ? '-' : '' } ${data?.name || '' }`} sx={{m:0.2}} />
-          )}
-        </Grid>
-      )}
-      { machineDocumentsArrayChip && Array.isArray(machineDocumentsArrayChip) && machineDocumentsArrayChip.length > 0 && (
-        <Grid container sx={{
-            display: 'flex',
-            alignItems: 'center',
-            whiteSpace: 'pre-line',
-            wordBreak: 'break-word',
-            mt:-1,
-            mb:1,
-            }} >
-          { machineDocumentsArrayChip?.map(
-            (data, index) =>
-              data?.displayName &&
-              typeof data?.displayName === 'string' &&
-              data?.displayName.trim().length > 0 && <Chip key={index} label={`${data?.displayName || '' }`} sx={{m:0.2}} />
-          )}
-        </Grid>
-      )}
-        {toolType && typeof toolType === 'object' && toolType?.length > 0 && (
-            <Grid container sx={{my:-3, mb:0,
-              display: 'flex',
-              alignItems: 'center',
-              whiteSpace: 'pre-line',
-              wordBreak: 'break-word',
-              }} >
-              {toolType.map((type, index) => (
-              type?.tool?.name &&
-              typeof type.tool.name === 'string' &&
-              type?.tool?.name.trim().length > 0 && (
-              <Chip key={index} label={type.tool.name} sx={{ m: 0.2 }} />
-              )
-            ))}
-            </Grid>
-        )}
 
-      {chipDialogArrayParam && typeof chipDialogArrayParam === 'object' && chipDialogArrayParam?.length > 0 &&
-        <Grid container sx={{my:-3, mb:0,
-              display: 'flex',
-              alignItems: 'center',
-              whiteSpace: 'pre-line',
-              wordBreak: 'break-word',
-              }} >
-      {chipDialogArrayParam.map((item, index) => (
-        <React.Fragment key={index}>
-          {item}
-          {index !== chipDialogArrayParam.length - 1}
-        </React.Fragment>
-      ))}
-        </Grid>
-      }
-
-      {chips && typeof chips === 'object' && chips.length > 0 ? (
-          <Grid container sx={{my:-3, mb:0,
-              display: 'flex',
-              alignItems: 'center',
-              whiteSpace: 'pre-line',
-              wordBreak: 'break-word',
-              }} >
-            {chips.map(
-              (chip,index) => typeof chip === 'string' && chip.trim().length > 0 && <Chip key={index} label={chip} sx={{m:0.2}}/>
+            {chips && typeof chips === 'object' && chips.length > 0 ? (
+              <Grid container sx={{my:-3, mb:0,
+                  display: 'flex',  alignItems: 'center',
+                  whiteSpace: 'pre-line', wordBreak: 'break-word',
+                  }} >
+                {chips.map(
+                  (chip,index) => typeof chip === 'string' && chip.trim().length > 0 && <Chip key={index} label={chip} sx={{m:0.2}}/>
+                )}
+              </Grid>
+              ) : (
+              chips && typeof chips === 'string' && chips.trim().length > 0 && <Chip label={chips} sx={{m:0.2}} />
             )}
-          </Grid>
-        ) : (
-          chips && typeof chips === 'string' && chips.trim().length > 0 && <Chip label={chips} sx={{m:0.2}} />
-        )}
 
-        {customerContacts && typeof customerContacts === 'object' && customerContacts.length > 0 ? (
-          <Grid container sx={{my:-3, mb:0,
-              display: 'flex',
-              alignItems: 'center',
-              whiteSpace: 'pre-line',
-              wordBreak: 'break-word',
-              }} >
-            {customerContacts.map(
-              (chip,index) =>  <Chip key={index} label={`${chip?.firstName || '' } ${chip?.lastName || '' }`} sx={{m:0.2}}/>
+            {customerContacts && typeof customerContacts === 'object' && customerContacts.length > 0 ? (
+              <Grid container sx={{my:-3, mb:0,
+                  display: 'flex',  alignItems: 'center',
+                  whiteSpace: 'pre-line',  wordBreak: 'break-word',
+                  }} >
+                {customerContacts.map(
+                  (chip,index) =>  <Chip key={index} label={`${chip?.firstName || '' } ${chip?.lastName || '' }`} sx={{m:0.2}}/>
+                )}
+              </Grid>
+              ) : (
+              customerContacts && typeof customerContacts?.firstName === 'string' && <Chip label={`${customerContacts?.firstName || '' } ${customerContacts?.lastName || '' }`} sx={{m:0.2}} />
             )}
-          </Grid>
-        ) : (
-          customerContacts && typeof customerContacts?.firstName === 'string' && <Chip label={`${customerContacts?.firstName || '' } ${customerContacts?.lastName || '' }`} sx={{m:0.2}} />
-        )}
 
-        {userRolesChips && typeof userRolesChips === 'object' && userRolesChips?.length > 0 ? (
-          <Grid container sx={{my:-3, mb:0,
-              display: 'flex',
-              }} >
-            {userRolesChips?.map((obj, index) => (obj?.roleType === 'SuperAdmin' ? <Chip key={index} label={obj?.name} sx={{m:0.2}} color='secondary' /> : <Chip key={index} label={obj?.name} sx={{mx:0.2}} />))}
-          </Grid>
-        ) : (
-          userRolesChips && typeof userRolesChips === 'string' && userRolesChips.trim().length > 0 && <Chip label={userRolesChips} sx={{m:0.2}} />
-        )}
+            {userRolesChips && typeof userRolesChips === 'object' && userRolesChips?.length > 0 ? (
+              <Grid container sx={{my:-3, mb:0,
+                  display: 'flex',
+                  }} >
+                {userRolesChips?.map((obj, index) => (obj?.roleType === 'SuperAdmin' ? <Chip key={index} label={obj?.name} sx={{m:0.2}} color='secondary' /> : <Chip key={index} label={obj?.name} sx={{mx:0.2}} />))}
+              </Grid>
+              ) : (
+              userRolesChips && typeof userRolesChips === 'string' && userRolesChips.trim().length > 0 && <Chip label={userRolesChips} sx={{m:0.2}} />
+            )}
 
-        {serviceParam && typeof serviceParam === 'object' && serviceParam?.length > 0 ? (
-          <Grid container sx={{my:-3, mb:0,
-              display: 'flex',
-              alignItems: 'center',
-              whiteSpace: 'pre-line',
-              wordBreak: 'break-word',
-              }} >
-            {serviceParam?.map((obj, index) => ( <Chip key={index} label={obj?.name} sx={{m:0.2}} />))}
-          </Grid>
-        ) : (
-          serviceParam && typeof serviceParam === 'string' && serviceParam.trim().length > 0 && <Chip label={serviceParam} sx={{m:0.2}} />
-        )}
-          </>
+            {serviceParam && typeof serviceParam === 'object' && serviceParam?.length > 0 ? (
+                  <Grid container sx={{my:-3, mb:0, 
+                      display: 'flex', alignItems: 'center', 
+                      whiteSpace: 'pre-line', wordBreak: 'break-word',
+                      }} 
+                  >
+                    {serviceParam?.map((obj, index) => ( <Chip key={index} label={obj?.name} sx={{m:0.2}} />))}
+                  </Grid>
+                  ) : (
+                  serviceParam && typeof serviceParam === 'string' && serviceParam.trim().length > 0 && <Chip label={serviceParam} sx={{m:0.2}} />
+            )}
+        </>
       )}
 
       
-
-      {/* popover for verification list */}
       <ViewFormMenuPopover
         open={verifiedAnchorEl}
         onClose={handleVerifiedPopoverClose}

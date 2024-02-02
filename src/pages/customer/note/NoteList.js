@@ -27,6 +27,7 @@ import NoteListTableToolbar from './NoteListTableToolbar';
 import {
   getNote, 
   getNotes,
+  resetNotes,
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
@@ -69,6 +70,7 @@ export default function NoteList() {
     if(customer?._id){
       dispatch(getNotes(customer?._id));
     }
+    return ()=>{ dispatch(resetNotes()) };
   }, [dispatch, customer]);
 
   useEffect(() => {

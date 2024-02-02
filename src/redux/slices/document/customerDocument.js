@@ -172,14 +172,10 @@ export function addCustomerDocument(customerId,params) {
           'Content-Type':"multupart/form-data"
         }
       });
-      // if(RegExp.test(response.status)){
         dispatch(getCustomerDocuments(customerId))
         dispatch(setCustomerDocumentFormVisibility(false));
-      // }
-      console.log("add customer document try block!")
     } catch (error) {
       console.error(error);
-      console.log("add customer document catch block!")
       dispatch(slice.actions.hasError(error.Message));
       throw error;
     }
@@ -247,11 +243,9 @@ export function getCustomerDocuments(customerId) {
           orderBy : {
             createdAt:-1
           }
-          // basic: true
         }
       }
       );
-      // console.log("response : ", response);
       if(regEx.test(response.status)){
         dispatch(slice.actions.getCustomerDocumentsSuccess(response.data));
       }
@@ -279,7 +273,6 @@ export function getActiveCustomerDocuments(customerId) {
         }
       }
       );
-      // console.log("response : ", response);
       if(regEx.test(response.status)){
         dispatch(slice.actions.getActiveCustomerDocumentsSuccess(response.data));
       }

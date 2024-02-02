@@ -7,8 +7,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Box,Card, Grid, Stack, Typography } from '@mui/material';
 // slice
 import { addNote, setNoteFormVisibility } from '../../../redux/slices/customer/customerNote';
-import { getActiveSites } from '../../../redux/slices/customer/site';
-import { getActiveContacts } from '../../../redux/slices/customer/contact';
+import { getActiveSites, resetActiveSites } from '../../../redux/slices/customer/site';
+import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete } from '../../../components/hook-form';
@@ -27,6 +27,10 @@ export default function NoteAddForm() {
   useEffect(()=>{
     dispatch(getActiveSites(customer?._id))
     dispatch(getActiveContacts(customer?._id))
+    return () => {
+      dispatch(resetActiveSites());
+      dispatch(resetActiveContacts());
+    };
   },[ dispatch, customer?._id ])
 
   const defaultValues = useMemo(

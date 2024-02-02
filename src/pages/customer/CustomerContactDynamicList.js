@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 // @mui
-import { Stack, Grid, Button } from '@mui/material';
+import { Stack, Grid } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { CardBase, GridBaseViewForm, StyledScrollbar } from '../../theme/styles/customer-styles';
 import AddButtonAboveAccordion from '../../components/Defaults/AddButtonAboveAcoordion';
@@ -14,6 +14,7 @@ import { TableNoData, useTable, getComparator } from '../../components/table';
 // sections
 import {
   getContacts,
+  resetContacts,
   setContactFormVisibility,
   getContact,
   resetContactFormsVisiblity,
@@ -32,16 +33,14 @@ import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
 import Iconify from '../../components/iconify';
 import ContactSiteCard from '../../components/sections/ContactSiteCard';
 import { exportCSV } from '../../utils/exportCSV';
+import { useAuthContext } from '../../auth/useAuthContext';
 
 // ----------------------------------------------------------------------
 
 export default function CustomerContactList(currentContact = null) {
 
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
-
   const { order, orderBy } = useTable({ defaultOrderBy: '-createdAt' });
+  const { isAllAccessAllowed } = useAuthContext()
   const { customer } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
   const {
@@ -127,6 +126,7 @@ export default function CustomerContactList(currentContact = null) {
     if (!formVisibility && !contactEditFormVisibility && !contactMoveFormVisibility) {
       dispatch(getContacts(customer._id));
     }
+    return ()=>{ dispatch(resetContacts()) }
   }, [dispatch, checked, customer, formVisibility, contactEditFormVisibility, contactMoveFormVisibility]);
 
   const isNotFound = !contacts.length && !formVisibility && !contactEditFormVisibility;
@@ -183,7 +183,7 @@ export default function CustomerContactList(currentContact = null) {
         </Grid>
         <Grid item xs={12} md={6} style={{display:'flex', justifyContent:"flex-end"}}>
           <Stack direction='row' alignContent='flex-end' spacing={1}>
-            {isSuperAdmin && contacts.length>0 &&
+            {isAllAccessAllowed && contacts.length>0 &&
               <LoadingButton variant='contained' onClick={onExportCSV} loading={exportingCSV} startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />} >
                   {BUTTONS.EXPORT.label}
               </LoadingButton>

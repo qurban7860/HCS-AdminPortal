@@ -1,14 +1,12 @@
-import { useState, useEffect , useRef, useLayoutEffect } from 'react';
+import { useState, useEffect , useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
 import {
   Table,
   Button,
-  Tooltip,
   TableBody,
   Container,
-  IconButton,
   TableContainer,
   // Stack,
 } from '@mui/material';
@@ -24,10 +22,8 @@ import {
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from '../../components/table';
-import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
 import ConfirmDialog from '../../components/confirm-dialog';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
@@ -36,10 +32,9 @@ import { FORMLABELS } from '../../constants/default-constants';
 // sections
 import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
-import { getCustomers, ChangePage, ChangeRowsPerPage, setFilterBy, setVerified,
+import { getCustomers, resetCustomers, ChangePage, ChangeRowsPerPage, setFilterBy, setVerified,
    setCustomerTab,
-   setExcludeReporting,
-   resetCustomers} from '../../redux/slices/customer/customer';
+   setExcludeReporting } from '../../redux/slices/customer/customer';
 import { Cover } from '../../components/Defaults/Cover';
 import TableCard from '../../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
@@ -66,7 +61,6 @@ export default function CustomerList() {
     setPage,
     selected,
     onSelectRow,
-    onSelectAllRows,
     onSort,
   } = useTable({
     defaultOrderBy: 'createdAt', defaultOrder: 'desc',
@@ -96,13 +90,9 @@ export default function CustomerList() {
 
   useEffect(() => {
     dispatch(getCustomers( null, null, cancelTokenSource ));
+    return ()=> { dispatch( resetCustomers() ) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
-
-  // useEffect(() => {
-  //     dispatch(getCustomers(page, rowsPerPage));
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [dispatch, page, rowsPerPage]);
 
   useEffect(() => {
     setTableData(customers || []);
@@ -120,7 +110,6 @@ export default function CustomerList() {
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
-  const handleOpenConfirm = () => setOpenConfirm(true);
   const handleCloseConfirm = () => setOpenConfirm(false);
 
   const debouncedSearch = useRef(debounce((value) => {
@@ -236,7 +225,6 @@ export default function CustomerList() {
 
               <TableBody>
                 {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                  // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
                       <CustomerListTableRow
@@ -244,8 +232,6 @@ export default function CustomerList() {
                         row={row}
                         selected={selected.includes(row._id)}
                         onSelectRow={() => onSelectRow(row._id)}
-                        // onDeleteRow={() => handleDeleteRow(row._id)}
-                        // onEditRow={() => handleEditRow(row._id)}
                         onViewRow={() => handleViewRow(row._id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />

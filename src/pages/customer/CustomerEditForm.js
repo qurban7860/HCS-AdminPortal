@@ -1,21 +1,17 @@
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Box, Card, Grid, Stack, Autocomplete, TextField, Typography } from '@mui/material';
+import { Box, Card, Grid, Stack } from '@mui/material';
 import { MuiChipsInput } from 'mui-chips-input';
 // hooks
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from '../../components/snackbar';
 // slice
-import {
-  updateCustomer,
-  setCustomerEditFormVisibility,
-  setCustomerTab,
-} from '../../redux/slices/customer/customer';
-import { getActiveContacts, getSPContacts } from '../../redux/slices/customer/contact';
-import { getSites } from '../../redux/slices/customer/site';
+import { updateCustomer, setCustomerEditFormVisibility, setCustomerTab } from '../../redux/slices/customer/customer';
+import { getActiveContacts, getActiveSPContacts } from '../../redux/slices/customer/contact';
+import { getActiveSites } from '../../redux/slices/customer/site';
 // routes
 import { PATH_CUSTOMER } from '../../routes/paths';
 // components
@@ -25,62 +21,59 @@ import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete } from '../../co
 import { FORMLABELS  } from '../../constants/customer-constants';
 // schema
 import { EditCustomerSchema } from '../schemas/customer';
-import { StyledToggleButtonLabel } from '../../theme/styles/document-styles';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 
 // ----------------------------------------------------------------------
 
 export default function CustomerEditForm() {
   const { customer } = useSelector((state) => state.customer);
-  const { sites } = useSelector((state) => state.site);
-  const { spContacts, activeContacts } = useSelector((state) => state.contact);
-  const filteredContacts = spContacts.filter((contact) => contact.isActive === true);
-  const [billingContactVal, setBillingContactVal] = useState('');
-  const [technicalContactVal, setTechnicalContactVal] = useState('');
-  const [siteVal, setSiteVal] = useState('');
-  const [chips, setChips] = useState([]);
-  // hooks
+  const { activeSites } = useSelector((state) => state.site);
+  const { activeSpContacts, activeContacts } = useSelector((state) => state.contact);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+
   const defaultValues = useMemo(
     () => ({
       id: customer?._id || '',
       code: customer?.clientCode || '',
       name: customer?.name || '',
-      isActive: customer?.isActive,
+      mainSite: customer?.mainSite || null,
+      primaryTechnicalContact: customer?.primaryTechnicalContact || null,
+      primaryBillingContact: customer?.primaryBillingContact || null,
       supportSubscription: customer?.supportSubscription,
+      tradingName: customer?.tradingName || [],
       accountManager: customer?.accountManager || [],
       projectManager: customer?.projectManager || [],
       supportManager: customer?.supportManager || [],
       isFinancialCompany: customer?.isFinancialCompany || false,
       excludeReports: customer?.excludeReports || false,
       updateProductManagers: false,
+      isActive: customer?.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer]
   );
-  // customer. === null || customer. === undefined  ? null : customer.,
   const methods = useForm({
-    resolver: yupResolver(EditCustomerSchema),
+    resolver: yupResolver( EditCustomerSchema ),
     defaultValues,
   });
 
   const {
     reset,
     setValue,
+    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
+  const { tradingName } = watch();
+
   useLayoutEffect(() => {
     dispatch(getActiveContacts(customer._id));
-    dispatch(getSites(customer._id));
-    dispatch(getSPContacts());
-    setSiteVal(customer?.mainSite);
-    setChips(customer?.tradingName);
-    setBillingContactVal(customer?.primaryBillingContact);
-    setTechnicalContactVal(customer?.primaryTechnicalContact);
+    dispatch(getActiveSites(customer._id));
+    dispatch(getActiveSPContacts());
   }, [dispatch, customer]);
 
   const toggleCancel = () => {
@@ -88,11 +81,6 @@ export default function CustomerEditForm() {
   };
 
   const onSubmit = async (data) => {
-    data.mainSite = siteVal?._id || null;
-    data.tradingName = chips;
-    data.primaryBillingContact = billingContactVal?._id || null;
-    data.primaryTechnicalContact = technicalContactVal?._id || null;
-
     try {
       await dispatch(updateCustomer(data));
       await dispatch(setCustomerTab('info'));
@@ -100,28 +88,16 @@ export default function CustomerEditForm() {
       enqueueSnackbar('Update success!');
       navigate(PATH_CUSTOMER.view(customer._id));
     } catch (err) {
-      reset();
-      setValue('code',data.code);
       enqueueSnackbar(err, { variant: `error` });
     }
   };
 
   const handleChipChange = (newChips) => {
     const array = [...new Set(newChips)]
-    setChips(array);
+    setValue('tradingName', array );
   };
 
   return (
-    <>
-      {/* <Grid container direction="row" justifyContent="space-between" alignItems="center">
-        <Grid item xs={12} md={6}>
-          <BreadcrumbsProvider>
-            <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
-            <BreadcrumbsLink to={PATH_CUSTOMER.view} name={customer.name} />
-          </BreadcrumbsProvider>
-        </Grid>
-        {!isMobile && <AddButtonAboveAccordion isCustomer />}
-      </Grid> */}
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container >
           <Grid item xs={18} md={12}>
@@ -129,69 +105,41 @@ export default function CustomerEditForm() {
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
                 <FormLabel content={FORMLABELS.CUSTOMER.EDITCUSTOMER} />
-                <Box
-                  rowGap={3}
-                  columnGap={2}
-                  display="grid"
+                <Box rowGap={3} columnGap={2} display="grid"
                   gridTemplateColumns={{
-                    xs: 'repeat(1, 1fr)',
-                    sm: 'repeat(1, 5fr 1fr)', // First one spans 1 column, and the second spans 5 columns on sm screens
+                    xs: 'repeat(1, 1fr)', sm: 'repeat(1, 5fr 1fr)', 
                   }}
                 >
                   <RHFTextField name="name" label={FORMLABELS.CUSTOMER.NAME.label} />
                   <RHFTextField name="code" label={FORMLABELS.CUSTOMER.CODE.label} />
                 </Box>
 
-                <Box
-                  rowGap={3}
-                  columnGap={2}
-                  display="grid"
+                <Box rowGap={3} columnGap={2} display="grid"
                   gridTemplateColumns={{
-                    xs: 'repeat(1, 1fr)',
-                    sm: 'repeat(1, 1fr)',
+                    xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)',
                   }}
                 >
                   <MuiChipsInput
                     name={FORMLABELS.CUSTOMER.TRADING_NAME.name}
                     label={FORMLABELS.CUSTOMER.TRADING_NAME.label}
-                    value={chips}
+                    value={tradingName}
                     onChange={handleChipChange}
                   />
                 </Box>
 
                 {/* main site */}
-                <Box
-                  rowGap={3}
-                  columnGap={2}
-                  display="grid"
+                <Box rowGap={3} columnGap={2} display="grid"
                   gridTemplateColumns={{
-                    xs: 'repeat(1, 1fr)',
-                    sm: 'repeat(2, 1fr)',
+                    xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',
                   }}
                 >
-                  <Autocomplete
-                    // freeSolo
-                    value={siteVal || null}
-                    options={sites}
+                  <RHFAutocomplete
+                    name="mainSite"
+                    label={FORMLABELS.CUSTOMER.MAINSITE.label}
+                    options={activeSites}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                    onChange={(event, newValue) => {
-                      if (newValue) {
-                        setSiteVal(newValue);
-                      } else {
-                        setSiteVal('');
-                      }
-                    }}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>
-                        {option.name && option.name}
-                      </li>
-                    )}
-                    id="controllable-states-demo"
-                    renderInput={(params) => (
-                      <TextField {...params} label={FORMLABELS.CUSTOMER.MAINSITE.label} />
-                    )}
-                    ChipProps={{ size: 'small' }}
+                    getOptionLabel={(option) => `${option?.name || ''}`}
+                    renderOption={(props, option) => ( <li {...props} key={option._id}>{option?.name || ''} </li>)}
                   />
                 </Box>
 
@@ -199,44 +147,22 @@ export default function CustomerEditForm() {
                   <Box rowGap={3} columnGap={2} display="grid"
                     gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)', }}
                   >
-                    <Autocomplete
-                      // freeSolo
-                      value={billingContactVal || null}
+                    <RHFAutocomplete
+                      name="primaryBillingContact"
+                      label={FORMLABELS.CUSTOMER.BILLING_CONTACT}
                       options={activeContacts}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                      getOptionLabel={(option) =>`${option.firstName && option.firstName} ${option.lastName && option.lastName}`}
-                      onChange={(event, newValue) => {
-                        if (newValue) {
-                          setBillingContactVal(newValue);
-                        } else {
-                          setBillingContactVal('');
-                        }
-                      }}
-                      renderOption={(props, option) => (<li {...props} key={option._id}>{option.firstName ? option.firstName : ''}{' '}{option.lastName ? option.lastName : ''}</li>)}
-                      id="controllable-states-demo"
-                      renderInput={(params) => (<TextField {...params} label={FORMLABELS.CUSTOMER.BILLING_CONTACT} />)}
-                      ChipProps={{ size: 'small' }}
+                      getOptionLabel={(option) =>`${option?.firstName || ''} ${option?.lastName || ''}`}
+                      renderOption={(props, option) => (<li {...props} key={option._id}>{option?.firstName || ''}{' '}{option?.lastName ||''}</li>)}
                     />
                     {/* primary technical contact */}
-                    <Autocomplete
-                      // freeSolo
-                      value={technicalContactVal || null}
+                    <RHFAutocomplete
+                      name="primaryTechnicalContact"
+                      label={FORMLABELS.CUSTOMER.TECHNICAL_CONTACT}
                       options={activeContacts}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                      getOptionLabel={(option) =>`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
-                      onChange={(event, newValue) => {
-                        if (newValue) {
-                          setTechnicalContactVal(newValue);
-                        } else {
-                          setTechnicalContactVal('');
-                        }
-                      }}
-                      renderOption={(props, option) => (<li {...props} key={option._id}>{option.firstName ? option.firstName : ''}{' '}{option.lastName ? option.lastName : ''}</li>)}
-                      id="controllable-states-demo"
-                      renderInput={(params) => (
-                        <TextField {...params} label={FORMLABELS.CUSTOMER.TECHNICAL_CONTACT} />
-                      )}
-                      ChipProps={{ size: 'small' }}
+                      getOptionLabel={(option) =>`${option.firstName || ''} ${option.lastName || ''}`}
+                      renderOption={(props, option) => (<li {...props} key={option._id}>{option?.firstName || ''}{' '}{option?.lastName || ''}</li>)}
                     />
                   </Box>
               </Stack>
@@ -251,46 +177,40 @@ export default function CustomerEditForm() {
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect
+                    filterSelectedOptions
                     name="accountManager"
-                    options={filteredContacts}
+                    label="Account Manager"
+                    options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                    getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>
-                    )}
-                    renderInput={(params) => <TextField {...params} label="Account Manager" />}
+                    getOptionLabel={(option) => `${option?.firstName || ''} ${ option?.lastName || ''}`}
+                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
                     ChipProps={{ size: 'small' }}
-                    id="controllable-states-demo"
                   />
 
                   <RHFAutocomplete
-                    // freeSolo
                     multiple
                     disableCloseOnSelect
+                    filterSelectedOptions
                     name="projectManager"
-                    options={filteredContacts}
+                    label="Project Manager"
+                    options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                    getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>
-                    )}
-                    renderInput={(params) => <TextField {...params} label="Project Manager" />}
+                    getOptionLabel={(option) => `${option?.firstName || ''} ${ option?.lastName || ''}`}
+                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
                     ChipProps={{ size: 'small' }}
-                    id="controllable-states-demo"
                   />
+
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect
+                    filterSelectedOptions
                     name="supportManager"
-                    options={filteredContacts}
+                    label="Support Manager" 
+                    options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                    getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>
-                    )}
-                    renderInput={(params) => <TextField {...params} label="Support Manager" />}
+                    getOptionLabel={(option) => `${option?.firstName || ''} ${ option?.lastName || ''}`}
+                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
                     ChipProps={{ size: 'small' }}
-                    id="controllable-states-demo"
                   />
 
                   <RHFSwitch name="updateProductManagers" label="Update Account, Project, and Support Manager in machine data" checked={defaultValues?.isActive} />
@@ -309,6 +229,5 @@ export default function CustomerEditForm() {
           </Grid>
         </Grid>
       </FormProvider>
-    </>
   );
 }

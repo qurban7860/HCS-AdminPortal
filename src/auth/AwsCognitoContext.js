@@ -25,6 +25,7 @@ const initialState = {
   isAuthenticated: false,
   isInitialized: false,
   user: null,
+  userId: null,
 };
 
 const reducer = (state, action) => {
@@ -33,6 +34,7 @@ const reducer = (state, action) => {
       isInitialized: true,
       isAuthenticated: action.payload.isAuthenticated,
       user: action.payload.user,
+      userId: action.payload.userId,
     };
   }
   if (action.type === 'LOGOUT') {
@@ -40,6 +42,7 @@ const reducer = (state, action) => {
       ...state,
       isAuthenticated: false,
       user: null,
+      userId: null,
     };
   }
 

@@ -24,13 +24,10 @@ import CustomerViewForm from './CustomerViewForm';
 import CustomerEditForm from './CustomerEditForm';
 import CustomerSiteDynamicList from './CustomerSiteDynamicList';
 import CustomerContactDynamicList from './CustomerContactDynamicList';
-
 import Iconify from '../../components/iconify';
 import CustomerNotes from './note/CustomerNotes';
 import DocumentTagPage from '../document/documents/DocumentTagPage';
 import CustomerMachines from './machine/CustomerMachines';
-import LogoAvatar from '../../components/logo-avatar';
-import { CustomAvatar } from '../../components/custom-avatar';
 
 // ----------------------------------------------------------------------
 
@@ -45,7 +42,7 @@ export default function CustomerView({ editPage }) {
   
   const dispatch = useDispatch();
   const { customer, customerEditFormFlag, customerTab } = useSelector((state) => state.customer);
-  const [currentComponent, setCurrentComponent] = useState(<CustomerViewForm />);
+  const [currentComponent, setCurrentComponent] = useState(customerTab);
   
   const TABS = [
     {
@@ -104,13 +101,12 @@ export default function CustomerView({ editPage }) {
   }, [dispatch, id]);
 
   useEffect(() => {
-    /* eslint-disable */
     if (customerEditFormFlag) {
       setCurrentComponent(<CustomerEditForm />);
     } else {
       setCurrentComponent(<CustomerViewForm />);
     }
-    /* eslint-enable */
+    dispatch(setCustomerTab('info'))
   }, [dispatch, customerEditFormFlag, customer]);
 
   return (

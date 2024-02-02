@@ -6,8 +6,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, Grid, Stack, Typography } from '@mui/material';
 import { updateNote, setNoteEditFormVisibility } from '../../../redux/slices/customer/customerNote';
-import { getActiveSites } from '../../../redux/slices/customer/site';
-import { getActiveContacts } from '../../../redux/slices/customer/contact';
+import { getActiveSites, resetActiveSites } from '../../../redux/slices/customer/site';
+import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete } from '../../../components/hook-form';
@@ -27,6 +27,10 @@ export default function NoteEditForm() {
   useEffect(()=>{
     dispatch(getActiveSites(customer?._id))
     dispatch(getActiveContacts(customer?._id))
+    return () => {
+      dispatch(resetActiveSites());
+      dispatch(resetActiveContacts());
+    };
   },[ dispatch, customer?._id ])
 
   const defaultValues = useMemo(
@@ -119,24 +123,7 @@ export default function NoteEditForm() {
 
               <RHFTextField name="note" label="Note*" minRows={8} multiline />
             </Stack>
-            <RHFSwitch
-              name="isActive"
-              labelPlacement="start"
-              label={
-                <Typography
-                  variant="subtitle2"
-                  sx={{
-                    mx: 0,
-                    width: 1,
-                    justifyContent: 'space-between',
-                    mb: 0.5,
-                    color: 'text.secondary',
-                  }}
-                >
-                  Active
-                </Typography>
-              }
-            />
+            <RHFSwitch  name="isActive" label="Active" />
 
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>

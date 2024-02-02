@@ -249,7 +249,6 @@ export function getModule(id) {
 // ----------------------------------------------------------------------
 
 export function deleteModule(id) {
-  console.log('path working');
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -276,7 +275,6 @@ export function deleteModule(id) {
 // ----------------------------------------------------------------------
 
 export function getValue() {
-  console.log('path working');
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{ 

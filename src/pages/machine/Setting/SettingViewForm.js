@@ -49,7 +49,7 @@ export default function SettingViewForm() {
         description : setting?.techParam?.description || '',
         category : setting?.techParam?.category || {}
       },
-      isActive: setting?.isActive || '',
+      isActive: setting?.isActive,
       createdByFullName: setting?.createdBy?.name || '',
       createdAt: setting?.createdAt || '',
       createdIP: setting?.createdIP || '',

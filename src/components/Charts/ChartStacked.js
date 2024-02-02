@@ -1,17 +1,13 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
-import { Card, CardHeader, Box, Divider, useTheme } from '@mui/material';
-import { CustomSmallSelect } from '../custom-input';
+import { useTheme } from '@mui/material';
 import Chart, { useChart } from '../chart';
-import { StyledBg } from '../../theme/styles/default-styles';
-import { varFade } from '../animate';
 import { fShortenNumber } from '../../utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
-ERPLog.propTypes = {chart: PropTypes.object};
+ChartStacked.propTypes = {chart: PropTypes.object};
 
-export default function ERPLog({ chart }) {
+export default function ChartStacked({ chart }) {
   const theme = useTheme();
   const { categories, series } = chart;
   const colors = [theme.palette.primary.main, theme.palette.orange.main]
@@ -43,7 +39,6 @@ export default function ERPLog({ chart }) {
       // },
 
       custom: ({ series: tooltipSeries, seriesIndex, dataPointIndex, w }) => {
-        const category = w.globals.labels[dataPointIndex];
 
         let tooltipContent = `<div class="apexcharts-theme-light">`;
         

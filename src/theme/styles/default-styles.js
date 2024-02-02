@@ -141,9 +141,15 @@ export const StyledPopover = styled(Popover)(({ theme }) => ({
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
     backgroundColor: 'white',
+    '&:hover':{
+      backgroundColor: '#2065d114',
+    }
   },
   '&:nth-of-type(even)': {
-    backgroundColor: '#f8f8f8',
+    backgroundColor: '#f4f6f866',
+    '&:hover':{
+      backgroundColor: '#2065d114',
+    }
   },
 }));
 

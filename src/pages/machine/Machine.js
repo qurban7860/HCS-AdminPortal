@@ -18,6 +18,12 @@ export default function Machine() {
   const navigate = useNavigate();
 
   // Functions to navigate to different pages
+  const linkGroup = () => {
+    console.log('hiii',PATH_MACHINE.machines.settings.groups.list)
+    navigate(PATH_MACHINE.machines.settings.groups.list);
+    // navigate(PATH_MACHINE.machines.settings.groups.list);
+  };
+
   const linkCategory = () => {
     navigate(PATH_MACHINE.machines.settings.categories.list);
   };
@@ -75,6 +81,12 @@ export default function Machine() {
                 aria-labelledby="nested-list-subheader"
                 subheader={<ListItemsHeader header={FORMLABELS.COMMON_SETTINGS} />}
               >
+
+                <ListItem
+                  onClick={linkGroup}
+                  icon={ICONS.MACHINE_GROUPS.icon}
+                  content={ICONS.MACHINE_GROUPS.heading}
+                />
                 <ListItem
                   onClick={linkCategory}
                   icon={ICONS.MACHINE_CATEGORIES.icon}

@@ -16,6 +16,12 @@ const initialState = {
   isInitialized: false,
   isAuthenticated: false,
   user: null,
+  userId: null,
+  isDisableDelete: true,
+  isSettingAccessAllowed: false,
+  isSecurityUserAccessAllowed: false,
+  isDocumentAccessAllowed: false,
+  isDrawingAccessAllowed: false,
 };
 
 const reducer = (state, action) => {
@@ -24,6 +30,12 @@ const reducer = (state, action) => {
       isInitialized: true,
       isAuthenticated: action.payload.isAuthenticated,
       user: action.payload.user,
+      userId: action.payload.userId,
+      isDisableDelete: action.payload.isDisableDelete,
+      isSettingAccessAllowed: action.payload.isSettingAccessAllowed,
+      isSecurityUserAccessAllowed: action.payload.isSecurityUserAccessAllowed,
+      isDocumentAccessAllowed: action.payload.isDocumentAccessAllowed,
+      isDrawingAccessAllowed: action.payload.isDrawingAccessAllowed,
     };
   }
   if (action.type === 'LOGIN') {
@@ -31,6 +43,13 @@ const reducer = (state, action) => {
       ...state,
       isAuthenticated: true,
       user: action.payload.user,
+      userId: action.payload.userId,
+      isDisableDelete: action.payload.isDisableDelete,
+      isConfigReadOnly: action.payload.isConfigReadOnly,
+      isSettingAccessAllowed: action.payload.isSettingAccessAllowed,
+      isSecurityUserAccessAllowed: action.payload.isSecurityUserAccessAllowed,
+      isDocumentAccessAllowed: action.payload.isDocumentAccessAllowed,
+      isDrawingAccessAllowed: action.payload.isDrawingAccessAllowed,
     };
   }
   if (action.type === 'LOGOUT') {
@@ -38,6 +57,13 @@ const reducer = (state, action) => {
       ...state,
       isAuthenticated: false,
       user: null,
+      userId: null,
+      isDisableDelete: true,
+      isConfigReadOnly: true,
+      isSettingAccessAllowed: false,
+      isSecurityUserAccessAllowed: false,
+      isDocumentAccessAllowed: false,
+      isDrawingAccessAllowed: false,
     };
   }
 
@@ -82,9 +108,15 @@ export function AuthProvider({ children }) {
             isAuthenticated,
             user: {
               ...user,
+              ...userId,
+              ...isDisableDelete,
+              ...isConfigReadOnly,
+              ...isSettingAccessAllowed,
+              ...isSecurityUserAccessAllowed,
+              ...isDocumentAccessAllowed,
+              ...isDrawingAccessAllowed,
               displayName: user?.name,
               photoURL: user?.picture,
-              role: 'admin',
             },
           },
         });
@@ -94,6 +126,13 @@ export function AuthProvider({ children }) {
           payload: {
             isAuthenticated,
             user: null,
+            userId: null,
+            isDisableDelete,
+            isConfigReadOnly,
+            isSettingAccessAllowed,
+            isSecurityUserAccessAllowed,
+            isDocumentAccessAllowed,
+            isDrawingAccessAllowed,
           },
         });
       }
@@ -104,6 +143,13 @@ export function AuthProvider({ children }) {
         payload: {
           isAuthenticated: false,
           user: null,
+          userId: null,
+          isDisableDelete: true,
+          isConfigReadOnly: true,
+          isSettingAccessAllowed: false,
+          isSecurityUserAccessAllowed: false,
+          isDocumentAccessAllowed: false,
+          isDrawingAccessAllowed: false,
         },
       });
     }
@@ -127,9 +173,9 @@ export function AuthProvider({ children }) {
         payload: {
           user: {
             ...user,
+            userId: user?._id,
             displayName: user?.name,
             photoURL: user?.picture,
-            role: 'admin',
           },
         },
       });
@@ -149,11 +195,25 @@ export function AuthProvider({ children }) {
       isInitialized: state.isInitialized,
       isAuthenticated: state.isAuthenticated,
       user: state.user,
+      isDisableDelete: state.isDisableDelete,  
+      isConfigReadOnly: state.isConfigReadOnly, 
+      isSettingAccessAllowed: state.isSettingAccessAllowed, 
+      isSecurityUserAccessAllowed: state.isSecurityUserAccessAllowed, 
+      isDocumentAccessAllowed: state.isDocumentAccessAllowed, 
+      isDrawingAccessAllowed: state.isDrawingAccessAllowed, 
+      userId: state.userId,
       method: 'auth0',
       login,
       logout,
     }),
-    [state.isAuthenticated, state.isInitialized, state.user, login, logout]
+    [state.isAuthenticated, state.isInitialized, state.user, 
+      state.isDisableDelete,  
+      state.isConfigReadOnly, 
+      state.isSettingAccessAllowed, 
+      state.isSecurityUserAccessAllowed, 
+      state.isDocumentAccessAllowed, 
+      state.isDrawingAccessAllowed, 
+      state.userId, login, logout]
   );
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;

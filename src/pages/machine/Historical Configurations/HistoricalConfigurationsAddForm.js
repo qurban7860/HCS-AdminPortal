@@ -150,24 +150,7 @@ const HandleChangeIniJson = async (e) => {
                     <input type="file" accept='.json, .ini' hidden onChange={handleFileChange} /> 
                   </Button>
                 </Grid>
-                <Grid 
-                // sx={{ position: "relative" }}
-                >
-                  {/* <RHFTextField name="iniJson" label="Configuration" minRows={7} maxRows={22} multiline 
-                  sx={{ 
-              alignItems: 'center',
-              whiteSpace: 'pre-line',
-              wordBreak: 'break-word' }}
-                    // InputProps={{
-                    //   endAdornment: <InputAdornment position="end" sx={{
-                    //     position: "absolute",
-                    //     top: 12,
-                    //     right: 6,
-                    //     // margin: "8px",
-                    //   }}><CopyIcon value={iniJson}/></InputAdornment>,
-                    // }}
-                  /> */}
-
+                <Grid >
                   <CodeMirror value={iniJson} HandleChangeIniJson={HandleChangeIniJson}/>                
                 </Grid>
 

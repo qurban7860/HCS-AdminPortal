@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import CodeMirror from '@uiw/react-codemirror';
-import { zebraStripes } from '@uiw/codemirror-extensions-zebra-stripes';
 import { langs } from '@uiw/codemirror-extensions-langs';
 import { search } from '@codemirror/search';
 import { Grid, Typography } from '@mui/material';

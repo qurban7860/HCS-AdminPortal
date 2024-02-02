@@ -21,11 +21,34 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setInitial(state, action) {
-      const { isAuthenticated, user, resetTokenTime } = action.payload;
+      const { 
+        isAuthenticated, 
+        user, 
+        isAllAccessAllowed,
+        isDisableDelete,
+        isDashboardAccessLimited,
+        isDocumentAccessAllowed,
+        isDrawingAccessAllowed,
+        isSettingReadOnly,
+        isSecurityReadOnly,
+        isSettingAccessAllowed,
+        isSecurityUserAccessAllowed,
+        isEmailAccessAllowed,
+        resetTokenTime } = action.payload;
+
       state.isInitialized = true;
       state.isAuthenticated = isAuthenticated;
       state.user = user;
-      state.resetTokenTime = resetTokenTime;
+      state.isAllAccessAllowed = isAllAccessAllowed;
+      state.isDisableDelete = isDisableDelete;
+      state.isDashboardAccessLimited = isDashboardAccessLimited;
+      state.isDocumentAccessAllowed = isDocumentAccessAllowed;
+      state.isDrawingAccessAllowed = isDrawingAccessAllowed;
+      state.isSettingReadOnly = isSettingReadOnly;
+      state.isSecurityReadOnly = isSettingReadOnly;
+      state.isSettingAccessAllowed = isSettingAccessAllowed;
+      state.isSecurityUserAccessAllowed = isSecurityUserAccessAllowed;
+      state.isEmailAccessAllowed = isEmailAccessAllowed;
     },
     login(state, action) {
       const { user, userId } = action.payload;
@@ -74,6 +97,19 @@ export function AuthProvider({ children }) {
         };
         const userId = localStorage.getItem('userId');
 
+        const {
+          isAllAccessAllowed,
+          isDisableDelete,
+          isDashboardAccessLimited,
+          isDocumentAccessAllowed,
+          isDrawingAccessAllowed,
+          isSettingReadOnly,
+          isSecurityReadOnly,
+          isSettingAccessAllowed,
+          isSecurityUserAccessAllowed,
+          isEmailAccessAllowed,
+      } = await getUserAccess()
+      
         const tokenExpTime = jwtDecode(accessToken).exp * 1000;
         const tokenRefreshTime = tokenExpTime - 20 * 60 * 1000;
         const resetTokenTime = setTimeout(async () => {
@@ -85,19 +121,36 @@ export function AuthProvider({ children }) {
 
             localStorage.setItem('accessToken', newAccessToken);
 
-            dispatch(setInitial({ isAuthenticated: true, user, userId, resetTokenTime }));
+            dispatch(setInitial({ 
+                  isAuthenticated: true, 
+                  user, 
+                  userId, 
+
+                  isAllAccessAllowed,
+                  isDisableDelete,
+                  isDashboardAccessLimited,
+                  isDocumentAccessAllowed,
+                  isDrawingAccessAllowed,
+                  isSettingReadOnly,
+                  isSecurityReadOnly,
+                  isSettingAccessAllowed,
+                  isSecurityUserAccessAllowed,
+                  isEmailAccessAllowed,
+
+                  resetTokenTime 
+            }));
           } catch (error) {
             console.error(error);
           }
         }, tokenRefreshTime - Date.now() + 30 * 1000);
 
-        dispatch(setInitial({ isAuthenticated: true, user, userId, resetTokenTime }));
+        dispatch(setInitial({ isAuthenticated: true, user, userId, isDisableDelete, isGloalReadOnly, isConfigReadOnly, isSettingAccessAllowed, isSecurityUserAccessAllowed, isDocumentAccessAllowed, isDrawingAccessAllowed, resetTokenTime }));
       } else {
-        dispatch(setInitial({ isAuthenticated: false, user: null, resetTokenTime: null }));
+        dispatch(setInitial({ isAuthenticated: false, user: null, userId: null, resetTokenTime: null }));
       }
     } catch (error) {
       console.error(error);
-      dispatch(setInitial({ isAuthenticated: false, user: null, resetTokenTime: null }));
+      dispatch(setInitial({ isAuthenticated: false, user: null, userId: null, resetTokenTime: null }));
     }
   }, [storageAvailable]);
 
@@ -122,7 +175,6 @@ export function AuthProvider({ children }) {
       localStorage.setItem('name', user.displayName);
       localStorage.setItem('userId', userId);
       localStorage.setItem('userRoles', rolesArrayString);
-
       setSession(accessToken);
 
       dispatch(login({ user, userId }));
@@ -162,6 +214,18 @@ export function AuthProvider({ children }) {
       isAuthenticated: state => state.auth.isAuthenticated,
       user: state => state.auth.user,
       userId: state => state.auth.userId,
+
+      isAllAccessAllowed: state => state.auth.isAllAccessAllowed,
+      isDisableDelete: state => state.auth.isDisableDelete,
+      isDashboardAccessLimited: state => state.auth.isDashboardAccessLimited,
+      isDocumentAccessAllowed: state => state.auth.isDocumentAccessAllowed,
+      isDrawingAccessAllowed: state => state.auth.isDrawingAccessAllowed,
+      isSettingReadOnly: state => state.auth.isSettingReadOnly,
+      isSecurityReadOnly: state => state.auth.isSecurityReadOnly,
+      isSettingAccessAllowed: state => state.auth.isSettingAccessAllowed,
+      isSecurityUserAccessAllowed: state => state.auth.isSecurityUserAccessAllowed,
+      isEmailAccessAllowed: state => state.auth.isEmailAccessAllowed,
+
       method: 'jwt',
       login,
       register,
