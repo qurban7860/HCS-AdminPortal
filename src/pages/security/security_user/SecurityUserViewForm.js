@@ -34,13 +34,11 @@ import FormLabel from '../../../components/DocumentForms/FormLabel';
 // ----------------------------------------------------------------------
 
 export default function SecurityUserViewForm() {
-  const [disableEditButton, setDisableEditButton] = useState(false);
 
   const { securityUser, isLoading} = useSelector((state) => state.user);
   const { blockedCustomer } = useSelector((state) => state.blockedCustomer);
   const { blockedUser } = useSelector((state) => state.blockedUser);
   
-  const userId = localStorage.getItem('userId');
   const [openConfirm, setOpenConfirm] = useState(false);
   const handleCloseConfirm = () => setOpenConfirm(false);
 
@@ -176,9 +174,6 @@ export default function SecurityUserViewForm() {
             handleUpdatePassword={handleUpdatePassword}
             onDelete={onDelete}
             isInviteLoading={isLoading}
-            // disablePasswordButton={!isSuperAdmin}
-            // disableDeleteButton={!isSuperAdmin}
-            disableEditButton={disableEditButton}
             backLink={() => navigate(PATH_SECURITY.users.list)}
             isActive={defaultValues.isActive}
             multiAuth={defaultValues?.multiFactorAuthentication} 

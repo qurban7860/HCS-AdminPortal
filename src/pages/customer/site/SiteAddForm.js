@@ -8,7 +8,7 @@ import { MuiTelInput } from 'mui-tel-input';
 import { Box,Card, Grid, Stack, Typography } from '@mui/material';
 // slice
 import { addSite, getSites, setSiteFormVisibility } from '../../../redux/slices/customer/site';
-import { getActiveContacts } from '../../../redux/slices/customer/contact';
+import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 // assets
@@ -30,6 +30,9 @@ export default function SiteAddForm() {
 
   useEffect(() => {
     dispatch( getActiveContacts(customer?._id))
+    return( ) => {
+      dispatch(resetActiveContacts())
+    }
   }, [ customer, dispatch ] );
 
   const defaultValues = useMemo(

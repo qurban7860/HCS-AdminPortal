@@ -8,6 +8,7 @@ import {
 import LinkTableCellButtons from '../../../components/ListTableTools/LinkTableCellButtons';
 import LinkDialogTableCellTargetBlank from '../../../components/ListTableTools/LinkDialogTableCellTargetBlank';
 import { StyledTableRow } from '../../../theme/styles/default-styles'
+import { useAuthContext } from '../../../auth/useAuthContext';
 
 MachineListTableRow.propTypes = {
   row: PropTypes.object,
@@ -33,10 +34,8 @@ export default function MachineListTableRow({
     instalationSite
   } = row;
 
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
   const address = {};
+  const { isAllAccessAllowed } = useAuthContext()
 
   address.country = instalationSite?.address?.country;
   address.region = instalationSite?.address?.region;
@@ -52,7 +51,7 @@ export default function MachineListTableRow({
             {Object.values(address ?? {}).map((value) => (typeof value === 'string' ? value.trim() : ''))
                           .filter((value) => value !== '').join(', ')}
         </TableCell>
-        <LinkTableCellButtons moveIcon align="center" onClick={row?.status?.slug!=='transferred' && isSuperAdmin && onMoveMachine} />
+        <LinkTableCellButtons moveIcon align="center" onClick={row?.status?.slug!=='transferred' && isAllAccessAllowed && onMoveMachine} />
       </StyledTableRow>
 
   );

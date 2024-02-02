@@ -26,7 +26,7 @@ import MachineListTableToolbar from './MachineListTableToolbar';
 
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
-import { getCustomerMachines, ChangeRowsPerPage,
+import { getCustomerMachines, resetCustomerMachines, ChangeRowsPerPage,
   ChangePage,
   // setFilterBy,
   setMachineDialog,
@@ -76,6 +76,7 @@ export default function MachineList() {
     if(customer?._id){
       dispatch(getCustomerMachines(customer._id));
     }
+    return ()=>{ dispatch(resetCustomerMachines())}
   }, [dispatch, customer]);
 
   useEffect(() => {

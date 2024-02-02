@@ -34,7 +34,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import SiteListTableRow from './SiteListTableRow';
 import SiteListTableToolbar from './SiteListTableToolbar';
-import { getSites, deleteSite } from '../../../redux/slices/customer/site';
+import { getSites, deleteSite, resetSites } from '../../../redux/slices/customer/site';
 import CustomerDashboardNavbar from '../util/CustomerDashboardNavbar';
 
 
@@ -87,6 +87,9 @@ export default function SiteList() {
 
   useLayoutEffect(() => {
     dispatch(getSites());
+    return ()=> {
+      dispatch(resetSites());
+    }
   }, [dispatch]);
 
   useEffect(() => {

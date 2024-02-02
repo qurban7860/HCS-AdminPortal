@@ -13,7 +13,6 @@ const initialState = {
   isInitialized: false,
   isAuthenticated: false,
   user: null,
-  isSuperAdmin: false,
   resetTokenTime: null,
 };
 
@@ -145,7 +144,7 @@ export function AuthProvider({ children }) {
           }
         }, tokenRefreshTime - Date.now() + 30 * 1000);
 
-        dispatch(setInitial({ isAuthenticated: true, user, userId, isSuperAdmin, isDisableDelete, isGloalReadOnly, isConfigReadOnly, isSettingAccessAllowed, isSecurityUserAccessAllowed, isDocumentAccessAllowed, isDrawingAccessAllowed, resetTokenTime }));
+        dispatch(setInitial({ isAuthenticated: true, user, userId, isDisableDelete, isGloalReadOnly, isConfigReadOnly, isSettingAccessAllowed, isSecurityUserAccessAllowed, isDocumentAccessAllowed, isDrawingAccessAllowed, resetTokenTime }));
       } else {
         dispatch(setInitial({ isAuthenticated: false, user: null, userId: null, resetTokenTime: null }));
       }

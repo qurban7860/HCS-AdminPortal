@@ -15,7 +15,7 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
-import { PATH_PAGE, PATH_SETTING } from '../../../../routes/paths';
+import { PATH_SETTING } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import {
@@ -88,15 +88,9 @@ export default function RoleList() {
   const [openConfirm, setOpenConfirm] = useState(false);
   const { roles, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.role);
 
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
-  
   useLayoutEffect(() => {
-    if(isSuperAdmin){
       dispatch(getRoles());
-    }
-  }, [dispatch, isSuperAdmin]);
+  }, [dispatch]);
 
   useEffect(() => {
 

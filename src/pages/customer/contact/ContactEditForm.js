@@ -14,9 +14,10 @@ import {
   resetContact,
   getContacts,
   getActiveContacts,
+  resetActiveContacts,
   getContact,
 } from '../../../redux/slices/customer/contact';
-import { getActiveDepartments } from '../../../redux/slices/Department/department'
+import { getActiveDepartments, resetDepartments } from '../../../redux/slices/Department/department'
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, {
@@ -94,6 +95,10 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   useEffect(() => {
     dispatch(getActiveContacts(customer?._id))
     dispatch(getActiveDepartments())
+    return ( ) => { 
+        dispatch(resetActiveContacts())
+        dispatch(resetDepartments())
+        }
   },[dispatch, customer?._id])
 
   useEffect(() => {

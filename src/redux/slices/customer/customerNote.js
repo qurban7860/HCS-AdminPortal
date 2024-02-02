@@ -75,7 +75,7 @@ const slice = createSlice({
     },
 
 
-    // RESET LICENSE
+    // RESET NOTE
     resetNote(state){
       state.note = {};
       state.responseMessage = null;
@@ -83,7 +83,7 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
-    // RESET LICENSE
+    // RESET NOTE
     resetNotes(state){
       state.notes = [];
       state.responseMessage = null;

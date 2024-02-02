@@ -42,7 +42,7 @@ export default function CustomerView({ editPage }) {
   
   const dispatch = useDispatch();
   const { customer, customerEditFormFlag, customerTab } = useSelector((state) => state.customer);
-  const [currentComponent, setCurrentComponent] = useState(<CustomerViewForm />);
+  const [currentComponent, setCurrentComponent] = useState(customerTab);
   
   const TABS = [
     {
@@ -101,13 +101,12 @@ export default function CustomerView({ editPage }) {
   }, [dispatch, id]);
 
   useEffect(() => {
-    /* eslint-disable */
     if (customerEditFormFlag) {
       setCurrentComponent(<CustomerEditForm />);
     } else {
       setCurrentComponent(<CustomerViewForm />);
     }
-    /* eslint-enable */
+    dispatch(setCustomerTab('info'))
   }, [dispatch, customerEditFormFlag, customer]);
 
   return (
