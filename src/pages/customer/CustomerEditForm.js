@@ -29,7 +29,7 @@ export default function CustomerEditForm() {
   const { customer } = useSelector((state) => state.customer);
   const { activeSites } = useSelector((state) => state.site);
   const { activeSpContacts, activeContacts } = useSelector((state) => state.contact);
-  
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -39,9 +39,9 @@ export default function CustomerEditForm() {
       id: customer?._id || '',
       code: customer?.clientCode || '',
       name: customer?.name || '',
-      mainSite: customer?.mainSite || '',
-      primaryTechnicalContact: customer?.primaryTechnicalContact || '',
-      primaryBillingContact: customer?.primaryBillingContact || '',
+      mainSite: customer?.mainSite || null,
+      primaryTechnicalContact: customer?.primaryTechnicalContact || null,
+      primaryBillingContact: customer?.primaryBillingContact || null,
       supportSubscription: customer?.supportSubscription,
       tradingName: customer?.tradingName || [],
       accountManager: customer?.accountManager || [],
@@ -81,7 +81,6 @@ export default function CustomerEditForm() {
   };
 
   const onSubmit = async (data) => {
-    console.log("customer edit data : ",data)
     try {
       await dispatch(updateCustomer(data));
       await dispatch(setCustomerTab('info'));
@@ -89,8 +88,6 @@ export default function CustomerEditForm() {
       enqueueSnackbar('Update success!');
       navigate(PATH_CUSTOMER.view(customer._id));
     } catch (err) {
-      reset();
-      setValue('code',data.code);
       enqueueSnackbar(err, { variant: `error` });
     }
   };
@@ -137,7 +134,7 @@ export default function CustomerEditForm() {
                   }}
                 >
                   <RHFAutocomplete
-                    name="site"
+                    name="mainSite"
                     label={FORMLABELS.CUSTOMER.MAINSITE.label}
                     options={activeSites}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
@@ -180,6 +177,7 @@ export default function CustomerEditForm() {
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect
+                    filterSelectedOptions
                     name="accountManager"
                     label="Account Manager"
                     options={activeSpContacts}
@@ -192,6 +190,7 @@ export default function CustomerEditForm() {
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect
+                    filterSelectedOptions
                     name="projectManager"
                     label="Project Manager"
                     options={activeSpContacts}
@@ -204,6 +203,7 @@ export default function CustomerEditForm() {
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect
+                    filterSelectedOptions
                     name="supportManager"
                     label="Support Manager" 
                     options={activeSpContacts}

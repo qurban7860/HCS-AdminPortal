@@ -570,12 +570,12 @@ export function updateCustomer(params) {
       const data = {
         id: params.id,
         name: params.name,
-        tradingName: params.tradingName,
+        tradingName: params.tradingName || [],
         isActive: params.isActive,
         clientCode: params.code,
-        primaryBillingContact: params.primaryBillingContact,
-        primaryTechnicalContact: params.primaryTechnicalContact,
-        mainSite: params.mainSite,
+        primaryBillingContact: params.primaryBillingContact?._id || null,
+        primaryTechnicalContact: params.primaryTechnicalContact?._id || null,
+        mainSite: params.mainSite?._id || null,
         accountManager: params.accountManager?._id || null,
         projectManager: params.projectManager?._id || null,
         supportManager: params.supportManager?._id || null,
@@ -584,7 +584,6 @@ export function updateCustomer(params) {
         excludeReports: params?.excludeReports,
         updateProductManagers: params?.updateProductManagers,
       };
-
       await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${params.id}`, data );
       dispatch(getCustomer(params.id));
       dispatch(slice.actions.setCustomerEditFormVisibility(false));
