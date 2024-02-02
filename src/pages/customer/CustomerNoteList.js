@@ -26,9 +26,9 @@ import ConfirmDialog from '../../components/confirm-dialog';
 import NotesViewForm from './note/NotesViewForm';
 import NoteEditForm from './note/NoteEditForm';
 import NoteAddForm from './note/NoteAddForm';
-import { getNotes, deleteNote, setNoteFormVisibility } from '../../redux/slices/customer/note';
-import { getActiveSites } from '../../redux/slices/customer/site';
-import { getActiveContacts } from '../../redux/slices/customer/contact';
+import { getNotes, resetNotes, deleteNote, setNoteFormVisibility } from '../../redux/slices/customer/customerNote';
+import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
+import { getActiveContacts, resetActiveContacts, resetContacts } from '../../redux/slices/customer/contact';
 import { BUTTONS, BREADCRUMBS, DIALOGS } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
@@ -91,6 +91,11 @@ export default function CustomerNoteList() {
       dispatch(getNotes(customer._id));
       dispatch(getActiveContacts(customer._id));
       dispatch(getActiveSites(customer._id));
+    }
+    return ()=>{
+      dispatch(resetNotes());
+      dispatch(resetContacts());
+      dispatch(resetActiveSites());
     }
   }, [dispatch, customer._id, noteEditFormVisibility, formVisibility]);
 

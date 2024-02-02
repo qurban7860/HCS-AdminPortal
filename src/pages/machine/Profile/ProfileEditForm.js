@@ -19,6 +19,8 @@ import {
 import { ProfileSchema } from './schemas/ProfileSchema';
 import FormProvider, { RHFSwitch, RHFTextField } from '../../../components/hook-form';
 import { getMachine } from '../../../redux/slices/products/machine';
+import { useAuthContext } from '../../../auth/useAuthContext';
+
 // ----------------------------------------------------------------------
 
 export default function ProfileEditForm() {
@@ -27,10 +29,7 @@ export default function ProfileEditForm() {
   const { machine } = useSelector((state) => state.machine);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
+  const { isAllAccessAllowed } = useAuthContext()
 
   const defaultValues = useMemo(
     () => ({
@@ -111,7 +110,7 @@ export default function ProfileEditForm() {
                   value={selectedValue}
                   label="Type"
                   onChange={handleChange}
-                  disabled={!isSuperAdmin}
+                  disabled={!isAllAccessAllowed}
                   >
                 {ProfileTypes.map((option, index) => (
                   <MenuItem key={index} value={option}>

@@ -12,10 +12,10 @@ export const EditCustomerDocumentSchema = Yup.object().shape({
 export const AddCustomerSchema = Yup.object().shape({
   name: Yup.string().trim('Leading and trailing spaces are not allowed')
   .min(2, 'Name must be at least 2 characters long')
-  .max(200, 'Name must not exceed 40 characters')
+  .max(500, 'Name must not exceed 500 characters')
   .required('Name is required'),
   
-  // tradingName: Yup.string(),
+  tradingName: Yup.string().max(200).label('Trading Name'),
   mainSite: Yup.string().trim('Leading and trailing spaces are not allowed'),
   sites: Yup.array(),
   contacts: Yup.array(),
@@ -59,8 +59,8 @@ export const AddCustomerSchema = Yup.object().shape({
 export const EditCustomerSchema = Yup.object().shape({
   code: Yup.string().max(20),
   name: Yup.string().trim('Leading and trailing spaces are not allowed')
-  .min(2, 'Name must be at least 2 characters long').max(200).required('Name is required'),
-  tradingName: Yup.string().max(40),
+  .min(2, 'Name must be at least 2 characters long').max(500).required('Name is required'),
+  tradingName: Yup.string().max(200).label('Trading Name'),
   // mainSite: Yup.string().nullable(),
   // sites: Yup.array().nullable(),
   isActive: Yup.boolean(),

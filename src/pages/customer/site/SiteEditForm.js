@@ -9,7 +9,7 @@ import { MuiTelInput } from 'mui-tel-input';
 import { Box, Card, Grid, Stack, Typography, Button } from '@mui/material';
 // slice
 import { updateSite, setSiteEditFormVisibility, getSite } from '../../../redux/slices/customer/site';
-import { getActiveContacts } from '../../../redux/slices/customer/contact';
+import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import Iconify from '../../../components/iconify';
@@ -38,6 +38,9 @@ export default function SiteEditForm() {
 
   useEffect(() => {
     dispatch( getActiveContacts(customer?._id))
+    return ()=>{
+      dispatch( resetActiveContacts())
+    }
   }, [ customer, dispatch ] );
 
   useEffect(() => {

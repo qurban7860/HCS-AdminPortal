@@ -567,58 +567,27 @@ export function updateCustomer(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      /* eslint-disable */
-      let data = {
+      const data = {
         id: params.id,
         name: params.name,
         tradingName: params.tradingName,
         isActive: params.isActive,
         clientCode: params.code,
+        primaryBillingContact: params.primaryBillingContact,
+        primaryTechnicalContact: params.primaryTechnicalContact,
+        mainSite: params.mainSite,
+        accountManager: params.accountManager?._id || null,
+        projectManager: params.projectManager?._id || null,
+        supportManager: params.supportManager?._id || null,
         supportSubscription: params?.supportSubscription,
         isFinancialCompany: params?.isFinancialCompany,
         excludeReports: params?.excludeReports,
         updateProductManagers: params?.updateProductManagers,
       };
-     /* eslint-enable */
-      if(params.mainSite !== "null" && params.mainSite !== null){
-        data.mainSite = params.mainSite;
-      }else{
-        data.mainSite = null;
-      }
-      if(params.accountManager !== "null" && params.accountManager !== null){
-        data.accountManager = params.accountManager;
-      }else{
-        data.accountManager = null;
-      }
-      if(params.projectManager !== "null" && params.projectManager !== null){
-        data.projectManager = params.projectManager;
-      }else{
-        data.projectManager = null;
-      }
-      if(params.supportManager !== "null" && params.supportManager !== null){
-        data.supportManager = params.supportManager;
-      }else{
-        data.supportManager = null;
-      }
-      if(params.primaryBillingContact !== "null" && params.primaryBillingContact !== null){
-        data.primaryBillingContact = params.primaryBillingContact;
-      }else{
-        data.primaryBillingContact = null;
-      }
-      if(params.primaryTechnicalContact !== "null" && params.primaryTechnicalContact !== null){
-        data.primaryTechnicalContact = params.primaryTechnicalContact;
-      }else{
-        data.primaryTechnicalContact = null;
-      }
-      await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${params.id}`,
-        data
-      );
 
+      await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${params.id}`, data );
       dispatch(getCustomer(params.id));
       dispatch(slice.actions.setCustomerEditFormVisibility(false));
-
-      // this.updateCustomerSuccess(response);
-
     } catch (error) {
       dispatch(slice.actions.stopLoading());
       console.error(error);

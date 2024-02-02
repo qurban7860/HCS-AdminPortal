@@ -20,7 +20,7 @@ import BreadcrumbsProvider from '../../components/Breadcrumbs/BreadcrumbsProvide
 import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
 import GoogleMaps from '../../assets/GoogleMaps';
 import useResponsive from '../../hooks/useResponsive';
-import { getSites, getSite, setSiteFormVisibility, resetSiteFormsVisiblity } from '../../redux/slices/customer/site';
+import { getSites, resetSites, getSite, setSiteFormVisibility, resetSiteFormsVisiblity } from '../../redux/slices/customer/site';
 import NothingProvided from '../../components/Defaults/NothingProvided';
 import SiteAddForm from './site/SiteAddForm';
 import SiteEditForm from './site/SiteEditForm';
@@ -32,17 +32,15 @@ import { BUTTONS, BREADCRUMBS, TITLES } from '../../constants/default-constants'
 import Iconify from '../../components/iconify';
 import ContactSiteCard from '../../components/sections/ContactSiteCard';
 import { exportCSV } from '../../utils/exportCSV';
+import { useAuthContext } from '../../auth/useAuthContext';
 
 // ----------------------------------------------------------------------
 
 export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
 
-  const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
-  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
-  
   const { order, orderBy } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
   const { site } = useSelector((state) => state.site);
+  const { isAllAccessAllowed } = useAuthContext()
   const { enqueueSnackbar } = useSnackbar();
   const [ activeCardIndex, setCardActiveIndex ] = useState(null);
   const [ isExpanded, setIsExpanded ] = useState(false);
@@ -120,7 +118,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
 
   useEffect( () => {
       dispatch(getSites(customer._id));
-    // }
+      return ()=>{ dispatch(resetSites()) }
   }, [dispatch, customer]); 
 
   // conditions for rendering the contact view, edit, and add forms
@@ -176,7 +174,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
         </Grid>
         <Grid item xs={12} md={6} style={{display:'flex', justifyContent:'flex-end'}}>
           <Stack direction='row' alignContent='flex-end' spacing={1} >
-            {isSuperAdmin && sites.length>0 &&
+            {isAllAccessAllowed && sites.length>0 &&
               <LoadingButton variant='contained' onClick={onExportCSV} loading={exportingCSV} startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />} >
                   {BUTTONS.EXPORT.label}
               </LoadingButton>

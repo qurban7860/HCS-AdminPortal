@@ -23,7 +23,7 @@ import { MuiChipsInput } from 'mui-chips-input'
 
 // slice
 import { addCustomer, setCustomerTab } from '../../redux/slices/customer/customer';
-import { getSPContacts } from '../../redux/slices/customer/contact';
+import { getActiveSPContacts } from '../../redux/slices/customer/contact';
 // routes
 import { PATH_CUSTOMER } from '../../routes/paths';
 // components
@@ -56,7 +56,7 @@ CustomerAddForm.propTypes = {
 
 export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const { userId, user } = useAuthContext();
-  const { spContacts } = useSelector((state) => state.contact);
+  const { activeSpContacts } = useSelector((state) => state.contact);
   const [contactFlag, setCheckboxFlag] = useState(false);
   const [chips, setChips] = useState([]);
 
@@ -110,7 +110,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     watch();
 
   useLayoutEffect(() => {
-    dispatch(getSPContacts());
+    dispatch(getActiveSPContacts());
   }, [dispatch]);
 
   
@@ -264,16 +264,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
               <RHFTextField name="region" label="Region" />
 
-              {/* <RHFAutocomplete
-                  name="country"
-                  label="Country"
-                  freeSolo
-                  options={countries.map((country) => country.label)}
-                  // getOptionLabel={(option) => option.title}
-
-                  ChipProps={{ size: 'small' }}
-                />  */}
-
               <RHFAutocomplete
                 id="country-select-demo"
                 options={countries}
@@ -325,7 +315,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
               <RHFTextField name="billingTitle" label="Title" />
 
-              {/* <RHFTextField name="billingContactPhone" label="Contact Phone" /> */}
               <MuiTelInput
                 value={billingContactPhone}
                 name="billingContactPhone"
@@ -371,7 +360,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   <RHFTextField name="technicalFirstName" label="First Name" />
                   <RHFTextField name="technicalLastName" label="Last Name" />
                   <RHFTextField name="technicalTitle" label="Title" />
-                  {/* <RHFTextField name="technicalContactPhone" label="Contact Phone" /> */}
                   <MuiTelInput
                     value={technicalContactPhone}
                     name="technicalContactPhone"
@@ -406,7 +394,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     multiple
                     disableCloseOnSelect
                     name="accountManager"
-                    options={spContacts}
+                    options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
                     renderOption={(props, option) => (
@@ -422,7 +410,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     multiple
                     disableCloseOnSelect
                     name="projectManager"
-                    options={spContacts}
+                    options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
                     renderOption={(props, option) => (
@@ -436,7 +424,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     multiple
                     disableCloseOnSelect
                     name="supportManager"
-                    options={spContacts}
+                    options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
                     renderOption={(props, option) => (

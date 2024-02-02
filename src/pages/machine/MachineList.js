@@ -26,6 +26,7 @@ import { StyledCardContainer } from '../../theme/styles/default-styles';
 // slice
 import {
   getMachines,
+  resetMachines,
   resetMachine,
   ChangeRowsPerPage,
   ChangePage,
@@ -99,6 +100,7 @@ export default function MachineList() {
 
   useLayoutEffect(() => {
     dispatch(resetMachine());
+    dispatch(resetMachines());
     dispatch(resetToolInstalled());
     dispatch(resetToolsInstalled());
     dispatch(resetSetting());

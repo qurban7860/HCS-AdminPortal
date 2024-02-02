@@ -10,8 +10,8 @@ import { Box, Card, Grid, Stack } from '@mui/material';
 // schema
 import { ContactSchema } from '../../schemas/customer';
 // slice
-import { addContact, getActiveContacts, setContactFormVisibility, setContactEditFormVisibility, setContactMoveFormVisibility } from '../../../redux/slices/customer/contact';
-import { getActiveDepartments } from '../../../redux/slices/Department/department';
+import { addContact, getActiveContacts, setContactFormVisibility, setContactEditFormVisibility, setContactMoveFormVisibility, resetActiveContacts } from '../../../redux/slices/customer/contact';
+import { getActiveDepartments, resetDepartments } from '../../../redux/slices/Department/department';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { useAuthContext } from '../../../auth/useAuthContext';
@@ -85,6 +85,10 @@ export default function ContactAddForm({ isEdit, readOnly, setIsExpanded, curren
     reset(defaultValues);
     if (!formVisibility) {
       dispatch(setContactFormVisibility(true));
+    }
+    return ()=>{ 
+      dispatch(resetActiveContacts())
+      dispatch(resetDepartments())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
