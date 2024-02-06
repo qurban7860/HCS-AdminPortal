@@ -24,6 +24,8 @@ function SearchBarCombo({
   supportManagerFilter,
   employeeFilterListBy,
   onEmployeeFilterListBy,
+  onFilterListByRegion,
+  filterByRegion,
   filterListBy,
   onFilterListBy,
   categoryVal,
@@ -63,6 +65,8 @@ function SearchBarCombo({
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const { spContacts } = useSelector((state) => state.contact);
+  const { activeRegions } = useSelector((state) => state.region);
+
   const isMobile = useResponsive('sm', 'down');
   const dispatch = useDispatch()
 
@@ -123,6 +127,25 @@ function SearchBarCombo({
                 </Select>
             </FormControl>
             </Stack>
+          </Grid>}
+          
+          { onFilterListByRegion &&
+          <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+            <Autocomplete 
+              value={ filterByRegion || null}
+              options={activeRegions}
+              isOptionEqualToValue={(option, val) => option?._id === val?._id}
+              getOptionLabel={(option) => option?.name}
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  onFilterListByRegion(newValue);
+                } else {
+                  onFilterListByRegion(null);
+                }
+              }}
+              renderOption={(props, option) => ( <li {...props} key={option._id}>{option?.name || ''}</li> )}
+              renderInput={(params) => <TextField {...params} size='small' label="Region" />}
+            />  
           </Grid>}
 
           {setAccountManagerFilter && isAllAccessAllowed &&
@@ -524,6 +547,8 @@ SearchBarCombo.propTypes = {
   setTypeVal: PropTypes.func,
   employeeFilterListBy: PropTypes.string,
   onEmployeeFilterListBy: PropTypes.func,
+  onFilterListByRegion: PropTypes.func,
+  filterByRegion: PropTypes.object,
   signInLogsFilter:PropTypes.number,
   onSignInLogsFilter:PropTypes.func,
   transferredMachine:PropTypes.bool,

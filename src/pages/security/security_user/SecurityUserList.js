@@ -25,12 +25,15 @@ import SecurityUserTableToolbar from './SecurityUserTableToolbar';
 import UserTableRow from './SecurityUserTableRow';
 import {
   getSecurityUsers,
+  resetSecurityUsers,
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
   setActiveFilterList,
   setEmployeeFilterList,
+  setFilterRegion,
 } from '../../../redux/slices/securityUser/securityUser';
+import { getActiveRegions, resetActiveRegions } from '../../../redux/slices/region/region';
 import { fDate } from '../../../utils/formatTime';
 // constants
 import TableCard from '../../../components/ListTableTools/TableCard';
@@ -46,6 +49,7 @@ const TABLE_HEAD = [
   { id: 'email', visibility: 'xs1', label: 'Email', align: 'left' },
   { id: 'phone', visibility: 'xs2', label: 'Phone Number', align: 'left' },
   { id: 'roles.name.[]', visibility: 'md1', label: 'Roles', align: 'left' },
+  // { id: 'regions.name.[]', visibility: 'md1', label: 'Regions', align: 'left' },
   { id: 'isOnline', label: 'Online', align: 'center' },
   { id: 'currentEmployee', label: 'Employed', align: 'center' },
   { id: 'isActive', label: 'Active', align: 'center' },
@@ -75,7 +79,13 @@ export default function SecurityUserList() {
     initial,
     securityUserEditFormVisibility,
     securityUserFormVisibility,
-    filterBy, employeeFilterList, activeFilterList, page, rowsPerPage, isLoading
+    filterBy, 
+    employeeFilterList, 
+    filterRegion,
+    activeFilterList, 
+    page, 
+    rowsPerPage, 
+    isLoading
   } = useSelector((state) => state.user);
 
   const onChangeRowsPerPage = (event) => {
@@ -86,14 +96,22 @@ export default function SecurityUserList() {
   
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const [tableData, setTableData] = useState([]);
-  const [filterName, setFilterName] = useState('');
-  const [filterRole, setFilterRole] = useState('all');
-  const [filterStatus, setFilterStatus] = useState('all');
-  const [activeFilterListBy, setActiveFilterListBy] = useState(activeFilterList);
-  const [employeeFilterListBy, setEmployeeFilterListBy] = useState(employeeFilterList);
+  const [ tableData, setTableData ] = useState([]);
+  const [ filterName, setFilterName ] = useState('');
+  const [ filterRole, setFilterRole ] = useState('all');
+  const [ filterStatus, setFilterStatus ] = useState('all');
+  const [ activeFilterListBy, setActiveFilterListBy ] = useState(activeFilterList);
+  const [ employeeFilterListBy, setEmployeeFilterListBy ] = useState(employeeFilterList);
+  const [ filterByRegion, setFilterByRegion ] = useState(filterRegion);
+
+
   useLayoutEffect(() => {
     dispatch(getSecurityUsers());
+    dispatch(getActiveRegions());
+    return ()=>{
+      dispatch(resetSecurityUsers());
+      dispatch(resetActiveRegions());
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, securityUserEditFormVisibility, securityUserFormVisibility]);
 
@@ -111,6 +129,7 @@ export default function SecurityUserList() {
     filterStatus,
     activeFilterListBy,
     employeeFilterListBy,
+    filterByRegion,
   });
   
 
@@ -157,9 +176,21 @@ const handleEmployeeFilterListBy = (event) => {
 };
 
 
+const debouncedFilterRegion = useRef(debounce((value) => {
+  dispatch(ChangePage(0))
+  dispatch(setFilterRegion(value))
+}, 500))
+
+const handleFilterListByRegion = (value) => {
+  debouncedFilterRegion.current(value);
+  setFilterByRegion(value)
+  setPage(0);
+};
+
 useEffect(() => {
     debouncedVerified.current.cancel();
     debouncedSearch.current.cancel();
+    debouncedFilterRegion.current.cancel();
 }, [debouncedSearch]);
 
 useEffect(()=>{
@@ -171,8 +202,6 @@ useEffect(()=>{
     setPage(0);
     setFilterRole(event.target.value);
   };
-
-  
 
   const handleViewRow = (id) => {
     // dispatch(getSecurityUser(id))
@@ -208,6 +237,8 @@ useEffect(()=>{
             onFilterListBy={handleFilterListBy}
             employeeFilterListBy={employeeFilterListBy}
             onEmployeeFilterListBy={handleEmployeeFilterListBy}
+            filterByRegion={filterByRegion}
+            onFilterListByRegion={handleFilterListByRegion}
             onReload={onRefresh}
           />
 
@@ -271,7 +302,7 @@ useEffect(()=>{
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus, filterRole, activeFilterListBy, employeeFilterListBy}) {
+function applyFilter({ inputData, comparator, filterName, filterStatus, filterRole, activeFilterListBy, employeeFilterListBy, filterByRegion }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
@@ -292,17 +323,18 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRo
   else if(employeeFilterListBy ==='notEmployee' )
     inputData = inputData.filter((user)=> user.currentEmployee === false );
   
+    if (filterByRegion) {
+      inputData = inputData.filter((user) => user.regions.some((region) => region === filterByRegion?._id));
+    }
+
   if (filterName) {
     inputData = inputData.filter(
       (securityUser) =>
         securityUser?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         securityUser?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         securityUser?.phone?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        securityUser?.roles
-          ?.map((obj) => obj.name)
-          .join(', ')
-          .toLowerCase()
-          .indexOf(filterName.toLowerCase()) >= 0 ||
+        securityUser?.phone?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        securityUser?.roles?.map((obj) => obj.name).join(', ').toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // (securityUser?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(securityUser?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );

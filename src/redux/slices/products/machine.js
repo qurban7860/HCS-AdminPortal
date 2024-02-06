@@ -198,6 +198,15 @@ const slice = createSlice({
       state.success = false;
       state.isLoading = false;
     },
+
+    // RESET All Machines
+    resetAllMachines(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.allMachines = [];
+      state.initial = true;
+    },
+
     // Set FilterBy
     setFilterBy(state, action) {
       state.filterBy = action.payload;
@@ -244,6 +253,7 @@ export const {
   resetMachine,
   resetMachines,
   resetActiveMachines,
+  resetAllMachines,
   setResponseMessage,
   setTransferDialogBoxVisibility,
   setFilterBy,
