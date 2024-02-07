@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 import { Snacks } from '../../constants/machine-constants';
 import { allowedExtensions, fileTypesMessage } from '../../constants/document-constants';
 import { NotRequiredValidateFileType } from '../document/documents/Utills/Util'
-import { today, futureDate, pastDate } from '../machine/util/index';
+import { today, future5yearDate, tomorrow, pastDate } from '../machine/util/index';
 import { fDate } from '../../utils/formatTime';
 
 export const machineSchema = Yup.object().shape({
@@ -25,11 +25,11 @@ export const machineSchema = Yup.object().shape({
     name: Yup.string()
   }).nullable(),
   workOrderRef: Yup.string().max(50),
-  shippingDate: Yup.date().typeError('Date Should be Valid').max(futureDate,`Shipping Date field must be at earlier than ${fDate(futureDate)}`)
+  shippingDate: Yup.date().typeError('Date Should be Valid').max(future5yearDate,`Shipping Date field must be at earlier than ${fDate(future5yearDate)}`)
   .min(pastDate,`Shipping Date field must be at after than ${fDate(pastDate)}`).nullable().label('Shipping Date'),
   installationDate: Yup.date()
   .typeError('Date Should be Valid')
-  .max(futureDate,`Shipping Date field must be at earlier than ${fDate(futureDate)}`)
+  .max(future5yearDate,`Shipping Date field must be at earlier than ${fDate(future5yearDate)}`)
   .min(pastDate,`Shipping Date field must be at after than ${fDate(pastDate)}`).nullable().label('Installation Date'),
   supportExpireDate: Yup.date()
   .min(today,`Support Expiry Date field must be at after than ${fDate(today)}`).nullable().label('Support Expiry Date'),
@@ -64,12 +64,12 @@ export const machineTransferSchema = Yup.object().shape({
     name: Yup.string()
   }).nullable(),
 
-  shippingDate: Yup.date().typeError('Date Should be Valid').max(futureDate,`Shipping Date field must be at earlier than ${fDate(futureDate)}`)
+  shippingDate: Yup.date().typeError('Date Should be Valid').max(future5yearDate,`Shipping Date field must be at earlier than ${fDate(future5yearDate)}`)
   .min(pastDate,`Shipping Date field must be at after than ${fDate(pastDate)}`).nullable().label('Shipping Date'),
   
   installationDate: Yup.date()
   .typeError('Date Should be Valid')
-  .max(futureDate,`Shipping Date field must be at earlier than ${fDate(futureDate)}`)
+  .max(future5yearDate,`Shipping Date field must be at earlier than ${fDate(future5yearDate)}`)
   .min(pastDate,`Shipping Date field must be at after than ${fDate(pastDate)}`).nullable().label('Installation Date'),
 
   status: Yup.object().shape({
@@ -140,7 +140,7 @@ export const MachineServiceRecordSchema = Yup.object().shape({
   // serviceDate: Yup.date().label('Service Date').nullable().required,
   serviceDate: Yup.date()
   .typeError('Date Should be Valid')
-  .max(today, `Service Date field must be at earlier than ${fDate(today,'dd/MM/yyyy')}`).nullable()
+  .max(today, `Service Date must be earlier ${fDate(tomorrow,'dd/MM/yyyy')}`).nullable()
   .required().label('Service Date'),
   // customer: Yup.object().label('Customer'), 
   site: Yup.object().label('Site').nullable(),

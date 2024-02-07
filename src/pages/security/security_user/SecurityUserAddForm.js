@@ -1,41 +1,27 @@
 import PropTypes from 'prop-types';
-import * as Yup from 'yup';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { MuiTelInput } from 'mui-tel-input';
-import {
-  Box,
-  Card,
-  Grid,
-  Stack,
-  IconButton,
-  InputAdornment,
-  Autocomplete,
-  TextField,
-} from '@mui/material';
-// component
-import Iconify from '../../../components/iconify';
+import { Box, Card, Grid, Stack, Checkbox } from '@mui/material';
 // routes
 import { PATH_SECURITY } from '../../../routes/paths';
 // assets
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect } from '../../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFTextField, RHFPasswordField, RHFAutocomplete, RHFPhoneInput } from '../../../components/hook-form';
 // slice
 import { addSecurityUser } from '../../../redux/slices/securityUser/securityUser';
-import { getAllCustomers } from '../../../redux/slices/customer/customer';
-import { resetContacts, getActiveContacts } from '../../../redux/slices/customer/contact';
-import { getRoles } from '../../../redux/slices/securityUser/role';
-import { getActiveRegions } from '../../../redux/slices/region/region';
-import { getAllMachines } from '../../../redux/slices/products/machine';
-
+import { getAllActiveCustomers, resetAllActiveCustomers } from '../../../redux/slices/customer/customer';
+import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
+import { getAllMachines, resetAllMachines } from '../../../redux/slices/products/machine';
+import { getActiveRoles, resetActiveRoles } from '../../../redux/slices/securityUser/role';
+import { getActiveRegions, resetActiveRegions } from '../../../redux/slices/region/region';
+import { addUserSchema , editUserSchema} from '../../schemas/securityUser';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-// ----------------------------------------------------------------------
 
 SecurityUserAddForm.propTypes = {
   isEdit: PropTypes.bool,
@@ -45,474 +31,239 @@ SecurityUserAddForm.propTypes = {
 
 export default function SecurityUserAddForm({ isEdit = false, currentUser, isInvite }) {
 
-  const { allCustomers } = useSelector((state) => state.customer);
-  const { roles } = useSelector((state) => state.role);
+  const { allActiveCustomers } = useSelector((state) => state.customer);
+  const { activeRoles } = useSelector((state) => state.role);
   const { activeRegions } = useSelector((state) => state.region);
   const { activeContacts } = useSelector((state) => state.contact);
   const { allMachines } = useSelector((state) => state.machine);
 
-  const [selectedRegions, setSelectedRegions] = useState([]);
-  const [showPassword, setShowPassword] = useState(false);
-  const [name, setName] = useState('');
-  const [customerVal, setCustomerVal] = useState('');
-  const [customersArr, setCustomerArr] = useState([]);
-  const [machinesArr, setMachineArr] = useState([]);
-  const [contactVal, setContactVal] = useState('');
-  const [sortedRoles, setSortedRoles] = useState([]);
-  const [phone, setPhone] = useState('');
-
-  const ROLES = [];
-  roles.map((role) => ROLES.push({ value: role?._id, label: role.name }));
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
   useLayoutEffect(() => {
-    dispatch(getAllCustomers());
+    dispatch(getAllActiveCustomers());
     dispatch(getAllMachines());
     dispatch(getActiveRegions());
-    dispatch(getRoles());
+    dispatch(getActiveRoles());
+    return () =>{
+      dispatch(resetAllActiveCustomers());
+      dispatch(resetAllMachines());
+      dispatch(resetActiveRegions());
+      dispatch(resetActiveRoles());
+      dispatch(resetActiveContacts());
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
-  useEffect(() => {
-    if (customerVal) {
-      dispatch(getActiveContacts(customerVal._id));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    dispatch,
-    customerVal,
-  ]);
-
-  useEffect(() => {
-    const mappedRoles = roles.map((role) => ({
-      value: role?._id,
-      label: role.name,
-    }));
-
-    const sortedRolesTemp = [...mappedRoles].sort((a, b) => {
-      const nameA = a.label.toUpperCase();
-      const nameB = b.label.toUpperCase();
-      return nameA.localeCompare(nameB);
-    });
-
-    setSortedRoles(sortedRolesTemp);
-  }, [roles]);
-
-  const NewUserSchema = Yup.object().shape({
-    customer: Yup.object().when( {
-      is: () => customerVal === "",
-      then: Yup.object().nullable().required('Customer is required!'),
-      otherwise: Yup.object().nullable(),
-    }),
-    name: !isInvite && Yup.string().required('Name is required!').max(40, 'Name must not exceed 40 characters!'),
-    email: Yup.string().email('Invalid email format').required('Email is required'),
-    password: !isInvite && Yup.string().required('Password is required').min(6),
-    passwordConfirmation: !isInvite && Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
-    roles: Yup.array().required('Roles are required'),
-    isActive: Yup.boolean(),
-    multiFactorAuthentication: Yup.boolean(),
-  });
 
   const defaultValues = useMemo(
     () => ({
-      name: name || '',
+      customer: null,
+      contact: null,
+      name: '',
+      phone: '+64 ',
       email: '',
+      loginEmail: '',
       password: '',
-      passwordConfirmation: '',
+      confirmPassword: '',
+      roles: [],
+      dataAccessibilityLevel: 'FILTER',
+      regions: [],
+      customers: [],
+      machines: [],
       isActive: true,
+      isInvite,
       multiFactorAuthentication: false,
-      roles: currentUser?.roles || [],
+      currentEmployee: false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentUser]
   );
 
   const methods = useForm({
-    resolver: yupResolver(NewUserSchema),
+    resolver: yupResolver( isInvite ? editUserSchema : addUserSchema ),
     defaultValues,
   });
 
   const {
     reset,
     setValue,
+    watch,
     handleSubmit,
     formState: { isSubmitting },
-    control,
-    trigger,
   } = methods;
 
+const { customer, contact } = watch();
+
   useEffect(() => {
-    if (isEdit && currentUser) {
-      reset(defaultValues);
+    if(customer?._id){
+      dispatch(getActiveContacts(customer?._id));
+    } else {
+      dispatch(resetActiveContacts());
     }
-    if (!isEdit) {
-      reset(defaultValues);
+  }, [ dispatch, customer?._id ]);
+
+  useEffect(() => {
+    if(contact?._id){
+      setValue( 'name', `${contact?.firstName || ''} ${contact?.lastName || ''}` );
+      setValue( 'phone', contact?.phone );
+      setValue( 'email', contact?.email );
+    } else {
+      setValue( 'name', '' );
+      setValue( 'phone', '' );
+      setValue( 'email', '' );
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEdit, currentUser]);
-
-
-  const handleNameChange = (event) => {
-    setName(event);
-    setValue('name', event || '');
-    trigger('name');
-  };
+  }, [ dispatch, contact, setValue ]);
 
   const onSubmit = async (data) => {
-
-    if (phone && phone.length > 4) {
-      data.phone = phone;
-    }
-    if (customerVal) {
-      data.customer = customerVal._id;
-    }
-    if (customersArr.length > 0) {
-      const selectedCustomerIDs = customersArr.map((customer) => customer._id);
-      data.customers = selectedCustomerIDs;
-    }
-    if(machinesArr.length > 0){
-      const selectedMachineIDs = machinesArr.map((machine) => machine._id);
-      data.machines = selectedMachineIDs;
-    }
-    if (contactVal) {
-      data.contact = contactVal._id;
-    }
-    if (name) {
-      data.name = name;
-    }else{
-      data.name = data.email;
-    }
-
-    if(selectedRegions.length > 0){
-      const selectedRegionsIDs = selectedRegions.map((region) => region._id);
-      data.selectedRegions = selectedRegionsIDs;
-    }
-
     try {
-      const message = !isInvite?"User Added Successfully":"User Invitation Sent Successfulllfy";
-      if(isInvite){
-        data.password = "sjhreywuidfsajchfdsgfkdfgsljhffjklgdhsg";
-        data.passwordConfirmation = "sjhreywuidfsajchfdsgfkdfgsljhffjklgdhsg";
-        data.isActive = true;
-        data.isInvite = true;
-      }
-
+      const message = !isInvite ? "User Added Successfully":"User Invitation Sent Successfulllfy";
+      // if(isInvite){
+      //   data.password = "sjhreywuidfsajchfdsgfkdfgsljhffjklgdhsg";
+      //   data.passwordConfirmation = "sjhreywuidfsajchfdsgfkdfgsljhffjklgdhsg";
+      // }
       const response = await dispatch(addSecurityUser(data, isInvite));
-      await dispatch(resetContacts());
       reset();
       navigate(PATH_SECURITY.users.view(response.data.user._id));
       enqueueSnackbar(message);
     } catch (error) {
-      if(error.MessageCode===409) error.Message="Can't send invitation user already registered";
-      if (error.Message) {
-        enqueueSnackbar(error.Message, { variant: `error` });
-      } else if (error.message) {
-        enqueueSnackbar(error.message, { variant: `error` });
-      } else {
-        enqueueSnackbar('Something went wrong!', { variant: `error` });
-      }
-      console.log('Error:', error);
+        enqueueSnackbar(error, { variant: `error` });
+        console.log('Error:', error);
     }
   };
 
-  const toggleCancel = () => {
-    navigate(PATH_SECURITY.users.list);
-  };
+  const toggleCancel = () =>  navigate(PATH_SECURITY.users.list);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={12}>
           <Card sx={{ p: 3 }}>
-            <Box
-              rowGap={3}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-              }}
+          <Stack spacing={2} >
+            <Box rowGap={2} columnGap={2} display="grid"
+              gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
             >
-
-                  <Controller
-                    name="customer"
-                    control={control}
-                    defaultValue={customerVal || null}
-                    render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                      <Autocomplete
-                        {...field}
-                        id="controllable-states-demo"
-                        options={allCustomers}
-                        getOptionLabel={(option) => option.name}
-                        isOptionEqualToValue={(option, value) => option._id === value._id}
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            field.onChange(newValue);
-                            dispatch(resetContacts());
-                            setCustomerVal(newValue);
-                            setContactVal('');
-                          } else {
-                            field.onChange(null);
-                            setCustomerVal('');
-                            dispatch(resetContacts());
-                            setContactVal('');
-                            handleNameChange('');
-                            setPhone('');
-                            setValue('email','')
-                            trigger('email');
-                          }
-                        }}
-                        renderOption={(props, option) => (
-                          <li {...props} key={option.id}>
-                            {option.name}
-                          </li>
-                        )}
-                        renderInput={(params) => (
-                          <TextField {...params} name="customer" id="customer" label="Customer*"
-                          error={!!error} helperText={error?.message}
-                          inputRef={ref}
-                          />
-                        )}
-                        ChipProps={{ size: 'small' }}
-                      />
-                    )}
-                  />
-
-              <Autocomplete
-                // freeSolo
-                value={contactVal || null}
-                options={customerVal ? activeContacts : []}
+              <RHFAutocomplete
+                name='customer'
+                label="Customer*"
+                options={ allActiveCustomers }
+                getOptionLabel={(option) => option?.name || ''}
                 isOptionEqualToValue={(option, value) => option._id === value._id}
-                getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
-                onChange={(event, newValue) => {
-                  if (newValue) {
-                    setContactVal(newValue);
-                    handleNameChange(`${newValue?.firstName  || '' } ${newValue?.lastName || ''}`);
-                    setPhone(newValue.phone);
-                    setValue('email',newValue.email)
-                    trigger('email');
-                  } else {
-                    setContactVal('');
-                    handleNameChange('');
-                    setPhone('');
-                    setValue('email','')
-                    trigger('email');
-                  }
-                }}
-                id="controllable-states-demo"
-                renderOption={(props, option) => (
-                  <li {...props} key={option.id}>
-                    {option?.firstName || ''} {option?.lastName || ''}
-                  </li>
-                )}
-                renderInput={(params) => <TextField {...params} name="contact" label="Contact" />}
-                ChipProps={{ size: 'small' }}
-              >
-                {(option) => (
-                  <div key={option._id}>
-                    <span>{`${option?.firstName || ''} ${option?.lastName || ''}`}</span>
-                  </div>
-                )}
-              </Autocomplete>
-
-              <RHFTextField
-                name="name"
-                label={isInvite?"Full Name":"Full Name*"}
-                onChange={(e) => handleNameChange(e.target.value)}
-                value={name}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option?.name || ''}</li>)}
               />
               
-              <MuiTelInput
-                value={phone}
-                name="phone"
-                label="Phone Number"
-                flagSize="medium"
-                defaultCountry="NZ"
-                onChange={(newValue)=>setPhone(newValue)}
-                inputProps={{maxLength:13}}
-                forceCallingCode
+              <RHFAutocomplete
+                name='contact'
+                label="Contact"
+                options={activeContacts}
+                getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
+                isOptionEqualToValue={(option, value) => option._id === value._id}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option?.firstName || ''}{' '}{option?.lastName || ''}</li>)}
               />
+
+              <RHFTextField name="name" label="Full Name*" />
+              <RHFPhoneInput name="phone" label="Phone Number" />
             </Box>
+
             <Box
-              rowGap={3} columnGap={2} display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(1, 1fr)',
-              }}
+              rowGap={2} columnGap={2} display="grid"
+              gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
             >
-              <RHFTextField
-                name="email"
-                type="email"
-                label="Login/Email Address"
-                sx={{ my: 3 }}
-              />
+              <RHFTextField name="email" label="Login/Email Address*" />
             </Box>
             {(!isInvite &&(
-            <Box sx={{ mb: 3 }} rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}>
-              <RHFTextField
-                name="password"
-                label="Password"
-                type={showPassword ? 'text' : 'password'}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                        <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              <RHFTextField
-                name="passwordConfirmation"
-                label="Confirm Password"
-                type={showPassword ? 'text' : 'password'}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                        <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Box>
+              <Box sx={{ mb: 3 }} rowGap={2} columnGap={2} display="grid" 
+                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}
+              >
+                <RHFPasswordField name="password" label="Password*"/>
+                <RHFPasswordField name="passwordConfirmation" label="Confirm Password*" />
+              </Box>
             ))}
-            {/* <Box sx={{ mb: 3 }} rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}>
-              <RHFMultiSelect
-                disabled={roleTypesDisabled}
-                chip
-                checkbox
-                name="roles"
-                label="Roles"
-                options={sortedRoles}
-              />
-            </Box> */}
-            <Box
-            rowGap={3}
-            columnGap={2}
-            display="grid"
-            gridTemplateColumns={{
-              xs: 'repeat(1, 1fr)',
-              sm: 'repeat(1, 1fr)',
-            }}
+
+            <Box rowGap={2} columnGap={2} display="grid"
+              gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
             >
 
-              <RHFMultiSelect
-                // disabled={roleTypesDisabled}
-                chip
-                checkbox
-                name="roles"
-                label="Roles"
-                options={sortedRoles}
-              />
-            <Autocomplete
+              <RHFAutocomplete
                 multiple
                 disableCloseOnSelect
-                id="regions-autocomplete"
-                options={activeRegions.length > 0 ? activeRegions : [] }
-                value={selectedRegions}
-                onChange={(event, newValue) => {
-                  if (newValue) {
-                    setSelectedRegions(newValue);
-                  } else {
-                    setSelectedRegions('');
-                  }
-                }} getOptionLabel={(option) => option.name}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    variant="outlined"
-                    label="Regions"
-                    placeholder="Select Regions"
-                  />
-                )}
+                filterSelectedOptions
+                name="roles"
+                label="Roles*"
+                options={ activeRoles }
+                getOptionLabel={(option) => `${option?.name || ''} `}
+                isOptionEqualToValue={(option, value) => option._id === value._id}
+                renderOption={(props, option, { selected }) => ( <li {...props}> <Checkbox checked={selected} />{option?.name || ''}</li> )}
               />
 
-            <Autocomplete
-              // freeSolo
-              multiple
-              disableCloseOnSelect
-              required
-              value={customersArr || null}
-              options={allCustomers.length > 0 ? allCustomers : [] }
-              getOptionLabel={(option) => option.name}
-              isOptionEqualToValue={(option, value) => option._id === value._id}
-              onChange={(event, newValue) => {
-                if (newValue) {
-                  setCustomerArr(newValue);
-                } else {
-                  setCustomerArr('');
-                }
-              }}                id="controllable-states-demo"
-              renderOption={(props, option) => (
-                <li {...props} key={option.id}>
-                  {option.name}
-                </li>
-              )}
-              renderInput={(params) => (
-                <TextField {...params} name="customers" label="Customers"/>
-              )}
-              ChipProps={{ size: 'small' }}
-            >
-              {(option) => (
-                <div key={option._id}>
-                  <span>{option.name}</span>
-                </div>
-              )}
-            </Autocomplete>
+              <RHFAutocomplete
+                disableClearable
+                name="dataAccessibilityLevel"
+                label="Data Accessibility Level"
+                options={ [ 'FILTER', 'GLOBAL' ] }
+                isOptionEqualToValue={(option, value) => option === value}
+                renderOption={(props, option, { selected }) => ( <li {...props}> <Checkbox checked={selected} />{option|| ''}</li> )}
+              />
 
-            <Autocomplete
-              // freeSolo
-              multiple
-              disableCloseOnSelect
-              required
-              value={machinesArr || null}
-              options={allMachines.length > 0 ? allMachines : [] }
-              getOptionLabel={(option) => `${option.serialNo} ${option.name ? '-' : ''} ${option.name ? option.name : ''}`}
-              isOptionEqualToValue={(option, value) => option._id === value._id}
-              onChange={(event, newValue) => {
-                if (newValue) {
-                  setMachineArr(newValue);
-                } else {
-                  setMachineArr([]);
-                }
-              }}
-              id="machine"
-              renderOption={(props, option) => (
-                <li {...props} key={option.id}>
-                  {`${option.serialNo ? option.serialNo : ''} ${option.name ? '-' : ''} ${option.name ? option.name : ''}`}
-                </li>
-              )}
-              renderInput={(params) => (
-                <TextField {...params} name="machines" label="Machines" />
-              )}
-              ChipProps={{ size: 'small' }}
-            >
-              {(option) => (
-                <div key={option._id}>
-                  <span>{option.name}</span>
-                </div>
-              )}
-            </Autocomplete>
             </Box>
-             <Grid item md={12} display="flex">
+            <Box rowGap={2} columnGap={2} display="grid"
+              gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
+            >
+              <RHFAutocomplete
+                multiple
+                disableCloseOnSelect
+                filterSelectedOptions
+                name="regions" 
+                label="Regions"
+                options={activeRegions}
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option._id === value._id}
+                renderOption={(props, option) => ( <li {...props} key={option._id}> {option?.name || ''} </li>)}
+                ChipProps={{ size: 'small' }}
+              />
+
+              <RHFAutocomplete
+                multiple
+                disableCloseOnSelect
+                filterSelectedOptions
+                name="customers" 
+                label="Customers"
+                options={allActiveCustomers}
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option._id === value._id}
+                renderOption={(props, option) => ( <li {...props} key={option._id}> {option?.name || ''} </li> )}
+                ChipProps={{ size: 'small' }}
+              />
+
+              <RHFAutocomplete
+                multiple
+                disableCloseOnSelect
+                filterSelectedOptions
+                name="machines" 
+                label="Machines"
+                options={allMachines}
+                getOptionLabel={(option) => `${option.serialNo} ${option.name ? '-' : ''} ${option?.name || ''}`}
+                isOptionEqualToValue={(option, value) => option._id === value._id}
+                renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.serialNo || ''} ${option.name ? '-' : ''} ${option.name || ''}`}</li>)}
+                ChipProps={{ size: 'small' }}
+              />
+
+            </Box>
+            <Grid item md={12} display="flex">
                 {(!isInvite &&(
                   <>
                   <RHFSwitch name="isActive" label="Active" />
                   <RHFSwitch name="multiFactorAuthentication" label="Multi-Factor Authentication" />
                   </>
-               ))}
+              ))}
               <RHFSwitch name="currentEmployee" label="Current Employee" />
             </Grid>
             <Stack sx={{ mt: 3 }}>
               <AddFormButtons securityUserPage saveButtonName={isInvite?"Invite":"Save"} isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Stack>
+          </Stack>
           </Card>
         </Grid>
       </Grid>

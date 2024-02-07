@@ -14,13 +14,18 @@ const initialState = {
   isLoading: false,
   error: null,
   roles: [],
+  activeRoles: [],
   role: null,
   userRoleTypes: [
               { name: 'Super Admin', value: 'SuperAdmin'},
               { name: 'Developer', value: 'Developer'},
-              { name: 'Global Manager', value: 'GlobalManager'},
-              { name: 'Regional Manager', value: 'RegionalManager'},
-              { name: 'Support Manager', value: 'SupportManager'},
+              { name: 'Sales Manager', value: 'SalesManager'},
+              { name: 'Sales Engineer', value: 'SalesEngineer'},
+              { name: 'Technical Manager', value: 'TechnicalManager'},
+              { name: 'Technician', value: 'Technician'},
+              // { name: 'Global Manager', value: 'GlobalManager'},
+              // { name: 'Regional Manager', value: 'RegionalManager'},
+              // { name: 'Support Manager', value: 'SupportManager'},
               { name: 'API Access', value: 'APIAccess'},
               { name: 'Email Access', value: 'EmailAccess'},
             ],
@@ -55,11 +60,19 @@ const slice = createSlice({
       state.editFormVisibility = action.payload;
     },
 
-    // GET  Role
+    // GET  Roles
     getRolesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
       state.roles = action.payload;
+      state.initial = true;
+    },
+
+    // GET  Active Roles
+    getActiveRolesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeRoles = action.payload;
       state.initial = true;
     },
 
@@ -85,6 +98,14 @@ const slice = createSlice({
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
+    },
+
+    // reset  Active Roles
+    resetActiveRoles(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeRoles = [];
+      state.initial = true;
     },
 
     // RESET ROLES
@@ -117,6 +138,7 @@ export const {
   setFormVisibility,
   setEditFormVisibility,
   resetRoles,
+  resetActiveRoles,
   resetRole,
   setFilterBy,
   ChangeRowsPerPage,
@@ -187,6 +209,29 @@ export function getRoles() {
       }
       );
       dispatch(slice.actions.getRolesSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Roles loaded successfully'));
+
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+export function getActiveRoles() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/roles`,
+      {
+        params: {
+          isArchived: false,
+          isActive: true,
+        }
+      }
+      );
+      dispatch(slice.actions.getActiveRolesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Roles loaded successfully'));
 
     } catch (error) {

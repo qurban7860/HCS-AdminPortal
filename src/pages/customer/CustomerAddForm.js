@@ -32,6 +32,7 @@ import FormProvider, {
   RHFSwitch,
   RHFAutocomplete,
   RHFTextField,
+  RHFCountryAutocomplete,
 } from '../../components/hook-form';
 import { MotionContainer, varBounce } from '../../components/animate';
 // auth
@@ -44,7 +45,6 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { FORMLABELS } from '../../constants/customer-constants';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import { AddCustomerSchema } from '../schemas/customer';
-
 
 // ----------------------------------------------------------------------
 
@@ -82,6 +82,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       supportManager: [],
       type: 'Customer',
       isActive: true,
+      countryName: null,
       supportSubscription:true,
       isFinancialCompany: false,
       excludeReports:false,
@@ -264,35 +265,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
               <RHFTextField name="region" label="Region" />
 
-              <RHFAutocomplete
-                id="country-select-demo"
-                options={countries}
-                value={country || null}
-                name="country"
-                label="Country"
-                autoHighlight
-                onChange={(event, newValue) => {
-                  if (newValue) {
-                    setCountryVal(newValue);
-                  } else {
-                    setCountryVal('');
-                  }
-                }}
-                getOptionLabel={(option) => `${option.label} (${option.code}) `}
-                renderOption={(props, option) => (
-                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                    <img
-                      loading="lazy"
-                      width="20"
-                      src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                      srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                      alt=""
-                    />
-                    {option.label} ({option.code}) {option.phone}
-                  </Box>
-                )}
-                renderInput={(params) => <TextField {...params} label="Choose a country" />}
-              />
+              <RHFCountryAutocomplete name="countryName" label="Country" />
+
             </Box>
           </Stack>
         </Card>
@@ -393,6 +367,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect
+                    filterSelectedOptions
                     name="accountManager"
                     options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
@@ -409,6 +384,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     // freeSolo
                     multiple
                     disableCloseOnSelect
+                    filterSelectedOptions
                     name="projectManager"
                     options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
@@ -423,6 +399,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect
+                    filterSelectedOptions
                     name="supportManager"
                     options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}

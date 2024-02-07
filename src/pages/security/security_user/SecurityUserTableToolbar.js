@@ -25,6 +25,8 @@ SecurityUserTableToolbar.propTypes = {
   onFilterListBy: PropTypes.func,
   employeeFilterListBy: PropTypes.string,
   onEmployeeFilterListBy: PropTypes.func,
+  onFilterListByRegion: PropTypes.func,
+  filterByRegion: PropTypes.object,
   onReload: PropTypes.func,
 };
 
@@ -36,6 +38,8 @@ export default function SecurityUserTableToolbar({
   onFilterListBy,
   employeeFilterListBy,
   onEmployeeFilterListBy,
+  onFilterListByRegion,
+  filterByRegion,
   optionsRole,
   onFilterName,
   onFilterRole,
@@ -68,6 +72,8 @@ export default function SecurityUserTableToolbar({
         onFilterListBy={onFilterListBy}
         employeeFilterListBy={employeeFilterListBy}
         onEmployeeFilterListBy={onEmployeeFilterListBy}
+        onFilterListByRegion={onFilterListByRegion}
+        filterByRegion={filterByRegion}
         addButton={BUTTONS.ADDUSER}
         inviteButton={BUTTONS.INVITEUSER}
         onReload={onReload}

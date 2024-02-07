@@ -17,7 +17,7 @@ const initialState = {
   customers: [],
   activeCustomers: [],
   financialCompanies: [],
-  allCustomers: [],
+  allActiveCustomers: [],
   spCustomers: [],
   customer: {},
   customerDialog: false,
@@ -92,11 +92,11 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Active Customers
-    getAllCustomersSuccess(state, action) {
+    // GET ALL Customers
+    getAllActiveCustomersSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.allCustomers = action.payload;
+      state.allActiveCustomers = action.payload;
       state.initial = true;
     },
 
@@ -141,6 +141,14 @@ const slice = createSlice({
     // RESET Active CUSTOMERS
     resetActiveCustomers(state){
       state.activeCustomers = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
+    // RESET ALL CUSTOMERS
+    resetAllActiveCustomers(state){
+      state.allActiveCustomers = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
@@ -191,6 +199,7 @@ export const {
   resetCustomer,
   resetCustomers,
   resetActiveCustomers,
+  resetAllActiveCustomers,
   resetFinancingCompanies,
   setResponseMessage,
   setFilterBy,
@@ -281,7 +290,7 @@ export function getFinancialCompanies( cancelToken ) {
 
 // ---------------------------- get Active Customers------------------------------------------
 
-export function getAllCustomers() {
+export function getAllActiveCustomers() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -293,7 +302,7 @@ export function getAllCustomers() {
           isArchived: false
         }
       });
-      dispatch(slice.actions.getAllCustomersSuccess(response.data));
+      dispatch(slice.actions.getAllActiveCustomersSuccess(response.data));
       // dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
     } catch (error) {
       console.log(error);
@@ -420,28 +429,23 @@ export function addCustomer(params) {
         let billingContact = {};
         let technicalContact = {};
         /* eslint-enable */
-        // params.accountManager ? data.accountManager = params.accountManager : '';
-
-        if(params.accountManager !== "null" && params.accountManager !== "undefined") {
-          data.accountManager = params.accountManager;
+        
+        if(params.accountManager) {
+          data.accountManager = params.accountManager.map(am => am._id);
+        }
+        
+        if(params.projectManager){
+          data.projectManager = params.projectManager.map(pm => pm._id);
         }
 
-        // params.projectManager ? data.projectManager = params.projectManager : '';
-        if(params.projectManager !== "null" && params.projectManager !== "undefined"){
-          data.projectManager = params.projectManager;
+        if(params.supportManager){
+          data.supportManager = params.supportManager.map(sm => sm._id);
         }
-
-        // params.supportManager ? data.supportManager = params.supportManager : '';
-        if(params.supportManager !== "null" && params.supportManager !== "undefined"){
-          data.supportManager = params.supportManager;
-        }
-
-        // params.phone ? data.phone = params.supportManager : '';
+        
         if(params.phone){
           data.mainSite.phone = params.phone;
         }
 
-        // params.email ? data.email = params.email : '';
         if(params.email){
           data.mainSite.email = params.email;
         }
@@ -519,7 +523,7 @@ export function addCustomer(params) {
           technicalContact.email = params.technicalContactEmail;
         }
         // Technical Contact Information End
-
+        
         if(!_.isEmpty(billingContact)){
           data.billingContact = billingContact;
           if(params.sameContactFlag){
@@ -576,9 +580,9 @@ export function updateCustomer(params) {
         primaryBillingContact: params.primaryBillingContact?._id || null,
         primaryTechnicalContact: params.primaryTechnicalContact?._id || null,
         mainSite: params.mainSite?._id || null,
-        accountManager: params.accountManager?._id || null,
-        projectManager: params.projectManager?._id || null,
-        supportManager: params.supportManager?._id || null,
+        accountManager: params.accountManager.map(am => am._id) || null,
+        projectManager: params.projectManager.map(pm => pm._id) || null,
+        supportManager: params.supportManager.map(sm => sm._id) || null,
         supportSubscription: params?.supportSubscription,
         isFinancialCompany: params?.isFinancialCompany,
         excludeReports: params?.excludeReports,

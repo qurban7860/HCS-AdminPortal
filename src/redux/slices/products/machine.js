@@ -198,6 +198,15 @@ const slice = createSlice({
       state.success = false;
       state.isLoading = false;
     },
+
+    // RESET All Machines
+    resetAllMachines(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.allMachines = [];
+      state.initial = true;
+    },
+
     // Set FilterBy
     setFilterBy(state, action) {
       state.filterBy = action.payload;
@@ -244,6 +253,7 @@ export const {
   resetMachine,
   resetMachines,
   resetActiveMachines,
+  resetAllMachines,
   setResponseMessage,
   setTransferDialogBoxVisibility,
   setFilterBy,
@@ -502,7 +512,6 @@ export function getMachineLatLongData() {
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/machineCoordinates`);
       dispatch(slice.actions.getMachineLatLongCoordinatesSuccess(response.data));
-      // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
