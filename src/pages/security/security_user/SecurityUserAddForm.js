@@ -189,7 +189,6 @@ const { customer, contact } = watch();
               <RHFAutocomplete
                 multiple
                 disableCloseOnSelect
-                filterSelectedOptions
                 name="roles"
                 label="Roles*"
                 options={ activeRoles }

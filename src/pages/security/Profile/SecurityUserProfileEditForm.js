@@ -187,7 +187,6 @@ useEffect(() => {
                 disabled={ isSecurityReadOnly }
                 multiple
                 disableCloseOnSelect
-                filterSelectedOptions
                 name="roles"
                 label="Roles"
                 options={ activeRoles }
