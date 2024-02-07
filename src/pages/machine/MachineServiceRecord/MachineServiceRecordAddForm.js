@@ -49,15 +49,15 @@ function MachineServiceRecordAddForm() {
     dispatch(resetServiceRecordConfig())
   },[dispatch, machine, user?._id])
 
-
-
-
-
   const machineDecoilers = (machine?.machineConnections || []).map((decoiler) => ({
     _id: decoiler?.connectedMachine?._id ?? null,
     name: decoiler?.connectedMachine?.name ?? null,
     serialNo: decoiler?.connectedMachine?.serialNo ?? null
   }));
+
+  const isSecurityUserInList = activeSecurityUsers.some(suser => suser._id === securityUser._id);
+  const technicians = !isSecurityUserInList && securityUser?.roles?.find((role) => role?.roleType === 'SuperAdmin')? [...activeSecurityUsers, securityUser]:activeSecurityUsers;
+
   const defaultValues = useMemo(
     () => {
       const initialValues = {
@@ -128,9 +128,15 @@ function MachineServiceRecordAddForm() {
     },[dispatch, serviceRecordConfiguration])
 
   useEffect(()=>{
-    if(securityUser?.customer?.name === 'Howick' && (securityUser?.roles?.find((role) => role?.roleType === 'Technician')) || securityUser?.roles?.find((role) => role?.roleType === 'TechnicalManager')){
-      setValue('technician',securityUser)
+    
+    if(securityUser?.customer?.name === 'Howick' && 
+      ( securityUser?.roles?.find((role) => role?.roleType === 'Technician') || 
+        securityUser?.roles?.find((role) => role?.roleType === 'TechnicalManager') ||
+        securityUser?.roles?.find((role) => role?.roleType === 'SuperAdmin')
+      )){
+          setValue('technician',securityUser)
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[securityUser, setValue, user?._id])
 
@@ -342,7 +348,7 @@ function MachineServiceRecordAddForm() {
                     <RHFAutocomplete
                     name="technician"
                     label="Technician"
-                    options={activeSecurityUsers}
+                    options={technicians}
                     getOptionLabel={(option) => option?.name || ''}
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     renderOption={(props, option) => (
