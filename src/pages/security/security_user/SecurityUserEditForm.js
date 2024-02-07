@@ -58,7 +58,7 @@ export default function SecurityUserEditForm() {
       email: securityUser?.email || '',
       loginEmail: securityUser?.login || '',
       roles: securityUser?.roles || [],
-      dataAccessibilityLevel: securityUser?.dataAccessibilityLevel || null,
+      dataAccessibilityLevel: securityUser?.dataAccessibilityLevel || 'FILTER' ,
       regions: securityUser?.regions || [],
       customers: securityUser?.customers || [],
       machines: securityUser?.machines || [],
@@ -131,6 +131,7 @@ const onChangeContact = (contact) => {
             >
               
               <RHFAutocomplete
+                disabled
                 name='customer'
                 label="Customer"
                 options={ allActiveCustomers }
@@ -180,6 +181,7 @@ const onChangeContact = (contact) => {
               />
               
               <RHFAutocomplete
+                disableClearable
                 name="dataAccessibilityLevel"
                 label="Data Accessibility Level"
                 options={ [ 'FILTER', 'GLOBAL' ] }

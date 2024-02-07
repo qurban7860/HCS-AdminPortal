@@ -69,7 +69,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
       password: '',
       confirmPassword: '',
       roles: [],
-      dataAccessibilityLevel: null,
+      dataAccessibilityLevel: 'FILTER',
       regions: [],
       customers: [],
       machines: [],
@@ -199,13 +199,12 @@ const { customer, contact } = watch();
               />
 
               <RHFAutocomplete
+                disableClearable
                 name="dataAccessibilityLevel"
                 label="Data Accessibility Level"
                 options={ [ 'FILTER', 'GLOBAL' ] }
                 isOptionEqualToValue={(option, value) => option === value}
-                renderOption={(props, option, { selected }) => ( 
-                  <li {...props}> <Checkbox checked={selected} />{option|| ''}</li> 
-                )}
+                renderOption={(props, option, { selected }) => ( <li {...props}> <Checkbox checked={selected} />{option|| ''}</li> )}
               />
 
             </Box>
