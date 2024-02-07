@@ -85,7 +85,7 @@ export default function CustomerEditForm() {
       await dispatch(updateCustomer(data));
       await dispatch(setCustomerTab('info'));
       reset();
-      enqueueSnackbar('Update success!');
+      enqueueSnackbar('Customer updated successfully!');
       navigate(PATH_CUSTOMER.view(customer._id));
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });
@@ -136,7 +136,7 @@ export default function CustomerEditForm() {
                   <RHFAutocomplete
                     name="mainSite"
                     label={FORMLABELS.CUSTOMER.MAINSITE.label}
-                    options={activeSites}
+                    options={activeSites || []}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option?.name || ''}`}
                     renderOption={(props, option) => ( <li {...props} key={option._id}>{option?.name || ''} </li>)}
@@ -150,7 +150,7 @@ export default function CustomerEditForm() {
                     <RHFAutocomplete
                       name="primaryBillingContact"
                       label={FORMLABELS.CUSTOMER.BILLING_CONTACT}
-                      options={activeContacts}
+                      options={activeContacts || []}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) =>`${option?.firstName || ''} ${option?.lastName || ''}`}
                       renderOption={(props, option) => (<li {...props} key={option._id}>{option?.firstName || ''}{' '}{option?.lastName ||''}</li>)}
@@ -159,7 +159,7 @@ export default function CustomerEditForm() {
                     <RHFAutocomplete
                       name="primaryTechnicalContact"
                       label={FORMLABELS.CUSTOMER.TECHNICAL_CONTACT}
-                      options={activeContacts}
+                      options={activeContacts || []}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) =>`${option.firstName || ''} ${option.lastName || ''}`}
                       renderOption={(props, option) => (<li {...props} key={option._id}>{option?.firstName || ''}{' '}{option?.lastName || ''}</li>)}
@@ -180,7 +180,7 @@ export default function CustomerEditForm() {
                     filterSelectedOptions
                     name="accountManager"
                     label="Account Manager"
-                    options={activeSpContacts}
+                    options={activeSpContacts || []}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option?.firstName || ''} ${ option?.lastName || ''}`}
                     renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
@@ -193,7 +193,7 @@ export default function CustomerEditForm() {
                     filterSelectedOptions
                     name="projectManager"
                     label="Project Manager"
-                    options={activeSpContacts}
+                    options={activeSpContacts || []}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option?.firstName || ''} ${ option?.lastName || ''}`}
                     renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
@@ -206,7 +206,7 @@ export default function CustomerEditForm() {
                     filterSelectedOptions
                     name="supportManager"
                     label="Support Manager" 
-                    options={activeSpContacts}
+                    options={activeSpContacts || []}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option?.firstName || ''} ${ option?.lastName || ''}`}
                     renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}

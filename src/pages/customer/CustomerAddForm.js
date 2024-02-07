@@ -367,6 +367,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect
+                    filterSelectedOptions
                     name="accountManager"
                     options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
@@ -383,6 +384,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     // freeSolo
                     multiple
                     disableCloseOnSelect
+                    filterSelectedOptions
                     name="projectManager"
                     options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
@@ -397,6 +399,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect
+                    filterSelectedOptions
                     name="supportManager"
                     options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
