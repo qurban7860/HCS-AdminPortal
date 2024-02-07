@@ -69,7 +69,7 @@ function MachineServiceRecordAddForm() {
       site:                         machine?.instalationSite?._id,
       // machine:                      machine?._id || null,
       decoilers:                    machineDecoilers || [],
-      technician:                   securityUser?.contact || null,
+      technician:                   null,
       technicianNotes:              '',
       textBeforeCheckItems:         '',
       textAfterCheckItems:          '',
@@ -128,8 +128,8 @@ function MachineServiceRecordAddForm() {
     },[dispatch, serviceRecordConfiguration])
 
   useEffect(()=>{
-    if(securityUser?.customer?.name === 'Howick' && !!securityUser?.roles?.find((role) => role?.roleType === 'Support')){
-      setValue('technician',user)
+    if(securityUser?.customer?.name === 'Howick' && (securityUser?.roles?.find((role) => role?.roleType === 'Technician')) || securityUser?.roles?.find((role) => role?.roleType === 'TechnicalManager')){
+      setValue('technician',securityUser)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[securityUser, setValue, user?._id])
