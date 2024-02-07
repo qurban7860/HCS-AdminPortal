@@ -78,17 +78,18 @@ export default function SecurityUserEditForm() {
   const {
     reset,
     setValue,
+    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
+const { customer } = watch();
 useEffect(() => {
-  if(securityUser?.customer?._id){
-    dispatch(getActiveContacts(securityUser?.customer?._id));
+  if(customer?._id){
+    dispatch(getActiveContacts(customer?._id));
   } else {
     dispatch(resetActiveContacts());
   }
-}, [ dispatch, securityUser?.customer?._id ]);
+}, [ dispatch,customer?._id ]);
 
 
 const onChangeContact = (contact) => {
@@ -96,10 +97,12 @@ const onChangeContact = (contact) => {
     setValue( 'name', `${contact?.firstName || ''} ${contact?.lastName || ''}` );
     setValue( 'phone', contact?.phone );
     setValue( 'email', contact?.email );
+    setValue( 'contact', contact );
   } else {
     setValue( 'name', '' );
     setValue( 'phone', '' );
     setValue( 'email', '' );
+    setValue( 'contact', null );
   }
 }
 
