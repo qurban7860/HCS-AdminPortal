@@ -51,8 +51,14 @@ export function checkValuesNotNull(obj) {
   ]
 
   export const today = new Date();
-  export const futureDate = new Date(today);
-  futureDate.setFullYear(today.getFullYear() + 5);
+  export const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  export const yesterday = new Date();
+  yesterday.setDate(tomorrow.getDate() - 1);
+
+  export const future5yearDate = new Date(today);
+  future5yearDate.setFullYear(today.getFullYear() + 5);
 
   export const future20yearDate = new Date(today);
   future20yearDate.setFullYear(today.getFullYear() + 20);

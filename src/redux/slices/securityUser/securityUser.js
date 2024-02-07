@@ -30,6 +30,7 @@ const initialState = {
   verifiedInvite:null,
   activeFilterList: 'active',
   employeeFilterList: 'all',
+  filterRegion: null,
 };
 
 const slice = createSlice({
@@ -64,8 +65,8 @@ const slice = createSlice({
     },
     
     // SET EMPLOYEE FILTER LIST
-    setEmployeeFilterList(state, action){
-      state.employeeFilterList = action.payload;
+    setFilterRegion(state, action){
+      state.filterRegion = action.payload;
     },
 
     // SET USER PROPERTIES
@@ -192,6 +193,7 @@ export const {
   setFilterBy,
   setActiveFilterList,
   setEmployeeFilterList,
+  setFilterRegion,
   ChangeRowsPerPage,
   ChangePage,
 } = slice.actions;
@@ -203,20 +205,21 @@ export function addSecurityUser(param, isInvite) {
     dispatch(resetSecurityUser());
     try{
       const data = {
-      customer: param.customer,
-      customers: param.customers,
-      machines: param.machines,
-      contact: param.contact,
+      customer: param.customer?._id,
+      contact: param.contact?._id,
       name: param.name,
-      email: param.email,
-      password: param.password,
       phone:  param.phone,
-      roles: param.roles,
+      email: param.email,
       login: param.email,
+      password: param.password,
+      roles: param.roles.map(role => role?._id ),
+      regions: param.selectedRegions?.map(region => region?._id ),
+      customers: param.customers?.map(customer => customer?._id),
+      machines: param.machines?.map(machines => machines?._id),
+      isInvite: param.isInvite,
       isActive: param.isActive,
       currentEmployee: param.currentEmployee,
       multiFactorAuthentication: param.multiFactorAuthentication,
-      regions: param.selectedRegions
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}security/users`, data);
       if(regEx.test(response.status) && isInvite){
@@ -239,19 +242,19 @@ export function  updateSecurityUser(param,id) {
     dispatch(slice.actions.startLoading());
     try{
       const data = {
-        customer: param.customer,
-        customers: param.customers,
-        machines: param.machines,
-        contact: param.contact,
+        // customer: param.customer,
+        contact: param.contact?._id,
         name: param.name,
-        email: param.email,
         phone:  param.phone,
+        email: param.email,
         login: param.loginEmail,
-        roles: param.roles,
+        roles: param?.roles?.map( role => role?._id),
+        regions: param.regions?.map( region => region?._id ),
+        customers: param.customers?.map(customer => customer?._id ),
+        machines: param.machines?.map( machine => machine?._id ),
         isActive: param.isActive,
-        currentEmployee: param.currentEmployee,
         multiFactorAuthentication: param.multiFactorAuthentication,
-        regions: param.selectedRegions
+        currentEmployee: param.currentEmployee,
         }
         if(param.password !== ""){
             data.password = param.password 

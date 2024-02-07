@@ -82,7 +82,7 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
         <ViewFormField isLoading={isLoading}
           sm={12}
           heading="Display Order No."
-          numberParam={defaultValues?.displayOrderNo}
+          param={defaultValues?.displayOrderNo?.toString()}
         />
         <ViewFormField isLoading={isLoading} sm={12} heading="Slug" param={defaultValues?.slug} />
         <ViewFormField isLoading={isLoading} sm={12} heading="Order Number" param={defaultValues?.order} />

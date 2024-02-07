@@ -66,6 +66,14 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // RESET Active regions
+    resetActiveRegions(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeRegions = [];
+      state.initial = true;
+    },
+
     // GET regions
     getCountriesSuccess(state, action) {
       state.isLoading = false;
@@ -130,6 +138,7 @@ export const {
   getRegionSuccess,
   resetRegion,
   resetRegions,
+  resetActiveRegions,
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,

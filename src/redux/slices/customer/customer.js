@@ -17,7 +17,7 @@ const initialState = {
   customers: [],
   activeCustomers: [],
   financialCompanies: [],
-  allCustomers: [],
+  allActiveCustomers: [],
   spCustomers: [],
   customer: {},
   customerDialog: false,
@@ -92,11 +92,11 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Active Customers
-    getAllCustomersSuccess(state, action) {
+    // GET ALL Customers
+    getAllActiveCustomersSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.allCustomers = action.payload;
+      state.allActiveCustomers = action.payload;
       state.initial = true;
     },
 
@@ -141,6 +141,14 @@ const slice = createSlice({
     // RESET Active CUSTOMERS
     resetActiveCustomers(state){
       state.activeCustomers = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
+    // RESET ALL CUSTOMERS
+    resetAllActiveCustomers(state){
+      state.allActiveCustomers = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
@@ -191,6 +199,7 @@ export const {
   resetCustomer,
   resetCustomers,
   resetActiveCustomers,
+  resetAllActiveCustomers,
   resetFinancingCompanies,
   setResponseMessage,
   setFilterBy,
@@ -281,7 +290,7 @@ export function getFinancialCompanies( cancelToken ) {
 
 // ---------------------------- get Active Customers------------------------------------------
 
-export function getAllCustomers() {
+export function getAllActiveCustomers() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -293,7 +302,7 @@ export function getAllCustomers() {
           isArchived: false
         }
       });
-      dispatch(slice.actions.getAllCustomersSuccess(response.data));
+      dispatch(slice.actions.getAllActiveCustomersSuccess(response.data));
       // dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
     } catch (error) {
       console.log(error);

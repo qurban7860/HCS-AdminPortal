@@ -36,7 +36,7 @@ export default function SecurityUserTableRow({
   onSelectRow,
   onDeleteRow,
 }) {
-  const { email, name, roles, phone, createdAt, currentEmployee, isActive, isOnline } = row;
+  const { email, name, roles, regions, phone, createdAt, currentEmployee, isActive, isOnline } = row;
 
   const smScreen = useScreenSize('sm')
   const lgScreen = useScreenSize('lg')
@@ -61,6 +61,11 @@ export default function SecurityUserTableRow({
             {roles.map((obj, index) => (obj.roleType === 'SuperAdmin' ? <Chip key={index} label={obj.name} sx={{m:0.2}} color='secondary' /> : <Chip  key={index} label={obj.name} sx={{mx:0.3}} />))}
           </TableCell>
         }
+        {/* { lgScreen && 
+          <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+            {regions?.map((obj, index) =>  <Chip  key={index} label={obj?.name} sx={{mx:0.3}} />)}
+          </TableCell>
+        } */}
         <TableCell align="center" key={isOnline}>
           <StyledTooltip title={isOnline?ICONS.ONLINE.heading:ICONS.OFFLINE.heading} placement="top" 
             disableFocusListener tooltipcolor={isOnline?ICONS.ONLINE.color:ICONS.OFFLINE.color} 
