@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
@@ -7,7 +7,6 @@ import {
   Grid,
   Container,
   Link,
-  Tabs,
 } from '@mui/material';
 // routes
 import { PATH_SECURITY } from '../../../routes/paths';
@@ -37,15 +36,12 @@ export default function SecurityUserProfile() {
   const { securityUser, initial } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user } = useAuthContext();
-  const userId = localStorage.getItem('userId');
-  const [currentTab, setCurrentTab] = useState('profile');
+  const { user, userId } = useAuthContext();
 
   useEffect(() => {
     if (userId) {
       dispatch(getSecurityUser(userId));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, userId, initial]);
 
   useEffect(() => {
@@ -56,7 +52,7 @@ export default function SecurityUserProfile() {
   const handleCustomerDialog = (event) =>{
     event.preventDefault();
     dispatch(setCustomerDialog(true))
-    if (userId && securityUser?.customer?._id) {
+    if ( securityUser?.customer?._id) {
       dispatch(getCustomer(securityUser?.customer?._id));
     }
   }
@@ -64,7 +60,7 @@ export default function SecurityUserProfile() {
   const handleContactDialog = (event) =>{
     event.preventDefault();
     dispatch(setContactDialog(true))
-    if (userId && securityUser?.contact?._id) {
+    if ( securityUser?.contact?._id) {
       dispatch(getContact(securityUser?.customer?._id, securityUser?.contact?._id));
     }
   }
@@ -77,7 +73,7 @@ export default function SecurityUserProfile() {
   const defaultValues = useMemo(
     () => ({
       customer: securityUser?.customer?.name || '',
-      contact: securityUser?.contact?.firstName || '',
+      contact: `${securityUser?.contact?.firstName || '' } ${securityUser?.contact?.lastName || '' }` || '',
       name: securityUser?.name || '',
       phone: securityUser?.phone || '',
       email: securityUser?.email || '',
@@ -102,8 +98,7 @@ export default function SecurityUserProfile() {
       <Container maxWidth={false}>
         <Card
           sx={{
-            mb: 3,
-            height: 160,
+            mb: 3, height: 160,
             position: 'relative',
           }}
         >
@@ -112,29 +107,6 @@ export default function SecurityUserProfile() {
             photoURL={user.name === 'HOWICK LTD.' ? <LogoAvatar /> : <CustomAvatar />}
             icon="ph:users-light"
           />
-
-          <Tabs
-            value={currentTab}
-            onChange={(event, newValue) => setCurrentTab(newValue)}
-            sx={{
-              width: 1,
-              bottom: 0,
-              zIndex: 9,
-              position: 'absolute',
-              bgcolor: 'background.paper',
-              '& .MuiTabs-flexContainer': {
-                pr: { md: 3 },
-                justifyContent: {
-                  sm: 'center',
-                  md: 'flex-end',
-                },
-              },
-            }}
-          >
-            {/* {TABS.map((tab) => (
-              <Tab key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
-            ))} */}
-          </Tabs>
         </Card>
         <Card sx={{ p: 3 }}>
           <ViewFormEditDeleteButtons handleEdit={handleEdit} />
@@ -189,7 +161,7 @@ export default function SecurityUserProfile() {
             <ViewFormField
               sm={12}
               heading="Machines"
-              arrayParam={defaultValues?.machines}
+              machineConnectionArrayChip={defaultValues?.machines}
             />
           </Grid>
           <ViewFormField />

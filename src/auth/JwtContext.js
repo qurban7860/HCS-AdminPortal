@@ -240,7 +240,7 @@ export function AuthProvider({ children }) {
       localStorage.setItem("userId", response.data.userId);
       localStorage.setItem("MFA", true);
     } else{
-      const { accessToken, user, userId } = response.data;
+      const { accessToken, user, userId} = response.data;
 
       const {
         isAllAccessAllowed,
@@ -253,13 +253,15 @@ export function AuthProvider({ children }) {
         isSettingAccessAllowed,
         isSecurityUserAccessAllowed,
         isEmailAccessAllowed,
-    } = getUserAccess( user?.roles )
+    } = getUserAccess( user?.roles, user?.dataAccessibilityLevel )
 
       const rolesArrayString = JSON.stringify(user.roles);
       localStorage.setItem('email', user.email);
       localStorage.setItem('name', user.displayName);
       localStorage.setItem('userId', userId);
       localStorage.setItem('userRoles', rolesArrayString);
+      localStorage.setItem('dataAccessibilityLevel', user?.dataAccessibilityLevel);
+
       setSession(accessToken);
       await getConfigs();
       dispatch({
@@ -298,13 +300,15 @@ export function AuthProvider({ children }) {
         isSettingAccessAllowed,
         isSecurityUserAccessAllowed,
         isEmailAccessAllowed,
-    } = getUserAccess( user?.roles )
+    } = getUserAccess( user?.roles , user?.dataAccessibilityLevel )
 
       const rolesArrayString = JSON.stringify(user.roles);
       localStorage.setItem('email', user.email);
       localStorage.setItem('name', user.displayName);
       localStorage.setItem('userId', userId);
       localStorage.setItem('userRoles', rolesArrayString);
+      localStorage.setItem('dataAccessibilityLevel', user?.dataAccessibilityLevel);
+      
       setSession(accessToken);
       await getConfigs();
       dispatch({
