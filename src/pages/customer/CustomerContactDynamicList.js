@@ -123,11 +123,9 @@ export default function CustomerContactList(currentContact = null) {
   };
 
   useEffect(() => {
-    if (!formVisibility && !contactEditFormVisibility && !contactMoveFormVisibility) {
-      dispatch(getContacts(customer._id));
-    }
+    dispatch(getContacts(customer._id));
     return ()=>{ dispatch(resetContacts()) }
-  }, [dispatch, checked, customer, formVisibility, contactEditFormVisibility, contactMoveFormVisibility]);
+  }, [dispatch, customer]);
 
   const isNotFound = !contacts.length && !formVisibility && !contactEditFormVisibility;
   const shouldShowContactView = isExpanded && !contactEditFormVisibility && !contactMoveFormVisibility;
