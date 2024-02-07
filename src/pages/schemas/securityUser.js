@@ -12,7 +12,7 @@ export const addUserSchema = Yup.object().shape({
       .label('Password Confirmation')
       .trim()
       .required('Password confirmation is required'),
-    roles: Yup.array().min(1,'Roles field must have at least 1 role').nullable().label('Roles'),
+    roles: Yup.array().nullable().label('Roles'),
     regions: Yup.array().nullable(),
     customers: Yup.array().nullable(),
     machines: Yup.array().nullable(),
@@ -28,7 +28,7 @@ export const addUserSchema = Yup.object().shape({
     phone: Yup.string().label('Phone Number'),
     email: Yup.string().email().label('Email Address').trim().required().max(200),
     loginEmail: Yup.string().email().label('Login Email Address').trim().required().max(200),
-    roles: Yup.array().min(1,'Roles field must have at least 1 role').nullable().label('Roles'),
+    roles: Yup.array().nullable().label('Roles'),
     regions: Yup.array().nullable(),
     customers: Yup.array().nullable(),
     machines: Yup.array().nullable(),
