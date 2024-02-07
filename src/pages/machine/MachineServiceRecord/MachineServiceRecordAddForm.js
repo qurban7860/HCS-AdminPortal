@@ -44,7 +44,7 @@ function MachineServiceRecordAddForm() {
     if(machine?.customer?._id){
       dispatch(getActiveContacts(machine?.customer?._id))
     }
-    dispatch(getActiveSecurityUsers({roleType:'Support'}))
+    dispatch(getActiveSecurityUsers({roleType:['TechnicalManager','Technician']}))
     dispatch(getSecurityUser(user._id))
     dispatch(resetServiceRecordConfig())
   },[dispatch, machine, user?._id])

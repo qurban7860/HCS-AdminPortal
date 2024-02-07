@@ -512,7 +512,6 @@ export function getMachineLatLongData() {
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/machineCoordinates`);
       dispatch(slice.actions.getMachineLatLongCoordinatesSuccess(response.data));
-      // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
