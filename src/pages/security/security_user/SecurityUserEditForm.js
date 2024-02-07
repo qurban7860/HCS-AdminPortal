@@ -173,6 +173,7 @@ const onChangeContact = (contact) => {
               <RHFAutocomplete
                 multiple
                 disableCloseOnSelect
+                filterSelectedOptions
                 name="roles"
                 label="Roles"
                 options={ activeRoles }
