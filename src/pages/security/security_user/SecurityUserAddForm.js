@@ -20,7 +20,7 @@ import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/cu
 import { getAllMachines, resetAllMachines } from '../../../redux/slices/products/machine';
 import { getActiveRoles, resetActiveRoles } from '../../../redux/slices/securityUser/role';
 import { getActiveRegions, resetActiveRegions } from '../../../redux/slices/region/region';
-import { addUserSchema } from '../../schemas/securityUser';
+import { addUserSchema , editUserSchema} from '../../schemas/securityUser';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 
 SecurityUserAddForm.propTypes = {
@@ -69,6 +69,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
       password: '',
       confirmPassword: '',
       roles: [],
+      dataAccessibilityLevel: null,
       regions: [],
       customers: [],
       machines: [],
@@ -82,7 +83,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
   );
 
   const methods = useForm({
-    resolver: yupResolver( addUserSchema ),
+    resolver: yupResolver( isInvite ? editUserSchema : addUserSchema ),
     defaultValues,
   });
 
@@ -117,7 +118,6 @@ const { customer, contact } = watch();
   }, [ dispatch, contact, setValue ]);
 
   const onSubmit = async (data) => {
-console.log("data : ",data)
     try {
       const message = !isInvite ? "User Added Successfully":"User Invitation Sent Successfulllfy";
       // if(isInvite){
@@ -151,7 +151,7 @@ console.log("data : ",data)
                 options={ allActiveCustomers }
                 getOptionLabel={(option) => option?.name || ''}
                 isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option?.name || ''}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option?.name || ''}</li>)}
               />
               
               <RHFAutocomplete
@@ -160,7 +160,7 @@ console.log("data : ",data)
                 options={activeContacts}
                 getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
                 isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option?.firstName || ''}{' '}{option?.lastName || ''}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option?.firstName || ''}{' '}{option?.lastName || ''}</li>)}
               />
 
               <RHFTextField name="name" label="Full Name*" />
@@ -183,8 +183,9 @@ console.log("data : ",data)
             ))}
 
             <Box rowGap={2} columnGap={2} display="grid"
-              gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
+              gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
             >
+
               <RHFAutocomplete
                 multiple
                 disableCloseOnSelect
@@ -197,6 +198,20 @@ console.log("data : ",data)
                 renderOption={(props, option, { selected }) => ( <li {...props}> <Checkbox checked={selected} />{option?.name || ''}</li> )}
               />
 
+              <RHFAutocomplete
+                name="dataAccessibilityLevel"
+                label="Data Accessibility Level"
+                options={ [ 'FILTER', 'GLOBAL' ] }
+                isOptionEqualToValue={(option, value) => option === value}
+                renderOption={(props, option, { selected }) => ( 
+                  <li {...props}> <Checkbox checked={selected} />{option|| ''}</li> 
+                )}
+              />
+
+            </Box>
+            <Box rowGap={2} columnGap={2} display="grid"
+              gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
+            >
               <RHFAutocomplete
                 multiple
                 disableCloseOnSelect
@@ -235,6 +250,7 @@ console.log("data : ",data)
                 renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.serialNo || ''} ${option.name ? '-' : ''} ${option.name || ''}`}</li>)}
                 ChipProps={{ size: 'small' }}
               />
+
             </Box>
             <Grid item md={12} display="flex">
                 {(!isInvite &&(

@@ -13,7 +13,7 @@ import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete, RHFPhoneInput } from '../../../components/hook-form';
 // slice
 import { updateSecurityUser } from '../../../redux/slices/securityUser/securityUser';
-// import { getAllActiveCustomers, resetAllActiveCustomers } from '../../../redux/slices/customer/customer';
+import { getAllActiveCustomers, resetAllActiveCustomers } from '../../../redux/slices/customer/customer';
 import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
 import { getAllMachines, resetAllMachines } from '../../../redux/slices/products/machine';
 import { getActiveRoles, resetActiveRoles } from '../../../redux/slices/securityUser/role';
@@ -37,12 +37,12 @@ export default function SecurityUserEditForm() {
   const { enqueueSnackbar } = useSnackbar();
 
   useLayoutEffect(() => {
-    // dispatch(getAllActiveCustomers());
+    dispatch(getAllActiveCustomers());
     dispatch(getAllMachines());
     dispatch(getActiveRegions());
     dispatch(getActiveRoles());
     return ()=>{ 
-      // dispatch(resetAllActiveCustomers());
+      dispatch(resetAllActiveCustomers());
       dispatch(resetAllMachines());
       dispatch(resetActiveRegions()); 
       dispatch(resetActiveRoles()); 
@@ -51,13 +51,14 @@ export default function SecurityUserEditForm() {
 
   const defaultValues = useMemo(
     () => ({
-      customer: `${securityUser?.customer?.name || ''}`,
+      customer: securityUser?.customer || null,
       contact: securityUser?.contact || null,
       name: securityUser?.name || '',
       phone: securityUser?.phone || '+64 ',
       email: securityUser?.email || '',
       loginEmail: securityUser?.login || '',
       roles: securityUser?.roles || [],
+      dataAccessibilityLevel: securityUser?.dataAccessibilityLevel || null,
       regions: securityUser?.regions || [],
       customers: securityUser?.customers || [],
       machines: securityUser?.machines || [],
@@ -66,7 +67,7 @@ export default function SecurityUserEditForm() {
       currentEmployee: securityUser?.currentEmployee
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [securityUser]
+    [ securityUser ]
   );
   
   const methods = useForm({
@@ -81,29 +82,29 @@ export default function SecurityUserEditForm() {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
-const { contact } = watch();
-
+const { customer } = watch();
 useEffect(() => {
-  if(securityUser?.customer?._id){
-    dispatch(getActiveContacts(securityUser?.customer?._id));
+  if(customer?._id){
+    dispatch(getActiveContacts(customer?._id));
   } else {
     dispatch(resetActiveContacts());
   }
-}, [ dispatch, securityUser?.customer?._id ]);
+}, [ dispatch,customer?._id ]);
 
 
-useEffect(() => {
+const onChangeContact = (contact) => {
   if(contact?._id){
     setValue( 'name', `${contact?.firstName || ''} ${contact?.lastName || ''}` );
     setValue( 'phone', contact?.phone );
     setValue( 'email', contact?.email );
+    setValue( 'contact', contact );
   } else {
     setValue( 'name', '' );
     setValue( 'phone', '' );
     setValue( 'email', '' );
+    setValue( 'contact', null );
   }
-}, [ dispatch, contact, setValue ]);
+}
 
 
   const onSubmit = async (data) => {
@@ -135,16 +136,17 @@ useEffect(() => {
                 options={ allActiveCustomers }
                 getOptionLabel={(option) => option?.name || ''}
                 isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option?.name || ''}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option?.name || ''}</li>)}
               />
 
               <RHFAutocomplete
                 name='contact'
                 label="Contact"
                 options={activeContacts}
+                onChange={(event, newValue) => onChangeContact(newValue) }
                 getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
                 isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option?.firstName || ''}{' '}{option?.lastName || ''}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option?.firstName || ''}{' '}{option?.lastName || ''}</li>)}
               />
 
               <RHFTextField name="name" label="Full Name*" />
@@ -156,6 +158,7 @@ useEffect(() => {
               gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
             >
               <RHFTextField name="email" label="Email Address*" />
+              <RHFTextField name="loginEmail" label="Login Email" disabled />
             </Box>
             <Box
               rowGap={2} columnGap={2} display="grid"
@@ -163,7 +166,6 @@ useEffect(() => {
                 xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',
               }}
             >
-              <RHFTextField name="loginEmail" label="Login Email" disabled />
 
               <RHFAutocomplete
                 multiple
@@ -175,6 +177,14 @@ useEffect(() => {
                 getOptionLabel={(option) => `${option?.name || ''} `}
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 renderOption={(props, option, { selected }) => ( <li {...props}> <Checkbox checked={selected} />{option?.name || ''}</li> )}
+              />
+              
+              <RHFAutocomplete
+                name="dataAccessibilityLevel"
+                label="Data Accessibility Level"
+                options={ [ 'FILTER', 'GLOBAL' ] }
+                isOptionEqualToValue={(option, value) => option === value}
+                renderOption={(props, option, { selected }) => ( <li {...props}> <Checkbox checked={selected} />{option|| ''}</li> )}
               />
 
             </Box>

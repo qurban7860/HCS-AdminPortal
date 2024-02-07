@@ -108,13 +108,7 @@ export default function SecurityUserViewForm() {
         await dispatch(sendUserInvite(securityUser._id));
         enqueueSnackbar('Invitation sent successfully!');
       } catch (error) {
-        if (error.Message) {
-          enqueueSnackbar(error.Message, { variant: `error` });
-        } else if (error.message) {
-          enqueueSnackbar(error.message, { variant: `error` });
-        } else {
-          enqueueSnackbar('Something went wrong!', { variant: `error` });
-        }
+        enqueueSnackbar(error, { variant: `error` });
         console.log('Error:', error);
       }
     }
@@ -140,6 +134,7 @@ export default function SecurityUserViewForm() {
       email: securityUser?.email || '',
       login: securityUser?.login || '',
       roles: securityUser?.roles,
+      dataAccessibilityLevel: securityUser?.dataAccessibilityLevel || '',
       regions: securityUser?.regions || [],
       countries: securityUser?.regions ? securityUser.regions.flatMap(region => region.countries) : [],
       customers: securityUser?.customers || [],
@@ -255,26 +250,37 @@ export default function SecurityUserViewForm() {
             <Grid item md={6} sm={12} xs={12} sx={{p:.5}}>
               <Grid  sx={{border: '1px solid lightgrey', borderRadius:2, px:1.5, pt:1.5, height: {md: '100%'} }}>
               <FormLabel content='Accessibility Information' />
+
               <ViewFormField isLoading={isLoading}
                 sm={12}
                 heading="Roles"
                 userRolesChips={defaultValues?.roles}
               />
+
+              <ViewFormField isLoading={isLoading}
+                sm={12}
+                heading="Data Accessibility Level"
+                param={defaultValues?.dataAccessibilityLevel}
+              />
+
               <ViewFormField isLoading={isLoading}
                 sm={12}
                 heading="Regions"
                 arrayParam={defaultValues?.regions}
               />
+
               <ViewFormField isLoading={isLoading}
                 sm={12}
                 heading="Customers"
                 arrayParam={defaultValues?.customers}
               />
+
               <ViewFormField isLoading={isLoading}
                 sm={12}
                 heading="Machines"
-                arrayParam={defaultValues?.machines}
+                machineConnectionArrayChip={defaultValues?.machines}
               />
+              
             </Grid>
             </Grid>
           </Grid>
