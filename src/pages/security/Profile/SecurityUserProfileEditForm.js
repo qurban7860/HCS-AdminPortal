@@ -18,7 +18,7 @@ import {
   updateSecurityUser,
   getSecurityUser,
 } from '../../../redux/slices/securityUser/securityUser';
-import { getAllCustomers } from '../../../redux/slices/customer/customer';
+import { getAllActiveCustomers, resetAllActiveCustomers } from '../../../redux/slices/customer/customer';
 import { getActiveContacts, resetContacts } from '../../../redux/slices/customer/contact';
 import { getAllMachines } from '../../../redux/slices/products/machine';
 import { getRoles } from '../../../redux/slices/securityUser/role';
@@ -60,7 +60,7 @@ export default function SecurityUserProfileEditForm() {
 
   useLayoutEffect(() => {
     // dispatch(getActiveSPCustomers());
-    dispatch(getAllCustomers());
+    dispatch(getAllActiveCustomers());
     dispatch(getAllMachines());
     dispatch(getActiveRegions());
     dispatch(getRoles());
