@@ -84,6 +84,8 @@ export default function SecurityUserProfile() {
       customers: securityUser?.customers || [],
       machines: securityUser?.machines || [],
       isActive: securityUser?.isActive || false,
+      currentEmployee: securityUser?.currentEmployee || false,
+      multiFactorAuthentication: securityUser?.multiFactorAuthentication,
       createdByFullName: securityUser?.createdBy?.name || '',
       createdAt: securityUser?.createdAt || '',
       createdIP: securityUser?.createdIP || '',
@@ -109,7 +111,12 @@ export default function SecurityUserProfile() {
           />
         </Card>
         <Card sx={{ p: 3 }}>
-          <ViewFormEditDeleteButtons handleEdit={handleEdit} />
+          <ViewFormEditDeleteButtons 
+              isActive={defaultValues.isActive}
+              multiAuth={defaultValues?.multiFactorAuthentication} 
+              currentEmp={defaultValues?.currentEmployee}
+              handleEdit={handleEdit} 
+            />
           <Grid container>
             <ViewFormField
               sm={6}

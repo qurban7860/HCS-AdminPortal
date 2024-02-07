@@ -82,7 +82,10 @@ export default function SecurityUserEditForm() {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+
 const { customer } = watch();
+
+
 useEffect(() => {
   if(customer?._id){
     dispatch(getActiveContacts(customer?._id));
@@ -161,17 +164,15 @@ const onChangeContact = (contact) => {
               <RHFTextField name="email" label="Email Address*" />
               <RHFTextField name="loginEmail" label="Login Email" disabled />
             </Box>
+
             <Box
               rowGap={2} columnGap={2} display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',
-              }}
+              gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
             >
 
               <RHFAutocomplete
                 multiple
                 disableCloseOnSelect
-                filterSelectedOptions
                 name="roles"
                 label="Roles"
                 options={ activeRoles }

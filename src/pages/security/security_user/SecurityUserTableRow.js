@@ -36,7 +36,7 @@ export default function SecurityUserTableRow({
   onSelectRow,
   onDeleteRow,
 }) {
-  const { email, name, roles, regions, phone, createdAt, currentEmployee, isActive, isOnline } = row;
+  const { email, name, roles, phone, createdAt, currentEmployee, isActive, isOnline } = row;
 
   const smScreen = useScreenSize('sm')
   const lgScreen = useScreenSize('lg')
