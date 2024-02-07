@@ -189,7 +189,7 @@ export default function SecurityUserProfile() {
             <ViewFormField
               sm={12}
               heading="Machines"
-              arrayParam={defaultValues?.machines}
+              machineConnectionArrayChip={defaultValues?.machines}
             />
           </Grid>
           <ViewFormField />
