@@ -76,15 +76,23 @@ export const setSession = (accessToken) => {
 
 // ----------------------------------------------------------------------
 
-export const getUserAccess = ( roles ) => {
+export const getUserAccess = ( roles, accessLevel ) => {
 
     let userRoles
+    let dataAccessibilityLevel 
+
     if( Array.isArray( roles ) && roles.length > 0 ) {
       userRoles = roles
     } else {
       userRoles = JSON.parse(localStorage.getItem('userRoles'))
     }
 
+    if( accessLevel ){
+      dataAccessibilityLevel = accessLevel
+    } else{
+      dataAccessibilityLevel = localStorage.getItem('dataAccessibilityLevel');
+    }
+    
     let isAllAccessAllowed = false;
     let isDisableDelete = true;
     let isDashboardAccessLimited = true;
@@ -122,7 +130,7 @@ export const getUserAccess = ( roles ) => {
       isSecurityUserAccessAllowed = true
       isEmailAccessAllowed = false
 
-    } else if(userRoles?.some((role) => role?.roleType?.toLowerCase() === 'globalmanager')){
+    } else if(userRoles?.some((role) => role?.roleType?.toLowerCase() === 'globalmanager' || dataAccessibilityLevel?.toUpperCase() === 'GLOBAL')){
 
         isAllAccessAllowed = true
         isDisableDelete = userRoles?.some((role) => role?.disableDelete || true )
@@ -135,7 +143,7 @@ export const getUserAccess = ( roles ) => {
         isSecurityUserAccessAllowed = true
         isEmailAccessAllowed = false
 
-    } else if(userRoles?.some((role) => role?.roleType?.toLowerCase() === 'regionalmanager')){
+    } else if(userRoles?.some((role) => role?.roleType?.toLowerCase() === 'regionalmanager' || dataAccessibilityLevel?.toUpperCase() === 'FILTER')){
 
         isAllAccessAllowed = false
         isDisableDelete = true
@@ -148,7 +156,7 @@ export const getUserAccess = ( roles ) => {
         isSecurityUserAccessAllowed = false
         isEmailAccessAllowed = false
 
-    } else if(userRoles?.some((role) => role?.roleType?.toLowerCase() === 'supportmanager')){
+    } else if(userRoles?.some((role) => role?.roleType?.toLowerCase() === 'supportmanager' || dataAccessibilityLevel?.toUpperCase() === 'FILTER' )){
 
       isAllAccessAllowed = false
       isDisableDelete = true
