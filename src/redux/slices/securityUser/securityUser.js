@@ -214,7 +214,7 @@ export function addSecurityUser(param, isInvite) {
       password: param.password,
       roles: param.roles.map(role => role?._id ),
       dataAccessibilityLevel: param?.dataAccessibilityLevel?.toUpperCase() ,
-      regions: param.selectedRegions?.map(region => region?._id ),
+      regions: param.regions?.map(region => region?._id ),
       customers: param.customers?.map(customer => customer?._id),
       machines: param.machines?.map(machines => machines?._id),
       isInvite: param.isInvite,
@@ -243,7 +243,7 @@ export function  updateSecurityUser(param,id) {
     dispatch(slice.actions.startLoading());
     try{
       const data = {
-        // customer: param.customer,
+        customer: param.customer,
         contact: param.contact?._id,
         name: param.name,
         phone:  param.phone,
@@ -264,9 +264,6 @@ export function  updateSecurityUser(param,id) {
       const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/${id}`, data);
       await dispatch(resetSecurityUser());
       await dispatch(getSecurityUser(id));
-      // if(regEx.test(response.status)){
-      //   dispatch(getSecurityUsers());
-      // }
       return response;
     } catch (error) {
       console.error(error);

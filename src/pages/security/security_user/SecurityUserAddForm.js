@@ -60,7 +60,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
 
   const defaultValues = useMemo(
     () => ({
-      customer: null,
+      customer: allActiveCustomers.find( cus => cus?.isDefault ) || null,
       contact: null,
       name: '',
       phone: '+64 ',
