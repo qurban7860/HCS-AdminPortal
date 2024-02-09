@@ -178,7 +178,7 @@ const onChangeContact = (contact) => {
                 label="Roles"
                 options={ activeRoles }
                 getOptionLabel={(option) => `${option?.name || ''} `}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 renderOption={(props, option, { selected }) => ( <li {...props}> <Checkbox checked={selected} />{option?.name || ''}</li> )}
               />
               

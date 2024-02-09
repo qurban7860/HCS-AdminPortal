@@ -429,28 +429,23 @@ export function addCustomer(params) {
         let billingContact = {};
         let technicalContact = {};
         /* eslint-enable */
-        // params.accountManager ? data.accountManager = params.accountManager : '';
-
-        if(params.accountManager !== "null" && params.accountManager !== "undefined") {
-          data.accountManager = params.accountManager;
+        
+        if(params.accountManager) {
+          data.accountManager = params.accountManager.map(am => am._id);
+        }
+        
+        if(params.projectManager){
+          data.projectManager = params.projectManager.map(pm => pm._id);
         }
 
-        // params.projectManager ? data.projectManager = params.projectManager : '';
-        if(params.projectManager !== "null" && params.projectManager !== "undefined"){
-          data.projectManager = params.projectManager;
+        if(params.supportManager){
+          data.supportManager = params.supportManager.map(sm => sm._id);
         }
-
-        // params.supportManager ? data.supportManager = params.supportManager : '';
-        if(params.supportManager !== "null" && params.supportManager !== "undefined"){
-          data.supportManager = params.supportManager;
-        }
-
-        // params.phone ? data.phone = params.supportManager : '';
+        
         if(params.phone){
           data.mainSite.phone = params.phone;
         }
 
-        // params.email ? data.email = params.email : '';
         if(params.email){
           data.mainSite.email = params.email;
         }
@@ -528,7 +523,7 @@ export function addCustomer(params) {
           technicalContact.email = params.technicalContactEmail;
         }
         // Technical Contact Information End
-
+        
         if(!_.isEmpty(billingContact)){
           data.billingContact = billingContact;
           if(params.sameContactFlag){
@@ -585,9 +580,9 @@ export function updateCustomer(params) {
         primaryBillingContact: params.primaryBillingContact?._id || null,
         primaryTechnicalContact: params.primaryTechnicalContact?._id || null,
         mainSite: params.mainSite?._id || null,
-        accountManager: params.accountManager?._id || null,
-        projectManager: params.projectManager?._id || null,
-        supportManager: params.supportManager?._id || null,
+        accountManager: params.accountManager.map(am => am._id) || null,
+        projectManager: params.projectManager.map(pm => pm._id) || null,
+        supportManager: params.supportManager.map(sm => sm._id) || null,
         supportSubscription: params?.supportSubscription,
         isFinancialCompany: params?.isFinancialCompany,
         excludeReports: params?.excludeReports,

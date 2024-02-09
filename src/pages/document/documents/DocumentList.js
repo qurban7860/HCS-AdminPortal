@@ -90,7 +90,9 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
     customerDocumentsFilterBy,   customerDocumentsPage,   customerDocumentsRowsPerPage,
     machineDocumentsFilterBy,  machineDocumentsPage,  machineDocumentsRowsPerPage,
     isLoading } = useSelector((state) => state.document );
-
+  const { activeDocumentCategories } = useSelector((state) => state.documentCategory );
+  const { activeDocumentTypes } = useSelector((state) => state.documentType );
+            
   const [totalRows, setTotalRows] = useState( documentRowsTotal );
 
   const {
@@ -160,6 +162,25 @@ const onChangePage = (event, newPage) => {
       if(machinePage || machineDrawings ){
         dispatch(getActiveDocumentCategories(null, cancelTokenSource));
         dispatch(getActiveDocumentTypes(cancelTokenSource));
+
+        if(machineDrawings){
+
+          const defaultType = activeDocumentTypes.find((typ) => typ?.isDefault === true);
+          const defaultCategory = activeDocumentCategories.find((cat) => cat?.isDefault === true);
+
+          if(typeVal===null && defaultType){
+            setTypeVal(defaultType);
+            setCategoryVal(defaultType?.docCategory)
+          }else{
+            setTypeVal(null);
+            setCategoryVal(null);
+          }
+
+          if(!defaultType && categoryVal===null){
+            setCategoryVal(defaultCategory);
+          }
+
+        }
       }
       
       if (customerPage || machinePage) {
