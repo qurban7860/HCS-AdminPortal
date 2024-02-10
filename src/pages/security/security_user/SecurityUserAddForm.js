@@ -37,7 +37,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
   const { activeContacts } = useSelector((state) => state.contact);
   const { allMachines } = useSelector((state) => state.machine);
 
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -60,7 +59,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
 
   const defaultValues = useMemo(
     () => ({
-      customer: allActiveCustomers.find( cus => cus?.isDefault ) || null,
+      customer: allActiveCustomers.find(c => c?.type?.toUpperCase() === "SP" ) || null,
       contact: null,
       name: '',
       phone: '+64 ',
