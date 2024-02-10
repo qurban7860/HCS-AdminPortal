@@ -37,7 +37,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
   const { activeContacts } = useSelector((state) => state.contact);
   const { allMachines } = useSelector((state) => state.machine);
 
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -79,7 +78,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
       currentEmployee: false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentUser]
+    [ currentUser ]
   );
 
   const methods = useForm({
@@ -96,6 +95,10 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
   } = methods;
 
 const { customer, contact } = watch();
+
+  useEffect(() => {
+    setValue('customer',allActiveCustomers.find(c => c?.type?.toUpperCase() === "SP" ));
+  },[ allActiveCustomers, setValue ])
 
   useEffect(() => {
     if(customer?._id){
