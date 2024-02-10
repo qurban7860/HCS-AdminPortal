@@ -59,7 +59,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
 
   const defaultValues = useMemo(
     () => ({
-      customer: allActiveCustomers.find(c => c?.type?.toUpperCase() === "SP" ) || null,
+      customer: null,
       contact: null,
       name: '',
       phone: '+64 ',
@@ -78,7 +78,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
       currentEmployee: false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentUser]
+    [ currentUser ]
   );
 
   const methods = useForm({
@@ -95,6 +95,10 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
   } = methods;
 
 const { customer, contact } = watch();
+
+  useEffect(() => {
+    setValue('customer',allActiveCustomers.find(c => c?.type?.toUpperCase() === "SP" ));
+  },[ allActiveCustomers, setValue ])
 
   useEffect(() => {
     if(customer?._id){
