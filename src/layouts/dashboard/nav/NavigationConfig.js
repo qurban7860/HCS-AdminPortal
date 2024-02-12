@@ -78,23 +78,23 @@ function NavigationConfig() {
 
     updatedConfig[0].items.splice(7, 0, { title: 'Sites Map', path: PATH_SITEMAP.app, icon: ICONS.map });
 
-    if (isDocumentAccessAllowed) {
+    if (isDocumentAccessAllowed && navConfig.some((config) => config.title !== 'Documents')) {
       updatedConfig[0].items.splice(3, 0, { title: 'Documents', path: PATH_DOCUMENT.document.list, icon: ICONS.document });
     }
 
-    if (isDrawingAccessAllowed) {
+    if (isDrawingAccessAllowed && navConfig.some((config) => config.title !== 'Machine Drawings')) {
       updatedConfig[0].items.splice(4, 0, { title: 'Machine Drawings', path: PATH_DOCUMENT.document.machineDrawings.list, icon: ICONS.drawing });
     }
 
-    if (isSettingAccessAllowed) {
+    if (isSettingAccessAllowed && navConfig.some((config) => config.title !== 'Settings')) {
       updatedConfig[0].items.splice(5, 0, { title: 'Settings', path: PATH_SETTING.app, icon: ICONS.setting });
     }
 
-    if (isSecurityUserAccessAllowed) {
+    if (isSecurityUserAccessAllowed && navConfig.some((config) => config.title !== 'Security')) {
       updatedConfig[0].items.splice(6, 0, { title: 'Security', path: PATH_SECURITY.users.list, icon: ICONS.security });
     }
 
-    if (isEmailAccessAllowed) {
+    if (isEmailAccessAllowed && navConfig.some((config) => config.title !== 'Email')) {
       updatedConfig[0].items.push({ title: 'Email', path: PATH_EMAIL.email.list, icon: ICONS.email });
     }
 

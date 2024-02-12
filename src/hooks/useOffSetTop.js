@@ -22,11 +22,3 @@ export default function useOffSetTop(top = 100, options) {
 
   return value;
 }
-
-// Usage
-// const offset = useOffSetTop(100);
-
-// Or
-// const offset = useOffSetTop(100, {
-//   container: ref,
-// });

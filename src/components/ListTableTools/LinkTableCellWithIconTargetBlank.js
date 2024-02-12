@@ -3,7 +3,7 @@ import { TableCell, Link } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import VerificationIcon from '../Icons/VerificationIcon';
 import OpenInNewPage from '../Icons/OpenInNewPage';
-// import Iconify from '../../../components/iconify';
+import useLimitString from '../../hooks/useLimitString';
 
 export default function LinkTableCellWithIconTargetBlank({ align, onViewRow, onClick, param, isVerified }) {
   return (
@@ -23,7 +23,7 @@ export default function LinkTableCellWithIconTargetBlank({ align, onViewRow, onC
           },
         }}
       >
-        {param}
+        { useLimitString( param, 30 ) }
       </Link>
       <OpenInNewPage onClick={onClick} /> 
     </TableCell>

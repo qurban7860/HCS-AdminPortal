@@ -14,7 +14,7 @@ import { TableNoData, useTable, getComparator } from '../../components/table';
 // sections
 import {
   getContacts,
-  resetContacts,
+  // resetContacts,
   setContactFormVisibility,
   getContact,
   resetContactFormsVisiblity,
@@ -123,9 +123,14 @@ export default function CustomerContactList(currentContact = null) {
   };
 
   useEffect(() => {
-    dispatch(getContacts(customer._id));
-    return ()=>{ dispatch(resetContacts()) }
-  }, [dispatch, customer]);
+    if (!formVisibility && !contactEditFormVisibility && !contactMoveFormVisibility) {
+      dispatch(getContacts(customer._id));
+    }
+      // return ()=>{ dispatch(resetContacts()) }
+  }, [dispatch, checked, customer, formVisibility, contactEditFormVisibility, contactMoveFormVisibility]);
+
+  //   dispatch(getContacts(customer._id));
+  // }, [dispatch, customer]);
 
   const isNotFound = !contacts.length && !formVisibility && !contactEditFormVisibility;
   const shouldShowContactView = isExpanded && !contactEditFormVisibility && !contactMoveFormVisibility;
@@ -196,9 +201,9 @@ export default function CustomerContactList(currentContact = null) {
           </Stack>            
         </Grid>
       </Grid>
-      <Grid container spacing={1} direction="row" justifyContent="flex-start">
+      <Grid container spacing={1} direction="row" justifyContent="flex-end">
         {contacts.length === 0 && (
-          <Grid item lg={12}>
+          <Grid item lg={12} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
             <TableNoData isNotFound={isNotFound} />
           </Grid>
         )}
@@ -207,7 +212,6 @@ export default function CustomerContactList(currentContact = null) {
             {contacts.length > 5 && (
               <Grid item md={12}>
                 <SearchInput
-                  // searchFormVisibility={formVisibility || contactEditFormVisibility || contactMoveFormVisibility}
                   disabled={formVisibility || contactEditFormVisibility || contactMoveFormVisibility}
                   filterName={filterName}
                   handleFilterName={handleFilterName}
@@ -229,7 +233,7 @@ export default function CustomerContactList(currentContact = null) {
               disabled={contactEditFormVisibility || formVisibility || contactMoveFormVisibility}
               maxHeight={100}
             >
-              <Grid container direction="column" gap={1}>
+              <Grid container direction="column" gap={1} >
                 {dataFiltered.map((contact, index) => (
                   <ContactSiteCard
                     isActive={contact._id === activeCardIndex}
