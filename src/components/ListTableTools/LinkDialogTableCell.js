@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { Button, TableCell } from '@mui/material';
 import { alpha } from '@mui/material/styles';
+import useLimitString from '../../hooks/useLimitString';
 
 export default function LinkDialogTableCell({ align, onClick, param }) {
   return (
@@ -27,7 +28,7 @@ export default function LinkDialogTableCell({ align, onClick, param }) {
             }
           }}
           onClick={onClick}>
-                {param}
+                {useLimitString(param)}
         </Button>
         
     </TableCell>

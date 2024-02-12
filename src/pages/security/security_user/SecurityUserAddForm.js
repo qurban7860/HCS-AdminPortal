@@ -68,10 +68,10 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
       password: '',
       confirmPassword: '',
       roles: [],
-      dataAccessibilityLevel: 'FILTER',
       regions: [],
       customers: [],
       machines: [],
+      dataAccessibilityLevel: 'FILTER',
       isActive: true,
       isInvite,
       multiFactorAuthentication: false,
@@ -80,9 +80,8 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [ currentUser ]
   );
-
   const methods = useForm({
-    resolver: yupResolver( isInvite ? editUserSchema : addUserSchema ),
+    resolver: yupResolver( isInvite && editUserSchema || addUserSchema ),
     defaultValues,
   });
 
@@ -123,10 +122,6 @@ const { customer, contact } = watch();
   const onSubmit = async (data) => {
     try {
       const message = !isInvite ? "User Added Successfully":"User Invitation Sent Successfulllfy";
-      // if(isInvite){
-      //   data.password = "sjhreywuidfsajchfdsgfkdfgsljhffjklgdhsg";
-      //   data.passwordConfirmation = "sjhreywuidfsajchfdsgfkdfgsljhffjklgdhsg";
-      // }
       const response = await dispatch(addSecurityUser(data, isInvite));
       reset();
       navigate(PATH_SECURITY.users.view(response.data.user._id));
@@ -174,14 +169,14 @@ const { customer, contact } = watch();
               rowGap={2} columnGap={2} display="grid"
               gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
             >
-              <RHFTextField name="email" label="Login/Email Address*" />
+              <RHFTextField name="loginEmail" label="Login/Email Address*" />
             </Box>
             {(!isInvite &&(
               <Box sx={{ mb: 3 }} rowGap={2} columnGap={2} display="grid" 
                 gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}
               >
                 <RHFPasswordField name="password" label="Password*"/>
-                <RHFPasswordField name="passwordConfirmation" label="Confirm Password*" />
+                <RHFPasswordField name="confirmPassword" label="Confirm Password*" />
               </Box>
             ))}
 
