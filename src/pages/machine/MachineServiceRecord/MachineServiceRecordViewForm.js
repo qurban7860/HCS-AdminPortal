@@ -148,7 +148,7 @@ function MachineServiceParamViewForm() {
           
           <ViewFormField isLoading={isLoading} variant='h4' sm={3} heading="Service Date" param={fDate(defaultValues.serviceDate)} />
           <ViewFormField isLoading={isLoading} variant='h4' sm={6} heading="Service Record Configuration" param={`${defaultValues.serviceRecordConfig} ${defaultValues.serviceRecordConfigRecordType ? '-' : ''} ${defaultValues.serviceRecordConfigRecordType ? defaultValues.serviceRecordConfigRecordType : ''}`} />
-          <ViewFormField isLoading={isLoading} variant='h4' sm={3} heading="Version No" param={
+          <ViewFormField isLoading={isLoading} variant='h4' sm={3} heading="Version No" node={
             <>{defaultValues?.versionNo}{machineServiceRecord?.isHistory && <CurrentIcon callFunction={handleCurrentServiceRecord} />}
               {!machineServiceRecord?.isHistory && (machineServiceRecord?.currentVersion?.versionNo || defaultValues?.versionNo) > 1 && <HistoryIcon callFunction={handleServiceRecordHistory} /> }
             </>  
