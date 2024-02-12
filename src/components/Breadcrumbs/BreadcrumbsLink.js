@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 import { Link } from '@mui/material';
+import useLimitString from '../../hooks/useLimitString';
+
 
 export default function BreadcrumbsLink({ name, to }) {
   return (
@@ -12,7 +14,7 @@ export default function BreadcrumbsLink({ name, to }) {
       to={to}
       sx={{ fontSize: '12px', color: 'text.disabled' }}
     >
-      {name}
+      { useLimitString( name ) }
     </Link>
   );
 }
