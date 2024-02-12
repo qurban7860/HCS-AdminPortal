@@ -132,16 +132,16 @@ const onChangePage = (event, newPage) => {
 }
 
   const TABLE_HEAD = [
+    { id: 'displayName', label: 'Name', align: 'left' },
+    { id: 'referenceNumber', visibility: 'xs2', label: 'Ref. No.', align: 'left' },
     { id: 'docCategory.name', visibility: 'xs1', label: 'Category', align: 'left' },
     { id: 'docType.name', visibility: 'xs2', label: 'Type', align: 'left' },
-    { id: 'referenceNumber', visibility: 'xs2', label: 'Ref. No.', align: 'left' },
-    { id: 'displayName', label: 'Name', align: 'left' },
-    { id: 'documentVersions.versionNo.[]', visibility: 'md1', label: 'Version', align: 'center' },
+    // { id: 'documentVersions.versionNo.[]', visibility: 'md1', label: 'Version', align: 'center' },
     { id: 'createdAt', label: 'Created At', align: 'right' },
   ];
   
   if (machineDrawings) {
-    const insertIndex = 5; // Index after which you want to insert the new objects
+    const insertIndex = 4; // Index after which you want to insert the new objects
     TABLE_HEAD.splice(insertIndex, 0,// 0 indicates that we're not removing any elements
     { id: 'stockNumber', visibility: 'xs2', label: 'Stock No.', align: 'left' },
     { id: 'productDrawings.serialNumbers', visibility: 'xs2', label: 'Machines', align: 'left' },
@@ -149,7 +149,7 @@ const onChangePage = (event, newPage) => {
   }
 
   if (!customerPage && !machinePage && !machineDrawings) {
-    const insertIndex = 5; // Index after which you want to insert the new objects
+    const insertIndex = 4; // Index after which you want to insert the new objects
     TABLE_HEAD.splice(insertIndex, 0,// 0 indicates that we're not removing any elements
       { id: 'customer.name', visibility: 'md3', label: 'Customer', align: 'left' },
       { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left' }

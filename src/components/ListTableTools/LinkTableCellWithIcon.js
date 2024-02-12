@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types';
 import { TableCell, Link } from '@mui/material';
 import { alpha } from '@mui/material/styles';
-// import { StyledTooltip } from '../../../theme/styles/default-styles';
 import VerificationIcon from '../Icons/VerificationIcon';
-// import Iconify from '../../../components/iconify';
+import useLimitString from '../../hooks/useLimitString';
 
 export default function LinkTableCellWithIcon({ align, onClick, param, isVerified }) {
   return (
@@ -22,7 +21,7 @@ export default function LinkTableCellWithIcon({ align, onClick, param, isVerifie
           },
         }}
       >
-        {param}
+        { useLimitString( param, 25 ) }
       </Link>
     </TableCell>
   );

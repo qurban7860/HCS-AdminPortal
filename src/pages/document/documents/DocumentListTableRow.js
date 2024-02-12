@@ -10,6 +10,7 @@ import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 import LinkDialogTableCell from '../../../components/ListTableTools/LinkDialogTableCell';
 import { useScreenSize } from '../../../hooks/useResponsive';
 import { StyledTableRow } from '../../../theme/styles/default-styles'
+import useLimitString from '../../../hooks/useLimitString';
 
 // ----------------------------------------------------------------------
 
@@ -44,7 +45,7 @@ export default function DocumentListTableRow({
 }) {
   const {
     displayName,
-    documentVersions,
+    // documentVersions,
     docType,
     referenceNumber,
     stockNumber,
@@ -57,14 +58,17 @@ export default function DocumentListTableRow({
 
   const lgScreen = useScreenSize('lg')
   const smScreen = useScreenSize('sm')
+  const referenceNumberString = useLimitString( referenceNumber )
+  const docCategoryNameString = useLimitString( docCategory?.name )
+  const docTypeNameString = useLimitString( docType?.name )
 
   return (
     <StyledTableRow hover selected={selected}>
-      {  smScreen && <TableCell align="left">{docCategory?.name}</TableCell>}
-      {  smScreen && <TableCell align="left">{docType?.name}</TableCell>}
-      {  smScreen && <TableCell align="left">{referenceNumber}</TableCell>}
       <LinkTableCell align="left" param={displayName} onClick={onViewRow} />
-      {  lgScreen && <TableCell align="center">{documentVersions[0]?.versionNo}</TableCell>}
+      {  smScreen && <TableCell align="left">{ referenceNumberString }</TableCell>}
+      {  smScreen && <TableCell align="left">{ docCategoryNameString }</TableCell>}
+      {  smScreen && <TableCell align="left">{ docTypeNameString }</TableCell>}
+      {/* {  lgScreen && <TableCell align="center">{documentVersions[0]?.versionNo}</TableCell>} */}
       {  smScreen && machineDrawings && <TableCell align="left">{stockNumber}</TableCell>}
       {  smScreen && machineDrawings && <TableCell align="left">{productDrawings?.map((m)=> m?.machine?.serialNo).join(', ')}</TableCell>}
       {  !customerPage && !machinePage && !machineDrawings && lgScreen && 
