@@ -5,6 +5,7 @@ import { NotRequiredValidateFileType } from '../document/documents/Utills/Util'
 import { today, future5yearDate, tomorrow, pastDate } from '../machine/util/index';
 import { fDate } from '../../utils/formatTime';
 
+
 export const machineSchema = Yup.object().shape({
   serialNo: Yup.string().max(6).required('Serial Number is required').nullable(),
   name: Yup.string().max(250),
@@ -140,7 +141,7 @@ export const MachineServiceRecordSchema = Yup.object().shape({
   // serviceDate: Yup.date().label('Service Date').nullable().required,
   serviceDate: Yup.date()
   .typeError('Date Should be Valid')
-  .max(today, `Service Date must be earlier ${fDate(tomorrow,'dd/MM/yyyy')}`).nullable()
+  .max(tomorrow, `Service Date must be earlier ${fDate(tomorrow,'dd/MM/yyyy')}`).nullable()
   .required().label('Service Date'),
   // customer: Yup.object().label('Customer'), 
   site: Yup.object().label('Site').nullable(),

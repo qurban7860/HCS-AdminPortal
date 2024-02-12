@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm, } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Typography, TextField, Autocomplete, Skeleton } from '@mui/material';
+import { Box, Card, Grid, Stack, TextField, Autocomplete, Skeleton } from '@mui/material';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 // slice
 import { updateMachineServiceRecord, setMachineServiceRecordViewFormVisibility } from '../../../redux/slices/products/machineServiceRecord';
@@ -14,12 +14,7 @@ import { useSnackbar } from '../../../components/snackbar';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { MachineServiceRecordSchema } from '../../schemas/machine';
-import FormProvider, {
-  RHFSwitch,
-  RHFTextField,
-  RHFAutocomplete,
-  RHFDatePicker,
-} from '../../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete, RHFDatePicker } from '../../../components/hook-form';
 import { getActiveSecurityUsers } from '../../../redux/slices/securityUser/securityUser';
 import CollapsibleCheckedItemInputRow from './CollapsibleCheckedItemInputRow';
 
@@ -287,6 +282,7 @@ setCheckItemLists(updatedCheckParams);
       <Grid item xs={18} md={12}>
         <Card sx={{ p: 3 }}>
           <Stack spacing={2}>
+          <FormLabel content="Edit Service Record" />
               {/* <Grid container>
                 <ViewFormField sm={6} heading='Machine'                 param={`${machine.serialNo} ${machine.name ? '-' : ''} ${machine.name ? machine.name : ''}`} label="serialNo"/>
                 <ViewFormField sm={6} heading='Machine Model Category'  param={machine?.machineModel?.category?.name} label="serialNo"/>
