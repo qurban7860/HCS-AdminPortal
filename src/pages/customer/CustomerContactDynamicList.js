@@ -208,7 +208,7 @@ export default function CustomerContactList(currentContact = null) {
           </Grid>
         )}
         {contacts.length > 0 && (
-          <Grid item xs={12} sm={12} md={12} lg={5} xl={4} sx={{ display: formVisibility && isMobile && 'none', minWidth: '200px' }} >
+          <Grid item xs={12} sm={12} md={12} lg={5} xl={4} sx={{ display: formVisibility && isMobile && 'none' }} >
             {contacts.length > 5 && (
               <Grid item md={12}>
                 <SearchInput
