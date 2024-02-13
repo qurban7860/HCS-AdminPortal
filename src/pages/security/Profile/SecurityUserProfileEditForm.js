@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Typography, Container, Checkbox } from '@mui/material';
+import { Box, Card, Grid, Stack, Container, Checkbox } from '@mui/material';
 // routes
 import { PATH_SECURITY } from '../../../routes/paths';
 // components

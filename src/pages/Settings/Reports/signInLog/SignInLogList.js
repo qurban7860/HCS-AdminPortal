@@ -32,7 +32,7 @@ import { getSignInLogs,
 import { Cover } from '../../../../components/Defaults/Cover';
 import { fDateTime } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
-import { PATH_PAGE, PATH_SECURITY } from '../../../../routes/paths';
+import { PATH_SECURITY } from '../../../../routes/paths';
 
 // ----------------------------------------------------------------------
 

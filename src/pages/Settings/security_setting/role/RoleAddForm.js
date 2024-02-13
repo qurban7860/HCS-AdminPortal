@@ -1,24 +1,17 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import {
-  Card,
-  Grid,
-  Stack,
-  Autocomplete,
-  Container,
-} from '@mui/material';
+import { Card, Grid, Stack, Container } from '@mui/material';
 // ROUTES
-import { PATH_PAGE, PATH_SETTING } from '../../../../routes/paths';
+import { PATH_SETTING } from '../../../../routes/paths';
 // slice
 import { addRole } from '../../../../redux/slices/securityUser/role';
-
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 // assets
@@ -34,18 +27,14 @@ RoleAddForm.propTypes = {
 export default function RoleAddForm({ currentRole }) {
 
   const { userRoleTypes } = useSelector((state) => state.role);
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
-  // a note can be archived.
   const AddRoleSchema = Yup.object().shape({
     name: Yup.string().min(2).max(50).required('Name Field is required!'),
     description: Yup.string().max(10000),
-    /* eslint-disable */
     roleType:  Yup.object().nullable().required().label('Role Type'),
-    /* eslint-enable */
     allModules: Yup.boolean(),
     allWriteAccess: Yup.boolean(),
     isActive: Yup.boolean(),
@@ -74,7 +63,6 @@ export default function RoleAddForm({ currentRole }) {
 
   const {
     reset,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -91,9 +79,7 @@ export default function RoleAddForm({ currentRole }) {
     }
   };
 
-  const toggleCancel = () => {
-    navigate(PATH_SETTING.role.list);
-  };
+  const toggleCancel = () => navigate(PATH_SETTING.role.list);
 
   return (
     <Container maxWidth={false}>

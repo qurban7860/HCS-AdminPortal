@@ -3,9 +3,6 @@ import { createSlice } from '@reduxjs/toolkit';
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
-const _ = require('lodash');
-
-// ---------------------------------------------------------------------
 const initialState = {
   intial: false,
   customerTab: 'info',
@@ -410,130 +407,48 @@ export function addCustomer(params) {
       dispatch(slice.actions.resetCustomer());
       dispatch(slice.actions.startLoading());
       try {
-        /* eslint-disable */
-        let data = {
-          name: params.name,
-          tradingName: params.tradingName,
-          isActive: params.isActive,
+        const data = {
+          name: params?.name,
+          clientCode: params?.code,
+          tradingName: params?.tradingName,
+          accountManager: params?.accountManager?.map((account) => account?._id),
+          projectManager: params?.projectManager?.map((project) => project?._id),
+          supportManager: params?.supportManager?.map((support) => support?._id),
           mainSite: {
-            name: params.name,
-            address: {},
+            name: params?.name,
+            phone: params?.phone,
+            fax: params?.fax,
+            email: params?.email,
+            website: params?.website,
+            address: {
+              street: params?.street,
+              suburb: params?.suburban,
+              city: params?.city,
+              postcode: params?.postcode,
+              country: params?.country?.label,
+              region: params?.region,
+            },
+          },
+          billingContact: {
+            firstName: params?.billingContactFirstName,
+            lastName: params?.billingContactLastName,
+            title: params?.billingContactTitle,
+            phone: params?.billingContactPhone,
+            email: params?.billingContactEmail,
+          },
+          technicalContact: {
+            firstName: params?.isSameContact ? params?.billingContactFirstName : params?.technicalContactFirstName,
+            lastName: params?.isSameContact ? params?.billingContactLastName : params?.technicalContactLastName,
+            title: params?.isSameContact ? params?.billingContactTitle : params?.technicalContactTitle,
+            phone: params?.isSameContact ? params?.billingContactPhone : params?.technicalContactPhone,
+            email: params?.isSameContact ? params?.billingContactEmail : params?.technicalContactEmail,
           },
           type: params.type,
-          clientCode: params.code,
+          isActive: params.isActive,
           supportSubscription: params?.supportSubscription,
           isFinancialCompany: params?.isFinancialCompany,
           excludeReports: params?.excludeReports,
         };
-
-        let billingContact = {};
-        let technicalContact = {};
-        /* eslint-enable */
-        
-        if(params.accountManager) {
-          data.accountManager = params.accountManager.map(am => am._id);
-        }
-        
-        if(params.projectManager){
-          data.projectManager = params.projectManager.map(pm => pm._id);
-        }
-
-        if(params.supportManager){
-          data.supportManager = params.supportManager.map(sm => sm._id);
-        }
-        
-        if(params.phone){
-          data.mainSite.phone = params.phone;
-        }
-
-        if(params.email){
-          data.mainSite.email = params.email;
-        }
-
-        if(params.fax){
-          data.mainSite.fax = params.fax;
-        }
-
-        if(params.website){
-          data.mainSite.website = params.website;
-        }
-
-        if(params.street){
-          data.mainSite.address.street = params.street;
-        }
-
-        if(params.suburb){
-          data.mainSite.address.suburb = params.suburb;
-        }
-
-        if(params.city){
-          data.mainSite.address.city = params.city;
-        }
-
-        if(params.postcode){
-          data.mainSite.address.postcode = params.postcode;
-        }
-
-        if(params.region){
-          data.mainSite.address.region = params.region;
-        }
-
-        if(params.country){
-          data.mainSite.address.country = params.country;
-        }
-
-        // Billing Contact Information Start
-        if(params.billingFirstName){
-          billingContact.firstName = params.billingFirstName;
-        }
-
-        if(params.billingLastName){
-          billingContact.lastName = params.billingLastName;
-        }
-
-        if(params.billingTitle){
-          billingContact.title = params.billingTitle;
-        }
-
-        if(params.billingContactPhone){
-          billingContact.phone = params.billingContactPhone;
-        }
-        if(params.billingContactEmail){
-          billingContact.email = params.billingContactEmail;
-        }
-        // Billing Contact Information End
-
-        // Technical Contact Information Start
-        if(params.technicalFirstName){
-          technicalContact.firstName = params.technicalFirstName;
-        }
-
-        if(params.technicalLastName){
-          technicalContact.lastName = params.technicalLastName;
-        }
-
-        if(params.technicalTitle){
-          technicalContact.title = params.technicalTitle;
-        }
-
-        if(params.technicalContactPhone){
-          technicalContact.phone = params.technicalContactPhone;
-        }
-        if(params.technicalContactEmail){
-          technicalContact.email = params.technicalContactEmail;
-        }
-        // Technical Contact Information End
-        
-        if(!_.isEmpty(billingContact)){
-          data.billingContact = billingContact;
-          if(params.sameContactFlag){
-            data.technicalContact = billingContact;
-          }
-        }
-
-        if(!params.sameContactFlag && !_.isEmpty(technicalContact)){
-          data.technicalContact = technicalContact;
-        }
 
         const response = await axios.post(`${CONFIG.SERVER_URL}crm/customers`, data);
         return response

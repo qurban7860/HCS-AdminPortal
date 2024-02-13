@@ -3,7 +3,7 @@ import { Snacks, allowedExtensions } from '../../../constants/document-constants
 const validateFileType = (value, options) => {
   const { path, createError } = options;
   if (value && Array.isArray(value)) {
-    if (value.length > 20) {
+    if (value.length > 200) {
       return createError({
         message: Snacks.fileMaxCount,
         path,

@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { m } from 'framer-motion';
 import { useDispatch } from 'react-redux';
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
-import { Button, Grid, IconButton, Typography } from '@mui/material';
+import { Button, Grid, Typography } from '@mui/material';
 import Iconify from '../components/iconify/Iconify';
 import { setLatLongCoordinates } from '../redux/slices/customer/site';
 import { CONFIG } from '../config-global';

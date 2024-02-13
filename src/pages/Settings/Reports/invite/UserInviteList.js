@@ -1,16 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
-import {
-  Table,
-  TableBody,
-  TableContainer,
-  Container,
-  Card
-} from '@mui/material';
+import { Table, TableBody, TableContainer, Container, Card } from '@mui/material';
 import { useNavigate } from 'react-router';
-import { PATH_PAGE, PATH_SETTING } from '../../../../routes/paths';
-
+import { PATH_SETTING } from '../../../../routes/paths';
 import { Cover } from '../../../../components/Defaults/Cover';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
