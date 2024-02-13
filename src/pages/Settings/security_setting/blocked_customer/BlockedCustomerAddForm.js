@@ -13,7 +13,7 @@ import {
   Box,
 } from '@mui/material';
 // ROUTES
-import { PATH_PAGE, PATH_SECURITY } from '../../../../routes/paths';
+import { PATH_SECURITY } from '../../../../routes/paths';
 // slice
 import { getActiveCustomers, resetCustomers } from '../../../../redux/slices/customer/customer';
 import { addBlockedCustomers, getBlockedCustomers, resetBlockedCustomers } from '../../../../redux/slices/securityConfig/blockedCustomers';

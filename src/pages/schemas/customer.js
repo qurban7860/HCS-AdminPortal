@@ -1,6 +1,8 @@
 import * as Yup from 'yup';
 import { isNumberLatitude , isNumberLongitude } from '../customer/site/util/index'
 
+const stringLengthMessage = 'Trading name must not exceed 200 characters';
+
 // @root - DocumentEditForm
 export const EditCustomerDocumentSchema = Yup.object().shape({
   displayName: Yup.string().max(50),
@@ -10,56 +12,55 @@ export const EditCustomerDocumentSchema = Yup.object().shape({
 });
 
 export const AddCustomerSchema = Yup.object().shape({
-  name: Yup.string().trim('Leading and trailing spaces are not allowed')
-  .min(2, 'Name must be at least 2 characters long')
-  .max(500, 'Name must not exceed 500 characters')
-  .required('Name is required'),
-  
-  // tradingName: Yup.string().max(200).label('Trading Name'),
-  mainSite: Yup.string().trim('Leading and trailing spaces are not allowed'),
-  sites: Yup.array(),
-  contacts: Yup.array(),
+  // Customer detail
+  name: Yup.string().label('Customer Name').trim().min(2).max(500).required(),
+  code: Yup.string().label('Customer Code').max(20),
+  tradingName: Yup.array().label('Trading Name').max(20)
+  .test('stringLength', stringLengthMessage, (value) => !(value && value.some( val => val.length > 500 ))),
+  phone: Yup.string().label('Phone Number').max(16),
+  fax: Yup.string().label('Fax Number').max(16),
+  email: Yup.string().label('Email').trim().email(),
+  website: Yup.string().label('Web Site').trim().max(200),
+  // Address Information
+  street: Yup.string().label('Street').trim().max(200),
+  suburban: Yup.string().label('Sub Urban').trim().max(200),
+  city: Yup.string().label('City').trim().max(200),
+  postcode: Yup.string().label('Post Code').trim().max(200),
+  region: Yup.string().label('Region').trim().max(200),
+  country: Yup.object().label('Country').nullable(),
+  // Billing Information
+  billingContactFirstName: Yup.string().label('First Name').trim().max(200),
+  billingContactLastName: Yup.string().label('Last Name').trim().max(200),
+  billingContactTitle: Yup.string().label('Billing Contact Title').trim().max(200),
+  billingContactPhone: Yup.string().label('Billing Contact Phone Number').trim().max(200),
+  billingContactEmail: Yup.string().label('Billing Contact Email').trim().email(),
+  // Is Same Contact
+  isSameContact: Yup.boolean().label('Same as Billing Contact'),
+  // Technical Information
+  technicalContactFirstName: Yup.string().label('First Name').trim().max(200),
+  technicalContactLastName: Yup.string().label('Last Name').trim().max(200),
+  technicalContactTitle: Yup.string().label('Technical Contact Title').trim().max(200),
+  technicalContactPhone: Yup.string().label('Technical Contact Phone Number').trim().max(200),
+  technicalContactEmail: Yup.string().label('Technical Contact Email').trim().email(),
+  // Account Information
   accountManager: Yup.array(),
   projectManager: Yup.array(),
   supportManager: Yup.array(),
-  // site details
-  billingSite: Yup.string().trim('Leading and trailing spaces are not allowed'),
-  // phone: Yup.string(),
-  email: Yup.string()
-    .trim('The contact name cannot include leading and trailing spaces')
-    .email('Email must be a valid email address'),
-  // fax: Yup.string(),
-  website: Yup.string().trim('Leading and trailing spaces are not allowed'),
-  street: Yup.string().trim('Leading and trailing spaces are not allowed'),
-  suburb: Yup.string().trim('Leading and trailing spaces are not allowed'),
-  city: Yup.string().trim('Leading and trailing spaces are not allowed'),
-  postcode: Yup.string().trim('Leading and trailing spaces are not allowed'),
-  region: Yup.string().trim('Leading and trailing spaces are not allowed'),
-  // country: Yup.string().nullable(true),
-
-  // billing contact details
-  billingFirstName: Yup.string().trim('Leading and trailing spaces are not allowed'),
-  billingLastName: Yup.string().trim('Leading and trailing spaces are not allowed'),
-  billingTitle: Yup.string().trim('Leading and trailing spaces are not allowed'),
-  billingContactTypes: Yup.array(),
-  // billingContactPhone: Yup.string(),
-  billingContactEmail: Yup.string().email('Email must be a valid email address').trim('Leading and trailing spaces are not allowed'),
-
-  // technical contact details
-  technicalFirstName: Yup.string().trim('Leading and trailing spaces are not allowed'),
-  technicalLastName: Yup.string().trim('Leading and trailing spaces are not allowed'),
-  technicalTitle: Yup.string().trim('Leading and trailing spaces are not allowed'),
-  technicalContactTypes: Yup.array(),
-  // technicalContactPhone: Yup.string(),
-  technicalContactEmail: Yup.string().email('Email must be a valid email address').trim('Leading and trailing spaces are not allowed'),
-  isActive: Yup.boolean(),
+  isActive: Yup.boolean().label('Active'),
+  supportSubscription: Yup.boolean().label('Support Subscription'),
+  isFinancialCompany: Yup.boolean().label('Is Financial Company'),
+  excludeReports: Yup.boolean().label('Exclude Reports'),
 });
 
 // @root - EditCustomerSchema
 export const EditCustomerSchema = Yup.object().shape({
-  code: Yup.string().max(20),
-  name: Yup.string().trim('Leading and trailing spaces are not allowed')
-  .min(2, 'Name must be at least 2 characters long').max(500).required('Name is required'),
+  name: Yup.string().label('Customer Name').min(2).max(500).required().trim(),
+  code: Yup.number().label('Customer Code')
+  .typeError('Customer Code must be a number')
+  .positive("Customer Code must be a positive number")
+  .test('no-spaces', 'Customer Code cannot have spaces', value => !(value && /\s/.test(value.toString())))
+  .max(999999999, 'Customer Code must be less than or equal to 999999999')
+  .nullable(),  
   // tradingName: Yup.string().max(200).label('Trading Name'),
   // mainSite: Yup.string().nullable(),
   // sites: Yup.array().nullable(),

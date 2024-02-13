@@ -1,29 +1,12 @@
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
-import {
-  Card,
-  Table,
-  Button,
-  TableBody,
-  Container,
-  TableContainer,
-} from '@mui/material';
+import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
-// routes
-import { PATH_PAGE } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
-import {
-  useTable,
-  getComparator,
-  TableNoData,
-  TableSkeleton,
-  TableHeadCustom,
-  TablePaginationCustom,
-} from '../../../../components/table';
+import { useTable, getComparator, TableNoData, TableSkeleton, TableHeadCustom, TablePaginationCustom } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
 import ConfirmDialog from '../../../../components/confirm-dialog';
 // sections
@@ -49,18 +32,14 @@ const TABLE_HEAD = [
 
 export default function BlacklistIPList() {
   const {
-    // page,
     order,
     orderBy,
-    // rowsPerPage,
     setPage,
     //
     selected,
     setSelected,
     //
     onSort,
-    // onChangePage,
-    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'blackListIP', defaultOrder: 'asc'
   });
@@ -73,7 +52,6 @@ export default function BlacklistIPList() {
   const onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);

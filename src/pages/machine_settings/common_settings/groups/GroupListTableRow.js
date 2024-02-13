@@ -5,7 +5,7 @@ import { Switch, TableRow, TableCell, Chip } from '@mui/material';
 import LinkTableCell from '../../../../components/ListTableTools/LinkTableCell';
 // utils
 import { fDate } from '../../../../utils/formatTime';
-import { useScreenSize } from '../../../../hooks/useResponsive';
+// import { useScreenSize } from '../../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ export default function GroupListTableRow({
 }) {
   const { name, categories, isActive, isDefault, createdAt } = row;
   
-  const smScreen = useScreenSize('sm')
+  // const smScreen = useScreenSize('sm')
 
   return (
       <TableRow hover selected={selected}>

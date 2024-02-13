@@ -124,6 +124,14 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // RESET ACTIVE SP Contacts
+    resetActiveSPContactsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeSpContacts = [];
+      state.initial = true;
+    },
+
     // GET Contact
     getContactSuccess(state, action) {
       state.isLoading = false;
@@ -172,6 +180,7 @@ export const {
   resetContact,
   resetContacts,
   resetActiveContacts,
+  resetActiveSPContactsSuccess,
   resetContactFormsVisiblity,
   setResponseMessage,
   setFilterBy,

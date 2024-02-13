@@ -1,5 +1,4 @@
 import * as Yup from 'yup';
-import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -13,7 +12,7 @@ import {
   Box,
 } from '@mui/material';
 // ROUTES
-import { PATH_PAGE, PATH_SECURITY } from '../../../../routes/paths';
+import { PATH_SECURITY } from '../../../../routes/paths';
 // slice
 import { addBlacklistIPs } from '../../../../redux/slices/securityConfig/blacklistIP';
 // components

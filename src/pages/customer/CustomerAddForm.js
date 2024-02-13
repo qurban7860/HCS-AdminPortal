@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { m } from 'framer-motion';
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
@@ -8,22 +8,10 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { MuiTelInput } from 'mui-tel-input';
-// import { LoadingButton } from '@mui/lab';
-import {
-  Box,
-  Card,
-  Grid,
-  Stack,
-  Checkbox,
-  FormControlLabel,
-  TextField,
-} from '@mui/material';
-import { MuiChipsInput } from 'mui-chips-input'
-
+import { Box, Card, Grid, Stack } from '@mui/material';
 // slice
 import { addCustomer, setCustomerTab } from '../../redux/slices/customer/customer';
-import { getActiveSPContacts } from '../../redux/slices/customer/contact';
+import { getActiveSPContacts, resetActiveSPContactsSuccess } from '../../redux/slices/customer/contact';
 // routes
 import { PATH_CUSTOMER } from '../../routes/paths';
 // components
@@ -33,12 +21,11 @@ import FormProvider, {
   RHFAutocomplete,
   RHFTextField,
   RHFCountryAutocomplete,
+  RHFChipsInput,
+  RHFPhoneInput,
+  RHFCheckbox,
 } from '../../components/hook-form';
 import { MotionContainer, varBounce } from '../../components/animate';
-// auth
-import { useAuthContext } from '../../auth/useAuthContext';
-// asset
-import { countries } from '../../assets/data';
 // util
 import { Cover } from '../../components/Defaults/Cover';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
@@ -55,42 +42,58 @@ CustomerAddForm.propTypes = {
 }
 
 export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
-  const { userId, user } = useAuthContext();
-  const { activeSpContacts } = useSelector((state) => state.contact);
-  const [contactFlag, setCheckboxFlag] = useState(false);
-  const [chips, setChips] = useState([]);
 
-  const toggleCheckboxFlag = () => setCheckboxFlag((value) => !value);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  
+  const { activeSpContacts } = useSelector((state) => state.contact);
 
-  const [phone, setPhone] = useState('');
-  const [fax, setFaxVal] = useState('');
-  const [country, setCountryVal] = useState(countries[169]);
-  const [billingContactPhone, setBillingContactPhone] = useState('');
-  const [technicalContactPhone, setTechnicalContactPhone] = useState('');
+  useLayoutEffect(() => {
+    dispatch(getActiveSPContacts());
+    return () => { resetActiveSPContactsSuccess() }
+  }, [dispatch]);
 
   const defaultValues = useMemo(
     () => ({
-      code:'',
+      // Customer detail
       name: '',
-      mainSite: '',
-      // tradingName: chips   ,
+      code:'',
+      tradingName: [],
+      phone: '',
+      fax: '',
+      email: '',
+      website: '',
+      // Address Information
+      street: '',
+      suburban: '',
+      city: '',
+      postcode: '',
+      region: '',
+      country: null,
+      // Billing Information
+      billingContactFirstName: '',
+      billingContactLastName: '',
+      billingContactTitle: '',
+      billingContactPhone: '+64 ',
+      billingContactEmail: '',
+      // Is Same Contact
+      isSameContact: false,
+      // Technical Information
+      technicalContactFirstName: '',
+      technicalContactLastName: '',
+      technicalContactTitle: '',
+      technicalContactPhone: '+64 ',
+      technicalContactEmail: '',
+      // Account Information
       accountManager: [],
       projectManager: [],
       supportManager: [],
       type: 'Customer',
       isActive: true,
-      countryName: null,
       supportSubscription:true,
       isFinancialCompany: false,
       excludeReports:false,
-      contactFlag,
-      loginUser: {
-        userId,
-        email: user.email,
-      },
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [AddCustomerSchema]
@@ -108,136 +111,53 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     formState: { isSubmitting },
   } = methods;
 
-    watch();
-
-  useLayoutEffect(() => {
-    dispatch(getActiveSPContacts());
-  }, [dispatch]);
-
+  const { isSameContact } = watch();
   
-  const toggleCancel = () => {
-    navigate(PATH_CUSTOMER.list);
-  };
+  const toggleCancel = () => navigate(PATH_CUSTOMER.list);
 
   const onSubmit = async (data) => {
     try {
-      if (phone && phone.length > 4) {
-        data.phone = phone;
-      }
-      if (chips && chips.length > 0) {
-        data.tradingName = chips;
-      }
-      if (fax && fax.length > 4) {
-        data.fax = fax;
-      }
-      if (country) {
-        data.country = country.label;
-      }
-      if (billingContactPhone) {
-        data.billingContactPhone = billingContactPhone;
-      }
-      if (technicalContactPhone) {
-        data.technicalContactPhone = technicalContactPhone;
-      }
-
-      if(contactFlag){
-        if (billingContactPhone) data.technicalContactPhone = billingContactPhone;
-        data.technicalFirstName = data?.billingFirstName;
-        data.technicalLastName = data?.billingLastName;
-        data.technicalTitle = data?.billingTitle;
-        data.technicalContactEmail = data?.billingContactEmail;
-      }
-      await dispatch(setCustomerTab('info'));
       const response = await dispatch(addCustomer(data));
       reset();
+      await dispatch(setCustomerTab('info'));
       enqueueSnackbar('Customer added successfully!');
       navigate(PATH_CUSTOMER.view(response.data.Customer._id));
-      
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
     }
   };
 
-  const handleChipChange = (newChips) => {
-    const array = [...new Set(newChips)]
-    setChips(array)
-  }
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Card
-        sx={{
-          mb: 3,
-          height: 160,
-          position: 'relative',
-        }}
-      >
+      <Card sx={{ mb: 3, height: 160, position: 'relative' }} >
         <Cover name="New Customer" icon="mdi:user" />
       </Card>
       <Grid sx={{ mt: 3 }}>
         <Card sx={{ p: 3, mb: 3 }}>
           <Stack spacing={3}>
             <Box
-              rowGap={3}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(1, 5fr 1fr)', // First one spans 1 column, and the second spans 5 columns on sm screens
-              }}
+              rowGap={3} columnGap={2} display="grid"
+              gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 5fr 1fr)' }}
             >
               <RHFTextField name="name" label={FORMLABELS.CUSTOMER.NAME.label} />
               <RHFTextField name="code" label={FORMLABELS.CUSTOMER.CODE.label} />
             </Box>
+
             <Box
-              rowGap={3}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(1, 1fr)',
-              }}
+              rowGap={3} columnGap={2} display="grid"
+              gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
             >
-              {/* <RHFTextField name="name" label="Customer Name*" /> */}
+              <RHFChipsInput name="tradingName" label="Trading Name"  />
+            </Box>
 
-              {/* <RHFTextField name="tradingName" label="Trading Name" /> */}
-              <MuiChipsInput name="tradingName" label="Trading Name"  value={chips} onChange={handleChipChange} />
-              </Box>
-              <Box
-              rowGap={3}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-              }}
+            <Box
+              rowGap={3} columnGap={2} display="grid"
+              gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
             >
-              {/* <RHFTextField name="phone" label="Phone" /> */}
-              <MuiTelInput
-                value={phone}
-                name="phone"
-                label="Phone Number"
-                flagSize="medium"
-                onChange={(newValue)=> setPhone(newValue)}
-                inputProps={{ maxLength: 13 }}
-                forceCallingCode
-                defaultCountry="NZ"
-              />
-
-              {/* <RHFTextField name="fax" label="Fax" /> */}
-              <MuiTelInput
-                value={fax}
-                name="fax"
-                label="Fax"
-                flagSize="medium"
-                onChange={(newValue) => setFaxVal(newValue)}
-                inputProps={{ maxLength: 13 }}
-                forceCallingCode
-                defaultCountry="NZ"
-              />
-
+              <RHFPhoneInput name="phone" label="Phone Number"  />
+              <RHFPhoneInput name="fax" label="Fax" />
               <RHFTextField name="email" label="Email" />
-
               <RHFTextField name="website" label="Website" />
             </Box>
           </Stack>
@@ -247,26 +167,15 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
           <Stack spacing={3}>
             <FormLabel content={FORMLABELS.CUSTOMER.ADDRESSINFORMATION} />
             <Box
-              rowGap={3}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-              }}
+              rowGap={3} columnGap={2} display="grid"
+              gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
             >
               <RHFTextField name="street" label="Street" />
-
-              <RHFTextField name="suburb" label="Suburb" />
-
+              <RHFTextField name="suburban" label="Sub Urban" />
               <RHFTextField name="city" label="City" />
-
               <RHFTextField name="postcode" label="Post Code" />
-
               <RHFTextField name="region" label="Region" />
-
-              <RHFCountryAutocomplete name="countryName" label="Country" />
-
+              <RHFCountryAutocomplete name="country" label="Country" />
             </Box>
           </Stack>
         </Card>
@@ -275,33 +184,14 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
           <Stack spacing={3}>
             <FormLabel content={FORMLABELS.CUSTOMER.BILLINGCONTACTINFORMATION} />
             <Box
-              rowGap={3}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-              }}
+              rowGap={3} columnGap={2} display="grid"
+              gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
             >
-              <RHFTextField name="billingFirstName" label="First Name" />
-
-              <RHFTextField name="billingLastName" label="Last Name" />
-
-              <RHFTextField name="billingTitle" label="Title" />
-
-              <MuiTelInput
-                value={billingContactPhone}
-                name="billingContactPhone"
-                label="Contact Phone"
-                flagSize="medium"
-                onChange={(newValue) => setBillingContactPhone(newValue)}
-                inputProps={{ maxLength: 13 }}
-                forceCallingCode
-                defaultCountry="NZ"
-                // onCount
-              />
-
-              <RHFTextField name="billingContactEmail" label="Contact Email" />
+              <RHFTextField name="billingContactFirstName" label="First Name" />
+              <RHFTextField name="billingContactLastName" label="Last Name" />
+              <RHFTextField name="billingContactTitle" label="Billing Contact Title" />
+              <RHFPhoneInput name="billingContactPhone" label="Billing Contact Phone Number" />
+              <RHFTextField name="billingContactEmail" label="Billing Contact Email" />
             </Box>
           </Stack>
         </Card>
@@ -310,41 +200,23 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
           <m.div variants={varBounce().in}>
             <Stack spacing={3}>
                 <Grid container direction='row'>
-                  <Grid item xs={12} sm={12} md={8} lg={9}>
+                  <Grid item xs={12} sm={12} md={7.5} lg={8.5}>
                     <FormLabel  content={FORMLABELS.CUSTOMER.TECHNICALCONTACTINFORMATION} />
                   </Grid>
-                  <Grid item xs={12} sm={12} md={4} lg={3}>
-                    <FormControlLabel
-                      label="Same as billing contact"
-                      control={<Checkbox checked={contactFlag} onClick={toggleCheckboxFlag} />}
-                      sx={{ ml:1}}
-                    />
+                  <Grid item xs={12} sm={12} md={4} lg={3} sx={{ ml:1.5, mt:-0.5}} >
+                    <RHFCheckbox name="isSameContact" label="Same as billing contact" />
                   </Grid>
                 </Grid>
-              {!contactFlag && (
+              {!isSameContact && (
                 <Box
-                  rowGap={3}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{
-                    xs: 'repeat(1, 1fr)',
-                    sm: 'repeat(2, 1fr)',
-                  }}
+                  rowGap={3} columnGap={2} display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
-                  <RHFTextField name="technicalFirstName" label="First Name" />
-                  <RHFTextField name="technicalLastName" label="Last Name" />
-                  <RHFTextField name="technicalTitle" label="Title" />
-                  <MuiTelInput
-                    value={technicalContactPhone}
-                    name="technicalContactPhone"
-                    label="Contact Phone"
-                    flagSize="medium"
-                    onChange={(newValue) => setTechnicalContactPhone(newValue)}
-                    inputProps={{ maxLength: 13 }}
-                    forceCallingCode
-                    defaultCountry="NZ"
-                  />
-                  <RHFTextField name="technicalContactEmail" label="Contact Email" />
+                  <RHFTextField  name="technicalContactFirstName" label="First Name" />
+                  <RHFTextField  name="technicalContactLastName"  label="Last Name" />
+                  <RHFTextField  name="technicalContactTitle"     label="Technical Contact Title" />
+                  <RHFPhoneInput name="technicalContactPhone"     label="Technical Contact Phone Number" />
+                  <RHFTextField  name="technicalContactEmail"     label="Technical Contact Email" />
                 </Box>
               )}
             </Stack>
@@ -356,61 +228,48 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               <Stack spacing={3}>
                 <FormLabel content={FORMLABELS.CUSTOMER.HOWICKRESOURCESS} />
                 <Box
-                  rowGap={3}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{
-                    xs: 'repeat(1, 1fr)',
-                    sm: 'repeat(2, 1fr)',
-                  }}
+                  rowGap={3} columnGap={2} display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect
                     filterSelectedOptions
                     name="accountManager"
+                    label="Account Manager"
                     options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>
-                    )}
-                    renderInput={(params) => <TextField {...params} label="Account Manager" />}
+                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
                     ChipProps={{ size: 'small' }}
-                    id="controllable-states-demo"
                   />
 
                   <RHFAutocomplete
-                    // freeSolo
                     multiple
                     disableCloseOnSelect
                     filterSelectedOptions
                     name="projectManager"
+                    label="Project Manager"
                     options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>
-                    )}
-                    renderInput={(params) => <TextField {...params} label="Project Manager" />}
+                    renderOption={(props, option) => (<li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
                     ChipProps={{ size: 'small' }}
-                    id="controllable-states-demo"
                   />
+
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect
                     filterSelectedOptions
                     name="supportManager"
+                    label="Support Manager"
                     options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>
-                    )}
-                    renderInput={(params) => <TextField {...params} label="Support Manager" />}
+                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
                     ChipProps={{ size: 'small' }}
-                    id="controllable-states-demo"
                   />
+
                 </Box>
                 <Grid sx={{display:{md:'flex'}}}>
                     <RHFSwitch name="isActive" label="Active" checked={defaultValues?.isActive} />

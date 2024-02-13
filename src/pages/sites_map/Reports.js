@@ -1,12 +1,9 @@
 import { useEffect } from 'react';
-import { Container, Grid, Card, CardHeader, CardContent } from '@mui/material';
-import List from '@mui/material/List';
-import ListSubheader from '@mui/material/ListSubheader';
+import { Container, Grid, Card } from '@mui/material';
 import { getMachineLatLongData } from '../../redux/slices/products/machine';
 import { useDispatch, useSelector } from '../../redux/store';
 import { Cover } from '../../components/Defaults/Cover';
 import GoogleMaps from '../../assets/GoogleMaps';
-import FormLabel from '../../components/DocumentForms/FormLabel';
 
 // ----------------------------------------------------------------------
 
