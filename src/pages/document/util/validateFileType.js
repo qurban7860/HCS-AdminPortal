@@ -5,7 +5,7 @@ const maxFiles = JSON.parse( localStorage.getItem('configurations'))?.find( ( c 
 const validateFileType = (value, options) => {
   const { path, createError } = options;
   if (value && Array.isArray(value)) {
-    if (value.length > ( Number(maxFiles?.value) || 20 ) ) {
+    if (value?.length > ( Number(maxFiles?.value) || 20 ) ) {
       return createError({
         message: Snacks.fileMaxCount,
         path,
