@@ -1,10 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, Grid, Stack, TextField } from '@mui/material';
-import { MuiChipsInput } from 'mui-chips-input';
 // hook
 import { useForm } from 'react-hook-form';
 import useResponsive from '../../hooks/useResponsive';
@@ -24,7 +23,7 @@ import { getActiveCategories } from '../../redux/slices/products/category';
 // hooks
 import { useSnackbar } from '../../components/snackbar';
 // components
-import FormProvider, { RHFTextField, RHFAutocomplete, RHFDatePicker } from '../../components/hook-form';
+import FormProvider, { RHFTextField, RHFAutocomplete, RHFDatePicker, RHFChipsInput } from '../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
 import AddButtonAboveAccordion from '../../components/Defaults/AddButtonAboveAcoordion';
@@ -49,7 +48,6 @@ export default function MachineEditForm() {
   const { spContacts } = useSelector((state) => state.contact);
   const { machineConnections } = useSelector((state) => state.machineConnections);
   const { activeCategories } = useSelector((state) => state.category);
-  const [chips, setChips] = useState([]);
   const isMobile = useResponsive('sm', 'down');
 
   const methods = useForm({
@@ -57,6 +55,7 @@ export default function MachineEditForm() {
     defaultValues: {
       serialNo: machine.serialNo || '',
       name: machine.name || '',
+      alias: machine.alias || [],
       parentSerialNo: machine?.parentMachine || '',
       previousMachine: machine?.parentMachine?.name || '',
       supplier: machine.supplier || null,
@@ -128,7 +127,6 @@ export default function MachineEditForm() {
     dispatch(getActiveCustomers());
     dispatch(getActiveMachines());
     dispatch(getSPContacts());
-    setChips(machine?.alias);
   }, [dispatch, machine]);
 
   useEffect(()=>{
@@ -149,7 +147,6 @@ export default function MachineEditForm() {
         message: 'Please change status In-Transfer is not acceptable',
       });
     }else{
-      data.alias = chips;
       try {
         await dispatch(updateMachine(machine._id ,data));
         enqueueSnackbar('Machine updated successfully!');
@@ -160,11 +157,6 @@ export default function MachineEditForm() {
         console.error(error);
       }
     }
-  };
-
-  const handleChipChange = (newChips) => {
-    const array = [...new Set(newChips)]
-    setChips(array);
   };
   
   return (
@@ -189,7 +181,7 @@ export default function MachineEditForm() {
                   <RHFTextField name="serialNo" label="Serial No.*" disabled />
                   <RHFTextField name="name" label="Name" />
                 </Box>
-                  <MuiChipsInput label="Alias" value={chips} onChange={handleChipChange} />
+                  <RHFChipsInput name="alias" label="Alias" />
                 {parentSerialNo && (
                       <RHFAutocomplete
                         disabled

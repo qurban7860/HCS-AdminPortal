@@ -7,7 +7,6 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, styled, Container, Grid, Stack, TextField } from '@mui/material';
-import { MuiChipsInput } from 'mui-chips-input';
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
 import { getActiveCustomers, getFinancialCompanies, setCustomerTab, setNewMachineCustomer } from '../../redux/slices/customer/customer';
@@ -24,7 +23,7 @@ import { StyledCardContainer } from '../../theme/styles/default-styles';
 import { PATH_CUSTOMER, PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, { RHFTextField, RHFAutocomplete, RHFDatePicker } from '../../components/hook-form';
+import FormProvider, { RHFTextField, RHFAutocomplete, RHFDatePicker, RHFChipsInput } from '../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import { FORMLABELS } from '../../constants/default-constants';
@@ -49,7 +48,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const { activeCategories } = useSelector((state) => state.category);
   const [ hasEffectRun, setHasEffectRun ] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
-  const [ chips, setChips ] = useState([]);
   const [ landToCustomerMachinePage, setLandToCustomerMachinePage ] = useState(false);
 
   useEffect(() => {
@@ -79,6 +77,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     defaultValues: {
       serialNo: '',
       name: '',
+      alias: [],
       parentSerialNo: null,
       previousMachine: '',
       category: null,
@@ -155,9 +154,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const onSubmit = async (data) => {
     try {
-      if (chips && chips.length > 0) {
-        data.alias = chips;
-      }
       await dispatch(addMachine(data));
       reset();
       enqueueSnackbar('Create success!');
@@ -180,11 +176,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       navigate(PATH_MACHINE.machines.list);
     }
   };
-  
-  const handleChipChange = (newChips) => {
-    const array = [...new Set(newChips)]
-    setChips(array);
-  };
+
 
   const CategoryValHandler = (event, newValue) => {
     if (newValue) {
@@ -242,7 +234,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   <RHFTextField name="serialNo" label="Serial No.*"  />
                   <RHFTextField name="name" label="Name" />
                 </Box>
-                <MuiChipsInput label="Alias" value={chips} onChange={handleChipChange} />
+                <RHFChipsInput name="alias" label="Alias" />
                 <Box rowGap={2} columnGap={2} display="grid"
                   gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
