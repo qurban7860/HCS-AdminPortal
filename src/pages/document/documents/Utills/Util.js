@@ -1,11 +1,13 @@
 import { allowedExtensions } from '../../../../constants/document-constants';
 
+const maxFiles = JSON.parse( localStorage.getItem('configurations'))?.find( ( c )=> c?.name === 'MAX_UPLOAD_FILES' )
+
 export const validateFileType = (value, options) => {
     const { path, createError } = options;
     if (value && Array.isArray(value)) {
       if (value.length > 20) {
         return createError({
-          message: 'Maximum 20 files can be uploaded at a time.',
+          message: `Maximum ${ Number(maxFiles?.value) || 20 } files can be uploaded at a time.`,
           path,
           value,
         });
