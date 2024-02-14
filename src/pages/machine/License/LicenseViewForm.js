@@ -31,8 +31,8 @@ export default function LicenseViewForm() {
       enqueueSnackbar(Snacks.licenseDeleted);
       dispatch(setLicenseViewFormVisibility(false));
     } catch (err) {
-      enqueueSnackbar(Snacks.failedDeleteLicense, { variant: `error` });
-      console.log('Error:', err);
+      enqueueSnackbar(err, { variant: `error` });
+      console.log(err);
     }
   };
 

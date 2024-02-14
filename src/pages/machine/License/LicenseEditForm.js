@@ -75,8 +75,8 @@ export default function LicenseEditForm() {
         dispatch(setLicenseViewFormVisibility(true));
         dispatch(getLicense(machine._id, license._id));
       } catch (err) {
-        enqueueSnackbar(Snacks.failedUpdateLicense, { variant: 'error' });
-        console.error(err.message);
+        enqueueSnackbar(err, { variant: 'error' });
+        console.error(err);
       }
   };
 
