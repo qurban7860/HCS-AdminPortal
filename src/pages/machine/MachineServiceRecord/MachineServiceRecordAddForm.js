@@ -52,15 +52,6 @@ function MachineServiceRecordAddForm() {
   },[dispatch, machine, userId ])
 
 
-  useEffect(()=>{ 
-    if(!activeSecurityUsers.some(u => u._id === userId )){
-      setSecurityUsers([ ...activeSecurityUsers, securityUser ].sort((a, b) => a.name.localeCompare(b.name))) 
-    }else {
-      setSecurityUsers([ ...activeSecurityUsers ].sort((a, b) => a.name.localeCompare(b.name))) 
-    }  
-  }, [ activeSecurityUsers, securityUser, userId ])
-
-
   const machineDecoilers = (machine?.machineConnections || []).map((decoiler) => ({
     _id: decoiler?.connectedMachine?._id ?? null,
     name: decoiler?.connectedMachine?.name ?? null,
@@ -79,7 +70,7 @@ function MachineServiceRecordAddForm() {
       site:                         machine?.instalationSite?._id,
       // machine:                      machine?._id || null,
       decoilers:                    machineDecoilers || [],
-      technician:                   securityUser || null,
+      technician:                   null,
       technicianNotes:              '',
       textBeforeCheckItems:         '',
       textAfterCheckItems:          '',
@@ -97,7 +88,7 @@ function MachineServiceRecordAddForm() {
     return initialValues;
   },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [ securityUser, machine, machineDecoilers ]
+    [ machine, machineDecoilers ]
   );
 
   const methods = useForm({
@@ -115,6 +106,16 @@ function MachineServiceRecordAddForm() {
   } = methods;
 
   const { decoilers, operators, serviceRecordConfiguration, docRecordType } = watch()
+
+
+  useEffect(()=>{ 
+    if(!activeSecurityUsers.some(u => u._id === userId )){
+      setSecurityUsers([ ...activeSecurityUsers, securityUser ]?.sort((a, b) => a?.name?.localeCompare(b?.name))) 
+      setValue( 'technician' , securityUser )
+    }else {
+      setSecurityUsers([ ...activeSecurityUsers ]?.sort((a, b) => a?.name?.localeCompare(b?.name))) 
+    }  
+  }, [ activeSecurityUsers, securityUser, userId, setValue ])
 
     useEffect(() => {
       if(docRecordType?.name){
