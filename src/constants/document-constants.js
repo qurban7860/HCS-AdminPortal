@@ -1,5 +1,7 @@
 export const allowedImageExtensions = ['png', 'jpeg', 'jpg', 'gif', 'bmp', 'webp'];
 export const allowedDocumentExtension = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'];
+const maxFiles = JSON.parse( localStorage.getItem('configurations'))?.find( ( c )=> c?.name === 'MAX_UPLOAD_FILES' )
+
 export const document = {
   icon: {
     pdf: 'bxs:file-pdf',
@@ -204,7 +206,7 @@ export const Snacks = {
   // documentAddForm -documents dashboard
   fileRequired: 'File is required',
   fileMaxSize: 'File size should be less than 10MB',
-  fileMaxCount: 'Maximum 20 files can be uploaded at a time.',
+  fileMaxCount: `Maximum ${ Number(maxFiles?.value) || 20 } files can be uploaded at a time.`,
   docMaxSize: 'Document Name must not exceed 40 characters',
 
   // @root - DocumentViewForm - documents dashboard
