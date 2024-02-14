@@ -16,7 +16,7 @@ const initialState = {
   contacts: [],
   activeContacts: [],
   spContacts: [],
-  activeSpContact:[],
+  activeSpContacts: [],
   contactDialog:false,
   contact: null,
   filterBy: '',
