@@ -7,7 +7,7 @@ import Iconify from '../iconify';
 import { ICONS } from '../../constants/icons/default-icons';
 import useLimitString from '../../hooks/useLimitString';
 
-export default function LinkTableCell({ align, onClick, param, isDefault }) {
+export default function LinkTableCell({ align, onClick, param, stringLength, isDefault }) {
 
   const theme = createTheme({
     palette: {
@@ -32,7 +32,7 @@ export default function LinkTableCell({ align, onClick, param, isDefault }) {
             },
           }}
         >
-        { useLimitString( param || 30) }
+        { useLimitString( param , stringLength || 30) }
         {isDefault && 
           <StyledTooltip onClick={onClick} title={ICONS.DEFAULT.heading} placement="top" disableFocusListener tooltipcolor={theme.palette.primary.main}>
             <Iconify icon={ICONS.DEFAULT.icon} color={theme.palette.primary.main} width="17px" height="17px" sx={{ mb: -0.3, ml: 0.5, cursor:"pointer"}}/>
@@ -46,5 +46,6 @@ LinkTableCell.propTypes = {
   align: PropTypes.string,
   onClick: PropTypes.func,
   param: PropTypes.string,
+  stringLength: PropTypes.number,
   isDefault: PropTypes.bool,
 };
