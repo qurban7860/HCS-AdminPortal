@@ -64,7 +64,7 @@ export default function DocumentListTableRow({
 
   return (
     <StyledTableRow hover selected={selected}>
-      <LinkTableCell align="left" param={displayName} onClick={onViewRow} />
+      <LinkTableCell align="left" param={displayName} stringLength={45} onClick={onViewRow} />
       {  smScreen && <TableCell align="left">{ referenceNumberString }</TableCell>}
       {  smScreen && <TableCell align="left">{ docCategoryNameString }</TableCell>}
       {  smScreen && <TableCell align="left">{ docTypeNameString }</TableCell>}
@@ -73,7 +73,7 @@ export default function DocumentListTableRow({
       {  smScreen && machineDrawings && <TableCell align="left">{productDrawings?.map((m)=> m?.machine?.serialNo).join(', ')}</TableCell>}
       {  !customerPage && !machinePage && !machineDrawings && lgScreen && 
           <>
-            <LinkDialogTableCell onClick={handleCustomerDialog} align='left' param={customer?.name}/>  
+            {/* <LinkDialogTableCell onClick={handleCustomerDialog} align='left' param={customer?.name}/>   */}
             <LinkDialogTableCell onClick={handleMachineDialog} align='left' param={machine?.serialNo}/>  
           </>
       }
