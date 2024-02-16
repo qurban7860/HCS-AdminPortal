@@ -70,7 +70,7 @@ function MachineServiceRecordAddForm() {
       site:                         machine?.instalationSite?._id,
       // machine:                      machine?._id || null,
       decoilers:                    machineDecoilers || [],
-      technician:                   null,
+      technician:                   securityUser || null,
       technicianNotes:              '',
       textBeforeCheckItems:         '',
       textAfterCheckItems:          '',
@@ -106,16 +106,17 @@ function MachineServiceRecordAddForm() {
   } = methods;
 
   const { decoilers, operators, serviceRecordConfiguration, docRecordType } = watch()
-
-
+  
   useEffect(()=>{ 
     if(!activeSecurityUsers.some(u => u._id === userId )){
       setSecurityUsers([ ...activeSecurityUsers, securityUser ]?.sort((a, b) => a?.name?.localeCompare(b?.name))) 
       setValue( 'technician' , securityUser )
     }else {
       setSecurityUsers([ ...activeSecurityUsers ]?.sort((a, b) => a?.name?.localeCompare(b?.name))) 
+      setValue( 'technician' , securityUser )
     }  
-  }, [ activeSecurityUsers, securityUser, userId, setValue ])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ activeSecurityUsers, securityUser, userId ])
 
     useEffect(() => {
       if(docRecordType?.name){
