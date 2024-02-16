@@ -260,6 +260,9 @@ const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNum
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      { machineDrawings &&
+        <DocumentCover content="Add Drawings" backLink={!customerPage && !machinePage && !machineDrawings} machineDrawingsBackLink={machineDrawings} generalSettings />
+      }
       <Box column={12} rowGap={2} columnGap={2} gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} mt={3} >
         <Grid container item xs={12} md={12} lg={12}>
           <Grid item xs={12} md={12}>

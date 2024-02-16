@@ -6,7 +6,11 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from '../../../redux/store';
 // components
 import { PATH_DOCUMENT } from '../../../routes/paths';
-import { setDocumentFormVisibility, setDocumentHistoryNewVersionFormVisibility, setDocumentNewVersionFormVisibility } from '../../../redux/slices/document/document';
+import { 
+  setDocumentFormVisibility, 
+  setDocumentHistoryNewVersionFormVisibility, 
+  setDocumentNewVersionFormVisibility 
+} from '../../../redux/slices/document/document';
 import SearchBarCombo from '../../../components/ListTableTools/SearchBarCombo';
 import { BUTTONS } from '../../../constants/default-constants';
 
