@@ -93,8 +93,19 @@ export default function MachineList() {
   const axiosToken = () => axios.CancelToken.source();
   const cancelTokenSource = axiosToken();
 
-  const { machines, verified, accountManager, supportManager, filterBy, page, rowsPerPage, 
-          isLoading, error, initial, responseMessage } = useSelector( (state) => state.machine );
+  const { machines, 
+    verified, 
+    accountManager, 
+    supportManager, 
+    filterBy, 
+    page, 
+    rowsPerPage, 
+    isLoading, 
+    error, 
+    initial, 
+    responseMessage 
+  } = useSelector( (state) => state.machine );
+
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -140,7 +151,7 @@ export default function MachineList() {
     filterVerify,
     filterStatus,
     accountManager, 
-    supportManager
+    supportManager,
   });
 
   const isFiltered = filterName !== '' || !!filterStatus.length;
@@ -350,13 +361,10 @@ function applyFilter({ inputData, comparator, filterName, filterVerify, filterSt
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-
   if(accountManager)
-    inputData = inputData.filter((machine) => machine?.accountManager?.some(manager => manager._id === accountManager?._id));
-  
+    inputData = inputData.filter((machine) => machine?.accountManager?.some(manager => manager === accountManager?._id ));
   if(supportManager)
-    inputData = inputData.filter((machine) => machine?.supportManager?.some(manager => manager._id === supportManager?._id));
-  
+    inputData = inputData.filter((machine) => machine?.supportManager?.some(manager => manager === supportManager?._id ));
   if(filterVerify==='verified')
     inputData = inputData.filter((machine)=> machine?.verifications?.length>0);
   
@@ -372,9 +380,9 @@ function applyFilter({ inputData, comparator, filterName, filterVerify, filterSt
         product?.status?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         product?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         product?.instalationSite?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        `${product?.accountManager?.firstName} ${product?.accountManager?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        `${product?.projectManager?.firstName} ${product?.projectManager?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        `${product?.supportManager?.firstName} ${product?.supportManager?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // `${product?.accountManager?.firstName} ${product?.accountManager?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // `${product?.projectManager?.firstName} ${product?.projectManager?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // `${product?.supportManager?.firstName} ${product?.supportManager?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // (product?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(product?.installationDate)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(product?.shippingDate)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||

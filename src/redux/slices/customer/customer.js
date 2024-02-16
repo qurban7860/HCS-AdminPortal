@@ -429,20 +429,20 @@ export function addCustomer(params) {
               region: params?.region,
             },
           },
-          billingContact: {
-            firstName: params?.billingContactFirstName,
-            lastName: params?.billingContactLastName,
-            title: params?.billingContactTitle,
-            phone: params?.billingContactPhone,
-            email: params?.billingContactEmail,
-          },
-          technicalContact: {
-            firstName: params?.isSameContact ? params?.billingContactFirstName : params?.technicalContactFirstName,
-            lastName: params?.isSameContact ? params?.billingContactLastName : params?.technicalContactLastName,
-            title: params?.isSameContact ? params?.billingContactTitle : params?.technicalContactTitle,
-            phone: params?.isSameContact ? params?.billingContactPhone : params?.technicalContactPhone,
-            email: params?.isSameContact ? params?.billingContactEmail : params?.technicalContactEmail,
-          },
+          // billingContact: {
+          //   firstName: params?.billingContactFirstName,
+          //   lastName: params?.billingContactLastName,
+          //   title: params?.billingContactTitle,
+          //   phone: params?.billingContactPhone,
+          //   email: params?.billingContactEmail,
+          // },
+          // technicalContact: {
+          //   firstName: params?.isSameContact ? params?.billingContactFirstName : params?.technicalContactFirstName,
+          //   lastName: params?.isSameContact ? params?.billingContactLastName : params?.technicalContactLastName,
+          //   title: params?.isSameContact ? params?.billingContactTitle : params?.technicalContactTitle,
+          //   phone: params?.isSameContact ? params?.billingContactPhone : params?.technicalContactPhone,
+          //   email: params?.isSameContact ? params?.billingContactEmail : params?.technicalContactEmail,
+          // },
           type: params.type,
           isActive: params.isActive,
           supportSubscription: params?.supportSubscription,
@@ -450,6 +450,44 @@ export function addCustomer(params) {
           excludeReports: params?.excludeReports,
         };
 
+        const billingContact = {}
+        let technicalContact = {}
+
+        if(params?.billingContactFirstName){
+          billingContact.firstName = params?.billingContactFirstName
+        }
+        if(params?.billingContactLastName){
+          billingContact.lastName = params?.billingContactLastName
+        }
+        if(params?.billingContactTitle){
+          billingContact.title = params?.billingContactTitle
+        }
+        if(params?.billingContactPhone){
+          billingContact.phone = params?.billingContactPhone
+        }
+        if(params?.billingContactEmail){
+          billingContact.email = params?.billingContactEmail
+        }
+
+        if(params?.technicalContactFirstName){
+          technicalContact.firstName = params?.technicalContactFirstName
+        }
+        if(params?.technicalContactLastName){
+          technicalContact.lastName = params?.technicalContactLastName
+        }
+        if(params?.technicalContactTitle){
+          technicalContact.title = params?.technicalContactTitle
+        }
+        if(params?.technicalContactPhone){
+          technicalContact.phone = params?.technicalContactPhone
+        }
+        if(params?.technicalContactEmail){
+          technicalContact.email = params?.technicalContactEmail
+        }
+
+        if( params?.isSameContact ){
+          technicalContact = billingContact
+        }
         const response = await axios.post(`${CONFIG.SERVER_URL}crm/customers`, data);
         return response
         // dispatch(slice.actions.getCustomerSuccess(response.data.Customer));

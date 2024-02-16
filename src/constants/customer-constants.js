@@ -64,11 +64,11 @@ export const FORMLABELS = {
 
   // @root - ContactAddForm
   REPORTINGTO: {
-    label: 'Report to*',
+    label: 'Report to',
     name: 'reportingTo',
   },
   DEPARTMENT:{
-    label: 'Department*',
+    label: 'Department',
     name: 'department',
   },
   FIRSTNAME: {

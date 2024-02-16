@@ -64,7 +64,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
       name: '',
       phone: '+64 ',
       email: '',
-      loginEmail: '',
       password: '',
       confirmPassword: '',
       roles: [],
@@ -170,7 +169,7 @@ const { customer, contact } = watch();
               rowGap={2} columnGap={2} display="grid"
               gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
             >
-              <RHFTextField name="loginEmail" label="Login/Email Address*" />
+              <RHFTextField name="email" label="Login/Email Address*" />
             </Box>
             {(!isInvite &&(
               <Box sx={{ mb: 3 }} rowGap={2} columnGap={2} display="grid" 
