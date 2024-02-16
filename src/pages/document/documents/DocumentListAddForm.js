@@ -1,5 +1,6 @@
+import * as Yup from 'yup';
 import PropTypes from 'prop-types';
-import { useEffect, useState, useCallback , memo} from 'react';
+import { useEffect, useLayoutEffect, useState, memo} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -12,39 +13,20 @@ import { Box, Card, Grid, Stack, Dialog } from '@mui/material';
 // PATH
 import { PATH_DOCUMENT } from '../../../routes/paths';
 // slice
-import {
-  resetActiveDocuments,
-  getDocument,
-  getDocumentHistory,
-  getCustomerDocuments,
-  getMachineDocuments,
-  getMachineDrawingsDocuments,
-  addDocument,
-  setViewVisiilityNoOthers,
-  setViewHistoryVisiilityNoOthers,
-  setDrawingAndDocumentVisibility,
-  checkDocument,
-} from '../../../redux/slices/document/document';
+import { addDocumentList, checkDocument } from '../../../redux/slices/document/document';
 import { getActiveDocumentCategories, resetActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
 import { getActiveDocumentTypesWithCategory, resetActiveDocumentTypes } from '../../../redux/slices/document/documentType';
-import { addDocumentVersion, updateDocumentVersion,} from '../../../redux/slices/document/documentVersion';
-import { getActiveCustomers } from '../../../redux/slices/customer/customer';
-import { getCustomerMachines, resetCustomerMachines} from '../../../redux/slices/products/machine';
-import { getDrawings, resetDrawings, setDrawingAddFormVisibility } from '../../../redux/slices/products/drawing';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFAutocomplete, RHFTextField, RHFUpload,} from '../../../components/hook-form';
+import FormProvider, { RHFUpload,} from '../../../components/hook-form';
 // assets
 import DialogLabel from '../../../components/Dialog/DialogLabel';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import RadioButtons from '../../../components/DocumentForms/RadioButtons';
-import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
-import { DocRadioValue, DocRadioLabel, Snacks,} from '../../../constants/document-constants';
+import { Snacks } from '../../../constants/document-constants';
 import DocumentCover from '../../../components/DocumentForms/DocumentCover';
 import { FORMLABELS } from '../../../constants/default-constants';
-import { documentSchema } from '../../schemas/document';
 import ConfirmDialog from '../../../components/confirm-dialog';
-
+import validateFileType from '../util/validateFileType';
 
 // ----------------------------------------------------------------------
 DocumentListAddForm.propTypes = {
@@ -68,27 +50,39 @@ function DocumentListAddForm({
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { machine, customerMachines } = useSelector((state) => state.machine);
-  const { document ,documentHistory, activeDocuments, documentAddFilesViewFormVisibility, documentNewVersionFormVisibility, documentHistoryAddFilesViewFormVisibility, documentHistoryNewVersionFormVisibility } = useSelector((state) => state.document);
-  const { customer, activeCustomers } = useSelector((state) => state.customer);
+  const { machine } = useSelector((state) => state.machine);
+  const { customer } = useSelector((state) => state.customer);
+  const { activeDocumentTypes } = useSelector((state) => state.documentType);
+  const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
 
   // ------------------ document values states ------------------------------
-  const [ categoryBy, setCategoryBy ] = useState(null);
-  const [ isDocumentTypesLoaded, setIsDocumentTypesLoaded ] = useState( false );
-  const [ isDocumentCategoryLoaded, setIsDocumentCategoryLoaded ] = useState( false );
+  // const [ categoryBy, setCategoryBy ] = useState(null);
   const [ previewVal, setPreviewVal ] = useState('');
   const [ preview, setPreview ] = useState(false);
-  const [ readOnlyVal, setReadOnlyVal ] = useState(false);
-  const [ readOnlyDocument, setReadOnlyDocument ] = useState(false);
-  const [ selectedValue, setSelectedValue ] = useState('new');
-  const [ selectedVersionValue, setSelectedVersionValue ] = useState('newVersion');
-  
+
+  useLayoutEffect( () => { 
+    dispatch( getActiveDocumentCategories() );  
+    dispatch( getActiveDocumentTypesWithCategory() ) 
+      return ()=>{ 
+      dispatch( resetActiveDocumentCategories() );  
+      dispatch( resetActiveDocumentTypes() ) 
+      }
+}, [ dispatch ] )
+
+const documentSchema = ( selectedValue ) => Yup.object().shape({
+  files: Yup.mixed()
+  .required('File is required!')
+  .test(
+    'fileType',
+    'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
+    validateFileType
+  ).nullable(true),
+});
+
   const methods = useForm({
-    resolver: yupResolver(),
+    resolver: null,
     defaultValues:{
       files: [],
-      customer: null,
-      machine: null,
     },
   });
 
@@ -101,69 +95,43 @@ function DocumentListAddForm({
   } = methods;
 
   const { files } = watch();
-
-  useEffect( () => { // Get Active Document Types And Active Document Categoories
-    if( !isDocumentCategoryLoaded && categoryBy ){
-      dispatch( getActiveDocumentCategories( categoryBy ) );  dispatch( getActiveDocumentTypesWithCategory( null, categoryBy ) ) 
-      setIsDocumentCategoryLoaded( true )
+// console.log("files : ",files)
+const onChangeDocCategory = ( index, event, value ) => {
+  if( value ){
+    setValue(`files[${index}].docCategory`, value );
+    if( value?._id !== files[index]?.docType?.docCategory?._id ){
+      setValue(`files[${index}].docType`, null );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ categoryBy ] )
+  } else {
+    setValue(`files[${index}].docType`, null );
+    setValue(`files[${index}].docCategory`, null );
+  }
+}
 
-
-  useEffect(() => {
-    if (!documentNewVersionFormVisibility && !documentAddFilesViewFormVisibility && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility) {
-      reset();
-      setSelectedValue('new');
-      setReadOnlyDocument(false);
+const onChangeDocType = ( index, event, value ) => {
+  if( value ){
+    setValue(`files[${index}].docType`, value );
+    if( !files[index].docCategory || !files[index].docCategory?._id !== value?.docCategory?._id  ){
+      setValue(`files[${index}].docCategory`, value?.docCategory );
     }
-    dispatch(resetActiveDocuments()); dispatch(resetCustomerMachines()); dispatch(getActiveCustomers());
-    if (customerPage)  setValue('customer', customer?._id);
-    if (machinePage)  setValue('machine', machine?._id);
-    return () =>  { dispatch(resetActiveDocumentTypes()); dispatch(resetActiveDocumentCategories()) }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, customer, machine ]);
+  } else {
+    setValue(`files[${index}].docType`, null );
+  }
+}
 
-  useEffect(()=>{
-    if( documentHistoryNewVersionFormVisibility ){
-      setReadOnlyDocument(true);
-      setReadOnlyVal(true);
-    }else if( documentHistoryAddFilesViewFormVisibility ){
-      setReadOnlyDocument(true);
-      setReadOnlyVal(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ documentHistoryNewVersionFormVisibility, documentHistoryAddFilesViewFormVisibility, documentHistory ])
-
-  useEffect(()=>{
-    if( documentNewVersionFormVisibility ){
-      setReadOnlyDocument(true);
-      setReadOnlyVal(true);
-    }else if( documentAddFilesViewFormVisibility ){
-      setReadOnlyDocument(true);
-      setReadOnlyVal(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ documentNewVersionFormVisibility, documentAddFilesViewFormVisibility, document ])
+const onChangeVersionNo = (index, value) => setValue(`files[${index}].versionNo`, value);
+const onChangeDisplayName = (index, value) => setValue(`files[${index}].displayName`, value);
+const onChangeReferenceNumber = (index, value) => setValue(`files[${index}].referenceNumber`, value);
+const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNumber`, value);   
 
   const onSubmit = async (data) => {
     try {
-      if(drawingPage){
-        data.machine = machine?._id;
-      } else{
-        data.machine = null;  
-      }
-        // Update versions Part
-        await dispatch(addDocument( customerPage ? customer?._id : null, machinePage ? machine?._id : null, data));
-        enqueueSnackbar(Snacks.updatedDoc);
-        // Page Navigation conditions for update versions
-        navigate(PATH_DOCUMENT.document.machineDrawings.list);
-      setReadOnlyVal(false);
-      setPreview(false);
-      setPreviewVal('');
+      await dispatch(addDocumentList( data));
+      enqueueSnackbar(Snacks.updatedDoc);
+      navigate(PATH_DOCUMENT.document.machineDrawings.list);
       reset();
     } catch (error) {
-      enqueueSnackbar(Snacks.failedDoc, { variant: `error` });
+      enqueueSnackbar(error, { variant: `error` });
       console.error(error);
     }
   };
@@ -221,19 +189,26 @@ function DocumentListAddForm({
   
 
   const handleDropMultiFile = async (acceptedFiles) => {
-    console.log("acceptedFiles : ",acceptedFiles)
     pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
     let _files = [];
-    if (drawingPage || machineDrawings) {
+    let defaultDocCategory = await activeDocumentCategories.find((el)=>  el.isDefault === true )
+    const defaultDocType = await activeDocumentTypes.find((el)=> el.isDefault === true )
+    if( defaultDocType?.docCategory?._id !== defaultDocCategory?._id ){
+      defaultDocCategory = activeDocumentCategories.find((el)=>  el?._id === defaultDocType?.docCategory?._id )
+    }
+    // if (drawingPage || machineDrawings) {
       const _files_MD5 = await hashFilesMD5(acceptedFiles);
       _files = await dispatch(checkDocument(_files_MD5));
-    }
+      console.log("_files_MD5 : ",_files_MD5)
+      console.log("_files : ",_files)
+    // }
     setDuplicate(_files.some((fff) => fff.status === 409));
     const newFiles = await Promise.all(acceptedFiles.map( async (file, index) => {
       const displayName = await removeFileExtension(file?.name);
       const referenceNumber = await getRefferenceNumber(file?.name);
       const versionNo = await getVersionNumber(file?.name);
       let stockNumber = '';
+      const fileUrl = URL.createObjectURL(file) 
       if (file?.type?.indexOf('pdf') > -1) {
         const arrayBuffer = await file.arrayBuffer();
         const pdfDocument = await pdfjs.getDocument(arrayBuffer).promise;
@@ -256,27 +231,22 @@ function DocumentListAddForm({
           console.log(e);
         }
       }
-      return {
-        ...file,
-        preview: URL.createObjectURL(file),
-        found: _files[index]?.status === 200 ? null : _files[index],
-        name: file.name || '',
-        path: file.path || '',
-        type: file.type || '',
-        size: file.size || '',
-        machine: machineVal?._id,
-        displayName,
-        referenceNumber,
-        versionNo,
-        stockNumber,
-      };
+      // if(!files.some( f => f?.hashMD5 === _files_MD5[index] )){
+        file.hashMD5 = _files_MD5[index]
+        file.displayName = displayName
+        file.docCategory = defaultDocCategory
+        file.docType = defaultDocType
+        file.versionNo = versionNo
+        file.referenceNumber = referenceNumber
+        file.stockNumber = stockNumber
+        return file
+      // }
+      // return null
     }));
-    console.log("newFiles : ",newFiles)
-    setValue('files', [ ...files, ...newFiles ] );
+    setValue('files',[ ...files, ...newFiles] );
   }
   
   const toggleCancel = () => navigate(PATH_DOCUMENT.document.machineDrawings.list)
-
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -292,16 +262,19 @@ function DocumentListAddForm({
                     <RHFUpload multiple rows name="files"
                       onDrop={handleDropMultiFile}
                       onRemove={(inputFile) =>
-                        files.length > 1 ?
-                        setValue(
-                          'files',
-                          files &&
-                            files?.filter((file) => file !== inputFile),
-                          { shouldValidate: true }
-                        ): setValue('files', '', { shouldValidate: true })
+                      // console.log('inputFile : ',inputFile, files[0])
+                        files?.length > 0 
+                        ? setValue( 'files', files && files?.filter((file) => file?.size !== inputFile?.size && file?.name !== inputFile?.name ) )
+                        : setValue('files', [])
                       }
-                      onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
-                      machine={machineVal}
+                      onRemoveAll={() => setValue('files', [])}
+                      // machine={machineVal}
+                      onChangeDocType={onChangeDocType}
+                      onChangeDocCategory={onChangeDocCategory}
+                      onChangeVersionNo={onChangeVersionNo}
+                      onChangeDisplayName={onChangeDisplayName}
+                      onChangeReferenceNumber={onChangeReferenceNumber}
+                      onChangeStockNumber={onChangeStockNumber}
                       drawingPage={drawingPage || machineDrawings}
                     />
                   </Grid>

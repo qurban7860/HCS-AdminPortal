@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   setDocumentFormVisibility,
+  setDocumentListFormVisibility,
   setDocumentEditFormVisibility,
   setDocumentViewFormVisibility,
   setDocumentHistoryViewFormVisibility,
@@ -15,6 +16,7 @@ import {
 // components
 import DocumentList from './DocumentList';
 import DocumentAddForm from './DocumentAddForm';
+import DocumentListAddForm from './DocumentListAddForm';
 import DocumentViewForm from './DocumentViewForm';
 import DocumentEditForm from './DocumentEditForm';
 import DocumentHistoryViewForm from './DocumentHistoryViewForm';
@@ -29,6 +31,7 @@ function DocumentTagPage(Page) {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(setDocumentFormVisibility(false));
+    dispatch(setDocumentListFormVisibility(false));
     dispatch(setDocumentEditFormVisibility(false));
     dispatch(setDocumentViewFormVisibility(false));
     dispatch(setDocumentHistoryViewFormVisibility(false));
@@ -40,6 +43,7 @@ function DocumentTagPage(Page) {
   const {
     documents,
     documentFormVisibility,
+    documentListFormVisibility,
     documentEditFormVisibility,
     documentViewFormVisibility,
     documentHistoryViewFormVisibility,
@@ -53,6 +57,14 @@ function DocumentTagPage(Page) {
     dispatch(setDocumentGalleryVisibility(false));
   };
   
+  const handleListFormVisibility = () => {
+    dispatch(setDocumentFormVisibility(false));
+    dispatch(setDocumentListFormVisibility(true));
+    dispatch(setDocumentNewVersionFormVisibility(false));
+    dispatch(setDocumentAddFilesViewFormVisibility(false));
+    dispatch(setDocumentGalleryVisibility(false));
+  };
+
   const handleEditFormVisibility = () => {
     dispatch(setDocumentEditFormVisibility(true));
   };
@@ -85,6 +97,19 @@ function DocumentTagPage(Page) {
             handleFormVisibility={handleFormVisibility}
           />
         )}
+
+        { documentListFormVisibility &&
+        !documentFormVisibility &&
+        !documentEditFormVisibility &&
+        !documentViewFormVisibility &&
+        !documentHistoryViewFormVisibility && (
+          <DocumentListAddForm
+            customerPage={Page?.customerPage}
+            machinePage={Page?.machinePage}
+            handleFormVisibility={handleListFormVisibility}
+          />
+        )}
+
       {!documentFormVisibility &&
         documentEditFormVisibility &&
         !documentViewFormVisibility &&
