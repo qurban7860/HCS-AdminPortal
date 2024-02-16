@@ -32,7 +32,6 @@ const slice = createSlice({
     startLoading(state) {
       state.isLoading = true;
       state.error = null;
-
     },
 
     // HAS ERROR

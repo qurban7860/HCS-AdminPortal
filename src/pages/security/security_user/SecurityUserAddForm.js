@@ -64,7 +64,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
       name: '',
       phone: '+64 ',
       email: '',
-      loginEmail: '',
       password: '',
       confirmPassword: '',
       roles: [],
@@ -80,8 +79,9 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [ currentUser ]
   );
+  // isInvite && editUserSchema || !isInvite && 
   const methods = useForm({
-    resolver: yupResolver( isInvite && editUserSchema || addUserSchema ),
+    resolver: yupResolver( isInvite && editUserSchema || !isInvite && addUserSchema ),
     defaultValues,
   });
 
@@ -111,11 +111,11 @@ const { customer, contact } = watch();
     if(contact?._id){
       setValue( 'name', `${contact?.firstName || ''} ${contact?.lastName || ''}` );
       setValue( 'phone', contact?.phone );
-      setValue( 'email', contact?.email );
+      setValue( 'loginEmail', contact?.email );
     } else {
       setValue( 'name', '' );
       setValue( 'phone', '' );
-      setValue( 'email', '' );
+      setValue( 'loginEmail', '' );
     }
   }, [ dispatch, contact, setValue ]);
 
@@ -169,7 +169,7 @@ const { customer, contact } = watch();
               rowGap={2} columnGap={2} display="grid"
               gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
             >
-              <RHFTextField name="loginEmail" label="Login/Email Address*" />
+              <RHFTextField name="email" label="Login/Email Address*" />
             </Box>
             {(!isInvite &&(
               <Box sx={{ mb: 3 }} rowGap={2} columnGap={2} display="grid" 

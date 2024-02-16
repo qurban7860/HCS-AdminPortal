@@ -237,6 +237,8 @@ export const ServiceRecordConfigEditForm = Loadable(
 // Document dashboard
 export const DocumentList = Loadable(lazy(() => import('../pages/document/documents/GlobalDocument')));
 export const DocumentAddForm = Loadable(lazy(() => import('../pages/document/documents/DocumentAddForm')));
+export const DocumentAddListForm = Loadable(lazy(() => import('../pages/document/documents/DocumentListAddForm')));
+
 export const DocumentEditForm = Loadable(lazy(() => import('../pages/document/documents/DocumentEditForm')));
 export const DocumentViewForm = Loadable(lazy(() => import('../pages/document/documents/DocumentHistoryViewForm')));
 export const DocumentGallery = Loadable(lazy(() => import('../pages/document/documents/DocumentGallery')));

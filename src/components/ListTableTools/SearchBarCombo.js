@@ -37,6 +37,7 @@ function SearchBarCombo({
   onChange,
   onClick,
   SubOnClick,
+  SubOnClick2,
   openGraph,
   addButton,
   inviteOnClick,
@@ -487,6 +488,34 @@ function SearchBarCombo({
                 </StyledTooltip>
               </Grid>
               }
+              
+              {SubOnClick2 && !transferredMachine && 
+                <Grid item >
+                    <StyledTooltip 
+                      title="Add Drawing List" 
+                      placement="top" 
+                      disableFocusListener 
+                      tooltipcolor={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#103996"} 
+                      color={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#103996"} 
+                    >
+                    <IconButton 
+                      disabled={ ( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) } 
+                      color={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#fff"}
+                      onClick={SubOnClick2} 
+                      sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
+                      '&:hover': {
+                        background:"#103996", 
+                        color:"#fff"
+                      }
+                    }}>
+                      <Iconify 
+                        color={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#fff"} 
+                        sx={{ height: '24px', width: '24px'}} icon='ic:round-post-add'
+                      />
+                    </IconButton>
+                  </StyledTooltip>
+                </Grid>
+              }
 
               {addButton && !transferredMachine && 
                 <Grid item >
@@ -515,7 +544,6 @@ function SearchBarCombo({
                   </StyledTooltip>
                 </Grid>
               }
-
             </Grid>
         </Grid>
     </Grid>
@@ -528,6 +556,7 @@ SearchBarCombo.propTypes = {
   onChange: PropTypes.func,
   value: PropTypes.string,
   SubOnClick: PropTypes.func,
+  SubOnClick2: PropTypes.func,
   addButton: PropTypes.string,
   inviteOnClick: PropTypes.func,
   inviteButton: PropTypes.string,

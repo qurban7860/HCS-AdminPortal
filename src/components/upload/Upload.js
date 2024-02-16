@@ -50,9 +50,16 @@ Upload.propTypes = {
   onRemove: PropTypes.func,
   onUpload: PropTypes.func,
   thumbnail: PropTypes.bool,
+  rows: PropTypes.bool,
   helperText: PropTypes.node,
   onRemoveAll: PropTypes.func,
   machine:PropTypes.string,
+  onChangeDocType: PropTypes.func,
+  onChangeDocCategory: PropTypes.func,
+  onChangeVersionNo: PropTypes.func,
+  onChangeDisplayName: PropTypes.func,
+  onChangeReferenceNumber: PropTypes.func,
+  onChangeStockNumber: PropTypes.func,
   drawingPage:PropTypes.bool
 };
 
@@ -68,10 +75,17 @@ export default function Upload({
   //
   files,
   thumbnail,
+  rows,
   onUpload,
   onRemove,
   onRemoveAll,
   machine,
+  onChangeDocType,
+  onChangeDocCategory,
+  onChangeVersionNo,
+  onChangeDisplayName,
+  onChangeReferenceNumber,
+  onChangeStockNumber,
   drawingPage,
   sx,
   ...other
@@ -251,7 +265,7 @@ export default function Upload({
           <Box
             sx={{mt:2, width:'100%'}}
             gap={2}
-            display="grid"
+            display={rows ? "" : "grid"}
             gridTemplateColumns={{
               xs: 'repeat(1, 1fr)',
               sm: 'repeat(3, 1fr)',
@@ -260,7 +274,20 @@ export default function Upload({
               xl: 'repeat(8, 1fr)',
             }}
           >
-            <MultiFilePreview machine={machine||''} drawingPage files={files} thumbnail={thumbnail} onRemove={onRemove} />
+            <MultiFilePreview 
+              onChangeDocType={onChangeDocType}
+              onChangeDocCategory={onChangeDocCategory}
+              onChangeVersionNo={onChangeVersionNo}
+              onChangeDisplayName={onChangeDisplayName}
+              onChangeReferenceNumber={onChangeReferenceNumber}
+              onChangeStockNumber={onChangeStockNumber}
+              machine={machine||''} 
+              rows={rows} 
+              drawingPage 
+              files={files} 
+              thumbnail={thumbnail} 
+              onRemove={onRemove} 
+            />
           </Box>
 
           <Stack direction="row" justifyContent="flex-end" spacing={1.5} sx={{mt:1}}>

@@ -7,7 +7,7 @@ import { fDate } from '../../utils/formatTime';
 
 
 export const machineSchema = Yup.object().shape({
-  serialNo: Yup.string().max(6).required('Serial Number is required').nullable(),
+  serialNo: Yup.string().max(6).required().label('Serial Number'),
   name: Yup.string().max(250),
   parentSerialNo: Yup.object().shape({
     serialNo: Yup.string()

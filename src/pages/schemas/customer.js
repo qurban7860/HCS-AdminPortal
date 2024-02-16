@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { isNumberLatitude , isNumberLongitude } from '../customer/site/util/index'
 
-const stringLengthMessage = 'Trading name must not exceed 200 characters';
+const stringLengthMessage = 'Trading name must not exceed 500 characters';
 
 // @root - DocumentEditForm
 export const EditCustomerDocumentSchema = Yup.object().shape({
@@ -55,22 +55,20 @@ export const AddCustomerSchema = Yup.object().shape({
 // @root - EditCustomerSchema
 export const EditCustomerSchema = Yup.object().shape({
   name: Yup.string().label('Customer Name').min(2).max(500).required().trim(),
-  code: Yup.number().label('Customer Code')
-  .typeError('Customer Code must be a number')
-  .positive("Customer Code must be a positive number")
-  .test('no-spaces', 'Customer Code cannot have spaces', value => !(value && /\s/.test(value.toString())))
-  .max(999999999, 'Customer Code must be less than or equal to 999999999')
-  .nullable(),  
-  // tradingName: Yup.string().max(200).label('Trading Name'),
-  // mainSite: Yup.string().nullable(),
-  // sites: Yup.array().nullable(),
-  isActive: Yup.boolean(),
-  // contacts: Yup.array().nullable(),
+  code: Yup.string().label('Customer Code').max(20),
+  tradingName: Yup.array().label('Trading Name').max(20)
+  .test('stringLength', stringLengthMessage, (value) => !(value && value.some( val => val.length > 500 ))),
+  mainSite: Yup.object().nullable(),
+  primaryTechnicalContact: Yup.object().nullable(),
+  primaryBillingContact: Yup.object().nullable(),
   accountManager: Yup.array(),
   projectManager: Yup.array(),
   supportManager: Yup.array(),
-  // primaryBillingContact: Yup.string().nullable(),
-  // primaryTechnicalContact: Yup.string().nullable(),
+  updateProductManagers: Yup.boolean().label('Update Product Managers'),
+  isActive: Yup.boolean().label('Active'),
+  supportSubscription: Yup.boolean().label('Support Subscription'),
+  isFinancialCompany: Yup.boolean().label('Is Financial Company'),
+  excludeReports: Yup.boolean().label('Exclude Reports'),
 });
 
 // @root - ContactSchema

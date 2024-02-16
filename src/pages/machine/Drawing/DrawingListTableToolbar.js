@@ -4,7 +4,11 @@ import { Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { useDispatch } from '../../../redux/store';
 // components
-import { setDrawingAddFormVisibility, setDrawingFormVisibility } from '../../../redux/slices/products/drawing';
+import { 
+  setDrawingFormVisibility,
+  setDrawingAddFormVisibility,
+  setDrawingListAddFormVisibility,
+} from '../../../redux/slices/products/drawing';
 import { SearchBarCombo } from '../../../components/ListTableTools';
 // constants
 import { BUTTONS } from '../../../constants/default-constants';
@@ -43,6 +47,8 @@ export default function DrawingListTableToolbar({
   const toggleAdd = () => dispatch(setDrawingAddFormVisibility(true));
   const { machine } = useSelector((state) => state.machine);
 
+  const toggleAddList = () =>  dispatch(setDrawingListAddFormVisibility(true));
+
   return (
     <Stack
     spacing={2}
@@ -56,6 +62,7 @@ export default function DrawingListTableToolbar({
       onChange={onFilterName}
       onClick={onResetFilter}
       SubOnClick={toggleAdd}
+      SubOnClick2={ toggleAddList }
       addButton={BUTTONS.ADDDRAWING}
       handleAttach={toggleAattach}
       transferredMachine={machine?.status?.slug==='transferred'}
