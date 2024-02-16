@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from '../../../redux/store';
 // components
 import { PATH_DOCUMENT } from '../../../routes/paths';
-import { setDocumentFormVisibility, setDocumentListFormVisibility, setDocumentHistoryNewVersionFormVisibility, setDocumentNewVersionFormVisibility } from '../../../redux/slices/document/document';
+import { setDocumentFormVisibility, setDocumentHistoryNewVersionFormVisibility, setDocumentNewVersionFormVisibility } from '../../../redux/slices/document/document';
 import SearchBarCombo from '../../../components/ListTableTools/SearchBarCombo';
 import { BUTTONS } from '../../../constants/default-constants';
 
@@ -60,15 +60,7 @@ export default function DocumentListTableToolbar({
     }
   };
 
-  const toggleAddList = async () => {
-    await  dispatch(setDocumentHistoryNewVersionFormVisibility(false));
-    await  dispatch(setDocumentNewVersionFormVisibility(false));
-  if(customerPage || machinePage){
-    await dispatch(setDocumentListFormVisibility(true));
-  }else if(machineDrawings){
-    navigate(PATH_DOCUMENT.document.machineDrawings.newList)
-  }
-};
+  const toggleAddList = async () => navigate(PATH_DOCUMENT.document.machineDrawings.newList);
 
   let addButton;
   if (machineDrawings) {
@@ -94,7 +86,7 @@ export default function DocumentListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        SubOnClick2={ toggleAddList }
+        SubOnClick2={ machineDrawings && toggleAddList || undefined }
         addButton={addButton}
         transferredMachine={machinePage && machine?.status?.slug==='transferred'}
         categoryVal={categoryVal}

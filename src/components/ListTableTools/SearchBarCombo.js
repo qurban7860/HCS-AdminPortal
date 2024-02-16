@@ -492,7 +492,7 @@ function SearchBarCombo({
               {SubOnClick2 && !transferredMachine && 
                 <Grid item >
                     <StyledTooltip 
-                      title="Add Document List" 
+                      title="Add Drawing List" 
                       placement="top" 
                       disableFocusListener 
                       tooltipcolor={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#103996"} 

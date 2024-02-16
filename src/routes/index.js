@@ -697,7 +697,7 @@ export default function Router() {
           children: [
             { path: 'list', element: <MachineDrawings/> },
             { path: 'new', element: <MachineDrawingsAddForm/> },
-            {path: 'newList', element: <DocumentAddListForm /> },
+            {path: 'newList', element: <DocumentAddListForm machineDrawings /> },
             { path: ':id/view', element: <MachineDrawingsViewForm /> },
           ]
         }

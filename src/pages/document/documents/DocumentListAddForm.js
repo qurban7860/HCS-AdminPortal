@@ -13,7 +13,8 @@ import { Box, Card, Grid, Stack, Dialog } from '@mui/material';
 // PATH
 import { PATH_DOCUMENT } from '../../../routes/paths';
 // slice
-import { addDocumentList, checkDocument } from '../../../redux/slices/document/document';
+import { checkDocument } from '../../../redux/slices/document/document';
+import { addDrawingsList, setDrawingListAddFormVisibility } from '../../../redux/slices/products/drawing';
 import { getActiveDocumentCategories, resetActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
 import { getActiveDocumentTypesWithCategory, resetActiveDocumentTypes } from '../../../redux/slices/document/documentType';
 // components
@@ -126,9 +127,13 @@ const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNum
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(addDocumentList( data));
-      enqueueSnackbar(Snacks.updatedDoc);
-      navigate(PATH_DOCUMENT.document.machineDrawings.list);
+      await dispatch(addDrawingsList( data));
+      enqueueSnackbar(Snacks.addedDrawing);
+      if (machineDrawings){
+        navigate(PATH_DOCUMENT.document.machineDrawings.list);
+      } else{
+        await dispatch(setDrawingListAddFormVisibility(false));
+      }
       reset();
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
@@ -199,8 +204,6 @@ const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNum
     // if (drawingPage || machineDrawings) {
       const _files_MD5 = await hashFilesMD5(acceptedFiles);
       _files = await dispatch(checkDocument(_files_MD5));
-      console.log("_files_MD5 : ",_files_MD5)
-      console.log("_files : ",_files)
     // }
     setDuplicate(_files.some((fff) => fff.status === 409));
     const newFiles = await Promise.all(acceptedFiles.map( async (file, index) => {
@@ -232,6 +235,7 @@ const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNum
         }
       }
       // if(!files.some( f => f?.hashMD5 === _files_MD5[index] )){
+        file.machine = machine?._id
         file.hashMD5 = _files_MD5[index]
         file.displayName = displayName
         file.docCategory = defaultDocCategory
@@ -246,13 +250,16 @@ const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNum
     setValue('files',[ ...files, ...newFiles] );
   }
   
-  const toggleCancel = () => navigate(PATH_DOCUMENT.document.machineDrawings.list)
+  const toggleCancel = () => { 
+    if(machineDrawings){
+      navigate(PATH_DOCUMENT.document.machineDrawings.list) 
+    }else {
+      dispatch(setDrawingListAddFormVisibility(false));
+    } 
+  }
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      {!customerPage && !machinePage && !drawingPage &&
-        <DocumentCover content={machineDrawings ? FORMLABELS.COVER.ADD_MACHINE_DRAWINGSS :  FORMLABELS.COVER.ADD_DOCUMENTS} backLink={!customerPage && !machinePage && !machineDrawings} machineDrawingsBackLink={machineDrawings} generalSettings />
-      }
       <Box column={12} rowGap={2} columnGap={2} gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} mt={3} >
         <Grid container item xs={12} md={12} lg={12}>
           <Grid item xs={12} md={12}>
@@ -262,7 +269,6 @@ const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNum
                     <RHFUpload multiple rows name="files"
                       onDrop={handleDropMultiFile}
                       onRemove={(inputFile) =>
-                      // console.log('inputFile : ',inputFile, files[0])
                         files?.length > 0 
                         ? setValue( 'files', files && files?.filter((file) => file?.size !== inputFile?.size && file?.name !== inputFile?.name ) )
                         : setValue('files', [])
