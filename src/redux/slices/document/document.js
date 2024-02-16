@@ -370,7 +370,7 @@ export function addDocument(customerId , machineId ,  params) {
             });
           }
 
-      // await axios.post(`${CONFIG.SERVER_URL}documents/document/`, formData );
+      await axios.post(`${CONFIG.SERVER_URL}documents/document/`, formData );
       dispatch(slice.actions.setResponseMessage('Document saved successfully'));
       dispatch(getDocuments( customerId, machineId ));
       dispatch(setDocumentFormVisibility(false));
