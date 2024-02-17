@@ -68,9 +68,9 @@ export default function MachineByCountriesViewForm() {
                     fullWidth
                     options={activeCategories}
                     value={MBMCategory}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                    renderOption={(props, option) => (<li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>)}
+                    renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>)}
                     renderInput={(params) => (<TextField {...params} label="Categories" size="small" />)}
                     onChange={(event, newValue) =>{
                         setMBMCategory(newValue); 

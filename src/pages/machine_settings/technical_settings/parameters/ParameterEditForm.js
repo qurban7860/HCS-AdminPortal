@@ -131,7 +131,7 @@ export default function ParameterEditForm() {
                   disabled
                   value={paramVal || null}
                   options={techparamcategories}
-                  isOptionEqualToValue={(option, value) => option._id === value._id}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   getOptionLabel={(option) => option.name}
                   onChange={(event, newValue) => {
                     setParamVal(newValue);

@@ -196,7 +196,7 @@ export default function RepairHistoryEditForm() {
                     <option defaultValue value="null" selected >No Primary Billing Contact Selected</option>
                     { 
                     contacts.length > 0 && contacts.map((option) => (
-                    <option key={option._id} value={option._id}>
+                    <option key={option?._id} value={option._id}>
                       {option.firstName} {option.lastName}
                     </option>
                   ))}
@@ -206,7 +206,7 @@ export default function RepairHistoryEditForm() {
                     <option defaultValue value="null" selected >No Primary Technical Contact Selected</option>
                     { 
                     contacts.length > 0 && contacts.map((option) => (
-                    <option key={option._id} value={option._id}>
+                    <option key={option?._id} value={option._id}>
                       {option.firstName} {option.lastName}
                     </option>
                   ))}

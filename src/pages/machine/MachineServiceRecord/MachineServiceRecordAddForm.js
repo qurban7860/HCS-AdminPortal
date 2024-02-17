@@ -289,10 +289,10 @@ function MachineServiceRecordAddForm() {
                     name="docRecordType"
                     label="Document Type*"
                     options={recordTypes}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                      <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
                   />
 
@@ -301,9 +301,9 @@ function MachineServiceRecordAddForm() {
                     label="Service Record Configuration"
                     options={activeServiceRecordConfigs}
                     getOptionLabel={(option) => `${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     renderOption={(props, option) => (
-                    <li {...props} key={option._id}>{`${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}</li>
+                    <li {...props} key={option?._id}>{`${option?.docTitle || ''} ${option?.docTitle ? '-' : '' } ${option.recordType || ''} ${option?.docVersionNo ? '- v' : '' }${option?.docVersionNo || ''}`}</li>
                     )}
                     onChange={handleParamChange}
                   />
@@ -324,8 +324,8 @@ function MachineServiceRecordAddForm() {
                       label="Technician"
                       options={ securityUsers }
                       getOptionLabel={(option) => option?.name || ''}
-                      isOptionEqualToValue={(option, value) => option._id === value._id}
-                      renderOption={(props, option) => ( <li {...props} key={option._id}>{option.name || ''}</li>)}
+                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                      renderOption={(props, option) => ( <li {...props} key={option?._id}>{option.name || ''}</li>)}
                     />
                     <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/> 
                     <RHFTextField name="textBeforeCheckItems" label="Text Before Check Items" minRows={3} multiline/> 

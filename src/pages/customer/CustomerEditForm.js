@@ -125,7 +125,7 @@ export default function CustomerEditForm() {
                     options={activeSites || []}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option?.name || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option._id}>{option?.name || ''} </li>)}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{option?.name || ''} </li>)}
                   />
                 </Box>
 
@@ -139,7 +139,7 @@ export default function CustomerEditForm() {
                       options={activeContacts || []}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) =>`${option?.firstName || ''} ${option?.lastName || ''}`}
-                      renderOption={(props, option) => (<li {...props} key={option._id}>{option?.firstName || ''}{' '}{option?.lastName ||''}</li>)}
+                      renderOption={(props, option) => (<li {...props} key={option?._id}>{option?.firstName || ''}{' '}{option?.lastName ||''}</li>)}
                     />
                     {/* primary technical contact */}
                     <RHFAutocomplete
@@ -148,7 +148,7 @@ export default function CustomerEditForm() {
                       options={activeContacts || []}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) =>`${option.firstName || ''} ${option.lastName || ''}`}
-                      renderOption={(props, option) => (<li {...props} key={option._id}>{option?.firstName || ''}{' '}{option?.lastName || ''}</li>)}
+                      renderOption={(props, option) => (<li {...props} key={option?._id}>{option?.firstName || ''}{' '}{option?.lastName || ''}</li>)}
                     />
                   </Box>
               </Stack>
@@ -169,7 +169,7 @@ export default function CustomerEditForm() {
                     options={activeSpContacts || []}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option?.firstName || ''} ${ option?.lastName || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
                     ChipProps={{ size: 'small' }}
                   />
 
@@ -182,7 +182,7 @@ export default function CustomerEditForm() {
                     options={activeSpContacts || []}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option?.firstName || ''} ${ option?.lastName || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
                     ChipProps={{ size: 'small' }}
                   />
 
@@ -195,7 +195,7 @@ export default function CustomerEditForm() {
                     options={activeSpContacts || []}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option?.firstName || ''} ${ option?.lastName || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
                     ChipProps={{ size: 'small' }}
                   />
 

@@ -101,7 +101,7 @@ export default function NoteAddForm() {
                   options={activeSites}
                   isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   getOptionLabel={(option) => `${option.name || ''}`}
-                  renderOption={(props, option) => (<li {...props} key={option._id}>{option?.name || ''}</li>)}
+                  renderOption={(props, option) => (<li {...props} key={option?._id}>{option?.name || ''}</li>)}
                 />
 
                 <RHFAutocomplete
@@ -110,7 +110,7 @@ export default function NoteAddForm() {
                   options={activeContacts}
                   isOptionEqualToValue={(option, value) => option?._id === value?._id }
                   getOptionLabel={(option) => `${option.firstName || '' } ${option.lastName || '' }`}
-                  renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.firstName || '' } ${option.lastName || '' }`}</li> )}
+                  renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.firstName || '' } ${option.lastName || '' }`}</li> )}
                 />
               </Box>
               <RHFTextField name="note" label="Note*" minRows={8} multiline />

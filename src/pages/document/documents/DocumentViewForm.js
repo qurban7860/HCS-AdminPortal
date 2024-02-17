@@ -37,10 +37,11 @@ import FormLabel from '../../../components/DocumentForms/FormLabel';
 DocumentViewForm.propTypes = {
   customerPage: PropTypes.bool,
   machinePage: PropTypes.bool,
+  drawingPage: PropTypes.bool,
   DocId: PropTypes.string,
 };
 
-function DocumentViewForm({ customerPage, machinePage, DocId }) {
+function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
   const { document, isLoading } = useSelector((state) => state.document);
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
@@ -287,7 +288,8 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
       backLink={(customerPage || machinePage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDocumentViewFormVisibility(false))}
       : () => navigate(PATH_DOCUMENT.document.list)}
       disableEditButton={machine?.status?.slug==='transferred'}
-      drawingPage={ !customerPage || !machinePage }
+      // drawingPage={ !customerPage || !machinePage }
+      customerPage={customerPage} machinePage={machinePage} drawingPage={drawingPage}
       />
       <Grid container>
       {PDFViewerDialog && (

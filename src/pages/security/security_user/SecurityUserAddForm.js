@@ -148,8 +148,8 @@ const { customer, contact } = watch();
                 label="Customer*"
                 options={ allActiveCustomers }
                 getOptionLabel={(option) => option?.name || ''}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option?.name || ''}</li>)}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                renderOption={(props, option) => (<li  {...props} key={option?._id}>{option?.name || ''}</li>)}
               />
               
               <RHFAutocomplete
@@ -157,8 +157,8 @@ const { customer, contact } = watch();
                 label="Contact"
                 options={activeContacts}
                 getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option?.firstName || ''}{' '}{option?.lastName || ''}</li>)}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                renderOption={(props, option) => (<li  {...props} key={option?._id}>{option?.firstName || ''}{' '}{option?.lastName || ''}</li>)}
               />
 
               <RHFTextField name="name" label="Full Name*" />
@@ -192,7 +192,7 @@ const { customer, contact } = watch();
                 label="Roles*"
                 options={ activeRoles }
                 getOptionLabel={(option) => `${option?.name || ''} `}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 renderOption={(props, option, { selected }) => ( <li {...props}> <Checkbox checked={selected} />{option?.name || ''}</li> )}
               />
 
@@ -217,8 +217,8 @@ const { customer, contact } = watch();
                 label="Regions"
                 options={activeRegions}
                 getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => ( <li {...props} key={option._id}> {option?.name || ''} </li>)}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                renderOption={(props, option) => ( <li {...props} key={option?._id}> {option?.name || ''} </li>)}
                 ChipProps={{ size: 'small' }}
               />
 
@@ -230,8 +230,8 @@ const { customer, contact } = watch();
                 label="Customers"
                 options={allActiveCustomers}
                 getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => ( <li {...props} key={option._id}> {option?.name || ''} </li> )}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                renderOption={(props, option) => ( <li {...props} key={option?._id}> {option?.name || ''} </li> )}
                 ChipProps={{ size: 'small' }}
               />
 
@@ -243,8 +243,8 @@ const { customer, contact } = watch();
                 label="Machines"
                 options={allMachines}
                 getOptionLabel={(option) => `${option.serialNo} ${option.name ? '-' : ''} ${option?.name || ''}`}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.serialNo || ''} ${option.name ? '-' : ''} ${option.name || ''}`}</li>)}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.serialNo || ''} ${option.name ? '-' : ''} ${option.name || ''}`}</li>)}
                 ChipProps={{ size: 'small' }}
               />
 

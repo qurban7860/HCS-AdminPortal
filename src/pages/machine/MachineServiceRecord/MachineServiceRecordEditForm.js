@@ -41,19 +41,9 @@ function MachineServiceRecordEditForm() {
   useEffect( ()=>{
     dispatch(resetActiveContacts())
     if( userId ) dispatch(getSecurityUser( userId ))
-    if(machine?.customer?._id){
-      dispatch(getActiveContacts(machine?.customer?._id))
-    }
+    if(machine?.customer?._id) dispatch(getActiveContacts(machine?.customer?._id))
     dispatch(getActiveSecurityUsers({roleType:['TechnicalManager','Technician']}))
   },[dispatch, machine, userId ])
-
-  useEffect(()=>{ 
-    if(!activeSecurityUsers.some(u => u._id === userId )){
-      setSecurityUsers([ ...activeSecurityUsers, securityUser ].sort((a, b) => a.name.localeCompare(b.name))) 
-    }else {
-      setSecurityUsers([ ...activeSecurityUsers ].sort((a, b) => a.name.localeCompare(b.name))) 
-    }  
-  }, [ activeSecurityUsers, securityUser, userId ])
 
   useEffect(() => {
     if (machineServiceRecord) {
@@ -137,13 +127,25 @@ function MachineServiceRecordEditForm() {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-  const { serviceRecordConfiguration, decoilers, operators } = watch()
+
+  const { serviceRecordConfiguration, decoilers, operators, technician } = watch()
 
   useEffect(() => {
     if (machineServiceRecord) {
       reset(defaultValues);
     }
   }, [machineServiceRecord, reset, defaultValues]);
+  
+  useEffect(()=>{ 
+    if( !activeSecurityUsers.some(u => u._id === userId ) && userId !== technician?._id ){
+      setSecurityUsers([ ...activeSecurityUsers, securityUser, technician ]?.sort((a, b) => a?.name?.localeCompare(b?.name))) 
+    } else if(!activeSecurityUsers.some(u => u._id === userId ) ){
+      setSecurityUsers([ ...activeSecurityUsers, securityUser ]?.sort((a, b) => a?.name?.localeCompare(b?.name))) 
+    }else {
+      setSecurityUsers([ ...activeSecurityUsers ]?.sort((a, b) => a?.name?.localeCompare(b?.name))) 
+    }  
+  }, [ activeSecurityUsers, securityUser, technician, userId ])
+
 
   const toggleCancel = () => dispatch(setMachineServiceRecordViewFormVisibility(true));
   
@@ -298,7 +300,7 @@ setCheckItemLists(updatedCheckParams);
         <Card sx={{ p: 3 }}>
           <Stack spacing={2}>
           <FormLabel content="Edit Service Record" />
-            <RHFTextField disabled name="serviceRecordConfiguration" label="Service Record Configuration" />
+            <RHFTextField disabled name="serviceRecordConfigurationName" label="Service Record Configuration" />
             <Box
                 rowGap={2}
                 columnGap={2}
@@ -314,8 +316,8 @@ setCheckItemLists(updatedCheckParams);
                 label="Technician"
                 options={securityUsers}
                 getOptionLabel={(option) => `${option?.name || ''}`}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option?.name || ''}`}</li> )}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.name || ''}`}</li> )}
               />
 
               <RHFTextField name="technicianNotes" label="Technician Notes" minRows={3} multiline/>

@@ -240,7 +240,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
                     ChipProps={{ size: 'small' }}
                   />
 
@@ -253,7 +253,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
-                    renderOption={(props, option) => (<li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
+                    renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
                     ChipProps={{ size: 'small' }}
                   />
 
@@ -266,7 +266,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
                     ChipProps={{ size: 'small' }}
                   />
 
