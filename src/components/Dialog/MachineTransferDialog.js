@@ -179,7 +179,7 @@ function MachineTransferDialog() {
                       options={activeCustomers.filter((cstmr)=> cstmr?._id !== machine?.customer?._id )}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name || ''}`}
-                      renderOption={(props, option) => ( <li {...props} key={option._id}> {option.name && option.name} </li> )}
+                      renderOption={(props, option) => ( <li {...props} key={option?._id}> {option.name && option.name} </li> )}
                     />
 
                     <RHFAutocomplete
@@ -189,7 +189,7 @@ function MachineTransferDialog() {
                       options={financialCompanies}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name || ''}`}
-                      renderOption={(props, option) => ( <li {...props} key={option._id}> {option.name && option.name} </li> )}
+                      renderOption={(props, option) => ( <li {...props} key={option?._id}> {option.name && option.name} </li> )}
                     />
 
                     <RHFAutocomplete
@@ -199,7 +199,7 @@ function MachineTransferDialog() {
                       options={activeSites}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name || ''}`}
-                      renderOption={(props, option) => ( <li {...props} key={option._id}> {option.name && option.name} </li> )}
+                      renderOption={(props, option) => ( <li {...props} key={option?._id}> {option.name && option.name} </li> )}
                     />
 
                     <RHFAutocomplete
@@ -209,7 +209,7 @@ function MachineTransferDialog() {
                       options={activeSites}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name || ''}`}
-                      renderOption={(props, option) => (<li {...props} key={option._id}> {option.name && option.name} </li> )}
+                      renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
                     />
 
                     <RHFDatePicker size="small" inputFormat='dd/MM/yyyy' name="shippingDate" label="Shipping Date" />
@@ -223,7 +223,7 @@ function MachineTransferDialog() {
                       options={activeMachineStatuses.filter((st) => st?.slug !== 'intransfer')}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name || ''}`}
-                      renderOption={(props, option) => (<li {...props} key={option._id}> {option.name && option.name} </li> )}
+                      renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
                     />
 
                   </Box>
@@ -271,7 +271,7 @@ function MachineTransferDialog() {
                     id="tags-outlined"
                     options={activeMachineDocuments}
                     getOptionLabel={(option) => `${option?.displayName || ''}`}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     renderInput={(params) => ( <TextField  {...params}  label="Machine Documents"   placeholder="Search"  /> )}
                   />
                   <Box sx={{ mb: 2, display:'flex', justifyContent: 'flex-end'  }}>
@@ -294,7 +294,7 @@ function MachineTransferDialog() {
                     id="tags-outlined"
                     options={machineConnections}
                     getOptionLabel={(option) => `${option.serialNo || ''} ${option.name ? '-' : ''} ${option.name || ''}`}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     renderInput={(params) => ( <TextField  {...params}  label="Connected Machines"   placeholder="Search"  /> )}
                   />
                   <Box sx={{ mb: 2,display:'flex', justifyContent: 'flex-end'}}>

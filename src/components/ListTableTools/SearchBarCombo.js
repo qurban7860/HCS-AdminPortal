@@ -144,7 +144,7 @@ function SearchBarCombo({
                   onFilterListByRegion(null);
                 }
               }}
-              renderOption={(props, option) => ( <li {...props} key={option._id}>{option?.name || ''}</li> )}
+              renderOption={(props, option) => ( <li {...props} key={option?._id}>{option?.name || ''}</li> )}
               renderInput={(params) => <TextField {...params} size='small' label="Region" />}
             />  
           </Grid>}
@@ -169,7 +169,7 @@ function SearchBarCombo({
                 }
               }}
               renderOption={(props, option) => (
-                <li {...props} key={option._id}>{`${
+                <li {...props} key={option?._id}>{`${
                   option.firstName ? option.firstName : ''
                 } ${option.lastName ? option.lastName : ''}`}</li>
               )}
@@ -232,7 +232,7 @@ function SearchBarCombo({
                 }
               }}
               renderOption={(props, option) => (
-                <li {...props} key={option._id}>{`${
+                <li {...props} key={option?._id}>{`${
                   option.firstName ? option.firstName : ''
                 } ${option.lastName ? option.lastName : ''}`}</li>
               )}
@@ -307,7 +307,7 @@ function SearchBarCombo({
                 }
               }}
               renderOption={(props, option) => (
-                <li {...props} key={option._id}>{option.name}</li>
+                <li {...props} key={option?._id}>{option.name}</li>
               )}
               renderInput={(params) => <TextField {...params} size='small' label="Category" />}
             />
@@ -332,7 +332,7 @@ function SearchBarCombo({
                 }
               }}
               renderOption={(props, option) => (
-                <li {...props} key={option._id}>{option.name}</li>
+                <li {...props} key={option?._id}>{option.name}</li>
               )}
               renderInput={(params) => <TextField {...params} size='small' label="Type" />}
 

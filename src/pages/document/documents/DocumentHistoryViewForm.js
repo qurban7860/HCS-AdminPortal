@@ -376,6 +376,9 @@ const handleNewFile = async () => {
         <Grid item md={12} mt={2}>
           <Card sx={{ p: 3 }}>
           <ViewFormEditDeleteButtons
+          customerPage={customerPage} 
+          machinePage={machinePage} 
+          drawingPage={drawingPage}
           customerAccess={defaultValues?.customerAccess}
           isActive={defaultValues.isActive}
           handleEdit={drawingPage && handleEditDrawing}
@@ -384,7 +387,6 @@ const handleNewFile = async () => {
           disableEditButton={drawingPage && machine?.status?.slug==="transferred"}
           backLink={(customerPage || machinePage || drawingPage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDrawingViewFormVisibility(false));}
           : () =>  machineDrawings ? navigate(PATH_DOCUMENT.document.machineDrawings.list) : navigate(PATH_DOCUMENT.document.list)}
-          drawingPage={ !customerPage || !machinePage }
       />
             <Grid container sx={{mt:2}}>
             {PDFViewerDialog && (

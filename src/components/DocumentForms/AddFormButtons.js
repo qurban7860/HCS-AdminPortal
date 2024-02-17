@@ -20,6 +20,8 @@ AddFormButtons.propTypes = {
   machineSettingPage: PropTypes.bool,
   settingPage: PropTypes.bool,
   securityUserPage: PropTypes.bool,
+  machinePage: PropTypes.bool,
+  customerPage: PropTypes.bool,
   drawingPage: PropTypes.bool,
 };
 
@@ -35,6 +37,8 @@ export default function AddFormButtons({
   machineSettingPage,
   settingPage,
   securityUserPage,
+  machinePage,
+  customerPage,
   drawingPage,
 }) {
   const navigate = useNavigate()

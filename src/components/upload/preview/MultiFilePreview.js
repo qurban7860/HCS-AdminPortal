@@ -213,7 +213,7 @@ function MultiFilePreview({
                 size='small' 
                 value={ docCategory || null} 
                 options={ activeDocumentCategories }
-                isOptionEqualToValue={( option, value ) => option._id === value._id }
+                isOptionEqualToValue={( option, value ) => option?._id === value?._id }
                 getOptionLabel={(option) => `${option?.name || ''}`}
                 onChange={(event, newValue) => onChangeDocCategory( index, event, newValue)}
                 renderInput={(params) => <TextField {...params} label="Category" size='small' />}
@@ -223,7 +223,7 @@ function MultiFilePreview({
                 size='small' 
                 value={ docType || null } 
                 options={ activeDocumentTypes.filter( dT =>  docCategory ? dT.docCategory?._id === docCategory?._id : dT )  }
-                isOptionEqualToValue={( option, value ) => option._id === value._id }
+                isOptionEqualToValue={( option, value ) => option?._id === value?._id }
                 getOptionLabel={(option) => `${option?.name || ''}`}
                 renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.name || ''}`}</li>)}
                 onChange={(event, newValue) => onChangeDocType( index, event, newValue)}

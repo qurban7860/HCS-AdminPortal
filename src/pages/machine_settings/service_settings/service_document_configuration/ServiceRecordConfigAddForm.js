@@ -191,7 +191,7 @@ export default function ServiceRecordConfigAddForm() {
                     options={recordTypes}
                     isOptionEqualToValue={(option, value) => option.name === value.name}
                     getOptionLabel={(option) => `${option.name || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || ''}`}</li>)}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li>)}
                   />
                   <RHFTextField name="docVersionNo" disabled label="Version No.*" />
                   <RHFTextField name="noOfApprovalsRequired" label="Required Approvals*" />
@@ -199,18 +199,18 @@ export default function ServiceRecordConfigAddForm() {
                     name="machineCategory"
                     label="Machine Category"
                     options={activeCategories}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || ''}`}</li> )}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
                     onChange={(event, newValue) => CategoryValHandler(event, newValue)}
                   />
                   <RHFAutocomplete 
                     name="machineModel"
                     label="Machine Model"
                     options={activeMachineModels}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || ''}`}</li> )}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
                     onChange={(event, newValue) => MachineModelValHandler(event, newValue)}
                   />
                 </Box>

@@ -110,10 +110,10 @@ export default function SettingAddForm() {
                       name="category"
                       label="Category*"
                       options={activeTechParamCategories}
-                      isOptionEqualToValue={(option, value) => option._id === value._id}
+                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name || ''}`}
                       renderOption={(props, option) => (
-                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                        <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
                       onChange={(event, newValue) => {
                         if (newValue) {
@@ -134,11 +134,11 @@ export default function SettingAddForm() {
                       name="techParamVal"
                       label="Technical Parameters*"
                       options={techparamsByCategory.filter((item) => !settings.some((setting) => setting?.techParam?._id === item._id))}
-                      isOptionEqualToValue={(option, value) => option._id === value._id}
+                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => option.name}
                       id="controllable-states-demo"
                       renderOption={(props, option) => (
-                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                        <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
                       onChange={(event, newValue) => {
                         if (newValue) {

@@ -152,7 +152,7 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
                     name="documentCategory"
                     value={documentCategoryVal || null}
                     options={activeDocumentCategories}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => option.name}
                     id="controllable-states-demo"
                     renderInput={(params) => (
@@ -167,7 +167,7 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
                     name="documentType"
                     value={documentTypeVal || null}
                     options={activeDocumentTypes}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => option.name}
                     id="controllable-states-demo"
                     renderInput={(params) => (
@@ -200,7 +200,7 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
                     handleIsActiveChange={handleIsActiveChange}
                   />
 
-                <AddFormButtons drawingPage={ !customerPage && !machinePage } isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+                <AddFormButtons customerPage={customerPage} machinePage={machinePage} drawingPage={drawingPage} isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>
           </Grid>

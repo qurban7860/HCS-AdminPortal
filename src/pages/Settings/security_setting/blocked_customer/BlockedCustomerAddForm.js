@@ -108,10 +108,10 @@ export default function BlockedCustomerAddForm() {
                     name="customer"
                     label="Customer*"
                     options={customersNotBlocked}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                      <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
                   />
               </Box>

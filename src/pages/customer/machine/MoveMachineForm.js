@@ -119,10 +119,10 @@ export default function MoveMachineForm() {
                     name="customer"
                     label="Customer*"
                     options={activeCustomers.filter(activeCustomer => activeCustomer._id !== id)}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                      <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
                   />
                 <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}>
@@ -130,10 +130,10 @@ export default function MoveMachineForm() {
                     name="installationSite"
                     label="Installation Site"
                     options={activeSites}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                      <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
                   />
 
@@ -141,10 +141,10 @@ export default function MoveMachineForm() {
                     name="billingSite"
                     label="Billing Site"
                     options={activeSites}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                      <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
                   />
 

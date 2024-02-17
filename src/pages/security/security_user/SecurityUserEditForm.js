@@ -139,8 +139,8 @@ const onChangeContact = (contact) => {
                 label="Customer"
                 options={ allActiveCustomers }
                 getOptionLabel={(option) => option?.name || ''}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option?.name || ''}</li>)}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                renderOption={(props, option) => (<li  {...props} key={option?._id}>{option?.name || ''}</li>)}
               />
 
               <RHFAutocomplete
@@ -149,8 +149,8 @@ const onChangeContact = (contact) => {
                 options={activeContacts}
                 onChange={(event, newValue) => onChangeContact(newValue) }
                 getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option?.firstName || ''}{' '}{option?.lastName || ''}</li>)}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                renderOption={(props, option) => (<li  {...props} key={option?._id}>{option?.firstName || ''}{' '}{option?.lastName || ''}</li>)}
               />
 
               <RHFTextField name="name" label="Full Name*" />
@@ -210,8 +210,8 @@ const onChangeContact = (contact) => {
                 label="Regions"
                 options={activeRegions}
                 getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => ( <li {...props} key={option._id}> {option?.name || ''} </li>)}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                renderOption={(props, option) => ( <li {...props} key={option?._id}> {option?.name || ''} </li>)}
                 ChipProps={{ size: 'small' }}
               />
 
@@ -223,8 +223,8 @@ const onChangeContact = (contact) => {
                 label="Customers"
                 options={allActiveCustomers}
                 getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => ( <li {...props} key={option._id}> {option?.name || ''} </li> )}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                renderOption={(props, option) => ( <li {...props} key={option?._id}> {option?.name || ''} </li> )}
                 ChipProps={{ size: 'small' }}
               />
 
@@ -236,8 +236,8 @@ const onChangeContact = (contact) => {
                 label="Machines"
                 options={allMachines}
                 getOptionLabel={(option) => `${option.serialNo} ${option.name ? '-' : ''} ${option?.name || ''}`}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.serialNo || ''} ${option.name ? '-' : ''} ${option.name || ''}`}</li>)}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.serialNo || ''} ${option.name ? '-' : ''} ${option.name || ''}`}</li>)}
                 ChipProps={{ size: 'small' }}
               />
 
