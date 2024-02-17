@@ -41,9 +41,7 @@ function MachineServiceRecordEditForm() {
   useEffect( ()=>{
     dispatch(resetActiveContacts())
     if( userId ) dispatch(getSecurityUser( userId ))
-    if(machine?.customer?._id){
-      dispatch(getActiveContacts(machine?.customer?._id))
-    }
+    if(machine?.customer?._id) dispatch(getActiveContacts(machine?.customer?._id))
     dispatch(getActiveSecurityUsers({roleType:['TechnicalManager','Technician']}))
   },[dispatch, machine, userId ])
 
@@ -137,9 +135,9 @@ function MachineServiceRecordEditForm() {
       reset(defaultValues);
     }
   }, [machineServiceRecord, reset, defaultValues]);
-
+  
   useEffect(()=>{ 
-    if( !activeSecurityUsers.some(u => u._id === userId ) && userId !== technician ){
+    if( !activeSecurityUsers.some(u => u._id === userId ) && userId !== technician?._id ){
       setSecurityUsers([ ...activeSecurityUsers, securityUser, technician ]?.sort((a, b) => a?.name?.localeCompare(b?.name))) 
     } else if(!activeSecurityUsers.some(u => u._id === userId ) ){
       setSecurityUsers([ ...activeSecurityUsers, securityUser ]?.sort((a, b) => a?.name?.localeCompare(b?.name))) 

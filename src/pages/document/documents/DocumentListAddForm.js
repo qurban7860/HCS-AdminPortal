@@ -235,7 +235,7 @@ const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNum
         }
       }
       // if(!files.some( f => f?.hashMD5 === _files_MD5[index] )){
-        file.machine = machine?._id
+        file.drawingMachine = machine?._id
         file.hashMD5 = _files_MD5[index]
         file.displayName = displayName
         file.docCategory = defaultDocCategory

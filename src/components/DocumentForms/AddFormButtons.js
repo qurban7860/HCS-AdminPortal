@@ -59,7 +59,7 @@ export default function AddFormButtons({
   };
 
   useLayoutEffect(()=>{
-    if(( machineSettingPage || settingPage || securityUserPage || drawingPage ) && ( isSettingReadOnly || isSecurityReadOnly || !isDocumentAccessAllowed || !isDrawingAccessAllowed )){
+    if(( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly || !isDocumentAccessAllowed || !isDrawingAccessAllowed )){
       navigate(PATH_DASHBOARD.general.app)
     }
   },[ 

@@ -36,7 +36,6 @@ function ViewFormEditDeleteButtons({
   machineSettingPage,
   settingPage,
   securityUserPage,
-  drawingPage,
   // Handlers
   handleVerification,
   handleVerificationTitle,
@@ -78,7 +77,10 @@ function ViewFormEditDeleteButtons({
   approveConfiglength,
   excludeReports,
   isConectable,
-  hanldeViewGallery
+  hanldeViewGallery,
+  customerPage, 
+  machinePage, 
+  drawingPage,
 
 }) {
   const { id } = useParams();
@@ -147,18 +149,20 @@ function ViewFormEditDeleteButtons({
   };
 
   useLayoutEffect(()=>{
-    if(( machineSettingPage || settingPage || securityUserPage || drawingPage ) && ( !isSettingAccessAllowed || !isSecurityUserAccessAllowed || !isDocumentAccessAllowed || !isDrawingAccessAllowed )){
+    if(( machineSettingPage || settingPage || securityUserPage ) && ( !isSettingAccessAllowed || !isSecurityUserAccessAllowed || !isDocumentAccessAllowed || ( !isDrawingAccessAllowed ) )){
       navigate(PATH_DASHBOARD.general.app)
     }
   },[ 
     machineSettingPage, 
     settingPage, 
     securityUserPage, 
-    drawingPage, 
     isSettingAccessAllowed,
     isSecurityUserAccessAllowed, 
     isDocumentAccessAllowed, 
     isDrawingAccessAllowed ,
+    drawingPage, 
+    customerPage, 
+    machinePage, 
     navigate
   ])
 
@@ -798,6 +802,8 @@ ViewFormEditDeleteButtons.propTypes = {
   machineSettingPage: PropTypes.bool,
   settingPage: PropTypes.bool,
   securityUserPage: PropTypes.bool,
-  drawingPage: PropTypes.bool,
   hanldeViewGallery: PropTypes.func,
+  customerPage: PropTypes.bool, 
+  machinePage: PropTypes.bool, 
+  drawingPage: PropTypes.bool,
 };
