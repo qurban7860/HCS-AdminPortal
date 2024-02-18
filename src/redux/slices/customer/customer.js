@@ -479,11 +479,11 @@ export function addCustomer(params) {
         if(params?.technicalContactEmail){
           technicalContact.email = params?.technicalContactEmail
         }
-        if(params?.technicalContactFirstName){
-          technicalContact.firstName = params?.technicalContactFirstName
-        }
         if(params?.technicalContactLastName){
           technicalContact.lastName = params?.technicalContactLastName
+        }
+        if(params?.technicalContactFirstName){
+          technicalContact.firstName = params?.technicalContactFirstName
           data.technicalContact = technicalContact
         }
 
