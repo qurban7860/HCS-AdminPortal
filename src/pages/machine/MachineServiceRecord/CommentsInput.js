@@ -109,7 +109,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                     { childRow?.inputType === 'Status' && <Autocomplete
                         disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
                         options={statusTypes}
-                        value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue || null }
+                        value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue || statusTypes[0] }
                         isOptionEqualToValue={(option, value) => option?.name === value?.name}
                         getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                         onChange={(event, newInputValue) =>  handleChangeCheckItemListStatus(index, childIndex, newInputValue) }
