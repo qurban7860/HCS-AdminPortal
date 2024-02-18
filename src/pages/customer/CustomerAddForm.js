@@ -66,7 +66,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       website: '',
       // Address Information
       street: '',
-      suburban: '',
+      suburb: '',
       city: '',
       postcode: '',
       region: '',
@@ -171,7 +171,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
             >
               <RHFTextField name="street" label="Street" />
-              <RHFTextField name="suburban" label="Sub Urban" />
+              <RHFTextField name="suburb" label="Suburb" />
               <RHFTextField name="city" label="City" />
               <RHFTextField name="postcode" label="Post Code" />
               <RHFTextField name="region" label="Region" />

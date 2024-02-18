@@ -422,7 +422,7 @@ export function addCustomer(params) {
             website: params?.website,
             address: {
               street: params?.street,
-              suburb: params?.suburban,
+              suburb: params?.suburb,
               city: params?.city,
               postcode: params?.postcode,
               country: params?.country?.label,
@@ -451,43 +451,48 @@ export function addCustomer(params) {
         };
 
         const billingContact = {}
-        let technicalContact = {}
+        const technicalContact = {}
 
-        if(params?.billingContactFirstName){
-          billingContact.firstName = params?.billingContactFirstName
-        }
         if(params?.billingContactLastName){
           billingContact.lastName = params?.billingContactLastName
         }
         if(params?.billingContactTitle){
           billingContact.title = params?.billingContactTitle
         }
-        if(params?.billingContactPhone){
+        if(params?.billingContactPhone && params?.billingContactFirstName){
           billingContact.phone = params?.billingContactPhone
         }
         if(params?.billingContactEmail){
           billingContact.email = params?.billingContactEmail
         }
+        if(params?.billingContactFirstName){
+          billingContact.firstName = params?.billingContactFirstName
+          data.billingContact = billingContact
+        }
 
-        if(params?.technicalContactFirstName){
-          technicalContact.firstName = params?.technicalContactFirstName
-        }
-        if(params?.technicalContactLastName){
-          technicalContact.lastName = params?.technicalContactLastName
-        }
         if(params?.technicalContactTitle){
           technicalContact.title = params?.technicalContactTitle
         }
-        if(params?.technicalContactPhone){
+        if(params?.technicalContactPhone ){
           technicalContact.phone = params?.technicalContactPhone
         }
         if(params?.technicalContactEmail){
           technicalContact.email = params?.technicalContactEmail
         }
-
-        if( params?.isSameContact ){
-          technicalContact = billingContact
+        if(params?.technicalContactFirstName){
+          technicalContact.firstName = params?.technicalContactFirstName
         }
+        if(params?.technicalContactLastName){
+          technicalContact.lastName = params?.technicalContactLastName
+          data.technicalContact = technicalContact
+        }
+
+        if( params?.isSameContact && params?.billingContactFirstName ){
+          data.technicalContact = billingContact
+        }
+
+        
+        
         const response = await axios.post(`${CONFIG.SERVER_URL}crm/customers`, data);
         return response
         // dispatch(slice.actions.getCustomerSuccess(response.data.Customer));

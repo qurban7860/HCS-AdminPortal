@@ -229,6 +229,33 @@ export function getActiveDocumentTypes(cancelToken) {
   };
 }
 
+
+// -----------------------------------Get Active Document Types-----------------------------------
+
+export function getActiveDrawingTypes(cancelToken) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/documentType/` , 
+      {
+        params: {
+          isArchived: false,
+          isActive: true,
+          drawing: true
+        },
+        cancelToken: cancelToken?.token,
+      }
+      );
+      dispatch(slice.actions.getActiveDocumentTypesSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Document Types loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      // throw error;
+    }
+  };
+}
+
 // -----------------------------------Get Active Document Types of Categories-----------------------------------
 
 export function getActiveDocumentTypesWithCategory(typeCategory, categoryBy ) {

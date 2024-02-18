@@ -16,7 +16,7 @@ import { PATH_DOCUMENT } from '../../../routes/paths';
 import { checkDocument } from '../../../redux/slices/document/document';
 import { addDrawingsList, setDrawingListAddFormVisibility } from '../../../redux/slices/products/drawing';
 import { getActiveDocumentCategories, resetActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
-import { getActiveDocumentTypesWithCategory, resetActiveDocumentTypes } from '../../../redux/slices/document/documentType';
+import { getActiveDrawingTypes, resetActiveDocumentTypes } from '../../../redux/slices/document/documentType';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFUpload,} from '../../../components/hook-form';
@@ -62,8 +62,8 @@ function DocumentListAddForm({
   const [ preview, setPreview ] = useState(false);
 
   useLayoutEffect( () => { 
-    dispatch( getActiveDocumentCategories() );  
-    dispatch( getActiveDocumentTypesWithCategory() ) 
+    dispatch( getActiveDocumentCategories({drawing: true}) );  
+    dispatch( getActiveDrawingTypes() ) 
       return ()=>{ 
       dispatch( resetActiveDocumentCategories() );  
       dispatch( resetActiveDocumentTypes() ) 
