@@ -23,7 +23,7 @@ export const AddCustomerSchema = Yup.object().shape({
   website: Yup.string().label('Web Site').trim().max(200),
   // Address Information
   street: Yup.string().label('Street').trim().max(200),
-  suburban: Yup.string().label('Sub Urban').trim().max(200),
+  suburb: Yup.string().label('Sub Urban').trim().max(200),
   city: Yup.string().label('City').trim().max(200),
   postcode: Yup.string().label('Post Code').trim().max(200),
   region: Yup.string().label('Region').trim().max(200),
