@@ -1,31 +1,16 @@
 import * as Yup from 'yup';
-import {  useMemo, useState, useLayoutEffect, useEffect } from 'react';
+import {  useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 // @mui
-import {
-  Card,
-  Grid,
-  Stack,
-  Autocomplete,
-  Container,
-} from '@mui/material';
-// global
-// slice
-// routes
-import { PATH_PAGE, PATH_SETTING } from '../../../../routes/paths';
+import { Card, Grid, Stack, Container } from '@mui/material';
+import {  PATH_SETTING } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
-import FormProvider, {
-  RHFTextField,
-  RHFSwitch,
-  RHFAutocomplete,
-} from '../../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete } from '../../../../components/hook-form';
 import { getRole, updateRole } from '../../../../redux/slices/securityUser/role';
 import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
 import { Cover } from '../../../../components/Defaults/Cover';
@@ -33,8 +18,8 @@ import { Cover } from '../../../../components/Defaults/Cover';
 // ----------------------------------------------------------------------
 
 export default function RoleEditForm() {
-  const { role, userRoleTypes } = useSelector((state) => state.role);;
 
+  const { role, userRoleTypes } = useSelector((state) => state.role);;
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
@@ -72,16 +57,11 @@ export default function RoleEditForm() {
 
   const {
     reset,
-    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const { roleType }= watch();
-
-  const toggleCancel = () => {
-    navigate(PATH_SETTING.role.view(role._id));
-  };
+  const toggleCancel = () => navigate(PATH_SETTING.role.view(role._id));
 
   const onSubmit = async (data) => {
     try {

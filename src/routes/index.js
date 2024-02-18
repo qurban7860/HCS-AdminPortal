@@ -165,6 +165,7 @@ import {
   // DocumentDashboard    
   DocumentList, 
   DocumentAddForm, 
+  DocumentAddListForm,
   DocumentEditForm, 
   DocumentViewForm,
   DocumentGallery, 
@@ -686,6 +687,7 @@ export default function Router() {
         {element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         {path: 'list',element: <DocumentList />},
         {path: 'new', element: <DocumentAddForm /> },
+        {path: 'newList', element: <DocumentAddListForm /> },
         {path: ':id/edit', element: <DocumentEditForm /> },
         {path: ':id/view', element: <DocumentViewForm /> },
         {path: ':id/gallery', element: <DocumentGallery /> },
@@ -695,6 +697,7 @@ export default function Router() {
           children: [
             { path: 'list', element: <MachineDrawings/> },
             { path: 'new', element: <MachineDrawingsAddForm/> },
+            {path: 'newList', element: <DocumentAddListForm machineDrawings /> },
             { path: ':id/view', element: <MachineDrawingsViewForm /> },
           ]
         }

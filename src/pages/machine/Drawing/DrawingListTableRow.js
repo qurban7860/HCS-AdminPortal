@@ -43,8 +43,8 @@ export default function DrawingListTableRow({
   
   return (
       <StyledTableRow hover selected={selected}>
+        <LinkTableCell param={document?.displayName} stringLength={ 55 } onClick={onViewRow} />
         <TableCell>{document?.referenceNumber}</TableCell>
-        <LinkTableCell param={document?.displayName} onClick={onViewRow} />
         <TableCell>{document?.stockNumber}</TableCell>
         { smScreen && <TableCell>{documentType?.name}</TableCell>}
         { smScreen && <TableCell>{documentCategory?.name}</TableCell>}

@@ -1,13 +1,12 @@
-import { useMemo, useEffect } from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
 // @mui
 import { Card, Grid } from '@mui/material';
 // redux
 import { deleteRole } from '../../../../redux/slices/securityUser/role';
 // paths
-import { PATH_PAGE, PATH_SETTING } from '../../../../routes/paths';
+import { PATH_SETTING } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import ViewFormAudit from '../../../../components/ViewForms/ViewFormAudit';

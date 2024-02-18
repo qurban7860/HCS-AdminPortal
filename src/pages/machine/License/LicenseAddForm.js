@@ -71,8 +71,8 @@ export default function LicenseAddForm() {
           enqueueSnackbar(Snacks.licenseAdded);
           dispatch(setLicenseFormVisibility(false));
     } catch (err) {
-      enqueueSnackbar(Snacks.failedAddLicense, { variant: 'error' });
-      console.error(err.message);
+      enqueueSnackbar(err, { variant: 'error' });
+      console.error(err);
     }
     
   };

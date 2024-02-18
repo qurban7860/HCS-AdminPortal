@@ -13,7 +13,7 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
-import { PATH_CUSTOMER, PATH_PAGE } from '../../../../routes/paths';
+import { PATH_CUSTOMER } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import {

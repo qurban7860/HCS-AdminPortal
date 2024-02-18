@@ -346,6 +346,7 @@ export const PATH_DOCUMENT = {
   document: {
     list: path(ROOTS_DOCUMENT, '/list'),
     new: path(ROOTS_DOCUMENT, '/new'),
+    newList: path(ROOTS_DOCUMENT, '/newList'),
     gallery: (id) => path(ROOTS_DOCUMENT, `/${id}/gallery`),
     edit: (id) => path(ROOTS_DOCUMENT, `/${id}/edit`),
     view: (id) => path(ROOTS_DOCUMENT, `/${id}/view`),
@@ -354,6 +355,7 @@ export const PATH_DOCUMENT = {
     machineDrawings:{
       list: path(ROOTS_DOCUMENT, '/machineDrawings/list'),
       new: path(ROOTS_DOCUMENT, '/machineDrawings/new'),
+      newList: path(ROOTS_DOCUMENT, '/machineDrawings/newList'),
       view: (id) => path(ROOTS_DOCUMENT, `/machineDrawings/${id}/view`),
     }
 

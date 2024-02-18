@@ -8,6 +8,7 @@ const initialState = {
   intial: false,
   drawingFormVisibility: false,
   drawingAddFormVisibility: false,
+  drawingListAddFormVisibility: false,
   drawingViewFormVisibility: false,
   drawingEditFormVisibility: false,
   responseMessage: null,
@@ -47,6 +48,10 @@ const slice = createSlice({
     // SET VIEW TOGGLE
     setDrawingViewFormVisibility(state, action){
       state.drawingViewFormVisibility = action.payload;
+    },
+    // SET ADD LIST TOGGLE
+    setDrawingListAddFormVisibility(state, action){
+      state.drawingListAddFormVisibility= action.payload;
     },
   
     // HAS ERROR
@@ -123,6 +128,7 @@ export const {
   setDrawingAddFormVisibility,
   setDrawingEditFormVisibility,
   setDrawingViewFormVisibility,
+  setDrawingListAddFormVisibility,
   resetDrawing,
   resetDrawings,
   setResponseMessage,
@@ -247,6 +253,43 @@ export function addDrawing(params) {
         throw error;
       }
     };
+}
+
+// ----------------------------Add Document------------------------------------------
+
+export function addDrawingsList( params ) {
+  return async (dispatch) => {
+      dispatch(slice.actions.startLoading());
+      try {
+        const formData = new FormData();
+        if (params?.files) {
+          params?.files?.forEach((file, index) => {
+            if (file) {
+              formData.append('docType', file?.docType?._id);
+              formData.append('documentType', file?.docType?._id);
+              formData.append('docCategory', file?.docCategory?._id);
+              formData.append('documentCategory', file?.docCategory?._id);
+              formData.append('versionNo', file?.versionNo);
+              formData.append('name', file?.displayName);
+              formData.append('displayName', file?.displayName);
+              formData.append('referenceNumber', file?.referenceNumber);
+              formData.append('stockNumber', file?.stockNumber);
+              if( file?.drawingMachine ){
+                formData.append('drawingMachine', file?.drawingMachine );
+              }
+              formData.append('images', file );
+            }
+          });
+        }
+
+    await axios.post(`${CONFIG.SERVER_URL}documents/documentmulti/`, formData );
+    dispatch(slice.actions.setResponseMessage('Drawing saved successfully!'));
+  } catch (error) {
+    console.log(error);
+    dispatch(slice.actions.hasError(error.Message));
+    throw error;
+  }
+};
 }
 
 // --------------------------------------------------------------------------

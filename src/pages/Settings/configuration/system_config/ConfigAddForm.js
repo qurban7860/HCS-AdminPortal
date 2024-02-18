@@ -1,4 +1,3 @@
-// import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useMemo } from 'react';
 import { useDispatch } from 'react-redux';
@@ -7,12 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import {
-  Box,
-  Card,
-  Grid,
-  Typography,
-} from '@mui/material';
+import { Box, Card, Grid } from '@mui/material';
 // routes
 import { PATH_SETTING } from '../../../../routes/paths';
 // components

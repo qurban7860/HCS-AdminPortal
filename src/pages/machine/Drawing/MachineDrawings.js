@@ -7,6 +7,7 @@ import {
   setDrawingFormVisibility,
   setDrawingViewFormVisibility,
   setDrawingAddFormVisibility,
+  setDrawingListAddFormVisibility,
 } from '../../../redux/slices/products/drawing';
 // components
 import DrawingList from './DrawingList'
@@ -14,6 +15,7 @@ import DrawingAddForm from './DrawingAddForm'
 import DocumentHistoryViewForm from '../../document/documents/DocumentHistoryViewForm'
 import DocumentEditForm from '../../document/documents/DocumentEditForm';
 import DocumentAddForm from '../../document/documents/DocumentAddForm';
+import DocumentListAddForm from '../../document/documents/DocumentListAddForm';
 
 
 export default function MachineDrawings() {
@@ -22,23 +24,27 @@ export default function MachineDrawings() {
     const { drawingFormVisibility, 
             drawingAddFormVisibility, 
             drawingEditFormVisibility, 
-            drawingViewFormVisibility } = useSelector((state) => state.drawing );
+            drawingViewFormVisibility,
+            drawingListAddFormVisibility,
+            } = useSelector((state) => state.drawing );
     const { machine } = useSelector((state) => state.machine);
 
     useEffect(()=>{
-        dispatch(setDrawingFormVisibility(false)) // for attach drawing
+        dispatch(setDrawingFormVisibility(false));
         dispatch(setDrawingEditFormVisibility(false));
         dispatch(setDrawingViewFormVisibility(false));
-        dispatch(setDrawingAddFormVisibility(false)); // for add new drawing
+        dispatch(setDrawingAddFormVisibility(false));
+        dispatch(setDrawingListAddFormVisibility(false))
         dispatch(resetDrawings());
     },[dispatch, machine])
 
   return (<>
-    { !drawingAddFormVisibility && !drawingFormVisibility && !drawingEditFormVisibility && !drawingViewFormVisibility && <DrawingList /> }
-    { drawingAddFormVisibility && !drawingFormVisibility && !drawingEditFormVisibility && !drawingViewFormVisibility && <DocumentAddForm drawingPage machineDrawings /> }
-    { !drawingAddFormVisibility && drawingFormVisibility && !drawingEditFormVisibility && !drawingViewFormVisibility && <DrawingAddForm/> }
-    { !drawingAddFormVisibility && !drawingFormVisibility && drawingEditFormVisibility && !drawingViewFormVisibility && <DocumentEditForm drawingPage/> }
-    { !drawingAddFormVisibility && !drawingFormVisibility && !drawingEditFormVisibility && drawingViewFormVisibility && <DocumentHistoryViewForm drawingPage /> }
+    { !drawingAddFormVisibility && !drawingListAddFormVisibility && !drawingFormVisibility && !drawingEditFormVisibility && !drawingViewFormVisibility && <DrawingList /> }
+    { drawingAddFormVisibility && !drawingListAddFormVisibility && !drawingFormVisibility && !drawingEditFormVisibility && !drawingViewFormVisibility && <DocumentAddForm drawingPage machineDrawings /> }
+    { !drawingAddFormVisibility && drawingListAddFormVisibility && !drawingFormVisibility && !drawingEditFormVisibility && !drawingViewFormVisibility && <DocumentListAddForm /> }
+    { !drawingAddFormVisibility && !drawingListAddFormVisibility && drawingFormVisibility && !drawingEditFormVisibility && !drawingViewFormVisibility && <DrawingAddForm/> }
+    { !drawingAddFormVisibility && !drawingListAddFormVisibility && !drawingFormVisibility && drawingEditFormVisibility && !drawingViewFormVisibility && <DocumentEditForm drawingPage/> }
+    { !drawingAddFormVisibility && !drawingListAddFormVisibility && !drawingFormVisibility && !drawingEditFormVisibility && drawingViewFormVisibility && <DocumentHistoryViewForm drawingPage /> }
     </>)
 }
 

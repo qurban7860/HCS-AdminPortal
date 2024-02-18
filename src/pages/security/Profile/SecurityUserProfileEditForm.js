@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Typography, Container, Checkbox } from '@mui/material';
+import { Box, Card, Grid, Stack, Container, Checkbox } from '@mui/material';
 // routes
 import { PATH_SECURITY } from '../../../routes/paths';
 // components
@@ -150,8 +150,8 @@ useEffect(() => {
                 label="Customer"
                 options={ allActiveCustomers }
                 getOptionLabel={(option) => option?.name || ''}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option?.name || ''}</li>)}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                renderOption={(props, option) => (<li  {...props} key={option?._id}>{option?.name || ''}</li>)}
               />
 
               <RHFAutocomplete
@@ -161,8 +161,8 @@ useEffect(() => {
                 options={activeContacts}
                 onChange={(event, newValue) => onChangeContact(newValue) }
                 getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option?.firstName || ''}{' '}{option?.lastName || ''}</li>)}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                renderOption={(props, option) => (<li  {...props} key={option?._id}>{option?.firstName || ''}{' '}{option?.lastName || ''}</li>)}
               />
 
               <RHFTextField name="name" label="Full Name*" />
@@ -192,7 +192,7 @@ useEffect(() => {
                 label="Roles"
                 options={ activeRoles }
                 getOptionLabel={(option) => `${option?.name || ''} `}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 renderOption={(props, option, { selected }) => ( <li {...props}> <Checkbox checked={selected} />{option?.name || ''}</li> )}
               />
               
@@ -226,8 +226,8 @@ useEffect(() => {
                 label="Regions"
                 options={activeRegions}
                 getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => ( <li {...props} key={option._id}> {option?.name || ''} </li>)}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                renderOption={(props, option) => ( <li {...props} key={option?._id}> {option?.name || ''} </li>)}
                 ChipProps={{ size: 'small' }}
               />
 
@@ -239,8 +239,8 @@ useEffect(() => {
                 label="Customers"
                 options={allActiveCustomers}
                 getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => ( <li {...props} key={option._id}> {option?.name || ''} </li> )}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                renderOption={(props, option) => ( <li {...props} key={option?._id}> {option?.name || ''} </li> )}
                 ChipProps={{ size: 'small' }}
               />
 
@@ -252,8 +252,8 @@ useEffect(() => {
                 label="Machines"
                 options={allMachines}
                 getOptionLabel={(option) => `${option.serialNo} ${option.name ? '-' : ''} ${option?.name || ''}`}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.serialNo || ''} ${option.name ? '-' : ''} ${option.name || ''}`}</li>)}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.serialNo || ''} ${option.name ? '-' : ''} ${option.name || ''}`}</li>)}
                 ChipProps={{ size: 'small' }}
               />
 

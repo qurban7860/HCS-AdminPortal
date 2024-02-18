@@ -399,9 +399,9 @@ function ToolsInstalledEditForm() {
                         disabled
                         options={activeTools}
                         getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                        isOptionEqualToValue={(option, value) => option._id === value._id}
+                        isOptionEqualToValue={(option, value) => option?._id === value?._id}
                         renderOption={(props, option) => (
-                          <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                          <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
                         )}
                         onChange={(event, value) => field.onChange(value)}
                         id="combo-box-demo"

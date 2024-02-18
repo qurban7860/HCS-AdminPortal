@@ -6,6 +6,7 @@ import { CONFIG } from '../../../config-global';
 // ----------------------------------------------------------------------
 const initialState = {
   documentFormVisibility: false,
+  documentListFormVisibility: false,
   documentEditFormVisibility: false,
   documentViewFormVisibility: false,
   documentHistoryViewFormVisibility: false,
@@ -61,6 +62,11 @@ const slice = createSlice({
     // SET TOGGLE
     setDocumentFormVisibility(state, action){
       state.documentFormVisibility = action.payload;
+    },
+
+    // SET LIST TOGGLE
+    setDocumentListFormVisibility(state, action){
+      state.documentListFormVisibility = action.payload;
     },
 
     // SET TOGGLE
@@ -271,6 +277,7 @@ export default slice.reducer;
 // Actions
 export const {
   setDocumentFormVisibility,
+  setDocumentListFormVisibility,
   setDocumentEditFormVisibility,
   setDocumentViewFormVisibility,
   setDocumentHistoryViewFormVisibility,
@@ -358,6 +365,7 @@ export function addDocument(customerId , machineId ,  params) {
           }
           if (params?.files) {
             params?.files?.forEach((file, index) => {
+              console.log("file : ",file)
               formData.append(`images`, file);
             });
           }
@@ -373,6 +381,42 @@ export function addDocument(customerId , machineId ,  params) {
       throw error;
     }
   };
+}
+
+// ----------------------------Add Document------------------------------------------
+
+export function addDocumentList( params ) {
+  return async (dispatch) => {
+      dispatch(slice.actions.startLoading());
+      try {
+        const formData = new FormData();
+
+        if (params?.files) {
+          params?.files?.forEach((file, index) => {
+            if (file) {
+            console.log("addDocumentList file : ",file)
+            formData.append('docType', file?.docType?._id);
+            formData.append('documentType', file?.docType?._id);
+            formData.append('docCategory', file?.docCategory?._id);
+            formData.append('documentCategory', file?.docCategory?._id);
+            formData.append('versionNo', file?.versionNo);
+            formData.append('name', file?.displayName);
+            formData.append('displayName', file?.displayName);
+            formData.append('referenceNumber', file?.referenceNumber);
+            formData.append('stockNumber', file?.stockNumber);
+            formData.append('images', file );
+            }
+          });
+        }
+
+    await axios.post(`${CONFIG.SERVER_URL}documents/documentmulti/`, formData );
+    dispatch(slice.actions.setResponseMessage('Document saved successfully'));
+  } catch (error) {
+    console.log(error);
+    dispatch(slice.actions.hasError(error.Message));
+    throw error;
+  }
+};
 }
 
 // ---------------------------------Update Document-------------------------------------

@@ -6,7 +6,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { Box, Card, Stack, FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
-import { MuiChipsInput } from 'mui-chips-input';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { useSnackbar } from '../../../components/snackbar';
 import { 
@@ -17,7 +16,7 @@ import {
   ProfileTypes,
 } from '../../../redux/slices/products/profile';
 import { ProfileSchema } from './schemas/ProfileSchema';
-import FormProvider, { RHFSwitch, RHFTextField } from '../../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFTextField, RHFChipsInput } from '../../../components/hook-form';
 import { getMachine } from '../../../redux/slices/products/machine';
 import { useAuthContext } from '../../../auth/useAuthContext';
 
@@ -58,12 +57,6 @@ export default function ProfileEditForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const [chips, setChips] = useState(defaultValues?.names)
-  const handleChipChange = (newChips) => {
-    const array = [...new Set(newChips)]
-    setChips(array)
-  }
-
   const toggleCancel = async() => {
     dispatch(setProfileEditFormVisibility (false));
     dispatch(setProfileViewFormVisibility(true));
@@ -77,7 +70,6 @@ export default function ProfileEditForm() {
   };
 
   const onSubmit = async (data) => {
-    data.names = chips;
     try {
       await dispatch(await updateProfile(machine._id, profile._id, data));
       reset();
@@ -122,7 +114,7 @@ export default function ProfileEditForm() {
             </Box>  
 
             <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)',}} sx={{mt:2}}>
-              <MuiChipsInput fullWidth name="names" label="Other Names" value={chips} onChange={handleChipChange} />
+              <RHFChipsInput name="names" label="Other Names" />
             </Box>
 
             <Box sx={{marginTop:2}} rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(4, 1fr)',}}>

@@ -111,7 +111,7 @@ export default function ModelEditForm() {
                   name="category"
                   label="Category*"
                   options={activeCategories}
-                  isOptionEqualToValue={(option, value) => option._id === value._id}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   getOptionLabel={(option) => option.name}
                   id="controllable-states-demo"
                   ChipProps={{ size: 'small' }}

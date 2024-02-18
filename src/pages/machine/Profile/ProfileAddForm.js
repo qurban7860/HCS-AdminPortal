@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
-import { MuiChipsInput } from 'mui-chips-input';
 // slice
 import { ProfileTypes, addProfile, setProfileFormVisibility } from '../../../redux/slices/products/profile';
 // schema
@@ -15,7 +14,7 @@ import { useSnackbar } from '../../../components/snackbar';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 
 // assets
-import FormProvider, { RHFSwitch, RHFTextField } from '../../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFTextField, RHFChipsInput } from '../../../components/hook-form';
 import { getMachine } from '../../../redux/slices/products/machine';
 // constants
 
@@ -60,11 +59,6 @@ export default function ProfileAddForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const [chips, setChips] = useState([])
-  const handleChipChange = (newChips) => {
-    const array = [...new Set(newChips)]
-    setChips(array)
-  }
   
   useEffect(() => {
     const hasManufacturer = profiles.some((profile) => profile.type === 'MANUFACTURER');
@@ -80,7 +74,6 @@ export default function ProfileAddForm() {
   };
 
   const onSubmit = async (data) => {
-    data.names = chips;
     try {
           await dispatch(addProfile(machine._id, data));
           reset();
@@ -122,16 +115,13 @@ export default function ProfileAddForm() {
 
             </Box>  
             <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)',}} sx={{mt:2}} >
-              <MuiChipsInput fullWidth name="names" label="Other Names" value={chips} onChange={handleChipChange} />
+              <RHFChipsInput name="names" label="Other Names" />
             </Box>
             <Box sx={{marginTop:2}} rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(4, 1fr)',}}>
-
-
               <RHFTextField name="web" label="Web"/>
               <RHFTextField name="flange" label="Flange"/>
               <RHFTextField name="thicknessStart" label="Min. Thickness"/>
               <RHFTextField name="thicknessEnd" label="Max. Thickness"/>
-              
             </Box>
               <RHFSwitch name="isActive"label="Active" />
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

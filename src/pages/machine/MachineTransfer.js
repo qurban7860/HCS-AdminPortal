@@ -171,7 +171,7 @@ function MachineTransfer() {
                       options={activeCustomers.filter((cstmr)=> cstmr?._id !== machine?.customer?._id )}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name || ''}`}
-                      renderOption={(props, option) => ( <li {...props} key={option._id}> {option.name && option.name} </li> )}
+                      renderOption={(props, option) => ( <li {...props} key={option?._id}> {option.name && option.name} </li> )}
                     />
 
                     <RHFAutocomplete
@@ -180,7 +180,7 @@ function MachineTransfer() {
                       options={financialCompanies}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name || ''}`}
-                      renderOption={(props, option) => ( <li {...props} key={option._id}> {option.name && option.name} </li> )}
+                      renderOption={(props, option) => ( <li {...props} key={option?._id}> {option.name && option.name} </li> )}
                     />
 
                     <RHFAutocomplete
@@ -189,7 +189,7 @@ function MachineTransfer() {
                       options={activeSites}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name || ''}`}
-                      renderOption={(props, option) => ( <li {...props} key={option._id}> {option.name && option.name} </li> )}
+                      renderOption={(props, option) => ( <li {...props} key={option?._id}> {option.name && option.name} </li> )}
                     />
 
                     <RHFAutocomplete
@@ -198,7 +198,7 @@ function MachineTransfer() {
                       options={activeSites}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name || ''}`}
-                      renderOption={(props, option) => (<li {...props} key={option._id}> {option.name && option.name} </li> )}
+                      renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
                     />
 
                     <RHFDatePicker inputFormat='dd/MM/yyyy' name="shippingDate" label="Shipping Date" />
@@ -211,7 +211,7 @@ function MachineTransfer() {
                       options={activeMachineStatuses.filter((st) => st?.slug !== 'intransfer')}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name || ''}`}
-                      renderOption={(props, option) => (<li {...props} key={option._id}> {option.name && option.name} </li> )}
+                      renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
                     />
                   </Box>
 

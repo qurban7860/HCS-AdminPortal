@@ -17,7 +17,7 @@ FileThumbnail.propTypes = {
 };
 
 export default function FileThumbnail({ file, tooltip, imageView, onDownload, sx, imgSx }) {
-
+// console.log("file : ",file)
   const { name = '', path = '', preview = '' } = fileData(file);
 
   const format = fileFormat(path || preview);

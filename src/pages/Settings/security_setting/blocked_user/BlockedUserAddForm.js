@@ -13,7 +13,7 @@ import {
   Box,
 } from '@mui/material';
 // ROUTES
-import { PATH_PAGE, PATH_SECURITY } from '../../../../routes/paths';
+import { PATH_SECURITY } from '../../../../routes/paths';
 // slice
 import { getActiveSecurityUsers, resetSecurityUsers } from '../../../../redux/slices/securityUser/securityUser';
 import { addBlockedUsers, getBlockedUsers, resetBlockedUsers } from '../../../../redux/slices/securityConfig/blockedUsers';
@@ -109,10 +109,10 @@ export default function BlockedUserAddForm() {
                     name="user"
                     label="User*"
                     options={usersNotBlocked}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                      <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
                   />
               </Box>

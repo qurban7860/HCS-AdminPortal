@@ -58,7 +58,7 @@ export default function SecurityUserTableRow({
         { smScreen && <TableCell align="left">{phone || ''}</TableCell>}
         { lgScreen && 
           <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-            {roles.map((obj, index) => (obj.roleType === 'SuperAdmin' ? <Chip key={index} label={obj.name} sx={{m:0.2}} color='secondary' /> : <Chip  key={index} label={obj.name} sx={{mx:0.3}} />))}
+            {roles.map((obj, index) => (obj.roleType === 'SuperAdmin' ? <Chip key={index} label={obj.name} sx={{m:0.2}} color='secondary' /> : <Chip  key={index} label={obj.name} sx={{m:0.2}} />))}
           </TableCell>
         }
         {/* { lgScreen && 

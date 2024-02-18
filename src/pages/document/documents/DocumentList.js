@@ -151,7 +151,7 @@ const onChangePage = (event, newPage) => {
   if (!customerPage && !machinePage && !machineDrawings) {
     const insertIndex = 4; // Index after which you want to insert the new objects
     TABLE_HEAD.splice(insertIndex, 0,// 0 indicates that we're not removing any elements
-      { id: 'customer.name', visibility: 'md3', label: 'Customer', align: 'left' },
+      // { id: 'customer.name', visibility: 'md3', label: 'Customer', align: 'left' },
       { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left' }
     );
   }

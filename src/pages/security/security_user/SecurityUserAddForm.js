@@ -64,7 +64,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
       name: '',
       phone: '+64 ',
       email: '',
-      loginEmail: '',
       password: '',
       confirmPassword: '',
       roles: [],
@@ -80,8 +79,9 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [ currentUser ]
   );
+  // isInvite && editUserSchema || !isInvite && 
   const methods = useForm({
-    resolver: yupResolver( isInvite && editUserSchema || addUserSchema ),
+    resolver: yupResolver( isInvite && editUserSchema || !isInvite && addUserSchema ),
     defaultValues,
   });
 
@@ -111,11 +111,11 @@ const { customer, contact } = watch();
     if(contact?._id){
       setValue( 'name', `${contact?.firstName || ''} ${contact?.lastName || ''}` );
       setValue( 'phone', contact?.phone );
-      setValue( 'email', contact?.email );
+      setValue( 'loginEmail', contact?.email );
     } else {
       setValue( 'name', '' );
       setValue( 'phone', '' );
-      setValue( 'email', '' );
+      setValue( 'loginEmail', '' );
     }
   }, [ dispatch, contact, setValue ]);
 
@@ -148,8 +148,8 @@ const { customer, contact } = watch();
                 label="Customer*"
                 options={ allActiveCustomers }
                 getOptionLabel={(option) => option?.name || ''}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option?.name || ''}</li>)}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                renderOption={(props, option) => (<li  {...props} key={option?._id}>{option?.name || ''}</li>)}
               />
               
               <RHFAutocomplete
@@ -157,8 +157,8 @@ const { customer, contact } = watch();
                 label="Contact"
                 options={activeContacts}
                 getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option?.firstName || ''}{' '}{option?.lastName || ''}</li>)}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                renderOption={(props, option) => (<li  {...props} key={option?._id}>{option?.firstName || ''}{' '}{option?.lastName || ''}</li>)}
               />
 
               <RHFTextField name="name" label="Full Name*" />
@@ -169,7 +169,7 @@ const { customer, contact } = watch();
               rowGap={2} columnGap={2} display="grid"
               gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
             >
-              <RHFTextField name="loginEmail" label="Login/Email Address*" />
+              <RHFTextField name="email" label="Login/Email Address*" />
             </Box>
             {(!isInvite &&(
               <Box sx={{ mb: 3 }} rowGap={2} columnGap={2} display="grid" 
@@ -192,7 +192,7 @@ const { customer, contact } = watch();
                 label="Roles*"
                 options={ activeRoles }
                 getOptionLabel={(option) => `${option?.name || ''} `}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 renderOption={(props, option, { selected }) => ( <li {...props}> <Checkbox checked={selected} />{option?.name || ''}</li> )}
               />
 
@@ -217,8 +217,8 @@ const { customer, contact } = watch();
                 label="Regions"
                 options={activeRegions}
                 getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => ( <li {...props} key={option._id}> {option?.name || ''} </li>)}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                renderOption={(props, option) => ( <li {...props} key={option?._id}> {option?.name || ''} </li>)}
                 ChipProps={{ size: 'small' }}
               />
 
@@ -230,8 +230,8 @@ const { customer, contact } = watch();
                 label="Customers"
                 options={allActiveCustomers}
                 getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => ( <li {...props} key={option._id}> {option?.name || ''} </li> )}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                renderOption={(props, option) => ( <li {...props} key={option?._id}> {option?.name || ''} </li> )}
                 ChipProps={{ size: 'small' }}
               />
 
@@ -243,8 +243,8 @@ const { customer, contact } = watch();
                 label="Machines"
                 options={allMachines}
                 getOptionLabel={(option) => `${option.serialNo} ${option.name ? '-' : ''} ${option?.name || ''}`}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
-                renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.serialNo || ''} ${option.name ? '-' : ''} ${option.name || ''}`}</li>)}
+                isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.serialNo || ''} ${option.name ? '-' : ''} ${option.name || ''}`}</li>)}
                 ChipProps={{ size: 'small' }}
               />
 

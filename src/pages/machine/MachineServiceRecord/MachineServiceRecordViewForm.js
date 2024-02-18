@@ -174,29 +174,7 @@ function MachineServiceParamViewForm() {
           
           {defaultValues.textAfterCheckItems && <ViewFormNoteField sm={12}  param={defaultValues.textAfterCheckItems} />}
 
-          {/* <Grid item md={12} >
-            <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
-              Header
-            </Typography>
-          </Grid>
-          <Grid container>
-            <ViewFormField isLoading={isLoading} sm={4}   param={defaultValues?.headerLeftText} />
-            <ViewFormField isLoading={isLoading} sm={4}   param={defaultValues?.headerCenterText} />
-            <ViewFormField isLoading={isLoading} sm={4}   param={defaultValues?.headerRightText} />
-          </Grid>
-
-          <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary', m:1.7 }}>
-            Footer
-          </Typography>
-          <Grid container>
-            <ViewFormField isLoading={isLoading} sm={4} param={defaultValues?.footerLeftText} />
-            <ViewFormField isLoading={isLoading} sm={4} param={defaultValues?.footerCenterText} />
-            <ViewFormField isLoading={isLoading} sm={4} param={defaultValues?.footerRightText} />
-          </Grid> */}
-
-          {/* <ViewFormField isLoading={isLoading} sm={12} heading="Internal Comments" param={defaultValues.internalComments} /> */}
           {machineServiceRecord?.serviceRecordConfig?.enableNote && <ViewFormNoteField sm={12} heading={`${machineServiceRecord?.serviceRecordConfig?.recordType?.charAt(0).toUpperCase()||''}${machineServiceRecord?.serviceRecordConfig?.recordType?.slice(1).toLowerCase()||''} Note`} param={defaultValues.serviceNote} />}
-
           {machineServiceRecord?.serviceRecordConfig?.enableMaintenanceRecommendations && <ViewFormNoteField sm={12} heading="Recommendation Note" param={defaultValues.recommendationNote} />}
           {machineServiceRecord?.serviceRecordConfig?.enableSuggestedSpares && <ViewFormNoteField sm={12} heading="Suggested Spares" param={defaultValues.suggestedSpares} />}
           <ViewFormNoteField sm={12} heading="Internal Note" param={defaultValues.internalNote} />

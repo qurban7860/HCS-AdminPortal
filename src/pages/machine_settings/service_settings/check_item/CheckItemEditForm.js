@@ -105,10 +105,10 @@ export default function DocumentCategoryeEditForm() {
                       name="serviceCategory"
                       label="Item Category"
                       options={activeServiceCategories}
-                      isOptionEqualToValue={(option, value) => option._id === value._id}
+                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                       renderOption={(props, option) => (
-                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                        <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
                     />
                   <RHFTextField name="name" label="Name" />
@@ -128,7 +128,7 @@ export default function DocumentCategoryeEditForm() {
                       isOptionEqualToValue={(option, value) => option.name === value.name}
                       getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                       renderOption={(props, option) => (
-                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                        <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
                     />
 
@@ -138,7 +138,7 @@ export default function DocumentCategoryeEditForm() {
                       isOptionEqualToValue={(option, value) => option.name === value.name}
                       getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                       renderOption={(props, option) => (
-                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                        <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
                       )}
                     />}
                   <RHFTextField name="minValidation" label="Minimum Validation" />

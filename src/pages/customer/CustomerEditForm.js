@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { Box, Card, Grid, Stack } from '@mui/material';
-import { MuiChipsInput } from 'mui-chips-input';
 // hooks
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -16,7 +15,7 @@ import { getActiveSites } from '../../redux/slices/customer/site';
 import { PATH_CUSTOMER } from '../../routes/paths';
 // components
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete } from '../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete, RHFChipsInput } from '../../components/hook-form';
 // constants
 import { FORMLABELS  } from '../../constants/customer-constants';
 // schema
@@ -39,11 +38,11 @@ export default function CustomerEditForm() {
       id: customer?._id || '',
       code: customer?.clientCode || '',
       name: customer?.name || '',
+      tradingName: customer?.tradingName || [],
       mainSite: customer?.mainSite || null,
       primaryTechnicalContact: customer?.primaryTechnicalContact || null,
       primaryBillingContact: customer?.primaryBillingContact || null,
       supportSubscription: customer?.supportSubscription,
-      tradingName: customer?.tradingName || [],
       accountManager: customer?.accountManager || [],
       projectManager: customer?.projectManager || [],
       supportManager: customer?.supportManager || [],
@@ -62,13 +61,9 @@ export default function CustomerEditForm() {
 
   const {
     reset,
-    setValue,
-    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
-  const { tradingName } = watch();
 
   useLayoutEffect(() => {
     dispatch(getActiveContacts(customer._id));
@@ -92,10 +87,6 @@ export default function CustomerEditForm() {
     }
   };
 
-  const handleChipChange = (newChips) => {
-    const array = [...new Set(newChips)]
-    setValue('tradingName', array );
-  };
 
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -119,12 +110,7 @@ export default function CustomerEditForm() {
                     xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)',
                   }}
                 >
-                  <MuiChipsInput
-                    name={FORMLABELS.CUSTOMER.TRADING_NAME.name}
-                    label={FORMLABELS.CUSTOMER.TRADING_NAME.label}
-                    value={tradingName}
-                    onChange={handleChipChange}
-                  />
+                  <RHFChipsInput name={FORMLABELS.CUSTOMER.TRADING_NAME.name} label={FORMLABELS.CUSTOMER.TRADING_NAME.label} />
                 </Box>
 
                 {/* main site */}
@@ -139,7 +125,7 @@ export default function CustomerEditForm() {
                     options={activeSites || []}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option?.name || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option._id}>{option?.name || ''} </li>)}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{option?.name || ''} </li>)}
                   />
                 </Box>
 
@@ -153,7 +139,7 @@ export default function CustomerEditForm() {
                       options={activeContacts || []}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) =>`${option?.firstName || ''} ${option?.lastName || ''}`}
-                      renderOption={(props, option) => (<li {...props} key={option._id}>{option?.firstName || ''}{' '}{option?.lastName ||''}</li>)}
+                      renderOption={(props, option) => (<li {...props} key={option?._id}>{option?.firstName || ''}{' '}{option?.lastName ||''}</li>)}
                     />
                     {/* primary technical contact */}
                     <RHFAutocomplete
@@ -162,7 +148,7 @@ export default function CustomerEditForm() {
                       options={activeContacts || []}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) =>`${option.firstName || ''} ${option.lastName || ''}`}
-                      renderOption={(props, option) => (<li {...props} key={option._id}>{option?.firstName || ''}{' '}{option?.lastName || ''}</li>)}
+                      renderOption={(props, option) => (<li {...props} key={option?._id}>{option?.firstName || ''}{' '}{option?.lastName || ''}</li>)}
                     />
                   </Box>
               </Stack>
@@ -183,7 +169,7 @@ export default function CustomerEditForm() {
                     options={activeSpContacts || []}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option?.firstName || ''} ${ option?.lastName || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
                     ChipProps={{ size: 'small' }}
                   />
 
@@ -196,7 +182,7 @@ export default function CustomerEditForm() {
                     options={activeSpContacts || []}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option?.firstName || ''} ${ option?.lastName || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
                     ChipProps={{ size: 'small' }}
                   />
 
@@ -209,7 +195,7 @@ export default function CustomerEditForm() {
                     options={activeSpContacts || []}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option?.firstName || ''} ${ option?.lastName || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
                     ChipProps={{ size: 'small' }}
                   />
 

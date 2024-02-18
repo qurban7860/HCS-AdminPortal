@@ -166,10 +166,10 @@ const CheckItemTable = ({ checkParams, setCheckParams, checkItemList, setCheckIt
                           name="checkItemCategory"
                           label="Service Category"
                           options={activeServiceCategories}
-                          isOptionEqualToValue={(option, value) => option._id === value._id}
+                          isOptionEqualToValue={(option, value) => option?._id === value?._id}
                           getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                           renderOption={(props, option) => (
-                            <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                            <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
                           )}
                       />
 
@@ -182,10 +182,10 @@ const CheckItemTable = ({ checkParams, setCheckParams, checkItemList, setCheckIt
                         disableClearable
                         filterSelectedOptions
                         options={activeCheckItems.filter(activeCheckItem => checkItemCategory ? activeCheckItem?.category?._id === checkItemCategory?._id : activeCheckItem)}
-                        isOptionEqualToValue={(option, value) => option._id === value._id}
+                        isOptionEqualToValue={(option, value) => option?._id === value?._id}
                         getOptionLabel={(option) => `${option.name ? option.name : ''} ${option?.category?.name ? '-' : ''} ${option?.category?.name ? option?.category?.name : ''} ${option?.inputType ? '-' : '' } ${option?.inputType ? option?.inputType : '' }`}
                         renderOption={(props, option) => (
-                          <li {...props} key={option._id}>{`${option.name ? option.name : ''} ${option?.category?.name ? '-' : ''} ${option?.category?.name ? option?.category?.name : ''} ${option?.inputType ? '-' : '' } ${option?.inputType ? option?.inputType : '' }`}</li>
+                          <li {...props} key={option?._id}>{`${option.name ? option.name : ''} ${option?.category?.name ? '-' : ''} ${option?.category?.name ? option?.category?.name : ''} ${option?.inputType ? '-' : '' } ${option?.inputType ? option?.inputType : '' }`}</li>
                         )}
                         onChange={(event, newValue) => {
                           if(newValue){

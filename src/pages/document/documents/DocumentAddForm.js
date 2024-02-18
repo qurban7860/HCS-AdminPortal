@@ -498,7 +498,7 @@ function DocumentAddForm({
                               setReadOnlyVal(false);
                             }
                           }}
-                          renderOption={(props, option) => ( <li {...props} key={option._id}>{`${ option.displayName || ''}`}</li> )}
+                          renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${ option.displayName || ''}`}</li> )}
                           id="controllable-states-demo"
                           ChipProps={{ size: 'small' }}
                         />
@@ -596,7 +596,7 @@ function DocumentAddForm({
                         options={activeCustomers}
                         isOptionEqualToValue={( option, value ) => option._id === value._id }
                         getOptionLabel={(option) => `${option?.name || ''}`}
-                        renderOption={(props, option) => ( <li {...props} key={option._id}>{option?.name || ''}</li> )}
+                        renderOption={(props, option) => ( <li {...props} key={option?._id}>{option?.name || ''}</li> )}
                         onChange={(event, newValue) => {
                           if (newValue) {
                             setValue('customer', newValue);
@@ -615,7 +615,7 @@ function DocumentAddForm({
                         isOptionEqualToValue={( option, value ) => option._id === value._id }
                         getOptionLabel={(option) => `${ option.serialNo || '' } ${option?.name ? '-' : ''} ${option?.name || ''}`}
                         onChange={(eve, newValue)=> setMachineVal(newValue)}
-                        renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}</li> )}
+                        renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}</li> )}
                       />
                     </Box>
                     }
@@ -657,7 +657,7 @@ function DocumentAddForm({
                   />
                 )}
 
-                <AddFormButtons drawingPage={ !customerPage && !machinePage } isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+                <AddFormButtons machinePage={machinePage} customerPage={customerPage} drawingPage={drawingPage} isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>
           </Grid>

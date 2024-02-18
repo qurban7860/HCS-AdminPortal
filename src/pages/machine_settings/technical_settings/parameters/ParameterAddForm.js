@@ -112,7 +112,7 @@ export default function ParameterAddForm() {
                       required
                       value={paramCategoryVal || null}
                       options={activeTechParamCategories}
-                      isOptionEqualToValue={(option, value) => option._id === value._id}
+                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => option.name}
                       onChange={(event, newValue) => {
                         setParamCategoryVal(newValue);

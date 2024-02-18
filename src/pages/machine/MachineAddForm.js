@@ -7,7 +7,6 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, styled, Container, Grid, Stack, TextField } from '@mui/material';
-import { MuiChipsInput } from 'mui-chips-input';
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
 import { getActiveCustomers, getFinancialCompanies, setCustomerTab, setNewMachineCustomer } from '../../redux/slices/customer/customer';
@@ -24,7 +23,7 @@ import { StyledCardContainer } from '../../theme/styles/default-styles';
 import { PATH_CUSTOMER, PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, { RHFTextField, RHFAutocomplete, RHFDatePicker } from '../../components/hook-form';
+import FormProvider, { RHFTextField, RHFAutocomplete, RHFDatePicker, RHFChipsInput } from '../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import { FORMLABELS } from '../../constants/default-constants';
@@ -49,7 +48,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const { activeCategories } = useSelector((state) => state.category);
   const [ hasEffectRun, setHasEffectRun ] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
-  const [ chips, setChips ] = useState([]);
   const [ landToCustomerMachinePage, setLandToCustomerMachinePage ] = useState(false);
 
   useEffect(() => {
@@ -79,6 +77,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     defaultValues: {
       serialNo: '',
       name: '',
+      alias: [],
       parentSerialNo: null,
       previousMachine: '',
       category: null,
@@ -155,9 +154,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const onSubmit = async (data) => {
     try {
-      if (chips && chips.length > 0) {
-        data.alias = chips;
-      }
       await dispatch(addMachine(data));
       reset();
       enqueueSnackbar('Create success!');
@@ -180,11 +176,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       navigate(PATH_MACHINE.machines.list);
     }
   };
-  
-  const handleChipChange = (newChips) => {
-    const array = [...new Set(newChips)]
-    setChips(array);
-  };
+
 
   const CategoryValHandler = (event, newValue) => {
     if (newValue) {
@@ -242,7 +234,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   <RHFTextField name="serialNo" label="Serial No.*"  />
                   <RHFTextField name="name" label="Name" />
                 </Box>
-                <MuiChipsInput label="Alias" value={chips} onChange={handleChipChange} />
+                <RHFChipsInput name="alias" label="Alias" />
                 <Box rowGap={2} columnGap={2} display="grid"
                   gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
@@ -250,19 +242,19 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                       name="category"
                       label="Machine Category"
                       options={activeCategories}
-                      isOptionEqualToValue={(option, value) => option._id === value._id}
+                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name || ''}`}
                       onChange={(event, newValue) => CategoryValHandler(event, newValue)}
-                      renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || ''}`}</li> )}
+                      renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
                     />
 
                     <RHFAutocomplete 
                       name="machineModel"
                       label="Machine Model"
                       options={activeMachineModels}
-                      isOptionEqualToValue={(option, value) => option._id === value._id}
+                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name || ''}`}
-                      renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || ''}`}</li> )}
+                      renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
                       onChange={(event, newValue) => MachineModelValHandler(event, newValue)}
                     />
 
@@ -272,10 +264,10 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     name="status" 
                     label="Status" 
                     options={activeMachineStatuses}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
                     getOptionDisabled={(option) => option.slug === 'intransfer' || option.slug === 'transferred' }
-                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option?.name || ''}`}</li> )}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.name || ''}`}</li> )}
                     id="controllable-states-demo"
                     ChipProps={{ size: 'small' }}
                   />
@@ -285,9 +277,9 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     label="Supplier"
                     id="controllable-states-demo"
                     options={activeSuppliers}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option?.name || ''}`}</li> )}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.name || ''}`}</li> )}
                     ChipProps={{ size: 'small' }}
                   />
 
@@ -298,9 +290,9 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     label="Customer*"  
                     id="controllable-states-demo"
                     options={activeCustomers}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || ''}`}</li> )}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
                     onChange={async (event, newValue) => {
                       setValue('customer',newValue);
                       setValue('instalationSite', null);
@@ -325,18 +317,18 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     name="financialCompany"
                     label="Financing Company"
                     options={financialCompanies}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || ''}`}</li> )}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
                   />
 
                   <RHFAutocomplete
                     name="billingSite"    
                     label="Billing Site" 
                     options={activeSites}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || ''}`}</li> )}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
                     id="controllable-states-demo"
                     ChipProps={{ size: 'small' }}
                   />
@@ -345,9 +337,9 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     name="instalationSite"  
                     label="Installation Site" 
                     options={activeSites}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || ''}`}</li> )}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
                     id="controllable-states-demo"
                     ChipProps={{ size: 'small' }}
                   />
@@ -374,7 +366,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     id="tags-outlined"
                     options={machineConnections}
                     getOptionLabel={(option) => `${option.serialNo || ''} ${option.name ? '-' : ''} ${option.name || ''}`}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     renderInput={(params) => ( <TextField  {...params}  label="Connected Machines"   placeholder="Search"  /> )}
                   />
                 <Box rowGap={2} columnGap={2} display="grid"
@@ -387,7 +379,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     options={spContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
                     renderInput={(params) => <TextField {...params} label="Account Manager" />}
                     ChipProps={{ size: 'small' }}
                     id="controllable-states-demo"
@@ -399,7 +391,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     options={spContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
                     renderInput={(params) => <TextField {...params} label="Project Manager" />}
                     ChipProps={{ size: 'small' }}
                     id="controllable-states-demo"
@@ -411,7 +403,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     options={spContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
-                    renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>)}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>)}
                     renderInput={(params) => <TextField {...params} label="Support Manager" />}
                     ChipProps={{ size: 'small' }}
                     id="controllable-states-demo"

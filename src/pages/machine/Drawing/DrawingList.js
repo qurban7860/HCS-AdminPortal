@@ -62,8 +62,8 @@ export default function DrawingList() {
   const { drawings, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.drawing );
 
   const TABLE_HEAD = [
-    { id: 'document.referenceNumber', label: 'Ref', align: 'left' },
     { id: 'document.displayName', label: 'Name', align: 'left' },
+    { id: 'document.referenceNumber', label: 'Ref', align: 'left' },
     { id: 'document.stockNumber', label: 'Stock Number', align: 'left' },
     { id: 'documentType.name', visibility: 'xs2', label: 'Type', align: 'left' },
     { id: 'documentCategory.name', visibility: 'xs1', label: 'Category', align: 'left' },

@@ -10,7 +10,6 @@ import {
   TableContainer
 } from '@mui/material';
 // redux
-import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from '../../../../redux/store';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
@@ -35,7 +34,6 @@ import { getWhitelistIPs , deleteWhitelistIP,
 import { Cover } from '../../../../components/Defaults/Cover';
 import { fDate } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
-import { PATH_PAGE } from '../../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -74,7 +72,6 @@ export default function WhitelistIPList() {
   const onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);

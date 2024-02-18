@@ -1,11 +1,11 @@
 import * as Yup from 'yup';
-import { useEffect, useLayoutEffect, useMemo } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Container, Grid, Stack, Typography } from '@mui/material';
+import { Box, Card, Container, Grid, Stack } from '@mui/material';
 // slice
 import { getActiveCategories } from '../../../../redux/slices/products/category';
 import { getGroup, updateGroup } from '../../../../redux/slices/products/group';
@@ -26,7 +26,7 @@ export default function GroupEditForm() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { activeCategories } = useSelector((state) => state.category);
-  const { group, isLoading } = useSelector((state) => state.group);
+  const { group } = useSelector((state) => state.group);
 
   useLayoutEffect(() => {
     dispatch(getActiveCategories());

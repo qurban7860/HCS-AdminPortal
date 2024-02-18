@@ -170,7 +170,7 @@ export default function ServiceRecordConfigEditForm() {
                     isOptionEqualToValue={(option, value) => option.name === value.name}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                      <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
                   />
 
@@ -181,9 +181,9 @@ export default function ServiceRecordConfigEditForm() {
                         name="machineCategory" 
                         label="Machine Category"
                         options={activeCategories}
-                        isOptionEqualToValue={(option, value) => option._id === value._id}
+                        isOptionEqualToValue={(option, value) => option?._id === value?._id}
                         getOptionLabel={(option) => `${option.name || ''}`}
-                        renderOption={(props, option) => ( <li {...props} key={option._id}>{`${option.name || ''}`}</li> )}
+                        renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
                         onChange={async (event, newValue) => {
                           if (newValue) {
                             setValue('machineCategory',newValue);
@@ -204,10 +204,10 @@ export default function ServiceRecordConfigEditForm() {
                     name="machineModel"
                     label="Machine Model"
                     options={activeMachineModels}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                      <li {...props} key={option?._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
                   />
                 </Box>     

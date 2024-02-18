@@ -11,24 +11,24 @@ RHFChipsInput.propTypes = {
 };
 
 export default function RHFChipsInput({ name, label, value, onChange, ...other }) {
-  const { control } = useFormContext();
 
+  const { control } = useFormContext();
   return (
     <Controller
       name={name}
       control={control}
       defaultValue={value || []}
-      render={({ field }) => (
+      render={({ field, fieldState: { error } }) => (
         <MuiChipsInput
           name={field.name}
           label={label}
           value={field.value}
           onChange={(chips) => {
-            field.onChange(chips);
-            if (onChange) {
-              onChange(chips);
-            }
+            field.onChange([...new Set(chips)]);
+            if (onChange) { onChange([...new Set(chips)]) }
           }}
+          error={!!error }
+          helperText={error && error?.message }
           {...other}
         />
       )}

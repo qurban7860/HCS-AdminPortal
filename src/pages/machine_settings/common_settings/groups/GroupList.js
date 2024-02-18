@@ -2,7 +2,7 @@ import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
-import { Table, Button, TableBody, Container, TableContainer } from '@mui/material';
+import { Table, TableBody, Container, TableContainer } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 // routes
@@ -20,7 +20,6 @@ import {
   TablePaginationCustom,
 } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
-import ConfirmDialog from '../../../../components/confirm-dialog/ConfirmDialog';
 // sections
 import GroupListTableRow from './GroupListTableRow';
 import GroupListTableToolbar from './GroupListTableToolbar';
