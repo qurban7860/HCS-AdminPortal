@@ -90,7 +90,7 @@ export default function DocumentListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        SubOnClick2={ machineDrawings && toggleAddList || undefined }
+        // SubOnClick2={ machineDrawings && toggleAddList || undefined }
         addButton={addButton}
         transferredMachine={machinePage && machine?.status?.slug==='transferred'}
         categoryVal={categoryVal}
