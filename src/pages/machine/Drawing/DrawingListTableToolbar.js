@@ -62,7 +62,7 @@ export default function DrawingListTableToolbar({
       onChange={onFilterName}
       onClick={onResetFilter}
       SubOnClick={toggleAdd}
-      // SubOnClick2={ toggleAddList }
+      SubOnClick2={ toggleAddList }
       addButton={BUTTONS.ADDDRAWING}
       handleAttach={toggleAattach}
       transferredMachine={machine?.status?.slug==='transferred'}
