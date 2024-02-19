@@ -24,6 +24,7 @@ import FormProvider, {
   RHFAutocomplete,
   RHFMultiSelect,
   RHFTextField,
+  RHFCountryAutocomplete,
 } from '../../../components/hook-form';
 import { AddFormLabel } from '../../../components/DocumentForms/FormLabel';
 import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
@@ -221,21 +222,11 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                 <RHFTextField name={FORMLABELS.REGION.name} label={FORMLABELS.REGION.label} />
                 <RHFTextField name={FORMLABELS.POSTCODE.name} label={FORMLABELS.POSTCODE.label} />
 
-                <RHFAutocomplete
-                  options={countries}
+                <RHFCountryAutocomplete 
                   name={FORMLABELS.COUNTRY.name}
                   label={FORMLABELS.COUNTRY.label}
-                  getOptionLabel={(option) => `${option.label} (${option.code}) `}
-                  renderOption={(props, option) => (
-                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      <img loading="lazy" width="20" alt=""
-                        src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                        srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                      />
-                      {option.label || ''} ({option.code || '' }) {option.phone || '' }
-                    </Box>
-                  )}
                 />
+                
               </Box>
               <ToggleButtons isMachine name={formLABELS.isACTIVE.name} />
             </Stack>

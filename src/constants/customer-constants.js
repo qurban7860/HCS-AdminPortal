@@ -99,9 +99,12 @@ export const FORMLABELS = {
     label: 'Contact Types',
     name: 'contactTypes',
     options: [
-      { value: 'financial', label: 'Financial' },
-      { value: 'sales', label: 'Sales' },
-      { value: 'technical', label: 'Technical Support' },
+      { value: 'Financial', label: 'Financial' },
+      { value: 'Sales', label: 'Sales' },
+      { value: 'Technical Support', label: 'Technical Support' },
+      { value: 'Machine Operator', label: 'Machine Operator' },
+      { value: 'Design Team', label: 'Design Team' },
+      { value: 'Executive (MD, CEO, GM)', label: 'Executive (MD, CEO, GM)' },
     ],
   },
   EMAIL: {

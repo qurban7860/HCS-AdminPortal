@@ -15,7 +15,7 @@ import { getActiveDepartments, resetDepartments } from '../../../redux/slices/De
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { useAuthContext } from '../../../auth/useAuthContext';
-import FormProvider, { RHFMultiSelect, RHFTextField, RHFAutocomplete } from '../../../components/hook-form';
+import FormProvider, { RHFMultiSelect, RHFTextField, RHFAutocomplete, RHFCountryAutocomplete } from '../../../components/hook-form';
 // assets
 import { countries } from '../../../assets/data';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
@@ -188,22 +188,11 @@ export default function ContactAddForm({ isEdit, readOnly, setIsExpanded, curren
               <RHFTextField name={FORMLABELS.REGION.name} label={FORMLABELS.REGION.label} />
               <RHFTextField name={FORMLABELS.POSTCODE.name} label={FORMLABELS.POSTCODE.label} />
 
-              <RHFAutocomplete
-                options={countries}
+              <RHFCountryAutocomplete 
                 name={FORMLABELS.COUNTRY.name}
                 label={FORMLABELS.COUNTRY.label}
-                getOptionLabel={(option) => `${option.label} (${option.code}) `}
-                isOptionEqualToValue={(option, value) => option?.label === value?.label }
-                renderOption={(props, option) => (
-                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                    <img loading="lazy" width="20" alt=""
-                      src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                      srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                    />
-                    {option?.label || ''} ({option?.code || '' }) {option?.phone || ''}
-                  </Box>
-                )}
               />
+
             </Box>
             <ToggleButtons isMachine name={FORMLABELS.isACTIVE.name} />
           </Stack>
