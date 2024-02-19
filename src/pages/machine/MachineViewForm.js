@@ -281,7 +281,7 @@ export default function MachineViewForm() {
               <Typography variant='h4' sx={{mr: 1,color: machine?.status?.slug === "transferred" && 'red'  }}>{ defaultValues?.status }</Typography>
               { (defaultValues?.transferredMachine && 
                 <Typography variant='body2' sx={{mt: 0.5}} >
-                    {` Transferred from `}
+                    {` to `}
                     <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredMachine?._id)} underline="none" sx={{ cursor: 'pointer'}}>
                       <b>{defaultValues?.transferredMachine?.name}</b>
                     </Link>
@@ -290,7 +290,7 @@ export default function MachineViewForm() {
                 </Typography> ) || 
                 ( defaultValues?.transferredFrom && 
                   <Typography variant='body2' sx={{mt: 0.5}} >
-                    {` - to `}
+                    {` Transferred from `}
                     <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredFrom?._id)} underline="none" sx={{ cursor: 'pointer'}}>
                       <b>{defaultValues?.transferredFrom?.name}</b>
                     </Link>
