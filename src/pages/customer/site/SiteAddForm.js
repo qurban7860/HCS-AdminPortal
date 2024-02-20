@@ -14,7 +14,7 @@ import { useSnackbar } from '../../../components/snackbar';
 // assets
 import { countries } from '../../../assets/data';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete } from '../../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete, RHFCountryAutocomplete, RHFCustomPhoneInput } from '../../../components/hook-form';
 import { SiteSchema } from '../../schemas/customer'
 
 // ----------------------------------------------------------------------
@@ -25,8 +25,6 @@ export default function SiteAddForm() {
   const { activeContacts } = useSelector((state) => state.contact);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const [phone, setPhone] = useState('');
-  const [fax, setFaxVal] = useState('');
 
   useEffect(() => {
     dispatch( getActiveContacts(customer?._id))
@@ -40,9 +38,9 @@ export default function SiteAddForm() {
       name: '',
       customer: customer?._id,
       billingSite: '',
-      // phone: '',
+      phone: { type: 'PHONE', countryCode: '64' },
       email: '',
-      // fax: '',
+      fax: { type: 'FAX', countryCode: '64' },
       website: '',
       street: '',
       suburb: '',
@@ -50,6 +48,8 @@ export default function SiteAddForm() {
       region: '',
       postcode: '',
       country: countries.find((contry)=> contry?.label?.toLocaleLowerCase() === 'New Zealand'.toLocaleLowerCase() ) || null ,
+      primaryTechnicalContact: null,
+      primaryBillingContact: null,
       isArchived: false,
       isActive: true,
     }),
@@ -64,10 +64,13 @@ export default function SiteAddForm() {
 
   const {
     reset,
+    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
+  const { phone } = watch();
+  console.log("phone number change : ",phone)
   useEffect(() => {
     reset(defaultValues);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -77,12 +80,6 @@ export default function SiteAddForm() {
 
   const onSubmit = async (data) => {
     try {
-      if (phone) {
-        data.phone = phone;
-      }
-      if (fax) {
-        data.fax = fax;
-      }
       await dispatch(addSite(data));
       await dispatch(getSites(customer?._id))
       reset();
@@ -104,76 +101,28 @@ export default function SiteAddForm() {
             <Stack spacing={3}>
               <RHFTextField name="name" label="Name*" />
               <Box
-                rowGap={3}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
+                rowGap={3} columnGap={2} display="grid"
+                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
               >
                 <RHFTextField name="street" label="Street" />
                 <RHFTextField name="suburb" label="Suburb" />
                 <RHFTextField name="city" label="City" />
                 <RHFTextField name="region" label="Region" />
                 <RHFTextField name="postcode" label="Post Code" />
-
-                <RHFAutocomplete
-                  options={countries}
-                  name="country"
-                  label="Country"
-                  getOptionLabel={(option) => `${option?.label || ''} (${option.code || ''}) `}
-                  isOptionEqualToValue={(option, value) => option?.label === value?.label }
-                  renderOption={(props, option) => (
-                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      <img loading="lazy" width="20" alt=""
-                        src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                        srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                      />
-                      {option?.label || ''} ({option?.code || ''}) {option?.phone || ''}
-                    </Box>
-                  )}
-                />
+                <RHFCountryAutocomplete  name="country" label="Country" />
                 <RHFTextField name="lat" label="Latitude" />
                 <RHFTextField name="long" label="Longitude" />
-                <MuiTelInput
-                  value={phone}
-                  name="phone"
-                  label="Phone Number"
-                  flagSize="medium"
-                  defaultCountry="NZ"
-                  onChange={(newValue)=>setPhone(newValue)}
-                  inputProps={{maxLength:13}}
-                  forceCallingCode
-                />
-
-                <MuiTelInput
-                  value={fax}
-                  name="fax"
-                  label="Fax"
-                  flagSize="medium"
-                  defaultCountry="NZ"
-                  onChange={(newValue)=>setFaxVal(newValue)}
-                  inputProps={{maxLength:13}}
-                  forceCallingCode
-                />
-
+                <RHFCustomPhoneInput name="phone" label="Phone Number" />
+                <RHFCustomPhoneInput name="fax" label="Fax" />
                 <RHFTextField name="email" label="Email" />
                 <RHFTextField name="website" label="Website" />
               </Box>
-
               <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
                 Contact Details
               </Typography>
-
               <Box
-                rowGap={3}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
+                rowGap={3} columnGap={2} display="grid"
+                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
               >
                 <RHFAutocomplete
                   name='primaryBillingContact'
@@ -183,7 +132,6 @@ export default function SiteAddForm() {
                   getOptionLabel={(option) => `${option.firstName || ''} ${option.lastName || ''}`}
                   renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.firstName || ''} ${option.lastName || ''}`}</li> )}
                 />
-
                 <RHFAutocomplete
                   name='primaryTechnicalContact'
                   label="Primary Technical Contact"
