@@ -19,9 +19,7 @@ export default function Machine() {
 
   // Functions to navigate to different pages
   const linkGroup = () => {
-    console.log('hiii',PATH_MACHINE.machines.settings.groups.list)
     navigate(PATH_MACHINE.machines.settings.groups.list);
-    // navigate(PATH_MACHINE.machines.settings.groups.list);
   };
 
   const linkCategory = () => {
