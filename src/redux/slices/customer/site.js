@@ -160,9 +160,7 @@ export function addSite(params) {
         let data = {
           name: params.name,
           customer: params.customer,
-          phone: params.phone,
           email: params.email,
-          fax: params.fax,
           website: params.website,
           lat: params.lat,
           long: params.long,
@@ -172,6 +170,18 @@ export function addSite(params) {
           address: {}
         };
 
+        const phoneNumbers = []
+
+        if( params?.phone?.number ){
+          phoneNumbers.push( params?.phone );
+        }
+
+        if( params?.fax?.number ){
+          phoneNumbers.push( params?.fax );
+        }
+
+        data.phoneNumbers = phoneNumbers;
+        
         /* eslint-enable */
         if(params.street){
           data.address.street = params.street;        
@@ -214,9 +224,7 @@ export function updateSite(params,customerId,Id) {
         let data = {
           name: params.name,
           customer: params.customer,
-          phone: params.phone,
           email: params.email,
-          fax: params.fax,
           website: params.website,
           lat: params.lat,
           long: params.long,
@@ -225,6 +233,18 @@ export function updateSite(params,customerId,Id) {
           primaryTechnicalContact: params.primaryTechnicalContact?._id || null,
           address: {}
         };
+        const phoneNumbers = []
+
+        if( params?.phone?.number ){
+          phoneNumbers.push( { ...params?.phone, type:'PHONE' } );
+        }
+
+        if( params?.fax?.number ){
+          phoneNumbers.push( { ...params?.fax, type:'FAX' } );
+        }
+
+        data.phoneNumbers = phoneNumbers;
+
         /* eslint-enable */
         if(params.street){
           data.address.street = params.street;        

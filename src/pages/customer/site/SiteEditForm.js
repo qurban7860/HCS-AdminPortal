@@ -1,20 +1,19 @@
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { MuiTelInput } from 'mui-tel-input';
 import { Box, Card, Grid, Stack, Typography, Button } from '@mui/material';
 // slice
-import { updateSite, setSiteEditFormVisibility, getSite } from '../../../redux/slices/customer/site';
+import { updateSite, setSiteEditFormVisibility, getSite, getSites } from '../../../redux/slices/customer/site';
 import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import Iconify from '../../../components/iconify';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete } from '../../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete, RHFCountryAutocomplete, RHFCustomPhoneInput } from '../../../components/hook-form';
 import { countries } from '../../../assets/data';
 import { SiteSchema } from '../../schemas/customer'
 // ----------------------------------------------------------------------
@@ -25,10 +24,7 @@ export default function SiteEditForm() {
   const { site } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
   const { activeContacts } = useSelector((state) => state.contact);
-  const [country, setCountryVal] = useState(countries[169]);
-  const [phone, setPhone] = useState('');
-  const [fax, setFaxVal] = useState('');
-  
+
   function filtter(data, input) {
     const filteredOutput = data.filter((obj) =>
       Object.keys(input).every((filterKeys) => obj[filterKeys] === input[filterKeys])
@@ -43,19 +39,6 @@ export default function SiteEditForm() {
     }
   }, [ customer, dispatch ] );
 
-  useEffect(() => {
-    if (site?.phone) {
-      setPhone(site.phone);
-    }
-    if (site?.address?.country) {
-      const siteCountry = filtter(countries, { label: site?.address?.country || '' });
-      setCountryVal(siteCountry[0]);
-    } else {
-      setCountryVal('');
-    }
-    setFaxVal(site.fax);
-  }, [site]);
-
   const defaultValues = useMemo(
     () => ({
       name: site?.name || '',
@@ -64,6 +47,8 @@ export default function SiteEditForm() {
       website: site?.website || '',
       lat: site?.lat || '',
       long: site?.long || '',
+      phone: Array.isArray(site?.phoneNumbers) && site?.phoneNumbers.find( n => n?.type?.toLowerCase() === 'phone' )  || null,
+      fax: Array.isArray(site?.phoneNumbers) && site?.phoneNumbers.find( n => n?.type?.toLowerCase() === 'fax' ) || null,
       street: site?.address?.street || '',
       suburb: site?.address?.suburb || '',
       city: site?.address?.city || '',
@@ -86,45 +71,49 @@ export default function SiteEditForm() {
   const {
     reset,
     watch,
+    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-    watch(); 
+    const { country, phone, fax } = watch(); 
 
+    // console.log("phone : ",phone,'fax : ',fax)
+
+    useEffect(() => {
+      // if (site?.phone) { setValue('phone',{ numberValue : site?.phone || ''}) }
+      if (site?.address?.country) {
+        const siteCountry = filtter(countries, { label: site?.address?.country || '' });
+        setValue('country',siteCountry[0]);
+      }
+      // setValue('fax',{ numberValue : site?.fax || ''});
+    }, [ site, setValue ]);
+
+    
   useEffect(() => {
     if (site) {
       reset(defaultValues);
     }
   }, [site, reset, defaultValues]);
 
-  const toggleCancel = () => { dispatch(setSiteEditFormVisibility(false)) };
-
+  
   const updateCountryCode = () =>{
-    if(phone){
-      const [firstPart, ...restParts] = phone.split(' ');
-      const modifiedPhoneNumber = `${country?.phone || '+64'} ${restParts.join(' ')}`;
-      setPhone(modifiedPhoneNumber);
-    }else{
-      setPhone(country?.phone||'+64');
-    }
-
-    if(fax){
-      const [firstPartFax, ...restPartsFax] = fax.split(' ');
-      const modifiedFaxNumber = `${country?.phone || '+64'} ${restPartsFax.join(' ')}`;
-      setFaxVal(modifiedFaxNumber)
-    }else{
-      setFaxVal(country?.phone || '+64')
-    }
+      if(phone){
+            const updatedPhone ={ ...phone, countryCode: country?.phone || '' }
+        setValue('phone',updatedPhone);
+      }
+    
+      if(fax){
+            const updatedFax ={ ...phone, countryCode: country?.phone || '' }
+        setValue('fax',updatedFax)
+      }
   }
-
+  
   const onSubmit = async (data) => {
-    data.country = country;
     try {
-      if (phone && phone.length > 4) { data.phone = phone }
-      if (fax && fax.length > 4) { data.fax = fax }
       await dispatch(updateSite(data, customer?._id, site?._id));
       await dispatch(getSite(customer?._id, site?._id));
+      await dispatch(getSites(customer?._id ));
       enqueueSnackbar('Site saved Successfully!');
       reset();
     } catch (err) {
@@ -132,14 +121,8 @@ export default function SiteEditForm() {
       console.error(err.message);
     }
   };
-
-  const handleTelInputChangePhone = (newValue, countryVal) => {
-    if (newValue.trim() !== '') { setPhone(newValue) }
-  };
-
-  const handleTelInputChangeFax = (newValue, countryVal) => {
-    if (newValue.trim() !== '') { setFaxVal(newValue) }
-  };
+  
+  const toggleCancel = () => dispatch(setSiteEditFormVisibility(false));
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -147,7 +130,6 @@ export default function SiteEditForm() {
         <Grid item xs={12} md={12}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={2}>
-
               <RHFTextField name="name" label="Name*" />
               <Box rowGap={2} columnGap={2} display="grid"
                 gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)'}}
@@ -157,28 +139,10 @@ export default function SiteEditForm() {
                 <RHFTextField name="city" label="City" />
                 <RHFTextField name="region" label="Region" />
                 <RHFTextField name="postcode" label="Post Code" />
-
-                <RHFAutocomplete
-                  name="country"
-                  label="Country"
-                  options={countries}
-                  value={country}
-                  getOptionLabel={(option) => `${option.label} (${option.code}) `}
-                  isOptionEqualToValue={(option, value) => option?.label === value?.label }
-                  onChange={(event, newValue)=> setCountryVal(newValue)}
-                  renderOption={(props, option) => (
-                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      <img loading="lazy" width="20" alt=""
-                        src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                        srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                      />
-                      {option?.label || ''} ({option?.code || ''}) {option?.phone || ''}
-                    </Box>
-                  )}
-                />
+                <RHFCountryAutocomplete name="country" label="Country" />
               </Box>
               
-                {(country?.phone!==phone?.split(' ')[0]) && (country?.phone!==fax?.split(' ')[0]) &&
+                { country?.phone!==phone?.countryCode && country?.phone !==fax?.countryCode &&
                   <Grid display="flex" justifyContent='flex-end'>
                     <Typography variant='body2' sx={{mr:1,lineHeight:2, color:'gray'}}>Update country code in phone/fax</Typography>
                     <Button variant='contained' sx={{minWidth:'auto', px:1}} color='secondary' onClick={updateCountryCode}>
@@ -186,42 +150,17 @@ export default function SiteEditForm() {
                     </Button>
                   </Grid>
                 }
-
-                <Box
-                rowGap={2}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
+              <Box
+                rowGap={2} columnGap={2} display="grid"
+                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
               >
-                
+                {/* defaultCountry={ country?.code } */}
                 <RHFTextField name="lat" label="Latitude" />
                 <RHFTextField name="long" label="Longitude" />
-
-                <MuiTelInput
-                  value={phone}
-                  name="phone"
-                  label="Phone Number"
-                  flagSize="medium"
-                  onChange={(newValue, countryVal) => handleTelInputChangePhone(newValue, countryVal)}
-                  inputProps={{maxLength:13}}
-                  forceCallingCode
-                  defaultCountry='NZ' 
-                />
-
-                <MuiTelInput
-                  value={fax}
-                  name="fax"
-                  label="Fax"
-                  flagSize="medium"
-                  onChange={(newValue, countryVal) => handleTelInputChangeFax(newValue, countryVal)}
-                  inputProps={{maxLength:13}}
-                  forceCallingCode
-                  defaultCountry='NZ'
-                />
-
+                <RHFCustomPhoneInput name="phone" label="Phone" />
+                {/* <RHFPhoneInput name="phone" label="Phone Number" defaultCountry={phoneCountryCode} /> */}
+                <RHFCustomPhoneInput name="fax" label="Fax" />
+                {/* <RHFPhoneInput name="fax" label="Fax" /> */}
                 <RHFTextField name="email" label="Email" />
                 <RHFTextField name="website" label="Website" />
               </Box>

@@ -19,6 +19,7 @@ import { useSnackbar } from '../../../components/snackbar';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormPhoneField from '../../../components/ViewForms/ViewFormPhoneField';
 
 // ----------------------------------------------------------------------
 
@@ -56,9 +57,9 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
       name: currentSite ? currentSite.name : site?.name || '',
       customer: currentSite ? currentSite.name : site?.tradingName || '',
       billingSite: currentSite ? currentSite?._id : site?.accountManager || '',
-      phone: currentSite ? currentSite.phone : site?.phone || '',
+      phone: currentSite ? currentSite.phoneNumbers : site?.phoneNumbers || '',
       email: currentSite ? currentSite.email : site?.email || '',
-      fax: currentSite ? currentSite.fax : site?.fax || '',
+      fax: currentSite ? currentSite.phoneNumbers : site?.phoneNumbers || '',
       website: currentSite ? currentSite.website : site?.website || '',
       lat: currentSite ? currentSite.lat : site?.lat || '',
       long: currentSite ? currentSite.long : site?.long || '',
@@ -104,8 +105,8 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
         <ViewFormField isLoading={isLoading} sm={6} heading="Country" param={defaultValues?.country} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Latitude" param={defaultValues?.lat} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Longitude" param={defaultValues?.long} />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Phone" param={defaultValues?.phone} />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Fax" param={defaultValues?.fax} />
+        <ViewFormPhoneField isLoading={isLoading} sm={6} heading="Phone" typeOfContact="Phone" value={defaultValues?.phone } />
+        <ViewFormPhoneField isLoading={isLoading} sm={6} heading="Fax" typeOfContact="Fax" value={defaultValues?.fax } />
         <ViewFormField isLoading={isLoading} sm={6} heading="Email" param={defaultValues?.email} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Website" param={defaultValues?.website} />
         <Grid container>
