@@ -128,7 +128,11 @@ function MachineTransfer() {
   
   const handleSelectAll = (inputString) => {
     if(activeMachineDocuments?.length > 0) {
-      setMachineDoc(() => activeMachineDocuments?.map((d) => d?._id));
+      if(activeMachineDocuments?.length === machineDoc?.length ){
+        setMachineDoc([]);
+      }else{
+        setMachineDoc(() => activeMachineDocuments?.map((d) => d?._id));
+      }
     }
   };
 
@@ -286,7 +290,7 @@ function MachineTransfer() {
                 
                 <Grid >
                   {activeMachineDocuments && activeMachineDocuments.length > 0 && activeMachineDocuments?.map(( doc, index ) =>(
-                    <Grid item md={12} sx={{ display: "flex", alignItems:'center'}} >{`${Number(index)+1} - ` }<Checkbox onClick={()=> handleMachineDoc(doc?._id)} checked={machineDoc?.find((d)=> d === doc?._id)} /><Typography variant='body2'>{doc?.displayName}</Typography></Grid>
+                    <Grid item md={12} sx={{ display: "flex", alignItems:'center'}} >{`${Number(index)+1} - ` }<Checkbox key={doc?._id} onClick={()=> handleMachineDoc(doc?._id)} checked={machineDoc?.some((d)=> d === doc?._id )} /><Typography variant='body2'>{doc?.displayName}</Typography></Grid>
                   ))}
                 </Grid>
                 <AddFormButtons isSubmitting={isSubmitting} saveButtonName="Transfer" toggleCancel={()=>{ navigate(PATH_MACHINE.machines.view(id)) }} />
