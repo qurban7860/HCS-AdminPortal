@@ -466,7 +466,7 @@ function SearchBarCombo({
 
               {onExportCSV && isAllAccessAllowed && 
                   <Grid item>
-                    <LoadingButton onClick={onExportCSV}  variant='contained' sx={{p:0, minWidth:'24px'}} loading={onExportLoading}>
+                    <LoadingButton onClick={()=> onExportCSV(false, false)}  variant='contained' sx={{p:0, minWidth:'24px'}} loading={onExportLoading}>
                       <StyledTooltip title={BUTTONS.EXPORT.label} placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
                         <Iconify color="#fff" sx={{ height: '41px', width: '55px', p:'8px'}} icon={BUTTONS.EXPORT.icon} />
                       </StyledTooltip>

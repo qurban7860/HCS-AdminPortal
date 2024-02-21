@@ -166,18 +166,40 @@ export default function CustomerList() {
   }; 
 
   const [exportingCSV, setExportingCSV] = useState(false);
-  const onExportCSV = async () => {
-    setExportingCSV(true);
+  const [exportingSitesCSV, setExportingSitesCSV] = useState(false);
+  const [exportingContactsCSV, setExportingContactsCSV] = useState(false);
+  const onExportCSV = async (fetchAllContacts, fetchAllSites) => {
+    
+    let filename = '';
+    if(fetchAllSites){
+      setExportingSitesCSV(true);
+      filename = 'CustomerWithAllSitesCSV';
+    } else if(fetchAllContacts){
+      setExportingContactsCSV(true);
+      filename = 'CustomerWithAllContactsCSV';
+    }else{
+      setExportingCSV(true);
+      filename = 'CustomerCSV';
+    }
+    
     const params = {
       isArchived: false,
+      fetchAllContacts,
+      fetchAllSites,
       orderBy : {
         createdAt:-1
       }
     };
 
-    const response = dispatch(await exportCSV('CustomerCSV','crm/customers/export', params));
+    const response = dispatch(await exportCSV(filename,'crm/customers/export', params));
     response.then((res) => {
-      setExportingCSV(false);
+      if(fetchAllSites){
+        setExportingSitesCSV(false);
+      } else if(fetchAllContacts){
+        setExportingContactsCSV(false);
+      }else{
+        setExportingCSV(false);
+      }
       enqueueSnackbar(res.message, {variant:`${res.hasError?"error":""}`});
     });
   };
@@ -185,7 +207,7 @@ export default function CustomerList() {
   return (
     <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name={FORMLABELS.COVER.CUSTOMERS} icon="mdi:users" />
+          <Cover name={FORMLABELS.COVER.CUSTOMERS} icon="mdi:users" onExportCSV={onExportCSV} onExportingContacts={exportingContactsCSV} onExportingSites={exportingSitesCSV} />
         </StyledCardContainer>
       <TableCard >
         <CustomerListTableToolbar
