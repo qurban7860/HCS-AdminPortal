@@ -107,15 +107,8 @@ export default function SiteEditForm() {
 
   
   const updateCountryCode = () =>{
-      if(phone){
-            const updatedPhone ={ ...phone, countryCode: country?.phone || '' }
-        setValue('phone',updatedPhone);
-      }
-    
-      if(fax){
-            const updatedFax ={ ...fax, countryCode: country?.phone || '' }
-        setValue('fax',updatedFax)
-      }
+        setValue('phone',{ ...phone, countryCode: country?.phone || ''});
+        setValue('fax',{ ...fax, countryCode: country?.phone || ''})
   }
   
   const onSubmit = async (data) => {
