@@ -64,13 +64,24 @@ export default function SiteAddForm() {
 
   const {
     reset,
+    setValue,
     watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const { phone } = watch();
-  console.log("phone number change : ",phone)
+  const { phone, fax, country } = watch();
+
+  useEffect(() => {
+    if(!phone?.number){
+      setValue( 'phone', { ...phone, countryCode: country?.phone  } );
+    }
+    if(!fax?.number){
+      setValue( 'fax', { ...fax, countryCode: country?.phone  } );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ country ]);
+
   useEffect(() => {
     reset(defaultValues);
     // eslint-disable-next-line react-hooks/exhaustive-deps

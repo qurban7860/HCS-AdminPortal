@@ -437,7 +437,7 @@ function SearchBarCombo({
               
               {handleAttach && !transferredMachine &&
                 <Grid item>
-                  <StyledTooltip title="Attach Drawing" placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
+                  <StyledTooltip title="Attach Existing Drawing" placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
                   <IconButton onClick={handleAttach} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
                     '&:hover': {
                       background:"#103996", 
@@ -492,7 +492,7 @@ function SearchBarCombo({
               {SubOnClick2 && !transferredMachine && 
                 <Grid item >
                     <StyledTooltip 
-                      title="Add Drawing List" 
+                      title="Upload Multiple Drawing" 
                       placement="top" 
                       disableFocusListener 
                       tooltipcolor={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#103996"} 

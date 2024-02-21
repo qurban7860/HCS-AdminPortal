@@ -642,6 +642,7 @@ export function transferMachine( machineId, params ) {
     try {
       const data = {
         machine: machineId,
+        name: params?.name,
         customer: params.customer?._id || null,
         financialCompany: params?.financialCompany?._id || null,
         billingSite: params?.billingSite?._id || null,

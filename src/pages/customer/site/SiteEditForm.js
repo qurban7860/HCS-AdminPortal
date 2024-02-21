@@ -77,17 +77,24 @@ export default function SiteEditForm() {
   } = methods;
 
     const { country, phone, fax } = watch(); 
-
-    // console.log("phone : ",phone,'fax : ',fax)
+console.log("phone : " , phone, 'fax : ', fax);
 
     useEffect(() => {
-      // if (site?.phone) { setValue('phone',{ numberValue : site?.phone || ''}) }
       if (site?.address?.country) {
         const siteCountry = filtter(countries, { label: site?.address?.country || '' });
         setValue('country',siteCountry[0]);
       }
-      // setValue('fax',{ numberValue : site?.fax || ''});
     }, [ site, setValue ]);
+
+    useEffect(() => {
+      if(!phone?.number){
+        setValue( 'phone', { ...phone, countryCode: country?.phone  } );
+      }
+      if(!fax?.number){
+        setValue( 'fax', { ...fax, countryCode: country?.phone  } );
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[ country ]);
 
     
   useEffect(() => {
@@ -142,7 +149,7 @@ export default function SiteEditForm() {
                 <RHFCountryAutocomplete name="country" label="Country" />
               </Box>
               
-                { country?.phone!==phone?.countryCode && country?.phone !==fax?.countryCode &&
+                { country?.phone !== phone?.countryCode && phone?.number && country?.phone !==fax?.countryCode && fax?.number &&
                   <Grid display="flex" justifyContent='flex-end'>
                     <Typography variant='body2' sx={{mr:1,lineHeight:2, color:'gray'}}>Update country code in phone/fax</Typography>
                     <Button variant='contained' sx={{minWidth:'auto', px:1}} color='secondary' onClick={updateCountryCode}>
