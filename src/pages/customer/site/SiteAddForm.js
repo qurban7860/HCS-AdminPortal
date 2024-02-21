@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MuiTelInput } from 'mui-tel-input';
-import { Box,Card, Grid, Stack, Typography } from '@mui/material';
+import { Box,Card, Grid, Stack, Typography, alpha, Button, IconButton } from '@mui/material';
 // slice
 import { addSite, getSites, setSiteFormVisibility } from '../../../redux/slices/customer/site';
 import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
@@ -14,8 +14,10 @@ import { useSnackbar } from '../../../components/snackbar';
 // assets
 import { countries } from '../../../assets/data';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete, RHFCountryAutocomplete, RHFCustomPhoneInput } from '../../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete, RHFCountryAutocomplete, RHFCustomPhoneInput, RHFCheckbox } from '../../../components/hook-form';
 import { SiteSchema } from '../../schemas/customer'
+import Iconify from '../../../components/iconify';
+// import IconTooltip from '../../../components/Icons/IconTooltip';
 
 // ----------------------------------------------------------------------
 
@@ -49,7 +51,9 @@ export default function SiteAddForm() {
       postcode: '',
       country: countries.find((contry)=> contry?.label?.toLocaleLowerCase() === 'New Zealand'.toLocaleLowerCase() ) || null ,
       primaryTechnicalContact: null,
+      updateAddressPrimaryBillingContact: false,
       primaryBillingContact: null,
+      updateAddressPrimaryTechnicalContact: false,
       isArchived: false,
       isActive: true,
     }),
@@ -88,7 +92,6 @@ export default function SiteAddForm() {
   }, [dispatch]);
 
 
-
   const onSubmit = async (data) => {
     try {
       await dispatch(addSite(data));
@@ -100,19 +103,29 @@ export default function SiteAddForm() {
     }
   };
 
-  const toggleCancel = () => {
-    dispatch(setSiteFormVisibility(false));
-  };
+  const updateCountryCode = () =>{
+    if(phone){
+          const updatedPhone ={ ...phone, countryCode: country?.phone || '' }
+      setValue('phone',updatedPhone);
+    }
+  
+    if(fax){
+          const updatedFax ={ ...phone, countryCode: country?.phone || '' }
+      setValue('fax',updatedFax)
+    }
+  }
+
+  const toggleCancel = () => dispatch(setSiteFormVisibility(false));
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={4}>
+      <Grid container >
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
-            <Stack spacing={3}>
+            <Stack spacing={2}>
               <RHFTextField name="name" label="Name*" />
               <Box
-                rowGap={3} columnGap={2} display="grid"
+                rowGap={2} columnGap={2} display="grid"
                 gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
               >
                 <RHFTextField name="street" label="Street" />
@@ -123,6 +136,17 @@ export default function SiteAddForm() {
                 <RHFCountryAutocomplete  name="country" label="Country" />
                 <RHFTextField name="lat" label="Latitude" />
                 <RHFTextField name="long" label="Longitude" />
+                </Box>
+                <Box display="flex" alignItems="center" gridTemplateColumns={{ sm: 'repeat(1, 1fr)' }} >
+                  <IconButton onClick={updateCountryCode} size="small" variant="contained" color='secondary' sx={{ mr: 0.5}} >
+                    <Iconify icon="icon-park-outline:update-rotation" sx={{width: 25, height: 25}}  />
+                  </IconButton>
+                  <Typography variant='body2' sx={{ color:'gray'}}>Update country code in phone/fax.</Typography>
+                </Box>
+              <Box
+                rowGap={2} columnGap={2} display="grid"
+                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+              >
                 <RHFCustomPhoneInput name="phone" label="Phone Number" />
                 <RHFCustomPhoneInput name="fax" label="Fax" />
                 <RHFTextField name="email" label="Email" />
@@ -132,9 +156,10 @@ export default function SiteAddForm() {
                 Contact Details
               </Typography>
               <Box
-                rowGap={3} columnGap={2} display="grid"
+                rowGap={2} columnGap={2} display="grid"
                 gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
               >
+              <Box display="grid" gridTemplateColumns={{  sm: 'repeat(1, 1fr)' }}  >
                 <RHFAutocomplete
                   name='primaryBillingContact'
                   label="Primary Billing Contact" 
@@ -143,6 +168,9 @@ export default function SiteAddForm() {
                   getOptionLabel={(option) => `${option.firstName || ''} ${option.lastName || ''}`}
                   renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.firstName || ''} ${option.lastName || ''}`}</li> )}
                 />
+                <RHFCheckbox name="updateAddressPrimaryBillingContact" label="Update Primary Billing Contact Address" />
+              </Box>
+              <Box display="grid" gridTemplateColumns={{ sm: 'repeat(1, 1fr)' }} >
                 <RHFAutocomplete
                   name='primaryTechnicalContact'
                   label="Primary Technical Contact"
@@ -151,6 +179,8 @@ export default function SiteAddForm() {
                   getOptionLabel={(option) => `${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
                   renderOption={(props, option) => ( <li {...props} key={option?._id}> {`${option.firstName || ''} ${option.lastName || ''}`}</li> )}
                 />
+                <RHFCheckbox name="updateAddressPrimaryTechnicalContact" label="Update Primary Technical Contact Address" />
+              </Box>
               </Box>
               <RHFSwitch name="isActive" label="Active" />
             </Stack>

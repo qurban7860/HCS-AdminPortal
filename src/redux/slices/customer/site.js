@@ -164,8 +164,10 @@ export function addSite(params) {
           website: params.website,
           lat: params.lat,
           long: params.long,
-          primaryBillingContact: params.primaryBillingContact?._id || null,
-          primaryTechnicalContact: params.primaryTechnicalContact?._id || null,
+          primaryBillingContact: params?.primaryBillingContact?._id || null,
+          updateAddressPrimaryBillingContact: params?.updateAddressPrimaryBillingContact,
+          primaryTechnicalContact: params?.primaryTechnicalContact?._id || null,
+          updateAddressPrimaryTechnicalContact: params?.updateAddressPrimaryTechnicalContact,
           isActive: params.isActive,
           address: {}
         };
@@ -230,7 +232,9 @@ export function updateSite(params,customerId,Id) {
           long: params.long,
           isActive: params.isActive,
           primaryBillingContact: params.primaryBillingContact?._id || null,
+          updateAddressPrimaryBillingContact: params?.updateAddressPrimaryBillingContact,
           primaryTechnicalContact: params.primaryTechnicalContact?._id || null,
+          updateAddressPrimaryTechnicalContact: params?.updateAddressPrimaryTechnicalContact,
           address: {}
         };
         const phoneNumbers = []
