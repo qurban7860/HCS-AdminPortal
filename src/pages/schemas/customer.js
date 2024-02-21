@@ -99,14 +99,14 @@ export const SiteSchema = Yup.object().shape({
   customer: Yup.string(),
   billingSite: Yup.string(),
   email: Yup.string().trim('The contact name cannot include leading and trailing spaces'),
-  phone: Yup.object().shape({
-    countryCode: Yup.number().max(999999).label("Phone Country Code"),
-    number: Yup.number().max(999999999999).label("Phone Number"),
-  }),
-  fax: Yup.object().shape({
-    countryCode: Yup.number().max(999999).label("Fax Country Code"),
-    number: Yup.number().max(999999999999).label("Fax Number"),
-  }),
+  // phone: Yup.object().shape({
+  //   countryCode: Yup.number().max(999999).label("Phone Country Code"),
+  //   number: Yup.number().max(999999999999).label("Phone Number"),
+  // }),
+  // fax: Yup.object().shape({
+  //   countryCode: Yup.number().max(999999).label("Fax Country Code"),
+  //   number: Yup.number().max(999999999999).label("Fax Number"),
+  // }),
   website: Yup.string(),
   lat: Yup.string().nullable()
   .max(25, 'Latitude must be less than or equal to 90.9999999999999999999999')
