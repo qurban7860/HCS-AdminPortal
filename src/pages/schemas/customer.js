@@ -98,9 +98,15 @@ export const SiteSchema = Yup.object().shape({
   name: Yup.string().min(2).max(40).required().label('Name'),
   customer: Yup.string(),
   billingSite: Yup.string(),
-  // phone: Yup.string().matches(phoneRegExp, {message: "Please enter valid number.", excludeEmptyString: true}).max(15, "too long"),
   email: Yup.string().trim('The contact name cannot include leading and trailing spaces'),
-  // fax: Yup.string(),
+  phone: Yup.object().shape({
+    countryCode: Yup.number().max(999999).label("Phone Country Code"),
+    number: Yup.number().max(999999999999).label("Phone Number"),
+  }),
+  fax: Yup.object().shape({
+    countryCode: Yup.number().max(999999).label("Fax Country Code"),
+    number: Yup.number().max(999999999999).label("Fax Number"),
+  }),
   website: Yup.string(),
   lat: Yup.string().nullable()
   .max(25, 'Latitude must be less than or equal to 90.9999999999999999999999')

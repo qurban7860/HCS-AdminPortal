@@ -188,13 +188,13 @@ function MachineTransfer() {
                 />
               </Grid>
               <Grid container>
-                <ViewFormField isLoading={isLoading} sm={6} variant='h4' heading="Profile" param={`${machine?.machineProfile?.defaultName || ''} ${(machine?.machineProfile?.web && machine?.machineProfile?.flange )? `(${machine?.machineProfile?.web || '' } X ${machine?.machineProfile?.flange || '' })` :""}`} />
                 {/* <ViewFormField isLoading={isLoading} sm={6 } heading="Name" param={defaultValues?.name} />
                 <ViewFormField isLoading={isLoading} sm={6} heading="Manufacture Date" param={fDate(defaultValues?.manufactureDate)} />
                 { defaultValues?.parentSerialNo ? <ViewFormField isLoading={isLoading} sm={6} heading="Previous Machine" param={defaultValues?.parentSerialNo} /> : " "}
                 <ViewFormField isLoading={isLoading} sm={6} heading="Alias" chips={defaultValues?.alias} />
                 <ViewFormField isLoading={isLoading} sm={6} heading="Supplier" param={defaultValues?.supplier} /> */}
-                <ViewFormField isLoading={isLoading} sm={6} heading="Status" param={machine?.status?.name || ''} />
+                <ViewFormField isLoading={isLoading} sm={4} heading="Status" param={machine?.status?.name || ''} />
+                <ViewFormField isLoading={isLoading} sm={8} variant='h4' heading="Profile" param={`${machine?.machineProfile?.defaultName || ''} ${(machine?.machineProfile?.web && machine?.machineProfile?.flange )? `(${machine?.machineProfile?.web || '' } X ${machine?.machineProfile?.flange || '' })` :""}`} />
               </Grid>
               <FormLabel content='Machine Transfer Information'/>
                 <RHFTextField name="name" label="Machine Name" />

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, IconButton } from '@mui/material';
 // slice
 import { updateSite, setSiteEditFormVisibility, getSite, getSites } from '../../../redux/slices/customer/site';
 import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
@@ -13,7 +13,7 @@ import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/cu
 import { useSnackbar } from '../../../components/snackbar';
 import Iconify from '../../../components/iconify';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete, RHFCountryAutocomplete, RHFCustomPhoneInput } from '../../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete, RHFCountryAutocomplete, RHFCustomPhoneInput, RHFCheckbox } from '../../../components/hook-form';
 import { countries } from '../../../assets/data';
 import { SiteSchema } from '../../schemas/customer'
 // ----------------------------------------------------------------------
@@ -57,7 +57,9 @@ export default function SiteEditForm() {
       country: countries.find((contry)=> contry?.label?.toLocaleLowerCase() === site?.address?.country?.toLocaleLowerCase() ) || null ,
       isActive: site?.isActive,
       primaryBillingContact: site?.primaryBillingContact || null,
+      updateAddressPrimaryBillingContact: site?.updateAddressPrimaryBillingContact || false,
       primaryTechnicalContact: site?.primaryTechnicalContact || null,
+      updateAddressPrimaryTechnicalContact: site?.updateAddressPrimaryTechnicalContact || false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [site]
@@ -77,7 +79,7 @@ export default function SiteEditForm() {
   } = methods;
 
     const { country, phone, fax } = watch(); 
-console.log("phone : " , phone, 'fax : ', fax);
+// console.log("phone : " , phone, 'fax : ', fax);
 
     useEffect(() => {
       if (site?.address?.country) {
@@ -147,27 +149,21 @@ console.log("phone : " , phone, 'fax : ', fax);
                 <RHFTextField name="region" label="Region" />
                 <RHFTextField name="postcode" label="Post Code" />
                 <RHFCountryAutocomplete name="country" label="Country" />
+                <RHFTextField name="lat" label="Latitude" />
+                <RHFTextField name="long" label="Longitude" />
               </Box>
-              
-                { country?.phone !== phone?.countryCode && phone?.number && country?.phone !==fax?.countryCode && fax?.number &&
-                  <Grid display="flex" justifyContent='flex-end'>
-                    <Typography variant='body2' sx={{mr:1,lineHeight:2, color:'gray'}}>Update country code in phone/fax</Typography>
-                    <Button variant='contained' sx={{minWidth:'auto', px:1}} color='secondary' onClick={updateCountryCode}>
-                      <Iconify icon="icon-park-outline:update-rotation"  />
-                    </Button>
-                  </Grid>
-                }
+                <Box display="flex" alignItems="center" gridTemplateColumns={{ sm: 'repeat(1, 1fr)' }} >
+                  <IconButton onClick={updateCountryCode} size="small" variant="contained" color='secondary' sx={{ mr: 0.5}} >
+                    <Iconify icon="icon-park-outline:update-rotation" sx={{width: 25, height: 25}}  />
+                  </IconButton>
+                  <Typography variant='body2' sx={{ color:'gray'}}>Update country code in phone/fax.</Typography>
+                </Box>
               <Box
                 rowGap={2} columnGap={2} display="grid"
                 gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
               >
-                {/* defaultCountry={ country?.code } */}
-                <RHFTextField name="lat" label="Latitude" />
-                <RHFTextField name="long" label="Longitude" />
                 <RHFCustomPhoneInput name="phone" label="Phone" />
-                {/* <RHFPhoneInput name="phone" label="Phone Number" defaultCountry={phoneCountryCode} /> */}
                 <RHFCustomPhoneInput name="fax" label="Fax" />
-                {/* <RHFPhoneInput name="fax" label="Fax" /> */}
                 <RHFTextField name="email" label="Email" />
                 <RHFTextField name="website" label="Website" />
               </Box>
@@ -179,6 +175,7 @@ console.log("phone : " , phone, 'fax : ', fax);
               <Box rowGap={2} columnGap={2} display="grid"
                 gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
               >
+              <Box display="grid" gridTemplateColumns={{ sm: 'repeat(1, 1fr)' }}  >
                 <RHFAutocomplete
                   name="primaryBillingContact"
                   label="Primary Billing Contact"
@@ -189,7 +186,10 @@ console.log("phone : " , phone, 'fax : ', fax);
                   id="controllable-states-demo"
                   ChipProps={{ size: 'small' }}
                 />
+                <RHFCheckbox name="updateAddressPrimaryBillingContact" label="Update Primary Billing Contact Address" />
+              </Box>
 
+              <Box display="grid" gridTemplateColumns={{ sm: 'repeat(1, 1fr)' }}  >
                 <RHFAutocomplete
                   name="primaryTechnicalContact"
                   label="Primary Technical Contact"
@@ -200,6 +200,8 @@ console.log("phone : " , phone, 'fax : ', fax);
                   id="controllable-states-demo"
                   ChipProps={{ size: 'small' }}
                 />
+                <RHFCheckbox name="updateAddressPrimaryTechnicalContact" label="Update Primary Technical Contact Address" />
+              </Box>
 
               </Box>
               <RHFSwitch name="isActive" label="Active" />
