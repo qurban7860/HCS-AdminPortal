@@ -79,7 +79,7 @@ export default function SiteEditForm() {
   } = methods;
 
     const { country, phone, fax } = watch(); 
-console.log("phone : " , phone, 'fax : ', fax);
+// console.log("phone : " , phone, 'fax : ', fax);
 
     useEffect(() => {
       if (site?.address?.country) {
@@ -149,20 +149,19 @@ console.log("phone : " , phone, 'fax : ', fax);
                 <RHFTextField name="region" label="Region" />
                 <RHFTextField name="postcode" label="Post Code" />
                 <RHFCountryAutocomplete name="country" label="Country" />
-              </Box>
-              
-              <Box
-                rowGap={2} columnGap={2} display="grid"
-                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
-              >
                 <RHFTextField name="lat" label="Latitude" />
                 <RHFTextField name="long" label="Longitude" />
+              </Box>
                 <Box display="flex" alignItems="center" gridTemplateColumns={{ sm: 'repeat(1, 1fr)' }} >
                   <IconButton onClick={updateCountryCode} size="small" variant="contained" color='secondary' sx={{ mr: 0.5}} >
                     <Iconify icon="icon-park-outline:update-rotation" sx={{width: 25, height: 25}}  />
                   </IconButton>
                   <Typography variant='body2' sx={{ color:'gray'}}>Update country code in phone/fax.</Typography>
                 </Box>
+              <Box
+                rowGap={2} columnGap={2} display="grid"
+                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+              >
                 <RHFCustomPhoneInput name="phone" label="Phone" />
                 <RHFCustomPhoneInput name="fax" label="Fax" />
                 <RHFTextField name="email" label="Email" />
