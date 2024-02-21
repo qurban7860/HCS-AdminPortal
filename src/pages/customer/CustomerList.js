@@ -191,7 +191,7 @@ export default function CustomerList() {
       }
     };
 
-    const response = dispatch(await exportCSV(filename,'crm/customers/export', params));
+    const response = dispatch(await exportCSV(filename,'crm/customers/undefined/sites/export', params));
     response.then((res) => {
       if(fetchAllSites){
         setExportingSitesCSV(false);
