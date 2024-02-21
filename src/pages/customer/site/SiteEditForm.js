@@ -113,7 +113,7 @@ export default function SiteEditForm() {
       }
     
       if(fax){
-            const updatedFax ={ ...phone, countryCode: country?.phone || '' }
+            const updatedFax ={ ...fax, countryCode: country?.phone || '' }
         setValue('fax',updatedFax)
       }
   }
