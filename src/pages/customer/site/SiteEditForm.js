@@ -57,9 +57,9 @@ export default function SiteEditForm() {
       country: countries.find((contry)=> contry?.label?.toLocaleLowerCase() === site?.address?.country?.toLocaleLowerCase() ) || null ,
       isActive: site?.isActive,
       primaryBillingContact: site?.primaryBillingContact || null,
-      updateAddressPrimaryBillingContact: site?.updateAddressPrimaryBillingContact,
+      updateAddressPrimaryBillingContact: site?.updateAddressPrimaryBillingContact || false,
       primaryTechnicalContact: site?.primaryTechnicalContact || null,
-      updateAddressPrimaryTechnicalContact: site?.updateAddressPrimaryTechnicalContact,
+      updateAddressPrimaryTechnicalContact: site?.updateAddressPrimaryTechnicalContact || false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [site]
