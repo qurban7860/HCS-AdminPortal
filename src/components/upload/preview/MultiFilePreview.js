@@ -192,7 +192,7 @@ function MultiFilePreview({
               px: 1.5,
               py: 1.25,
               borderRadius: 0.75,
-              border:`solid 1px ${theme.palette.divider}`,
+              border:`solid 1px ${ ( docType && displayName?.trim() && referenceNumber?.trim() && stockNumber?.trim() && versionNo?.trim() ) ? theme.palette.divider : theme.palette.error.main}`,
               ...sx,
             }}
           >
@@ -221,12 +221,24 @@ function MultiFilePreview({
                     getOptionLabel={(option) => `${option?.name || ''}`}
                     renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.name || ''}`}</li>)}
                     onChange={(event, newValue) => onChangeDocType( index, event, newValue)}
-                    renderInput={(params) => <TextField required {...params} label="Type" size='small' />}
+                    renderInput={(params) => <TextField {...params} label="Type" size='small' />}
+                    error={!docType } 
+                    helperText={!docType && 'Document Type is required!'}
                   />}
                 </Grid>
+
                 <Grid item md={8} sm={12} >
-                  {onChangeDisplayName && <TextField required fullWidth label="Name" size='small' value={ displayName } sx={{mt: { md:0, sm: 1} }} onChange={(e)=> onChangeDisplayName( index, e.target.value)} />}
+                  {onChangeDisplayName && <TextField 
+                    fullWidth 
+                    label="Name" 
+                    size='small' 
+                    value={ displayName } sx={{mt: { md:0, sm: 1} }} 
+                    onChange={(e)=> onChangeDisplayName( index, e.target.value)} 
+                    error={!displayName?.trim()} 
+                    helperText={!displayName?.trim() && 'Display Name is required!'} 
+                  />}
                 </Grid>
+
               </Stack>
               <Box rowGap={1} columnGap={1} display="grid" 
                 gridTemplateColumns={{
@@ -234,9 +246,34 @@ function MultiFilePreview({
                   md: 'repeat(3, 1fr)',
                 }} 
               >
-              {onChangeReferenceNumber && <TextField required label="Reference No." size='small' value={ referenceNumber } onChange={(e)=> onChangeReferenceNumber( index, e.target.value)}  />}
-              {onChangeStockNumber && <TextField required label="Stock No." size='small' value={ stockNumber } onChange={(e)=> onChangeStockNumber( index, e.target.value)} />}
-              {onChangeVersionNo && <TextField required label="Version No." size='small' value={ versionNo } onChange={(e)=> onChangeVersionNo( index, e.target.value)} />}
+
+              {onChangeReferenceNumber && <TextField 
+                label="Reference No." 
+                size='small' 
+                value={ referenceNumber } 
+                onChange={(e)=> onChangeReferenceNumber( index, e.target.value)} 
+                error={!referenceNumber?.trim()} 
+                helperText={!referenceNumber?.trim() && 'Reference Number is required!'} 
+              />}
+
+              {onChangeStockNumber && <TextField 
+                label="Stock No." 
+                size='small' 
+                value={ stockNumber } 
+                onChange={(e)=> onChangeStockNumber( index, e.target.value)} 
+                error={!stockNumber?.trim()} 
+                helperText={!stockNumber?.trim() && 'Stock Number is required!'} 
+              />}
+
+              {onChangeVersionNo && <TextField 
+                label="Version No." 
+                size='small' 
+                value={ versionNo } 
+                onChange={(e)=> onChangeVersionNo( index, e.target.value)} 
+                error={!versionNo?.trim()} 
+                helperText={!versionNo?.trim() && 'Version No. is required!'} 
+              />}
+
               </Box>
             </Stack>
           </Stack>

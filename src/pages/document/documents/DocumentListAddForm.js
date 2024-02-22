@@ -28,7 +28,7 @@ import DocumentCover from '../../../components/DocumentForms/DocumentCover';
 import { FORMLABELS } from '../../../constants/default-constants';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import ConfirmDialog from '../../../components/confirm-dialog';
-import validateFileType from '../util/validateFileType';
+import validateMultipleDrawingsFileType from '../util/validateMultipleDrawingsFileType';
 
 // ----------------------------------------------------------------------
 
@@ -78,7 +78,7 @@ const documentSchema = Yup.object().shape({
   files: Yup.mixed().required('Files required!')
   .test( 'fileType',
     'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
-    validateFileType
+    validateMultipleDrawingsFileType
   ).nullable(true),
 });
 
@@ -101,10 +101,6 @@ const documentSchema = Yup.object().shape({
   } = methods;
 
   const { files, docCategory } = watch();
-
-  useEffect(()=>{ 
-      trigger('files');
-  },[ files, trigger ])
 
   useEffect(() => {
     if(docCategory){
@@ -138,7 +134,7 @@ const onChangeDocType = ( index, event, value ) => {
   }
 }
 
-const onChangeVersionNo = (index, value) => setValue(`files[${index}].versionNo`, value);
+const onChangeVersionNo = (index, value) => setValue(`files[${index}].versionNo`, value?.replace(/[^0-9]/g, ''))
 const onChangeDisplayName = (index, value) => setValue(`files[${index}].displayName`, value);
 const onChangeReferenceNumber = (index, value) => setValue(`files[${index}].referenceNumber`, value);
 const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNumber`, value);   
@@ -212,6 +208,7 @@ const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNum
   
 
   const handleDropMultiFile = async (acceptedFiles) => {
+    trigger('files');
     pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
     let defaultDocCategory = await activeDocumentCategories.find((el)=>  el.isDefault === true )
     const defaultDocType = await activeDocumentTypes.find((el)=> el.isDefault === true )
@@ -267,6 +264,7 @@ const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNum
     } else {
       setValue('files',[ ...newFiles] );
     }
+    trigger('files');
   }
   
   const toggleCancel = () => { 
@@ -303,12 +301,15 @@ const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNum
 
                     <RHFUpload multiple rows name="files"
                       onDrop={handleDropMultiFile}
-                      onRemove={(inputFile) =>
-                        files?.length > 1 
-                        ? setValue( 'files', files && files?.filter((file) => file?.hashMD5 !== inputFile?.hashMD5 ) )
-                        : setValue('files', null )
-                      }
-                      onRemoveAll={() => setValue('files', null )}
+                      onRemove={(inputFile) => {
+                          if (files?.length > 1) {
+                              setValue('files', files?.filter((file) => file?.hashMD5 !== inputFile?.hashMD5));
+                          } else {
+                              setValue('files', null);
+                          }
+                          trigger('files');
+                      }}
+                      onRemoveAll={() => { setValue('files', null ); trigger('files') }}
                       // machine={machineVal}
                       onChangeDocType={onChangeDocType}
                       // onChangeDocCategory={onChangeDocCategory}
