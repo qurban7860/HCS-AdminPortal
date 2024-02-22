@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -6,11 +6,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Box, Container, Grid, TextField, Card, Stack, Checkbox, Typography, Link } from '@mui/material';
 import { PATH_MACHINE, PATH_CUSTOMER } from '../../routes/paths';
-import { setMachineTransferDialog, transferMachine , getMachine} from '../../redux/slices/products/machine';
+import { transferMachine , getMachine} from '../../redux/slices/products/machine';
 import { getActiveMachineStatuses, resetActiveMachineStatuses } from '../../redux/slices/products/statuses';
 import { getActiveCustomers, getFinancialCompanies, resetActiveCustomers, resetFinancingCompanies, getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import { getActiveMachineDocuments, resetActiveMachineDocuments } from '../../redux/slices/document/machineDocument';
+import { getActiveSuppliers, resetActiveSuppliers } from '../../redux/slices/products/supplier';
+import { getActiveSPContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFAutocomplete, RHFCheckbox, RHFDatePicker, RHFTextField } from '../../components/hook-form';
 import { machineTransferSchema } from '../schemas/machine'
@@ -33,22 +35,27 @@ function MachineTransfer() {
   const cancelTokenSource = axiosToken();
   const navigate = useNavigate();
 
+  const { activeSpContacts } = useSelector((state) => state.contact);
   const { machine, isLoading } = useSelector((state) => state.machine);
   const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
   const { activeCustomers, financialCompanies, customerDialog } = useSelector((state) => state.customer);
   const { activeSites } = useSelector((state) => state.site);
   const { activeMachineDocuments } = useSelector((state) => state.machineDocument );
-  const [machineDoc, setMachineDoc] = useState([]);
+  const { activeSuppliers } = useSelector((state) => state.supplier);
 
   useEffect(()=> {
     dispatch(getActiveMachineStatuses(cancelTokenSource))
     dispatch(getActiveCustomers(cancelTokenSource))
+    dispatch(getActiveSuppliers(cancelTokenSource))
+    dispatch(getActiveSPContacts(cancelTokenSource))
     return ()=>{  
       // cancelTokenSource.cancel()
       dispatch(resetActiveCustomers())
       dispatch(resetActiveSites())
       dispatch(resetActiveMachineDocuments()) 
       dispatch(resetActiveMachineStatuses())
+      dispatch(resetActiveSuppliers())
+      dispatch(resetActiveSPContacts())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ dispatch])
@@ -84,17 +91,26 @@ function MachineTransfer() {
       name: machine?.name || '',
       customer: null,
       financialCompany: null,
+      supplier: machine?.supplier || null,
+      workOrderRef: machine?.workOrderRef || '',
       billingSite: null,
       installationSite: null,
+      siteMilestone: '',
       shippingDate: null,
       installationDate: null,
       status: null,
+      machineConnection: [],
+      accountManager: machine?.accountManager || [],
+      projectManager: machine?.projectManager || [],
+      supportManager: machine?.supportManager || [],
+      supportExpireDate: machine?.supportExpireDate || null,
+      description: machine?.description || '',
       isAllSettings: false,
       isAllTools: false,
       isAllDrawings: false,
       isAllProfiles: false,
       isAllINIs: false,
-      machineConnection: [],
+      machineDocuments: [],
       isSelectAllDocs: false,
     },
   });
@@ -107,19 +123,15 @@ function MachineTransfer() {
     formState: { isSubmitting },
   } = methods;
 
-  const { customer } =watch();
+  const { customer, machineDocuments } =watch();
 
-  const handleMachineDialog = ()=>{ dispatch(setMachineTransferDialog(false)) }
 
   const onSubmit = async (data) => {
       try {
-        data.machineDocuments = machineDoc
         const response = await dispatch(transferMachine( id, data ));
-        const machineId = response.data.Machine._id;
-        reset();
         enqueueSnackbar(Snacks.machineTransferSuccess);
-        navigate(PATH_MACHINE.machines.view(machineId));
-        handleMachineDialog()
+        reset();
+        navigate(PATH_MACHINE.machines.view(response?.data?.Machine?._id));
       } catch (error) {
         enqueueSnackbar( error, { variant: `error` });
         console.error(error);
@@ -128,21 +140,20 @@ function MachineTransfer() {
   
   const handleSelectAll = (inputString) => {
     if(activeMachineDocuments?.length > 0) {
-      if(activeMachineDocuments?.length === machineDoc?.length ){
-        setMachineDoc([]);
+      if(activeMachineDocuments?.length === machineDocuments?.length ){
+        setValue('machineDocuments',[]);
       }else{
-        setMachineDoc(() => activeMachineDocuments?.map((d) => d?._id));
+        setValue('machineDocuments', activeMachineDocuments?.map((d) => d?._id) || []);
       }
     }
   };
 
   const handleMachineDoc = (inputString) => {
-    setMachineDoc((prevArray) => {
-      if (prevArray.includes(inputString)) {
-        return prevArray.filter(item => item !== inputString);
-      } 
-        return [...prevArray, inputString];
-    });
+      if (machineDocuments.includes(inputString)) {
+        setValue('machineDocuments', machineDocuments.filter(item => item !== inputString) || [] )
+      } else{
+        setValue('machineDocuments', [...machineDocuments, inputString]);
+      }
   };
 
   useEffect(()=>{
@@ -162,7 +173,8 @@ function MachineTransfer() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ customer?._id ])
-  console.log("machineDoc : ",machineDoc)
+
+
   return (
     <Container maxWidth={false} sx={{mb:3}}>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
@@ -173,9 +185,9 @@ function MachineTransfer() {
             <Stack spacing={2} >
               <FormLabel content='Machine Information'/>
               <Grid container>
-                <ViewFormField isLoading={isLoading} sm={4} variant='h4' heading="Serial No" param={machine?.serialNo} />
-                <ViewFormField isLoading={isLoading} sm={4} variant='h4' heading="Machine Model" param={machine?.machineModel?.name} />
-                <ViewFormField isLoading={isLoading} sm={4} variant='h4' heading="Customer"
+                <ViewFormField isLoading={isLoading} sm={3} variant='h4' heading="Serial No" param={machine?.serialNo} />
+                <ViewFormField isLoading={isLoading} sm={3} variant='h4' heading="Machine Model" param={machine?.machineModel?.name} />
+                <ViewFormField isLoading={isLoading} sm={3} variant='h4' heading="Customer"
                   node={
                     machine?.customer && (
                       <>
@@ -187,15 +199,7 @@ function MachineTransfer() {
                     )
                   }
                 />
-              </Grid>
-              <Grid container>
-                {/* <ViewFormField isLoading={isLoading} sm={6 } heading="Name" param={defaultValues?.name} />
-                <ViewFormField isLoading={isLoading} sm={6} heading="Manufacture Date" param={fDate(defaultValues?.manufactureDate)} />
-                { defaultValues?.parentSerialNo ? <ViewFormField isLoading={isLoading} sm={6} heading="Previous Machine" param={defaultValues?.parentSerialNo} /> : " "}
-                <ViewFormField isLoading={isLoading} sm={6} heading="Alias" chips={defaultValues?.alias} />
-                <ViewFormField isLoading={isLoading} sm={6} heading="Supplier" param={defaultValues?.supplier} /> */}
-                <ViewFormField isLoading={isLoading} sm={4} heading="Status" param={machine?.status?.name || ''} />
-                <ViewFormField isLoading={isLoading} sm={8} variant='h4' heading="Profile" param={`${machine?.machineProfile?.defaultName || ''} ${(machine?.machineProfile?.web && machine?.machineProfile?.flange )? `(${machine?.machineProfile?.web || '' } X ${machine?.machineProfile?.flange || '' })` :""}`} />
+                <ViewFormField isLoading={isLoading} sm={3} heading="Status" param={machine?.status?.name || ''} />
               </Grid>
               <FormLabel content='Machine Transfer Information'/>
                 <RHFTextField name="name" label="Machine Name" />
@@ -221,6 +225,19 @@ function MachineTransfer() {
                     />
 
                     <RHFAutocomplete
+                      name="supplier"
+                      label="Supplier"
+                      id="controllable-states-demo"
+                      options={activeSuppliers}
+                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                      getOptionLabel={(option) => `${option.name || ''}`}
+                      renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.name || ''}`}</li> )}
+                      ChipProps={{ size: 'small' }}
+                    />
+
+                    <RHFTextField name="workOrderRef" label="Work Order/ Purchase Order" />
+
+                    <RHFAutocomplete
                       name="billingSite"
                       label="Billing Site"
                       options={activeSites}
@@ -238,6 +255,13 @@ function MachineTransfer() {
                       renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
                     />
 
+                  </Box>
+
+                    <RHFTextField name="siteMilestone" label="Landmark for Installation site" multiline />
+
+                  <Box rowGap={2} columnGap={2} display="grid"
+                    gridTemplateColumns={{ md: 'repeat(2, 1fr)', sm: 'repeat(1, 1fr)' }}
+                  >
                     <RHFDatePicker inputFormat='dd/MM/yyyy' name="shippingDate" label="Shipping Date" />
 
                     <RHFDatePicker inputFormat='dd/MM/yyyy' name="installationDate" label="Installation Date" />
@@ -264,12 +288,58 @@ function MachineTransfer() {
                     renderInput={(params) => ( <TextField  {...params}  label="Connected Machines"   placeholder="Search"  /> )}
                   />
 
+                <Box rowGap={2} columnGap={2} display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
+                >
+
+                  <RHFAutocomplete
+                    multiple
+                    disableCloseOnSelect
+                    filterSelectedOptions
+                    name="accountManager"
+                    options={ activeSpContacts }
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
+                    renderInput={(params) => <TextField {...params} label="Account Manager" />}
+                    ChipProps={{ size: 'small' }}
+                    id="controllable-states-demo"
+                  />
+
+                  <RHFAutocomplete
+                    multiple
+                    disableCloseOnSelect
+                    filterSelectedOptions
+                    name="projectManager"
+                    options={ activeSpContacts }
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
+                    renderInput={(params) => <TextField {...params} label="Project Manager" />}
+                    ChipProps={{ size: 'small' }}
+                    id="controllable-states-demo"
+                  />
+
+                  <RHFAutocomplete
+                    multiple
+                    disableCloseOnSelect
+                    filterSelectedOptions
+                    name="supportManager"
+                    options={ activeSpContacts }
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>)}
+                    renderInput={(params) => <TextField {...params} label="Support Manager" />}
+                    ChipProps={{ size: 'small' }}
+                    id="controllable-states-demo"
+                  />
+                  <RHFDatePicker inputFormat='dd/MM/yyyy' name="supportExpireDate" label="Support Expiry Date" />
+                </Box>
+                  <RHFTextField name="description" label="Description" minRows={3} multiline />
+
                   <Grid container direction="row" alignItems="center" spacing={2}  sx={{
-                      p:2,
-                      whiteSpace: 'pre-line',
-                      wordBreak: 'break-word',
-                      flexWrap: 'wrap', 
-                    }} >
+                      p:2, whiteSpace: 'pre-line', wordBreak: 'break-word', flexWrap: 'wrap', 
+                  }} >
                     <RHFCheckbox name="isAllSettings" label="All Settings"/>
                     <RHFCheckbox name="isAllTools" label="All Tools"/>
                     <RHFCheckbox name="isAllDrawings" label="All Drawings"/>
@@ -280,14 +350,14 @@ function MachineTransfer() {
                   { activeMachineDocuments && activeMachineDocuments?.length > 0 && <FormLabel content='Machine Documents'/> }
                   { activeMachineDocuments && activeMachineDocuments?.length > 1 && 
                     <Grid sx={{display:"flex", alignItems:"center" }}>
-                      <Checkbox onClick={ handleSelectAll } checked={ activeMachineDocuments?.length === machineDoc?.length }/>
+                      <Checkbox onClick={ handleSelectAll } checked={ activeMachineDocuments?.length === machineDocuments?.length }/>
                       <Typography variant='body2'>Select all Documents</Typography> 
                     </Grid>
                   }
                 
                 <Grid >
                   {activeMachineDocuments && activeMachineDocuments.length > 0 && activeMachineDocuments?.map(( doc, index ) =>(
-                    <Grid key={doc?._id}  item md={12} sx={{ display: "flex", alignItems:'center'}} >{`${Number(index)+1} - ` }<Checkbox key={doc?._id} onClick={()=> handleMachineDoc(doc?._id)} checked={machineDoc?.some((d)=> d === doc?._id )} /><Typography variant='body2'>{doc?.displayName}</Typography></Grid>
+                    <Grid key={doc?._id}  item md={12} sx={{ display: "flex", alignItems:'center'}} >{`${Number(index)+1} - ` }<Checkbox key={doc?._id} onClick={()=> handleMachineDoc(doc?._id)} checked={ machineDocuments?.some((d)=> d === doc?._id )} /><Typography variant='body2'>{doc?.displayName}</Typography></Grid>
                   ))}
                 </Grid>
                 <AddFormButtons isSubmitting={isSubmitting} saveButtonName="Transfer" toggleCancel={()=>{ navigate(PATH_MACHINE.machines.view(id)) }} />

@@ -4,6 +4,7 @@ import { useFormContext, Controller } from 'react-hook-form';
 // @mui
 import {
   Checkbox,
+  Typography,
   FormLabel,
   FormGroup,
   FormControl,
@@ -15,10 +16,11 @@ import {
 
 RHFCheckbox.propTypes = {
   name: PropTypes.string,
+  label: PropTypes.string,
   helperText: PropTypes.node,
 };
 
-export function RHFCheckbox({ name, helperText, ...other }) {
+export function RHFCheckbox({ name, label, helperText, ...other }) {
   const { control } = useFormContext();
 
   return (
@@ -27,7 +29,7 @@ export function RHFCheckbox({ name, helperText, ...other }) {
       control={control}
       render={({ field, fieldState: { error } }) => (
         <div>
-          <FormControlLabel control={<Checkbox {...field} checked={field.value} />} {...other} />
+          <FormControlLabel control={<Checkbox {...field} checked={field.value} />} label={<Typography variant='body2'sx={{fontWeight:'bold'}}>{label}</Typography>} {...other} />
 
           {(!!error || helperText) && (
             <FormHelperText error={!!error}>{error ? error?.message : helperText}</FormHelperText>

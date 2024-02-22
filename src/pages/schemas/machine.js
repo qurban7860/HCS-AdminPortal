@@ -33,8 +33,9 @@ export const machineSchema = Yup.object().shape({
   .max(future5yearDate,`Shipping Date field must be at earlier than ${fDate(future5yearDate)}`)
   .min(pastDate,`Shipping Date field must be at after than ${fDate(pastDate)}`).nullable().label('Installation Date'),
   supportExpireDate: Yup.date()
+  .typeError('Date Should be Valid')
   .min(today,`Support Expiry Date field must be at after than ${fDate(today)}`).nullable().label('Support Expiry Date'),
-  instalationSite: Yup.object().shape({
+  installationSite: Yup.object().shape({
     name: Yup.string()
   }).nullable(),
   billingSite: Yup.object().shape({
@@ -61,7 +62,7 @@ export const machineTransferSchema = Yup.object().shape({
     name: Yup.string()
   }).nullable(),
 
-  instalationSite: Yup.object().shape({
+  installationSite: Yup.object().shape({
     name: Yup.string()
   }).nullable(),
 
@@ -72,7 +73,9 @@ export const machineTransferSchema = Yup.object().shape({
   .typeError('Date Should be Valid')
   .max(future5yearDate,`Shipping Date field must be at earlier than ${fDate(future5yearDate)}`)
   .min(pastDate,`Shipping Date field must be at after than ${fDate(pastDate)}`).nullable().label('Installation Date'),
-
+  supportExpireDate: Yup.date()
+  .typeError('Date Should be Valid')
+  .min(today,`Support Expiry Date field must be at after than ${fDate(today)}`).nullable().label('Support Expiry Date'),
   status: Yup.object().shape({
     name: Yup.string()
   }).nullable().required("Status Is Required"),
