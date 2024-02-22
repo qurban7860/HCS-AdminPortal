@@ -4,7 +4,7 @@ const maxFiles = JSON.parse( localStorage.getItem('configurations'))?.find( ( c 
 
 
 const validateMultipleDrawingsFileType = (value, options) => {
-    console.log("value : ",value ,'options',options)
+    
     const { path, createError } = options;
     if (value && Array.isArray(value)) {
         if (value?.length > ( Number(maxFiles?.value) || 20 ) ) {

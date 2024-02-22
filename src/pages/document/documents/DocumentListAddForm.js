@@ -106,22 +106,22 @@ const documentSchema = Yup.object().shape({
     if(docCategory){
       files?.map( ( f, index ) => setValue(`files[${index}].docCategory`, docCategory ))
     }else{
-      files?.map( ( f, index ) =>   setValue(`files[${index}].docCategory`, null ) )
+      files?.forEach((f, index) => { setValue(`files[${index}].docCategory`, null); setValue(`files[${index}].docType`, null);  })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ docCategory?._id ]);
 
-const onChangeDocCategory = ( index, event, value ) => {
-  if( value ){
-    setValue(`files[${index}].docCategory`, value );
-    if( value?._id !== files[index]?.docType?.docCategory?._id ){
-      setValue(`files[${index}].docType`, null );
-    }
-  } else {
-    setValue(`files[${index}].docType`, null );
-    setValue(`files[${index}].docCategory`, null );
-  }
-}
+// const onChangeDocCategory = ( index, event, value ) => {
+//   if( value ){
+//     setValue(`files[${index}].docCategory`, value );
+//     if( value?._id !== files[index]?.docType?.docCategory?._id ){
+//       setValue(`files[${index}].docType`, null );
+//     }
+//   } else {
+//     setValue(`files[${index}].docType`, null );
+//     setValue(`files[${index}].docCategory`, null );
+//   }
+// }
 
 const onChangeDocType = ( index, event, value ) => {
   if( value ){
@@ -208,7 +208,6 @@ const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNum
   
 
   const handleDropMultiFile = async (acceptedFiles) => {
-    trigger('files');
     pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
     let defaultDocCategory = await activeDocumentCategories.find((el)=>  el.isDefault === true )
     const defaultDocType = await activeDocumentTypes.find((el)=> el.isDefault === true )
