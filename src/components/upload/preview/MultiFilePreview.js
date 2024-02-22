@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { m, AnimatePresence } from 'framer-motion';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Button, ButtonGroup, Card, CardMedia, IconButton, Stack, Typography, TextField, Box, Autocomplete } from '@mui/material';
+import { Button, ButtonGroup, Card, CardMedia, IconButton, Stack, Typography, TextField, Box, Autocomplete, Grid } from '@mui/material';
 // utils
 import { fData } from '../../../utils/formatNumber';
 import { bgBlur } from '../../../utils/cssStyles';
@@ -199,17 +199,9 @@ function MultiFilePreview({
 
           <Stack direction="row" sx={{ width:"100%" }} >
             <FileThumbnail file={file} />
-            <Box rowGap={1} columnGap={1} display="grid" sx={{ml:3, width:"100%" }}
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-                md: 'repeat(3, 1fr)',
-                lg: 'repeat(3, 1fr)',
-                xl: 'repeat(3, 1fr)',
-              }} 
-            >
+            <Stack spacing={1} sx={{ml:3, width:"100%" }} >
 
-              <Autocomplete 
+              {/* {onChangeDocCategory && <Autocomplete 
                 size='small' 
                 value={ docCategory || null} 
                 options={ activeDocumentCategories }
@@ -217,24 +209,36 @@ function MultiFilePreview({
                 getOptionLabel={(option) => `${option?.name || ''}`}
                 onChange={(event, newValue) => onChangeDocCategory( index, event, newValue)}
                 renderInput={(params) => <TextField {...params} label="Category" size='small' />}
-              />
+              />} */}
 
-              <Autocomplete 
-                size='small' 
-                value={ docType || null } 
-                options={ activeDocumentTypes.filter( dT =>  docCategory ? dT.docCategory?._id === docCategory?._id : dT )  }
-                isOptionEqualToValue={( option, value ) => option?._id === value?._id }
-                getOptionLabel={(option) => `${option?.name || ''}`}
-                renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.name || ''}`}</li>)}
-                onChange={(event, newValue) => onChangeDocType( index, event, newValue)}
-                renderInput={(params) => <TextField {...params} label="Type" size='small' />}
-              />
-
-              <TextField label="Version No."   size='small' value={ versionNo }        onChange={(e)=> onChangeVersionNo( index, e.target.value)}        />
-              <TextField label="Name"          size='small' value={ displayName } onChange={(e)=> onChangeDisplayName( index, e.target.value)}      />
-              <TextField label="Reference No." size='small' value={ referenceNumber }  onChange={(e)=> onChangeReferenceNumber( index, e.target.value)}  />
-              <TextField label="Stock No."     size='small' value={ stockNumber }      onChange={(e)=> onChangeStockNumber( index, e.target.value)}      />
-            </Box>
+              <Stack direction={{ sm: 'block', md: 'row' }} spacing={1} >
+                <Grid item md={4} sm={12} >
+                  {onChangeDocType && <Autocomplete 
+                    size='small' 
+                    value={ docType || null } 
+                    options={ activeDocumentTypes.filter( dT =>  docCategory ? dT.docCategory?._id === docCategory?._id : dT )  }
+                    isOptionEqualToValue={( option, value ) => option?._id === value?._id }
+                    getOptionLabel={(option) => `${option?.name || ''}`}
+                    renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.name || ''}`}</li>)}
+                    onChange={(event, newValue) => onChangeDocType( index, event, newValue)}
+                    renderInput={(params) => <TextField required {...params} label="Type" size='small' />}
+                  />}
+                </Grid>
+                <Grid item md={8} sm={12} >
+                  {onChangeDisplayName && <TextField required fullWidth label="Name" size='small' value={ displayName } sx={{mt: { md:0, sm: 1} }} onChange={(e)=> onChangeDisplayName( index, e.target.value)} />}
+                </Grid>
+              </Stack>
+              <Box rowGap={1} columnGap={1} display="grid" 
+                gridTemplateColumns={{
+                  sm: 'repeat(1, 1fr)',
+                  md: 'repeat(3, 1fr)',
+                }} 
+              >
+              {onChangeReferenceNumber && <TextField required label="Reference No." size='small' value={ referenceNumber } onChange={(e)=> onChangeReferenceNumber( index, e.target.value)}  />}
+              {onChangeStockNumber && <TextField required label="Stock No." size='small' value={ stockNumber } onChange={(e)=> onChangeStockNumber( index, e.target.value)} />}
+              {onChangeVersionNo && <TextField required label="Version No." size='small' value={ versionNo } onChange={(e)=> onChangeVersionNo( index, e.target.value)} />}
+              </Box>
+            </Stack>
           </Stack>
             {onRemove && (
               <IconButton edge="end" size="small" onClick={() => onRemove(file)} sx={{ ml: 5 }}> 
