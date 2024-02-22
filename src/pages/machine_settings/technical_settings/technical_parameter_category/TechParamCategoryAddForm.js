@@ -63,7 +63,7 @@ export default function TechParamCategoryAddForm() {
     try {
       await dispatch(addTechparamcategory(data));
       reset();
-      enqueueSnackbar('Create success!');
+      enqueueSnackbar('Technical Parameter Category created successfully!');
       navigate(PATH_MACHINE.machines.settings.technicalParameterCategories.list);
     } catch (error) {
       enqueueSnackbar('Save Failed!', { variant: `error` });

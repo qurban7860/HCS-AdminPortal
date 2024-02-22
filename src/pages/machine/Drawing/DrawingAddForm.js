@@ -86,7 +86,7 @@ export default function DrawingAddForm() {
             data.machine = machine._id;
         await dispatch(addDrawing(data));
             reset();
-            enqueueSnackbar('Create success!');
+            enqueueSnackbar('Drawing created successfully!');
             dispatch(setDrawingFormVisibility(false));
         } catch (error) {
             enqueueSnackbar(error, {variant: 'error'});

@@ -85,7 +85,7 @@ export default function StatusAddForm() {
       }
       await dispatch(addSupplier(data));
       reset();
-      enqueueSnackbar('Create success!');
+      enqueueSnackbar('Supplier created successfully!');
       navigate(PATH_MACHINE.machines.settings.supplier.list);
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });

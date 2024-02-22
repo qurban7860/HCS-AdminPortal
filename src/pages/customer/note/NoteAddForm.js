@@ -63,7 +63,7 @@ export default function NoteAddForm() {
   const onSubmit = async (data) => {
     try {
       await dispatch(addNote(customer._id, data));
-      enqueueSnackbar('Note Created Successfully!');
+      enqueueSnackbar('Note created Successfully!');
       reset();
     } catch (error) {
       enqueueSnackbar('Saving failed!', { variant: `error` });

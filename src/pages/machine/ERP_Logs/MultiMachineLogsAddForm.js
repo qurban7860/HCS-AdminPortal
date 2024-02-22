@@ -52,7 +52,7 @@ export default function MultiMachineLogsAddForm() {
         try {
           await dispatch(addMachineErpLogRecord(machine?._id, data.erpLog));
           reset();
-          enqueueSnackbar('INI create successfully!');
+          enqueueSnackbar('Logs Added successfully!');
           dispatch(setAllVisibilityFalse())
           dispatch(getMachineErpLogRecords(machine?._id))
         } catch (error) {
