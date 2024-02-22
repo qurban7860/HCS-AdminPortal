@@ -76,7 +76,7 @@ export default function ToolAddForm() {
     try {
       await dispatch(addTool(data));
       reset();
-      enqueueSnackbar('Create success!');
+      enqueueSnackbar('Tool created successfully!');
       navigate(PATH_MACHINE.machines.settings.tool.list);
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });

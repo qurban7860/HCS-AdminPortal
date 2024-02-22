@@ -110,7 +110,7 @@ export default function SiteAddForm() {
     }
   
     if(fax){
-          const updatedFax ={ ...phone, countryCode: country?.phone?.replace(/[^0-9]/g, '') || '' }
+          const updatedFax ={ ...fax, countryCode: country?.phone?.replace(/[^0-9]/g, '') || '' }
       setValue('fax',updatedFax)
     }
   }

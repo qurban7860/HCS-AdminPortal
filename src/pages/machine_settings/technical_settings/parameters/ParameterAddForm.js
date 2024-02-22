@@ -82,7 +82,7 @@ export default function ParameterAddForm() {
       }
       await dispatch(addTechparam(data));
       reset();
-      enqueueSnackbar('Create success!');
+      enqueueSnackbar('Parameter created successfully!');
       navigate(PATH_MACHINE.machines.settings.parameters.list);
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });

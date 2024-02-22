@@ -61,7 +61,7 @@ export default function HistoricalConfigurationsAddForm() {
           cleanedData.inputSerialNo = machine?.serialNo;
           await dispatch(addHistoricalConfigurationRecord(cleanedData));
           reset();
-          enqueueSnackbar('INI create successfully!');
+          enqueueSnackbar('INI created successfully!');
           dispatch(setAllFlagFalse())
           dispatch(getHistoricalConfigurationRecords(machine?._id))
         } catch (error) {

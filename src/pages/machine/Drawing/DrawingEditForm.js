@@ -64,9 +64,9 @@ export default function DrawingEditForm() {
             data.machine = machine._id;
              await dispatch(updateDrawing(data));
             reset();
-            enqueueSnackbar('Create success!');
+            enqueueSnackbar('Drawing Updated successfully!');
         } catch (error) {
-            enqueueSnackbar('Create failed!');
+            enqueueSnackbar(error, { variant: 'error' });
             console.error( error);
         };
     }

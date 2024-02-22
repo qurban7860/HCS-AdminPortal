@@ -62,7 +62,7 @@ export default function CategoryAddForm() {
     try {
       await dispatch(addCategory(data));
       reset();
-      enqueueSnackbar('Create success!');
+      enqueueSnackbar('Category created successfully!');
       navigate(PATH_MACHINE.machines.settings.categories.list);
     } catch (error) {
       enqueueSnackbar(error?.message, { variant: `error` });
