@@ -23,18 +23,8 @@ export default function RHFCustomPhoneInput({ name, label, ...other }) {
           fullWidth
           value={ field?.value?.number }
           onChange={(e) => {
-              const inputValue = e.target.value;
-              if (/^\d*$/.test(inputValue)) {
+              const inputValue = e.target.value.replace(/[^0-9]/g, '');
                 setValue(name, { ...field?.value, number: inputValue || '' }, { shouldValidate: true });
-              }
-          }} 
-          onKeyDown={(e) => {
-              if (e.key === 'Backspace') {
-                  return;
-              }
-              if (!/^\d*$/.test(e.key)) {
-                  e.preventDefault();
-              }
           }}
           InputProps={{
             startAdornment: (
@@ -48,25 +38,13 @@ export default function RHFCustomPhoneInput({ name, label, ...other }) {
                   sx={{width: '60px', mr:1 }} 
                   InputProps={{
                     inputProps: {
-                      inputMode: 'numeric', 
-                      pattern: '[0-9]*',
                       maxLength: 6
                     },
                   }}
                   onChange={(e) => {
-                      const inputValue = e.target.value;
-                      if (/^\d*$/.test(inputValue)) {
+                      const inputValue = e.target.value.replace(/[^0-9]/g, '')
                         setValue(name, { ...field?.value , countryCode: inputValue || '' } , { shouldValidate: true });
-                      }
                   }} 
-                  onKeyDown={(e) => {
-                      if (e.key === 'Backspace') {
-                          return;
-                      }
-                      if (!/^\d*$/.test(e.key)) {
-                          e.preventDefault();
-                      }
-                  }}
               />
               |
               </InputAdornment>
@@ -81,9 +59,6 @@ export default function RHFCustomPhoneInput({ name, label, ...other }) {
             //   }
             // },
             inputProps: {
-                      className: 'custom-input',
-                      inputMode: 'numeric', 
-                      pattern: '[0-9]*',
                       maxLength: 12
                     },
           }}

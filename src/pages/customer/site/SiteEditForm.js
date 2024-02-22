@@ -90,10 +90,10 @@ export default function SiteEditForm() {
 
     useEffect(() => {
       if(!phone?.number){
-        setValue( 'phone', { ...phone, countryCode: country?.phone  } );
+        setValue( 'phone', { ...phone, countryCode: country?.phone?.replace(/[^0-9]/g, '')  } );
       }
       if(!fax?.number){
-        setValue( 'fax', { ...fax, countryCode: country?.phone  } );
+        setValue( 'fax', { ...fax, countryCode: country?.phone?.replace(/[^0-9]/g, '')  } );
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     },[ country ]);
@@ -107,8 +107,8 @@ export default function SiteEditForm() {
 
   
   const updateCountryCode = () =>{
-        setValue('phone',{ ...phone, countryCode: country?.phone || ''});
-        setValue('fax',{ ...fax, countryCode: country?.phone || ''})
+        setValue('phone',{ ...phone, countryCode: country?.phone?.replace(/[^0-9]/g, '') || ''});
+        setValue('fax',{ ...fax, countryCode: country?.phone?.replace(/[^0-9]/g, '') || ''})
   }
   
   const onSubmit = async (data) => {

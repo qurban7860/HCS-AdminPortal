@@ -78,10 +78,10 @@ export default function SiteAddForm() {
 
   useEffect(() => {
     if(!phone?.number){
-      setValue( 'phone', { ...phone, countryCode: country?.phone  } );
+      setValue( 'phone', { ...phone, countryCode: country?.phone?.replace(/[^0-9]/g, '')  } );
     }
     if(!fax?.number){
-      setValue( 'fax', { ...fax, countryCode: country?.phone  } );
+      setValue( 'fax', { ...fax, countryCode: country?.phone?.replace(/[^0-9]/g, '')  } );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ country ]);
@@ -105,12 +105,12 @@ export default function SiteAddForm() {
 
   const updateCountryCode = () =>{
     if(phone){
-          const updatedPhone ={ ...phone, countryCode: country?.phone || '' }
+          const updatedPhone ={ ...phone, countryCode: country?.phone?.replace(/[^0-9]/g, '') || '' }
       setValue('phone',updatedPhone);
     }
   
     if(fax){
-          const updatedFax ={ ...phone, countryCode: country?.phone || '' }
+          const updatedFax ={ ...phone, countryCode: country?.phone?.replace(/[^0-9]/g, '') || '' }
       setValue('fax',updatedFax)
     }
   }
