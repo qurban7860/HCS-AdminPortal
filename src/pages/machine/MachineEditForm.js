@@ -67,7 +67,7 @@ export default function MachineEditForm() {
       machineConnectionVal: machine?.machineConnections?.map((connection)=> connection?.connectedMachine) || [],
       status: machine.status || null,
       workOrderRef: machine.workOrderRef || '',
-      instalationSite: machine.instalationSite || null,
+      installationSite: machine.instalationSite || null,
       billingSite: machine.billingSite || null,
       installationDate: machine.installationDate || null,
       shippingDate: machine.shippingDate || null,
@@ -276,7 +276,7 @@ export default function MachineEditForm() {
                     onChange={async (event, newValue) => {
                       
                       setValue('customer',newValue);
-                      setValue('instalationSite', null);
+                      setValue('installationSite', null);
                       setValue('billingSite', null);
                       setValue('machineConnectionVal', []);
                       setValue('accountManager', [])
@@ -315,7 +315,7 @@ export default function MachineEditForm() {
                   />
 
                   <RHFAutocomplete
-                    name="instalationSite"
+                    name="installationSite"
                     label="Installation Site" 
                     options={activeSites}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}

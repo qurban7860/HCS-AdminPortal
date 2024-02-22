@@ -90,7 +90,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       machineConnectionVal: [],
       connection: [],
       workOrderRef: '',
-      instalationSite: null,
+      installationSite: null,
       billingSite: null,
       installationDate: null,
       shippingDate: null,
@@ -295,7 +295,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
                     onChange={async (event, newValue) => {
                       setValue('customer',newValue);
-                      setValue('instalationSite', null);
+                      setValue('installationSite', null);
                       setValue('billingSite', null);
                       setValue('machineConnectionVal', []);
                       setValue('accountManager', [])
@@ -334,7 +334,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   />
 
                   <RHFAutocomplete
-                    name="instalationSite"  
+                    name="installationSite"  
                     label="Installation Site" 
                     options={activeSites}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
