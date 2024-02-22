@@ -221,11 +221,11 @@ function MultiFilePreview({
                     getOptionLabel={(option) => `${option?.name || ''}`}
                     renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.name || ''}`}</li>)}
                     onChange={(event, newValue) => onChangeDocType( index, event, newValue)}
-                    renderInput={(params) => <TextField {...params} label="Type" size='small' />}
+                    renderInput={(params) => <TextField required {...params} label="Type" size='small' />}
                   />}
                 </Grid>
                 <Grid item md={8} sm={12} >
-                  {onChangeDisplayName && <TextField fullWidth label="Name" size='small' value={ displayName } sx={{mt: { md:0, sm: 1} }} onChange={(e)=> onChangeDisplayName( index, e.target.value)} />}
+                  {onChangeDisplayName && <TextField required fullWidth label="Name" size='small' value={ displayName } sx={{mt: { md:0, sm: 1} }} onChange={(e)=> onChangeDisplayName( index, e.target.value)} />}
                 </Grid>
               </Stack>
               <Box rowGap={1} columnGap={1} display="grid" 
@@ -234,9 +234,9 @@ function MultiFilePreview({
                   md: 'repeat(3, 1fr)',
                 }} 
               >
-              {onChangeReferenceNumber && <TextField label="Reference No." size='small' value={ referenceNumber } onChange={(e)=> onChangeReferenceNumber( index, e.target.value)}  />}
-              {onChangeStockNumber && <TextField label="Stock No." size='small' value={ stockNumber } onChange={(e)=> onChangeStockNumber( index, e.target.value)} />}
-              {onChangeVersionNo && <TextField label="Version No." size='small' value={ versionNo } onChange={(e)=> onChangeVersionNo( index, e.target.value)} />}
+              {onChangeReferenceNumber && <TextField required label="Reference No." size='small' value={ referenceNumber } onChange={(e)=> onChangeReferenceNumber( index, e.target.value)}  />}
+              {onChangeStockNumber && <TextField required label="Stock No." size='small' value={ stockNumber } onChange={(e)=> onChangeStockNumber( index, e.target.value)} />}
+              {onChangeVersionNo && <TextField required label="Version No." size='small' value={ versionNo } onChange={(e)=> onChangeVersionNo( index, e.target.value)} />}
               </Box>
             </Stack>
           </Stack>
