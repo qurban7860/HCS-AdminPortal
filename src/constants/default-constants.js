@@ -59,6 +59,7 @@ export const FORMLABELS = {
   },
 
   // @root FormLabels
+  ADDMULTIPLEDRAWING: 'Upload Multiple Drawing',
   HOWICK: 'Howick Resources',
   ADDRESS: 'Address Information',
   CUSTOMER: 'Customer Information',
