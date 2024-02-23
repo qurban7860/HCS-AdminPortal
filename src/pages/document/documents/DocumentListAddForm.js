@@ -13,13 +13,13 @@ import { Box, Card, Grid, Stack, Dialog, Container } from '@mui/material';
 // PATH
 import { PATH_DOCUMENT } from '../../../routes/paths';
 // slice
-import { checkDocument } from '../../../redux/slices/document/document';
+// import { checkDocument } from '../../../redux/slices/document/document';
 import { addDrawingsList, setDrawingListAddFormVisibility } from '../../../redux/slices/products/drawing';
 import { getActiveDocumentCategories, resetActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
 import { getActiveDrawingTypes, resetActiveDocumentTypes } from '../../../redux/slices/document/documentType';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFUpload, RHFTextField, RHFAutocomplete } from '../../../components/hook-form';
+import FormProvider, { RHFUpload, RHFAutocomplete } from '../../../components/hook-form';
 // assets
 import DialogLabel from '../../../components/Dialog/DialogLabel';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
@@ -54,7 +54,6 @@ function DocumentListAddForm({
   const { enqueueSnackbar } = useSnackbar();
 
   const { machine } = useSelector((state) => state.machine);
-  const { customer } = useSelector((state) => state.customer);
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
 
@@ -116,18 +115,6 @@ const documentSchema = Yup.object().shape({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ docCategory?._id, files ]);
 
-// const onChangeDocCategory = ( index, event, value ) => {
-//   if( value ){
-//     setValue(`files[${index}].docCategory`, value );
-//     if( value?._id !== files[index]?.docType?.docCategory?._id ){
-//       setValue(`files[${index}].docType`, null );
-//     }
-//   } else {
-//     setValue(`files[${index}].docType`, null );
-//     setValue(`files[${index}].docCategory`, null );
-//   }
-// }
-
 const onChangeDocType = ( index, event, value ) => {
   if( value ){
     setValue(`files[${index}].docType`, value );
@@ -170,7 +157,6 @@ const onChangeVersionNo = (index, value) => {
 
 
   const handleClosePreview = () => setPreview(false);
-  const [machineVal, setMachineVal] = useState(null);
   const [duplicate, setDuplicate] = useState(false);
 
   const hashFilesMD5 = async (_files) => {
@@ -234,7 +220,6 @@ const onChangeVersionNo = (index, value) => {
       const referenceNumber = await getRefferenceNumber(file?.name);
       const versionNo = await getVersionNumber(file?.name);
       let stockNumber = '';
-      const fileUrl = URL.createObjectURL(file);
       
       if (file?.type?.indexOf('pdf') > -1) {
         const arrayBuffer = await file.arrayBuffer();

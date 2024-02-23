@@ -208,7 +208,7 @@ function MachineTransfer() {
                   >
                     <RHFAutocomplete
                       name="customer"
-                      label="Customer"
+                      label="Customer*"
                       options={activeCustomers.filter((cstmr)=> cstmr?._id !== machine?.customer?._id )}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name || ''}`}
@@ -268,7 +268,7 @@ function MachineTransfer() {
 
                     <RHFAutocomplete
                       name="status"
-                      label="Status"
+                      label="Status*"
                       options={activeMachineStatuses.filter(st => !['intransfer', 'transferred'].includes(st?.slug?.toLowerCase()))}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name || ''}`}

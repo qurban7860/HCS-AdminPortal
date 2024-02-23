@@ -169,29 +169,21 @@ export default function CustomerList() {
   const [exportingSitesCSV, setExportingSitesCSV] = useState(false);
   const [exportingContactsCSV, setExportingContactsCSV] = useState(false);
   const onExportCSV = async (fetchAllContacts, fetchAllSites) => {
-    
+  
     let filename = '';
     if(fetchAllSites){
       setExportingSitesCSV(true);
-      filename = 'CustomerWithAllSitesCSV';
+      filename = 'AllSites';
     } else if(fetchAllContacts){
       setExportingContactsCSV(true);
-      filename = 'CustomerWithAllContactsCSV';
+      filename = 'AllContacts';
     }else{
       setExportingCSV(true);
-      filename = 'CustomerCSV';
+      filename = 'Customers';
     }
     
-    const params = {
-      isArchived: false,
-      fetchAllContacts,
-      fetchAllSites,
-      orderBy : {
-        createdAt:-1
-      }
-    };
 
-    const response = dispatch(await exportCSV(filename,'crm/customers/undefined/sites/export', params));
+    const response = dispatch(await exportCSV( filename ));
     response.then((res) => {
       if(fetchAllSites){
         setExportingSitesCSV(false);
