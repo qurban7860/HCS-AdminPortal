@@ -119,7 +119,7 @@ export default function MachineByCountriesViewForm() {
             </Grid>
             <Divider sx={{paddingTop:2}} />
             <Grid item sx={{ height: '500px', overflow: 'auto', backgroundColor: 'transparent' }} >
-              {/* <Paper style={{ height: '100%', padding: '20px', backgroundColor: 'transparent' }}> */}
+              {/* <Paper style={{ height: 'auto', padding: '20px', backgroundColor: 'transparent' }}> */}
                 <ChartBarAutoHeight
                   optionsData={countryWiseMachineCountCountries}
                   seriesData={countryWiseMachineCountNumber}
