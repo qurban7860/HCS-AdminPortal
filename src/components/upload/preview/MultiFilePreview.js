@@ -192,7 +192,7 @@ function MultiFilePreview({
               px: 1.5,
               py: 1.25,
               borderRadius: 0.75,
-              border:`solid 1px ${ ( docType && displayName?.trim() && referenceNumber?.trim() && stockNumber?.trim() && versionNo?.trim() ) ? theme.palette.divider : theme.palette.error.main}`,
+              border:`solid 1px ${ ( docType && displayName?.trim() ) ? theme.palette.divider : theme.palette.error.main}`,
               ...sx,
             }}
           >
@@ -231,6 +231,11 @@ function MultiFilePreview({
                     label="Display Name*" 
                     size='small' 
                     value={ displayName } sx={{mt: { md:0, sm: 1} }} 
+                    InputProps={{
+                      inputProps: {
+                          maxLength: 500
+                        },
+                    }}
                     onChange={(e)=> onChangeDisplayName( index, e.target.value)} 
                     error={!displayName?.trim()} 
                     helperText={!displayName?.trim() && 'Display Name is required!'} 
@@ -246,30 +251,39 @@ function MultiFilePreview({
               >
 
               {onChangeReferenceNumber && <TextField 
-                label="Reference No.*" 
+                label="Reference No." 
                 size='small' 
                 value={ referenceNumber } 
+                InputProps={{
+                  inputProps: {
+                      maxLength: 20
+                    },
+                }}
                 onChange={(e)=> onChangeReferenceNumber( index, e.target.value)} 
-                error={!referenceNumber?.trim()} 
-                helperText={!referenceNumber?.trim() && 'Reference Number is required!'} 
               />}
 
               {onChangeStockNumber && <TextField 
-                label="Stock No.*" 
+                label="Stock No." 
                 size='small' 
                 value={ stockNumber } 
-                onChange={(e)=> onChangeStockNumber( index, e.target.value)} 
-                error={!stockNumber?.trim()} 
-                helperText={!stockNumber?.trim() && 'Stock Number is required!'} 
+                InputProps={{
+                  inputProps: {
+                      maxLength: 20
+                    },
+                }}
+                onChange={(e)=> onChangeStockNumber( index, e.target.value)}  
               />}
 
               {onChangeVersionNo && <TextField 
-                label="Version No.*" 
+                label="Version No." 
                 size='small' 
                 value={ versionNo } 
-                onChange={(e)=> onChangeVersionNo( index, e.target.value)} 
-                error={!versionNo?.trim()} 
-                helperText={!versionNo?.trim() && 'Version No. is required!'} 
+                InputProps={{
+                  inputProps: {
+                      maxLength: 8
+                    },
+                }}
+                onChange={(e)=> onChangeVersionNo( index, e.target.value)}  
               />}
 
               </Box>

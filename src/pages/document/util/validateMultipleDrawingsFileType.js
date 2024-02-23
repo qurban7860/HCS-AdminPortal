@@ -14,7 +14,7 @@ const validateMultipleDrawingsFileType = (value, options) => {
                 value,
             });
         }
-        const fieldsRequired = value.filter((file) => ( !file?.docType || !file?.displayName?.trim() || !file?.referenceNumber?.trim() || !file?.stockNumber?.trim() || !file?.versionNo?.trim() ) );
+        const fieldsRequired = value.filter((file) => ( !file?.docType || !file?.displayName?.trim() ) );
         if ( Array.isArray(fieldsRequired) && fieldsRequired.length > 0 ) {
             return createError({
                 message: Snacks.fieldsRequired,

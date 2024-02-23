@@ -139,10 +139,18 @@ const onChangeDocType = ( index, event, value ) => {
   }
 }
 
-const onChangeVersionNo = (index, value) => setValue(`files[${index}].versionNo`, value?.replace(/[^0-9]/g, ''))
 const onChangeDisplayName = (index, value) => setValue(`files[${index}].displayName`, value);
 const onChangeReferenceNumber = (index, value) => setValue(`files[${index}].referenceNumber`, value);
 const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNumber`, value);   
+const onChangeVersionNo = (index, value) => {
+  const sanitizedValue = value?.replace(/[^\d.]+/g, "");
+  const dotIndex = sanitizedValue.indexOf(".");
+  const lastIndex = sanitizedValue.lastIndexOf(".");
+  const finalValue = lastIndex !== dotIndex ? sanitizedValue.slice(0, lastIndex) + sanitizedValue.slice(lastIndex + 1) : sanitizedValue;
+  setValue(`files[${index}].versionNo`, finalValue);
+  // setValue(`files[${index}].versionNo`, value?.replace(/[^0-9.]/g, ''))
+}
+
 
   const onSubmit = async (data) => {
     try {
@@ -301,7 +309,7 @@ const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNum
                       renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
                     />
                   </Box>
-                    <RHFTextField name="description" label="Description" minRows={3} multiline />
+                    {/* <RHFTextField name="description" label="Description" minRows={3} multiline /> */}
 
                     <RHFUpload multiple rows name="files"
                       onDrop={handleDropMultiFile}
