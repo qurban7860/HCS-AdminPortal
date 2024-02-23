@@ -84,7 +84,7 @@ const documentSchema = Yup.object().shape({
   const methods = useForm({
     resolver: yupResolver( documentSchema ),
     defaultValues:{
-      docCategory: activeDocumentCategories?.find( f => f?.name.toLowerCase() === 'assembly drawings'),
+      docCategory: activeDocumentCategories?.find( f => f?.name?.toLowerCase()?.trim() === 'assembly drawings') || null,
       description: '',
       files: null,
     },
