@@ -26,5 +26,5 @@ export default function ChartBarAutoHeight({ type, height, optionsData, seriesDa
       categories: optionsData,
     },
   });
-  return <Chart type={type} series={series} options={chartOptions}  />;
+  return <Chart type={type} series={series} options={chartOptions} height="auto" />;
 }

@@ -12,6 +12,7 @@ import useResponsive from '../../hooks/useResponsive';
 import CoverAvatar from './CoverAvatar';
 import Iconify from '../iconify';
 import { BUTTONS } from '../../constants/default-constants';
+import { useAuthContext } from '../../auth/useAuthContext';
 
 // ----------------------------------------------------------------------
 
@@ -42,7 +43,8 @@ export function Cover({
   };
   
   const isMobile = useResponsive('down', 'sm');
-  
+  const { isAllAccessAllowed } = useAuthContext()
+
   return (
     <StyledRoot style={{ p: { xs: 0, md: 0 } }}>
       <StyledInfo style={{ width: '100%', flex: 1, display: 'flex', justifyContent: 'space-between' }} >
@@ -50,7 +52,7 @@ export function Cover({
         <CoverTitles title={avatar && isMobile ? '' : name} />
         <CoverSettingsIcons setting={setting} handleSettingsNavigate={handleSettingsNavigate} generalSettings={generalSettings} />
       </StyledInfo>
-      {onExportCSV &&
+      {onExportCSV && isAllAccessAllowed &&
         <Grid container justifyContent='flex-end' columnGap={2} sx={{ position: 'absolute', bottom: 10, right: 10}}>
           <LoadingButton size='small' loading={onExportingSites} variant='outlined' startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />} onClick={()=> onExportCSV(false, true)}>Export All Sites</LoadingButton>
           <LoadingButton size='small' loading={onExportingContacts} variant='outlined' startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />} onClick={()=> onExportCSV(true, false)}>Export All Contacts</LoadingButton>
