@@ -141,14 +141,8 @@ export default function CustomerContactList(currentContact = null) {
   const [exportingCSV, setExportingCSV] = useState(false);
   const onExportCSV = async () => {
     setExportingCSV(true);
-    const params = {
-      isArchived: false,
-      orderBy : {
-        createdAt:-1
-      }
-    };
     
-    const response = dispatch(await exportCSV('CustomerContactsCSV',`crm/customers/${customer?._id}/contacts/export`, params));
+    const response = dispatch(await exportCSV('CustomerContacts', customer?._id));
     response.then((res) => {
       setExportingCSV(false);
       enqueueSnackbar(res.message, {variant:`${res.hasError?"error":""}`});

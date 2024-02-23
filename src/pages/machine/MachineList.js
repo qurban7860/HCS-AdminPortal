@@ -237,14 +237,7 @@ export default function MachineList() {
   const [exportingCSV, setExportingCSV] = useState(false);
   const onExportCSV = async () => {
     setExportingCSV(true);
-    const params = {
-      isArchived: false,
-      orderBy : {
-        serialNo:1
-      }
-    };
-
-    const response = dispatch(await exportCSV('MachinesCSV','products/machines/export', params));
+    const response = dispatch(await exportCSV('Machines'));
     response.then((res) => {
       setExportingCSV(false);
       enqueueSnackbar(res.message, {variant:`${res.hasError?"error":""}`});

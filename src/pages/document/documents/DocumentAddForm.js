@@ -115,7 +115,7 @@ function DocumentAddForm({
   const { documentCategory, documentType, displayName, versionNo, documentVal, files, isActive, customerAccess  } = watch();
 
   useEffect(() => {
-    if( customerPage && !machinePage && !machineDrawings && !categoryBy ){ // customerPage
+    if( customerPage && !machinePage && !machineDrawings && !categoryBy ){
       setCategoryBy( {customer: true} )
       if( customer?._id && selectedValue === 'newVersion' ) dispatch(getCustomerDocuments(customer?._id));
     } else if ( machinePage && !customerPage && !machineDrawings && !categoryBy ) { // machinePage 

@@ -227,7 +227,14 @@ export function addHistoricalConfigurationRecord( params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post(`${CONFIG.SERVER_URL}apiclient/productConfigurations/`,params );
+        const data = {
+          backupDate: params.backupDate,
+          configuration: params.configuration,
+          inputGUID: params.inputGUID,
+          inputSerialNo: params.inputSerialNo,
+          isManufacture: params.isManufacture,
+        }
+      const response = await axios.post(`${CONFIG.SERVER_URL}apiclient/productConfigurations/`, data );
       dispatch(slice.actions.setResponseMessage(response?.data || ''));
     } catch (error) {
       console.error(error);

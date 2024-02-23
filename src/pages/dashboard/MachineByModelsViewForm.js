@@ -9,10 +9,11 @@ import {  getMachinesByModel, setMachineCategory, setMachineCountry, setMachineY
 import {  getActiveCategories } from '../../redux/slices/products/category';
 // hooks
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-import ChartBar from '../../components/Charts/ChartBar';
+import ChartBarAutoHeight from '../../components/Charts/ChartBarAutoHeight';
 import { Cover } from '../../components/Defaults/Cover';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import { countries } from '../../assets/data';
+import { StyledGlobalCard } from '../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -58,7 +59,7 @@ export default function MachineByCountriesViewForm() {
       <Card sx={{ mb: 3, height: 160, position: 'relative'}}>
         <Cover name="Machine By Models" icon="material-symbols:list-alt-outline" />
       </Card>      
-        <Card sx={{p:2, pt:0}}>
+        <StyledGlobalCard sx={{p:2, pt:0}}>
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{mt:2, display:'flex', justifyContent:'flex-end'}}>
                 <Grid item xs={12} sm={6}>
                 <ViewFormEditDeleteButtons backLink={() => navigate(PATH_DASHBOARD.general.app)} />
@@ -107,17 +108,14 @@ export default function MachineByCountriesViewForm() {
                 </Grid>
             </Grid>
             <Divider sx={{paddingTop:2}} />
-          <Grid item sx={{ height: '600px', overflow: 'auto' }} >
-          <Paper style={{ height: '100%', padding: '20px' }}>
-            <ChartBar
+          <Grid item sx={{ height: '500px', overflow: 'auto', backgroundColor: 'transparent' }} >
+            <ChartBarAutoHeight
               optionsData={modelWiseMachineModel}
               seriesData={modelWiseMachineNumber}
-              height={500}
               type="bar"
               sx={{ backgroundColor: 'transparent' }}
             />
-          </Paper>
           </Grid>
-      </Card>          
+      </StyledGlobalCard>          
     </Container>
   )}

@@ -3,16 +3,15 @@ import PropTypes from 'prop-types';
 import Chart, { useChart } from '../chart';
 // ----------------------------------------------------------------------
 
-ChartBar.propTypes = {
+ChartBarAutoHeight.propTypes = {
   type:PropTypes.string,
   height: PropTypes.number,
   optionsData: PropTypes.array,
   seriesData: PropTypes.array,
 };
-export default function ChartBar({ type, height, optionsData, seriesData}) {
+export default function ChartBarAutoHeight({ type, height, optionsData, seriesData}) {
 
-  const minHeight = 320;
-  const series = [ { name: 'Machines', data:  seriesData } ];
+  const series = [{ name: 'Machines', data:  seriesData}];
   const chartOptions = useChart({
     stroke: { show: true },
     yaxis: {
@@ -27,5 +26,5 @@ export default function ChartBar({ type, height, optionsData, seriesData}) {
       categories: optionsData,
     },
   });
-  return <Chart type={type} series={series} options={chartOptions} height={height>minHeight?height:minHeight} />;
+  return <Chart type={type} series={series} options={chartOptions}  />;
 }
