@@ -6,7 +6,7 @@ import {
   TableCell,
 } from '@mui/material';
 // utils
-import { fDateTime } from '../../../utils/formatTime';
+import { fDateTime, fDate } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 import { StyledTableRow } from '../../../theme/styles/default-styles'
@@ -36,7 +36,7 @@ export default function HistoricalConfigurationsTableRow({
   onViewRow,
 }) {
 
-  const { backupid, isActive, createdAt, createdBy } = row;
+  const { backupid, backupDate, isManufacture, isActive, createdAt, createdBy } = row;
 
   return (
       <StyledTableRow hover selected={selected}>
@@ -44,8 +44,11 @@ export default function HistoricalConfigurationsTableRow({
           <Checkbox checked={selected} onClick={ onSelectRow }  />
         </TableCell>
         <LinkTableCell align="left" onClick={onViewRow} param={backupid} />
+        <TableCell align="center" >{ fDate( backupDate ) }</TableCell>
         <TableCell align="center">
-          {' '}
+          <Switch checked={isManufacture} disabled size="small" />{' '}
+        </TableCell>
+        <TableCell align="center">
           <Switch checked={isActive} disabled size="small" />{' '}
         </TableCell>
         <TableCell align="left">{createdBy.name}</TableCell>

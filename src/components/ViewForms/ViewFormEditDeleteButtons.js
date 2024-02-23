@@ -28,6 +28,7 @@ function ViewFormEditDeleteButtons({
   backLink,
   isActive,
   isDefault,
+  isManufacture,
   isDeleteDisabled,
   customerAccess,
   isRequired,
@@ -309,6 +310,14 @@ function ViewFormEditDeleteButtons({
               title={isActive?ICONS.ACTIVE.heading:ICONS.INACTIVE.heading}
               color={isActive?ICONS.ACTIVE.color:ICONS.INACTIVE.color}
               icon={isActive?ICONS.ACTIVE.icon:ICONS.INACTIVE.icon}
+            />
+          }
+
+          {isManufacture !==undefined &&
+            <IconTooltip
+              title={isManufacture ? ICONS.MANUFACTURE.heading : ICONS.NOTMANUFACTURE.heading}
+              color={isManufacture ? ICONS.MANUFACTURE.color : ICONS.NOTMANUFACTURE.color}
+              icon={isManufacture ? ICONS.MANUFACTURE.icon : ICONS.NOTMANUFACTURE.icon}
             />
           }
 
@@ -763,6 +772,7 @@ ViewFormEditDeleteButtons.propTypes = {
   isVerifiedTitle: PropTypes.string,
   approveConfiglength: PropTypes.string,
   isActive: PropTypes.bool,
+  isManufacture: PropTypes.bool,
   isDeleteDisabled: PropTypes.bool,
   isDefault: PropTypes.bool,
   isSubmitted: PropTypes.func,

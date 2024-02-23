@@ -25,6 +25,18 @@ export const ICONS = {
     heading: 'Inactive',
   },
 
+  // IS MANUFACTURE
+  MANUFACTURE: {
+    icon: 'ci:settings-future',
+    color: '#008000',
+    heading: 'Manufacture',
+  },
+  NOTMANUFACTURE: {
+    icon: 'ci:settings-future',
+    color: '#FF0000',
+    heading: 'Not Manufacture',
+  },
+  //
   DEFAULT: {
     icon: 'carbon:settings-check',
     color: '#008000',

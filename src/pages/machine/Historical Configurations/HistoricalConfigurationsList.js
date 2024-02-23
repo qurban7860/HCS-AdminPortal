@@ -44,14 +44,16 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 
 // ----------------------------------------------------------------------
 
-
 const TABLE_HEAD = [
   { id: 'checkboxes', label: ' ', align: 'left' },
   { id: 'backupid', label: 'Backup Id', align: 'left' },
+  { id: 'backupDate', label: 'Backup Date', align: 'center' },
+  { id: 'isManufacture', label: 'Manufacture', align: 'center' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdBy.name', label: 'Created By', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
+
 // ----------------------------------------------------------------------
 
 export default function HistoricalConfigurationsList() {

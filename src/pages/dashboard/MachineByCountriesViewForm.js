@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { Container } from '@mui/system';
-import { Card, Grid, Autocomplete, TextField, Divider } from '@mui/material';
+import { Card, Grid, Autocomplete, TextField, Divider, Paper } from '@mui/material';
 // slices
 import {  getMachinesByCountry, setMachineCategory, setMachineModel, setMachineYear } from '../../redux/slices/dashboard/count';
 import {  getActiveMachineModels } from '../../redux/slices/products/model';
@@ -11,7 +11,7 @@ import {  getActiveCategories } from '../../redux/slices/products/category';
 // hooks
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import { StyledGlobalCard } from '../../theme/styles/default-styles';
-import ChartBar from '../../components/Charts/ChartBar';
+import ChartBarAutoHeight from '../../components/Charts/ChartBarAutoHeight';
 import { Cover } from '../../components/Defaults/Cover';
 import { PATH_DASHBOARD } from '../../routes/paths';
 
@@ -118,14 +118,16 @@ export default function MachineByCountriesViewForm() {
                 </Grid>
             </Grid>
             <Divider sx={{paddingTop:2}} />
-
-            <ChartBar
-              optionsData={countryWiseMachineCountCountries}
-              seriesData={countryWiseMachineCountNumber}
-              height={500}
-              type="bar"
-              sx={{ backgroundColor: 'transparent' }}
-            />
+            <Grid item sx={{ height: '500px', overflow: 'auto', backgroundColor: 'transparent' }} >
+              {/* <Paper style={{ height: '100%', padding: '20px', backgroundColor: 'transparent' }}> */}
+                <ChartBarAutoHeight
+                  optionsData={countryWiseMachineCountCountries}
+                  seriesData={countryWiseMachineCountNumber}
+                  type="bar"
+                  sx={{ backgroundColor: 'transparent' }}
+                />
+              {/* </Paper> */}
+            </Grid>
       </StyledGlobalCard>          
     </Container>
   )}

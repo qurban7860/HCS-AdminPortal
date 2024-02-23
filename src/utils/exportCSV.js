@@ -13,7 +13,11 @@ export function exportCSV(fileName, customerId) {
           api = 'crm/customers/undefined/sites/export';
         }else if( fileName?.toLowerCase() === 'allcontacts' ){
           api = 'crm/customers/undefined/contacts/export';
-        } else {
+        }else if( fileName?.toLowerCase() === 'machines' ){
+          api = 'products/machines/export';
+        }else if( fileName?.toLowerCase() === 'customercontacts' ){
+          api = `crm/customers/${customerId}/contacts/export`;
+        }else if( fileName?.toLowerCase() === 'customers' ){
           api = 'crm/customers/export/';
         }
         const response = await axios.get(`${CONFIG.SERVER_URL}${api}`);
