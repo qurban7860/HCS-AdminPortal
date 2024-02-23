@@ -28,7 +28,7 @@ import DocumentCover from '../../../components/DocumentForms/DocumentCover';
 import { FORMLABELS } from '../../../constants/default-constants';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import ConfirmDialog from '../../../components/confirm-dialog';
-import validateFileType from '../util/validateFileType';
+import validateMultipleDrawingsFileType from '../util/validateMultipleDrawingsFileType';
 
 // ----------------------------------------------------------------------
 
@@ -78,14 +78,14 @@ const documentSchema = Yup.object().shape({
   files: Yup.mixed().required('Files required!')
   .test( 'fileType',
     'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
-    validateFileType
+    validateMultipleDrawingsFileType
   ).nullable(true),
 });
 
   const methods = useForm({
     resolver: yupResolver( documentSchema ),
     defaultValues:{
-      docCategory: null,
+      docCategory: activeDocumentCategories?.find( f => f?.name.toLowerCase() === 'assembly drawings'),
       description: '',
       files: null,
     },
@@ -102,30 +102,31 @@ const documentSchema = Yup.object().shape({
 
   const { files, docCategory } = watch();
 
-  useEffect(()=>{ 
-      trigger('files');
-  },[ files, trigger ])
-
   useEffect(() => {
     if(docCategory){
-      files?.map( ( f, index ) => setValue(`files[${index}].docCategory`, docCategory ))
+      files?.forEach( ( f, index ) => {
+        setValue(`files[${index}].docCategory`, docCategory )
+        if( docCategory?._id !== files[index]?.docType?.docCategory?._id ){
+          setValue(`files[${index}].docType`, null);
+        }
+      })
     }else{
-      files?.map( ( f, index ) =>   setValue(`files[${index}].docCategory`, null ) )
+      files?.forEach((f, index) => { setValue(`files[${index}].docCategory`, null); setValue(`files[${index}].docType`, null);  })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ docCategory?._id ]);
+  }, [ docCategory?._id, files ]);
 
-const onChangeDocCategory = ( index, event, value ) => {
-  if( value ){
-    setValue(`files[${index}].docCategory`, value );
-    if( value?._id !== files[index]?.docType?.docCategory?._id ){
-      setValue(`files[${index}].docType`, null );
-    }
-  } else {
-    setValue(`files[${index}].docType`, null );
-    setValue(`files[${index}].docCategory`, null );
-  }
-}
+// const onChangeDocCategory = ( index, event, value ) => {
+//   if( value ){
+//     setValue(`files[${index}].docCategory`, value );
+//     if( value?._id !== files[index]?.docType?.docCategory?._id ){
+//       setValue(`files[${index}].docType`, null );
+//     }
+//   } else {
+//     setValue(`files[${index}].docType`, null );
+//     setValue(`files[${index}].docCategory`, null );
+//   }
+// }
 
 const onChangeDocType = ( index, event, value ) => {
   if( value ){
@@ -138,7 +139,7 @@ const onChangeDocType = ( index, event, value ) => {
   }
 }
 
-const onChangeVersionNo = (index, value) => setValue(`files[${index}].versionNo`, value);
+const onChangeVersionNo = (index, value) => setValue(`files[${index}].versionNo`, value?.replace(/[^0-9]/g, ''))
 const onChangeDisplayName = (index, value) => setValue(`files[${index}].displayName`, value);
 const onChangeReferenceNumber = (index, value) => setValue(`files[${index}].referenceNumber`, value);
 const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNumber`, value);   
@@ -267,6 +268,7 @@ const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNum
     } else {
       setValue('files',[ ...newFiles] );
     }
+    trigger('files');
   }
   
   const toggleCancel = () => { 
@@ -303,12 +305,15 @@ const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNum
 
                     <RHFUpload multiple rows name="files"
                       onDrop={handleDropMultiFile}
-                      onRemove={(inputFile) =>
-                        files?.length > 1 
-                        ? setValue( 'files', files && files?.filter((file) => file?.hashMD5 !== inputFile?.hashMD5 ) )
-                        : setValue('files', null )
-                      }
-                      onRemoveAll={() => setValue('files', null )}
+                      onRemove={(inputFile) => {
+                          if (files?.length > 1) {
+                              setValue('files', files?.filter((file) => file?.hashMD5 !== inputFile?.hashMD5));
+                          } else {
+                              setValue('files', null);
+                          }
+                          trigger('files');
+                      }}
+                      onRemoveAll={() => { setValue('files', null ); trigger('files') }}
                       // machine={machineVal}
                       onChangeDocType={onChangeDocType}
                       // onChangeDocCategory={onChangeDocCategory}

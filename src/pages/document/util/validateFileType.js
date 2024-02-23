@@ -33,4 +33,5 @@ const validateFileType = (value, options) => {
   });
 };
 
+
 export default validateFileType;
