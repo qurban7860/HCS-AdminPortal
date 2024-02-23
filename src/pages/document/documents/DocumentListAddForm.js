@@ -124,9 +124,11 @@ const onChangeDocType = ( index, event, value ) => {
   } else {
     setValue(`files[${index}].docType`, null );
   }
+  trigger('files');
 }
 
-const onChangeDisplayName = (index, value) => setValue(`files[${index}].displayName`, value);
+
+const onChangeDisplayName = (index, value) => { setValue(`files[${index}].displayName`, value); trigger('files'); }
 const onChangeReferenceNumber = (index, value) => setValue(`files[${index}].referenceNumber`, value);
 const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNumber`, value);   
 const onChangeVersionNo = (index, value) => {
