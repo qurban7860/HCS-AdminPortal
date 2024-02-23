@@ -85,7 +85,7 @@ const documentSchema = Yup.object().shape({
   const methods = useForm({
     resolver: yupResolver( documentSchema ),
     defaultValues:{
-      docCategory: null,
+      docCategory: activeDocumentCategories?.find( f => f?.name.toLowerCase() === 'assembly drawings'),
       description: '',
       files: null,
     },
@@ -104,12 +104,17 @@ const documentSchema = Yup.object().shape({
 
   useEffect(() => {
     if(docCategory){
-      files?.map( ( f, index ) => setValue(`files[${index}].docCategory`, docCategory ))
+      files?.forEach( ( f, index ) => {
+        setValue(`files[${index}].docCategory`, docCategory )
+        if( docCategory?._id !== files[index]?.docType?.docCategory?._id ){
+          setValue(`files[${index}].docType`, null);
+        }
+      })
     }else{
       files?.forEach((f, index) => { setValue(`files[${index}].docCategory`, null); setValue(`files[${index}].docType`, null);  })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ docCategory?._id ]);
+  }, [ docCategory?._id, files ]);
 
 // const onChangeDocCategory = ( index, event, value ) => {
 //   if( value ){
