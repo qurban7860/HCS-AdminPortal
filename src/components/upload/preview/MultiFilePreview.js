@@ -51,7 +51,6 @@ function MultiFilePreview({
 }) {
   
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
-  const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
 
   const theme = useTheme();
   const [selectedFile, setSelectedFile] = useState([]);

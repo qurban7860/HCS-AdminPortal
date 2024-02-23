@@ -129,14 +129,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   const [exportingCSV, setExportingCSV] = useState(false);
   const onExportCSV = async () => {
     setExportingCSV(true);
-    const params = {
-      isArchived: false,
-      orderBy : {
-        createdAt:-1
-      }
-    };
-    
-    const response = dispatch(await exportCSV('CustomerSitesCSV',`crm/customers/${customer?._id}/sites/export`, params));
+    const response = dispatch(await exportCSV('CustomerSites', customer?._id));
     response.then((res) => {
       setExportingCSV(false);
       enqueueSnackbar(res.message, {variant:`${res.hasError?"error":""}`});
