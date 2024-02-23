@@ -11,7 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Card, Grid, Stack } from '@mui/material';
 // slice
 import { addCustomer, setCustomerTab } from '../../redux/slices/customer/customer';
-import { getActiveSPContacts, resetActiveSPContactsSuccess } from '../../redux/slices/customer/contact';
+import { getActiveSPContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
 // routes
 import { PATH_CUSTOMER } from '../../routes/paths';
 // components
@@ -51,7 +51,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   useLayoutEffect(() => {
     dispatch(getActiveSPContacts());
-    return () => { resetActiveSPContactsSuccess() }
+    return () => { resetActiveSPContacts() }
   }, [dispatch]);
 
   const defaultValues = useMemo(
@@ -78,7 +78,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       billingContactPhone: '+64 ',
       billingContactEmail: '',
       // Is Same Contact
-      isSameContact: false,
+      isSameContact: true,
       // Technical Information
       technicalContactFirstName: '',
       technicalContactLastName: '',
@@ -135,9 +135,9 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       </Card>
       <Grid sx={{ mt: 3 }}>
         <Card sx={{ p: 3, mb: 3 }}>
-          <Stack spacing={3}>
+          <Stack spacing={2}>
             <Box
-              rowGap={3} columnGap={2} display="grid"
+              rowGap={2} columnGap={2} display="grid"
               gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 5fr 1fr)' }}
             >
               <RHFTextField name="name" label={FORMLABELS.CUSTOMER.NAME.label} />
@@ -145,14 +145,14 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
             </Box>
 
             <Box
-              rowGap={3} columnGap={2} display="grid"
+              rowGap={2} columnGap={2} display="grid"
               gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
             >
               <RHFChipsInput name="tradingName" label="Trading Name"  />
             </Box>
 
             <Box
-              rowGap={3} columnGap={2} display="grid"
+              rowGap={2} columnGap={2} display="grid"
               gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
             >
               <RHFPhoneInput name="phone" label="Phone Number"  />
@@ -164,10 +164,10 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
         </Card>
 
         <Card sx={{ p: 3, mb: 3 }}>
-          <Stack spacing={3}>
+          <Stack spacing={2}>
             <FormLabel content={FORMLABELS.CUSTOMER.ADDRESSINFORMATION} />
             <Box
-              rowGap={3} columnGap={2} display="grid"
+              rowGap={2} columnGap={2} display="grid"
               gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
             >
               <RHFTextField name="street" label="Street" />
@@ -181,10 +181,10 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
         </Card>
 
         <Card sx={{ p: 3, mb: 3 }}>
-          <Stack spacing={3}>
+          <Stack spacing={2}>
             <FormLabel content={FORMLABELS.CUSTOMER.BILLINGCONTACTINFORMATION} />
             <Box
-              rowGap={3} columnGap={2} display="grid"
+              rowGap={2} columnGap={2} display="grid"
               gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
             >
               <RHFTextField name="billingContactFirstName" label="First Name" />
@@ -198,18 +198,11 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
         <Card component={MotionContainer} sx={{ p: 3, mb: 3 }}>
           <m.div variants={varBounce().in}>
-            <Stack spacing={3}>
-                <Grid container direction='row'>
-                  <Grid item xs={12} sm={12} md={7.5} lg={8.5}>
-                    <FormLabel  content={FORMLABELS.CUSTOMER.TECHNICALCONTACTINFORMATION} />
-                  </Grid>
-                  <Grid item xs={12} sm={12} md={4} lg={3} sx={{ ml:1.5, mt:-0.5}} >
-                    <RHFCheckbox name="isSameContact" label="Same as billing contact" />
-                  </Grid>
-                </Grid>
+                <FormLabel  content={FORMLABELS.CUSTOMER.TECHNICALCONTACTINFORMATION} />
+                <RHFCheckbox name="isSameContact" label="Same as billing contact" />
               {!isSameContact && (
                 <Box
-                  rowGap={3} columnGap={2} display="grid"
+                  rowGap={2} columnGap={2} display="grid"
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
                   <RHFTextField  name="technicalContactFirstName" label="First Name" />
@@ -219,16 +212,15 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   <RHFTextField  name="technicalContactEmail"     label="Technical Contact Email" />
                 </Box>
               )}
-            </Stack>
           </m.div>
         </Card>
-        <Grid container spacing={3}>
+        <Grid container spacing={2}>
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
-              <Stack spacing={3}>
+              <Stack spacing={2}>
                 <FormLabel content={FORMLABELS.CUSTOMER.HOWICKRESOURCESS} />
                 <Box
-                  rowGap={3} columnGap={2} display="grid"
+                  rowGap={2} columnGap={2} display="grid"
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
                   <RHFAutocomplete

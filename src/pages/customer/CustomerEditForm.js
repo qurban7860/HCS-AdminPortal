@@ -92,11 +92,11 @@ export default function CustomerEditForm() {
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container >
           <Grid item xs={18} md={12}>
-          <Stack spacing={3}>
+          <Stack spacing={2}>
             <Card sx={{ p: 3 }}>
-              <Stack spacing={3}>
+              <Stack spacing={2}>
                 <FormLabel content={FORMLABELS.CUSTOMER.EDITCUSTOMER} />
-                <Box rowGap={3} columnGap={2} display="grid"
+                <Box rowGap={2} columnGap={2} display="grid"
                   gridTemplateColumns={{
                     xs: 'repeat(1, 1fr)', sm: 'repeat(1, 5fr 1fr)', 
                   }}
@@ -105,7 +105,7 @@ export default function CustomerEditForm() {
                   <RHFTextField name="code" label={FORMLABELS.CUSTOMER.CODE.label} />
                 </Box>
 
-                <Box rowGap={3} columnGap={2} display="grid"
+                <Box rowGap={2} columnGap={2} display="grid"
                   gridTemplateColumns={{
                     xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)',
                   }}
@@ -114,7 +114,7 @@ export default function CustomerEditForm() {
                 </Box>
 
                 {/* main site */}
-                <Box rowGap={3} columnGap={2} display="grid"
+                <Box rowGap={2} columnGap={2} display="grid"
                   gridTemplateColumns={{
                     xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',
                   }}
@@ -130,7 +130,7 @@ export default function CustomerEditForm() {
                 </Box>
 
                   {/* primary billing contact */}
-                  <Box rowGap={3} columnGap={2} display="grid"
+                  <Box rowGap={2} columnGap={2} display="grid"
                     gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)', }}
                   >
                     <RHFAutocomplete
@@ -154,10 +154,10 @@ export default function CustomerEditForm() {
               </Stack>
                 </Card>
                 <Card sx={{ p: 3 }}>
-                <Stack spacing={3}>
+                <Stack spacing={2}>
                 <FormLabel content={FORMLABELS.CUSTOMER.HOWICKRESOURCESS} />
                 {/* account manager */}
-                <Box rowGap={3} columnGap={2} display="grid"
+                <Box rowGap={2} columnGap={2} display="grid"
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)'}}
                 >
                   <RHFAutocomplete

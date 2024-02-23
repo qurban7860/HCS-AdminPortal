@@ -69,7 +69,7 @@ export default function ModelAddForm() {
     try {
       await dispatch(addMachineModel(data));
       reset();
-      enqueueSnackbar('Create success!');
+      enqueueSnackbar('Model created successfully!');
       navigate(PATH_MACHINE.machines.settings.model.list);
     } catch (error) {
         enqueueSnackbar(error, { variant: `error` });

@@ -90,7 +90,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       machineConnectionVal: [],
       connection: [],
       workOrderRef: '',
-      instalationSite: null,
+      installationSite: null,
       billingSite: null,
       installationDate: null,
       shippingDate: null,
@@ -156,14 +156,14 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     try {
       await dispatch(addMachine(data));
       reset();
-      enqueueSnackbar('Create success!');
+      enqueueSnackbar('Machine created successfully!');
       if(landToCustomerMachinePage){
         await navigate(PATH_CUSTOMER.view(customer._id));
       }else{
         await  navigate(PATH_MACHINE.machines.list);
       }
     } catch (error) {
-      enqueueSnackbar('Saving failed!', { variant: `error` });
+      enqueueSnackbar(error, { variant: `error` });
       console.error(error);
     }
   };
@@ -295,7 +295,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
                     onChange={async (event, newValue) => {
                       setValue('customer',newValue);
-                      setValue('instalationSite', null);
+                      setValue('installationSite', null);
                       setValue('billingSite', null);
                       setValue('machineConnectionVal', []);
                       setValue('accountManager', [])
@@ -334,7 +334,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   />
 
                   <RHFAutocomplete
-                    name="instalationSite"  
+                    name="installationSite"  
                     label="Installation Site" 
                     options={activeSites}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}

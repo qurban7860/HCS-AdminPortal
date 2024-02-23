@@ -437,7 +437,7 @@ function SearchBarCombo({
               
               {handleAttach && !transferredMachine &&
                 <Grid item>
-                  <StyledTooltip title="Attach Drawing" placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
+                  <StyledTooltip title="Attach Existing Drawing" placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
                   <IconButton onClick={handleAttach} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
                     '&:hover': {
                       background:"#103996", 
@@ -466,7 +466,7 @@ function SearchBarCombo({
 
               {onExportCSV && isAllAccessAllowed && 
                   <Grid item>
-                    <LoadingButton onClick={onExportCSV}  variant='contained' sx={{p:0, minWidth:'24px'}} loading={onExportLoading}>
+                    <LoadingButton onClick={()=> onExportCSV(false, false)}  variant='contained' sx={{p:0, minWidth:'24px'}} loading={onExportLoading}>
                       <StyledTooltip title={BUTTONS.EXPORT.label} placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
                         <Iconify color="#fff" sx={{ height: '41px', width: '55px', p:'8px'}} icon={BUTTONS.EXPORT.icon} />
                       </StyledTooltip>
@@ -492,7 +492,7 @@ function SearchBarCombo({
               {SubOnClick2 && !transferredMachine && 
                 <Grid item >
                     <StyledTooltip 
-                      title="Add Drawing List" 
+                      title="Upload Multiple Drawing" 
                       placement="top" 
                       disableFocusListener 
                       tooltipcolor={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#103996"} 

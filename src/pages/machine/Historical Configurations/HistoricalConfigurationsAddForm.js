@@ -9,7 +9,7 @@ import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { setAllFlagFalse, getHistoricalConfigurationRecords, addHistoricalConfigurationRecord } from '../../../redux/slices/products/historicalConfiguration';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider from '../../../components/hook-form';
+import FormProvider, { RHFDatePicker, RHFSwitch } from '../../../components/hook-form';
 // constants
 import CodeMirror from '../../../components/CodeMirror/JsonEditor';
 import Iconify from '../../../components/iconify/Iconify';
@@ -27,7 +27,9 @@ export default function HistoricalConfigurationsAddForm() {
 
   const defaultValues = useMemo(
     () => ({
+      backupDate: null,
       iniJson: '',
+      isManufacture: false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -53,15 +55,14 @@ export default function HistoricalConfigurationsAddForm() {
   };
 
   const onSubmit = async (data) => {
-    const cleanedData = {}
     try{
-        cleanedData.configuration= JSON.parse(data.iniJson)
+      data.configuration= JSON.parse(data.iniJson)
         try {
-          cleanedData.inputGUID = machine?._id;
-          cleanedData.inputSerialNo = machine?.serialNo;
-          await dispatch(addHistoricalConfigurationRecord(cleanedData));
+          data.inputGUID = machine?._id;
+          data.inputSerialNo = machine?.serialNo;
+          await dispatch(addHistoricalConfigurationRecord(data));
           reset();
-          enqueueSnackbar('INI create successfully!');
+          enqueueSnackbar('INI created successfully!');
           dispatch(setAllFlagFalse())
           dispatch(getHistoricalConfigurationRecords(machine?._id))
         } catch (error) {
@@ -72,7 +73,6 @@ export default function HistoricalConfigurationsAddForm() {
     }catch(err){
       enqueueSnackbar('JSON validation Failed!',{ variant: `error` });
     }
-    
   };
 
   function iniToJSON(iniData) {
@@ -144,14 +144,19 @@ const HandleChangeIniJson = async (e) => {
           <Grid item xs={18} md={12} >
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
-
-                <Grid display="flex" justifyContent="flex-end" >
-                  <Button variant="contained" component="label" startIcon={<Iconify icon={ICONS.UPLOAD_FILE.icon} />} > Upload File  
-                    <input type="file" accept='.json, .ini' hidden onChange={handleFileChange} /> 
-                  </Button>
+                <Grid display={{ sm:'block', md: 'flex'}} justifyContent="space-between" >
+                  <Grid item sm={12} md={6} >
+                    <RHFDatePicker inputFormat='dd/MM/yyyy' name="backupDate" label="Backup Date" size="small" />
+                  </Grid>
+                  <Grid container display="flex" justifyContent="flex-end"  >
+                    <Button variant="contained" component="label" startIcon={<Iconify icon={ICONS.UPLOAD_FILE.icon} />} > Upload File  
+                      <input type="file" accept='.json, .ini' hidden onChange={handleFileChange} /> 
+                    </Button>
+                  </Grid>
                 </Grid>
                 <Grid >
-                  <CodeMirror value={iniJson} HandleChangeIniJson={HandleChangeIniJson}/>                
+                  <CodeMirror value={iniJson} HandleChangeIniJson={HandleChangeIniJson}/>
+                  <RHFSwitch name="isManufacture" label="Manufacture" />                
                 </Grid>
 
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

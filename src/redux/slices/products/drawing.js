@@ -274,6 +274,8 @@ export function addDrawingsList( params ) {
               formData.append('displayName', file?.displayName);
               formData.append('referenceNumber', file?.referenceNumber);
               formData.append('stockNumber', file?.stockNumber);
+              formData.append('description', params?.description || '' );
+              formData.append('isActive', true);
               if( file?.drawingMachine ){
                 formData.append('drawingMachine', file?.drawingMachine );
               }

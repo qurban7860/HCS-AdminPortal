@@ -9,27 +9,29 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { enc, MD5, lib } from 'crypto-js';
 import { pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
-import { Box, Card, Grid, Stack, Dialog } from '@mui/material';
+import { Box, Card, Grid, Stack, Dialog, Container } from '@mui/material';
 // PATH
 import { PATH_DOCUMENT } from '../../../routes/paths';
 // slice
-import { checkDocument } from '../../../redux/slices/document/document';
+// import { checkDocument } from '../../../redux/slices/document/document';
 import { addDrawingsList, setDrawingListAddFormVisibility } from '../../../redux/slices/products/drawing';
 import { getActiveDocumentCategories, resetActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
 import { getActiveDrawingTypes, resetActiveDocumentTypes } from '../../../redux/slices/document/documentType';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFUpload,} from '../../../components/hook-form';
+import FormProvider, { RHFUpload, RHFAutocomplete } from '../../../components/hook-form';
 // assets
 import DialogLabel from '../../../components/Dialog/DialogLabel';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { Snacks } from '../../../constants/document-constants';
 import DocumentCover from '../../../components/DocumentForms/DocumentCover';
 import { FORMLABELS } from '../../../constants/default-constants';
+import FormLabel from '../../../components/DocumentForms/FormLabel';
 import ConfirmDialog from '../../../components/confirm-dialog';
-import validateFileType from '../util/validateFileType';
+import validateMultipleDrawingsFileType from '../util/validateMultipleDrawingsFileType';
 
 // ----------------------------------------------------------------------
+
 DocumentListAddForm.propTypes = {
   currentDocument: PropTypes.object,
   customerPage: PropTypes.bool,
@@ -52,12 +54,11 @@ function DocumentListAddForm({
   const { enqueueSnackbar } = useSnackbar();
 
   const { machine } = useSelector((state) => state.machine);
-  const { customer } = useSelector((state) => state.customer);
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
 
   // ------------------ document values states ------------------------------
-  // const [ categoryBy, setCategoryBy ] = useState(null);
+
   const [ previewVal, setPreviewVal ] = useState('');
   const [ preview, setPreview ] = useState(false);
 
@@ -70,44 +71,49 @@ function DocumentListAddForm({
       }
 }, [ dispatch ] )
 
-const documentSchema = ( selectedValue ) => Yup.object().shape({
-  files: Yup.mixed()
-  .required('File is required!')
-  .test(
-    'fileType',
+const documentSchema = Yup.object().shape({
+  docCategory: Yup.object().label('Document Category').required().nullable(),
+  description: Yup.string().max(10000),
+  files: Yup.mixed().required('Files required!')
+  .test( 'fileType',
     'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
-    validateFileType
+    validateMultipleDrawingsFileType
   ).nullable(true),
 });
 
   const methods = useForm({
-    resolver: null,
+    resolver: yupResolver( documentSchema ),
     defaultValues:{
-      files: [],
+      docCategory: activeDocumentCategories?.find( f => f?.name?.toLowerCase()?.trim() === 'assembly drawings') || null,
+      description: '',
+      files: null,
     },
   });
 
   const {
     reset,
     watch,
+    trigger,
     setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const { files } = watch();
-// console.log("files : ",files)
-const onChangeDocCategory = ( index, event, value ) => {
-  if( value ){
-    setValue(`files[${index}].docCategory`, value );
-    if( value?._id !== files[index]?.docType?.docCategory?._id ){
-      setValue(`files[${index}].docType`, null );
+  const { files, docCategory } = watch();
+
+  useEffect(() => {
+    if(docCategory){
+      files?.forEach( ( f, index ) => {
+        setValue(`files[${index}].docCategory`, docCategory )
+        if( docCategory?._id !== files[index]?.docType?.docCategory?._id ){
+          setValue(`files[${index}].docType`, null);
+        }
+      })
+    }else{
+      files?.forEach((f, index) => { setValue(`files[${index}].docCategory`, null); setValue(`files[${index}].docType`, null);  })
     }
-  } else {
-    setValue(`files[${index}].docType`, null );
-    setValue(`files[${index}].docCategory`, null );
-  }
-}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ docCategory?._id, files ]);
 
 const onChangeDocType = ( index, event, value ) => {
   if( value ){
@@ -118,12 +124,22 @@ const onChangeDocType = ( index, event, value ) => {
   } else {
     setValue(`files[${index}].docType`, null );
   }
+  trigger('files');
 }
 
-const onChangeVersionNo = (index, value) => setValue(`files[${index}].versionNo`, value);
-const onChangeDisplayName = (index, value) => setValue(`files[${index}].displayName`, value);
+
+const onChangeDisplayName = (index, value) => { setValue(`files[${index}].displayName`, value); trigger('files'); }
 const onChangeReferenceNumber = (index, value) => setValue(`files[${index}].referenceNumber`, value);
 const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNumber`, value);   
+const onChangeVersionNo = (index, value) => {
+  const sanitizedValue = value?.replace(/[^\d.]+/g, "");
+  const dotIndex = sanitizedValue.indexOf(".");
+  const lastIndex = sanitizedValue.lastIndexOf(".");
+  const finalValue = lastIndex !== dotIndex ? sanitizedValue.slice(0, lastIndex) + sanitizedValue.slice(lastIndex + 1) : sanitizedValue;
+  setValue(`files[${index}].versionNo`, finalValue);
+  // setValue(`files[${index}].versionNo`, value?.replace(/[^0-9.]/g, ''))
+}
+
 
   const onSubmit = async (data) => {
     try {
@@ -143,7 +159,6 @@ const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNum
 
 
   const handleClosePreview = () => setPreview(false);
-  const [machineVal, setMachineVal] = useState(null);
   const [duplicate, setDuplicate] = useState(false);
 
   const hashFilesMD5 = async (_files) => {
@@ -195,23 +210,19 @@ const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNum
 
   const handleDropMultiFile = async (acceptedFiles) => {
     pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
-    let _files = [];
     let defaultDocCategory = await activeDocumentCategories.find((el)=>  el.isDefault === true )
     const defaultDocType = await activeDocumentTypes.find((el)=> el.isDefault === true )
     if( defaultDocType?.docCategory?._id !== defaultDocCategory?._id ){
       defaultDocCategory = activeDocumentCategories.find((el)=>  el?._id === defaultDocType?.docCategory?._id )
     }
-    // if (drawingPage || machineDrawings) {
       const _files_MD5 = await hashFilesMD5(acceptedFiles);
-      _files = await dispatch(checkDocument(_files_MD5));
-    // }
-    setDuplicate(_files.some((fff) => fff.status === 409));
-    const newFiles = await Promise.all(acceptedFiles.map( async (file, index) => {
+    const newFiles = await acceptedFiles.reduce(async (accumulatorPromise, file, index) => {
+      const accumulator = await accumulatorPromise;
       const displayName = await removeFileExtension(file?.name);
       const referenceNumber = await getRefferenceNumber(file?.name);
       const versionNo = await getVersionNumber(file?.name);
       let stockNumber = '';
-      const fileUrl = URL.createObjectURL(file) 
+      
       if (file?.type?.indexOf('pdf') > -1) {
         const arrayBuffer = await file.arrayBuffer();
         const pdfDocument = await pdfjs.getDocument(arrayBuffer).promise;
@@ -234,20 +245,25 @@ const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNum
           console.log(e);
         }
       }
-      // if(!files.some( f => f?.hashMD5 === _files_MD5[index] )){
-        file.drawingMachine = machine?._id
-        file.hashMD5 = _files_MD5[index]
-        file.displayName = displayName
-        file.docCategory = defaultDocCategory
-        file.docType = defaultDocType
-        file.versionNo = versionNo
-        file.referenceNumber = referenceNumber
-        file.stockNumber = stockNumber
-        return file
-      // }
-      // return null
-    }));
-    setValue('files',[ ...files, ...newFiles] );
+      if (files?.some(f => f?.hashMD5 === _files_MD5[index] )) {
+        return accumulator;
+      }
+      file.drawingMachine = machine?._id;
+      file.hashMD5 = _files_MD5[index];
+      file.displayName = displayName;
+      file.docCategory = defaultDocCategory;
+      file.docType = defaultDocType;
+      file.versionNo = versionNo;
+      file.referenceNumber = referenceNumber;
+      file.stockNumber = stockNumber;
+      return [...accumulator, file];
+    }, Promise.resolve([]));
+    if(files){
+      setValue('files',[ ...files, ...newFiles] );
+    } else {
+      setValue('files',[ ...newFiles] );
+    }
+    trigger('files');
   }
   
   const toggleCancel = () => { 
@@ -259,34 +275,49 @@ const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNum
   }
 
   return (
+    <Container maxWidth={false} sx={{mb:3}}>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       { machineDrawings &&
-        <DocumentCover content="Add Drawings" backLink={!customerPage && !machinePage && !machineDrawings} machineDrawingsBackLink={machineDrawings} generalSettings />
+        <DocumentCover content="Upload Multiple Drawings" backLink={!customerPage && !machinePage && !machineDrawings} machineDrawingsBackLink={machineDrawings} generalSettings />
       }
       <Box column={12} rowGap={2} columnGap={2} gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} mt={3} >
         <Grid container item xs={12} md={12} lg={12}>
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
-                  <Grid item xs={12} md={12} lg={12}>
+              { !machineDrawings && <FormLabel content={FORMLABELS.ADDMULTIPLEDRAWING } /> }
+                  <Box rowGap={2} columnGap={2} display="grid"  gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}>
+                    <RHFAutocomplete
+                      name="docCategory"
+                      label="Document Category"
+                      options={activeDocumentCategories}
+                      isOptionEqualToValue={( option, value ) => option._id === value._id }
+                      getOptionLabel={(option) => `${option?.name || ''}`}
+                      renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
+                    />
+                  </Box>
+                    {/* <RHFTextField name="description" label="Description" minRows={3} multiline /> */}
+
                     <RHFUpload multiple rows name="files"
                       onDrop={handleDropMultiFile}
-                      onRemove={(inputFile) =>
-                        files?.length > 0 
-                        ? setValue( 'files', files && files?.filter((file) => file?.size !== inputFile?.size && file?.name !== inputFile?.name ) )
-                        : setValue('files', [])
-                      }
-                      onRemoveAll={() => setValue('files', [])}
+                      onRemove={(inputFile) => {
+                          if (files?.length > 1) {
+                              setValue('files', files?.filter((file) => file?.hashMD5 !== inputFile?.hashMD5));
+                          } else {
+                              setValue('files', null);
+                          }
+                          trigger('files');
+                      }}
+                      onRemoveAll={() => { setValue('files', null ); trigger('files') }}
                       // machine={machineVal}
                       onChangeDocType={onChangeDocType}
-                      onChangeDocCategory={onChangeDocCategory}
+                      // onChangeDocCategory={onChangeDocCategory}
                       onChangeVersionNo={onChangeVersionNo}
                       onChangeDisplayName={onChangeDisplayName}
                       onChangeReferenceNumber={onChangeReferenceNumber}
                       onChangeStockNumber={onChangeStockNumber}
                       drawingPage={drawingPage || machineDrawings}
                     />
-                  </Grid>
 
                 <AddFormButtons drawingPage={ !customerPage && !machinePage } isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
@@ -319,6 +350,7 @@ const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNum
         SubButton="Close"
       />
     </FormProvider>
+    </Container>
   )
 }
 

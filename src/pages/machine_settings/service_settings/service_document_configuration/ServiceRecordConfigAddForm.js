@@ -117,7 +117,7 @@ export default function ServiceRecordConfigAddForm() {
       data.checkItemLists = checkParams
       await dispatch(addServiceRecordConfig(data));
       reset();
-      enqueueSnackbar('Create success!');
+      enqueueSnackbar('Service record configuration created successfully!');
       navigate(PATH_MACHINE.machines.settings.serviceRecordConfigs.list);
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });

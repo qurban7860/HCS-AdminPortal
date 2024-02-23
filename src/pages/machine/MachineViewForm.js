@@ -269,37 +269,37 @@ export default function MachineViewForm() {
               
         <Card sx={{ width: '100%', p: '1rem', mb:3 }}>
           <Grid container>
-            <ViewFormField isLoading={isLoading} sm={6 } heading="Name" param={defaultValues?.name} />
+            <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues?.name} />
+            {defaultValues?.alias?.length > 0 && <ViewFormField isLoading={isLoading} sm={12} heading="Alias" chips={defaultValues?.alias} />}
+            <ViewFormField isLoading={isLoading} sm={6} variant='h4' heading="Profile" param={`${defaultValues?.machineProfile} ${(defaultValues?.machineweb && defaultValues?.machineflange)? `(${defaultValues?.machineweb} X ${defaultValues?.machineflange})` :""}`} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Status"
+              node={
+                <Grid display="flex">
+                  <Typography variant='h4' sx={{mr: 1,color: machine?.status?.slug === "transferred" && 'red'  }}>{ defaultValues?.status }</Typography>
+                  { (defaultValues?.transferredMachine && 
+                    <Typography variant='body2' sx={{mt: 0.5}} >
+                        {` to `}
+                        <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredMachine?._id)} underline="none" sx={{ cursor: 'pointer'}}>
+                          <b>{defaultValues?.transferredMachine?.name}</b>
+                        </Link>
+                          <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(defaultValues?.transferredMachine?._id), '_blank' ) }/>
+                    </Typography> ) || 
+                    ( defaultValues?.transferredFrom && 
+                      <Typography variant='body2' sx={{mt: 0.5}} >
+                        {` Transferred from `}
+                        <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredFrom?._id)} underline="none" sx={{ cursor: 'pointer'}}>
+                          <b>{defaultValues?.transferredFrom?.name}</b>
+                        </Link>
+                          <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(defaultValues?.transferredFrom?._id), '_blank' ) }/>
+                    </Typography> 
+                    )
+                  }
+                </Grid>
+              }
+            />
             <ViewFormField isLoading={isLoading} sm={6} heading="Manufacture Date" param={fDate(defaultValues?.manufactureDate)} />
             { defaultValues?.parentSerialNo ? <ViewFormField isLoading={isLoading} sm={6} heading="Previous Machine" param={defaultValues?.parentSerialNo} /> : " "}
-            <ViewFormField isLoading={isLoading} sm={6} heading="Alias" chips={defaultValues?.alias} />
-            <ViewFormField isLoading={isLoading} sm={6} variant='h4' heading="Profile" param={`${defaultValues?.machineProfile} ${(defaultValues?.machineweb && defaultValues?.machineflange)? `(${defaultValues?.machineweb} X ${defaultValues?.machineflange})` :""}`} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Supplier" param={defaultValues?.supplier} />
-            <ViewFormField isLoading={isLoading} sm={6} heading="Status"
-            node={
-            <Grid display="flex">
-              <Typography variant='h4' sx={{mr: 1,color: machine?.status?.slug === "transferred" && 'red'  }}>{ defaultValues?.status }</Typography>
-              { (defaultValues?.transferredMachine && 
-                <Typography variant='body2' sx={{mt: 0.5}} >
-                    {` to `}
-                    <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredMachine?._id)} underline="none" sx={{ cursor: 'pointer'}}>
-                      <b>{defaultValues?.transferredMachine?.name}</b>
-                    </Link>
-                      <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(defaultValues?.transferredMachine?._id), '_blank' ) }/>
-                  
-                </Typography> ) || 
-                ( defaultValues?.transferredFrom && 
-                  <Typography variant='body2' sx={{mt: 0.5}} >
-                    {` Transferred from `}
-                    <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredFrom?._id)} underline="none" sx={{ cursor: 'pointer'}}>
-                      <b>{defaultValues?.transferredFrom?.name}</b>
-                    </Link>
-                      <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(defaultValues?.transferredFrom?._id), '_blank' ) }/>
-                  
-                </Typography> 
-                )
-              }
-            </Grid>} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Work Order / Purchase Order" param={defaultValues?.workOrderRef}/>
 
             <ViewFormField isLoading={isLoading} sm={6}
@@ -324,11 +324,7 @@ export default function MachineViewForm() {
                 )
               }
             />
-            <ViewFormField isLoading={isLoading}
-              sm={6}
-              heading="Shipping Date"
-              param={fDate(defaultValues?.shippingDate)}
-            />
+
             <ViewFormField isLoading={isLoading}
               sm={6}
               heading="Installation Site"
@@ -340,16 +336,23 @@ export default function MachineViewForm() {
                 )
               }
             />
-            <ViewFormField isLoading={isLoading}
-              sm={6}
-              heading="Installation Date"
-              param={fDate(defaultValues?.installationDate)}
-            />
 
             <ViewFormField isLoading={isLoading}
               sm={12}
               heading="Landmark for Installation site"
               param={defaultValues?.siteMilestone}
+            />
+
+            <ViewFormField isLoading={isLoading}
+              sm={6}
+              heading="Shipping Date"
+              param={fDate(defaultValues?.shippingDate)}
+            />
+
+            <ViewFormField isLoading={isLoading}
+              sm={6}
+              heading="Installation Date"
+              param={fDate(defaultValues?.installationDate)}
             />
 
             <ViewFormField isLoading={isLoading} sm={12} heading="Connected Machines" chipDialogArrayParam={linkedMachines} />

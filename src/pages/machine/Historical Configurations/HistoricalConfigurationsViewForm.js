@@ -7,7 +7,9 @@ import JsonEditor from '../../../components/CodeMirror/JsonEditor';
 import { setHistoricalConfigurationViewFormVisibility } from '../../../redux/slices/products/historicalConfiguration';
 // components
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
+import { fDate } from '../../../utils/formatTime';
 
 
 function HistoricalConfigurationsViewForm() {
@@ -18,7 +20,9 @@ function HistoricalConfigurationsViewForm() {
 
   const defaultValues = useMemo(
     () => ({
+      backupDate:                           historicalConfiguration?.backupDate,
       isActive:                             historicalConfiguration?.isActive,
+      isManufacture:                        historicalConfiguration.isManufacture, 
       createdAt:                            historicalConfiguration?.createdAt || '',
       createdByFullName:                    historicalConfiguration?.createdBy?.name || '',
       createdIP:                            historicalConfiguration?.createdIP || '',
@@ -34,9 +38,9 @@ function HistoricalConfigurationsViewForm() {
   return (
     <Card sx={{ p: 2 }}>
       <Grid>
-        <ViewFormEditDeleteButtons backLink={()=> dispatch(setHistoricalConfigurationViewFormVisibility(false))} />
+        <ViewFormEditDeleteButtons isActive={defaultValues?.isActive} isManufacture={defaultValues?.isManufacture} backLink={()=> dispatch(setHistoricalConfigurationViewFormVisibility(false))} />
+        <ViewFormField sm={12} heading='Backup Date' param={fDate(defaultValues?.backupDate)} />
         <Stack spacing={2} sx={{p:1}}>
-
           {isLoading ? 
           <>
             <Skeleton />

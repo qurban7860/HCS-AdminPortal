@@ -71,7 +71,7 @@ export default function StatusAddForm() {
     try {
       await dispatch(addMachineStatus(data));
       reset();
-      enqueueSnackbar('Create success!');
+      enqueueSnackbar('Status created successfully!');
       navigate(PATH_MACHINE.machines.settings.status.list);
     } catch (error) {
       enqueueSnackbar(error?.message, { variant: `error` });

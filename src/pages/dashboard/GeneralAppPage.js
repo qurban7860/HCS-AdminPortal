@@ -268,7 +268,7 @@ export default function GeneralAppPage() {
 
             {/* Machine by  Models */}
             <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
-              <Card sx={{ px: 3, mb: 3}} variants={varFade().inDown}>
+              <StyledGlobalCard sx={{ px: 3, mb: 3}} variants={varFade().inDown}>
                   <Grid container mt={2} mb={2}>
                     <Grid item xs={12} sm={4} display='flex' alignItems='center'>
                       <Typography variant='h5'>Machine by Models</Typography>
@@ -311,12 +311,12 @@ export default function GeneralAppPage() {
                   type="bar"
                   sx={{ backgroundColor: 'transparent' }}
                 />
-              </Card>
+              </StyledGlobalCard>
               <StyledBg />
             </Grid>
 
             <Grid item xs={12} sm={12} md={12} lg={12} xl={6} >
-              <Card sx={{ px: 3, mb: 3}} variants={varFade().inDown}>
+              <StyledGlobalCard sx={{ px: 3, mb: 3}} variants={varFade().inDown}>
               <Grid container mt={2} mb={2}>
                     <Grid item xs={12} sm={4} display='flex' alignItems='center'>
                       <Typography variant='h5'>Machine by Years</Typography>
@@ -369,7 +369,7 @@ export default function GeneralAppPage() {
                   type="bar"
                   sx={{ backgroundColor: 'transparent' }}
                 />
-              </Card>
+              </StyledGlobalCard>
               <StyledBg />
             </Grid>
 

@@ -365,7 +365,6 @@ export function addDocument(customerId , machineId ,  params) {
           }
           if (params?.files) {
             params?.files?.forEach((file, index) => {
-              console.log("file : ",file)
               formData.append(`images`, file);
             });
           }
@@ -394,7 +393,6 @@ export function addDocumentList( params ) {
         if (params?.files) {
           params?.files?.forEach((file, index) => {
             if (file) {
-            console.log("addDocumentList file : ",file)
             formData.append('docType', file?.docType?._id);
             formData.append('documentType', file?.docType?._id);
             formData.append('docCategory', file?.docCategory?._id);

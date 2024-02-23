@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MuiTelInput } from 'mui-tel-input';
-import { Box,Card, Grid, Stack, Typography } from '@mui/material';
+import { Box,Card, Grid, Stack, Typography, alpha, Button, IconButton } from '@mui/material';
 // slice
 import { addSite, getSites, setSiteFormVisibility } from '../../../redux/slices/customer/site';
 import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
@@ -14,8 +14,10 @@ import { useSnackbar } from '../../../components/snackbar';
 // assets
 import { countries } from '../../../assets/data';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete } from '../../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete, RHFCountryAutocomplete, RHFCustomPhoneInput, RHFCheckbox } from '../../../components/hook-form';
 import { SiteSchema } from '../../schemas/customer'
+import Iconify from '../../../components/iconify';
+// import IconTooltip from '../../../components/Icons/IconTooltip';
 
 // ----------------------------------------------------------------------
 
@@ -25,8 +27,6 @@ export default function SiteAddForm() {
   const { activeContacts } = useSelector((state) => state.contact);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const [phone, setPhone] = useState('');
-  const [fax, setFaxVal] = useState('');
 
   useEffect(() => {
     dispatch( getActiveContacts(customer?._id))
@@ -40,9 +40,9 @@ export default function SiteAddForm() {
       name: '',
       customer: customer?._id,
       billingSite: '',
-      // phone: '',
+      phone: { type: 'PHONE', countryCode: '64' },
       email: '',
-      // fax: '',
+      fax: { type: 'FAX', countryCode: '64' },
       website: '',
       street: '',
       suburb: '',
@@ -50,6 +50,10 @@ export default function SiteAddForm() {
       region: '',
       postcode: '',
       country: countries.find((contry)=> contry?.label?.toLocaleLowerCase() === 'New Zealand'.toLocaleLowerCase() ) || null ,
+      primaryTechnicalContact: null,
+      updateAddressPrimaryBillingContact: false,
+      primaryBillingContact: null,
+      updateAddressPrimaryTechnicalContact: false,
       isArchived: false,
       isActive: true,
     }),
@@ -64,9 +68,23 @@ export default function SiteAddForm() {
 
   const {
     reset,
+    setValue,
+    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+
+  const { phone, fax, country } = watch();
+
+  useEffect(() => {
+    if(!phone?.number){
+      setValue( 'phone', { ...phone, countryCode: country?.phone?.replace(/[^0-9]/g, '')  } );
+    }
+    if(!fax?.number){
+      setValue( 'fax', { ...fax, countryCode: country?.phone?.replace(/[^0-9]/g, '')  } );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ country ]);
 
   useEffect(() => {
     reset(defaultValues);
@@ -74,15 +92,8 @@ export default function SiteAddForm() {
   }, [dispatch]);
 
 
-
   const onSubmit = async (data) => {
     try {
-      if (phone) {
-        data.phone = phone;
-      }
-      if (fax) {
-        data.fax = fax;
-      }
       await dispatch(addSite(data));
       await dispatch(getSites(customer?._id))
       reset();
@@ -92,89 +103,63 @@ export default function SiteAddForm() {
     }
   };
 
-  const toggleCancel = () => {
-    dispatch(setSiteFormVisibility(false));
-  };
+  const updateCountryCode = () =>{
+    if(phone){
+          const updatedPhone ={ ...phone, countryCode: country?.phone?.replace(/[^0-9]/g, '') || '' }
+      setValue('phone',updatedPhone);
+    }
+  
+    if(fax){
+          const updatedFax ={ ...fax, countryCode: country?.phone?.replace(/[^0-9]/g, '') || '' }
+      setValue('fax',updatedFax)
+    }
+  }
+
+  const toggleCancel = () => dispatch(setSiteFormVisibility(false));
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={4}>
+      <Grid container >
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
-            <Stack spacing={3}>
+            <Stack spacing={2}>
               <RHFTextField name="name" label="Name*" />
               <Box
-                rowGap={3}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
+                rowGap={2} columnGap={2} display="grid"
+                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
               >
                 <RHFTextField name="street" label="Street" />
                 <RHFTextField name="suburb" label="Suburb" />
                 <RHFTextField name="city" label="City" />
                 <RHFTextField name="region" label="Region" />
                 <RHFTextField name="postcode" label="Post Code" />
-
-                <RHFAutocomplete
-                  options={countries}
-                  name="country"
-                  label="Country"
-                  getOptionLabel={(option) => `${option?.label || ''} (${option.code || ''}) `}
-                  isOptionEqualToValue={(option, value) => option?.label === value?.label }
-                  renderOption={(props, option) => (
-                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      <img loading="lazy" width="20" alt=""
-                        src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                        srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                      />
-                      {option?.label || ''} ({option?.code || ''}) {option?.phone || ''}
-                    </Box>
-                  )}
-                />
+                <RHFCountryAutocomplete  name="country" label="Country" />
                 <RHFTextField name="lat" label="Latitude" />
                 <RHFTextField name="long" label="Longitude" />
-                <MuiTelInput
-                  value={phone}
-                  name="phone"
-                  label="Phone Number"
-                  flagSize="medium"
-                  defaultCountry="NZ"
-                  onChange={(newValue)=>setPhone(newValue)}
-                  inputProps={{maxLength:13}}
-                  forceCallingCode
-                />
-
-                <MuiTelInput
-                  value={fax}
-                  name="fax"
-                  label="Fax"
-                  flagSize="medium"
-                  defaultCountry="NZ"
-                  onChange={(newValue)=>setFaxVal(newValue)}
-                  inputProps={{maxLength:13}}
-                  forceCallingCode
-                />
-
+                </Box>
+                <Box display="flex" alignItems="center" gridTemplateColumns={{ sm: 'repeat(1, 1fr)' }} >
+                  <IconButton onClick={updateCountryCode} size="small" variant="contained" color='secondary' sx={{ mr: 0.5}} >
+                    <Iconify icon="icon-park-outline:update-rotation" sx={{width: 25, height: 25}}  />
+                  </IconButton>
+                  <Typography variant='body2' sx={{ color:'gray'}}>Update country code in phone/fax.</Typography>
+                </Box>
+              <Box
+                rowGap={2} columnGap={2} display="grid"
+                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+              >
+                <RHFCustomPhoneInput name="phone" label="Phone Number" />
+                <RHFCustomPhoneInput name="fax" label="Fax" />
                 <RHFTextField name="email" label="Email" />
                 <RHFTextField name="website" label="Website" />
               </Box>
-
               <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
                 Contact Details
               </Typography>
-
               <Box
-                rowGap={3}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
+                rowGap={2} columnGap={2} display="grid"
+                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
               >
+              <Box display="grid" gridTemplateColumns={{  sm: 'repeat(1, 1fr)' }}  >
                 <RHFAutocomplete
                   name='primaryBillingContact'
                   label="Primary Billing Contact" 
@@ -183,7 +168,9 @@ export default function SiteAddForm() {
                   getOptionLabel={(option) => `${option.firstName || ''} ${option.lastName || ''}`}
                   renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.firstName || ''} ${option.lastName || ''}`}</li> )}
                 />
-
+                <RHFCheckbox name="updateAddressPrimaryBillingContact" label="Update Primary Billing Contact Address" />
+              </Box>
+              <Box display="grid" gridTemplateColumns={{ sm: 'repeat(1, 1fr)' }} >
                 <RHFAutocomplete
                   name='primaryTechnicalContact'
                   label="Primary Technical Contact"
@@ -192,6 +179,8 @@ export default function SiteAddForm() {
                   getOptionLabel={(option) => `${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
                   renderOption={(props, option) => ( <li {...props} key={option?._id}> {`${option.firstName || ''} ${option.lastName || ''}`}</li> )}
                 />
+                <RHFCheckbox name="updateAddressPrimaryTechnicalContact" label="Update Primary Technical Contact Address" />
+              </Box>
               </Box>
               <RHFSwitch name="isActive" label="Active" />
             </Stack>

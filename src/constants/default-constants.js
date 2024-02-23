@@ -59,6 +59,7 @@ export const FORMLABELS = {
   },
 
   // @root FormLabels
+  ADDMULTIPLEDRAWING: 'Upload Multiple Drawing',
   HOWICK: 'Howick Resources',
   ADDRESS: 'Address Information',
   CUSTOMER: 'Customer Information',
@@ -195,7 +196,7 @@ export const BUTTONS = {
 
   // documents
   ADDDOCUMENT: 'Add Document',
-  ADDDRAWING: 'Add Drawing',
+  ADDDRAWING: 'Upload Single Drawing',
   ADDSETTING: 'Add Setting',
   ADDTOOL: 'Add Tool',
 

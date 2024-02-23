@@ -160,18 +160,30 @@ export function addSite(params) {
         let data = {
           name: params.name,
           customer: params.customer,
-          phone: params.phone,
           email: params.email,
-          fax: params.fax,
           website: params.website,
           lat: params.lat,
           long: params.long,
-          primaryBillingContact: params.primaryBillingContact?._id || null,
-          primaryTechnicalContact: params.primaryTechnicalContact?._id || null,
+          primaryBillingContact: params?.primaryBillingContact?._id || null,
+          updateAddressPrimaryBillingContact: params?.updateAddressPrimaryBillingContact,
+          primaryTechnicalContact: params?.primaryTechnicalContact?._id || null,
+          updateAddressPrimaryTechnicalContact: params?.updateAddressPrimaryTechnicalContact,
           isActive: params.isActive,
           address: {}
         };
 
+        const phoneNumbers = []
+
+        if( params?.phone?.number ){
+          phoneNumbers.push( params?.phone );
+        }
+
+        if( params?.fax?.number ){
+          phoneNumbers.push( params?.fax );
+        }
+
+        data.phoneNumbers = phoneNumbers;
+        
         /* eslint-enable */
         if(params.street){
           data.address.street = params.street;        
@@ -214,17 +226,29 @@ export function updateSite(params,customerId,Id) {
         let data = {
           name: params.name,
           customer: params.customer,
-          phone: params.phone,
           email: params.email,
-          fax: params.fax,
           website: params.website,
           lat: params.lat,
           long: params.long,
           isActive: params.isActive,
           primaryBillingContact: params.primaryBillingContact?._id || null,
+          updateAddressPrimaryBillingContact: params?.updateAddressPrimaryBillingContact,
           primaryTechnicalContact: params.primaryTechnicalContact?._id || null,
+          updateAddressPrimaryTechnicalContact: params?.updateAddressPrimaryTechnicalContact,
           address: {}
         };
+        const phoneNumbers = []
+
+        if( params?.phone?.number ){
+          phoneNumbers.push( { ...params?.phone, type:'PHONE' } );
+        }
+
+        if( params?.fax?.number ){
+          phoneNumbers.push( { ...params?.fax, type:'FAX' } );
+        }
+
+        data.phoneNumbers = phoneNumbers;
+
         /* eslint-enable */
         if(params.street){
           data.address.street = params.street;        

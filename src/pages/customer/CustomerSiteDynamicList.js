@@ -129,14 +129,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   const [exportingCSV, setExportingCSV] = useState(false);
   const onExportCSV = async () => {
     setExportingCSV(true);
-    const params = {
-      isArchived: false,
-      orderBy : {
-        createdAt:-1
-      }
-    };
-    
-    const response = dispatch(await exportCSV('CustomerSitesCSV',`crm/customers/${customer?._id}/sites/export`, params));
+    const response = dispatch(await exportCSV('CustomerSites', customer?._id));
     response.then((res) => {
       setExportingCSV(false);
       enqueueSnackbar(res.message, {variant:`${res.hasError?"error":""}`});
@@ -225,7 +218,10 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                     isActive={_site._id === activeCardIndex}
                     handleOnClick={() => handleCardClick(_site) }
                     disableClick={siteEditFormVisibility || siteAddFormVisibility}
-                    name={_site?.name} title={_site?.address?.city || ""} email={_site?.website || ""}
+                    name={_site?.name} 
+                    title={`${_site?.address?.country || '' }${(_site?.address?.country && _site?.address?.city) ? ',' : '' } ${_site?.address?.city || '' }`} 
+                    phone={_site?.phoneNumbers?.find( n => n?.type?.toLowerCase() === 'phone' )}
+                    email={_site?.website || ""}
                     image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
                   />)
                 )}
