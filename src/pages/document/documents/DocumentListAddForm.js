@@ -29,6 +29,7 @@ import { FORMLABELS } from '../../../constants/default-constants';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import validateMultipleDrawingsFileType from '../util/validateMultipleDrawingsFileType';
+import LinearProgressWithLabel from '../../../components/progress-bar/LinearProgressWithLabel';
 
 // ----------------------------------------------------------------------
 
@@ -61,6 +62,9 @@ function DocumentListAddForm({
 
   const [ previewVal, setPreviewVal ] = useState('');
   const [ preview, setPreview ] = useState(false);
+
+  const [ progress, setProgress ] = useState(0);
+  const [ progressBar, setProgressBar ] = useState(false);
 
   useLayoutEffect( () => { 
     dispatch( getActiveDocumentCategories({drawing: true}) );  
@@ -171,7 +175,7 @@ const onChangeVersionNo = (index, value) => {
         resolve(hashHex);
       };
       reader.onerror = () => {
-        reject(new Error(`Error reading file: ${file.name}`));
+        reject(new Error(`Error reading file: ${file?.name || '' }`));
       };
       reader.readAsArrayBuffer(file);
     }));
@@ -209,6 +213,10 @@ const onChangeVersionNo = (index, value) => {
   
 
   const handleDropMultiFile = async (acceptedFiles) => {
+    setProgressBar(true);
+    const setProgressBarPercentage = async ( index ) => {
+      await setProgress( acceptedFiles?.length ? Math.round( (100 / acceptedFiles.length ) * index / 10 ) * 10  : 0  );
+  }
     pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
     let defaultDocCategory = await activeDocumentCategories.find((el)=>  el.isDefault === true )
     const defaultDocType = await activeDocumentTypes.find((el)=> el.isDefault === true )
@@ -217,6 +225,7 @@ const onChangeVersionNo = (index, value) => {
     }
       const _files_MD5 = await hashFilesMD5(acceptedFiles);
     const newFiles = await acceptedFiles.reduce(async (accumulatorPromise, file, index) => {
+      await setProgressBarPercentage( index )
       const accumulator = await accumulatorPromise;
       const displayName = await removeFileExtension(file?.name);
       const referenceNumber = await getRefferenceNumber(file?.name);
@@ -245,6 +254,7 @@ const onChangeVersionNo = (index, value) => {
           console.log(e);
         }
       }
+
       if (files?.some(f => f?.hashMD5 === _files_MD5[index] )) {
         return accumulator;
       }
@@ -258,14 +268,16 @@ const onChangeVersionNo = (index, value) => {
       file.stockNumber = stockNumber;
       return [...accumulator, file];
     }, Promise.resolve([]));
+    setProgressBar(false);
+    setProgress(0)
     if(files){
       setValue('files',[ ...files, ...newFiles] );
     } else {
       setValue('files',[ ...newFiles] );
     }
     trigger('files');
+    console.log("newFiles : ",newFiles)
   }
-  
   const toggleCancel = () => { 
     if(machineDrawings){
       navigate(PATH_DOCUMENT.document.machineDrawings.list) 
@@ -318,7 +330,9 @@ const onChangeVersionNo = (index, value) => {
                       onChangeStockNumber={onChangeStockNumber}
                       drawingPage={drawingPage || machineDrawings}
                     />
-
+                    { progressBar &&  <Box sx={{ width: '100%' }}>
+                        <LinearProgressWithLabel variant="buffer"  value={progress}  /> 
+                    </Box>}
                 <AddFormButtons drawingPage={ !customerPage && !machinePage } isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>

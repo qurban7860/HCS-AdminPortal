@@ -227,7 +227,7 @@ function MultiFilePreview({
                 <Grid item md={8} sm={12} >
                   {onChangeDisplayName && <TextField 
                     fullWidth 
-                    label="Display Name*" 
+                    label="Document Name*" 
                     size='small' 
                     value={ displayName } sx={{mt: { md:0, sm: 1} }} 
                     InputProps={{
@@ -237,7 +237,7 @@ function MultiFilePreview({
                     }}
                     onChange={(e)=> onChangeDisplayName( index, e.target.value)} 
                     error={!displayName?.trim()} 
-                    helperText={!displayName?.trim() && 'Display Name is required!'} 
+                    helperText={!displayName?.trim() && 'Document Name is required!'} 
                   />}
                 </Grid>
 

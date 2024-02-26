@@ -29,11 +29,11 @@ export function fileFormat(fileUrl) {
     case FORMAT_AUDIO.includes(fileTypeByUrl(fileUrl)):
       format = 'audio';
       break;
-    case FORMAT_IMG_VISIBBLE.includes(fileTypeByUrl(fileUrl)):
-      format = 'images';
-      break;
     case FORMAT_IMG.includes(fileTypeByUrl(fileUrl)):
       format = 'image';
+        break;
+    case FORMAT_IMG_VISIBBLE.includes(fileTypeByUrl(fileUrl)):
+      format = 'images';
       break;
     case FORMAT_VIDEO.includes(fileTypeByUrl(fileUrl)):
       format = 'video';
