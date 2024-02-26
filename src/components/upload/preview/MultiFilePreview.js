@@ -197,7 +197,7 @@ function MultiFilePreview({
           >
 
           <Stack direction="row" sx={{ width:"100%" }} >
-            <FileThumbnail file={file} />
+            <FileThumbnail file={file} rows />
             <Stack spacing={1} sx={{ml:3, width:"100%" }} >
 
               {/* {onChangeDocCategory && <Autocomplete 

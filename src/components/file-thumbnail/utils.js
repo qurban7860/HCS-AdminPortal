@@ -16,7 +16,7 @@ const FORMAT_VIDEO = ['m4v', 'avi', 'mpg', 'mp4', 'webm'];
 const iconUrl = (icon) => `/assets/icons/files/${icon}.svg`;
 // ----------------------------------------------------------------------
 
-export function fileFormat(fileUrl) {
+export function fileFormat(fileUrl, rows ) {
   let format;
 
   switch (fileUrl?.includes(fileTypeByUrl(fileUrl))) {
@@ -29,7 +29,7 @@ export function fileFormat(fileUrl) {
     case FORMAT_AUDIO.includes(fileTypeByUrl(fileUrl)):
       format = 'audio';
       break;
-    case FORMAT_IMG.includes(fileTypeByUrl(fileUrl)):
+    case FORMAT_IMG.includes(fileTypeByUrl(fileUrl)) && rows:
       format = 'image';
         break;
     case FORMAT_IMG_VISIBBLE.includes(fileTypeByUrl(fileUrl)):
