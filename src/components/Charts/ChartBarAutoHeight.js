@@ -10,7 +10,7 @@ ChartBarAutoHeight.propTypes = {
   seriesData: PropTypes.array,
 };
 export default function ChartBarAutoHeight({ type, height, optionsData, seriesData}) {
-
+console.log("optionsData : ",optionsData, "seriesData : ",seriesData)
   const series = [{ name: 'Machines', data:  seriesData}];
   const chartOptions = useChart({
     stroke: { show: true },
@@ -26,5 +26,5 @@ export default function ChartBarAutoHeight({ type, height, optionsData, seriesDa
       categories: optionsData,
     },
   });
-  return <Chart type={type} series={series} options={chartOptions} height="auto" />;
+  return <Chart type={type} series={series} options={chartOptions} height={`${((optionsData?.length || 10) * 25) < 500 ? 500 : ((optionsData?.length || 10) * 25)}px`} />;
 }
