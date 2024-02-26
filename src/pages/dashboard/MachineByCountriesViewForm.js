@@ -62,7 +62,7 @@ export default function MachineByCountriesViewForm() {
   };
 
   return (
-      <Container maxWidth={false}>
+      <Container maxWidth={false}  sx={{ height: 'auto'}} >
       <Card sx={{ mb: 3, height: 160, position: 'relative'}}>
         <Cover name="Machine By Countries" icon="material-symbols:list-alt-outline" />
       </Card>      
@@ -118,16 +118,14 @@ export default function MachineByCountriesViewForm() {
                 </Grid>
             </Grid>
             <Divider sx={{paddingTop:2}} />
-            <Grid item sx={{ height: '500px', overflow: 'auto', backgroundColor: 'transparent' }} >
-              {/* <Paper style={{ height: 'auto', padding: '20px', backgroundColor: 'transparent' }}> */}
+            {/* <Grid item sx={{ height: 'auto', overflow: 'auto', backgroundColor: 'transparent' }} > */}
                 <ChartBarAutoHeight
                   optionsData={countryWiseMachineCountCountries}
                   seriesData={countryWiseMachineCountNumber}
                   type="bar"
                   sx={{ backgroundColor: 'transparent' }}
                 />
-              {/* </Paper> */}
-            </Grid>
+            {/* </Grid> */}
       </StyledGlobalCard>          
     </Container>
   )}

@@ -34,7 +34,8 @@ export const machineSchema = Yup.object().shape({
   .min(pastDate,`Shipping Date field must be at after than ${fDate(pastDate)}`).nullable().label('Installation Date'),
   supportExpireDate: Yup.date()
   .typeError('Date Should be Valid')
-  .min(today,`Support Expiry Date field must be at after than ${fDate(today)}`).nullable().label('Support Expiry Date'),
+  // .min(today,`Support Expiry Date field must be at after than ${fDate(today)}`)
+  .nullable().label('Support Expiry Date'),
   installationSite: Yup.object().shape({
     name: Yup.string()
   }).nullable(),

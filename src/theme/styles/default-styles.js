@@ -185,6 +185,7 @@ export const StyledGlobalCard = styled(Card)(({ theme }) => ({
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'top right',
   backgroundSize: 'auto 90%',
+  height: 'auto',
 }));
 
 // --------------------------------------------------------------------------------------------
