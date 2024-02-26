@@ -653,7 +653,7 @@ export function transferMachine( machineId, params ) {
         shippingDate: params?.shippingDate || null,
         installationDate: params?.installationDate || null,
         status: params.status?._id || null,
-        machineConnections: params?.machineConnection && params?.machineConnection?.length > 0 && params?.machineConnection?.map((m)=> m?.connectedMachine?._id) || [],
+        machineConnections: params?.machineConnection && params?.machineConnection?.length > 0 && params?.machineConnection?.map((m)=> m?._id) || [],
         accountManager: params?.accountManager?.map(a => a?._id) || [],
         projectManager: params?.projectManager?.map(p => p?._id) || [],
         supportManager: params?.supportManager?.map(s => s?._id) || [],
