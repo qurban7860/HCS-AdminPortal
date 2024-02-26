@@ -34,7 +34,7 @@ import GoogleMaps from '../../assets/GoogleMaps';
 import { TITLES, FORMLABELS } from '../../constants/default-constants';
 import { Snacks } from '../../constants/machine-constants';
 // utils
-import { fDate } from '../../utils/formatTime';
+import { fDate, GetDifferenceInDays } from '../../utils/formatTime';
 // dialog
 import MachineDialog from '../../components/Dialog/MachineDialog'
 import CustomerDialog from '../../components/Dialog/CustomerDialog';
@@ -216,7 +216,7 @@ export default function MachineViewForm() {
       accountManager: machine?.accountManager || [],
       projectManager: machine?.projectManager || [],
       supportManager: machine?.supportManager || [],
-      supportExpireDate: machine?.supportExpireDate  || '',
+      supportExpireDate: machine?.supportExpireDate  || null,
       isActive: machine?.isActive,
       createdByFullName: machine?.createdBy?.name,
       createdAt: machine?.createdAt,
@@ -228,7 +228,7 @@ export default function MachineViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [machine]
   );
-
+  
   return (
     <>
       <Grid container direction="row" mt={isMobile && 2}>
