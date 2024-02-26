@@ -19,7 +19,7 @@ import IconTooltip from '../Icons/IconTooltip';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
 import ViewFormApprovalsPopover from './ViewFormApprovalsPopover';
 import { ICONS } from '../../constants/icons/default-icons';
-import { fDate, fDateTime } from '../../utils/formatTime';
+import { fDate, fDateTime, GetDifferenceInDays } from '../../utils/formatTime';
 import { useAuthContext } from '../../auth/useAuthContext';
 import { PATH_DASHBOARD } from '../../routes/paths';
 
@@ -283,7 +283,7 @@ function ViewFormEditDeleteButtons({
   } = methods;
 
   const machineSupport = {
-    status:new Date(machineSupportDate).getTime() > new Date().getTime(),
+    status: GetDifferenceInDays( machineSupportDate ),
     date: new Date(machineSupportDate)
   }
 
@@ -360,8 +360,8 @@ function ViewFormEditDeleteButtons({
           {machineSupportDate &&
             <IconTooltip
               title={machineSupport?.status?`Support valid till ${fDate(machineSupportDate)}`:`Support ended ${fDate(machineSupportDate)}`}
-              color={machineSupport?.status?ICONS.ALLOWED.color:ICONS.DISALLOWED.color}
-              icon="bx:support"
+              color={machineSupport?.status > 30 && ICONS.SUPPORT_VALLID.color || machineSupport?.status < 30 && machineSupport?.status > 0 && ICONS.SUPPORT_WARNING.color || machineSupport?.status < 1 && ICONS.SUPPORT_EXPIRED.color}
+              icon={machineSupport?.status?ICONS.SUPPORT_VALLID.icon:ICONS.SUPPORT_EXPIRED.icon}
               />
           }
 
