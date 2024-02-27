@@ -263,7 +263,7 @@ const onChangeVersionNo = (index, value) => {
       file.displayName = displayName;
       file.docCategory = defaultDocCategory;
       file.docType = defaultDocType;
-      file.versionNo = versionNo;
+      file.versionNo = versionNo?.replace(/[^\d.]+/g, "");
       file.referenceNumber = referenceNumber;
       file.stockNumber = stockNumber;
       return [...accumulator, file];

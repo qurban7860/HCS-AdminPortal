@@ -197,7 +197,7 @@ function MultiFilePreview({
           >
 
           <Stack direction="row" sx={{ width:"100%" }} >
-            <FileThumbnail file={file} />
+            <FileThumbnail file={file} rows />
             <Stack spacing={1} sx={{ml:3, width:"100%" }} >
 
               {/* {onChangeDocCategory && <Autocomplete 
@@ -282,6 +282,8 @@ function MultiFilePreview({
                       maxLength: 8
                     },
                 }}
+                // error={ versionNo > 1000 }
+                // helperText={ versionNo > 1000 && 'Version Number Version number must be less than or equal to 1000'}
                 onChange={(e)=> onChangeVersionNo( index, e.target.value)}  
               />}
 
