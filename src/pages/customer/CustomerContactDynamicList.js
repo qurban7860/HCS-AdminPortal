@@ -37,7 +37,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 
 // ----------------------------------------------------------------------
 
-export default function CustomerContactList(currentContact = null) {
+export default function CustomerContactDynamicList(currentContact = null) {
 
   const { order, orderBy } = useTable({ defaultOrderBy: '-createdAt' });
   const { isAllAccessAllowed } = useAuthContext()

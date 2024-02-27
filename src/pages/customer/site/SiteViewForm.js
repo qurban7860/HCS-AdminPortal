@@ -106,7 +106,7 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
         <ViewFormField isLoading={isLoading} sm={6} heading="Latitude" param={defaultValues?.lat} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Longitude" param={defaultValues?.long} />
         <ViewFormPhoneField isLoading={isLoading} sm={6} heading="Phone" typeOfContact="Phone" value={defaultValues?.phone } />
-        <ViewFormPhoneField isLoading={isLoading} sm={6} heading="Fax" typeOfContact="Fax" value={defaultValues?.fax } />
+        <ViewFormPhoneField isLoading={isLoading} sm={6} heading="Fax" typeOfContact="Phone" value={defaultValues?.fax } />
         <ViewFormField isLoading={isLoading} sm={6} heading="Email" param={defaultValues?.email} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Website" param={defaultValues?.website} />
         <Grid container>

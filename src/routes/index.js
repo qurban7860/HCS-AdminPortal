@@ -242,7 +242,9 @@ import {
   GroupAddForm,
   GroupViewForm,
   GroupEditForm,
-  GroupList
+  GroupList,
+  CustomerSiteList,
+  CustomerContactList
   
 } from './elements';
 // ----------------------------------------------------------------------
@@ -322,6 +324,8 @@ export default function Router() {
         { path: 'new', element: <CustomerAdd /> },
         { path: ':id/edit', element: <CustomerEdit />},
         { path: ':id/view', element: <CustomerView />},
+        { path: 'sites', element: <CustomerSiteList />},
+        { path: 'contacts', element: <CustomerContactList />},
         {
           path: 'site',
           children: [

@@ -79,6 +79,8 @@ export const PATH_CUSTOMER = {
   new: path(ROOTS_CUSTOMER, '/new'),
   view: (id) => path(ROOTS_CUSTOMER, `/${id}/view`),
   edit: (id) => path(ROOTS_CUSTOMER, `/${id}/edit`),
+  sites: path(ROOTS_CUSTOMER, '/sites'),
+  contacts: path(ROOTS_CUSTOMER, '/contacts'),
   general: {
     app: path(ROOTS_CUSTOMER, '/app'),
   },
