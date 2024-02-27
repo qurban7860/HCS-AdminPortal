@@ -17,6 +17,7 @@ import { getActiveCustomers } from '../../redux/slices/customer/customer';
 import IconPopover from '../Icons/IconPopover';
 import IconTooltip from '../Icons/IconTooltip';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
+import ViewFormTransferHistoryMenuPopover from './ViewFormTransferHistoryMenuPopover';
 import ViewFormApprovalsPopover from './ViewFormApprovalsPopover';
 import { ICONS } from '../../constants/icons/default-icons';
 import { fDate, fDateTime, GetDifferenceInDays } from '../../utils/formatTime';
@@ -37,6 +38,7 @@ function ViewFormEditDeleteButtons({
   machineSettingPage,
   settingPage,
   securityUserPage,
+  transferredHistory,
   // Handlers
   handleVerification,
   handleVerificationTitle,
@@ -250,6 +252,9 @@ function ViewFormEditDeleteButtons({
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
 
+  const [ transferHistoryAnchorEl, setTransferHistoryAnchorEl ] = useState(null);
+  const [ transferHistory, setTransferHistory ] = useState([]);
+
   const [approvedAnchorEl, setApprovedAnchorEl] = useState(null);
   const [approvedBy, setApprovedBy] = useState([]);
 
@@ -261,6 +266,16 @@ function ViewFormEditDeleteButtons({
   const handleVerifiedPopoverClose = () => {
     setVerifiedAnchorEl(null);
     setVerifiedBy([])
+  };
+
+  const handleTransferHistoryPopoverOpen = (event) => {
+    setTransferHistoryAnchorEl(event.currentTarget);
+    setTransferHistory(transferredHistory)
+  };
+
+  const handleTransferHistoryPopoverClose = () => {
+    setTransferHistoryAnchorEl(null);
+    setTransferHistory([])
   };
 
   const handleApprovedPopoverOpen = (event) => {
@@ -286,7 +301,7 @@ function ViewFormEditDeleteButtons({
     status: GetDifferenceInDays( machineSupportDate ),
     date: new Date(machineSupportDate)
   }
-
+  
   return (
     <Grid container justifyContent="space-between" sx={{pb:1, px:0.5}}>
       <Grid item sx={{display:'flex', mt:0.5,mr:1}}>
@@ -365,13 +380,24 @@ function ViewFormEditDeleteButtons({
               />
           }
 
-          {verifiers?.length>0 &&
+          {Array.isArray(verifiers) && verifiers?.length>0 &&
           <Badge badgeContent={verifiers.length} color="info">
             <IconTooltip
               title={isVerifiedTitle || 'Verified'}
               color={ICONS.ALLOWED.color}
               icon="ic:outline-verified-user"
               onClick={handleVerifiedPopoverOpen}
+              />
+          </Badge>
+          }
+
+          {Array.isArray(transferredHistory) && transferredHistory?.length>0 &&
+          <Badge badgeContent={transferredHistory.length} color="info">
+            <IconTooltip
+              title='Transfer History'
+              color={ICONS.TRANSFERHISTORY.color}
+              icon={ICONS.TRANSFERHISTORY.icon}
+              onClick={handleTransferHistoryPopoverOpen}
               />
           </Badge>
           }
@@ -386,7 +412,6 @@ function ViewFormEditDeleteButtons({
               />
             </Badge>
           }
-
 
           {customerAccess !== undefined &&
             <IconTooltip
@@ -751,6 +776,13 @@ function ViewFormEditDeleteButtons({
         ListTitle={isVerifiedTitle || "Verified By"}
       />
 
+      <ViewFormTransferHistoryMenuPopover
+        open={transferHistoryAnchorEl}
+        onClose={handleTransferHistoryPopoverClose}
+        ListArr={transferHistory}
+        ListTitle="Transfer History"
+      />
+
       <ViewFormApprovalsPopover
         open={approvedAnchorEl}
         onClose={handleApprovedPopoverClose}
@@ -798,6 +830,7 @@ ViewFormEditDeleteButtons.propTypes = {
   disableEditButton: PropTypes.bool,
   handleMap: PropTypes.func,
   machineSupportDate: PropTypes.string,
+  transferredHistory: PropTypes.array,
   moveCustomerContact: PropTypes.func,
   approveConfig: PropTypes.bool,
   approveHandler: PropTypes.func,
