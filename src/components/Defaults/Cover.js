@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router';
-import { Grid } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { StyledRoot, StyledInfo } from '../../theme/styles/default-styles';
 // utils
-import { PATH_SETTING } from '../../routes/paths';
+import { PATH_CUSTOMER, PATH_SETTING } from '../../routes/paths';
 // auth
 import CoverSettingsIcons from './CoverSettingsIcons';
 import CoverTitles from './CoverTitles';
@@ -22,9 +22,8 @@ Cover.propTypes = {
   avatar: PropTypes.bool,
   setting: PropTypes.bool,
   generalSettings: PropTypes.bool,
-  onExportCSV: PropTypes.func,
-  onExportingContacts: PropTypes.bool,
-  onExportingSites: PropTypes.bool,
+  customerSites: PropTypes.bool,
+  customerContacts: PropTypes.bool,
 };
 export function Cover({
   name,
@@ -32,15 +31,22 @@ export function Cover({
   avatar,
   setting,
   generalSettings,
-  onExportCSV,
-  onExportingContacts,
-  onExportingSites
+  customerSites,
+  customerContacts
 }) {
   const navigate = useNavigate();
 
   const handleSettingsNavigate = () => {
     navigate(PATH_SETTING.app);
   };
+
+  const linkCustomerSites = () => {
+    navigate(PATH_CUSTOMER.sites)
+  }
+
+  const linkCustomerContacts = () => {
+    navigate(PATH_CUSTOMER.contacts)
+  }
   
   const isMobile = useResponsive('down', 'sm');
   const { isAllAccessAllowed } = useAuthContext()
@@ -52,10 +58,10 @@ export function Cover({
         <CoverTitles title={avatar && isMobile ? '' : name} />
         <CoverSettingsIcons setting={setting} handleSettingsNavigate={handleSettingsNavigate} generalSettings={generalSettings} />
       </StyledInfo>
-      {onExportCSV && isAllAccessAllowed &&
+      {isAllAccessAllowed &&
         <Grid container justifyContent='flex-end' columnGap={2} sx={{ position: 'absolute', bottom: 10, right: 10}}>
-          <LoadingButton size='small' loading={onExportingSites} variant='outlined' startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />} onClick={()=> onExportCSV(false, true)}>Export All Sites</LoadingButton>
-          <LoadingButton size='small' loading={onExportingContacts} variant='outlined' startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />} onClick={()=> onExportCSV(true, false)}>Export All Contacts</LoadingButton>
+          {customerSites && <Button variant='contained' onClick={linkCustomerSites}>Sites</Button>}
+          {customerContacts && <Button variant='contained' onClick={linkCustomerContacts}>Conatcts</Button>}
         </Grid>
       }
     </StyledRoot>
