@@ -1,7 +1,8 @@
 import { useMemo, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 // @mui
-import { Card, Grid } from '@mui/material';
+import { Card, Chip, Grid } from '@mui/material';
 // redux
 import { deleteMachineServiceRecord, 
   setAllFlagsFalse, 
@@ -12,6 +13,7 @@ import { deleteMachineServiceRecord,
   getMachineServiceHistoryRecords, 
   setSendEmailDialog,
   setPDFViewerDialog} from '../../../redux/slices/products/machineServiceRecord';
+import { setCustomerTab } from '../../../redux/slices/customer/customer';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { FORMLABELS } from '../../../constants/default-constants';
@@ -26,6 +28,7 @@ import HistoryIcon from '../../../components/Icons/HistoryIcon';
 import CurrentIcon from '../../../components/Icons/CurrentIcon';
 import SendEmailDialog from '../../../components/Dialog/SendEmailDialog';
 import PDFViewerDialog from '../../../components/Dialog/PDFViewerDialog';
+import { PATH_CUSTOMER } from '../../../routes/paths';
 
 function MachineServiceParamViewForm() {
 
@@ -119,6 +122,19 @@ function MachineServiceParamViewForm() {
 
   const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceRecordConfigRecordType}_${defaultValues?.versionNo}.pdf`
 
+  const navigate = useNavigate();
+
+  const handleContactView = async (contactId) => {
+    await navigate(PATH_CUSTOMER.view(machine?.customer?._id))
+    await dispatch(setCustomerTab('contacts'));
+  };
+
+  const operators = defaultValues?.operators?.map((operator, index) => (  
+    <Chip 
+        onClick={() => handleContactView(operator?._id)} 
+        label={`${operator?.firstName || ''} ${operator?.lastName || ''}`} 
+      />
+  ));
 
   
   
@@ -179,7 +195,9 @@ function MachineServiceParamViewForm() {
           {machineServiceRecord?.serviceRecordConfig?.enableSuggestedSpares && <ViewFormNoteField sm={12} heading="Suggested Spares" param={defaultValues.suggestedSpares} />}
           <ViewFormNoteField sm={12} heading="Internal Note" param={defaultValues.internalNote} />
           
-          <ViewFormField isLoading={isLoading} sm={12} heading="Operators" arrayParam={defaultValues?.operators?.map((operator) => ({ name: `${operator?.firstName || ''} ${operator?.lastName || ''}`}))} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Operators" chipDialogArrayParam={operators} />
+            
+          {/* <ViewFormField isLoading={isLoading} sm={12} heading="Operators" arrayParam={defaultValues?.operators?.map((operator) => ({ name: `${operator?.firstName || ''} ${operator?.lastName || ''}`}))} /> */}
           <ViewFormNoteField sm={12} heading="Operator Notes" param={defaultValues.operatorNotes} />
           
           <ViewFormAudit defaultValues={defaultValues} />
