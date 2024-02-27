@@ -357,10 +357,10 @@ function ViewFormEditDeleteButtons({
             icon={ICONS.EXCLUDE_REPORTING.icon} />
           }
 
-          {machineSupportDate &&
+          {machineSupportDate !==undefined  &&
             <IconTooltip
-              title={machineSupport?.status?`Support valid till ${fDate(machineSupportDate)}`:`Support ended ${fDate(machineSupportDate)}`}
-              color={machineSupport?.status > 30 && ICONS.SUPPORT_VALLID.color || machineSupport?.status < 30 && machineSupport?.status > 0 && ICONS.SUPPORT_WARNING.color || machineSupport?.status < 1 && ICONS.SUPPORT_EXPIRED.color}
+              title={ !Number.isNaN(machineSupport?.status) && ( machineSupport?.status > 0 ? `Support valid till ${fDate(machineSupportDate)}` : `Support ended ${fDate(machineSupportDate)}` ) || 'Support not available!' }
+              color={machineSupport?.status > 30 && ICONS.SUPPORT_VALLID.color || machineSupport?.status < 30 && machineSupport?.status > 0 && ICONS.SUPPORT_WARNING.color || machineSupport?.status < 1 && ICONS.SUPPORT_EXPIRED.color || ICONS.SUPPORT_EXPIRED.color}
               icon={machineSupport?.status?ICONS.SUPPORT_VALLID.icon:ICONS.SUPPORT_EXPIRED.icon}
               />
           }
