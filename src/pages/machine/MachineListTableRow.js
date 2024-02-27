@@ -43,6 +43,8 @@ export default function MachineListTableRow({
     shippingDate,
     status,
     isActive,
+    transferredDate,
+    transferredMachine
     // createdAt,
   } = row;
  
@@ -65,7 +67,17 @@ export default function MachineListTableRow({
       }
       {  useScreenSize('lg') && <TableCell >{fDate(installationDate)}</TableCell>}
       {  useScreenSize('lg') && <TableCell >{fDate(shippingDate)}</TableCell>}
-      {  useScreenSize('sm') && <TableCell sx={{color: status?.slug === 'transferred' ? 'red' : 'inherit' }} >{status?.name || ''}</TableCell>}
+      {  useScreenSize('sm') && 
+        <TableCell>
+          <span style={{color:row?.status?.slug==='transferred'?'red':''}}>{status?.name || ''}</span>
+          {row?.status?.slug ==='transferred' &&
+            <>
+              {` to `} <span style={{fontWeight:'bold'}}>{transferredMachine?.customer?.name || ''}</span>
+              {` on `} {fDate(transferredDate)}
+            </>
+          }
+        </TableCell>
+      }
       <TableCell align="center">  <Switch checked={isActive} disabled size="small"/>  </TableCell>
 
     </TableRow>
