@@ -1,21 +1,71 @@
+import { memo, useState, useEffect } from 'react'
 import PropTypes from 'prop-types';
-import { Stack, Box, TextField, Autocomplete, Checkbox, FormControlLabel, FormGroup } from '@mui/material';
+import { Stack, Box, TextField, Autocomplete, Checkbox, FormControlLabel, FormGroup, Typography, Grid } from '@mui/material';
 import { statusTypes } from '../util/index'
 
 const CommentsInput = ({ index, childIndex, childRow, checkParamList,
+                    isChecked,
+                    callCheckedValue,
                     handleChangeCheckItemListValue, 
                     handleChangeCheckItemListDate,
                     handleChangeCheckItemListStatus,
                     handleChangeCheckItemListComment,
                     handleChangeCheckItemListChecked,
                     handleChangeCheckItemListCheckBoxValue
-                }) => (
-    <>
+                }) =>  {
+
+    const [ isValueAvailable, setIsValueAvailable ] = useState(false);
+
+useEffect(()=>{
+    if((childRow?.inputType === 'Status' || childRow?.inputType === 'Date' || childRow?.inputType === 'Boolean' )
+        && checkParamList[index]?.checkItems[childIndex]?.checkItemValue ){
+            setIsValueAvailable(true);
+            if(!checkParamList[index]?.checkItems[childIndex]?.checked){
+                callCheckedValue()
+            }
+    }else if (( childRow?.inputType === 'Status' || childRow?.inputType === 'Date' || childRow?.inputType === 'Boolean' ) && 
+                checkParamList[index]?.checkItems[childIndex]?.checkItemValue !== undefined && 
+                !checkParamList[index]?.checkItems[childIndex]?.checkItemValue ){
+                    setIsValueAvailable(false);
+                    if(checkParamList[index]?.checkItems[childIndex]?.checked){
+                        callCheckedValue()
+                    }
+    } else if(( childRow?.inputType === 'Short Text' || childRow?.inputType === 'Long Text' || childRow?.inputType === 'Number' ) && 
+                checkParamList[index]?.checkItems[childIndex]?.checkItemValue?.trim() ){
+                    setIsValueAvailable(true);
+                    if(!checkParamList[index]?.checkItems[childIndex]?.checked){
+                        callCheckedValue()
+                    }
+    } else if(( childRow?.inputType === 'Short Text' || childRow?.inputType === 'Long Text' || childRow?.inputType === 'Number' ) && 
+                checkParamList[index]?.checkItems[childIndex]?.checkItemValue !== undefined && 
+                !checkParamList[index]?.checkItems[childIndex]?.checkItemValue?.trim() ){
+                    setIsValueAvailable(false);
+                    if(checkParamList[index]?.checkItems[childIndex]?.checked){
+                        callCheckedValue()
+                    }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+},[ checkParamList[index]?.checkItems[childIndex]?.checkItemValue ])
+
+    return (<>
     <Stack spacing={1} >
+                <Grid display="flex" alignItems="center">
+                    <Typography variant='body2' size='small'  >
+                        <b>{`${index+1}.${childIndex+1}. `}</b>{`${childRow.name}`}
+                    </Typography>
+                    <Checkbox 
+                        name={`${childRow?.name}_${childIndex}_${index}_${childIndex}`} 
+                        checked={checkParamList[index]?.checkItems[childIndex]?.checked || false } 
+                        onChange={()=>handleChangeCheckItemListChecked(index, childIndex )} 
+                    /> 
+                    {!checkParamList[index]?.checkItems[childIndex]?.checked && isValueAvailable &&
+                        <Typography variant='body2' size='small' sx={{ color: 'red'}}  >Please tick this box to save values</Typography>
+                    }
+                </Grid>
             {childRow?.inputType === 'Short Text' && <TextField 
                 // name={`${index}${childIndex}`} 
                 type='text'
-                disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
+                // disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
                 label={childRow?.inputType} 
                 name={`${childRow?.name}_${childIndex}_${index}`} 
                 onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e.target.value)}
@@ -28,7 +78,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
 
             { childRow?.inputType === 'Long Text' &&<TextField 
                 type="text"
-                disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
+                // disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
                 label={childRow?.inputType} 
                 name={`${childRow?.name}_${childIndex}_${index}`} 
                 onChange={(e) => handleChangeCheckItemListValue(index, childIndex, e.target.value)}
@@ -45,7 +95,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
             <FormGroup >
                 <FormControlLabel control={
                 <Checkbox 
-                    disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
+                    // disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
                     checked={checkParamList[index]?.checkItems[childIndex]?.checkItemValue === 'true' || checkParamList[index]?.checkItems[childIndex]?.checkItemValue === true } 
                     onChange={()=>handleChangeCheckItemListCheckBoxValue(index, childIndex )} 
                     />
@@ -69,7 +119,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                         name={childRow?.name} 
                         type="date"
                         format="dd/mm/yyyy"
-                        disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
+                        // disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
                         value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue || null}
                         onChange={(e) =>  handleChangeCheckItemListDate(index, childIndex, e.target.value) } 
                         size="small" 
@@ -83,7 +133,7 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                         label={`${childRow?.unitType ? childRow?.unitType : 'Enter Value'}`}
                         name={childRow?.name} 
                         type="number"
-                        disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
+                        // disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
                         value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue}
                         onChange={(e) => {
                             const inputValue = e.target.value;
@@ -105,33 +155,41 @@ const CommentsInput = ({ index, childIndex, childRow, checkParamList,
                     />
                     }
 
-
                     { childRow?.inputType === 'Status' && <Autocomplete
-                        disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
+                        // disabled={!checkParamList[index]?.checkItems[childIndex]?.checked}
                         options={statusTypes}
                         value={checkParamList[index]?.checkItems[childIndex]?.checkItemValue || null }
                         isOptionEqualToValue={(option, value) => option?.name === value?.name}
                         getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                        onChange={(event, newInputValue) =>  handleChangeCheckItemListStatus(index, childIndex, newInputValue) }
+                        onChange={ async (event, newInputValue) => { 
+                            if(newInputValue){
+                                await handleChangeCheckItemListStatus(index, childIndex, newInputValue); 
+                                // await changeFieldStatus();  
+                            }else{
+                                handleChangeCheckItemListStatus(index, childIndex, null ); 
+                            }
+                            }}
                         renderInput={(params) => <TextField {...params} label="Status" size='small' />}
                     /> }
             </Box>
     </Stack>
     </>
-    );
+    )};
 
 CommentsInput.propTypes = {
     index: PropTypes.number,
     childIndex: PropTypes.number,
     checkParamList: PropTypes.array,
     childRow: PropTypes.object,
+    callCheckedValue: PropTypes.func,
+    isChecked: PropTypes.bool,
     handleChangeCheckItemListDate: PropTypes.func,
     handleChangeCheckItemListValue: PropTypes.func,
     handleChangeCheckItemListStatus: PropTypes.func,
     handleChangeCheckItemListComment: PropTypes.func,
     handleChangeCheckItemListChecked: PropTypes.func,
     handleChangeCheckItemListCheckBoxValue: PropTypes.func,
-  };
+};
 
 
-export default CommentsInput
+export default memo(CommentsInput)
