@@ -12,9 +12,9 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
   handleChangeCheckItemListStatus,
   handleChangeCheckItemListComment,
   handleChangeCheckItemListChecked,
-  handleChangeCheckItemListCheckBoxValue}) =>
-  (
-    <>
+  handleChangeCheckItemListCheckBoxValue }) => 
+
+    (<>
         <Typography key={index} variant='h5'>
 
             <b>{`${index+1}). `}</b>{typeof row?.ListTitle === 'string' && row?.ListTitle || ''}{' ( Items: '}<b>{`${row?.checkItems?.length}`}</b>{' ) '}
@@ -26,19 +26,26 @@ const CollapsibleCheckedItemInputRow = ({ row, index, checkItemLists, setValue,
                       <StyledTableRow key={childRow._id}  >
                         <Grid display='flex' flexDirection='column' sx={{ m:  1, }} key={childRow._id} >
                           <Grid >
-                            <Typography variant='body2' size='small'  >
-                              <b>{`${index+1}.${childIndex+1}. `}</b>{`${childRow.name}`}
-                              <Checkbox 
-                                name={`${childRow?.name}_${childIndex}_${index}_${childIndex}`} 
-                                checked={checkItemLists[index]?.checkItems[childIndex]?.checked || false} 
-                                onChange={()=>handleChangeCheckItemListChecked(index, childIndex )} 
-                              />
-                            </Typography>
+                            {/* <Grid display="flex" alignItems="center">
+                                <Typography variant='body2' size='small'  >
+                                  <b>{`${index+1}.${childIndex+1}. `}</b>{`${childRow.name}`}
+                                </Typography>
+                                <Checkbox 
+                                  name={`${childRow?.name}_${childIndex}_${index}_${childIndex}`} 
+                                  checked={checkItemLists[index]?.checkItems[childIndex]?.checked || false } 
+                                  onChange={()=>handleChangeCheckItemListChecked(index, childIndex )} 
+                                /> 
+                                {!checkItemLists[index]?.checkItems[childIndex]?.checked && isValueAvailable && 
+                                  <Typography variant='body2' size='small' sx={{ color: 'red'}}  >Please tick this box to save values</Typography>
+                                }
+                            </Grid> */}
                             <Grid  >
                               <CommentsInput index={index} childIndex={childIndex} 
                                 key={`${index}${childIndex}`}
                                 childRow={childRow}
                                 checkParamList={checkItemLists} 
+                                isChecked={checkItemLists[index]?.checkItems[childIndex]?.checked}
+                                callCheckedValue={()=>handleChangeCheckItemListChecked(index, childIndex )}
                                 handleChangeCheckItemListDate={handleChangeCheckItemListDate}
                                 handleChangeCheckItemListValue={handleChangeCheckItemListValue}
                                 handleChangeCheckItemListStatus={handleChangeCheckItemListStatus}
