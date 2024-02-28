@@ -33,6 +33,7 @@ import { FORMLABELS } from '../../constants/default-constants';
 import CustomerSiteListTableRow from './CustomerSiteListTableRow';
 import CustomerSiteListTableToolbar from './CustomerSiteListTableToolbar';
 import { getSites, resetSites, ChangePage, ChangeRowsPerPage, setFilterBy } from '../../redux/slices/customer/site';
+import { setCustomerTab } from '../../redux/slices/customer/customer';
 import { Cover } from '../../components/Defaults/Cover';
 import TableCard from '../../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
@@ -42,11 +43,13 @@ import { exportCSV } from '../../utils/exportCSV';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
+  { id: 'customer', label: 'Customer', align: 'left' },
   { id: 'name', label: 'Site', align: 'left' },
-  { id: 'email', visibility: 'xs2', label: 'Email', align: 'left' },
-  { id: 'website', visibility: 'xs2', label: 'Website', align: 'left' },
-  { id: 'phoneNumbers[0]', visibility: 'xs2', label: 'Phone', align: 'left' },
   { id: 'address', visibility: 'sm', label: 'Address', align: 'left' },
+  { id: 'phoneNumbers[0]', visibility: 'xs2', label: 'Phone', align: 'left' },
+  { id: 'email', visibility: 'xs2', label: 'Email', align: 'left' },
+  { id: 'technical.contact', visibility: 'xs2', label: 'Technical Contact', align: 'left' },
+  { id: 'billing.contact', visibility: 'xs2', label: 'Billing Contact', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt',visibility: 'sm', label: 'Created At', align: 'right' },
 ];
@@ -130,10 +133,21 @@ export default function CustomerSiteList() {
     navigate(PATH_CUSTOMER.view(id));
   };
 
+  const openInNewPage = (id) => {
+    dispatch(setCustomerTab('info'));
+    const url = PATH_CUSTOMER.view(id);
+    window.open(url, '_blank');
+  };
+
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
   }; 
+
+  const handleBackLink = () => {
+    console.log('back')
+    navigate(PATH_CUSTOMER.list);
+  };
 
   const [exportingCSV, setExportingCSV] = useState(false);
   const onExportCSV = async() => {
@@ -152,7 +166,7 @@ export default function CustomerSiteList() {
   return (
     <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name='Customer Sites'/>
+          <Cover name='Customer Sites' backLink customerContacts/>
         </StyledCardContainer>
       <TableCard >
       <CustomerSiteListTableToolbar
@@ -191,7 +205,8 @@ export default function CustomerSiteList() {
                         row={row}
                         selected={selected.includes(row._id)}
                         onSelectRow={() => onSelectRow(row._id)}
-                        onViewRow={() => handleViewRow(row._id)}
+                        onViewRow={() => handleViewRow(row?.customer?._id)}
+                        openInNewPage={() => openInNewPage(row?.customer?._id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
                     ) : (
