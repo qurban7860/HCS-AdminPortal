@@ -87,7 +87,7 @@ export default function CustomerContactList() {
   }
 
   useEffect(() => {
-    dispatch(getContacts('640f20882b6cfb6f0a58eb87'));
+    dispatch(getContacts());
     return ()=> { dispatch( resetContacts() ) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
@@ -232,12 +232,12 @@ function applyFilter({ inputData, comparator, filterName }) {
   if (filterName) {
     inputData = inputData.filter(
       (contact) =>
-      `${contact?.firstName} ${contact?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        contact?.title?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        contact?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        `${contact?.firstName} ${contact?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // contact?.title?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         contact?.phone?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         contact?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         contact?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // `+${site?.phoneNumbers[0]?.countryCode} ${site?.phoneNumbers[0]?.number}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(contact?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }

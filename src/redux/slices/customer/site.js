@@ -324,9 +324,7 @@ export function getSites(customerID) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      let response = null;
-      if(customerID){
-        response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites` , 
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites` , 
         {
           params: {
             isArchived: false,
@@ -338,7 +336,6 @@ export function getSites(customerID) {
         );
         dispatch(slice.actions.getSitesSuccess(response.data));
         dispatch(slice.actions.setResponseMessage('Sites loaded successfully'));
-      }
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));

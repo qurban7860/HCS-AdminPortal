@@ -89,7 +89,7 @@ export default function CustomerSiteList() {
   }
 
   useEffect(() => {
-    dispatch(getSites('640f20882b6cfb6f0a58eb87'));
+    dispatch(getSites());
     return ()=> { dispatch( resetSites() ) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
@@ -238,9 +238,12 @@ function applyFilter({ inputData, comparator, filterName }) {
   if (filterName) {
     inputData = inputData.filter(
       (site) =>
+        site?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         site?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         site?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         site?.website?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        `${site?.primaryTechnicalContact?.firstName} ${site?.primaryTechnicalContact?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        `${site?.primaryBillingContact?.firstName} ${site?.primaryBillingContact?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         `${site?.address?.city}, ${site?.address?.suburb}, ${site?.address?.city}, ${site?.address?.region}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         `+${site?.phoneNumbers[0]?.countryCode} ${site?.phoneNumbers[0]?.number}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(site?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0

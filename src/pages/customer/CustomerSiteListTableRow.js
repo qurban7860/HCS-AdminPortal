@@ -40,7 +40,6 @@ export default function CustomerSiteListTableRow({
 }) {
   const { customer, name, email, website, phoneNumbers, address, lat, long,
      primaryBillingContact, primaryTechnicalContact, isActive, createdAt } = row;
-  const {street, suburb, city, region, postcode } = address;
   const phone = phoneNumbers[0];
   const fax = phoneNumbers[0];
   const smScreen = useScreenSize('sm')
@@ -52,10 +51,10 @@ export default function CustomerSiteListTableRow({
       <TableCell>{name}</TableCell>
       {smScreen && mdScreen &&
         <TableCell>
-            {street?`${street}, `:''}
-            {suburb?`${suburb}, `:''}
-            {city?`${city}, `:''}
-            {region?`${region}, `:''}
+            {address?.street?`${address?.street}, `:''}
+            {address?.suburb?`${address?.suburb}, `:''}
+            {address?.city?`${address?.city}, `:''}
+            {address?.region?`${address?.region}, `:''}
 
             {lat && long && 
               <StyledTooltip
