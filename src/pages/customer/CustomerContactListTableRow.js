@@ -22,6 +22,8 @@ CustomerContactListTableRow.propTypes = {
   onEditRow: PropTypes.func,
   onViewRow: PropTypes.func,
   openInNewPage: PropTypes.func,
+  handleContactView: PropTypes.func,
+  handleContactViewInNewPage: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
 };
@@ -34,15 +36,21 @@ export default function CustomerContactListTableRow({
   onDeleteRow,
   onEditRow,
   onViewRow,
-  openInNewPage
+  openInNewPage,
+  handleContactView,
+  handleContactViewInNewPage,
 }) {
-  const { customer, firstName, lastName, title, phone, email, address, isActive, createdAt } = row;
+  const { _id, customer, firstName, lastName, title, phone, email, address, isActive, createdAt } = row;
+
   const smScreen = useScreenSize('sm')
   const mdScreen = useScreenSize('md')
+
+
   return (
     <StyledTableRow hover selected={selected}>
       <LinkTableCellWithIconTargetBlank onViewRow={onViewRow} onClick={openInNewPage} param={customer?.name || ''} />
-      <TableCell>{firstName} {lastName}</TableCell>
+      <LinkTableCellWithIconTargetBlank onViewRow={() => handleContactView(customer?._id, _id) } onClick={ () => handleContactViewInNewPage(customer?._id, _id)} param={`${firstName || '' } ${lastName || '' }`} />
+      {/* <TableCell>{firstName} {lastName}</TableCell> */}
       {smScreen && <TableCell>{phone}</TableCell>}
       <TableCell>{email}</TableCell>
       {smScreen && mdScreen && <TableCell>{address?.country}</TableCell>}

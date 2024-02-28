@@ -9,6 +9,8 @@ const initialState = {
   siteAddFormVisibility: false,
   siteEditFormVisibility: false,
   responseMessage: null,
+  activeCardIndex: '',
+  isExpanded: false,
   success: false,
   isLoading: false,
   error: null,
@@ -46,6 +48,17 @@ const slice = createSlice({
     setSiteDialog(state, action){
       state.siteDialog = action.payload;
     },
+
+    // ACTIVE CARD INDEX
+    setCardActiveIndex(state, action){
+      state.activeCardIndex = action.payload;
+    },
+
+    // CARD IS EXPENDED
+    setIsExpanded(state, action){
+      state.isExpanded = action.payload;
+    },
+
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -139,6 +152,8 @@ export const {
   setSiteFormVisibility,
   setSiteEditFormVisibility,
   setResponseMessage,
+  setIsExpanded,
+  setCardActiveIndex,
   resetSite,
   resetSites,
   resetActiveSites,

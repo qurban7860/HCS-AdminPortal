@@ -32,7 +32,7 @@ import { FORMLABELS } from '../../constants/default-constants';
 // sections
 import CustomerSiteListTableRow from './CustomerSiteListTableRow';
 import CustomerSiteListTableToolbar from './CustomerSiteListTableToolbar';
-import { getSites, resetSites, ChangePage, ChangeRowsPerPage, setFilterBy } from '../../redux/slices/customer/site';
+import { getSites, getSite, resetSites, ChangePage, ChangeRowsPerPage, setFilterBy, setIsExpanded, setCardActiveIndex  } from '../../redux/slices/customer/site';
 import { setCustomerTab } from '../../redux/slices/customer/customer';
 import { Cover } from '../../components/Defaults/Cover';
 import TableCard from '../../components/ListTableTools/TableCard';
@@ -163,6 +163,22 @@ export default function CustomerSiteList() {
     });
   };
 
+  const handleSiteView = async (customerId, siteId ) => {
+    await dispatch(setCustomerTab('sites'));
+    await dispatch(setCardActiveIndex(siteId));
+    await dispatch(setIsExpanded(true));
+    await dispatch(getSite(customerId, siteId));
+    await navigate(PATH_CUSTOMER.view(customerId))
+  };
+
+  const handleSiteViewInNewPage = async (customerId, siteId ) => {
+    await openInNewPage(customerId);
+    await dispatch(setCustomerTab('sites'));
+    await dispatch(setCardActiveIndex(siteId));
+    await dispatch(setIsExpanded(true));
+    await dispatch(getSite(customerId, siteId));
+  };
+
   return (
     <Container maxWidth={false}>
         <StyledCardContainer>
@@ -207,6 +223,8 @@ export default function CustomerSiteList() {
                         onSelectRow={() => onSelectRow(row._id)}
                         onViewRow={() => handleViewRow(row?.customer?._id)}
                         openInNewPage={() => openInNewPage(row?.customer?._id)}
+                        handleSiteView= { handleSiteView }
+                        handleSiteViewInNewPage= { handleSiteViewInNewPage }
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
                     ) : (

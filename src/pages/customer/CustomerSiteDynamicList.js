@@ -20,7 +20,7 @@ import BreadcrumbsProvider from '../../components/Breadcrumbs/BreadcrumbsProvide
 import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
 import GoogleMaps from '../../assets/GoogleMaps';
 import useResponsive from '../../hooks/useResponsive';
-import { getSites, resetSites, getSite, setSiteFormVisibility, resetSiteFormsVisiblity } from '../../redux/slices/customer/site';
+import { getSites, resetSites, getSite, setSiteFormVisibility, resetSiteFormsVisiblity, setIsExpanded, setCardActiveIndex } from '../../redux/slices/customer/site';
 import NothingProvided from '../../components/Defaults/NothingProvided';
 import SiteAddForm from './site/SiteAddForm';
 import SiteEditForm from './site/SiteEditForm';
@@ -42,15 +42,15 @@ export default function CustomerSiteDynamicList(defaultValues = { lat: 0, long: 
   const { site } = useSelector((state) => state.site);
   const { isAllAccessAllowed } = useAuthContext()
   const { enqueueSnackbar } = useSnackbar();
-  const [ activeCardIndex, setCardActiveIndex ] = useState(null);
-  const [ isExpanded, setIsExpanded ] = useState(false);
+  // const [ activeCardIndex, setCardActiveIndex ] = useState(null);
+  // const [ isExpanded, setIsExpanded ] = useState(false);
   const [ filterName, setFilterName ] = useState('');
   const [ filterStatus, setFilterStatus ] = useState([]);
   const [ tableData, setTableData ] = useState([]);
   const [ googleMapsVisibility, setGoogleMapsVisibility ] = useState(false);
   const isMobile = useResponsive('down', 'sm');
   const dispatch = useDispatch();
-  const { sites, error, responseMessage, siteEditFormVisibility, siteAddFormVisibility } = useSelector((state) => state.site);
+  const { sites, isExpanded, activeCardIndex, error, responseMessage, siteEditFormVisibility, siteAddFormVisibility } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
   // for filtering sites
   const isFiltered = filterName !== '' || !!filterStatus.length;
@@ -61,12 +61,12 @@ export default function CustomerSiteDynamicList(defaultValues = { lat: 0, long: 
       enqueueSnackbar(Snacks.SITE_CLOSE_CONFIRM, {
         variant: 'warning',
       });
-      setCardActiveIndex(null);
-      setIsExpanded(false);
+      dispatch(setCardActiveIndex(null));
+      dispatch(setIsExpanded(false));
     } else {
       dispatch(setSiteFormVisibility(true));
-      setCardActiveIndex(null);
-      setIsExpanded(false);
+      dispatch(setCardActiveIndex(null));
+      dispatch(setIsExpanded(false));
     }
   };
 
@@ -110,10 +110,10 @@ export default function CustomerSiteDynamicList(defaultValues = { lat: 0, long: 
   };
 
   const handleActiveCard = (index) => {
-    setCardActiveIndex(index);
+    dispatch(setCardActiveIndex(index));
   };
   const handleExpand = (index) => {
-    setIsExpanded(true);
+    dispatch(setIsExpanded(true));
   };
 
   useEffect( () => {
@@ -260,7 +260,6 @@ export default function CustomerSiteDynamicList(defaultValues = { lat: 0, long: 
                 handleMap={() => {
                   handleGoogleMapsVisibility(true);
                 }}
-                setIsExpanded={setIsExpanded}
               />
               <Grid item lg={12}>
                 {!isMobile && (
