@@ -4,14 +4,16 @@ import {
   Switch,
   TableCell,
   Chip,
+  Link,
 } from '@mui/material';
 // utils
 import { fDate } from '../../utils/formatTime';
 // components
-import LinkTableCellWithIcon from '../../components/ListTableTools/LinkTableCellWithIcon';
+import LinkTableCellWithIconTargetBlank from '../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import { useScreenSize } from '../../hooks/useResponsive';
-import { StyledTableRow } from '../../theme/styles/default-styles'
+import { StyledTableRow, StyledTooltip } from '../../theme/styles/default-styles'
+import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -21,6 +23,7 @@ CustomerSiteListTableRow.propTypes = {
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
   onViewRow: PropTypes.func,
+  openInNewPage:PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
 };
@@ -33,8 +36,10 @@ export default function CustomerSiteListTableRow({
   onDeleteRow,
   onEditRow,
   onViewRow,
+  openInNewPage
 }) {
-  const { name, email, website, phoneNumbers, address, isActive, createdAt } = row;
+  const { customer, name, email, website, phoneNumbers, address, lat, long,
+     primaryBillingContact, primaryTechnicalContact, isActive, createdAt } = row;
   const {street, suburb, city, region, postcode } = address;
   const phone = phoneNumbers[0];
   const fax = phoneNumbers[0];
@@ -43,18 +48,33 @@ export default function CustomerSiteListTableRow({
   
   return (
     <StyledTableRow hover selected={selected}>
+      <LinkTableCellWithIconTargetBlank onViewRow={onViewRow} onClick={openInNewPage} param={customer?.name || ''} />
       <TableCell>{name}</TableCell>
-      {smScreen && <TableCell>{email}</TableCell>}
-      {smScreen && <TableCell>{website}</TableCell>}
-      {smScreen && <TableCell>{phone?.countryCode?`+${phone?.countryCode} `:''}{phone?.number}</TableCell>}
       {smScreen && mdScreen &&
         <TableCell>
             {street?`${street}, `:''}
             {suburb?`${suburb}, `:''}
             {city?`${city}, `:''}
             {region?`${region}, `:''}
+
+            {lat && long && 
+              <StyledTooltip
+                title={`${lat}, ${long}`}
+                placement="top"
+                disableFocusListener
+                tooltipcolor="#103996" 
+                color="#103996"
+                sx={{maxWidth:'170px'}}
+              >
+                  <Iconify icon="heroicons:map-pin" sx={{position:'relative', bottom:'-5px', cursor:'pointer'}} />
+              </StyledTooltip>
+            }
         </TableCell>
       }
+      {smScreen && <TableCell>{phone?.countryCode?`+${phone?.countryCode} `:''}{phone?.number}</TableCell>}
+      {smScreen && <TableCell>{email}</TableCell>}
+      {smScreen && <TableCell>{primaryTechnicalContact?.firstName || ''} {primaryTechnicalContact?.lastName || ''}</TableCell>}
+      {smScreen && <TableCell>{primaryBillingContact?.firstName || ''} {primaryBillingContact?.lastName || ''}</TableCell>}
       <TableCell align='center'><Switch checked={isActive} disabled size="small" /></TableCell>
       {mdScreen && <TableCell align='right'>{fDate(createdAt)}</TableCell>}
     </StyledTableRow>

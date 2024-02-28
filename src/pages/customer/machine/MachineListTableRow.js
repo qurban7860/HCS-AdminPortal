@@ -7,9 +7,10 @@ import {
 // components
 import LinkTableCellButtons from '../../../components/ListTableTools/LinkTableCellButtons';
 import LinkDialogTableCellTargetBlank from '../../../components/ListTableTools/LinkDialogTableCellTargetBlank';
-import { StyledTableRow } from '../../../theme/styles/default-styles'
+import { StyledTableRow, StyledTooltip } from '../../../theme/styles/default-styles'
 import { useAuthContext } from '../../../auth/useAuthContext';
 import { fDate } from '../../../utils/formatTime';
+import Iconify from '../../../components/iconify';
 
 MachineListTableRow.propTypes = {
   row: PropTypes.object,
@@ -51,12 +52,18 @@ export default function MachineListTableRow({
         <TableCell>{name || ''}</TableCell>
         <TableCell>{machineModel?.name || ''}</TableCell>
         <TableCell>
-          <span style={{color:row?.status?.slug==='transferred'?'red':''}}>{status?.name || ''}</span>
+          <span style={{color:row?.status?.slug==='transferred'?'red':''}}>{status?.name || ''} </span>
           {row?.status?.slug ==='transferred' &&
-            <>
-              {` to `} <span style={{fontWeight:'bold'}}>{transferredMachine?.customer?.name || ''}</span>
-              {` on `} {fDate(transferredDate)}
-            </>
+            <StyledTooltip
+              title={`${status?.name || ''} to ${transferredMachine?.customer?.name || ''} on ${fDate(transferredDate)}`}
+              placement="top"
+              disableFocusListener
+              tooltipcolor="#FF0000" 
+              color="#FF0000"
+              sx={{maxWidth:'200px'}}
+            >
+              <Iconify icon="mdi:info" sx={{position:'relative', bottom:'-5px'}} />
+            </StyledTooltip>
           }
         </TableCell>
         <TableCell>

@@ -33,6 +33,7 @@ import { FORMLABELS } from '../../constants/default-constants';
 import CustomerContactListTableRow from './CustomerContactListTableRow';
 import CustomerContactListTableToolbar from './CustomerContactListTableToolbar';
 import { getContacts, resetContacts, ChangePage, ChangeRowsPerPage, setFilterBy } from '../../redux/slices/customer/contact';
+import { setCustomerTab } from '../../redux/slices/customer/customer';
 import { Cover } from '../../components/Defaults/Cover';
 import TableCard from '../../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
@@ -42,12 +43,12 @@ import { exportCSV } from '../../utils/exportCSV';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'firstName', label: 'Name', align: 'left' },
-  { id: 'title', visibility: 'sm', label: 'Title', align: 'left' },
+  { id: 'customer', label: 'Customer', align: 'left' },
+  { id: 'firstName', label: 'Contact', align: 'left' },
   { id: 'phone', visibility: 'xs2', label: 'Phone', align: 'left' },
   { id: 'email', label: 'Email', align: 'left' },
   { id: 'address.country', visibility: 'sm', label: 'Country', align: 'left' },
-  { id: 'isActive', label: 'Active', align: 'center' },
+  { id: 'isActive', visibility: 'xs2', label: 'Active', align: 'center' },
   { id: 'createdAt',visibility: 'sm', label: 'Created At', align: 'right' },
 ];
 
@@ -127,8 +128,15 @@ export default function CustomerContactList() {
 
 
   const handleViewRow = (id) => {
-    navigate(PATH_CUSTOMER.contact.view(id));
+    navigate(PATH_CUSTOMER.view(id));
   };
+
+  const openInNewPage = (id) => {
+    dispatch(setCustomerTab('info'));
+    const url = PATH_CUSTOMER.view(id);
+    window.open(url, '_blank');
+  };
+
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
@@ -152,7 +160,7 @@ export default function CustomerContactList() {
   return (
     <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name='Customer Contacts'/>
+          <Cover name='Customer Contacts' backLink customerSites/>
         </StyledCardContainer>
       <TableCard >
       <CustomerContactListTableToolbar
@@ -191,7 +199,8 @@ export default function CustomerContactList() {
                         row={row}
                         selected={selected.includes(row._id)}
                         onSelectRow={() => onSelectRow(row._id)}
-                        onViewRow={() => handleViewRow(row._id)}
+                        onViewRow={() => handleViewRow(row?.customer?._id)}
+                        openInNewPage={() => openInNewPage(row?.customer?._id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
                     ) : (

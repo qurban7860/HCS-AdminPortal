@@ -24,6 +24,7 @@ Cover.propTypes = {
   generalSettings: PropTypes.bool,
   customerSites: PropTypes.bool,
   customerContacts: PropTypes.bool,
+  backLink: PropTypes.bool,
 };
 export function Cover({
   name,
@@ -32,7 +33,8 @@ export function Cover({
   setting,
   generalSettings,
   customerSites,
-  customerContacts
+  customerContacts,
+  backLink
 }) {
   const navigate = useNavigate();
 
@@ -47,6 +49,10 @@ export function Cover({
   const linkCustomerContacts = () => {
     navigate(PATH_CUSTOMER.contacts)
   }
+
+  const handleBackLink = () => {
+    window.history.back();
+  }
   
   const isMobile = useResponsive('down', 'sm');
   const { isAllAccessAllowed } = useAuthContext()
@@ -59,9 +65,14 @@ export function Cover({
         <CoverSettingsIcons setting={setting} handleSettingsNavigate={handleSettingsNavigate} generalSettings={generalSettings} />
       </StyledInfo>
       {isAllAccessAllowed &&
-        <Grid container justifyContent='flex-end' columnGap={2} sx={{ position: 'absolute', bottom: 10, right: 10}}>
-          {customerSites && <Button variant='contained' onClick={linkCustomerSites}>Sites</Button>}
-          {customerContacts && <Button variant='contained' onClick={linkCustomerContacts}>Conatcts</Button>}
+        <Grid container justifyContent='space-between' columnGap={2} sx={{ position: 'absolute', bottom:10, px:3}}>
+          <Grid item>
+            {backLink && <Button size='small' startIcon={<Iconify icon="mdi:arrow-left" />} variant='outlined' sx={{float:'left'}} onClick={handleBackLink}>Back</Button>}
+          </Grid>
+          <Grid item>
+            {customerSites && <Button size='small' startIcon={<Iconify icon="mdi:map-legend" />} variant='outlined' onClick={linkCustomerSites}>Sites</Button>}
+            {customerContacts && <Button size='small' startIcon={<Iconify icon="mdi:account-multiple" />} variant='outlined' sx={{ml:2}} onClick={linkCustomerContacts}>Contacts</Button>}
+          </Grid>
         </Grid>
       }
     </StyledRoot>
