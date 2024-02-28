@@ -13,6 +13,7 @@ import { deleteMachineServiceRecord,
   getMachineServiceHistoryRecords, 
   setSendEmailDialog,
   setPDFViewerDialog} from '../../../redux/slices/products/machineServiceRecord';
+import { setCardActiveIndex, setIsExpanded, getContact } from '../../../redux/slices/customer/contact';
 import { setCustomerTab } from '../../../redux/slices/customer/customer';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -127,11 +128,15 @@ function MachineServiceParamViewForm() {
   const handleContactView = async (contactId) => {
     await navigate(PATH_CUSTOMER.view(machine?.customer?._id))
     await dispatch(setCustomerTab('contacts'));
+    await dispatch(setCardActiveIndex(contactId));
+    await dispatch(setIsExpanded(true));
+    await dispatch(getContact(machine?.customer?._id, contactId));
   };
 
   const operators = defaultValues?.operators?.map((operator, index) => (  
     <Chip 
         onClick={() => handleContactView(operator?._id)} 
+        sx={{m:0.2}}
         label={`${operator?.firstName || ''} ${operator?.lastName || ''}`} 
       />
   ));

@@ -11,7 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // import { LoadingButton } from '@mui/lab';
 import { Card, Grid, Stack } from '@mui/material';
 // slice
-import {moveCustomerContact,setContactMoveFormVisibility } from '../../../redux/slices/customer/contact';
+import { setIsExpanded, moveCustomerContact,setContactMoveFormVisibility } from '../../../redux/slices/customer/contact';
 import { getActiveCustomers } from '../../../redux/slices/customer/customer';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -21,11 +21,7 @@ import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 // ----------------------------------------------------------------------
 
-ContactMoveForm.propTypes = {
-  setIsExpanded: PropTypes.func
-};
-
-export default function ContactMoveForm({setIsExpanded}) {
+export default function ContactMoveForm( ) {
   const { contact } = useSelector((state) => state.contact);
   const { activeCustomers } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
@@ -67,7 +63,7 @@ export default function ContactMoveForm({setIsExpanded}) {
     try {
       await dispatch(moveCustomerContact(data));
       enqueueSnackbar('Contact moved successfully!');
-      setIsExpanded(false);
+      dispatch(setIsExpanded(false));
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.error(error);

@@ -10,7 +10,7 @@ import { Box, Card, Grid, Stack } from '@mui/material';
 // schema
 import { ContactSchema } from '../../schemas/customer';
 // slice
-import { addContact, getActiveContacts, setContactFormVisibility, setContactEditFormVisibility, setContactMoveFormVisibility, resetActiveContacts } from '../../../redux/slices/customer/contact';
+import { addContact, setIsExpanded, getActiveContacts, setContactFormVisibility, setContactEditFormVisibility, setContactMoveFormVisibility, resetActiveContacts } from '../../../redux/slices/customer/contact';
 import { getActiveDepartments, resetDepartments } from '../../../redux/slices/Department/department';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -29,11 +29,10 @@ import { AddFormLabel } from '../../../components/DocumentForms/FormLabel';
 ContactAddForm.propTypes = {
   isEdit: PropTypes.bool,
   readOnly: PropTypes.bool,
-  setIsExpanded: PropTypes.func,
   currentContact: PropTypes.object,
 };
 
-export default function ContactAddForm({ isEdit, readOnly, setIsExpanded, currentContact }) {
+export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
   const { formVisibility, activeContacts } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
   const { departments } = useSelector((state) => state.department);
@@ -99,7 +98,7 @@ export default function ContactAddForm({ isEdit, readOnly, setIsExpanded, curren
         data.phone = phone;
       }
       await dispatch(addContact(data));
-      setIsExpanded(true);
+      dispatch(setIsExpanded(true));
       dispatch(setContactEditFormVisibility(false))
       dispatch(setContactMoveFormVisibility(false))
       enqueueSnackbar('Contact added successfully');
