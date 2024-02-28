@@ -651,6 +651,7 @@ export function transferMachine( machineId, params ) {
         installationSite: params?.installationSite?._id || null,
         siteMilestone: params?.siteMilestone || '',
         shippingDate: params?.shippingDate || null,
+        transferredDate: params?.transferredDate || null,
         installationDate: params?.installationDate || null,
         status: params.status?._id || null,
         machineConnections: params?.machineConnection && params?.machineConnection?.length > 0 && params?.machineConnection?.map((m)=> m?._id) || [],
