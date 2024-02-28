@@ -325,7 +325,7 @@ export function getSPContacts( cancelToken ) {
 
 // ----------------------------------------------------------------------
 
-export function getContacts(customerID ) {
+export function getContacts(customerID) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
