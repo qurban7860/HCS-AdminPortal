@@ -8,6 +8,8 @@ import { fDate } from '../../utils/formatTime';
 import LinkTableCellWithIconTargetBlank from '../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
 import { useScreenSize } from '../../hooks/useResponsive';
 import LinkDialogTableCell from '../../components/ListTableTools/LinkDialogTableCell';
+import { StyledTooltip } from '../../theme/styles/default-styles';
+import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -69,12 +71,18 @@ export default function MachineListTableRow({
       {  useScreenSize('lg') && <TableCell >{fDate(shippingDate)}</TableCell>}
       {  useScreenSize('sm') && 
         <TableCell>
-          <span style={{color:row?.status?.slug==='transferred'?'red':''}}>{status?.name || ''}</span>
+          <span style={{color:row?.status?.slug==='transferred'?'red':''}}>{status?.name || ''} </span>
           {row?.status?.slug ==='transferred' &&
-            <>
-              {` to `} <span style={{fontWeight:'bold'}}>{transferredMachine?.customer?.name || ''}</span>
-              {` on `} {fDate(transferredDate)}
-            </>
+            <StyledTooltip
+              title={`${status?.name || ''} to ${transferredMachine?.customer?.name || ''} on ${fDate(transferredDate)}`}
+              placement="top"
+              disableFocusListener
+              tooltipcolor="#FF0000" 
+              color="#FF0000"
+              sx={{maxWidth:'200px'}}
+            >
+              <Iconify icon="mdi:info" sx={{position:'relative', bottom:'-5px'}} />
+            </StyledTooltip>
           }
         </TableCell>
       }

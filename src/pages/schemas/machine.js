@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 import { Snacks } from '../../constants/machine-constants';
 import { allowedExtensions, fileTypesMessage } from '../../constants/document-constants';
 import { NotRequiredValidateFileType } from '../document/documents/Utills/Util'
-import { today, future5yearDate, tomorrow, pastDate } from '../machine/util/index';
+import { future5yearDate, tomorrow, pastDate } from '../machine/util/index';
 import { fDate } from '../../utils/formatTime';
 
 
@@ -76,7 +76,9 @@ export const machineTransferSchema = Yup.object().shape({
   .min(pastDate,`Shipping Date field must be at after than ${fDate(pastDate)}`).nullable().label('Installation Date'),
   supportExpireDate: Yup.date()
   .typeError('Date Should be Valid')
-  .min(today,`Support Expiry Date field must be at after than ${fDate(today)}`).nullable().label('Support Expiry Date'),
+  // .min(today,`Support Expiry Date field must be at after than ${fDate(today)}`)
+  .nullable()
+  .label('Support Expiry Date'),
   status: Yup.object().shape({
     name: Yup.string()
   }).nullable().required("Status Is Required"),

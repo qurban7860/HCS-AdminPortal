@@ -37,6 +37,11 @@ export const CustomerAdd = Loadable(lazy(() => import('../pages/customer/Custome
 export const CustomerEdit = Loadable(lazy(() => import('../pages/customer/CustomerEdit')));
 export const CustomerView = Loadable(lazy(() => import('../pages/customer/CustomerView')));
 
+// CUSTOMER SITES
+export const CustomerSiteList = Loadable(lazy(() => import('../pages/customer/CustomerSiteList')));
+// CUSTOMER CONTACTS
+export const CustomerContactList = Loadable(lazy(() => import('../pages/customer/CustomerContactList')));
+
 // SITE
 export const SiteList = Loadable(lazy(() => import('../pages/customer/site/SiteList')));
 export const SiteAdd = Loadable(lazy(() => import('../pages/customer/site/SiteAdd')));

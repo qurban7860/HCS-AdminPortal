@@ -246,6 +246,7 @@ export default function MachineViewForm() {
               handleTransfer={ () => navigate(PATH_MACHINE.machines.transfer(machine?._id))}
               backLink={() => navigate(PATH_MACHINE.machines.list)}
               machineSupportDate={defaultValues?.supportExpireDate}
+              transferredHistory={machine?.transferredHistory || []}
             />
 
             <FormLabel content={FORMLABELS.KEYDETAILS} />

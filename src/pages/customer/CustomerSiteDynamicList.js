@@ -36,7 +36,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 
 // ----------------------------------------------------------------------
 
-export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
+export default function CustomerSiteDynamicList(defaultValues = { lat: 0, long: 0 }) {
 
   const { order, orderBy } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
   const { site } = useSelector((state) => state.site);

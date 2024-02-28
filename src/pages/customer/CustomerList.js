@@ -199,7 +199,7 @@ export default function CustomerList() {
   return (
     <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name={FORMLABELS.COVER.CUSTOMERS} icon="mdi:users" onExportCSV={onExportCSV} onExportingContacts={exportingContactsCSV} onExportingSites={exportingSitesCSV} />
+          <Cover name={FORMLABELS.COVER.CUSTOMERS} customerSites customerContacts />
         </StyledCardContainer>
       <TableCard >
         <CustomerListTableToolbar

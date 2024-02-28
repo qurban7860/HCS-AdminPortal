@@ -1,401 +1,253 @@
-import { useState, useEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useState, useEffect , useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import debounce from 'lodash/debounce';
 // @mui
 import {
-  Stack,
-  Card,
-  Grid,
+  Table,
   Button,
-  Typography,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
+  TableBody,
+  Container,
+  TableContainer,
+  // Stack,
 } from '@mui/material';
+import axios from 'axios';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_CUSTOMER } from '../../routes/paths';
 // components
+import {
+  useTable,
+  getComparator,
+  TableNoData,
+  TableSkeleton,
+  TableHeadCustom,
+  TablePaginationCustom,
+} from '../../components/table';
+import Scrollbar from '../../components/scrollbar';
+import ConfirmDialog from '../../components/confirm-dialog';
+import { StyledCardContainer } from '../../theme/styles/default-styles';
+import { FORMLABELS } from '../../constants/default-constants';
+
+// sections
+import CustomerSiteListTableRow from './CustomerSiteListTableRow';
+import CustomerSiteListTableToolbar from './CustomerSiteListTableToolbar';
+import { getSites, resetSites, ChangePage, ChangeRowsPerPage, setFilterBy } from '../../redux/slices/customer/site';
+import { setCustomerTab } from '../../redux/slices/customer/customer';
+import { Cover } from '../../components/Defaults/Cover';
+import TableCard from '../../components/ListTableTools/TableCard';
+import { fDate } from '../../utils/formatTime';
 import { useSnackbar } from '../../components/snackbar';
-import { useSettingsContext } from '../../components/settings';
-import { useTable, getComparator, TableNoData } from '../../components/table';
-import Iconify from '../../components/iconify';
-import { getSites, setSiteFormVisibility } from '../../redux/slices/customer/site';
-import SiteAddForm from './site/SiteAddForm';
-import SiteEditForm from './site/SiteEditForm';
-import _mock from '../../_mock';
-import SiteViewForm from './site/SiteViewForm';
+import { exportCSV } from '../../utils/exportCSV';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
+  { id: 'customer', label: 'Customer', align: 'left' },
   { id: 'name', label: 'Site', align: 'left' },
-  { id: 'email', label: 'Email', align: 'left' },
-  { id: 'website', label: 'Website', align: 'left' },
-  { id: 'isverified', label: 'Disabled', align: 'left' },
-  { id: 'created_at', label: 'Created At', align: 'left' },
-  { id: 'action', label: 'Actions', align: 'left' },
+  { id: 'address', visibility: 'sm', label: 'Address', align: 'left' },
+  { id: 'phoneNumbers[0]', visibility: 'xs2', label: 'Phone', align: 'left' },
+  { id: 'email', visibility: 'xs2', label: 'Email', align: 'left' },
+  { id: 'technical.contact', visibility: 'xs2', label: 'Technical Contact', align: 'left' },
+  { id: 'billing.contact', visibility: 'xs2', label: 'Billing Contact', align: 'left' },
+  { id: 'isActive', label: 'Active', align: 'center' },
+  { id: 'createdAt',visibility: 'sm', label: 'Created At', align: 'right' },
 ];
-
-const STATUS_OPTIONS = [];
-
-
-const _accordions = [...Array(8)].map((_, index) => ({
-  id: _mock.id(index),
-  value: `panel${index + 1}`,
-  heading: `Site ${index + 1}`,
-  subHeading: _mock.text.title(index),
-  detail: _mock.text.description(index),
-}));
 
 // ----------------------------------------------------------------------
 
 export default function CustomerSiteList() {
   const {
-    dense,
-    page,
     order,
     orderBy,
-    rowsPerPage,
     setPage,
-    //
     selected,
-    setSelected,
     onSelectRow,
-    onSelectAllRows,
-    //
     onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'createdAt', defaultOrder: 'desc',
   });
 
-  const [controlled, setControlled] = useState(false);
-  const handleChangeControlled = (panel) => (event, isExpanded) => {
-    setControlled(isExpanded ? panel : false);
-  };
   const dispatch = useDispatch();
-  const {
-    sites,
-    isLoading,
-    error,
-    initial,
-    responseMessage,
-    siteEditFormVisibility,
-    siteAddFormVisibility,
-  } = useSelector((state) => state.site);
-  const { customer } = useSelector((state) => state.customer);
-
-  const toggleChecked = async () => {
-    dispatch(setSiteFormVisibility(!siteAddFormVisibility));
-  };
-
-  const { themeStretch } = useSettingsContext();
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const [filterName, setFilterName] = useState('');
-  const [tableData, setTableData] = useState([]);
-  const [filterStatus, setFilterStatus] = useState([]);
-  const [activeIndex, setActiveIndex] = useState(null);
-  const [expanded, setExpanded] = useState(false);
-  const handleAccordianClick = (accordianIndex) => {
-    if (accordianIndex === activeIndex) {
-      setActiveIndex(null);
-    } else {
-      setActiveIndex(accordianIndex);
-    }
-  };
-
-  const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
-
-  useEffect(() => {
-    if (!siteAddFormVisibility && !siteEditFormVisibility) {
-      dispatch(getSites(customer._id));
-    }
-  }, [dispatch, customer, siteAddFormVisibility, siteEditFormVisibility]); // checked is also included
-
-  useEffect(() => {
-    if (initial) {
-      setTableData(sites);
-    }
-  }, [sites, error, responseMessage, enqueueSnackbar, initial]);
-
+  const axiosToken = () => axios.CancelToken.source();
+  const cancelTokenSource = axiosToken();
   
+  const { sites, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.site);
+  
+  const [tableData, setTableData] = useState([]);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [filterName, setFilterName] = useState(filterBy);
+
+  const onChangeRowsPerPage = (event) => {
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
+  };
+  const onChangePage = (event, newPage) => { 
+    dispatch(ChangePage(newPage)) 
+  }
+
+  useEffect(() => {
+    dispatch(getSites());
+    return ()=> { dispatch( resetSites() ) }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
+
+  useEffect(() => {
+    setTableData(sites || []);
+  }, [sites]);
+
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
-    filterStatus,
   });
+  const denseHeight = 60;
+  const isFiltered = filterName !== '';
+  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-  const denseHeight = dense ? 60 : 80;
-  const isFiltered = filterName !== '' || !!filterStatus.length;
-  const isNotFound = !sites.length && !siteAddFormVisibility && !siteEditFormVisibility;
+  const handleCloseConfirm = () => setOpenConfirm(false);
+
+  const debouncedSearch = useRef(debounce((value) => {
+      dispatch(ChangePage(0))
+      dispatch(setFilterBy(value))
+  }, 500))
+
+  const debouncedVerified = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+  }, 500))
+
+  const handleFilterName = (event) => {
+    debouncedSearch.current(event.target.value)
+    setFilterName(event.target.value)
+    setPage(0);
+  };
+
+  useEffect(() => {
+    debouncedSearch.current.cancel();
+  }, [debouncedSearch]);
+
+
+  const handleViewRow = (id) => {
+    navigate(PATH_CUSTOMER.view(id));
+  };
+
+  const openInNewPage = (id) => {
+    dispatch(setCustomerTab('info'));
+    const url = PATH_CUSTOMER.view(id);
+    window.open(url, '_blank');
+  };
+
+  const handleResetFilter = () => {
+    dispatch(setFilterBy(''))
+    setFilterName('');
+  }; 
+
+  const handleBackLink = () => {
+    console.log('back')
+    navigate(PATH_CUSTOMER.list);
+  };
+
+  const [exportingCSV, setExportingCSV] = useState(false);
+  const onExportCSV = async() => {
+    setExportingCSV(true);
+    const response = dispatch(await exportCSV('allsites'));
+    response.then((res) => {
+      setExportingCSV(false);
+      if(!res.hasError){
+        enqueueSnackbar('Sites CSV Generated Successfully');
+      }else{
+        enqueueSnackbar(res.message, {variant:`${res.hasError?"error":""}`});
+      }
+    });
+  };
 
   return (
-    <>
-      {!siteEditFormVisibility && (
-        <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
-          <Button
-            // alignItems
-            onClick={toggleChecked}
-            variant="contained"
-            startIcon={
-              !siteAddFormVisibility ? (
-                <Iconify icon="eva:plus-fill" />
-              ) : (
-                <Iconify icon="eva:minus-fill" />
-              )
-            }
-          >
-            New Site
-          </Button>
-        </Stack>
-      )}
+    <Container maxWidth={false}>
+        <StyledCardContainer>
+          <Cover name='Customer Sites' backLink customerContacts/>
+        </StyledCardContainer>
+      <TableCard >
+      <CustomerSiteListTableToolbar
+          filterName={filterName}
+          onFilterName={handleFilterName}
+          isFiltered={isFiltered}
+          onResetFilter={handleResetFilter}
+          onExportCSV={onExportCSV}
+          onExportLoading={exportingCSV}
+        />
 
-      <Card>
-        {siteEditFormVisibility && <SiteEditForm />}
-        {siteAddFormVisibility && !siteEditFormVisibility && <SiteAddForm />}
-        {!siteAddFormVisibility &&
-          !siteEditFormVisibility &&
-          sites.map((site, index) => {
-            const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
-            return (
-              <Accordion
-                key={site._id}
-                expanded={expanded === index}
-                onChange={handleChange(index)}
-                sx={{
-                  borderTop: borderTopVal,
-                }}
-              >
-                <AccordionSummary
-                  expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
-                  onClick={() => handleAccordianClick(index)}
-                >
-                  {index !== activeIndex ? (
-                    <Grid container spacing={0}>
-                      <Grid item xs={12} sm={8} md={4}>
-                        {' '}
-                        <Typography> {site.name} </Typography>{' '}
-                      </Grid>
-                      {/* <CommaJoinField sm={8} objectParam={site.address} /> */}
-                    </Grid>
-                  ) : null}
-                </AccordionSummary>
-                <AccordionDetails
-                  sx={{
-                    mt: -5,
-                  }}
-                >
-                  <SiteViewForm currentSite={site} />
-                </AccordionDetails>
-              </Accordion>
-            );
-          })}
-        <TableNoData isNotFound={isNotFound} />
-        {/*
-        {!siteAddFormVisibility &&
-          !siteEditFormVisibility &&
-          sites.map((site, index) => {
-            const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
-            return (
-              <Accordion
-                key={site._id}
-                expanded={expanded === index}
-                onChange={handleChange(index)}
-                sx={{ borderTop: borderTopVal }}
-              >
-                <AccordionSummary
-                  expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
-                  onClick={() => handleAccordianClick(index)}
-                >
-                  {index !== activeIndex ? (
-                    <Grid container spacing={1}>
-                      <Grid item xs={12} sm={4} md={4} sx={{ overflowWrap: 'break-word' }}>
-                        {' '}
-                        <Typography > {site.name} </Typography>{' '}
-                      </Grid>
-                      <CommaJoinField
-                        display={{ sm: 'none', md: 'block' }}
-                        sm={8}
-                        objectParam={site.address}
-                        sx={{ overflowWrap: 'break-word' }}
+        {!isNotFound && <TablePaginationCustom
+          count={sites?sites.length : 0}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={onChangePage}
+          onRowsPerPageChange={onChangeRowsPerPage}
+        />}
+        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+
+          <Scrollbar>
+            <Table size="small" sx={{ minWidth: 360 }}>
+              <TableHeadCustom
+                order={order}
+                orderBy={orderBy}
+                headLabel={TABLE_HEAD}
+                onSort={onSort}
+              />
+
+              <TableBody>
+                {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                  .map((row, index) =>
+                    row ? (
+                      <CustomerSiteListTableRow
+                        key={row._id}
+                        row={row}
+                        selected={selected.includes(row._id)}
+                        onSelectRow={() => onSelectRow(row._id)}
+                        onViewRow={() => handleViewRow(row?.customer?._id)}
+                        openInNewPage={() => openInNewPage(row?.customer?._id)}
+                        style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
-                    </Grid>
-                  ) : null}
-                </AccordionSummary>
-                <AccordionDetails sx={{ mt: -5 }}>
-                  <SiteViewForm currentSite={site} />
-                </AccordionDetails>
-              </Accordion>
-            );
-          })}
-
-        <TableNoData isNotFound={isNotFound} /> */}
-
-        {/* </Block> */}
-        {/* <Block title="Controlled">
-            {_accordions.map((item, index) => (
-              <Accordion
-                key={item.value}
-                disabled={index === 3}
-                expanded={controlled === item.value}
-                onChange={handleChangeControlled(item.value)}
-              >
-                <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
-                  <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0 }}>
-                    {item.heading}
-                  </Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{item.subHeading}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography>{item.detail}</Typography>
-                </AccordionDetails>
-              </Accordion>
-            ))}
-          </Block> */}
-
-        {/* <SiteListTableToolbar
-            filterName={filterName}
-            filterStatus={filterStatus}
-            onFilterName={handleFilterName}
-            onFilterStatus={handleFilterStatus}
-            statusOptions={STATUS_OPTIONS}
-            isFiltered={isFiltered}
-            onResetFilter={handleResetFilter}
-          />
-
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
-              dense={dense}
-              numSelected={selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row._id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            />
-
-            <Scrollbar>
-              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
-                <TableHeadCustom
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
-                  numSelected={selected.length}
-                  onSort={onSort}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row._id)
+                    ) : (
+                      !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                     )
-                  }
-                />
-
-                <TableBody>
-                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) =>
-                      row ? (
-                        <SiteListTableRow
-                          key={row._id}
-                          row={row}
-                          selected={selected.includes(row._id)}
-                          onSelectRow={() => onSelectRow(row._id)}
-                          onDeleteRow={() => handleDeleteRow(row._id)}
-                          onEditRow={() => handleEditRow(row._id)}
-                          onViewRow={() => handleViewRow(row._id)}
-                        />
-                      ) : (
-                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                      )
-                    )}
-
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  />
-
+                  )}
                   <TableNoData isNotFound={isNotFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
 
-          <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-            //
-            dense={dense}
-            onChangeDense={onChangeDense}
-          /> */}
-      </Card>
+              </TableBody>
+            </Table>
+          </Scrollbar>
+        </TableContainer>
 
-      {/* <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRows(selected);
-              handleCloseConfirm();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      /> */}
-    </>
+        {!isNotFound && <TablePaginationCustom
+          count={sites?sites.length : 0}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={onChangePage}
+          onRowsPerPageChange={onChangeRowsPerPage}
+        />}
+      </TableCard>
+    </Container>
   );
 }
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus }) {
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
-
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  inputData = stabilizedThis.map((el) => el[0]);
-
+function applyFilter({ inputData, comparator, filterName }) {
   if (filterName) {
     inputData = inputData.filter(
-      (site) => site.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (site) =>
+        site?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        site?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        site?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        site?.website?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        `${site?.primaryTechnicalContact?.firstName} ${site?.primaryTechnicalContact?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        `${site?.primaryBillingContact?.firstName} ${site?.primaryBillingContact?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        `${site?.address?.city}, ${site?.address?.suburb}, ${site?.address?.city}, ${site?.address?.region}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        `+${site?.phoneNumbers[0]?.countryCode} ${site?.phoneNumbers[0]?.number}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(site?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
-  }
-
-  if (filterStatus.length) {
-    inputData = inputData.filter((site) => filterStatus.includes(site.status));
   }
 
   return inputData;
