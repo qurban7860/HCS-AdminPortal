@@ -163,7 +163,12 @@ export const ICONS = {
     color: '#878787',
     heading: 'Customer Not Allowed',
   },
-
+  TRANSFERHISTORY: {
+    icon: 'ic:outline-manage-history',
+    color: '#008000',
+    heading: 'Transfer History',
+  },
+  
   // Machine Support 
   SUPPORT_VALLID: {
     icon: 'bx:support',
