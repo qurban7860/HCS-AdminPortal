@@ -62,7 +62,6 @@ export default function CustomerContactDynamicList(currentContact = null) {
   // const [activeCardIndex, setCardActiveIndex] = useState('');
   // for filtering contacts -------------------------------------
   // const [isExpanded, setIsExpanded] = useState(false);
-  console.log( "activeCardIndex : ",activeCardIndex, " isExpanded : ",isExpanded )
   const [filterName, setFilterName] = useState('');
   const [filterStatus, setFilterStatus] = useState([]);
   const [tableData, setTableData] = useState([]);
