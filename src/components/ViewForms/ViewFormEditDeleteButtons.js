@@ -25,7 +25,6 @@ import { useAuthContext } from '../../auth/useAuthContext';
 import { PATH_DASHBOARD } from '../../routes/paths';
 
 function ViewFormEditDeleteButtons({
-  // Icons 
   backLink,
   isActive,
   isDefault,
@@ -269,8 +268,10 @@ function ViewFormEditDeleteButtons({
   };
 
   const handleTransferHistoryPopoverOpen = (event) => {
-    setTransferHistoryAnchorEl(event.currentTarget);
-    setTransferHistory(transferredHistory)
+    if(transferredHistory.length > 0) {
+      setTransferHistoryAnchorEl(event.currentTarget);
+      setTransferHistory(transferredHistory)
+    }
   };
 
   const handleTransferHistoryPopoverClose = () => {
@@ -391,8 +392,8 @@ function ViewFormEditDeleteButtons({
           </Badge>
           }
 
-          {Array.isArray(transferredHistory) && transferredHistory?.length>0 &&
-          <Badge badgeContent={transferredHistory.length} color="info">
+          {transferredHistory !== undefined &&
+          <Badge badgeContent={transferredHistory.length || '0' } color="info">
             <IconTooltip
               title='Transfer History'
               color={ICONS.TRANSFERHISTORY.color}

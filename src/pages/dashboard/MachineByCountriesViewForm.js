@@ -3,14 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { Container } from '@mui/system';
-import { Card, Grid, Autocomplete, TextField, Divider, Paper } from '@mui/material';
+import { Card, Grid, Autocomplete, TextField, Divider } from '@mui/material';
 // slices
 import {  getMachinesByCountry, setMachineCategory, setMachineModel, setMachineYear } from '../../redux/slices/dashboard/count';
 import {  getActiveMachineModels } from '../../redux/slices/products/model';
 import {  getActiveCategories } from '../../redux/slices/products/category';
 // hooks
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-import { StyledGlobalCard } from '../../theme/styles/default-styles';
 import ChartBarAutoHeight from '../../components/Charts/ChartBarAutoHeight';
 import { Cover } from '../../components/Defaults/Cover';
 import { PATH_DASHBOARD } from '../../routes/paths';
@@ -66,7 +65,7 @@ export default function MachineByCountriesViewForm() {
       <Card sx={{ mb: 3, height: 160, position: 'relative'}}>
         <Cover name="Machine By Countries" icon="material-symbols:list-alt-outline" />
       </Card>      
-        <StyledGlobalCard>
+        <Card sx={{p:2, pt:0}} >
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{mt:2, display:'flex', justifyContent:'flex-end'}}>
                 <Grid item xs={12} sm={6}>
                 <ViewFormEditDeleteButtons backLink={() => navigate(PATH_DASHBOARD.general.app)} />
@@ -118,14 +117,12 @@ export default function MachineByCountriesViewForm() {
                 </Grid>
             </Grid>
             <Divider sx={{paddingTop:2}} />
-            {/* <Grid item sx={{ height: 'auto', overflow: 'auto', backgroundColor: 'transparent' }} > */}
                 <ChartBarAutoHeight
                   optionsData={countryWiseMachineCountCountries}
                   seriesData={countryWiseMachineCountNumber}
                   type="bar"
                   sx={{ backgroundColor: 'transparent' }}
                 />
-            {/* </Grid> */}
-      </StyledGlobalCard>          
+      </Card>          
     </Container>
   )}
