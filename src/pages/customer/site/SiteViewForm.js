@@ -11,6 +11,7 @@ import {
   deleteSite,
   getSite,
   getSites,
+  setIsExpanded,
   setSiteEditFormVisibility,
 } from '../../../redux/slices/customer/site';
 import { useSnackbar } from '../../../components/snackbar';
@@ -26,9 +27,8 @@ import ViewFormPhoneField from '../../../components/ViewForms/ViewFormPhoneField
 SiteViewForm.propTypes = {
   currentSite: PropTypes.object,
   handleMap: PropTypes.func,
-  setIsExpanded: PropTypes.func,
 };
-export default function SiteViewForm({ currentSite = null, handleMap, setIsExpanded }) {
+export default function SiteViewForm({ currentSite = null, handleMap }) {
   const { site, isLoading } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
@@ -39,7 +39,7 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
       await dispatch(deleteSite(customer?._id, currentSite?._id));
       await dispatch(getSites(customer?._id));
       enqueueSnackbar('Site deleted Successfully!');
-      setIsExpanded(false);
+      dispatch(setIsExpanded(false));
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });
       console.log(err);

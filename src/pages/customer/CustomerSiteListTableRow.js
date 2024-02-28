@@ -24,6 +24,8 @@ CustomerSiteListTableRow.propTypes = {
   onEditRow: PropTypes.func,
   onViewRow: PropTypes.func,
   openInNewPage:PropTypes.func,
+  handleSiteView: PropTypes.func,
+  handleSiteViewInNewPage: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
 };
@@ -36,10 +38,12 @@ export default function CustomerSiteListTableRow({
   onDeleteRow,
   onEditRow,
   onViewRow,
-  openInNewPage
+  openInNewPage,
+  handleSiteView,
+  handleSiteViewInNewPage,
 }) {
-  const { customer, name, email, website, phoneNumbers, address, lat, long,
-     primaryBillingContact, primaryTechnicalContact, isActive, createdAt } = row;
+  const { _id, customer, name, email, website, phoneNumbers, address, lat, long,
+    primaryBillingContact, primaryTechnicalContact, isActive, createdAt } = row;
   const phone = phoneNumbers[0];
   const fax = phoneNumbers[0];
   const smScreen = useScreenSize('sm')
@@ -48,6 +52,7 @@ export default function CustomerSiteListTableRow({
   return (
     <StyledTableRow hover selected={selected}>
       <LinkTableCellWithIconTargetBlank onViewRow={onViewRow} onClick={openInNewPage} param={customer?.name || ''} />
+      <LinkTableCellWithIconTargetBlank onViewRow={()=> handleSiteView( customer?._id, _id ) } onClick={()=> handleSiteViewInNewPage( customer?._id, _id ) } param={name || ''} />
       <TableCell>{name}</TableCell>
       {smScreen && mdScreen &&
         <TableCell>

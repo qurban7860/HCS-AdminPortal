@@ -32,7 +32,7 @@ import { FORMLABELS } from '../../constants/default-constants';
 // sections
 import CustomerContactListTableRow from './CustomerContactListTableRow';
 import CustomerContactListTableToolbar from './CustomerContactListTableToolbar';
-import { getContacts, resetContacts, ChangePage, ChangeRowsPerPage, setFilterBy } from '../../redux/slices/customer/contact';
+import { getContacts, resetContacts, ChangePage, ChangeRowsPerPage, setFilterBy, setCardActiveIndex, setIsExpanded, getContact  } from '../../redux/slices/customer/contact';
 import { setCustomerTab } from '../../redux/slices/customer/customer';
 import { Cover } from '../../components/Defaults/Cover';
 import TableCard from '../../components/ListTableTools/TableCard';
@@ -157,6 +157,22 @@ export default function CustomerContactList() {
     });
   };
 
+  const handleContactView = async (customerId, contactId ) => {
+    await navigate(PATH_CUSTOMER.view(customerId))
+    await dispatch(setCustomerTab('contacts'));
+    await dispatch(setCardActiveIndex(contactId));
+    await dispatch(setIsExpanded(true));
+    await dispatch(getContact(customerId, contactId));
+  };
+
+  const handleContactViewInNewPage = async (customerId, contactId ) => {
+    await openInNewPage(customerId);
+    await dispatch(setCustomerTab('contacts'));
+    await dispatch(setCardActiveIndex(contactId));
+    await dispatch(setIsExpanded(true));
+    await dispatch(getContact(customerId, contactId));
+  };
+
   return (
     <Container maxWidth={false}>
         <StyledCardContainer>
@@ -201,6 +217,8 @@ export default function CustomerContactList() {
                         onSelectRow={() => onSelectRow(row._id)}
                         onViewRow={() => handleViewRow(row?.customer?._id)}
                         openInNewPage={() => openInNewPage(row?.customer?._id)}
+                        handleContactView= { handleContactView }
+                        handleContactViewInNewPage= { handleContactViewInNewPage }
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
                     ) : (
