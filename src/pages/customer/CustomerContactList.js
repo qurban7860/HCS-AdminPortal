@@ -208,6 +208,7 @@ export default function CustomerContactList() {
 
               <TableBody>
                 {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
                       <CustomerContactListTableRow

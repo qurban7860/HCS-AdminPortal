@@ -58,8 +58,8 @@ export default function MachineListTableRow({
               title={`${status?.name || ''}${transferredMachine?.customer?.name?` to ${transferredMachine?.customer?.name}`:''} on ${fDate(transferredDate)}`}
               placement="top"
               disableFocusListener
-              tooltipcolor="#FF0000" 
-              color="#FF0000"
+              tooltipcolor="#008000" 
+              color="#008000"
               sx={{maxWidth:'200px'}}
             >
               <Iconify icon="mdi:info" sx={{position:'relative', bottom:'-5px'}} />
