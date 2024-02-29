@@ -11,21 +11,35 @@ ViewFormPhoneField.propTypes = {
 };
 function ViewFormPhoneField({ heading, variant, sm, value, typeOfContact }) {
 
-  const contactNumber  = Array.isArray(value)  && value.find( n => n?.type?.toLowerCase() === typeOfContact?.toLowerCase()  );
 
   return (
+    <Grid container >
+    {value?.length > 0 ? value?.map( (num) =>(
     <Grid item xs={12} sm={sm} sx={{ px: 0.5, py: 1, overflowWrap: 'break-word' }} >
-      <Typography variant="overline" sx={{ color: 'text.disabled' }}>{heading || ''}</Typography>
+      <Typography variant="overline" sx={{ color: 'text.disabled' }}>{ num?.type || heading || ''}</Typography>
         <Typography variant={variant}
           style={{
             display: 'flex',
             alignItems: 'center',
             whiteSpace: 'pre-line',
             wordBreak: 'break-word',
-          }}>
-          {contactNumber?.number && `+${contactNumber?.countryCode || '' } ${ contactNumber?.number || '' }`}
+          }} >
+          {num?.number && `+${num?.countryCode || '' } ${ num?.number || '' } ` }{num?.extensions && ` (ext: ${num?.extensions} )` }
         </Typography>
     </Grid>
+      )) : ( 
+    <Grid item xs={12} sm={sm} sx={{ px: 0.5, py: 1, overflowWrap: 'break-word' }} >
+      <Typography variant="overline" sx={{ color: 'text.disabled' }}>{ heading || 'Phone'}</Typography>
+        <Typography variant={variant}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            whiteSpace: 'pre-line',
+            wordBreak: 'break-word',
+          }}>{' '}</Typography>
+    </Grid>
+      ) }
+      </Grid>
   );
 }
 export default memo(ViewFormPhoneField)

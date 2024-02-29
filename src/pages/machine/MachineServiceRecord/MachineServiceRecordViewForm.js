@@ -30,6 +30,7 @@ import CurrentIcon from '../../../components/Icons/CurrentIcon';
 import SendEmailDialog from '../../../components/Dialog/SendEmailDialog';
 import PDFViewerDialog from '../../../components/Dialog/PDFViewerDialog';
 import { PATH_CUSTOMER } from '../../../routes/paths';
+import Iconify from '../../../components/iconify';
 
 function MachineServiceParamViewForm() {
 
@@ -133,10 +134,20 @@ function MachineServiceParamViewForm() {
     await dispatch(getContact(machine?.customer?._id, contactId));
   };
 
+  const handleContactViewInNewPage = async (contactId) => {
+    await window.open(PATH_CUSTOMER.view(machine?.customer?._id), '_blank');
+    await dispatch(setCustomerTab('contacts'));
+    await dispatch(setCardActiveIndex(contactId));
+    await dispatch(setIsExpanded(true));
+    await dispatch(getContact(machine?.customer?._id, contactId));
+  };
+
   const operators = defaultValues?.operators?.map((operator, index) => (  
     <Chip 
         onClick={() => handleContactView(operator?._id)} 
         sx={{m:0.2}}
+        deleteIcon={<Iconify icon="fluent:open-12-regular"/>}
+        onDelete={()=> handleContactViewInNewPage(operator?._id)}
         label={`${operator?.firstName || ''} ${operator?.lastName || ''}`} 
       />
   ));
