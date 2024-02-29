@@ -6,6 +6,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MuiTelInput } from 'mui-tel-input';
 import { Box,Card, Grid, Stack, Typography, alpha, Button, IconButton } from '@mui/material';
+import { createTheme } from '@mui/material/styles';
+import { green } from '@mui/material/colors';
 // slice
 import { addSite, getSites, setSiteFormVisibility } from '../../../redux/slices/customer/site';
 import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
@@ -17,7 +19,7 @@ import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete, RHFCountryAutocomplete, RHFCustomPhoneInput, RHFCheckbox } from '../../../components/hook-form';
 import { SiteSchema } from '../../schemas/customer'
 import Iconify from '../../../components/iconify';
-// import IconTooltip from '../../../components/Icons/IconTooltip';
+import { StyledTooltip } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -27,6 +29,13 @@ export default function SiteAddForm() {
   const { activeContacts } = useSelector((state) => state.contact);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+
+
+  const theme = createTheme({
+    palette: {
+      success: green,
+    },
+  });
 
   useEffect(() => {
     dispatch( getActiveContacts(customer?._id))
@@ -40,9 +49,8 @@ export default function SiteAddForm() {
       name: '',
       customer: customer?._id,
       billingSite: '',
-      phone: { type: 'PHONE', countryCode: '64' },
+      phoneNumbers: [ { type: 'PHONE', countryCode: '64' }, { type: 'FAX', countryCode: '64' } ],
       email: '',
-      fax: { type: 'FAX', countryCode: '64' },
       website: '',
       street: '',
       suburb: '',
@@ -74,23 +82,12 @@ export default function SiteAddForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const { phone, fax, country } = watch();
-
-  useEffect(() => {
-    if(!phone?.number){
-      setValue( 'phone', { ...phone, countryCode: country?.phone?.replace(/[^0-9]/g, '')  } );
-    }
-    if(!fax?.number){
-      setValue( 'fax', { ...fax, countryCode: country?.phone?.replace(/[^0-9]/g, '')  } );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ country ]);
+  const { phoneNumbers,  country } = watch();
 
   useEffect(() => {
     reset(defaultValues);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
-
 
   const onSubmit = async (data) => {
     try {
@@ -103,18 +100,27 @@ export default function SiteAddForm() {
     }
   };
 
+  useEffect(() => {
+    phoneNumbers?.forEach((pN, index) => {
+      if(!phoneNumbers[index]?.number || phoneNumbers[index]?.number === undefined ){
+        setValue( `phoneNumbers[${index}].countryCode`,  country?.phone?.replace(/[^0-9]/g, '') )
+      }
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ country ]);
+
   const updateCountryCode = () =>{
-    if(phone){
-          const updatedPhone ={ ...phone, countryCode: country?.phone?.replace(/[^0-9]/g, '') || '' }
-      setValue('phone',updatedPhone);
-    }
-  
-    if(fax){
-          const updatedFax ={ ...fax, countryCode: country?.phone?.replace(/[^0-9]/g, '') || '' }
-      setValue('fax',updatedFax)
-    }
+    phoneNumbers?.forEach((pN, index ) =>  setValue( `phoneNumbers[${index}].countryCode`,  country?.phone?.replace(/[^0-9]/g, '') ))
   }
 
+  const removeContactNumber = (indexToRemove) => {
+    setValue('phoneNumbers',  phoneNumbers?.filter((_, index) => index !== indexToRemove) || [] );
+  }
+
+  const addContactNumber = () => {
+    const updatedPhoneNumbers = [...phoneNumbers, { type: 'PHONE', countryCode: country?.phone?.replace(/[^0-9]/g, '')} ]; 
+    setValue( 'phoneNumbers', updatedPhoneNumbers )
+  }
   const toggleCancel = () => dispatch(setSiteFormVisibility(false));
 
   return (
@@ -143,12 +149,29 @@ export default function SiteAddForm() {
                   </IconButton>
                   <Typography variant='body2' sx={{ color:'gray'}}>Update country code in phone/fax.</Typography>
                 </Box>
+                  <Grid>
+                    {phoneNumbers?.map((pN, index) => (
+                      <Grid sx={{ py: 1 }} display="flex" alignItems="center" >
+                        <RHFCustomPhoneInput name={`phoneNumbers[${index}]`} value={pN} label={pN?.type || 'Contact Number'} index={index} />
+                        <IconButton disabled={phoneNumbers?.length === 1} onClick={ () => removeContactNumber(index) } size="small" variant="contained" color='error' sx={{ mx: 1 }} >
+                          <StyledTooltip title="Remove Contact Number" placement="top" disableFocusListener tooltipcolor={theme.palette.error.main}  color={ phoneNumbers?.length > 1 ? theme.palette.error.main : theme.palette.text.main }  >
+                            <Iconify icon="icons8:minus" sx={{width: 25, height: 25}}  />
+                          </StyledTooltip>
+                        </IconButton>
+                      </Grid>
+                    ))}
+                    <Grid >
+                      <IconButton disabled={ phoneNumbers?.length > 9 } onClick={ addContactNumber } size="small" variant="contained" color='success' sx={{ ml: 'auto', mr:1 }} >
+                        <StyledTooltip title="Add Contact Number" placement="top" disableFocusListener tooltipcolor={theme.palette.success.dark} color={ phoneNumbers?.length < 10 ? theme.palette.success.dark : theme.palette.text.main }  >
+                          <Iconify icon="icons8:plus" sx={{width: 25, height: 25}}  />
+                        </StyledTooltip>
+                      </IconButton>
+                    </Grid>
+                  </Grid>
               <Box
                 rowGap={2} columnGap={2} display="grid"
                 gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
               >
-                <RHFCustomPhoneInput name="phone" label="Phone Number" />
-                <RHFCustomPhoneInput name="fax" label="Fax" />
                 <RHFTextField name="email" label="Email" />
                 <RHFTextField name="website" label="Website" />
               </Box>

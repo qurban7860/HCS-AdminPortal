@@ -90,7 +90,7 @@ function MultiFilePreview({
       {files.map(( file , index ) => {
         if(file){
         const { key, name = '', size = 0, displayName, referenceNumber, versionNo, stockNumber, docCategory, docType } = fileData(file);
-        const fileType = file?.type?.split('/').pop();
+        const fileType = file?.type?.split('/').pop()?.toLowerCase();
         const isNotFormatFile = typeof file === 'string';
 
         if (thumbnail) {
@@ -109,7 +109,7 @@ function MultiFilePreview({
                       height:180,
                     }}
                 >
-                  <CardMedia onClick={()=> FORMAT_IMG_VISIBBLE.some(format => fileType.match(format)) && previewHandle(file)}>
+                  <CardMedia onClick={()=> FORMAT_IMG_VISIBBLE.some(format => fileType.match(format?.toLowerCase())) && previewHandle(file)}>
                     <FileThumbnail imageView file={file} sx={{ position: 'absolute' }} imgSx={{ position: 'absolute' }}/>
                   </CardMedia>
                   <ButtonGroup

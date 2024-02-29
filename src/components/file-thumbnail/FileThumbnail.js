@@ -21,10 +21,10 @@ export default function FileThumbnail({ file, rows, tooltip, imageView, onDownlo
 
   const { name = '', path = '', preview = '' } = fileData(file);
 
-  const format = fileFormat(path || preview, rows );
+  const format = fileFormat(path.toLowerCase() || preview.toLowerCase(), rows )?.toLowerCase();
 
   const renderContent =
-    format === 'images' && !rows && imageView ? (
+    format === 'images' && imageView ? (
           <Box
         component="img"
         src={preview}

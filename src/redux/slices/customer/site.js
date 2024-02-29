@@ -179,6 +179,7 @@ export function addSite(params) {
           website: params.website,
           lat: params.lat,
           long: params.long,
+          phoneNumbers: params?.phoneNumbers || [],
           primaryBillingContact: params?.primaryBillingContact?._id || null,
           updateAddressPrimaryBillingContact: params?.updateAddressPrimaryBillingContact,
           primaryTechnicalContact: params?.primaryTechnicalContact?._id || null,
@@ -187,17 +188,17 @@ export function addSite(params) {
           address: {}
         };
 
-        const phoneNumbers = []
+        // const phoneNumbers = []
 
-        if( params?.phone?.number ){
-          phoneNumbers.push( params?.phone );
-        }
+        // if( params?.phone?.number ){
+        //   phoneNumbers.push( params?.phone );
+        // }
 
-        if( params?.fax?.number ){
-          phoneNumbers.push( params?.fax );
-        }
+        // if( params?.fax?.number ){
+        //   phoneNumbers.push( params?.fax );
+        // }
 
-        data.phoneNumbers = phoneNumbers;
+        // data.phoneNumbers = phoneNumbers;
         
         /* eslint-enable */
         if(params.street){
@@ -246,23 +247,24 @@ export function updateSite(params,customerId,Id) {
           lat: params.lat,
           long: params.long,
           isActive: params.isActive,
+          phoneNumbers: params.phoneNumbers || [],
           primaryBillingContact: params.primaryBillingContact?._id || null,
           updateAddressPrimaryBillingContact: params?.updateAddressPrimaryBillingContact,
           primaryTechnicalContact: params.primaryTechnicalContact?._id || null,
           updateAddressPrimaryTechnicalContact: params?.updateAddressPrimaryTechnicalContact,
           address: {}
         };
-        const phoneNumbers = []
+        // const phoneNumbers = []
 
-        if( params?.phone?.number ){
-          phoneNumbers.push( { ...params?.phone, type:'PHONE' } );
-        }
+        // if( params?.phone?.number ){
+        //   phoneNumbers.push( { ...params?.phone, type:'PHONE' } );
+        // }
 
-        if( params?.fax?.number ){
-          phoneNumbers.push( { ...params?.fax, type:'FAX' } );
-        }
+        // if( params?.fax?.number ){
+        //   phoneNumbers.push( { ...params?.fax, type:'FAX' } );
+        // }
 
-        data.phoneNumbers = phoneNumbers;
+        // data.phoneNumbers = phoneNumbers;
 
         /* eslint-enable */
         if(params.street){
