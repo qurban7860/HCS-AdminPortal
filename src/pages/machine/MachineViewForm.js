@@ -203,8 +203,8 @@ export default function MachineViewForm() {
       machineweb:machine?.machineProfile?.web || '',
       machineflange:machine?.machineProfile?.flange || '',
       status: machine?.status?.name || '',
-      transferredMachine: machine?.transferredMachine?.customer || null,
-      transferredFrom: machine?.transferredFrom?.customer || null,
+      transferredToMachine: machine?.transferredToMachine || null,
+      transferredFromMachine: machine?.transferredFromMachine || null,
       customer: machine?.customer || '',
       financialCompany: machine?.financialCompany || '',
       siteMilestone: machine?.siteMilestone || '',
@@ -279,23 +279,26 @@ export default function MachineViewForm() {
                        {/* 3 FULL ROW */}
             <ViewFormField isLoading={isLoading} sm={6} heading="Transfer Detail"
               node={
-                <Grid display="flex">
-                  {( machine?.status?.slug === "transferred" && defaultValues?.transferredFrom && 
+                <Grid display="flex" alignItems="center">
+                  { defaultValues?.transferredFromMachine && 
+                    <>
                       <Typography variant='body2' sx={{mt: 0.5}} >
-                        {` Transferred from `}
-                        <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredFrom?._id)} underline="none" sx={{ cursor: 'pointer'}}>
-                          <b>{defaultValues?.transferredFrom?.name}</b>
+                        {`from >`}
+                        <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredFromMachine?.customer?._id)} underline="none" sx={{ cursor: 'pointer', ml:1}}>
+                          <b>{defaultValues?.transferredFromMachine?.customer?.name}</b>
                         </Link>
-                          <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(defaultValues?.transferredFrom?._id), '_blank' ) }/>
-                    </Typography> ) ||
-                    ( machine?.status?.slug !== "transferred" && defaultValues?.transferredMachine && 
-                      <Typography variant='body2' sx={{mt: 0.5}} >
-                          {` to `}
-                          <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredMachine?._id)} underline="none" sx={{ cursor: 'pointer'}}>
-                            <b>{defaultValues?.transferredMachine?.name}</b>
+                          <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(defaultValues?.transferredFromMachine?.customer?._id), '_blank' ) }/>
+                      </Typography>
+                    </>}
+                    { defaultValues?.transferredFromMachine && defaultValues?.transferredToMachine && <Typography variant='body2'>,</Typography> }
+                    { defaultValues?.transferredToMachine && 
+                      <Typography variant='body2' sx={{mt: 0.5, ml:1 }} >
+                          {`to >  `}
+                          <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredToMachine?.customer?._id)} underline="none" sx={{ cursor: 'pointer', ml:1}}>
+                            <b>{defaultValues?.transferredToMachine?.customer?.name}</b>
                           </Link>
-                            <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(defaultValues?.transferredMachine?._id), '_blank' ) }/>
-                      </Typography> )}
+                            <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(defaultValues?.transferredToMachine?.customer?._id), '_blank' ) }/>
+                      </Typography> }
                 </Grid>
               }
             />

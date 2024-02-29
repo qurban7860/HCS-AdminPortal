@@ -14,19 +14,17 @@ function ViewFormTransferHistoryMenuPopover({ open, onClose, ListArr, ListTitle 
           <Table size="small" aria-label="a dense table" >
             <TableHead>
               <TableRow>
-                {/* <TableCell align='left' >Serial No</TableCell> */}
-                <TableCell align='left' >Transferred Date</TableCell>
-                <TableCell align='left' >Transferred to Customer</TableCell>
-                <TableCell align='left' >Status</TableCell>
+                <TableCell align='left' >Purchase Date</TableCell>
+                <TableCell align='left' >Customer</TableCell>
+                <TableCell align='right' >Transferred Date</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {ListArr?.map((m) => (
                 <TableRow key={m?._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }} >
-                  {/* <TableCell align='left' component="th" scope="row" >{m?.serialNo || ''}</TableCell> */}
-                  <TableCell align='left'>{fDate(m?.transferredDate) || ''}</TableCell>
+                  <TableCell align='left'>{fDate(m?.purchaseDate) || ''}</TableCell>
                   <TableCell align='left'>{m?.customer?.name || ''}</TableCell>
-                  <TableCell align='left'>{m?.status?.name || ''}</TableCell>
+                  <TableCell align='right'>{fDate(m?.transferredDate) || ''}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
