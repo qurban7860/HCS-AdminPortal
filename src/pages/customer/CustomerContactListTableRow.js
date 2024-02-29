@@ -48,7 +48,8 @@ export default function CustomerContactListTableRow({
 
   return (
     <StyledTableRow hover selected={selected}>
-      <LinkTableCell param={customer?.name || ''} onClick={onViewRow} />
+      {/* <LinkTableCell param={customer?.name || ''} onClick={onViewRow} /> */}
+      {smScreen && <TableCell>{customer?.name?`${customer?.name} `:''}{customer?.name}</TableCell>}
       {/* <LinkTableCellWithIconTargetBlank onViewRow={onViewRow} onClick={openInNewPage} param={customer?.name || ''} /> */}
       <LinkTableCellWithIconTargetBlank onViewRow={() => handleContactView(customer?._id, _id) } onClick={ () => handleContactViewInNewPage(customer?._id, _id)} param={`${firstName || '' } ${lastName || '' }`} />
       {/* <TableCell>{firstName} {lastName}</TableCell> */}
