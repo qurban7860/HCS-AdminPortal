@@ -74,11 +74,11 @@ export default function MachineListTableRow({
           <span style={{color:row?.status?.slug==='transferred'?'red':''}}>{status?.name || ''} </span>
           {row?.status?.slug ==='transferred' &&
             <StyledTooltip
-              title={`${status?.name || ''} to ${transferredMachine?.customer?.name || ''} on ${fDate(transferredDate)}`}
+              title={`${status?.name || ''}${transferredMachine?.customer?.name?` to ${transferredMachine?.customer?.name}`:''} on ${fDate(transferredDate)}`}
               placement="top"
               disableFocusListener
-              tooltipcolor="#FF0000" 
-              color="#FF0000"
+              tooltipcolor="#008000" 
+              color="#008000"
               sx={{maxWidth:'200px'}}
             >
               <Iconify icon="mdi:info" sx={{position:'relative', bottom:'-5px'}} />
