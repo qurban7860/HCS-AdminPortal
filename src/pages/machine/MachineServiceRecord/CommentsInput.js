@@ -115,7 +115,7 @@ useEffect(()=>{
                     { childRow?.inputType === 'Date'  && 
                     <TextField 
                         id="date"
-                        label='Date'
+                        // label='Date'
                         name={childRow?.name} 
                         type="date"
                         format="dd/mm/yyyy"
@@ -124,7 +124,7 @@ useEffect(()=>{
                         onChange={(e) =>  handleChangeCheckItemListDate(index, childIndex, e.target.value) } 
                         size="small" 
                         required={childRow?.isRequired}
-                        InputLabelProps={{ shrink: checkParamList[index]?.checkItems[childIndex]?.checked || checkParamList[index]?.checkItems[childIndex]?.checkItemValue }}
+                        // InputLabelProps={{ shrink: checkParamList[index]?.checkItems[childIndex]?.checked || checkParamList[index]?.checkItems[childIndex]?.checkItemValue }}
                     /> }
 
                     { childRow?.inputType === 'Number'  && 

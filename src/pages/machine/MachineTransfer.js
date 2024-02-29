@@ -96,7 +96,7 @@ function MachineTransfer() {
       billingSite: null,
       installationSite: null,
       siteMilestone: '',
-      transferredDate: null,
+      transferredDate: new Date(),
       shippingDate: null,
       installationDate: null,
       status: null,
