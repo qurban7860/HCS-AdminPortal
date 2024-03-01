@@ -66,7 +66,7 @@ export default function ContactSiteCard({name, title, email, phone, image, handl
             <Typography variant="h4" color="#2065d1" component="div">{_name}</Typography>
             <Typography variant="body1" color="text.secondary" component="div">{_title}</Typography>
             <Typography variant="overline" color="text.secondary" component="div">{_email}</Typography>
-            <Typography variant="overline" color="text.secondary" component="div">{`${phone?.countryCode ?  '+' : '' }${phone?.countryCode || '' }${phone?.number || '' }`}</Typography>
+            <Typography variant="overline" color="text.secondary" component="div">{`${phone?.countryCode ?  '+' : '' }${phone?.countryCode || '' }${phone?.contactNumber || '' }`}</Typography>
           </CardContent>
       </CardActionArea>
     </Card>

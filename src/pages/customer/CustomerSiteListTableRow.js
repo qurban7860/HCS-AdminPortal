@@ -75,7 +75,7 @@ export default function CustomerSiteListTableRow({
             }
         </TableCell>
       }
-      {smScreen && <TableCell>{phone?.countryCode?`+${phone?.countryCode} `:''}{phone?.number}</TableCell>}
+      {smScreen && <TableCell>{phone?.countryCode?`+${phone?.countryCode} `:''}{phone?.contactNumber}</TableCell>}
       {smScreen && <TableCell>{email}</TableCell>}
       {smScreen && <TableCell>{primaryTechnicalContact?.firstName || ''} {primaryTechnicalContact?.lastName || ''}</TableCell>}
       {smScreen && <TableCell>{primaryBillingContact?.firstName || ''} {primaryBillingContact?.lastName || ''}</TableCell>}

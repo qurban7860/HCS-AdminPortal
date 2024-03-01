@@ -24,10 +24,10 @@ export default function RHFCustomPhoneInput({ name, value, index, label, ...othe
           label={label}
           fullWidth
           placeholder='Number'
-          value={ value?.number?.replace(/[^0-9]/g) || '' }
+          value={ value?.contactNumber?.replace(/[^0-9]/g) || '' }
           onChange={(e) => {
               const inputValue = e.target.value.replace(/[^0-9]/g, '');
-              setValue( name, { ...value, number: inputValue}   , { shouldValidate: true });
+              setValue( name, { ...value, contactNumber: inputValue}   , { shouldValidate: true });
           }}
           InputProps={{
             startAdornment: (

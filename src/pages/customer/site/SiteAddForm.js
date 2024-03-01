@@ -102,7 +102,7 @@ export default function SiteAddForm() {
 
   useEffect(() => {
     phoneNumbers?.forEach((pN, index) => {
-      if(!phoneNumbers[index]?.number || phoneNumbers[index]?.number === undefined ){
+      if(!phoneNumbers[index]?.contactNumber || phoneNumbers[index]?.contactNumber === undefined ){
         setValue( `phoneNumbers[${index}].countryCode`,  country?.phone?.replace(/[^0-9]/g, '') )
       }
     })

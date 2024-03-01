@@ -99,7 +99,7 @@ export default function SiteEditForm() {
 
     useEffect(() => {
       phoneNumbers?.forEach((pN, index) => {
-        if(!phoneNumbers[index].number){
+        if(!phoneNumbers[index].contactNumber){
           setValue( `phoneNumbers[${index}].countryCode`,  country?.phone?.replace(/[^0-9]/g, '') )
         }
       })

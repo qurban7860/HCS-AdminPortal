@@ -26,8 +26,8 @@ function ViewFormPhoneField({ heading, variant, sm, value, typeOfContact }) {
           }} >
 
     {value?.map((num, index) => (
-        num?.number &&
-          `${index !== 0 ? ', ' : ''} ${num?.type} +${num?.countryCode || ''} ${num?.number || ''} ${
+        num?.contactNumber &&
+          `${index !== 0 ? ', ' : ''} ${num?.type} +${num?.countryCode || ''} ${num?.contactNumber || ''} ${
         num?.extensions ? ` - (${num?.extensions})` : ''
         }`
     ))}
