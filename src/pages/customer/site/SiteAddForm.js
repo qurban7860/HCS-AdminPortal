@@ -49,7 +49,7 @@ export default function SiteAddForm() {
       name: '',
       customer: customer?._id,
       billingSite: '',
-      phoneNumbers: [ { type: 'PHONE', countryCode: '64' }, { type: 'FAX', countryCode: '64' } ],
+      phoneNumbers: [ { type: 'Phone', countryCode: '64' }, { type: 'Fax', countryCode: '64' } ],
       email: '',
       website: '',
       street: '',
@@ -118,7 +118,7 @@ export default function SiteAddForm() {
   }
 
   const addContactNumber = () => {
-    const updatedPhoneNumbers = [...phoneNumbers, { type: 'PHONE', countryCode: country?.phone?.replace(/[^0-9]/g, '')} ]; 
+    const updatedPhoneNumbers = [...phoneNumbers, { type: 'Phone', countryCode: country?.phone?.replace(/[^0-9]/g, '')} ]; 
     setValue( 'phoneNumbers', updatedPhoneNumbers )
   }
   const toggleCancel = () => dispatch(setSiteFormVisibility(false));

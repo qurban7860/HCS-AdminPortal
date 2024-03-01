@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { useFormContext, Controller } from 'react-hook-form';
 import Iconify from '../iconify';
 
+
+
 RHFCustomPhoneInput.propTypes = {
   name: PropTypes.string,
   label: PropTypes.string,
@@ -13,6 +15,14 @@ RHFCustomPhoneInput.propTypes = {
 
 export default function RHFCustomPhoneInput({ name, value, index, label, ...other }) {
   const { control, setValue } = useFormContext();
+  const PHONE_TYPES_ = JSON.parse( localStorage.getItem('configurations'))?.find( ( c )=> c?.name === 'PHONE_TYPES' )
+  let PHONE_TYPES = ['Mobile', 'Home', 'Work', 'Fax', 'Others'];
+  if(PHONE_TYPES_) {
+    console.log("idher", PHONE_TYPES_);
+    PHONE_TYPES = PHONE_TYPES_.value.split(',').map(item => item.trim());
+  }
+  
+    
 
   return (
     <Controller
@@ -40,7 +50,7 @@ export default function RHFCustomPhoneInput({ name, value, index, label, ...othe
                   size='small'
                   value={ value?.type || null }
                   sx={{width: '110px', mx:1 }} 
-                  options={ [ 'PHONE', 'FAX', 'CELL', 'OTHERS' ] }
+                  options={ PHONE_TYPES }
                   onChange={(event, newValue) => { setValue( name, { ...value, type: newValue } , { shouldValidate: true } ) }}
                   renderInput={(params) => ( <TextField {...params} variant="standard" size='small' placeholder='Type' sx={{mb:0.9}}/> )}
                 />
