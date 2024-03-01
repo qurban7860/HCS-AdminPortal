@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Box, Divider, Grid, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import MenuPopover from '../menu-popover/MenuPopover';
 import FormLabel from '../DocumentForms/FormLabel';
-import { fDate } from '../../utils/formatTime';
+import { fDate, fDateTime } from '../../utils/formatTime';
 
 function ViewFormTransferHistoryMenuPopover({ open, onClose, ListArr, ListTitle }) {
   return (
@@ -22,9 +22,9 @@ function ViewFormTransferHistoryMenuPopover({ open, onClose, ListArr, ListTitle 
             <TableBody>
               {ListArr?.map((m) => (
                 <TableRow key={m?._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }} >
-                  <TableCell align='left'>{fDate(m?.purchaseDate) || ''}</TableCell>
+                  <TableCell align='left'>{fDateTime(m?.purchaseDate) || ''}</TableCell>
                   <TableCell align='left'>{m?.customer?.name || ''}</TableCell>
-                  <TableCell align='right'>{fDate(m?.transferredDate) || ''}</TableCell>
+                  <TableCell align='right'>{fDateTime(m?.transferredDate) || ''}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

@@ -55,10 +55,10 @@ export default function CustomerSiteListTableRow({
       <LinkTableCellWithIconTargetBlank onViewRow={()=> handleSiteView( customer?._id, _id ) } onClick={()=> handleSiteViewInNewPage( customer?._id, _id ) } param={name || ''} />
       {smScreen && mdScreen &&
         <TableCell>
-            {address?.street?`${address?.street}, `:''}
-            {address?.suburb?`${address?.suburb}, `:''}
-            {address?.city?`${address?.city}, `:''}
-            {address?.region?`${address?.region}, `:''}
+            {address?.street?`${address?.street}`:''}
+            {address?.suburb?`, ${address?.suburb}`:''}
+            {address?.city?`, ${address?.city}`:''}
+            {address?.country?`, ${address?.country}`:''}
 
             {lat && long && 
               <StyledTooltip

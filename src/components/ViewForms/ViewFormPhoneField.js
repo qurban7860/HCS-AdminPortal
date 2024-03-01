@@ -14,31 +14,21 @@ function ViewFormPhoneField({ heading, variant, sm, value, typeOfContact }) {
 
   return (
     <Grid container >
-    {value?.length > 0 ? value?.map( (num) =>(
-    <Grid item xs={12} sm={sm} sx={{ px: 0.5, py: 1, overflowWrap: 'break-word' }} >
-      <Typography variant="overline" sx={{ color: 'text.disabled' }}>{ num?.type || heading || ''}</Typography>
+    <Grid item xs={12} sm={12} sx={{ px: 0.5,  overflowWrap: 'break-word' }} >
+      <Typography variant="overline" sx={{ color: 'text.disabled' }}>{ heading || ''}</Typography>
         <Typography variant={variant}
-          style={{
+          sx={{
             display: 'flex',
             alignItems: 'center',
             whiteSpace: 'pre-line',
             wordBreak: 'break-word',
+            pb: 2,
           }} >
-          {num?.number && `+${num?.countryCode || '' } ${ num?.number || '' } ` }{num?.extensions && ` (ext: ${num?.extensions} )` }
+    {value?.map( (num , index ) =>
+          num?.number && `${index !== 0 ? ', ': ''} (${num?.type }) +${num?.countryCode || '' } ${ num?.number || '' } - ext: ${num?.extensions} ` 
+          ) }
         </Typography>
-    </Grid>
-      )) : ( 
-    <Grid item xs={12} sm={sm} sx={{ px: 0.5, py: 1, overflowWrap: 'break-word' }} >
-      <Typography variant="overline" sx={{ color: 'text.disabled' }}>{ heading || 'Phone'}</Typography>
-        <Typography variant={variant}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            whiteSpace: 'pre-line',
-            wordBreak: 'break-word',
-          }}>{' '}</Typography>
-    </Grid>
-      ) }
+    </Grid> 
       </Grid>
   );
 }

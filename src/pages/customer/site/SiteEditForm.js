@@ -58,7 +58,7 @@ export default function SiteEditForm() {
       lat: site?.lat || '',
       long: site?.long || '',
       street: site?.address?.street || '',
-      phoneNumbers: site?.phoneNumbers || [],
+      phoneNumbers: site?.phoneNumbers || [ { type: 'PHONE', countryCode: '64' }, { type: 'FAX', countryCode: '64' } ],
       suburb: site?.address?.suburb || '',
       city: site?.address?.city || '',
       region: site?.address?.region || '',

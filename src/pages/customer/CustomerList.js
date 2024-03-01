@@ -261,12 +261,13 @@ export default function CustomerList() {
         </TableContainer>
 
         {!isNotFound && <TablePaginationCustom
-          count={customers?.totalCount || 0}
-          page={customers?.totalCount? page:0}
+          count={customers?customers.length : 0}
+          page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
         />}
+
       </TableCard>
 
       <ConfirmDialog

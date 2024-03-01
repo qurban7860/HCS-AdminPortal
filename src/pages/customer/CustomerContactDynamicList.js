@@ -28,6 +28,7 @@ import ContactMoveForm from './contact/ContactMoveForm';
 import BreadcrumbsProvider from '../../components/Breadcrumbs/BreadcrumbsProvider';
 import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
 import useResponsive from '../../hooks/useResponsive';
+import useLimitString from '../../hooks/useLimitString';
 import SearchInput from '../../components/Defaults/SearchInput';
 import { fDate } from '../../utils/formatTime';
 import { Snacks } from '../../constants/customer-constants';
@@ -163,7 +164,7 @@ export default function CustomerContactDynamicList(currentContact = null) {
         <Grid item xs={12} md={6}>
           <BreadcrumbsProvider>
             <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
-            <BreadcrumbsLink to={PATH_CUSTOMER.view} name={customer.name} />
+            <BreadcrumbsLink to={PATH_CUSTOMER.view} name={ customer.name } />
             <BreadcrumbsLink
               to={PATH_CUSTOMER.contacts}
               name={
