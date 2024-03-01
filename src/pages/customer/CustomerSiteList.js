@@ -263,7 +263,7 @@ function applyFilter({ inputData, comparator, filterName }) {
         site?.website?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         `${site?.primaryTechnicalContact?.firstName} ${site?.primaryTechnicalContact?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         `${site?.primaryBillingContact?.firstName} ${site?.primaryBillingContact?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        `${site?.address?.city}, ${site?.address?.suburb}, ${site?.address?.city}, ${site?.address?.region}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        `${site?.address?.street }, ${site?.address?.suburb }, ${site?.address?.city }, ${site?.address?.country}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         `+${site?.phoneNumbers[0]?.countryCode} ${site?.phoneNumbers[0]?.number}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(site?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );

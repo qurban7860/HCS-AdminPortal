@@ -14,7 +14,7 @@ export default function BreadcrumbsLink({ name, to }) {
       to={to}
       sx={{ fontSize: '12px', color: 'text.disabled' }}
     >
-      { useLimitString( name ) }
+      { useLimitString( name, 25 ) }
     </Link>
   );
 }
