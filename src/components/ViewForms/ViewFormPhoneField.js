@@ -24,9 +24,15 @@ function ViewFormPhoneField({ heading, variant, sm, value, typeOfContact }) {
             wordBreak: 'break-word',
             pb: 2,
           }} >
-    {value?.map( (num , index ) =>
-          num?.number && `${index !== 0 ? ', ': ''} (${num?.type }) +${num?.countryCode || '' } ${ num?.number || '' } - ext: ${num?.extensions} ` 
-          ) }
+
+    {value?.map((num, index) => (
+        num?.number &&
+          `${index !== 0 ? ', ' : ''} ${num?.type} +${num?.countryCode || ''} ${num?.number || ''} ${
+        num?.extensions ? ` - (${num?.extensions})` : ''
+        }`
+    ))}
+    
+
         </Typography>
     </Grid> 
       </Grid>
