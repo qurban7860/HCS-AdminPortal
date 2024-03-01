@@ -16,7 +16,7 @@ function ViewFormTransferHistoryMenuPopover({ open, onClose, ListArr, ListTitle 
               <TableRow>
                 <TableCell align='left' >Purchase Date</TableCell>
                 <TableCell align='left' >Customer</TableCell>
-                <TableCell align='right' >Transferred Date</TableCell>
+                <TableCell align='right' >Transfer Date</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
