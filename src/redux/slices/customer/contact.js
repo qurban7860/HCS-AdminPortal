@@ -10,6 +10,8 @@ const initialState = {
   contactEditFormVisibility: false,
   contactMoveFormVisibility: false,
   responseMessage: null,
+  activeCardIndex: '',
+  isExpanded: false,
   success: false,
   isLoading: false,
   error: null,
@@ -49,6 +51,16 @@ const slice = createSlice({
     // SET TOGGLE
     setContactEditFormVisibility(state, action){
       state.contactEditFormVisibility = action.payload;
+    },
+
+    // ACTIVE CARD INDEX
+    setCardActiveIndex(state, action){
+      state.activeCardIndex = action.payload;
+    },
+
+    // CARD IS EXPENDED
+    setIsExpanded(state, action){
+      state.isExpanded = action.payload;
     },
 
     // SET TOGGLE
@@ -170,6 +182,8 @@ export const {
   setContactFormVisibility,
   setContactEditFormVisibility,
   setContactMoveFormVisibility,
+  setCardActiveIndex,
+  setIsExpanded,
   resetContact,
   resetContacts,
   resetActiveContacts,
@@ -325,7 +339,7 @@ export function getSPContacts( cancelToken ) {
 
 // ----------------------------------------------------------------------
 
-export function getContacts(customerID ) {
+export function getContacts(customerID) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {

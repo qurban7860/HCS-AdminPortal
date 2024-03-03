@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router';
-import { Grid } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { StyledRoot, StyledInfo } from '../../theme/styles/default-styles';
 // utils
-import { PATH_SETTING } from '../../routes/paths';
+import { PATH_CUSTOMER, PATH_SETTING } from '../../routes/paths';
 // auth
 import CoverSettingsIcons from './CoverSettingsIcons';
 import CoverTitles from './CoverTitles';
@@ -22,9 +22,9 @@ Cover.propTypes = {
   avatar: PropTypes.bool,
   setting: PropTypes.bool,
   generalSettings: PropTypes.bool,
-  onExportCSV: PropTypes.func,
-  onExportingContacts: PropTypes.bool,
-  onExportingSites: PropTypes.bool,
+  customerSites: PropTypes.bool,
+  customerContacts: PropTypes.bool,
+  backLink: PropTypes.bool,
 };
 export function Cover({
   name,
@@ -32,15 +32,27 @@ export function Cover({
   avatar,
   setting,
   generalSettings,
-  onExportCSV,
-  onExportingContacts,
-  onExportingSites
+  customerSites,
+  customerContacts,
+  backLink
 }) {
   const navigate = useNavigate();
 
   const handleSettingsNavigate = () => {
     navigate(PATH_SETTING.app);
   };
+
+  const linkCustomerSites = () => {
+    navigate(PATH_CUSTOMER.sites)
+  }
+
+  const linkCustomerContacts = () => {
+    navigate(PATH_CUSTOMER.contacts)
+  }
+
+  const handleBackLink = () => {
+    window.history.back();
+  }
   
   const isMobile = useResponsive('down', 'sm');
   const { isAllAccessAllowed } = useAuthContext()
@@ -52,10 +64,15 @@ export function Cover({
         <CoverTitles title={avatar && isMobile ? '' : name} />
         <CoverSettingsIcons setting={setting} handleSettingsNavigate={handleSettingsNavigate} generalSettings={generalSettings} />
       </StyledInfo>
-      {onExportCSV && isAllAccessAllowed &&
-        <Grid container justifyContent='flex-end' columnGap={2} sx={{ position: 'absolute', bottom: 10, right: 10}}>
-          <LoadingButton size='small' loading={onExportingSites} variant='outlined' startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />} onClick={()=> onExportCSV(false, true)}>Export All Sites</LoadingButton>
-          <LoadingButton size='small' loading={onExportingContacts} variant='outlined' startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />} onClick={()=> onExportCSV(true, false)}>Export All Contacts</LoadingButton>
+      {isAllAccessAllowed &&
+        <Grid container justifyContent='space-between' columnGap={2} sx={{ position: 'absolute', bottom:10, px:3}}>
+          <Grid item>
+            {backLink && <Button size='small' startIcon={<Iconify icon="mdi:arrow-left" />} variant='outlined' sx={{float:'left'}} onClick={handleBackLink}>Back</Button>}
+          </Grid>
+          <Grid item>
+            {customerSites && <Button size='small' startIcon={<Iconify icon="mdi:map-legend" />} variant='outlined' onClick={linkCustomerSites}>Sites</Button>}
+            {customerContacts && <Button size='small' startIcon={<Iconify icon="mdi:account-multiple" />} variant='outlined' sx={{ml:2}} onClick={linkCustomerContacts}>Contacts</Button>}
+          </Grid>
         </Grid>
       }
     </StyledRoot>

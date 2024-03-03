@@ -1,4 +1,4 @@
-import { format, isValid, getTime, formatDistanceToNow } from 'date-fns';
+import { format, isValid, getTime, parseISO, formatDistanceToNow, differenceInDays } from 'date-fns';
 
 // ----------------------------------------------------------------------
 
@@ -11,6 +11,15 @@ export function fDate(date, newFormat) {
     return date
 }
 
+export function GetDifferenceInDays( definedDay ) {
+  const today = new Date();
+    
+  const definedDate = parseISO(definedDay);
+  
+  const difference = differenceInDays(definedDate, today);
+  
+  return difference;
+}
 export function fQuarterYearDate(startDate, newFormat) {
 
   if (startDate) {
@@ -43,9 +52,7 @@ export function fTimestamp(date) {
 
 export function fToNow(date) {
   return date
-    ? formatDistanceToNow(new Date(date), {
-        addSuffix: true,
-      })
+    ? formatDistanceToNow(new Date(date))
     : '';
 }
 

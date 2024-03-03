@@ -163,6 +163,28 @@ export const ICONS = {
     color: '#878787',
     heading: 'Customer Not Allowed',
   },
+  TRANSFERHISTORY: {
+    icon: 'ic:outline-manage-history',
+    color: '#008000',
+    heading: 'Transfer History',
+  },
+  
+  // Machine Support 
+  SUPPORT_VALLID: {
+    icon: 'bx:support',
+    color: '#008000',
+    heading: 'Support Vallid!',
+  },
+  SUPPORT_WARNING: {
+    icon: 'bx:support',
+    color: '#ff9800',
+    heading: 'Support Exiries Soon!',
+  },
+  SUPPORT_EXPIRED: {
+    icon: 'bx:support',
+    color: '#FF0000',
+    heading: 'Support Expired!',
+  },
 
   EXCLUDE_REPORTING: {
     icon: 'pepicons-pop:list-off',

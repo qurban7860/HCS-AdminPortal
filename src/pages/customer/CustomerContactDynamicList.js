@@ -16,6 +16,8 @@ import {
   getContacts,
   // resetContacts,
   setContactFormVisibility,
+  setCardActiveIndex,
+  setIsExpanded,
   getContact,
   resetContactFormsVisiblity,
 } from '../../redux/slices/customer/contact';
@@ -26,6 +28,7 @@ import ContactMoveForm from './contact/ContactMoveForm';
 import BreadcrumbsProvider from '../../components/Breadcrumbs/BreadcrumbsProvider';
 import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
 import useResponsive from '../../hooks/useResponsive';
+import useLimitString from '../../hooks/useLimitString';
 import SearchInput from '../../components/Defaults/SearchInput';
 import { fDate } from '../../utils/formatTime';
 import { Snacks } from '../../constants/customer-constants';
@@ -37,7 +40,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 
 // ----------------------------------------------------------------------
 
-export default function CustomerContactList(currentContact = null) {
+export default function CustomerContactDynamicList(currentContact = null) {
 
   const { order, orderBy } = useTable({ defaultOrderBy: '-createdAt' });
   const { isAllAccessAllowed } = useAuthContext()
@@ -52,12 +55,14 @@ export default function CustomerContactList(currentContact = null) {
     contactEditFormVisibility,
     contactMoveFormVisibility,
     formVisibility,
+    activeCardIndex,
+    isExpanded,
   } = useSelector((state) => state.contact);
   const [checked, setChecked] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
-  const [activeCardIndex, setCardActiveIndex] = useState('');
+  // const [activeCardIndex, setCardActiveIndex] = useState('');
   // for filtering contacts -------------------------------------
-  const [isExpanded, setIsExpanded] = useState(false);
+  // const [isExpanded, setIsExpanded] = useState(false);
   const [filterName, setFilterName] = useState('');
   const [filterStatus, setFilterStatus] = useState([]);
   const [tableData, setTableData] = useState([]);
@@ -70,12 +75,12 @@ export default function CustomerContactList(currentContact = null) {
     if (contactEditFormVisibility) {
       dispatch(setContactFormVisibility(false));
       enqueueSnackbar(Snacks.CONTACT_CLOSE_CONFIRM, {variant: 'warning'});
-      setIsExpanded(false);
-      setCardActiveIndex('');
+      dispatch(setIsExpanded(false));
+      dispatch(setCardActiveIndex(''));
     } else {
       dispatch(setContactFormVisibility(true));
-      setCardActiveIndex('');
-      setIsExpanded(false);
+      dispatch(setCardActiveIndex(''));
+      dispatch(setIsExpanded(false));
     }
   };
 
@@ -114,23 +119,19 @@ export default function CustomerContactList(currentContact = null) {
 
   const handleActiveCard = (index) => {
     if (!contactEditFormVisibility && !contactMoveFormVisibility) {
-      setCardActiveIndex(index);
+      dispatch(setCardActiveIndex(index));
     }
   };
 
   const handleExpand = (index) => {
-    setIsExpanded(true);
+    dispatch(setIsExpanded(true));
   };
 
   useEffect(() => {
     if (!formVisibility && !contactEditFormVisibility && !contactMoveFormVisibility) {
       dispatch(getContacts(customer._id));
     }
-      // return ()=>{ dispatch(resetContacts()) }
   }, [dispatch, checked, customer, formVisibility, contactEditFormVisibility, contactMoveFormVisibility]);
-
-  //   dispatch(getContacts(customer._id));
-  // }, [dispatch, customer]);
 
   const isNotFound = !contacts.length && !formVisibility && !contactEditFormVisibility;
   const shouldShowContactView = isExpanded && !contactEditFormVisibility && !contactMoveFormVisibility;
@@ -163,7 +164,7 @@ export default function CustomerContactList(currentContact = null) {
         <Grid item xs={12} md={6}>
           <BreadcrumbsProvider>
             <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
-            <BreadcrumbsLink to={PATH_CUSTOMER.view} name={customer.name} />
+            <BreadcrumbsLink to={PATH_CUSTOMER.view} name={ customer.name } />
             <BreadcrumbsLink
               to={PATH_CUSTOMER.contacts}
               name={
@@ -247,7 +248,7 @@ export default function CustomerContactList(currentContact = null) {
           <GridBaseViewForm item xs={12} sm={12} md={12} lg={7} xl={8} >
             {shouldShowContactView && (
               <CardBase>
-                <ContactViewForm setIsExpanded={setIsExpanded} />
+                <ContactViewForm />
               </CardBase>
             )}
             {shouldShowContactEdit && <ContactEditForm setIsExpanded={setIsExpanded} />}

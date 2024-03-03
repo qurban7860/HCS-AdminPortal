@@ -43,7 +43,7 @@ export default function CustomerView({ editPage }) {
   const dispatch = useDispatch();
   const { customer, customerEditFormFlag, customerTab } = useSelector((state) => state.customer);
   const [currentComponent, setCurrentComponent] = useState(customerTab);
-  
+
   const TABS = [
     {
       // disabled: siteEditFormVisibility || contactEditFormVisibility || contactMoveFormVisibility || noteEditFormVisibility,
@@ -106,7 +106,7 @@ export default function CustomerView({ editPage }) {
     } else {
       setCurrentComponent(<CustomerViewForm />);
     }
-    dispatch(setCustomerTab('info'))
+    // dispatch(setCustomerTab('info'))
   }, [dispatch, customerEditFormFlag, customer]);
 
   return (

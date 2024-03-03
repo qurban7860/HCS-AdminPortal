@@ -16,6 +16,7 @@ import {
   deleteContact,
   setContactMoveFormVisibility,
   setContactFormVisibility,
+  setIsExpanded,
 } from '../../../redux/slices/customer/contact';
 import { setMachineTab } from '../../../redux/slices/products/machine';
 import { getMachineServiceRecord, setMachineServiceRecordViewFormVisibility, setResetFlags } from '../../../redux/slices/products/machineServiceRecord';
@@ -29,12 +30,10 @@ import { PATH_MACHINE } from '../../../routes/paths';
 ContactViewForm.propTypes = {
   currentContact: PropTypes.object,
   setCurrentContactData: PropTypes.func,
-  setIsExpanded: PropTypes.func,
 };
 
 export default function ContactViewForm({
   currentContact = null,
-  setIsExpanded,
   setCurrentContactData,
 }) {
   const { contact, isLoading } = useSelector((state) => state.contact);
@@ -60,7 +59,7 @@ export default function ContactViewForm({
   const onDelete = async () => {
     try {
       await dispatch(deleteContact(customer?._id, contact?._id));
-      setIsExpanded(false);
+      dispatch(setIsExpanded(false));
       enqueueSnackbar('Contact deleted Successfully!');
       dispatch(getContacts(customer?._id));
     } catch (err) {

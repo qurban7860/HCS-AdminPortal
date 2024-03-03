@@ -83,6 +83,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       category: null,
       machineModel: null,
       manufactureDate: null,
+      purchaseDate: null,
       supplier: null,
       status: null,
       customer: null,
@@ -261,18 +262,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   <RHFDatePicker inputFormat='dd/MM/yyyy' name="manufactureDate" label="Manufacture Date" />
 
                   <RHFAutocomplete
-                    name="status" 
-                    label="Status" 
-                    options={activeMachineStatuses}
-                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                    getOptionLabel={(option) => `${option.name || ''}`}
-                    getOptionDisabled={(option) => option.slug === 'intransfer' || option.slug === 'transferred' }
-                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.name || ''}`}</li> )}
-                    id="controllable-states-demo"
-                    ChipProps={{ size: 'small' }}
-                  />
-
-                  <RHFAutocomplete
                     name="supplier"
                     label="Supplier"
                     id="controllable-states-demo"
@@ -283,6 +272,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     ChipProps={{ size: 'small' }}
                   />
 
+                  <RHFDatePicker inputFormat='dd/MM/yyyy' name="purchaseDate" label="Purchase Date" />
                   <RHFTextField name="workOrderRef" label="Work Order/ Purchase Order" />
 
                   <RHFAutocomplete
@@ -369,9 +359,24 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     renderInput={(params) => ( <TextField  {...params}  label="Connected Machines"   placeholder="Search"  /> )}
                   />
+                  
                 <Box rowGap={2} columnGap={2} display="grid"
                   gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
+                  <RHFAutocomplete
+                    name="status" 
+                    label="Status" 
+                    options={activeMachineStatuses}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    getOptionLabel={(option) => `${option.name || ''}`}
+                    getOptionDisabled={(option) => option.slug === 'intransfer' || option.slug === 'transferred' }
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.name || ''}`}</li> )}
+                    id="controllable-states-demo"
+                    ChipProps={{ size: 'small' }}
+                  />
+
+                  <RHFDatePicker inputFormat='dd/MM/yyyy' name="supportExpireDate" label="Support Expiry Date" />
+
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect
@@ -384,6 +389,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     ChipProps={{ size: 'small' }}
                     id="controllable-states-demo"
                   />
+
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect
@@ -396,6 +402,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     ChipProps={{ size: 'small' }}
                     id="controllable-states-demo"
                   />
+
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect
@@ -408,7 +415,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     ChipProps={{ size: 'small' }}
                     id="controllable-states-demo"
                   />
-                  <RHFDatePicker inputFormat='dd/MM/yyyy' name="supportExpireDate" label="Support Expiry Date" />
+                  
                 </Box>
                   <RHFTextField name="description" label="Description" minRows={3} multiline />
                   <ToggleButtons name={FORMLABELS.isACTIVE.name} isMachine />

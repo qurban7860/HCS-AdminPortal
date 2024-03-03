@@ -8,6 +8,8 @@ import { fDate } from '../../utils/formatTime';
 import LinkTableCellWithIconTargetBlank from '../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
 import { useScreenSize } from '../../hooks/useResponsive';
 import LinkDialogTableCell from '../../components/ListTableTools/LinkDialogTableCell';
+import { StyledTooltip } from '../../theme/styles/default-styles';
+import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -32,6 +34,7 @@ export default function MachineListTableRow({
   openInNewPage,
   handleCustomerDialog
 }) {
+  console.log("rowrow : ", row)
   const {
     verifications,
     serialNo,
@@ -43,6 +46,8 @@ export default function MachineListTableRow({
     shippingDate,
     status,
     isActive,
+    transferredDate,
+    transferredToMachine
     // createdAt,
   } = row;
  
@@ -65,7 +70,23 @@ export default function MachineListTableRow({
       }
       {  useScreenSize('lg') && <TableCell >{fDate(installationDate)}</TableCell>}
       {  useScreenSize('lg') && <TableCell >{fDate(shippingDate)}</TableCell>}
-      {  useScreenSize('sm') && <TableCell sx={{color: status?.slug === 'transferred' ? 'red' : 'inherit' }} >{status?.name || ''}</TableCell>}
+      {  useScreenSize('sm') && 
+        <TableCell>
+          <span style={{color:row?.status?.slug==='transferred'?'red':''}}>{status?.name || ''} </span>
+          {row?.status?.slug ==='transferred' &&
+            <StyledTooltip
+              title={`${status?.name || ''}${transferredToMachine?.customer?.name?` to ${transferredToMachine?.customer?.name}`:''} on ${fDate(transferredDate)}`}
+              placement="top"
+              disableFocusListener
+              tooltipcolor="#008000" 
+              color="#008000"
+              sx={{maxWidth:'200px'}}
+            >
+              <Iconify icon="mdi:info" sx={{position:'relative', bottom:'-5px'}} />
+            </StyledTooltip>
+          }
+        </TableCell>
+      }
       <TableCell align="center">  <Switch checked={isActive} disabled size="small"/>  </TableCell>
 
     </TableRow>

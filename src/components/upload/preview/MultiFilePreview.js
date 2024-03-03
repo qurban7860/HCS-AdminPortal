@@ -90,7 +90,7 @@ function MultiFilePreview({
       {files.map(( file , index ) => {
         if(file){
         const { key, name = '', size = 0, displayName, referenceNumber, versionNo, stockNumber, docCategory, docType } = fileData(file);
-        const fileType = file?.type?.split('/').pop();
+        const fileType = file?.type?.split('/').pop()?.toLowerCase();
         const isNotFormatFile = typeof file === 'string';
 
         if (thumbnail) {
@@ -109,7 +109,7 @@ function MultiFilePreview({
                       height:180,
                     }}
                 >
-                  <CardMedia onClick={()=> FORMAT_IMG_VISIBBLE.some(format => fileType.match(format)) && previewHandle(file)}>
+                  <CardMedia onClick={()=> FORMAT_IMG_VISIBBLE.some(format => fileType.match(format?.toLowerCase())) && previewHandle(file)}>
                     <FileThumbnail imageView file={file} sx={{ position: 'absolute' }} imgSx={{ position: 'absolute' }}/>
                   </CardMedia>
                   <ButtonGroup
@@ -197,7 +197,7 @@ function MultiFilePreview({
           >
 
           <Stack direction="row" sx={{ width:"100%" }} >
-            <FileThumbnail file={file} />
+            <FileThumbnail file={file} rows />
             <Stack spacing={1} sx={{ml:3, width:"100%" }} >
 
               {/* {onChangeDocCategory && <Autocomplete 
@@ -227,7 +227,7 @@ function MultiFilePreview({
                 <Grid item md={8} sm={12} >
                   {onChangeDisplayName && <TextField 
                     fullWidth 
-                    label="Display Name*" 
+                    label="Document Name*" 
                     size='small' 
                     value={ displayName } sx={{mt: { md:0, sm: 1} }} 
                     InputProps={{
@@ -237,7 +237,7 @@ function MultiFilePreview({
                     }}
                     onChange={(e)=> onChangeDisplayName( index, e.target.value)} 
                     error={!displayName?.trim()} 
-                    helperText={!displayName?.trim() && 'Display Name is required!'} 
+                    helperText={!displayName?.trim() && 'Document Name is required!'} 
                   />}
                 </Grid>
 
@@ -282,6 +282,8 @@ function MultiFilePreview({
                       maxLength: 8
                     },
                 }}
+                // error={ versionNo > 1000 }
+                // helperText={ versionNo > 1000 && 'Version Number Version number must be less than or equal to 1000'}
                 onChange={(e)=> onChangeVersionNo( index, e.target.value)}  
               />}
 

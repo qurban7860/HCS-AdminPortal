@@ -96,6 +96,7 @@ function MachineTransfer() {
       billingSite: null,
       installationSite: null,
       siteMilestone: '',
+      transferredDate: new Date(),
       shippingDate: null,
       installationDate: null,
       status: null,
@@ -258,6 +259,13 @@ function MachineTransfer() {
                   </Box>
 
                     <RHFTextField name="siteMilestone" label="Landmark for Installation site" multiline />
+                    <Box rowGap={2} columnGap={2} display="grid"
+                    gridTemplateColumns={{ md: 'repeat(2, 1fr)', sm: 'repeat(1, 1fr)' }}
+                  >
+                    <RHFDatePicker inputFormat='dd/MM/yyyy' name="transferredDate" label="Transfer Date" />
+
+
+                  </Box>
 
                   <Box rowGap={2} columnGap={2} display="grid"
                     gridTemplateColumns={{ md: 'repeat(2, 1fr)', sm: 'repeat(1, 1fr)' }}

@@ -8,7 +8,7 @@ import useLimitString from '../../hooks/useLimitString';
 export default function LinkTableCellWithIconTargetBlank({ align, onViewRow, onClick, param, isVerified }) {
   return (
     <TableCell align={align} sx={{minWidth:'130px'}}>
-      <VerificationIcon isVerified={isVerified} />
+      {isVerified!==undefined && <VerificationIcon isVerified={isVerified} />}
       <Link
         onClick={onViewRow}
         color="inherit"

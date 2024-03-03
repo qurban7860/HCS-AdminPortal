@@ -7,8 +7,10 @@ import {
 // components
 import LinkTableCellButtons from '../../../components/ListTableTools/LinkTableCellButtons';
 import LinkDialogTableCellTargetBlank from '../../../components/ListTableTools/LinkDialogTableCellTargetBlank';
-import { StyledTableRow } from '../../../theme/styles/default-styles'
+import { StyledTableRow, StyledTooltip } from '../../../theme/styles/default-styles'
 import { useAuthContext } from '../../../auth/useAuthContext';
+import { fDate } from '../../../utils/formatTime';
+import Iconify from '../../../components/iconify';
 
 MachineListTableRow.propTypes = {
   row: PropTypes.object,
@@ -31,7 +33,9 @@ export default function MachineListTableRow({
     name,
     machineModel,
     status,
-    instalationSite
+    instalationSite,
+    transferredDate,
+    transferredMachine
   } = row;
 
   const address = {};
@@ -41,15 +45,29 @@ export default function MachineListTableRow({
   address.region = instalationSite?.address?.region;
   address.city = instalationSite?.address?.city;
 
+
   return (
       <StyledTableRow hover selected={selected}>
         <LinkDialogTableCellTargetBlank align="left" param={serialNo} onViewRow={onViewRow} onClick={onClick} />
         <TableCell>{name || ''}</TableCell>
         <TableCell>{machineModel?.name || ''}</TableCell>
-        <TableCell sx={{color:row?.status?.slug==='transferred'?'red':''}}>{status?.name || ''}</TableCell>
         <TableCell>
-            {Object.values(address ?? {}).map((value) => (typeof value === 'string' ? value.trim() : ''))
-                          .filter((value) => value !== '').join(', ')}
+          <span style={{color:row?.status?.slug==='transferred'?'red':''}}>{status?.name || ''} </span>
+          {row?.status?.slug ==='transferred' &&
+            <StyledTooltip
+              title={`${status?.name || ''}${transferredMachine?.customer?.name?` to ${transferredMachine?.customer?.name}`:''} on ${fDate(transferredDate)}`}
+              placement="top"
+              disableFocusListener
+              tooltipcolor="#008000" 
+              color="#008000"
+              sx={{maxWidth:'200px'}}
+            >
+              <Iconify icon="mdi:info" sx={{position:'relative', bottom:'-5px'}} />
+            </StyledTooltip>
+          }
+        </TableCell>
+        <TableCell>
+            {Object.values(address ?? {}).map((value) => (typeof value === 'string' ? value.trim() : '')).filter((value) => value !== '').join(', ')}
         </TableCell>
         <LinkTableCellButtons moveIcon align="center" onClick={row?.status?.slug!=='transferred' && isAllAccessAllowed && onMoveMachine} />
       </StyledTableRow>

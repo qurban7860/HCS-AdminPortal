@@ -17,14 +17,14 @@ import { getActiveCustomers } from '../../redux/slices/customer/customer';
 import IconPopover from '../Icons/IconPopover';
 import IconTooltip from '../Icons/IconTooltip';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
+import ViewFormTransferHistoryMenuPopover from './ViewFormTransferHistoryMenuPopover';
 import ViewFormApprovalsPopover from './ViewFormApprovalsPopover';
 import { ICONS } from '../../constants/icons/default-icons';
-import { fDate, fDateTime } from '../../utils/formatTime';
+import { fDate, fDateTime, GetDifferenceInDays } from '../../utils/formatTime';
 import { useAuthContext } from '../../auth/useAuthContext';
 import { PATH_DASHBOARD } from '../../routes/paths';
 
 function ViewFormEditDeleteButtons({
-  // Icons 
   backLink,
   isActive,
   isDefault,
@@ -37,6 +37,7 @@ function ViewFormEditDeleteButtons({
   machineSettingPage,
   settingPage,
   securityUserPage,
+  transferredHistory,
   // Handlers
   handleVerification,
   handleVerificationTitle,
@@ -250,6 +251,9 @@ function ViewFormEditDeleteButtons({
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
 
+  const [ transferHistoryAnchorEl, setTransferHistoryAnchorEl ] = useState(null);
+  const [ transferHistory, setTransferHistory ] = useState([]);
+
   const [approvedAnchorEl, setApprovedAnchorEl] = useState(null);
   const [approvedBy, setApprovedBy] = useState([]);
 
@@ -261,6 +265,18 @@ function ViewFormEditDeleteButtons({
   const handleVerifiedPopoverClose = () => {
     setVerifiedAnchorEl(null);
     setVerifiedBy([])
+  };
+
+  const handleTransferHistoryPopoverOpen = (event) => {
+    if(transferredHistory.length > 0) {
+      setTransferHistoryAnchorEl(event.currentTarget);
+      setTransferHistory(transferredHistory)
+    }
+  };
+
+  const handleTransferHistoryPopoverClose = () => {
+    setTransferHistoryAnchorEl(null);
+    setTransferHistory([])
   };
 
   const handleApprovedPopoverOpen = (event) => {
@@ -283,10 +299,10 @@ function ViewFormEditDeleteButtons({
   } = methods;
 
   const machineSupport = {
-    status:new Date(machineSupportDate).getTime() > new Date().getTime(),
+    status: GetDifferenceInDays( machineSupportDate ),
     date: new Date(machineSupportDate)
   }
-
+  
   return (
     <Grid container justifyContent="space-between" sx={{pb:1, px:0.5}}>
       <Grid item sx={{display:'flex', mt:0.5,mr:1}}>
@@ -357,21 +373,32 @@ function ViewFormEditDeleteButtons({
             icon={ICONS.EXCLUDE_REPORTING.icon} />
           }
 
-          {machineSupportDate &&
+          {machineSupportDate !==undefined  &&
             <IconTooltip
-              title={machineSupport?.status?`Support valid till ${fDate(machineSupportDate)}`:`Support ended ${fDate(machineSupportDate)}`}
-              color={machineSupport?.status?ICONS.ALLOWED.color:ICONS.DISALLOWED.color}
-              icon="bx:support"
+              title={ !Number.isNaN(machineSupport?.status) && ( machineSupport?.status > 0 ? `Support valid till ${fDate(machineSupportDate)}` : `Support ended ${fDate(machineSupportDate)}` ) || 'Support not available!' }
+              color={machineSupport?.status > 30 && ICONS.SUPPORT_VALLID.color || machineSupport?.status < 30 && machineSupport?.status > 0 && ICONS.SUPPORT_WARNING.color || machineSupport?.status < 1 && ICONS.SUPPORT_EXPIRED.color || ICONS.SUPPORT_EXPIRED.color}
+              icon={machineSupport?.status?ICONS.SUPPORT_VALLID.icon:ICONS.SUPPORT_EXPIRED.icon}
               />
           }
 
-          {verifiers?.length>0 &&
+          {Array.isArray(verifiers) && verifiers?.length>0 &&
           <Badge badgeContent={verifiers.length} color="info">
             <IconTooltip
               title={isVerifiedTitle || 'Verified'}
               color={ICONS.ALLOWED.color}
               icon="ic:outline-verified-user"
               onClick={handleVerifiedPopoverOpen}
+              />
+          </Badge>
+          }
+
+          {transferredHistory !== undefined &&
+          <Badge badgeContent={transferredHistory.length || '0' } color="info">
+            <IconTooltip
+              title='Transfer History'
+              color={ICONS.TRANSFERHISTORY.color}
+              icon={ICONS.TRANSFERHISTORY.icon}
+              onClick={handleTransferHistoryPopoverOpen}
               />
           </Badge>
           }
@@ -386,7 +413,6 @@ function ViewFormEditDeleteButtons({
               />
             </Badge>
           }
-
 
           {customerAccess !== undefined &&
             <IconTooltip
@@ -751,6 +777,13 @@ function ViewFormEditDeleteButtons({
         ListTitle={isVerifiedTitle || "Verified By"}
       />
 
+      <ViewFormTransferHistoryMenuPopover
+        open={transferHistoryAnchorEl}
+        onClose={handleTransferHistoryPopoverClose}
+        ListArr={transferHistory}
+        ListTitle="Transfer History"
+      />
+
       <ViewFormApprovalsPopover
         open={approvedAnchorEl}
         onClose={handleApprovedPopoverClose}
@@ -798,6 +831,7 @@ ViewFormEditDeleteButtons.propTypes = {
   disableEditButton: PropTypes.bool,
   handleMap: PropTypes.func,
   machineSupportDate: PropTypes.string,
+  transferredHistory: PropTypes.array,
   moveCustomerContact: PropTypes.func,
   approveConfig: PropTypes.bool,
   approveHandler: PropTypes.func,

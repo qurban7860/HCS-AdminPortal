@@ -34,7 +34,7 @@ import GoogleMaps from '../../assets/GoogleMaps';
 import { TITLES, FORMLABELS } from '../../constants/default-constants';
 import { Snacks } from '../../constants/machine-constants';
 // utils
-import { fDate } from '../../utils/formatTime';
+import { fDate, GetDifferenceInDays } from '../../utils/formatTime';
 // dialog
 import MachineDialog from '../../components/Dialog/MachineDialog'
 import CustomerDialog from '../../components/Dialog/CustomerDialog';
@@ -195,6 +195,7 @@ export default function MachineViewForm() {
       parentSerialNo: machine?.parentMachine?.serialNo || '',
       supplier: machine?.supplier?.name || '',
       workOrderRef: machine?.workOrderRef || '',
+      purchaseDate: machine?.purchaseDate || null,
       machineModel: machine?.machineModel?.name || '',
       manufactureDate: machine?.manufactureDate || '',
       machineConnections: machine?.machineModel?.category?.connections || false,
@@ -202,8 +203,8 @@ export default function MachineViewForm() {
       machineweb:machine?.machineProfile?.web || '',
       machineflange:machine?.machineProfile?.flange || '',
       status: machine?.status?.name || '',
-      transferredMachine: machine?.transferredMachine?.customer || null,
-      transferredFrom: machine?.transferredFrom?.customer || null,
+      transferredToMachine: machine?.transferredToMachine || null,
+      transferredFromMachine: machine?.transferredFromMachine || null,
       customer: machine?.customer || '',
       financialCompany: machine?.financialCompany || '',
       siteMilestone: machine?.siteMilestone || '',
@@ -216,7 +217,7 @@ export default function MachineViewForm() {
       accountManager: machine?.accountManager || [],
       projectManager: machine?.projectManager || [],
       supportManager: machine?.supportManager || [],
-      supportExpireDate: machine?.supportExpireDate  || '',
+      supportExpireDate: machine?.supportExpireDate  || null,
       isActive: machine?.isActive,
       createdByFullName: machine?.createdBy?.name,
       createdAt: machine?.createdAt,
@@ -228,7 +229,7 @@ export default function MachineViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [machine]
   );
-
+  
   return (
     <>
       <Grid container direction="row" mt={isMobile && 2}>
@@ -246,8 +247,9 @@ export default function MachineViewForm() {
               handleTransfer={ () => navigate(PATH_MACHINE.machines.transfer(machine?._id))}
               backLink={() => navigate(PATH_MACHINE.machines.list)}
               machineSupportDate={defaultValues?.supportExpireDate}
+              transferredHistory={machine?.transferredHistory || []}
             />
-
+             {/* TOP CARD FULL ROW */}
             <FormLabel content={FORMLABELS.KEYDETAILS} />
             <Grid container>
               <ViewFormField isLoading={isLoading} sm={4} variant='h4' heading="Serial No" param={defaultValues?.serialNo} />
@@ -269,124 +271,82 @@ export default function MachineViewForm() {
               
         <Card sx={{ width: '100%', p: '1rem', mb:3 }}>
           <Grid container>
+                       {/* 1 FULL ROW */}
             <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues?.name} />
-            {defaultValues?.alias?.length > 0 && <ViewFormField isLoading={isLoading} sm={12} heading="Alias" chips={defaultValues?.alias} />}
-            <ViewFormField isLoading={isLoading} sm={6} variant='h4' heading="Profile" param={`${defaultValues?.machineProfile} ${(defaultValues?.machineweb && defaultValues?.machineflange)? `(${defaultValues?.machineweb} X ${defaultValues?.machineflange})` :""}`} />
-            <ViewFormField isLoading={isLoading} sm={6} heading="Status"
+                       {/* 2 FULL ROW */}
+            <ViewFormField isLoading={isLoading} sm={6} heading="Status" node={ <Typography variant='h4' sx={{mr: 1,color: machine?.status?.slug === "transferred" && 'red'  }}>{ defaultValues?.status }</Typography> } />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Support Expiry Date" param={fDate(defaultValues?.supportExpireDate)} />
+                       {/* 3 FULL ROW */}
+            <ViewFormField isLoading={isLoading} sm={6} heading="Transfer Detail"
               node={
-                <Grid display="flex">
-                  <Typography variant='h4' sx={{mr: 1,color: machine?.status?.slug === "transferred" && 'red'  }}>{ defaultValues?.status }</Typography>
-                  { (defaultValues?.transferredMachine && 
-                    <Typography variant='body2' sx={{mt: 0.5}} >
-                        {` to `}
-                        <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredMachine?._id)} underline="none" sx={{ cursor: 'pointer'}}>
-                          <b>{defaultValues?.transferredMachine?.name}</b>
-                        </Link>
-                          <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(defaultValues?.transferredMachine?._id), '_blank' ) }/>
-                    </Typography> ) || 
-                    ( defaultValues?.transferredFrom && 
+                <Grid display="flex" alignItems="center">
+                  { defaultValues?.transferredFromMachine && 
+                    <>
                       <Typography variant='body2' sx={{mt: 0.5}} >
-                        {` Transferred from `}
-                        <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredFrom?._id)} underline="none" sx={{ cursor: 'pointer'}}>
-                          <b>{defaultValues?.transferredFrom?.name}</b>
+                        {`from >`}
+                        <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredFromMachine?.customer?._id)} underline="none" sx={{ cursor: 'pointer', ml:1}}>
+                          <b>{defaultValues?.transferredFromMachine?.customer?.name}</b>
                         </Link>
-                          <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(defaultValues?.transferredFrom?._id), '_blank' ) }/>
-                    </Typography> 
-                    )
-                  }
+                          <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(defaultValues?.transferredFromMachine?.customer?._id), '_blank' ) }/>
+                      </Typography>
+                    </>}
+                    { defaultValues?.transferredFromMachine && defaultValues?.transferredToMachine && <Typography variant='body2'>,</Typography> }
+                    { defaultValues?.transferredToMachine && 
+                      <Typography variant='body2' sx={{mt: 0.5, ml:1 }} >
+                          {`to >  `}
+                          <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredToMachine?.customer?._id)} underline="none" sx={{ cursor: 'pointer', ml:1}}>
+                            <b>{defaultValues?.transferredToMachine?.customer?.name}</b>
+                          </Link>
+                            <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(defaultValues?.transferredToMachine?.customer?._id), '_blank' ) }/>
+                      </Typography> }
                 </Grid>
               }
             />
+            <ViewFormField isLoading={isLoading} sm={6} variant='h4' heading="Profile" param={`${defaultValues?.machineProfile} ${(defaultValues?.machineweb && defaultValues?.machineflange)? `(${defaultValues?.machineweb} X ${defaultValues?.machineflange})` :""}`} />
+                       {/* 4 FULL ROW */}
+            {defaultValues?.alias?.length > 0 && <ViewFormField isLoading={isLoading} sm={12} heading="Alias" chips={defaultValues?.alias} />}
+                       {/* 5 FULL ROW */}
             <ViewFormField isLoading={isLoading} sm={6} heading="Manufacture Date" param={fDate(defaultValues?.manufactureDate)} />
-            { defaultValues?.parentSerialNo ? <ViewFormField isLoading={isLoading} sm={6} heading="Previous Machine" param={defaultValues?.parentSerialNo} /> : " "}
             <ViewFormField isLoading={isLoading} sm={6} heading="Supplier" param={defaultValues?.supplier} />
+                       {/* 6 FULL ROW */}
+            <ViewFormField isLoading={isLoading} sm={6} heading="Purchase Date" param={fDate(defaultValues?.purchaseDate)} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Work Order / Purchase Order" param={defaultValues?.workOrderRef}/>
-
-            <ViewFormField isLoading={isLoading} sm={6}
-                    heading="Financing Company"
-                    node={
-                      defaultValues.financialCompany && (
+                       {/* 7 FULL ROW */}
+            <ViewFormField isLoading={isLoading} sm={6} heading="Financing Company"
+                    node={ defaultValues.financialCompany && (
                         <Link onClick={(event)=> handleCustomerDialog(event, defaultValues.financialCompany?._id)} underline="none" sx={{ cursor: 'pointer'}} >
                           {defaultValues.financialCompany?.name}
-                        </Link>
-                      )
-                    }
-                  />
-
-            <ViewFormField isLoading={isLoading}
-              sm={6}
-              heading="Billing Site"
-              node={
-                defaultValues.billingSite && (
+                        </Link> )} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Billing Site"
+                node={ defaultValues.billingSite && (
                   <Link onClick={ handleBillingSiteDialog } underline="none" sx={{ cursor: 'pointer'}} >
                     {defaultValues.billingSite?.name}
-                  </Link>
-                )
-              }
-            />
-
-            <ViewFormField isLoading={isLoading}
-              sm={6}
-              heading="Installation Site"
-              node={
-                defaultValues.instalationSite && (
+                  </Link> )} />
+                       {/* 8 FULL ROW */}
+            <ViewFormField isLoading={isLoading} sm={6} heading="Installation Site"
+              node={ defaultValues.instalationSite && (
                   <Link onClick={ handleInstallationSiteDialog } underline="none" sx={{ cursor: 'pointer'}} >
                     {defaultValues.instalationSite?.name}
-                  </Link>
-                )
-              }
-            />
-
-            <ViewFormField isLoading={isLoading}
-              sm={12}
-              heading="Landmark for Installation site"
-              param={defaultValues?.siteMilestone}
-            />
-
-            <ViewFormField isLoading={isLoading}
-              sm={6}
-              heading="Shipping Date"
-              param={fDate(defaultValues?.shippingDate)}
-            />
-
-            <ViewFormField isLoading={isLoading}
-              sm={6}
-              heading="Installation Date"
-              param={fDate(defaultValues?.installationDate)}
-            />
-
+                  </Link> )} />
+            <ViewFormField isLoading={isLoading} sm={12} heading="Landmark for Installation site" param={defaultValues?.siteMilestone} />
+                       {/* 9 FULL ROW */}
+            <ViewFormField isLoading={isLoading} sm={6} heading="Shipping Date" param={fDate(defaultValues?.shippingDate)} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Installation Date" param={fDate(defaultValues?.installationDate)} />
+                       {/* 10 FULL ROW */}
+            { defaultValues?.parentSerialNo ? <ViewFormField isLoading={isLoading} sm={6} heading="Previous Machine" param={defaultValues?.parentSerialNo} /> : " "}
+                       {/* 11 FULL ROW */}
             <ViewFormField isLoading={isLoading} sm={12} heading="Connected Machines" chipDialogArrayParam={linkedMachines} />
+                       {/* 12 FULL ROW */}
             <ViewFormField isLoading={isLoading} sm={12} heading="Parent Machines" chipDialogArrayParam={paranetMachines} />
+                       {/* 13 FULL ROW */}
             <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
           </Grid>
-
+                       {/* HOWICK RESOURCES */}
           <Grid container>
             <FormLabel content={FORMLABELS.HOWICK} />
-
-            <ViewFormField isLoading={isLoading}
-              sm={6}
-              heading="Account Manager"
-              customerContacts={defaultValues?.accountManager}
-            />
-
-            <ViewFormField isLoading={isLoading}
-              sm={6}
-              heading="Project Manager"
-              customerContacts={defaultValues?.projectManager}
-            />
-            
-            <ViewFormField isLoading={isLoading}
-              sm={6}
-              heading="Suppport Manager"
-              customerContacts={defaultValues?.supportManager}
-            />
-
-            <ViewFormField isLoading={isLoading}
-              sm={6}
-              heading="Support Expiry Date"
-              param={fDate(defaultValues?.supportExpireDate)}
-            />
-            
+            <ViewFormField isLoading={isLoading} sm={6} heading="Account Manager" customerContacts={defaultValues?.accountManager} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Project Manager" customerContacts={defaultValues?.projectManager} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Suppport Manager" customerContacts={defaultValues?.supportManager} />
           </Grid>
 
           <Grid container>

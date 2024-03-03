@@ -9,6 +9,8 @@ const initialState = {
   siteAddFormVisibility: false,
   siteEditFormVisibility: false,
   responseMessage: null,
+  activeCardIndex: '',
+  isExpanded: false,
   success: false,
   isLoading: false,
   error: null,
@@ -46,6 +48,17 @@ const slice = createSlice({
     setSiteDialog(state, action){
       state.siteDialog = action.payload;
     },
+
+    // ACTIVE CARD INDEX
+    setCardActiveIndex(state, action){
+      state.activeCardIndex = action.payload;
+    },
+
+    // CARD IS EXPENDED
+    setIsExpanded(state, action){
+      state.isExpanded = action.payload;
+    },
+
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -139,6 +152,8 @@ export const {
   setSiteFormVisibility,
   setSiteEditFormVisibility,
   setResponseMessage,
+  setIsExpanded,
+  setCardActiveIndex,
   resetSite,
   resetSites,
   resetActiveSites,
@@ -164,6 +179,7 @@ export function addSite(params) {
           website: params.website,
           lat: params.lat,
           long: params.long,
+          phoneNumbers: params?.phoneNumbers?.filter( pN => pN?.contactNumber !== '' ||  pN?.contactNumber !== undefined ) || [],
           primaryBillingContact: params?.primaryBillingContact?._id || null,
           updateAddressPrimaryBillingContact: params?.updateAddressPrimaryBillingContact,
           primaryTechnicalContact: params?.primaryTechnicalContact?._id || null,
@@ -172,17 +188,17 @@ export function addSite(params) {
           address: {}
         };
 
-        const phoneNumbers = []
+        // const phoneNumbers = []
 
-        if( params?.phone?.number ){
-          phoneNumbers.push( params?.phone );
-        }
+        // if( params?.phone?.number ){
+        //   phoneNumbers.push( params?.phone );
+        // }
 
-        if( params?.fax?.number ){
-          phoneNumbers.push( params?.fax );
-        }
+        // if( params?.fax?.number ){
+        //   phoneNumbers.push( params?.fax );
+        // }
 
-        data.phoneNumbers = phoneNumbers;
+        // data.phoneNumbers = phoneNumbers;
         
         /* eslint-enable */
         if(params.street){
@@ -231,23 +247,24 @@ export function updateSite(params,customerId,Id) {
           lat: params.lat,
           long: params.long,
           isActive: params.isActive,
+          phoneNumbers: params?.phoneNumbers?.filter( pN => pN?.contactNumber !== '' ||  pN?.contactNumber !== undefined ) || [],
           primaryBillingContact: params.primaryBillingContact?._id || null,
           updateAddressPrimaryBillingContact: params?.updateAddressPrimaryBillingContact,
           primaryTechnicalContact: params.primaryTechnicalContact?._id || null,
           updateAddressPrimaryTechnicalContact: params?.updateAddressPrimaryTechnicalContact,
           address: {}
         };
-        const phoneNumbers = []
+        // const phoneNumbers = []
 
-        if( params?.phone?.number ){
-          phoneNumbers.push( { ...params?.phone, type:'PHONE' } );
-        }
+        // if( params?.phone?.number ){
+        //   phoneNumbers.push( { ...params?.phone, type:'PHONE' } );
+        // }
 
-        if( params?.fax?.number ){
-          phoneNumbers.push( { ...params?.fax, type:'FAX' } );
-        }
+        // if( params?.fax?.number ){
+        //   phoneNumbers.push( { ...params?.fax, type:'FAX' } );
+        // }
 
-        data.phoneNumbers = phoneNumbers;
+        // data.phoneNumbers = phoneNumbers;
 
         /* eslint-enable */
         if(params.street){
@@ -324,9 +341,7 @@ export function getSites(customerID) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      let response = null;
-      if(customerID){
-        response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites` , 
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites` , 
         {
           params: {
             isArchived: false,
@@ -338,7 +353,6 @@ export function getSites(customerID) {
         );
         dispatch(slice.actions.getSitesSuccess(response.data));
         dispatch(slice.actions.setResponseMessage('Sites loaded successfully'));
-      }
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
