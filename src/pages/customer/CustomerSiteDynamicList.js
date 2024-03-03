@@ -220,7 +220,7 @@ export default function CustomerSiteDynamicList(defaultValues = { lat: 0, long: 
                     disableClick={siteEditFormVisibility || siteAddFormVisibility}
                     name={_site?.name} 
                     title={`${_site?.address?.country || '' }${(_site?.address?.country && _site?.address?.city) ? ',' : '' } ${_site?.address?.city || '' }`} 
-                    phone={_site?.phoneNumbers?.find( n => n?.type?.toLowerCase() === 'phone' )}
+                    phone={_site?.phoneNumbers?.find( n => n?.type?.toLowerCase() === 'mobile' )}
                     email={_site?.website || ""}
                     image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
                   />)

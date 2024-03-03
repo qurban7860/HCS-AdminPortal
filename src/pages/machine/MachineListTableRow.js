@@ -34,6 +34,7 @@ export default function MachineListTableRow({
   openInNewPage,
   handleCustomerDialog
 }) {
+  console.log("rowrow : ", row)
   const {
     verifications,
     serialNo,
@@ -46,7 +47,7 @@ export default function MachineListTableRow({
     status,
     isActive,
     transferredDate,
-    transferredMachine
+    transferredToMachine
     // createdAt,
   } = row;
  
@@ -74,7 +75,7 @@ export default function MachineListTableRow({
           <span style={{color:row?.status?.slug==='transferred'?'red':''}}>{status?.name || ''} </span>
           {row?.status?.slug ==='transferred' &&
             <StyledTooltip
-              title={`${status?.name || ''}${transferredMachine?.customer?.name?` to ${transferredMachine?.customer?.name}`:''} on ${fDate(transferredDate)}`}
+              title={`${status?.name || ''}${transferredToMachine?.customer?.name?` to ${transferredToMachine?.customer?.name}`:''} on ${fDate(transferredDate)}`}
               placement="top"
               disableFocusListener
               tooltipcolor="#008000" 
