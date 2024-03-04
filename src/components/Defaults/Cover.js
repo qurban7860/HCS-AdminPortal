@@ -64,8 +64,7 @@ export function Cover({
         <CoverTitles title={avatar && isMobile ? '' : name} />
         <CoverSettingsIcons setting={setting} handleSettingsNavigate={handleSettingsNavigate} generalSettings={generalSettings} />
       </StyledInfo>
-      {isAllAccessAllowed &&
-        <Grid container justifyContent='space-between' columnGap={2} sx={{ position: 'absolute', bottom:10, px:3}}>
+      <Grid container justifyContent='space-between' columnGap={2} sx={{ position: 'absolute', bottom:10, px:3}}>
           <Grid item>
             {backLink && <Button size='small' startIcon={<Iconify icon="mdi:arrow-left" />} variant='outlined' sx={{float:'left'}} onClick={handleBackLink}>Back</Button>}
           </Grid>
@@ -73,8 +72,7 @@ export function Cover({
             {customerSites && <Button size='small' startIcon={<Iconify icon="mdi:map-legend" />} variant='outlined' onClick={linkCustomerSites}>Sites</Button>}
             {customerContacts && <Button size='small' startIcon={<Iconify icon="mdi:account-multiple" />} variant='outlined' sx={{ml:2}} onClick={linkCustomerContacts}>Contacts</Button>}
           </Grid>
-        </Grid>
-      }
+      </Grid>
     </StyledRoot>
   );
 }
