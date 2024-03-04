@@ -53,7 +53,7 @@ export default function CustomerSiteListTableRow({
     <StyledTableRow hover selected={selected}>
       {/* <LinkTableCell param={customer?.name || ''} onClick={onViewRow} /> */}
       {/* {smScreen && <TableCell>{customer?.name?`${customer?.name} `:''}{customer?.name}</TableCell>} */}
-      {smScreen && mdScreen && <TableCell>{customer?.name}</TableCell>}
+      {smScreen && <TableCell>{customer?.name}</TableCell>}
       <LinkTableCellWithIconTargetBlank onViewRow={()=> handleSiteView( customer?._id, _id ) } onClick={()=> handleSiteViewInNewPage( customer?._id, _id ) } param={name || ''} />
       {smScreen && mdScreen &&
         <TableCell>
