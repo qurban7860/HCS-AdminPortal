@@ -29,7 +29,7 @@ function ViewPhoneComponent({ heading, variant, sm, value, typeOfContact }) {
             {value?.map((phoneNumber, index) => (
               <Chip
                 key={index}
-                sx={{ mr: 1 }}
+                sx={{ mr: 1, mb: 1 }}
                 label={
                   <>
                     <strong>{phoneNumber.type && phoneNumber.type}</strong> {phoneNumber.countryCode && `+${phoneNumber.countryCode} `} {phoneNumber.contactNumber && phoneNumber.contactNumber} {phoneNumber.extensions && `(${phoneNumber.extensions})`}
