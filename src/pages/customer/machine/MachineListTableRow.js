@@ -35,7 +35,7 @@ export default function MachineListTableRow({
     status,
     instalationSite,
     transferredDate,
-    transferredMachine
+    transferredToMachine
   } = row;
 
   const address = {};
@@ -55,7 +55,7 @@ export default function MachineListTableRow({
           <span style={{color:row?.status?.slug==='transferred'?'red':''}}>{status?.name || ''} </span>
           {row?.status?.slug ==='transferred' &&
             <StyledTooltip
-              title={`${status?.name || ''}${transferredMachine?.customer?.name?` to ${transferredMachine?.customer?.name}`:''} on ${fDate(transferredDate)}`}
+              title={`${status?.name || ''}${transferredToMachine?.customer?.name?` to ${transferredToMachine?.customer?.name}`:''} on ${fDate(transferredDate)}`}
               placement="top"
               disableFocusListener
               tooltipcolor="#008000" 

@@ -58,7 +58,7 @@ export default function SiteEditForm() {
       lat: site?.lat || '',
       long: site?.long || '',
       street: site?.address?.street || '',
-      phoneNumbers: site?.phoneNumbers || [ { type: 'Phone', countryCode: '64' }, { type: 'Fax', countryCode: '64' } ],
+      phoneNumbers: site?.phoneNumbers || [ { type: '', countryCode: '64' }, { type: '', countryCode: '64' } ],
       suburb: site?.address?.suburb || '',
       city: site?.address?.city || '',
       region: site?.address?.region || '',
@@ -123,7 +123,7 @@ export default function SiteEditForm() {
   }
 
   const addContactNumber = () => {
-    const updatedPhoneNumbers = [...phoneNumbers, { type: 'Phone', countryCode: country?.phone?.replace(/[^0-9]/g, '') } ]; 
+    const updatedPhoneNumbers = [...phoneNumbers, { type: '', countryCode: country?.phone?.replace(/[^0-9]/g, '') } ]; 
     setValue( 'phoneNumbers', updatedPhoneNumbers )
   }
   
