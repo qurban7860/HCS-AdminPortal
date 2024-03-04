@@ -1,19 +1,16 @@
 import PropTypes from 'prop-types';
-import React from 'react';
-
-// ... rest of your code
-
-// import { memo } from 'react';
+import * as React from 'react';
+import Chip from '@mui/material/Chip';
 import { Typography, Grid } from '@mui/material';
 
-ViewFormPhoneField.propTypes = {
+ViewPhoneComponent.propTypes = {
   heading: PropTypes.string,
   variant: PropTypes.string,
   sm: PropTypes.number,
   value: PropTypes.array,
   typeOfContact: PropTypes.string,
 };
-function ViewFormPhoneField({ heading, variant, sm, value, typeOfContact }) {
+function ViewPhoneComponent({ heading, variant, sm, value, typeOfContact }) {
   return (
     <Grid container >
       <Grid item xs={12} sm={12} sx={{ px: 0.5, overflowWrap: 'break-word' }} >
@@ -28,20 +25,22 @@ function ViewFormPhoneField({ heading, variant, sm, value, typeOfContact }) {
             pb: 2,
           }}
         >
-          {value?.map((num, index) => (
-            num?.contactNumber && (
-              <React.Fragment key={index}>
-
-                {`${[1, 2, 4, 5, 7, 8, 10, 11, 13, 14].includes(index) ? ', ' : ''} ${num?.type} +${num?.countryCode || ''} ${num?.contactNumber || ''} ${num?.extensions ? ` - (${num?.extensions})` : ''
-                  }`}
-
-                {(index + 1) % 3 === 0 && <br />} {/* Line break after every three numbers */}
-              </React.Fragment>
-            )
-          ))}
+          <div>
+            {value?.map((phoneNumber, index) => (
+              <Chip
+                key={index}
+                sx={{ mr: 1, mb: 1 }}
+                label={
+                  <>
+                    <strong>{phoneNumber.type && phoneNumber.type}</strong> {phoneNumber.countryCode && `+${phoneNumber.countryCode} `} {phoneNumber.contactNumber && phoneNumber.contactNumber} {phoneNumber.extensions && `(${phoneNumber.extensions})`}
+                  </>
+                }
+              />
+            ))}
+          </div>
         </Typography>
       </Grid>
     </Grid>
   );
 }
-export default React.memo(ViewFormPhoneField)
+export default React.memo(ViewPhoneComponent)
