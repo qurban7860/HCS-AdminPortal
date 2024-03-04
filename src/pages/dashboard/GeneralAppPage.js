@@ -98,7 +98,7 @@ export default function GeneralAppPage() {
   },[dispatch, activeCategories, isDashboardAccessLimited])
 
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: currentYear - 1999 }, (_, index) => 2000 + index);
+  const years = Array.from({ length: currentYear - 1999 }, (_, index) => currentYear - index);
   if (machinesByModel.length !== 0) {
     machinesByModel.modelWiseMachineCount.map((model) => {
       modelWiseMachineNumber.push(model.count);
