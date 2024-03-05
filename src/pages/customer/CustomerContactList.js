@@ -43,12 +43,12 @@ import { exportCSV } from '../../utils/exportCSV';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'customer', label: 'Customer', align: 'left' },
-  { id: 'firstName', label: 'Contact', align: 'left' },
-  { id: 'phone', visibility: 'xs2', label: 'Phone', align: 'left' },
-  { id: 'email', label: 'Email', align: 'left' },
+  { id: 'customer', visibility: 'sm', label: 'Customer', align: 'left' },
+  { id: 'firstName', visibility: 'sm', label: 'Contact', align: 'left' },
+  { id: 'phone', visibility: 'sm', label: 'Phone', align: 'left' },
+  { id: 'email', visibility: 'sm', label: 'Email', align: 'left' },
   { id: 'address.country', visibility: 'sm', label: 'Country', align: 'left' },
-  { id: 'isActive', visibility: 'xs2', label: 'Active', align: 'center' },
+  { id: 'isActive', visibility: 'sm', label: 'Active', align: 'center' },
   { id: 'createdAt',visibility: 'sm', label: 'Created At', align: 'right' },
 ];
 
