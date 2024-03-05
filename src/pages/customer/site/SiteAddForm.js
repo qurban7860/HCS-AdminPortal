@@ -49,7 +49,7 @@ export default function SiteAddForm() {
       name: '',
       customer: customer?._id,
       billingSite: '',
-      phoneNumbers: [ { type: 'Phone', countryCode: '64' }, { type: 'Fax', countryCode: '64' } ],
+      phoneNumbers: [ { type: '', countryCode: '64' }, { type: '', countryCode: '64' } ],
       email: '',
       website: '',
       street: '',
@@ -93,6 +93,7 @@ export default function SiteAddForm() {
     try {
       await dispatch(addSite(data));
       await dispatch(getSites(customer?._id))
+      enqueueSnackbar('Site created successfully!');
       reset();
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
@@ -118,7 +119,7 @@ export default function SiteAddForm() {
   }
 
   const addContactNumber = () => {
-    const updatedPhoneNumbers = [...phoneNumbers, { type: 'Phone', countryCode: country?.phone?.replace(/[^0-9]/g, '')} ]; 
+    const updatedPhoneNumbers = [...phoneNumbers, { type: '', countryCode: country?.phone?.replace(/[^0-9]/g, '')} ]; 
     setValue( 'phoneNumbers', updatedPhoneNumbers )
   }
   const toggleCancel = () => dispatch(setSiteFormVisibility(false));

@@ -8,6 +8,7 @@ import { Grid, Chip } from '@mui/material';
 import { useSnackbar } from '../../../components/snackbar';
 import { fDateTime } from '../../../utils/formatTime';
 import { useAuthContext } from '../../../auth/useAuthContext';
+import ViewPhoneComponent from '../../../components/ViewForms/ViewPhoneComponent';
 
 import {
   getContacts,
@@ -74,7 +75,7 @@ export default function ContactViewForm({
       lastName: contact?.lastName || '',
       title: contact?.title || '',
       contactTypes: contact?.contactTypes || [],
-      phone: contact?.phone || '',
+      phoneNumbers: contact ? contact.phoneNumbers : contact?.phoneNumbers || '',
       email: contact?.email || '',
       reportingTo: contact?.reportingTo || {},
       department: contact?.department?.departmentName || '',
@@ -118,7 +119,7 @@ export default function ContactViewForm({
         <ViewFormField isLoading={isLoading} sm={6} heading="Last Name" param={defaultValues?.lastName} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Title" param={defaultValues?.title} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Contact Types" chips={defaultValues?.contactTypes} />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Phone" param={defaultValues?.phone} />
+        <ViewPhoneComponent isLoading={isLoading} sm={6} heading="Phone" value={defaultValues?.phoneNumbers} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Email" param={defaultValues?.email} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Report To" param={`${defaultValues?.reportingTo?.firstName || '' } ${defaultValues?.reportingTo?.lastName || '' }`} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Department" param={defaultValues?.department} />
