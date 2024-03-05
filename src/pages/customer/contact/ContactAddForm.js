@@ -64,7 +64,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
       contactTypes: [],
       isActive: true,
       // phone: '',
-      phoneNumbers: [{ type: 'Phone', countryCode: '64' }, { type: 'Fax', countryCode: '64' }],
+      phoneNumbers: [{ type: '', countryCode: '64' }, { type: '', countryCode: '64' }],
       email: '',
       reportingTo: null,
       department: null,
@@ -125,8 +125,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
   }
 
   const addContactNumber = () => {
-    console.log("here.");
-    const updatedPhoneNumbers = [...phoneNumbers, { type: 'Phone', countryCode: country?.phone?.replace(/[^0-9]/g, '') }];
+    const updatedPhoneNumbers = [...phoneNumbers, { type: '', countryCode: country?.phone?.replace(/[^0-9]/g, '') }];
     setValue('phoneNumbers', updatedPhoneNumbers)
   }
 
