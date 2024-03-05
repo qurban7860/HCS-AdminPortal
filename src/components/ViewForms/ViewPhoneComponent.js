@@ -26,7 +26,7 @@ function ViewPhoneComponent({ heading, variant, sm, value, typeOfContact }) {
           }}
         >
           <div>
-            {value?.map((phoneNumber, index) => (
+            {Array.isArray(value) && value?.map((phoneNumber, index) => (
               <Chip
                 key={index}
                 sx={{ mr: 1, mb: 1 }}

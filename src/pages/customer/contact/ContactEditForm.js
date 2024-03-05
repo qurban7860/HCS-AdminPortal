@@ -6,7 +6,9 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MuiTelInput } from 'mui-tel-input';
-import { Box, Card, Grid, Stack } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, IconButton } from '@mui/material';
+import { green } from '@mui/material/colors';
+import { createTheme } from '@mui/material/styles';
 // slice
 import {
   updateContact,
@@ -19,12 +21,14 @@ import {
 } from '../../../redux/slices/customer/contact';
 import { getActiveDepartments, resetDepartments } from '../../../redux/slices/Department/department'
 // components
+import Iconify from '../../../components/iconify';
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, {
   RHFAutocomplete,
   RHFMultiSelect,
   RHFTextField,
   RHFCountryAutocomplete,
+  RHFCustomPhoneInput
 } from '../../../components/hook-form';
 import { AddFormLabel } from '../../../components/DocumentForms/FormLabel';
 import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
@@ -36,7 +40,7 @@ import { ContactSchema } from '../../schemas/customer';
 // constants
 import { FORMLABELS, Snacks } from '../../../constants/customer-constants';
 import { FORMLABELS as formLABELS } from '../../../constants/default-constants';
-
+import { StyledTooltip } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -45,6 +49,12 @@ ContactEditForm.propTypes = {
   readOnly: PropTypes.bool,
   currentAsset: PropTypes.object,
 };
+
+const theme = createTheme({
+  palette: {
+    success: green,
+  },
+});
 
 export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   const { contact, activeContacts } = useSelector((state) => state.contact);
@@ -64,6 +74,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
       title: contact?.title || '',
       contactTypes: contact?.contactTypes || [],
       // phone: contact?.phone || '',
+      phoneNumbers: contact?.phoneNumbers || [{ type: 'Phone', countryCode: '64' }, { type: 'Fax', countryCode: '64' }],
       email: contact?.email || '',
       reportingTo: contact?.reportingTo || null,
       department: contact?.department || null,
@@ -73,7 +84,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
       region: contact?.address?.region || '',
       postcode: contact?.address?.postcode || '',
       isActive: contact?.isActive,
-      country: countries.find((contry)=> contry?.label?.toLocaleLowerCase() === contact?.address?.country?.toLocaleLowerCase() ) || null ,
+      country: countries.find((contry) => contry?.label?.toLocaleLowerCase() === contact?.address?.country?.toLocaleLowerCase()) || null,
     }),
     [contact]
   );
@@ -86,25 +97,27 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   const {
     reset,
     watch,
-
+    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+
+  const { country, phoneNumbers } = watch();
 
   watch();
 
   useEffect(() => {
     dispatch(getActiveContacts(customer?._id))
     dispatch(getActiveDepartments())
-    return ( ) => { 
-        dispatch(resetActiveContacts())
-        dispatch(resetDepartments())
-        }
-  },[dispatch, customer?._id])
+    return () => {
+      dispatch(resetActiveContacts())
+      dispatch(resetDepartments())
+    }
+  }, [dispatch, customer?._id])
 
-  useEffect(() => {
-    setPhone(contact?.phone);
-  }, [contact]);
+  // useEffect(() => {
+  //   setPhone(contact?.phone);
+  // }, [contact]);
 
   useEffect(() => {
     if (contact) {
@@ -112,16 +125,39 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
     }
   }, [contact, reset, defaultValues]);
 
+  useEffect(() => {
+    phoneNumbers?.forEach((pN, index) => {
+      if (!phoneNumbers[index].contactNumber) {
+        setValue(`phoneNumbers[${index}].countryCode`, country?.phone?.replace(/[^0-9]/g, ''))
+      }
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [country]);
+
+
+  const updateCountryCode = () => {
+    phoneNumbers?.map((pN, index) => setValue(`phoneNumbers[${index}].countryCode`, country?.phone?.replace(/[^0-9]/g, '')))
+  }
+
+  const removeContactNumber = (indexToRemove) => {
+    setValue('phoneNumbers', phoneNumbers?.filter((_, index) => index !== indexToRemove) || []);
+  }
+
+  const addContactNumber = () => {
+    const updatedPhoneNumbers = [...phoneNumbers, { type: 'Phone', countryCode: country?.phone?.replace(/[^0-9]/g, '') }];
+    setValue('phoneNumbers', updatedPhoneNumbers)
+  }
+
   // -------------------------------functions---------------------------------
   const toggleCancel = () => { dispatch(setContactEditFormVisibility(false)) };
 
   const onSubmit = async (data) => {
     try {
-      if (phone && phone.length > 4) {
-        data.phone = phone;
-      } else {
-        data.phone = '';
-      }
+      // if (phone && phone.length > 4) {
+      //   data.phone = phone;
+      // } else {
+      //   data.phone = '';
+      // }
       await dispatch(updateContact(customer?._id, data));
       reset();
       dispatch(setContactEditFormVisibility(false));
@@ -164,43 +200,80 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                   options={FORMLABELS.CONTACT_TYPES.options}
                 />
 
-                <MuiTelInput
+                {/* <MuiTelInput
                   value={phone}
                   name="phone"
                   label="Phone Number"
                   flagSize="medium"
-                  onChange={(newValue)=>setPhone(newValue)}
-                  inputProps={{maxLength:13}}
+                  onChange={(newValue) => setPhone(newValue)}
+                  inputProps={{ maxLength: 13 }}
                   forceCallingCode
                   defaultCountry="NZ"
-                />
+                /> */}
+              </Box>
+
+              <Box display="flex" alignItems="center" gridTemplateColumns={{ sm: 'repeat(1, 1fr)' }} >
+                <IconButton onClick={updateCountryCode} size="small" variant="contained" color='secondary' sx={{ mr: 0.5 }} >
+                  <Iconify icon="icon-park-outline:update-rotation" sx={{ width: 25, height: 25 }} />
+                </IconButton>
+                <Typography variant='body2' sx={{ color: 'gray' }}>Update country code in phone/fax.</Typography>
+              </Box>
+              <Grid>
+                {phoneNumbers?.map((pN, index) => (
+                  <Grid sx={{ py: 1 }} display="flex" alignItems="center" >
+                    <RHFCustomPhoneInput name={`phoneNumbers[${index}]`} value={pN} label={pN?.type || 'Contact Number'} index={index} />
+                    <IconButton disabled={phoneNumbers?.length === 1} onClick={() => removeContactNumber(index)} size="small" variant="contained" color='error' sx={{ mx: 1 }} >
+                      <StyledTooltip title="Remove Contact Number" placement="top" disableFocusListener tooltipcolor={theme.palette.error.main} color={phoneNumbers?.length > 1 ? theme.palette.error.main : theme.palette.text.main}  >
+                        <Iconify icon="icons8:minus" sx={{ width: 25, height: 25 }} />
+                      </StyledTooltip>
+                    </IconButton>
+                  </Grid>
+                ))}
+                <Grid >
+                  <IconButton disabled={phoneNumbers?.length > 9} onClick={addContactNumber} size="small" variant="contained" color='success' sx={{ ml: 'auto', mr: 1 }} >
+                    <StyledTooltip title="Add Contact Number" placement="top" disableFocusListener tooltipcolor={theme.palette.success.dark} color={phoneNumbers?.length < 10 ? theme.palette.success.dark : theme.palette.text.main}  >
+                      <Iconify icon="icons8:plus" sx={{ width: 25, height: 25 }} />
+                    </StyledTooltip>
+                  </IconButton>
+                </Grid>
+              </Grid>
+
+
+              <Box
+                rowGap={3}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
+
 
                 <RHFTextField name={FORMLABELS.EMAIL.name} label={FORMLABELS.EMAIL.label} />
 
-              <RHFAutocomplete
+                <RHFAutocomplete
                   name={FORMLABELS.REPORTINGTO.name}
                   label={FORMLABELS.REPORTINGTO.label}
-                  options={activeContacts.filter((activeContact)=> contact?._id !== activeContact?._id )}
+                  options={activeContacts.filter((activeContact) => contact?._id !== activeContact?._id)}
                   getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
                   isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   renderOption={(props, option) => (
-                    <li {...props} key={option?._id}>{`${option?.firstName  || '' } ${option?.lastName  || '' }`}</li>
+                    <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>
                   )}
                 />
 
-              <RHFAutocomplete
-                name={FORMLABELS.DEPARTMENT.name}
-                label={FORMLABELS.DEPARTMENT.label}
-                options={departments}
-                getOptionLabel={(option) => option?.departmentName || ''}
-                isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                renderOption={(props, option) => (
-                  <li {...props} key={option?._id}>{option?.departmentName || ''}</li>
-                )}
-              />
-
+                <RHFAutocomplete
+                  name={FORMLABELS.DEPARTMENT.name}
+                  label={FORMLABELS.DEPARTMENT.label}
+                  options={departments}
+                  getOptionLabel={(option) => option?.departmentName || ''}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option?._id}>{option?.departmentName || ''}</li>
+                  )}
+                />
               </Box>
-              
             </Stack>
           </Card>
 
@@ -222,11 +295,11 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                 <RHFTextField name={FORMLABELS.REGION.name} label={FORMLABELS.REGION.label} />
                 <RHFTextField name={FORMLABELS.POSTCODE.name} label={FORMLABELS.POSTCODE.label} />
 
-                <RHFCountryAutocomplete 
+                <RHFCountryAutocomplete
                   name={FORMLABELS.COUNTRY.name}
                   label={FORMLABELS.COUNTRY.label}
                 />
-                
+
               </Box>
               <ToggleButtons isMachine name={formLABELS.isACTIVE.name} />
             </Stack>
@@ -234,6 +307,6 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
           </Card>
         </Grid>
       </Grid>
-    </FormProvider>
+    </FormProvider >
   );
 }
