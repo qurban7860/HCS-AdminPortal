@@ -145,6 +145,9 @@ function MachineServiceRecordAddForm() {
 
   const handleParamChange = (event, newValue) => {
     if(newValue != null){
+    if(newValue?.textBeforeCheckItems)
+      setValue('textBeforeCheckItems',newValue.textBeforeCheckItems)
+    
     setValue('serviceRecordConfiguration',newValue)
     trigger('serviceRecordConfiguration');
     }else{
