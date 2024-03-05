@@ -19,7 +19,7 @@ function ViewPhoneComponent({ heading, variant, sm, value, typeOfContact }) {
           variant={variant}
           sx={{
             display: 'flex',
-            flexDirection: 'column', // Display items in a column
+            flexDirection: 'column',
             whiteSpace: 'pre-line',
             wordBreak: 'break-word',
             pb: 2,

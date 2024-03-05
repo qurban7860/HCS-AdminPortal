@@ -74,7 +74,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
       title: contact?.title || '',
       contactTypes: contact?.contactTypes || [],
       // phone: contact?.phone || '',
-      phoneNumbers: contact?.phoneNumbers || [{ type: 'Phone', countryCode: '64' }, { type: 'Fax', countryCode: '64' }],
+      phoneNumbers: contact?.phoneNumbers || [{ type: '', countryCode: '64' }, { type: 'Fax', countryCode: '64' }],
       email: contact?.email || '',
       reportingTo: contact?.reportingTo || null,
       department: contact?.department || null,
@@ -144,7 +144,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   }
 
   const addContactNumber = () => {
-    const updatedPhoneNumbers = [...phoneNumbers, { type: 'Phone', countryCode: country?.phone?.replace(/[^0-9]/g, '') }];
+    const updatedPhoneNumbers = [...phoneNumbers, { type: '', countryCode: country?.phone?.replace(/[^0-9]/g, '') }];
     setValue('phoneNumbers', updatedPhoneNumbers)
   }
 
@@ -199,17 +199,6 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                   label={FORMLABELS.CONTACT_TYPES.label}
                   options={FORMLABELS.CONTACT_TYPES.options}
                 />
-
-                {/* <MuiTelInput
-                  value={phone}
-                  name="phone"
-                  label="Phone Number"
-                  flagSize="medium"
-                  onChange={(newValue) => setPhone(newValue)}
-                  inputProps={{ maxLength: 13 }}
-                  forceCallingCode
-                  defaultCountry="NZ"
-                /> */}
               </Box>
 
               <Box display="flex" alignItems="center" gridTemplateColumns={{ sm: 'repeat(1, 1fr)' }} >
