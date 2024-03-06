@@ -120,9 +120,9 @@ export default function ContactViewForm({
         <ViewFormField isLoading={isLoading} sm={6} heading="Title" param={defaultValues?.title} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Contact Types" chips={defaultValues?.contactTypes} />
         <ViewPhoneComponent isLoading={isLoading} sm={6} heading="Phone" value={defaultValues?.phoneNumbers} />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Email" param={defaultValues?.email} />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Report To" param={`${defaultValues?.reportingTo?.firstName || '' } ${defaultValues?.reportingTo?.lastName || '' }`} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Email" param={defaultValues?.email} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Department" param={defaultValues?.department} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Report To" param={`${defaultValues?.reportingTo?.firstName || '' } ${defaultValues?.reportingTo?.lastName || '' }`} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Street" param={defaultValues?.street} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Suburb" param={defaultValues?.suburb} />
         <ViewFormField isLoading={isLoading} sm={6} heading="City" param={defaultValues?.city} />

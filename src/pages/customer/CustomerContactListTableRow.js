@@ -43,30 +43,31 @@ export default function CustomerContactListTableRow({
       {/* Render rows with column names in bold for small screens */}
       {!useScreenSize('lg') && (
         <>
-          <StyledTableRow hover selected={selected}>
-            <TableCell>
-              <strong>Customer Name:</strong> {customer?.name}
-            </TableCell>
-          </StyledTableRow>
+          
           <StyledTableRow hover selected={selected}>
             <LinkTableCellWithIconTargetBlank
               onViewRow={() => handleContactView(customer?._id, _id)}
               onClick={() => handleContactViewInNewPage(customer?._id, _id)}
               param={
                 <>
-                  <strong>Contact Name:</strong>&nbsp;{`${firstName || ''} ${lastName || ''}`}
+                  {`${firstName || ''} ${lastName || ''}`}
                 </>
               }
             />
           </StyledTableRow>
           <StyledTableRow hover selected={selected}>
             <TableCell>
-              <strong>Phone:</strong>&nbsp;{phone}
+              {customer?.name}
             </TableCell>
           </StyledTableRow>
           <StyledTableRow hover selected={selected}>
             <TableCell>
-              <strong>Email:</strong>&nbsp;{email}
+              {phone}
+            </TableCell>
+          </StyledTableRow>
+          <StyledTableRow hover selected={selected}>
+            <TableCell>
+              {email}
             </TableCell>
           </StyledTableRow>
         </>

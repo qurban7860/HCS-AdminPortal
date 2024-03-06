@@ -85,19 +85,17 @@ export default function CustomerSiteListTableRow({
       {!useScreenSize('lg') && (
         <>
           <StyledTableRow hover selected={selected}>
-            <TableCell><strong>Customer Name:</strong> {customer?.name}</TableCell>
-          </StyledTableRow>
-          
-          <StyledTableRow hover selected={selected}>
             <LinkTableCellWithIconTargetBlank
               onViewRow={() => handleSiteView(customer?._id, _id)}
               onClick={() => handleSiteViewInNewPage(customer?._id, _id)}
-              param={<><strong>Site Name:</strong> {name || ''}</>}
+              param={<>{name || ''}</>}
             />
           </StyledTableRow>
           <StyledTableRow hover selected={selected}>
+            <TableCell>{customer?.name}</TableCell>
+          </StyledTableRow>
+          <StyledTableRow hover selected={selected}>
             <TableCell>
-              <strong>Address:</strong>
               {address?.street ? ` ${address?.street}` : ''}
               {address?.suburb ? `, ${address?.suburb}` : ''}
               {address?.city ? `, ${address?.city}` : ''}
@@ -118,10 +116,10 @@ export default function CustomerSiteListTableRow({
             </TableCell>
           </StyledTableRow>
           <StyledTableRow hover selected={selected}>
-            <TableCell><strong>Phone:</strong> {phone?.countryCode ? `+${phone?.countryCode} ` : ''}{phone?.contactNumber}</TableCell>
+            <TableCell>{phone?.countryCode ? `+${phone?.countryCode} ` : ''}{phone?.contactNumber}</TableCell>
           </StyledTableRow>
           <StyledTableRow hover selected={selected}>
-            <TableCell><strong>Email:</strong> {email}</TableCell>
+            <TableCell> {email}</TableCell>
           </StyledTableRow>
         </>
       )}
