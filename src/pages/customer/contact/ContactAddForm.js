@@ -69,7 +69,11 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
       success: green,
     },
   });
-
+  const PHONE_TYPES_ = JSON.parse( localStorage.getItem('configurations'))?.find( ( c )=> c?.name === 'PHONE_TYPES' )
+  let PHONE_TYPES = ['Mobile', 'Home', 'Work', 'Fax', 'Others'];
+  if(PHONE_TYPES_) {
+    PHONE_TYPES = PHONE_TYPES_.value.split(',').map(item => item.trim());
+  }
   const defaultValues = useMemo(
     () => ({
       customer: customer?._id,
@@ -80,8 +84,8 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
       isActive: true,
       // phone: '',
       phoneNumbers: [
-        { type: '', countryCode: '64' },
-        { type: '', countryCode: '64' },
+        { type: PHONE_TYPES[0], countryCode: '64' },
+        { type: PHONE_TYPES[0], countryCode: '64' },
       ],
       email: '',
       reportingTo: null,
