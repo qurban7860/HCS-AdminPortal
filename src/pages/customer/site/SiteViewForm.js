@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+
 // import { useNavigate } from 'react-router-dom';
 
 // @mui
@@ -16,11 +17,13 @@ import {
 } from '../../../redux/slices/customer/site';
 import { useSnackbar } from '../../../components/snackbar';
 
+
 // paths
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
-import ViewFormPhoneField from '../../../components/ViewForms/ViewFormPhoneField';
+import ViewPhoneComponent from '../../../components/ViewForms/ViewPhoneComponent';
+
 
 // ----------------------------------------------------------------------
 
@@ -83,7 +86,7 @@ export default function SiteViewForm({ currentSite = null, handleMap }) {
   );
 
   return (
-    <Grid sx={{mt:1}}>
+    <Grid sx={{ mt: 1 }}>
       <Grid container justifyContent="flex-end">
         <ViewFormEditDeleteButtons
           isActive={defaultValues?.isActive}
@@ -91,7 +94,7 @@ export default function SiteViewForm({ currentSite = null, handleMap }) {
           onDelete={onDelete}
           // sites={sites}
           mainSite={customer.mainSite?._id === site?._id}
-          // handleMap={handleMap}
+        // handleMap={handleMap}
         />
       </Grid>
       <Grid container>
@@ -104,7 +107,8 @@ export default function SiteViewForm({ currentSite = null, handleMap }) {
         <ViewFormField isLoading={isLoading} sm={6} heading="Country" param={defaultValues?.country} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Latitude" param={defaultValues?.lat} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Longitude" param={defaultValues?.long} />
-        <ViewFormPhoneField isLoading={isLoading} sm={6} heading="Phone" value={defaultValues?.phoneNumbers } />
+        <ViewPhoneComponent isLoading={isLoading} sm={6} heading="Phone" value={defaultValues?.phoneNumbers} />
+
         <ViewFormField isLoading={isLoading} sm={6} heading="Email" param={defaultValues?.email} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Website" param={defaultValues?.website} />
         <Grid container>

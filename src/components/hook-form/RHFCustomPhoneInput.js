@@ -18,7 +18,6 @@ export default function RHFCustomPhoneInput({ name, value, index, label, ...othe
   const PHONE_TYPES_ = JSON.parse( localStorage.getItem('configurations'))?.find( ( c )=> c?.name === 'PHONE_TYPES' )
   let PHONE_TYPES = ['Mobile', 'Home', 'Work', 'Fax', 'Others'];
   if(PHONE_TYPES_) {
-    console.log("idher", PHONE_TYPES_);
     PHONE_TYPES = PHONE_TYPES_.value.split(',').map(item => item.trim());
   }
   

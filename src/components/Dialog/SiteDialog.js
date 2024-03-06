@@ -5,6 +5,7 @@ import { Grid, Dialog, DialogTitle, Divider, DialogContent } from '@mui/material
 import { setSiteDialog } from '../../redux/slices/customer/site';
 import ViewFormField from '../ViewForms/ViewFormField';
 import DialogLink from './DialogLink';
+import ViewPhoneComponent from '../ViewForms/ViewPhoneComponent';
 
 function SiteDialog({ title }) {
     const dispatch = useDispatch();
@@ -24,7 +25,7 @@ function SiteDialog({ title }) {
         <DialogContent dividers sx={{px:3}}>
           <Grid item container>
             <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={site?.name} />
-            <ViewFormField isLoading={isLoading} sm={6} heading="Phone" param={site?.phone} />
+            <ViewPhoneComponent isLoading={isLoading} sm={6} heading="Phone" value={site?.phoneNumbers} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Fax" param={site?.fax} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Email" param={site?.email} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Website" param={site?.website} />

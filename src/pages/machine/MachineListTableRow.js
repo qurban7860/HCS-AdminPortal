@@ -34,7 +34,7 @@ export default function MachineListTableRow({
   openInNewPage,
   handleCustomerDialog
 }) {
-  console.log("rowrow : ", row)
+  // console.log("rowrow : ", row)
   const {
     verifications,
     serialNo,

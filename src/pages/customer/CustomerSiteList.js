@@ -43,14 +43,14 @@ import { exportCSV } from '../../utils/exportCSV';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'customer', label: 'Customer', align: 'left' },
-  { id: 'name', label: 'Site', align: 'left' },
+  { id: 'customer', visibility: 'sm', label: 'Customer', align: 'left' },
+  { id: 'name', visibility: 'sm', label: 'Site', align: 'left' },
   { id: 'address', visibility: 'sm', label: 'Address', align: 'left' },
-  { id: 'phoneNumbers[0]', visibility: 'xs2', label: 'Phone', align: 'left' },
-  { id: 'email', visibility: 'xs2', label: 'Email', align: 'left' },
-  { id: 'technical.contact', visibility: 'xs2', label: 'Technical Contact', align: 'left' },
-  { id: 'billing.contact', visibility: 'xs2', label: 'Billing Contact', align: 'left' },
-  { id: 'isActive', label: 'Active', align: 'center' },
+  { id: 'phoneNumbers[0]', visibility: 'sm', label: 'Phone', align: 'left' },
+  { id: 'email', visibility: 'sm', label: 'Email', align: 'left' },
+  { id: 'technical.contact', visibility: 'sm', label: 'Technical Contact', align: 'left' },
+  { id: 'billing.contact', visibility: 'sm', label: 'Billing Contact', align: 'left' },
+  { id: 'isActive', visibility: 'sm', label: 'Active', align: 'center' },
   { id: 'createdAt',visibility: 'sm', label: 'Created At', align: 'right' },
 ];
 
