@@ -45,11 +45,11 @@ import { exportCSV } from '../../utils/exportCSV';
 const TABLE_HEAD = [
   { id: 'customer.name', visibility: 'xs', label: 'Customer', align: 'left' },
   { id: 'name', label: 'Site', align: 'left' },
-  { id: 'address', visibility: 'xs', label: 'Address', align: 'left' },
-  { id: 'phoneNumbers[0]', visibility: 'xs', label: 'Phone', align: 'left' },
+  { id: 'address.country', visibility: 'xs', label: 'Address', align: 'left' },
+  { id: 'phoneNumbers.countryCode', visibility: 'xs', label: 'Phone', align: 'left' },
   { id: 'email', visibility: 'xs', label: 'Email', align: 'left' },
-  { id: 'technical.contact', visibility: 'xs', label: 'Technical Contact', align: 'left' },
-  { id: 'billing.contact', visibility: 'xs', label: 'Billing Contact', align: 'left' },
+  { id: 'primaryTechnicalContact.firstName', visibility: 'xs', label: 'Technical Contact', align: 'left' },
+  { id: 'primaryBillingContact.firstName', visibility: 'xs', label: 'Billing Contact', align: 'left' },
   { id: 'isActive', visibility: 'xs', label: 'Active', align: 'center' },
   { id: 'createdAt',visibility: 'xs', label: 'Created At', align: 'right' },
 ];
@@ -79,7 +79,7 @@ export default function CustomerSiteList() {
   const [tableData, setTableData] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [filterName, setFilterName] = useState(filterBy);
-
+console.log("tableData : ",tableData)
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
