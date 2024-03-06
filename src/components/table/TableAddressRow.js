@@ -26,7 +26,6 @@ return (
         { address?.street?.trim() && address?.suburb?.trim() ? `, ${address?.suburb || '' }` : ` ${address?.suburb || '' }` }
         { ( address?.street?.trim() || address?.suburb?.trim() ) && address?.city?.trim() ? `, ${address?.city || '' }` : ` ${address?.city || '' }`  }
         { ( address?.street?.trim() || address?.suburb?.trim() || address?.city?.trim() ) && address?.country?.trim() ? `, ${address?.country || '' }` :  ` ${address?.country || '' }` }
-
         {lat && long && (
             <StyledTooltip
                 title={`${lat || '' }, ${long || '' }`}
