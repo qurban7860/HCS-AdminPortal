@@ -11,7 +11,8 @@ import LinkTableCellWithIconTargetBlank from '../../components/ListTableTools/Li
 import { useScreenSize } from '../../hooks/useResponsive';
 import { StyledTableRow, StyledTooltip } from '../../theme/styles/default-styles'
 import Iconify from '../../components/iconify';
-
+import { TableAddressRow } from '../../components/table';
+import useLimitString from '../../hooks/useLimitString';
 // ----------------------------------------------------------------------
 
 CustomerSiteListTableRow.propTypes = {
@@ -43,36 +44,18 @@ export default function CustomerSiteListTableRow({
     primaryBillingContact, primaryTechnicalContact, isActive, createdAt } = row;
   const phone = phoneNumbers[0];
   const fax = phoneNumbers[0];
-  
+  const limitedName = useLimitString(customer?.name, 35);
   return (
     <>
-      {useScreenSize('lg') && (
+      {useScreenSize('sm') && (
         <StyledTableRow hover selected={selected}>
-          <TableCell>{customer?.name}</TableCell>
+          <TableCell>{ limitedName || ''}</TableCell>
           <LinkTableCellWithIconTargetBlank
             onViewRow={() => handleSiteView(customer?._id, _id)}
             onClick={() => handleSiteViewInNewPage(customer?._id, _id)}
             param={name || ''}
           />
-          <TableCell>
-            {address?.street ? `${address?.street}` : ''}
-            {address?.suburb ? `, ${address?.suburb}` : ''}
-            {address?.city ? `, ${address?.city}` : ''}
-            {address?.country ? ` ${address?.country}` : ''}
-  
-            {lat && long && (
-              <StyledTooltip
-                title={`${lat}, ${long}`}
-                placement="top"
-                disableFocusListener
-                tooltipcolor="#103996"
-                color="#103996"
-                sx={{ maxWidth: '170px' }}
-              >
-                <Iconify icon="heroicons:map-pin" sx={{ position: 'relative', bottom: '-5px', cursor: 'pointer' }} />
-              </StyledTooltip>
-            )}
-          </TableCell>
+          <TableAddressRow address={address} lat={lat} long={long} />
           <TableCell>{phone?.countryCode ? `+${phone?.countryCode} ` : ''}{phone?.contactNumber}</TableCell>
           <TableCell>{email}</TableCell>
           <TableCell>{primaryTechnicalContact?.firstName || ''} {primaryTechnicalContact?.lastName || ''}</TableCell>
@@ -82,44 +65,19 @@ export default function CustomerSiteListTableRow({
         </StyledTableRow>
       )}
   
-      {!useScreenSize('lg') && (
+      {!useScreenSize('sm') && (
         <>
-          <StyledTableRow hover selected={selected}>
-            <LinkTableCellWithIconTargetBlank
+          <StyledTableRow hover selected={selected}  component="div" style={{ display: 'block' }} >
+            <LinkTableCellWithIconTargetBlank 
+              style={{ width: '100%', display: 'inline-block' }}
               onViewRow={() => handleSiteView(customer?._id, _id)}
               onClick={() => handleSiteViewInNewPage(customer?._id, _id)}
               param={<>{name || ''}</>}
             />
-          </StyledTableRow>
-          <StyledTableRow hover selected={selected}>
-            <TableCell>{customer?.name}</TableCell>
-          </StyledTableRow>
-          <StyledTableRow hover selected={selected}>
-            <TableCell>
-              {address?.street ? ` ${address?.street}` : ''}
-              {address?.suburb ? `, ${address?.suburb}` : ''}
-              {address?.city ? `, ${address?.city}` : ''}
-              {address?.country ? `, ${address?.country}` : ''}
-  
-              {lat && long && (
-                <StyledTooltip
-                  title={`${lat}, ${long}`}
-                  placement="top"
-                  disableFocusListener
-                  tooltipcolor="#103996"
-                  color="#103996"
-                  sx={{ maxWidth: '170px' }}
-                >
-                  <Iconify icon="heroicons:map-pin" sx={{ position: 'relative', bottom: '-5px', cursor: 'pointer' }} />
-                </StyledTooltip>)}
-              
-            </TableCell>
-          </StyledTableRow>
-          <StyledTableRow hover selected={selected}>
-            <TableCell>{phone?.countryCode ? `+${phone?.countryCode} ` : ''}{phone?.contactNumber}</TableCell>
-          </StyledTableRow>
-          <StyledTableRow hover selected={selected}>
-            <TableCell> {email}</TableCell>
+            { customer?.name && <TableCell style={{ width: '100%', display: 'inline-block' }} >{customer?.name}</TableCell>}
+            { address && <TableAddressRow address={address} lat={lat} long={long} style={{ width: '100%', display: 'inline-block' }} />}
+            { phone?.countryCode && <TableCell style={{ width: '100%', display: 'inline-block' }} >{phone?.countryCode ? `+${phone?.countryCode} ` : ''}{phone?.contactNumber}</TableCell>}
+            { email && <TableCell style={{ width: '100%', display: 'inline-block' }} > {email}</TableCell>}
           </StyledTableRow>
         </>
       )}

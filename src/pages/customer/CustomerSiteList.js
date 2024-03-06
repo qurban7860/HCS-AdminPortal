@@ -43,15 +43,15 @@ import { exportCSV } from '../../utils/exportCSV';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'customer', visibility: 'sm', label: 'Customer', align: 'left' },
-  { id: 'name', visibility: 'sm', label: 'Site', align: 'left' },
-  { id: 'address', visibility: 'sm', label: 'Address', align: 'left' },
-  { id: 'phoneNumbers[0]', visibility: 'sm', label: 'Phone', align: 'left' },
-  { id: 'email', visibility: 'sm', label: 'Email', align: 'left' },
-  { id: 'technical.contact', visibility: 'sm', label: 'Technical Contact', align: 'left' },
-  { id: 'billing.contact', visibility: 'sm', label: 'Billing Contact', align: 'left' },
-  { id: 'isActive', visibility: 'sm', label: 'Active', align: 'center' },
-  { id: 'createdAt',visibility: 'sm', label: 'Created At', align: 'right' },
+  { id: 'customer.name', visibility: 'xs', label: 'Customer', align: 'left' },
+  { id: 'name', visibility: 'xs', label: 'Site', align: 'left' },
+  { id: 'address', visibility: 'xs', label: 'Address', align: 'left' },
+  { id: 'phoneNumbers[0]', visibility: 'xs', label: 'Phone', align: 'left' },
+  { id: 'email', visibility: 'xs', label: 'Email', align: 'left' },
+  { id: 'technical.contact', visibility: 'xs', label: 'Technical Contact', align: 'left' },
+  { id: 'billing.contact', visibility: 'xs', label: 'Billing Contact', align: 'left' },
+  { id: 'isActive', visibility: 'xs', label: 'Active', align: 'center' },
+  { id: 'createdAt',visibility: 'xs', label: 'Created At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
