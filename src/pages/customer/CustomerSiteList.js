@@ -79,7 +79,6 @@ export default function CustomerSiteList() {
   const [tableData, setTableData] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [filterName, setFilterName] = useState(filterBy);
-console.log("tableData : ",tableData)
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
