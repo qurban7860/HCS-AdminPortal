@@ -161,8 +161,8 @@ const onChangeContact = (contact) => {
             <Box rowGap={2} columnGap={2} display="grid"
               gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
             >
-              <RHFTextField name="email" label="Email Address*" />
-              <RHFTextField name="loginEmail" label="Login Email" disabled />
+              <RHFTextField name="email" label="Email Address*" inputProps={{ style: { textTransform: 'lowercase' } }} />
+              <RHFTextField name="loginEmail" label="Login Email" disabled inputProps={{ style: { textTransform: 'lowercase' } }} />
             </Box>
 
             <Box

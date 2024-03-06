@@ -365,7 +365,7 @@ export function AuthProvider({ children }) {
         // });
         window.location.href = PATH_AUTH.login
         const keys = Object.keys(localStorage); 
-        const reduxPersistKeys = keys.filter(  key => !(key === 'remember' || key === 'UserEmail' || key === 'UserPassword')  );
+        const reduxPersistKeys = keys.filter(  key => !(key === 'isRemember' || key === 'HowickUserEmail' || key === 'HowickUserPassword')  );
       await Promise.all(reduxPersistKeys.map(key => storage.removeItem(key)));
     } catch (error) {
       console.error('Error clearing persisted states:', error);
