@@ -43,13 +43,13 @@ import { exportCSV } from '../../utils/exportCSV';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'customer', visibility: 'sm', label: 'Customer', align: 'left' },
-  { id: 'firstName', visibility: 'sm', label: 'Contact', align: 'left' },
-  { id: 'phone', visibility: 'sm', label: 'Phone', align: 'left' },
-  { id: 'email', visibility: 'sm', label: 'Email', align: 'left' },
-  { id: 'address.country', visibility: 'sm', label: 'Country', align: 'left' },
-  { id: 'isActive', visibility: 'sm', label: 'Active', align: 'center' },
-  { id: 'createdAt',visibility: 'sm', label: 'Created At', align: 'right' },
+  { id: 'customer.name', visibility: 'xs', label: 'Customer', align: 'left' },
+  { id: 'firstName', visibility: 'xs', label: 'Contact', align: 'left' },
+  { id: 'phone', visibility: 'xs', label: 'Phone', align: 'left' },
+  { id: 'email', visibility: 'xs', label: 'Email', align: 'left' },
+  { id: 'address.country', visibility: 'xs', label: 'Country', align: 'left' },
+  { id: 'isActive', visibility: 'xs', label: 'Active', align: 'center' },
+  { id: 'createdAt',visibility: 'xs', label: 'Created At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
@@ -71,10 +71,10 @@ export default function CustomerContactList() {
   const { enqueueSnackbar } = useSnackbar();
   const axiosToken = () => axios.CancelToken.source();
   const cancelTokenSource = axiosToken();
-  
   const { contacts, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.contact);
   
   const [tableData, setTableData] = useState([]);
+  console.log("tableData : ",tableData)
   const [openConfirm, setOpenConfirm] = useState(false);
   const [filterName, setFilterName] = useState(filterBy);
 

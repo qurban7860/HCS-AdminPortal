@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Switch, TableCell, Chip } from '@mui/material';
+import { Switch, TableCell, Chip, Grid } from '@mui/material';
 // utils
 import { fDate } from '../../utils/formatTime';
 // components
@@ -41,40 +41,22 @@ export default function CustomerContactListTableRow({
   return (
     <>
       {/* Render rows with column names in bold for small screens */}
-      {!useScreenSize('lg') && (
+      {!useScreenSize('sm') && (
         <>
-          
-          <StyledTableRow hover selected={selected}>
-            <LinkTableCellWithIconTargetBlank
+          <StyledTableRow hover selected={selected} component="div" style={{ display: 'block' }} >
+            <LinkTableCellWithIconTargetBlank style={{ width: '100%', display: 'inline-block' }}
               onViewRow={() => handleContactView(customer?._id, _id)}
               onClick={() => handleContactViewInNewPage(customer?._id, _id)}
-              param={
-                <>
-                  {`${firstName || ''} ${lastName || ''}`}
-                </>
-              }
+              param={`${firstName || ''} ${lastName || ''}`}
             />
-          </StyledTableRow>
-          <StyledTableRow hover selected={selected}>
-            <TableCell>
-              {customer?.name}
-            </TableCell>
-          </StyledTableRow>
-          <StyledTableRow hover selected={selected}>
-            <TableCell>
-              {phone}
-            </TableCell>
-          </StyledTableRow>
-          <StyledTableRow hover selected={selected}>
-            <TableCell>
-              {email}
-            </TableCell>
+            {customer?.name && <TableCell style={{ width: '100%', display: 'inline-block' }} >{customer?.name || '' } </TableCell> }
+            {phone && <TableCell style={{ width: '100%', display: 'inline-block' }} >{phone}</TableCell> }
+            {email && <TableCell style={{ width: '100%', display: 'inline-block' }} >{email}</TableCell> }
           </StyledTableRow>
         </>
       )}
 
-      {/* Render rows with column names and data for large screens */}
-      {useScreenSize('lg') && (
+      {useScreenSize('sm') && (
         <StyledTableRow hover selected={selected}>
           <TableCell> {customer?.name}</TableCell>
           <LinkTableCellWithIconTargetBlank

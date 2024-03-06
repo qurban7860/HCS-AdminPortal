@@ -5,9 +5,9 @@ import VerificationIcon from '../Icons/VerificationIcon';
 import OpenInNewPage from '../Icons/OpenInNewPage';
 import useLimitString from '../../hooks/useLimitString';
 
-export default function LinkTableCellWithIconTargetBlank({ align, onViewRow, onClick, param, isVerified }) {
+export default function LinkTableCellWithIconTargetBlank({ align, onViewRow, onClick, param, isVerified, ...other }) {
   return (
-    <TableCell align={align} sx={{minWidth:'130px'}}>
+    <TableCell align={align} sx={{minWidth:'130px'}} {...other}>
       {isVerified!==undefined && <VerificationIcon isVerified={isVerified} />}
       <Link
         onClick={onViewRow}
