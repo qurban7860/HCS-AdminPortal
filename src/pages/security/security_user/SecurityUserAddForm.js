@@ -111,11 +111,11 @@ const { customer, contact } = watch();
     if(contact?._id){
       setValue( 'name', `${contact?.firstName || ''} ${contact?.lastName || ''}` );
       setValue( 'phone', contact?.phone );
-      setValue( 'loginEmail', contact?.email );
+      setValue( 'email', contact?.email );
     } else {
       setValue( 'name', '' );
       setValue( 'phone', '' );
-      setValue( 'loginEmail', '' );
+      setValue( 'email', '' );
     }
   }, [ dispatch, contact, setValue ]);
 
@@ -169,7 +169,7 @@ const { customer, contact } = watch();
               rowGap={2} columnGap={2} display="grid"
               gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
             >
-              <RHFTextField name="email" label="Login/Email Address*" />
+              <RHFTextField name="email" label="Login/Email Address*" inputProps={{ style: { textTransform: 'lowercase' } }} />
             </Box>
             {(!isInvite &&(
               <Box sx={{ mb: 3 }} rowGap={2} columnGap={2} display="grid" 
