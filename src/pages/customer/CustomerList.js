@@ -106,6 +106,7 @@ export default function CustomerList() {
     filterExcludeRepoting,
     filterStatus,
   });
+
   const denseHeight = 60;
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
@@ -239,6 +240,7 @@ export default function CustomerList() {
 
               <TableBody>
                 {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
                       <CustomerListTableRow
@@ -254,7 +256,6 @@ export default function CustomerList() {
                     )
                   )}
                   <TableNoData isNotFound={isNotFound} />
-
               </TableBody>
             </Table>
           </Scrollbar>
@@ -308,6 +309,7 @@ function applyFilter({ inputData, comparator, filterName, filterVerify, filterEx
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
+  
   if(filterVerify==='verified')
     inputData = inputData.filter((customer)=> customer.verifications.length>0);
   else if(filterVerify==='unverified')
