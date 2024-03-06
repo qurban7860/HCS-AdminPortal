@@ -67,12 +67,12 @@ export default function CustomerSiteListTableRow({
   
       {!useScreenSize('sm') && (
         <>
-          <StyledTableRow hover selected={selected}  component="div" style={{ display: 'block' }} >
+          <StyledTableRow hover selected={selected} style={{ display: 'block' }} >
             <LinkTableCellWithIconTargetBlank 
               style={{ width: '100%', display: 'inline-block' }}
               onViewRow={() => handleSiteView(customer?._id, _id)}
               onClick={() => handleSiteViewInNewPage(customer?._id, _id)}
-              param={<>{name || ''}</>}
+              param={name || ''}
             />
             { customer?.name && <TableCell style={{ width: '100%', display: 'inline-block' }} >{customer?.name}</TableCell>}
             { address && <TableAddressRow address={address} lat={lat} long={long} style={{ width: '100%', display: 'inline-block' }} />}

@@ -28,7 +28,6 @@ import Scrollbar from '../../components/scrollbar';
 import ConfirmDialog from '../../components/confirm-dialog';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 import { FORMLABELS } from '../../constants/default-constants';
-
 // sections
 import CustomerContactListTableRow from './CustomerContactListTableRow';
 import CustomerContactListTableToolbar from './CustomerContactListTableToolbar';
@@ -72,9 +71,7 @@ export default function CustomerContactList() {
   const axiosToken = () => axios.CancelToken.source();
   const cancelTokenSource = axiosToken();
   const { contacts, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.contact);
-  
   const [tableData, setTableData] = useState([]);
-  console.log("tableData : ",tableData)
   const [openConfirm, setOpenConfirm] = useState(false);
   const [filterName, setFilterName] = useState(filterBy);
 
@@ -91,7 +88,6 @@ export default function CustomerContactList() {
     return ()=> { dispatch( resetContacts() ) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
-
   useEffect(() => {
     setTableData(contacts || []);
   }, [contacts]);
@@ -101,6 +97,7 @@ export default function CustomerContactList() {
     comparator: getComparator(order, orderBy),
     filterName,
   });
+
   const denseHeight = 60;
   const isFiltered = filterName !== '';
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
@@ -248,6 +245,16 @@ export default function CustomerContactList() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName }) {
+  const stabilizedThis = inputData.map((el, index) => [el, index]);
+
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+  
+  inputData = stabilizedThis.map((el) => el[0]);
+
   if (filterName) {
     inputData = inputData.filter(
       (contact) =>

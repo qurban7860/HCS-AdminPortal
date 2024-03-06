@@ -43,7 +43,7 @@ export default function CustomerContactListTableRow({
       {/* Render rows with column names in bold for small screens */}
       {!useScreenSize('sm') && (
         <>
-          <StyledTableRow hover selected={selected} component="div" style={{ display: 'block' }} >
+          <StyledTableRow hover selected={selected} style={{ display: 'block' }} >
             <LinkTableCellWithIconTargetBlank style={{ width: '100%', display: 'inline-block' }}
               onViewRow={() => handleContactView(customer?._id, _id)}
               onClick={() => handleContactViewInNewPage(customer?._id, _id)}
