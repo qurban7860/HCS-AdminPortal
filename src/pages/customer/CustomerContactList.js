@@ -43,7 +43,7 @@ import { exportCSV } from '../../utils/exportCSV';
 
 const TABLE_HEAD = [
   { id: 'customer.name', visibility: 'xs', label: 'Customer', align: 'left' },
-  { id: 'firstName', visibility: 'xs', label: 'Contact', align: 'left' },
+  { id: 'firstName', label: 'Contact', align: 'left' },
   { id: 'phone', visibility: 'xs', label: 'Phone', align: 'left' },
   { id: 'email', visibility: 'xs', label: 'Email', align: 'left' },
   { id: 'address.country', visibility: 'xs', label: 'Country', align: 'left' },
