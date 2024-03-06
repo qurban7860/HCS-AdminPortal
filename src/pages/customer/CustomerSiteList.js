@@ -44,7 +44,7 @@ import { exportCSV } from '../../utils/exportCSV';
 
 const TABLE_HEAD = [
   { id: 'customer.name', visibility: 'xs', label: 'Customer', align: 'left' },
-  { id: 'name', visibility: 'xs', label: 'Site', align: 'left' },
+  { id: 'name', label: 'Site', align: 'left' },
   { id: 'address', visibility: 'xs', label: 'Address', align: 'left' },
   { id: 'phoneNumbers[0]', visibility: 'xs', label: 'Phone', align: 'left' },
   { id: 'email', visibility: 'xs', label: 'Email', align: 'left' },
