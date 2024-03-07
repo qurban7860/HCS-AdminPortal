@@ -674,8 +674,8 @@ export function transferMachine( machineId, params ) {
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/transferMachine`,
         data
       );
-      dispatch(setTransferDialogBoxVisibility(false));
-      dispatch(getMachine(response.data.Machine.parentMachineID));
+      // dispatch(setTransferDialogBoxVisibility(false));
+      // dispatch(getMachine(response.data.Machine.parentMachineID));
       return response; // eslint-disable-line
 
     } catch (error) {

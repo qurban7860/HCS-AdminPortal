@@ -45,7 +45,7 @@ export default function MachineView({ editPage }) {
   useEffect(() => {
     dispatch(setDocumentViewFormVisibility(false));
     dispatch(setDocumentHistoryViewFormVisibility(false));
-    if (id !== 'null') {
+    if (id ) {
       dispatch(getMachine(id));
     }
   }, [dispatch, id]);
