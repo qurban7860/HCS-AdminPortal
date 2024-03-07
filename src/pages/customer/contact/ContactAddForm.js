@@ -69,10 +69,12 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
       success: green,
     },
   });
-  const PHONE_TYPES_ = JSON.parse( localStorage.getItem('configurations'))?.find( ( c )=> c?.name === 'PHONE_TYPES' )
+  const PHONE_TYPES_ = JSON.parse(localStorage.getItem('configurations'))?.find(
+    (c) => c?.name === 'PHONE_TYPES'
+  );
   let PHONE_TYPES = ['Mobile', 'Home', 'Work', 'Fax', 'Others'];
-  if(PHONE_TYPES_) {
-    PHONE_TYPES = PHONE_TYPES_.value.split(',').map(item => item.trim());
+  if (PHONE_TYPES_) {
+    PHONE_TYPES = PHONE_TYPES_.value.split(',').map((item) => item.trim());
   }
   const defaultValues = useMemo(
     () => ({
@@ -239,7 +241,6 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
                 )}
               />
             </Box>
-            <RHFTextField name={FORMLABELS.EMAIL.name} label={FORMLABELS.EMAIL.label} />
             <AddFormLabel content={FORM_LABELS.ADDRESS} />
             <Box
               rowGap={2}
@@ -329,6 +330,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
                 </IconButton>
               </Grid>
             </Grid>
+            <RHFTextField name={FORMLABELS.EMAIL.name} label={FORMLABELS.EMAIL.label} />
 
             <ToggleButtons isMachine name={FORMLABELS.isACTIVE.name} />
           </Stack>
