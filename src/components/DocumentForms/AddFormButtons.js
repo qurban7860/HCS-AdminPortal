@@ -13,6 +13,8 @@ AddFormButtons.propTypes = {
   isDraft: PropTypes.bool,
   saveAsDraftButtonName: PropTypes.string,
   saveButtonName: PropTypes.string,
+  istrigger: PropTypes.bool,
+  saveTransferButtonName: PropTypes.string,
   cancelButtonName: PropTypes.string,
   toggleCancel: PropTypes.func,
   isSubmitting: PropTypes.bool,
@@ -23,6 +25,7 @@ AddFormButtons.propTypes = {
   machinePage: PropTypes.bool,
   customerPage: PropTypes.bool,
   drawingPage: PropTypes.bool,
+  handleSubmit: PropTypes.func,
 };
 
 export default function AddFormButtons({
@@ -30,6 +33,8 @@ export default function AddFormButtons({
   isDraft,
   saveAsDraftButtonName,
   saveButtonName,
+  saveTransferButtonName,
+  istrigger,
   toggleCancel,
   isSubmitting,
   cancelButtonName,
@@ -40,9 +45,12 @@ export default function AddFormButtons({
   machinePage,
   customerPage,
   drawingPage,
+  handleSubmit,
 }) {
   const navigate = useNavigate()
   const [openConfirm, setOpenConfirm] = useState(false);
+  const [openTransferConfirm, setOpenTransferConfirm] = useState(false);
+// console.log("istrigger : ",istrigger)
   const { isSettingReadOnly, isSecurityReadOnly, isDocumentAccessAllowed, isDrawingAccessAllowed } = useAuthContext();
   
   const handleOpenConfirm = () => {
@@ -51,11 +59,20 @@ export default function AddFormButtons({
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
-    // toggleCancel();
   };
+
   const onConfirm = () => {
     setOpenConfirm(false);
     toggleCancel();
+  };
+  const handleOpenTransferConfirm = () => {
+    if(istrigger){
+      setOpenTransferConfirm(true);
+    }
+  };
+
+  const handleCloseTransferConfirm = () => {
+    setOpenTransferConfirm(false);
   };
 
   useLayoutEffect(()=>{
@@ -86,7 +103,6 @@ export default function AddFormButtons({
                 variant="contained"
                 size="large"
                 fullWidth
-                // disabled={isDisabled || ( ( machineSettingPage || settingPage || securityUserPage || drawingPage ) && ( isSettingReadOnly || isSecurityReadOnly || !isDocumentAccessAllowed || !isDrawingAccessAllowed ))}
                 disabled
                 loading={isDraft && isSubmitting}
                 onClick={saveAsDraft}
@@ -94,7 +110,7 @@ export default function AddFormButtons({
                 {saveAsDraftButtonName || BUTTONS.SAVE_AS_DRAFT}
               </LoadingButton>
             </Grid>}
-            <Grid item sm={6}>
+            {!saveTransferButtonName && <Grid item sm={6}>
               <LoadingButton
                 type="submit"
                 variant="contained"
@@ -105,10 +121,19 @@ export default function AddFormButtons({
               >
                 {saveButtonName || BUTTONS.SAVE}
               </LoadingButton>
-            </Grid>
+            </Grid>}
+            {saveTransferButtonName && <Grid item sm={6}>
+              <Button onClick={ handleOpenTransferConfirm } size='large'  
+                fullWidth
+                variant={ !istrigger ? "outlined" : "contained" }
+                color={ istrigger ? undefined : "error"  }
+              >
+                { saveTransferButtonName }
+              </Button>
+            </Grid>}
 
             {toggleCancel && <Grid item sm={6}>
-              <Button onClick={handleOpenConfirm} fullWidth variant="outlined" size="large">
+              <Button onClick={handleOpenConfirm} fullWidth size="large" variant="outlined" >
                 {cancelButtonName || BUTTONS.CANCEL}
               </Button>
             </Grid>}
@@ -126,6 +151,23 @@ export default function AddFormButtons({
             {BUTTONS.DISCARD}
           </Button>
         }
+      />
+
+      <ConfirmDialog
+        open={openTransferConfirm}
+        onClose={handleCloseTransferConfirm}
+        title={DIALOGS.TRANSFER_CONFIRM_TITLE}
+        content={DIALOGS.TRANSFER_CONFIRM}
+        action={
+          <LoadingButton
+            type="submit"
+            variant="contained"
+            disabled={isDisabled}
+            loading={!isDraft && isSubmitting}
+            onClick={handleSubmit}
+          >
+            { BUTTONS.TRANSFER }
+          </LoadingButton>}
       />
     </>
   );

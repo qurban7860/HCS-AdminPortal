@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -30,11 +30,10 @@ function MachineTransfer() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
-  
   const axiosToken = () => axios.CancelToken.source();
   const cancelTokenSource = axiosToken();
   const navigate = useNavigate();
-
+  const [ isTrigger, setIsTrigger ] = useState(true);
   const { activeSpContacts } = useSelector((state) => state.contact);
   const { machine, isLoading } = useSelector((state) => state.machine);
   const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
@@ -121,11 +120,11 @@ function MachineTransfer() {
     handleSubmit,
     setValue,
     watch,
+    trigger,
     formState: { isSubmitting },
   } = methods;
 
-  const { customer, machineDocuments } =watch();
-
+  const { customer, status, supportExpireDate, transferredDate, shippingDate, installationDate, machineDocuments } =watch();
 
   const onSubmit = async (data) => {
       try {
@@ -175,6 +174,12 @@ function MachineTransfer() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ customer?._id ])
 
+  
+useEffect(()=>{
+  trigger().then((res) => setIsTrigger(res));
+},[ trigger, customer, status, supportExpireDate, transferredDate, shippingDate, installationDate ])
+
+// console.log("isTrigger : ",isTrigger)
 
   return (
     <Container maxWidth={false} sx={{mb:3}}>
@@ -182,6 +187,8 @@ function MachineTransfer() {
         <StyledCardContainer>
           <Cover name="Machine Transfer" setting />
         </StyledCardContainer>
+          <Grid container >
+          <Grid item xs={18} md={12} >
           <Card sx={{ p: 3 }} >
             <Stack spacing={2} >
               <FormLabel content='Machine Information'/>
@@ -282,6 +289,9 @@ function MachineTransfer() {
                       getOptionLabel={(option) => `${option.name || ''}`}
                       renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
                     />
+
+                    <RHFDatePicker inputFormat='dd/MM/yyyy' name="supportExpireDate" label="Support Expiry Date" />
+
                   </Box>
 
                   <RHFAutocomplete
@@ -341,7 +351,7 @@ function MachineTransfer() {
                     ChipProps={{ size: 'small' }}
                     id="controllable-states-demo"
                   />
-                  <RHFDatePicker inputFormat='dd/MM/yyyy' name="supportExpireDate" label="Support Expiry Date" />
+
                 </Box>
                   <RHFTextField name="description" label="Description" minRows={3} multiline />
 
@@ -368,9 +378,17 @@ function MachineTransfer() {
                     <Grid key={doc?._id}  item md={12} sx={{ display: "flex", alignItems:'center'}} >{`${Number(index)+1} - ` }<Checkbox key={doc?._id} onClick={()=> handleMachineDoc(doc?._id)} checked={ machineDocuments?.some((d)=> d === doc?._id )} /><Typography variant='body2'>{doc?.displayName}</Typography></Grid>
                   ))}
                 </Grid>
-                <AddFormButtons isSubmitting={isSubmitting} saveButtonName="Transfer" toggleCancel={()=>{ navigate(PATH_MACHINE.machines.view(id)) }} />
+                <AddFormButtons 
+                  isSubmitting={isSubmitting} 
+                  istrigger={ isTrigger }
+                  handleSubmit={handleSubmit(onSubmit)}
+                  saveTransferButtonName="Transfer" 
+                  toggleCancel={()=>{ navigate(PATH_MACHINE.machines.view(id)) }} 
+                />
             </Stack>
           </Card>
+          </Grid>
+          </Grid>
       { customerDialog  && <CustomerDialog />}
         </FormProvider>
       </Container>
