@@ -119,8 +119,6 @@ export default function ContactViewForm({
         <ViewFormField isLoading={isLoading} sm={6} heading="Last Name" param={defaultValues?.lastName} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Title" param={defaultValues?.title} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Contact Types" chips={defaultValues?.contactTypes} />
-        <ViewPhoneComponent isLoading={isLoading} sm={6} heading="Phone" value={defaultValues?.phoneNumbers} />
-        <ViewFormField isLoading={isLoading} sm={12} heading="Email" param={defaultValues?.email} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Department" param={defaultValues?.department} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Report To" param={`${defaultValues?.reportingTo?.firstName || '' } ${defaultValues?.reportingTo?.lastName || '' }`} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Street" param={defaultValues?.street} />
@@ -129,6 +127,8 @@ export default function ContactViewForm({
         <ViewFormField isLoading={isLoading} sm={6} heading="Region" param={defaultValues?.region} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Post Code" param={defaultValues?.postcode} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Country" param={defaultValues?.country} />
+        <ViewPhoneComponent isLoading={isLoading} sm={6} heading="Phone" value={defaultValues?.phoneNumbers} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Email" param={defaultValues?.email} />
         <ViewFormField isLoading={isLoading} sm={12} heading="Operator's Trainings" chipDialogArrayParam={operatorTraningsList} />
       </Grid>
       <ViewFormAudit defaultValues={defaultValues} />
