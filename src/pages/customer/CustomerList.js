@@ -32,7 +32,7 @@ import { FORMLABELS } from '../../constants/default-constants';
 // sections
 import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
-import { getCustomers, resetCustomers, ChangePage, ChangeRowsPerPage, setFilterBy, setVerified,
+import { getCustomers, resetCustomers, resetCustomer, ChangePage, ChangeRowsPerPage, setFilterBy, setVerified,
    setCustomerTab,
    setExcludeReporting } from '../../redux/slices/customer/customer';
 import { Cover } from '../../components/Defaults/Cover';
@@ -156,7 +156,7 @@ export default function CustomerList() {
   };
 
   const handleViewRow = (id) => {
-    dispatch(setCustomerTab('info'));
+    dispatch(resetCustomer(id));
     navigate(PATH_CUSTOMER.view(id));
   };
 
@@ -227,6 +227,7 @@ export default function CustomerList() {
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
         />}
+        
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
 
           <Scrollbar>

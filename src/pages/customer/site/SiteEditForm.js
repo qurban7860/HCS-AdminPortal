@@ -1,6 +1,7 @@
 
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -19,6 +20,7 @@ import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete, RHFCountryAutoc
 import { countries } from '../../../assets/data';
 import { SiteSchema } from '../../schemas/customer'
 import { StyledTooltip } from '../../../theme/styles/default-styles';
+import { PATH_CUSTOMER } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -28,6 +30,7 @@ export default function SiteEditForm() {
   const { site } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
   const { activeContacts } = useSelector((state) => state.contact);
+  const navigate = useNavigate();
 
   const theme = createTheme({
     palette: {
@@ -133,6 +136,7 @@ export default function SiteEditForm() {
       await dispatch(getSite(customer?._id, site?._id));
       await dispatch(getSites(customer?._id ));
       enqueueSnackbar('Site saved Successfully!');
+      navigate(PATH_CUSTOMER.site.view(customer?._id, site?._id))
       reset();
     } catch (err) {
       enqueueSnackbar('Site save failed!', { variant: 'error' });
@@ -140,7 +144,7 @@ export default function SiteEditForm() {
     }
   };
   
-  const toggleCancel = () => dispatch(setSiteEditFormVisibility(false));
+  const toggleCancel = () => navigate(PATH_CUSTOMER.site.view(customer?._id, site?._id));
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

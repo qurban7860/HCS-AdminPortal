@@ -68,7 +68,7 @@ export default function SiteViewPage() {
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Site',
-              href: PATH_DASHBOARD.site.list,
+              // href: PATH_DASHBOARD.site.list,
             },
             { name: 'View' },
           ]}

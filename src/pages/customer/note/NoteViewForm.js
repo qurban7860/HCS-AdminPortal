@@ -1,6 +1,7 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid } from '@mui/material';
+import { Container, Card, Grid } from '@mui/material';
 // hooks
 import { useDispatch, useSelector } from 'react-redux';
 // import { fDate } from 'src/utils/formatTime';
@@ -15,29 +16,35 @@ import {
   setNoteViewFormVisibility,
 } from '../../../redux/slices/customer/customerNote';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
-// constants
+import CustomerTabContainer from '../CustomerTabContainer'
+import { PATH_CUSTOMER } from '../../../routes/paths';
 
 export default function NoteViewForm() {
   const { note, isLoading } = useSelector((state) => state.customerNote);
   const { customer } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
+  const { id } = useParams();
   const dispatch = useDispatch();
+
+  useEffect(()=>{ 
+    if( id && customer?._id ){
+      dispatch(getNote(customer?._id, id))
+    }
+  },[ dispatch, id, customer?._id ])
+
   const onDelete = async () => {
     try {
       await dispatch(deleteNote(customer._id, note._id));
       enqueueSnackbar("Note Deleted Successfully");
-      dispatch(setNoteViewFormVisibility(false));
+      navigate(PATH_CUSTOMER.notes.root(customer?._id));
     } catch (err) {
       enqueueSnackbar("Note Deletion Failed", { variant: `error` });
       console.log('Error:', err);
     }
   }
 
-  const handleEdit = async () => {
-    await dispatch(getNote(customer._id, note._id));
-    dispatch(setNoteViewFormVisibility(false));
-    dispatch(setNoteEditFormVisibility(true));
-  }
+  const handleEdit = async () => navigate(PATH_CUSTOMER.notes.edit(customer?._id, note._id));
 
   const defaultValues = useMemo(
     () => ({
@@ -58,18 +65,21 @@ export default function NoteViewForm() {
   );
   
   return (
+    <Container maxWidth={false} >
     <Grid item md={12} >
-    <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons isActive={defaultValues.isActive} backLink={()=> dispatch(setNoteViewFormVisibility(false))} handleEdit={handleEdit} onDelete={onDelete} />
-      <Grid container sx={{mt:2}}>
-        <ViewFormField isLoading={isLoading} sm={6} heading="Site" param={defaultValues?.site_name} />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Contact" param={defaultValues?.contact_firstName}
-          secondParam={defaultValues?.contact_lastName !== '' ? defaultValues.contact_lastName : ''}
-        />
-        <ViewFormField isLoading={isLoading} sm={12} heading="Note" param={defaultValues?.note} />
-        <ViewFormAudit defaultValues={defaultValues} />
-      </Grid>
-    </Card>
+      <CustomerTabContainer currentTabValue='notes' />
+      <Card sx={{ p: 2 }}>
+        <ViewFormEditDeleteButtons isActive={defaultValues.isActive} backLink={()=> navigate(PATH_CUSTOMER.notes.root(customer?._id,))} handleEdit={handleEdit} onDelete={onDelete} />
+        <Grid container sx={{mt:2}}>
+          <ViewFormField isLoading={isLoading} sm={6} heading="Site" param={defaultValues?.site_name} />
+          <ViewFormField isLoading={isLoading} sm={6} heading="Contact" param={defaultValues?.contact_firstName}
+            secondParam={defaultValues?.contact_lastName !== '' ? defaultValues.contact_lastName : ''}
+          />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Note" param={defaultValues?.note} />
+          <ViewFormAudit defaultValues={defaultValues} />
+        </Grid>
+      </Card>
     </Grid>
+    </Container>
   );
 }

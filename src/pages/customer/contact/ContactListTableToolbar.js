@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 // components
 import Iconify from '../../../components/iconify';
+import { PATH_CUSTOMER } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 

@@ -47,7 +47,7 @@ import FormLabel from '../../../components/DocumentForms/FormLabel';
 import DocumentCover from '../../../components/DocumentForms/DocumentCover';
 import CustomerDialog from '../../../components/Dialog/CustomerDialog';
 import MachineDialog from '../../../components/Dialog/MachineDialog';
-import { PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_DOCUMENT, PATH_CUSTOMER } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
 import { Snacks } from '../../../constants/document-constants';
 import UpdateDocumentVersionDialog from '../../../components/Dialog/UpdateDocumentVersionDialog';
@@ -214,7 +214,11 @@ const handleNewFile = async () => {
   const handleDelete = async () => {
     try {
       await dispatch(deleteDocument(documentHistory?._id));
-      navigate(PATH_DOCUMENT.document.machineDrawings.list);
+      if(customerPage && !machinePage ) {
+        navigate(PATH_CUSTOMER.documents.root( customer?._id ));
+      }else{
+        navigate(PATH_DOCUMENT.document.machineDrawings.list);
+      }
       enqueueSnackbar("Document Deleted Successfully!", { variant: `success` });
     }catch(error) {
       enqueueSnackbar(error, { variant: `error` });
@@ -366,6 +370,19 @@ const handleNewFile = async () => {
   const onDocumentLoadSuccess = ({ numPages }) => {
     setPages(numPages);
   };
+
+  const handleBackLink = ()=>{
+    if(customerPage && !machinePage ) {
+      navigate(PATH_CUSTOMER.documents.view( customer?._id, documentHistory?._id ));
+    } else if(customerPage || machinePage || drawingPage ){
+      dispatch(setDrawingViewFormVisibility(false))
+      dispatch(setDocumentHistoryViewFormVisibility(false)); 
+    } else if(machineDrawings){
+      navigate(PATH_DOCUMENT.document.machineDrawings.list) 
+    } else{
+      navigate(PATH_DOCUMENT.document.list)
+    }
+  }
   
   return (
     <Container maxWidth={false} sx={{padding:(machineDrawings || customerPage || machinePage || drawingPage) ?'0 !important':''}}>
@@ -385,8 +402,7 @@ const handleNewFile = async () => {
           onDelete={drawingPage?handleDeleteDrawing : handleDelete }
           disableDeleteButton={drawingPage && machine?.status?.slug==="transferred"}
           disableEditButton={drawingPage && machine?.status?.slug==="transferred"}
-          backLink={(customerPage || machinePage || drawingPage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDrawingViewFormVisibility(false));}
-          : () =>  machineDrawings ? navigate(PATH_DOCUMENT.document.machineDrawings.list) : navigate(PATH_DOCUMENT.document.list)}
+          backLink={handleBackLink}
       />
             <Grid container sx={{mt:2}}>
             {PDFViewerDialog && (

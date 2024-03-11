@@ -1,7 +1,9 @@
+import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 // @mui
-import { Stack, Card, Grid, CardActionArea } from '@mui/material';
+import { Container, Stack, Card, Grid, CardActionArea } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { useNavigate } from 'react-router-dom';
 import {
   CardBase,
   GridBaseViewForm,
@@ -20,7 +22,7 @@ import BreadcrumbsProvider from '../../components/Breadcrumbs/BreadcrumbsProvide
 import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
 import GoogleMaps from '../../assets/GoogleMaps';
 import useResponsive from '../../hooks/useResponsive';
-import { getSites, resetSites, getSite, setSiteFormVisibility, resetSiteFormsVisiblity, setIsExpanded, setCardActiveIndex } from '../../redux/slices/customer/site';
+import { getSites, resetSites, getSite, setIsExpanded, setCardActiveIndex } from '../../redux/slices/customer/site';
 import NothingProvided from '../../components/Defaults/NothingProvided';
 import SiteAddForm from './site/SiteAddForm';
 import SiteEditForm from './site/SiteEditForm';
@@ -33,38 +35,42 @@ import Iconify from '../../components/iconify';
 import ContactSiteCard from '../../components/sections/ContactSiteCard';
 import { exportCSV } from '../../utils/exportCSV';
 import { useAuthContext } from '../../auth/useAuthContext';
+import CustomerTabContainer from './CustomerTabContainer';
 
 // ----------------------------------------------------------------------
 
-export default function CustomerSiteDynamicList(defaultValues = { lat: 0, long: 0 }) {
+CustomerSiteDynamicList.propTypes = {
+  siteAddForm: PropTypes.bool,
+  siteEditForm: PropTypes.bool,
+  siteViewForm: PropTypes.bool,
+};
 
+export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, siteViewForm }) {
   const { order, orderBy } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
   const { site } = useSelector((state) => state.site);
   const { isAllAccessAllowed } = useAuthContext()
   const { enqueueSnackbar } = useSnackbar();
-  // const [ activeCardIndex, setCardActiveIndex ] = useState(null);
-  // const [ isExpanded, setIsExpanded ] = useState(false);
   const [ filterName, setFilterName ] = useState('');
   const [ filterStatus, setFilterStatus ] = useState([]);
   const [ tableData, setTableData ] = useState([]);
   const [ googleMapsVisibility, setGoogleMapsVisibility ] = useState(false);
   const isMobile = useResponsive('down', 'sm');
   const dispatch = useDispatch();
-  const { sites, isExpanded, activeCardIndex, error, responseMessage, siteEditFormVisibility, siteAddFormVisibility } = useSelector((state) => state.site);
+  const navigate = useNavigate();
+  const { sites, isExpanded, activeCardIndex, error, responseMessage, } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
-  // for filtering sites
   const isFiltered = filterName !== '' || !!filterStatus.length;
 
   const toggleChecked = () => {
-    if (siteEditFormVisibility) {
-      dispatch(setSiteFormVisibility(false));
+    if (siteEditForm) {
       enqueueSnackbar(Snacks.SITE_CLOSE_CONFIRM, {
         variant: 'warning',
       });
       dispatch(setCardActiveIndex(null));
       dispatch(setIsExpanded(false));
+      navigate(PATH_CUSTOMER.site.new(customer?._id))
     } else {
-      dispatch(setSiteFormVisibility(true));
+      navigate(PATH_CUSTOMER.site.new(customer?._id))
       dispatch(setCardActiveIndex(null));
       dispatch(setIsExpanded(false));
     }
@@ -92,17 +98,9 @@ export default function CustomerSiteDynamicList(defaultValues = { lat: 0, long: 
     setTableData(sites);
   }, [sites, error, responseMessage]);
   
-  useEffect(() => {
-    dispatch(resetSiteFormsVisiblity());
-  }, [dispatch]);
-
-  
-
-  // ------------------------------------------------------------
 
   const toggleCancel = () => {
-    dispatch(setSiteFormVisibility(false));
-    // setChecked(false);
+    navigate(PATH_CUSTOMER.site.root(customer?._id))
   };
 
   const handleGoogleMapsVisibility = () => {
@@ -121,12 +119,9 @@ export default function CustomerSiteDynamicList(defaultValues = { lat: 0, long: 
       return ()=>{ dispatch(resetSites()) }
   }, [dispatch, customer]); 
 
-  // conditions for rendering the contact view, edit, and add forms
-  const shouldShowSiteView = isExpanded && !siteEditFormVisibility && !siteAddFormVisibility;
-  const shouldShowSiteEdit = siteEditFormVisibility && !siteAddFormVisibility;
-  const shouldShowSiteAdd = siteAddFormVisibility && !siteEditFormVisibility;
 
   const [exportingCSV, setExportingCSV] = useState(false);
+
   const onExportCSV = async () => {
     setExportingCSV(true);
     const response = dispatch(await exportCSV('CustomerSites', customer?._id));
@@ -139,15 +134,16 @@ export default function CustomerSiteDynamicList(defaultValues = { lat: 0, long: 
 
   const handleCardClick = async (_site)=>{
     await dispatch(getSite(customer._id, _site._id));
-    if (!siteEditFormVisibility && !siteAddFormVisibility) {
+    navigate(PATH_CUSTOMER.site.view(customer._id, _site._id))
+    if ( !siteEditForm && !siteAddForm ) {
       handleActiveCard(_site._id);
       handleExpand(_site._id);
     }
 }
 
   return (
-    <>
-      {/* <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}></Stack> */}
+    <Container maxWidth={ false }>
+      <CustomerTabContainer currentTabValue="sites" />
       <Grid container direction="row" justifyContent="space-between" alignItems="center" sx={{mb:2}}>
         <Grid item xs={12} md={6}>
           <BreadcrumbsProvider>
@@ -157,9 +153,9 @@ export default function CustomerSiteDynamicList(defaultValues = { lat: 0, long: 
               to={PATH_CUSTOMER.contacts}
               name={
                 <Stack>
-                  {!siteAddFormVisibility && !siteEditFormVisibility && !isExpanded && 'Sites'}
-                  {siteEditFormVisibility ? `Edit ${site?.name}` : isExpanded && site?.name}
-                  {siteAddFormVisibility && !isExpanded && 'New Site Form'}
+                  {!siteAddForm && !siteEditForm && !isExpanded && 'Sites'}
+                  {siteEditForm ? `Edit ${site?.name}` : isExpanded && site?.name}
+                  {siteAddForm && !isExpanded && 'New Site Form'} 
                 </Stack>
               }
             />
@@ -175,29 +171,31 @@ export default function CustomerSiteDynamicList(defaultValues = { lat: 0, long: 
             <AddButtonAboveAccordion
               name={BUTTONS.NEWSITE}
               toggleChecked={toggleChecked}
-              FormVisibility={siteAddFormVisibility}
+              FormVisibility={siteAddForm}
               toggleCancel={toggleCancel}
-              disabled={siteEditFormVisibility}
+              disabled={siteEditForm}
             />
           </Stack>
         </Grid>
       </Grid>
 
       <Grid container spacing={1} direction="row" justifyContent="flex-start">
-      <Grid item xs={12} sm={12} md={12} lg={5} xl={4} sx={{ display: siteAddFormVisibility && isMobile && 'none' }} >
+      <Grid item xs={12} sm={12} md={12} lg={5} xl={4} 
+        sx={{ display: siteAddForm && isMobile && 'none' }} 
+      >
         {sites.length > 0 && (
           <>
             {sites.length > 5 && (
               <Grid item md={12}>
                 <SearchInput
-                  disabled={siteAddFormVisibility || siteEditFormVisibility}
+                  disabled={ siteAddForm || siteEditForm }
                   filterName={filterName}
                   handleFilterName={handleFilterName}
                   isFiltered={isFiltered}
                   handleResetFilter={handleResetFilter}
                   toggleChecked={toggleChecked}
                   toggleCancel={toggleCancel}
-                  FormVisibility={siteAddFormVisibility}
+                  FormVisibility={siteAddForm}
                   sx={{ position: 'fixed', top: '0px', zIndex: '1000' }}
                 />
               </Grid>
@@ -209,7 +207,7 @@ export default function CustomerSiteDynamicList(defaultValues = { lat: 0, long: 
               onClick={(e) => e.stopPropagation()}
               snapAlign="start"
               contacts={sites.length}
-              disabled={siteEditFormVisibility || siteAddFormVisibility}
+              disabled={siteEditForm || siteAddForm}
             >
               <Grid container direction="column" gap={1}>
                 {dataFiltered.map((_site, index) => (
@@ -217,7 +215,7 @@ export default function CustomerSiteDynamicList(defaultValues = { lat: 0, long: 
                     key={index}
                     isActive={_site._id === activeCardIndex}
                     handleOnClick={() => handleCardClick(_site) }
-                    disableClick={siteEditFormVisibility || siteAddFormVisibility}
+                    disableClick={siteEditForm || siteAddForm}
                     name={_site?.name} 
                     title={`${_site?.address?.country || '' }${(_site?.address?.country && _site?.address?.city) ? ',' : '' } ${_site?.address?.city || '' }`} 
                     phone={_site?.phoneNumbers?.find( n => n?.type?.toLowerCase() === 'mobile' && n?.contactNumber !== undefined && n?.contactNumber !== '' )}
@@ -253,7 +251,7 @@ export default function CustomerSiteDynamicList(defaultValues = { lat: 0, long: 
 
         {/* Conditional View Forms */}
         <GridBaseViewForm item xs={12} sm={12} md={12} lg={7} xl={8}>
-          {shouldShowSiteView && (
+          {isExpanded && !siteAddForm && !siteEditForm && (
             <CardBase>
               <SiteViewForm
                 currentSite={site}
@@ -297,11 +295,11 @@ export default function CustomerSiteDynamicList(defaultValues = { lat: 0, long: 
               </Grid>
             </CardBase>
           )}
-          {shouldShowSiteEdit && <SiteEditForm />}
-          {shouldShowSiteAdd && <SiteAddForm />}
+          { siteAddForm && !siteEditForm&& <SiteAddForm />}
+          { !siteAddForm && siteEditForm && <SiteEditForm />}
         </GridBaseViewForm>
       </Grid>
-    </>
+    </Container>
   );
 }
 

@@ -72,7 +72,7 @@ export default function CustomerEditForm() {
   }, [dispatch, customer]);
 
   const toggleCancel = () => {
-    dispatch(setCustomerEditFormVisibility(false));
+    navigate(PATH_CUSTOMER.view(customer._id));
   };
 
   const onSubmit = async (data) => {
@@ -141,6 +141,7 @@ export default function CustomerEditForm() {
                       getOptionLabel={(option) =>`${option?.firstName || ''} ${option?.lastName || ''}`}
                       renderOption={(props, option) => (<li {...props} key={option?._id}>{option?.firstName || ''}{' '}{option?.lastName ||''}</li>)}
                     />
+
                     {/* primary technical contact */}
                     <RHFAutocomplete
                       name="primaryTechnicalContact"

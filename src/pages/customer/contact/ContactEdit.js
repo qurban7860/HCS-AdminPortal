@@ -12,13 +12,14 @@ import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
 // sections
 import ContactEditForm from './ContactEditForm';
+import { PATH_CUSTOMER } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
 export default function ContactEdit() {
   const dispatch = useDispatch();
   const { themeStretch } = useSettingsContext();
-  const { id } = useParams();
+  const { id, customerId } = useParams();
   const { contact } = useSelector((state) => state.contact);
 
   useEffect(() => {

@@ -67,7 +67,7 @@ function NavigationConfig() {
       subheader: 'general',
       items: [
         { title: 'Dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
-        { title: 'Customers', path: PATH_CUSTOMER.list, icon: ICONS.users },
+        { title: 'Customers', path: PATH_CUSTOMER.root, icon: ICONS.users },
         { title: 'Machines', path: PATH_MACHINE.machines.list, icon: ICONS.machines },
       ],
     },

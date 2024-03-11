@@ -15,6 +15,8 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
 // sections
 import CustomerEditForm from './CustomerEditForm';
+import CustomerTabContainer from './CustomerTabContainer';
+
 
 // ----------------------------------------------------------------------
 
@@ -34,18 +36,7 @@ export default function CustomerEdit() {
 
   return (
     <Container maxWidth={themeStretch ? false : 'lg'}>
-      <CustomBreadcrumbs
-        heading="Edit Customer"
-        links={[
-          { name: 'Dashboard', href: PATH_DASHBOARD.root },
-          {
-            name: 'Customer',
-            href: PATH_CUSTOMER.list,
-          },
-          { name: customer?.name },
-        ]}
-      />
-
+      <CustomerTabContainer currentTabValue="customer" />
       <CustomerEditForm />
     </Container>
   );

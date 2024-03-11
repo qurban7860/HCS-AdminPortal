@@ -6,7 +6,7 @@ function path(root, sublink) {
 
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
-const ROOTS_CUSTOMER = '/customers';
+const ROOTS_CUSTOMER = '/crm/customers';
 const ROOTS_MACHINE = '/products';
 const ROOTS_EMAIL =   '/email';
 const ROOTS_SECURITY = '/security';
@@ -72,42 +72,47 @@ export const PATH_DASHBOARD = {
   },
 };
 
+  // CUSTOMER
+
 export const PATH_CUSTOMER = {
   root: ROOTS_CUSTOMER,
   permissionDenied: path(ROOTS_CUSTOMER, '/permission-denied'),
-  list: path(ROOTS_CUSTOMER, '/list'),
   new: path(ROOTS_CUSTOMER, '/new'),
   view: (id) => path(ROOTS_CUSTOMER, `/${id}/view`),
   edit: (id) => path(ROOTS_CUSTOMER, `/${id}/edit`),
-  sites: path(ROOTS_CUSTOMER, '/sites'),
-  contacts: path(ROOTS_CUSTOMER, '/contacts'),
-  general: {
-    app: path(ROOTS_CUSTOMER, '/app'),
-  },
   site: {
-    root: path(ROOTS_CUSTOMER, '/site'),
-    list: path(ROOTS_CUSTOMER, '/site/list'),
-    new: path(ROOTS_CUSTOMER, '/site/new'),
-    view: (id) => path(ROOTS_CUSTOMER, `/site/${id}/view`),
-    edit: (id) => path(ROOTS_CUSTOMER, `/site/${id}/edit`),
+    root: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/site`),
+    new: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/site/new`),
+    view: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/site/${id}/view`),
+    edit: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/site/${id}/edit`),
   },
   contact: {
-    root: path(ROOTS_CUSTOMER, '/contact'),
-    list: path(ROOTS_CUSTOMER, '/contact/list'),
-    new: path(ROOTS_CUSTOMER, '/contact/new'),
-    view: (id) => path(ROOTS_CUSTOMER, `/contact/${id}/view`),
-    edit: (id) => path(ROOTS_CUSTOMER, `/contact/${id}/edit`),
+    root: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/contact`),
+    new: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/contact/new`),
+    view: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/contact/${id}/view`),
+    edit: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/contact/${id}/edit`),
+    move: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/contact/${id}/move`),
   },
-  note: {
-    root: path(ROOTS_CUSTOMER, '/note'),
-    list: path(ROOTS_CUSTOMER, '/note/list'),
-    new: path(ROOTS_CUSTOMER, '/note/new'),
-    view: (id) => path(ROOTS_CUSTOMER, `/note/${id}/view`),
-    edit: (id) => path(ROOTS_CUSTOMER, `/note/${id}/edit`),
+  notes: {
+    root: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/notes`),
+    new: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/notes/new`),
+    view: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/notes/${id}/view`),
+    edit: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/notes/${id}/edit`),
+  },  
+  documents: {
+    root: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/documents`),
+    new: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/documents/new`),
+    viewGallery: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/documents/viewGallery`),
+    view: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/documents/${id}/view`),
+    viewHistory: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/documents/${id}/viewHistory`),
+    edit: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/documents/${id}/edit`),
+  },
+  machines: {
+    root: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/machines`),
   },
 };
 
-// Machine
+// MACHINE
 
 export const PATH_MACHINE = {
   root: ROOTS_MACHINE,

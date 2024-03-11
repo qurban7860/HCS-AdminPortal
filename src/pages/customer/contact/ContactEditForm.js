@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import {  useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -41,6 +42,7 @@ import { ContactSchema } from '../../schemas/customer';
 import { FORMLABELS, Snacks } from '../../../constants/customer-constants';
 import { FORMLABELS as formLABELS } from '../../../constants/default-constants';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
+import { PATH_CUSTOMER } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -61,6 +63,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   const { customer } = useSelector((state) => state.customer);
   const { departments } = useSelector((state) => state.department);
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar();
   const [phone, setPhone] = useState('');
 
@@ -96,15 +99,13 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
 
   const {
     reset,
-    watch,
     setValue,
+    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
   const { country, phoneNumbers } = watch();
-
-  watch();
 
   useEffect(() => {
     dispatch(getActiveContacts(customer?._id))
@@ -114,10 +115,6 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
       dispatch(resetDepartments())
     }
   }, [dispatch, customer?._id])
-
-  // useEffect(() => {
-  //   setPhone(contact?.phone);
-  // }, [contact]);
 
   useEffect(() => {
     if (contact) {
@@ -149,22 +146,16 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   }
 
   // -------------------------------functions---------------------------------
-  const toggleCancel = () => { dispatch(setContactEditFormVisibility(false)) };
+  const toggleCancel = () => navigate(PATH_CUSTOMER.contact.view( customer?._id, contact?._id ));
 
   const onSubmit = async (data) => {
     try {
-      // if (phone && phone.length > 4) {
-      //   data.phone = phone;
-      // } else {
-      //   data.phone = '';
-      // }
       await dispatch(updateContact(customer?._id, data));
-      reset();
-      dispatch(setContactEditFormVisibility(false));
       dispatch(resetContact());
       dispatch(getContacts(customer?._id));
       dispatch(getContact(customer?._id, contact?._id));
-
+      reset();
+      navigate(PATH_CUSTOMER.contact.view( customer?._id, contact?._id ))
       enqueueSnackbar(Snacks.SAVE_SUCCESS);
     } catch (err) {
       enqueueSnackbar(Snacks.SAVE_FAILED, { variant: 'error' });

@@ -25,7 +25,7 @@ import { getMachineServiceRecord, setMachineServiceRecordViewFormVisibility, set
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
-import { PATH_MACHINE } from '../../../routes/paths';
+import { PATH_MACHINE, PATH_CUSTOMER } from '../../../routes/paths';
 
 
 ContactViewForm.propTypes = {
@@ -45,9 +45,8 @@ export default function ContactViewForm({
   const navigate = useNavigate();
 
   const handleEdit = async () => {
-    await dispatch(getContact(customer?._id, contact?._id));
-    dispatch(setContactMoveFormVisibility(false));
-    dispatch(setContactEditFormVisibility(true));
+    dispatch(getContact(customer?._id, contact?._id));
+    navigate(PATH_CUSTOMER.contact.edit(customer?._id, contact?._id))
   };
 
   const handleMoveConatct = async () => {
@@ -55,6 +54,7 @@ export default function ContactViewForm({
     dispatch(setContactFormVisibility(false))
     dispatch(setContactEditFormVisibility(false))
     dispatch(setContactMoveFormVisibility(true))
+    navigate(PATH_CUSTOMER.contact.move(customer?._id, contact?._id ))
   };
 
   const onDelete = async () => {
@@ -63,6 +63,7 @@ export default function ContactViewForm({
       dispatch(setIsExpanded(false));
       enqueueSnackbar('Contact deleted Successfully!');
       dispatch(getContacts(customer?._id));
+      navigate(PATH_CUSTOMER.contact.root(customer?._id ))
     } catch (err) {
       enqueueSnackbar('Contact delete failed!', { variant: `error` });
       console.log('Error:', err);

@@ -1,10 +1,7 @@
 import PropTypes from 'prop-types';
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-
-// import { useNavigate } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 // @mui
 import { Grid } from '@mui/material';
 // redux
@@ -16,14 +13,12 @@ import {
   setSiteEditFormVisibility,
 } from '../../../redux/slices/customer/site';
 import { useSnackbar } from '../../../components/snackbar';
-
-
 // paths
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewPhoneComponent from '../../../components/ViewForms/ViewPhoneComponent';
-
+import { PATH_CUSTOMER } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -36,13 +31,14 @@ export default function SiteViewForm({ currentSite = null, handleMap }) {
   const { customer } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const onDelete = async () => {
     try {
       await dispatch(deleteSite(customer?._id, currentSite?._id));
       await dispatch(getSites(customer?._id));
       enqueueSnackbar('Site deleted Successfully!');
       dispatch(setIsExpanded(false));
+      navigate(PATH_CUSTOMER.site.root( customer?._id ))
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });
       console.log(err);
@@ -51,7 +47,8 @@ export default function SiteViewForm({ currentSite = null, handleMap }) {
 
   const handleEdit = async () => {
     await dispatch(getSite(customer?._id, currentSite?._id));
-    dispatch(setSiteEditFormVisibility(true));
+    // dispatch(setSiteEditFormVisibility(true));
+    navigate(PATH_CUSTOMER.site.edit(customer?._id, currentSite?._id))
   };
 
   const defaultValues = useMemo(

@@ -31,7 +31,7 @@ import { FORMLABELS } from '../../constants/default-constants';
 // sections
 import CustomerContactListTableRow from './CustomerContactListTableRow';
 import CustomerContactListTableToolbar from './CustomerContactListTableToolbar';
-import { getContacts, resetContacts, ChangePage, ChangeRowsPerPage, setFilterBy, setCardActiveIndex, setIsExpanded, getContact  } from '../../redux/slices/customer/contact';
+import { getContacts, resetContacts, ChangePage, ChangeRowsPerPage, setFilterBy, setCardActiveIndex, setIsExpanded, getContact, resetContact  } from '../../redux/slices/customer/contact';
 import { setCustomerTab } from '../../redux/slices/customer/customer';
 import { Cover } from '../../components/Defaults/Cover';
 import TableCard from '../../components/ListTableTools/TableCard';
@@ -129,7 +129,7 @@ export default function CustomerContactList() {
   };
 
   const openInNewPage = (id) => {
-    dispatch(setCustomerTab('info'));
+    // dispatch(setCustomerTab('info'));
     const url = PATH_CUSTOMER.view(id);
     window.open(url, '_blank');
   };
@@ -155,19 +155,23 @@ export default function CustomerContactList() {
   };
 
   const handleContactView = async (customerId, contactId ) => {
-    await navigate(PATH_CUSTOMER.view(customerId))
     await dispatch(setCustomerTab('contacts'));
+    await dispatch(resetContact());
+    await dispatch(getContact(customerId, contactId));
     await dispatch(setCardActiveIndex(contactId));
     await dispatch(setIsExpanded(true));
-    await dispatch(getContact(customerId, contactId));
+    await navigate(PATH_CUSTOMER.view(customerId))
   };
-
+  const {  customerTab } = useSelector((state) => state.customer);
   const handleContactViewInNewPage = async (customerId, contactId ) => {
+    await dispatch(resetContact());
     await openInNewPage(customerId);
     await dispatch(setCustomerTab('contacts'));
     await dispatch(setCardActiveIndex(contactId));
     await dispatch(setIsExpanded(true));
     await dispatch(getContact(customerId, contactId));
+    console.log("customerTab : ",customerTab)
+    console.log("handleContactViewInNewPage called  ",)
   };
 
   return (

@@ -6,7 +6,7 @@ import { Document, Page, pdfjs } from 'react-pdf';
 import { Grid, Card, Box, Dialog, DialogTitle, Button, DialogContent, Divider, Typography } from '@mui/material'
 import download from 'downloadjs';
 import { StyledVersionChip } from '../../../theme/styles/default-styles';
-import { PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_CUSTOMER, PATH_DOCUMENT } from '../../../routes/paths';
 import {
   deleteDocument,
   getDocumentHistory,
@@ -54,9 +54,10 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
       await dispatch(deleteDocument(document._id));
       if (customerPage || machinePage) {
         if (customer?._id || machine?._id) {
-          await dispatch(
-            getDocuments(customerPage ? customer?._id : null, machinePage ? machine?._id : null)
-          );
+          await dispatch( getDocuments(customerPage ? customer?._id : null, machinePage ? machine?._id : null) );
+        }
+        if(customerPage && !machinePage ) {
+          navigate(PATH_CUSTOMER.documents.root( customer?._id ));
         }
       } else {
         await dispatch(getDocuments());
@@ -70,16 +71,22 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
   };
 
   const handleEdit = async () => {
-    await dispatch(getDocument(document._id));
+    dispatch(getDocument(document?._id));
     dispatch(setDocumentViewFormVisibility(false));
     dispatch(setDocumentEditFormVisibility(true));
+    if( customerPage && !machinePage ){
+      navigate(PATH_CUSTOMER.documents.edit( customer?._id, document?._id ));
+    }
   };
 
   const linkDocumentView = async () => {
     dispatch(setDocumentViewFormVisibility(false));
     dispatch(setDocumentHistoryViewFormVisibility(true));
     dispatch(resetDocumentHistory())
-    await dispatch(getDocumentHistory(document?._id));
+    dispatch(getDocumentHistory(document?._id));
+    if( customerPage && !machinePage ){
+      navigate(PATH_CUSTOMER.documents.viewHistory( customer?._id, document?._id ));
+    }
   };
 
   const defaultValues = useMemo(
@@ -125,6 +132,9 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
       dispatch(setDocumentViewFormVisibility(false));
       dispatch(setDocumentFormVisibility(true));
       dispatch(setDocumentNewVersionFormVisibility(true));
+      if( customerPage && !machinePage ){
+        navigate(PATH_CUSTOMER.documents.new( customer?._id ));
+      }
   }else{
     dispatch(setDocumentNewVersionFormVisibility(true));
     navigate(PATH_DOCUMENT.document.new);
@@ -277,6 +287,17 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
     setPages(numPages);
   };
 
+  const handleBackLink = () => {
+    if(customerPage || machinePage ) {
+      dispatch(setDocumentHistoryViewFormVisibility(false)); 
+      dispatch(setDocumentViewFormVisibility(false))
+      if(customerPage && !machinePage ) {
+        navigate(PATH_CUSTOMER.documents.root( customer?._id ));
+      }
+    } else {
+      navigate(PATH_DOCUMENT.document.list)
+    } 
+  }
 
   return (
     <Card sx={{ p: 2 }}>
@@ -285,8 +306,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
       handleEdit={handleEdit}
       onDelete={onDelete}
       disableDeleteButton={machinePage && machine?.status?.slug==="transferred"}
-      backLink={(customerPage || machinePage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDocumentViewFormVisibility(false))}
-      : () => navigate(PATH_DOCUMENT.document.list)}
+      backLink={ handleBackLink} 
       disableEditButton={machine?.status?.slug==='transferred'}
       // drawingPage={ !customerPage || !machinePage }
       customerPage={customerPage} machinePage={machinePage} drawingPage={drawingPage}

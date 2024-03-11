@@ -10,7 +10,7 @@ import { pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import { Box, Card, Grid, Stack, Dialog } from '@mui/material';
 // PATH
-import { PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_CUSTOMER, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
 import {
   resetActiveDocuments,
@@ -307,7 +307,13 @@ function DocumentAddForm({
       navigate(PATH_DOCUMENT.document.machineDrawings.list);
     } else if((documentNewVersionFormVisibility || documentAddFilesViewFormVisibility)  && (customerPage || machinePage)){
       dispatch(setViewVisiilityNoOthers())
+      if(customerPage && !machinePage){
+        navigate(PATH_CUSTOMER.documents.root( customer?._id ));
+      }
     }else if((documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility) && (customerPage || machinePage) ){
+      if(customerPage && !machinePage){
+        navigate(PATH_CUSTOMER.documents.viewHistory(customer?._id  ));
+      }
       dispatch(setViewHistoryVisiilityNoOthers(false))
     }else if(machineDrawings && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility)){
       dispatch(setDrawingAndDocumentVisibility())

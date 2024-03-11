@@ -32,7 +32,7 @@ import { FORMLABELS } from '../../constants/default-constants';
 // sections
 import CustomerSiteListTableRow from './CustomerSiteListTableRow';
 import CustomerSiteListTableToolbar from './CustomerSiteListTableToolbar';
-import { getSites, getSite, resetSites, ChangePage, ChangeRowsPerPage, setFilterBy, setIsExpanded, setCardActiveIndex  } from '../../redux/slices/customer/site';
+import { getSites, getSite, resetSite, resetSites, ChangePage, ChangeRowsPerPage, setFilterBy, setIsExpanded, setCardActiveIndex  } from '../../redux/slices/customer/site';
 import { setCustomerTab } from '../../redux/slices/customer/customer';
 import { Cover } from '../../components/Defaults/Cover';
 import TableCard from '../../components/ListTableTools/TableCard';
@@ -76,16 +76,16 @@ export default function CustomerSiteList() {
   
   const { sites, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.site);
   
-  const [tableData, setTableData] = useState([]);
-  const [openConfirm, setOpenConfirm] = useState(false);
-  const [filterName, setFilterName] = useState(filterBy);
+  const [ tableData, setTableData ] = useState([]);
+  const [ openConfirm, setOpenConfirm ] = useState(false);
+  const [ filterName, setFilterName ] = useState(filterBy);
+
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
   };
-  const onChangePage = (event, newPage) => { 
-    dispatch(ChangePage(newPage)) 
-  }
+
+  const onChangePage = (event, newPage) => {  dispatch(ChangePage(newPage))  }
 
   useEffect(() => {
     dispatch(getSites());
@@ -133,7 +133,7 @@ export default function CustomerSiteList() {
   };
 
   const openInNewPage = (id) => {
-    dispatch(setCustomerTab('info'));
+    // dispatch(setCustomerTab('info'));
     const url = PATH_CUSTOMER.view(id);
     window.open(url, '_blank');
   };
@@ -163,19 +163,21 @@ export default function CustomerSiteList() {
   };
 
   const handleSiteView = async (customerId, siteId ) => {
-    await dispatch(setCustomerTab('sites'));
-    await dispatch(setCardActiveIndex(siteId));
-    await dispatch(setIsExpanded(true));
+    await dispatch(resetSite());
     await dispatch(getSite(customerId, siteId));
+    await dispatch(setCardActiveIndex(siteId));
+    await dispatch(setCustomerTab('sites'));
+    await dispatch(setIsExpanded(true));
     await navigate(PATH_CUSTOMER.view(customerId))
   };
 
   const handleSiteViewInNewPage = async (customerId, siteId ) => {
-    await openInNewPage(customerId);
-    await dispatch(setCustomerTab('sites'));
-    await dispatch(setCardActiveIndex(siteId));
-    await dispatch(setIsExpanded(true));
+    await dispatch(resetSite());
     await dispatch(getSite(customerId, siteId));
+    await dispatch(setCardActiveIndex(siteId));
+    await dispatch(setCustomerTab('sites'));
+    await dispatch(setIsExpanded(true));
+    await openInNewPage(customerId);
   };
 
   return (

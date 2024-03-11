@@ -25,10 +25,11 @@ import { Snacks, FORMLABELS as formLABELS } from '../../constants/customer-const
 // ----------------------------------------------------------------------
 
 export default function CustomerViewForm() {
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isMobile = useResponsive('down', 'sm');
-  const { customer, customerEditFormFlag, isLoading} = useSelector((state) => state.customer);
+  const { customer, isLoading } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
   
   const defaultValues = useMemo(
@@ -59,15 +60,16 @@ export default function CustomerViewForm() {
   );
   
   const handleEdit = async () => {
-    if (!customerEditFormFlag) {
-      dispatch(setCustomerEditFormVisibility(true));
-    }
+    // if (!customerEditFormFlag) {
+      // dispatch(setCustomerEditFormVisibility(true));
+      navigate(PATH_CUSTOMER.edit(customer._id));
+    // }
   };
 
   const onDelete = async () => {
     try {
       await dispatch(deleteCustomer(customer._id));
-      navigate(PATH_CUSTOMER.list);
+      navigate(PATH_CUSTOMER.root);
     } catch (err) {
       enqueueSnackbar(Snacks.FAILED_DELETE, { variant: `error` });
       console.log('Error:', err);
@@ -94,7 +96,7 @@ export default function CustomerViewForm() {
               handleEdit={handleEdit}
               onDelete={onDelete}
               supportSubscription={defaultValues.supportSubscription}
-              backLink={() => navigate(PATH_CUSTOMER.list)}
+              backLink={() => navigate(PATH_CUSTOMER.root)}
               excludeReports={defaultValues.excludeReports}
             />
 

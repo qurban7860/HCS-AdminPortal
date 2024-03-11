@@ -69,7 +69,7 @@ export default function MachineListTableRow({
         <TableCell>
             {Object.values(address ?? {}).map((value) => (typeof value === 'string' ? value.trim() : '')).filter((value) => value !== '').join(', ')}
         </TableCell>
-        <LinkTableCellButtons moveIcon align="center" onClick={row?.status?.slug!=='transferred' && isAllAccessAllowed && onMoveMachine} />
+        <LinkTableCellButtons moveIcon align="center" onClick={row?.status?.slug!=='transferred' && isAllAccessAllowed && onMoveMachine || undefined } />
       </StyledTableRow>
 
   );

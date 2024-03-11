@@ -15,7 +15,7 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_CUSTOMER } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 // import { useSettingsContext } from '../../../components/settings';
@@ -130,7 +130,7 @@ export default function ContactList() {
       await dispatch(deleteContact(id));
       dispatch(getContacts());
       setSelected([]);
-
+      navigate(PATH_CUSTOMER.contact.root(customer?._id))
       if (page > 0) {
         if (dataInPage.length < 2) {
           setPage(page - 1);

@@ -1,5 +1,6 @@
 import { useEffect,useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -20,6 +21,7 @@ import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete, RHFCountryAutoc
 import { SiteSchema } from '../../schemas/customer'
 import Iconify from '../../../components/iconify';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
+import { PATH_CUSTOMER } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -29,6 +31,7 @@ export default function SiteAddForm() {
   const { activeContacts } = useSelector((state) => state.contact);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
 
 
   const theme = createTheme({
@@ -100,6 +103,7 @@ export default function SiteAddForm() {
       await dispatch(addSite(data));
       await dispatch(getSites(customer?._id))
       enqueueSnackbar('Site created successfully!');
+      navigate(PATH_CUSTOMER.site.root( customer?._id ))
       reset();
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
@@ -128,7 +132,7 @@ export default function SiteAddForm() {
     const updatedPhoneNumbers = [...phoneNumbers, { type: '', countryCode: country?.phone?.replace(/[^0-9]/g, '')} ]; 
     setValue( 'phoneNumbers', updatedPhoneNumbers )
   }
-  const toggleCancel = () => dispatch(setSiteFormVisibility(false));
+  const toggleCancel = () => navigate(PATH_CUSTOMER.site.root(customer?._id ));
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

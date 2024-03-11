@@ -1,9 +1,8 @@
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { useEffect, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-// import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -12,13 +11,15 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Card, Grid, Stack } from '@mui/material';
 // slice
 import { setIsExpanded, moveCustomerContact,setContactMoveFormVisibility } from '../../../redux/slices/customer/contact';
-import { getActiveCustomers } from '../../../redux/slices/customer/customer';
+import customer, { getActiveCustomers } from '../../../redux/slices/customer/customer';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFAutocomplete } from '../../../components/hook-form';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
+import { PATH_CUSTOMER } from '../../../routes/paths';
+
 // ----------------------------------------------------------------------
 
 export default function ContactMoveForm( ) {
@@ -26,6 +27,7 @@ export default function ContactMoveForm( ) {
   const { activeCustomers } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
   const { id } = useParams();
   const MoveMachineSchema = Yup.object().shape({
     customer: Yup.object().shape({name: Yup.string()}).nullable().required('Customer is required!'),
@@ -64,6 +66,7 @@ export default function ContactMoveForm( ) {
       await dispatch(moveCustomerContact(data));
       enqueueSnackbar('Contact moved successfully!');
       dispatch(setIsExpanded(false));
+      navigate(PATH_CUSTOMER.contact.root(customer?._id))
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.error(error);
@@ -72,6 +75,7 @@ export default function ContactMoveForm( ) {
 
   const toggleCancel = () => {
     dispatch(setContactMoveFormVisibility(false));
+    navigate(PATH_CUSTOMER.contact.root(customer?._id))
   };
 
   return (

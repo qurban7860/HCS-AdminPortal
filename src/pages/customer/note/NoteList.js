@@ -1,11 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
-import {
-  Table,
-  TableBody,
-  TableContainer,
-} from '@mui/material';
+import { Container, Table, TableBody, TableContainer } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
@@ -23,7 +20,7 @@ import Scrollbar from '../../../components/scrollbar';
 // sections
 import NoteListTableRow from './NoteListTableRow';
 import NoteListTableToolbar from './NoteListTableToolbar';
-
+import CustomerTabContainer from '../CustomerTabContainer'
 import {
   getNote, 
   getNotes,
@@ -34,6 +31,7 @@ import {
   setNoteViewFormVisibility } from '../../../redux/slices/customer/customerNote';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
+import { PATH_CUSTOMER } from '../../../routes/paths';
 
 export default function NoteList() {
   const {
@@ -44,7 +42,7 @@ export default function NoteList() {
   } = useTable({
     defaultOrderBy: '-createdAt',
   });
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   useSettingsContext();
   const [filterName, setFilterName] = useState('');
@@ -112,17 +110,11 @@ export default function NoteList() {
     setFilterStatus(event.target.value);
   };
 
-  const handleViewRow = (noteid) => {
-      dispatch(getNote(customer._id,noteid));
-      dispatch(setNoteViewFormVisibility(true));
-  };
-
-  const handleResetFilter = () => {
-    dispatch(setFilterBy(''))
-    setFilterName('');
-  };
+  const handleViewRow = (noteid) => navigate(PATH_CUSTOMER.notes.view(customer?._id, noteid));
 
   return (
+    <Container maxWidth={false} >
+      <CustomerTabContainer currentTabValue='notes' />
       <TableCard>
         <NoteListTableToolbar
           filterName={filterName}
@@ -130,7 +122,7 @@ export default function NoteList() {
           onFilterName={handleFilterName}
           onFilterStatus={handleFilterStatus}
           isFiltered={isFiltered}
-          onResetFilter={handleResetFilter}
+          // onResetFilter={handleResetFilter}
         />
           {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
@@ -178,6 +170,7 @@ export default function NoteList() {
           onRowsPerPageChange={onChangeRowsPerPage}
         />
       </TableCard>
+    </Container>
   );
 }
 

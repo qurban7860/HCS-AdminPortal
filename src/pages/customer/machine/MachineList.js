@@ -167,7 +167,6 @@ export default function MachineList() {
                 headLabel={TABLE_HEAD}
                 onSort={onSort}
               />
-
               <TableBody>
                 {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -190,7 +189,6 @@ export default function MachineList() {
             </Table>
           </Scrollbar>
         </TableContainer>
-
         <TablePaginationCustom
           count={dataFiltered.length}
           page={page}
@@ -198,9 +196,6 @@ export default function MachineList() {
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
         />
-
-        
-
       </TableCard>
       <MachineDialog />
       </>

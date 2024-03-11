@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
-
+import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 // import { MuiTelInput } from 'mui-tel-input';
@@ -47,6 +47,8 @@ import { FORMLABELS } from '../../../constants/customer-constants';
 import { AddFormLabel } from '../../../components/DocumentForms/FormLabel';
 import Iconify from '../../../components/iconify';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
+import { PATH_CUSTOMER } from '../../../routes/paths';
+
 // ----------------------------------------------------------------------
 
 ContactAddForm.propTypes = {
@@ -63,7 +65,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const [phone, setPhone] = useState('');
-
+  const navigate = useNavigate();
   const theme = createTheme({
     palette: {
       success: green,
@@ -112,7 +114,6 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
     reset,
     setValue,
     watch,
-    // setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -166,19 +167,16 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
       }
       await dispatch(addContact(data));
       dispatch(setIsExpanded(true));
-      dispatch(setContactEditFormVisibility(false));
-      dispatch(setContactMoveFormVisibility(false));
       enqueueSnackbar('Contact added successfully');
       reset();
+      navigate(PATH_CUSTOMER.contact.root(customer?._id))
     } catch (error) {
       enqueueSnackbar('Failed : Contact adding', { variant: `error` });
       console.error(error);
     }
   };
 
-  const toggleCancel = () => {
-    dispatch(setContactFormVisibility(false));
-  };
+  const toggleCancel = () =>  navigate(PATH_CUSTOMER.contact.root(customer?._id));
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
