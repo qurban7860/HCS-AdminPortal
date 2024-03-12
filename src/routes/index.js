@@ -308,7 +308,6 @@ export default function Router() {
         { path: 'machineByModels', element: <MachineByModelsViewForm /> },
         { path: 'machineByYears', element: <MachineByYearsViewForm /> },
         { path: 'permission-denied', element: <PermissionDeniedPage /> },
-        { path: 'blank', element: <BlankPage /> },
       ],
     },
     {
