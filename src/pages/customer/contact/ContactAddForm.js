@@ -15,11 +15,9 @@ import { ContactSchema } from '../../schemas/customer';
 // slice
 import {
   addContact,
+  getContacts,
   setIsExpanded,
   getActiveContacts,
-  setContactFormVisibility,
-  setContactEditFormVisibility,
-  setContactMoveFormVisibility,
   resetActiveContacts,
 } from '../../../redux/slices/customer/contact';
 import {
@@ -163,10 +161,11 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
         data.phone = phone;
       }
       await dispatch(addContact(data));
-      dispatch(setIsExpanded(true));
+      await dispatch(setIsExpanded(true));
       enqueueSnackbar('Contact added successfully');
-      reset();
-      navigate(PATH_CUSTOMER.contact.root(customerId ))
+      await reset();
+      await dispatch(getContacts(customerId));
+      if(customerId ) await navigate(PATH_CUSTOMER.contact.root(customerId ))
     } catch (error) {
       enqueueSnackbar('Failed : Contact adding', { variant: `error` });
       console.error(error);

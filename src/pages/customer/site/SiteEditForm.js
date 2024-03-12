@@ -10,7 +10,7 @@ import { Box, Card, Grid, Stack, Typography, IconButton } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { green } from '@mui/material/colors';
 // slice
-import { updateSite, setSiteEditFormVisibility, getSite, getSites } from '../../../redux/slices/customer/site';
+import { updateSite, getSite, getSites } from '../../../redux/slices/customer/site';
 import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -46,6 +46,10 @@ export default function SiteEditForm() {
     );
     return filteredOutput;
   }
+
+  useEffect(() => {
+    if(customerId && id)dispatch(getSite(customerId, id))
+  }, [ dispatch, customerId, id ]);
 
   useEffect(() => {
     dispatch( getActiveContacts(customerId))
@@ -110,13 +114,6 @@ export default function SiteEditForm() {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     },[ country ]);
 
-    
-  useEffect(() => {
-    if (site) {
-      reset(defaultValues);
-    }
-  }, [site, reset, defaultValues]);
-
   
   const updateCountryCode = () =>{
     phoneNumbers?.map((pN, index ) =>  setValue( `phoneNumbers[${index}].countryCode`,  country?.phone?.replace(/[^0-9]/g, '') ))
@@ -135,15 +132,16 @@ export default function SiteEditForm() {
     try {
       await dispatch(updateSite(data, customerId, id));
       enqueueSnackbar('Site saved Successfully!');
-      reset();
-      navigate(PATH_CUSTOMER.site.view(customerId, id))
+      await reset();
+      await dispatch(getSites(customerId))
+      if(customerId && id ) await navigate(PATH_CUSTOMER.site.view(customerId, id))
     } catch (err) {
       enqueueSnackbar('Site save failed!', { variant: 'error' });
       console.error(err.message);
     }
   };
   
-  const toggleCancel = () => navigate(PATH_CUSTOMER.site.view(customerId, id));
+  const toggleCancel = () => {if(customerId && id ){ navigate(PATH_CUSTOMER.site.view(customerId, id))}}
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

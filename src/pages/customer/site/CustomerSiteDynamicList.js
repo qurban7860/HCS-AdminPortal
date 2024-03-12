@@ -69,9 +69,9 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
       enqueueSnackbar(Snacks.SITE_CLOSE_CONFIRM, { variant: 'warning' });
       dispatch(setCardActiveIndex(null));
       dispatch(setIsExpanded(false));
-      navigate(PATH_CUSTOMER.site.new(customerId))
+      if(customerId ) navigate(PATH_CUSTOMER.site.new(customerId))
     } else {
-      navigate(PATH_CUSTOMER.site.new(customerId))
+      if(customerId ) navigate(PATH_CUSTOMER.site.new(customerId))
       dispatch(setCardActiveIndex(null));
       dispatch(setIsExpanded(false));
     }
@@ -98,14 +98,14 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
   useEffect( () => {
     dispatch(getSites(customerId));
     return ()=>{ dispatch(resetSites()) }
-}, [dispatch, customerId]); 
+}, [dispatch, customerId ]); 
 
   useEffect(() => {
     setTableData(sites);
   }, [sites ]);
   
 
-  const toggleCancel = () => navigate(PATH_CUSTOMER.site.root(customerId));
+  const toggleCancel = () => { if(customerId ) navigate(PATH_CUSTOMER.site.root(customerId))};
   const handleGoogleMapsVisibility = () => setGoogleMapsVisibility(!googleMapsVisibility);
   const handleActiveCard = (index) => dispatch(setCardActiveIndex(index));
   const handleExpand = (index) => dispatch(setIsExpanded(true));
@@ -121,7 +121,7 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
 
 
   const handleCardClick = async (_site)=>{
-    navigate(PATH_CUSTOMER.site.view(customerId, _site._id))
+    if(customerId && _site._id ){ navigate(PATH_CUSTOMER.site.view(customerId, _site._id))}
     if ( !siteEditForm && !siteAddForm ) {
       handleActiveCard(_site._id);
       handleExpand(_site._id);
