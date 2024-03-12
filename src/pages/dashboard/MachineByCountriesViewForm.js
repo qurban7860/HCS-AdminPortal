@@ -68,7 +68,7 @@ export default function MachineByCountriesViewForm() {
         <Card sx={{p:2, pt:0}} >
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{mt:2, display:'flex', justifyContent:'flex-end'}}>
                 <Grid item xs={12} sm={6}>
-                <ViewFormEditDeleteButtons backLink={() => navigate(PATH_DASHBOARD.general.app)} />
+                <ViewFormEditDeleteButtons backLink={() => navigate(PATH_DASHBOARD.root)} />
                 </Grid>
                 <Grid item xs={12} sm={2}>
                   <Autocomplete

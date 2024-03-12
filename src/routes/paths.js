@@ -47,33 +47,13 @@ export const PATH_DASHBOARD = {
   permissionDenied: path(ROOTS_DASHBOARD, '/permission-denied'),
   blank: path(ROOTS_AUTH, '/login'),
   general: {
-    app: path(ROOTS_DASHBOARD, '/app'),
     machineByCountries: path(ROOTS_DASHBOARD, `/machineByCountries`),
     machineByModels: path(ROOTS_DASHBOARD, '/machineByModels'),
     machineByYears: path(ROOTS_DASHBOARD, '/machineByYears'),
   },
-  asset: {
-    root: path(ROOTS_DASHBOARD, '/asset'),
-    shop: path(ROOTS_DASHBOARD, '/asset/shop'),
-    list: path(ROOTS_DASHBOARD, '/asset/list'),
-    // checkout: path(ROOTS_DASHBOARD, '/asset/checkout'),
-    new: path(ROOTS_DASHBOARD, '/asset/new'),
-    view: (id) => path(ROOTS_DASHBOARD, `/asset/${id}/view`),
-    edit: (id) => path(ROOTS_DASHBOARD, `/asset/${id}/edit`),
-    demoEdit: path(ROOTS_DASHBOARD, '/asset/product/nike-bblazer-low-77-vintage/edit'),
-    demoView: path(ROOTS_DASHBOARD, '/asset/product/nike-air-force-1-ndestrukt'),
-  },
-  customer: {
-    dashboard: path(ROOTS_DASHBOARD, '/customer/dashboard'),
-    list: path(ROOTS_DASHBOARD, '/customer/list'),
-    new: path(ROOTS_DASHBOARD, '/customer/new'),
-    view: (id) => path(ROOTS_DASHBOARD, `/customer/${id}/view`),
-    edit: (id) => path(ROOTS_DASHBOARD, `/customer/${id}/edit`),
-  },
 };
 
   // CUSTOMER
-
 export const PATH_CUSTOMER = {
   root: ROOTS_CUSTOMER,
   permissionDenied: path(ROOTS_CUSTOMER, '/permission-denied'),
@@ -115,7 +95,6 @@ export const PATH_CUSTOMER = {
 };
 
 // MACHINE
-
 export const PATH_MACHINE = {
   root: ROOTS_MACHINE,
   permissionDenied: path(ROOTS_MACHINE, '/permission-denied'),
@@ -247,10 +226,8 @@ export const PATH_SECURITY = {
   root: ROOTS_SECURITY,
   permissionDenied: path(ROOTS_SECURITY, '/permission-denied'),
   users: {
-    root: path(ROOTS_SECURITY, '/users'),
     new: path(ROOTS_SECURITY, `/users/new/`),
     invite: path(ROOTS_SECURITY, `/users/invite/`),
-    list: path(ROOTS_SECURITY, '/users/list'),
     cards: path(ROOTS_SECURITY, '/users/cards'),
     profile: path(ROOTS_SECURITY, '/users/profile'),
     editProfile: path(ROOTS_SECURITY, '/users/editProfile'),
@@ -283,12 +260,8 @@ export const PATH_SECURITY = {
 };
 
 export const PATH_SETTING = {
-  root: ROOTS_SETTING,
   permissionDenied: path(ROOTS_SETTING, '/permission-denied'),
-  general: {
-    app: path(ROOTS_SETTING, '/app'),
-  },
-  app: path(ROOTS_SETTING, '/app'),
+  root: ROOTS_SETTING,
   documentType: {
     list: path(ROOTS_SETTING, '/documentType/list'),
     new: path(ROOTS_SETTING, '/documentType/new'),

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Container } from '@mui/material';
 import { getCustomerMachines, setMachineMoveFormVisibility } from '../../../redux/slices/products/machine';
-import CustomerTabContainer from '../CustomerTabContainer';
+import CustomerTabContainer from '../util/CustomerTabContainer';
 import MachineList from './MachineList'
 import MoveMachineForm from './MoveMachineForm'
 

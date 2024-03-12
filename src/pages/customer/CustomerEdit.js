@@ -15,7 +15,7 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
 // sections
 import CustomerEditForm from './CustomerEditForm';
-import CustomerTabContainer from './CustomerTabContainer';
+import CustomerTabContainer from './util/CustomerTabContainer';
 
 
 // ----------------------------------------------------------------------

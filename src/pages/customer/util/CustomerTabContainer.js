@@ -2,17 +2,17 @@ import PropTypes from 'prop-types';
 import {  useNavigate } from 'react-router-dom';
 // @mui
 import { Tab, Container, Box, tabsClasses } from '@mui/material';
-import TabContainer from '../../components/Tabs/TabContainer';
+import TabContainer from '../../../components/Tabs/TabContainer';
 // redux
-import { useDispatch, useSelector } from '../../redux/store';
+import { useDispatch, useSelector } from '../../../redux/store';
 // components
-import UnderDevelopment from '../boundaries/UnderDevelopment';
+import UnderDevelopment from '../../boundaries/UnderDevelopment';
 // sections
-import { Cover } from '../../components/Defaults/Cover';
-import { StyledCardContainer } from '../../theme/styles/default-styles';
-import Iconify from '../../components/iconify';
-import  TABS from './index';
-import { PATH_CUSTOMER } from '../../routes/paths';
+import { Cover } from '../../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
+import Iconify from '../../../components/iconify';
+import  TABS from '../index';
+import { PATH_CUSTOMER } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 

@@ -36,11 +36,11 @@ export const CustomerEdit = Loadable(lazy(() => import('../pages/customer/Custom
 export const CustomerView = Loadable(lazy(() => import('../pages/customer/CustomerView')));
 
 // SITE
-export const CustomerSiteList = Loadable(lazy(() => import('../pages/customer/CustomerSiteList')));
+export const CustomerSiteList = Loadable(lazy(() => import('../pages/customer/sites_list/CustomerSiteList')));
 export const CustomerSiteDynamicList = Loadable(lazy(() => import('../pages/customer/site/CustomerSiteDynamicList')));
 
 // CONTACT
-export const CustomerContactList = Loadable(lazy(() => import('../pages/customer/CustomerContactList')));
+export const CustomerContactList = Loadable(lazy(() => import('../pages/customer/contacts_list/CustomerContactList')));
 export const CustomerContactDynamicList = Loadable(lazy(() => import('../pages/customer/contact/CustomerContactDynamicList')));
 
 // NOTE
@@ -53,12 +53,12 @@ export const NoteViewForm = Loadable(lazy(() => import('../pages/customer/note/N
 export const CustomerMachines = Loadable(lazy(() => import('../pages/customer/machine/CustomerMachines')));
 
 // NOTE
-export const CustomerDocumentList             = Loadable(lazy(() => import('../pages/customer/Documents/CustomerDocumentList')));
-export const CustomerDocumentAddForm          = Loadable(lazy(() => import('../pages/customer/Documents/CustomerDocumentAddForm')));
-export const CustomerDocumentEditForm         = Loadable(lazy(() => import('../pages/customer/Documents/CustomerDocumentEditForm')));
-export const CustomerDocumentViewForm         = Loadable(lazy(() => import('../pages/customer/Documents/CustomerDocumentViewForm')));
-export const CustomerDocumentHistoryViewForm  = Loadable(lazy(() => import('../pages/customer/Documents/CustomerDocumentHistoryViewForm')));
-export const CustomerDocumentGallery          = Loadable(lazy(() => import('../pages/customer/Documents/CustomerDocumentGallery')));
+export const CustomerDocumentList             = Loadable(lazy(() => import('../pages/customer/documents/CustomerDocumentList')));
+export const CustomerDocumentAddForm          = Loadable(lazy(() => import('../pages/customer/documents/CustomerDocumentAddForm')));
+export const CustomerDocumentEditForm         = Loadable(lazy(() => import('../pages/customer/documents/CustomerDocumentEditForm')));
+export const CustomerDocumentViewForm         = Loadable(lazy(() => import('../pages/customer/documents/CustomerDocumentViewForm')));
+export const CustomerDocumentHistoryViewForm  = Loadable(lazy(() => import('../pages/customer/documents/CustomerDocumentHistoryViewForm')));
+export const CustomerDocumentGallery          = Loadable(lazy(() => import('../pages/customer/documents/CustomerDocumentGallery')));
 
 
 // DASHBOARD: USER

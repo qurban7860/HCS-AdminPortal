@@ -11,7 +11,7 @@ import { getCustomer } from '../../redux/slices/customer/customer';
 import UnderDevelopment from '../boundaries/UnderDevelopment';
 // sections
 import CustomerViewForm from './CustomerViewForm';
-import CustomerTabContainer from './CustomerTabContainer';
+import CustomerTabContainer from './util/CustomerTabContainer';
 
 // ----------------------------------------------------------------------
 

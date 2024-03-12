@@ -35,7 +35,7 @@ import Iconify from '../../../components/iconify';
 import ContactSiteCard from '../../../components/sections/ContactSiteCard';
 import { exportCSV } from '../../../utils/exportCSV';
 import { useAuthContext } from '../../../auth/useAuthContext';
-import CustomerTabContainer from '../CustomerTabContainer';
+import CustomerTabContainer from '../util/CustomerTabContainer';
 
 // ----------------------------------------------------------------------
 

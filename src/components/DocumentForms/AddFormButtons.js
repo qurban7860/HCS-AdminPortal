@@ -77,7 +77,7 @@ export default function AddFormButtons({
 
   useLayoutEffect(()=>{
     if(( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly || !isDocumentAccessAllowed || !isDrawingAccessAllowed )){
-      navigate(PATH_DASHBOARD.general.app)
+      navigate(PATH_DASHBOARD.root)
     }
   },[ 
     machineSettingPage, 

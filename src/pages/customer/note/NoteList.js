@@ -20,7 +20,7 @@ import Scrollbar from '../../../components/scrollbar';
 // sections
 import NoteListTableRow from './NoteListTableRow';
 import NoteListTableToolbar from './NoteListTableToolbar';
-import CustomerTabContainer from '../CustomerTabContainer'
+import CustomerTabContainer from '../util/CustomerTabContainer'
 import {
   getNote, 
   getNotes,

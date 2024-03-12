@@ -127,19 +127,15 @@ function MachineServiceParamViewForm() {
   const navigate = useNavigate();
 
   const handleContactView = async (contactId) => {
-    await navigate(PATH_CUSTOMER.view(machine?.customer?._id))
-    await dispatch(setCustomerTab('contacts'));
     await dispatch(setCardActiveIndex(contactId));
     await dispatch(setIsExpanded(true));
-    await dispatch(getContact(machine?.customer?._id, contactId));
+    await navigate(PATH_CUSTOMER.contact.view(machine?.customer?._id,contactId))
   };
 
   const handleContactViewInNewPage = async (contactId) => {
-    await window.open(PATH_CUSTOMER.view(machine?.customer?._id), '_blank');
-    await dispatch(setCustomerTab('contacts'));
     await dispatch(setCardActiveIndex(contactId));
     await dispatch(setIsExpanded(true));
-    await dispatch(getContact(machine?.customer?._id, contactId));
+    await window.open(PATH_CUSTOMER.contact.view(machine?.customer?._id, contactId), '_blank');
   };
 
   const operators = defaultValues?.operators?.map((operator, index) => (  

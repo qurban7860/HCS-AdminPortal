@@ -35,7 +35,7 @@ import Iconify from '../../../components/iconify';
 import ContactSiteCard from '../../../components/sections/ContactSiteCard';
 import { exportCSV } from '../../../utils/exportCSV';
 import { useAuthContext } from '../../../auth/useAuthContext';
-import CustomerTabContainer from '../CustomerTabContainer';
+import CustomerTabContainer from '../util/CustomerTabContainer';
 
 // ----------------------------------------------------------------------
 
@@ -56,6 +56,7 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
   const [ tableData, setTableData ] = useState([]);
   const [ googleMapsVisibility, setGoogleMapsVisibility ] = useState(false);
   const { customerId } = useParams() 
+  const [exportingCSV, setExportingCSV] = useState(false);
 
   const isMobile = useResponsive('down', 'sm');
   const dispatch = useDispatch();
@@ -65,9 +66,7 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
 
   const toggleChecked = () => {
     if (siteEditForm) {
-      enqueueSnackbar(Snacks.SITE_CLOSE_CONFIRM, {
-        variant: 'warning',
-      });
+      enqueueSnackbar(Snacks.SITE_CLOSE_CONFIRM, { variant: 'warning' });
       dispatch(setCardActiveIndex(null));
       dispatch(setIsExpanded(false));
       navigate(PATH_CUSTOMER.site.new(customerId))
@@ -96,35 +95,20 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
     filterStatus,
   });
 
+  useEffect( () => {
+    dispatch(getSites(customerId));
+    return ()=>{ dispatch(resetSites()) }
+}, [dispatch, customerId]); 
+
   useEffect(() => {
     setTableData(sites);
   }, [sites ]);
   
 
-  const toggleCancel = () => {
-    navigate(PATH_CUSTOMER.site.root(customerId))
-  };
-
-  const handleGoogleMapsVisibility = () => {
-    setGoogleMapsVisibility(!googleMapsVisibility);
-  };
-
-  const handleActiveCard = (index) => {
-    dispatch(setCardActiveIndex(index));
-  };
-  const handleExpand = (index) => {
-    dispatch(setIsExpanded(true));
-  };
-
-  useEffect( () => {
-      dispatch(getSites(customerId));
-      dispatch(setCardActiveIndex(null));
-      dispatch(setIsExpanded(false));
-      return ()=>{ dispatch(resetSites()) }
-  }, [dispatch, customerId]); 
-
-
-  const [exportingCSV, setExportingCSV] = useState(false);
+  const toggleCancel = () => navigate(PATH_CUSTOMER.site.root(customerId));
+  const handleGoogleMapsVisibility = () => setGoogleMapsVisibility(!googleMapsVisibility);
+  const handleActiveCard = (index) => dispatch(setCardActiveIndex(index));
+  const handleExpand = (index) => dispatch(setIsExpanded(true));
 
   const onExportCSV = async () => {
     setExportingCSV(true);
@@ -137,7 +121,6 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
 
 
   const handleCardClick = async (_site)=>{
-    await dispatch(getSite(customerId, _site._id));
     navigate(PATH_CUSTOMER.site.view(customerId, _site._id))
     if ( !siteEditForm && !siteAddForm ) {
       handleActiveCard(_site._id);

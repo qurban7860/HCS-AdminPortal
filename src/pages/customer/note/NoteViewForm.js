@@ -16,7 +16,7 @@ import {
   setNoteViewFormVisibility,
 } from '../../../redux/slices/customer/customerNote';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
-import CustomerTabContainer from '../CustomerTabContainer'
+import CustomerTabContainer from '../util/CustomerTabContainer'
 import { PATH_CUSTOMER } from '../../../routes/paths';
 
 export default function NoteViewForm() {

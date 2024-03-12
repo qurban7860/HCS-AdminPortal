@@ -14,7 +14,7 @@ import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete } from '../../../components/hook-form';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { NoteSchema } from '../../schemas/customer'
-import CustomerTabContainer from '../CustomerTabContainer'
+import CustomerTabContainer from '../util/CustomerTabContainer'
 import { PATH_CUSTOMER } from '../../../routes/paths';
 
 

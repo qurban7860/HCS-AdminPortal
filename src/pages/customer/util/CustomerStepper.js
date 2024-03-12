@@ -2,8 +2,8 @@ import { useState } from 'react';
 // @mui
 import { alpha } from '@mui/material/styles';
 import { Box, Step, Paper, Button, Stepper, StepLabel, Typography } from '@mui/material';
-import CustomerAddForm from './CustomerAddForm';
-import SiteAddForm from './site/SiteAddForm';
+import CustomerAddForm from '../CustomerAddForm';
+import SiteAddForm from '../site/SiteAddForm';
 // ----------------------------------------------------------------------
 
 const steps = ['Enter Contact Details', 'Enter Site Details'];

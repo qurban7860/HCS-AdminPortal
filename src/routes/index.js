@@ -303,8 +303,7 @@ export default function Router() {
         </AuthGuard>
       ),
       children: [
-        { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-        { path: 'app', element: <GeneralAppPage /> },
+        { element: <GeneralAppPage to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'machineByCountries', element: <MachineByCountriesViewForm /> },
         { path: 'machineByModels', element: <MachineByModelsViewForm /> },
         { path: 'machineByYears', element: <MachineByYearsViewForm /> },
@@ -539,16 +538,14 @@ export default function Router() {
         </AuthGuard>
       ),
       children: [
-        { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
+        { element: <SecurityUserList />, index: true },
         {
           path: 'users',
           children: [
-            { element: <Navigate to="/dashboard/user/profile" replace />, index: true },
             { path: 'profile', element: <SecurityUserProfile/> },
             { path: 'editProfile', element: <SecurityUserProfileEditForm/> },
             { path: 'password', element: <SecurityUserChangePassword/> },
             { path: 'changePassword', element: <SecurityUserChangePasswordByAdmin/> },
-            { path: 'list', element: <SecurityUserList /> },
             { path: 'new', element: <SecurityUserAdd /> },
             { path: 'invite', element: <SecurityUserAdd isInvite /> },
             { path: ':id/edit', element: <SecurityUserEdit /> },
@@ -601,8 +598,7 @@ export default function Router() {
         </AuthGuard>
       ),
       children: [
-        {element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-        { path: 'app', element: <Setting /> },
+        {element: <Setting  />, index: true },
         {
           path: 'documentCategory',
           children: [

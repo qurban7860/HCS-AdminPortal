@@ -39,7 +39,7 @@ export function Cover({
   const navigate = useNavigate();
 
   const handleSettingsNavigate = () => {
-    navigate(PATH_SETTING.app);
+    navigate(PATH_SETTING.root);
   };
 
   const linkCustomerSites = () => {
