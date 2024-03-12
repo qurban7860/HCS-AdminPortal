@@ -25,23 +25,24 @@ export default function NoteEditForm() {
   const { activeSites } = useSelector((state) => state.site);
   const { activeContacts } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const { customerId, id } = useParams() 
   const { enqueueSnackbar } = useSnackbar();
 
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   useEffect(()=>{
-    dispatch(getActiveSites(customer?._id))
-    dispatch(getActiveContacts(customer?._id))
-    if(id && customer?._id ){
-      dispatch(getNote(customer?._id, id))
+    dispatch(getActiveSites(customerId))
+    dispatch(getActiveContacts(customerId))
+    if(id && customerId ){
+      dispatch(getNote(customerId, id))
     }
     return () => {
       dispatch(resetActiveSites());
       dispatch(resetActiveContacts());
       dispatch(resetNote());
     };
-  },[ dispatch, customer?._id, id ])
+  },[ dispatch, customerId, id ])
 
   const defaultValues = useMemo(
     () => ({
@@ -69,7 +70,7 @@ export default function NoteEditForm() {
   
   const onSubmit = async (data) => {
     try {
-      await dispatch(updateNote(customer._id, note._id, data));
+      await dispatch(updateNote(customerId, id, data));
       enqueueSnackbar('Note Updated Successfully');
       reset();
     } catch (err) {
@@ -78,7 +79,7 @@ export default function NoteEditForm() {
     }
   };
   
-  const toggleCancel = () =>  navigate(PATH_CUSTOMER.notes.view(customer?._id, note?._id));
+  const toggleCancel = () =>  navigate(PATH_CUSTOMER.notes.view(customerId, id));
 
   return (
     <Container maxWidth={false} >

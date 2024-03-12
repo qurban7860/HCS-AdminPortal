@@ -3,39 +3,39 @@ import { useState, useEffect } from 'react';
 // @mui
 import { Container, Stack, Card, Grid, CardActionArea } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   CardBase,
   GridBaseViewForm,
   StyledScrollbar,
-} from '../../theme/styles/customer-styles';
-import SiteCarousel from './site/util/SiteCarousel';
+} from '../../../theme/styles/customer-styles';
+import SiteCarousel from './util/SiteCarousel';
 // redux
-import { useDispatch, useSelector } from '../../redux/store';
+import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_CUSTOMER } from '../../routes/paths';
+import { PATH_CUSTOMER } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../components/snackbar';
-import { getComparator, useTable } from '../../components/table';
-import AddButtonAboveAccordion from '../../components/Defaults/AddButtonAboveAcoordion';
-import BreadcrumbsProvider from '../../components/Breadcrumbs/BreadcrumbsProvider';
-import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
-import GoogleMaps from '../../assets/GoogleMaps';
-import useResponsive from '../../hooks/useResponsive';
-import { getSites, resetSites, getSite, setIsExpanded, setCardActiveIndex } from '../../redux/slices/customer/site';
-import NothingProvided from '../../components/Defaults/NothingProvided';
-import SiteAddForm from './site/SiteAddForm';
-import SiteEditForm from './site/SiteEditForm';
-import SiteViewForm from './site/SiteViewForm';
-import SearchInput from '../../components/Defaults/SearchInput';
-import { fDate } from '../../utils/formatTime';
-import { Snacks } from '../../constants/customer-constants';
-import { BUTTONS, BREADCRUMBS, TITLES } from '../../constants/default-constants';
-import Iconify from '../../components/iconify';
-import ContactSiteCard from '../../components/sections/ContactSiteCard';
-import { exportCSV } from '../../utils/exportCSV';
-import { useAuthContext } from '../../auth/useAuthContext';
-import CustomerTabContainer from './CustomerTabContainer';
+import { useSnackbar } from '../../../components/snackbar';
+import { getComparator, useTable } from '../../../components/table';
+import AddButtonAboveAccordion from '../../../components/Defaults/AddButtonAboveAcoordion';
+import BreadcrumbsProvider from '../../../components/Breadcrumbs/BreadcrumbsProvider';
+import BreadcrumbsLink from '../../../components/Breadcrumbs/BreadcrumbsLink';
+import GoogleMaps from '../../../assets/GoogleMaps';
+import useResponsive from '../../../hooks/useResponsive';
+import { getSites, resetSites, getSite, setIsExpanded, setCardActiveIndex } from '../../../redux/slices/customer/site';
+import NothingProvided from '../../../components/Defaults/NothingProvided';
+import SiteAddForm from './SiteAddForm';
+import SiteEditForm from './SiteEditForm';
+import SiteViewForm from './SiteViewForm';
+import SearchInput from '../../../components/Defaults/SearchInput';
+import { fDate } from '../../../utils/formatTime';
+import { Snacks } from '../../../constants/customer-constants';
+import { BUTTONS, BREADCRUMBS, TITLES } from '../../../constants/default-constants';
+import Iconify from '../../../components/iconify';
+import ContactSiteCard from '../../../components/sections/ContactSiteCard';
+import { exportCSV } from '../../../utils/exportCSV';
+import { useAuthContext } from '../../../auth/useAuthContext';
+import CustomerTabContainer from '../CustomerTabContainer';
 
 // ----------------------------------------------------------------------
 
@@ -46,19 +46,21 @@ CustomerSiteDynamicList.propTypes = {
 };
 
 export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, siteViewForm }) {
+  const { customer } = useSelector((state) => state.customer);
+  const { sites, site, isExpanded, activeCardIndex } = useSelector((state) => state.site);
   const { order, orderBy } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
-  const { site } = useSelector((state) => state.site);
   const { isAllAccessAllowed } = useAuthContext()
   const { enqueueSnackbar } = useSnackbar();
   const [ filterName, setFilterName ] = useState('');
   const [ filterStatus, setFilterStatus ] = useState([]);
   const [ tableData, setTableData ] = useState([]);
   const [ googleMapsVisibility, setGoogleMapsVisibility ] = useState(false);
+  const { customerId } = useParams() 
+
   const isMobile = useResponsive('down', 'sm');
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { sites, isExpanded, activeCardIndex, error, responseMessage, } = useSelector((state) => state.site);
-  const { customer } = useSelector((state) => state.customer);
+
   const isFiltered = filterName !== '' || !!filterStatus.length;
 
   const toggleChecked = () => {
@@ -68,9 +70,9 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
       });
       dispatch(setCardActiveIndex(null));
       dispatch(setIsExpanded(false));
-      navigate(PATH_CUSTOMER.site.new(customer?._id))
+      navigate(PATH_CUSTOMER.site.new(customerId))
     } else {
-      navigate(PATH_CUSTOMER.site.new(customer?._id))
+      navigate(PATH_CUSTOMER.site.new(customerId))
       dispatch(setCardActiveIndex(null));
       dispatch(setIsExpanded(false));
     }
@@ -96,11 +98,11 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
 
   useEffect(() => {
     setTableData(sites);
-  }, [sites, error, responseMessage]);
+  }, [sites ]);
   
 
   const toggleCancel = () => {
-    navigate(PATH_CUSTOMER.site.root(customer?._id))
+    navigate(PATH_CUSTOMER.site.root(customerId))
   };
 
   const handleGoogleMapsVisibility = () => {
@@ -115,16 +117,18 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
   };
 
   useEffect( () => {
-      dispatch(getSites(customer._id));
+      dispatch(getSites(customerId));
+      dispatch(setCardActiveIndex(null));
+      dispatch(setIsExpanded(false));
       return ()=>{ dispatch(resetSites()) }
-  }, [dispatch, customer]); 
+  }, [dispatch, customerId]); 
 
 
   const [exportingCSV, setExportingCSV] = useState(false);
 
   const onExportCSV = async () => {
     setExportingCSV(true);
-    const response = dispatch(await exportCSV('CustomerSites', customer?._id));
+    const response = dispatch(await exportCSV('CustomerSites', customerId));
     response.then((res) => {
       setExportingCSV(false);
       enqueueSnackbar(res.message, {variant:`${res.hasError?"error":""}`});
@@ -133,8 +137,8 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
 
 
   const handleCardClick = async (_site)=>{
-    await dispatch(getSite(customer._id, _site._id));
-    navigate(PATH_CUSTOMER.site.view(customer._id, _site._id))
+    await dispatch(getSite(customerId, _site._id));
+    navigate(PATH_CUSTOMER.site.view(customerId, _site._id))
     if ( !siteEditForm && !siteAddForm ) {
       handleActiveCard(_site._id);
       handleExpand(_site._id);
@@ -150,7 +154,7 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
             <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
             <BreadcrumbsLink to={PATH_CUSTOMER.view} name={customer.name} />
             <BreadcrumbsLink
-              to={PATH_CUSTOMER.contacts}
+              to={PATH_CUSTOMER.sites}
               name={
                 <Stack>
                   {!siteAddForm && !siteEditForm && !isExpanded && 'Sites'}

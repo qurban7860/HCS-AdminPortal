@@ -129,7 +129,7 @@ function DocumentAddForm({
   
 
   useEffect( () => { // Get Active Document Types And Active Document Categoories
-    if( !isDocumentCategoryLoaded && categoryBy ){
+    if( !isDocumentCategoryLoaded && categoryBy  ){
       dispatch( getActiveDocumentCategories( categoryBy ) );  dispatch( getActiveDocumentTypesWithCategory( null, categoryBy ) ) 
       setIsDocumentCategoryLoaded( true )
     }
@@ -137,7 +137,7 @@ function DocumentAddForm({
   }, [ categoryBy ] )
 
   useEffect(() => { // Set Default Document Type Value
-    if( activeDocumentTypes?.length > 0 && activeDocumentCategories?.length > 0  && !isDocumentTypesLoaded ){
+    if( activeDocumentTypes?.length > 0 && activeDocumentCategories?.length > 0  && !documentHistoryNewVersionFormVisibility && !isDocumentTypesLoaded ){
       if(activeDocumentTypes.find((el)=> el.isDefault === true )?._id === activeDocumentCategories.find((el)=> el.isDefault === true )?._id){
         setValue('documentType', activeDocumentTypes.find((el)=> el.isDefault === true ))
         setValue('documentCategory', activeDocumentCategories.find((el)=>  el.isDefault === true ))

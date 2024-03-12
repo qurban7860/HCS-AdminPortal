@@ -1,7 +1,7 @@
 
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -25,11 +25,13 @@ import { PATH_CUSTOMER } from '../../../routes/paths';
 // ----------------------------------------------------------------------
 
 export default function SiteEditForm() {
-  const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { site } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
   const { activeContacts } = useSelector((state) => state.contact);
+  const { customerId, id } = useParams() 
+  
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const theme = createTheme({
@@ -46,11 +48,11 @@ export default function SiteEditForm() {
   }
 
   useEffect(() => {
-    dispatch( getActiveContacts(customer?._id))
+    dispatch( getActiveContacts(customerId))
     return ()=>{
       dispatch( resetActiveContacts())
     }
-  }, [ customer, dispatch ] );
+  }, [ customerId, dispatch ] );
 
   const defaultValues = useMemo(
     () => ({
@@ -91,7 +93,6 @@ export default function SiteEditForm() {
   } = methods;
 
     const { country, phoneNumbers } = watch(); 
-// console.log("phone : " , phone, 'fax : ', fax);
 
     useEffect(() => {
       if (site?.address?.country) {
@@ -132,19 +133,17 @@ export default function SiteEditForm() {
   
   const onSubmit = async (data) => {
     try {
-      await dispatch(updateSite(data, customer?._id, site?._id));
-      await dispatch(getSite(customer?._id, site?._id));
-      await dispatch(getSites(customer?._id ));
+      await dispatch(updateSite(data, customerId, id));
       enqueueSnackbar('Site saved Successfully!');
-      navigate(PATH_CUSTOMER.site.view(customer?._id, site?._id))
       reset();
+      navigate(PATH_CUSTOMER.site.view(customerId, id))
     } catch (err) {
       enqueueSnackbar('Site save failed!', { variant: 'error' });
       console.error(err.message);
     }
   };
   
-  const toggleCancel = () => navigate(PATH_CUSTOMER.site.view(customer?._id, site?._id));
+  const toggleCancel = () => navigate(PATH_CUSTOMER.site.view(customerId, id));
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

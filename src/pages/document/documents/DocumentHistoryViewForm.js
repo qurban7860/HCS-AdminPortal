@@ -67,7 +67,7 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
   const { id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const { documentHistory, isLoading } = useSelector((state) => state.document);
+  const { documentHistory, documentVersionEditDialogVisibility, isLoading } = useSelector((state) => state.document);
   const { machine } = useSelector((state) => state.machine);
   const { customer } = useSelector((state) => state.customer);
   const { drawing } = useSelector((state) => state.drawing);
@@ -137,7 +137,10 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
   );
 
 const handleNewVersion = async () => {
-  if(customerPage || machinePage){
+  if(customerPage){
+    dispatch(setDocumentHistoryNewVersionFormVisibility(true));
+    navigate(PATH_CUSTOMER.documents.new( customer?._id ));
+  } else if( machinePage){
     dispatch(setDocumentHistoryViewFormVisibility(false));
     dispatch(setDocumentFormVisibility(true));
     dispatch(setDocumentHistoryNewVersionFormVisibility(true));
@@ -374,7 +377,7 @@ const handleNewFile = async () => {
   const handleBackLink = ()=>{
     if(customerPage && !machinePage ) {
       navigate(PATH_CUSTOMER.documents.view( customer?._id, documentHistory?._id ));
-    } else if(customerPage || machinePage || drawingPage ){
+    } else if( machinePage || drawingPage ){
       dispatch(setDrawingViewFormVisibility(false))
       dispatch(setDocumentHistoryViewFormVisibility(false)); 
     } else if(machineDrawings){
@@ -583,8 +586,7 @@ const handleNewFile = async () => {
         </Grid>
       <CustomerDialog />
       <MachineDialog />
-      {/* <DocumentGallery /> */}
-      <UpdateDocumentVersionDialog versionNo={defaultValues?.documentVersion} />
+      {documentVersionEditDialogVisibility && <UpdateDocumentVersionDialog />}
     </Container>
      
   );

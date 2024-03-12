@@ -36,10 +36,12 @@ export const CustomerEdit = Loadable(lazy(() => import('../pages/customer/Custom
 export const CustomerView = Loadable(lazy(() => import('../pages/customer/CustomerView')));
 
 // SITE
-export const CustomerSiteDynamicList = Loadable(lazy(() => import('../pages/customer/CustomerSiteDynamicList')));
+export const CustomerSiteList = Loadable(lazy(() => import('../pages/customer/CustomerSiteList')));
+export const CustomerSiteDynamicList = Loadable(lazy(() => import('../pages/customer/site/CustomerSiteDynamicList')));
 
 // CONTACT
-export const CustomerContactDynamicList = Loadable(lazy(() => import('../pages/customer/CustomerContactDynamicList')));
+export const CustomerContactList = Loadable(lazy(() => import('../pages/customer/CustomerContactList')));
+export const CustomerContactDynamicList = Loadable(lazy(() => import('../pages/customer/contact/CustomerContactDynamicList')));
 
 // NOTE
 export const NoteList = Loadable(lazy(() => import('../pages/customer/note/NoteList')));

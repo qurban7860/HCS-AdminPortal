@@ -2,44 +2,40 @@ import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 // @mui
 import { Stack, Grid, Container } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
-import { CardBase, GridBaseViewForm, StyledScrollbar } from '../../theme/styles/customer-styles';
-import AddButtonAboveAccordion from '../../components/Defaults/AddButtonAboveAcoordion';
+import { CardBase, GridBaseViewForm, StyledScrollbar } from '../../../theme/styles/customer-styles';
+import AddButtonAboveAccordion from '../../../components/Defaults/AddButtonAboveAcoordion';
 // redux
-import { useDispatch, useSelector } from '../../redux/store';
+import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_CUSTOMER } from '../../routes/paths';
+import { PATH_CUSTOMER } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../components/snackbar';
-import { TableNoData, useTable, getComparator } from '../../components/table';
+import { useSnackbar } from '../../../components/snackbar';
+import { TableNoData, useTable, getComparator } from '../../../components/table';
 // sections
 import {
   getContacts,
-  // resetContacts,
-  setContactFormVisibility,
   setCardActiveIndex,
-  setIsExpanded,
-  getContact,
-  resetContactFormsVisiblity,
-} from '../../redux/slices/customer/contact';
-import ContactAddForm from './contact/ContactAddForm';
-import ContactEditForm from './contact/ContactEditForm';
-import ContactViewForm from './contact/ContactViewForm';
-import ContactMoveForm from './contact/ContactMoveForm';
-import BreadcrumbsProvider from '../../components/Breadcrumbs/BreadcrumbsProvider';
-import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
-import useResponsive from '../../hooks/useResponsive';
-import useLimitString from '../../hooks/useLimitString';
-import SearchInput from '../../components/Defaults/SearchInput';
-import { fDate } from '../../utils/formatTime';
-import { Snacks } from '../../constants/customer-constants';
-import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
-import Iconify from '../../components/iconify';
-import ContactSiteCard from '../../components/sections/ContactSiteCard';
-import { exportCSV } from '../../utils/exportCSV';
-import { useAuthContext } from '../../auth/useAuthContext';
-import CustomerTabContainer from './CustomerTabContainer';
+  setIsExpanded
+} from '../../../redux/slices/customer/contact';
+import ContactAddForm from './ContactAddForm';
+import ContactEditForm from './ContactEditForm';
+import ContactViewForm from './ContactViewForm';
+import ContactMoveForm from './ContactMoveForm';
+import BreadcrumbsProvider from '../../../components/Breadcrumbs/BreadcrumbsProvider';
+import BreadcrumbsLink from '../../../components/Breadcrumbs/BreadcrumbsLink';
+import useResponsive from '../../../hooks/useResponsive';
+import useLimitString from '../../../hooks/useLimitString';
+import SearchInput from '../../../components/Defaults/SearchInput';
+import { fDate } from '../../../utils/formatTime';
+import { Snacks } from '../../../constants/customer-constants';
+import { BUTTONS, BREADCRUMBS } from '../../../constants/default-constants';
+import Iconify from '../../../components/iconify';
+import ContactSiteCard from '../../../components/sections/ContactSiteCard';
+import { exportCSV } from '../../../utils/exportCSV';
+import { useAuthContext } from '../../../auth/useAuthContext';
+import CustomerTabContainer from '../CustomerTabContainer';
 
 // ----------------------------------------------------------------------
 
@@ -52,26 +48,20 @@ CustomerContactDynamicList.propTypes = {
 
 export default function CustomerContactDynamicList({ contactAddForm, contactEditForm, contactViewForm, contactMoveForm }) {
 
-  const { order, orderBy } = useTable({ defaultOrderBy: '-createdAt' });
+  const { contact: currentContactData, contacts, activeCardIndex, isExpanded,} = useSelector((state) => state.contact);
   const { isAllAccessAllowed } = useAuthContext()
   const { customer } = useSelector((state) => state.customer);
+  const { customerId, id } = useParams() 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {
-    contact: currentContactData,
-    contacts,
-    error,
-    // initial,
-    responseMessage,
-    activeCardIndex,
-    isExpanded,
-  } = useSelector((state) => state.contact);
+  
   const [checked, setChecked] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const [filterName, setFilterName] = useState('');
   const [filterStatus, setFilterStatus] = useState([]);
   const [tableData, setTableData] = useState([]);
   const isFiltered = filterName !== '' || !!filterStatus.length;
+  const { order, orderBy } = useTable({ defaultOrderBy: '-createdAt' });
   // ------------------------------------------------------------
   const isMobile = useResponsive('down', 'sm');
 
@@ -81,9 +71,9 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
       enqueueSnackbar(Snacks.CONTACT_CLOSE_CONFIRM, {variant: 'warning'});
       dispatch(setIsExpanded(false));
       dispatch(setCardActiveIndex(''));
-      navigate(PATH_CUSTOMER.contact.new(customer?._id))
+      navigate(PATH_CUSTOMER.contact.new(customerId))
     } else {
-      navigate(PATH_CUSTOMER.contact.new(customer?._id))
+      navigate(PATH_CUSTOMER.contact.new(customerId))
       dispatch(setCardActiveIndex(''));
       dispatch(setIsExpanded(false));
     }
@@ -109,11 +99,11 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
 
   useEffect(() => {
     setTableData(contacts);
-  }, [contacts, error, responseMessage]);
+  }, [contacts ]);
 
   // ------------------------------------------------------------
 
-  const toggleCancel = () => navigate(PATH_CUSTOMER.contact.new(customer?._id));
+  const toggleCancel = () => navigate(PATH_CUSTOMER.contact.root(customer?._id));
 
   const handleActiveCard = (index) => {
     if (!contactEditForm && !contactMoveForm) {
@@ -121,27 +111,21 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
     }
   };
 
-  const handleExpand = (index) => {
-    dispatch(setIsExpanded(true));
-  };
+  const handleExpand = (index) => dispatch(setIsExpanded(true));
 
   useEffect(() => {
     if (!contactAddForm && !contactEditForm && !contactMoveForm ) {
-      dispatch(getContacts(customer._id));
+      dispatch(getContacts(customerId));
     }
-  }, [ dispatch, checked, customer, contactAddForm, contactEditForm, contactMoveForm ]);
+  }, [ dispatch, checked, customerId, id, contactAddForm, contactEditForm, contactMoveForm ]);
 
   const isNotFound = !contacts.length && !contactAddForm && !contactEditForm;
-  const shouldShowContactView = isExpanded && !contactEditForm && !contactMoveForm && !contactAddForm ;
-  // const shouldShowContactEdit = contactEditForm && !contactAddForm && !contactMoveForm;
-  // const shouldShowContactAdd = contactAddForm && !contactEditForm && !contactMoveForm;
-  const shouldShowContactMove = contactMoveForm && !contactAddForm && !contactEditForm;
   
   const [exportingCSV, setExportingCSV] = useState(false);
   const onExportCSV = async () => {
     setExportingCSV(true);
     
-    const response = dispatch(await exportCSV('CustomerContacts', customer?._id));
+    const response = dispatch(await exportCSV('CustomerContacts', customerId ));
     response.then((res) => {
       setExportingCSV(false);
       enqueueSnackbar(res.message, {variant:`${res.hasError?"error":""}`});
@@ -149,7 +133,6 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
   };
 
   const handleCardClick = async (contact)=>{
-      await dispatch(getContact(customer._id, contact._id));
       if (!contactMoveForm && !contactEditForm && !contactAddForm ) {
         handleActiveCard(contact._id);
         handleExpand(contact._id);
@@ -164,7 +147,7 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
         <Grid item xs={12} md={6}>
           <BreadcrumbsProvider>
             <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
-            <BreadcrumbsLink to={PATH_CUSTOMER.view} name={ customer.name } />
+            <BreadcrumbsLink to={PATH_CUSTOMER.view(customerId)} name={ customer.name } />
             <BreadcrumbsLink
               to={PATH_CUSTOMER.contacts}
               name={
@@ -244,32 +227,16 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
         )}
 
         {/* Conditional View Forms */}
-        {!isMobile && (
           <GridBaseViewForm item xs={12} sm={12} md={12} lg={7} xl={8} >
-            {shouldShowContactView && (
+            {isExpanded && !contactEditForm && !contactMoveForm && !contactAddForm  && (
               <CardBase>
                 <ContactViewForm />
               </CardBase>
             )}
-            {shouldShowContactEdit && <ContactEditForm setIsExpanded={setIsExpanded} />}
+            {contactEditForm && !contactAddForm && !contactMoveForm && <ContactEditForm setIsExpanded={setIsExpanded} />}
             {contactAddForm && !contactEditForm && !contactMoveForm && <ContactAddForm setIsExpanded={setIsExpanded}/>}
-            {shouldShowContactMove && <ContactMoveForm setIsExpanded={setIsExpanded} />}
+            {contactMoveForm && !contactAddForm && !contactEditForm && <ContactMoveForm setIsExpanded={setIsExpanded} />}
           </GridBaseViewForm>
-        )}
-
-        {/* View form for mobile */}
-        {isMobile && (
-          <Grid item xs={12} lg={12}>
-            {shouldShowContactView && (
-              <CardBase>
-                <ContactViewForm setIsExpanded={setIsExpanded} />
-              </CardBase>
-            )}
-            {shouldShowContactEdit && <ContactEditForm isExpanded={isExpanded} />}
-            {contactAddForm && !contactEditForm && !contactMoveForm && <ContactAddForm />}
-            {shouldShowContactMove && <ContactMoveForm />}
-          </Grid>
-        )}
       </Grid>
     </Container>
   );

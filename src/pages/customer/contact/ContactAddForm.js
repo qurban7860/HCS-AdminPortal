@@ -3,10 +3,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-// import { MuiTelInput } from 'mui-tel-input';
 import { Box, Card, Grid, Stack, Typography, IconButton } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { green } from '@mui/material/colors';
@@ -58,19 +57,21 @@ ContactAddForm.propTypes = {
 };
 
 export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
+
   const { formVisibility, activeContacts } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
   const { departments } = useSelector((state) => state.department);
   const { userId, user } = useAuthContext();
-  const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  const { customerId, id } = useParams() 
+
   const [phone, setPhone] = useState('');
+  
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const theme = createTheme({
-    palette: {
-      success: green,
-    },
-  });
+
+  const theme = createTheme({ palette: { success: green } });
+
   const PHONE_TYPES_ = JSON.parse( localStorage.getItem('configurations'))?.find( ( c )=> c?.name === 'PHONE_TYPES' )
   let PHONE_TYPES = ['Mobile', 'Home', 'Work', 'Fax', 'Others'];
   if(PHONE_TYPES_) {
@@ -129,12 +130,8 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
       }
     });
 
-    dispatch(getActiveContacts(customer?._id));
+    dispatch(getActiveContacts( customerId ));
     dispatch(getActiveDepartments());
-    reset(defaultValues);
-    if (!formVisibility) {
-      dispatch(setContactFormVisibility(true));
-    }
     return () => {
       dispatch(resetActiveContacts());
       dispatch(resetDepartments());
@@ -169,14 +166,14 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
       dispatch(setIsExpanded(true));
       enqueueSnackbar('Contact added successfully');
       reset();
-      navigate(PATH_CUSTOMER.contact.root(customer?._id))
+      navigate(PATH_CUSTOMER.contact.root(customerId ))
     } catch (error) {
       enqueueSnackbar('Failed : Contact adding', { variant: `error` });
       console.error(error);
     }
   };
 
-  const toggleCancel = () =>  navigate(PATH_CUSTOMER.contact.root(customer?._id));
+  const toggleCancel = () =>  navigate(PATH_CUSTOMER.contact.root(customerId ));
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

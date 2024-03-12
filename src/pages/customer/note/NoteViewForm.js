@@ -23,28 +23,29 @@ export default function NoteViewForm() {
   const { note, isLoading } = useSelector((state) => state.customerNote);
   const { customer } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
+  const { customerId, id } = useParams() 
+
   const navigate = useNavigate();
-  const { id } = useParams();
   const dispatch = useDispatch();
 
   useEffect(()=>{ 
-    if( id && customer?._id ){
-      dispatch(getNote(customer?._id, id))
+    if( id && customerId ){
+      dispatch(getNote(customerId, id))
     }
-  },[ dispatch, id, customer?._id ])
+  },[ dispatch, id, customerId])
 
   const onDelete = async () => {
     try {
-      await dispatch(deleteNote(customer._id, note._id));
+      await dispatch(deleteNote(customerId, id));
       enqueueSnackbar("Note Deleted Successfully");
-      navigate(PATH_CUSTOMER.notes.root(customer?._id));
+      navigate(PATH_CUSTOMER.notes.root(customerId));
     } catch (err) {
       enqueueSnackbar("Note Deletion Failed", { variant: `error` });
       console.log('Error:', err);
     }
   }
 
-  const handleEdit = async () => navigate(PATH_CUSTOMER.notes.edit(customer?._id, note._id));
+  const handleEdit = async () => navigate(PATH_CUSTOMER.notes.edit(customerId, id));
 
   const defaultValues = useMemo(
     () => ({
@@ -69,7 +70,7 @@ export default function NoteViewForm() {
     <Grid item md={12} >
       <CustomerTabContainer currentTabValue='notes' />
       <Card sx={{ p: 2 }}>
-        <ViewFormEditDeleteButtons isActive={defaultValues.isActive} backLink={()=> navigate(PATH_CUSTOMER.notes.root(customer?._id,))} handleEdit={handleEdit} onDelete={onDelete} />
+        <ViewFormEditDeleteButtons isActive={defaultValues.isActive} backLink={()=> navigate(PATH_CUSTOMER.notes.root(customerId))} handleEdit={handleEdit} onDelete={onDelete} />
         <Grid container sx={{mt:2}}>
           <ViewFormField isLoading={isLoading} sm={6} heading="Site" param={defaultValues?.site_name} />
           <ViewFormField isLoading={isLoading} sm={6} heading="Contact" param={defaultValues?.contact_firstName}

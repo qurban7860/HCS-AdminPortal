@@ -121,10 +121,11 @@ import {
 
   // Site
   CustomerSiteDynamicList,
+  CustomerSiteList,
 
   // Contact
   CustomerContactDynamicList,
-
+  CustomerContactList,
   // Note
   NoteList,
   NoteAddForm,
@@ -196,10 +197,10 @@ import {
   RegionEdit,
 
    // modules
-   ModuleList,
-   ModuleAdd,
-   ModuleEdit,
-   ModuleView,
+  ModuleList,
+  ModuleAdd,
+  ModuleEdit,
+  ModuleView,
 
   // Configs
   ConfigList,
@@ -324,6 +325,8 @@ export default function Router() {
         { path: 'new', element: <CustomerAdd /> },
         { path: ':id/edit', element: <CustomerEdit />},
         { path: ':id/view', element: <CustomerView />},
+        { path: 'sites', element: <CustomerSiteList />},
+        { path: 'contacts', element: <CustomerContactList />},
 
         { path: ':customerId/site',
           children: [

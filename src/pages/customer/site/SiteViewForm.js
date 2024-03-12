@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // @mui
 import { Grid } from '@mui/material';
 // redux
@@ -27,11 +27,15 @@ SiteViewForm.propTypes = {
   handleMap: PropTypes.func,
 };
 export default function SiteViewForm({ currentSite = null, handleMap }) {
+
   const { site, isLoading } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
+  const { customerId, id } = useParams() 
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const onDelete = async () => {
     try {
       await dispatch(deleteSite(customer?._id, currentSite?._id));
@@ -47,7 +51,6 @@ export default function SiteViewForm({ currentSite = null, handleMap }) {
 
   const handleEdit = async () => {
     await dispatch(getSite(customer?._id, currentSite?._id));
-    // dispatch(setSiteEditFormVisibility(true));
     navigate(PATH_CUSTOMER.site.edit(customer?._id, currentSite?._id))
   };
 

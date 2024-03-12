@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
 import { Container, Table, TableBody, TableContainer } from '@mui/material';
@@ -42,13 +42,14 @@ export default function NoteList() {
   } = useTable({
     defaultOrderBy: '-createdAt',
   });
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
   useSettingsContext();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  const { customer } = useSelector((state) => state.customer);
+  const { customerId, id } = useParams() 
+  
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { notes, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.customerNote );
   const TABLE_HEAD = [
@@ -65,11 +66,11 @@ export default function NoteList() {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useEffect(() => {
-    if(customer?._id){
-      dispatch(getNotes(customer?._id));
+    if(customerId){
+      dispatch(getNotes(customerId));
     }
     return ()=>{ dispatch(resetNotes()) };
-  }, [dispatch, customer]);
+  }, [dispatch, customerId]);
 
   useEffect(() => {
     setTableData(notes);
@@ -110,7 +111,7 @@ export default function NoteList() {
     setFilterStatus(event.target.value);
   };
 
-  const handleViewRow = (noteid) => navigate(PATH_CUSTOMER.notes.view(customer?._id, noteid));
+  const handleViewRow = (noteid) => navigate(PATH_CUSTOMER.notes.view(customerId, id));
 
   return (
     <Container maxWidth={false} >

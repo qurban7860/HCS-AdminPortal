@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -24,19 +24,20 @@ export default function NoteAddForm() {
 
   const { activeSites } = useSelector((state) => state.site);
   const { activeContacts } = useSelector((state) => state.contact);
-  const { customer } = useSelector((state) => state.customer);
+  const { enqueueSnackbar } = useSnackbar();
+  const { customerId, id } = useParams() 
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(()=>{
-    dispatch(getActiveSites(customer?._id))
-    dispatch(getActiveContacts(customer?._id))
+    dispatch(getActiveSites(customerId))
+    dispatch(getActiveContacts(customerId))
     return () => {
       dispatch(resetActiveSites());
       dispatch(resetActiveContacts());
     };
-  },[ dispatch, customer?._id ])
+  },[ dispatch, customerId ])
 
   const defaultValues = useMemo(
     () => ({
@@ -62,9 +63,9 @@ export default function NoteAddForm() {
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(addNote(customer._id, data));
+      await dispatch(addNote(customerId, data));
       enqueueSnackbar('Note created Successfully!');
-      navigate(PATH_CUSTOMER.notes.root( customer?._id ))
+      navigate(PATH_CUSTOMER.notes.root( customerId ))
       reset();
     } catch (error) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
@@ -72,7 +73,7 @@ export default function NoteAddForm() {
     }
   };
 
-  const toggleCancel = () => navigate(PATH_CUSTOMER.notes.root( customer?._id ));
+  const toggleCancel = () => navigate(PATH_CUSTOMER.notes.root( customerId ));
 
   return (
     <Container maxWidth={false} >

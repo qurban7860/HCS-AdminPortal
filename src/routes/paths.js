@@ -77,6 +77,8 @@ export const PATH_DASHBOARD = {
 export const PATH_CUSTOMER = {
   root: ROOTS_CUSTOMER,
   permissionDenied: path(ROOTS_CUSTOMER, '/permission-denied'),
+  sites: path(ROOTS_CUSTOMER, '/sites'),
+  contacts: path(ROOTS_CUSTOMER, '/contacts'),
   new: path(ROOTS_CUSTOMER, '/new'),
   view: (id) => path(ROOTS_CUSTOMER, `/${id}/view`),
   edit: (id) => path(ROOTS_CUSTOMER, `/${id}/edit`),

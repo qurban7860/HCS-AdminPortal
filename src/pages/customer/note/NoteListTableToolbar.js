@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
 // @mui
 import { Stack } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from '../../../redux/store';
+import { useNavigate, useParams } from 'react-router-dom';
 // components
 import { SearchBarCombo } from '../../../components/ListTableTools';
 // import { PATH_DOCUMENT } from '../../../routes/paths';
@@ -32,10 +31,12 @@ export default function NoteListTableToolbar({
   onResetFilter,
   onFilterStatus,
 }) {
-  const navigate = useNavigate();
-  const { customer } = useSelector((state) => state.customer);
 
-  const toggleAdd = () => navigate(PATH_CUSTOMER.notes.new(customer?._id));
+  const { customerId, id } = useParams() 
+
+  const navigate = useNavigate();
+
+  const toggleAdd = () => navigate(PATH_CUSTOMER.notes.new(customerId));
 
   return (
     <Stack

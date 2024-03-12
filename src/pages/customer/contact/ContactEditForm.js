@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {  useNavigate } from 'react-router-dom';
+import {  useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -15,7 +15,6 @@ import {
   updateContact,
   setContactEditFormVisibility,
   resetContact,
-  getContacts,
   getActiveContacts,
   resetActiveContacts,
   getContact,
@@ -62,21 +61,21 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   const { contact, activeContacts } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
   const { departments } = useSelector((state) => state.department);
+  const { enqueueSnackbar } = useSnackbar();
+  const [ phone, setPhone ] = useState('');
+  const { customerId, id } = useParams() 
+
   const dispatch = useDispatch();
   const navigate = useNavigate()
-  const { enqueueSnackbar } = useSnackbar();
-  const [phone, setPhone] = useState('');
 
   // --------------------------------hooks----------------------------------
   const defaultValues = useMemo(
     () => ({
-      id: contact?._id || '',
       customer: contact?.customer || '',
       firstName: contact?.firstName || '',
       lastName: contact?.lastName || '',
       title: contact?.title || '',
       contactTypes: contact?.contactTypes || [],
-      // phone: contact?.phone || '',
       phoneNumbers: contact?.phoneNumbers || [{ type: '', countryCode: '64' }, { type: 'Fax', countryCode: '64' }],
       email: contact?.email || '',
       reportingTo: contact?.reportingTo || null,
@@ -108,19 +107,13 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   const { country, phoneNumbers } = watch();
 
   useEffect(() => {
-    dispatch(getActiveContacts(customer?._id))
+    dispatch(getActiveContacts(customerId))
     dispatch(getActiveDepartments())
     return () => {
       dispatch(resetActiveContacts())
       dispatch(resetDepartments())
     }
-  }, [dispatch, customer?._id])
-
-  useEffect(() => {
-    if (contact) {
-      reset(defaultValues);
-    }
-  }, [contact, reset, defaultValues]);
+  }, [dispatch, customerId ])
 
   useEffect(() => {
     phoneNumbers?.forEach((pN, index) => {
@@ -146,22 +139,21 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   }
 
   // -------------------------------functions---------------------------------
-  const toggleCancel = () => navigate(PATH_CUSTOMER.contact.view( customer?._id, contact?._id ));
-
+  
   const onSubmit = async (data) => {
     try {
-      await dispatch(updateContact(customer?._id, data));
+      await dispatch(updateContact(customerId, data));
       dispatch(resetContact());
-      dispatch(getContacts(customer?._id));
-      dispatch(getContact(customer?._id, contact?._id));
       reset();
-      navigate(PATH_CUSTOMER.contact.view( customer?._id, contact?._id ))
+      navigate(PATH_CUSTOMER.contact.view( customerId, id ))
       enqueueSnackbar(Snacks.SAVE_SUCCESS);
     } catch (err) {
       enqueueSnackbar(Snacks.SAVE_FAILED, { variant: 'error' });
       console.error(err);
     }
   };
+
+  const toggleCancel = () => navigate(PATH_CUSTOMER.contact.view( customerId, id ));
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

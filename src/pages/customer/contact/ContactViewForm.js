@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 // @mui
 import { Grid, Chip } from '@mui/material';
 // components
@@ -9,24 +9,13 @@ import { useSnackbar } from '../../../components/snackbar';
 import { fDateTime } from '../../../utils/formatTime';
 import { useAuthContext } from '../../../auth/useAuthContext';
 import ViewPhoneComponent from '../../../components/ViewForms/ViewPhoneComponent';
-
-import {
-  getContacts,
-  getContact,
-  setContactEditFormVisibility,
-  deleteContact,
-  setContactMoveFormVisibility,
-  setContactFormVisibility,
-  setIsExpanded,
-} from '../../../redux/slices/customer/contact';
+import { getContact, deleteContact, setIsExpanded } from '../../../redux/slices/customer/contact';
 import { setMachineTab } from '../../../redux/slices/products/machine';
 import { getMachineServiceRecord, setMachineServiceRecordViewFormVisibility, setResetFlags } from '../../../redux/slices/products/machineServiceRecord';
-
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import { PATH_MACHINE, PATH_CUSTOMER } from '../../../routes/paths';
-
 
 ContactViewForm.propTypes = {
   currentContact: PropTypes.object,
@@ -40,30 +29,25 @@ export default function ContactViewForm({
   const { contact, isLoading } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
   const { isAllAccessAllowed } = useAuthContext()
-  const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  const { customerId, id } = useParams() 
+  
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleEdit = async () => {
-    dispatch(getContact(customer?._id, contact?._id));
-    navigate(PATH_CUSTOMER.contact.edit(customer?._id, contact?._id))
-  };
+  useEffect(()=>{
+    if(customerId && id) dispatch(getContact(customerId, id));
+  },[ dispatch, customerId, id ])
 
-  const handleMoveConatct = async () => {
-    dispatch(setContactFormVisibility(false))
-    dispatch(setContactFormVisibility(false))
-    dispatch(setContactEditFormVisibility(false))
-    dispatch(setContactMoveFormVisibility(true))
-    navigate(PATH_CUSTOMER.contact.move(customer?._id, contact?._id ))
-  };
+  const handleEdit = () => navigate(PATH_CUSTOMER.contact.edit(customerId, id));
+  const handleMoveConatct = () => navigate(PATH_CUSTOMER.contact.move(customerId, id));
 
   const onDelete = async () => {
     try {
-      await dispatch(deleteContact(customer?._id, contact?._id));
+      await dispatch(deleteContact(customerId, id));
       dispatch(setIsExpanded(false));
       enqueueSnackbar('Contact deleted Successfully!');
-      dispatch(getContacts(customer?._id));
-      navigate(PATH_CUSTOMER.contact.root(customer?._id ))
+      navigate(PATH_CUSTOMER.contact.root(customerId))
     } catch (err) {
       enqueueSnackbar('Contact delete failed!', { variant: `error` });
       console.log('Error:', err);
@@ -99,11 +83,11 @@ export default function ContactViewForm({
     [contact]
   );
 
-  const handleSericeRecordView = async (machineId, id) => {
+  const handleSericeRecordView = async (machineId, Id) => {
     await dispatch(setMachineTab('serviceRecords'));
     await navigate(PATH_MACHINE.machines.view(machineId));
     await dispatch(setResetFlags(false));
-    dispatch(getMachineServiceRecord(machineId, id));
+    dispatch(getMachineServiceRecord(machineId, Id));
     dispatch(setMachineServiceRecordViewFormVisibility(true));
   };
 

@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { Container } from '@mui/material';
 import { getCustomerMachines, setMachineMoveFormVisibility } from '../../../redux/slices/products/machine';
 import CustomerTabContainer from '../CustomerTabContainer';
@@ -9,15 +10,16 @@ import MoveMachineForm from './MoveMachineForm'
 export default function CustomerMachines() {
 
     const dispatch = useDispatch();
+
+    const { customerId } = useParams() 
     const { machineMoveFormVisibility } = useSelector((state) => state.machine );
-    const { customer } = useSelector((state) => state.customer);
 
     useEffect(()=>{
         dispatch(setMachineMoveFormVisibility(false))
-        if(customer?._id){
-          dispatch(getCustomerMachines(customer._id));
+        if(customerId){
+          dispatch(getCustomerMachines(customerId));
         }
-    },[dispatch, customer])
+    },[dispatch, customerId])
     
   return (<Container maxWidth={false} >
     <CustomerTabContainer currentTabValue="machines" />
