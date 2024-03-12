@@ -35,7 +35,7 @@ export default function CustomerEdit() {
   }, [dispatch, id]);
 
   return (
-    <Container maxWidth={themeStretch ? false : 'lg'}>
+    <Container maxWidth={false }>
       <CustomerTabContainer currentTabValue="customer" />
       <CustomerEditForm />
     </Container>
