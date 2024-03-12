@@ -13,7 +13,7 @@ import { createTheme } from '@mui/material/styles';
 // slice
 import {
   updateContact,
-  setContactEditFormVisibility,
+  getContacts,
   resetContact,
   getActiveContacts,
   resetActiveContacts,
@@ -143,9 +143,9 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   const onSubmit = async (data) => {
     try {
       await dispatch(updateContact(customerId, data));
-      dispatch(resetContact());
-      reset();
-      navigate(PATH_CUSTOMER.contact.view( customerId, id ))
+      await reset();
+      await dispatch(getContacts(customerId));
+      await navigate(PATH_CUSTOMER.contact.view( customerId, id ))
       enqueueSnackbar(Snacks.SAVE_SUCCESS);
     } catch (err) {
       enqueueSnackbar(Snacks.SAVE_FAILED, { variant: 'error' });

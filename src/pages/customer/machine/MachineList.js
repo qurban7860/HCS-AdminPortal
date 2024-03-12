@@ -73,13 +73,6 @@ export default function MachineList() {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useEffect(() => {
-    if(customer?._id){
-      dispatch(getCustomerMachines(customer._id));
-    }
-    return ()=>{ dispatch(resetCustomerMachines())}
-  }, [dispatch, customer]);
-
-  useEffect(() => {
     setTableData(customerMachines);
   }, [customerMachines]);
 

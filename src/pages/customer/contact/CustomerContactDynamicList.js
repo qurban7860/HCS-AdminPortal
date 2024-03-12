@@ -98,6 +98,10 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
   });
 
   useEffect(() => {
+    dispatch(getContacts(customerId));
+  }, [ dispatch, customerId ]);
+
+  useEffect(() => {
     setTableData(contacts);
   }, [contacts ]);
 
@@ -112,12 +116,6 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
   };
 
   const handleExpand = (index) => dispatch(setIsExpanded(true));
-
-  useEffect(() => {
-    if (!contactAddForm && !contactEditForm && !contactMoveForm ) {
-      dispatch(getContacts(customerId));
-    }
-  }, [ dispatch, checked, customerId, id, contactAddForm, contactEditForm, contactMoveForm ]);
 
   const isNotFound = !contacts.length && !contactAddForm && !contactEditForm;
   

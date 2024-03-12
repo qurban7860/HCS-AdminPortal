@@ -72,14 +72,15 @@ export default function NoteEditForm() {
     try {
       await dispatch(updateNote(customerId, id, data));
       enqueueSnackbar('Note Updated Successfully');
-      reset();
+      await reset();
+      if(customerId && id ) await navigate(PATH_CUSTOMER.notes.view(customerId, id))
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
     }
   };
   
-  const toggleCancel = () =>  navigate(PATH_CUSTOMER.notes.view(customerId, id));
+  const toggleCancel = () => { if(customerId && id ) navigate(PATH_CUSTOMER.notes.view(customerId, id))};
 
   return (
     <Container maxWidth={false} >

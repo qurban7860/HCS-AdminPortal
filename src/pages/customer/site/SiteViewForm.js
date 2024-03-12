@@ -45,15 +45,15 @@ export default function SiteViewForm({ handleMap }) {
     try {
       await dispatch(deleteSite(customerId, id));
       enqueueSnackbar('Site deleted Successfully!');
-      dispatch(setIsExpanded(false));
-      navigate(PATH_CUSTOMER.site.root( customer?._id ))
+      await dispatch(setIsExpanded(false));
+      if(customerId ) await navigate(PATH_CUSTOMER.site.root( customerId ))
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });
       console.log(err);
     }
   };
 
-  const handleEdit = async () => navigate(PATH_CUSTOMER.site.edit(customerId, id));
+  const handleEdit = async () => { if(customerId && id ) navigate(PATH_CUSTOMER.site.edit(customerId, id))};
 
   const defaultValues = useMemo(
     () => ({

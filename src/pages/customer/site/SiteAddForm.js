@@ -10,7 +10,7 @@ import { Box,Card, Grid, Stack, Typography, alpha, Button, IconButton } from '@m
 import { createTheme } from '@mui/material/styles';
 import { green } from '@mui/material/colors';
 // slice
-import { addSite, getSites, setSiteFormVisibility } from '../../../redux/slices/customer/site';
+import { addSite, getSites } from '../../../redux/slices/customer/site';
 import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -104,8 +104,9 @@ export default function SiteAddForm() {
     try {
       await dispatch(addSite(data));
       enqueueSnackbar('Site created successfully!');
-      navigate(PATH_CUSTOMER.site.root( customerId ))
-      reset();
+      await dispatch(getSites(customerId))
+      if(customerId ) await navigate(PATH_CUSTOMER.site.root( customerId ))
+      await reset();
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
@@ -133,7 +134,7 @@ export default function SiteAddForm() {
     const updatedPhoneNumbers = [...phoneNumbers, { type: '', countryCode: country?.phone?.replace(/[^0-9]/g, '')} ]; 
     setValue( 'phoneNumbers', updatedPhoneNumbers )
   }
-  const toggleCancel = () => navigate(PATH_CUSTOMER.site.root(customerId ));
+  const toggleCancel = () =>{ if(customerId ) navigate(PATH_CUSTOMER.site.root(customerId ))};
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

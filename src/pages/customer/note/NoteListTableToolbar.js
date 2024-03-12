@@ -36,7 +36,7 @@ export default function NoteListTableToolbar({
 
   const navigate = useNavigate();
 
-  const toggleAdd = () => navigate(PATH_CUSTOMER.notes.new(customerId));
+  const toggleAdd = () =>{ if(customerId ) navigate(PATH_CUSTOMER.notes.new(customerId))};
 
   return (
     <Stack

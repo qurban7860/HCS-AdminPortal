@@ -15,7 +15,6 @@ export default function CustomerMachines() {
     const { machineMoveFormVisibility } = useSelector((state) => state.machine );
 
     useEffect(()=>{
-        dispatch(setMachineMoveFormVisibility(false))
         if(customerId){
           dispatch(getCustomerMachines(customerId));
         }

@@ -111,7 +111,7 @@ export default function NoteList() {
     setFilterStatus(event.target.value);
   };
 
-  const handleViewRow = (noteid) => navigate(PATH_CUSTOMER.notes.view(customerId, id));
+  const handleViewRow = (noteid) =>{ if(customerId && noteid ) navigate(PATH_CUSTOMER.notes.view(customerId, noteid))};
 
   return (
     <Container maxWidth={false} >

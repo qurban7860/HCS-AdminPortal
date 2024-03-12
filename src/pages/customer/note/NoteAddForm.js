@@ -65,7 +65,7 @@ export default function NoteAddForm() {
     try {
       await dispatch(addNote(customerId, data));
       enqueueSnackbar('Note created Successfully!');
-      navigate(PATH_CUSTOMER.notes.root( customerId ))
+      if(customerId ) navigate(PATH_CUSTOMER.notes.root( customerId ))
       reset();
     } catch (error) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
@@ -73,7 +73,7 @@ export default function NoteAddForm() {
     }
   };
 
-  const toggleCancel = () => navigate(PATH_CUSTOMER.notes.root( customerId ));
+  const toggleCancel = () =>{ if(customerId ) navigate(PATH_CUSTOMER.notes.root( customerId ))};
 
   return (
     <Container maxWidth={false} >

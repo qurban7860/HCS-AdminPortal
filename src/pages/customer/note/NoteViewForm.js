@@ -38,7 +38,7 @@ export default function NoteViewForm() {
     try {
       await dispatch(deleteNote(customerId, id));
       enqueueSnackbar("Note Deleted Successfully");
-      navigate(PATH_CUSTOMER.notes.root(customerId));
+      if(customerId ) navigate(PATH_CUSTOMER.notes.root(customerId));
     } catch (err) {
       enqueueSnackbar("Note Deletion Failed", { variant: `error` });
       console.log('Error:', err);
@@ -70,7 +70,7 @@ export default function NoteViewForm() {
     <Grid item md={12} >
       <CustomerTabContainer currentTabValue='notes' />
       <Card sx={{ p: 2 }}>
-        <ViewFormEditDeleteButtons isActive={defaultValues.isActive} backLink={()=> navigate(PATH_CUSTOMER.notes.root(customerId))} handleEdit={handleEdit} onDelete={onDelete} />
+        <ViewFormEditDeleteButtons isActive={defaultValues.isActive} backLink={()=> { if(customerId) navigate(PATH_CUSTOMER.notes.root(customerId))}} handleEdit={handleEdit} onDelete={onDelete} />
         <Grid container sx={{mt:2}}>
           <ViewFormField isLoading={isLoading} sm={6} heading="Site" param={defaultValues?.site_name} />
           <ViewFormField isLoading={isLoading} sm={6} heading="Contact" param={defaultValues?.contact_firstName}
