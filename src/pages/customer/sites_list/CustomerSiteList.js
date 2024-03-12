@@ -12,9 +12,9 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 // redux
-import { useDispatch, useSelector } from '../../redux/store';
+import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_CUSTOMER } from '../../routes/paths';
+import { PATH_CUSTOMER } from '../../../routes/paths';
 // components
 import {
   useTable,
@@ -23,22 +23,22 @@ import {
   TableSkeleton,
   TableHeadCustom,
   TablePaginationCustom,
-} from '../../components/table';
-import Scrollbar from '../../components/scrollbar';
-import ConfirmDialog from '../../components/confirm-dialog';
-import { StyledCardContainer } from '../../theme/styles/default-styles';
-import { FORMLABELS } from '../../constants/default-constants';
+} from '../../../components/table';
+import Scrollbar from '../../../components/scrollbar';
+import ConfirmDialog from '../../../components/confirm-dialog';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
+import { FORMLABELS } from '../../../constants/default-constants';
 
 // sections
 import CustomerSiteListTableRow from './CustomerSiteListTableRow';
 import CustomerSiteListTableToolbar from './CustomerSiteListTableToolbar';
-import { getSites, getSite, resetSites, ChangePage, ChangeRowsPerPage, setFilterBy, setIsExpanded, setCardActiveIndex  } from '../../redux/slices/customer/site';
-import { setCustomerTab } from '../../redux/slices/customer/customer';
-import { Cover } from '../../components/Defaults/Cover';
-import TableCard from '../../components/ListTableTools/TableCard';
-import { fDate } from '../../utils/formatTime';
-import { useSnackbar } from '../../components/snackbar';
-import { exportCSV } from '../../utils/exportCSV';
+import { getSites, getSite, resetSite, resetSites, ChangePage, ChangeRowsPerPage, setFilterBy, setIsExpanded, setCardActiveIndex  } from '../../../redux/slices/customer/site';
+import { setCustomerTab } from '../../../redux/slices/customer/customer';
+import { Cover } from '../../../components/Defaults/Cover';
+import TableCard from '../../../components/ListTableTools/TableCard';
+import { fDate } from '../../../utils/formatTime';
+import { useSnackbar } from '../../../components/snackbar';
+import { exportCSV } from '../../../utils/exportCSV';
 
 // ----------------------------------------------------------------------
 
@@ -75,22 +75,22 @@ export default function CustomerSiteList() {
   const cancelTokenSource = axiosToken();
   
   const { sites, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.site);
-  
-  const [tableData, setTableData] = useState([]);
-  const [openConfirm, setOpenConfirm] = useState(false);
-  const [filterName, setFilterName] = useState(filterBy);
+
+  const [exportingCSV, setExportingCSV] = useState(false);
+  const [ tableData, setTableData ] = useState([]);
+  const [ openConfirm, setOpenConfirm ] = useState(false);
+  const [ filterName, setFilterName ] = useState(filterBy);
+
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
   };
-  const onChangePage = (event, newPage) => { 
-    dispatch(ChangePage(newPage)) 
-  }
+
+  const onChangePage = (event, newPage) => {  dispatch(ChangePage(newPage))  }
 
   useEffect(() => {
     dispatch(getSites());
     return ()=> { dispatch( resetSites() ) }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   useEffect(() => {
@@ -127,28 +127,27 @@ export default function CustomerSiteList() {
     debouncedSearch.current.cancel();
   }, [debouncedSearch]);
 
-
-  const handleViewRow = (id) => {
-    navigate(PATH_CUSTOMER.view(id));
-  };
-
-  const openInNewPage = (id) => {
-    dispatch(setCustomerTab('info'));
-    const url = PATH_CUSTOMER.view(id);
-    window.open(url, '_blank');
-  };
-
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
-  }; 
-
-  const handleBackLink = () => {
-    console.log('back')
-    navigate(PATH_CUSTOMER.list);
   };
 
-  const [exportingCSV, setExportingCSV] = useState(false);
+  const handleViewCustomer = (id) => navigate(PATH_CUSTOMER.view(id));
+  const handleViewCustomerInNewPage = (id) => window.open(PATH_CUSTOMER.view(id), '_blank');
+  const handleBackLink = () => navigate(PATH_CUSTOMER.root);
+
+  const handleViewSite = async (customerId, siteId ) => {
+    await dispatch(setCardActiveIndex(siteId));
+    await dispatch(setIsExpanded(true));
+    await navigate(PATH_CUSTOMER.site.view(customerId, siteId))
+  };
+
+  const handleViewSiteInNewPage = async (customerId, siteId ) => {
+    await dispatch(setCardActiveIndex(siteId));
+    await dispatch(setIsExpanded(true));
+    window.open(PATH_CUSTOMER.site.view(customerId, siteId), '_blank');
+  };
+
   const onExportCSV = async() => {
     setExportingCSV(true);
     const response = dispatch(await exportCSV('allsites'));
@@ -160,22 +159,6 @@ export default function CustomerSiteList() {
         enqueueSnackbar(res.message, {variant:`${res.hasError?"error":""}`});
       }
     });
-  };
-
-  const handleSiteView = async (customerId, siteId ) => {
-    await dispatch(setCustomerTab('sites'));
-    await dispatch(setCardActiveIndex(siteId));
-    await dispatch(setIsExpanded(true));
-    await dispatch(getSite(customerId, siteId));
-    await navigate(PATH_CUSTOMER.view(customerId))
-  };
-
-  const handleSiteViewInNewPage = async (customerId, siteId ) => {
-    await openInNewPage(customerId);
-    await dispatch(setCustomerTab('sites'));
-    await dispatch(setCardActiveIndex(siteId));
-    await dispatch(setIsExpanded(true));
-    await dispatch(getSite(customerId, siteId));
   };
 
   return (
@@ -221,10 +204,10 @@ export default function CustomerSiteList() {
                         row={row}
                         selected={selected.includes(row._id)}
                         onSelectRow={() => onSelectRow(row._id)}
-                        onViewRow={() => handleViewRow(row?.customer?._id)}
-                        openInNewPage={() => openInNewPage(row?.customer?._id)}
-                        handleSiteView= { handleSiteView }
-                        handleSiteViewInNewPage= { handleSiteViewInNewPage }
+                        onViewRow={() => handleViewCustomer(row?.customer?._id)}
+                        openInNewPage={() => handleViewCustomerInNewPage(row?.customer?._id)}
+                        handleSiteView= { handleViewSite }
+                        handleSiteViewInNewPage= { handleViewSiteInNewPage }
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
                     ) : (

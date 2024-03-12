@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import {  useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -14,15 +15,11 @@ import {
   updateContact,
   setContactEditFormVisibility,
   resetContact,
-  getContacts,
   getActiveContacts,
   resetActiveContacts,
   getContact,
 } from '../../../redux/slices/customer/contact';
-import {
-  getActiveDepartments,
-  resetDepartments,
-} from '../../../redux/slices/Department/department';
+import { getActiveDepartments, resetDepartments } from '../../../redux/slices/Department/department'
 // components
 import Iconify from '../../../components/iconify';
 import { useSnackbar } from '../../../components/snackbar';
@@ -31,7 +28,7 @@ import FormProvider, {
   RHFMultiSelect,
   RHFTextField,
   RHFCountryAutocomplete,
-  RHFCustomPhoneInput,
+  RHFCustomPhoneInput
 } from '../../../components/hook-form';
 import { AddFormLabel } from '../../../components/DocumentForms/FormLabel';
 import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
@@ -44,6 +41,7 @@ import { ContactSchema } from '../../schemas/customer';
 import { FORMLABELS, Snacks } from '../../../constants/customer-constants';
 import { FORMLABELS as formLABELS } from '../../../constants/default-constants';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
+import { PATH_CUSTOMER } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -63,24 +61,22 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   const { contact, activeContacts } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
   const { departments } = useSelector((state) => state.department);
-  const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const [phone, setPhone] = useState('');
+  const [ phone, setPhone ] = useState('');
+  const { customerId, id } = useParams() 
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   // --------------------------------hooks----------------------------------
   const defaultValues = useMemo(
     () => ({
-      id: contact?._id || '',
       customer: contact?.customer || '',
       firstName: contact?.firstName || '',
       lastName: contact?.lastName || '',
       title: contact?.title || '',
       contactTypes: contact?.contactTypes || [],
-      // phone: contact?.phone || '',
-      phoneNumbers: contact?.phoneNumbers || [
-        { type: '', countryCode: '64' },
-        { type: 'Fax', countryCode: '64' },
-      ],
+      phoneNumbers: contact?.phoneNumbers || [{ type: '', countryCode: '64' }, { type: 'Fax', countryCode: '64' }],
       email: contact?.email || '',
       reportingTo: contact?.reportingTo || null,
       department: contact?.department || null,
@@ -90,11 +86,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
       region: contact?.address?.region || '',
       postcode: contact?.address?.postcode || '',
       isActive: contact?.isActive,
-      country:
-        countries.find(
-          (contry) =>
-            contry?.label?.toLocaleLowerCase() === contact?.address?.country?.toLocaleLowerCase()
-        ) || null,
+      country: countries.find((contry) => contry?.label?.toLocaleLowerCase() === contact?.address?.country?.toLocaleLowerCase()) || null,
     }),
     [contact]
   );
@@ -106,81 +98,54 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
 
   const {
     reset,
-    watch,
     setValue,
+    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
   const { country, phoneNumbers } = watch();
 
-  watch();
-
   useEffect(() => {
-    dispatch(getActiveContacts(customer?._id));
-    dispatch(getActiveDepartments());
+    dispatch(getActiveContacts(customerId))
+    dispatch(getActiveDepartments())
     return () => {
-      dispatch(resetActiveContacts());
-      dispatch(resetDepartments());
-    };
-  }, [dispatch, customer?._id]);
-
-  // useEffect(() => {
-  //   setPhone(contact?.phone);
-  // }, [contact]);
-
-  useEffect(() => {
-    if (contact) {
-      reset(defaultValues);
+      dispatch(resetActiveContacts())
+      dispatch(resetDepartments())
     }
-  }, [contact, reset, defaultValues]);
+  }, [dispatch, customerId ])
 
   useEffect(() => {
     phoneNumbers?.forEach((pN, index) => {
       if (!phoneNumbers[index].contactNumber) {
-        setValue(`phoneNumbers[${index}].countryCode`, country?.phone?.replace(/[^0-9]/g, ''));
+        setValue(`phoneNumbers[${index}].countryCode`, country?.phone?.replace(/[^0-9]/g, ''))
       }
-    });
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [country]);
 
+
   const updateCountryCode = () => {
-    phoneNumbers?.map((pN, index) =>
-      setValue(`phoneNumbers[${index}].countryCode`, country?.phone?.replace(/[^0-9]/g, ''))
-    );
-  };
+    phoneNumbers?.map((pN, index) => setValue(`phoneNumbers[${index}].countryCode`, country?.phone?.replace(/[^0-9]/g, '')))
+  }
 
   const removeContactNumber = (indexToRemove) => {
     setValue('phoneNumbers', phoneNumbers?.filter((_, index) => index !== indexToRemove) || []);
-  };
+  }
 
   const addContactNumber = () => {
-    const updatedPhoneNumbers = [
-      ...phoneNumbers,
-      { type: '', countryCode: country?.phone?.replace(/[^0-9]/g, '') },
-    ];
-    setValue('phoneNumbers', updatedPhoneNumbers);
-  };
+    const updatedPhoneNumbers = [...phoneNumbers, { type: '', countryCode: country?.phone?.replace(/[^0-9]/g, '') }];
+    setValue('phoneNumbers', updatedPhoneNumbers)
+  }
 
   // -------------------------------functions---------------------------------
-  const toggleCancel = () => {
-    dispatch(setContactEditFormVisibility(false));
-  };
-
+  
   const onSubmit = async (data) => {
     try {
-      // if (phone && phone.length > 4) {
-      //   data.phone = phone;
-      // } else {
-      //   data.phone = '';
-      // }
-      await dispatch(updateContact(customer?._id, data));
-      reset();
-      dispatch(setContactEditFormVisibility(false));
+      await dispatch(updateContact(customerId, data));
       dispatch(resetContact());
-      dispatch(getContacts(customer?._id));
-      dispatch(getContact(customer?._id, contact?._id));
-
+      reset();
+      navigate(PATH_CUSTOMER.contact.view( customerId, id ))
       enqueueSnackbar(Snacks.SAVE_SUCCESS);
     } catch (err) {
       enqueueSnackbar(Snacks.SAVE_FAILED, { variant: 'error' });
@@ -188,160 +153,132 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
     }
   };
 
+  const toggleCancel = () => navigate(PATH_CUSTOMER.contact.view( customerId, id ));
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid>
-        <Card sx={{ p: 3, mb: 3 }}>
-          <Stack spacing={3}>
-            <Box
-              rowGap={2}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-              }}
-            >
-              <RHFTextField name={FORMLABELS.FIRSTNAME.name} label={FORMLABELS.FIRSTNAME.label} />
-              <RHFTextField name={FORMLABELS.LASTNAME.name} label={FORMLABELS.LASTNAME.label} />
-              <RHFTextField name={FORMLABELS.TITLE.name} label={FORMLABELS.TITLE.label} />
-              <RHFMultiSelect
-                chip
-                checkbox
-                name={FORMLABELS.CONTACT_TYPES.name}
-                label={FORMLABELS.CONTACT_TYPES.label}
-                options={FORMLABELS.CONTACT_TYPES.options}
-              />
-            </Box>
-            <Box
-              rowGap={2}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-              }}
-            >
-              <RHFAutocomplete
-                name={FORMLABELS.DEPARTMENT.name}
-                label={FORMLABELS.DEPARTMENT.label}
-                options={departments}
-                getOptionLabel={(option) => option?.departmentName || ''}
-                isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                renderOption={(props, option) => (
-                  <li {...props} key={option?._id}>
-                    {option?.departmentName || ''}
-                  </li>
-                )}
-              />
-              <RHFAutocomplete
-                name={FORMLABELS.REPORTINGTO.name}
-                label={FORMLABELS.REPORTINGTO.label}
-                options={activeContacts}
-                getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
-                isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                renderOption={(props, option) => (
-                  <li {...props} key={option?._id}>{`${option?.firstName || ''} ${
-                    option?.lastName || ''
-                  }`}</li>
-                )}
-              />
-            </Box>
-            <Box
-              rowGap={2}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
-            >
-              <RHFTextField name={FORMLABELS.STREET.name} label={FORMLABELS.STREET.label} />
-              <RHFTextField name={FORMLABELS.SUBURB.name} label={FORMLABELS.SUBURB.label} />
-              <RHFTextField name={FORMLABELS.CITY.name} label={FORMLABELS.CITY.label} />
-              <RHFTextField name={FORMLABELS.REGION.name} label={FORMLABELS.REGION.label} />
-              <RHFTextField name={FORMLABELS.POSTCODE.name} label={FORMLABELS.POSTCODE.label} />
-              <RHFCountryAutocomplete
-                name={FORMLABELS.COUNTRY.name}
-                label={FORMLABELS.COUNTRY.label}
-              />
-            </Box>
-            <Box display="flex" alignItems="center" gridTemplateColumns={{ sm: 'repeat(1, 1fr)' }}>
-              <IconButton
-                onClick={updateCountryCode}
-                size="small"
-                variant="contained"
-                color="secondary"
-                sx={{ mr: 0.5 }}
+      <Grid container direction="column">
+        <Grid item sm={12} lg={12}>
+          <Card sx={{ p: 3, mb: 3 }}>
+            <Stack spacing={3}>
+              <Box
+                rowGap={3}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
               >
-                <Iconify icon="icon-park-outline:update-rotation" sx={{ width: 25, height: 25 }} />
-              </IconButton>
-              <Typography variant="body2" sx={{ color: 'gray' }}>
-                Update country code in phone/fax.
-              </Typography>
-            </Box>
-            <Grid>
-              {phoneNumbers?.map((pN, index) => (
-                <Grid sx={{ py: 1 }} display="flex" alignItems="center">
-                  <RHFCustomPhoneInput
-                    name={`phoneNumbers[${index}]`}
-                    value={pN}
-                    label={pN?.type || 'Contact Number'}
-                    index={index}
-                  />
-                  <IconButton
-                    disabled={phoneNumbers?.length === 1}
-                    onClick={() => removeContactNumber(index)}
-                    size="small"
-                    variant="contained"
-                    color="error"
-                    sx={{ mx: 1 }}
-                  >
-                    <StyledTooltip
-                      title="Remove Contact Number"
-                      placement="top"
-                      disableFocusListener
-                      tooltipcolor={theme.palette.error.main}
-                      color={
-                        phoneNumbers?.length > 1
-                          ? theme.palette.error.main
-                          : theme.palette.text.main
-                      }
-                    >
-                      <Iconify icon="icons8:minus" sx={{ width: 25, height: 25 }} />
+
+                <RHFTextField name={FORMLABELS.FIRSTNAME.name} label={FORMLABELS.FIRSTNAME.label} />
+                <RHFTextField name={FORMLABELS.LASTNAME.name} label={FORMLABELS.LASTNAME.label} />
+                <RHFTextField name={FORMLABELS.TITLE.name} label={FORMLABELS.TITLE.label} />
+
+                <RHFMultiSelect
+                  chip
+                  checkbox
+                  name={FORMLABELS.CONTACT_TYPES.name}
+                  label={FORMLABELS.CONTACT_TYPES.label}
+                  options={FORMLABELS.CONTACT_TYPES.options}
+                />
+              </Box>
+
+              <Box display="flex" alignItems="center" gridTemplateColumns={{ sm: 'repeat(1, 1fr)' }} >
+                <IconButton onClick={updateCountryCode} size="small" variant="contained" color='secondary' sx={{ mr: 0.5 }} >
+                  <Iconify icon="icon-park-outline:update-rotation" sx={{ width: 25, height: 25 }} />
+                </IconButton>
+                <Typography variant='body2' sx={{ color: 'gray' }}>Update country code in phone/fax.</Typography>
+              </Box>
+              <Grid>
+                {phoneNumbers?.map((pN, index) => (
+                  <Grid sx={{ py: 1 }} display="flex" alignItems="center" >
+                    <RHFCustomPhoneInput name={`phoneNumbers[${index}]`} value={pN} label={pN?.type || 'Contact Number'} index={index} />
+                    <IconButton disabled={phoneNumbers?.length === 1} onClick={() => removeContactNumber(index)} size="small" variant="contained" color='error' sx={{ mx: 1 }} >
+                      <StyledTooltip title="Remove Contact Number" placement="top" disableFocusListener tooltipcolor={theme.palette.error.main} color={phoneNumbers?.length > 1 ? theme.palette.error.main : theme.palette.text.main}  >
+                        <Iconify icon="icons8:minus" sx={{ width: 25, height: 25 }} />
+                      </StyledTooltip>
+                    </IconButton>
+                  </Grid>
+                ))}
+                <Grid >
+                  <IconButton disabled={phoneNumbers?.length > 9} onClick={addContactNumber} size="small" variant="contained" color='success' sx={{ ml: 'auto', mr: 1 }} >
+                    <StyledTooltip title="Add Contact Number" placement="top" disableFocusListener tooltipcolor={theme.palette.success.dark} color={phoneNumbers?.length < 10 ? theme.palette.success.dark : theme.palette.text.main}  >
+                      <Iconify icon="icons8:plus" sx={{ width: 25, height: 25 }} />
                     </StyledTooltip>
                   </IconButton>
                 </Grid>
-              ))}
-              <Grid>
-                <IconButton
-                  disabled={phoneNumbers?.length > 9}
-                  onClick={addContactNumber}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                  sx={{ ml: 'auto', mr: 1 }}
-                >
-                  <StyledTooltip
-                    title="Add Contact Number"
-                    placement="top"
-                    disableFocusListener
-                    tooltipcolor={theme.palette.success.dark}
-                    color={
-                      phoneNumbers?.length < 10
-                        ? theme.palette.success.dark
-                        : theme.palette.text.main
-                    }
-                  >
-                    <Iconify icon="icons8:plus" sx={{ width: 25, height: 25 }} />
-                  </StyledTooltip>
-                </IconButton>
               </Grid>
-            </Grid>
-            <RHFTextField name={FORMLABELS.EMAIL.name} label={FORMLABELS.EMAIL.label} />
 
-            <ToggleButtons isMachine name={FORMLABELS.isACTIVE.name} />
-          </Stack>
-          <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
-        </Card>
+
+              <Box
+                rowGap={3}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
+
+
+                <RHFTextField name={FORMLABELS.EMAIL.name} label={FORMLABELS.EMAIL.label} />
+
+                <RHFAutocomplete
+                  name={FORMLABELS.REPORTINGTO.name}
+                  label={FORMLABELS.REPORTINGTO.label}
+                  options={activeContacts.filter((activeContact) => contact?._id !== activeContact?._id)}
+                  getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>
+                  )}
+                />
+
+                <RHFAutocomplete
+                  name={FORMLABELS.DEPARTMENT.name}
+                  label={FORMLABELS.DEPARTMENT.label}
+                  options={departments}
+                  getOptionLabel={(option) => option?.departmentName || ''}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option?._id}>{option?.departmentName || ''}</li>
+                  )}
+                />
+              </Box>
+            </Stack>
+          </Card>
+
+          <Card sx={{ p: 3, mb: 3 }}>
+            <Stack spacing={3}>
+              <AddFormLabel content={formLABELS.ADDRESS} />
+              <Box
+                rowGap={3}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
+                <RHFTextField name={FORMLABELS.STREET.name} label={FORMLABELS.STREET.label} />
+                <RHFTextField name={FORMLABELS.SUBURB.name} label={FORMLABELS.SUBURB.label} />
+                <RHFTextField name={FORMLABELS.CITY.name} label={FORMLABELS.CITY.label} />
+                <RHFTextField name={FORMLABELS.REGION.name} label={FORMLABELS.REGION.label} />
+                <RHFTextField name={FORMLABELS.POSTCODE.name} label={FORMLABELS.POSTCODE.label} />
+
+                <RHFCountryAutocomplete
+                  name={FORMLABELS.COUNTRY.name}
+                  label={FORMLABELS.COUNTRY.label}
+                />
+
+              </Box>
+              <ToggleButtons isMachine name={formLABELS.isACTIVE.name} />
+            </Stack>
+            <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+          </Card>
+        </Grid>
       </Grid>
-    </FormProvider>
+    </FormProvider >
   );
 }

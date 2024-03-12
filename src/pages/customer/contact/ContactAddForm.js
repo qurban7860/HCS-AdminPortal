@@ -3,10 +3,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
-
+import { useNavigate, useParams } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-// import { MuiTelInput } from 'mui-tel-input';
 import { Box, Card, Grid, Stack, Typography, IconButton } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { green } from '@mui/material/colors';
@@ -47,6 +46,8 @@ import { FORMLABELS } from '../../../constants/customer-constants';
 import { AddFormLabel } from '../../../components/DocumentForms/FormLabel';
 import Iconify from '../../../components/iconify';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
+import { PATH_CUSTOMER } from '../../../routes/paths';
+
 // ----------------------------------------------------------------------
 
 ContactAddForm.propTypes = {
@@ -56,25 +57,25 @@ ContactAddForm.propTypes = {
 };
 
 export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
+
   const { formVisibility, activeContacts } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
   const { departments } = useSelector((state) => state.department);
   const { userId, user } = useAuthContext();
-  const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const [phone, setPhone] = useState('');
+  const { customerId, id } = useParams() 
 
-  const theme = createTheme({
-    palette: {
-      success: green,
-    },
-  });
-  const PHONE_TYPES_ = JSON.parse(localStorage.getItem('configurations'))?.find(
-    (c) => c?.name === 'PHONE_TYPES'
-  );
+  const [phone, setPhone] = useState('');
+  
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const theme = createTheme({ palette: { success: green } });
+
+  const PHONE_TYPES_ = JSON.parse( localStorage.getItem('configurations'))?.find( ( c )=> c?.name === 'PHONE_TYPES' )
   let PHONE_TYPES = ['Mobile', 'Home', 'Work', 'Fax', 'Others'];
-  if (PHONE_TYPES_) {
-    PHONE_TYPES = PHONE_TYPES_.value.split(',').map((item) => item.trim());
+  if(PHONE_TYPES_) {
+    PHONE_TYPES = PHONE_TYPES_.value.split(',').map(item => item.trim());
   }
   const defaultValues = useMemo(
     () => ({
@@ -114,7 +115,6 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
     reset,
     setValue,
     watch,
-    // setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -130,12 +130,8 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
       }
     });
 
-    dispatch(getActiveContacts(customer?._id));
+    dispatch(getActiveContacts( customerId ));
     dispatch(getActiveDepartments());
-    reset(defaultValues);
-    if (!formVisibility) {
-      dispatch(setContactFormVisibility(true));
-    }
     return () => {
       dispatch(resetActiveContacts());
       dispatch(resetDepartments());
@@ -168,19 +164,16 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
       }
       await dispatch(addContact(data));
       dispatch(setIsExpanded(true));
-      dispatch(setContactEditFormVisibility(false));
-      dispatch(setContactMoveFormVisibility(false));
       enqueueSnackbar('Contact added successfully');
       reset();
+      navigate(PATH_CUSTOMER.contact.root(customerId ))
     } catch (error) {
       enqueueSnackbar('Failed : Contact adding', { variant: `error` });
       console.error(error);
     }
   };
 
-  const toggleCancel = () => {
-    dispatch(setContactFormVisibility(false));
-  };
+  const toggleCancel = () =>  navigate(PATH_CUSTOMER.contact.root(customerId ));
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -241,6 +234,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
                 )}
               />
             </Box>
+            <RHFTextField name={FORMLABELS.EMAIL.name} label={FORMLABELS.EMAIL.label} />
             <AddFormLabel content={FORM_LABELS.ADDRESS} />
             <Box
               rowGap={2}
@@ -330,7 +324,6 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
                 </IconButton>
               </Grid>
             </Grid>
-            <RHFTextField name={FORMLABELS.EMAIL.name} label={FORMLABELS.EMAIL.label} />
 
             <ToggleButtons isMachine name={FORMLABELS.isACTIVE.name} />
           </Stack>

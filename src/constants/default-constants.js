@@ -284,7 +284,7 @@ export const TITLES = {
 
   // @root - AccountPopover - settings drawer
   SETTINGS: 'Settings',
-  CUSTOMIZE: 'Customize',
+  CUSTOMIZE: 'Theme Settings',
   LOGOUT: 'Logout',
   MODE: 'Mode',
   CONTRAST: 'Contrast',

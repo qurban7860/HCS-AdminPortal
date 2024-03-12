@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Dialog, DialogContent, Button, DialogTitle, Divider, DialogActions } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
@@ -17,7 +17,6 @@ function UpdateDocumentVersionDialog() {
   const dispatch = useDispatch();
   
   const { documentHistory, documentVersionEditDialogVisibility } = useSelector((state) => state.document);
-
   const handleCloseDialog = ()=>{ 
     dispatch(setDocumentVersionEditDialogVisibility(false));
     reset();
@@ -25,14 +24,13 @@ function UpdateDocumentVersionDialog() {
 
   const defaultValues = useMemo(
     () => ({
-      updatedVersion: documentHistory?.documentVersions?.length > 0 ? documentHistory?.documentVersions[0]?.versionNo : '',
+      updatedVersion: Number(documentHistory?.documentVersions[0]?.versionNo) || 0,
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [ documentHistory ]
   );
 
   const SendEmailSchema = Yup.object().shape({
-    updatedVersion: Yup.string().required("Version is required"),
+    updatedVersion: Yup.number().required("Version is required").max(1000).nullable(),
   });
 
 
@@ -44,8 +42,16 @@ function UpdateDocumentVersionDialog() {
   const {
     reset,
     handleSubmit,
+    watch,
+    setValue,
     formState: { isSubmitting },
   } = methods;
+  const { updatedVersion } = watch;
+  useEffect(()=>{
+    if(Number(documentHistory?.documentVersions[0]?.versionNo) !== Number(updatedVersion)){
+      setValue('updatedVersion',documentHistory?.documentVersions[0]?.versionNo)
+    }
+  },[ updatedVersion, documentHistory, setValue ])
   
   const onSubmit = async (data) => {    
     try {
@@ -65,7 +71,9 @@ function UpdateDocumentVersionDialog() {
       <DialogTitle variant='h3' sx={{pb:1, pt:2}}>Update Version</DialogTitle>
       <Divider orientation="horizontal" flexItem />
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} mb={5}>
-        <DialogContent dividers sx={{pt:3}}><RHFTextField type="number" name="updatedVersion" label="Version"/></DialogContent>
+        <DialogContent dividers sx={{pt:3}}>
+          <RHFTextField type="number" name="updatedVersion" label="Version No."/>
+        </DialogContent>
         <DialogActions>
           <Button variant='outlined' onClick={handleCloseDialog}>Cancel</Button>
           <LoadingButton loading={isSubmitting} type='submit' variant='contained'>Update</LoadingButton>

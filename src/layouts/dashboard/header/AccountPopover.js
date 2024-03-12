@@ -48,7 +48,6 @@ export default function AccountPopover() {
   const theme = useTheme();
   const navigate = useNavigate();
   const { user, logout } = useAuthContext();
-
   const email = localStorage.getItem('email')
   const displayName = localStorage.getItem('name')
 
@@ -98,7 +97,11 @@ export default function AccountPopover() {
 
   const handleClickItem = (path) => {
     handleClosePopover();
-    navigate(path || setOpen(!open));
+    if( typeof path === 'function' && user?.customer ){
+      navigate(path(user?.customer) || setOpen(!open));
+    } else if( typeof path === 'string' ) {
+      navigate(path || setOpen(!open));
+    }
   };
 
   const notDefault =

@@ -12,9 +12,9 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 // redux
-import { useDispatch, useSelector } from '../../redux/store';
+import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_CUSTOMER } from '../../routes/paths';
+import { PATH_CUSTOMER } from '../../../routes/paths';
 // components
 import {
   useTable,
@@ -23,21 +23,21 @@ import {
   TableSkeleton,
   TableHeadCustom,
   TablePaginationCustom,
-} from '../../components/table';
-import Scrollbar from '../../components/scrollbar';
-import ConfirmDialog from '../../components/confirm-dialog';
-import { StyledCardContainer } from '../../theme/styles/default-styles';
-import { FORMLABELS } from '../../constants/default-constants';
+} from '../../../components/table';
+import Scrollbar from '../../../components/scrollbar';
+import ConfirmDialog from '../../../components/confirm-dialog';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
+import { FORMLABELS } from '../../../constants/default-constants';
 // sections
 import CustomerContactListTableRow from './CustomerContactListTableRow';
 import CustomerContactListTableToolbar from './CustomerContactListTableToolbar';
-import { getContacts, resetContacts, ChangePage, ChangeRowsPerPage, setFilterBy, setCardActiveIndex, setIsExpanded, getContact  } from '../../redux/slices/customer/contact';
-import { setCustomerTab } from '../../redux/slices/customer/customer';
-import { Cover } from '../../components/Defaults/Cover';
-import TableCard from '../../components/ListTableTools/TableCard';
-import { fDate } from '../../utils/formatTime';
-import { useSnackbar } from '../../components/snackbar';
-import { exportCSV } from '../../utils/exportCSV';
+import { getContacts, resetContacts, ChangePage, ChangeRowsPerPage, setFilterBy, setCardActiveIndex, setIsExpanded, getContact, resetContact  } from '../../../redux/slices/customer/contact';
+import { setCustomerTab } from '../../../redux/slices/customer/customer';
+import { Cover } from '../../../components/Defaults/Cover';
+import TableCard from '../../../components/ListTableTools/TableCard';
+import { fDate } from '../../../utils/formatTime';
+import { useSnackbar } from '../../../components/snackbar';
+import { exportCSV } from '../../../utils/exportCSV';
 
 // ----------------------------------------------------------------------
 
@@ -74,11 +74,13 @@ export default function CustomerContactList() {
   const [tableData, setTableData] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [filterName, setFilterName] = useState(filterBy);
+  const [exportingCSV, setExportingCSV] = useState(false);
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
   };
+
   const onChangePage = (event, newPage) => { 
     dispatch(ChangePage(newPage)) 
   }
@@ -86,8 +88,8 @@ export default function CustomerContactList() {
   useEffect(() => {
     dispatch(getContacts());
     return ()=> { dispatch( resetContacts() ) }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
+
   useEffect(() => {
     setTableData(contacts || []);
   }, [contacts]);
@@ -123,24 +125,26 @@ export default function CustomerContactList() {
     debouncedSearch.current.cancel();
   }, [debouncedSearch]);
 
-
-  const handleViewRow = (id) => {
-    navigate(PATH_CUSTOMER.view(id));
-  };
-
-  const openInNewPage = (id) => {
-    dispatch(setCustomerTab('info'));
-    const url = PATH_CUSTOMER.view(id);
-    window.open(url, '_blank');
-  };
-
-
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
   }; 
 
-  const [exportingCSV, setExportingCSV] = useState(false);
+  const handleViewCustomer = (customerId) => navigate(PATH_CUSTOMER.view(customerId));
+  const handleViewCustomerInNewPage = (customerId) => window.open(PATH_CUSTOMER.view(customerId), '_blank');
+
+  const handleViewContact = async (customerId, contactId ) => {
+    await dispatch(setCardActiveIndex(contactId));
+    await dispatch(setIsExpanded(true));
+    await navigate(PATH_CUSTOMER.contact.view(customerId, contactId))
+  };
+  
+  const handleViewContactInNewPage = async (customerId, contactId ) => {
+    await dispatch(setCardActiveIndex(contactId));
+    await dispatch(setIsExpanded(true));
+    window.open(PATH_CUSTOMER.contact.view(customerId, contactId), '_blank');
+  };
+
   const onExportCSV = async() => {
     setExportingCSV(true);
     const response = dispatch(await exportCSV('allcontacts'));
@@ -152,22 +156,6 @@ export default function CustomerContactList() {
         enqueueSnackbar(res.message, {variant:`${res.hasError?"error":""}`});
       }
     });
-  };
-
-  const handleContactView = async (customerId, contactId ) => {
-    await navigate(PATH_CUSTOMER.view(customerId))
-    await dispatch(setCustomerTab('contacts'));
-    await dispatch(setCardActiveIndex(contactId));
-    await dispatch(setIsExpanded(true));
-    await dispatch(getContact(customerId, contactId));
-  };
-
-  const handleContactViewInNewPage = async (customerId, contactId ) => {
-    await openInNewPage(customerId);
-    await dispatch(setCustomerTab('contacts'));
-    await dispatch(setCardActiveIndex(contactId));
-    await dispatch(setIsExpanded(true));
-    await dispatch(getContact(customerId, contactId));
   };
 
   return (
@@ -213,10 +201,10 @@ export default function CustomerContactList() {
                         row={row}
                         selected={selected.includes(row._id)}
                         onSelectRow={() => onSelectRow(row._id)}
-                        onViewRow={() => handleViewRow(row?.customer?._id)}
-                        openInNewPage={() => openInNewPage(row?.customer?._id)}
-                        handleContactView= { handleContactView }
-                        handleContactViewInNewPage= { handleContactViewInNewPage }
+                        onViewRow={() => handleViewCustomer(row?.customer?._id)}
+                        openInNewPage={() => handleViewCustomerInNewPage(row?.customer?._id)}
+                        handleContactView= { handleViewContact }
+                        handleContactViewInNewPage= { handleViewContactInNewPage }
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
                     ) : (

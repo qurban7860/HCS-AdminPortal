@@ -1,11 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
-import {
-  Table,
-  TableBody,
-  TableContainer,
-} from '@mui/material';
+import { Container, Table, TableBody, TableContainer } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
@@ -23,7 +20,7 @@ import Scrollbar from '../../../components/scrollbar';
 // sections
 import NoteListTableRow from './NoteListTableRow';
 import NoteListTableToolbar from './NoteListTableToolbar';
-
+import CustomerTabContainer from '../util/CustomerTabContainer'
 import {
   getNote, 
   getNotes,
@@ -34,6 +31,7 @@ import {
   setNoteViewFormVisibility } from '../../../redux/slices/customer/customerNote';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
+import { PATH_CUSTOMER } from '../../../routes/paths';
 
 export default function NoteList() {
   const {
@@ -44,13 +42,14 @@ export default function NoteList() {
   } = useTable({
     defaultOrderBy: '-createdAt',
   });
-
-  const dispatch = useDispatch();
   useSettingsContext();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  const { customer } = useSelector((state) => state.customer);
+  const { customerId, id } = useParams() 
+  
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { notes, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.customerNote );
   const TABLE_HEAD = [
@@ -67,11 +66,11 @@ export default function NoteList() {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useEffect(() => {
-    if(customer?._id){
-      dispatch(getNotes(customer?._id));
+    if(customerId){
+      dispatch(getNotes(customerId));
     }
     return ()=>{ dispatch(resetNotes()) };
-  }, [dispatch, customer]);
+  }, [dispatch, customerId]);
 
   useEffect(() => {
     setTableData(notes);
@@ -112,17 +111,11 @@ export default function NoteList() {
     setFilterStatus(event.target.value);
   };
 
-  const handleViewRow = (noteid) => {
-      dispatch(getNote(customer._id,noteid));
-      dispatch(setNoteViewFormVisibility(true));
-  };
-
-  const handleResetFilter = () => {
-    dispatch(setFilterBy(''))
-    setFilterName('');
-  };
+  const handleViewRow = (noteid) => navigate(PATH_CUSTOMER.notes.view(customerId, id));
 
   return (
+    <Container maxWidth={false} >
+      <CustomerTabContainer currentTabValue='notes' />
       <TableCard>
         <NoteListTableToolbar
           filterName={filterName}
@@ -130,7 +123,7 @@ export default function NoteList() {
           onFilterName={handleFilterName}
           onFilterStatus={handleFilterStatus}
           isFiltered={isFiltered}
-          onResetFilter={handleResetFilter}
+          // onResetFilter={handleResetFilter}
         />
           {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
@@ -178,6 +171,7 @@ export default function NoteList() {
           onRowsPerPageChange={onChangeRowsPerPage}
         />
       </TableCard>
+    </Container>
   );
 }
 

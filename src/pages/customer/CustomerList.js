@@ -32,9 +32,7 @@ import { FORMLABELS } from '../../constants/default-constants';
 // sections
 import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
-import { getCustomers, resetCustomers, ChangePage, ChangeRowsPerPage, setFilterBy, setVerified,
-   setCustomerTab,
-   setExcludeReporting } from '../../redux/slices/customer/customer';
+import { getCustomers, resetCustomers, resetCustomer, ChangePage, ChangeRowsPerPage, setFilterBy, setVerified, setExcludeReporting } from '../../redux/slices/customer/customer';
 import { Cover } from '../../components/Defaults/Cover';
 import TableCard from '../../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
@@ -156,7 +154,7 @@ export default function CustomerList() {
   };
 
   const handleViewRow = (id) => {
-    dispatch(setCustomerTab('info'));
+    dispatch(resetCustomer(id));
     navigate(PATH_CUSTOMER.view(id));
   };
 
@@ -167,32 +165,13 @@ export default function CustomerList() {
   }; 
 
   const [exportingCSV, setExportingCSV] = useState(false);
-  const [exportingSitesCSV, setExportingSitesCSV] = useState(false);
-  const [exportingContactsCSV, setExportingContactsCSV] = useState(false);
   const onExportCSV = async (fetchAllContacts, fetchAllSites) => {
-  
-    let filename = '';
-    if(fetchAllSites){
-      setExportingSitesCSV(true);
-      filename = 'AllSites';
-    } else if(fetchAllContacts){
-      setExportingContactsCSV(true);
-      filename = 'AllContacts';
-    }else{
-      setExportingCSV(true);
-      filename = 'Customers';
-    }
+
     
 
-    const response = dispatch(await exportCSV( filename ));
+    const response = dispatch(await exportCSV( 'Customers' ));
     response.then((res) => {
-      if(fetchAllSites){
-        setExportingSitesCSV(false);
-      } else if(fetchAllContacts){
-        setExportingContactsCSV(false);
-      }else{
         setExportingCSV(false);
-      }
       enqueueSnackbar(res.message, {variant:`${res.hasError?"error":""}`});
     });
   };
@@ -227,6 +206,7 @@ export default function CustomerList() {
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
         />}
+        
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
 
           <Scrollbar>

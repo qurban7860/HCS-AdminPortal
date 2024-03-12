@@ -1,11 +1,12 @@
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Typography } from '@mui/material';
-import { updateNote, setNoteEditFormVisibility } from '../../../redux/slices/customer/customerNote';
+import { Container, Box, Card, Grid, Stack, Typography } from '@mui/material';
+import { updateNote, setNoteEditFormVisibility, getNote, resetNote } from '../../../redux/slices/customer/customerNote';
 import { getActiveSites, resetActiveSites } from '../../../redux/slices/customer/site';
 import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
 // components
@@ -13,6 +14,9 @@ import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete } from '../../../components/hook-form';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { NoteSchema } from '../../schemas/customer'
+import CustomerTabContainer from '../util/CustomerTabContainer'
+import { PATH_CUSTOMER } from '../../../routes/paths';
+
 
 // ----------------------------------------------------------------------
 
@@ -21,17 +25,24 @@ export default function NoteEditForm() {
   const { activeSites } = useSelector((state) => state.site);
   const { activeContacts } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
-  const dispatch = useDispatch();
+  const { customerId, id } = useParams() 
   const { enqueueSnackbar } = useSnackbar();
 
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   useEffect(()=>{
-    dispatch(getActiveSites(customer?._id))
-    dispatch(getActiveContacts(customer?._id))
+    dispatch(getActiveSites(customerId))
+    dispatch(getActiveContacts(customerId))
+    if(id && customerId ){
+      dispatch(getNote(customerId, id))
+    }
     return () => {
       dispatch(resetActiveSites());
       dispatch(resetActiveContacts());
+      dispatch(resetNote());
     };
-  },[ dispatch, customer?._id ])
+  },[ dispatch, customerId, id ])
 
   const defaultValues = useMemo(
     () => ({
@@ -52,41 +63,30 @@ export default function NoteEditForm() {
 
   const {
     reset,
-    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  watch();
-
-  useEffect(() => {
-    if (note) {
-      reset(defaultValues);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [note]);
-
-  const toggleCancel = () => {
-    dispatch(setNoteEditFormVisibility(false));
-  };
-
+  
   const onSubmit = async (data) => {
- 
     try {
-      await dispatch(updateNote(customer._id, note._id, data));
+      await dispatch(updateNote(customerId, id, data));
       enqueueSnackbar('Note Updated Successfully');
       reset();
-      dispatch(setNoteEditFormVisibility(false));
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
     }
   };
+  
+  const toggleCancel = () =>  navigate(PATH_CUSTOMER.notes.view(customerId, id));
 
   return (
+    <Container maxWidth={false} >
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={18} md={12}>
+        <CustomerTabContainer currentTabValue='notes' />
           <Card sx={{ p: 3 }}>
             <Stack spacing={3} sx={{ mb: 3 }}>
               <Stack spacing={1}>
@@ -130,5 +130,6 @@ export default function NoteEditForm() {
         </Grid>
       </Grid>
     </FormProvider>
+    </Container>
   );
 }

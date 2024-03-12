@@ -152,7 +152,7 @@ function ViewFormEditDeleteButtons({
 
   useLayoutEffect(()=>{
     if(( machineSettingPage || settingPage || securityUserPage ) && ( !isSettingAccessAllowed || !isSecurityUserAccessAllowed || !isDocumentAccessAllowed || ( !isDrawingAccessAllowed ) )){
-      navigate(PATH_DASHBOARD.general.app)
+      navigate(PATH_DASHBOARD.root)
     }
   },[ 
     machineSettingPage, 

@@ -118,7 +118,7 @@ export default function SecurityUserViewForm() {
     try {
       await dispatch(deleteSecurityUser(id));
       dispatch(getSecurityUsers());
-      navigate(PATH_SECURITY.users.list);
+      navigate(PATH_SECURITY.list);
     } catch (error) {
       enqueueSnackbar('User delete failed!', { variant: `error` });
       console.log('Error:', error);

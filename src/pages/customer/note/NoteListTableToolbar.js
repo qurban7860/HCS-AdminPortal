@@ -1,13 +1,14 @@
 import PropTypes from 'prop-types';
 // @mui
 import { Stack } from '@mui/material';
-import { useDispatch } from '../../../redux/store';
+import { useNavigate, useParams } from 'react-router-dom';
 // components
 import { SearchBarCombo } from '../../../components/ListTableTools';
 // import { PATH_DOCUMENT } from '../../../routes/paths';
 import { setNoteFormVisibility } from '../../../redux/slices/customer/customerNote';
 // constants
 import { BUTTONS } from '../../../constants/default-constants';
+import { PATH_CUSTOMER } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -30,8 +31,12 @@ export default function NoteListTableToolbar({
   onResetFilter,
   onFilterStatus,
 }) {
-  const dispatch = useDispatch();
-  const toggleAdd = () => dispatch(setNoteFormVisibility(true));
+
+  const { customerId, id } = useParams() 
+
+  const navigate = useNavigate();
+
+  const toggleAdd = () => navigate(PATH_CUSTOMER.notes.new(customerId));
 
   return (
     <Stack

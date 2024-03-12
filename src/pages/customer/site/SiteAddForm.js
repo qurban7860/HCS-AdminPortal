@@ -1,5 +1,6 @@
 import { useEffect,useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -20,6 +21,7 @@ import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete, RHFCountryAutoc
 import { SiteSchema } from '../../schemas/customer'
 import Iconify from '../../../components/iconify';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
+import { PATH_CUSTOMER } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -27,8 +29,11 @@ export default function SiteAddForm() {
 
   const { customer } = useSelector((state) => state.customer);
   const { activeContacts } = useSelector((state) => state.contact);
-  const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  const { customerId, id } = useParams() 
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
 
   const theme = createTheme({
@@ -38,11 +43,11 @@ export default function SiteAddForm() {
   });
 
   useEffect(() => {
-    dispatch( getActiveContacts(customer?._id))
+    dispatch( getActiveContacts(customerId))
     return( ) => {
       dispatch(resetActiveContacts())
     }
-  }, [ customer, dispatch ] );
+  }, [ customerId, dispatch ] );
 
   const PHONE_TYPES_ = JSON.parse( localStorage.getItem('configurations'))?.find( ( c )=> c?.name === 'PHONE_TYPES' )
   let PHONE_TYPES = ['Mobile', 'Home', 'Work', 'Fax', 'Others'];
@@ -53,7 +58,7 @@ export default function SiteAddForm() {
   const defaultValues = useMemo(
     () => ({
       name: '',
-      customer: customer?._id,
+      customer: customerId,
       billingSite: '',
       phoneNumbers: [ { type: PHONE_TYPES[0], countryCode: '64' }, { type: PHONE_TYPES[0], countryCode: '64' } ],
       email: '',
@@ -98,8 +103,8 @@ export default function SiteAddForm() {
   const onSubmit = async (data) => {
     try {
       await dispatch(addSite(data));
-      await dispatch(getSites(customer?._id))
       enqueueSnackbar('Site created successfully!');
+      navigate(PATH_CUSTOMER.site.root( customerId ))
       reset();
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
@@ -128,7 +133,7 @@ export default function SiteAddForm() {
     const updatedPhoneNumbers = [...phoneNumbers, { type: '', countryCode: country?.phone?.replace(/[^0-9]/g, '')} ]; 
     setValue( 'phoneNumbers', updatedPhoneNumbers )
   }
-  const toggleCancel = () => dispatch(setSiteFormVisibility(false));
+  const toggleCancel = () => navigate(PATH_CUSTOMER.site.root(customerId ));
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

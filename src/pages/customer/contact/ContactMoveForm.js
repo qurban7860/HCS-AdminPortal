@@ -1,9 +1,8 @@
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { useEffect, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-// import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -11,22 +10,27 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // import { LoadingButton } from '@mui/lab';
 import { Card, Grid, Stack } from '@mui/material';
 // slice
-import { setIsExpanded, moveCustomerContact,setContactMoveFormVisibility } from '../../../redux/slices/customer/contact';
-import { getActiveCustomers } from '../../../redux/slices/customer/customer';
+import { setIsExpanded, moveCustomerContact,setContactMoveFormVisibility, getContact } from '../../../redux/slices/customer/contact';
+import customer, { getActiveCustomers } from '../../../redux/slices/customer/customer';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFAutocomplete } from '../../../components/hook-form';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
+import { PATH_CUSTOMER } from '../../../routes/paths';
+
 // ----------------------------------------------------------------------
 
 export default function ContactMoveForm( ) {
   const { contact } = useSelector((state) => state.contact);
   const { activeCustomers } = useSelector((state) => state.customer);
-  const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const { id } = useParams();
+  const { customerId, id } = useParams() 
+  
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const MoveMachineSchema = Yup.object().shape({
     customer: Yup.object().shape({name: Yup.string()}).nullable().required('Customer is required!'),
   });
@@ -36,9 +40,9 @@ export default function ContactMoveForm( ) {
       customer: null,
       contact: null,
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
+
   const methods = useForm({
     resolver: yupResolver(MoveMachineSchema),
     defaultValues,
@@ -51,28 +55,25 @@ export default function ContactMoveForm( ) {
 
   useEffect(() => {
     dispatch(getActiveCustomers())
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [ dispatch ]);
 
+  useEffect(() => {
+    dispatch(getContact(customerId, id))
+  }, [ dispatch, customerId, id ]);
+  
   const onSubmit = async (data) => {
-
-    if(contact?._id){
-      data.contact = contact?._id;
-    }
-
     try {
       await dispatch(moveCustomerContact(data));
       enqueueSnackbar('Contact moved successfully!');
       dispatch(setIsExpanded(false));
+      navigate(PATH_CUSTOMER.contact.root(customerId))
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.error(error);
     }
   };
 
-  const toggleCancel = () => {
-    dispatch(setContactMoveFormVisibility(false));
-  };
+  const toggleCancel = () => navigate(PATH_CUSTOMER.contact.root(customerId));
 
   return (
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

@@ -1,10 +1,7 @@
 import PropTypes from 'prop-types';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-
-// import { useNavigate } from 'react-router-dom';
-
+import { useNavigate, useParams } from 'react-router-dom';
 // @mui
 import { Grid } from '@mui/material';
 // redux
@@ -13,76 +10,79 @@ import {
   getSite,
   getSites,
   setIsExpanded,
-  setSiteEditFormVisibility,
+  setCardActiveIndex,
 } from '../../../redux/slices/customer/site';
 import { useSnackbar } from '../../../components/snackbar';
-
-
 // paths
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewPhoneComponent from '../../../components/ViewForms/ViewPhoneComponent';
-
+import { PATH_CUSTOMER } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
 SiteViewForm.propTypes = {
-  currentSite: PropTypes.object,
   handleMap: PropTypes.func,
 };
-export default function SiteViewForm({ currentSite = null, handleMap }) {
+export default function SiteViewForm({ handleMap }) {
+
   const { site, isLoading } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
+  const { customerId, id } = useParams() 
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(()=>{
+    dispatch(getSite(customerId, id ))
+    dispatch(setIsExpanded(true))
+    dispatch(setCardActiveIndex(id))
+  },[ dispatch, customerId, id ])
 
   const onDelete = async () => {
     try {
-      await dispatch(deleteSite(customer?._id, currentSite?._id));
-      await dispatch(getSites(customer?._id));
+      await dispatch(deleteSite(customerId, id));
       enqueueSnackbar('Site deleted Successfully!');
       dispatch(setIsExpanded(false));
+      navigate(PATH_CUSTOMER.site.root( customer?._id ))
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });
       console.log(err);
     }
   };
 
-  const handleEdit = async () => {
-    await dispatch(getSite(customer?._id, currentSite?._id));
-    dispatch(setSiteEditFormVisibility(true));
-  };
+  const handleEdit = async () => navigate(PATH_CUSTOMER.site.edit(customerId, id));
 
   const defaultValues = useMemo(
     () => ({
-      id: currentSite ? currentSite?._id : site?._id || '',
-      name: currentSite ? currentSite.name : site?.name || '',
-      customer: currentSite ? currentSite.name : site?.tradingName || '',
-      billingSite: currentSite ? currentSite?._id : site?.accountManager || '',
-      phoneNumbers: currentSite ? currentSite.phoneNumbers : site?.phoneNumbers || '',
-      email: currentSite ? currentSite.email : site?.email || '',
-      website: currentSite ? currentSite.website : site?.website || '',
-      lat: currentSite ? currentSite.lat : site?.lat || '',
-      long: currentSite ? currentSite.long : site?.long || '',
-      street: currentSite ? currentSite.address?.street : site?.address.street || '',
-      suburb: currentSite ? currentSite.address?.suburb : site?.address.suburb || '',
-      city: currentSite ? currentSite.address?.city : site?.address.city || '',
-      postcode: currentSite ? currentSite.address?.postcode : site?.address.postcode || '',
-      region: currentSite ? currentSite.address?.region : site?.address.region || '',
-      country: currentSite ? currentSite.address?.country : site?.address.country || '',
-      primaryBillingContact: currentSite?.primaryBillingContact || null,
-      primaryTechnicalContact: currentSite?.primaryTechnicalContact || null,
-      isActive: currentSite?.isActive,
-      createdAt: currentSite?.createdAt || '',
-      createdByFullName: currentSite?.createdBy?.name || '',
-      createdIP: currentSite?.createdIP || '',
-      updatedAt: currentSite?.updatedAt || '',
-      updatedByFullName: currentSite?.updatedBy?.name || '',
-      updatedIP: currentSite?.updatedIP || '',
+      name:                     site?.name || '',
+      customer:                 site?.tradingName || '',
+      billingSite:              site?.accountManager || '',
+      phoneNumbers:             site?.phoneNumbers || '',
+      email:                    site?.email || '',
+      website:                  site?.website || '',
+      lat:                      site?.lat || '',
+      long:                     site?.long || '',
+      street:                   site?.address.street || '',
+      suburb:                   site?.address.suburb || '',
+      city:                     site?.address.city || '',
+      postcode:                 site?.address.postcode || '',
+      region:                   site?.address.region || '',
+      country:                  site?.address.country || '',
+      primaryBillingContact:    site?.primaryBillingContact || null,
+      primaryTechnicalContact:  site?.primaryTechnicalContact || null,
+      isActive:                 site?.isActive,
+      createdAt:                site?.createdAt || '',
+      createdByFullName:        site?.createdBy?.name || '',
+      createdIP:                site?.createdIP || '',
+      updatedAt:                site?.updatedAt || '',
+      updatedByFullName:        site?.updatedBy?.name || '',
+      updatedIP:                site?.updatedIP || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentSite, site]
+    [ site]
   );
 
   return (

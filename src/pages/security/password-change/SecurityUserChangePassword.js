@@ -54,7 +54,7 @@ export default function SecurityUserChangePassword() {
   } = methods;
 
   const toggleCancel = () => {
-    navigate(PATH_DASHBOARD.general.app);
+    navigate(PATH_DASHBOARD.root);
   };
   const onSubmit = async (data) => {
     if (userId) {

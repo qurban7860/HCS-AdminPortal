@@ -10,7 +10,7 @@ import { pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import { Box, Card, Grid, Stack, Dialog } from '@mui/material';
 // PATH
-import { PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_CUSTOMER, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
 import {
   resetActiveDocuments,
@@ -129,7 +129,7 @@ function DocumentAddForm({
   
 
   useEffect( () => { // Get Active Document Types And Active Document Categoories
-    if( !isDocumentCategoryLoaded && categoryBy ){
+    if( !isDocumentCategoryLoaded && categoryBy  ){
       dispatch( getActiveDocumentCategories( categoryBy ) );  dispatch( getActiveDocumentTypesWithCategory( null, categoryBy ) ) 
       setIsDocumentCategoryLoaded( true )
     }
@@ -137,7 +137,7 @@ function DocumentAddForm({
   }, [ categoryBy ] )
 
   useEffect(() => { // Set Default Document Type Value
-    if( activeDocumentTypes?.length > 0 && activeDocumentCategories?.length > 0  && !isDocumentTypesLoaded ){
+    if( activeDocumentTypes?.length > 0 && activeDocumentCategories?.length > 0  && !documentHistoryNewVersionFormVisibility && !isDocumentTypesLoaded ){
       if(activeDocumentTypes.find((el)=> el.isDefault === true )?._id === activeDocumentCategories.find((el)=> el.isDefault === true )?._id){
         setValue('documentType', activeDocumentTypes.find((el)=> el.isDefault === true ))
         setValue('documentCategory', activeDocumentCategories.find((el)=>  el.isDefault === true ))
@@ -307,7 +307,13 @@ function DocumentAddForm({
       navigate(PATH_DOCUMENT.document.machineDrawings.list);
     } else if((documentNewVersionFormVisibility || documentAddFilesViewFormVisibility)  && (customerPage || machinePage)){
       dispatch(setViewVisiilityNoOthers())
+      if(customerPage && !machinePage){
+        navigate(PATH_CUSTOMER.documents.root( customer?._id ));
+      }
     }else if((documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility) && (customerPage || machinePage) ){
+      if(customerPage && !machinePage){
+        navigate(PATH_CUSTOMER.documents.viewHistory(customer?._id  ));
+      }
       dispatch(setViewHistoryVisiilityNoOthers(false))
     }else if(machineDrawings && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility)){
       dispatch(setDrawingAndDocumentVisibility())
