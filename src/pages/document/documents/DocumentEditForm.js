@@ -96,7 +96,10 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
           machinePage ? machine?._id : null
         )
       );
-      if(drawingPage){
+      if( customerPage && !machinePage ){
+        await dispatch(getDocument(document?._id));
+        navigate(PATH_CUSTOMER.documents.view( customer?._id, document?._id ));
+      } else if(drawingPage){
         await dispatch(getDocumentHistory(document?._id));
         dispatch(setDrawingViewFormVisibility(true));
         dispatch(setDrawingEditFormVisibility(false));
