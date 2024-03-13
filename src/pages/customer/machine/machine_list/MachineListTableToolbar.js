@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 // components
 import { SearchBarCombo } from '../../../../components/ListTableTools'
 import { BUTTONS } from '../../../../constants/default-constants';
-import { PATH_MACHINE } from '../../../../routes/paths';
+import { PATH_CUSTOMER } from '../../../../routes/paths';
 import { setNewMachineCustomer } from '../../../../redux/slices/customer/customer';
 import { useDispatch, useSelector } from '../../../../redux/store';
 
@@ -40,7 +40,7 @@ export default function MachineListTableToolbar({
 
   const toggleAdd = async () => {
     await dispatch(setNewMachineCustomer(customer))
-    navigate(PATH_MACHINE.machines.new);
+    navigate(PATH_CUSTOMER.machines.new(customer?._id));
   };
 
   return (

@@ -92,7 +92,7 @@ export const PATH_CUSTOMER = {
   machines: {
     root: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/machines`),
     move: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/machines/${id}/move`),
-
+    new: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/machines/new`),
   },
 };
 

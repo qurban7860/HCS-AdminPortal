@@ -576,6 +576,7 @@ export function addMachine(params) {
         };
         const response = await axios.post(`${CONFIG.SERVER_URL}products/machines`, data);
         dispatch(slice.actions.getMachineSuccess(response.data.Machine));
+        return response
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));

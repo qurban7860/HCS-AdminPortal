@@ -41,9 +41,10 @@ import {
   // Customer Machines
   CustomerMachines,
   CustomerMachineMove,
+  CustomerMachineAddForm,
   // Machine
   MachineSetting,
-  MachineAdd,
+  MachineAddForm,
   MachineList,
   MachineView,
   MachineEdit,
@@ -216,8 +217,8 @@ import {
   ConfigurationView, 
 
    // User Invite
-   UserInvitationList,
-   UserInvitationView,
+  UserInvitationList,
+  UserInvitationView,
 
 //   
   BlankPage,
@@ -366,7 +367,8 @@ export default function Router() {
         { path: ':customerId/machines',
           children: [
             { element: <CustomerMachines />, index: true  },
-            { path: ':id/move',element: <CustomerMachineMove />, index: true  },
+            { path: 'new',element: <CustomerMachineAddForm />  },
+            { path: ':id/move',element: <CustomerMachineMove />  },
           ],
         },
         { path: 'permission-denied', element: <PermissionDeniedPage /> },
@@ -385,7 +387,7 @@ export default function Router() {
         { path: 'machines',
           children: [
             { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-            { path: 'new', element: <MachineAdd /> }, 
+            { path: 'new', element: <MachineAddForm /> }, 
             { path: 'list', element: <MachineList /> }, 
             { path: ':id/view', element: <MachineView /> }, 
             { path: ':id/edit', element: <MachineEdit /> }, 

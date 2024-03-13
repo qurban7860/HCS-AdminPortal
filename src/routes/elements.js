@@ -51,6 +51,7 @@ export const NoteViewForm = Loadable(lazy(() => import('../pages/customer/note/N
 
 // CUSTOMER MACHINESS
 export const CustomerMachines = Loadable(lazy(() => import('../pages/customer/machine/machine_list/CustomerMachines')));
+export const CustomerMachineAddForm = Loadable(lazy(() => import('../pages/customer/machine/NewMachine')));
 export const CustomerMachineMove = Loadable(lazy(() => import('../pages/customer/machine/machine_move/CustomerMachineMove')));
 
 // NOTE
@@ -82,7 +83,7 @@ export const RoleView = Loadable(lazy(() => import('../pages/Settings/security_s
 
 // Machine
 export const MachineSetting = Loadable(lazy(() => import('../pages/machine/Machine')));
-export const MachineAdd = Loadable(lazy(() => import('../pages/machine/MachineAddForm')));
+export const MachineAddForm = Loadable(lazy(() => import('../pages/machine/MachineAdd')));
 export const MachineList = Loadable(lazy(() => import('../pages/machine/MachineList')));
 export const MachineView = Loadable(lazy(() => import('../pages/machine/MachineView')));
 export const MachineEdit = Loadable(lazy(() => import('../pages/machine/MachineEdit')));

@@ -13,6 +13,7 @@ import { createTheme } from '@mui/material/styles';
 import {
   updateContact,
   getContacts,
+  getContact,
   getActiveContacts,
   resetActiveContacts,
 } from '../../../redux/slices/customer/contact';
@@ -104,11 +105,12 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   useEffect(() => {
     dispatch(getActiveContacts(customerId))
     dispatch(getActiveDepartments())
+    dispatch(getContact( customerId, id ));
     return () => {
       dispatch(resetActiveContacts())
       dispatch(resetDepartments())
     }
-  }, [dispatch, customerId ])
+  }, [dispatch, customerId, id ])
 
   useEffect(() => {
     phoneNumbers?.forEach((pN, index) => {
