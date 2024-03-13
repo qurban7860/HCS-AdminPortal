@@ -18,6 +18,7 @@ import {
   getDocumentHistory,
   getCustomerDocuments,
   getMachineDocuments,
+  getDocuments,
   getMachineDrawingsDocuments,
   addDocument,
   setViewVisiilityNoOthers,
@@ -240,6 +241,9 @@ function DocumentAddForm({
           dispatch(resetDrawings());
           dispatch(getDrawings(machine?._id));
           dispatch(setDrawingAddFormVisibility(false));
+        } else if( customerPage && !machinePage ){
+          // await dispatch(getDocuments(customerPage ? customer?._id : null, machinePage ? machine?._id : null, null));
+          await navigate(PATH_CUSTOMER.documents.root( customer?._id ));
         } else if (  machineDrawings && !customerPage && !machinePage ) {
           navigate(PATH_DOCUMENT.document.machineDrawings.list);
         } else if( handleFormVisibility ){
@@ -303,6 +307,8 @@ function DocumentAddForm({
   const toggleCancel = () => {
     if(drawingPage){
       dispatch(setDrawingAddFormVisibility(false));
+    } else if( customerPage && !machinePage ){
+      navigate(PATH_CUSTOMER.documents.root( customer?._id ));
     } else if (!drawingPage && !customerPage && !machinePage && !documentNewVersionFormVisibility && !documentAddFilesViewFormVisibility && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility) {
       navigate(PATH_DOCUMENT.document.machineDrawings.list);
     } else if((documentNewVersionFormVisibility || documentAddFilesViewFormVisibility)  && (customerPage || machinePage)){
