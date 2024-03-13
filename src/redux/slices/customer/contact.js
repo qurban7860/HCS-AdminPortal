@@ -255,7 +255,7 @@ export function addContact(params) {
 
 // ----------------------------------------------------------------------
 
-export function updateContact(customerId,params) {
+export function updateContact(customerId, contactId, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     dispatch(slice.actions.setContactEditFormVisibility(false));
@@ -298,7 +298,7 @@ export function updateContact(customerId,params) {
         data.address.country = params?.country?.label;        
       }
 
-      await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/contacts/${params.id}`,
+      await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/contacts/${contactId}`,
         data
       );
       dispatch(slice.actions.setResponseMessage('Contact updated successfully'));
