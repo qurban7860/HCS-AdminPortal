@@ -22,7 +22,7 @@ import BreadcrumbsProvider from '../../../components/Breadcrumbs/BreadcrumbsProv
 import BreadcrumbsLink from '../../../components/Breadcrumbs/BreadcrumbsLink';
 import GoogleMaps from '../../../assets/GoogleMaps';
 import useResponsive from '../../../hooks/useResponsive';
-import { getSites, resetSites, getSite, setIsExpanded, setCardActiveIndex } from '../../../redux/slices/customer/site';
+import { getSites, resetSites, setIsExpanded, setCardActiveIndex } from '../../../redux/slices/customer/site';
 import NothingProvided from '../../../components/Defaults/NothingProvided';
 import SiteAddForm from './SiteAddForm';
 import SiteEditForm from './SiteEditForm';
@@ -56,7 +56,7 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
   const [ tableData, setTableData ] = useState([]);
   const [ googleMapsVisibility, setGoogleMapsVisibility ] = useState(false);
   const { customerId } = useParams() 
-  const [exportingCSV, setExportingCSV] = useState(false);
+  const [ exportingCSV, setExportingCSV ] = useState(false);
 
   const isMobile = useResponsive('down', 'sm');
   const dispatch = useDispatch();
@@ -69,9 +69,9 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
       enqueueSnackbar(Snacks.SITE_CLOSE_CONFIRM, { variant: 'warning' });
       dispatch(setCardActiveIndex(null));
       dispatch(setIsExpanded(false));
-      if(customerId ) navigate(PATH_CUSTOMER.site.new(customerId))
+      if(customerId ) navigate(PATH_CUSTOMER.sites.new(customerId))
     } else {
-      if(customerId ) navigate(PATH_CUSTOMER.site.new(customerId))
+      if(customerId ) navigate(PATH_CUSTOMER.sites.new(customerId))
       dispatch(setCardActiveIndex(null));
       dispatch(setIsExpanded(false));
     }
@@ -105,10 +105,8 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
   }, [sites ]);
   
 
-  const toggleCancel = () => { if(customerId ) navigate(PATH_CUSTOMER.site.root(customerId))};
+  const toggleCancel = () => { if(customerId ) navigate(PATH_CUSTOMER.sites.root(customerId))};
   const handleGoogleMapsVisibility = () => setGoogleMapsVisibility(!googleMapsVisibility);
-  const handleActiveCard = (index) => dispatch(setCardActiveIndex(index));
-  const handleExpand = (index) => dispatch(setIsExpanded(true));
 
   const onExportCSV = async () => {
     setExportingCSV(true);
@@ -121,11 +119,7 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
 
 
   const handleCardClick = async (_site)=>{
-    if(customerId && _site._id ){ navigate(PATH_CUSTOMER.site.view(customerId, _site._id))}
-    if ( !siteEditForm && !siteAddForm ) {
-      handleActiveCard(_site._id);
-      handleExpand(_site._id);
-    }
+    if(customerId && _site._id ){ navigate(PATH_CUSTOMER.sites.view(customerId, _site._id))}
 }
 
   return (
@@ -199,7 +193,7 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
               <Grid container direction="column" gap={1}>
                 {dataFiltered.map((_site, index) => (
                   <ContactSiteCard
-                    key={index}
+                    key={_site?._id || index }
                     isActive={_site._id === activeCardIndex}
                     handleOnClick={() => handleCardClick(_site) }
                     disableClick={siteEditForm || siteAddForm}
@@ -238,7 +232,7 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
 
         {/* Conditional View Forms */}
         <GridBaseViewForm item xs={12} sm={12} md={12} lg={7} xl={8}>
-          {isExpanded && !siteAddForm && !siteEditForm && (
+          { siteViewForm && !siteAddForm && !siteEditForm && (
             <CardBase>
               <SiteViewForm
                 currentSite={site}
@@ -282,8 +276,8 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
               </Grid>
             </CardBase>
           )}
-          { siteAddForm && !siteEditForm&& <SiteAddForm />}
-          { !siteAddForm && siteEditForm && <SiteEditForm />}
+          { !siteViewForm && siteAddForm && !siteEditForm&& <SiteAddForm />}
+          { !siteViewForm && !siteAddForm && siteEditForm && <SiteEditForm />}
         </GridBaseViewForm>
       </Grid>
     </Container>

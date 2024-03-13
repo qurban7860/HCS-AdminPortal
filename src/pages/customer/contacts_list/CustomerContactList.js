@@ -4,13 +4,11 @@ import debounce from 'lodash/debounce';
 // @mui
 import {
   Table,
-  Button,
   TableBody,
   Container,
   TableContainer,
   // Stack,
 } from '@mui/material';
-import axios from 'axios';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
@@ -25,14 +23,11 @@ import {
   TablePaginationCustom,
 } from '../../../components/table';
 import Scrollbar from '../../../components/scrollbar';
-import ConfirmDialog from '../../../components/confirm-dialog';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
-import { FORMLABELS } from '../../../constants/default-constants';
 // sections
 import CustomerContactListTableRow from './CustomerContactListTableRow';
 import CustomerContactListTableToolbar from './CustomerContactListTableToolbar';
-import { getContacts, resetContacts, ChangePage, ChangeRowsPerPage, setFilterBy, setCardActiveIndex, setIsExpanded, getContact, resetContact  } from '../../../redux/slices/customer/contact';
-import { setCustomerTab } from '../../../redux/slices/customer/customer';
+import { getContacts, resetContacts, ChangePage, ChangeRowsPerPage, setFilterBy, setCardActiveIndex, setIsExpanded } from '../../../redux/slices/customer/contact';
 import { Cover } from '../../../components/Defaults/Cover';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import { fDate } from '../../../utils/formatTime';
@@ -68,11 +63,8 @@ export default function CustomerContactList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const axiosToken = () => axios.CancelToken.source();
-  const cancelTokenSource = axiosToken();
   const { contacts, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.contact);
   const [tableData, setTableData] = useState([]);
-  const [openConfirm, setOpenConfirm] = useState(false);
   const [filterName, setFilterName] = useState(filterBy);
   const [exportingCSV, setExportingCSV] = useState(false);
 
@@ -104,15 +96,9 @@ export default function CustomerContactList() {
   const isFiltered = filterName !== '';
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
-  const handleCloseConfirm = () => setOpenConfirm(false);
-
   const debouncedSearch = useRef(debounce((value) => {
       dispatch(ChangePage(0))
       dispatch(setFilterBy(value))
-  }, 500))
-
-  const debouncedVerified = useRef(debounce((value) => {
-    dispatch(ChangePage(0))
   }, 500))
 
   const handleFilterName = (event) => {
@@ -136,13 +122,13 @@ export default function CustomerContactList() {
   const handleViewContact = async (customerId, contactId ) => {
     await dispatch(setCardActiveIndex(contactId));
     await dispatch(setIsExpanded(true));
-    await navigate(PATH_CUSTOMER.contact.view(customerId, contactId))
+    await navigate(PATH_CUSTOMER.contacts.view(customerId, contactId))
   };
   
   const handleViewContactInNewPage = async (customerId, contactId ) => {
     await dispatch(setCardActiveIndex(contactId));
     await dispatch(setIsExpanded(true));
-    window.open(PATH_CUSTOMER.contact.view(customerId, contactId), '_blank');
+    window.open(PATH_CUSTOMER.contacts.view(customerId, contactId), '_blank');
   };
 
   const onExportCSV = async() => {

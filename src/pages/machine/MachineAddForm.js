@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, styled, Container, Grid, Stack, TextField } from '@mui/material';
+import { Box, Card, styled, Grid, Stack, TextField } from '@mui/material';
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
 import { getActiveCustomers, getFinancialCompanies, setCustomerTab, setNewMachineCustomer } from '../../redux/slices/customer/customer';
@@ -17,8 +17,6 @@ import { getActiveMachineModels, resetActiveMachineModels } from '../../redux/sl
 import { getActiveMachineStatuses, resetActiveMachineStatuses } from '../../redux/slices/products/statuses';
 import { getActiveSuppliers, resetActiveSuppliers } from '../../redux/slices/products/supplier';
 import { getMachineConnections, resetMachineConnections } from '../../redux/slices/products/machineConnections';
-import { Cover } from '../../components/Defaults/Cover';
-import { StyledCardContainer } from '../../theme/styles/default-styles';
 // routes
 import { PATH_CUSTOMER, PATH_MACHINE } from '../../routes/paths';
 // components
@@ -155,13 +153,15 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(addMachine(data));
+      const response = await dispatch(addMachine(data));
       reset();
       enqueueSnackbar('Machine created successfully!');
-      if(landToCustomerMachinePage){
-        await navigate(PATH_CUSTOMER.view(customer._id));
-      }else{
-        await  navigate(PATH_MACHINE.machines.list);
+      if( landToCustomerMachinePage && customer._id ){
+        await navigate(PATH_CUSTOMER.machines.root(customer?._id));
+      }else if(response?.data?.Machine?._id){
+        await navigate(PATH_MACHINE.machines.view(response?.data?.Machine?._id));
+      } else {
+        await navigate(PATH_MACHINE.machines.list);
       }
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
@@ -172,7 +172,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const toggleCancel = async() => {
     if(landToCustomerMachinePage){
       await dispatch(setCustomerTab('machines'));
-      navigate(PATH_CUSTOMER.view(newMachineCustomer._id));
+      navigate(PATH_CUSTOMER.machines.root(newMachineCustomer._id));
     }else{
       navigate(PATH_MACHINE.machines.list);
     }
@@ -220,11 +220,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   },[activeMachineModels, activeCategories, hasEffectRun])
 
   return (
-    <Container maxWidth={false} sx={{mb:3}}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
-        <StyledCardContainer>
-          <Cover name="New Machine" setting />
-        </StyledCardContainer>
         <Grid container>
           <Grid item xs={18} md={12} >
             <Card sx={{ p: 3 }}>
@@ -272,7 +268,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     ChipProps={{ size: 'small' }}
                   />
 
-                  <RHFDatePicker inputFormat='dd/MM/yyyy' name="purchaseDate" label="Purchase Date" />
+                  <RHFDatePicker inputFormat='dd/MM/yyyy' name="purchaseDate" label="Purchase Date*" />
                   <RHFTextField name="workOrderRef" label="Work Order/ Purchase Order" />
 
                   <RHFAutocomplete
@@ -346,7 +342,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   <RHFDatePicker inputFormat='dd/MM/yyyy' name="installationDate" label="Installation Date" />
 
                 </Box>
-
 
                   <RHFAutocomplete
                     multiple
@@ -428,6 +423,5 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
           </Grid>
         </Grid>
       </FormProvider>
-    </Container>
   );
 }

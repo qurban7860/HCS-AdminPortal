@@ -1,12 +1,11 @@
 import PropTypes from 'prop-types';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {  useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { MuiTelInput } from 'mui-tel-input';
 import { Box, Card, Grid, Stack, Typography, IconButton } from '@mui/material';
 import { green } from '@mui/material/colors';
 import { createTheme } from '@mui/material/styles';
@@ -14,10 +13,9 @@ import { createTheme } from '@mui/material/styles';
 import {
   updateContact,
   getContacts,
-  resetContact,
+  getContact,
   getActiveContacts,
   resetActiveContacts,
-  getContact,
 } from '../../../redux/slices/customer/contact';
 import { getActiveDepartments, resetDepartments } from '../../../redux/slices/Department/department'
 // components
@@ -59,10 +57,8 @@ const theme = createTheme({
 
 export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   const { contact, activeContacts } = useSelector((state) => state.contact);
-  const { customer } = useSelector((state) => state.customer);
   const { departments } = useSelector((state) => state.department);
   const { enqueueSnackbar } = useSnackbar();
-  const [ phone, setPhone ] = useState('');
   const { customerId, id } = useParams() 
 
   const dispatch = useDispatch();
@@ -109,11 +105,12 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   useEffect(() => {
     dispatch(getActiveContacts(customerId))
     dispatch(getActiveDepartments())
+    dispatch(getContact( customerId, id ));
     return () => {
       dispatch(resetActiveContacts())
       dispatch(resetDepartments())
     }
-  }, [dispatch, customerId ])
+  }, [dispatch, customerId, id ])
 
   useEffect(() => {
     phoneNumbers?.forEach((pN, index) => {
@@ -145,15 +142,15 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
       await dispatch(updateContact(customerId, data));
       await reset();
       await dispatch(getContacts(customerId));
-      await navigate(PATH_CUSTOMER.contact.view( customerId, id ))
+      await navigate(PATH_CUSTOMER.contacts.view( customerId, id ))
       enqueueSnackbar(Snacks.SAVE_SUCCESS);
     } catch (err) {
-      enqueueSnackbar(Snacks.SAVE_FAILED, { variant: 'error' });
+      enqueueSnackbar(err, { variant: 'error' });
       console.error(err);
     }
   };
 
-  const toggleCancel = () => navigate(PATH_CUSTOMER.contact.view( customerId, id ));
+  const toggleCancel = () => navigate(PATH_CUSTOMER.contacts.view( customerId, id ));
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

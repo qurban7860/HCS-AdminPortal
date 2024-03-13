@@ -1,6 +1,6 @@
 import { useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // @mui
 import { Box, Card, Grid, Stack } from '@mui/material';
 // hooks
@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from '../../components/snackbar';
 // slice
-import { updateCustomer, setCustomerEditFormVisibility, setCustomerTab } from '../../redux/slices/customer/customer';
+import { updateCustomer, setCustomerTab } from '../../redux/slices/customer/customer';
 import { getActiveContacts, getActiveSPContacts } from '../../redux/slices/customer/contact';
 import { getActiveSites } from '../../redux/slices/customer/site';
 // routes
@@ -32,6 +32,7 @@ export default function CustomerEditForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const { customerId } = useParams();
 
   const defaultValues = useMemo(
     () => ({
@@ -66,13 +67,13 @@ export default function CustomerEditForm() {
   } = methods;
 
   useLayoutEffect(() => {
-    dispatch(getActiveContacts(customer._id));
-    dispatch(getActiveSites(customer._id));
+    dispatch(getActiveContacts(customerId));
+    dispatch(getActiveSites(customerId));
     dispatch(getActiveSPContacts());
-  }, [dispatch, customer]);
+  }, [dispatch, customerId ]);
 
   const toggleCancel = () => {
-    navigate(PATH_CUSTOMER.view(customer._id));
+    navigate(PATH_CUSTOMER.view(customerId));
   };
 
   const onSubmit = async (data) => {
@@ -81,7 +82,7 @@ export default function CustomerEditForm() {
       await dispatch(setCustomerTab('info'));
       reset();
       enqueueSnackbar('Customer updated successfully!');
-      navigate(PATH_CUSTOMER.view(customer._id));
+      navigate(PATH_CUSTOMER.view(customerId));
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });
     }

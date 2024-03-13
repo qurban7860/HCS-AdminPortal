@@ -187,18 +187,6 @@ export function addSite(params) {
           isActive: params.isActive,
           address: {}
         };
-
-        // const phoneNumbers = []
-
-        // if( params?.phone?.number ){
-        //   phoneNumbers.push( params?.phone );
-        // }
-
-        // if( params?.fax?.number ){
-        //   phoneNumbers.push( params?.fax );
-        // }
-
-        // data.phoneNumbers = phoneNumbers;
         
         /* eslint-enable */
         if(params.street){
@@ -220,9 +208,8 @@ export function addSite(params) {
           data.address.country = params?.country?.label;        
         }
         
-        await axios.post(`${CONFIG.SERVER_URL}crm/customers/${params.customer}/sites`, data);
-        await dispatch(slice.actions.setSiteFormVisibility(false));
-
+        const response = await axios.post(`${CONFIG.SERVER_URL}crm/customers/${params.customer}/sites`, data);
+        return response; 
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));

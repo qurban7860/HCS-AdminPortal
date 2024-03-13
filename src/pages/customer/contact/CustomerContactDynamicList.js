@@ -48,14 +48,12 @@ CustomerContactDynamicList.propTypes = {
 
 export default function CustomerContactDynamicList({ contactAddForm, contactEditForm, contactViewForm, contactMoveForm }) {
 
-  const { contact: currentContactData, contacts, activeCardIndex, isExpanded,} = useSelector((state) => state.contact);
+  const { contact, contacts, activeCardIndex, isExpanded } = useSelector((state) => state.contact);
   const { isAllAccessAllowed } = useAuthContext()
   const { customer } = useSelector((state) => state.customer);
-  const { customerId, id } = useParams() 
+  const { customerId } = useParams() 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
-  const [checked, setChecked] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const [filterName, setFilterName] = useState('');
   const [filterStatus, setFilterStatus] = useState([]);
@@ -66,14 +64,13 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
   const isMobile = useResponsive('down', 'sm');
 
   const toggleChecked = () => {
-    setChecked((value) => !value);
     if (contactEditForm) {
       enqueueSnackbar(Snacks.CONTACT_CLOSE_CONFIRM, {variant: 'warning'});
       dispatch(setIsExpanded(false));
       dispatch(setCardActiveIndex(''));
-      navigate(PATH_CUSTOMER.contact.new(customerId))
+      navigate(PATH_CUSTOMER.contacts.new(customerId))
     } else {
-      navigate(PATH_CUSTOMER.contact.new(customerId))
+      navigate(PATH_CUSTOMER.contacts.new(customerId))
       dispatch(setCardActiveIndex(''));
       dispatch(setIsExpanded(false));
     }
@@ -107,22 +104,12 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
 
   // ------------------------------------------------------------
 
-  const toggleCancel = () => navigate(PATH_CUSTOMER.contact.root(customer?._id));
-
-  const handleActiveCard = (index) => {
-    if (!contactEditForm && !contactMoveForm) {
-      dispatch(setCardActiveIndex(index));
-    }
-  };
-
-  const handleExpand = (index) => dispatch(setIsExpanded(true));
-
+  const toggleCancel = () => navigate(PATH_CUSTOMER.contacts.root(customer?._id));
   const isNotFound = !contacts.length && !contactAddForm && !contactEditForm;
   
   const [exportingCSV, setExportingCSV] = useState(false);
   const onExportCSV = async () => {
     setExportingCSV(true);
-    
     const response = dispatch(await exportCSV('CustomerContacts', customerId ));
     response.then((res) => {
       setExportingCSV(false);
@@ -130,13 +117,7 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
     });
   };
 
-  const handleCardClick = async (contact)=>{
-      if (!contactMoveForm && !contactEditForm && !contactAddForm ) {
-        handleActiveCard(contact._id);
-        handleExpand(contact._id);
-        navigate(PATH_CUSTOMER.contact.view(customer?._id, contact?._id));
-      }
-  }
+  const handleCardClick = async (_contact)=>{ if(customerId && _contact?._id) navigate(PATH_CUSTOMER.contacts.view(customerId, _contact?._id)) };
 
   return (
     <Container maxWidth={ false } >
@@ -152,8 +133,8 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
                 <Stack>
                   {!contactAddForm && !contactEditForm && !isExpanded && 'Contacts'}
                   {contactEditForm
-                    ? `Edit ${currentContactData?.firstName}`
-                    : isExpanded && currentContactData?.firstName}
+                    ? `Edit ${contact?.firstName || '' }`
+                    : isExpanded && contact?.firstName || '' }
                   {contactAddForm && !isExpanded && 'Add new contact'}
                 </Stack>
               }
@@ -210,13 +191,14 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
               maxHeight={100}
             >
               <Grid container direction="column" gap={1} >
-                {dataFiltered.map((contact, index) => (
+                {dataFiltered.map((_contact, index) => (
                   <ContactSiteCard
-                    isActive={contact._id === activeCardIndex}
-                    handleOnClick={() => handleCardClick(contact) }
-                    disableClick={contactEditForm || contactAddForm || contactMoveForm}
-                    name={`${contact.firstName || ''} ${contact.lastName || ''}`} title={contact.title} email={contact.email}
-                    phone={contact?.phone}
+                    key={_contact?._id || index }
+                    disableClick={ contactMoveForm || contactEditForm || contactAddForm }
+                    isActive={_contact._id === activeCardIndex}
+                    handleOnClick={() => handleCardClick(_contact) }
+                    name={`${_contact.firstName || ''} ${_contact.lastName || ''}`} title={_contact.title} email={_contact.email}
+                    phone={_contact?.phone || null }
                   />)
                 )}
               </Grid>
@@ -226,14 +208,14 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
 
         {/* Conditional View Forms */}
           <GridBaseViewForm item xs={12} sm={12} md={12} lg={7} xl={8} >
-            {isExpanded && !contactEditForm && !contactMoveForm && !contactAddForm  && (
+            { contactViewForm && !contactEditForm && !contactMoveForm && !contactAddForm  && (
               <CardBase>
                 <ContactViewForm />
               </CardBase>
             )}
-            {contactEditForm && !contactAddForm && !contactMoveForm && <ContactEditForm setIsExpanded={setIsExpanded} />}
-            {contactAddForm && !contactEditForm && !contactMoveForm && <ContactAddForm setIsExpanded={setIsExpanded}/>}
-            {contactMoveForm && !contactAddForm && !contactEditForm && <ContactMoveForm setIsExpanded={setIsExpanded} />}
+            { !contactViewForm && contactEditForm && !contactAddForm && !contactMoveForm && <ContactEditForm setIsExpanded={setIsExpanded} />}
+            { !contactViewForm && contactAddForm && !contactEditForm && !contactMoveForm && <ContactAddForm setIsExpanded={setIsExpanded}/>}
+            { !contactViewForm && contactMoveForm && !contactAddForm && !contactEditForm && <ContactMoveForm setIsExpanded={setIsExpanded} />}
           </GridBaseViewForm>
       </Grid>
     </Container>

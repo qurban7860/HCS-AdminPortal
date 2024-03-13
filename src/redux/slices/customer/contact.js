@@ -244,7 +244,7 @@ export function addContact(params) {
       dispatch(getContact(response?.data?.customerCategory?.customer, response?.data?.customerCategory?._id));
       dispatch(slice.actions.setContactFormVisibility(false));
       dispatch(slice.actions.setResponseMessage('Site saved successfully'));
-
+      return response; 
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));

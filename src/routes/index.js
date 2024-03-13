@@ -40,9 +40,11 @@ import {
 
   // Customer Machines
   CustomerMachines,
+  CustomerMachineMove,
+  CustomerMachineAddForm,
   // Machine
   MachineSetting,
-  MachineAdd,
+  MachineAddForm,
   MachineList,
   MachineView,
   MachineEdit,
@@ -215,8 +217,8 @@ import {
   ConfigurationView, 
 
    // User Invite
-   UserInvitationList,
-   UserInvitationView,
+  UserInvitationList,
+  UserInvitationView,
 
 //   
   BlankPage,
@@ -321,12 +323,12 @@ export default function Router() {
       children: [
         { element: <CustomerList />, index: true  },
         { path: 'new', element: <CustomerAdd /> },
-        { path: ':id/edit', element: <CustomerEdit />},
-        { path: ':id/view', element: <CustomerView />},
-        { path: 'sites', element: <CustomerSiteList />},
-        { path: 'contacts', element: <CustomerContactList />},
+        { path: ':customerId/edit', element: <CustomerEdit />},
+        { path: ':customerId/view', element: <CustomerView />},
+        { path: 'sitesReport', element: <CustomerSiteList />},
+        { path: 'contactsReport', element: <CustomerContactList />},
 
-        { path: ':customerId/site',
+        { path: ':customerId/sites',
           children: [
             { element: <CustomerSiteDynamicList />, index: true  },
             { path: 'new', element: <CustomerSiteDynamicList siteAddForm /> },
@@ -334,7 +336,7 @@ export default function Router() {
             { path: ':id/view', element: <CustomerSiteDynamicList siteViewForm />}
           ],
         },
-        { path: ':customerId/contact',
+        { path: ':customerId/contacts',
           children: [
             { element: <CustomerContactDynamicList />, index: true  },
             { path: 'new', element: <CustomerContactDynamicList contactAddForm /> },
@@ -365,6 +367,8 @@ export default function Router() {
         { path: ':customerId/machines',
           children: [
             { element: <CustomerMachines />, index: true  },
+            { path: 'new',element: <CustomerMachineAddForm />  },
+            { path: ':id/move',element: <CustomerMachineMove />  },
           ],
         },
         { path: 'permission-denied', element: <PermissionDeniedPage /> },
@@ -383,7 +387,7 @@ export default function Router() {
         { path: 'machines',
           children: [
             { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-            { path: 'new', element: <MachineAdd /> }, 
+            { path: 'new', element: <MachineAddForm /> }, 
             { path: 'list', element: <MachineList /> }, 
             { path: ':id/view', element: <MachineView /> }, 
             { path: ':id/edit', element: <MachineEdit /> }, 

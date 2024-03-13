@@ -5,12 +5,12 @@ import {
 } from '@mui/material';
 // utils
 // components
-import LinkTableCellButtons from '../../../components/ListTableTools/LinkTableCellButtons';
-import LinkDialogTableCellTargetBlank from '../../../components/ListTableTools/LinkDialogTableCellTargetBlank';
-import { StyledTableRow, StyledTooltip } from '../../../theme/styles/default-styles'
-import { useAuthContext } from '../../../auth/useAuthContext';
-import { fDate } from '../../../utils/formatTime';
-import Iconify from '../../../components/iconify';
+import LinkTableCellButtons from '../../../../components/ListTableTools/LinkTableCellButtons';
+import LinkDialogTableCellTargetBlank from '../../../../components/ListTableTools/LinkDialogTableCellTargetBlank';
+import { StyledTableRow, StyledTooltip } from '../../../../theme/styles/default-styles'
+import { useAuthContext } from '../../../../auth/useAuthContext';
+import { fDate } from '../../../../utils/formatTime';
+import Iconify from '../../../../components/iconify';
 
 MachineListTableRow.propTypes = {
   row: PropTypes.object,

@@ -1,16 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
-import {
-  Table,
-  TableBody,
-  TableContainer,
-} from '@mui/material';
+import { Table, TableBody, TableContainer } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from '../../../redux/store';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
 // components
-import { useSettingsContext } from '../../../components/settings';
+import { useSettingsContext } from '../../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -18,23 +15,21 @@ import {
   TableSkeleton,
   TableHeadCustom,
   TablePaginationCustom,
-} from '../../../components/table';
-import Scrollbar from '../../../components/scrollbar';
+} from '../../../../components/table';
+import Scrollbar from '../../../../components/scrollbar';
 // sections
 import MachineListTableRow from './MachineListTableRow';
 import MachineListTableToolbar from './MachineListTableToolbar';
 
-import { fDate } from '../../../utils/formatTime';
-import TableCard from '../../../components/ListTableTools/TableCard';
+import { fDate } from '../../../../utils/formatTime';
+import TableCard from '../../../../components/ListTableTools/TableCard';
 import { getCustomerMachines, resetCustomerMachines, ChangeRowsPerPage,
   ChangePage,
   // setFilterBy,
   setMachineDialog,
-  setMachineMoveFormVisibility,
-  getMachine,
-  getMachineForDialog, } from '../../../redux/slices/products/machine';
-import MachineDialog from '../../../components/Dialog/MachineDialog';
-import { PATH_MACHINE } from '../../../routes/paths';
+  getMachineForDialog, } from '../../../../redux/slices/products/machine';
+import MachineDialog from '../../../../components/Dialog/MachineDialog';
+import { PATH_MACHINE, PATH_CUSTOMER } from '../../../../routes/paths';
 
 export default function MachineList() {
   const {
@@ -53,9 +48,10 @@ export default function MachineList() {
   const [filterStatus, setFilterStatus] = useState([]);
   const [transferStatus, setTransferStatus] = useState(false);
   
-  const { customer } = useSelector((state) => state.customer);
   const { customerMachines, page, rowsPerPage, isLoading } = useSelector((state) => state.machine);
-  
+  const { customerId } = useParams() 
+  const navigate = useNavigate();
+
   const TABLE_HEAD = [
     { id: 'serialNo', label: 'SerialNo'},
     { id: 'name', visibility: 'xs1', label: 'name'},
@@ -71,6 +67,13 @@ export default function MachineList() {
   };
 
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
+
+  useEffect(()=>{
+    if(customerId){
+      dispatch(getCustomerMachines(customerId));
+    }
+    return ()=> { dispatch(resetCustomerMachines())}
+},[dispatch, customerId])
 
   useEffect(() => {
     setTableData(customerMachines);
@@ -119,8 +122,9 @@ export default function MachineList() {
   };
 
   const handleMoveMachine = (id) => {
-    dispatch(getMachine(id))
-    dispatch(setMachineMoveFormVisibility(true)) 
+    if(customerId && id ){
+      navigate(PATH_CUSTOMER.machines.move(customerId, id));
+    }
   };
 
   const handleResetFilter = () => {

@@ -10,10 +10,9 @@ import { useSnackbar } from '../../../components/snackbar';
 // components
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import {
-  setNoteEditFormVisibility,
   getNote,
+  resetNote,
   deleteNote,
-  setNoteViewFormVisibility,
 } from '../../../redux/slices/customer/customerNote';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import CustomerTabContainer from '../util/CustomerTabContainer'
@@ -21,7 +20,6 @@ import { PATH_CUSTOMER } from '../../../routes/paths';
 
 export default function NoteViewForm() {
   const { note, isLoading } = useSelector((state) => state.customerNote);
-  const { customer } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
   const { customerId, id } = useParams() 
 
@@ -32,6 +30,7 @@ export default function NoteViewForm() {
     if( id && customerId ){
       dispatch(getNote(customerId, id))
     }
+    return ()=>{ dispatch(resetNote())}
   },[ dispatch, id, customerId])
 
   const onDelete = async () => {
@@ -40,7 +39,7 @@ export default function NoteViewForm() {
       enqueueSnackbar("Note Deleted Successfully");
       if(customerId ) navigate(PATH_CUSTOMER.notes.root(customerId));
     } catch (err) {
-      enqueueSnackbar("Note Deletion Failed", { variant: `error` });
+      enqueueSnackbar(err, { variant: `error` });
       console.log('Error:', err);
     }
   }

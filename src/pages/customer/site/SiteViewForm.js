@@ -8,7 +8,7 @@ import { Grid } from '@mui/material';
 import {
   deleteSite,
   getSite,
-  getSites,
+  resetSite,
   setIsExpanded,
   setCardActiveIndex,
 } from '../../../redux/slices/customer/site';
@@ -39,6 +39,12 @@ export default function SiteViewForm({ handleMap }) {
     dispatch(getSite(customerId, id ))
     dispatch(setIsExpanded(true))
     dispatch(setCardActiveIndex(id))
+    return () => 
+              { 
+                dispatch(resetSite()) 
+                dispatch(setIsExpanded(false))
+                dispatch(setCardActiveIndex(null))
+              }
   },[ dispatch, customerId, id ])
 
   const onDelete = async () => {
@@ -46,14 +52,14 @@ export default function SiteViewForm({ handleMap }) {
       await dispatch(deleteSite(customerId, id));
       enqueueSnackbar('Site deleted Successfully!');
       await dispatch(setIsExpanded(false));
-      if(customerId ) await navigate(PATH_CUSTOMER.site.root( customerId ))
+      if(customerId ) await navigate(PATH_CUSTOMER.sites.root( customerId ))
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });
       console.log(err);
     }
   };
 
-  const handleEdit = async () => { if(customerId && id ) navigate(PATH_CUSTOMER.site.edit(customerId, id))};
+  const handleEdit = async () => { if(customerId && id ) navigate(PATH_CUSTOMER.sites.edit(customerId, id))};
 
   const defaultValues = useMemo(
     () => ({

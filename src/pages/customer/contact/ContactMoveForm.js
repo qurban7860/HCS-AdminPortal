@@ -1,5 +1,4 @@
 import * as Yup from 'yup';
-import PropTypes from 'prop-types';
 import { useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,11 +6,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-// import { LoadingButton } from '@mui/lab';
 import { Card, Grid, Stack } from '@mui/material';
 // slice
 import { setIsExpanded, moveCustomerContact,getContacts, getContact } from '../../../redux/slices/customer/contact';
-import customer, { getActiveCustomers } from '../../../redux/slices/customer/customer';
+import { getActiveCustomers } from '../../../redux/slices/customer/customer';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFAutocomplete } from '../../../components/hook-form';
@@ -67,14 +65,14 @@ export default function ContactMoveForm( ) {
       enqueueSnackbar('Contact moved successfully!');
       await dispatch(setIsExpanded(false));
       await dispatch(getContacts(customerId));
-      await navigate(PATH_CUSTOMER.contact.root(customerId))
+      await navigate(PATH_CUSTOMER.contacts.root(customerId))
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.error(error);
     }
   };
 
-  const toggleCancel = () => navigate(PATH_CUSTOMER.contact.root(customerId));
+  const toggleCancel = () => navigate(PATH_CUSTOMER.contacts.root(customerId));
 
   return (
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

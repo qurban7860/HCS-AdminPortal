@@ -17,12 +17,12 @@ import CustomerTabContainer from './util/CustomerTabContainer';
 
 export default function CustomerView() {
 
-  const { id } = useParams();
+  const { customerId } = useParams();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getCustomer(id))
-  },[ dispatch, id ])
+    dispatch(getCustomer(customerId))
+  },[ dispatch, customerId ])
 
   return (
     <Container maxWidth={false}>
