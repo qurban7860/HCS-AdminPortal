@@ -268,7 +268,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     ChipProps={{ size: 'small' }}
                   />
 
-                  <RHFDatePicker inputFormat='dd/MM/yyyy' name="purchaseDate" label="Purchase Date*" />
+                  <RHFDatePicker inputFormat='dd/MM/yyyy' name="purchaseDate" label="Purchase Date" />
                   <RHFTextField name="workOrderRef" label="Work Order/ Purchase Order" />
 
                   <RHFAutocomplete
