@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Container, Box, Card, Grid, Stack, Typography } from '@mui/material';
-import { updateNote, setNoteEditFormVisibility, getNote, resetNote } from '../../../redux/slices/customer/customerNote';
+import { updateNote, getNote, resetNote } from '../../../redux/slices/customer/customerNote';
 import { getActiveSites, resetActiveSites } from '../../../redux/slices/customer/site';
 import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
 // components
@@ -24,7 +24,6 @@ export default function NoteEditForm() {
   const { note } = useSelector((state) => state.customerNote);
   const { activeSites } = useSelector((state) => state.site);
   const { activeContacts } = useSelector((state) => state.contact);
-  const { customer } = useSelector((state) => state.customer);
   const { customerId, id } = useParams() 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -75,8 +74,8 @@ export default function NoteEditForm() {
       await reset();
       if(customerId && id ) await navigate(PATH_CUSTOMER.notes.view(customerId, id))
     } catch (err) {
-      enqueueSnackbar('Saving failed!', { variant: `error` });
-      console.error(err.message);
+      enqueueSnackbar(err, { variant: `error` });
+      console.error(err);
     }
   };
   

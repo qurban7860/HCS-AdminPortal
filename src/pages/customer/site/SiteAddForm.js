@@ -1,12 +1,11 @@
-import { useEffect,useMemo, useState } from 'react';
+import { useEffect,useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { MuiTelInput } from 'mui-tel-input';
-import { Box,Card, Grid, Stack, Typography, alpha, Button, IconButton } from '@mui/material';
+import { Box,Card, Grid, Stack, Typography, IconButton } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { green } from '@mui/material/colors';
 // slice
@@ -27,10 +26,9 @@ import { PATH_CUSTOMER } from '../../../routes/paths';
 
 export default function SiteAddForm() {
 
-  const { customer } = useSelector((state) => state.customer);
   const { activeContacts } = useSelector((state) => state.contact);
   const { enqueueSnackbar } = useSnackbar();
-  const { customerId, id } = useParams() 
+  const { customerId } = useParams() 
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -102,13 +100,13 @@ export default function SiteAddForm() {
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(addSite(data));
+      const response = await dispatch(addSite(data));
       enqueueSnackbar('Site created successfully!');
       await dispatch(getSites(customerId))
-      if(customerId ) await navigate(PATH_CUSTOMER.site.root( customerId ))
+      if(customerId && response?.data?.CustomerSite?._id ) await navigate(PATH_CUSTOMER.sites.view( customerId, response?.data?.CustomerSite?._id ))
       await reset();
     } catch (err) {
-      enqueueSnackbar('Saving failed!', { variant: `error` });
+      enqueueSnackbar(err, { variant: `error` });
       console.error(err.message);
     }
   };
@@ -134,7 +132,7 @@ export default function SiteAddForm() {
     const updatedPhoneNumbers = [...phoneNumbers, { type: '', countryCode: country?.phone?.replace(/[^0-9]/g, '')} ]; 
     setValue( 'phoneNumbers', updatedPhoneNumbers )
   }
-  const toggleCancel = () =>{ if(customerId ) navigate(PATH_CUSTOMER.site.root(customerId ))};
+  const toggleCancel = () =>{ if(customerId ) navigate(PATH_CUSTOMER.sites.root(customerId ))};
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

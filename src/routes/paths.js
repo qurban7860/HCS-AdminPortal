@@ -57,23 +57,23 @@ export const PATH_DASHBOARD = {
 export const PATH_CUSTOMER = {
   root: ROOTS_CUSTOMER,
   permissionDenied: path(ROOTS_CUSTOMER, '/permission-denied'),
-  sites: path(ROOTS_CUSTOMER, '/sites'),
-  contacts: path(ROOTS_CUSTOMER, '/contacts'),
+  sitesReport: path(ROOTS_CUSTOMER, '/sitesReport'),
+  contactsReport: path(ROOTS_CUSTOMER, '/contactsReport'),
   new: path(ROOTS_CUSTOMER, '/new'),
-  view: (id) => path(ROOTS_CUSTOMER, `/${id}/view`),
-  edit: (id) => path(ROOTS_CUSTOMER, `/${id}/edit`),
-  site: {
-    root: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/site`),
-    new: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/site/new`),
-    view: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/site/${id}/view`),
-    edit: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/site/${id}/edit`),
+  view: (customerId) => path(ROOTS_CUSTOMER, `/${customerId}/view`),
+  edit: (customerId) => path(ROOTS_CUSTOMER, `/${customerId}/edit`),
+  sites: {
+    root: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/sites`),
+    new: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/sites/new`),
+    view: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/sites/${id}/view`),
+    edit: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/sites/${id}/edit`),
   },
-  contact: {
-    root: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/contact`),
-    new: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/contact/new`),
-    view: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/contact/${id}/view`),
-    edit: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/contact/${id}/edit`),
-    move: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/contact/${id}/move`),
+  contacts: {
+    root: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/contacts`),
+    new: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/contacts/new`),
+    view: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/contacts/${id}/view`),
+    edit: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/contacts/${id}/edit`),
+    move: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/contacts/${id}/move`),
   },
   notes: {
     root: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/notes`),
@@ -91,6 +91,8 @@ export const PATH_CUSTOMER = {
   },
   machines: {
     root: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/machines`),
+    move: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/machines/${id}/move`),
+
   },
 };
 

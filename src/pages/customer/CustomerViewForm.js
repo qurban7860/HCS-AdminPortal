@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // @mui
 import { Card, Grid } from '@mui/material';
 // routes
@@ -10,7 +10,6 @@ import { useSnackbar } from '../../components/snackbar';
 import useResponsive from '../../hooks/useResponsive';
 // slices
 import {
-  setCustomerEditFormVisibility,
   deleteCustomer,
   setCustomerVerification,
 } from '../../redux/slices/customer/customer';
@@ -20,7 +19,7 @@ import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../constants/default-constants';
-import { Snacks, FORMLABELS as formLABELS } from '../../constants/customer-constants';
+import { FORMLABELS as formLABELS } from '../../constants/customer-constants';
 
 // ----------------------------------------------------------------------
 
@@ -31,7 +30,7 @@ export default function CustomerViewForm() {
   const isMobile = useResponsive('down', 'sm');
   const { customer, isLoading } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
-  
+  const { customerId } = useParams();
   const defaultValues = useMemo(
     () => ({
       id: customer?._id || '',
@@ -59,29 +58,24 @@ export default function CustomerViewForm() {
     [customer]
   );
   
-  const handleEdit = async () => {
-    // if (!customerEditFormFlag) {
-      // dispatch(setCustomerEditFormVisibility(true));
-      navigate(PATH_CUSTOMER.edit(customer._id));
-    // }
-  };
+  const handleEdit = async () =>  customerId && navigate(PATH_CUSTOMER.edit(customerId));
 
   const onDelete = async () => {
     try {
-      await dispatch(deleteCustomer(customer._id));
+      await dispatch(deleteCustomer(customerId));
       navigate(PATH_CUSTOMER.root);
     } catch (err) {
-      enqueueSnackbar(Snacks.FAILED_DELETE, { variant: `error` });
+      enqueueSnackbar(err, { variant: `error` });
       console.log('Error:', err);
     }
   };
   const handleVerification = async () => {
     try {
-      await dispatch(setCustomerVerification(customer._id));
+      await dispatch(setCustomerVerification(customerId));
       enqueueSnackbar('Customer Verified!');
     } catch (error) {
       console.log(error);
-      enqueueSnackbar(Snacks.FAILED_VERIFY, { variant: 'error' });
+      enqueueSnackbar(error, { variant: 'error' });
     }
   };
 

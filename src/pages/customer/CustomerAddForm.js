@@ -10,7 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, Grid, Stack } from '@mui/material';
 // slice
-import { addCustomer, setCustomerTab } from '../../redux/slices/customer/customer';
+import { addCustomer } from '../../redux/slices/customer/customer';
 import { getActiveSPContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
 // routes
 import { PATH_CUSTOMER } from '../../routes/paths';
@@ -119,14 +119,12 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     try {
       const response = await dispatch(addCustomer(data));
       reset();
-      await dispatch(setCustomerTab('info'));
       enqueueSnackbar('Customer added successfully!');
       navigate(PATH_CUSTOMER.view(response.data.Customer._id));
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
     }
   };
-
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

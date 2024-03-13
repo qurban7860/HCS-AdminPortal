@@ -4,8 +4,6 @@ import { Stack } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 // components
 import { SearchBarCombo } from '../../../components/ListTableTools';
-// import { PATH_DOCUMENT } from '../../../routes/paths';
-import { setNoteFormVisibility } from '../../../redux/slices/customer/customerNote';
 // constants
 import { BUTTONS } from '../../../constants/default-constants';
 import { PATH_CUSTOMER } from '../../../routes/paths';
@@ -32,7 +30,7 @@ export default function NoteListTableToolbar({
   onFilterStatus,
 }) {
 
-  const { customerId, id } = useParams() 
+  const { customerId } = useParams() 
 
   const navigate = useNavigate();
 

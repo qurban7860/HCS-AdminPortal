@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 // components
-import { SearchBarCombo } from '../../../components/ListTableTools'
-import { BUTTONS } from '../../../constants/default-constants';
-import { PATH_MACHINE } from '../../../routes/paths';
-import { setNewMachineCustomer } from '../../../redux/slices/customer/customer';
-import { useDispatch, useSelector } from '../../../redux/store';
+import { SearchBarCombo } from '../../../../components/ListTableTools'
+import { BUTTONS } from '../../../../constants/default-constants';
+import { PATH_MACHINE } from '../../../../routes/paths';
+import { setNewMachineCustomer } from '../../../../redux/slices/customer/customer';
+import { useDispatch, useSelector } from '../../../../redux/store';
 
 // ----------------------------------------------------------------------
 

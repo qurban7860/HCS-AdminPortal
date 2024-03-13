@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
@@ -56,15 +56,13 @@ ContactAddForm.propTypes = {
 
 export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
 
-  const { formVisibility, activeContacts } = useSelector((state) => state.contact);
+  const { activeContacts } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
   const { departments } = useSelector((state) => state.department);
   const { userId, user } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
-  const { customerId, id } = useParams() 
+  const { customerId } = useParams() 
 
-  const [phone, setPhone] = useState('');
-  
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -157,22 +155,19 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
 
   const onSubmit = async (data) => {
     try {
-      if (phone && phone.length > 7) {
-        data.phone = phone;
-      }
-      await dispatch(addContact(data));
+      const respone = await dispatch(addContact(data));
       await dispatch(setIsExpanded(true));
       enqueueSnackbar('Contact added successfully');
       await reset();
       await dispatch(getContacts(customerId));
-      if(customerId ) await navigate(PATH_CUSTOMER.contact.root(customerId ))
+      if(customerId && respone?.data?.customerCategory?._id ) await navigate(PATH_CUSTOMER.contacts.view(customerId, respone?.data?.customerCategory?._id ))
     } catch (error) {
-      enqueueSnackbar('Failed : Contact adding', { variant: `error` });
+      enqueueSnackbar(error, { variant: `error` });
       console.error(error);
     }
   };
 
-  const toggleCancel = () =>  navigate(PATH_CUSTOMER.contact.root(customerId ));
+  const toggleCancel = () =>  navigate(PATH_CUSTOMER.contacts.root(customerId ));
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

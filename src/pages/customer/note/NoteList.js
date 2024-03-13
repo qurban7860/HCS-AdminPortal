@@ -21,14 +21,12 @@ import Scrollbar from '../../../components/scrollbar';
 import NoteListTableRow from './NoteListTableRow';
 import NoteListTableToolbar from './NoteListTableToolbar';
 import CustomerTabContainer from '../util/CustomerTabContainer'
-import {
-  getNote, 
+import { 
   getNotes,
   resetNotes,
   ChangeRowsPerPage,
   ChangePage,
-  setFilterBy,
-  setNoteViewFormVisibility } from '../../../redux/slices/customer/customerNote';
+  setFilterBy } from '../../../redux/slices/customer/customerNote';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import { PATH_CUSTOMER } from '../../../routes/paths';
@@ -46,7 +44,7 @@ export default function NoteList() {
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  const { customerId, id } = useParams() 
+  const { customerId } = useParams() 
   
   const navigate = useNavigate();
   const dispatch = useDispatch();

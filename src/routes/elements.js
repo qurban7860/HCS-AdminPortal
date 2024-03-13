@@ -50,7 +50,8 @@ export const NoteEditForm = Loadable(lazy(() => import('../pages/customer/note/N
 export const NoteViewForm = Loadable(lazy(() => import('../pages/customer/note/NoteViewForm')));
 
 // CUSTOMER MACHINESS
-export const CustomerMachines = Loadable(lazy(() => import('../pages/customer/machine/CustomerMachines')));
+export const CustomerMachines = Loadable(lazy(() => import('../pages/customer/machine/machine_list/CustomerMachines')));
+export const CustomerMachineMove = Loadable(lazy(() => import('../pages/customer/machine/machine_move/CustomerMachineMove')));
 
 // NOTE
 export const CustomerDocumentList             = Loadable(lazy(() => import('../pages/customer/documents/CustomerDocumentList')));

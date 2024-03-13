@@ -27,7 +27,6 @@ import { PATH_CUSTOMER } from '../../../routes/paths';
 export default function SiteEditForm() {
   const { enqueueSnackbar } = useSnackbar();
   const { site } = useSelector((state) => state.site);
-  const { customer } = useSelector((state) => state.customer);
   const { activeContacts } = useSelector((state) => state.contact);
   const { customerId, id } = useParams() 
   
@@ -134,14 +133,14 @@ export default function SiteEditForm() {
       enqueueSnackbar('Site saved Successfully!');
       await reset();
       await dispatch(getSites(customerId))
-      if(customerId && id ) await navigate(PATH_CUSTOMER.site.view(customerId, id))
+      if(customerId && id ) await navigate(PATH_CUSTOMER.sites.view(customerId, id))
     } catch (err) {
-      enqueueSnackbar('Site save failed!', { variant: 'error' });
+      enqueueSnackbar(err, { variant: 'error' });
       console.error(err.message);
     }
   };
   
-  const toggleCancel = () => {if(customerId && id ){ navigate(PATH_CUSTOMER.site.view(customerId, id))}}
+  const toggleCancel = () => {if(customerId && id ){ navigate(PATH_CUSTOMER.sites.view(customerId, id))}}
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { useEffect, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
@@ -8,15 +8,16 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box,Card, Grid, Stack } from '@mui/material';
 // slice
-import {moveMachine, setMachineMoveFormVisibility } from '../../../redux/slices/products/machine';
-import { getActiveCustomers } from '../../../redux/slices/customer/customer';
+import {getMachine, resetMachine, moveMachine } from '../../../../redux/slices/products/machine';
+import { getActiveCustomers, resetActiveCustomers } from '../../../../redux/slices/customer/customer';
 // components
-import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFAutocomplete } from '../../../components/hook-form';
-import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import ViewFormField from '../../../components/ViewForms/ViewFormField';
-import { getActiveSites, resetActiveSites } from '../../../redux/slices/customer/site';
-import FormLabel from '../../../components/DocumentForms/FormLabel';
+import { useSnackbar } from '../../../../components/snackbar';
+import FormProvider, { RHFAutocomplete } from '../../../../components/hook-form';
+import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
+import ViewFormField from '../../../../components/ViewForms/ViewFormField';
+import { getActiveSites, resetActiveSites } from '../../../../redux/slices/customer/site';
+import FormLabel from '../../../../components/DocumentForms/FormLabel';
+import { PATH_CUSTOMER } from '../../../../routes/paths';
 // ----------------------------------------------------------------------
 
 export default function MoveMachineForm() {
@@ -24,8 +25,22 @@ export default function MoveMachineForm() {
   const { activeSites } = useSelector((state) => state.site);
   const { activeCustomers } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
-  const { id } = useParams();
+  const { customerId, id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(getActiveCustomers())
+    if(id){
+      dispatch(getMachine(id))
+    }
+    return ()=> 
+    {
+      dispatch(resetMachine())
+      dispatch(resetActiveCustomers())
+      dispatch(resetActiveSites())
+    }
+  }, [ dispatch, id ]);
 
   const MoveMachineSchema = Yup.object().shape({
     customer: Yup.object().shape({name: Yup.string()}).nullable().required('Customer is required!'),
@@ -44,8 +59,7 @@ export default function MoveMachineForm() {
       machineModel: machine?.machineModel?.name || "",
       machineProfile: machineProfile || "",
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [ machine, machineProfile ]
   );
 
   const methods = useForm({
@@ -60,12 +74,6 @@ export default function MoveMachineForm() {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-  
-  useEffect(() => {
-    dispatch(resetActiveSites())
-    dispatch(getActiveCustomers())
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const { customer } = watch();
 
@@ -75,8 +83,6 @@ export default function MoveMachineForm() {
     if(customer !== null){
       dispatch(getActiveSites(customer?._id))
     }else{
-      // setValue('installationSite',null);
-      // setValue('billingSite',null);
       dispatch(resetActiveSites())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -90,16 +96,16 @@ export default function MoveMachineForm() {
       await dispatch(moveMachine(data));
       enqueueSnackbar('Machine moved successfully!');
       reset();
-      setMachineMoveFormVisibility(false);
+      if(customerId){
+        navigate(PATH_CUSTOMER.machines.root(customerId))
+      } 
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.error(error);
     }
   };
 
-  const toggleCancel = () => {
-    dispatch(setMachineMoveFormVisibility(false));
-  };
+  const toggleCancel = () => { if(customerId) navigate(PATH_CUSTOMER.machines.root(customerId))};
 
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

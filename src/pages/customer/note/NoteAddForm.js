@@ -7,7 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Container, Box,Card, Grid, Stack, Typography } from '@mui/material';
 // slice
-import { addNote, setNoteFormVisibility } from '../../../redux/slices/customer/customerNote';
+import { addNote } from '../../../redux/slices/customer/customerNote';
 import { getActiveSites, resetActiveSites } from '../../../redux/slices/customer/site';
 import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
 // components
@@ -25,7 +25,7 @@ export default function NoteAddForm() {
   const { activeSites } = useSelector((state) => state.site);
   const { activeContacts } = useSelector((state) => state.contact);
   const { enqueueSnackbar } = useSnackbar();
-  const { customerId, id } = useParams() 
+  const { customerId } = useParams() 
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -63,12 +63,12 @@ export default function NoteAddForm() {
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(addNote(customerId, data));
+      const response = await dispatch(addNote(customerId, data));
       enqueueSnackbar('Note created Successfully!');
-      if(customerId ) navigate(PATH_CUSTOMER.notes.root( customerId ))
+      if( customerId && response?.data?.CustomerNote?._id ) navigate(PATH_CUSTOMER.notes.view( customerId, response?.data?.CustomerNote?._id ))
       reset();
     } catch (error) {
-      enqueueSnackbar('Saving failed!', { variant: `error` });
+      enqueueSnackbar(error, { variant: `error` });
       console.error(error);
     }
   };

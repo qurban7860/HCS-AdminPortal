@@ -9,7 +9,7 @@ import { useSnackbar } from '../../../components/snackbar';
 import { fDateTime } from '../../../utils/formatTime';
 import { useAuthContext } from '../../../auth/useAuthContext';
 import ViewPhoneComponent from '../../../components/ViewForms/ViewPhoneComponent';
-import { getContact, deleteContact, setIsExpanded } from '../../../redux/slices/customer/contact';
+import { getContact, resetContact, deleteContact, setIsExpanded, setCardActiveIndex } from '../../../redux/slices/customer/contact';
 import { setMachineTab } from '../../../redux/slices/products/machine';
 import { getMachineServiceRecord, setMachineServiceRecordViewFormVisibility, setResetFlags } from '../../../redux/slices/products/machineServiceRecord';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
@@ -27,7 +27,6 @@ export default function ContactViewForm({
   setCurrentContactData,
 }) {
   const { contact, isLoading } = useSelector((state) => state.contact);
-  const { customer } = useSelector((state) => state.customer);
   const { isAllAccessAllowed } = useAuthContext()
   const { enqueueSnackbar } = useSnackbar();
   const { customerId, id } = useParams() 
@@ -36,20 +35,30 @@ export default function ContactViewForm({
   const dispatch = useDispatch();
 
   useEffect(()=>{
-    if(customerId && id) dispatch(getContact(customerId, id));
+    if(customerId && id){
+      dispatch(getContact(customerId, id));
+      dispatch(setIsExpanded(true));
+      dispatch(setCardActiveIndex(id));
+    } 
+    return () => 
+            { 
+              dispatch(resetContact());
+              dispatch(setIsExpanded(false));
+              dispatch(setCardActiveIndex(null));
+            }
   },[ dispatch, customerId, id ])
 
-  const handleEdit = () => navigate(PATH_CUSTOMER.contact.edit(customerId, id));
-  const handleMoveConatct = () => navigate(PATH_CUSTOMER.contact.move(customerId, id));
+  const handleEdit = () => navigate(PATH_CUSTOMER.contacts.edit(customerId, id));
+  const handleMoveConatct = () => navigate(PATH_CUSTOMER.contacts.move(customerId, id));
 
   const onDelete = async () => {
     try {
       await dispatch(deleteContact(customerId, id));
       dispatch(setIsExpanded(false));
       enqueueSnackbar('Contact deleted Successfully!');
-      navigate(PATH_CUSTOMER.contact.root(customerId))
+      navigate(PATH_CUSTOMER.contacts.root(customerId))
     } catch (err) {
-      enqueueSnackbar('Contact delete failed!', { variant: `error` });
+      enqueueSnackbar(err, { variant: `error` });
       console.log('Error:', err);
     }
   };

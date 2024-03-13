@@ -40,6 +40,7 @@ import {
 
   // Customer Machines
   CustomerMachines,
+  CustomerMachineMove,
   // Machine
   MachineSetting,
   MachineAdd,
@@ -321,12 +322,12 @@ export default function Router() {
       children: [
         { element: <CustomerList />, index: true  },
         { path: 'new', element: <CustomerAdd /> },
-        { path: ':id/edit', element: <CustomerEdit />},
-        { path: ':id/view', element: <CustomerView />},
-        { path: 'sites', element: <CustomerSiteList />},
-        { path: 'contacts', element: <CustomerContactList />},
+        { path: ':customerId/edit', element: <CustomerEdit />},
+        { path: ':customerId/view', element: <CustomerView />},
+        { path: 'sitesReport', element: <CustomerSiteList />},
+        { path: 'contactsReport', element: <CustomerContactList />},
 
-        { path: ':customerId/site',
+        { path: ':customerId/sites',
           children: [
             { element: <CustomerSiteDynamicList />, index: true  },
             { path: 'new', element: <CustomerSiteDynamicList siteAddForm /> },
@@ -334,7 +335,7 @@ export default function Router() {
             { path: ':id/view', element: <CustomerSiteDynamicList siteViewForm />}
           ],
         },
-        { path: ':customerId/contact',
+        { path: ':customerId/contacts',
           children: [
             { element: <CustomerContactDynamicList />, index: true  },
             { path: 'new', element: <CustomerContactDynamicList contactAddForm /> },
@@ -365,6 +366,7 @@ export default function Router() {
         { path: ':customerId/machines',
           children: [
             { element: <CustomerMachines />, index: true  },
+            { path: ':id/move',element: <CustomerMachineMove />, index: true  },
           ],
         },
         { path: 'permission-denied', element: <PermissionDeniedPage /> },
