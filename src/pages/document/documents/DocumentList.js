@@ -100,7 +100,7 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
     orderBy,
     onSort,
   } = useTable({
-    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
+    defaultOrderBy: machineDrawings ? 'docCategory' : 'createdAt', defaultOrder: machineDrawings ? 'asc' : 'desc',
   });
 
 const onChangeRowsPerPage = (event) => {

@@ -242,7 +242,6 @@ function DocumentAddForm({
           dispatch(getDrawings(machine?._id));
           dispatch(setDrawingAddFormVisibility(false));
         } else if( customerPage && !machinePage ){
-          // await dispatch(getDocuments(customerPage ? customer?._id : null, machinePage ? machine?._id : null, null));
           await navigate(PATH_CUSTOMER.documents.root( customer?._id ));
         } else if (  machineDrawings && !customerPage && !machinePage ) {
           navigate(PATH_DOCUMENT.document.machineDrawings.list);
@@ -257,6 +256,14 @@ function DocumentAddForm({
         if ( machineDrawings && !customerPage && !machinePage && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility) ){
           dispatch(setDrawingAndDocumentVisibility())
           navigate(PATH_DOCUMENT.document.machineDrawings.view(documentHistory._id));
+        } else if( customerPage && !machinePage ){
+          if(documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility  ){
+            await dispatch(getDocumentHistory(documentVal._id))
+            await navigate(PATH_CUSTOMER.documents.viewHistory( customer?._id, documentVal._id ));
+          } else if(documentNewVersionFormVisibility || documentAddFilesViewFormVisibility  ){
+            await dispatch(getDocument(documentVal._id))
+            await navigate(PATH_CUSTOMER.documents.view( customer?._id, documentVal._id ));
+          }
         } else if( machineDrawings && !customerPage && !machinePage && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility ){
           navigate(PATH_DOCUMENT.document.machineDrawings.list);
         } else if( (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility) && !customerPage && !machinePage && !machineDrawings ){
@@ -272,6 +279,7 @@ function DocumentAddForm({
           handleFormVisibility();
         }
       } else {
+
         // Update versions Part
         await dispatch(updateDocumentVersion(documentVal._id, documentVal?.documentVersions[0]?._id, data));
         enqueueSnackbar(Snacks.updatedDoc);
@@ -279,6 +287,14 @@ function DocumentAddForm({
         if (machineDrawings && !customerPage && !machinePage && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility)) {
           dispatch(setDrawingAndDocumentVisibility())
           navigate(PATH_DOCUMENT.document.machineDrawings.view(documentHistory._id));
+        } else if( customerPage && !machinePage ){
+          if(documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility ){
+            await dispatch(getDocumentHistory(documentVal._id))
+            await navigate(PATH_CUSTOMER.documents.viewHistory( customer?._id, documentVal._id ));
+          } else if(documentNewVersionFormVisibility || documentAddFilesViewFormVisibility ){
+            await dispatch(getDocument(documentVal._id))
+            await navigate(PATH_CUSTOMER.documents.view( customer?._id, documentVal._id ));
+          }
         } else if(!customerPage && !machinePage && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility ){
           dispatch(setDrawingAndDocumentVisibility())
         }else if(!customerPage && !machinePage && !machineDrawings && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility)){
@@ -308,7 +324,15 @@ function DocumentAddForm({
     if(drawingPage){
       dispatch(setDrawingAddFormVisibility(false));
     } else if( customerPage && !machinePage ){
-      navigate(PATH_CUSTOMER.documents.root( customer?._id ));
+      if(documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility ){
+        dispatch(getDocumentHistory(documentVal._id))
+        navigate(PATH_CUSTOMER.documents.viewHistory( customer?._id, documentVal._id ));
+      } else if(documentNewVersionFormVisibility || documentAddFilesViewFormVisibility ){
+        dispatch(getDocument(documentVal._id))
+        navigate(PATH_CUSTOMER.documents.view( customer?._id, documentVal._id ));
+      } else{
+        navigate(PATH_CUSTOMER.documents.root( customer?._id ));
+      }
     } else if (!drawingPage && !customerPage && !machinePage && !documentNewVersionFormVisibility && !documentAddFilesViewFormVisibility && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility) {
       navigate(PATH_DOCUMENT.document.machineDrawings.list);
     } else if((documentNewVersionFormVisibility || documentAddFilesViewFormVisibility)  && (customerPage || machinePage)){
