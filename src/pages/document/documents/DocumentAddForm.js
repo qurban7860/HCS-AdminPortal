@@ -242,6 +242,7 @@ function DocumentAddForm({
           dispatch(getDrawings(machine?._id));
           dispatch(setDrawingAddFormVisibility(false));
         } else if( customerPage && !machinePage ){
+          await dispatch(setViewVisiilityNoOthers())
           await navigate(PATH_CUSTOMER.documents.root( customer?._id ));
         } else if (  machineDrawings && !customerPage && !machinePage ) {
           navigate(PATH_DOCUMENT.document.machineDrawings.list);
@@ -257,6 +258,7 @@ function DocumentAddForm({
           dispatch(setDrawingAndDocumentVisibility())
           navigate(PATH_DOCUMENT.document.machineDrawings.view(documentHistory._id));
         } else if( customerPage && !machinePage ){
+          await dispatch(setViewVisiilityNoOthers())
           if(documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility  ){
             await dispatch(getDocumentHistory(documentVal._id))
             await navigate(PATH_CUSTOMER.documents.viewHistory( customer?._id, documentVal._id ));
@@ -288,6 +290,7 @@ function DocumentAddForm({
           dispatch(setDrawingAndDocumentVisibility())
           navigate(PATH_DOCUMENT.document.machineDrawings.view(documentHistory._id));
         } else if( customerPage && !machinePage ){
+          await dispatch(setViewVisiilityNoOthers())
           if(documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility ){
             await dispatch(getDocumentHistory(documentVal._id))
             await navigate(PATH_CUSTOMER.documents.viewHistory( customer?._id, documentVal._id ));
@@ -324,11 +327,13 @@ function DocumentAddForm({
     if(drawingPage){
       dispatch(setDrawingAddFormVisibility(false));
     } else if( customerPage && !machinePage ){
+        dispatch(setViewVisiilityNoOthers())
       if(documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility ){
         dispatch(getDocumentHistory(documentVal._id))
         navigate(PATH_CUSTOMER.documents.viewHistory( customer?._id, documentVal._id ));
       } else if(documentNewVersionFormVisibility || documentAddFilesViewFormVisibility ){
         dispatch(getDocument(documentVal._id))
+        dispatch(setViewHistoryVisiilityNoOthers(false))
         navigate(PATH_CUSTOMER.documents.view( customer?._id, documentVal._id ));
       } else{
         navigate(PATH_CUSTOMER.documents.root( customer?._id ));
