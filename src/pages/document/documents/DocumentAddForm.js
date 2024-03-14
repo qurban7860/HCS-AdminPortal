@@ -118,6 +118,7 @@ function DocumentAddForm({
   useEffect(() => {
     if( customerPage && !machinePage && !machineDrawings && !categoryBy ){
       setCategoryBy( {customer: true} )
+      console.log("newVersion : newVersion")
       if( customer?._id && selectedValue === 'newVersion' ) dispatch(getCustomerDocuments(customer?._id));
     } else if ( machinePage && !customerPage && !machineDrawings && !categoryBy ) { // machinePage 
       setCategoryBy( { machine: true } )
@@ -126,6 +127,10 @@ function DocumentAddForm({
       setCategoryBy( { drawing: true } )
       if( selectedValue === 'newVersion' ) dispatch(getMachineDrawingsDocuments());
     }
+    if( customerPage && customer?._id && selectedValue === 'newVersion' && Array.isArray(activeDocuments) && activeDocuments.length < 1 ){
+      dispatch(getCustomerDocuments(customer?._id));
+    } 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, categoryBy, customerPage, customer, machinePage, machine, machineDrawings, selectedValue]);
   
 
@@ -263,6 +268,9 @@ function DocumentAddForm({
             await dispatch(getDocumentHistory(documentVal._id))
             await navigate(PATH_CUSTOMER.documents.viewHistory( customer?._id, documentVal._id ));
           } else if(documentNewVersionFormVisibility || documentAddFilesViewFormVisibility  ){
+            await dispatch(getDocument(documentVal._id))
+            await navigate(PATH_CUSTOMER.documents.view( customer?._id, documentVal._id ));
+          } else {
             await dispatch(getDocument(documentVal._id))
             await navigate(PATH_CUSTOMER.documents.view( customer?._id, documentVal._id ));
           }
@@ -528,6 +536,7 @@ function DocumentAddForm({
                               setValue('documentCategory', newValue.docCategory);
                               setValue('customerAccess', newValue.customerAccess);
                               setValue('isActive', newValue.isActive);
+                              setValue('documentVal', newValue );
                               setReadOnlyVal(true);
                               setSelectedVersionValue('newVersion');
                             } else {
@@ -540,8 +549,6 @@ function DocumentAddForm({
                             }
                           }}
                           renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${ option.displayName || ''}`}</li> )}
-                          id="controllable-states-demo"
-                          ChipProps={{ size: 'small' }}
                         />
                       </Grid>
                     </Grid>
