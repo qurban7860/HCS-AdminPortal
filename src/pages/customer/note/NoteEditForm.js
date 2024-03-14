@@ -39,7 +39,7 @@ export default function NoteEditForm() {
     return () => {
       dispatch(resetActiveSites());
       dispatch(resetActiveContacts());
-      dispatch(resetNote());
+      // dispatch(resetNote());
     };
   },[ dispatch, customerId, id ])
 

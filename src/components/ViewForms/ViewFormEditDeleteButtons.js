@@ -18,6 +18,7 @@ import IconPopover from '../Icons/IconPopover';
 import IconTooltip from '../Icons/IconTooltip';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
 import ViewFormTransferHistoryMenuPopover from './ViewFormTransferHistoryMenuPopover';
+import ViewFormMachineSettingHistoryMenuPopover from './ViewFormMachineSettingHistoryMenuPopover';
 import ViewFormApprovalsPopover from './ViewFormApprovalsPopover';
 import { ICONS } from '../../constants/icons/default-icons';
 import { fDate, fDateTime, GetDifferenceInDays } from '../../utils/formatTime';
@@ -83,7 +84,7 @@ function ViewFormEditDeleteButtons({
   customerPage, 
   machinePage, 
   drawingPage,
-
+  history,
 }) {
   const { id } = useParams();
   const navigate = useNavigate()
@@ -254,6 +255,9 @@ function ViewFormEditDeleteButtons({
   const [ transferHistoryAnchorEl, setTransferHistoryAnchorEl ] = useState(null);
   const [ transferHistory, setTransferHistory ] = useState([]);
 
+  const [ machineSettingHistoryAnchorEl, setMachineSettingHistoryAnchorEl ] = useState(null);
+  const [ machineSettingHistory, setMachineSettingHistory ] = useState([]);
+
   const [approvedAnchorEl, setApprovedAnchorEl] = useState(null);
   const [approvedBy, setApprovedBy] = useState([]);
 
@@ -268,7 +272,7 @@ function ViewFormEditDeleteButtons({
   };
 
   const handleTransferHistoryPopoverOpen = (event) => {
-    if(transferredHistory.length > 0) {
+    if(transferredHistory?.length > 0) {
       setTransferHistoryAnchorEl(event.currentTarget);
       setTransferHistory(transferredHistory)
     }
@@ -277,6 +281,18 @@ function ViewFormEditDeleteButtons({
   const handleTransferHistoryPopoverClose = () => {
     setTransferHistoryAnchorEl(null);
     setTransferHistory([])
+  };
+
+  const handleMachineSettingHistoryPopoverOpen = (event) => {
+    if(history?.length > 0) {
+      setMachineSettingHistoryAnchorEl(event.currentTarget);
+      setMachineSettingHistory(transferredHistory)
+    }
+  };
+
+  const handleMachineSettingHistoryPopoverClose = () => {
+    setMachineSettingHistoryAnchorEl(null);
+    setMachineSettingHistory([])
   };
 
   const handleApprovedPopoverOpen = (event) => {
@@ -393,14 +409,25 @@ function ViewFormEditDeleteButtons({
           }
 
           {transferredHistory !== undefined &&
-          <Badge badgeContent={transferredHistory.length || '0' } color="info">
-            <IconTooltip
-              title='Ownership Detail'
-              color={ICONS.TRANSFERHISTORY.color}
-              icon={ICONS.TRANSFERHISTORY.icon}
-              onClick={handleTransferHistoryPopoverOpen}
-              />
-          </Badge>
+            <Badge badgeContent={transferredHistory?.length || '0' } color="info">
+              <IconTooltip
+                title='Ownership Detail'
+                color={ICONS.TRANSFERHISTORY.color}
+                icon={ICONS.TRANSFERHISTORY.icon}
+                onClick={handleTransferHistoryPopoverOpen}
+                />
+            </Badge>
+          }
+
+          {history !== undefined &&
+            <Badge badgeContent={history?.length || '0' } color="info">
+              <IconTooltip
+                title='Setting History'
+                color={ICONS.MACHINESETTINGHISTORY.color}
+                icon={ICONS.MACHINESETTINGHISTORY.icon}
+                onClick={handleMachineSettingHistoryPopoverOpen}
+                />
+            </Badge>
           }
 
           {approveConfiglength !== undefined &&
@@ -784,6 +811,13 @@ function ViewFormEditDeleteButtons({
         ListTitle="Ownership Detail"
       />
 
+      <ViewFormMachineSettingHistoryMenuPopover
+        open={machineSettingHistoryAnchorEl}
+        onClose={handleMachineSettingHistoryPopoverClose}
+        ListArr={history}
+        ListTitle="Setting History"
+      />
+
       <ViewFormApprovalsPopover
         open={approvedAnchorEl}
         onClose={handleApprovedPopoverClose}
@@ -850,4 +884,5 @@ ViewFormEditDeleteButtons.propTypes = {
   customerPage: PropTypes.bool, 
   machinePage: PropTypes.bool, 
   drawingPage: PropTypes.bool,
+  history: PropTypes.array,
 };
