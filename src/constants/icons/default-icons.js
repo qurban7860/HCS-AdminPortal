@@ -168,7 +168,13 @@ export const ICONS = {
     color: '#008000',
     heading: 'Transfer History',
   },
-  
+
+  MACHINESETTINGHISTORY: {
+    icon: 'ic:outline-manage-history',
+    color: '#008000',
+    heading: 'Machine Setting History',
+  },
+
   // Machine Support 
   SUPPORT_VALLID: {
     icon: 'bx:support',

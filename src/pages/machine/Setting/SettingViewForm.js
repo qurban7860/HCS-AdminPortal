@@ -68,6 +68,7 @@ export default function SettingViewForm() {
         handleEdit={handleEdit} onDelete={onDelete}
         disableEditButton={machine?.status?.slug==='transferred'}
         disableDeleteButton={machine?.status?.slug==='transferred'}
+        history={setting?.history || [] }
         />
       <Grid container>
         <ViewFormField isLoading={isLoading} sm={12} heading="Category Name" param={defaultValues.techParam.category.name} />
