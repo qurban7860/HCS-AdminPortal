@@ -485,6 +485,7 @@ export function moveCustomerContact(params) {
       /* eslint-disable */
       let data = {
         contact: params?.contact,
+        customer: params?.customer?._id,
       };
 
       await axios.post(`${CONFIG.SERVER_URL}crm/customers/${params?.customer?._id}/contacts/moveContact`,data);

@@ -245,6 +245,8 @@ export function addTechparam(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
+          alias: params.alias || [],
+          isIniRead: params.isIniRead,
           isActive: params.isActive,
           description: params.description,
           code: params.code
@@ -275,6 +277,8 @@ export function updateTechparam(params,id) {
       /* eslint-disable */
       let data = {
         name: params.name,
+        alias: params.alias || [],
+        isIniRead: params.isIniRead,
         isActive: params.isActive,
         description: params.description,
         code: params.code

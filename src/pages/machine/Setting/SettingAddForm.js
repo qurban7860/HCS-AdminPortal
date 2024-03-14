@@ -14,7 +14,7 @@ import {
 } from '../../../redux/slices/products/machineTechParam';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFAutocomplete, RHFTextField } from '../../../components/hook-form';
+import FormProvider, { RHFAutocomplete, RHFTextField, RHFSwitch } from '../../../components/hook-form';
 import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
 // constants
 import { Snacks } from '../../../constants/machine-constants';
@@ -164,7 +164,7 @@ export default function SettingAddForm() {
                     sx={{ mt: 3 }}
                   >
                     <RHFTextField name="techParamValue" label="Technical Parameter Value" />
-                    <ToggleButtons isMachine name="isActive" />
+                    <RHFSwitch  name="isActive" label="Active" />
                   </Box>
                 
               </Grid>
