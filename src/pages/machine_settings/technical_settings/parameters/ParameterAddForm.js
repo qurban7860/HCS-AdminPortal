@@ -20,12 +20,9 @@ import {
 import { addTechparam } from '../../../../redux/slices/products/machineTechParam';
 // routes
 import { PATH_MACHINE } from '../../../../routes/paths';
-// import { useSettingsContext } from '../../../components/settings';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFSwitch } from '../../../../components/hook-form';
-// auth
-// import { useAuthContext } from '../../../auth/useAuthContext';
+import FormProvider, { RHFTextField, RHFSwitch, RHFChipsInput } from '../../../../components/hook-form';
 // util
 import { Cover } from '../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
@@ -53,8 +50,10 @@ export default function ParameterAddForm() {
   const defaultValues = useMemo(
     () => ({
       name: '',
+      alias: [],
       description: '',
       isActive: true,
+      isIniRead: false,
       createdAt: '',
       code: '',
     }),
@@ -131,6 +130,7 @@ export default function ParameterAddForm() {
                     <RHFTextField name="name" label="Name*" />
                     <RHFTextField name="code" label="Code*" />
                   </Box>
+                  <RHFChipsInput name="alias" label="Alias" />
                   <Box
                     rowGap={2}
                     columnGap={2}
@@ -138,7 +138,10 @@ export default function ParameterAddForm() {
                     gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
                   >
                     <RHFTextField name="description" label="Description" minRows={7} multiline />
-                    <RHFSwitch name="isActive" label="Active"/>
+                    <Grid display="flex" >
+                      <RHFSwitch  name="isActive" label="Active" />
+                      <RHFSwitch  name="isIniRead" label="Read INI" />
+                    </Grid>
                   </Box>
                 </Stack>
                 <AddFormButtons machineSettingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

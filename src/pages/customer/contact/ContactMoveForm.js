@@ -15,6 +15,7 @@ import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFAutocomplete } from '../../../components/hook-form';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
+import ViewPhoneComponent from '../../../components/ViewForms/ViewPhoneComponent';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { PATH_CUSTOMER } from '../../../routes/paths';
 
@@ -36,9 +37,9 @@ export default function ContactMoveForm( ) {
   const defaultValues = useMemo(
     () => ({
       customer: null,
-      contact: null,
+      contact: id ||  null,
     }),
-    []
+    [ id ]
   );
 
   const methods = useForm({
@@ -72,7 +73,7 @@ export default function ContactMoveForm( ) {
     }
   };
 
-  const toggleCancel = () => navigate(PATH_CUSTOMER.contacts.root(customerId));
+  const toggleCancel = () => navigate(PATH_CUSTOMER.contacts.view(customerId, id));
 
   return (
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -83,7 +84,7 @@ export default function ContactMoveForm( ) {
                   <ViewFormField sm={6} heading="Name" param={`${contact?.firstName} ${contact?.lastName}`} />
                   <ViewFormField sm={6} heading="Title" param={contact?.title} />
                   <ViewFormField sm={6} heading="Email" param={contact?.email} />
-                  <ViewFormField sm={6} heading="Phone" param={contact?.phone} />
+                  <ViewPhoneComponent sm={6} heading="Phone" value={contact?.phoneNumbers} />
                 </Grid>
                 <Stack spacing={2}>
                   <FormLabel content="Move Contact" />

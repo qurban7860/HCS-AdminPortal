@@ -3,10 +3,8 @@ import { useEffect,  useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
-
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 // @mui
 import {
   TextField,
@@ -16,22 +14,16 @@ import {
   Grid,
   Stack
 } from '@mui/material';
-// global
-
 // slice
 import { updateTechparam } from '../../../../redux/slices/products/machineTechParam';
-
-// import { useSettingsContext } from '../../../components/settings';
-// import { CONFIG } from '../../../config-global';
 // routes
 import { PATH_MACHINE } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
-// import Iconify from '../../../components/iconify/Iconify';
-// import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import FormProvider, {
   RHFTextField,
   RHFSwitch,
+  RHFChipsInput,
 } from '../../../../components/hook-form';
 import { Cover } from '../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
@@ -63,9 +55,11 @@ export default function ParameterEditForm() {
   const defaultValues = useMemo(
     () => ({
       name: techparam?.name || '',
+      alias: techparam?.alias || [],
       code: techparam?.code || '',
       description: techparam?.description || '',
       isActive: techparam.isActive,
+      isIniRead: techparam?.isIniRead,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [techparam]
@@ -81,12 +75,6 @@ export default function ParameterEditForm() {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
-  // const values = watch();
-
-  // useLayoutEffect(() => {
-  //   dispatch(getTechparam(id));
-  // }, [dispatch, id]);
 
   useEffect(() => {
     if (techparam) {
@@ -117,7 +105,6 @@ export default function ParameterEditForm() {
   };
 
   return (
-    // <Container maxWidth={false }>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <StyledCardContainer>
         <Cover name="Edit Parameter" icon="ic:round-flare" />
@@ -149,6 +136,7 @@ export default function ParameterEditForm() {
                 <RHFTextField name="name" label="Name*" />
                 <RHFTextField name="code" label="Code*" />
               </Box>
+              <RHFChipsInput name="alias" label="Alias" />
               <Box
                 rowGap={2}
                 columnGap={2}
@@ -156,7 +144,10 @@ export default function ParameterEditForm() {
                 gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
               >
                 <RHFTextField name="description" label="Description" minRows={7} multiline />
-                <RHFSwitch name="isActive" label="Active"/>
+                <Grid display="flex" >
+                  <RHFSwitch  name="isActive" label="Active" />
+                  <RHFSwitch  name="isIniRead" label="Read INI" />
+                </Grid>
               </Box>
             </Stack>
             <AddFormButtons machineSettingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
