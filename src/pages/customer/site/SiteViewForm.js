@@ -8,6 +8,7 @@ import { Grid } from '@mui/material';
 import {
   deleteSite,
   getSite,
+  getSites,
   resetSite,
   setIsExpanded,
   setCardActiveIndex,
@@ -52,6 +53,7 @@ export default function SiteViewForm({ handleMap }) {
       await dispatch(deleteSite(customerId, id));
       enqueueSnackbar('Site deleted Successfully!');
       await dispatch(setIsExpanded(false));
+      await dispatch(getSites( customerId ));
       if(customerId ) await navigate(PATH_CUSTOMER.sites.root( customerId ))
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });

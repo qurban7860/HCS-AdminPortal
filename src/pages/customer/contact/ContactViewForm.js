@@ -9,7 +9,7 @@ import { useSnackbar } from '../../../components/snackbar';
 import { fDateTime } from '../../../utils/formatTime';
 import { useAuthContext } from '../../../auth/useAuthContext';
 import ViewPhoneComponent from '../../../components/ViewForms/ViewPhoneComponent';
-import { getContact, resetContact, deleteContact, setIsExpanded, setCardActiveIndex } from '../../../redux/slices/customer/contact';
+import { getContact, getContacts, resetContact, deleteContact, setIsExpanded, setCardActiveIndex } from '../../../redux/slices/customer/contact';
 import { setMachineTab } from '../../../redux/slices/products/machine';
 import { getMachineServiceRecord, setMachineServiceRecordViewFormVisibility, setResetFlags } from '../../../redux/slices/products/machineServiceRecord';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
@@ -56,6 +56,7 @@ export default function ContactViewForm({
       await dispatch(deleteContact(customerId, id));
       dispatch(setIsExpanded(false));
       enqueueSnackbar('Contact deleted Successfully!');
+      await dispatch(getContacts( customerId ))
       navigate(PATH_CUSTOMER.contacts.root(customerId))
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });
