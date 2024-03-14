@@ -171,6 +171,10 @@ const handleUpdateVersion = async () => {
 
 const handleNewFile = async () => {
   if(customerPage || machinePage){
+    if( customerPage && !machinePage ){
+      dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
+      navigate(PATH_CUSTOMER.documents.new( customer?._id ));
+    }
     dispatch(setDocumentHistoryViewFormVisibility(false));
     dispatch(setDocumentHistoryAddFilesViewFormVisibility(true));
     dispatch(setDocumentHistoryNewVersionFormVisibility(false));
@@ -376,6 +380,7 @@ const handleNewFile = async () => {
 
   const handleBackLink = ()=>{
     if(customerPage && !machinePage ) {
+      dispatch(getDocument(documentHistory?._id));
       navigate(PATH_CUSTOMER.documents.view( customer?._id, documentHistory?._id ));
     } else if( machinePage || drawingPage ){
       dispatch(setDrawingViewFormVisibility(false))

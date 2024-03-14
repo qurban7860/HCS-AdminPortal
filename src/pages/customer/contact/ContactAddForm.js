@@ -158,9 +158,9 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
       const respone = await dispatch(addContact(data));
       await dispatch(setIsExpanded(true));
       enqueueSnackbar('Contact added successfully');
-      await reset();
       await dispatch(getContacts(customerId));
       if(customerId && respone?.data?.customerCategory?._id ) await navigate(PATH_CUSTOMER.contacts.view(customerId, respone?.data?.customerCategory?._id ))
+      await reset();
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.error(error);

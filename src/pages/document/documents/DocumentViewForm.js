@@ -143,6 +143,10 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
 
   const handleNewFile = async () => {
     if(customerPage || machinePage){
+      if( customerPage && !machinePage ){
+        dispatch(setDocumentAddFilesViewFormVisibility(true));
+        navigate(PATH_CUSTOMER.documents.new( customer?._id ));
+      }
       dispatch(setDocumentHistoryNewVersionFormVisibility(false));
       dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
       dispatch(setDocumentNewVersionFormVisibility(false));

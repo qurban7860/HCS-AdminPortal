@@ -77,7 +77,7 @@ export default function CustomerEditForm() {
   const { name, tradingName } = watch();
   
   useEffect(() => {
-    if( customer?.name !== name && !tradingName.includes(customer?.name) ){
+    if( customer?.name?.trim() !== name?.trim() && !tradingName.includes(customer?.name?.trim()) ){
       setValue('tradingName', [ ...tradingName, customer?.name?.trim() ] )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
