@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
@@ -34,6 +34,12 @@ export default function CustomerEditForm() {
   const { enqueueSnackbar } = useSnackbar();
   const { customerId } = useParams();
 
+  useEffect(() => {
+    dispatch(getActiveContacts(customerId));
+    dispatch(getActiveSites(customerId));
+    dispatch(getActiveSPContacts());
+  }, [dispatch, customerId ]);
+
   const defaultValues = useMemo(
     () => ({
       id: customer?._id || '',
@@ -63,18 +69,21 @@ export default function CustomerEditForm() {
   const {
     reset,
     handleSubmit,
+    watch,
+    setValue,
     formState: { isSubmitting },
   } = methods;
 
-  useLayoutEffect(() => {
-    dispatch(getActiveContacts(customerId));
-    dispatch(getActiveSites(customerId));
-    dispatch(getActiveSPContacts());
-  }, [dispatch, customerId ]);
+  const { name, tradingName } = watch();
+  
+  useEffect(() => {
+    if( customer?.name !== name && !tradingName.includes(customer?.name) ){
+      setValue('tradingName', [ ...tradingName, customer?.name?.trim() ] )
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ name ]);
 
-  const toggleCancel = () => {
-    navigate(PATH_CUSTOMER.view(customerId));
-  };
+  const toggleCancel = () => navigate(PATH_CUSTOMER.view(customerId));
 
   const onSubmit = async (data) => {
     try {
@@ -87,7 +96,6 @@ export default function CustomerEditForm() {
       enqueueSnackbar(err, { variant: `error` });
     }
   };
-
 
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -105,7 +113,6 @@ export default function CustomerEditForm() {
                   <RHFTextField name="name" label={FORMLABELS.CUSTOMER.NAME.label} />
                   <RHFTextField name="code" label={FORMLABELS.CUSTOMER.CODE.label} />
                 </Box>
-
                 <Box rowGap={2} columnGap={2} display="grid"
                   gridTemplateColumns={{
                     xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)',

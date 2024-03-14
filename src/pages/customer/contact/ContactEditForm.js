@@ -139,7 +139,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   
   const onSubmit = async (data) => {
     try {
-      await dispatch(updateContact(customerId, data));
+      await dispatch(updateContact(customerId, id, data));
       await reset();
       await dispatch(getContacts(customerId));
       await navigate(PATH_CUSTOMER.contacts.view( customerId, id ))
