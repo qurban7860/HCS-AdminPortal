@@ -354,13 +354,13 @@ const onChangePage = (event, newPage) => {
           setTypeVal={setTypeVal}
           handleGalleryView={!isNotFound && (customerPage || machinePage) ? handleGalleryView:undefined}
         />
-        {!isNotFound && <TablePaginationCustom
+        <TablePaginationCustom
           count={ documentRowsTotal }
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
-        />}
+        />
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
             <Table size="small" sx={{ minWidth: 360 }}>
