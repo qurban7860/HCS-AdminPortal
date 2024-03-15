@@ -244,7 +244,7 @@ export function addContact(params) {
       dispatch(getContact(response?.data?.customerCategory?.customer, response?.data?.customerCategory?._id));
       dispatch(slice.actions.setContactFormVisibility(false));
       dispatch(slice.actions.setResponseMessage('Site saved successfully'));
-
+      return response; 
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -255,7 +255,7 @@ export function addContact(params) {
 
 // ----------------------------------------------------------------------
 
-export function updateContact(customerId,params) {
+export function updateContact(customerId, contactId, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     dispatch(slice.actions.setContactEditFormVisibility(false));
@@ -298,7 +298,7 @@ export function updateContact(customerId,params) {
         data.address.country = params?.country?.label;        
       }
 
-      await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/contacts/${params.id}`,
+      await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/contacts/${contactId}`,
         data
       );
       dispatch(slice.actions.setResponseMessage('Contact updated successfully'));
@@ -485,6 +485,7 @@ export function moveCustomerContact(params) {
       /* eslint-disable */
       let data = {
         contact: params?.contact,
+        customer: params?.customer?._id,
       };
 
       await axios.post(`${CONFIG.SERVER_URL}crm/customers/${params?.customer?._id}/contacts/moveContact`,data);

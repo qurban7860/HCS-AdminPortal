@@ -411,7 +411,8 @@ export function getCustomerMachines(customerId) {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, 
       {
         params: {
-          customer: customerId
+          customer: customerId,
+          isArchived: false,
         }
       });
       dispatch(slice.actions.getCustomerMachinesSuccess(response.data));
@@ -576,6 +577,7 @@ export function addMachine(params) {
         };
         const response = await axios.post(`${CONFIG.SERVER_URL}products/machines`, data);
         dispatch(slice.actions.getMachineSuccess(response.data.Machine));
+        return response
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
@@ -674,9 +676,7 @@ export function transferMachine( machineId, params ) {
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/transferMachine`,
         data
       );
-      dispatch(setTransferDialogBoxVisibility(false));
-      dispatch(getMachine(response.data.Machine.parentMachineID));
-      return response; // eslint-disable-line
+      return response; 
 
     } catch (error) {
       dispatch(slice.actions.stopLoading());

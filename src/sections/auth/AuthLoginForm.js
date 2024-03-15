@@ -1,54 +1,44 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import * as Yup from 'yup';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Link, Stack, Alert, IconButton, InputAdornment, Checkbox, FormControlLabel } from '@mui/material';
+import { Link, Stack, Alert, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-
 // routes
 import { PATH_AUTH } from '../../routes/paths';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
-
 // components
 import Iconify from '../../components/iconify';
-import FormProvider, { RHFTextField} from '../../components/hook-form';
-
+import FormProvider, { RHFTextField, RHFCheckbox, RHFPasswordField } from '../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
 export default function AuthLoginForm() {
+
   const navigate = useNavigate();
   const { login } = useAuthContext();
+  const inputRef = useRef(null);
   const regEx = /^[4][0-9][0-9]$/
-  const [showPassword, setShowPassword] = useState(false);
-  const [uemail, setEmail] = useState("");
-  const [upassword, setPassword] = useState("");
-  const [uremember, setRemember] = useState(false);
-  
-  
-  useEffect(() => {
-    const storedEmail =       localStorage.getItem("UserEmail");
-    const storedPassword =    localStorage.getItem("UserPassword");
-    const storedRemember =    localStorage.getItem("remember");
-    if (storedEmail && storedPassword && storedRemember) {
-      setEmail(storedEmail);
-      setPassword(storedPassword);
-      setRemember(true);
-    }
-  }, []);
 
   const LoginSchema = Yup.object().shape({
-    // email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    // password: Yup.string().required('Password is required'),
+    email: Yup.string()
+    .transform((value, originalValue) => originalValue ? originalValue.toLowerCase() : value)
+    .email()
+    .label('Login/Email Address')
+    .trim()
+    .required('Login/Email address is Required!')
+    .max(200),
+    password: Yup.string().label("Password").required('Password is Required!'),
   });
 
   const defaultValues = {
-    email: uemail,
-    password: upassword,
+    email: '',
+    password: '',
+    isRemember: false,
   };
 
   const methods = useForm({
@@ -59,29 +49,38 @@ export default function AuthLoginForm() {
   const {
     reset,
     setError,
+    setValue,
+    watch,
     handleSubmit,
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = methods;
 
+  const { isRemember } = watch()
+
+  useEffect(() => {
+    const storedEmail =       localStorage.getItem("HowickUserEmail");
+    const storedPassword =    localStorage.getItem("HowickUserPassword");
+    const storedRemember =    localStorage.getItem("isRemember");
+    if (storedEmail && storedPassword && storedRemember) {
+      setValue('email',storedEmail);
+      setValue('password',storedPassword);
+      setValue('isRemember',true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  
   const onSubmit = async (data) => {
-    if(uemail){
-      data.email = uemail;
-    }
-    if(upassword){
-      data.password = upassword;
-    }
     try {
-      if (uremember) {
-        localStorage.setItem("UserEmail", data.email);
-        localStorage.setItem("UserPassword", data.password);
-        localStorage.setItem("remember", uremember);
+      if (isRemember) {
+        localStorage.setItem("HowickUserEmail", data.email);
+        localStorage.setItem("HowickUserPassword", data.password);
+        localStorage.setItem("isRemember", isRemember);
       } else {
-        localStorage.removeItem("UserEmail");
-        localStorage.removeItem("UserPassword");
-        localStorage.removeItem("remember");
+        localStorage.removeItem("HowickUserEmail");
+        localStorage.removeItem("HowickUserPassword");
+        localStorage.removeItem("isRemember");
       }
       await login(data.email, data.password);
-
       if(localStorage.getItem("MFA")) {
         navigate(PATH_AUTH.authenticate);
         localStorage.removeItem("MFA");
@@ -108,41 +107,24 @@ export default function AuthLoginForm() {
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3} sx={{ mt: 1 }}>
         {!!errors.afterSubmit && <Alert sx={{width:'380px'}} severity="error">{errors.afterSubmit.message}</Alert>}
-        <RHFTextField type="email" name="email" value={uemail}  onChange={(e) => setEmail(e.target.value)} label="Login/Email address"  autoComplete="username" required/>
-        <RHFTextField
+        <RHFTextField 
+          type="email" 
+          name="email"
+          label="Login/Email address*" 
+          autoComplete="username" 
+          inputRef={inputRef}
+          inputProps={{ style: { textTransform: 'lowercase' } }}
+        />
+        <RHFPasswordField
           name="password"
           id="password"
-          value={upassword}
-          onChange={(e) => setPassword(e.target.value)}
-          label="Password"
-          type={showPassword ? 'text' : 'password'}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                  <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
+          label="Password*"
           autoComplete="current-password"
-          required
         />
       </Stack>
 
-      <FormControlLabel
-        control={
-            <Checkbox
-                name="remember"
-                checked={uremember}
-                onChange={() => setRemember(!uremember)}
-                variant="soft"
-            />
-        }
-        label="Remember Me" 
-        />
+      <RHFCheckbox name="isRemember" label="Remember Me"  variant="soft"/>
 
-      {/* <RHFCheckbox name="remember"  label="Remember Me" variant="soft" value={uremember} Checked/> */}
       <LoadingButton
         fullWidth
         color="inherit"

@@ -12,7 +12,7 @@ import axios from 'axios';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_CUSTOMER, PATH_DOCUMENT } from '../../../routes/paths';
 // components
 import {
   useTable,
@@ -74,7 +74,6 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
   const navigate = useNavigate();
   const axiosToken = () => axios.CancelToken.source();
   const cancelTokenSource = axiosToken();
-
   const [filterName, setFilterName] = useState('');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(100);
@@ -100,7 +99,7 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
     orderBy,
     onSort,
   } = useTable({
-    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
+    defaultOrderBy: machineDrawings ? 'doNotOrder' : 'createdAt', defaultOrder: 'desc',
   });
 
 const onChangeRowsPerPage = (event) => {
@@ -286,7 +285,11 @@ const onChangePage = (event, newPage) => {
       dispatch(resetDocument())
     if (customerPage || machinePage) {
       dispatch(getDocument(id));
-      dispatch(setDocumentViewFormVisibility(true));
+      if( customerPage ){
+        navigate(PATH_CUSTOMER.documents.view( customer?._id, id));
+      }else{
+        dispatch(setDocumentViewFormVisibility(true));
+      }
     } else if(machineDrawings){
       dispatch(resetDocumentHistory())
       navigate(PATH_DOCUMENT.document.machineDrawings.view(id));
@@ -322,6 +325,9 @@ const onChangePage = (event, newPage) => {
 
   const handleGalleryView = () => {
     dispatch(setDocumentGalleryVisibility(true));
+    if( customerPage && !machinePage){
+      navigate(PATH_CUSTOMER.documents.viewGallery(customer?._id))
+    }
   };
 
   return (
@@ -348,13 +354,13 @@ const onChangePage = (event, newPage) => {
           setTypeVal={setTypeVal}
           handleGalleryView={!isNotFound && (customerPage || machinePage) ? handleGalleryView:undefined}
         />
-        {!isNotFound && <TablePaginationCustom
+        <TablePaginationCustom
           count={ documentRowsTotal }
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
-        />}
+        />
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
             <Table size="small" sx={{ minWidth: 360 }}>

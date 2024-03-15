@@ -66,8 +66,8 @@ function NavigationConfig() {
     {
       subheader: 'general',
       items: [
-        { title: 'Dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
-        { title: 'Customers', path: PATH_CUSTOMER.list, icon: ICONS.users },
+        { title: 'Dashboard', path: PATH_DASHBOARD.root, icon: ICONS.dashboard },
+        { title: 'Customers', path: PATH_CUSTOMER.root, icon: ICONS.users },
         { title: 'Machines', path: PATH_MACHINE.machines.list, icon: ICONS.machines },
       ],
     },
@@ -87,11 +87,11 @@ function NavigationConfig() {
     }
 
     if (isSettingAccessAllowed && navConfig.some((config) => config.title !== 'Settings')) {
-      updatedConfig[0].items.splice(5, 0, { title: 'Settings', path: PATH_SETTING.app, icon: ICONS.setting });
+      updatedConfig[0].items.splice(5, 0, { title: 'Settings', path: PATH_SETTING.root, icon: ICONS.setting });
     }
 
     if (isSecurityUserAccessAllowed && navConfig.some((config) => config.title !== 'Security')) {
-      updatedConfig[0].items.splice(6, 0, { title: 'Security', path: PATH_SECURITY.users.list, icon: ICONS.security });
+      updatedConfig[0].items.splice(6, 0, { title: 'Security', path: PATH_SECURITY.root, icon: ICONS.security });
     }
 
     if (isEmailAccessAllowed && navConfig.some((config) => config.title !== 'Email')) {

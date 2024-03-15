@@ -13,8 +13,7 @@ import { deleteMachineServiceRecord,
   getMachineServiceHistoryRecords, 
   setSendEmailDialog,
   setPDFViewerDialog} from '../../../redux/slices/products/machineServiceRecord';
-import { setCardActiveIndex, setIsExpanded, getContact } from '../../../redux/slices/customer/contact';
-import { setCustomerTab } from '../../../redux/slices/customer/customer';
+import { setCardActiveIndex, setIsExpanded } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { FORMLABELS } from '../../../constants/default-constants';
@@ -127,19 +126,15 @@ function MachineServiceParamViewForm() {
   const navigate = useNavigate();
 
   const handleContactView = async (contactId) => {
-    await navigate(PATH_CUSTOMER.view(machine?.customer?._id))
-    await dispatch(setCustomerTab('contacts'));
     await dispatch(setCardActiveIndex(contactId));
     await dispatch(setIsExpanded(true));
-    await dispatch(getContact(machine?.customer?._id, contactId));
+    await navigate(PATH_CUSTOMER.contacts.view(machine?.customer?._id,contactId))
   };
 
   const handleContactViewInNewPage = async (contactId) => {
-    await window.open(PATH_CUSTOMER.view(machine?.customer?._id), '_blank');
-    await dispatch(setCustomerTab('contacts'));
     await dispatch(setCardActiveIndex(contactId));
     await dispatch(setIsExpanded(true));
-    await dispatch(getContact(machine?.customer?._id, contactId));
+    await window.open(PATH_CUSTOMER.contacts.view(machine?.customer?._id, contactId), '_blank');
   };
 
   const operators = defaultValues?.operators?.map((operator, index) => (  

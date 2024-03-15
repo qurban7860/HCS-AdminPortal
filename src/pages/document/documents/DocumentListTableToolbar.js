@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useDispatch } from '../../../redux/store';
 // components
-import { PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_DOCUMENT, PATH_CUSTOMER } from '../../../routes/paths';
 import { 
   setDocumentFormVisibility, 
   setDocumentHistoryNewVersionFormVisibility, 
@@ -53,11 +53,15 @@ export default function DocumentListTableToolbar({
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { customer } = useSelector((state) => state.customer);
+  const { machine } = useSelector((state) => state.machine);
 
   const toggleAdd = async () => {
       await  dispatch(setDocumentHistoryNewVersionFormVisibility(false));
       await  dispatch(setDocumentNewVersionFormVisibility(false));
-    if(customerPage || machinePage){
+    if(customerPage && !machinePage){
+      await navigate(PATH_CUSTOMER.documents.new(customer?._id))
+    } else if(!customerPage && machinePage){
       await dispatch(setDocumentFormVisibility(true));
     }else if(machineDrawings){
       navigate(PATH_DOCUMENT.document.machineDrawings.new)
@@ -75,7 +79,6 @@ export default function DocumentListTableToolbar({
     addButton = undefined;
   }
 
-  const { machine } = useSelector((state) => state.machine);
   
   return (
     <Stack

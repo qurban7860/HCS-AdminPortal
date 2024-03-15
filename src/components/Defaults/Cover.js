@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router';
 import { Button, Grid } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
 import { StyledRoot, StyledInfo } from '../../theme/styles/default-styles';
 // utils
 import { PATH_CUSTOMER, PATH_SETTING } from '../../routes/paths';
@@ -11,8 +10,6 @@ import CoverTitles from './CoverTitles';
 import useResponsive from '../../hooks/useResponsive';
 import CoverAvatar from './CoverAvatar';
 import Iconify from '../iconify';
-import { BUTTONS } from '../../constants/default-constants';
-import { useAuthContext } from '../../auth/useAuthContext';
 
 // ----------------------------------------------------------------------
 
@@ -39,15 +36,15 @@ export function Cover({
   const navigate = useNavigate();
 
   const handleSettingsNavigate = () => {
-    navigate(PATH_SETTING.app);
+    navigate(PATH_SETTING.root);
   };
 
   const linkCustomerSites = () => {
-    navigate(PATH_CUSTOMER.sites)
+    navigate(PATH_CUSTOMER.sitesReport)
   }
 
   const linkCustomerContacts = () => {
-    navigate(PATH_CUSTOMER.contacts)
+    navigate(PATH_CUSTOMER.contactsReport)
   }
 
   const handleBackLink = () => {
@@ -55,7 +52,6 @@ export function Cover({
   }
   
   const isMobile = useResponsive('down', 'sm');
-  const { isAllAccessAllowed } = useAuthContext()
 
   return (
     <StyledRoot style={{ p: { xs: 0, md: 0 } }}>

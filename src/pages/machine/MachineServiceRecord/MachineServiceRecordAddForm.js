@@ -148,6 +148,9 @@ function MachineServiceRecordAddForm() {
     if(newValue?.textBeforeCheckItems)
       setValue('textBeforeCheckItems',newValue.textBeforeCheckItems)
     
+    if(newValue?.textAfterCheckItems)
+      setValue('textAfterCheckItems',newValue.textAfterCheckItems)
+    
     setValue('serviceRecordConfiguration',newValue)
     trigger('serviceRecordConfiguration');
     }else{

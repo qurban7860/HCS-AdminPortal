@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import {  useEffect, useMemo, useState, memo} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
+import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -12,7 +12,6 @@ import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField } from '../../../components/hook-form';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
-
 // slice
 import {
   setDocumentEditFormVisibility,
@@ -21,9 +20,8 @@ import {
   getDocumentHistory,
 } from '../../../redux/slices/document/document';
 import { setDrawingEditFormVisibility, setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
-
-
 import { Snacks } from '../../../constants/document-constants';
+import { PATH_CUSTOMER, PATH_DOCUMENT } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 DocumentEditForm.propTypes = {
@@ -43,7 +41,7 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
   const [documentCategoryVal, setDocumentCategoryVal] = useState('');
   const [customerAccessVal, setCustomerAccessVal] = useState(false);
   const [isActive, setIsActive] = useState(false);
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -98,7 +96,10 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
           machinePage ? machine?._id : null
         )
       );
-      if(drawingPage){
+      if( customerPage && !machinePage ){
+        await dispatch(getDocument(document?._id));
+        navigate(PATH_CUSTOMER.documents.view( customer?._id, document?._id ));
+      } else if(drawingPage){
         await dispatch(getDocumentHistory(document?._id));
         dispatch(setDrawingViewFormVisibility(true));
         dispatch(setDrawingEditFormVisibility(false));
@@ -118,7 +119,9 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
   };
 
   const toggleCancel = () => {
-    if(drawingPage){
+    if( customerPage && !machinePage ){
+      navigate(PATH_CUSTOMER.documents.view( customer?._id, document?._id ));
+    } else if(drawingPage){
       dispatch(setDrawingViewFormVisibility(true));
       dispatch(setDrawingEditFormVisibility(false));
     }else{

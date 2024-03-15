@@ -10,7 +10,7 @@ import { pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import { Box, Card, Grid, Stack, Dialog } from '@mui/material';
 // PATH
-import { PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_CUSTOMER, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
 import {
   resetActiveDocuments,
@@ -18,6 +18,7 @@ import {
   getDocumentHistory,
   getCustomerDocuments,
   getMachineDocuments,
+  getDocuments,
   getMachineDrawingsDocuments,
   addDocument,
   setViewVisiilityNoOthers,
@@ -117,6 +118,7 @@ function DocumentAddForm({
   useEffect(() => {
     if( customerPage && !machinePage && !machineDrawings && !categoryBy ){
       setCategoryBy( {customer: true} )
+      console.log("newVersion : newVersion")
       if( customer?._id && selectedValue === 'newVersion' ) dispatch(getCustomerDocuments(customer?._id));
     } else if ( machinePage && !customerPage && !machineDrawings && !categoryBy ) { // machinePage 
       setCategoryBy( { machine: true } )
@@ -125,11 +127,15 @@ function DocumentAddForm({
       setCategoryBy( { drawing: true } )
       if( selectedValue === 'newVersion' ) dispatch(getMachineDrawingsDocuments());
     }
+    if( customerPage && customer?._id && selectedValue === 'newVersion' && Array.isArray(activeDocuments) && activeDocuments.length < 1 ){
+      dispatch(getCustomerDocuments(customer?._id));
+    } 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, categoryBy, customerPage, customer, machinePage, machine, machineDrawings, selectedValue]);
   
 
   useEffect( () => { // Get Active Document Types And Active Document Categoories
-    if( !isDocumentCategoryLoaded && categoryBy ){
+    if( !isDocumentCategoryLoaded && categoryBy  ){
       dispatch( getActiveDocumentCategories( categoryBy ) );  dispatch( getActiveDocumentTypesWithCategory( null, categoryBy ) ) 
       setIsDocumentCategoryLoaded( true )
     }
@@ -137,7 +143,7 @@ function DocumentAddForm({
   }, [ categoryBy ] )
 
   useEffect(() => { // Set Default Document Type Value
-    if( activeDocumentTypes?.length > 0 && activeDocumentCategories?.length > 0  && !isDocumentTypesLoaded ){
+    if( activeDocumentTypes?.length > 0 && activeDocumentCategories?.length > 0  && !documentHistoryNewVersionFormVisibility && !isDocumentTypesLoaded ){
       if(activeDocumentTypes.find((el)=> el.isDefault === true )?._id === activeDocumentCategories.find((el)=> el.isDefault === true )?._id){
         setValue('documentType', activeDocumentTypes.find((el)=> el.isDefault === true ))
         setValue('documentCategory', activeDocumentCategories.find((el)=>  el.isDefault === true ))
@@ -240,6 +246,9 @@ function DocumentAddForm({
           dispatch(resetDrawings());
           dispatch(getDrawings(machine?._id));
           dispatch(setDrawingAddFormVisibility(false));
+        } else if( customerPage && !machinePage ){
+          await dispatch(setViewVisiilityNoOthers())
+          await navigate(PATH_CUSTOMER.documents.root( customer?._id ));
         } else if (  machineDrawings && !customerPage && !machinePage ) {
           navigate(PATH_DOCUMENT.document.machineDrawings.list);
         } else if( handleFormVisibility ){
@@ -253,6 +262,18 @@ function DocumentAddForm({
         if ( machineDrawings && !customerPage && !machinePage && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility) ){
           dispatch(setDrawingAndDocumentVisibility())
           navigate(PATH_DOCUMENT.document.machineDrawings.view(documentHistory._id));
+        } else if( customerPage && !machinePage ){
+          await dispatch(setViewVisiilityNoOthers())
+          if(documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility  ){
+            await dispatch(getDocumentHistory(documentVal._id))
+            await navigate(PATH_CUSTOMER.documents.viewHistory( customer?._id, documentVal._id ));
+          } else if(documentNewVersionFormVisibility || documentAddFilesViewFormVisibility  ){
+            await dispatch(getDocument(documentVal._id))
+            await navigate(PATH_CUSTOMER.documents.view( customer?._id, documentVal._id ));
+          } else {
+            await dispatch(getDocument(documentVal._id))
+            await navigate(PATH_CUSTOMER.documents.view( customer?._id, documentVal._id ));
+          }
         } else if( machineDrawings && !customerPage && !machinePage && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility ){
           navigate(PATH_DOCUMENT.document.machineDrawings.list);
         } else if( (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility) && !customerPage && !machinePage && !machineDrawings ){
@@ -268,6 +289,7 @@ function DocumentAddForm({
           handleFormVisibility();
         }
       } else {
+
         // Update versions Part
         await dispatch(updateDocumentVersion(documentVal._id, documentVal?.documentVersions[0]?._id, data));
         enqueueSnackbar(Snacks.updatedDoc);
@@ -275,6 +297,15 @@ function DocumentAddForm({
         if (machineDrawings && !customerPage && !machinePage && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility)) {
           dispatch(setDrawingAndDocumentVisibility())
           navigate(PATH_DOCUMENT.document.machineDrawings.view(documentHistory._id));
+        } else if( customerPage && !machinePage ){
+          await dispatch(setViewVisiilityNoOthers())
+          if(documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility ){
+            await dispatch(getDocumentHistory(documentVal._id))
+            await navigate(PATH_CUSTOMER.documents.viewHistory( customer?._id, documentVal._id ));
+          } else if(documentNewVersionFormVisibility || documentAddFilesViewFormVisibility ){
+            await dispatch(getDocument(documentVal._id))
+            await navigate(PATH_CUSTOMER.documents.view( customer?._id, documentVal._id ));
+          }
         } else if(!customerPage && !machinePage && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility ){
           dispatch(setDrawingAndDocumentVisibility())
         }else if(!customerPage && !machinePage && !machineDrawings && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility)){
@@ -303,11 +334,29 @@ function DocumentAddForm({
   const toggleCancel = () => {
     if(drawingPage){
       dispatch(setDrawingAddFormVisibility(false));
+    } else if( customerPage && !machinePage ){
+        dispatch(setViewVisiilityNoOthers())
+      if(documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility ){
+        dispatch(getDocumentHistory(documentVal._id))
+        navigate(PATH_CUSTOMER.documents.viewHistory( customer?._id, documentVal._id ));
+      } else if(documentNewVersionFormVisibility || documentAddFilesViewFormVisibility ){
+        dispatch(getDocument(documentVal._id))
+        dispatch(setViewHistoryVisiilityNoOthers(false))
+        navigate(PATH_CUSTOMER.documents.view( customer?._id, documentVal._id ));
+      } else{
+        navigate(PATH_CUSTOMER.documents.root( customer?._id ));
+      }
     } else if (!drawingPage && !customerPage && !machinePage && !documentNewVersionFormVisibility && !documentAddFilesViewFormVisibility && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility) {
       navigate(PATH_DOCUMENT.document.machineDrawings.list);
     } else if((documentNewVersionFormVisibility || documentAddFilesViewFormVisibility)  && (customerPage || machinePage)){
       dispatch(setViewVisiilityNoOthers())
+      if(customerPage && !machinePage){
+        navigate(PATH_CUSTOMER.documents.root( customer?._id ));
+      }
     }else if((documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility) && (customerPage || machinePage) ){
+      if(customerPage && !machinePage){
+        navigate(PATH_CUSTOMER.documents.viewHistory(customer?._id  ));
+      }
       dispatch(setViewHistoryVisiilityNoOthers(false))
     }else if(machineDrawings && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility)){
       dispatch(setDrawingAndDocumentVisibility())
@@ -487,6 +536,7 @@ function DocumentAddForm({
                               setValue('documentCategory', newValue.docCategory);
                               setValue('customerAccess', newValue.customerAccess);
                               setValue('isActive', newValue.isActive);
+                              setValue('documentVal', newValue );
                               setReadOnlyVal(true);
                               setSelectedVersionValue('newVersion');
                             } else {
@@ -499,8 +549,6 @@ function DocumentAddForm({
                             }
                           }}
                           renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${ option.displayName || ''}`}</li> )}
-                          id="controllable-states-demo"
-                          ChipProps={{ size: 'small' }}
                         />
                       </Grid>
                     </Grid>

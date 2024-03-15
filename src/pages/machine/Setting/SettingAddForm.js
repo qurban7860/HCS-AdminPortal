@@ -8,13 +8,11 @@ import { Box, Card, Grid } from '@mui/material';
 // slice
 import { addSetting, setSettingFormVisibility } from '../../../redux/slices/products/machineSetting';
 import { getActiveTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
-import {
-  getTechparamsByCategory,
-  resetTechParamByCategory,
-} from '../../../redux/slices/products/machineTechParam';
+import { getTechparamsByCategory, resetTechParamByCategory } from '../../../redux/slices/products/machineTechParam';
+import { getActiveMachines, resetActiveMachines } from '../../../redux/slices/products/machine';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFAutocomplete, RHFTextField } from '../../../components/hook-form';
+import FormProvider, { RHFAutocomplete, RHFTextField, RHFSwitch, RHFCheckbox } from '../../../components/hook-form';
 import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
 // constants
 import { Snacks } from '../../../constants/machine-constants';
@@ -31,7 +29,7 @@ export default function SettingAddForm() {
   const [category, setCategory] = useState('');
   const [techParamVal, setTechParamVal] = useState(null);
   // const [paramData, setparamData] = useState([]);
-  const { machine } = useSelector((state) => state.machine);
+  const { machine, activeMachines } = useSelector((state) => state.machine);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -52,6 +50,8 @@ export default function SettingAddForm() {
       category: null,
       techParamVal: null,
       techParamValue: '',
+      machines: [],
+      isUpdateMultipleMachines: false,
       isActive: true,
     }),
     []
@@ -65,10 +65,21 @@ export default function SettingAddForm() {
   const {
     reset,
     setValue,
+    watch,
     trigger,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+
+  const { isUpdateMultipleMachines } = watch();
+
+  useEffect(() => {
+    if( isUpdateMultipleMachines && Array.isArray(activeMachines) && activeMachines?.length < 1  ){
+      dispatch(getActiveMachines());
+    }
+    return () => { dispatch(resetActiveMachines)}
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ dispatch, isUpdateMultipleMachines ])
 
   const onSubmit = async (data) => {
     try {
@@ -86,9 +97,7 @@ export default function SettingAddForm() {
     }
   };
 
-  const toggleCancel = () => {
-    dispatch(setSettingFormVisibility(false));
-  };
+  const toggleCancel = () => dispatch(setSettingFormVisibility(false));
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -164,7 +173,19 @@ export default function SettingAddForm() {
                     sx={{ mt: 3 }}
                   >
                     <RHFTextField name="techParamValue" label="Technical Parameter Value" />
-                    <ToggleButtons isMachine name="isActive" />
+                    <RHFCheckbox name="isUpdateMultipleMachines" label="Update in multiple Machines" sx={{my:-1.5}} />
+                    { isUpdateMultipleMachines && <RHFAutocomplete 
+                      multiple
+                      disableCloseOnSelect
+                      filterSelectedOptions
+                      name="machines"
+                      label="Machines"
+                      options={activeMachines}
+                      isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                      getOptionLabel={(option) => `${option?.serialNo || ''} ${option?.name ? '-' : '' } ${option?.name || ''}`}
+                      renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.serialNo || ''} ${option?.name ? '-' : '' } ${option?.name || ''}`}</li> )}
+                    />}
+                    <RHFSwitch  name="isActive" label="Active" />
                   </Box>
                 
               </Grid>

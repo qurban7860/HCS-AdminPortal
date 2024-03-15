@@ -5,7 +5,6 @@ import { NotRequiredValidateFileType } from '../document/documents/Utills/Util'
 import { future5yearDate, tomorrow, pastDate } from '../machine/util/index';
 import { fDate } from '../../utils/formatTime';
 
-
 export const machineSchema = Yup.object().shape({
   serialNo: Yup.string().max(6).required().label('Serial Number'),
   name: Yup.string().max(250),
@@ -26,7 +25,7 @@ export const machineSchema = Yup.object().shape({
     name: Yup.string()
   }).nullable(),
   workOrderRef: Yup.string().max(50),
-  purchaseDate: Yup.date().typeError('Date Should be Valid').nullable().label('Purchase Date').required(),
+  purchaseDate: Yup.date().typeError('Date Should be Valid').nullable().label('Purchase Date'),
   shippingDate: Yup.date().typeError('Date Should be Valid').max(future5yearDate,`Shipping Date field must be at earlier than ${fDate(future5yearDate)}`)
   .min(pastDate,`Shipping Date field must be at after than ${fDate(pastDate)}`).nullable().label('Shipping Date'),
   installationDate: Yup.date()

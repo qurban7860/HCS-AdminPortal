@@ -99,6 +99,8 @@ export default function GroupEditForm() {
                   <RHFTextField name="name" label="Group Name*" />
                   <RHFAutocomplete
                     multiple
+                    disableCloseOnSelect
+                    filterSelectedOptions
                     name="categories"
                     label="Categories*"
                     // filterSelectedOptions

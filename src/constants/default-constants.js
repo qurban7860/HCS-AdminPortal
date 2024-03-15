@@ -140,7 +140,8 @@ export const DIALOGS = {
   //   discard changes
   DISCARD: 'Are you sure you want to Discard your changes?',
   DISCARD_TITLE: 'Discard Changes',
-
+  TRANSFER_CONFIRM: 'Are you sure to transfer this machine?',
+  TRANSFER_CONFIRM_TITLE: 'Transfer Machine',
   //   delete
   DELETE: {
     content: 'Are you sure you want to Delete?',
@@ -158,6 +159,7 @@ export const BUTTONS = {
   CLEAR: 'Clear',
   CANCEL: 'Cancel',
   DISCARD: 'Discard',
+  TRANSFER: 'Transfer',
   CONTINUE: 'Continue',
   DELETE: 'Delete',
 
@@ -282,7 +284,7 @@ export const TITLES = {
 
   // @root - AccountPopover - settings drawer
   SETTINGS: 'Settings',
-  CUSTOMIZE: 'Customize',
+  CUSTOMIZE: 'Theme Settings',
   LOGOUT: 'Logout',
   MODE: 'Mode',
   CONTRAST: 'Contrast',

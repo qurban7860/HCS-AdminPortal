@@ -330,6 +330,7 @@ export default function MachineEditForm() {
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect
+                    filterSelectedOptions
                     name="machineConnectionVal"
                     label="Connected Machines" 
                     id="tags-outlined"
@@ -358,6 +359,7 @@ export default function MachineEditForm() {
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect
+                    filterSelectedOptions
                     name="accountManager"
                     options={spContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
@@ -371,6 +373,7 @@ export default function MachineEditForm() {
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect
+                    filterSelectedOptions
                     name="projectManager"
                     options={spContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
@@ -384,6 +387,7 @@ export default function MachineEditForm() {
                   <RHFAutocomplete
                     multiple
                     disableCloseOnSelect
+                    filterSelectedOptions
                     name="supportManager"
                     options={spContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}

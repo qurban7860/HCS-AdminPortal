@@ -23,7 +23,7 @@ export default function ParameterViewForm() {
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { techparam } = useSelector((state) => state.techparam);
+  const { techparam, isLoading } = useSelector((state) => state.techparam);
   const navigate = useNavigate();
 
   const toggleEdit = () => {
@@ -34,9 +34,11 @@ export default function ParameterViewForm() {
     () => ({
       name: techparam?.name || '',
       code: techparam?.code || '',
+      alias: techparam?.alias || [],
       description: techparam?.description || '',
       category: techparam?.category?.name || '',
       isActive: techparam?.isActive,
+      isIniRead: techparam?.isIniRead,
       createdByFullName: techparam?.createdBy?.name || '',
       createdAt: techparam?.createdAt || '',
       createdIP: techparam?.createdIP || '',
@@ -62,16 +64,18 @@ export default function ParameterViewForm() {
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons 
         isActive={defaultValues.isActive} 
+        isIniRead={defaultValues.isIniRead}
         handleEdit={toggleEdit} 
         onDelete={onDelete} 
         backLink={() => navigate(PATH_MACHINE.machines.settings.parameters.list)}
         machineSettingPage
       />
       <Grid container sx={{mt:2}}>
-        <ViewFormField sm={12} heading="Category Name" param={defaultValues?.category} />
-        <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
-        <ViewFormField sm={6} heading="Code" param={defaultValues?.code} />
-        <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Category Name" param={defaultValues?.category} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.name} />
+        <ViewFormField isLoading={isLoading} sm={6} heading="Code" param={defaultValues?.code} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Alias" chips={defaultValues?.alias} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>
     </Card>

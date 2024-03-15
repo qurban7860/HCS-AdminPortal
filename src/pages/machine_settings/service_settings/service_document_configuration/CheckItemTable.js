@@ -175,12 +175,12 @@ const CheckItemTable = ({ checkParams, setCheckParams, checkItemList, setCheckIt
 
                       <RHFAutocomplete
                         multiple
-                        name="paramList"
-                        label="Select Items"
-                        value={checkItemList}
                         disableCloseOnSelect
                         disableClearable
                         filterSelectedOptions
+                        name="paramList"
+                        label="Select Items"
+                        value={checkItemList}
                         options={activeCheckItems.filter(activeCheckItem => checkItemCategory ? activeCheckItem?.category?._id === checkItemCategory?._id : activeCheckItem)}
                         isOptionEqualToValue={(option, value) => option?._id === value?._id}
                         getOptionLabel={(option) => `${option.name ? option.name : ''} ${option?.category?.name ? '-' : ''} ${option?.category?.name ? option?.category?.name : ''} ${option?.inputType ? '-' : '' } ${option?.inputType ? option?.inputType : '' }`}

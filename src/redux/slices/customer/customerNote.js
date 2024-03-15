@@ -142,10 +142,8 @@ export function addNote (customerId, params){
         note: params.note,
         isActive: params.isActive,
       }
-      await axios.post(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/`, data);
-      dispatch(slice.actions.setNoteFormVisibility(false));
-      dispatch(slice.actions.setResponseMessage('Note saved successfully'));
-
+      const response = await axios.post(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/`, data);
+      return response
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));

@@ -6,7 +6,7 @@ function path(root, sublink) {
 
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
-const ROOTS_CUSTOMER = '/customers';
+const ROOTS_CUSTOMER = '/crm/customers';
 const ROOTS_MACHINE = '/products';
 const ROOTS_EMAIL =   '/email';
 const ROOTS_SECURITY = '/security';
@@ -47,68 +47,56 @@ export const PATH_DASHBOARD = {
   permissionDenied: path(ROOTS_DASHBOARD, '/permission-denied'),
   blank: path(ROOTS_AUTH, '/login'),
   general: {
-    app: path(ROOTS_DASHBOARD, '/app'),
     machineByCountries: path(ROOTS_DASHBOARD, `/machineByCountries`),
     machineByModels: path(ROOTS_DASHBOARD, '/machineByModels'),
     machineByYears: path(ROOTS_DASHBOARD, '/machineByYears'),
   },
-  asset: {
-    root: path(ROOTS_DASHBOARD, '/asset'),
-    shop: path(ROOTS_DASHBOARD, '/asset/shop'),
-    list: path(ROOTS_DASHBOARD, '/asset/list'),
-    // checkout: path(ROOTS_DASHBOARD, '/asset/checkout'),
-    new: path(ROOTS_DASHBOARD, '/asset/new'),
-    view: (id) => path(ROOTS_DASHBOARD, `/asset/${id}/view`),
-    edit: (id) => path(ROOTS_DASHBOARD, `/asset/${id}/edit`),
-    demoEdit: path(ROOTS_DASHBOARD, '/asset/product/nike-bblazer-low-77-vintage/edit'),
-    demoView: path(ROOTS_DASHBOARD, '/asset/product/nike-air-force-1-ndestrukt'),
-  },
-  customer: {
-    dashboard: path(ROOTS_DASHBOARD, '/customer/dashboard'),
-    list: path(ROOTS_DASHBOARD, '/customer/list'),
-    new: path(ROOTS_DASHBOARD, '/customer/new'),
-    view: (id) => path(ROOTS_DASHBOARD, `/customer/${id}/view`),
-    edit: (id) => path(ROOTS_DASHBOARD, `/customer/${id}/edit`),
-  },
 };
 
+  // CUSTOMER
 export const PATH_CUSTOMER = {
   root: ROOTS_CUSTOMER,
   permissionDenied: path(ROOTS_CUSTOMER, '/permission-denied'),
-  list: path(ROOTS_CUSTOMER, '/list'),
+  sitesReport: path(ROOTS_CUSTOMER, '/sitesReport'),
+  contactsReport: path(ROOTS_CUSTOMER, '/contactsReport'),
   new: path(ROOTS_CUSTOMER, '/new'),
-  view: (id) => path(ROOTS_CUSTOMER, `/${id}/view`),
-  edit: (id) => path(ROOTS_CUSTOMER, `/${id}/edit`),
-  sites: path(ROOTS_CUSTOMER, '/sites'),
-  contacts: path(ROOTS_CUSTOMER, '/contacts'),
-  general: {
-    app: path(ROOTS_CUSTOMER, '/app'),
+  view: (customerId) => path(ROOTS_CUSTOMER, `/${customerId}/view`),
+  edit: (customerId) => path(ROOTS_CUSTOMER, `/${customerId}/edit`),
+  sites: {
+    root: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/sites`),
+    new: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/sites/new`),
+    view: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/sites/${id}/view`),
+    edit: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/sites/${id}/edit`),
   },
-  site: {
-    root: path(ROOTS_CUSTOMER, '/site'),
-    list: path(ROOTS_CUSTOMER, '/site/list'),
-    new: path(ROOTS_CUSTOMER, '/site/new'),
-    view: (id) => path(ROOTS_CUSTOMER, `/site/${id}/view`),
-    edit: (id) => path(ROOTS_CUSTOMER, `/site/${id}/edit`),
+  contacts: {
+    root: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/contacts`),
+    new: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/contacts/new`),
+    view: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/contacts/${id}/view`),
+    edit: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/contacts/${id}/edit`),
+    move: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/contacts/${id}/move`),
   },
-  contact: {
-    root: path(ROOTS_CUSTOMER, '/contact'),
-    list: path(ROOTS_CUSTOMER, '/contact/list'),
-    new: path(ROOTS_CUSTOMER, '/contact/new'),
-    view: (id) => path(ROOTS_CUSTOMER, `/contact/${id}/view`),
-    edit: (id) => path(ROOTS_CUSTOMER, `/contact/${id}/edit`),
+  notes: {
+    root: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/notes`),
+    new: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/notes/new`),
+    view: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/notes/${id}/view`),
+    edit: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/notes/${id}/edit`),
+  },  
+  documents: {
+    root: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/documents`),
+    new: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/documents/new`),
+    viewGallery: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/documents/viewGallery`),
+    view: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/documents/${id}/view`),
+    viewHistory: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/documents/${id}/viewHistory`),
+    edit: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/documents/${id}/edit`),
   },
-  note: {
-    root: path(ROOTS_CUSTOMER, '/note'),
-    list: path(ROOTS_CUSTOMER, '/note/list'),
-    new: path(ROOTS_CUSTOMER, '/note/new'),
-    view: (id) => path(ROOTS_CUSTOMER, `/note/${id}/view`),
-    edit: (id) => path(ROOTS_CUSTOMER, `/note/${id}/edit`),
+  machines: {
+    root: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/machines`),
+    move: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/machines/${id}/move`),
+    new: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/machines/new`),
   },
 };
 
-// Machine
-
+// MACHINE
 export const PATH_MACHINE = {
   root: ROOTS_MACHINE,
   permissionDenied: path(ROOTS_MACHINE, '/permission-denied'),
@@ -240,10 +228,8 @@ export const PATH_SECURITY = {
   root: ROOTS_SECURITY,
   permissionDenied: path(ROOTS_SECURITY, '/permission-denied'),
   users: {
-    root: path(ROOTS_SECURITY, '/users'),
     new: path(ROOTS_SECURITY, `/users/new/`),
     invite: path(ROOTS_SECURITY, `/users/invite/`),
-    list: path(ROOTS_SECURITY, '/users/list'),
     cards: path(ROOTS_SECURITY, '/users/cards'),
     profile: path(ROOTS_SECURITY, '/users/profile'),
     editProfile: path(ROOTS_SECURITY, '/users/editProfile'),
@@ -276,12 +262,8 @@ export const PATH_SECURITY = {
 };
 
 export const PATH_SETTING = {
-  root: ROOTS_SETTING,
   permissionDenied: path(ROOTS_SETTING, '/permission-denied'),
-  general: {
-    app: path(ROOTS_SETTING, '/app'),
-  },
-  app: path(ROOTS_SETTING, '/app'),
+  root: ROOTS_SETTING,
   documentType: {
     list: path(ROOTS_SETTING, '/documentType/list'),
     new: path(ROOTS_SETTING, '/documentType/new'),

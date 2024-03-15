@@ -47,7 +47,7 @@ import FormLabel from '../../../components/DocumentForms/FormLabel';
 import DocumentCover from '../../../components/DocumentForms/DocumentCover';
 import CustomerDialog from '../../../components/Dialog/CustomerDialog';
 import MachineDialog from '../../../components/Dialog/MachineDialog';
-import { PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_DOCUMENT, PATH_CUSTOMER } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
 import { Snacks } from '../../../constants/document-constants';
 import UpdateDocumentVersionDialog from '../../../components/Dialog/UpdateDocumentVersionDialog';
@@ -67,7 +67,7 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
   const { id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const { documentHistory, isLoading } = useSelector((state) => state.document);
+  const { documentHistory, documentVersionEditDialogVisibility, isLoading } = useSelector((state) => state.document);
   const { machine } = useSelector((state) => state.machine);
   const { customer } = useSelector((state) => state.customer);
   const { drawing } = useSelector((state) => state.drawing);
@@ -137,7 +137,10 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
   );
 
 const handleNewVersion = async () => {
-  if(customerPage || machinePage){
+  if(customerPage){
+    dispatch(setDocumentHistoryNewVersionFormVisibility(true));
+    navigate(PATH_CUSTOMER.documents.new( customer?._id ));
+  } else if( machinePage){
     dispatch(setDocumentHistoryViewFormVisibility(false));
     dispatch(setDocumentFormVisibility(true));
     dispatch(setDocumentHistoryNewVersionFormVisibility(true));
@@ -168,6 +171,10 @@ const handleUpdateVersion = async () => {
 
 const handleNewFile = async () => {
   if(customerPage || machinePage){
+    if( customerPage && !machinePage ){
+      dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
+      navigate(PATH_CUSTOMER.documents.new( customer?._id ));
+    }
     dispatch(setDocumentHistoryViewFormVisibility(false));
     dispatch(setDocumentHistoryAddFilesViewFormVisibility(true));
     dispatch(setDocumentHistoryNewVersionFormVisibility(false));
@@ -214,7 +221,11 @@ const handleNewFile = async () => {
   const handleDelete = async () => {
     try {
       await dispatch(deleteDocument(documentHistory?._id));
-      navigate(PATH_DOCUMENT.document.machineDrawings.list);
+      if(customerPage && !machinePage ) {
+        navigate(PATH_CUSTOMER.documents.root( customer?._id ));
+      }else{
+        navigate(PATH_DOCUMENT.document.machineDrawings.list);
+      }
       enqueueSnackbar("Document Deleted Successfully!", { variant: `success` });
     }catch(error) {
       enqueueSnackbar(error, { variant: `error` });
@@ -366,6 +377,20 @@ const handleNewFile = async () => {
   const onDocumentLoadSuccess = ({ numPages }) => {
     setPages(numPages);
   };
+
+  const handleBackLink = ()=>{
+    if(customerPage && !machinePage ) {
+      dispatch(getDocument(documentHistory?._id));
+      navigate(PATH_CUSTOMER.documents.view( customer?._id, documentHistory?._id ));
+    } else if( machinePage || drawingPage ){
+      dispatch(setDrawingViewFormVisibility(false))
+      dispatch(setDocumentHistoryViewFormVisibility(false)); 
+    } else if(machineDrawings){
+      navigate(PATH_DOCUMENT.document.machineDrawings.list) 
+    } else{
+      navigate(PATH_DOCUMENT.document.list)
+    }
+  }
   
   return (
     <Container maxWidth={false} sx={{padding:(machineDrawings || customerPage || machinePage || drawingPage) ?'0 !important':''}}>
@@ -385,8 +410,7 @@ const handleNewFile = async () => {
           onDelete={drawingPage?handleDeleteDrawing : handleDelete }
           disableDeleteButton={drawingPage && machine?.status?.slug==="transferred"}
           disableEditButton={drawingPage && machine?.status?.slug==="transferred"}
-          backLink={(customerPage || machinePage || drawingPage ) ? ()=>{dispatch(setDocumentHistoryViewFormVisibility(false)); dispatch(setDrawingViewFormVisibility(false));}
-          : () =>  machineDrawings ? navigate(PATH_DOCUMENT.document.machineDrawings.list) : navigate(PATH_DOCUMENT.document.list)}
+          backLink={handleBackLink}
       />
             <Grid container sx={{mt:2}}>
             {PDFViewerDialog && (
@@ -567,8 +591,7 @@ const handleNewFile = async () => {
         </Grid>
       <CustomerDialog />
       <MachineDialog />
-      {/* <DocumentGallery /> */}
-      <UpdateDocumentVersionDialog versionNo={defaultValues?.documentVersion} />
+      {documentVersionEditDialogVisibility && <UpdateDocumentVersionDialog />}
     </Container>
      
   );

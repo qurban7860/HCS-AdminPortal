@@ -24,6 +24,17 @@ export const ICONS = {
     color: '#FF0000',
     heading: 'Inactive',
   },
+  // isIniRead
+  READINI: {
+    icon: 'circum:read',
+    color: '#008000',
+    heading: 'Read INI allowed',
+  },
+  NOTREADINI: {
+    icon: 'circum:unread',
+    color: '#FF0000',
+    heading: 'Read INI not allowed',
+  },
 
   // IS MANUFACTURE
   MANUFACTURE: {
@@ -168,7 +179,13 @@ export const ICONS = {
     color: '#008000',
     heading: 'Transfer History',
   },
-  
+
+  MACHINESETTINGHISTORY: {
+    icon: 'ic:outline-manage-history',
+    color: '#008000',
+    heading: 'Machine Setting History',
+  },
+
   // Machine Support 
   SUPPORT_VALLID: {
     icon: 'bx:support',

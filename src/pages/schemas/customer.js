@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { isNumberLatitude , isNumberLongitude } from '../customer/site/util/index'
+import { isNumberLatitude , isNumberLongitude } from '../customers/sites/util/index'
 
 const stringLengthMessage = 'Trading name must not exceed 500 characters';
 

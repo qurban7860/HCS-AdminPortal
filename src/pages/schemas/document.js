@@ -44,7 +44,7 @@ export const documentSchema = ( selectedValue ) => Yup.object().shape({
     'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
     validateFileType
   ).nullable(true),
-  referenceNumber: Yup.string().max( ( Number(maxFiles?.value) || 20 ) )
+  referenceNumber: Yup.string().max( 200 )
   .test('Reference number', 'Reference number can not have spaces', numValue =>!(numValue.includes(' '))),
 
   versionNo: Yup.number()
