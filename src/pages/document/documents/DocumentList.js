@@ -99,7 +99,7 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
     orderBy,
     onSort,
   } = useTable({
-    defaultOrderBy: machineDrawings ? 'doNotOrder' : 'createdAt', defaultOrder: machineDrawings ? 'noOrder' : 'desc',
+    defaultOrderBy: machineDrawings ? 'doNotOrder' : 'createdAt', defaultOrder: 'desc',
   });
 
 const onChangeRowsPerPage = (event) => {

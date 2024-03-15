@@ -140,7 +140,7 @@ export function addSetting (machineId, params){
       const data = {
           techParam: params.techParam,
           techParamValue: params.techParamValue,
-          machines: params.machines,
+          machines: params.machines?.map(el => el?._id) || [],
           isActive: params.isActive,
       }
       await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/`, data);
