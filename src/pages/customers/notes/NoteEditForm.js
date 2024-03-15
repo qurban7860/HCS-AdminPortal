@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Container, Box, Card, Grid, Stack, Typography } from '@mui/material';
-import { updateNote, getNote, resetNote } from '../../../redux/slices/customer/customerNote';
+import { updateNote, getNote } from '../../../redux/slices/customer/customerNote';
 import { getActiveSites, resetActiveSites } from '../../../redux/slices/customer/site';
 import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
 // components
@@ -26,7 +26,6 @@ export default function NoteEditForm() {
   const { activeContacts } = useSelector((state) => state.contact);
   const { customerId, id } = useParams() 
   const { enqueueSnackbar } = useSnackbar();
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -59,7 +58,7 @@ export default function NoteEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [note]
   );
-
+  
   const methods = useForm({
     resolver: yupResolver(NoteSchema),
     defaultValues,

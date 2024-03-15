@@ -30,7 +30,7 @@ export default function NoteViewForm() {
     if( id && customerId ){
       dispatch(getNote(customerId, id))
     }
-    return ()=>{ dispatch(resetNote())}
+    // return ()=>{ dispatch(resetNote())}
   },[ dispatch, id, customerId])
 
   const onDelete = async () => {
