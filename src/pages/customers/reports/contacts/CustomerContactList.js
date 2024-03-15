@@ -10,9 +10,9 @@ import {
   // Stack,
 } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from '../../../redux/store';
+import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
-import { PATH_CUSTOMER } from '../../../routes/paths';
+import { PATH_CUSTOMER } from '../../../../routes/paths';
 // components
 import {
   useTable,
@@ -21,36 +21,34 @@ import {
   TableSkeleton,
   TableHeadCustom,
   TablePaginationCustom,
-} from '../../../components/table';
-import Scrollbar from '../../../components/scrollbar';
-import { StyledCardContainer } from '../../../theme/styles/default-styles';
+} from '../../../../components/table';
+import Scrollbar from '../../../../components/scrollbar';
+import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 // sections
-import CustomerSiteListTableRow from './CustomerSiteListTableRow';
-import CustomerSiteListTableToolbar from './CustomerSiteListTableToolbar';
-import { getSites, resetSites, ChangePage, ChangeRowsPerPage, setFilterBy, setIsExpanded, setCardActiveIndex  } from '../../../redux/slices/customer/site';
-import { Cover } from '../../../components/Defaults/Cover';
-import TableCard from '../../../components/ListTableTools/TableCard';
-import { fDate } from '../../../utils/formatTime';
-import { useSnackbar } from '../../../components/snackbar';
-import { exportCSV } from '../../../utils/exportCSV';
+import CustomerContactListTableRow from './CustomerContactListTableRow';
+import CustomerContactListTableToolbar from './CustomerContactListTableToolbar';
+import { getContacts, resetContacts, ChangePage, ChangeRowsPerPage, setFilterBy, setCardActiveIndex, setIsExpanded } from '../../../../redux/slices/customer/contact';
+import { Cover } from '../../../../components/Defaults/Cover';
+import TableCard from '../../../../components/ListTableTools/TableCard';
+import { fDate } from '../../../../utils/formatTime';
+import { useSnackbar } from '../../../../components/snackbar';
+import { exportCSV } from '../../../../utils/exportCSV';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'customer.name', visibility: 'xs', label: 'Customer', align: 'left' },
-  { id: 'name', label: 'Site', align: 'left' },
-  { id: 'address.country', visibility: 'xs', label: 'Address', align: 'left' },
-  { id: 'phoneNumbers.countryCode', visibility: 'xs', label: 'Phone', align: 'left' },
+  { id: 'firstName', label: 'Contact', align: 'left' },
+  { id: 'phone', visibility: 'xs', label: 'Phone', align: 'left' },
   { id: 'email', visibility: 'xs', label: 'Email', align: 'left' },
-  { id: 'primaryTechnicalContact.firstName', visibility: 'xs', label: 'Technical Contact', align: 'left' },
-  { id: 'primaryBillingContact.firstName', visibility: 'xs', label: 'Billing Contact', align: 'left' },
+  { id: 'address.country', visibility: 'xs', label: 'Country', align: 'left' },
   { id: 'isActive', visibility: 'xs', label: 'Active', align: 'center' },
   { id: 'createdAt',visibility: 'xs', label: 'Created At', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function CustomerSiteList() {
+export default function CustomerContactList() {
   const {
     order,
     orderBy,
@@ -65,34 +63,35 @@ export default function CustomerSiteList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  
-  const { sites, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.site);
-
+  const { contacts, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.contact);
+  const [tableData, setTableData] = useState([]);
+  const [filterName, setFilterName] = useState(filterBy);
   const [exportingCSV, setExportingCSV] = useState(false);
-  const [ tableData, setTableData ] = useState([]);
-  const [ filterName, setFilterName ] = useState(filterBy);
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
   };
 
-  const onChangePage = (event, newPage) => {  dispatch(ChangePage(newPage))  }
+  const onChangePage = (event, newPage) => { 
+    dispatch(ChangePage(newPage)) 
+  }
 
   useEffect(() => {
-    dispatch(getSites());
-    return ()=> { dispatch( resetSites() ) }
+    dispatch(getContacts());
+    return ()=> { dispatch( resetContacts() ) }
   }, [dispatch]);
 
   useEffect(() => {
-    setTableData(sites || []);
-  }, [sites]);
+    setTableData(contacts || []);
+  }, [contacts]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
   });
+
   const denseHeight = 60;
   const isFiltered = filterName !== '';
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
@@ -101,7 +100,6 @@ export default function CustomerSiteList() {
       dispatch(ChangePage(0))
       dispatch(setFilterBy(value))
   }, 500))
-
 
   const handleFilterName = (event) => {
     debouncedSearch.current(event.target.value)
@@ -116,30 +114,30 @@ export default function CustomerSiteList() {
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
-  };
+  }; 
 
-  const handleViewCustomer = (id) => navigate(PATH_CUSTOMER.view(id));
-  const handleViewCustomerInNewPage = (id) => window.open(PATH_CUSTOMER.view(id), '_blank');
+  const handleViewCustomer = (customerId) => navigate(PATH_CUSTOMER.view(customerId));
+  const handleViewCustomerInNewPage = (customerId) => window.open(PATH_CUSTOMER.view(customerId), '_blank');
 
-  const handleViewSite = async (customerId, siteId ) => {
-    await dispatch(setCardActiveIndex(siteId));
+  const handleViewContact = async (customerId, contactId ) => {
+    await dispatch(setCardActiveIndex(contactId));
     await dispatch(setIsExpanded(true));
-    await navigate(PATH_CUSTOMER.sites.view(customerId, siteId))
+    await navigate(PATH_CUSTOMER.contacts.view(customerId, contactId))
   };
-
-  const handleViewSiteInNewPage = async (customerId, siteId ) => {
-    await dispatch(setCardActiveIndex(siteId));
+  
+  const handleViewContactInNewPage = async (customerId, contactId ) => {
+    await dispatch(setCardActiveIndex(contactId));
     await dispatch(setIsExpanded(true));
-    window.open(PATH_CUSTOMER.sites.view(customerId, siteId), '_blank');
+    window.open(PATH_CUSTOMER.contacts.view(customerId, contactId), '_blank');
   };
 
   const onExportCSV = async() => {
     setExportingCSV(true);
-    const response = dispatch(await exportCSV('allsites'));
+    const response = dispatch(await exportCSV('allcontacts'));
     response.then((res) => {
       setExportingCSV(false);
       if(!res.hasError){
-        enqueueSnackbar('Sites CSV Generated Successfully');
+        enqueueSnackbar('Contacts CSV Generated Successfully');
       }else{
         enqueueSnackbar(res.message, {variant:`${res.hasError?"error":""}`});
       }
@@ -149,10 +147,10 @@ export default function CustomerSiteList() {
   return (
     <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name='Customer Sites' backLink customerContacts/>
+          <Cover name='Customer Contacts' backLink customerSites/>
         </StyledCardContainer>
       <TableCard >
-      <CustomerSiteListTableToolbar
+      <CustomerContactListTableToolbar
           filterName={filterName}
           onFilterName={handleFilterName}
           isFiltered={isFiltered}
@@ -162,7 +160,7 @@ export default function CustomerSiteList() {
         />
 
         {!isNotFound && <TablePaginationCustom
-          count={sites?sites.length : 0}
+          count={contacts?contacts.length : 0}
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
@@ -184,15 +182,15 @@ export default function CustomerSiteList() {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
-                      <CustomerSiteListTableRow
+                      <CustomerContactListTableRow
                         key={row._id}
                         row={row}
                         selected={selected.includes(row._id)}
                         onSelectRow={() => onSelectRow(row._id)}
                         onViewRow={() => handleViewCustomer(row?.customer?._id)}
                         openInNewPage={() => handleViewCustomerInNewPage(row?.customer?._id)}
-                        handleSiteView= { handleViewSite }
-                        handleSiteViewInNewPage= { handleViewSiteInNewPage }
+                        handleContactView= { handleViewContact }
+                        handleContactViewInNewPage= { handleViewContactInNewPage }
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                       />
                     ) : (
@@ -207,7 +205,7 @@ export default function CustomerSiteList() {
         </TableContainer>
 
         {!isNotFound && <TablePaginationCustom
-          count={sites?sites.length : 0}
+          count={contacts?contacts.length : 0}
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
@@ -221,7 +219,6 @@ export default function CustomerSiteList() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName }) {
-
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
@@ -229,21 +226,19 @@ function applyFilter({ inputData, comparator, filterName }) {
     if (order !== 0) return order;
     return a[1] - b[1];
   });
-
+  
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
     inputData = inputData.filter(
-      (site) =>
-        site?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        site?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        site?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        site?.website?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        `${site?.primaryTechnicalContact?.firstName} ${site?.primaryTechnicalContact?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        `${site?.primaryBillingContact?.firstName} ${site?.primaryBillingContact?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        `${site?.address?.street }, ${site?.address?.suburb }, ${site?.address?.city }, ${site?.address?.country}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        `+${site?.phoneNumbers[0]?.countryCode} ${site?.phoneNumbers[0]?.contactNumber}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(site?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+      (contact) =>
+        contact?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        `${contact?.firstName} ${contact?.lastName}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // contact?.title?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        contact?.phone?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        contact?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        contact?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(contact?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 

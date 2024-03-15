@@ -2,11 +2,11 @@ import PropTypes from 'prop-types';
 // @mui
 import { Switch, TableCell, Chip, Grid } from '@mui/material';
 // utils
-import { fDate } from '../../../utils/formatTime';
+import { fDate } from '../../../../utils/formatTime';
 // components
-import { useScreenSize } from '../../../hooks/useResponsive';
-import { StyledTableRow } from '../../../theme/styles/default-styles';
-import LinkTableCellWithIconTargetBlank from '../../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
+import { useScreenSize } from '../../../../hooks/useResponsive';
+import { StyledTableRow } from '../../../../theme/styles/default-styles';
+import LinkTableCellWithIconTargetBlank from '../../../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
 
 // ----------------------------------------------------------------------
 
