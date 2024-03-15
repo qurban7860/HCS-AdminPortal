@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Container, Box, Card, Grid, Stack, Typography } from '@mui/material';
-import { updateNote, getNote, resetNote } from '../../../redux/slices/customer/customerNote';
+import { updateNote, getNote } from '../../../redux/slices/customer/customerNote';
 import { getActiveSites, resetActiveSites } from '../../../redux/slices/customer/site';
 import { getActiveContacts, resetActiveContacts } from '../../../redux/slices/customer/contact';
 // components
@@ -26,16 +26,12 @@ export default function NoteEditForm() {
   const { activeContacts } = useSelector((state) => state.contact);
   const { customerId, id } = useParams() 
   const { enqueueSnackbar } = useSnackbar();
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(()=>{
     dispatch(getActiveSites(customerId))
     dispatch(getActiveContacts(customerId))
-    if(id && customerId ){
-      dispatch(getNote(customerId, id))
-    }
     return () => {
       dispatch(resetActiveSites());
       dispatch(resetActiveContacts());
@@ -43,21 +39,19 @@ export default function NoteEditForm() {
   },[ dispatch, customerId, id ])
 
   useEffect(()=>{
-    if(id && customerId ){
-      dispatch(getNote(customerId, id))
+    if( customerId && id ){
+        dispatch(getNote(customerId, id))
     }
   },[ dispatch, customerId, id ])
 
   const defaultValues = useMemo(
     () => ({
-      id: note?._id || '',
       site: note?.site || null,
       contact: note?.contact || null,
       note: note?.note || '',
       isActive: note?.isActive,
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [note]
+    [ note ]
   );
 
   const methods = useForm({
@@ -70,8 +64,11 @@ export default function NoteEditForm() {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
   
+  useEffect(()=>{
+    reset(defaultValues);
+  },[ reset, note, defaultValues ])
+
   const onSubmit = async (data) => {
     try {
       await dispatch(updateNote(customerId, id, data));
@@ -97,7 +94,6 @@ export default function NoteEditForm() {
               <Stack spacing={1}>
                 <Typography variant="h3" sx={{ color: 'text.secondary' }}>Edit Note</Typography>
               </Stack>
-
               <Box
                 rowGap={3}
                 columnGap={2}
@@ -115,7 +111,6 @@ export default function NoteEditForm() {
                   getOptionLabel={(option) => `${option.name || ''}`}
                   renderOption={(props, option) => (<li {...props} key={option?._id}>{option?.name || ''}</li>)}
                 />
-
                 <RHFAutocomplete
                   name='contact'
                   label="Contact"
@@ -125,7 +120,6 @@ export default function NoteEditForm() {
                   renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.firstName || '' } ${option.lastName || '' }`}</li> )}
                 />
               </Box>
-
               <RHFTextField name="note" label="Note*" minRows={8} multiline />
             </Stack>
             <RHFSwitch  name="isActive" label="Active" />
