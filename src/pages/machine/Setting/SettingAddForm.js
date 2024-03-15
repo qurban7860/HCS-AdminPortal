@@ -9,7 +9,7 @@ import { Box, Card, Grid } from '@mui/material';
 import { addSetting, setSettingFormVisibility } from '../../../redux/slices/products/machineSetting';
 import { getActiveTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
 import { getTechparamsByCategory, resetTechParamByCategory } from '../../../redux/slices/products/machineTechParam';
-import { getActiveMachines } from '../../../redux/slices/products/machine';
+import { getActiveMachines, resetActiveMachines } from '../../../redux/slices/products/machine';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFAutocomplete, RHFTextField, RHFSwitch, RHFCheckbox } from '../../../components/hook-form';
@@ -77,6 +77,7 @@ export default function SettingAddForm() {
     if( isUpdateMultipleMachines && Array.isArray(activeMachines) && activeMachines?.length < 1  ){
       dispatch(getActiveMachines());
     }
+    return () => { dispatch(resetActiveMachines)}
      // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ dispatch, isUpdateMultipleMachines ])
 
@@ -96,9 +97,7 @@ export default function SettingAddForm() {
     }
   };
 
-  const toggleCancel = () => {
-    dispatch(setSettingFormVisibility(false));
-  };
+  const toggleCancel = () => dispatch(setSettingFormVisibility(false));
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -174,7 +173,7 @@ export default function SettingAddForm() {
                     sx={{ mt: 3 }}
                   >
                     <RHFTextField name="techParamValue" label="Technical Parameter Value" />
-                    <RHFCheckbox name="isUpdateMultipleMachines" label="Update in multiple Machines" />
+                    <RHFCheckbox name="isUpdateMultipleMachines" label="Update in multiple Machines" sx={{my:-1.5}} />
                     { isUpdateMultipleMachines && <RHFAutocomplete 
                       multiple
                       disableCloseOnSelect
