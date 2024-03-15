@@ -39,8 +39,13 @@ export default function NoteEditForm() {
     return () => {
       dispatch(resetActiveSites());
       dispatch(resetActiveContacts());
-      // dispatch(resetNote());
     };
+  },[ dispatch, customerId, id ])
+
+  useEffect(()=>{
+    if(id && customerId ){
+      dispatch(getNote(customerId, id))
+    }
   },[ dispatch, customerId, id ])
 
   const defaultValues = useMemo(
@@ -71,7 +76,7 @@ export default function NoteEditForm() {
     try {
       await dispatch(updateNote(customerId, id, data));
       enqueueSnackbar('Note Updated Successfully');
-      await reset();
+      reset();
       if(customerId && id ) await navigate(PATH_CUSTOMER.notes.view(customerId, id))
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });
