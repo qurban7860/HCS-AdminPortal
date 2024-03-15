@@ -268,7 +268,7 @@ export function addDrawingsList( params ) {
               formData.append('docType', file?.docType?._id);
               formData.append('documentType', file?.docType?._id);
               formData.append('docCategory', file?.docCategory?._id);
-              formData.append('documentCategory', file?.docCategory?._id);
+              formData.append('documentCategory', params?.docCategory?._id);
               formData.append('versionNo', file?.versionNo);
               formData.append('name', file?.displayName);
               formData.append('displayName', file?.displayName);

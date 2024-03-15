@@ -489,7 +489,9 @@ export function getDocuments(customerId, machineId, drawing, page, pageSize, can
     const params = {
       isArchived: false,
       basic: true,
-      orderBy : {
+    }
+    if(!drawing) {
+      params.orderBy = {
         createdAt:-1
       }
     }

@@ -134,7 +134,9 @@ const onChangeDocType = ( index, event, value ) => {
 
 const onChangeDisplayName = (index, value) => { setValue(`files[${index}].displayName`, value); trigger('files'); }
 const onChangeReferenceNumber = (index, value) => setValue(`files[${index}].referenceNumber`, value);
-const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNumber`, value);   
+const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNumber`, value);
+const extracteDocumentTypeName = ( fileName ) => fileName.match(/\b\S+\s(.+?)\([^)]*\)/)[1]
+
 const onChangeVersionNo = (index, value) => {
   const sanitizedValue = value?.replace(/[^\d.]+/g, "");
   const dotIndex = sanitizedValue.indexOf(".");
@@ -218,11 +220,8 @@ const onChangeVersionNo = (index, value) => {
       await setProgress( acceptedFiles?.length ? Math.round( (100 / acceptedFiles.length ) * index / 10 ) * 10  : 0  );
   }
     pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
-    let defaultDocCategory = await activeDocumentCategories.find((el)=>  el.isDefault === true )
-    const defaultDocType = await activeDocumentTypes.find((el)=> el.isDefault === true )
-    if( defaultDocType?.docCategory?._id !== defaultDocCategory?._id ){
-      defaultDocCategory = activeDocumentCategories.find((el)=>  el?._id === defaultDocType?.docCategory?._id )
-    }
+    const defaultDocCategory = await activeDocumentCategories?.find( f => f?.name?.toLowerCase()?.trim() === 'assembly drawings');
+
       const _files_MD5 = await hashFilesMD5(acceptedFiles);
     const newFiles = await acceptedFiles.reduce(async (accumulatorPromise, file, index) => {
       await setProgressBarPercentage( index )
@@ -230,8 +229,20 @@ const onChangeVersionNo = (index, value) => {
       const displayName = await removeFileExtension(file?.name);
       const referenceNumber = await getRefferenceNumber(file?.name);
       const versionNo = await getVersionNumber(file?.name);
+      const extractedDocumentTypeName = await extracteDocumentTypeName( displayName );
+
+      // console.log("extractedDocumentTypeName : ",extractedDocumentTypeName)
+
       let stockNumber = '';
+      const checkDocType = await activeDocumentTypes.find((el) => el?.name?.trim()?.toLowerCase() === extractedDocumentTypeName?.trim()?.toLowerCase() )
       
+      // console.log("checkDocType : ",checkDocType,"defaultDocCategory : ",defaultDocCategory)
+
+      let defaultDocType
+      if( checkDocType?.docCategory?._id === defaultDocCategory?._id ){
+        defaultDocType = checkDocType
+      }
+  
       if (file?.type?.indexOf('pdf') > -1) {
         const arrayBuffer = await file.arrayBuffer();
         const pdfDocument = await pdfjs.getDocument(arrayBuffer).promise;
@@ -276,7 +287,6 @@ const onChangeVersionNo = (index, value) => {
       setValue('files',[ ...newFiles] );
     }
     trigger('files');
-    console.log("newFiles : ",newFiles)
   }
   const toggleCancel = () => { 
     if(machineDrawings){

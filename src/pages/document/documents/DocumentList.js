@@ -74,7 +74,6 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
   const navigate = useNavigate();
   const axiosToken = () => axios.CancelToken.source();
   const cancelTokenSource = axiosToken();
-
   const [filterName, setFilterName] = useState('');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(100);
@@ -100,7 +99,7 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
     orderBy,
     onSort,
   } = useTable({
-    defaultOrderBy: machineDrawings ? 'docCategory' : 'createdAt', defaultOrder: machineDrawings ? 'asc' : 'desc',
+    defaultOrderBy: machineDrawings ? 'doNotOrder' : 'createdAt', defaultOrder: machineDrawings ? 'noOrder' : 'desc',
   });
 
 const onChangeRowsPerPage = (event) => {
