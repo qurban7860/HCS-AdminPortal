@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { PATH_CUSTOMER, PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_SETTING, PATH_SITEMAP, PATH_SECURITY, PATH_EMAIL } from '../../../routes/paths';
+import { PATH_CRM, PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_SETTING, PATH_SITEMAP, PATH_SECURITY, PATH_EMAIL } from '../../../routes/paths';
 // components
 import Iconify from '../../../components/iconify';
 import SvgColor from '../../../components/svg-color';
@@ -67,7 +67,7 @@ function NavigationConfig() {
       subheader: 'general',
       items: [
         { title: 'Dashboard', path: PATH_DASHBOARD.root, icon: ICONS.dashboard },
-        { title: 'Customers', path: PATH_CUSTOMER.root, icon: ICONS.users },
+        { title: 'Customers', path: PATH_CRM.customers.list, icon: ICONS.users },
         { title: 'Machines', path: PATH_MACHINE.machines.list, icon: ICONS.machines },
       ],
     },

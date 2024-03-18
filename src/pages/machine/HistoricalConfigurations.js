@@ -2,10 +2,10 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from '../../redux/store';
 // COMPONENTS
 import { setAllVisibilityFalse } from '../../redux/slices/products/historicalConfiguration';
-import HistoricalConfigurationsViewForm from './Historical Configurations/HistoricalConfigurationsViewForm';
-import HistoricalConfigurationsAddForm from './Historical Configurations/HistoricalConfigurationsAddForm';
-import HistoricalConfigurationsList from './Historical Configurations/HistoricalConfigurationsList';
-import HistoricalConfigurationsCompareViewForm from './Historical Configurations/HistoricalConfigurationsCompareViewForm';
+import HistoricalConfigurationsViewForm from './historicalConfigurations/HistoricalConfigurationsViewForm';
+import HistoricalConfigurationsAddForm from './historicalConfigurations/HistoricalConfigurationsAddForm';
+import HistoricalConfigurationsList from './historicalConfigurations/HistoricalConfigurationsList';
+import HistoricalConfigurationsCompareViewForm from './historicalConfigurations/HistoricalConfigurationsCompareViewForm';
 
 
 // ----------------------------------------------------------------------

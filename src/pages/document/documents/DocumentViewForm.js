@@ -6,7 +6,7 @@ import { Document, Page, pdfjs } from 'react-pdf';
 import { Grid, Card, Box, Dialog, DialogTitle, Button, DialogContent, Divider, Typography } from '@mui/material'
 import download from 'downloadjs';
 import { StyledVersionChip } from '../../../theme/styles/default-styles';
-import { PATH_CUSTOMER, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_CRM, PATH_DOCUMENT } from '../../../routes/paths';
 import {
   deleteDocument,
   getDocumentHistory,
@@ -57,7 +57,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
           await dispatch( getDocuments(customerPage ? customer?._id : null, machinePage ? machine?._id : null) );
         }
         if(customerPage && !machinePage ) {
-          navigate(PATH_CUSTOMER.documents.root( customer?._id ));
+          navigate(PATH_CRM.customers.documents.root( customer?._id ));
         }
       } else {
         await dispatch(getDocuments());
@@ -75,7 +75,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
     dispatch(setDocumentViewFormVisibility(false));
     dispatch(setDocumentEditFormVisibility(true));
     if( customerPage && !machinePage ){
-      navigate(PATH_CUSTOMER.documents.edit( customer?._id, document?._id ));
+      navigate(PATH_CRM.customers.documents.edit( customer?._id, document?._id ));
     }
   };
 
@@ -85,7 +85,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
     dispatch(resetDocumentHistory())
     dispatch(getDocumentHistory(document?._id));
     if( customerPage && !machinePage ){
-      navigate(PATH_CUSTOMER.documents.viewHistory( customer?._id, document?._id ));
+      navigate(PATH_CRM.customers.documents.viewHistory( customer?._id, document?._id ));
     }
   };
 
@@ -133,7 +133,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
       dispatch(setDocumentFormVisibility(true));
       dispatch(setDocumentNewVersionFormVisibility(true));
       if( customerPage && !machinePage ){
-        navigate(PATH_CUSTOMER.documents.new( customer?._id ));
+        navigate(PATH_CRM.customers.documents.new( customer?._id ));
       }
   }else{
     dispatch(setDocumentNewVersionFormVisibility(true));
@@ -145,7 +145,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
     if(customerPage || machinePage){
       if( customerPage && !machinePage ){
         dispatch(setDocumentAddFilesViewFormVisibility(true));
-        navigate(PATH_CUSTOMER.documents.new( customer?._id ));
+        navigate(PATH_CRM.customers.documents.new( customer?._id ));
       }
       dispatch(setDocumentHistoryNewVersionFormVisibility(false));
       dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
@@ -296,7 +296,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
       dispatch(setDocumentHistoryViewFormVisibility(false)); 
       dispatch(setDocumentViewFormVisibility(false))
       if(customerPage && !machinePage ) {
-        navigate(PATH_CUSTOMER.documents.root( customer?._id ));
+        navigate(PATH_CRM.customers.documents.root( customer?._id ));
       }
     } else {
       navigate(PATH_DOCUMENT.document.list)

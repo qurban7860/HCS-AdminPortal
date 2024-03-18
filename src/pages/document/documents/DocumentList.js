@@ -12,7 +12,7 @@ import axios from 'axios';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_CUSTOMER, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_CRM, PATH_DOCUMENT } from '../../../routes/paths';
 // components
 import {
   useTable,
@@ -286,7 +286,7 @@ const onChangePage = (event, newPage) => {
     if (customerPage || machinePage) {
       dispatch(getDocument(id));
       if( customerPage ){
-        navigate(PATH_CUSTOMER.documents.view( customer?._id, id));
+        navigate(PATH_CRM.customers.documents.view( customer?._id, id));
       }else{
         dispatch(setDocumentViewFormVisibility(true));
       }
@@ -326,7 +326,7 @@ const onChangePage = (event, newPage) => {
   const handleGalleryView = () => {
     dispatch(setDocumentGalleryVisibility(true));
     if( customerPage && !machinePage){
-      navigate(PATH_CUSTOMER.documents.viewGallery(customer?._id))
+      navigate(PATH_CRM.customers.documents.viewGallery(customer?._id))
     }
   };
 

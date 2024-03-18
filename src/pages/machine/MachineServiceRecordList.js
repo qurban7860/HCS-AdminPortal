@@ -2,11 +2,11 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from '../../redux/store';
 // COMPONENTS
 import { setAllFlagsFalse } from '../../redux/slices/products/machineServiceRecord';
-import MachineServiceRecordAddForm from './MachineServiceRecord/MachineServiceRecordAddForm';
-import MachineServiceRecordEditForm from './MachineServiceRecord/MachineServiceRecordEditForm';
-import MachineServiceRecordViewForm from './MachineServiceRecord/MachineServiceRecordViewForm';
-import MachineServiceRecordListTable from './MachineServiceRecord/MachineServiceRecordList';
-import MachineServiceRecordHistoryList from './MachineServiceRecord/MachineServiceRecordHistoryList';
+import MachineServiceRecordAddForm from './machineServiceRecords/MachineServiceRecordAddForm';
+import MachineServiceRecordEditForm from './machineServiceRecords/MachineServiceRecordEditForm';
+import MachineServiceRecordViewForm from './machineServiceRecords/MachineServiceRecordViewForm';
+import MachineServiceRecordListTable from './machineServiceRecords/MachineServiceRecordList';
+import MachineServiceRecordHistoryList from './machineServiceRecords/MachineServiceRecordHistoryList';
 
 // ----------------------------------------------------------------------
 

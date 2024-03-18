@@ -21,7 +21,7 @@ import {
 } from '../../../redux/slices/document/document';
 import { setDrawingEditFormVisibility, setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
 import { Snacks } from '../../../constants/document-constants';
-import { PATH_CUSTOMER, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_CRM, PATH_DOCUMENT } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 DocumentEditForm.propTypes = {
@@ -98,7 +98,7 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
       );
       if( customerPage && !machinePage ){
         await dispatch(getDocument(document?._id));
-        navigate(PATH_CUSTOMER.documents.view( customer?._id, document?._id ));
+        navigate(PATH_CRM.customers.documents.view( customer?._id, document?._id ));
       } else if(drawingPage){
         await dispatch(getDocumentHistory(document?._id));
         dispatch(setDrawingViewFormVisibility(true));
@@ -120,7 +120,7 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
 
   const toggleCancel = () => {
     if( customerPage && !machinePage ){
-      navigate(PATH_CUSTOMER.documents.view( customer?._id, document?._id ));
+      navigate(PATH_CRM.customers.documents.view( customer?._id, document?._id ));
     } else if(drawingPage){
       dispatch(setDrawingViewFormVisibility(true));
       dispatch(setDrawingEditFormVisibility(false));

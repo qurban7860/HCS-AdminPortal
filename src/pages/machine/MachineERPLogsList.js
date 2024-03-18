@@ -2,10 +2,10 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from '../../redux/store';
 // COMPONENTS
 import { setAllVisibilityFalse } from '../../redux/slices/products/machineErpLogs';
-import MachineErpLogsAddForm from './ERP_Logs/MachineLogsAddForm';
-import MachineErpLogsViewForm from './ERP_Logs/MachineLogsViewForm';
-import MachineLogsGraphViewForm from './ERP_Logs/MachineLogsGraphViewForm';
-import MachineErpLogsList from './ERP_Logs/MachineLogsList';
+import MachineErpLogsAddForm from './logs/MachineLogsAddForm';
+import MachineErpLogsViewForm from './logs/MachineLogsViewForm';
+import MachineLogsGraphViewForm from './logs/MachineLogsGraphViewForm';
+import MachineErpLogsList from './logs/MachineLogsList';
 
 // ----------------------------------------------------------------------
 

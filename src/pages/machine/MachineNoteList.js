@@ -25,9 +25,9 @@ import BreadcrumbsProvider from '../../components/Breadcrumbs/BreadcrumbsProvide
 import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
 import Iconify from '../../components/iconify';
 // sections
-import NotesViewForm from './Note/NotesViewForm';
-import NoteEditForm from './Note/NoteEditForm';
-import NoteAddForm from './Note/NoteAddForm';
+import NotesViewForm from './notes/NotesViewForm';
+import NoteEditForm from './notes/NoteEditForm';
+import NoteAddForm from './notes/NoteAddForm';
 import AddButtonAboveAccordion from '../../components/Defaults/AddButtonAboveAcoordion';
 import {
   getNotes,

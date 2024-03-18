@@ -1,4 +1,4 @@
-import { PATH_SECURITY, PATH_CUSTOMER } from '../../../../routes/paths';
+import { PATH_SECURITY, PATH_CRM } from '../../../../routes/paths';
 
 export const OPTIONS = [
   {
@@ -15,6 +15,6 @@ export const OPTIONS = [
   },
   {
     label: 'Organization',
-    linkTo: (id) => PATH_CUSTOMER.view(id),
+    linkTo: (id) => PATH_CRM.customers.view(id),
   },
 ];

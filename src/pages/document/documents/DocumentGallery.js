@@ -16,7 +16,7 @@ import { downloadFile } from '../../../redux/slices/document/documentFile';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { Cover } from '../../../components/Defaults/Cover';
-import { PATH_CUSTOMER, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_CRM, PATH_DOCUMENT } from '../../../routes/paths';
 import EmptyContent from '../../../components/empty-content/EmptyContent';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
 
@@ -123,7 +123,7 @@ export default function DocumentGallery({customerPage, machinePage}) {
 
   const handleBackLink = () => {
     if( customerPage ){
-      navigate(PATH_CUSTOMER.documents.root(customer?._id))
+      navigate(PATH_CRM.customers.documents.root(customer?._id))
     } else if( machinePage ){
       dispatch(setDocumentGalleryVisibility(false))
       // () =>  navigate(PATH_DOCUMENT.document.list)
