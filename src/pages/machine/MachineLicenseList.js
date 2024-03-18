@@ -26,9 +26,9 @@ import { useTable, getComparator, TableNoData } from '../../components/table';
 import Iconify from '../../components/iconify';
 // sections
 import { setLicenseFormVisibility } from '../../redux/slices/products/license';
-import LicenseAddForm from './License/LicenseAddForm';
-import LicenseEditForm from './License/LicenseEditForm';
-import LicenseViewForm from './License/LicenseViewForm';
+import LicenseAddForm from './licenses/LicenseAddForm';
+import LicenseEditForm from './licenses/LicenseEditForm';
+import LicenseViewForm from './licenses/LicenseViewForm';
 import { fDate } from '../../utils/formatTime';
 // constants
 import { BREADCRUMBS, BUTTONS } from '../../constants/default-constants';

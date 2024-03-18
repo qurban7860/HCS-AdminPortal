@@ -13,7 +13,7 @@ import {
   sendEmail,
   setSendEmailDialog,
 } from '../../redux/slices/products/machineServiceRecord';
-import { MachineServiceRecordPDF } from '../../pages/machine/MachineServiceRecord/MachineServiceRecordPDF';
+import { MachineServiceRecordPDF } from '../../pages/machine/machineServiceRecords/MachineServiceRecordPDF';
 import FormProvider from '../hook-form/FormProvider';
 
 import { RHFTextField } from '../hook-form';

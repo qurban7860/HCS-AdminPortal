@@ -6,7 +6,7 @@ function path(root, sublink) {
 
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
-const ROOTS_CUSTOMER = '/crm/customers';
+const ROOTS_CRM = '/crm';
 const ROOTS_MACHINE = '/products';
 const ROOTS_EMAIL =   '/email';
 const ROOTS_SECURITY = '/security';
@@ -54,46 +54,48 @@ export const PATH_DASHBOARD = {
 };
 
   // CUSTOMER
-export const PATH_CUSTOMER = {
-  root: ROOTS_CUSTOMER,
-  permissionDenied: path(ROOTS_CUSTOMER, '/permission-denied'),
-  sitesReport: path(ROOTS_CUSTOMER, '/sitesReport'),
-  contactsReport: path(ROOTS_CUSTOMER, '/contactsReport'),
-  new: path(ROOTS_CUSTOMER, '/new'),
-  view: (customerId) => path(ROOTS_CUSTOMER, `/${customerId}/view`),
-  edit: (customerId) => path(ROOTS_CUSTOMER, `/${customerId}/edit`),
-  sites: {
-    root: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/sites`),
-    new: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/sites/new`),
-    view: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/sites/${id}/view`),
-    edit: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/sites/${id}/edit`),
-  },
-  contacts: {
-    root: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/contacts`),
-    new: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/contacts/new`),
-    view: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/contacts/${id}/view`),
-    edit: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/contacts/${id}/edit`),
-    move: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/contacts/${id}/move`),
-  },
-  notes: {
-    root: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/notes`),
-    new: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/notes/new`),
-    view: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/notes/${id}/view`),
-    edit: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/notes/${id}/edit`),
-  },  
-  documents: {
-    root: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/documents`),
-    new: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/documents/new`),
-    viewGallery: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/documents/viewGallery`),
-    view: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/documents/${id}/view`),
-    viewHistory: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/documents/${id}/viewHistory`),
-    edit: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/documents/${id}/edit`),
-  },
-  machines: {
-    root: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/machines`),
-    move: ( customerId, id ) => path(ROOTS_CUSTOMER, `/${customerId}/machines/${id}/move`),
-    new: ( customerId ) => path(ROOTS_CUSTOMER, `/${customerId}/machines/new`),
-  },
+export const PATH_CRM = {
+  permissionDenied: path(ROOTS_CRM, '/permission-denied'),
+  sites: path(ROOTS_CRM, '/sites'),
+  contacts: path(ROOTS_CRM, '/contacts'),
+  customers: {
+    list: path(ROOTS_CRM, '/customers'),
+    new: path(ROOTS_CRM, '/customers/new'),
+    view: (customerId) => path(ROOTS_CRM, `/customers/${customerId}/view`),
+    edit: (customerId) => path(ROOTS_CRM, `/customers/${customerId}/edit`),
+    sites: {
+      root: ( customerId ) => path(ROOTS_CRM, `/customers/${customerId}/sites`),
+      new: ( customerId ) => path(ROOTS_CRM, `/customers/${customerId}/sites/new`),
+      view: ( customerId, id ) => path(ROOTS_CRM, `/customers/${customerId}/sites/${id}/view`),
+      edit: ( customerId, id ) => path(ROOTS_CRM, `/customers/${customerId}/sites/${id}/edit`),
+    },
+    contacts: {
+      root: ( customerId ) => path(ROOTS_CRM, `/customers/${customerId}/contacts`),
+      new: ( customerId ) => path(ROOTS_CRM, `/customers/${customerId}/contacts/new`),
+      view: ( customerId, id ) => path(ROOTS_CRM, `/customers/${customerId}/contacts/${id}/view`),
+      edit: ( customerId, id ) => path(ROOTS_CRM, `/customers/${customerId}/contacts/${id}/edit`),
+      move: ( customerId, id ) => path(ROOTS_CRM, `/customers/${customerId}/contacts/${id}/move`),
+    },
+    notes: {
+      root: ( customerId ) => path(ROOTS_CRM, `/customers/${customerId}/notes`),
+      new: ( customerId ) => path(ROOTS_CRM, `/customers/${customerId}/notes/new`),
+      view: ( customerId, id ) => path(ROOTS_CRM, `/customers/${customerId}/notes/${id}/view`),
+      edit: ( customerId, id ) => path(ROOTS_CRM, `/customers/${customerId}/notes/${id}/edit`),
+    },  
+    documents: {
+      root: ( customerId ) => path(ROOTS_CRM, `/customers/${customerId}/documents`),
+      new: ( customerId ) => path(ROOTS_CRM, `/customers/${customerId}/documents/new`),
+      viewGallery: ( customerId ) => path(ROOTS_CRM, `/customers/${customerId}/documents/viewGallery`),
+      view: ( customerId, id ) => path(ROOTS_CRM, `/customers/${customerId}/documents/${id}/view`),
+      viewHistory: ( customerId, id ) => path(ROOTS_CRM, `/customers/${customerId}/documents/${id}/viewHistory`),
+      edit: ( customerId, id ) => path(ROOTS_CRM, `/customers/${customerId}/documents/${id}/edit`),
+    },
+    machines: {
+      root: ( customerId ) => path(ROOTS_CRM, `/customers/${customerId}/machines`),
+      move: ( customerId, id ) => path(ROOTS_CRM, `/customers/${customerId}/machines/${id}/move`),
+      new: ( customerId ) => path(ROOTS_CRM, `/customers/${customerId}/machines/new`),
+    },
+  }
 };
 
 // MACHINE

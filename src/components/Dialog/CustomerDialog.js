@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Dialog, DialogContent, DialogTitle, Divider } from '@mui/material';
 import { setCustomerDialog, setCustomerTab } from '../../redux/slices/customer/customer';
 // import Iconify from '../../../components/iconify';
-import { PATH_CUSTOMER } from '../../routes/paths';
+import { PATH_CRM } from '../../routes/paths';
 import DialogLink from './DialogLink';
 import FormLabel from '../DocumentForms/FormLabel';
 import ViewFormField from '../ViewForms/ViewFormField';
@@ -73,7 +73,7 @@ function CustomerDialog() {
         onClick={() => {
           dispatch(setCustomerTab('info'));
           handleCustomerDialog();
-          navigate(PATH_CUSTOMER.view(customer._id));
+          navigate(PATH_CRM.customers.view(customer._id));
         }}
         content="Go to Customer"
       />

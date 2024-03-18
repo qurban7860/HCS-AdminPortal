@@ -23,6 +23,7 @@ const initialState = {
   activeMachines: [],
   allMachines:[],
   customerMachines:[],
+  activeCustomerMachines: [],
   machineLatLongCoordinates: [],
   machineGallery:[],
   transferDialogBoxVisibility: false,
@@ -127,6 +128,21 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // GET Active Customer Machines
+    getActiveCustomerMachinesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeCustomerMachines = action.payload;
+      state.initial = true;
+    },
+
+    // RESET Active Customer Machines
+    resetActiveCustomerMachines(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeCustomerMachines = [];
+      state.initial = true;
+    },
 
     // GET Machine LatLong Coordinates
     getMachineLatLongCoordinatesSuccess(state, action) {
@@ -250,6 +266,7 @@ export const {
   setTransferMachineFlag,
   setMachineTransferDialog,
   resetCustomerMachines,
+  resetActiveCustomerMachines,
   resetMachine,
   resetMachines,
   resetActiveMachines,
@@ -426,6 +443,28 @@ export function getCustomerMachines(customerId) {
   };
 }
 
+export function getActiveCustomerMachines(customerId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, 
+      {
+        params: {
+          customer: customerId,
+          isActive: true,
+          isArchived: false,
+        }
+      });
+      dispatch(slice.actions.getActiveCustomerMachinesSuccess(response.data));
+      return response.data;
+      // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
 
 // ----------------------------------------------------------------------
 

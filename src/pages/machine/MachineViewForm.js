@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import { Card, Grid, Link, Chip, Typography} from '@mui/material';
 // routes
-import { PATH_CUSTOMER, PATH_MACHINE } from '../../routes/paths';
+import { PATH_CRM, PATH_MACHINE } from '../../routes/paths';
 // slices
 import {
   getMachines,
@@ -34,7 +34,7 @@ import GoogleMaps from '../../assets/GoogleMaps';
 import { TITLES, FORMLABELS } from '../../constants/default-constants';
 import { Snacks } from '../../constants/machine-constants';
 // utils
-import { fDate, GetDifferenceInDays } from '../../utils/formatTime';
+import { fDate } from '../../utils/formatTime';
 // dialog
 import MachineDialog from '../../components/Dialog/MachineDialog'
 import CustomerDialog from '../../components/Dialog/CustomerDialog';
@@ -261,7 +261,7 @@ export default function MachineViewForm() {
                     <Link onClick={(event)=> handleCustomerDialog(event, defaultValues.customer?._id)} underline="none" sx={{ cursor: 'pointer'}}>
                       {defaultValues.customer?.name}
                     </Link>
-                      <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(defaultValues.customer?._id), '_blank' ) }/>
+                      <OpenInNewPage onClick={()=> window.open( PATH_CRM.customers.view(defaultValues.customer?._id), '_blank' ) }/>
                     </>
                   )
                 }
@@ -281,15 +281,13 @@ export default function MachineViewForm() {
               node={
                 <Grid display="flex" alignItems="center">
                   { defaultValues?.transferredFromMachine && 
-                    <>
-                      <Typography variant='body2' sx={{mt: 0.5}} >
-                        {`from >`}
-                        <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredFromMachine?.customer?._id)} underline="none" sx={{ cursor: 'pointer', ml:1}}>
-                          <b>{defaultValues?.transferredFromMachine?.customer?.name}</b>
-                        </Link>
-                          <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(defaultValues?.transferredFromMachine?.customer?._id), '_blank' ) }/>
-                      </Typography>
-                    </>}
+                    <Typography variant='body2' sx={{mt: 0.5}} >
+                      {`from >`}
+                      <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredFromMachine?.customer?._id)} underline="none" sx={{ cursor: 'pointer', ml:1}}>
+                        <b>{defaultValues?.transferredFromMachine?.customer?.name}</b>
+                      </Link>
+                        <OpenInNewPage onClick={()=> window.open( PATH_CRM.customers.view(defaultValues?.transferredFromMachine?.customer?._id), '_blank' ) }/>
+                    </Typography>}
                     { defaultValues?.transferredFromMachine && defaultValues?.transferredToMachine && <Typography variant='body2'>,</Typography> }
                     { defaultValues?.transferredToMachine && 
                       <Typography variant='body2' sx={{mt: 0.5, ml:1 }} >
@@ -297,7 +295,7 @@ export default function MachineViewForm() {
                           <Link onClick={(event)=> handleCustomerDialog(event, defaultValues?.transferredToMachine?.customer?._id)} underline="none" sx={{ cursor: 'pointer', ml:1}}>
                             <b>{defaultValues?.transferredToMachine?.customer?.name}</b>
                           </Link>
-                            <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(defaultValues?.transferredToMachine?.customer?._id), '_blank' ) }/>
+                            <OpenInNewPage onClick={()=> window.open( PATH_CRM.customers.view(defaultValues?.transferredToMachine?.customer?._id), '_blank' ) }/>
                       </Typography> }
                 </Grid>
               }
