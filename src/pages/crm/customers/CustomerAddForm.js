@@ -8,7 +8,9 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack } from '@mui/material';
+import { createTheme } from '@mui/material/styles';
+import { green } from '@mui/material/colors';
+import { Box, Card, Grid, Stack, IconButton } from '@mui/material';
 // slice
 import { addCustomer } from '../../../redux/slices/customer/customer';
 import { getActiveSPContacts, resetActiveSPContacts } from '../../../redux/slices/customer/contact';
@@ -22,7 +24,7 @@ import FormProvider, {
   RHFTextField,
   RHFCountryAutocomplete,
   RHFChipsInput,
-  RHFPhoneInput,
+  RHFCustomPhoneInput,
   RHFCheckbox,
 } from '../../../components/hook-form';
 import { MotionContainer, varBounce } from '../../../components/animate';
@@ -32,6 +34,8 @@ import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { FORMLABELS } from '../../../constants/customer-constants';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { AddCustomerSchema } from '../../schemas/customer';
+import Iconify from '../../../components/iconify';
+import { StyledTooltip } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -46,8 +50,14 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  
+  const theme = createTheme({ palette: { success: green } });
   const { activeSpContacts } = useSelector((state) => state.contact);
+
+  const PHONE_TYPES_ = JSON.parse( localStorage.getItem('configurations'))?.find( ( c )=> c?.name === 'PHONE_TYPES' )
+  let PHONE_TYPES = ['Mobile', 'Home', 'Work', 'Fax', 'Others'];
+  if(PHONE_TYPES_) {
+    PHONE_TYPES = PHONE_TYPES_.value.split(',').map(item => item.trim());
+  }
 
   useLayoutEffect(() => {
     dispatch(getActiveSPContacts());
@@ -62,6 +72,10 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       tradingName: [],
       phone: '',
       fax: '',
+      phoneNumbers: [
+        { type: PHONE_TYPES[0], countryCode: '64' },
+        { type: PHONE_TYPES[0], countryCode: '64' },
+      ],
       email: '',
       website: '',
       // Address Information
@@ -107,12 +121,25 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const {
     reset,
     watch,
+    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const { isSameContact } = watch();
-  
+  const { isSameContact, phoneNumbers, country } = watch();
+
+  const addContactNumber = () => {
+    const updatedPhoneNumbers = [
+      ...phoneNumbers,
+      { type: '', countryCode: country?.phone?.replace(/[^0-9]/g, '') },
+    ];
+    setValue('phoneNumbers', updatedPhoneNumbers);
+  };
+
+  const removeContactNumber = (indexToRemove) => {
+    setValue('phoneNumbers', phoneNumbers?.filter((_, index) => index !== indexToRemove) || []);
+  };
+
   const toggleCancel = () => navigate(PATH_CRM.customers.list);
 
   const onSubmit = async (data) => {
@@ -149,12 +176,74 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               <RHFChipsInput name="tradingName" label="Trading Name"  />
             </Box>
 
+
+              {/* 
+                  <RHFPhoneInput name="phone" label="Phone Number"  />
+                  <RHFPhoneInput name="fax" label="Fax" /> 
+              */}
+            <Grid>
+              {phoneNumbers?.map((pN, index) => (
+                <Grid sx={{ py: 1 }} display="flex" alignItems="center">
+                  <RHFCustomPhoneInput
+                    name={`phoneNumbers[${index}]`}
+                    value={pN}
+                    label={pN?.type || 'Contact Number'}
+                    index={index}
+                  />
+                  <IconButton
+                    disabled={phoneNumbers?.length === 1}
+                    onClick={() => removeContactNumber(index)}
+                    size="small"
+                    variant="contained"
+                    color="error"
+                    sx={{ mx: 1 }}
+                  >
+                    <StyledTooltip
+                      title="Remove Contact Number"
+                      placement="top"
+                      disableFocusListener
+                      tooltipcolor={theme.palette.error.main}
+                      color={
+                        phoneNumbers?.length > 1
+                          ? theme.palette.error.main
+                          : theme.palette.text.main
+                      }
+                    >
+                      <Iconify icon="icons8:minus" sx={{ width: 25, height: 25 }} />
+                    </StyledTooltip>
+                  </IconButton>
+                </Grid>
+              ))}
+              <Grid>
+                <IconButton
+                  disabled={phoneNumbers?.length > 9}
+                  onClick={addContactNumber}
+                  size="small"
+                  variant="contained"
+                  color="success"
+                  sx={{ ml: 'auto', mr: 1 }}
+                >
+                  <StyledTooltip
+                    title="Add Contact Number"
+                    placement="top"
+                    disableFocusListener
+                    tooltipcolor={theme.palette.success.dark}
+                    color={
+                      phoneNumbers?.length < 10
+                      ? theme.palette.success.dark
+                      : theme.palette.text.main
+                    }
+                  >
+                    <Iconify icon="icons8:plus" sx={{ width: 25, height: 25 }} />
+                  </StyledTooltip>
+                </IconButton>
+              </Grid>
+            </Grid>
+
             <Box
               rowGap={2} columnGap={2} display="grid"
               gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
             >
-              <RHFPhoneInput name="phone" label="Phone Number"  />
-              <RHFPhoneInput name="fax" label="Fax" />
               <RHFTextField name="email" label="Email" />
               <RHFTextField name="website" label="Website" />
             </Box>
@@ -188,7 +277,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               <RHFTextField name="billingContactFirstName" label="First Name" />
               <RHFTextField name="billingContactLastName" label="Last Name" />
               <RHFTextField name="billingContactTitle" label="Billing Contact Title" />
-              <RHFPhoneInput name="billingContactPhone" label="Billing Contact Phone Number" />
+              {/* <RHFPhoneInput name="billingContactPhone" label="Billing Contact Phone Number" /> */}
               <RHFTextField name="billingContactEmail" label="Billing Contact Email" />
             </Box>
           </Stack>
@@ -206,7 +295,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   <RHFTextField  name="technicalContactFirstName" label="First Name" />
                   <RHFTextField  name="technicalContactLastName"  label="Last Name" />
                   <RHFTextField  name="technicalContactTitle"     label="Technical Contact Title" />
-                  <RHFPhoneInput name="technicalContactPhone"     label="Technical Contact Phone Number" />
+                  {/* <RHFPhoneInput name="technicalContactPhone" label="Technical Contact Phone Number" /> */}
                   <RHFTextField  name="technicalContactEmail"     label="Technical Contact Email" />
                 </Box>
               )}

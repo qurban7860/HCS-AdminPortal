@@ -135,10 +135,6 @@ const onChangeDocType = ( index, event, value ) => {
 const onChangeDisplayName = (index, value) => { setValue(`files[${index}].displayName`, value); trigger('files'); }
 const onChangeReferenceNumber = (index, value) => setValue(`files[${index}].referenceNumber`, value);
 const onChangeStockNumber = (index, value) => setValue(`files[${index}].stockNumber`, value);
-const extracteDocumentTypeName = ( fileName ) => {
-  const matchResult = fileName?.match(/\b\S+\s(.+?)\([^)]*\)/);
-  return matchResult ? matchResult[1] : null;
-};
 
 const onChangeVersionNo = (index, value) => {
   const sanitizedValue = value?.replace(/[^\d.]+/g, "");
@@ -230,17 +226,17 @@ const onChangeVersionNo = (index, value) => {
       await setProgressBarPercentage( index )
       const accumulator = await accumulatorPromise;
       const displayName = await removeFileExtension(file?.name);
-      console.log("displayName : ",displayName)
       const referenceNumber = await getRefferenceNumber(file?.name);
       const versionNo = await getVersionNumber(file?.name);
-      const extractedDocumentTypeName = await extracteDocumentTypeName( displayName );
 
       let stockNumber = '';
-      const checkDocType = await activeDocumentTypes.find((el) => el?.name?.trim()?.toLowerCase() === extractedDocumentTypeName?.trim()?.toLowerCase() )
+      const checkDocType = activeDocumentTypes.find((el) => displayName.trim().toLowerCase().includes(el.name.trim().toLowerCase()));
 
       let defaultDocType
       if( checkDocType?.docCategory?._id === defaultDocCategory?._id ){
         defaultDocType = checkDocType
+      } else if( displayName.trim().toLowerCase().includes( 'frama' ) || displayName.trim().toLowerCase().includes( 'decoiler' )){
+        defaultDocType = activeDocumentTypes.find((el) => el?.name?.trim()?.toLowerCase().includes( 'assembly' ))
       }
   
       if (file?.type?.indexOf('pdf') > -1) {

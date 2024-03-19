@@ -169,7 +169,7 @@ export default function SecurityUserViewForm() {
             handleUpdatePassword={handleUpdatePassword}
             onDelete={onDelete}
             isInviteLoading={isLoading}
-            backLink={() => navigate(PATH_SECURITY.users.list)}
+            backLink={() => navigate(PATH_SECURITY.root)}
             isActive={defaultValues.isActive}
             multiAuth={defaultValues?.multiFactorAuthentication} 
             currentEmp={defaultValues?.currentEmployee}
