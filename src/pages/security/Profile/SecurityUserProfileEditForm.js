@@ -65,7 +65,7 @@ export default function SecurityUserProfileEditForm() {
       email: securityUser?.email || '',
       loginEmail: securityUser?.login || '',
       roles: securityUser?.roles || [],
-      dataAccessibilityLevel: securityUser?.dataAccessibilityLevel || 'FILTER',
+      dataAccessibilityLevel: securityUser?.dataAccessibilityLevel || 'RESTRICTED',
       regions: securityUser?.regions || [],
       customers: securityUser?.customers || [],
       machines: securityUser?.machines || [],
@@ -201,7 +201,7 @@ useEffect(() => {
                 disableClearable
                 name="dataAccessibilityLevel"
                 label="Data Accessibility Level"
-                options={ [ 'FILTER', 'GLOBAL' ] }
+                options={ [ 'RESTRICTED', 'GLOBAL' ] }
                 isOptionEqualToValue={(option, value) => option === value}
                 renderOption={(props, option, { selected }) => ( <li {...props}> <Checkbox checked={selected} />{option|| ''}</li> )}
               />

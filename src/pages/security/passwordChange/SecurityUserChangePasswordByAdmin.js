@@ -5,17 +5,21 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
 // @mui
+import { createTheme } from '@mui/material/styles';
+import { green, blue } from '@mui/material/colors';
+import { LoadingButton } from '@mui/lab';
 import { Stack, Card, Container, IconButton, InputAdornment, Grid } from '@mui/material';
 // components
 import Iconify from '../../../components/iconify';
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField } from '../../../components/hook-form';
 import { Cover } from '../../../components/Defaults/Cover';
-import { SecurityUserPasswordUpdate } from '../../../redux/slices/securityUser/securityUser';
+import { SecurityUserPasswordUpdate, sendResetPasswordEmail, resetLoadingResetPasswordEmail } from '../../../redux/slices/securityUser/securityUser';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { PATH_SECURITY } from '../../../routes/paths';
+import { StyledTooltip } from '../../../theme/styles/default-styles';
+import { useAuthContext } from '../../../auth/useAuthContext';
 
 // ----------------------------------------------------------------------
 
@@ -23,15 +27,25 @@ export default function SecurityUserChangePassword() {
   const navigate = useNavigate();
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { securityUser } = useSelector((state) => state.user);
+  const { securityUser, isLoadingResetPasswordEmail } = useSelector((state) => state.user);
+
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
+  const { isAllAccessAllowed } = useAuthContext();
   const ChangePassWordSchema = Yup.object().shape({
     newPassword: Yup.string()
       .min(6, 'Password must be at least 6 characters')
       .max(18, 'Password must be less than 18 characters')
       .required('New Password is required'),
     confirmNewPassword: Yup.string().oneOf([Yup.ref('newPassword'), null], 'Passwords must match'),
+  });
+
+
+  const theme = createTheme({
+    palette: {
+      success: green,
+      primary: blue,
+    },
   });
 
   const defaultValues = {
@@ -50,9 +64,18 @@ export default function SecurityUserChangePassword() {
     formState: { isSubmitting },
   } = methods;
 
-  const toggleCancel = () => {
-    navigate(PATH_SECURITY.users.view(securityUser._id));
-  };
+  const toggleCancel = () => navigate(PATH_SECURITY.users.view(securityUser._id));
+
+  const senResetPasswordLink = async () => {
+    try{
+      await dispatch(sendResetPasswordEmail(securityUser?.login))
+      await dispatch(resetLoadingResetPasswordEmail())
+      await enqueueSnackbar('Email sent successfully!!');
+    }catch(e){
+      dispatch(resetLoadingResetPasswordEmail())
+      enqueueSnackbar(e, { variant: `error` } );
+    }
+  }
 
   const onSubmit = async (data) => {
     try {
@@ -73,7 +96,7 @@ export default function SecurityUserChangePassword() {
   };
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
       <Container maxWidth={false}>
         <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
           <Cover name="Change Password" icon="mdi:user-circle" />
@@ -87,19 +110,35 @@ export default function SecurityUserChangePassword() {
                   label="Name"
                   type="name"
                   autoComplete="name"
-                  value={securityUser.name}
+                  value={securityUser?.name || '' }
                   disabled
                 />
 
                 <RHFTextField
-                  name="email"
+                  name="login"
                   label="Login"
                   type="email"
                   autoComplete="email"
-                  value={securityUser.login}
+                  value={securityUser?.login || '' }
+                  disabled
+                />
+                
+                <RHFTextField
+                  name="email"
+                  label="Email"
+                  type="email"
+                  autoComplete="email"
+                  value={securityUser?.email || ''}
                   disabled
                 />
 
+                { isAllAccessAllowed && <Grid container item sm={12} md={12} sx={{ display: { md: 'flex'}, justifyContent: 'space-between' }} > 
+                  <LoadingButton disabled={isLoadingResetPasswordEmail} loading={isLoadingResetPasswordEmail} onClick={senResetPasswordLink} size="small" variant="contained" color='primary' sx={{ ml: 'auto', mr: 1, my:-1 }} >
+                    <StyledTooltip title="Send reset Password email" placement="top" disableFocusListener tooltipcolor={theme.palette.primary.dark} color={theme.palette.text}  >
+                      <Iconify icon="mdi:password-reset" sx={{ width: 25, height: 25 }} />
+                    </StyledTooltip>
+                  </LoadingButton>
+                </Grid>}
                 <RHFTextField
                   name="newPassword"
                   label="New Password"

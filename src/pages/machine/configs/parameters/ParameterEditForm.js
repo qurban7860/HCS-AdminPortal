@@ -24,6 +24,7 @@ import FormProvider, {
   RHFTextField,
   RHFSwitch,
   RHFChipsInput,
+  RHFAutocomplete,
 } from '../../../../components/hook-form';
 import { Cover } from '../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
@@ -32,6 +33,7 @@ import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons'
 // ----------------------------------------------------------------------
 
 export default function ParameterEditForm() {
+
   const { techparam } = useSelector((state) => state.techparam);
 
   const { techparamcategories } = useSelector((state) => state.techparamcategory);
@@ -46,17 +48,19 @@ export default function ParameterEditForm() {
   const { id } = useParams();
 
   const ParameterEditSchema = Yup.object().shape({
-    name: Yup.string().max(40).required('Name is required'),
+    category: Yup.object().label('Parameter Category').nullable().required(),
+    name: Yup.string().max(200).required('Name is required'),
+    code: Yup.array().label('Code').max(20)
+    .test('codeLength', 'Code must not exceed 200 characters', (value) => !(value && value.some( val => val.length > 200 ))),
     description: Yup.string().max(5000),
     isActive: Yup.boolean(),
-    code: Yup.string().max(200).required('Code is required'),
   });
 
   const defaultValues = useMemo(
     () => ({
+      category: techparam?.category || null,
       name: techparam?.name || '',
-      alias: techparam?.alias || [],
-      code: techparam?.code || '',
+      code: techparam?.code || [],
       description: techparam?.description || '',
       isActive: techparam.isActive,
       isIniRead: techparam?.isIniRead,
@@ -64,7 +68,7 @@ export default function ParameterEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [techparam]
   );
-  // const { themeStretch } = useSettingsContext();
+  
   const methods = useForm({
     resolver: yupResolver(ParameterEditSchema),
     defaultValues,
@@ -76,13 +80,13 @@ export default function ParameterEditForm() {
     formState: { isSubmitting },
   } = methods;
 
-  useEffect(() => {
-    if (techparam) {
-      reset(defaultValues);
-    }
-    setParamVal(techparam.category);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [techparam]);
+  // useEffect(() => {
+  //   if (techparam) {
+  //     reset(defaultValues);
+  //   }
+  //   setParamVal(techparam.category);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [techparam]);
 
   const toggleCancel = () => {
     navigate(PATH_MACHINE.machines.settings.parameters.view(id));
@@ -90,9 +94,6 @@ export default function ParameterEditForm() {
 
   const onSubmit = async (data) => {
     try {
-      if (paramVal !== null && paramVal !== '') {
-        data.category = paramVal?._id;
-      }
       await dispatch(updateTechparam(data, techparam._id));
       reset();
       enqueueSnackbar('Update success!');
@@ -112,42 +113,22 @@ export default function ParameterEditForm() {
         <Grid item xs={18} md={12} sx={{ mt: 3 }}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
-              
-                <Autocomplete
+                <RHFAutocomplete
                   disabled
-                  value={paramVal || null}
+                  name="category"
+                  label="Parameter Category"
                   options={techparamcategories}
                   isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   getOptionLabel={(option) => option.name}
-                  onChange={(event, newValue) => {
-                    setParamVal(newValue);
-                  }}
-                  id="controllable-states-demo"
-                  renderInput={(params) => <TextField {...params} label="Parameter Category" required />}
-                  ChipProps={{ size: 'small' }}
                 />
-              <Box
-                rowGap={2}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
-              >
                 <RHFTextField name="name" label="Name*" />
-                <RHFTextField name="code" label="Code*" />
-              </Box>
-              <RHFChipsInput name="alias" label="Alias" />
-              <Box
-                rowGap={2}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
-              >
+                <RHFChipsInput name="code" label="Code*" />
+
                 <RHFTextField name="description" label="Description" minRows={7} multiline />
                 <Grid display="flex" >
                   <RHFSwitch  name="isActive" label="Active" />
                   <RHFSwitch  name="isIniRead" label="Read INI" />
                 </Grid>
-              </Box>
             </Stack>
             <AddFormButtons machineSettingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>

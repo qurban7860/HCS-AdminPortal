@@ -7,16 +7,15 @@ import Iconify from '../iconify';
 import { ICONS } from '../../constants/icons/default-icons';
 import useLimitString from '../../hooks/useLimitString';
 
-export default function LinkTableCell({ align, onClick, param, stringLength, isDefault }) {
+export default function LinkTableCell({ align, onClick, param, node, stringLength, isDefault }) {
 
   const theme = createTheme({
-    palette: {
-      success: green,
-    },
+    palette: { success: green },
   });
 
   return (
-        <TableCell className='ellipsis-cell' onClick={onClick} align={align}
+    <>
+      <TableCell className='ellipsis-cell' onClick={onClick} align={align}
           color="inherit"
           sx={{
             cursor: 'pointer',
@@ -31,20 +30,23 @@ export default function LinkTableCell({ align, onClick, param, stringLength, isD
               color: () => alpha(theme.palette.info.main, 0.98),
             },
           }}
-        >
-        { useLimitString( param , stringLength || 30) }
+          >
+        { useLimitString( param , stringLength || 30) } 
         {isDefault && 
           <StyledTooltip onClick={onClick} title={ICONS.DEFAULT.heading} placement="top" disableFocusListener tooltipcolor={theme.palette.primary.main}>
             <Iconify icon={ICONS.DEFAULT.icon} color={theme.palette.primary.main} width="17px" height="17px" sx={{ mb: -0.3, ml: 0.5, cursor:"pointer"}}/>
           </StyledTooltip>
         }
-    </TableCell>
+        { node }
+      </TableCell>
+    </>
   );
 }
 
 LinkTableCell.propTypes = {
   align: PropTypes.string,
   onClick: PropTypes.func,
+  node: PropTypes.node,
   param: PropTypes.string,
   stringLength: PropTypes.number,
   isDefault: PropTypes.bool,

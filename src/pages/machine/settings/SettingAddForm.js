@@ -29,17 +29,20 @@ export default function SettingAddForm() {
   const { activeTechParamCategories } = useSelector((state) => state.techparamcategory);
   const [category, setCategory] = useState('');
   const [techParamVal, setTechParamVal] = useState(null);
-  // const [paramData, setparamData] = useState([]);
   const { activeCustomers } = useSelector((state) => state.customer);
   const { machine, activeCustomerMachines } = useSelector((state) => state.machine);
-
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
-  useLayoutEffect(() => {
+  useLayoutEffect( () => {
     dispatch(getActiveTechparamcategories());
     dispatch(resetTechParamByCategory());
-  }, [dispatch]);
+    if(machine?.customer?._id ){
+      dispatch(getActiveCustomerMachines( machine?.customer?._id ))
+    }
+    return ()=>{ dispatch(resetActiveCustomerMachines()) }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch ]);
 
   useEffect(() => {
     if (category) {
@@ -53,11 +56,12 @@ export default function SettingAddForm() {
       category: null,
       techParamVal: null,
       techParamValue: '',
-      customer: null,
-      machines: [],
+      customer: machine?.customer || null,
+      machines: activeCustomerMachines || [],
       isUpdateMultipleMachines: false,
       isActive: true,
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
@@ -74,6 +78,11 @@ export default function SettingAddForm() {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+
+  useLayoutEffect( () => {
+      reset(defaultValues);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ ]);
 
   const { customer, isUpdateMultipleMachines } = watch();
 
@@ -183,14 +192,18 @@ export default function SettingAddForm() {
                       <RHFAutocomplete 
                         name="customer"
                         label="Customer"
-                        options={activeCustomers}
+                        options={ [ { _id: 'customId', name: 'All Customer' }, ...activeCustomers ] }
                         isOptionEqualToValue={(option, value) => option?._id === value?._id}
                         getOptionLabel={(option) => `${option?.name || ''}`}
                         renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.name || ''}`}</li> )}
                         onChange={async (event, newValue) => {
                           if(newValue){
                             await setValue('customer',newValue);
-                            await dispatch(getActiveCustomerMachines(newValue?._id))
+                            if( newValue?.name?.toLowerCase() === 'all customer' ){
+                              await dispatch(getActiveCustomerMachines())
+                            }else{
+                              await dispatch(getActiveCustomerMachines(newValue?._id))
+                            }
                           }else{
                             await setValue('customer',null);
                             await dispatch(resetActiveCustomerMachines())
