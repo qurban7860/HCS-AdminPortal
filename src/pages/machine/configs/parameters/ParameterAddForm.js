@@ -13,8 +13,6 @@ import {
   Grid,
   Stack,
   Container,
-  TextField,
-  Autocomplete,
 } from '@mui/material';
 // slice
 import { addTechparam } from '../../../../redux/slices/products/machineTechParam';
@@ -22,7 +20,7 @@ import { addTechparam } from '../../../../redux/slices/products/machineTechParam
 import { PATH_MACHINE } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFSwitch, RHFChipsInput } from '../../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFAutocomplete, RHFSwitch, RHFChipsInput } from '../../../../components/hook-form';
 // util
 import { Cover } from '../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
@@ -41,21 +39,23 @@ export default function ParameterAddForm() {
   const { enqueueSnackbar } = useSnackbar();
 
   const AddMachineParameterSchema = Yup.object().shape({
-    name: Yup.string().max(40).required('Name is required'),
-    code: Yup.string().max(200).required('Code is required'),
+    category: Yup.object().label('Parameter Category').nullable().required(),
+    name: Yup.string().max(200).required('Name is required'),
+    code: Yup.array().label('Code').max(20)
+    .test('codeLength', 'Code must not exceed 200 characters', (value) => !(value && value.some( val => val.length > 200 ))),
     description: Yup.string().max(5000),
     isActive: Yup.boolean(),
   });
 
   const defaultValues = useMemo(
     () => ({
+      category: null,
       name: '',
-      alias: [],
+      code: [],
       description: '',
       isActive: true,
       isIniRead: false,
       createdAt: '',
-      code: '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -72,13 +72,8 @@ export default function ParameterAddForm() {
     formState: { isSubmitting },
   } = methods;
 
-  // const values = watch();
-
   const onSubmit = async (data) => {
     try {
-      if (paramCategoryVal) {
-        data.category = paramCategoryVal?._id;
-      }
       await dispatch(addTechparam(data));
       reset();
       enqueueSnackbar('Parameter created successfully!');
@@ -101,48 +96,21 @@ export default function ParameterAddForm() {
             <Grid item xs={18} md={12} sx={{ mt: 3 }}>
               <Card sx={{ p: 3 }}>
                 <Stack spacing={3}>
-                  <Box
-                    rowGap={2}
-                    columnGap={2}
-                    display="grid"
-                    gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
-                  >
-                    <Autocomplete
-                      required
-                      value={paramCategoryVal || null}
+                    <RHFAutocomplete
+                      name="category"
+                      label="Parameter Category"
                       options={activeTechParamCategories}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => option.name}
-                      onChange={(event, newValue) => {
-                        setParamCategoryVal(newValue);
-                      }}
-                      id="controllable-states-demo"
-                      renderInput={(params) => <TextField {...params} label="Parameter Category" required />}
-                      ChipProps={{ size: 'small' }}
                     />
-                  </Box>
-                  <Box
-                    rowGap={2}
-                    columnGap={2}
-                    display="grid"
-                    gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
-                  >
                     <RHFTextField name="name" label="Name*" />
-                    <RHFTextField name="code" label="Code*" />
-                  </Box>
-                  <RHFChipsInput name="alias" label="Alias" />
-                  <Box
-                    rowGap={2}
-                    columnGap={2}
-                    display="grid"
-                    gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
-                  >
+                    <RHFChipsInput name="code" label="Code*" />
                     <RHFTextField name="description" label="Description" minRows={7} multiline />
+
                     <Grid display="flex" >
                       <RHFSwitch  name="isActive" label="Active" />
                       <RHFSwitch  name="isIniRead" label="Read INI" />
                     </Grid>
-                  </Box>
                 </Stack>
                 <AddFormButtons machineSettingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Card>

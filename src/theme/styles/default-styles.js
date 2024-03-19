@@ -1,5 +1,5 @@
 import { styled, alpha } from '@mui/material/styles';
-import { Popover, Stack, Card, Chip, Container, TableRow } from '@mui/material';
+import { Popover, Stack, Card, Chip, Container, TableRow, Badge } from '@mui/material';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { bgBlur } from '../../utils/cssStyles';
 
@@ -52,6 +52,15 @@ export const HtmlTooltip = styled(({ className, ...props }, TooltipProps) => (
     maxWidth: 220,
     fontSize: theme.typography.pxToRem(12),
     border: '1px solid #dadde9',
+  },
+}));
+
+export const StyledBadge = styled(Badge)(({ theme }) => ({
+  '& .MuiBadge-badge': {
+    right: 3,
+    top: 7,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: '0 4px',
   },
 }));
 

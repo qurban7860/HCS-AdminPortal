@@ -1,24 +1,20 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 // @mui
-import {
-  Switch,
-  Button,
-  TableRow,
-  MenuItem,
-  TableCell,
-} from '@mui/material';
-// utils
-// import { fData, fCurrency } from '../../../utils/formatNumber';
+import { Switch, Button, MenuItem, TableCell, Box } from '@mui/material';
 // components
 import Iconify from '../../../../components/iconify/Iconify';
 import MenuPopover from '../../../../components/menu-popover/MenuPopover';
 import ConfirmDialog from '../../../../components/confirm-dialog';
-// import Label from '../../../components/label';
 import { fDate } from '../../../../utils/formatTime';
 import LinkTableCell from '../../../../components/ListTableTools/LinkTableCell';
-// import { useSelector } from '../../../redux/store';
 import { useScreenSize } from '../../../../hooks/useResponsive';
+import { StyledTableRow, StyledBadge } from '../../../../theme/styles/default-styles';
+import IconButtonTooltip from '../../../../components/Icons/IconButtonTooltip';
+import { ICONS } from '../../../../constants/icons/default-icons';
+import ViewFormField from '../../../../components/ViewForms/ViewFormField';
+import useLimitString from '../../../../hooks/useLimitString';
+import ViewFormCodeMenuPopover from '../../../../components/ViewForms/ViewFormCodeMenuPopover';
 
 // ----------------------------------------------------------------------
 
@@ -39,78 +35,50 @@ export default function ParameterListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, category, isActive, createdAt } = row;
+  const { name, category, code, isActive, createdAt } = row;
 
   const smScreen = useScreenSize('sm')
 
-  const [openConfirm, setOpenConfirm] = useState(false);
-
-  const [openPopover, setOpenPopover] = useState(null);
-
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
+  const [ codeAnchorEl, setCodeAnchorEl ] = useState(null);
+  
+  const handleCodePopoverOpen = (event) => {
+    if(code?.length > 0) {
+      setCodeAnchorEl(event.currentTarget);
+    }
   };
 
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
+  const handleCodePopoverClose = () => {
+    setCodeAnchorEl(null);
   };
-
-
-  const handleClosePopover = () => {
-    setOpenPopover(null);
-  };
-
   return (
     <>
-      <TableRow hover selected={selected}>
+      <StyledTableRow hover selected={selected}>
 
         <LinkTableCell onClick={onViewRow} align="left" stringLength={40} param={name} />
+        <TableCell>
+          { useLimitString( code[0] , 30 ) }
+          { code?.length > 1 &&
+          <StyledBadge badgeContent={code?.length || '0' } color="info" sx={{top:-1, left:-1}} >
+            <IconButtonTooltip
+              title='Code'
+              color={ICONS.MACHINESETTINGHISTORY.color}
+              icon={ICONS.MACHINESETTINGHISTORY.icon}
+              onClick={ handleCodePopoverOpen }
+              />
+          </StyledBadge>}
+        </TableCell >
         { smScreen && <TableCell>{category?.name || ''}</TableCell>}
         <TableCell align="center">
           {' '}
           <Switch checked={isActive} disabled size="small" sx={{ my: -1 }} />{' '}
         </TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>
-      </TableRow>
+      </StyledTableRow>
 
-      <MenuPopover
-        open={openPopover}
-        onClose={handleClosePopover}
-        arrow="right-top"
-        sx={{ width: 140 }}
-      >
-        <MenuItem
-          onClick={() => {
-            handleOpenConfirm();
-            handleClosePopover();
-          }}
-          sx={{ color: 'error.main' }}
-        >
-          <Iconify icon="eva:trash-2-outline" />
-          Delete
-        </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            onEditRow();
-            handleClosePopover();
-          }}
-        >
-          <Iconify icon="eva:edit-fill" />
-          Edit
-        </MenuItem>
-      </MenuPopover>
-
-      <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content="Are you sure want to delete?"
-        action={
-          <Button variant="contained" color="error" onClick={onDeleteRow}>
-            Delete
-          </Button>
-        }
+      <ViewFormCodeMenuPopover
+        open={codeAnchorEl}
+        onClose={handleCodePopoverClose}
+        ListArr={code}
       />
     </>
   );

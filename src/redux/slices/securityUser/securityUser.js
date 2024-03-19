@@ -12,6 +12,7 @@ const initialState = {
   responseMessage: null,
   success: false,
   isLoading: false,
+  isLoadingResetPasswordEmail: false,
   error: null,
   securityUsers: [],
   activeSecurityUsers: [],
@@ -41,7 +42,10 @@ const slice = createSlice({
     startLoading(state) {
       state.isLoading = true;
     },
-
+    // START LOADING
+    startLoadingResetPasswordEmail(state) {
+      state.isLoadingResetPasswordEmail = true;
+    },
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -59,12 +63,12 @@ const slice = createSlice({
       state.editFormVisibility = action.payload;
     },
 
-    // SET ACTIVE FILTER LIST
+    // SET ACTIVE RESTRICTED LIST
     setActiveFilterList(state, action){
       state.activeFilterList = action.payload;
     },
     
-    // SET EMPLOYEE FILTER LIST
+    // SET EMPLOYEE RESTRICTED LIST
     setFilterRegion(state, action){
       state.filterRegion = action.payload;
     },
@@ -125,6 +129,11 @@ const slice = createSlice({
       state.success = true;
       state.signInLogs = action.payload;
       state.initial = true;
+    },
+
+    // SET RES MESSAGE
+    resetLoadingResetPasswordEmail(state, action) {
+      state.isLoadingResetPasswordEmail = false;
     },
 
     // SET RES MESSAGE
@@ -190,6 +199,7 @@ export const {
   setSecurityUserProperties,
   resetSecurityUsers,
   resetSecurityUser,
+  resetLoadingResetPasswordEmail,
   setFilterBy,
   setActiveFilterList,
   setEmployeeFilterList,
@@ -464,6 +474,24 @@ export function sendUserInvite(Id) {
       return response; // eslint-disable-line
     } catch (error) {
       dispatch(slice.actions.hasError(error.Message));
+      console.error(error);
+      throw error;
+    }
+  };
+}
+
+export function sendResetPasswordEmail(email) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoadingResetPasswordEmail());
+    try{
+      const data = {
+        email
+      }
+      const response = await axios.post(`${CONFIG.SERVER_URL}security/forgetPassword`,data);
+      dispatch(slice.actions.resetLoadingResetPasswordEmail());
+      return response; 
+    } catch (error) {
+      dispatch(slice.actions.resetLoadingResetPasswordEmail());
       console.error(error);
       throw error;
     }

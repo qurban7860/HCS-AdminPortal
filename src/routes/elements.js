@@ -263,10 +263,10 @@ export const DocumentCategoryView = Loadable(lazy(() => import('../pages/Setting
 export const DocumentCategoryEditForm = Loadable(lazy(() => import('../pages/Settings/documentSettings/documentCategory/DocumentCategoryEditForm')));
 
 // Configs
-export const RegionAdd = Loadable(lazy(() => import('../pages/crm/configuration/regions/RegionAdd')));
-export const RegionList = Loadable(lazy(() => import('../pages/crm/configuration/regions/RegionList')));
-export const RegionEdit = Loadable(lazy(() => import('../pages/crm/configuration/regions/RegionEdit')));
-export const RegionView = Loadable(lazy(() => import('../pages/crm/configuration/regions/RegionView')));
+export const RegionAdd = Loadable(lazy(() => import('../pages/crm/configs/regions/RegionAdd')));
+export const RegionList = Loadable(lazy(() => import('../pages/crm/configs/regions/RegionList')));
+export const RegionEdit = Loadable(lazy(() => import('../pages/crm/configs/regions/RegionEdit')));
+export const RegionView = Loadable(lazy(() => import('../pages/crm/configs/regions/RegionView')));
 
 
 // Modules
@@ -290,10 +290,10 @@ export const ConfigView = Loadable(lazy(() => import('../pages/Settings/configur
 
 // Configs
 
-export const DepartmentAdd  = Loadable(lazy(() => import('../pages/crm/configuration/departments/DepartmentAddForm')));
-export const DepartmentList = Loadable(lazy(() => import('../pages/crm/configuration/departments/DepartmentList')));
-export const DepartmentEdit = Loadable(lazy(() => import('../pages/crm/configuration/departments/DepartmentEditForm')));
-export const DepartmentView = Loadable(lazy(() => import('../pages/crm/configuration/departments/DepartmentView')));
+export const DepartmentAdd  = Loadable(lazy(() => import('../pages/crm/configs/departments/DepartmentAddForm')));
+export const DepartmentList = Loadable(lazy(() => import('../pages/crm/configs/departments/DepartmentList')));
+export const DepartmentEdit = Loadable(lazy(() => import('../pages/crm/configs/departments/DepartmentEditForm')));
+export const DepartmentView = Loadable(lazy(() => import('../pages/crm/configs/departments/DepartmentView')));
 
 // DASHBOARD: SETTINGS
 export const Setting = Loadable(lazy(() => import('../pages/Settings/Setting')));
@@ -305,7 +305,7 @@ export const Email = Loadable(lazy(() => import('../pages/email/Email')));
 export const Emailviewform = Loadable(lazy(() => import('../pages/email/EmailViewform')));
 
 // DASHBOARD: REPORTS
-export const Reports = Loadable(lazy(() => import('../pages/crm/reports/sitesMap/Reports')));
+export const Reports = Loadable(lazy(() => import('../pages/crm/reports/sites/Reports')));
 
 // TEST RENDER PAGE BY ROLE
 export const PermissionDeniedPage = Loadable(

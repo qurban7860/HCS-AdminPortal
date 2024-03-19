@@ -58,7 +58,7 @@ export default function SecurityUserEditForm() {
       email: securityUser?.email || '',
       loginEmail: securityUser?.login || '',
       roles: securityUser?.roles || [],
-      dataAccessibilityLevel: securityUser?.dataAccessibilityLevel || 'FILTER' ,
+      dataAccessibilityLevel: securityUser?.dataAccessibilityLevel || 'RESTRICTED' ,
       regions: securityUser?.regions || [],
       customers: securityUser?.customers || [],
       machines: securityUser?.machines || [],

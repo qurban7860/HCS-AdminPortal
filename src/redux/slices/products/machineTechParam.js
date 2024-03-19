@@ -242,8 +242,8 @@ export function addTechparam(params) {
       dispatch(slice.actions.startLoading());
       try {
         
-        /* eslint-disable */
-        let data = {
+        const data = {
+          category: params.category?._id || null,
           name: params.name,
           alias: params.alias || [],
           isIniRead: params.isIniRead,
@@ -251,12 +251,7 @@ export function addTechparam(params) {
           description: params.description,
           code: params.code
         };
-        /* eslint-enable */
-          if(params.category){
-            data.category = params.category;
-          }else{
-            data.category = null
-          }
+
         const response = await axios.post(`${CONFIG.SERVER_URL}products/techparams`, data);
         dispatch(slice.actions.getTechparamsSuccess(response.data.Techparam));
       } catch (error) {
@@ -274,8 +269,9 @@ export function updateTechparam(params,id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      /* eslint-disable */
-      let data = {
+
+      const data = {
+        category: params.category?._id || null,
         name: params.name,
         alias: params.alias || [],
         isIniRead: params.isIniRead,
@@ -283,13 +279,7 @@ export function updateTechparam(params,id) {
         description: params.description,
         code: params.code
       };
-     /* eslint-enable */
 
-      if(params.category){
-        data.category = params.category;
-      }else{
-        data.category = null
-      }
       await axios.patch(`${CONFIG.SERVER_URL}products/techparams/${id}`,
         data
       );

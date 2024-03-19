@@ -33,8 +33,7 @@ export default function ParameterViewForm() {
   const defaultValues = useMemo(
     () => ({
       name: techparam?.name || '',
-      code: techparam?.code || '',
-      alias: techparam?.alias || [],
+      code: techparam?.code || [],
       description: techparam?.description || '',
       category: techparam?.category?.name || '',
       isActive: techparam?.isActive,
@@ -72,9 +71,8 @@ export default function ParameterViewForm() {
       />
       <Grid container sx={{mt:2}}>
         <ViewFormField isLoading={isLoading} sm={12} heading="Category Name" param={defaultValues?.category} />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.name} />
-        <ViewFormField isLoading={isLoading} sm={6} heading="Code" param={defaultValues?.code} />
-        <ViewFormField isLoading={isLoading} sm={12} heading="Alias" chips={defaultValues?.alias} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues?.name} />
+        <ViewFormField isLoading={isLoading} sm={12} heading="Code" chips={defaultValues?.code} />
         <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>

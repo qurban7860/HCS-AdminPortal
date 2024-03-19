@@ -39,6 +39,7 @@ import TableCard from '../../../../components/ListTableTools/TableCard';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
+  { id: 'code.[0]', label: 'Code', align: 'left' },
   { id: 'category.name', visibility: 'xs1', label: 'Category', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },

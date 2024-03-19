@@ -55,7 +55,7 @@ export default function AuthLoginForm() {
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = methods;
 
-  const { isRemember } = watch()
+  const { isRemember, email, password } = watch()
 
   useEffect(() => {
     const storedEmail =       localStorage.getItem("HowickUserEmail");
@@ -68,12 +68,13 @@ export default function AuthLoginForm() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   
   const onSubmit = async (data) => {
     try {
       if (isRemember) {
-        localStorage.setItem("HowickUserEmail", data.email);
-        localStorage.setItem("HowickUserPassword", data.password);
+        localStorage.setItem("HowickUserEmail", email);
+        localStorage.setItem("HowickUserPassword", password);
         localStorage.setItem("isRemember", isRemember);
       } else {
         localStorage.removeItem("HowickUserEmail");
@@ -85,10 +86,10 @@ export default function AuthLoginForm() {
         navigate(PATH_AUTH.authenticate);
         localStorage.removeItem("MFA");
       }
+      reset();
     } catch (error) {
       if(regEx.test(error.MessageCode)){
         console.error("error : ",error?.Message || '');
-        reset();
         setError('afterSubmit', {
           ...error,
           message: error.Message,

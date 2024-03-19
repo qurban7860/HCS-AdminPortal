@@ -70,7 +70,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
       regions: [],
       customers: [],
       machines: [],
-      dataAccessibilityLevel: 'FILTER',
+      dataAccessibilityLevel: 'RESTRICTED',
       isActive: true,
       isInvite,
       multiFactorAuthentication: false,

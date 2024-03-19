@@ -1,14 +1,18 @@
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 // @mui
-import {
-  TableCell,
-} from '@mui/material';
+import { TableCell, Badge, Grid } from '@mui/material';
 // utils
 import { fDate } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 import { useScreenSize } from '../../../hooks/useResponsive';
-import { StyledTableRow } from '../../../theme/styles/default-styles'
+import { StyledTableRow, StyledBadge } from '../../../theme/styles/default-styles';
+import ViewFormMachineSettingHistoryMenuPopover from '../../../components/ViewForms/ViewFormMachineSettingHistoryMenuPopover';
+import IconButtonTooltip from '../../../components/Icons/IconButtonTooltip';
+import { ICONS } from '../../../constants/icons/default-icons';
+
+
 // ----------------------------------------------------------------------
 
 SettingListTableRow.propTypes = {
@@ -28,16 +32,55 @@ export default function SettingListTableRow({
       category,
     },
     techParamValue,
+    history,
     createdAt
   } = row;
+
   const smScreen = useScreenSize('sm')
+  const [ machineSettingHistoryAnchorEl, setMachineSettingHistoryAnchorEl ] = useState(null);
+  
+  const handleMachineSettingHistoryPopoverOpen = (event) => {
+    if(history?.length > 0) {
+      setMachineSettingHistoryAnchorEl(event.currentTarget);
+    }
+  };
+
+  const handleMachineSettingHistoryPopoverClose = () => {
+    setMachineSettingHistoryAnchorEl(null);
+  };
+
   return (
+    <>
       <StyledTableRow hover selected={selected}>
         <LinkTableCell align="left" param={category?.name||""} onClick={onViewRow} />
-        <TableCell align="left">{name||""}</TableCell>
-        <TableCell align="left">{techParamValue || ""}</TableCell>
+        <TableCell align="left">
+          {name||""}
+        </TableCell>
+        <TableCell align="left"  >
+          {/* <Grid sx={{display:'flex', justifyContent:'space-between'}}> */}
+            {techParamValue || ""}
+            {history !== undefined &&
+              <StyledBadge badgeContent={history?.length || '0' } color="info" sx={{top:-2, left:-2}} >
+                <IconButtonTooltip
+                  title='Setting History'
+                  color={ICONS.MACHINESETTINGHISTORY.color}
+                  icon={ICONS.MACHINESETTINGHISTORY.icon}
+                  onClick={handleMachineSettingHistoryPopoverOpen}
+                  />
+              </StyledBadge>
+            }
+          {/* </Grid> */}
+        </TableCell>
         { smScreen && <TableCell align="right">{fDate(createdAt)}</TableCell>}
       </StyledTableRow>
 
+      <ViewFormMachineSettingHistoryMenuPopover
+        open={machineSettingHistoryAnchorEl}
+        onClose={handleMachineSettingHistoryPopoverClose}
+        ListArr={history}
+        ListTitle="Setting History"
+      />
+
+    </>
   );
 }
