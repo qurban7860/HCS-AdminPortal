@@ -235,6 +235,8 @@ const onChangeVersionNo = (index, value) => {
       let defaultDocType
       if( checkDocType?.docCategory?._id === defaultDocCategory?._id ){
         defaultDocType = checkDocType
+      } else if( displayName.trim().toLowerCase().includes( 'frama' ) || displayName.trim().toLowerCase().includes( 'decoiler' )){
+        defaultDocType = activeDocumentTypes.find((el) => el?.name?.trim()?.toLowerCase().includes( 'assembly' ))
       }
   
       if (file?.type?.indexOf('pdf') > -1) {

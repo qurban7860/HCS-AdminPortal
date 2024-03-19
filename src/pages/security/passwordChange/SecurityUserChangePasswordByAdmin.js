@@ -70,7 +70,7 @@ export default function SecurityUserChangePassword() {
     try{
       await dispatch(sendResetPasswordEmail(securityUser?.login))
       await dispatch(resetLoadingResetPasswordEmail())
-      await enqueueSnackbar('Email sent successfully!!');
+      await enqueueSnackbar('Email sent successfully!');
     }catch(e){
       dispatch(resetLoadingResetPasswordEmail())
       enqueueSnackbar(e, { variant: `error` } );
