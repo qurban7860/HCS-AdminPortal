@@ -63,4 +63,4 @@ export function checkValuesNotNull(obj) {
   export const future20yearDate = new Date(today);
   future20yearDate.setFullYear(today.getFullYear() + 20);
 
-  export const pastDate = new Date(2000, 0, 1);
+  export const pastDate = new Date(1960, 0, 1);
