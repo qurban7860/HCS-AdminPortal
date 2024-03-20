@@ -194,8 +194,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               <RHFTextField name="street" label="Street" />
               <RHFTextField name="suburb" label="Suburb" />
               <RHFTextField name="city" label="City" />
-              <RHFTextField name="postcode" label="Post Code" />
               <RHFTextField name="region" label="Region" />
+              <RHFTextField name="postcode" label="Post Code" />
               <RHFCountryAutocomplete name="country" label="Country" />
             </Box>
               <Grid>

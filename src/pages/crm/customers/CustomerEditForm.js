@@ -46,6 +46,7 @@ export default function CustomerEditForm() {
       code: customer?.clientCode || '',
       name: customer?.name || '',
       tradingName: customer?.tradingName || [],
+      ref: customer?.ref || '',
       mainSite: customer?.mainSite || null,
       primaryTechnicalContact: customer?.primaryTechnicalContact || null,
       primaryBillingContact: customer?.primaryBillingContact || null,
@@ -113,20 +114,13 @@ export default function CustomerEditForm() {
                   <RHFTextField name="name" label={FORMLABELS.CUSTOMER.NAME.label} />
                   <RHFTextField name="code" label={FORMLABELS.CUSTOMER.CODE.label} />
                 </Box>
-                <Box rowGap={2} columnGap={2} display="grid"
-                  gridTemplateColumns={{
-                    xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)',
-                  }}
-                >
                   <RHFChipsInput name={FORMLABELS.CUSTOMER.TRADING_NAME.name} label={FORMLABELS.CUSTOMER.TRADING_NAME.label} />
-                </Box>
-
-                {/* main site */}
-                <Box rowGap={2} columnGap={2} display="grid"
-                  gridTemplateColumns={{
-                    xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',
-                  }}
+                <Box
+                  rowGap={2} columnGap={2} display="grid"
+                  gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                 >
+                  <RHFTextField name="ref" label="Reference Number"  />
+
                   <RHFAutocomplete
                     name="mainSite"
                     label={FORMLABELS.CUSTOMER.MAINSITE.label}
