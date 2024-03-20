@@ -9,7 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Card, Grid, Stack, Container } from '@mui/material';
 // slice
 import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
-import { addDepartment } from '../../../../redux/slices/Department/department';
+import { addDepartment } from '../../../../redux/slices/department/department';
 // routes
 import { PATH_SETTING } from '../../../../routes/paths';
 // components
