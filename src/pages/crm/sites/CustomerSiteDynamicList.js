@@ -197,6 +197,7 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
               <Grid container direction="column" gap={1}>
                 {dataFiltered.map((_site, index) => (
                   <ContactSiteCard
+                    isMain={customer?.mainSite?._id === _site?._id }
                     key={_site?._id || index }
                     isActive={_site._id === activeCardIndex}
                     handleOnClick={() => handleCardClick(_site) }

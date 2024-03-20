@@ -5,6 +5,7 @@ import { setContactDialog } from '../../redux/slices/customer/contact';
 import FormLabel from '../DocumentForms/FormLabel';
 import DialogLink from './DialogLink';
 import ViewFormField from '../ViewForms/ViewFormField';
+import ViewPhoneComponent from '../ViewForms/ViewPhoneComponent';
 
 function ContactDialog() {
     const dispatch = useDispatch();
@@ -39,8 +40,7 @@ function ContactDialog() {
             heading="Contact Types"
             param={contact?.contactTypes && contact?.contactTypes.toString()}
           />
-          <ViewFormField isLoading={isLoading}  sm={6} heading="Phone" param={contact?.phone && contact?.phone} />
-          <ViewFormField isLoading={isLoading}  sm={6} heading="Email" param={contact?.email && contact?.email} />
+          <ViewPhoneComponent isLoading={isLoading}  sm={12} heading="Phone" param={contact?.phoneNumbers && contact?.phoneNumbers} />
           <FormLabel content="Address Information" />
           <ViewFormField isLoading={isLoading} 
             sm={6}
