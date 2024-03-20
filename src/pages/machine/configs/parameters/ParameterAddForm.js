@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -8,7 +8,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import {
-  Box,
   Card,
   Grid,
   Stack,
@@ -31,8 +30,6 @@ export default function ParameterAddForm() {
   const { activeTechParamCategories } = useSelector((state) => state.techparamcategory);
 
   const dispatch = useDispatch();
-
-  const [paramCategoryVal, setParamCategoryVal] = useState(null);
 
   const navigate = useNavigate();
 

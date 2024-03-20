@@ -14,7 +14,6 @@ import { getActiveCustomers, resetActiveCustomers } from '../../../redux/slices/
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFAutocomplete, RHFTextField, RHFSwitch, RHFCheckbox } from '../../../components/hook-form';
-import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
 // constants
 import { Snacks } from '../../../constants/machine-constants';
 // schema
@@ -84,7 +83,7 @@ export default function SettingAddForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ ]);
 
-  const { customer, isUpdateMultipleMachines } = watch();
+  const { isUpdateMultipleMachines } = watch();
 
   useEffect(() => {
     if( isUpdateMultipleMachines && Array.isArray(activeCustomers) && activeCustomers?.length < 1  ){

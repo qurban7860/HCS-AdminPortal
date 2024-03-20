@@ -4,8 +4,6 @@ import { useLayoutEffect } from 'react';
 // @mui
 import { Container } from '@mui/material';
 import {  useSelector, useDispatch } from 'react-redux';
-// routes
-import { PATH_MACHINE } from '../../../../routes/paths';
 // sections
 import ParameterViewForm from './ParameterViewForm';
 import { Cover } from '../../../../components/Defaults/Cover';

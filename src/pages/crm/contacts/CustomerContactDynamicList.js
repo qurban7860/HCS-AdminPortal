@@ -16,6 +16,7 @@ import { TableNoData, useTable, getComparator } from '../../../components/table'
 // sections
 import {
   getContacts,
+  resetContacts,
   setCardActiveIndex,
   setIsExpanded
 } from '../../../redux/slices/customer/contact';
@@ -26,7 +27,7 @@ import ContactMoveForm from './ContactMoveForm';
 import BreadcrumbsProvider from '../../../components/Breadcrumbs/BreadcrumbsProvider';
 import BreadcrumbsLink from '../../../components/Breadcrumbs/BreadcrumbsLink';
 import useResponsive from '../../../hooks/useResponsive';
-import useLimitString from '../../../hooks/useLimitString';
+// import useLimitString from '../../../hooks/useLimitString';
 import SearchInput from '../../../components/Defaults/SearchInput';
 import { fDate } from '../../../utils/formatTime';
 import { Snacks } from '../../../constants/customer-constants';
@@ -96,6 +97,11 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
 
   useEffect(() => {
     dispatch(getContacts(customerId));
+    return ()=>{
+      dispatch(resetContacts());
+      dispatch(setCardActiveIndex(null));
+      dispatch(setIsExpanded(false));
+    }
   }, [ dispatch, customerId ]);
 
   useEffect(() => {

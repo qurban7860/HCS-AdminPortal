@@ -9,8 +9,7 @@ import { fDate } from '../../../../utils/formatTime';
 // components
 import LinkTableCellWithIconTargetBlank from '../../../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
 import { useScreenSize } from '../../../../hooks/useResponsive';
-import { StyledTableRow, StyledTooltip } from '../../../../theme/styles/default-styles'
-import Iconify from '../../../../components/iconify';
+import { StyledTableRow } from '../../../../theme/styles/default-styles';
 import { TableAddressRow } from '../../../../components/table';
 import useLimitString from '../../../../hooks/useLimitString';
 // ----------------------------------------------------------------------
@@ -43,7 +42,6 @@ export default function CustomerSiteListTableRow({
   const { _id, customer, name, email, phoneNumbers, address, lat, long,
     primaryBillingContact, primaryTechnicalContact, isActive, createdAt } = row;
   const phone = phoneNumbers[0];
-  const fax = phoneNumbers[0];
   const limitedName = useLimitString(customer?.name, 35);
   return (
     <>
@@ -66,7 +64,6 @@ export default function CustomerSiteListTableRow({
       )}
   
       {!useScreenSize('sm') && (
-        <>
           <StyledTableRow hover selected={selected} style={{ display: 'block' }} >
             <LinkTableCellWithIconTargetBlank 
               style={{ width: '100%', display: 'inline-block' }}
@@ -79,7 +76,6 @@ export default function CustomerSiteListTableRow({
             { phone?.countryCode && <TableCell style={{ width: '100%', display: 'inline-block' }} >{phone?.countryCode ? `+${phone?.countryCode} ` : ''}{phone?.contactNumber}</TableCell>}
             { email && <TableCell style={{ width: '100%', display: 'inline-block' }} > {email}</TableCell>}
           </StyledTableRow>
-        </>
       )}
     </>
   );

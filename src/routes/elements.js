@@ -61,7 +61,7 @@ export const CustomerDocumentHistoryViewForm  = Loadable(lazy(() => import('../p
 export const CustomerDocumentGallery          = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentGallery')));
 
 // DASHBOARD: USER
-export const SecurityUserProfile = Loadable(lazy(() => import('../pages/security/profile/SecurityUserProfile')));
+export const SecurityUserProfile = Loadable(lazy(() => import('../pages/security/profile/SecurityUserProfile')))  
 export const SecurityUserProfileEditForm = Loadable(lazy(() => import('../pages/security/profile/SecurityUserProfileEditForm')));
 export const SecurityUserChangePassword = Loadable(lazy(() => import('../pages/security/passwordChange/SecurityUserChangePassword')));
 export const SecurityUserChangePasswordByAdmin = Loadable(lazy(() => import('../pages/security/passwordChange/SecurityUserChangePasswordByAdmin')));

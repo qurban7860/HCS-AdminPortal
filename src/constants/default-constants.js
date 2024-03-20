@@ -62,6 +62,7 @@ export const FORMLABELS = {
   ADDMULTIPLEDRAWING: 'Upload Multiple Drawing',
   HOWICK: 'Howick Resources',
   ADDRESS: 'Address Information',
+  SITEINFORMATION: 'Site Information',
   CUSTOMER: 'Customer Information',
   SITE: 'Site Information',
   SITELOC: 'Site Location',

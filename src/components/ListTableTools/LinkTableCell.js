@@ -14,7 +14,6 @@ export default function LinkTableCell({ align, onClick, param, node, stringLengt
   });
 
   return (
-    <>
       <TableCell className='ellipsis-cell' onClick={onClick} align={align}
           color="inherit"
           sx={{
@@ -39,7 +38,6 @@ export default function LinkTableCell({ align, onClick, param, node, stringLengt
         }
         { node }
       </TableCell>
-    </>
   );
 }
 
