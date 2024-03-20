@@ -23,7 +23,7 @@ import {
 import {
   getActiveDepartments,
   resetDepartments,
-} from '../../../redux/slices/Department/department';
+} from '../../../redux/slices/department/department';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { useAuthContext } from '../../../auth/useAuthContext';

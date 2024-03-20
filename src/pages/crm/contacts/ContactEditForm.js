@@ -17,7 +17,7 @@ import {
   getActiveContacts,
   resetActiveContacts,
 } from '../../../redux/slices/customer/contact';
-import { getActiveDepartments, resetDepartments } from '../../../redux/slices/Department/department'
+import { getActiveDepartments, resetDepartments } from '../../../redux/slices/department/department'
 // components
 import Iconify from '../../../components/iconify';
 import { useSnackbar } from '../../../components/snackbar';

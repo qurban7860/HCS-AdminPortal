@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // routes
 import { getDepartments, deleteDepartment, ChangeRowsPerPage,
   ChangePage,
-  setFilterBy, } from '../../../../redux/slices/Department/department';
+  setFilterBy, } from '../../../../redux/slices/department/department';
 import { PATH_SETTING } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';

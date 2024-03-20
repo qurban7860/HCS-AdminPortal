@@ -44,7 +44,7 @@ import blockedCustomerReducer from './slices/securityConfig/blockedCustomers';
 import blockedUserReducer from './slices/securityConfig/blockedUsers';
 import blacklistIPReducer from './slices/securityConfig/blacklistIP';
 import whitelistIPReducer from './slices/securityConfig/whitelistIP';
-import departmentReducer from './slices/Department/department';
+import departmentReducer from './slices/department/department';
 import historicalConfigurationReducer from './slices/products/historicalConfiguration';
 import configurationReducer from './slices/products/configuration';
 import machineErpLogsReducer from './slices/products/machineErpLogs';
