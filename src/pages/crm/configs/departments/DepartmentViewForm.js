@@ -9,7 +9,7 @@ import { Card, Grid } from '@mui/material';
 import {
   getDepartment,
   deleteDepartment,
-} from '../../../../redux/slices/Department/department';
+} from '../../../../redux/slices/department/department';
 import { useSnackbar } from '../../../../components/snackbar';
 // paths
 import { PATH_SETTING } from '../../../../routes/paths';

@@ -10,7 +10,7 @@ import { Box, Card, Grid, Stack } from '@mui/material';
 import {
   updateDepartment,
   getDepartment,
-} from '../../../../redux/slices/Department/department';
+} from '../../../../redux/slices/department/department';
 // routes
 import { PATH_SETTING } from '../../../../routes/paths';
 // components
