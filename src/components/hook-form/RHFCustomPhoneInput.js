@@ -18,11 +18,9 @@ export default function RHFCustomPhoneInput({ name, value, index, label, ...othe
   const PHONE_TYPES_ = JSON.parse( localStorage.getItem('configurations'))?.find( ( c )=> c?.name === 'PHONE_TYPES' )
   let PHONE_TYPES = ['Mobile', 'Home', 'Work', 'Fax', 'Others'];
   if(PHONE_TYPES_) {
-    PHONE_TYPES = PHONE_TYPES_.value.split(',').map(item => item.trim());
+    PHONE_TYPES = PHONE_TYPES_?.value?.split(',')?.map(item => item?.trim());
   }
   
-    
-
   return (
     <Controller
       name={name}
@@ -40,7 +38,6 @@ export default function RHFCustomPhoneInput({ name, value, index, label, ...othe
           }}
           InputProps={{
             startAdornment: (
-              <>
               <InputAdornment position="start" >
               <Iconify icon="mdi:phone" sx={{ width: 25, height: 25, }} />
                 <Autocomplete 
@@ -57,7 +54,7 @@ export default function RHFCustomPhoneInput({ name, value, index, label, ...othe
               <TextField  
                   value={ value?.countryCode || '' }
                   variant="standard" 
-                  sx={{width: '90px', mx:1 }} 
+                  sx={{width: '70px', mx:1 }} 
                   InputProps={{
                     inputProps: {
                       maxLength: 6
@@ -67,11 +64,10 @@ export default function RHFCustomPhoneInput({ name, value, index, label, ...othe
                       const inputValue = e.target.value.replace(/[^0-9]/g, '')
                         setValue( name, { ...value , countryCode: inputValue } , { shouldValidate: true });
                   }} 
-                  placeholder='Country Code'
+                  placeholder='64'
               />
               |
               </InputAdornment>
-              </>
             ),
             endAdornment: (
               <InputAdornment position="start" >

@@ -1,9 +1,6 @@
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Divider, Grid, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import MenuPopover from '../menu-popover/MenuPopover';
-import FormLabel from '../DocumentForms/FormLabel';
-import { fDate, fDateTime } from '../../utils/formatTime';
 import ViewFormField from './ViewFormField';
 
 function ViewFormCodeMenuPopover({ open, onClose, ListArr, ListTitle }) {

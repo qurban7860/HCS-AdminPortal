@@ -56,7 +56,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const PHONE_TYPES_ = JSON.parse( localStorage.getItem('configurations'))?.find( ( c )=> c?.name === 'PHONE_TYPES' )
   let PHONE_TYPES = ['Mobile', 'Home', 'Work', 'Fax', 'Others'];
   if(PHONE_TYPES_) {
-    PHONE_TYPES = PHONE_TYPES_.value.split(',').map(item => item.trim());
+    PHONE_TYPES = PHONE_TYPES_?.value?.split(',')?.map(item => item?.trim());
   }
 
   useLayoutEffect(() => {
@@ -70,8 +70,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       name: '',
       code:'',
       tradingName: [],
-      phone: '',
-      fax: '',
+      ref: '',
       phoneNumbers: [
         { type: PHONE_TYPES[0], countryCode: '64' },
         { type: PHONE_TYPES[0], countryCode: '64' },
@@ -89,7 +88,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       billingContactFirstName: '',
       billingContactLastName: '',
       billingContactTitle: '',
-      billingContactPhone: '+64 ',
+      billingContactPhone: { type: PHONE_TYPES[0], countryCode: '64' },
       billingContactEmail: '',
       // Is Same Contact
       isSameContact: true,
@@ -97,7 +96,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       technicalContactFirstName: '',
       technicalContactLastName: '',
       technicalContactTitle: '',
-      technicalContactPhone: '+64 ',
+      technicalContactPhone: { type: PHONE_TYPES[0], countryCode: '64' },
       technicalContactEmail: '',
       // Account Information
       accountManager: [],
@@ -126,7 +125,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     formState: { isSubmitting },
   } = methods;
 
-  const { isSameContact, phoneNumbers, country } = watch();
+  const { isSameContact, phoneNumbers, country, billingContactPhone, technicalContactPhone } = watch();
 
   const addContactNumber = () => {
     const updatedPhoneNumbers = [
@@ -163,86 +162,103 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
           <Stack spacing={2}>
             <Box
               rowGap={2} columnGap={2} display="grid"
-              gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 5fr 1fr)' }}
+              gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(1, 5fr 1fr)' }}
             >
               <RHFTextField name="name" label={FORMLABELS.CUSTOMER.NAME.label} />
               <RHFTextField name="code" label={FORMLABELS.CUSTOMER.CODE.label} />
             </Box>
 
+              <RHFChipsInput name="tradingName" label="Trading Name"  />
+
             <Box
               rowGap={2} columnGap={2} display="grid"
-              gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
+              gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
             >
-              <RHFChipsInput name="tradingName" label="Trading Name"  />
+              <RHFTextField name="ref" label="Reference Number"  />
             </Box>
-
-
               {/* 
                   <RHFPhoneInput name="phone" label="Phone Number"  />
                   <RHFPhoneInput name="fax" label="Fax" /> 
-              */}
-            <Grid>
-              {phoneNumbers?.map((pN, index) => (
-                <Grid sx={{ py: 1 }} display="flex" alignItems="center">
-                  <RHFCustomPhoneInput
-                    name={`phoneNumbers[${index}]`}
-                    value={pN}
-                    label={pN?.type || 'Contact Number'}
-                    index={index}
-                  />
+                */}
+
+          </Stack>
+        </Card>
+
+        <Card sx={{ p: 3, mb: 3 }}>
+          <Stack spacing={2}>
+            <FormLabel content={FORMLABELS.CUSTOMER.ADDRESSINFORMATION} />
+            <Box
+              rowGap={2} columnGap={2} display="grid"
+              gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+            >
+              <RHFTextField name="street" label="Street" />
+              <RHFTextField name="suburb" label="Suburb" />
+              <RHFTextField name="city" label="City" />
+              <RHFTextField name="postcode" label="Post Code" />
+              <RHFTextField name="region" label="Region" />
+              <RHFCountryAutocomplete name="country" label="Country" />
+            </Box>
+              <Grid>
+                {phoneNumbers?.map((pN, index) => (
+                  <Grid sx={{ py: 1 }} display="flex" alignItems="center">
+                    <RHFCustomPhoneInput
+                      name={`phoneNumbers[${index}]`}
+                      value={pN}
+                      label={pN?.type || 'Contact Number'}
+                      index={index}
+                    />
+                    <IconButton
+                      disabled={phoneNumbers?.length === 1}
+                      onClick={() => removeContactNumber(index)}
+                      size="small"
+                      variant="contained"
+                      color="error"
+                      sx={{ mx: 1 }}
+                    >
+                      <StyledTooltip
+                        title="Remove Contact Number"
+                        placement="top"
+                        disableFocusListener
+                        tooltipcolor={theme.palette.error.main}
+                        color={
+                          phoneNumbers?.length > 1
+                            ? theme.palette.error.main
+                            : theme.palette.text.main
+                        }
+                      >
+                        <Iconify icon="icons8:minus" sx={{ width: 25, height: 25 }} />
+                      </StyledTooltip>
+                    </IconButton>
+                  </Grid>
+                ))}
+                <Grid>
                   <IconButton
-                    disabled={phoneNumbers?.length === 1}
-                    onClick={() => removeContactNumber(index)}
+                    disabled={phoneNumbers?.length > 9}
+                    onClick={addContactNumber}
                     size="small"
                     variant="contained"
-                    color="error"
-                    sx={{ mx: 1 }}
+                    color="success"
+                    sx={{ ml: 'auto', mr: 1 }}
                   >
                     <StyledTooltip
-                      title="Remove Contact Number"
+                      title="Add Contact Number"
                       placement="top"
                       disableFocusListener
-                      tooltipcolor={theme.palette.error.main}
+                      tooltipcolor={theme.palette.success.dark}
                       color={
-                        phoneNumbers?.length > 1
-                          ? theme.palette.error.main
-                          : theme.palette.text.main
+                        phoneNumbers?.length < 10
+                        ? theme.palette.success.dark
+                        : theme.palette.text.main
                       }
                     >
-                      <Iconify icon="icons8:minus" sx={{ width: 25, height: 25 }} />
+                      <Iconify icon="icons8:plus" sx={{ width: 25, height: 25 }} />
                     </StyledTooltip>
                   </IconButton>
                 </Grid>
-              ))}
-              <Grid>
-                <IconButton
-                  disabled={phoneNumbers?.length > 9}
-                  onClick={addContactNumber}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                  sx={{ ml: 'auto', mr: 1 }}
-                >
-                  <StyledTooltip
-                    title="Add Contact Number"
-                    placement="top"
-                    disableFocusListener
-                    tooltipcolor={theme.palette.success.dark}
-                    color={
-                      phoneNumbers?.length < 10
-                      ? theme.palette.success.dark
-                      : theme.palette.text.main
-                    }
-                  >
-                    <Iconify icon="icons8:plus" sx={{ width: 25, height: 25 }} />
-                  </StyledTooltip>
-                </IconButton>
               </Grid>
-            </Grid>
-
             <Box
               rowGap={2} columnGap={2} display="grid"
-              gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+              gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
             >
               <RHFTextField name="email" label="Email" />
               <RHFTextField name="website" label="Website" />
@@ -252,31 +268,15 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
         <Card sx={{ p: 3, mb: 3 }}>
           <Stack spacing={2}>
-            <FormLabel content={FORMLABELS.CUSTOMER.ADDRESSINFORMATION} />
-            <Box
-              rowGap={2} columnGap={2} display="grid"
-              gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
-            >
-              <RHFTextField name="street" label="Street" />
-              <RHFTextField name="suburb" label="Suburb" />
-              <RHFTextField name="city" label="City" />
-              <RHFTextField name="postcode" label="Post Code" />
-              <RHFTextField name="region" label="Region" />
-              <RHFCountryAutocomplete name="country" label="Country" />
-            </Box>
-          </Stack>
-        </Card>
-
-        <Card sx={{ p: 3, mb: 3 }}>
-          <Stack spacing={2}>
             <FormLabel content={FORMLABELS.CUSTOMER.BILLINGCONTACTINFORMATION} />
             <Box
               rowGap={2} columnGap={2} display="grid"
-              gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+              gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
             >
               <RHFTextField name="billingContactFirstName" label="First Name" />
               <RHFTextField name="billingContactLastName" label="Last Name" />
               <RHFTextField name="billingContactTitle" label="Billing Contact Title" />
+              <RHFCustomPhoneInput name="billingContactPhone" label="Billing Contact Phone Number" value={billingContactPhone} />
               {/* <RHFPhoneInput name="billingContactPhone" label="Billing Contact Phone Number" /> */}
               <RHFTextField name="billingContactEmail" label="Billing Contact Email" />
             </Box>
@@ -290,11 +290,12 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               {!isSameContact && (
                 <Box
                   rowGap={2} columnGap={2} display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+                  gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                 >
                   <RHFTextField  name="technicalContactFirstName" label="First Name" />
                   <RHFTextField  name="technicalContactLastName"  label="Last Name" />
                   <RHFTextField  name="technicalContactTitle"     label="Technical Contact Title" />
+                  <RHFCustomPhoneInput name="technicalContactPhone" label="Technical Contact Phone Number" value={technicalContactPhone} />
                   {/* <RHFPhoneInput name="technicalContactPhone" label="Technical Contact Phone Number" /> */}
                   <RHFTextField  name="technicalContactEmail"     label="Technical Contact Email" />
                 </Box>
@@ -308,7 +309,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 <FormLabel content={FORMLABELS.CUSTOMER.HOWICKRESOURCESS} />
                 <Box
                   rowGap={2} columnGap={2} display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+                  gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                 >
                   <RHFAutocomplete
                     multiple
@@ -350,12 +351,14 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   />
 
                 </Box>
+
                 <Grid sx={{display:{md:'flex'}}}>
                     <RHFSwitch name="isActive" label="Active" checked={defaultValues?.isActive} />
                     <RHFSwitch name="supportSubscription" label='Support Subscription' checked={defaultValues?.supportSubscription} />
                     <RHFSwitch name="isFinancialCompany" label="Financing Company" defaultChecked={defaultValues?.isFinancialCompany} />
                     <RHFSwitch name="excludeReports" label="Exclude Reporting" defaultChecked={defaultValues?.excludeReports} />
                 </Grid>
+
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>

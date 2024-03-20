@@ -1,18 +1,14 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 // @mui
-import { Switch, Button, MenuItem, TableCell, Box } from '@mui/material';
+import { Switch, TableCell } from '@mui/material';
 // components
-import Iconify from '../../../../components/iconify/Iconify';
-import MenuPopover from '../../../../components/menu-popover/MenuPopover';
-import ConfirmDialog from '../../../../components/confirm-dialog';
 import { fDate } from '../../../../utils/formatTime';
 import LinkTableCell from '../../../../components/ListTableTools/LinkTableCell';
 import { useScreenSize } from '../../../../hooks/useResponsive';
 import { StyledTableRow, StyledBadge } from '../../../../theme/styles/default-styles';
 import IconButtonTooltip from '../../../../components/Icons/IconButtonTooltip';
 import { ICONS } from '../../../../constants/icons/default-icons';
-import ViewFormField from '../../../../components/ViewForms/ViewFormField';
 import useLimitString from '../../../../hooks/useLimitString';
 import ViewFormCodeMenuPopover from '../../../../components/ViewForms/ViewFormCodeMenuPopover';
 

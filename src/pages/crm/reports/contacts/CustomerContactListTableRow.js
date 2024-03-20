@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Switch, TableCell, Chip, Grid } from '@mui/material';
+import { Switch, TableCell } from '@mui/material';
 // utils
 import { fDate } from '../../../../utils/formatTime';
 // components
@@ -42,7 +42,6 @@ export default function CustomerContactListTableRow({
     <>
       {/* Render rows with column names in bold for small screens */}
       {!useScreenSize('sm') && (
-        <>
           <StyledTableRow hover selected={selected} style={{ display: 'block' }} >
             <LinkTableCellWithIconTargetBlank style={{ width: '100%', display: 'inline-block' }}
               onViewRow={() => handleContactView(customer?._id, _id)}
@@ -53,7 +52,6 @@ export default function CustomerContactListTableRow({
             {phone && <TableCell style={{ width: '100%', display: 'inline-block' }} >{phone}</TableCell> }
             {email && <TableCell style={{ width: '100%', display: 'inline-block' }} >{email}</TableCell> }
           </StyledTableRow>
-        </>
       )}
 
       {useScreenSize('sm') && (

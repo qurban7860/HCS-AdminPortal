@@ -16,6 +16,7 @@ import {
 // components
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
+import ViewPhoneComponent from '../../../components/ViewForms/ViewPhoneComponent';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../../constants/default-constants';
@@ -36,6 +37,7 @@ export default function CustomerViewForm() {
       id: customer?._id || '',
       code: customer?.clientCode || '',
       name: customer?.name || '',
+      ref: customer?.ref || '',
       tradingName: customer?.tradingName || '',
       accountManager: customer?.accountManager || [],
       projectManager: customer?.projectManager || [],
@@ -98,9 +100,9 @@ export default function CustomerViewForm() {
                 <ViewFormField isLoading={isLoading} variant='h4' sm={6} md={6} heading={formLABELS.CUSTOMER.NAME.label} param={defaultValues?.name} />
                 <ViewFormField isLoading={isLoading} variant='h4' sm={6} md={6} heading={formLABELS.CUSTOMER.CODE.label} param={defaultValues?.code} />
                 <ViewFormField isLoading={isLoading} sm={12} md={12} heading={formLABELS.CUSTOMER.TRADING_NAME.label} chips={defaultValues?.tradingName} />
-                <ViewFormField isLoading={isLoading} sm={6} md={6} heading={formLABELS.CUSTOMER.PHONE} param={defaultValues?.mainSite?.phone} />
-                <ViewFormField isLoading={isLoading} sm={6} md={6} heading={formLABELS.CUSTOMER.FAX} param={defaultValues?.mainSite?.fax} />
-                <ViewFormField isLoading={isLoading} sm={12} md={12} heading={formLABELS.CUSTOMER.EMAIL} param={defaultValues?.mainSite?.email} />
+                <ViewFormField isLoading={isLoading} md={6} heading='Reference Number' param={defaultValues?.ref} />
+                {/* <ViewFormField isLoading={isLoading} sm={6} md={6} heading={formLABELS.CUSTOMER.PHONE} param={defaultValues?.mainSite?.phone} />
+                <ViewFormField isLoading={isLoading} sm={6} md={6} heading={formLABELS.CUSTOMER.FAX} param={defaultValues?.mainSite?.fax} /> */}
 
                 <ViewFormField isLoading={isLoading} sm={6}
                   heading={formLABELS.CUSTOMER.BILLING_CONTACT}
@@ -118,7 +120,7 @@ export default function CustomerViewForm() {
 
             {defaultValues.mainSite && (
               <Grid container>
-                <FormLabel content={FORMLABELS.ADDRESS} />
+                <FormLabel content={FORMLABELS.SITEINFORMATION} />
                 <ViewFormField isLoading={isLoading} sm={6} heading="Site Name" param={defaultValues?.mainSite?.name} />
                 <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.STREET.label} param={defaultValues?.mainSite.address?.street} />
                 <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.SUBURB.label} param={defaultValues?.mainSite.address?.suburb} />
@@ -126,6 +128,21 @@ export default function CustomerViewForm() {
                 <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.POSTCODE.label} param={defaultValues?.mainSite.address?.postcode} />
                 <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.REGION.label} param={defaultValues?.mainSite.address?.region} />
                 <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.COUNTRY.label} param={defaultValues?.mainSite.address?.country} />
+                <ViewPhoneComponent isLoading={isLoading} sm={6} heading="Phone" value={defaultValues?.mainSite?.phoneNumbers || [] } />
+                <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.EMAIL} param={defaultValues?.mainSite?.email} />
+                <ViewFormField isLoading={isLoading} sm={6} heading={formLABELS.CUSTOMER.WEBSITE} param={defaultValues?.mainSite?.website} />
+                <ViewFormField 
+                  isLoading={isLoading} sm={6} 
+                  heading='Primary Billing Contact' 
+                  param={defaultValues?.mainSite?.primaryBillingContact?.firstName} 
+                  secondParam={defaultValues?.mainSite?.primaryTechnicalContact?.lastName}
+                />
+                <ViewFormField 
+                  isLoading={isLoading} sm={6} 
+                  heading='Primary Technical Contact'
+                  param={defaultValues?.mainSite?.primaryTechnicalContact?.firstName} 
+                  secondParam={defaultValues?.mainSite?.primaryTechnicalContact?.lastName}
+                />
               </Grid>
             )}
             <Grid container>

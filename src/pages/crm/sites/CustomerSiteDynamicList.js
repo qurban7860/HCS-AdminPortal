@@ -97,7 +97,11 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
 
   useEffect( () => {
     dispatch(getSites(customerId));
-    return ()=>{ dispatch(resetSites()) }
+    return ()=>{ 
+      dispatch(resetSites());
+      dispatch(setCardActiveIndex(null));
+      dispatch(setIsExpanded(false));
+    }
 }, [dispatch, customerId ]); 
 
   useEffect(() => {

@@ -132,7 +132,7 @@ const { customer, contact } = watch();
     }
   };
 
-  const toggleCancel = () =>  navigate(PATH_SECURITY.users.list);
+  const toggleCancel = () =>  navigate(PATH_SECURITY.root);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

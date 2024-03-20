@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useEffect,  useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
@@ -7,9 +7,6 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import {
-  TextField,
-  Autocomplete,
-  Box,
   Card,
   Grid,
   Stack
@@ -37,8 +34,6 @@ export default function ParameterEditForm() {
   const { techparam } = useSelector((state) => state.techparam);
 
   const { techparamcategories } = useSelector((state) => state.techparamcategory);
-
-  const [paramVal, setParamVal] = useState(null);
 
   const dispatch = useDispatch();
 

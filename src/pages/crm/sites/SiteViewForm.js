@@ -43,8 +43,8 @@ export default function SiteViewForm({ handleMap }) {
     return () => 
               { 
                 dispatch(resetSite()) 
-                // dispatch(setIsExpanded(false))
-                // dispatch(setCardActiveIndex(null))
+                dispatch(setIsExpanded(false))
+                dispatch(setCardActiveIndex(null))
               }
   },[ dispatch, customerId, id ])
 
