@@ -258,7 +258,7 @@ function ViewFormField({
                   whiteSpace: 'pre-line', wordBreak: 'break-word',
                   }} >
                 {chips.map(
-                  (chip,index) => typeof chip === 'string' && chip.trim().length > 0 && <Chip key={index} label={chip} sx={{m:0.2}}/>
+                  (chip,index) => typeof chip === 'string' && chip.trim().length > 0 && <Chip key={index} title={chip} label={chip} sx={{m:0.2}}/>
                 )}
               </Grid>
               ) : (

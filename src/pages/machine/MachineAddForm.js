@@ -18,7 +18,7 @@ import { getActiveMachineStatuses, resetActiveMachineStatuses } from '../../redu
 import { getActiveSuppliers, resetActiveSuppliers } from '../../redux/slices/products/supplier';
 import { getMachineConnections, resetMachineConnections } from '../../redux/slices/products/machineConnections';
 // routes
-import { PATH_CUSTOMER, PATH_MACHINE } from '../../routes/paths';
+import { PATH_CRM, PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFTextField, RHFAutocomplete, RHFDatePicker, RHFChipsInput } from '../../components/hook-form';
@@ -157,7 +157,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       reset();
       enqueueSnackbar('Machine created successfully!');
       if( landToCustomerMachinePage && customer._id ){
-        await navigate(PATH_CUSTOMER.machines.root(customer?._id));
+        await navigate(PATH_CRM.customers.machines.root(customer?._id));
       }else if(response?.data?.Machine?._id){
         await navigate(PATH_MACHINE.machines.view(response?.data?.Machine?._id));
       } else {
@@ -172,7 +172,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const toggleCancel = async() => {
     if(landToCustomerMachinePage){
       await dispatch(setCustomerTab('machines'));
-      navigate(PATH_CUSTOMER.machines.root(newMachineCustomer._id));
+      navigate(PATH_CRM.customers.machines.root(newMachineCustomer._id));
     }else{
       navigate(PATH_MACHINE.machines.list);
     }

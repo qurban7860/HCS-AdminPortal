@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { isNumberLatitude , isNumberLongitude } from '../customers/sites/util/index'
+import { isNumberLatitude , isNumberLongitude } from '../crm/sites/util/index'
 
 const stringLengthMessage = 'Trading name must not exceed 500 characters';
 
@@ -17,8 +17,9 @@ export const AddCustomerSchema = Yup.object().shape({
   code: Yup.string().label('Customer Code').max(20),
   tradingName: Yup.array().label('Trading Name').max(20)
   .test('stringLength', stringLengthMessage, (value) => !(value && value.some( val => val.length > 500 ))),
-  phone: Yup.string().label('Phone Number').max(16),
-  fax: Yup.string().label('Fax Number').max(16),
+  ref: Yup.string().label('Reference Number').max(200),
+  // phone: Yup.string().label('Phone Number').max(16),
+  // fax: Yup.string().label('Fax Number').max(16),
   email: Yup.string().label('Email').trim().email(),
   website: Yup.string().label('Web Site').trim().max(200),
   // Address Information
@@ -32,7 +33,7 @@ export const AddCustomerSchema = Yup.object().shape({
   billingContactFirstName: Yup.string().label('First Name').trim().max(200),
   billingContactLastName: Yup.string().label('Last Name').trim().max(200),
   billingContactTitle: Yup.string().label('Billing Contact Title').trim().max(200),
-  billingContactPhone: Yup.string().label('Billing Contact Phone Number').trim().max(200),
+  // billingContactPhone: Yup.string().label('Billing Contact Phone Number').trim().max(200),
   billingContactEmail: Yup.string().label('Billing Contact Email').trim().email(),
   // Is Same Contact
   isSameContact: Yup.boolean().label('Same as Billing Contact'),
@@ -40,7 +41,7 @@ export const AddCustomerSchema = Yup.object().shape({
   technicalContactFirstName: Yup.string().label('First Name').trim().max(200),
   technicalContactLastName: Yup.string().label('Last Name').trim().max(200),
   technicalContactTitle: Yup.string().label('Technical Contact Title').trim().max(200),
-  technicalContactPhone: Yup.string().label('Technical Contact Phone Number').trim().max(200),
+  // technicalContactPhone: Yup.string().label('Technical Contact Phone Number').trim().max(200),
   technicalContactEmail: Yup.string().label('Technical Contact Email').trim().email(),
   // Account Information
   accountManager: Yup.array(),

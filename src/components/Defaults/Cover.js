@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { Button, Grid } from '@mui/material';
 import { StyledRoot, StyledInfo } from '../../theme/styles/default-styles';
 // utils
-import { PATH_CUSTOMER, PATH_SETTING } from '../../routes/paths';
+import { PATH_CRM, PATH_SETTING } from '../../routes/paths';
 // auth
 import CoverSettingsIcons from './CoverSettingsIcons';
 import CoverTitles from './CoverTitles';
@@ -40,11 +40,11 @@ export function Cover({
   };
 
   const linkCustomerSites = () => {
-    navigate(PATH_CUSTOMER.sitesReport)
+    navigate(PATH_CRM.sites)
   }
 
   const linkCustomerContacts = () => {
-    navigate(PATH_CUSTOMER.contactsReport)
+    navigate(PATH_CRM.contacts)
   }
 
   const handleBackLink = () => {

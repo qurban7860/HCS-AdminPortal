@@ -5,7 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Box, Container, Grid, TextField, Card, Stack, Checkbox, Typography, Link } from '@mui/material';
-import { PATH_MACHINE, PATH_CUSTOMER } from '../../routes/paths';
+import { PATH_MACHINE, PATH_CRM } from '../../routes/paths';
 import { transferMachine , getMachine} from '../../redux/slices/products/machine';
 import { getActiveMachineStatuses, resetActiveMachineStatuses } from '../../redux/slices/products/statuses';
 import { getActiveCustomers, getFinancialCompanies, resetActiveCustomers, resetFinancingCompanies, getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
@@ -202,7 +202,7 @@ useEffect(()=>{
                       <Link onClick={(event)=> handleCustomerDialog(event, machine?.customer?._id)} underline="none" sx={{ cursor: 'pointer'}}>
                         {machine?.customer?.name}
                       </Link>
-                        <OpenInNewPage onClick={()=> window.open( PATH_CUSTOMER.view(machine?.customer?._id), '_blank' ) }/>
+                        <OpenInNewPage onClick={()=> window.open( PATH_CRM.customers.view(machine?.customer?._id), '_blank' ) }/>
                       </>
                     )
                   }

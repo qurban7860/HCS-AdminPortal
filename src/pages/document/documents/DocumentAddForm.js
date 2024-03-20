@@ -10,7 +10,7 @@ import { pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import { Box, Card, Grid, Stack, Dialog } from '@mui/material';
 // PATH
-import { PATH_CUSTOMER, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_CRM, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
 import {
   resetActiveDocuments,
@@ -248,7 +248,7 @@ function DocumentAddForm({
           dispatch(setDrawingAddFormVisibility(false));
         } else if( customerPage && !machinePage ){
           await dispatch(setViewVisiilityNoOthers())
-          await navigate(PATH_CUSTOMER.documents.root( customer?._id ));
+          await navigate(PATH_CRM.customers.documents.root( customer?._id ));
         } else if (  machineDrawings && !customerPage && !machinePage ) {
           navigate(PATH_DOCUMENT.document.machineDrawings.list);
         } else if( handleFormVisibility ){
@@ -266,13 +266,13 @@ function DocumentAddForm({
           await dispatch(setViewVisiilityNoOthers())
           if(documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility  ){
             await dispatch(getDocumentHistory(documentVal._id))
-            await navigate(PATH_CUSTOMER.documents.viewHistory( customer?._id, documentVal._id ));
+            await navigate(PATH_CRM.customers.documents.viewHistory( customer?._id, documentVal._id ));
           } else if(documentNewVersionFormVisibility || documentAddFilesViewFormVisibility  ){
             await dispatch(getDocument(documentVal._id))
-            await navigate(PATH_CUSTOMER.documents.view( customer?._id, documentVal._id ));
+            await navigate(PATH_CRM.customers.documents.view( customer?._id, documentVal._id ));
           } else {
             await dispatch(getDocument(documentVal._id))
-            await navigate(PATH_CUSTOMER.documents.view( customer?._id, documentVal._id ));
+            await navigate(PATH_CRM.customers.documents.view( customer?._id, documentVal._id ));
           }
         } else if( machineDrawings && !customerPage && !machinePage && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility ){
           navigate(PATH_DOCUMENT.document.machineDrawings.list);
@@ -301,10 +301,10 @@ function DocumentAddForm({
           await dispatch(setViewVisiilityNoOthers())
           if(documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility ){
             await dispatch(getDocumentHistory(documentVal._id))
-            await navigate(PATH_CUSTOMER.documents.viewHistory( customer?._id, documentVal._id ));
+            await navigate(PATH_CRM.customers.documents.viewHistory( customer?._id, documentVal._id ));
           } else if(documentNewVersionFormVisibility || documentAddFilesViewFormVisibility ){
             await dispatch(getDocument(documentVal._id))
-            await navigate(PATH_CUSTOMER.documents.view( customer?._id, documentVal._id ));
+            await navigate(PATH_CRM.customers.documents.view( customer?._id, documentVal._id ));
           }
         } else if(!customerPage && !machinePage && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility ){
           dispatch(setDrawingAndDocumentVisibility())
@@ -338,24 +338,24 @@ function DocumentAddForm({
         dispatch(setViewVisiilityNoOthers())
       if(documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility ){
         dispatch(getDocumentHistory(documentVal._id))
-        navigate(PATH_CUSTOMER.documents.viewHistory( customer?._id, documentVal._id ));
+        navigate(PATH_CRM.customers.documents.viewHistory( customer?._id, documentVal._id ));
       } else if(documentNewVersionFormVisibility || documentAddFilesViewFormVisibility ){
         dispatch(getDocument(documentVal._id))
         dispatch(setViewHistoryVisiilityNoOthers(false))
-        navigate(PATH_CUSTOMER.documents.view( customer?._id, documentVal._id ));
+        navigate(PATH_CRM.customers.documents.view( customer?._id, documentVal._id ));
       } else{
-        navigate(PATH_CUSTOMER.documents.root( customer?._id ));
+        navigate(PATH_CRM.customers.documents.root( customer?._id ));
       }
     } else if (!drawingPage && !customerPage && !machinePage && !documentNewVersionFormVisibility && !documentAddFilesViewFormVisibility && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility) {
       navigate(PATH_DOCUMENT.document.machineDrawings.list);
     } else if((documentNewVersionFormVisibility || documentAddFilesViewFormVisibility)  && (customerPage || machinePage)){
       dispatch(setViewVisiilityNoOthers())
       if(customerPage && !machinePage){
-        navigate(PATH_CUSTOMER.documents.root( customer?._id ));
+        navigate(PATH_CRM.customers.documents.root( customer?._id ));
       }
     }else if((documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility) && (customerPage || machinePage) ){
       if(customerPage && !machinePage){
-        navigate(PATH_CUSTOMER.documents.viewHistory(customer?._id  ));
+        navigate(PATH_CRM.customers.documents.viewHistory(customer?._id  ));
       }
       dispatch(setViewHistoryVisiilityNoOthers(false))
     }else if(machineDrawings && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility)){

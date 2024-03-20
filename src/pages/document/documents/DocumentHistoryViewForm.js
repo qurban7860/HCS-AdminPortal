@@ -47,7 +47,7 @@ import FormLabel from '../../../components/DocumentForms/FormLabel';
 import DocumentCover from '../../../components/DocumentForms/DocumentCover';
 import CustomerDialog from '../../../components/Dialog/CustomerDialog';
 import MachineDialog from '../../../components/Dialog/MachineDialog';
-import { PATH_DOCUMENT, PATH_CUSTOMER } from '../../../routes/paths';
+import { PATH_DOCUMENT, PATH_CRM } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
 import { Snacks } from '../../../constants/document-constants';
 import UpdateDocumentVersionDialog from '../../../components/Dialog/UpdateDocumentVersionDialog';
@@ -139,7 +139,7 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
 const handleNewVersion = async () => {
   if(customerPage){
     dispatch(setDocumentHistoryNewVersionFormVisibility(true));
-    navigate(PATH_CUSTOMER.documents.new( customer?._id ));
+    navigate(PATH_CRM.customers.documents.new( customer?._id ));
   } else if( machinePage){
     dispatch(setDocumentHistoryViewFormVisibility(false));
     dispatch(setDocumentFormVisibility(true));
@@ -173,7 +173,7 @@ const handleNewFile = async () => {
   if(customerPage || machinePage){
     if( customerPage && !machinePage ){
       dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
-      navigate(PATH_CUSTOMER.documents.new( customer?._id ));
+      navigate(PATH_CRM.customers.documents.new( customer?._id ));
     }
     dispatch(setDocumentHistoryViewFormVisibility(false));
     dispatch(setDocumentHistoryAddFilesViewFormVisibility(true));
@@ -222,7 +222,7 @@ const handleNewFile = async () => {
     try {
       await dispatch(deleteDocument(documentHistory?._id));
       if(customerPage && !machinePage ) {
-        navigate(PATH_CUSTOMER.documents.root( customer?._id ));
+        navigate(PATH_CRM.customers.documents.root( customer?._id ));
       }else{
         navigate(PATH_DOCUMENT.document.machineDrawings.list);
       }
@@ -381,7 +381,7 @@ const handleNewFile = async () => {
   const handleBackLink = ()=>{
     if(customerPage && !machinePage ) {
       dispatch(getDocument(documentHistory?._id));
-      navigate(PATH_CUSTOMER.documents.view( customer?._id, documentHistory?._id ));
+      navigate(PATH_CRM.customers.documents.view( customer?._id, documentHistory?._id ));
     } else if( machinePage || drawingPage ){
       dispatch(setDrawingViewFormVisibility(false))
       dispatch(setDocumentHistoryViewFormVisibility(false)); 

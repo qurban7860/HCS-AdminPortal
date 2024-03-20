@@ -143,7 +143,7 @@ export const getUserAccess = ( roles, accessLevel ) => {
         isSecurityUserAccessAllowed = true
         isEmailAccessAllowed = false
 
-    } else if(userRoles?.some((role) => role?.roleType?.toLowerCase() === 'regionalmanager' || dataAccessibilityLevel?.toUpperCase() === 'FILTER')){
+    } else if(userRoles?.some((role) => role?.roleType?.toLowerCase() === 'regionalmanager' || dataAccessibilityLevel?.toUpperCase() === 'RESTRICTED')){
 
         isAllAccessAllowed = false
         isDisableDelete = true
@@ -156,7 +156,7 @@ export const getUserAccess = ( roles, accessLevel ) => {
         isSecurityUserAccessAllowed = false
         isEmailAccessAllowed = false
 
-    } else if(userRoles?.some((role) => role?.roleType?.toLowerCase() === 'supportmanager' || dataAccessibilityLevel?.toUpperCase() === 'FILTER' )){
+    } else if(userRoles?.some((role) => role?.roleType?.toLowerCase() === 'supportmanager' || dataAccessibilityLevel?.toUpperCase() === 'RESTRICTED' )){
 
       isAllAccessAllowed = false
       isDisableDelete = true

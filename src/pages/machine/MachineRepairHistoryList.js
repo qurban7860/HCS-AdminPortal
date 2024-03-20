@@ -42,14 +42,14 @@ import Scrollbar from '../../components/scrollbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
-import SiteListTableRow from './ToolsInstalled/SiteListTableRow';
-import SiteListTableToolbar from './ToolsInstalled/SiteListTableToolbar';
+import SiteListTableRow from './toolsInstalled/SiteListTableRow';
+import SiteListTableToolbar from './toolsInstalled/SiteListTableToolbar';
 import { getSites, deleteSite, getSite,setFormVisibility } from '../../redux/slices/customer/site';
-import SiteAddForm from './ToolsInstalled/SiteAddForm';
-import SiteEditForm from './ToolsInstalled/SiteEditForm';
+import SiteAddForm from './toolsInstalled/SiteAddForm';
+import SiteEditForm from './toolsInstalled/SiteEditForm';
 
 import _mock from '../../_mock';
-import SiteViewForm from './ToolsInstalled/SiteViewForm';
+import SiteViewForm from './toolsInstalled/SiteViewForm';
 import EmptyContent from '../../components/empty-content';
 
 

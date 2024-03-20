@@ -3,10 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Dialog, DialogContent, DialogTitle, Divider } from '@mui/material';
 import { setCustomerDialog, setCustomerTab } from '../../redux/slices/customer/customer';
 // import Iconify from '../../../components/iconify';
-import { PATH_CUSTOMER } from '../../routes/paths';
+import { PATH_CRM } from '../../routes/paths';
 import DialogLink from './DialogLink';
 import FormLabel from '../DocumentForms/FormLabel';
 import ViewFormField from '../ViewForms/ViewFormField';
+import ViewPhoneComponent from '../ViewForms/ViewPhoneComponent';
 
 function CustomerDialog() {
   const navigate = useNavigate();
@@ -29,8 +30,7 @@ function CustomerDialog() {
         <Grid item container>
           <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={customer?.name || ''} />
           <ViewFormField isLoading={isLoading} sm={12} heading="Trading Name" chips={customer?.tradingName || ''} />
-          <ViewFormField isLoading={isLoading} sm={6} heading="Phone" param={customer?.mainSite?.phone || ''} />
-          <ViewFormField isLoading={isLoading} sm={6} heading="Fax" param={customer?.mainSite?.fax || ''} />
+          <ViewPhoneComponent isLoading={isLoading} sm={12} heading="Phone" value={customer?.mainSite?.phoneNumbers || []} />
           <ViewFormField isLoading={isLoading} sm={6} heading="Email" param={customer?.mainSite?.email || ''} />
           <ViewFormField isLoading={isLoading} sm={6} heading="Site Name" param={customer?.mainSite?.name || ''} />
           <FormLabel content="Address Information" />
@@ -73,7 +73,7 @@ function CustomerDialog() {
         onClick={() => {
           dispatch(setCustomerTab('info'));
           handleCustomerDialog();
-          navigate(PATH_CUSTOMER.view(customer._id));
+          navigate(PATH_CRM.customers.view(customer._id));
         }}
         content="Go to Customer"
       />

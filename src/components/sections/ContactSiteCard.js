@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import { CardActionArea, Grid } from '@mui/material';
 import { CustomAvatarBase } from '../../theme/styles/customer-styles';
 import { useScreenSize } from '../../hooks/useResponsive';
+import Iconify from '../iconify';
 
 ContactSiteCard.propTypes = {
   name: PropTypes.string,
@@ -14,12 +15,13 @@ ContactSiteCard.propTypes = {
   email: PropTypes.string,
   phone: PropTypes.object,
   image: PropTypes.string,
+  isMain: PropTypes.bool,
   handleOnClick:PropTypes.func,
   disableClick:PropTypes.bool,
   isActive:PropTypes.bool
 };
 
-export default function ContactSiteCard({name, title, email, phone, image, handleOnClick, disableClick, isActive}) {
+export default function ContactSiteCard({name, title, email, phone, image, isMain, handleOnClick, disableClick, isActive}) {
 
   const smScreen = useScreenSize('sm');
   const mdScreen = useScreenSize('md');
@@ -55,14 +57,15 @@ export default function ContactSiteCard({name, title, email, phone, image, handl
           <>
             {image ? (
               <CardMedia component="img" sx={{ width: 150, height:'100%', opacity:0.5 }} image={image} alt={_name} />
-            ):(
-              <Grid sx={{background:'#939ec5', width: 150, height:'100%'}} item display='flex' alignItems='center'>
+              ):(
+                <Grid sx={{background:'#939ec5', width: 150, height:'100%'}} item display='flex' alignItems='center'>
                 <CustomAvatarBase name={name} alt={name}  />
               </Grid>
             )}
           </> 
         }
           <CardContent sx={{ flex: '1 0 auto',  height:'100%', width:'calc(100% - 150px)'}}>
+            {isMain && <Iconify icon="f7:dot-square-fill" color="green" sx={{ position: 'absolute', top: 5, right: 5 }}/>}
             <Typography variant="h4" color="#2065d1" component="div">{_name}</Typography>
             <Typography variant="body1" color="text.secondary" component="div">{_title}</Typography>
             <Typography variant="overline" color="text.secondary" component="div">{_email}</Typography>

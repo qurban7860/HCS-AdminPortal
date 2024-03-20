@@ -411,13 +411,13 @@ export function addCustomer(params) {
           name: params?.name,
           clientCode: params?.code,
           tradingName: params?.tradingName,
+          ref: params?.ref,
           accountManager: params?.accountManager?.map((account) => account?._id),
           projectManager: params?.projectManager?.map((project) => project?._id),
           supportManager: params?.supportManager?.map((support) => support?._id),
           mainSite: {
             name: params?.name,
-            phone: params?.phone,
-            fax: params?.fax,
+            phoneNumbers: params?.phoneNumbers?.filter( pN => pN?.contactNumber ) || [],
             email: params?.email,
             website: params?.website,
             address: {
@@ -459,8 +459,8 @@ export function addCustomer(params) {
         if(params?.billingContactTitle){
           billingContact.title = params?.billingContactTitle
         }
-        if(params?.billingContactPhone && params?.billingContactFirstName){
-          billingContact.phone = params?.billingContactPhone
+        if(params?.billingContactPhone?.contactNumber && params?.billingContactFirstName){
+          billingContact.phoneNumbers = [ params?.billingContactPhone ]
         }
         if(params?.billingContactEmail){
           billingContact.email = params?.billingContactEmail
@@ -473,8 +473,8 @@ export function addCustomer(params) {
         if(params?.technicalContactTitle){
           technicalContact.title = params?.technicalContactTitle
         }
-        if(params?.technicalContactPhone ){
-          technicalContact.phone = params?.technicalContactPhone
+        if(params?.technicalContactPhone?.contactNumber ){
+          technicalContact.phoneNumbers = [ params?.technicalContactPhone ]
         }
         if(params?.technicalContactEmail){
           technicalContact.email = params?.technicalContactEmail
@@ -533,6 +533,7 @@ export function updateCustomer(params) {
         id: params.id,
         name: params.name,
         tradingName: params.tradingName || [],
+        ref: params.ref || '',
         isActive: params.isActive,
         clientCode: params.code,
         primaryBillingContact: params.primaryBillingContact?._id || null,

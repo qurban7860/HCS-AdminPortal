@@ -313,66 +313,68 @@ export default function Router() {
       ],
     },
     {
-      // Customers
-      path: 'crm/customers',
+      path: 'crm',
       element: (
         <AuthGuard>
           <DashboardLayout />
         </AuthGuard>
       ),
       children: [
-        { element: <CustomerList />, index: true  },
-        { path: 'new', element: <CustomerAdd /> },
-        { path: ':customerId/edit', element: <CustomerEdit />},
-        { path: ':customerId/view', element: <CustomerView />},
-        { path: 'sitesReport', element: <CustomerSiteList />},
-        { path: 'contactsReport', element: <CustomerContactList />},
-
-        { path: ':customerId/sites',
+        { path: 'contacts', element: <CustomerContactList />},
+        { path: 'sites', element: <CustomerSiteList />},
+        { path: 'customers',
           children: [
-            { element: <CustomerSiteDynamicList />, index: true  },
-            { path: 'new', element: <CustomerSiteDynamicList siteAddForm /> },
-            { path: ':id/edit', element: <CustomerSiteDynamicList siteEditForm />},
-            { path: ':id/view', element: <CustomerSiteDynamicList siteViewForm />}
-          ],
+            { element: <CustomerList />, index: true  },
+            { path: 'new', element: <CustomerAdd /> },
+            { path: ':customerId/edit', element: <CustomerEdit />},
+            { path: ':customerId/view', element: <CustomerView />},
+            { path: ':customerId/sites',
+            children: [
+                { element: <CustomerSiteDynamicList />, index: true  },
+                { path: 'new', element: <CustomerSiteDynamicList siteAddForm /> },
+                { path: ':id/edit', element: <CustomerSiteDynamicList siteEditForm />},
+                { path: ':id/view', element: <CustomerSiteDynamicList siteViewForm />}
+              ],
+            },
+            { path: ':customerId/contacts',
+              children: [
+                { element: <CustomerContactDynamicList />, index: true  },
+                { path: 'new', element: <CustomerContactDynamicList contactAddForm /> },
+                { path: ':id/edit', element: <CustomerContactDynamicList contactEditForm />},
+                { path: ':id/view', element: <CustomerContactDynamicList contactViewForm />},
+                { path: ':id/move', element: <CustomerContactDynamicList contactMoveForm />},
+              ],
+            },
+            { path: ':customerId/notes',
+              children: [
+                { element: <NoteList />, index: true  },
+                { path: 'new', element: <NoteAddForm /> },
+                { path: ':id/edit', element: <NoteEditForm />},
+                { path: ':id/view', element: <NoteViewForm />}
+              ],
+            },
+            { path: ':customerId/documents',
+              children: [
+                { element: <CustomerDocumentList />, index: true  },
+                { path: 'new', element: <CustomerDocumentAddForm /> },
+                { path: 'viewGallery', element: <CustomerDocumentGallery />},
+                { path: ':id/edit', element: <CustomerDocumentEditForm />},
+                { path: ':id/view', element: <CustomerDocumentViewForm />},
+                { path: ':id/viewHistory', element: <CustomerDocumentHistoryViewForm />},
+                { path: 'gallery', element: <CustomerDocumentGallery />},
+              ],
+            },        
+            { path: ':customerId/machines',
+              children: [
+                { element: <CustomerMachines />, index: true  },
+                { path: 'new',element: <CustomerMachineAddForm />  },
+                { path: ':id/move',element: <CustomerMachineMove />  },
+              ],
+            },
+            { path: 'permission-denied', element: <PermissionDeniedPage /> },
+            { path: 'blank', element: <BlankPage /> },
+          ]
         },
-        { path: ':customerId/contacts',
-          children: [
-            { element: <CustomerContactDynamicList />, index: true  },
-            { path: 'new', element: <CustomerContactDynamicList contactAddForm /> },
-            { path: ':id/edit', element: <CustomerContactDynamicList contactEditForm />},
-            { path: ':id/view', element: <CustomerContactDynamicList contactViewForm />},
-            { path: ':id/move', element: <CustomerContactDynamicList contactMoveForm />},
-          ],
-        },
-        { path: ':customerId/notes',
-          children: [
-            { element: <NoteList />, index: true  },
-            { path: 'new', element: <NoteAddForm /> },
-            { path: ':id/edit', element: <NoteEditForm />},
-            { path: ':id/view', element: <NoteViewForm />}
-          ],
-        },
-        { path: ':customerId/documents',
-          children: [
-            { element: <CustomerDocumentList />, index: true  },
-            { path: 'new', element: <CustomerDocumentAddForm /> },
-            { path: 'viewGallery', element: <CustomerDocumentGallery />},
-            { path: ':id/edit', element: <CustomerDocumentEditForm />},
-            { path: ':id/view', element: <CustomerDocumentViewForm />},
-            { path: ':id/viewHistory', element: <CustomerDocumentHistoryViewForm />},
-            { path: 'gallery', element: <CustomerDocumentGallery />},
-          ],
-        },        
-        { path: ':customerId/machines',
-          children: [
-            { element: <CustomerMachines />, index: true  },
-            { path: 'new',element: <CustomerMachineAddForm />  },
-            { path: ':id/move',element: <CustomerMachineMove />  },
-          ],
-        },
-        { path: 'permission-denied', element: <PermissionDeniedPage /> },
-        { path: 'blank', element: <BlankPage /> },
       ],
     },
     // Machine

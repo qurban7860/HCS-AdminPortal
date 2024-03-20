@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useDispatch } from '../../../redux/store';
 // components
-import { PATH_DOCUMENT, PATH_CUSTOMER } from '../../../routes/paths';
+import { PATH_DOCUMENT, PATH_CRM } from '../../../routes/paths';
 import { 
   setDocumentFormVisibility, 
   setDocumentHistoryNewVersionFormVisibility, 
@@ -60,7 +60,7 @@ export default function DocumentListTableToolbar({
       await  dispatch(setDocumentHistoryNewVersionFormVisibility(false));
       await  dispatch(setDocumentNewVersionFormVisibility(false));
     if(customerPage && !machinePage){
-      await navigate(PATH_CUSTOMER.documents.new(customer?._id))
+      await navigate(PATH_CRM.documents.new(customer?._id))
     } else if(!customerPage && machinePage){
       await dispatch(setDocumentFormVisibility(true));
     }else if(machineDrawings){

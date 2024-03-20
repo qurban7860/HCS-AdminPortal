@@ -1,18 +1,17 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import * as Yup from 'yup';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Link, Stack, Alert, IconButton, InputAdornment } from '@mui/material';
+import { Link, Stack, Alert } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // routes
 import { PATH_AUTH } from '../../routes/paths';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // components
-import Iconify from '../../components/iconify';
 import FormProvider, { RHFTextField, RHFCheckbox, RHFPasswordField } from '../../components/hook-form';
 
 // ----------------------------------------------------------------------
@@ -55,7 +54,7 @@ export default function AuthLoginForm() {
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = methods;
 
-  const { isRemember } = watch()
+  const { isRemember, email, password } = watch()
 
   useEffect(() => {
     const storedEmail =       localStorage.getItem("HowickUserEmail");
@@ -68,12 +67,13 @@ export default function AuthLoginForm() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   
   const onSubmit = async (data) => {
     try {
       if (isRemember) {
-        localStorage.setItem("HowickUserEmail", data.email);
-        localStorage.setItem("HowickUserPassword", data.password);
+        localStorage.setItem("HowickUserEmail", email);
+        localStorage.setItem("HowickUserPassword", password);
         localStorage.setItem("isRemember", isRemember);
       } else {
         localStorage.removeItem("HowickUserEmail");
@@ -85,10 +85,10 @@ export default function AuthLoginForm() {
         navigate(PATH_AUTH.authenticate);
         localStorage.removeItem("MFA");
       }
+      reset();
     } catch (error) {
       if(regEx.test(error.MessageCode)){
         console.error("error : ",error?.Message || '');
-        reset();
         setError('afterSubmit', {
           ...error,
           message: error.Message,

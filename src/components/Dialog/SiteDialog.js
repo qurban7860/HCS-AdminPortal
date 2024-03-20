@@ -25,8 +25,7 @@ function SiteDialog({ title }) {
         <DialogContent dividers sx={{px:3}}>
           <Grid item container>
             <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={site?.name} />
-            <ViewPhoneComponent isLoading={isLoading} sm={6} heading="Phone" value={site?.phoneNumbers} />
-            <ViewFormField isLoading={isLoading} sm={6} heading="Fax" param={site?.fax} />
+            <ViewPhoneComponent isLoading={isLoading} sm={12} heading="Phone" value={site?.phoneNumbers} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Email" param={site?.email} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Website" param={site?.website} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Street" param={site?.address?.street} />
