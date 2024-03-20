@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { m } from 'framer-motion';
-import { useLayoutEffect, useMemo } from 'react';
+import { useLayoutEffect, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { createTheme } from '@mui/material/styles';
 import { green } from '@mui/material/colors';
-import { Box, Card, Grid, Stack, IconButton } from '@mui/material';
+import { Box, Card, Grid, Stack, IconButton, Typography } from '@mui/material';
 // slice
 import { addCustomer } from '../../../redux/slices/customer/customer';
 import { getActiveSPContacts, resetActiveSPContacts } from '../../../redux/slices/customer/contact';
@@ -152,6 +152,19 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     }
   };
 
+  useEffect(() => {
+    phoneNumbers?.forEach((pN, index) => {
+      if(!phoneNumbers[index]?.contactNumber || phoneNumbers[index]?.contactNumber === undefined ){
+        setValue( `phoneNumbers[${index}].countryCode`,  country?.phone?.replace(/[^0-9]/g, '') )
+      }
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ country ]);
+
+  const updateCountryCode = () =>{
+    phoneNumbers?.forEach((pN, index ) =>  setValue( `phoneNumbers[${index}].countryCode`,  country?.phone?.replace(/[^0-9]/g, '') ))
+  }
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Card sx={{ mb: 3, height: 160, position: 'relative' }} >
@@ -197,6 +210,12 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               <RHFTextField name="region" label="Region" />
               <RHFTextField name="postcode" label="Post Code" />
               <RHFCountryAutocomplete name="country" label="Country" />
+            </Box>
+            <Box display="flex" alignItems="center" gridTemplateColumns={{ sm: 'repeat(1, 1fr)' }} >
+              <IconButton onClick={updateCountryCode} size="small" variant="contained" color='secondary' sx={{ mr: 0.5}} >
+                <Iconify icon="icon-park-outline:update-rotation" sx={{width: 25, height: 25}}  />
+              </IconButton>
+              <Typography variant='body2' sx={{ color:'gray'}}>Update country code in phone/fax.</Typography>
             </Box>
               <Grid>
                 {phoneNumbers?.map((pN, index) => (
