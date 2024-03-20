@@ -40,7 +40,7 @@ function ContactDialog() {
             heading="Contact Types"
             param={contact?.contactTypes && contact?.contactTypes.toString()}
           />
-          <ViewPhoneComponent isLoading={isLoading}  sm={12} heading="Phone" param={contact?.phoneNumbers && contact?.phoneNumbers} />
+          <ViewPhoneComponent isLoading={isLoading}  sm={12} heading="Phone" value={contact?.phoneNumbers && contact?.phoneNumbers} />
           <FormLabel content="Address Information" />
           <ViewFormField isLoading={isLoading} 
             sm={6}

@@ -30,7 +30,7 @@ function CustomerDialog() {
         <Grid item container>
           <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={customer?.name || ''} />
           <ViewFormField isLoading={isLoading} sm={12} heading="Trading Name" chips={customer?.tradingName || ''} />
-          <ViewPhoneComponent isLoading={isLoading} sm={12} heading="Phone" param={customer?.mainSite?.phoneNumbers || ''} />
+          <ViewPhoneComponent isLoading={isLoading} sm={12} heading="Phone" value={customer?.mainSite?.phoneNumbers || []} />
           <ViewFormField isLoading={isLoading} sm={6} heading="Email" param={customer?.mainSite?.email || ''} />
           <ViewFormField isLoading={isLoading} sm={6} heading="Site Name" param={customer?.mainSite?.name || ''} />
           <FormLabel content="Address Information" />
