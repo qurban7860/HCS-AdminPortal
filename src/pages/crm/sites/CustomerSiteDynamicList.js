@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes, { array } from 'prop-types';
 import { useState, useEffect } from 'react';
 // @mui
 import { Container, Stack, Card, Grid, CardActionArea } from '@mui/material';
@@ -102,7 +102,13 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
       dispatch(setCardActiveIndex(null));
       dispatch(setIsExpanded(false));
     }
-}, [dispatch, customerId ]); 
+  }, [dispatch, customerId ]); 
+
+  useEffect(()=>{
+    if( Array.isArray(sites) && sites?.length > 0 && customerId && !siteAddForm && !siteEditForm && !siteViewForm ){
+      navigate(PATH_CRM.customers.sites.view( customerId, sites[0]?._id))
+    }
+  },[ sites, customerId, navigate, siteAddForm, siteEditForm, siteViewForm ])
 
   useEffect(() => {
     setTableData(sites);
