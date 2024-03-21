@@ -108,6 +108,10 @@ export const SignInLogList = Loadable(lazy(() => import('../pages/Settings/Repor
 export const UserInvitationList = Loadable(lazy(() => import('../pages/Settings/Reports/invite/UserInviteList')));
 export const UserInvitationView = Loadable(lazy(() => import('../pages/Settings/Reports/invite/UserInviteViewForm')));
 
+// RELEASES
+export const ReleasesList = Loadable(lazy(() => import('../pages/Settings/Reports/releases/ReleasesList')));
+export const ReleasesViewForm = Loadable(lazy(() => import('../pages/Settings/Reports/releases/ReleasesViewForm')));
+
 // User Blocked Customers
 export const BlockedCustomerList = Loadable(lazy(() => import('../pages/Settings/securitySettings/blocked_customer/BlockedCustomerList')));
 export const BlockedCustomerAddForm = Loadable(lazy(() => import('../pages/Settings/securitySettings/blocked_customer/BlockedCustomerAddForm')));

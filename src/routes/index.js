@@ -220,7 +220,11 @@ import {
   UserInvitationList,
   UserInvitationView,
 
-//   
+  // RELEASES
+  ReleasesList,
+  ReleasesViewForm,
+
+  //   
   BlankPage,
   PermissionDeniedPage,
 
@@ -678,6 +682,13 @@ export default function Router() {
           children: [
             { path: 'list', element: <UserInvitationList /> },
             { path: ':id/view', element: <UserInvitationView /> },
+          ],
+        },
+        {
+          path: 'releases',
+          children: [
+            { path: 'list', element: <ReleasesList /> },
+            { path: ':id/view', element: <ReleasesViewForm /> },
           ],
         }
       ],

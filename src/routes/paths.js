@@ -314,7 +314,11 @@ export const PATH_SETTING = {
   invite: {
     list: path(ROOTS_SETTING, '/invite/list'),
     view: (id) => path(ROOTS_SETTING, `/invite/${id}/view`)
-  }
+  },
+  releases: {
+    list: path(ROOTS_SETTING, '/releases/list'),
+    view: (id) => path(ROOTS_SETTING, `/releases/${id}/view`)
+  },
 };
 
 export const PATH_SITEMAP = {

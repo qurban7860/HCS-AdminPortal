@@ -28,6 +28,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 function ViewFormEditDeleteButtons({
   backLink,
   isActive,
+  isReleased,
   isDefault,
   isIniRead,
   isManufacture,
@@ -257,7 +258,6 @@ function ViewFormEditDeleteButtons({
   const [ transferHistory, setTransferHistory ] = useState([]);
 
   const [ machineSettingHistoryAnchorEl, setMachineSettingHistoryAnchorEl ] = useState(null);
-  const [ machineSettingHistory, setMachineSettingHistory ] = useState([]);
 
   const [approvedAnchorEl, setApprovedAnchorEl] = useState(null);
   const [approvedBy, setApprovedBy] = useState([]);
@@ -287,13 +287,11 @@ function ViewFormEditDeleteButtons({
   const handleMachineSettingHistoryPopoverOpen = (event) => {
     if(history?.length > 0) {
       setMachineSettingHistoryAnchorEl(event.currentTarget);
-      setMachineSettingHistory(transferredHistory)
     }
   };
 
   const handleMachineSettingHistoryPopoverClose = () => {
     setMachineSettingHistoryAnchorEl(null);
-    setMachineSettingHistory([])
   };
 
   const handleApprovedPopoverOpen = (event) => {
@@ -336,6 +334,13 @@ function ViewFormEditDeleteButtons({
               {/* <Divider */}
               <Divider orientation="vertical" flexItem />
             </>
+          }
+          { isReleased !== undefined && 
+            <IconTooltip
+              title={isReleased ? ICONS.RELEASE.heading:ICONS.NOTRELEASE.heading}
+              color={isReleased ? ICONS.RELEASE.color:ICONS.NOTRELEASE.color}
+              icon={isReleased ? ICONS.RELEASE.icon:ICONS.NOTRELEASE.icon}
+            />
           }
 
           {isActive!==undefined &&
@@ -847,6 +852,7 @@ ViewFormEditDeleteButtons.propTypes = {
   isVerifiedTitle: PropTypes.string,
   approveConfiglength: PropTypes.string,
   isActive: PropTypes.bool,
+  isReleased: PropTypes.bool,
   isIniRead: PropTypes.bool,
   isManufacture: PropTypes.bool,
   isDeleteDisabled: PropTypes.bool,

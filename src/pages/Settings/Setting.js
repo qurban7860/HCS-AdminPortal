@@ -18,7 +18,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 
 export default function Setting() {
 
-  const { isSettingAccessAllowed } = useAuthContext()
+  const { isSettingAccessAllowed, isAllAccessAllowed } = useAuthContext()
 
   const navigate = useNavigate();
 
@@ -45,6 +45,8 @@ export default function Setting() {
   const linkUserInvites = () => {
     navigate(PATH_SETTING.invite.list);
   }
+
+  const releases = () => navigate(PATH_SETTING.releases.list);
 
   const linkBlockedCustomer = () => {
     navigate(PATH_SECURITY.config.blockedCustomer.list);
@@ -79,7 +81,7 @@ return (
                 lg: 'repeat(3, 1fr)',
               }}
             >
-            { isSettingAccessAllowed &&
+          { isSettingAccessAllowed &&
             <StyledSettingsCardContainer>
                 <List
                   component="nav"
@@ -133,6 +135,11 @@ return (
                     icon={ICONS.USER_INVITE.icon}
                     content={ICONS.USER_INVITE.heading}
                   />
+                  {isAllAccessAllowed && <ListItem
+                    onClick={releases}
+                    icon={ICONS.RELEASES.icon}
+                    content={ICONS.RELEASES.heading}
+                  />}
                 </List>
             </StyledSettingsCardContainer>
             }
