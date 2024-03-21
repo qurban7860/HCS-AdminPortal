@@ -22,7 +22,7 @@ import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 import MachineViewForm from './MachineViewForm';
 import MachineEditForm from './MachineEditForm';
-import { TABS as TABSFunc } from './util/Tabs';
+import { TABS as TABSFunc } from './Tabs';
 import { CONFIG } from '../../config-global';
 
 // ----------------------------------------------------------------------

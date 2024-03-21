@@ -1,4 +1,4 @@
-import PropTypes, { array } from 'prop-types';
+import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 // @mui
 import { Container, Stack, Card, Grid, CardActionArea } from '@mui/material';

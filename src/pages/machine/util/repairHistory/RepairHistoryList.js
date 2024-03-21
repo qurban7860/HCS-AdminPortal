@@ -1,12 +1,10 @@
 import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
-  Stack,
-  Card,
   Grid,
+  Card,
   Table,
   Button,
   Tooltip,
@@ -14,18 +12,14 @@ import {
   Container,
   IconButton,
   TableContainer,
-  DialogTitle,
-  Dialog, 
-  Typography,
-  Accordion, AccordionSummary, AccordionDetails
 } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from '../../redux/store';
+import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD } from '../../../../routes/paths';
 // components
-import { useSnackbar } from '../../components/snackbar';
-import { useSettingsContext } from '../../components/settings';
+import { useSnackbar } from '../../../../components/snackbar';
+import { useSettingsContext } from '../../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -36,22 +30,15 @@ import {
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
-} from '../../components/table';
-import Iconify from '../../components/iconify';
-import Scrollbar from '../../components/scrollbar';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
-import ConfirmDialog from '../../components/confirm-dialog';
+} from '../../../../components/table';
+import Iconify from '../../../../components/iconify';
+import Scrollbar from '../../../../components/scrollbar';
+import ConfirmDialog from '../../../../components/confirm-dialog';
 // sections
-import SiteListTableRow from './util/toolsInstalled/SiteListTableRow';
-import SiteListTableToolbar from './util/toolsInstalled/SiteListTableToolbar';
-import { getSites, deleteSite, getSite,setFormVisibility } from '../../redux/slices/customer/site';
-import SiteAddForm from './util/toolsInstalled/SiteAddForm';
-import SiteEditForm from './util/toolsInstalled/SiteEditForm';
-
-import _mock from '../../_mock';
-import SiteViewForm from './util/toolsInstalled/SiteViewForm';
-import EmptyContent from '../../components/empty-content';
-
+import SiteListTableRow from './RepairHistoryListTableRow';
+import SiteListTableToolbar from './RepairHistoryListTableToolbar';
+import { getSites, deleteSite } from '../../../../redux/slices/customer/site';
+import CustomerDashboardNavbar from '../util/CustomerDashboardNavbar';
 
 
 // ----------------------------------------------------------------------
@@ -68,18 +55,9 @@ const TABLE_HEAD = [
 
 const STATUS_OPTIONS = [];
 
-
-const _accordions = [...Array(8)].map((_, index) => ({
-  id: _mock.id(index),
-  value: `panel${index + 1}`,
-  heading: `Site ${index + 1}`,
-  subHeading: _mock.text.title(index),
-  detail: _mock.text.description(index),
-}));
-
 // ----------------------------------------------------------------------
 
-export default function MachineRepairHistoryList() {
+export default function RepairHistoryList() {
   const {
     dense,
     page,
@@ -101,26 +79,13 @@ export default function MachineRepairHistoryList() {
     defaultOrderBy: 'createdAt',
   });
 
-
-  const [controlled, setControlled] = useState(false);
-
-  const handleChangeControlled = (panel) => (event, isExpanded) => {
-    setControlled(isExpanded ? panel : false);
-  };
   const dispatch = useDispatch();
-
-  const { sites, isLoading, error, initial, responseMessage, siteEditFormVisibility, siteAddFormVisibility } = useSelector((state) => state.site);
-
-  const { customer } = useSelector((state) => state.customer);
-
-  const toggleChecked = async () => 
-    {
-      dispatch(setFormVisibility(!siteAddFormVisibility));    
-    };
 
   const { themeStretch } = useSettingsContext();
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const navigate = useNavigate();
 
   const [filterName, setFilterName] = useState('');
 
@@ -128,33 +93,19 @@ export default function MachineRepairHistoryList() {
 
   const [filterStatus, setFilterStatus] = useState([]);
 
-  const [activeIndex, setActiveIndex] = useState(null);
-  const [expanded, setExpanded] = useState(false);
-  const handleAccordianClick = (accordianIndex) => {
-   if(accordianIndex === activeIndex ){
-    setActiveIndex(null)
-   }else{
-    setActiveIndex(accordianIndex)
-   }
-  };
+  const [openConfirm, setOpenConfirm] = useState(false);
 
-  const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
+  const { sites, isLoading, error, initial, responseMessage } = useSelector((state) => state.site);
+
+  useLayoutEffect(() => {
+    dispatch(getSites());
+  }, [dispatch]);
 
   useEffect(() => {
-    if(!siteAddFormVisibility && !siteEditFormVisibility){
-      dispatch(getSites(customer._id));
-    }
-  }, [dispatch, customer, siteAddFormVisibility, siteEditFormVisibility]); // checked is also included
-
-  useEffect(() => {
-    if (initial) {   
+    if (initial) {
       setTableData(sites);
     }
   }, [sites, error, responseMessage, enqueueSnackbar, initial]);
-
-
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -169,87 +120,82 @@ export default function MachineRepairHistoryList() {
 
   const isFiltered = filterName !== '' || !!filterStatus.length;
 
-  const isNotFound = !sites.length && !siteAddFormVisibility && !siteEditFormVisibility;
+  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+
+  const handleOpenConfirm = () => {
+    setOpenConfirm(true);
+  };
+
+  const handleCloseConfirm = () => {
+    setOpenConfirm(false);
+  };
+
+  const handleFilterName = (event) => {
+    setPage(0);
+    setFilterName(event.target.value);
+  };
+
+  const handleFilterStatus = (event) => {
+    setPage(0);
+    setFilterStatus(event.target.value);
+  };
+
+  const handleDeleteRow = async (id) => {
+    try {
+      await dispatch(deleteSite(id));
+      dispatch(getSites());
+      setSelected([]);
+
+      if (page > 0) {
+        if (dataInPage.length < 2) {
+          setPage(page - 1);
+        }
+      }
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
+  const handleDeleteRows = (selectedRows) => {
+    const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
+    setSelected([]);
+    setTableData(deleteRows);
+
+    if (page > 0) {
+      if (selectedRows.length === dataInPage.length) {
+        setPage(page - 1);
+      } else if (selectedRows.length === dataFiltered.length) {
+        setPage(0);
+      } else if (selectedRows.length > dataInPage.length) {
+        const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
+        setPage(newPage);
+      }
+    }
+  };
+
+  const handleEditRow = (id) => {
+    navigate(PATH_DASHBOARD.site.edit(id));
+  };
+
+  const handleViewRow = (id) => {
+    navigate(PATH_DASHBOARD.site.view(id));
+  };
+
+  const handleResetFilter = () => {
+    setFilterName('');
+    setFilterStatus([]);
+  };
 
   return (
     <>
-
-      <Container maxWidth={false}>
-
-        {!siteEditFormVisibility && <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
-          <Button
-              // alignItems 
-              onClick={toggleChecked}
-
-              variant="contained"
-              startIcon={!siteAddFormVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}
-            >
-              New Site
-            </Button>
-
-        </Stack>}
+      <Container maxWidth={themeStretch ? false : 'lg'}>
         
+
+        <Grid container spacing={3}>
+          <CustomerDashboardNavbar/>
+          </Grid>
         <Card>
-
-          {siteEditFormVisibility && <SiteEditForm/>}
-
-          {siteAddFormVisibility && !siteEditFormVisibility && <SiteAddForm/>}
-
-          {!siteAddFormVisibility && !siteEditFormVisibility && sites.map((site, index) =>{ 
-            const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
-            return(
-            <Accordion key={site._id} expanded={expanded === index} onChange={handleChange(index)} sx={ {borderTop: borderTopVal}}>
-              <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
-                { index !==  activeIndex ? 
-                <Grid container spacing={0}>
-                  <Grid item xs={12} sm={4} >
-                    <Typography variant="body2" >
-                    {site.name} 
-                    </Typography>
-                  </Grid>
-                  {site.address && <Grid item xs={12} sm={8}>
-                    <Typography variant="body2" >
-                    {Object.values(site.address)?.join(", ")}
-                    </Typography>
-                  </Grid>}
-                </Grid>
-                : null }
-              </AccordionSummary>
-              <AccordionDetails sx={{mt:-5}}>
-                <SiteViewForm
-                currentSite={site}
-                />
-              </AccordionDetails>
-            </Accordion>
-            
-          )})} 
-
-          {isNotFound && <EmptyContent title="No Data"/>}
-            
-          {/* </Block> */}
-          {/* <Block title="Controlled">
-            {_accordions.map((item, index) => (
-              <Accordion
-                key={item.value}
-                disabled={index === 3}
-                expanded={controlled === item.value}
-                onChange={handleChangeControlled(item.value)}
-              >
-                <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
-                  <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0 }}>
-                    {item.heading}
-                  </Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{item.subHeading}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography>{item.detail}</Typography>
-                </AccordionDetails>
-              </Accordion>
-            ))}
-          </Block> */}
-
-
-           {/* <SiteListTableToolbar
+          <SiteListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -261,7 +207,7 @@ export default function MachineRepairHistoryList() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
-              dense={dense}
+              
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -280,13 +226,13 @@ export default function MachineRepairHistoryList() {
             />
 
             <Scrollbar>
-              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+              <Table size='small' sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
-                  numSelected={selected.length}
+                  // rowCount={tableData.length}
+                  // numSelected={selected.length}
                   onSort={onSort}
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
@@ -314,7 +260,6 @@ export default function MachineRepairHistoryList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
-
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
@@ -327,14 +272,12 @@ export default function MachineRepairHistoryList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            //
-            dense={dense}
-            onChangeDense={onChangeDense}
-          /> */}
+            
+          />
         </Card>
       </Container>
 
-      {/* <ConfirmDialog
+      <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
         title="Delete"
@@ -355,7 +298,7 @@ export default function MachineRepairHistoryList() {
             Delete
           </Button>
         }
-      /> */}
+      />
     </>
   );
 }
