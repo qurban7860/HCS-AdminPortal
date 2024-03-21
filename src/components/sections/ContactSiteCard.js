@@ -84,7 +84,7 @@ export default function ContactSiteCard({name, title, email, phone, image, isMai
                   disableFocusListener 
                   tooltipcolor={theme.palette.primary.main} 
                   >
-                  <Iconify icon="f7:dot-square-fill" color="#1769aa"  />
+                  <Iconify icon="f7:dot-square-fill" color="#1769aa" />
                 </StyledTooltip>
               </Grid>
             }

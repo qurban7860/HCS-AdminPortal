@@ -24,6 +24,19 @@ export const ICONS = {
     color: '#FF0000',
     heading: 'Inactive',
   },
+
+  //  Releases
+  RELEASE: {
+    icon: 'fluent-mdl2:release-gate',
+    color: '#008000',
+    heading: 'Released',
+  },
+  NOTRELEASE: {
+    icon: 'fluent-mdl2:release-gate',
+    color: '#FF0000',
+    heading: 'Not Release',
+  },
+
   // isIniRead
   READINI: {
     icon: 'circum:read',
@@ -340,6 +353,10 @@ export const ICONS = {
   USER_INVITE: {
     icon: 'ph:user-plus-bold',
     heading: 'User Invites',
+  },
+  RELEASES: {
+    icon: 'fluent-mdl2:release-gate',
+    heading: 'Releases',
   },
   BLOCKED_CUSTOMER: {
     icon: 'tabler:home-off',

@@ -48,7 +48,7 @@ CustomerSiteDynamicList.propTypes = {
 export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, siteViewForm }) {
   const { customer } = useSelector((state) => state.customer);
   const { sites, site, isExpanded, activeCardIndex } = useSelector((state) => state.site);
-  const { order, orderBy } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
+  const { order, orderBy } = useTable({ defaultOrderBy: 'doNotOrder', defaultOrder: 'desc' });
   const { isAllAccessAllowed } = useAuthContext()
   const { enqueueSnackbar } = useSnackbar();
   const [ filterName, setFilterName ] = useState('');
@@ -92,7 +92,6 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
-    filterStatus,
   });
 
   useEffect( () => {

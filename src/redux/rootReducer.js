@@ -32,6 +32,7 @@ import documentFileReducer from './slices/document/documentFile';
 import machineConnectionsReducer from './slices/products/machineConnections';
 import documentVersionReducer from './slices/document/documentVersion';
 import regionReducer from './slices/region/region';
+import releasesReducer from './slices/reports/releases';
 import moduleReducer from './slices/module/module';
 import drawingReducer from './slices/products/drawing';
 import configReducer from './slices/config/config';
@@ -259,6 +260,14 @@ export const regionPersistConfig={
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
+
+export const releasesPersistConfig={
+  key: 'releases',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+
 export const modulePersistConfig={
   key: 'module',
   storage,
@@ -392,6 +401,7 @@ const rootReducer = combineReducers({
   machineConnections: persistReducer(machineConnectionsPersistConfig, machineConnectionsReducer),
   documentVersion: persistReducer(documentVersionPersistConfig, documentVersionReducer),
   region: persistReducer(regionPersistConfig, regionReducer),
+  releases: persistReducer(releasesPersistConfig, releasesReducer),
   module: persistReducer(modulePersistConfig, moduleReducer),
   drawing: persistReducer(drawingPersistConfig, drawingReducer),
   config: persistReducer(configPersistConfig, configReducer),
