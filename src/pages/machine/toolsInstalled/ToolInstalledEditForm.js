@@ -20,20 +20,20 @@ import {
 import {
   setToolInstalledEditFormVisibility,
   updateToolInstalled,
-} from '../../../../redux/slices/products/toolInstalled';
+} from '../../../redux/slices/products/toolInstalled';
 // routes
-import { useSnackbar } from '../../../../components/snackbar';
-import useResponsive from '../../../../hooks/useResponsive';
-import Iconify from '../../../../components/iconify';
+import { useSnackbar } from '../../../components/snackbar';
+import useResponsive from '../../../hooks/useResponsive';
+import Iconify from '../../../components/iconify';
 
 import FormProvider, {
   RHFTextField,
   RHFSwitch,
   RHFDatePicker,
-} from '../../../../components/hook-form';
-import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
-import { CONFIG } from '../../../../config-global'
-import { checkValuesNotNull } from '../index'
+} from '../../../components/hook-form';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
+import { CONFIG } from '../../../config-global'
+import { checkValuesNotNull } from '../util/index'
 
 
 // ----------------------------------------------------------------------

@@ -8,18 +8,18 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Button, Card, Grid, Stack, Typography } from '@mui/material';
 // slice
-import { saveSite, setFormVisibility } from '../../../../redux/slices/customer/site';
+import { saveSite, setFormVisibility } from '../../../redux/slices/customer/site';
 // components
-import { useSnackbar } from '../../../../components/snackbar';
+import { useSnackbar } from '../../../components/snackbar';
 // assets
-import { countries } from '../../../../assets/data';
+import { countries } from '../../../assets/data';
 
 
 import FormProvider, {
   RHFSelect,
   RHFTextField,
   RHFAutocomplete
-} from '../../../../components/hook-form';
+} from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
 

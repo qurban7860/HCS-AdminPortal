@@ -7,22 +7,22 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, Grid, Stack, Container, Checkbox } from '@mui/material';
 // routes
-import { PATH_SECURITY } from '../../../../routes/paths';
+import { PATH_SECURITY } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../../../components/snackbar';
-import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete, RHFPhoneInput } from '../../../../components/hook-form';
+import { useSnackbar } from '../../../components/snackbar';
+import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete, RHFPhoneInput } from '../../../components/hook-form';
 // slice
-import { updateSecurityUser, getSecurityUser } from '../../../../redux/slices/securityUser/securityUser';
-import { getAllActiveCustomers, resetAllActiveCustomers } from '../../../../redux/slices/customer/customer';
-import { getActiveContacts, resetActiveContacts} from '../../../../redux/slices/customer/contact';
-import { getAllMachines, resetAllMachines } from '../../../../redux/slices/products/machine';
-import { getActiveRoles, resetActiveRoles } from '../../../../redux/slices/securityUser/role';
-import { getActiveRegions, resetActiveRegions } from '../../../../redux/slices/region/region';
+import { updateSecurityUser, getSecurityUser } from '../../../redux/slices/securityUser/securityUser';
+import { getAllActiveCustomers, resetAllActiveCustomers } from '../../../redux/slices/customer/customer';
+import { getActiveContacts, resetActiveContacts} from '../../../redux/slices/customer/contact';
+import { getAllMachines, resetAllMachines } from '../../../redux/slices/products/machine';
+import { getActiveRoles, resetActiveRoles } from '../../../redux/slices/securityUser/role';
+import { getActiveRegions, resetActiveRegions } from '../../../redux/slices/region/region';
 // current user
-import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
-import { Cover } from '../../../../components/Defaults/Cover';
-import { editUserSchema } from '../../../schemas/securityUser';
-import { useAuthContext } from '../../../../auth/useAuthContext';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
+import { Cover } from '../../../components/Defaults/Cover';
+import { editUserSchema } from '../../schemas/securityUser';
+import { useAuthContext } from '../../../auth/useAuthContext';
 
 // ----------------------------------------------------------------------
 

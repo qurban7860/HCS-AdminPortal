@@ -12,22 +12,22 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
 // global
-import { CONFIG } from '../../../../config-global';
+import { CONFIG } from '../../../config-global';
 // slice
-import { updateSite, setEditFormVisibility } from '../../../../redux/slices/customer/site';
+import { updateSite, setEditFormVisibility } from '../../../redux/slices/customer/site';
 // routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../../../components/snackbar';
-import Iconify from '../../../../components/iconify';
+import { useSnackbar } from '../../../components/snackbar';
+import Iconify from '../../../components/iconify';
 
 import FormProvider, {
   RHFSelect,
   RHFTextField,
 
-} from '../../../../components/hook-form';
+} from '../../../components/hook-form';
 
-import { countries } from '../../../../assets/data';
+import { countries } from '../../../assets/data';
 
 // ----------------------------------------------------------------------
 

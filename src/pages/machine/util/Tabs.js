@@ -1,15 +1,15 @@
 import React from 'react';
-import Iconify from '../../components/iconify/Iconify';
-import DocumentTagPage from '../document/documents/DocumentTagPage';
-import MachineDrawings from './drawings/MachineDrawings';
-import MachineLicenses from './licenses/MachineLicenses';
-import MachineServiceRecordList from './MachineServiceRecordList';
-import HistoricalConfigurations from './HistoricalConfigurations';
-import MachineProfiles from './profiles/MachineProfiles';
-import MachineSetting from './settings/MachineSetting';
-import MachineToolInstalled from './util/toolsInstalled/MachineToolInstalled';
-import MachineNotes from './notes/MachineNotes';
-import MachineERPLogsList from './MachineERPLogsList';
+import Iconify from '../../../components/iconify/Iconify';
+import DocumentTagPage from '../../document/documents/DocumentTagPage';
+import MachineDrawings from '../drawings/MachineDrawings';
+import MachineLicenses from '../licenses/MachineLicenses';
+import MachineServiceRecordList from '../MachineServiceRecordList';
+import HistoricalConfigurations from '../HistoricalConfigurations';
+import MachineProfiles from '../profiles/MachineProfiles';
+import MachineSetting from '../settings/MachineSetting';
+import MachineToolInstalled from '../toolsInstalled/MachineToolInstalled';
+import MachineNotes from '../notes/MachineNotes';
+import MachineERPLogsList from '../MachineERPLogsList';
 
 export const TABS = (currentComponent, showDevTabs, disableTab) => [
   {

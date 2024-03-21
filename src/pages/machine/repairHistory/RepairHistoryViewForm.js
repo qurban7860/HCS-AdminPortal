@@ -7,15 +7,15 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import { Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
-import { deleteSite, getSite, getSites, setEditFormVisibility } from '../../../../redux/slices/customer/site';
+import { deleteSite, getSite, getSites, setEditFormVisibility } from '../../../redux/slices/customer/site';
 
 // paths
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import Iconify from '../../../../components/iconify';
-import ConfirmDialog from '../../../../components/confirm-dialog';
+import Iconify from '../../../components/iconify';
+import ConfirmDialog from '../../../components/confirm-dialog';
 
-import { fDate,fDateTime } from '../../../../utils/formatTime';
+import { fDate,fDateTime } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 RepairHistoryViewForm.propTypes = {

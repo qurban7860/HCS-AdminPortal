@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { Snacks } from '../../../../../constants/machine-constants';
+import { Snacks } from '../../../../constants/machine-constants';
 
 export const LicenseSchema = Yup.object().shape({
   version: Yup.string().max(50, 'Version must be at most 50 characters'),
