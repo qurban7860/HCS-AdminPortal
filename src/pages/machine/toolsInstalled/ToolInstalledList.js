@@ -7,10 +7,10 @@ import {
   TableContainer,
 } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from '../../../../redux/store';
+import { useDispatch, useSelector } from '../../../redux/store';
 // routes
 // components
-import { useSettingsContext } from '../../../../components/settings';
+import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -18,8 +18,8 @@ import {
   TableSkeleton,
   TableHeadCustom,
   TablePaginationCustom,
-} from '../../../../components/table';
-import Scrollbar from '../../../../components/scrollbar';
+} from '../../../components/table';
+import Scrollbar from '../../../components/scrollbar';
 // sections
 import ToolInstalledListTableRow from './ToolInstalledListTableRow';
 import ToolInstalledListTableToolbar from './ToolInstalledListTableToolbar';
@@ -30,9 +30,9 @@ import {
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
-  setToolInstalledViewFormVisibility } from '../../../../redux/slices/products/toolInstalled';
-import { fDate } from '../../../../utils/formatTime';
-import TableCard from '../../../../components/ListTableTools/TableCard';
+  setToolInstalledViewFormVisibility } from '../../../redux/slices/products/toolInstalled';
+import { fDate } from '../../../utils/formatTime';
+import TableCard from '../../../components/ListTableTools/TableCard';
 
 export default function ToolInstalledList() {
   const {

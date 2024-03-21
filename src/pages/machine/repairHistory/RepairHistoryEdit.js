@@ -4,13 +4,13 @@ import { useParams } from 'react-router-dom';
 // @mui
 import { Container } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from '../../../../redux/store';
-import { getSite } from '../../../../redux/slices/customer/site';
+import { useDispatch, useSelector } from '../../../redux/store';
+import { getSite } from '../../../redux/slices/customer/site';
 // routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
-import { useSettingsContext } from '../../../../components/settings';
+import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
+import { useSettingsContext } from '../../../components/settings';
 // sections
 import RepairHistoryEditForm from './RepairHistoryEditForm';
 

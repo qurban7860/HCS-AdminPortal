@@ -14,12 +14,12 @@ import {
   TableContainer,
 } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from '../../../../redux/store';
+import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../../../components/snackbar';
-import { useSettingsContext } from '../../../../components/settings';
+import { useSnackbar } from '../../../components/snackbar';
+import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -30,14 +30,14 @@ import {
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
-} from '../../../../components/table';
-import Iconify from '../../../../components/iconify';
-import Scrollbar from '../../../../components/scrollbar';
-import ConfirmDialog from '../../../../components/confirm-dialog';
+} from '../../../components/table';
+import Iconify from '../../../components/iconify';
+import Scrollbar from '../../../components/scrollbar';
+import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import SiteListTableRow from './RepairHistoryListTableRow';
 import SiteListTableToolbar from './RepairHistoryListTableToolbar';
-import { getSites, deleteSite } from '../../../../redux/slices/customer/site';
+import { getSites, deleteSite } from '../../../redux/slices/customer/site';
 import CustomerDashboardNavbar from '../util/CustomerDashboardNavbar';
 
 

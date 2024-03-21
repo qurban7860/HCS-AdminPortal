@@ -6,26 +6,26 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, Grid, Stack, Autocomplete, TextField, Button } from '@mui/material';
-import useResponsive from '../../../../hooks/useResponsive'; 
+import useResponsive from '../../../hooks/useResponsive'; 
 // slice
 import {
   setToolInstalledFormVisibility, 
   addToolInstalled,
   getToolsInstalled,
-} from '../../../../redux/slices/products/toolInstalled';  
-import { getActiveTools } from '../../../../redux/slices/products/tools'; 
+} from '../../../redux/slices/products/toolInstalled';  
+import { getActiveTools } from '../../../redux/slices/products/tools'; 
 // components
-import { useSnackbar } from '../../../../components/snackbar'; 
-import Iconify from '../../../../components/iconify';
+import { useSnackbar } from '../../../components/snackbar'; 
+import Iconify from '../../../components/iconify';
 // assets
 import FormProvider, {
   RHFTextField,
   RHFSwitch,
   RHFDatePicker,
-} from '../../../../components/hook-form';
-import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
-import { CONFIG } from '../../../../config-global'
-import { checkValuesNotNull } from '../index'
+} from '../../../components/hook-form';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
+import { CONFIG } from '../../../config-global'
+import { checkValuesNotNull } from '../util/index'
 
 // ----------------------------------------------------------------------
 

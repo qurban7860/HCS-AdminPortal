@@ -5,11 +5,11 @@ import {
   Switch,
 } from '@mui/material';
 // utils
-import { fDate } from '../../../../utils/formatTime';
+import { fDate } from '../../../utils/formatTime';
 // components
-import LinkTableCell from '../../../../components/ListTableTools/LinkTableCell';
-import { useScreenSize } from '../../../../hooks/useResponsive';
-import { StyledTableRow } from '../../../../theme/styles/default-styles'
+import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
+import { useScreenSize } from '../../../hooks/useResponsive';
+import { StyledTableRow } from '../../../theme/styles/default-styles'
 
 // ----------------------------------------------------------------------
 

@@ -13,15 +13,15 @@ import {
   Link,
 } from '@mui/material';
 // utils
-import { fDate } from '../../../../utils/formatTime';
-import { fCurrency } from '../../../../utils/formatNumber';
+import { fDate } from '../../../utils/formatTime';
+import { fCurrency } from '../../../utils/formatNumber';
 // components
-import Iconify from '../../../../components/iconify';
-import MenuPopover from '../../../../components/menu-popover';
-import ConfirmDialog from '../../../../components/confirm-dialog';
-import Label from '../../../../components/label';
+import Iconify from '../../../components/iconify';
+import MenuPopover from '../../../components/menu-popover';
+import ConfirmDialog from '../../../components/confirm-dialog';
+import Label from '../../../components/label';
 
-import { useSelector } from '../../../../redux/store';
+import { useSelector } from '../../../redux/store';
 
 
 // ----------------------------------------------------------------------

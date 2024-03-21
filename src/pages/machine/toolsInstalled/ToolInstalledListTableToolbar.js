@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 import { Stack } from '@mui/material';
 // import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useDispatch } from '../../../../redux/store';
+import { useDispatch } from '../../../redux/store';
 // import { PATH_DOCUMENT } from '../../../routes/paths';
-import { setToolInstalledFormVisibility } from '../../../../redux/slices/products/toolInstalled';
-import { SearchBarCombo } from '../../../../components/ListTableTools'
+import { setToolInstalledFormVisibility } from '../../../redux/slices/products/toolInstalled';
+import { SearchBarCombo } from '../../../components/ListTableTools'
 // constants
-import { BUTTONS } from '../../../../constants/default-constants';
+import { BUTTONS } from '../../../constants/default-constants';
 // ----------------------------------------------------------------------
 
 ToolInstalledListTableToolbar.propTypes = {

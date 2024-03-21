@@ -4,14 +4,14 @@ import { useParams } from 'react-router-dom';
 // @mui
 import { Tab, Card, Tabs, Container, Box } from '@mui/material';
 // routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_DASHBOARD } from '../../../routes/paths';
 // redux
-import { useDispatch, useSelector } from '../../../../redux/store';
-import { getSite } from '../../../../redux/slices/customer/site';
+import { useDispatch, useSelector } from '../../../redux/store';
+import { getSite } from '../../../redux/slices/customer/site';
 // components
-import Iconify from '../../../../components/iconify';
-import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
-import { useSettingsContext } from '../../../../components/settings';
+import Iconify from '../../../components/iconify';
+import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
+import { useSettingsContext } from '../../../components/settings';
 // sections
 
 import RepairHistoryViewForm from './RepairHistoryViewForm'

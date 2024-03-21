@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // slice
 import { getToolsInstalled, resetToolsInstalled, setToolInstalledFormVisibility, 
           setToolInstalledEditFormVisibility, setToolInstalledViewFormVisibility 
-        } from '../../../../redux/slices/products/toolInstalled';
+        } from '../../../redux/slices/products/toolInstalled';
 // components
 import ToolInstalledList from './ToolInstalledList'
 import ToolInstalledAddForm from './ToolInstalledAddForm'
