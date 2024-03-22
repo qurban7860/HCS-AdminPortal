@@ -4,7 +4,6 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-const regEx = /^[^2]*/
 const initialState = {
   release: {},
   releases: [],
@@ -113,6 +112,7 @@ export function getReleases() {
         dispatch(slice.actions.getReleasesSuccess(response.data));
       return response;
     } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
       console.error(error);
       throw error;
     }
@@ -130,6 +130,7 @@ export function getRelease(id) {
         dispatch(slice.actions.getReleaseSuccess(response.data));
       return response;
     } catch (error) {
+      dispatch(slice.actions.hasError(error.Message));
       console.error(error);
       throw error;
     }

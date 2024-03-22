@@ -47,6 +47,7 @@ import {
   MachineAddForm,
   MachineList,
   MachineView,
+  GetMachineId,
   MachineEdit,
   MachineTransfer,
 
@@ -398,6 +399,11 @@ export default function Router() {
             { path: ':id/view', element: <MachineView /> }, 
             { path: ':id/edit', element: <MachineEdit /> }, 
             { path: ':id/transfer', element: <MachineTransfer />},
+            { path: 'serialNo',                 
+              children: [
+                  { path: ':id/customer/:customerName/view', element: <GetMachineId /> },
+              ]
+            },
             { path: 'settings',
               children: [
               { path: 'app', element: <MachineSetting />},

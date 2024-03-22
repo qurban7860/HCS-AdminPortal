@@ -16,7 +16,6 @@ import { useDispatch, useSelector } from '../../../redux/store';
 import { PATH_CRM } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import { getComparator, useTable } from '../../../components/table';
 import AddButtonAboveAccordion from '../../../components/Defaults/AddButtonAboveAcoordion';
 import BreadcrumbsProvider from '../../../components/Breadcrumbs/BreadcrumbsProvider';
 import BreadcrumbsLink from '../../../components/Breadcrumbs/BreadcrumbsLink';
@@ -48,7 +47,6 @@ CustomerSiteDynamicList.propTypes = {
 export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, siteViewForm }) {
   const { customer } = useSelector((state) => state.customer);
   const { sites, site, isExpanded, activeCardIndex } = useSelector((state) => state.site);
-  const { order, orderBy } = useTable({ defaultOrderBy: 'doNotOrder', defaultOrder: 'desc' });
   const { isAllAccessAllowed } = useAuthContext()
   const { enqueueSnackbar } = useSnackbar();
   const [ filterName, setFilterName ] = useState('');
@@ -90,7 +88,6 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
 
   const dataFiltered = applyFilter({
     inputData: tableData,
-    comparator: getComparator(order, orderBy),
     filterName,
   });
 
@@ -296,13 +293,8 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
 
 // ----------------------------------------------------------------------
 
-export function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+export function applyFilter({ inputData, filterName}) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
 
   inputData = stabilizedThis.map((el) => el[0]);
 

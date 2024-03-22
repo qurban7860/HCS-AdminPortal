@@ -109,6 +109,9 @@ export const PATH_MACHINE = {
     view: (id) => path(ROOTS_MACHINE, `/machines/${id}/view`),
     edit: (id) => path(ROOTS_MACHINE, `/machines/${id}/edit`),
     transfer: (id) => path(ROOTS_MACHINE, `/machines/${id}/transfer`),
+    serialNo: {
+        view: ( id, customerName ) => path(ROOTS_MACHINE, `/machines/serialNo/${id}/customer/${customerName}/view`),
+    },
     settings: {
       app: path(ROOTS_MACHINE, '/machines/settings/app'),
 

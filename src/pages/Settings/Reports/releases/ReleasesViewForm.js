@@ -47,10 +47,10 @@ export default function ReleasesViewForm() {
           settingPage
         />
           <Grid container sx={{mt:2}}>
-            <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues.name} />
-            <ViewFormField isLoading={isLoading} sm={6} heading="Release Date" param={fDate(defaultValues.releaseDate)} />
+            <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues.name} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Start Date" param={fDate(defaultValues.startDate)} />
-            <ViewFormField isLoading={isLoading} sm={6} heading="Description" param={defaultValues.description} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Release Date" param={fDate(defaultValues.releaseDate)} />
+            <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues.description} />
           </Grid>
         </Card>
       </Grid>

@@ -32,7 +32,7 @@ export const FORMLABELS = {
     EDIT_DOCUMENT_CATEGORY: 'Edit Document Category',
     MACHINE_PLACEHOLDER: 'Machine',
     TOOLS: 'Tools',
-    SETTINGS: 'Settings',
+    SETTINGS: 'Machine Settings',
     CUSTOMERS: 'Customers',
     DOCUMENTS: 'Documents',
     ADD_DOCUMENTS: 'Add Documents',
@@ -71,10 +71,11 @@ export const FORMLABELS = {
   TECHNICAL_CONTACT: 'Technical Contact Information',
 
   // @root - Machine -settings
-  COMMON_SETTINGS: 'Common Settings',
-  TECHNICAL_SETTINGS: 'Technical Settings',
-  TOOLS_INFO: ' Tools Information',
-  SERVICE: ' Service Settings',
+  COMMON_SETTINGS: 'Categories & Models',
+  TECHNICAL_SETTINGS: 'Machine Settings',
+  TOOLS_INFO: 'Tools Information',
+  SERVICE: 'Service Record Configuration',
+  OTHERS: 'Others',
 
   // @root - Settings
   DOCUMENT_SETTINGS: 'Document Settings',

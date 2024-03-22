@@ -290,7 +290,7 @@ export const ICONS = {
   // technical settings
   TECHPARAM_CATEGORIES: {
     icon: 'mdi:table-cog',
-    heading: 'Technical Parameter Categories',
+    heading: 'Parameter Categories',
   },
   PARAMETERS: {
     icon: 'mdi:abacus',

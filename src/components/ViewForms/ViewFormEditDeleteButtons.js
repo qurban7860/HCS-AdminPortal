@@ -91,6 +91,7 @@ function ViewFormEditDeleteButtons({
   const { id } = useParams();
   const navigate = useNavigate()
   const userId = localStorage.getItem('userId');
+  
   const { 
     isDisableDelete, 
     isSettingReadOnly, 
@@ -99,6 +100,7 @@ function ViewFormEditDeleteButtons({
     isDrawingAccessAllowed,
     isSettingAccessAllowed,
     isSecurityUserAccessAllowed, } = useAuthContext();
+
   const dispatch = useDispatch();
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openUserInviteConfirm, setOpenUserInviteConfirm] = useState(false);

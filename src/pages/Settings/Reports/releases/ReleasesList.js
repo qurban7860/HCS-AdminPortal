@@ -35,7 +35,7 @@ export default function ReleasesList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
+    defaultOrderBy: 'id', defaultOrder: 'desc',
   });
 
   const dispatch = useDispatch();
@@ -96,7 +96,7 @@ export default function ReleasesList() {
   };
 
   const handleViewRow = (id) => {
-    // navigate(PATH_SETTING.releases.view(id))
+    navigate(PATH_SETTING.releases.view(id))
   };
 
   const handleResetFilter = () => {
@@ -118,7 +118,7 @@ export default function ReleasesList() {
             onResetFilter={handleResetFilter}
           />
             <TablePaginationCustom
-              count={dataFiltered.length}
+              count={dataFiltered?.length}
               page={page}
               rowsPerPage={rowsPerPage}
               onPageChange={onChangePage}
@@ -171,7 +171,7 @@ export default function ReleasesList() {
 
 function applyFilter({ inputData, comparator, filterName }) {
 
-  const stabilizedThis = inputData && inputData.map((el, index) => [el, index]);
+  const stabilizedThis = inputData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -180,16 +180,14 @@ function applyFilter({ inputData, comparator, filterName }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-  
   if (filterName) {
-    inputData = inputData.filter(
-      (release) =>
-        release?.name.toString().toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(release?.startDate)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(release?.releaseDate)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        release?.released >= 0
+    return inputData.filter(
+      (release) => 
+        release.name.indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(release.startDate)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(release.releaseDate)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        release.released >= 0
     );
   }
-
   return inputData;
 }
