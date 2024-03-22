@@ -35,7 +35,7 @@ export default function ReleasesList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'doNotOrder', defaultOrder: 'asc',
+    defaultOrderBy: 'id', defaultOrder: 'desc',
   });
 
   const dispatch = useDispatch();
@@ -58,7 +58,7 @@ export default function ReleasesList() {
 
   useEffect(() => {
     if (initial) {
-      setTableData(releases || [] ); 
+      setTableData(releases?.values || [] ); 
     }
   }, [ dispatch, initial, releases ]);
 
@@ -180,7 +180,6 @@ function applyFilter({ inputData, comparator, filterName }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-  console.log("filterName : ",filterName);
   if (filterName) {
     return inputData.filter(
       (release) => 
@@ -190,6 +189,5 @@ function applyFilter({ inputData, comparator, filterName }) {
         release.released >= 0
     );
   }
-console.log("inputData : ",inputData)
   return inputData;
 }

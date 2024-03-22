@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 // @mui
-import { Box, Stack, Drawer,Typography, Link } from '@mui/material'
+import { Box, Stack, Drawer,Typography, Link, Grid } from '@mui/material'
 // hooks
 // import { useSettingsContext } from '../../../components/settings';
 import useResponsive from '../../../hooks/useResponsive';
@@ -31,7 +31,6 @@ export default function NavVertical({ openNav, onCloseNav }) {
   const navConfig = NavigationConfig();
 
   const { pathname } = useLocation();
-  // const { themeLayout } = useSettingsContext();
   const isDesktop = useResponsive('up', 'lg');
   const [envColor, setEnvColor]= useState('#897A69');
   useEffect(() => {
@@ -71,24 +70,24 @@ export default function NavVertical({ openNav, onCloseNav }) {
         }}
       >
         <Logo sx={{ width: '70%', margin: '0 auto' }} />
-        {/* <Grid sx={{ margin: '0 auto', mb:2, display:'flex', alignItems:'baseline'}}>
-          {CONFIG.ENV.toLocaleLowerCase()!=='live' &&
+        <Grid sx={{ margin: '0 auto', mb:2, display:'flex', alignItems:'baseline'}}>
+          {/* {CONFIG.ENV.toLocaleLowerCase()!=='live' &&
             <Typography sx={{background:envColor, borderRadius:'50px', fontSize:'10px', padding:'2px 5px', color:"#FFF"}}>{`${CONFIG.ENV.toLocaleUpperCase()} ${CONFIG.Version}`}</Typography>
           }
 
           {CONFIG.ENV.toLocaleLowerCase()==='live' &&
             <Typography sx={{ color: '#897A69', fontSize:'10px'}}>{CONFIG.Version}</Typography>
-          }
-        </Grid> */}
+          } */}
 
-        <Link
-          sx={{ margin: '0 auto', mb: 2, display: 'flex', alignItems: 'baseline', textDecoration: 'none' }}
-          href={PATH_SETTING.releases.list}
-        >
-          {CONFIG.ENV.toLocaleLowerCase() !== 'live' && ( <Typography sx={{ background: envColor, borderRadius: '50px', fontSize: '10px', padding: '2px 5px', color: '#FFF', }} > 
-                  {`${CONFIG.ENV.toLocaleUpperCase()} ${CONFIG.Version}`} </Typography> )}
-          {CONFIG.ENV.toLocaleLowerCase() === 'live' && ( <Typography sx={{ color: '#897A69', fontSize: '10px' }}> {CONFIG.Version} </Typography> )}
-        </Link>
+          <Link
+            sx={{ margin: '0 auto', mb: 2, display: 'flex', alignItems: 'baseline', textDecoration: 'none' }}
+            href={PATH_SETTING.releases.list}
+            >
+            {CONFIG.ENV.toLocaleLowerCase() !== 'live' && ( <Typography sx={{ background: envColor, borderRadius: '50px', fontSize: '10px', padding: '2px 5px', color: '#FFF', }} > 
+                    {`${CONFIG.ENV.toLocaleUpperCase()} ${CONFIG.Version}`} </Typography> )}
+            {CONFIG.ENV.toLocaleLowerCase() === 'live' && ( <Typography sx={{ color: '#897A69', fontSize: '10px' }}> {CONFIG.Version} </Typography> )}
+          </Link>
+        </Grid>
 
         <NavAccount />
       </Stack>
