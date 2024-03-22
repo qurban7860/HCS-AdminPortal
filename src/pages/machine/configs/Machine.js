@@ -1,23 +1,24 @@
 import { useNavigate } from 'react-router-dom';
 import { Box, Container, List } from '@mui/material';
 // routes
-import { PATH_MACHINE } from '../../routes/paths';
+import { PATH_MACHINE } from '../../../routes/paths';
 // components
-import { StyledSettingsCardContainer } from '../../theme/styles/machine-styles';
-import { Cover } from '../../components/Defaults/Cover';
-import { StyledCardContainer } from '../../theme/styles/default-styles';
-import ListItem from '../../components/ListTableTools/ListItem';
-import ListItemsHeader from '../../components/ListTableTools/ListItemsHeader';
+import { StyledSettingsCardContainer } from '../../../theme/styles/machine-styles';
+import { Cover } from '../../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
+import ListItem from '../../../components/ListTableTools/ListItem';
+import ListItemsHeader from '../../../components/ListTableTools/ListItemsHeader';
 // constants
-import { FORMLABELS } from '../../constants/default-constants';
-import { ICONS } from '../../constants/icons/default-icons';
+import { FORMLABELS } from '../../../constants/default-constants';
+import { ICONS } from '../../../constants/icons/default-icons';
+import { useAuthContext } from '../../../auth/useAuthContext';
 
 // ----------------------------------------------------------------------
 
 export default function Machine() {
   const navigate = useNavigate();
-
-  // Functions to navigate to different pages
+  const { isAllAccessAllowed } = useAuthContext();
+  
   const linkGroup = () => {
     navigate(PATH_MACHINE.machines.settings.groups.list);
   };
@@ -68,7 +69,7 @@ export default function Machine() {
               display="grid"
               gridTemplateColumns={{
                 xs: 'repeat(1, 1fr)',
-                sm: 'repeat(1, 1fr)', // First one spans 1 column, and the second spans 5 columns on sm screens
+                sm: 'repeat(1, 1fr)',
                 lg: 'repeat(3, 1fr)',
               }}
             >
@@ -79,7 +80,6 @@ export default function Machine() {
                 aria-labelledby="nested-list-subheader"
                 subheader={<ListItemsHeader header={FORMLABELS.COMMON_SETTINGS} />}
               >
-
                 <ListItem
                   onClick={linkGroup}
                   icon={ICONS.MACHINE_GROUPS.icon}
@@ -99,11 +99,6 @@ export default function Machine() {
                   onClick={linkSupplier}
                   icon={ICONS.MACHINE_SUPPLIERS.icon}
                   content={ICONS.MACHINE_SUPPLIERS.heading}
-                />
-                <ListItem
-                  onClick={linkStatus}
-                  icon={ICONS.MACHINE_STATUS.icon}
-                  content={ICONS.MACHINE_STATUS.heading}
                 />
               </List>
             </StyledSettingsCardContainer>
@@ -130,11 +125,11 @@ export default function Machine() {
                   icon={ICONS.TOOLS.icon}
                   content={ICONS.MACHINE_SERVICE_RECORD_CONFIG.heading}
                 />
-                <ListItem
+                { isAllAccessAllowed && <ListItem
                   onClick={linkConfiguration}
                   icon={ICONS.Configuration.icon}
                   content={ICONS.Configuration.heading}
-                />
+                /> }
               </List>
           </StyledSettingsCardContainer>
 
@@ -173,6 +168,20 @@ export default function Machine() {
               </List>
             </StyledSettingsCardContainer>
 
+            <StyledSettingsCardContainer>
+              <List
+                sx={{ fontSize: '0.7em' }}
+                component="nav"
+                aria-labelledby="nested-list-subheader"
+                subheader={<ListItemsHeader header={FORMLABELS.OTHERS} />}
+              >
+                <ListItem
+                  onClick={linkStatus}
+                  icon={ICONS.MACHINE_STATUS.icon}
+                  content={ICONS.MACHINE_STATUS.heading}
+                />
+              </List>
+            </StyledSettingsCardContainer>
       </Box>
     </Container>
   );

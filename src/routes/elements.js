@@ -79,7 +79,7 @@ export const RoleView = Loadable(lazy(() => import('../pages/Settings/securitySe
 //----------------------------------------------------------------
 
 // Machine
-export const MachineSetting = Loadable(lazy(() => import('../pages/machine/Machine')));
+export const MachineSetting = Loadable(lazy(() => import('../pages/machine/configs/Machine')));
 export const MachineAddForm = Loadable(lazy(() => import('../pages/machine/MachineAdd')));
 export const MachineList = Loadable(lazy(() => import('../pages/machine/MachineList')));
 export const MachineView = Loadable(lazy(() => import('../pages/machine/MachineView')));
