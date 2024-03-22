@@ -73,28 +73,29 @@ function NavigationConfig() {
     },
   ]);
 
+  
   useEffect(() => {
     const updatedConfig = [...navConfig];
 
     updatedConfig[0].items.splice(7, 0, { title: 'Sites Map', path: PATH_SITEMAP.app, icon: ICONS.map });
 
-    if (isDocumentAccessAllowed && navConfig.some((config) => config.title !== 'Documents')) {
+    if (isDocumentAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'documents')) {
       updatedConfig[0].items.splice(3, 0, { title: 'Documents', path: PATH_DOCUMENT.document.list, icon: ICONS.document });
     }
 
-    if (isDrawingAccessAllowed && navConfig.some((config) => config.title !== 'Machine Drawings')) {
+    if (isDrawingAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'machine drawings')) {
       updatedConfig[0].items.splice(4, 0, { title: 'Machine Drawings', path: PATH_DOCUMENT.document.machineDrawings.list, icon: ICONS.drawing });
     }
 
-    if (isSettingAccessAllowed && navConfig.some((config) => config.title !== 'Settings')) {
+    if (isSettingAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'settings')) {
       updatedConfig[0].items.splice(5, 0, { title: 'Settings', path: PATH_SETTING.root, icon: ICONS.setting });
     }
 
-    if (isSecurityUserAccessAllowed && navConfig.some((config) => config.title !== 'Security')) {
+    if (isSecurityUserAccessAllowed && navConfig.some((config) => config?.title?.toLowerCase() !== 'security')) {
       updatedConfig[0].items.splice(6, 0, { title: 'Security', path: PATH_SECURITY.root, icon: ICONS.security });
     }
 
-    if (isEmailAccessAllowed && navConfig.some((config) => config.title !== 'Email')) {
+    if (isEmailAccessAllowed && navConfig.some((config) => config?.title?.toLowerCase() !== 'email')) {
       updatedConfig[0].items.push({ title: 'Email', path: PATH_EMAIL.email.list, icon: ICONS.email });
     }
 

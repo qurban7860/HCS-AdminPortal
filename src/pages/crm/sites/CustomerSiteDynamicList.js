@@ -16,7 +16,6 @@ import { useDispatch, useSelector } from '../../../redux/store';
 import { PATH_CRM } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import { getComparator, useTable } from '../../../components/table';
 import AddButtonAboveAccordion from '../../../components/Defaults/AddButtonAboveAcoordion';
 import BreadcrumbsProvider from '../../../components/Breadcrumbs/BreadcrumbsProvider';
 import BreadcrumbsLink from '../../../components/Breadcrumbs/BreadcrumbsLink';
@@ -48,7 +47,6 @@ CustomerSiteDynamicList.propTypes = {
 export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, siteViewForm }) {
   const { customer } = useSelector((state) => state.customer);
   const { sites, site, isExpanded, activeCardIndex } = useSelector((state) => state.site);
-  // const { order, orderBy } = useTable({ defaultOrderBy: 'doNotOrder', defaultOrder: 'desc' });
   const { isAllAccessAllowed } = useAuthContext()
   const { enqueueSnackbar } = useSnackbar();
   const [ filterName, setFilterName ] = useState('');
