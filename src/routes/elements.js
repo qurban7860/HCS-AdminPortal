@@ -79,10 +79,11 @@ export const RoleView = Loadable(lazy(() => import('../pages/Settings/securitySe
 //----------------------------------------------------------------
 
 // Machine
-export const MachineSetting = Loadable(lazy(() => import('../pages/machine/Machine')));
+export const MachineSetting = Loadable(lazy(() => import('../pages/machine/configs/Machine')));
 export const MachineAddForm = Loadable(lazy(() => import('../pages/machine/MachineAdd')));
 export const MachineList = Loadable(lazy(() => import('../pages/machine/MachineList')));
 export const MachineView = Loadable(lazy(() => import('../pages/machine/MachineView')));
+export const GetMachineId = Loadable(lazy(() => import('../pages/machine/GetMachineId')));
 export const MachineEdit = Loadable(lazy(() => import('../pages/machine/MachineEdit')));
 export const MachineTransfer = Loadable(lazy(() => import('../pages/machine/MachineTransfer')));
 
@@ -107,6 +108,10 @@ export const SignInLogList = Loadable(lazy(() => import('../pages/Settings/Repor
 // User Invitations List
 export const UserInvitationList = Loadable(lazy(() => import('../pages/Settings/Reports/invite/UserInviteList')));
 export const UserInvitationView = Loadable(lazy(() => import('../pages/Settings/Reports/invite/UserInviteViewForm')));
+
+// RELEASES
+export const ReleasesList = Loadable(lazy(() => import('../pages/Settings/Reports/releases/ReleasesList')));
+export const ReleasesViewForm = Loadable(lazy(() => import('../pages/Settings/Reports/releases/ReleasesViewForm')));
 
 // User Blocked Customers
 export const BlockedCustomerList = Loadable(lazy(() => import('../pages/Settings/securitySettings/blocked_customer/BlockedCustomerList')));

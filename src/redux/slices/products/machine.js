@@ -514,6 +514,22 @@ export function getMachinesAgainstCountries(countries) {
 
 // ----------------------------------------------------------------------
 
+export function getMachineID(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/searchProductId?serialNo=${id}&ref=cusref`);
+      return response
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
 export function getMachine(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());

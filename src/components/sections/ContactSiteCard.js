@@ -4,10 +4,13 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
+import { createTheme } from '@mui/material/styles';
+import { green } from '@mui/material/colors';
 import { CardActionArea, Grid } from '@mui/material';
 import { CustomAvatarBase } from '../../theme/styles/customer-styles';
 import { useScreenSize } from '../../hooks/useResponsive';
 import Iconify from '../iconify';
+import { StyledTooltip } from '../../theme/styles/default-styles';
 
 ContactSiteCard.propTypes = {
   name: PropTypes.string,
@@ -27,6 +30,12 @@ export default function ContactSiteCard({name, title, email, phone, image, isMai
   const mdScreen = useScreenSize('md');
   const lgScreen = useScreenSize('lg');
   const xlScreen = useScreenSize('xl');
+
+  const theme = createTheme({
+    palette: {
+      success: green,
+    },
+  });
 
   let _name = name?.length>20 ?`${name.substring(0,20)}...`:name;
   let _title = title?.length>20 ?`${title.substring(0,20)}...`:title;
@@ -65,7 +74,20 @@ export default function ContactSiteCard({name, title, email, phone, image, isMai
           </> 
         }
           <CardContent sx={{ flex: '1 0 auto',  height:'100%', width:'calc(100% - 150px)'}}>
-            {isMain && <Iconify icon="f7:dot-square-fill" color="green" sx={{ position: 'absolute', top: 5, right: 5 }}/>}
+            {isMain && 
+              <Grid
+                sx={{ position: 'absolute', top: 5, right: 5 }}
+              >
+                <StyledTooltip
+                  title="Main Site"
+                  placement="top" 
+                  disableFocusListener 
+                  tooltipcolor={theme.palette.primary.main} 
+                  >
+                  <Iconify icon="f7:dot-square-fill" color="#1769aa" />
+                </StyledTooltip>
+              </Grid>
+            }
             <Typography variant="h4" color="#2065d1" component="div">{_name}</Typography>
             <Typography variant="body1" color="text.secondary" component="div">{_title}</Typography>
             <Typography variant="overline" color="text.secondary" component="div">{_email}</Typography>

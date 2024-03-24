@@ -109,6 +109,9 @@ export const PATH_MACHINE = {
     view: (id) => path(ROOTS_MACHINE, `/machines/${id}/view`),
     edit: (id) => path(ROOTS_MACHINE, `/machines/${id}/edit`),
     transfer: (id) => path(ROOTS_MACHINE, `/machines/${id}/transfer`),
+    serialNo: {
+        view: ( id, customerName ) => path(ROOTS_MACHINE, `/machines/serialNo/${id}/customer/${customerName}/view`),
+    },
     settings: {
       app: path(ROOTS_MACHINE, '/machines/settings/app'),
 
@@ -314,7 +317,11 @@ export const PATH_SETTING = {
   invite: {
     list: path(ROOTS_SETTING, '/invite/list'),
     view: (id) => path(ROOTS_SETTING, `/invite/${id}/view`)
-  }
+  },
+  releases: {
+    list: path(ROOTS_SETTING, '/releases/list'),
+    view: (id) => path(ROOTS_SETTING, `/releases/${id}/view`)
+  },
 };
 
 export const PATH_SITEMAP = {
