@@ -60,7 +60,7 @@ export default function DocumentListTableToolbar({
       await  dispatch(setDocumentHistoryNewVersionFormVisibility(false));
       await  dispatch(setDocumentNewVersionFormVisibility(false));
     if(customerPage && !machinePage){
-      await navigate(PATH_CRM.documents.new(customer?._id))
+      await navigate(PATH_CRM.customers.documents.new(customer?._id))
     } else if(!customerPage && machinePage){
       await dispatch(setDocumentFormVisibility(true));
     }else if(machineDrawings){

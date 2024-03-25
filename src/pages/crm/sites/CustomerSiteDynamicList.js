@@ -92,7 +92,9 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
   });
 
   useEffect( () => {
-    dispatch(getSites(customerId));
+    if( customerId ){
+      dispatch(getSites(customerId));
+    }
     return ()=>{ 
       dispatch(resetSites());
       dispatch(setCardActiveIndex(null));
@@ -125,7 +127,9 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
 
 
   const handleCardClick = async (_site)=>{
-    if(customerId && _site._id ){ navigate(PATH_CRM.customers.sites.view(customerId, _site._id))}
+    if(customerId && _site._id ){
+        await navigate(PATH_CRM.customers.sites.view(customerId, _site?._id))
+    }
 }
 
   return (

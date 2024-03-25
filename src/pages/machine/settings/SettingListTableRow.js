@@ -59,7 +59,7 @@ export default function SettingListTableRow({
         <TableCell align="left"  >
           {/* <Grid sx={{display:'flex', justifyContent:'space-between'}}> */}
             {techParamValue || ""}
-            {history !== undefined &&
+            {history !== undefined && history?.length > 1 &&
               <StyledBadge badgeContent={history?.length || '0' } color="info" sx={{top:-2, left:-2}} >
                 <IconButtonTooltip
                   title='Setting History'
