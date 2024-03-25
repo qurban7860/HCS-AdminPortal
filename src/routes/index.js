@@ -239,6 +239,7 @@ import {
   Page500,
   Page403,
   Page404,
+  MachineNotFoundPage,
   ComingSoonPage,
   MaintenancePage,
   ErrorPage,
@@ -401,7 +402,7 @@ export default function Router() {
             { path: ':id/transfer', element: <MachineTransfer />},
             { path: 'serialNo',                 
               children: [
-                  { path: ':id/customer/:customerName/view', element: <GetMachineId /> },
+                  { path: ':serialNo/customer/:ref/view', element: <GetMachineId /> },
               ]
             },
             { path: 'settings',
@@ -756,6 +757,7 @@ export default function Router() {
     { path: '500', element: <Page500 /> },
     { path: '403', element: <Page403 /> },
     { path: '404', element: <Page404 /> },
+    { path: 'machineNotFound', element: <MachineNotFoundPage /> },
     {
       element: <CompactLayout />,
       children: [

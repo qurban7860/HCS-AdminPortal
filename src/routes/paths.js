@@ -39,7 +39,8 @@ export const PATH_PAGE = {
   components: '/components',
   userInviteLanding: (id, code, expiry) => path(`/invite/${id}/{$code}/{$expiry}`),
   invalidErrorPage:'/InvalidErrorPage',
-  expiredErrorPage:'/ExpiredErrorPage'
+  expiredErrorPage:'/ExpiredErrorPage',
+  machineNotFound:'/machineNotFound',
 };
 
 export const PATH_DASHBOARD = {
@@ -110,7 +111,7 @@ export const PATH_MACHINE = {
     edit: (id) => path(ROOTS_MACHINE, `/machines/${id}/edit`),
     transfer: (id) => path(ROOTS_MACHINE, `/machines/${id}/transfer`),
     serialNo: {
-        view: ( id, customerName ) => path(ROOTS_MACHINE, `/machines/serialNo/${id}/customer/${customerName}/view`),
+        view: ( serialNo, ref ) => path(ROOTS_MACHINE, `/machines/serialNo/${serialNo}/customer/${ref}/view`),
     },
     settings: {
       app: path(ROOTS_MACHINE, '/machines/settings/app'),
