@@ -287,7 +287,7 @@ function ViewFormEditDeleteButtons({
   };
 
   const handleMachineSettingHistoryPopoverOpen = (event) => {
-    if(history?.length > 0) {
+    if(history?.length > 1) {
       setMachineSettingHistoryAnchorEl(event.currentTarget);
     }
   };
@@ -434,10 +434,10 @@ function ViewFormEditDeleteButtons({
             </Badge>
           }
 
-          {history !== undefined &&
+          {history !== undefined && history.length > 1 &&
             <Badge badgeContent={history?.length || '0' } color="info">
               <IconTooltip
-                title='Setting History'
+                title='History'
                 color={ICONS.MACHINESETTINGHISTORY.color}
                 icon={ICONS.MACHINESETTINGHISTORY.icon}
                 onClick={handleMachineSettingHistoryPopoverOpen}
@@ -830,7 +830,7 @@ function ViewFormEditDeleteButtons({
         open={machineSettingHistoryAnchorEl}
         onClose={handleMachineSettingHistoryPopoverClose}
         ListArr={history}
-        ListTitle="Setting History"
+        ListTitle="History"
       />
 
       <ViewFormApprovalsPopover

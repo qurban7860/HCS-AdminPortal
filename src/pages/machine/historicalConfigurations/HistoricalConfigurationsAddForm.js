@@ -75,6 +75,22 @@ export default function HistoricalConfigurationsAddForm() {
     }
   };
 
+  const isIniFormat = (data) => {
+    const lines = data.split('\n');
+    return lines.every(line => {
+      const trimmedLine = line.trim();
+      if (trimmedLine === '' || trimmedLine.startsWith(';') || trimmedLine.startsWith('#')) {
+        return true; 
+      }
+      if (!trimmedLine.includes('=')) {
+        if (!(/^\[.*\]$/.test(trimmedLine))) {
+          return false;
+        }
+      }
+      return true;
+    });
+  };
+  
   function iniToJSON(iniData) {
     const lines = iniData.split('\n');
     let currentSection = null;
@@ -82,26 +98,25 @@ export default function HistoricalConfigurationsAddForm() {
 
     lines.forEach(line => {
         line = line.trim();
-        // Skip comments and empty lines
         if (line.startsWith(';') || line === '') {
             return;
         }
-        // Check for section header
         const sectionMatch = line.match(/^\[([^\]]+)\]$/);
         if (sectionMatch) {
             currentSection = sectionMatch[1];
             result[currentSection] = {};
             return;
         }
-        // Check for key-value pairs
         const keyValueMatch = line.match(/^([^=]+)=(.+)$/);
         if (keyValueMatch && currentSection !== null) {
             const key = keyValueMatch[1].trim();
-            const value = keyValueMatch[2].trim();
+            let value = keyValueMatch[2].trim();
+            if (value.startsWith('"') && value.endsWith('"')) {
+                value = value.slice(1, -1).replace(/\\"/g, '"');
+            }
             result[currentSection][key] = value;
         }
     });
-
     const formattedJSON = JSON.stringify(result, null, 2);
     return formattedJSON;
 }
@@ -124,9 +139,7 @@ const readFile = (selectedFile) =>
     const selectedFile = event.target.files[0];
     const parts = selectedFile.name.split(".");
     const fileExtension = parts[parts.length - 1];
-
     const fileData = await readFile(selectedFile)
-    
     if(fileExtension === 'ini' ){
       const parsedData = iniToJSON(fileData)
         setValue('iniJson', parsedData)
@@ -136,8 +149,14 @@ const readFile = (selectedFile) =>
   };
 
 const HandleChangeIniJson = async (e) => {
-  setValue('iniJson', e)
+  if(isIniFormat(e)){
+    const parsedData = iniToJSON(e)
+    setValue('iniJson', parsedData)
+  }else{
+    setValue('iniJson', e)
+  }
 }
+
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container>
@@ -145,8 +164,9 @@ const HandleChangeIniJson = async (e) => {
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 <Grid display={{ sm:'block', md: 'flex'}} justifyContent="space-between" >
-                  <Grid item sm={12} md={6} >
+                  <Grid item md={9}  sx={{display: { sm:'flex', xs: 'block'}  }} >
                     <RHFDatePicker inputFormat='dd/MM/yyyy' name="backupDate" label="Backup Date" size="small" />
+                    <RHFSwitch name="isManufacture" label="Manufacture" sx={{ ml: { sm: 2, xs: 0 }}} />  
                   </Grid>
                   <Grid container display="flex" justifyContent="flex-end"  >
                     <Button variant="contained" component="label" startIcon={<Iconify icon={ICONS.UPLOAD_FILE.icon} />} > Upload File  
@@ -156,7 +176,6 @@ const HandleChangeIniJson = async (e) => {
                 </Grid>
                 <Grid >
                   <CodeMirror value={iniJson} HandleChangeIniJson={HandleChangeIniJson}/>
-                  <RHFSwitch name="isManufacture" label="Manufacture" />                
                 </Grid>
 
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

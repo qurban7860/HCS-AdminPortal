@@ -21,14 +21,15 @@ export default function ReleasesListTableRow({
   onViewRow
 }) {
   
-  const { name, startDate, releaseDate, released  } = row;
+  const { name, startDate, releaseDate, released, description  } = row;
 
   return (
       <StyledTableRow hover selected={selected}>
-        <LinkTableCell align="left" param={name} onClick={onViewRow} />
+        { ( released && description ) ? <LinkTableCell align="left" param={name} onClick={onViewRow} />
+        : <TableCell align="left" >{name}</TableCell>}
         <TableCell>{fDate(startDate)}</TableCell>
         <TableCell>{fDate(releaseDate)}</TableCell>
-        <TableCell align="center"><Switch checked={released} disabled size="small" /></TableCell>
+        <TableCell align="center">{released && <Switch checked={released} disabled size="small" /> || '' }</TableCell>
       </StyledTableRow>
   );
 }

@@ -56,7 +56,7 @@ export default function SettingAddForm() {
       techParamVal: null,
       techParamValue: '',
       customer: machine?.customer || null,
-      machines: activeCustomerMachines || [],
+      machines: activeCustomerMachines?.filter(el => el?._id !== machine?._id ) || [],
       isUpdateMultipleMachines: false,
       isActive: true,
     }),
@@ -215,7 +215,7 @@ export default function SettingAddForm() {
                         filterSelectedOptions
                         name="machines"
                         label="Machines"
-                        options={activeCustomerMachines}
+                        options={activeCustomerMachines.filter((el)=> el?._id !== machine?._id )}
                         isOptionEqualToValue={(option, value) => option?._id === value?._id}
                         getOptionLabel={(option) => `${option?.serialNo || ''} ${option?.name ? '-' : '' } ${option?.name || ''}`}
                         renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.serialNo || ''} ${option?.name ? '-' : '' } ${option?.name || ''}`}</li> )}

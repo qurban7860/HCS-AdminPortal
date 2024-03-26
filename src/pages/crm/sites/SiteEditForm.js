@@ -133,8 +133,10 @@ export default function SiteEditForm() {
     try {
       await dispatch(updateSite(data, customerId, id));
       enqueueSnackbar('Site saved Successfully!');
-      await dispatch(getSites(customerId))
-      if(customerId && id ) await navigate(PATH_CRM.customers.sites.view(customerId, id))
+      if(customerId && id ){
+        await dispatch(getSites(customerId))
+        await navigate(PATH_CRM.customers.sites.view(customerId, id))
+      } 
       await reset();
     } catch (err) {
       enqueueSnackbar(err, { variant: 'error' });

@@ -91,7 +91,7 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
     isLoading } = useSelector((state) => state.document );
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory );
   const { activeDocumentTypes } = useSelector((state) => state.documentType );
-            
+
   const [totalRows, setTotalRows] = useState( documentRowsTotal );
 
   const {
@@ -155,45 +155,52 @@ const onChangePage = (event, newPage) => {
     );
   }
 
-
   useEffect(() => {
+    if(machinePage || machineDrawings ){
+      dispatch(getActiveDocumentCategories(null));
+      dispatch(getActiveDocumentTypes());
+      if(machineDrawings){
+        const defaultType = activeDocumentTypes.find((typ) => typ?.isDefault === true);
+        const defaultCategory = activeDocumentCategories.find((cat) => cat?.isDefault === true);
 
-      if(machinePage || machineDrawings ){
-        dispatch(getActiveDocumentCategories(null, cancelTokenSource));
-        dispatch(getActiveDocumentTypes(cancelTokenSource));
-
-        if(machineDrawings){
-
-          const defaultType = activeDocumentTypes.find((typ) => typ?.isDefault === true);
-          const defaultCategory = activeDocumentCategories.find((cat) => cat?.isDefault === true);
-
-          if(typeVal===null && defaultType){
-            setTypeVal(defaultType);
-            setCategoryVal(defaultType?.docCategory)
-          }else{
-            setTypeVal(null);
-            setCategoryVal(null);
-          }
-
-          if(!defaultType && categoryVal===null){
-            setCategoryVal(defaultCategory);
-          }
-
+        if(typeVal===null && defaultType){
+          setTypeVal(defaultType);
+          setCategoryVal(defaultType?.docCategory)
+        }else{
+          setTypeVal(null);
+          setCategoryVal(null);
+        }
+        if(!defaultType && categoryVal===null){
+          setCategoryVal(defaultCategory);
         }
       }
-      
-      if (customerPage || machinePage) {
-        if (customer?._id || machine?._id) {
-          dispatch(getDocuments(customerPage ? customer?._id : null, machinePage ? machine?._id : null, null, page, rowsPerPage, cancelTokenSource));
-        }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [ dispatch, machinePage, machineDrawings ]);
+
+  useEffect(() => {
+      if (customerPage && customer?._id) {
+        dispatch(getDocuments( customer?._id , null, null, page, customerDocumentsRowsPerPage, cancelTokenSource));
+      } else if(machinePage &&  machine?._id ){
+        dispatch(getDocuments( null, machine?._id, null, page, machineDocumentsRowsPerPage, cancelTokenSource));
       } else if( machineDrawings ){
-          dispatch(getDocuments(null, null, machineDrawings, page, rowsPerPage, cancelTokenSource));
+        dispatch(getDocuments(null, null, machineDrawings, page, machineDrawingsRowsPerPage, cancelTokenSource));
       } else {
-          dispatch(getDocuments(null, null, null, page, rowsPerPage, cancelTokenSource));
+        dispatch(getDocuments(null, null, null, page, documentRowsPerPage, cancelTokenSource));
       }
       return()=>{ cancelTokenSource.cancel(); dispatch(resetDocuments()) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, customerPage, machinePage, page, rowsPerPage]);
+  }, [
+    dispatch, 
+    customerPage, 
+    machinePage, 
+    machineDrawings, 
+    page, 
+    customerDocumentsRowsPerPage, 
+    machineDocumentsRowsPerPage, 
+    machineDrawingsRowsPerPage, 
+    documentRowsPerPage 
+  ]);
   
   useEffect(()=>{
     setTotalRows( documentRowsTotal || 0 );
@@ -207,7 +214,7 @@ const onChangePage = (event, newPage) => {
     }else if(!customerPage && !machinePage && !machineDrawings){
       setPage(documentPage)
     }
-  },[customerPage, machinePage, machineDrawings, machineDocumentsPage, customerDocumentsPage, machineDrawingsPage, documentPage])
+  },[customerPage, machinePage, machineDrawings, machineDrawingsPage, documentPage])
 
   useEffect(()=>{
     if(machinePage){
@@ -228,6 +235,7 @@ const onChangePage = (event, newPage) => {
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
+    orderBy,
     filterName,
     filterStatus,
     categoryVal, 
@@ -416,15 +424,17 @@ const onChangePage = (event, newPage) => {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus, categoryVal, typeVal }) {
+function applyFilter({ inputData, comparator, orderBy, filterName, filterStatus, categoryVal, typeVal }) {
 
   if(inputData){
     const stabilizedThis = inputData && inputData.map((el, index) => [el, index]);
-    stabilizedThis?.sort((a, b) => {
-      const order = comparator(a[0], b[0]);
-      if (order !== 0) return order;
-      return a[1] - b[1];
-    });
+    if( orderBy !== 'doNotOrder' ){
+      stabilizedThis?.sort((a, b) => {
+        const order = comparator(a[0], b[0]);
+        if (order !== 0) return order;
+        return a[1] - b[1];
+      });
+    }
   
     inputData = stabilizedThis?.map((el) => el[0]);
   

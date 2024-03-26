@@ -32,6 +32,7 @@ export const FORMLABELS = {
     EDIT_DOCUMENT_CATEGORY: 'Edit Document Category',
     MACHINE_PLACEHOLDER: 'Machine',
     TOOLS: 'Tools',
+    LOGS: 'Logs',
     SETTINGS: 'Machine Settings',
     CUSTOMERS: 'Customers',
     DOCUMENTS: 'Documents',
@@ -82,7 +83,7 @@ export const FORMLABELS = {
   SECURITY_SETTINGS: 'Security Settings',
   REPORTS: 'Reports',
   CONFIG: 'Configuration',
-
+  LOGS_SETTINGS: 'Logs',
   // @root DocumentAddForm in dashboard/documents
   SELECT_CUSTOMER: 'Select Customer',
   SELECT_SITE: 'Select Site',

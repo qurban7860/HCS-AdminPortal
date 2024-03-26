@@ -48,7 +48,7 @@ export default function DrawingList() {
     setPage,
     onSort,
   } = useTable({
-    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
+    defaultOrderBy: 'doNotOrder', defaultOrder: 'desc',
   });
 
   const dispatch = useDispatch();
@@ -94,6 +94,7 @@ export default function DrawingList() {
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
+    orderBy,
     filterName,
     filterStatus,
     categoryVal,
@@ -207,13 +208,15 @@ export default function DrawingList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus, categoryVal, typeVal }) {
+function applyFilter({ inputData, comparator, orderBy, filterName, filterStatus, categoryVal, typeVal }) {
   const stabilizedThis = inputData && inputData.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
+  if( orderBy !== 'doNotOrder' ){
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) return order;
+      return a[1] - b[1];
+    });
+  }
 
   inputData = stabilizedThis.map((el) => el[0]);
   if(categoryVal)

@@ -1,9 +1,9 @@
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Divider, Grid, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import MenuPopover from '../menu-popover/MenuPopover';
 import FormLabel from '../DocumentForms/FormLabel';
-import { fDate, fDateTime } from '../../utils/formatTime';
+import { fDateTime } from '../../utils/formatTime';
 
 function ViewFormMachineSettingHistoryMenuPopover({ open, onClose, ListArr, ListTitle }) {
   return (
@@ -14,9 +14,9 @@ function ViewFormMachineSettingHistoryMenuPopover({ open, onClose, ListArr, List
           <Table size="small" aria-label="a dense table" >
             <TableHead>
               <TableRow>
-                <TableCell align='left' >Parameter Value</TableCell>
+                <TableCell align='left' >Value</TableCell>
                 <TableCell align='left' >Updated By</TableCell>
-                <TableCell align='right' >Updated At</TableCell>
+                <TableCell align='right' >Date</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
