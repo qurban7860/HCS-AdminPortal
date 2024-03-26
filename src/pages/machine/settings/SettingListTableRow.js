@@ -76,7 +76,7 @@ export default function SettingListTableRow({
         open={machineSettingHistoryAnchorEl}
         onClose={handleMachineSettingHistoryPopoverClose}
         ListArr={history}
-        ListTitle="Setting History"
+        ListTitle="History"
       />
 
     </>
