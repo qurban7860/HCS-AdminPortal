@@ -312,6 +312,11 @@ export const ICONS = {
     heading: 'Service Categories',
   },
 
+  AUDIT_LOGS:{
+    heading: 'Audit Logs',
+    icon: "entypo:bar-graph",
+  },
+  
   // service information
   MACHINE_SERVICE_CATEGORY: {
     icon: 'mdi:cog',

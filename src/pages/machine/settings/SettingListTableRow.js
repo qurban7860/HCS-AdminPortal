@@ -57,19 +57,17 @@ export default function SettingListTableRow({
           {name||""}
         </TableCell>
         <TableCell align="left"  >
-          {/* <Grid sx={{display:'flex', justifyContent:'space-between'}}> */}
             {techParamValue || ""}
             {history !== undefined && history?.length > 1 &&
               <StyledBadge badgeContent={history?.length || '0' } color="info" sx={{top:-2, left:-2}} >
                 <IconButtonTooltip
-                  title='Setting History'
+                  title='History'
                   color={ICONS.MACHINESETTINGHISTORY.color}
                   icon={ICONS.MACHINESETTINGHISTORY.icon}
                   onClick={handleMachineSettingHistoryPopoverOpen}
-                  />
+                />
               </StyledBadge>
             }
-          {/* </Grid> */}
         </TableCell>
         { smScreen && <TableCell align="right">{fDate(createdAt)}</TableCell>}
       </StyledTableRow>

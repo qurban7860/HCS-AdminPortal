@@ -164,8 +164,9 @@ const HandleChangeIniJson = async (e) => {
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 <Grid display={{ sm:'block', md: 'flex'}} justifyContent="space-between" >
-                  <Grid item sm={12} md={6} >
+                  <Grid item md={9}  sx={{display: { sm:'flex', xs: 'block'}  }} >
                     <RHFDatePicker inputFormat='dd/MM/yyyy' name="backupDate" label="Backup Date" size="small" />
+                    <RHFSwitch name="isManufacture" label="Manufacture" sx={{ ml: { sm: 2, xs: 0 }}} />  
                   </Grid>
                   <Grid container display="flex" justifyContent="flex-end"  >
                     <Button variant="contained" component="label" startIcon={<Iconify icon={ICONS.UPLOAD_FILE.icon} />} > Upload File  
@@ -175,7 +176,6 @@ const HandleChangeIniJson = async (e) => {
                 </Grid>
                 <Grid >
                   <CodeMirror value={iniJson} HandleChangeIniJson={HandleChangeIniJson}/>
-                  <RHFSwitch name="isManufacture" label="Manufacture" />                
                 </Grid>
 
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

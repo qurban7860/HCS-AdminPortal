@@ -100,7 +100,7 @@ export default function CustomerEditForm() {
 
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Grid  >
+        <Grid container >
           <Grid item xs={18} md={12}>
           <Stack spacing={2}>
             <Card sx={{ p: 3 }}>
