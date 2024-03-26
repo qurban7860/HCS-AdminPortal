@@ -224,6 +224,29 @@ export function AuthProvider({ children }) {
     initialize();
   }, [initialize]);  
 
+    // Clear All persisted data and remove Items from localStorage
+    const clearAllPersistedStates = useCallback( async () => {
+      try {
+          setSession(null);
+          localStorage.removeItem('name');
+          localStorage.removeItem('email');
+          localStorage.removeItem('userId');
+          localStorage.removeItem('userRoles');
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem("configurations");
+          const keys = Object.keys(localStorage); 
+          const reduxPersistKeys = keys.filter(  key => !(key === 'isRemember' || key === 'HowickUserEmail' || key === 'HowickUserPassword')  );
+        await Promise.all(reduxPersistKeys.map(key => storage.removeItem(key)));
+      } catch (error) {
+        console.error('Error clearing persisted states:', error);
+      }
+    },[]);
+
+    const clearStorageAndNaviagteToLogin = useCallback( async () => {
+        await clearAllPersistedStates();
+        window.location.href = PATH_AUTH.login
+    },[ clearAllPersistedStates ]);
+
   // CONFIGURATIONS
   async function getConfigs(){
     const configsResponse = await axios.get(`${CONFIG.SERVER_URL}configs`, {  params: { isActive: true, isArchived: false } });
@@ -235,6 +258,7 @@ export function AuthProvider({ children }) {
 
   // LOGIN
   const login = useCallback(async (uEmail, uPassword) => {
+    await dispatch(clearAllPersistedStates());
     const response = await axios.post(`${CONFIG.SERVER_URL}security/getToken`, { email: uEmail, password : uPassword, })
     if (response.data.multiFactorAuthentication){
       localStorage.setItem("userId", response.data.userId);
@@ -282,6 +306,7 @@ export function AuthProvider({ children }) {
               },
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // MULTI FACTOR CODE
@@ -350,33 +375,13 @@ export function AuthProvider({ children }) {
     });
   }, []);
 
-  // Clear All persisted data and remove Items from localStorage
-  const clearAllPersistedStates = useCallback( async () => {
-    try {
-        setSession(null);
-        localStorage.removeItem('name');
-        localStorage.removeItem('email');
-        localStorage.removeItem('userId');
-        localStorage.removeItem('userRoles');
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem("configurations");
-        // dispatch({
-        //   type: 'LOGOUT',
-        // });
-        window.location.href = PATH_AUTH.login
-        const keys = Object.keys(localStorage); 
-        const reduxPersistKeys = keys.filter(  key => !(key === 'isRemember' || key === 'HowickUserEmail' || key === 'HowickUserPassword')  );
-      await Promise.all(reduxPersistKeys.map(key => storage.removeItem(key)));
-    } catch (error) {
-      console.error('Error clearing persisted states:', error);
-    }
-  },[]);
-
   // LOGOUT
   const logout = useCallback( async () => {
     const userId  = localStorage.getItem("userId")
+    const id = initialState.userId
+    console.log("id : ",id, userId,userId)
     try{
-      await dispatch(clearAllPersistedStates());
+      await dispatch(clearStorageAndNaviagteToLogin());
       await axios.post(`${CONFIG.SERVER_URL}security/logout/${userId}`)
     }catch (error) {
       console.error(error)
@@ -405,7 +410,7 @@ export function AuthProvider({ children }) {
         login,
         register,
         logout,
-        clearAllPersistedStates,
+        clearStorageAndNaviagteToLogin,
         muliFactorAuthentication
       }),
     [state.isAuthenticated, state.isInitialized, 
@@ -419,7 +424,7 @@ export function AuthProvider({ children }) {
       state.isSettingAccessAllowed,
       state.isSecurityUserAccessAllowed,
       state.isEmailAccessAllowed,
-      state.user, state.userId, login, logout, register, muliFactorAuthentication, clearAllPersistedStates]
+      state.user, state.userId, login, logout, register, muliFactorAuthentication, clearStorageAndNaviagteToLogin]
   );
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;

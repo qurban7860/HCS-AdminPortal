@@ -177,7 +177,7 @@ const onChangePage = (event, newPage) => {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [ dispatch, machinePage, machineDrawings ]);
- 
+
   useEffect(() => {
       if (customerPage && customer?._id) {
         dispatch(getDocuments( customer?._id , null, null, page, customerDocumentsRowsPerPage, cancelTokenSource));
@@ -235,6 +235,7 @@ const onChangePage = (event, newPage) => {
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
+    orderBy,
     filterName,
     filterStatus,
     categoryVal, 
@@ -423,15 +424,17 @@ const onChangePage = (event, newPage) => {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus, categoryVal, typeVal }) {
+function applyFilter({ inputData, comparator, orderBy, filterName, filterStatus, categoryVal, typeVal }) {
 
   if(inputData){
     const stabilizedThis = inputData && inputData.map((el, index) => [el, index]);
-    stabilizedThis?.sort((a, b) => {
-      const order = comparator(a[0], b[0]);
-      if (order !== 0) return order;
-      return a[1] - b[1];
-    });
+    if( orderBy !== 'doNotOrder' ){
+      stabilizedThis?.sort((a, b) => {
+        const order = comparator(a[0], b[0]);
+        if (order !== 0) return order;
+        return a[1] - b[1];
+      });
+    }
   
     inputData = stabilizedThis?.map((el) => el[0]);
   

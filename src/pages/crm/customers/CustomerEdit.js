@@ -6,7 +6,7 @@ import { Container } from '@mui/material';
 import { useDispatch } from '../../../redux/store';
 // slices
 import { getCustomer } from '../../../redux/slices/customer/customer';
-import { getSites } from '../../../redux/slices/customer/site';
+// import { getSites } from '../../../redux/slices/customer/site';
 // sections
 import CustomerEditForm from './CustomerEditForm';
 import CustomerTabContainer from './util/CustomerTabContainer';
@@ -22,7 +22,6 @@ export default function CustomerEdit() {
 
   useLayoutEffect(() => {
     dispatch(getCustomer(customerId));
-    dispatch(getSites());
   }, [dispatch, customerId]);
 
   return (
