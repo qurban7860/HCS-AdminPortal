@@ -39,7 +39,7 @@ export default function MachineNotFoundPage() {
         <Typography variant="p" sx={{ color: '#c9c9c9', fontSize: 16, p: 19, pt: 0, pb: 2 }} paragraph>
           {defaultValues.message}
         </Typography>
-        <Button onClick={() => window.open('/', '_self')} size="large" variant="contained">Go Back</Button>
+        {/* <Button onClick={() => window.open('/', '_self')} size="large" variant="contained">Go Back</Button> */}
       </Grid>
     </MotionContainer>
   );

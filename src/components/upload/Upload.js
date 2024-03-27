@@ -116,7 +116,7 @@ export default function Upload({
         {...getRootProps()}
         sx={{
           ...(isDragActive && {
-            opacity: 0.72,
+            opacity: 0.42,
             height: '232px',
           }),
           ...(isError && {
@@ -169,27 +169,6 @@ export default function Upload({
       {helperText && helperText}
 
       <RejectionFiles fileRejections={fileRejections} />
-
-      {/* {hasFile && onDelete && (
-        <IconButton
-          size="small"
-          onClick={onDelete}
-          sx={{
-            top: 16,
-            right: 16,
-            zIndex: 9,
-            height: "150",
-            position: 'absolute',
-            color: (theme) => alpha(theme.palette.common.white, 0.8),
-            bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
-            '&:hover': {
-              bgcolor: (theme) => alpha(theme.palette.grey[900], 0.48),
-            },
-          }}
-        >
-          <Iconify icon="eva:close-fill" width={18} />
-        </IconButton>
-      )} */}
 
       {hasFile && onDelete && (
         <IconButton
