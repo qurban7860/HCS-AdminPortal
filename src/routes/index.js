@@ -403,6 +403,8 @@ export default function Router() {
             { path: 'serialNo',                 
               children: [
                   { path: ':serialNo/customer/:ref/view', element: <GetMachineId /> },
+                  { path: ':serialNo', element: <GetMachineId /> },
+                  { path: ':serialNo/:ref', element: <GetMachineId /> },
               ]
             },
             { path: 'settings',
