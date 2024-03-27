@@ -245,6 +245,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                             }
                           } else {
                             setValue('machineModel',null )
+                            setValue('category',null )
                           }
                         }
                       }
@@ -253,11 +254,21 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     <RHFAutocomplete 
                       name="machineModel"
                       label="Machine Model"
-                      options={activeMachineModels.filter( ( el ) => el?.category?._id === category?._id )}
+                      options={activeMachineModels.filter(el => (el.category && category) ? el.category._id === category._id : !category)}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name || ''}`}
                       renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
-                      // onChange={(event, newValue) => MachineModelValHandler(event, newValue)}
+                      onChange={(event, newValue) =>{
+                        if(newValue){
+                          setValue('machineModel',newValue)
+                          if(!category ){
+                            setValue('category',newValue?.category)
+                          }
+                        } else {
+                          setValue('machineModel',null )
+                        }
+                      }
+                    }
                     />
 
                   <RHFDatePicker inputFormat='dd/MM/yyyy' name="manufactureDate" label="Manufacture Date" />
