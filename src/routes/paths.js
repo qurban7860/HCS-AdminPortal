@@ -111,8 +111,21 @@ export const PATH_MACHINE = {
     edit: (id) => path(ROOTS_MACHINE, `/machines/${id}/edit`),
     transfer: (id) => path(ROOTS_MACHINE, `/machines/${id}/transfer`),
     serialNo: {
-        view: ( serialNo, ref ) => path(ROOTS_MACHINE, `/machines/serialNo/${serialNo}/customer/${ref}/view`),
-    },
+      view: [
+          {
+              name: 'view1',
+              path: (serialNo, ref) => path(ROOTS_MACHINE, `/machines/serialNo/${serialNo}/customer/${ref}/view`),
+          },
+          {
+              name: 'view2',
+              path: (serialNo, ref) => path(ROOTS_MACHINE, `/machines/serialNo/${serialNo}`),
+          },
+          {
+            name: 'view3',
+            path: (serialNo, ref) => path(ROOTS_MACHINE, `/machines/serialNo/${serialNo}/${ref}`),
+        }
+      ]
+  },
     settings: {
       app: path(ROOTS_MACHINE, '/machines/settings/app'),
 

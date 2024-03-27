@@ -9,9 +9,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Card, styled, Grid, Stack, TextField } from '@mui/material';
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
-import { getActiveCustomers, getFinancialCompanies, setCustomerTab, setNewMachineCustomer } from '../../redux/slices/customer/customer';
+import { getActiveCustomers, setCustomerTab, setNewMachineCustomer } from '../../redux/slices/customer/customer';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
-import  { addMachine, getActiveMachines } from '../../redux/slices/products/machine';
+import  { addMachine } from '../../redux/slices/products/machine';
 import { getActiveCategories, resetActiveCategories } from '../../redux/slices/products/category';
 import { getActiveMachineModels, resetActiveMachineModels } from '../../redux/slices/products/model';
 import { getActiveMachineStatuses, resetActiveMachineStatuses } from '../../redux/slices/products/statuses';
@@ -38,19 +38,18 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const navigate = useNavigate();
   const { activeSuppliers } = useSelector((state) => state.supplier);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
-  const { activeCustomers, financialCompanies, newMachineCustomer } = useSelector((state) => state.customer);
+  const { activeCustomers, newMachineCustomer } = useSelector((state) => state.customer);
   const { activeSites } = useSelector((state) => state.site);
   const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
   const { spContacts } = useSelector((state) => state.contact);
   const { machineConnections } = useSelector((state) => state.machineConnections);
   const { activeCategories } = useSelector((state) => state.category);
-  const [ hasEffectRun, setHasEffectRun ] = useState(false);
+  // const [ hasEffectRun, setHasEffectRun ] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const [ landToCustomerMachinePage, setLandToCustomerMachinePage ] = useState(false);
 
   useEffect(() => {
     dispatch(getActiveCustomers());
-    dispatch(getActiveMachines());
     dispatch(getActiveCategories());
     dispatch(getActiveMachineModels());
     dispatch(getActiveSuppliers());
@@ -64,11 +63,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       dispatch(setNewMachineCustomer(null)); 
     }
   }, [dispatch]);
-
-  useEffect(()=>{
-    dispatch(getFinancialCompanies());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ activeCustomers ])
 
   const methods = useForm({
     resolver: yupResolver(machineSchema),
@@ -116,14 +110,15 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     customer,
     category,
     machineModel,
-    financialCompany,
   } = watch();
 
   useEffect(() => {
     dispatch(resetMachineConnections());
     dispatch(resetActiveSites());
-    dispatch(getActiveSites(customer?._id));
-    dispatch(getMachineConnections(customer?._id));
+    if(customer?._id){
+      dispatch(getActiveSites(customer?._id));
+      dispatch(getMachineConnections(customer?._id));
+    }
   },[dispatch, customer, spContacts, setValue])
 
   useEffect(() => {
@@ -179,45 +174,45 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   };
 
 
-  const CategoryValHandler = (event, newValue) => {
-    if (newValue) {
-      setValue('category', newValue);
-      dispatch(getActiveMachineModels(newValue?._id));
-      if(  machineModel?.category?._id !== newValue?._id ){
-        setValue('machineModel', null);
-      }
-    } else {
-      setValue('category', null);
-      setValue('machineModel', null);
-      dispatch(getActiveMachineModels());
-    }
-  }
+  // const CategoryValHandler = (event, newValue) => {
+  //   if (newValue) {
+  //     setValue('category', newValue);
+  //     dispatch(getActiveMachineModels(newValue?._id));
+  //     if(  machineModel?.category?._id !== newValue?._id ){
+  //       setValue('machineModel', null);
+  //     }
+  //   } else {
+  //     setValue('category', null);
+  //     setValue('machineModel', null);
+  //     dispatch(getActiveMachineModels());
+  //   }
+  // }
 
-  const MachineModelValHandler = (event, newValue) => {
-    if (newValue) {
-      setValue('machineModel', newValue);
-      if(category === null){
-      dispatch(getActiveMachineModels(newValue?.category?._id));
-      setValue('category', newValue?.category);
-      }
-    } else {
-      setValue('machineModel', null);
-    }
-  }
+  // const MachineModelValHandler = (event, newValue) => {
+  //   if (newValue) {
+  //     setValue('machineModel', newValue);
+  //     if(category === null){
+  //     dispatch(getActiveMachineModels(newValue?.category?._id));
+  //     setValue('category', newValue?.category);
+  //     }
+  //   } else {
+  //     setValue('machineModel', null);
+  //   }
+  // }
 
-  useEffect(() => {
-    if(activeMachineModels.length > 0 && activeCategories.length > 0 ){
-      if(!hasEffectRun){
-        if ( activeCategories.find((ele) => ele?.isDefault === true) === activeMachineModels.find((ele)=> ele.isDefault === true)?.category?._id || !activeMachineModels.some((ele)=> ele.isDefault === true) ){
-          CategoryValHandler(null, activeCategories.find((ele) => ele?.isDefault === true) ) 
-        } else {
-          MachineModelValHandler(null, activeMachineModels.find((element)=> element.isDefault === true) )
-        }
-      }
-      setHasEffectRun(true)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[activeMachineModels, activeCategories, hasEffectRun])
+  // useEffect(() => {
+  //   if(activeMachineModels.length > 0 && activeCategories.length > 0 ){
+  //     if(!hasEffectRun){
+  //       if ( activeCategories.find((ele) => ele?.isDefault === true) === activeMachineModels.find((ele)=> ele.isDefault === true)?.category?._id || !activeMachineModels.some((ele)=> ele.isDefault === true) ){
+  //         CategoryValHandler(null, activeCategories.find((ele) => ele?.isDefault === true) ) 
+  //       } else {
+  //         MachineModelValHandler(null, activeMachineModels.find((element)=> element.isDefault === true) )
+  //       }
+  //     }
+  //     setHasEffectRun(true)
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // },[activeMachineModels, activeCategories, hasEffectRun])
 
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
@@ -241,18 +236,39 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                       options={activeCategories}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name || ''}`}
-                      onChange={(event, newValue) => CategoryValHandler(event, newValue)}
                       renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
+                      onChange={(event, newValue) =>{
+                          if(newValue){
+                            setValue('category',newValue)
+                            if(newValue?._id !== machineModel?.category?._id){
+                              setValue('machineModel',null)
+                            }
+                          } else {
+                            setValue('machineModel',null )
+                            setValue('category',null )
+                          }
+                        }
+                      }
                     />
 
                     <RHFAutocomplete 
                       name="machineModel"
                       label="Machine Model"
-                      options={activeMachineModels}
+                      options={activeMachineModels.filter(el => (el.category && category) ? el.category._id === category._id : !category)}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name || ''}`}
                       renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
-                      onChange={(event, newValue) => MachineModelValHandler(event, newValue)}
+                      onChange={(event, newValue) =>{
+                        if(newValue){
+                          setValue('machineModel',newValue)
+                          if(!category ){
+                            setValue('category',newValue?.category)
+                          }
+                        } else {
+                          setValue('machineModel',null )
+                        }
+                      }
+                    }
                     />
 
                   <RHFDatePicker inputFormat='dd/MM/yyyy' name="manufactureDate" label="Manufacture Date" />
@@ -299,10 +315,9 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   />
 
                   <RHFAutocomplete
-                    value={financialCompany}
                     name="financialCompany"
                     label="Financing Company"
-                    options={financialCompanies}
+                    options={activeCustomers.filter(el => el?.isFinancialCompany )}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}

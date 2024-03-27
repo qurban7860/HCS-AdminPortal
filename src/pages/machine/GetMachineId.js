@@ -1,14 +1,14 @@
-import { useLayoutEffect } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-// redux
 import { useDispatch } from '../../redux/store';
 import { getMachineID } from '../../redux/slices/products/machine';
-import { PATH_MACHINE, PATH_PAGE } from '../../routes/paths';
+import { PATH_MACHINE } from '../../routes/paths';
+import MachineNotFoundPage from '../MachineNotFoundPage';
 
 // ----------------------------------------------------------------------
 
 export default function GetMachineId() {
-
+  const [ isMachineNotExist, setIsMachineNotExist ] = useState(false);
   const { serialNo, ref } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -23,10 +23,11 @@ export default function GetMachineId() {
         })
         .catch(error => {
           console.error(error);
-          navigate(PATH_PAGE.machineNotFound)
+          setIsMachineNotExist(true);
+          // navigate(PATH_PAGE.machineNotFound)
         });
     }
   }, [dispatch, navigate, serialNo, ref]);
 
-  return null;
+  return isMachineNotExist ? <MachineNotFoundPage /> : null;
 }
