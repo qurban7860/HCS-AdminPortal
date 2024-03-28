@@ -230,6 +230,11 @@ export default function MachineViewForm() {
     [machine]
   );
   
+  const handleJiraNaviagte = ( )=>{
+    const url = `https://howickltd.atlassian.net/jira/servicedesk/projects/HWKSC/queues/custom/3/HWKSC-492`
+    window.open( url, '_blank')
+  }
+
   return (
     <>
       <Grid container direction="row" mt={isMobile && 2}>
@@ -243,6 +248,7 @@ export default function MachineViewForm() {
               disableEditButton={disableEditButton}
               disableDeleteButton={disableDeleteButton}
               handleEdit={handleEdit}
+              handleJiraNaviagte={handleJiraNaviagte}
               onDelete={onDelete}
               handleTransfer={ () => navigate(PATH_MACHINE.machines.transfer(machine?._id))}
               backLink={() => navigate(PATH_MACHINE.machines.list)}
