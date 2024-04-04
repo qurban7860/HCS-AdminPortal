@@ -1,48 +1,47 @@
-import { useMemo } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 // @mui
-import { Card, Grid } from '@mui/material';
+import { Container, Card, Grid } from '@mui/material';
 // hooks
 import { useDispatch, useSelector } from 'react-redux';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
+// components
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import { useSnackbar } from '../../../components/snackbar';
-// components
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import {
-  setProfileEditFormVisibility,
   getProfile,
   deleteProfile,
-  setProfileViewFormVisibility,
-  getProfiles,
 } from '../../../redux/slices/products/profile';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
-import { getMachine } from '../../../redux/slices/products/machine';
-// constants
-// import { Snacks } from '../../../constants/machine-constants';
+import MachineTabContainer from '../util/MachineTabContainer';
 
 export default function ProfileViewForm() {
   const { profile, isLoading} = useSelector((state) => state.profile);
   const { machine } = useSelector((state) => state.machine);
   const { enqueueSnackbar } = useSnackbar();
-  
+  const navigate = useNavigate();
+  const { machineId, id } = useParams();
   const dispatch = useDispatch();
+
+  useLayoutEffect(()=>{
+    if(machineId && id ){
+      dispatch(getProfile(machineId, id ))
+    }
+  },[ dispatch, machineId, id ])
+  
   const onDelete = async () => {
     try {
-      await dispatch(deleteProfile(machine._id, profile._id));
+      await dispatch(deleteProfile(machineId, id));
       enqueueSnackbar("Profile deleted successfully");
-      dispatch(getProfiles(machine._id))
-      dispatch(setProfileViewFormVisibility(false));
-      dispatch(getMachine(machine._id))
     } catch (err) {
       enqueueSnackbar("Failed to delete profile", { variant: `error` });
       console.log('Error:', err);
     }
   };
 
-  const handleEdit = async () => {
-    dispatch(getProfile(machine._id, profile._id));
-    dispatch(setProfileViewFormVisibility(false));
-    dispatch(setProfileEditFormVisibility(true));
-  };
+  const handleEdit = () => navigate(PATH_MACHINE.machines.profiles.edit( machineId, id )) ;
 
   const defaultValues = useMemo(
     () => ({
@@ -66,12 +65,17 @@ export default function ProfileViewForm() {
   );
 
   return (
+    <Container maxWidth={false} >
+      <MachineTabContainer currentTabValue='profile' />
     <Grid item md={12} mt={2}>
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons isActive={defaultValues.isActive}
-      disableEditButton={machine?.status?.slug==='transferred'}
-      disableDeleteButton={machine?.status?.slug==='transferred'}
-      handleEdit={handleEdit} onDelete={onDelete} backLink={() => dispatch(setProfileViewFormVisibility(false))} />
+        disableEditButton={machine?.status?.slug==='transferred'}
+        disableDeleteButton={machine?.status?.slug==='transferred'}
+        handleEdit={handleEdit} 
+        onDelete={onDelete} 
+        backLink={() => navigate(PATH_MACHINE.machines.profiles.root( machineId))} 
+      />
       <Grid container sx={{mt:2}}>
         <ViewFormField isLoading={isLoading} sm={6} heading="Default Name" param={defaultValues.defaultName} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Type" param={defaultValues?.type} />
@@ -85,5 +89,6 @@ export default function ProfileViewForm() {
       </Grid>
     </Card>
     </Grid>
+    </Container>
   );
 }

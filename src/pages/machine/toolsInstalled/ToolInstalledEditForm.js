@@ -1,26 +1,16 @@
 import * as Yup from 'yup';
-import {  useEffect, useState, memo } from 'react';
+import { useLayoutEffect, useEffect, useState, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 // form
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 // @mui
-import {
-  Box,
-  Card,
-  Grid,
-  Stack,
-  Autocomplete,
-  TextField,
-  Button,
-} from '@mui/material';
+import { Box, Card, Grid, Stack, Autocomplete, TextField, Button } from '@mui/material';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 // global
-import {
-  setToolInstalledEditFormVisibility,
-  updateToolInstalled,
-} from '../../../redux/slices/products/toolInstalled';
+import { getToolInstalled, updateToolInstalled } from '../../../redux/slices/products/toolInstalled';
 // routes
 import { useSnackbar } from '../../../components/snackbar';
 import useResponsive from '../../../hooks/useResponsive';
@@ -34,6 +24,7 @@ import FormProvider, {
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { CONFIG } from '../../../config-global'
 import { checkValuesNotNull } from '../util/index'
+import MachineTabContainer from '../util/MachineTabContainer';
 
 
 // ----------------------------------------------------------------------
@@ -42,12 +33,20 @@ function ToolsInstalledEditForm() {
   const { toolsInstalled, toolInstalled, toolTypesObj,movingPunchConditions, engageOnConditions, engageOffConditions} = useSelector((state) => state.toolInstalled);
   const { activeTools } = useSelector((state) => state.tool);
   const { machine } = useSelector((state) => state.machine);
+  const { machineId, id } = useParams()
+  const navigate = useNavigate()
   const [compositToolVal, setCompositToolVal] = useState([]);
   const [compositToolNumber, setCompositToolNumber] = useState(1);
   const dispatch = useDispatch();
   const isMobile = useResponsive('down', 'sm');
   const { enqueueSnackbar } = useSnackbar();
 
+  useLayoutEffect(()=>{ 
+    if(machineId && id){
+      dispatch(getToolInstalled(machineId, id))
+    }
+  },[ dispatch, machineId, id ])
+  
   const EditSettingSchema = Yup.object().shape({
     tool: Yup.object().shape({
       name: Yup.string()
@@ -343,7 +342,7 @@ function ToolsInstalledEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolInstalled]);
 
-  const toggleCancel = () => { dispatch(setToolInstalledEditFormVisibility(false));};
+  const toggleCancel = () => navigate(PATH_MACHINE.machines.toolsInstalled.view(machineId, id));
   const handleCompositToolNumberIncrease = () => { setCompositToolNumber(compositToolNumber + 1); };
 
   const onSubmit = async (data) => {
@@ -376,7 +375,8 @@ function ToolsInstalledEditForm() {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={4}>
+      <Grid container spacing={3}>
+        <MachineTabContainer currentTabValue='toolsinstalled' />
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>

@@ -3,11 +3,10 @@ import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 // @mui
 import { createTheme } from '@mui/material/styles';
 import { green } from '@mui/material/colors';
-import { 
-  Table,
-  TableBody,
-  TableContainer
-} from '@mui/material';
+import { Container, Table, TableBody, TableContainer } from '@mui/material';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // components
@@ -21,26 +20,16 @@ import {
   TablePaginationCustom,
 } from '../../../components/table';
 import Scrollbar from '../../../components/scrollbar';
-import { useSnackbar } from '../../../components/snackbar';
 // sections
 import HistoricalConfigurationsTableRow from './HistoricalConfigurationsTableRow';
 import HistoricalConfigurationsListTableToolbar from './HistoricalConfigurationsListTableToolbar';
-import {
-  getHistoricalConfigurationRecords,
-  getHistoricalConfigurationRecord,
-  getHistoricalConfigurationRecord2,
-  setHistoricalConfigurationViewFormVisibility,
-  setHistoricalConfigurationCompareViewFormVisibility,
-  resetHistoricalConfigurationRecord,
-  ChangeRowsPerPage,
-  ChangePage,
-  setFilterBy
-} from '../../../redux/slices/products/historicalConfiguration';
+import { getHistoricalConfigurationRecords, ChangeRowsPerPage, ChangePage, setFilterBy } from '../../../redux/slices/products/historicalConfiguration';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import Iconify from '../../../components/iconify';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
 import ConfirmDialog from '../../../components/confirm-dialog';
+import MachineTabContainer from '../util/MachineTabContainer';
 
 // ----------------------------------------------------------------------
 
@@ -58,8 +47,10 @@ const TABLE_HEAD = [
 
 export default function HistoricalConfigurationsList() {
   const { historicalConfigurations, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.historicalConfiguration );
-  const { machine } = useSelector((state) => state.machine);
-  const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
+  const { machineId } = useParams();
+  const dispatch = useDispatch();
+
   const {
     order,
     orderBy,
@@ -84,18 +75,16 @@ export default function HistoricalConfigurationsList() {
   });
 
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
-  const dispatch = useDispatch();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
 
   useLayoutEffect(() => {
-    if(machine?._id){
-      dispatch(getHistoricalConfigurationRecords(machine?._id)); 
+    if(machineId){
+      dispatch(getHistoricalConfigurationRecords(machineId)); 
     }
-    dispatch(setHistoricalConfigurationViewFormVisibility(false));
-  }, [dispatch, machine?._id]);
+  }, [dispatch, machineId]);
 
   useEffect(() => {
     if (initial) {
@@ -140,30 +129,18 @@ export default function HistoricalConfigurationsList() {
     setFilterStatus(event.target.value);
   };
 
-  const handleViewRow = async (id) => {
-    try{
-      await dispatch(setHistoricalConfigurationViewFormVisibility(true));
-      await dispatch(resetHistoricalConfigurationRecord())
-      await dispatch(getHistoricalConfigurationRecord(machine._id, id));
-    }catch(e){
-      enqueueSnackbar(e, { variant: `error` });
-      console.error(e);
-    }
-  };
+  const handleViewRow = async (id) => navigate(PATH_MACHINE.machines.ini.view(machineId, id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
   };
 
-  const getCompareInis = async (id1, id2) => {
-    dispatch(setHistoricalConfigurationCompareViewFormVisibility(true));
-    dispatch(getHistoricalConfigurationRecord( machine?._id, id1 ));
-    dispatch(getHistoricalConfigurationRecord2( machine?._id, id2 ));
-  }
+  const getCompareInis = async (id1, id2) => navigate(PATH_MACHINE.machines.ini.compare(machineId, id1, id2))
 
   return (
-    <>
+    <Container maxWidth={false} >
+        <MachineTabContainer currentTabValue='ini' />
         <TableCard>
           <HistoricalConfigurationsListTableToolbar
             filterName={filterName}
@@ -256,7 +233,7 @@ export default function HistoricalConfigurationsList() {
             content="Please select two INI's  only!"
             SubButton="Close"
           />
-    </>
+    </Container>
   );
 }
 

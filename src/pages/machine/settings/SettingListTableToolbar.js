@@ -2,13 +2,12 @@ import PropTypes from 'prop-types';
 // import { sentenceCase } from 'change-case';
 // @mui
 import { Stack } from '@mui/material';
-// import { useNavigate } from 'react-router-dom';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useDispatch } from '../../../redux/store';
 // components
 import { SearchBarCombo } from '../../../components/ListTableTools'
-// import { PATH_DOCUMENT } from '../../../routes/paths';
-import { setSettingFormVisibility } from '../../../redux/slices/products/machineSetting';
+import { PATH_MACHINE } from '../../../routes/paths';
 // constants
 import { BUTTONS } from '../../../constants/default-constants';
 
@@ -33,9 +32,9 @@ export default function SettingListTableToolbar({
   onResetFilter,
   onFilterStatus
 }) {
-  // const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const toggleAdd = () => dispatch(setSettingFormVisibility(true));
+  const { machineId } = useParams()
+  const navigate = useNavigate();
+  const toggleAdd = () => navigate(PATH_MACHINE.machines.settings.new(machineId));
   const { machine } = useSelector((state) => state.machine);
   return (
     <Stack

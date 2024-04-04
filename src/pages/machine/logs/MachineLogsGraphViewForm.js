@@ -2,9 +2,11 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
 import { Card, Grid, CardHeader, Divider, IconButton } from '@mui/material';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 // slices
 import { getERPLogs } from '../../../redux/slices/dashboard/count';
-import { setMachineErpLogAddFormVisibility, setMachineErpLogListViewFormVisibility } from '../../../redux/slices/products/machineErpLogs';
 // utils
 import { fQuarterYearDate } from '../../../utils/formatTime';
 import ChartStacked from '../../../components/Charts/ChartStacked';
@@ -12,12 +14,15 @@ import { SkeletonGraph } from '../../../components/skeleton';
 import EmptyContent from '../../../components/empty-content';
 import Iconify from '../../../components/iconify/Iconify';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
+import MachineTabContainer from '../util/MachineTabContainer';
 
 // ----------------------------------------------------------------------
 
 export default function MachineLogsGraphViewForm() {
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { machineId } = useParams();
     const { erpLogs, isLoading } = useSelector((state) => state.count);
     const { machine } = useSelector((state) => state.machine);
     const [ disable, setDisable ] = useState(false);
@@ -26,8 +31,10 @@ export default function MachineLogsGraphViewForm() {
     const erpLogsWaste = [];
 
     useEffect(() => {
-        dispatch(getERPLogs(machine?._id,  ));
-    }, [dispatch, machine?._id ]);
+        if(machineId){
+            dispatch(getERPLogs(machineId  ));
+        }
+    }, [dispatch, machineId ]);
     
     if (erpLogs.length !== 0) {
         erpLogs.map((log) => {
@@ -46,11 +53,12 @@ export default function MachineLogsGraphViewForm() {
         }
     }, [dispatch, machine]);
 
-    const openRecordsList = () => { dispatch(setMachineErpLogListViewFormVisibility(true)) }
-    const addLogRecord = () => { dispatch(setMachineErpLogAddFormVisibility(true)) }
+    const openRecordsList = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
+    const addLogRecord = () => navigate(PATH_MACHINE.machines.logs.new(machineId))
 
     return (
-        <Grid container direction="row">
+        <Grid container >
+            <MachineTabContainer currentTabValue='logs' />
         <Card sx={{ width: '100%'}}>
             <Grid item sx={{display: {md: 'flex', xs:'block', justifyContent: 'space-between'}}}>
                 <Grid item sx={{display: 'flex'}}>

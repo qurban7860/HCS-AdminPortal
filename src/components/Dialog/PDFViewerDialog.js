@@ -5,7 +5,7 @@ import { Dialog, Button, DialogTitle } from '@mui/material';
 import {  
   setPDFViewerDialog,
 } from '../../redux/slices/products/machineServiceRecord';
-import { MachineServiceRecordPDF } from '../../pages/machine/machineServiceRecords/MachineServiceRecordPDF';
+import { MachineServiceRecordPDF } from '../../pages/machine/serviceRecords/MachineServiceRecordPDF';
 
 PDFViewerDialog.propTypes = {
   machineServiceRecord: PropTypes.object

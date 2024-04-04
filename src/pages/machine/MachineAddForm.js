@@ -156,7 +156,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       }else if(response?.data?.Machine?._id){
         await navigate(PATH_MACHINE.machines.view(response?.data?.Machine?._id));
       } else {
-        await navigate(PATH_MACHINE.machines.list);
+        await navigate(PATH_MACHINE.machines.root);
       }
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
@@ -169,7 +169,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       await dispatch(setCustomerTab('machines'));
       navigate(PATH_CRM.customers.machines.root(newMachineCustomer._id));
     }else{
-      navigate(PATH_MACHINE.machines.list);
+      navigate(PATH_MACHINE.machines.root);
     }
   };
 

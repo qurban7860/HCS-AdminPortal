@@ -1,34 +1,40 @@
-import { useMemo } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 // @mui
-import { Box, Card, Grid, Autocomplete, TextField } from '@mui/material';
+import { Container, Box, Card, Grid, Autocomplete, TextField } from '@mui/material';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
+//
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { useSnackbar } from '../../../components/snackbar';
-import { 
-  setLicenseEditFormVisibility, 
+import {  
   updateLicense,
   LicenseTypes,
-  setLicenseViewFormVisibility,
-  getLicense
+  getLicense,
 } from '../../../redux/slices/products/license';
 import { LicenseSchema } from './schemas/LicenseSchema';
 import FormProvider, { RHFSwitch, RHFTextField, RHFDatePicker } from '../../../components/hook-form';
 import { Snacks } from '../../../constants/machine-constants';
+import MachineTabContainer from '../util/MachineTabContainer';
 
 // ----------------------------------------------------------------------
 
 export default function LicenseEditForm() {
   
-  const {
-    license, 
-  } = useSelector((state) => state.license);
-  const { machine } = useSelector((state) => state.machine);
+  const { license } = useSelector((state) => state.license);
+  const { machineId, id } = useParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+
+  useLayoutEffect(()=>{
+    dispatch(getLicense(machineId, id))
+  },[ dispatch, machineId, id ])
+
   const defaultValues = useMemo(
     () => ({
       licenseKey: license?.licenseKey ||'',
@@ -62,18 +68,14 @@ export default function LicenseEditForm() {
     setValue('type', newValue);
   };
 
-  const toggleCancel = async() => {
-    dispatch(setLicenseEditFormVisibility (false));
-    dispatch(setLicenseViewFormVisibility(true));
-  };
+  const toggleCancel = () => navigate(PATH_MACHINE.machines.licenses.view(machineId, id));
 
   const onSubmit = async (data) => {
       try {
-        dispatch(await updateLicense(machine._id, license._id, data));
-        reset();
-        enqueueSnackbar(Snacks.licenseUpdated);
-        dispatch(setLicenseViewFormVisibility(true));
-        dispatch(getLicense(machine._id, license._id));
+        await dispatch(await updateLicense(machineId, id, data));
+        await reset();
+        await enqueueSnackbar(Snacks.licenseUpdated);
+        await navigate(PATH_MACHINE.machines.licenses.view(machineId, id))
       } catch (err) {
         enqueueSnackbar(err, { variant: 'error' });
         console.error(err);
@@ -81,10 +83,12 @@ export default function LicenseEditForm() {
   };
 
   return (
+    <Container maxWidth={false} >
+      <MachineTabContainer currentTabValue='license' />
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} mb={5}>
       <Grid
         container
-        spacing={4}>
+        spacing={2}>
         <Grid item xs={18} md={12}>
         <Card sx={{ p: 3 }}>
             <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}>
@@ -112,5 +116,6 @@ export default function LicenseEditForm() {
         </Grid>
       </Grid>
     </FormProvider>
+  </Container>
   );
 }

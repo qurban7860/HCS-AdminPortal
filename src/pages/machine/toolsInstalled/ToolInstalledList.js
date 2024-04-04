@@ -1,16 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
-import {
-  Table,
-  TableBody,
-  TableContainer,
-} from '@mui/material';
+import { Container, Table, TableBody, TableContainer } from '@mui/material';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-// routes
 // components
-import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -23,16 +20,10 @@ import Scrollbar from '../../../components/scrollbar';
 // sections
 import ToolInstalledListTableRow from './ToolInstalledListTableRow';
 import ToolInstalledListTableToolbar from './ToolInstalledListTableToolbar';
-
-import {
-  getToolInstalled, 
-  getToolsInstalled,
-  ChangeRowsPerPage,
-  ChangePage,
-  setFilterBy,
-  setToolInstalledViewFormVisibility } from '../../../redux/slices/products/toolInstalled';
+import { getToolsInstalled, ChangeRowsPerPage, ChangePage, setFilterBy } from '../../../redux/slices/products/toolInstalled';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
+import MachineTabContainer from '../util/MachineTabContainer';
 
 export default function ToolInstalledList() {
   const {
@@ -41,13 +32,12 @@ export default function ToolInstalledList() {
     setPage,
     onSort,
   } = useTable({defaultOrderBy: 'createdAt', defaultOrder: 'desc'});
-
+  const { machineId } = useParams()
+  const navigate = useNavigate()
   const dispatch = useDispatch();
-  useSettingsContext();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  const { machine } = useSelector((state) => state.machine);
 
   const { toolsInstalled, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.toolInstalled );
   const TABLE_HEAD = [
@@ -65,10 +55,10 @@ export default function ToolInstalledList() {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useEffect(() => {
-    if(machine?._id){
-      dispatch(getToolsInstalled(machine?._id));
+    if(machineId){
+      dispatch(getToolsInstalled(machineId));
     }
-  }, [dispatch, machine]);
+  }, [dispatch, machineId]);
 
   useEffect(() => {
     setTableData(toolsInstalled);
@@ -110,10 +100,7 @@ export default function ToolInstalledList() {
   };
 
 
-  const handleViewRow = (id) => {
-      dispatch(getToolInstalled(machine._id,id));
-      dispatch(setToolInstalledViewFormVisibility(true));
-  };
+  const handleViewRow = (id) => navigate(PATH_MACHINE.machines.toolsInstalled.view( machineId, id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
@@ -121,6 +108,8 @@ export default function ToolInstalledList() {
   };
 
   return (
+    <Container maxWidth={false} >
+      <MachineTabContainer currentTabValue='toolsinstalled' />
       <TableCard>
         <ToolInstalledListTableToolbar
           filterName={filterName}
@@ -176,6 +165,7 @@ export default function ToolInstalledList() {
           onRowsPerPageChange={onChangeRowsPerPage}
         />
       </TableCard>
+    </Container>
   );
 }
 

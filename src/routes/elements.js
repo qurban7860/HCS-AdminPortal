@@ -21,306 +21,11 @@ export const NewPasswordPage = Loadable(lazy(() => import('../pages/auth/NewPass
 export const ResetPasswordPage = Loadable(lazy(() => import('../pages/auth/ResetPasswordPage')));
 export const Authenticate = Loadable(lazy(() => import('../sections/auth/Authenticate')));
 
-// DASHBOARD: GENERAL
-export const GeneralAppPage = Loadable(lazy(() => import('../pages/dashboard/GeneralAppPage')));
-export const MachineByCountriesViewForm = Loadable(lazy(() => import('../pages/dashboard/MachineByCountriesViewForm')));
-export const MachineByModelsViewForm = Loadable(lazy(() => import('../pages/dashboard/MachineByModelsViewForm')));
-export const MachineByYearsViewForm = Loadable(lazy(() => import('../pages/dashboard/MachineByYearsViewForm')));
-
-// CUSTOMER
-export const CustomerList = Loadable(lazy(() => import('../pages/crm/reports/customers/CustomerList')));
-export const CustomerAdd = Loadable(lazy(() => import('../pages/crm/customers/CustomerAdd')));
-export const CustomerEdit = Loadable(lazy(() => import('../pages/crm/customers/CustomerEdit')));
-export const CustomerView = Loadable(lazy(() => import('../pages/crm/customers/CustomerView')));
-
-// SITE
-export const CustomerSiteList = Loadable(lazy(() => import('../pages/crm/reports/sites/CustomerSiteList')));
-export const CustomerSiteDynamicList = Loadable(lazy(() => import('../pages/crm/sites/CustomerSiteDynamicList')));
-
-// CONTACT
-export const CustomerContactList = Loadable(lazy(() => import('../pages/crm/reports/contacts/CustomerContactList')));
-export const CustomerContactDynamicList = Loadable(lazy(() => import('../pages/crm/contacts/CustomerContactDynamicList')));
-
-// NOTE
-export const NoteList = Loadable(lazy(() => import('../pages/crm/notes/NoteList')));
-export const NoteAddForm = Loadable(lazy(() => import('../pages/crm/notes/NoteAddForm')));
-export const NoteEditForm = Loadable(lazy(() => import('../pages/crm/notes/NoteEditForm')));
-export const NoteViewForm = Loadable(lazy(() => import('../pages/crm/notes/NoteViewForm')));
-
-// CUSTOMER MACHINESS
-export const CustomerMachines = Loadable(lazy(() => import('../pages/crm/machines/machine_list/CustomerMachines')));
-export const CustomerMachineAddForm = Loadable(lazy(() => import('../pages/crm/machines/NewMachine')));
-export const CustomerMachineMove = Loadable(lazy(() => import('../pages/crm/machines/machine_move/CustomerMachineMove')));
-
-// CUSTOMER DOCUMENTS
-export const CustomerDocumentList             = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentList')));
-export const CustomerDocumentAddForm          = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentAddForm')));
-export const CustomerDocumentEditForm         = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentEditForm')));
-export const CustomerDocumentViewForm         = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentViewForm')));
-export const CustomerDocumentHistoryViewForm  = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentHistoryViewForm')));
-export const CustomerDocumentGallery          = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentGallery')));
-
-// DASHBOARD: USER
-export const SecurityUserProfile = Loadable(lazy(() => import('../pages/security/profile/SecurityUserProfile')))  
-export const SecurityUserProfileEditForm = Loadable(lazy(() => import('../pages/security/profile/SecurityUserProfileEditForm')));
-export const SecurityUserChangePassword = Loadable(lazy(() => import('../pages/security/passwordChange/SecurityUserChangePassword')));
-export const SecurityUserChangePasswordByAdmin = Loadable(lazy(() => import('../pages/security/passwordChange/SecurityUserChangePasswordByAdmin')));
-export const SecurityUserList = Loadable(lazy(() => import('../pages/security/securityUsers/SecurityUserList')));
-export const SecurityUserAdd = Loadable(lazy(() => import('../pages/security/securityUsers/SecurityUserAdd')));
-export const SecurityUserEdit = Loadable(lazy(() => import('../pages/security/securityUsers/SecurityUserEdit')));
-export const SecurityUserViewForm = Loadable(lazy(() => import('../pages/security/securityUsers/SecurityUserView')));
-
-// SECURITY USERS ROLES
-export const RoleList = Loadable(lazy(() => import('../pages/Settings/securitySettings/role/RoleList')));
-export const RoleAdd = Loadable(lazy(() => import('../pages/Settings/securitySettings/role/RoleAddForm')));
-export const RoleEdit = Loadable(lazy(() => import('../pages/Settings/securitySettings/role/RoleEditForm')));
-export const RoleView = Loadable(lazy(() => import('../pages/Settings/securitySettings/role/RoleView')));
-
-//----------------------------------------------------------------
-
-// Machine
-export const MachineSetting = Loadable(lazy(() => import('../pages/machine/configs/Machine')));
-export const MachineAddForm = Loadable(lazy(() => import('../pages/machine/MachineAdd')));
-export const MachineList = Loadable(lazy(() => import('../pages/machine/MachineList')));
-export const MachineView = Loadable(lazy(() => import('../pages/machine/MachineView')));
-export const GetMachineId = Loadable(lazy(() => import('../pages/machine/GetMachineId')));
-export const MachineEdit = Loadable(lazy(() => import('../pages/machine/MachineEdit')));
-export const MachineTransfer = Loadable(lazy(() => import('../pages/machine/MachineTransfer')));
-
-// Supplier
-export const SupplierAddForm = Loadable(
-  lazy(() => import('../pages/machine/configs/suppliers/SupplierAddForm'))
-);
-export const SupplierList = Loadable(lazy(() => import('../pages/machine/configs/suppliers/SupplierList')));
-export const SupplierView = Loadable(lazy(() => import('../pages/machine/configs/suppliers/SupplierView')));
-export const SupplierViewForm = Loadable(lazy(() => import('../pages/machine/configs/suppliers/SupplierViewForm')));
-export const SupplierEdit = Loadable(lazy(() => import('../pages/machine/configs/suppliers/SupplierEdit')));
-export const SupplierEditForm = Loadable(lazy(() => import('../pages/machine/configs/suppliers/SupplierEditForm')));
-export const SForm = Loadable(lazy(() => import('../pages/machine/configs/suppliers/SupplierEditForm')));
-
-export const CheckItemList = Loadable(lazy(() => import('../pages/machine/configs/checkItem/CheckItemList')));
-export const CheckItemViewForm = Loadable(lazy(() => import('../pages/machine/configs/checkItem/CheckItemView')));
-export const CheckItemEditForm = Loadable(lazy(() => import('../pages/machine/configs/checkItem/CheckItemEditForm')));
-export const CheckItemAddForm  = Loadable(lazy(() => import('../pages/machine/configs/checkItem/CheckItemAddForm')));
-// Signin Logs
-export const SignInLogList = Loadable(lazy(() => import('../pages/Settings/Reports/signInLog/SignInLogList')));
-
-// User Invitations List
-export const UserInvitationList = Loadable(lazy(() => import('../pages/Settings/Reports/invite/UserInviteList')));
-export const UserInvitationView = Loadable(lazy(() => import('../pages/Settings/Reports/invite/UserInviteViewForm')));
-
-// RELEASES
-export const ReleasesList = Loadable(lazy(() => import('../pages/Settings/Reports/releases/ReleasesList')));
-export const ReleasesViewForm = Loadable(lazy(() => import('../pages/Settings/Reports/releases/ReleasesViewForm')));
-
-// User Blocked Customers
-export const BlockedCustomerList = Loadable(lazy(() => import('../pages/Settings/securitySettings/blocked_customer/BlockedCustomerList')));
-export const BlockedCustomerAddForm = Loadable(lazy(() => import('../pages/Settings/securitySettings/blocked_customer/BlockedCustomerAddForm')));
-
-// User Blocked Users
-export const BlockedUserList = Loadable(lazy(() => import('../pages/Settings/securitySettings/blocked_user/BlockedUserList')));
-export const BlockedUserAddForm = Loadable(lazy(() => import('../pages/Settings/securitySettings/blocked_user/BlockedUserAddForm')));
-
-// Blacklist IP
-export const BlacklistIPList = Loadable(lazy(() => import('../pages/Settings/securitySettings/blacklist_IP/BlacklistIPList')));
-export const BlacklistIPAddForm = Loadable(lazy(() => import('../pages/Settings/securitySettings/blacklist_IP/BlacklistIPAddForm')));
-
-// Whitelist IP
-export const WhitelistIPList = Loadable(lazy(() => import('../pages/Settings/securitySettings/whitelist_IP/WhitelistIPList')));
-export const WhitelistIPAddForm = Loadable(lazy(() => import('../pages/Settings/securitySettings/whitelist_IP/WhitelistIPAddForm')));
-
-// License
-// export const MachineLicenses = Loadable(lazy(()=> import('../pages/machine/License/MachineLicenses')));
-// export const LicenseList = Loadable(lazy(()=> import('../pages/machine/License/LicenseList')));
-
-// Machine Groups
-export const GroupAddForm = Loadable(lazy(() => import('../pages/machine/configs/groups/GroupAddForm')));
-export const GroupList = Loadable(lazy(() => import('../pages/machine/configs/groups/GroupList')));
-export const GroupViewForm = Loadable(lazy(() => import('../pages/machine/configs/groups/GroupViewForm')));
-export const GroupEditForm = Loadable(lazy(() => import('../pages/machine/configs/groups/GroupEditForm')));
-
-// Machine Categories
-export const CategoryAddForm = Loadable(lazy(() => import('../pages/machine/configs/categories/CategoryAddForm')));
-export const CategoryList = Loadable(lazy(() => import('../pages/machine/configs/categories/CategoryList')));
-export const CategoryView = Loadable(lazy(() => import('../pages/machine/configs/categories/CategoryView')));
-export const CategoryViewForm = Loadable(lazy(() => import('../pages/machine/configs/categories/CategoryViewForm')));
-export const CategoryEdit = Loadable(lazy(() => import('../pages/machine/configs/categories/CategoryEdit')));
-export const CategoryEditForm = Loadable(lazy(() => import('../pages/machine/configs/categories/CategoryEditForm')));
-
-// Machine Service Categories
-export const ServiceCategoryAddForm = Loadable(lazy(() => import('../pages/machine/configs/itemCategories/ServiceCategoryAddForm')));
-export const ServiceCategoryList = Loadable(lazy(() => import('../pages/machine/configs/itemCategories/ServiceCategoryList')));
-export const ServiceCategoryView = Loadable(lazy(() => import('../pages/machine/configs/itemCategories/ServiceCategoryView')));
-export const ServiceCategoryViewForm = Loadable(lazy(() => import('../pages/machine/configs/itemCategories/ServiceCategoryViewForm')));
-export const ServiceCategoryEdit = Loadable(lazy(() => import('../pages/machine/configs/itemCategories/ServiceCategoryEdit')));
-export const ServiceCategoryEditForm = Loadable(lazy(() => import('../pages/machine/configs/itemCategories/ServiceCategoryEditForm')));
-
-
-// Machine Parameters
-export const ParameterAddForm = Loadable(
-  lazy(() => import('../pages/machine/configs/parameters/ParameterAddForm'))
-);
-export const ParameterList = Loadable(
-  lazy(() => import('../pages/machine/configs/parameters/ParameterList'))
-);
-export const ParameterView = Loadable(
-  lazy(() => import('../pages/machine/configs/parameters/ParameterView'))
-);
-export const ParameterViewForm = Loadable(
-  lazy(() => import('../pages/machine/configs/parameters/ParameterViewForm'))
-);
-export const ParameterEdit = Loadable(
-  lazy(() => import('../pages/machine/configs/parameters/ParameterEdit'))
-);
-export const ParameterEditForm = Loadable(
-  lazy(() => import('../pages/machine/configs/parameters/ParameterEditForm'))
-);
-
-// Machine Tools
-export const ToolAddForm = Loadable(lazy(() => import('../pages/machine/configs/tools/ToolAddForm')));
-export const ToolList = Loadable(lazy(() => import('../pages/machine/configs/tools/ToolList')));
-export const ToolView = Loadable(lazy(() => import('../pages/machine/configs/tools/ToolView')));
-export const ToolViewForm = Loadable(lazy(() => import('../pages/machine/configs/tools/ToolViewForm')));
-export const ToolEdit = Loadable(lazy(() => import('../pages/machine/configs/tools/ToolEdit')));
-export const ToolEditForm = Loadable(lazy(() => import('../pages/machine/configs/tools/ToolEditForm')));
-
-// MachineTechParam
-export const TechParamCategoryAddForm = Loadable(
-  lazy(() => import('../pages/machine/configs/technicalParameterCategories/TechParamCategoryAddForm'))
-);
-export const TechParamList = Loadable(
-  lazy(() => import('../pages/machine/configs/technicalParameterCategories/TechParamList'))
-);
-export const TechParamCategoryViewForm = Loadable(
-  lazy(() => import('../pages/machine/configs/technicalParameterCategories/TechParamCategoryViewForm'))
-);
-export const TechParamCategoryView = Loadable(
-  lazy(() => import('../pages/machine/configs/technicalParameterCategories/TechParamCategoryView'))
-);
-export const TechParamCategoryEdit = Loadable(
-  lazy(() => import('../pages/machine/configs/technicalParameterCategories/TechParamCategoryEdit'))
-);
-export const TechParamCategoryEditForm = Loadable(
-  lazy(() => import('../pages/machine/configs/technicalParameterCategories/TechParamCategoryEditForm'))
-);
-
-// Machine Statuses
-export const StatusAddForm = Loadable(lazy(() => import('../pages/machine/configs/status/StatusAddForm')));
-export const StatusList = Loadable(lazy(() => import('../pages/machine/configs/status/StatusList')));
-export const StatusViewForm = Loadable(
-  lazy(() => import('../pages/machine/configs/status/StatusViewForm'))
-);
-export const StatusView = Loadable(lazy(() => import('../pages/machine/configs/status/StatusView')));
-export const StatusEditForm = Loadable(
-  lazy(() => import('../pages/machine/configs/status/StatusEditForm'))
-);
-export const StatusEdit = Loadable(lazy(() => import('../pages/machine/configs/status/StatusEdit')));
-
-// Machine Model
-export const ModelAddForm = Loadable(lazy(() => import('../pages/machine/configs/Model/ModelAddForm')));
-export const ModelList = Loadable(lazy(() => import('../pages/machine/configs/Model/ModelList')));
-export const ModelViewForm = Loadable(lazy(() => import('../pages/machine/configs/Model/ModelViewForm')));
-export const ModelView = Loadable(lazy(() => import('../pages/machine/configs/Model/ModelView')));
-export const ModelEditForm = Loadable(lazy(() => import('../pages/machine/configs/Model/ModelEditForm')));
-export const ModelEdit = Loadable(lazy(() => import('../pages/machine/configs/Model/ModelEdit')));
-
-// Machine Service Record Config
-export const ServiceRecordConfigAddForm = Loadable(
-  lazy(() => import('../pages/machine/configs/serviceDocumentConfiguration/ServiceRecordConfigAddForm'))
-);
-export const ServiceRecordConfigList = Loadable(
-  lazy(() => import('../pages/machine/configs/serviceDocumentConfiguration/ServiceRecordConfigList'))
-);
-export const ServiceRecordConfigView = Loadable(
-  lazy(() => import('../pages/machine/configs/serviceDocumentConfiguration/ServiceRecordConfigView'))
-);
-export const ServiceRecordConfigViewForm = Loadable(
-  lazy(() => import('../pages/machine/configs/serviceDocumentConfiguration/ServiceRecordConfigViewForm'))
-);
-export const ServiceRecordConfigEdit = Loadable(
-  lazy(() => import('../pages/machine/configs/serviceDocumentConfiguration/ServiceRecordConfigEdit'))
-);
-export const ServiceRecordConfigEditForm = Loadable( lazy(() => import('../pages/machine/configs/serviceDocumentConfiguration/ServiceRecordConfigEditForm')));
-
-// Document dashboard
-export const DocumentList = Loadable(lazy(() => import('../pages/document/documents/GlobalDocument')));
-export const DocumentAddForm = Loadable(lazy(() => import('../pages/document/documents/DocumentAddForm')));
-export const DocumentAddListForm = Loadable(lazy(() => import('../pages/document/documents/DocumentListAddForm')));
-export const DocumentEditForm = Loadable(lazy(() => import('../pages/document/documents/DocumentEditForm')));
-export const DocumentViewForm = Loadable(lazy(() => import('../pages/document/documents/DocumentHistoryViewForm')));
-export const DocumentGallery = Loadable(lazy(() => import('../pages/document/documents/DocumentGallery')));
-
-// Machine Drawings dashboard
-export const MachineDrawings = Loadable(lazy(() => import('../pages/document/documents/MachineDrawings')));
-export const MachineDrawingsAddForm = Loadable(lazy(() => import('../pages/document/documents/MachineDrawingsAddForm')));
-export const MachineDrawingsViewForm = Loadable(lazy(() => import('../pages/document/documents/MachineDrawingsViewForm')));
-
-// Document Name
-export const DocumentNameAddForm = Loadable(lazy(() => import('../pages/Settings/documentSettings/documentType/DocumentTypeAddForm')));
-export const DocumentNameList = Loadable(lazy(() => import('../pages/Settings/documentSettings/documentType/DocumentTypeList')));
-export const DocumentNameViewForm = Loadable(lazy(() => import('../pages/Settings/documentSettings/documentType/DocumentTypeView')));
-export const DocumentNameEditForm = Loadable(lazy(() => import('../pages/Settings/documentSettings/documentType/DocumentTypeEditForm')));
-
-// Document Category
-export const DocumentCategoryAddForm = Loadable(lazy(() => import('../pages/Settings/documentSettings/documentCategory/DocumentCategoryAddForm')));
-export const DocumentCategoryList = Loadable(lazy(() => import('../pages/Settings/documentSettings/documentCategory/DocumentCategoryList')));
-export const DocumentCategoryView = Loadable(lazy(() => import('../pages/Settings/documentSettings/documentCategory/DocumentCategoryView')));
-export const DocumentCategoryEditForm = Loadable(lazy(() => import('../pages/Settings/documentSettings/documentCategory/DocumentCategoryEditForm')));
-
-// Configs
-export const RegionAdd = Loadable(lazy(() => import('../pages/crm/configs/regions/RegionAdd')));
-export const RegionList = Loadable(lazy(() => import('../pages/crm/configs/regions/RegionList')));
-export const RegionEdit = Loadable(lazy(() => import('../pages/crm/configs/regions/RegionEdit')));
-export const RegionView = Loadable(lazy(() => import('../pages/crm/configs/regions/RegionView')));
-
-
-// Modules
-export const ModuleAdd = Loadable(lazy(() => import('../pages/Settings/configuration/modules/ModuleAdd')));
-export const ModuleList = Loadable(lazy(() => import('../pages/Settings/configuration/modules/ModuleList')));
-export const ModuleEdit = Loadable(lazy(() => import('../pages/Settings/configuration/modules/ModuleEdit')));
-export const ModuleView = Loadable(lazy(() => import('../pages/Settings/configuration/modules/ModuleView')));
-
-// Configuration
-export const ConfigurationAdd  = Loadable(lazy(() => import('../pages/machine/configs/serviceSettings/ConfigurationAddForm')));
-export const ConfigurationList = Loadable(lazy(() => import('../pages/machine/configs/serviceSettings/ConfigurationList')));
-export const ConfigurationEdit = Loadable(lazy(() => import('../pages/machine/configs/serviceSettings/ConfigurationEdit')));
-export const ConfigurationView = Loadable(lazy(() => import('../pages/machine/configs/serviceSettings/ConfigurationView')));
-
-// Configs
-
-export const ConfigAdd = Loadable(lazy(() => import('../pages/Settings/configuration/systemConfigs/ConfigAdd')));
-export const ConfigList = Loadable(lazy(() => import('../pages/Settings/configuration/systemConfigs/ConfigList')));
-export const ConfigEdit = Loadable(lazy(() => import('../pages/Settings/configuration/systemConfigs/ConfigEdit')));
-export const ConfigView = Loadable(lazy(() => import('../pages/Settings/configuration/systemConfigs/ConfigView')));
-
-// Configs
-
-export const DepartmentAdd  = Loadable(lazy(() => import('../pages/crm/configs/departments/DepartmentAddForm')));
-export const DepartmentList = Loadable(lazy(() => import('../pages/crm/configs/departments/DepartmentList')));
-export const DepartmentEdit = Loadable(lazy(() => import('../pages/crm/configs/departments/DepartmentEditForm')));
-export const DepartmentView = Loadable(lazy(() => import('../pages/crm/configs/departments/DepartmentView')));
-
-// DASHBOARD: SETTINGS
-export const Setting = Loadable(lazy(() => import('../pages/Settings/Setting')));
-
-
-// DASHBOARD: Email
-export const Email = Loadable(lazy(() => import('../pages/email/Email')));
-
-export const Emailviewform = Loadable(lazy(() => import('../pages/email/EmailViewform')));
-
-// DASHBOARD: REPORTS
-export const Reports = Loadable(lazy(() => import('../pages/crm/reports/sites/Reports')));
-
-// TEST RENDER PAGE BY ROLE
-export const PermissionDeniedPage = Loadable(
-  lazy(() => import('../pages/dashboard/PermissionDeniedPage'))
-);
-
-// BLANK PAGE
-export const BlankPage = Loadable(lazy(() => import('../pages/dashboard/BlankPage')));
+// ----------------------------------------------------------------
 
 // MAIN
+export const PermissionDeniedPage = Loadable( lazy(() => import('../pages/dashboard/PermissionDeniedPage')));
+export const BlankPage = Loadable(lazy(() => import('../pages/dashboard/BlankPage')));
 export const Page500 = Loadable(lazy(() => import('../pages/Page500')));
 export const Page403 = Loadable(lazy(() => import('../pages/Page403')));
 export const Page404 = Loadable(lazy(() => import('../pages/Page404')));
@@ -330,6 +35,338 @@ export const ComingSoonPage = Loadable(lazy(() => import('../pages/ComingSoonPag
 export const MaintenancePage = Loadable(lazy(() => import('../pages/MaintenancePage')));
 export const ErrorPage = Loadable(lazy(() => import('../pages/ErrorPage')));
 export const UserInviteLanding = Loadable(lazy(() => import('../pages/UserInviteLanding')));
-export const ComponentsOverviewPage = Loadable(
-  lazy(() => import('../components/Defaults/ComponentsOverviewPage'))
-);
+export const ComponentsOverviewPage = Loadable(lazy(() => import('../components/Defaults/ComponentsOverviewPage')));
+
+// ----------------------------------------------------------------
+
+// AUTH SECURITY USER 
+export const SecurityUserProfile = Loadable(lazy(() => import('../pages/security/profile/SecurityUserProfile')))  
+export const SecurityUserProfileEdit = Loadable(lazy(() => import('../pages/security/profile/SecurityUserProfileEditForm')));
+export const SecurityUserChangePassword = Loadable(lazy(() => import('../pages/security/passwordChange/SecurityUserChangePassword')));
+
+// ----------------------------------------------------------------
+
+// DASHBOARD
+export const Dashboard = Loadable(lazy(() => import('../pages/dashboard/Dashboard')));
+export const MachineByCountriesView = Loadable(lazy(() => import('../pages/dashboard/MachineByCountriesViewForm')));
+export const MachineByModelsView = Loadable(lazy(() => import('../pages/dashboard/MachineByModelsViewForm')));
+export const MachineByYearsView = Loadable(lazy(() => import('../pages/dashboard/MachineByYearsViewForm')));
+
+// CUSTOMER
+export const CustomerList = Loadable(lazy(() => import('../pages/crm/reports/customers/CustomerList')));
+export const CustomerAdd = Loadable(lazy(() => import('../pages/crm/customers/CustomerAdd')));
+export const CustomerEdit = Loadable(lazy(() => import('../pages/crm/customers/CustomerEdit')));
+export const CustomerView = Loadable(lazy(() => import('../pages/crm/customers/CustomerView')));
+
+// CUSTOMERS SITE REPORTS
+export const CustomerSiteList = Loadable(lazy(() => import('../pages/crm/reports/sites/CustomerSiteList')));
+
+// CUSTOMERS CONTACT REPORTS
+export const CustomerContactList = Loadable(lazy(() => import('../pages/crm/reports/contacts/CustomerContactList')));
+
+// CUSTOMER SITES
+export const CustomerSiteDynamicList = Loadable(lazy(() => import('../pages/crm/sites/CustomerSiteDynamicList')));
+
+// CUSTOMER CONTACTS
+export const CustomerContactDynamicList = Loadable(lazy(() => import('../pages/crm/contacts/CustomerContactDynamicList')));
+
+// CUSTOMER NOTE
+export const CustomerNoteList = Loadable(lazy(() => import('../pages/crm/notes/NoteList')));
+export const CustomerNoteAdd  = Loadable(lazy(() => import('../pages/crm/notes/NoteAddForm')));
+export const CustomerNoteEdit = Loadable(lazy(() => import('../pages/crm/notes/NoteEditForm')));
+export const CustomerNoteView = Loadable(lazy(() => import('../pages/crm/notes/NoteViewForm')));
+
+// CUSTOMER DOCUMENTS
+export const CustomerDocumentList             = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentList')));
+export const CustomerDocumentAdd          = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentAddForm')));
+export const CustomerDocumentEdit        = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentEditForm')));
+export const CustomerDocumentView         = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentViewForm')));
+export const CustomerDocumentHistoryView  = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentHistoryViewForm')));
+export const CustomerDocumentGallery          = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentGallery')));
+
+// CUSTOMER MACHINESS
+export const CustomerMachines = Loadable(lazy(() => import('../pages/crm/machines/machine_list/CustomerMachines')));
+export const CustomerMachineAdd = Loadable(lazy(() => import('../pages/crm/machines/NewMachine')));
+export const CustomerMachineMove = Loadable(lazy(() => import('../pages/crm/machines/machine_move/CustomerMachineMove')));
+
+// ----------------------------------------------------------------
+
+// CUSTOMER SETTING DEPARTMENTS
+export const DepartmentAdd  = Loadable(lazy(() => import('../pages/crm/configs/departments/DepartmentAddForm')));
+export const DepartmentList = Loadable(lazy(() => import('../pages/crm/configs/departments/DepartmentList')));
+export const DepartmentEdit = Loadable(lazy(() => import('../pages/crm/configs/departments/DepartmentEditForm')));
+export const DepartmentView = Loadable(lazy(() => import('../pages/crm/configs/departments/DepartmentView')));
+
+// CUSTOMER SETTING REGIONS
+export const RegionList = Loadable(lazy(() => import('../pages/crm/configs/regions/RegionList')));
+export const RegionAdd = Loadable(lazy(() => import('../pages/crm/configs/regions/RegionAdd')));
+export const RegionEdit = Loadable(lazy(() => import('../pages/crm/configs/regions/RegionEdit')));
+export const RegionView = Loadable(lazy(() => import('../pages/crm/configs/regions/RegionView')));
+
+//----------------------------------------------------------------
+
+// Machine
+export const MachineAdd = Loadable(lazy(() => import('../pages/machine/MachineAdd')));
+export const MachineList = Loadable(lazy(() => import('../pages/machine/MachineList')));
+export const MachineView = Loadable(lazy(() => import('../pages/machine/MachineView')));
+export const GetMachineId = Loadable(lazy(() => import('../pages/machine/GetMachineId')));
+export const MachineEdit = Loadable(lazy(() => import('../pages/machine/MachineEdit')));
+export const MachineTransfer = Loadable(lazy(() => import('../pages/machine/MachineTransfer')));
+
+// --------------------------- MACHINE SETTING -------------------------------------
+
+export const SettingList = Loadable(lazy(() => import('../pages/machine/settings/SettingList')));
+export const SettingAdd  = Loadable(lazy(() => import('../pages/machine/settings/SettingAdd')));
+export const SettingView = Loadable(lazy(() => import('../pages/machine/settings/SettingView')));
+export const SettingEdit = Loadable(lazy(() => import('../pages/machine/settings/SettingEdit')));
+
+// --------------------------- Tool Installed -------------------------------------
+
+export const MachineToolInstalledList = Loadable(lazy(() => import('../pages/machine/toolsInstalled/ToolInstalledList')));
+export const MachineToolInstalledAdd  = Loadable(lazy(() => import('../pages/machine/toolsInstalled/ToolInstalledAddForm')));
+export const MachineToolInstalledView = Loadable(lazy(() => import('../pages/machine/toolsInstalled/ToolInstalledViewForm')));
+export const MachineToolInstalledEdit = Loadable(lazy(() => import('../pages/machine/toolsInstalled/ToolInstalledEditForm')));
+
+// --------------------------- Machine Notes -------------------------------------
+
+export const MachineNoteList = Loadable(lazy(() => import('../pages/machine/notes/NoteList')));
+export const MachineNoteAdd  = Loadable(lazy(() => import('../pages/machine/notes/NoteAddForm')));
+export const MachineNoteView = Loadable(lazy(() => import('../pages/machine/notes/NoteViewForm')));
+export const MachineNoteEdit = Loadable(lazy(() => import('../pages/machine/notes/NoteEditForm')));
+
+// --------------------------- MACHINE Drawings  -------------------------------------
+
+export const MachineDrawingList = Loadable(lazy(() => import('../pages/machine/drawings/DrawingList')));
+export const MachineDrawingAdd = Loadable(lazy(() => import('../pages/machine/drawings/DrawingAddForm')));
+export const MachineDrawingListAdd = Loadable(lazy(() => import('../pages/machine/drawings/DrawingListAdd')));
+export const MachineDrawingView = Loadable(lazy(() => import('../pages/machine/drawings/DrawingView')));
+export const MachineDrawingEdit = Loadable(lazy(() => import('../pages/machine/drawings/DrawingEdit')));
+
+// --------------------------- Machine Documents -------------------------------------
+
+export const MachineDocumentList = Loadable(lazy(() => import('../pages/machine/documents/MachineDocumentList')));
+export const MachineDocumentAdd = Loadable(lazy(() => import('../pages/machine/documents/MachineDocumentAdd')));
+export const MachineDocumentEditForm = Loadable(lazy(() => import('../pages/machine/documents/MachineDocumentEdit')));
+export const MachineDocumentGallery = Loadable(lazy(() => import('../pages/machine/documents/MachineDocumentGallery')));
+export const MachineDocumentViewForm = Loadable(lazy(() => import('../pages/machine/documents/MachineDocumentView')));
+export const MachineDocumentHistoryViewForm = Loadable(lazy(() => import('../pages/machine/documents/MachineDocumentHistoryView')));
+
+// --------------------------- MACHINE Licenses -------------------------------------
+
+export const MachineLicenseList = Loadable(lazy(() => import('../pages/machine/licenses/LicenseList')));
+export const MachineLicenseAdd  = Loadable(lazy(() => import('../pages/machine/licenses/LicenseAddForm')));
+export const MachineLicenseView = Loadable(lazy(() => import('../pages/machine/licenses/LicenseViewForm')));
+export const MachineLicenseEdit = Loadable(lazy(() => import('../pages/machine/licenses/LicenseEditForm')));
+
+// --------------------------- MACHINE Profile -------------------------------------
+
+export const MachineProfileList = Loadable(lazy(() => import('../pages/machine/profiles/ProfileList')));
+export const MachineProfileAdd = Loadable(lazy(() => import('../pages/machine/profiles/ProfileAddForm')));
+export const MachineProfileView = Loadable(lazy(() => import('../pages/machine/profiles/ProfileViewForm')));
+export const MachineProfileEdit = Loadable(lazy(() => import('../pages/machine/profiles/ProfileEditForm')));
+
+// --------------------------- MACHINE Service Records -------------------------------------
+
+export const MachineServiceRecordList = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordList')));
+export const MachineServiceRecordAdd = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordAddForm')));
+export const MachineServiceRecordView = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordViewForm')));
+export const MachineServiceRecordEdit = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordEditForm')));
+export const MachineServiceRecordHistoryList = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordHistoryList')));
+export const MachineServiceRecordPDF = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordPDF')));
+
+// --------------------------- MACHINE INI -------------------------------------
+
+export const MachineINIList = Loadable(lazy(() => import('../pages/machine/historicalConfigurations/HistoricalConfigurationsList')));
+export const MachineINIAdd = Loadable(lazy(() => import('../pages/machine/historicalConfigurations/HistoricalConfigurationsAddForm')));
+export const MachineINIView = Loadable(lazy(() => import('../pages/machine/historicalConfigurations/HistoricalConfigurationsViewForm')));
+export const MachineINICompareView = Loadable(lazy(() => import('../pages/machine/historicalConfigurations/HistoricalConfigurationsCompareViewForm')));
+
+// --------------------------- MACHINE LOGS -------------------------------------
+
+export const MachineLogsList = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsList')));
+export const MachineLogsAdd = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsAddForm')));
+export const MachineLogsView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsViewForm')));
+export const MachineLogsGraphView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsGraphViewForm')));
+
+// ---------------------  SETTINGS -------------------------------------------
+
+export const MachineSetting = Loadable(lazy(() => import('../pages/machineSettings/Machine')));
+
+// --------------------- Categories & Models ----------------------
+
+// MACHINE SETTINGS Machine Groups
+export const MachineGroupList = Loadable(lazy(() => import('../pages/machineSettings/groups/GroupList')));
+export const MachineGroupAdd  = Loadable(lazy(() => import('../pages/machineSettings/groups/GroupAddForm')));
+export const MachineGroupView = Loadable(lazy(() => import('../pages/machineSettings/groups/GroupViewForm')));
+export const MachineGroupEdit = Loadable(lazy(() => import('../pages/machineSettings/groups/GroupEditForm')));
+
+// MACHINE SETTINGS: MACHINE Categories
+export const MachineCategoryList = Loadable(lazy(() => import('../pages/machineSettings/categories/CategoryList')));
+export const MachineCategoryAdd  = Loadable(lazy(() => import('../pages/machineSettings/categories/CategoryAddForm')));
+export const MachineCategoryView = Loadable(lazy(() => import('../pages/machineSettings/categories/CategoryView')));
+export const MachineCategoryEdit = Loadable(lazy(() => import('../pages/machineSettings/categories/CategoryEdit')));
+
+// MACHINE SETTINGS: MACHINE Model
+export const MachineModelList = Loadable(lazy(() => import('../pages/machineSettings/Model/ModelList')));
+export const MachineModelAdd  = Loadable(lazy(() => import('../pages/machineSettings/Model/ModelAddForm')));
+export const MachineModelView = Loadable(lazy(() => import('../pages/machineSettings/Model/ModelView')));
+export const MachineModelEdit = Loadable(lazy(() => import('../pages/machineSettings/Model/ModelEdit')));
+
+// MACHINE SETTINGS: MACHINE Supplier
+export const MachineSupplierList = Loadable(lazy(() => import('../pages/machineSettings/suppliers/SupplierList')));
+export const MachineSupplierAdd = Loadable(lazy(() => import('../pages/machineSettings/suppliers/SupplierAddForm')));
+export const MachineSupplierView = Loadable(lazy(() => import('../pages/machineSettings/suppliers/SupplierView')));
+export const MachineSupplierEdit = Loadable(lazy(() => import('../pages/machineSettings/suppliers/SupplierEdit')));
+
+// ----------------------- Tools Information -----------------------
+
+// MACHINE SETTINGS: MACHINE Tools
+export const MachineToolList = Loadable(lazy(() => import('../pages/machineSettings/tools/ToolList')));
+export const MachineToolAdd = Loadable(lazy(() => import('../pages/machineSettings/tools/ToolAddForm')));
+export const MachineToolView = Loadable(lazy(() => import('../pages/machineSettings/tools/ToolView')));
+export const MachineToolEdit = Loadable(lazy(() => import('../pages/machineSettings/tools/ToolEdit')));
+
+// --------------- Service Record Configuration --------------------
+
+// MACHINE SETTINGS CHECK Item Categories
+export const CheckItemCategoryList = Loadable(lazy(() => import('../pages/machineSettings/checkItemsCategories/CheckItemCategoryList')));
+export const CheckItemCategoryAdd  = Loadable(lazy(() => import('../pages/machineSettings/checkItemsCategories/CheckItemCategoryAddForm')));
+export const CheckItemCategoryView = Loadable(lazy(() => import('../pages/machineSettings/checkItemsCategories/CheckItemCategoryView')));
+export const CheckItemCategoryEdit = Loadable(lazy(() => import('../pages/machineSettings/checkItemsCategories/CheckItemCategoryEdit')));
+
+// MACHINE SETTINGS CHECK ITEM
+export const CheckItemList = Loadable(lazy(() => import('../pages/machineSettings/checkItem/CheckItemList')));
+export const CheckItemAdd  = Loadable(lazy(() => import('../pages/machineSettings/checkItem/CheckItemAddForm')));
+export const CheckItemView = Loadable(lazy(() => import('../pages/machineSettings/checkItem/CheckItemView')));
+export const CheckItemEdit = Loadable(lazy(() => import('../pages/machineSettings/checkItem/CheckItemEditForm')));
+
+// MACHINE SETTINGS Service Record Config / Document
+export const ServiceRecordConfigList = Loadable(lazy(() => import('../pages/machineSettings/serviceDocumentConfiguration/ServiceRecordConfigList')));
+export const ServiceRecordConfigAdd = Loadable(lazy(() => import('../pages/machineSettings/serviceDocumentConfiguration/ServiceRecordConfigAddForm')));
+export const ServiceRecordConfigView = Loadable(lazy(() => import('../pages/machineSettings/serviceDocumentConfiguration/ServiceRecordConfigView')));
+export const ServiceRecordConfigEdit = Loadable(lazy(() => import('../pages/machineSettings/serviceDocumentConfiguration/ServiceRecordConfigEdit')));
+
+// ------------------------ Others / Machine Status ------------------------
+
+// MACHINE SETTINGS: MACHINE Statuses
+export const MachineStatusList = Loadable(lazy(() => import('../pages/machineSettings/status/StatusList')));
+export const MachineStatusAdd = Loadable(lazy(() => import('../pages/machineSettings/status/StatusAddForm')));
+export const MachineStatusView = Loadable(lazy(() => import('../pages/machineSettings/status/StatusView')));
+export const MachineStatusEdit = Loadable(lazy(() => import('../pages/machineSettings/status/StatusEdit')));
+
+// --------------------- Machine Settings --------------------------
+
+// MACHINE SETTINGS: MACHINE Technical Parameters Categories 
+export const TechnicalParameterCategoryList = Loadable(lazy(() => import('../pages/machineSettings/technicalParameterCategories/TechParamCategoryList')));
+export const TechnicalParameterCategoryAdd  = Loadable(lazy(() => import('../pages/machineSettings/technicalParameterCategories/TechParamCategoryAddForm')));
+export const TechnicalParameterCategoryView = Loadable(lazy(() => import('../pages/machineSettings/technicalParameterCategories/TechParamCategoryView')));
+export const TechnicalParameterCategoryEdit = Loadable(lazy(() => import('../pages/machineSettings/technicalParameterCategories/TechParamCategoryEdit')));
+
+// MACHINE SETTINGS: MACHINE Parameters
+export const TechnicalParameterList = Loadable(lazy(() => import('../pages/machineSettings/technicalParameters/ParameterList')));
+export const TechnicalParameterAdd   = Loadable(lazy(() => import('../pages/machineSettings/technicalParameters/ParameterAddForm')));
+export const TechnicalParameterView = Loadable(lazy(() => import('../pages/machineSettings/technicalParameters/ParameterView')));
+export const TechnicalParameterEdit = Loadable(lazy(() => import('../pages/machineSettings/technicalParameters/ParameterEdit')));
+
+// ----------------------------------------------------------------
+
+// DOCUMENT dashboard
+export const DocumentList = Loadable(lazy(() => import('../pages/document/documents/GlobalDocument')));
+export const DocumentAdd = Loadable(lazy(() => import('../pages/document/documents/DocumentAddForm')));
+export const DocumentAddList = Loadable(lazy(() => import('../pages/document/documents/DocumentListAddForm')));
+export const DocumentEdit = Loadable(lazy(() => import('../pages/document/documents/DocumentEditForm')));
+export const DocumentView = Loadable(lazy(() => import('../pages/document/documents/DocumentHistoryViewForm')));
+export const DocumentGallery = Loadable(lazy(() => import('../pages/document/documents/DocumentGallery')));
+
+// ----------------------------------------------------------------
+
+// DOCUMENT SETTING Document Type
+export const DocumentTypeList = Loadable(lazy(() => import('../pages/Settings/documentSettings/documentType/DocumentTypeList')));
+export const DocumentTypeAdd  = Loadable(lazy(() => import('../pages/Settings/documentSettings/documentType/DocumentTypeAddForm')));
+export const DocumentTypeView = Loadable(lazy(() => import('../pages/Settings/documentSettings/documentType/DocumentTypeView')));
+export const DocumentTypeEdit = Loadable(lazy(() => import('../pages/Settings/documentSettings/documentType/DocumentTypeEditForm')));
+
+// DOCUMENT SETTING Document Category
+export const DocumentCategoryList = Loadable(lazy(() => import('../pages/Settings/documentSettings/documentCategory/DocumentCategoryList')));
+export const DocumentCategoryAdd  = Loadable(lazy(() => import('../pages/Settings/documentSettings/documentCategory/DocumentCategoryAddForm')));
+export const DocumentCategoryView = Loadable(lazy(() => import('../pages/Settings/documentSettings/documentCategory/DocumentCategoryView')));
+export const DocumentCategoryEdit = Loadable(lazy(() => import('../pages/Settings/documentSettings/documentCategory/DocumentCategoryEditForm')));
+
+// ----------------------------------------------------------------
+
+// Machine Drawings dashboard
+export const MachineDrawings    = Loadable(lazy(() => import('../pages/document/documents/MachineDrawings')));
+export const MachineDrawingsAdd = Loadable(lazy(() => import('../pages/document/documents/MachineDrawingsAddForm')));
+export const MachineDrawingsView = Loadable(lazy(() => import('../pages/document/documents/MachineDrawingsViewForm')));
+
+// ----------------------------------------------------------------
+
+// REPORTS / SETTINGS
+export const Setting = Loadable(lazy(() => import('../pages/Settings/Setting')));
+
+// UNKNOWN: Modules
+export const ModuleList = Loadable(lazy(() => import('../pages/Settings/configuration/modules/ModuleList')));
+export const ModuleAdd  = Loadable(lazy(() => import('../pages/Settings/configuration/modules/ModuleAdd')));
+export const ModuleEdit = Loadable(lazy(() => import('../pages/Settings/configuration/modules/ModuleEdit')));
+export const ModuleView = Loadable(lazy(() => import('../pages/Settings/configuration/modules/ModuleView')));
+
+// System Configs
+export const SystemConfigList = Loadable(lazy(() => import('../pages/Settings/configuration/systemConfigs/ConfigList')));
+export const SystemConfigAdd  = Loadable(lazy(() => import('../pages/Settings/configuration/systemConfigs/ConfigAdd')));
+export const SystemConfigEdit = Loadable(lazy(() => import('../pages/Settings/configuration/systemConfigs/ConfigEdit')));
+export const SystemConfigView = Loadable(lazy(() => import('../pages/Settings/configuration/systemConfigs/ConfigView')));
+
+// REPORTS 
+
+// REPORTS: User Blocked Customers
+export const BlockedCustomerList = Loadable(lazy(() => import('../pages/Settings/securitySettings/blocked_customer/BlockedCustomerList')));
+export const BlockedCustomerAdd = Loadable(lazy(() => import('../pages/Settings/securitySettings/blocked_customer/BlockedCustomerAddForm')));
+
+// REPORTS: User Blocked Users
+export const BlockedUserList = Loadable(lazy(() => import('../pages/Settings/securitySettings/blocked_user/BlockedUserList')));
+export const BlockedUserAdd = Loadable(lazy(() => import('../pages/Settings/securitySettings/blocked_user/BlockedUserAddForm')));
+
+// REPORTS: Blacklist IP
+export const BlacklistIPList = Loadable(lazy(() => import('../pages/Settings/securitySettings/blacklist_IP/BlacklistIPList')));
+export const BlacklistIPAdd = Loadable(lazy(() => import('../pages/Settings/securitySettings/blacklist_IP/BlacklistIPAddForm')));
+
+// REPORTS: Whitelist IP
+export const WhitelistIPList = Loadable(lazy(() => import('../pages/Settings/securitySettings/whitelist_IP/WhitelistIPList')));
+export const WhitelistIPAdd = Loadable(lazy(() => import('../pages/Settings/securitySettings/whitelist_IP/WhitelistIPAddForm')));
+
+// REPORTS: Signin Logs
+export const SignInLogList = Loadable(lazy(() => import('../pages/Settings/Reports/signInLog/SignInLogList')));
+
+// REPORTS: User Invitations List
+export const UserInvitationList = Loadable(lazy(() => import('../pages/Settings/Reports/invite/UserInviteList')));
+export const UserInvitationView = Loadable(lazy(() => import('../pages/Settings/Reports/invite/UserInviteViewForm')));
+
+// REPORTS: RELEASES
+export const ReleasesList = Loadable(lazy(() => import('../pages/Settings/Reports/releases/ReleasesList')));
+export const ReleasesView = Loadable(lazy(() => import('../pages/Settings/Reports/releases/ReleasesViewForm')));
+
+// ----------------------------------------------------------------
+
+// SECURITY USERS
+export const SecurityUserList = Loadable(lazy(() => import('../pages/security/securityUsers/SecurityUserList')));
+export const SecurityUserAdd = Loadable(lazy(() => import('../pages/security/securityUsers/SecurityUserAdd')));
+export const SecurityUserView = Loadable(lazy(() => import('../pages/security/securityUsers/SecurityUserView')));
+export const SecurityUserEdit = Loadable(lazy(() => import('../pages/security/securityUsers/SecurityUserEdit')));
+export const SecurityUserChangePasswordByAdmin = Loadable(lazy(() => import('../pages/security/passwordChange/SecurityUserChangePasswordByAdmin')));
+
+// SECURITY SETTIGS ROLES
+export const RoleList = Loadable(lazy(() => import('../pages/Settings/securitySettings/role/RoleList')));
+export const RoleAdd = Loadable(lazy(() => import('../pages/Settings/securitySettings/role/RoleAddForm')));
+export const RoleEdit = Loadable(lazy(() => import('../pages/Settings/securitySettings/role/RoleEditForm')));
+export const RoleView = Loadable(lazy(() => import('../pages/Settings/securitySettings/role/RoleView')));
+
+// ----------------------------------------------------------------
+
+// SITE MAP / SITES REPORT
+export const SitesReport = Loadable(lazy(() => import('../pages/crm/reports/sites/Reports')));
+
+// ----------------------------------------------------------------
+
+// Email
+export const Email = Loadable(lazy(() => import('../pages/email/Email')));
+export const Emailview = Loadable(lazy(() => import('../pages/email/EmailViewform')));

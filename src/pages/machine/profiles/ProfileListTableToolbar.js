@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 // @mui
 import { Stack } from '@mui/material';
-// import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useDispatch } from '../../../redux/store';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { SearchBarCombo } from '../../../components/ListTableTools'
-import { setProfileFormVisibility } from '../../../redux/slices/products/profile';
 // constants
 import { BUTTONS } from '../../../constants/default-constants';
 
@@ -31,10 +31,13 @@ export default function ProfileListTableToolbar({
   onResetFilter,
   onFilterStatus,
 }) {
-  // const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const toggleAdd = () => dispatch(setProfileFormVisibility(true));
+  const navigate = useNavigate();
+  const { machineId } = useParams();
+
+  const toggleAdd = () => navigate(PATH_MACHINE.machines.profiles.new(machineId));
+
   const { machine } = useSelector((state) => state.machine);
+
   return (
     <Stack
       spacing={2}

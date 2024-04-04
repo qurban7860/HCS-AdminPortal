@@ -1,24 +1,38 @@
-import { memo } from 'react';
+import { memo, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
-import {  Card, Grid, Stack, Skeleton } from '@mui/material';
-import JsonEditor from '../../../components/CodeMirror/JsonEditor';
+import { Container, Card, Grid, Stack, Skeleton } from '@mui/material';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 // redux
-import { setMachineErpLogListViewFormVisibility } from '../../../redux/slices/products/machineErpLogs';
+import { getMachineErpLogRecord } from '../../../redux/slices/products/machineErpLogs';
 // components
+import JsonEditor from '../../../components/CodeMirror/JsonEditor';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
+import MachineTabContainer from '../util/MachineTabContainer';
 
 
 function MachineLogsViewForm() {
 
   const { machineErpLog, isLoading } = useSelector((state) => state.machineErpLogs);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { machineId, id } = useParams();
+
+  useLayoutEffect(()=>{
+    if(machineId && id){
+      dispatch(getMachineErpLogRecord(machineId, id))
+    }
+  },[ dispatch, machineId, id ])
 
   return (
+    <Container maxWidth={false} >
+      <MachineTabContainer currentTabValue='logs' />
     <Card sx={{ p: 2 }}>
       <Grid>
-        <ViewFormEditDeleteButtons backLink={()=> dispatch(setMachineErpLogListViewFormVisibility(true))} />
+        <ViewFormEditDeleteButtons backLink={()=> navigate(PATH_MACHINE.machines.logs.root(machineId))} />
         <Stack spacing={2} sx={{p:1}}>
           {isLoading ? 
           <>
@@ -38,6 +52,7 @@ function MachineLogsViewForm() {
           <ViewFormAudit  defaultValues={machineErpLog} />
       </Grid>
     </Card>
+  </Container>
   );
 }
 

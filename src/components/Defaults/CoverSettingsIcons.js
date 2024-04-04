@@ -34,7 +34,7 @@ function CoverSettingsIcons({
           }}
           component="button"
           variant="body2"
-          onClick={()=>navigate(PATH_MACHINE.machines.settings.app)}
+          onClick={()=>navigate(PATH_MACHINE.machines.machineSettings.root)}
         >
           <Iconify icon="mdi:cog" />
         </Link>

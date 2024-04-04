@@ -68,7 +68,7 @@ function NavigationConfig() {
       items: [
         { title: 'Dashboard', path: PATH_DASHBOARD.root, icon: ICONS.dashboard },
         { title: 'Customers', path: PATH_CRM.customers.list, icon: ICONS.users },
-        { title: 'Machines', path: PATH_MACHINE.machines.list, icon: ICONS.machines },
+        { title: 'Machines', path: PATH_MACHINE.machines.root, icon: ICONS.machines },
       ],
     },
   ]);

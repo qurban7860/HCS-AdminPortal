@@ -1,40 +1,31 @@
-import { Helmet } from 'react-helmet-async';
 import { useLayoutEffect } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
 import { Container } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from '../../../redux/store';
+import { useDispatch } from '../../../redux/store';
 import { getSetting } from '../../../redux/slices/products/machineSetting';
-// routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
-// components
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
-import { useSettingsContext } from '../../../components/settings';
 // sections
 import SettingEditForm from './SettingEditForm';
+import MachineTabContainer from '../util/MachineTabContainer';
 
 // ----------------------------------------------------------------------
 
 export default function SettingEdit() {
-  const { themeStretch } = useSettingsContext();
-
   const dispatch = useDispatch();
 
-  const { id } = useParams();
-
+  const { machineId, id } = useParams();
 
   useLayoutEffect(() => {
-    dispatch(getSetting(id));
-  }, [dispatch, id]);
-
-
+    if(machineId && id) {
+      dispatch(getSetting(machineId, id));
+    }
+  }, [dispatch, machineId, id]);
 
   return (
-    <>
       <Container maxWidth={false}>
+        <MachineTabContainer currentTabValue='settings' />
         <SettingEditForm />
       </Container>
-    </>
   );
 }

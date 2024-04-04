@@ -1,36 +1,38 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
+import { Container, Box, Card, FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 // slice
-import { ProfileTypes, addProfile, setProfileFormVisibility } from '../../../redux/slices/products/profile';
+import { ProfileTypes, addProfile, getProfiles } from '../../../redux/slices/products/profile';
 // schema
 import { ProfileSchema } from './schemas/ProfileSchema';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-
 // assets
 import FormProvider, { RHFSwitch, RHFTextField, RHFChipsInput } from '../../../components/hook-form';
-import { getMachine } from '../../../redux/slices/products/machine';
-// constants
+import MachineTabContainer from '../util/MachineTabContainer';
 
 // ----------------------------------------------------------------------
 
 export default function ProfileAddForm() {
 
-  const { machine } = useSelector((state) => state.machine);
   const { profiles } = useSelector((state) => state.profile);
+  const navigate = useNavigate();
+  const { machineId } = useParams();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const [profileTypes, setProfileTypes] = useState([]);
 
-  const toggleCancel = () => {
-    dispatch(setProfileFormVisibility(false));
-  };
+  useLayoutEffect(()=>{
+    dispatch(getProfiles(machineId))
+  },[ dispatch, machineId ])
 
   const defaultValues = useMemo(
     () => ({
@@ -58,7 +60,6 @@ export default function ProfileAddForm() {
     setValue,
     formState: { isSubmitting },
   } = methods;
-
   
   useEffect(() => {
     const hasManufacturer = profiles.some((profile) => profile.type === 'MANUFACTURER');
@@ -75,26 +76,29 @@ export default function ProfileAddForm() {
 
   const onSubmit = async (data) => {
     try {
-          await dispatch(addProfile(machine._id, data));
-          reset();
-          enqueueSnackbar('Profile added successfully');
-          dispatch(setProfileFormVisibility(false));
-          dispatch(getMachine(machine._id))
+          await dispatch(addProfile(machineId, data));
+          await enqueueSnackbar('Profile added successfully');
+          await reset();
+          await navigate(PATH_MACHINE.machines.profiles.root(machineId))
     } catch (err) {
       enqueueSnackbar(err, { variant: 'error' });
     }
   };
 
+  const toggleCancel = () => navigate(PATH_MACHINE.machines.profiles.root(machineId));
+
+
   return (
+    <Container maxWidth={false} >
+      <MachineTabContainer currentTabValue='profile' />
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} mb={5}>
       <Grid
         container
-        spacing={4}>
+        spacing={2} >
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
             <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}>
-              <RHFTextField name="defaultName" label="Default Name"/>
-
+              <RHFTextField name="defaultName" label="Default Name*"/>
               <FormControl >
               <InputLabel id="demo-simple-select-label">Type</InputLabel>
               <Select
@@ -129,5 +133,6 @@ export default function ProfileAddForm() {
         </Grid>
       </Grid>
     </FormProvider>
+  </Container>
   );
 }

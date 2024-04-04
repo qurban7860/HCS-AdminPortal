@@ -126,7 +126,9 @@ export default function MachineViewForm() {
   }, [dispatch, machine]);
 
   const handleEdit = () => {
-    dispatch(setMachineEditFormVisibility(true));
+    if(machine._id){
+      navigate(PATH_MACHINE.machines.edit(machine._id));
+    }
   };
 
   const onDelete = async () => {
@@ -134,7 +136,7 @@ export default function MachineViewForm() {
       await dispatch(deleteMachine(machine._id));
       dispatch(getMachines());
       enqueueSnackbar('Machine Deleted Successfully!');
-      navigate(PATH_MACHINE.machines.list);
+      navigate(PATH_MACHINE.machines.root);
     } catch (err) {
       enqueueSnackbar(Snacks.machineFailedDelete, { variant: `error` });
       console.log('Error:', err);
@@ -239,7 +241,7 @@ export default function MachineViewForm() {
     <>
       <Grid container direction="row" mt={isMobile && 2}>
         <Card sx={{ width: '100%', p: '1rem', mb:3 }}>
-          <ViewFormEditDeleteButtons
+            <ViewFormEditDeleteButtons
               sx={{ pt: 5 }}
               verifiers={machine?.verifications}
               isActive={defaultValues?.isActive}
@@ -251,11 +253,10 @@ export default function MachineViewForm() {
               handleJiraNaviagte={handleJiraNaviagte}
               onDelete={onDelete}
               handleTransfer={ () => navigate(PATH_MACHINE.machines.transfer(machine?._id))}
-              backLink={() => navigate(PATH_MACHINE.machines.list)}
+              backLink={() => navigate(PATH_MACHINE.machines.root)}
               machineSupportDate={defaultValues?.supportExpireDate}
               transferredHistory={machine?.transferredHistory || []}
             />
-             {/* TOP CARD FULL ROW */}
             <FormLabel content={FORMLABELS.KEYDETAILS} />
             <Grid container>
               <ViewFormField isLoading={isLoading} sm={4} variant='h4' heading="Serial No" param={defaultValues?.serialNo} />

@@ -4,6 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 // @mui
 import { Card, Grid, Stack, Button } from '@mui/material';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 // slice
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { setAllVisibilityFalse, getMachineErpLogRecords, addMachineErpLogRecord } from '../../../redux/slices/products/machineErpLogs';
@@ -14,6 +17,7 @@ import FormProvider from '../../../components/hook-form';
 import CodeMirror from '../../../components/CodeMirror/JsonEditor';
 import Iconify from '../../../components/iconify/Iconify';
 import { ICONS } from '../../../constants/icons/default-icons';
+import MachineTabContainer from '../util/MachineTabContainer';
 
 // ----------------------------------------------------------------------
 
@@ -22,7 +26,9 @@ export default function MultiMachineLogsAddForm() {
   const { machine } = useSelector((state) => state.machine);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-
+  const navigate = useNavigate();
+  const { machineId } = useParams();
+  
   const defaultValues = useMemo(
     () => ({
       erpLog: '',
@@ -126,7 +132,8 @@ const HandleChangeIniJson = async (e) => { setValue('iniJson', e) }
 
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Grid container>
+        <Grid container >
+          <MachineTabContainer currentTabValue='logs' />
           <Grid item xs={18} md={12} >
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>

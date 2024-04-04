@@ -2,11 +2,9 @@ import PropTypes from 'prop-types';
 // import { sentenceCase } from 'change-case';
 // @mui
 import { Stack } from '@mui/material';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useDispatch } from '../../../redux/store';
-// import { PATH_DOCUMENT } from '../../../routes/paths';
-import { setToolInstalledFormVisibility } from '../../../redux/slices/products/toolInstalled';
+import { PATH_MACHINE } from '../../../routes/paths';
 import { SearchBarCombo } from '../../../components/ListTableTools'
 // constants
 import { BUTTONS } from '../../../constants/default-constants';
@@ -31,9 +29,9 @@ export default function ToolInstalledListTableToolbar({
   onResetFilter,
   onFilterStatus,
 }) {
-  // const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const toggleAdd = () => dispatch(setToolInstalledFormVisibility(true));
+  const { machineId } = useParams()
+  const navigate = useNavigate();
+  const toggleAdd = () => navigate(PATH_MACHINE.machines.toolsInstalled.new(machineId));
   const { machine } = useSelector((state) => state.machine);
   return (
     <Stack

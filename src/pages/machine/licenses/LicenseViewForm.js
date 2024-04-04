@@ -1,46 +1,54 @@
-import { useMemo } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 // @mui
-import { Card, Grid } from '@mui/material';
+import { Container, Card, Grid } from '@mui/material';
 // hooks
 import { useDispatch, useSelector } from 'react-redux';
-// import { fDate } from 'src/utils/formatTime';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
+//
 import { fDate } from '../../../utils/formatTime';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import { useSnackbar } from '../../../components/snackbar';
 // components
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import {
-  setLicenseEditFormVisibility,
   getLicense,
   deleteLicense,
-  setLicenseViewFormVisibility,
 } from '../../../redux/slices/products/license';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 // constants
 import { Snacks } from '../../../constants/machine-constants';
+import MachineTabContainer from '../util/MachineTabContainer';
 
 export default function LicenseViewForm() {
   const { license, isLoading} = useSelector((state) => state.license);
   const { machine } = useSelector((state) => state.machine);
   const { enqueueSnackbar } = useSnackbar();
-  
+
+  const { machineId, id } = useParams();
+  const navigate = useNavigate();
+
   const dispatch = useDispatch();
+
+  useLayoutEffect(()=>{
+    if(machineId && id){
+      dispatch(getLicense(machineId, id))
+    }
+  },[ dispatch, machineId, id ])
+
   const onDelete = async () => {
     try {
-      await dispatch(deleteLicense(machine._id, license._id));
+      await dispatch(deleteLicense(machineId, id));
       enqueueSnackbar(Snacks.licenseDeleted);
-      dispatch(setLicenseViewFormVisibility(false));
+      ;
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });
       console.log(err);
     }
   };
 
-  const handleEdit = async () => {
-    dispatch(getLicense(machine._id, license._id));
-    dispatch(setLicenseViewFormVisibility(false));
-    dispatch(setLicenseEditFormVisibility(true));
-  };
+  const handleEdit = () => navigate(PATH_MACHINE.machines.licenses.edit(machineId, id));
 
   const defaultValues = useMemo(
     () => ({
@@ -64,16 +72,15 @@ export default function LicenseViewForm() {
       updatedIP: license?.updatedIP || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [license, machine]
+    [license, ]
   );
   return (
-    // needs cleanup
-    <>
-    {/* <DocumentCover content={defaultValues?.displayName} backLink="true"  generalSettings /> */}
+    <Container maxWidth={false} >
+      <MachineTabContainer currentTabValue='license' />
     <Grid item md={12} mt={2}>
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons isActive={defaultValues.isActive}  handleEdit={handleEdit} onDelete={onDelete} 
-      backLink={() => dispatch(setLicenseViewFormVisibility(false))} 
+      backLink={() => navigate(PATH_MACHINE.machines.licenses.root(machineId, id)) } 
       disableEditButton={machine?.status?.slug==='transferred'}
       disableDeleteButton={machine?.status?.slug==='transferred'}
       />
@@ -91,6 +98,6 @@ export default function LicenseViewForm() {
       </Grid>
     </Card>
     </Grid>
-    </>
+    </Container>
   );
 }
