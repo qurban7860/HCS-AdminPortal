@@ -2,12 +2,13 @@ import PropTypes from 'prop-types';
 // import { sentenceCase } from 'change-case';
 // @mui
 import { Stack } from '@mui/material';
-// import { useNavigate } from 'react-router-dom';
+//
 import { useSelector } from 'react-redux';
-import { useDispatch } from '../../../redux/store';
+//
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { SearchBarCombo } from '../../../components/ListTableTools'
-import { setLicenseFormVisibility } from '../../../redux/slices/products/license';
 // constants
 import { BUTTONS } from '../../../constants/default-constants';
 
@@ -32,9 +33,10 @@ export default function LicenseListTableToolbar({
   onResetFilter,
   onFilterStatus,
 }) {
-  // const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const toggleAdd = () => dispatch(setLicenseFormVisibility(true));
+  const navigate = useNavigate();
+  const { machineId } = useParams();
+
+  const toggleAdd = () => navigate(PATH_MACHINE.machines.licenses.new(machineId)) ;
   const { machine } = useSelector((state) => state.machine);
   return (
     <Stack

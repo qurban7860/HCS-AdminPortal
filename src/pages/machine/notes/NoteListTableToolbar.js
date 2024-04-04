@@ -1,13 +1,12 @@
 import PropTypes from 'prop-types';
-// import { sentenceCase } from 'change-case';
 // @mui
 import { Stack } from '@mui/material';
-// import { useNavigate } from 'react-router-dom';
 
 import { useSelector } from 'react-redux';
-import { useDispatch } from '../../../redux/store';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 // components
-import { setNoteFormVisibility } from '../../../redux/slices/products/machineNote';
 import { SearchBarCombo } from '../../../components/ListTableTools';
 import { BUTTONS } from '../../../constants/default-constants';
 
@@ -32,9 +31,9 @@ export default function NoteListTableToolbar({
   onResetFilter,
   onFilterStatus,
 }) {
-  // const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const toggleAdd = () => dispatch(setNoteFormVisibility(true));
+  const { machineId } = useParams();
+  const navigate = useNavigate();
+  const toggleAdd = () => navigate(PATH_MACHINE.machines.notes.new(machineId));
   const { machine } = useSelector((state) => state.machine);
   return (
     <Stack

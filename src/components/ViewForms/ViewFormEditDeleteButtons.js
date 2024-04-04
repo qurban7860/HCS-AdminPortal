@@ -46,6 +46,7 @@ function ViewFormEditDeleteButtons({
   handleVerificationTitle,
   onDelete,
   handleEdit,
+  handleJiraNaviagte,
   handleTransfer,
   handleUpdatePassword,
   handleUserInvite,
@@ -654,6 +655,16 @@ function ViewFormEditDeleteButtons({
           icon="mdi:pencil-outline"
         />}
 
+        {handleJiraNaviagte && <IconTooltip
+          title="Jira"
+          disabled={disableEditButton || (( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ))}
+          onClick={() => {
+            handleJiraNaviagte();
+          }}
+          color={disableEditButton || (( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly )) ?"#c3c3c3":theme.palette.primary.main}
+          icon="cib:jira"
+        />}
+
 
         {hanldeViewGallery && (
           <IconTooltip
@@ -872,6 +883,7 @@ ViewFormEditDeleteButtons.propTypes = {
   handleViewPDF: PropTypes.func,
   isInviteLoading:PropTypes.bool,
   handleEdit: PropTypes.func,
+  handleJiraNaviagte: PropTypes.func,
   onDelete: PropTypes.func,
   type: PropTypes.string,
   sites: PropTypes.bool,

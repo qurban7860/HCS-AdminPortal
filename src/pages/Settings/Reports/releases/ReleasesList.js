@@ -96,7 +96,9 @@ export default function ReleasesList() {
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_SETTING.releases.view(id))
+    const url = `https://howickltd.atlassian.net/projects/HPS/versions/${id}/tab/release-report-all-issues`
+    window.open(url, '_blank');
+    // navigate(PATH_SETTING.releases.view(link))
   };
 
   const handleResetFilter = () => {
@@ -127,12 +129,12 @@ export default function ReleasesList() {
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
-                <TableHeadCustom
+                {/* <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   onSort={onSort}
-                />
+                /> */}
 
                 <TableBody>
                   {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)

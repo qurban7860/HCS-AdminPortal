@@ -1,35 +1,39 @@
-import { useMemo , useState} from 'react';
+import { useLayoutEffect, useMemo, useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 // @mui
-import { Box, Card, Stack, FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
+import { Container, Box, Card, Stack, FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
+// Components
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { useSnackbar } from '../../../components/snackbar';
-import { 
-  setProfileEditFormVisibility, 
-  updateProfile,
-  setProfileViewFormVisibility,
-  getProfile,
-  ProfileTypes,
-} from '../../../redux/slices/products/profile';
+import { updateProfile, getProfile, ProfileTypes } from '../../../redux/slices/products/profile';
 import { ProfileSchema } from './schemas/ProfileSchema';
 import FormProvider, { RHFSwitch, RHFTextField, RHFChipsInput } from '../../../components/hook-form';
-import { getMachine } from '../../../redux/slices/products/machine';
 import { useAuthContext } from '../../../auth/useAuthContext';
+import MachineTabContainer from '../util/MachineTabContainer';
 
 // ----------------------------------------------------------------------
 
 export default function ProfileEditForm() {
   
   const { profile } = useSelector((state) => state.profile);
-  const { machine } = useSelector((state) => state.machine);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { isAllAccessAllowed } = useAuthContext()
+  const navigate = useNavigate();
+  const { machineId, id } = useParams();
 
+  useLayoutEffect(()=>{
+    if(machineId && id ){
+      dispatch(getProfile(machineId, id ))
+    }
+  },[ dispatch, machineId, id ])
+  
   const defaultValues = useMemo(
     () => ({
       defaultName: profile?.defaultName ||'',
@@ -57,10 +61,7 @@ export default function ProfileEditForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const toggleCancel = async() => {
-    dispatch(setProfileEditFormVisibility (false));
-    dispatch(setProfileViewFormVisibility(true));
-  };
+  const toggleCancel = async() => navigate(PATH_MACHINE.machines.profiles.view(machineId, id));
 
    // Handle Type
   const [selectedValue, setSelectedValue] = useState(defaultValues?.type);
@@ -71,12 +72,10 @@ export default function ProfileEditForm() {
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(await updateProfile(machine._id, profile._id, data));
+      await dispatch(await updateProfile(machineId, id, data));
       reset();
       enqueueSnackbar("Profile updated successfully");
-      dispatch(setProfileViewFormVisibility(true));
-      dispatch(getProfile(machine._id, profile._id));
-      dispatch(getMachine(machine._id))
+      navigate(PATH_MACHINE.machines.profiles.view(machineId, id))
     } catch (err) {
       enqueueSnackbar("Failed to update profile", { variant: 'error' });
       console.error(err.message);
@@ -84,10 +83,12 @@ export default function ProfileEditForm() {
   };
 
   return (
+    <Container maxWidth={false} >
+      <MachineTabContainer currentTabValue='profile' />
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} mb={5}>
       <Grid
         container
-        spacing={4}>
+        spacing={2}>
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
           <Stack spacing={2}>
@@ -131,5 +132,6 @@ export default function ProfileEditForm() {
         </Grid>
       </Grid>
     </FormProvider>
+  </Container>
   );
 }

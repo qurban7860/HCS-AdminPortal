@@ -29,7 +29,7 @@ function MachineTransfer() {
 
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const { id } = useParams();
+  const { machineId } = useParams();
   const axiosToken = () => axios.CancelToken.source();
   const cancelTokenSource = axiosToken();
   const navigate = useNavigate();
@@ -60,15 +60,15 @@ function MachineTransfer() {
   },[ dispatch])
 
   useEffect(()=> {
-    if(id){
-      dispatch(getMachine(id))
-      dispatch(getActiveMachineDocuments(id, cancelTokenSource))
+    if(machineId){
+      dispatch(getMachine(machineId))
+      dispatch(getActiveMachineDocuments(machineId, cancelTokenSource))
     } 
     return ()=>{  
       dispatch(resetActiveMachineDocuments()) 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ dispatch, id ])
+  },[ dispatch, machineId ])
 
   useEffect(()=>{
     dispatch(getFinancialCompanies(cancelTokenSource))
@@ -128,7 +128,7 @@ function MachineTransfer() {
 
   const onSubmit = async (data) => {
       try {
-        const response = await dispatch(transferMachine( id, data ));
+        const response = await dispatch(transferMachine( machineId, data ));
         enqueueSnackbar(Snacks.machineTransferSuccess);
         reset();
         navigate(PATH_MACHINE.machines.view(response?.data?.Machine?._id));
@@ -383,7 +383,7 @@ useEffect(()=>{
                   istrigger={ isTrigger }
                   handleSubmit={handleSubmit(onSubmit)}
                   saveTransferButtonName="Transfer" 
-                  toggleCancel={()=>{ navigate(PATH_MACHINE.machines.view(id)) }} 
+                  toggleCancel={()=>{ navigate(PATH_MACHINE.machines.view(machineId)) }} 
                 />
             </Stack>
           </Card>

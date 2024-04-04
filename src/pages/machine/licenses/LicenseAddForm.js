@@ -4,9 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Autocomplete, Box, Card, Grid, TextField } from '@mui/material';
+import { Container, Autocomplete, Box, Card, Grid, TextField } from '@mui/material';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 // slice
-import { LicenseTypes, addLicense, setLicenseFormVisibility } from '../../../redux/slices/products/license';
+import { LicenseTypes, addLicense } from '../../../redux/slices/products/license';
 // schema
 import { LicenseSchema } from './schemas/LicenseSchema';
 // components
@@ -16,6 +19,7 @@ import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import FormProvider, { RHFDatePicker, RHFSwitch, RHFTextField } from '../../../components/hook-form';
 // constants
 import { Snacks } from '../../../constants/machine-constants';
+import MachineTabContainer from '../util/MachineTabContainer';
 
 // ----------------------------------------------------------------------
 
@@ -24,11 +28,9 @@ export default function LicenseAddForm() {
   const { machine } = useSelector((state) => state.machine);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-
-  const toggleCancel = () => {
-    dispatch(setLicenseFormVisibility(false));
-  };
-
+  const { machineId } = useParams();
+  const navigate = useNavigate();
+  
   const defaultValues = useMemo(
     () => ({
       licenseKey: '',
@@ -50,38 +52,41 @@ export default function LicenseAddForm() {
     resolver: yupResolver(LicenseSchema),
     defaultValues,
   });
-
+  
   const {
     reset,
     setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
+  
   
   // Handle Type
   const handleTypeChange = (event, newValue) => {
     setValue('type', newValue);
   };
- 
+  
   const onSubmit = async (data) => {
     try {
-          await dispatch(addLicense(machine._id, data));
-          reset();
-          enqueueSnackbar(Snacks.licenseAdded);
-          dispatch(setLicenseFormVisibility(false));
+      await dispatch(addLicense(machineId, data));
+      await reset();
+      await enqueueSnackbar(Snacks.licenseAdded);
+      await navigate(PATH_MACHINE.machines.licenses.root(machineId))
     } catch (err) {
       enqueueSnackbar(err, { variant: 'error' });
       console.error(err);
     }
-    
   };
+  
+  const toggleCancel = () => navigate(PATH_MACHINE.machines.licenses.root(machineId));
 
   return (
+    <Container maxWidth={false} >
+      <MachineTabContainer currentTabValue='license' />
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} mb={5}>
       <Grid
         container
-        spacing={4}>
+        spacing={2}>
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
             
@@ -111,5 +116,6 @@ export default function LicenseAddForm() {
         </Grid>
       </Grid>
     </FormProvider>
+    </Container>
   );
 }

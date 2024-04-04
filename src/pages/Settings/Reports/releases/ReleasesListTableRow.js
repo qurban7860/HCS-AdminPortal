@@ -24,12 +24,13 @@ export default function ReleasesListTableRow({
   const { name, startDate, releaseDate, released, description  } = row;
 
   return (
-      <StyledTableRow hover selected={selected}>
-        { ( released && description ) ? <LinkTableCell align="left" param={name} onClick={onViewRow} />
-        : <TableCell align="left" >{name}</TableCell>}
-        <TableCell>{fDate(startDate)}</TableCell>
-        <TableCell>{fDate(releaseDate)}</TableCell>
-        <TableCell align="center">{released && <Switch checked={released} disabled size="small" /> || '' }</TableCell>
+      <StyledTableRow hover selected={selected} style={{ display: 'block' }}  >
+        { ( released && description ) ? <LinkTableCell align="left" param={`Name: ${name}`} onClick={onViewRow} />
+        : <TableCell align="left" sx={{ display: 'flex' }} ><b>Name: </b>{name}</TableCell>}
+        <TableCell sx={{ display: 'flex' }} ><b>Start Date: </b>{fDate(startDate)}</TableCell>
+        <TableCell sx={{ display: 'flex' }} ><b>Release Date: </b>{fDate(releaseDate)}</TableCell>
+        <TableCell align="center" sx={{ display: 'flex' }} ><b>Is Released: </b>{released && <Switch checked={released} disabled size="small" /> || '' }</TableCell>
+        <TableCell ><b>Description: </b>{description}</TableCell>
       </StyledTableRow>
   );
 }

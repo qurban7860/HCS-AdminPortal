@@ -1,15 +1,16 @@
 import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 // @mui
 import { Stack } from '@mui/material';
 // routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import SearchBarCombo from '../../../components/ListTableTools/SearchBarCombo';
 // constants
 import { BUTTONS } from '../../../constants/default-constants';
 // styles
 import { options } from '../../../theme/styles/default-styles';
-import { setHistoricalConfigurationAddFormVisibility } from '../../../redux/slices/products/historicalConfiguration';
 
 // ----------------------------------------------------------------------
 
@@ -34,13 +35,12 @@ export default function HistoricalConfigurationsListTableToolbar({
   onFilterStatus,
   isHistory
 }) {
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const { machineId } = useParams();
 
   const { machine } = useSelector((state) => state.machine);
   
-  const toggleAdd = () => {
-    dispatch(setHistoricalConfigurationAddFormVisibility(true))
-  };
+  const toggleAdd = () => navigate(PATH_MACHINE.machines.ini.new(machineId));
 
   return (
     <Stack {...options}>

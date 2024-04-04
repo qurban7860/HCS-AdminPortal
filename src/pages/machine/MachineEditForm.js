@@ -6,7 +6,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Card, Grid, Stack, TextField } from '@mui/material';
 // hook
 import { useForm } from 'react-hook-form';
-import useResponsive from '../../hooks/useResponsive';
 // routes
 import { PATH_MACHINE } from '../../routes/paths';
 // slice
@@ -25,12 +24,9 @@ import { useSnackbar } from '../../components/snackbar';
 // components
 import FormProvider, { RHFTextField, RHFAutocomplete, RHFDatePicker, RHFChipsInput } from '../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
-import AddButtonAboveAccordion from '../../components/Defaults/AddButtonAboveAcoordion';
-import BreadcrumbsProvider from '../../components/Breadcrumbs/BreadcrumbsProvider';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 // constants
-import { BREADCRUMBS, FORMLABELS } from '../../constants/default-constants';
+import { FORMLABELS } from '../../constants/default-constants';
 import { machineSchema } from '../schemas/machine'
 
 // ----------------------------------------------------------------------
@@ -48,7 +44,6 @@ export default function MachineEditForm() {
   const { spContacts } = useSelector((state) => state.contact);
   const { machineConnections } = useSelector((state) => state.machineConnections);
   const { activeCategories } = useSelector((state) => state.category);
-  const isMobile = useResponsive('sm', 'down');
 
   const methods = useForm({
     resolver: yupResolver(machineSchema),
@@ -161,19 +156,9 @@ export default function MachineEditForm() {
   };
   
   return (
-    <>
-      <Grid container direction="row" justifyContent="space-between" alignItems="center">
-        <Grid item xs={12} md={6}>
-          <BreadcrumbsProvider>
-            <BreadcrumbsLink to={PATH_MACHINE.machines.list} name={BREADCRUMBS.MACHINES} />
-            <BreadcrumbsLink to={PATH_MACHINE.machines.view(machine._id)} name={machine.serialNo} />
-          </BreadcrumbsProvider>
-        </Grid>
-        {!isMobile && <AddButtonAboveAccordion isCustomer />}
-      </Grid>
-      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
         <Grid container>
-          <Grid item xs={18} md={12} sx={{ mt: 3 }}>
+          <Grid item xs={18} md={12} >
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
                 <Box rowGap={3} columnGap={2} display="grid"
@@ -336,7 +321,6 @@ export default function MachineEditForm() {
                     id="tags-outlined"
                     options={machineConnections?.filter((machinforConnection)=> machinforConnection?._id !== machine?._id)}
                     getOptionLabel={(option) => `${option?.connectedMachine?.serialNo ? option?.connectedMachine?.serialNo : option?.serialNo} ${option?.name ? '-' : ''} ${option?.name ? option.name : ''}`}
-                    filterSelectedOptions
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   />
                 <Box rowGap={3} columnGap={2} display="grid"
@@ -406,6 +390,5 @@ export default function MachineEditForm() {
           </Grid>
         </Grid>
       </FormProvider>
-    </>
   );
 }

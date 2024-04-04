@@ -1,16 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
-import {
-  Table,
-  TableBody,
-  TableContainer,
-} from '@mui/material';
+import { Container, Table, TableBody, TableContainer } from '@mui/material';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-// routes
 // components
-import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -23,14 +20,8 @@ import Scrollbar from '../../../components/scrollbar';
 // sections
 import SettingListTableRow from './SettingListTableRow';
 import SettingListTableToolbar from './SettingListTableToolbar';
-
-import {
-  getSetting, 
-  getSettings,
-  ChangeRowsPerPage,
-  ChangePage,
-  setFilterBy,
-  setSettingViewFormVisibility } from '../../../redux/slices/products/machineSetting';
+import MachineTabContainer from '../util/MachineTabContainer';
+import { getSettings, ChangeRowsPerPage, ChangePage, setFilterBy } from '../../../redux/slices/products/machineSetting';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
 
@@ -43,13 +34,13 @@ export default function SettingList() {
   } = useTable({
     defaultOrderBy: 'createdAt', defaultOrder: 'desc',
   });
-
+  const { machineId } = useParams()
+  const navigate = useNavigate()
   const dispatch = useDispatch();
-  useSettingsContext();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  const { machine } = useSelector((state) => state.machine);
+  
   const { settings, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.machineSetting );
   const TABLE_HEAD = [
     { id: 'techParam.category.name', label: 'Category Name', align: 'left' },
@@ -57,7 +48,6 @@ export default function SettingList() {
     { id: 'techParamValue', label: 'Parameter Value', align: 'left' },
     { id: 'createdAt', visibility: 'xs1',  label: 'Created At', align: 'right' },
   ];
-
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
@@ -66,10 +56,10 @@ export default function SettingList() {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useEffect(() => {
-    if(machine?._id){
-      dispatch(getSettings(machine?._id));
+    if(machineId){
+      dispatch(getSettings( machineId ));
     }
-  }, [dispatch, machine]);
+  }, [dispatch, machineId]);
 
   useEffect(() => {
     setTableData(settings);
@@ -110,10 +100,7 @@ export default function SettingList() {
     setFilterStatus(event.target.value);
   };
 
-  const handleViewRow = (id) => {
-    dispatch(getSetting(machine._id,id));
-    dispatch(setSettingViewFormVisibility(true));
-  };
+  const handleViewRow = (id) => navigate(PATH_MACHINE.machines.settings.view( machineId, id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
@@ -121,6 +108,8 @@ export default function SettingList() {
   };
 
   return (
+    <Container maxWidth={false} >
+      <MachineTabContainer currentTabValue='settings' />
       <TableCard>
         <SettingListTableToolbar
           filterName={filterName}
@@ -177,6 +166,7 @@ export default function SettingList() {
           onRowsPerPageChange={onChangeRowsPerPage}
         />
       </TableCard>
+    </Container>
   );
 }
 

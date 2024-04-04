@@ -21,11 +21,11 @@ function JsonEditorMerge({value, modifiedValue, HandleChangeIniJson, readOnly })
 
 
 
-  return  (<Grid sx={{p:1}}>
-              <Box
-                rowGap={2} columnGap={2} display="grid"
-                gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-              >
+  return  (<Grid sx={{p:1 }}>
+            <Box
+              rowGap={2} columnGap={2} display="grid"
+              gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+            >
               <Typography variant='h6' >{ value?.backupid || '' }</Typography>
               <Typography variant='h6' >{ modifiedValue?.backupid || '' }</Typography>
             </Box>

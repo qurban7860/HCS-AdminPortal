@@ -17,7 +17,8 @@ export const Snacks = {
   checkItemDeleteFailed: 'Failed to Delete Machine Check Item',
   checkItemDelete: 'Machine Check Item Deleted',
 
-
+  // @root noteDeleted
+  noteDeleted: 'Note deleted Successfully!',
   // @root - ModelEditForm
   modelUpdated: 'Model Updated Successfully',
   failedUpdateModel: 'Failed to Update Model',

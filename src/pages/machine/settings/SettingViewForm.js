@@ -3,16 +3,14 @@ import { useMemo } from 'react';
 import { Card, Grid } from '@mui/material';
 // hooks
 import { useDispatch, useSelector } from 'react-redux';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import { useSnackbar } from '../../../components/snackbar';
 // components
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
-import {
-  setSettingEditFormVisibility,
-  getSetting,
-  deleteSetting,
-  setSettingViewFormVisibility,
-} from '../../../redux/slices/products/machineSetting';
+import { deleteSetting } from '../../../redux/slices/products/machineSetting';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 // constants
 import { Snacks } from '../../../constants/machine-constants';
@@ -21,24 +19,21 @@ export default function SettingViewForm() {
   const { setting, isLoading } = useSelector((state) => state.machineSetting);
   const { machine } = useSelector((state) => state.machine);
   const { enqueueSnackbar } = useSnackbar();
-  
+  const { machineId, id } = useParams()
+  const navigate = useNavigate()
   const dispatch = useDispatch();
   const onDelete = async () => {
     try {
       await dispatch(deleteSetting(machine._id, setting._id));
       enqueueSnackbar("Setting Deleted Successfully!");
-      dispatch(setSettingViewFormVisibility(false));
+      navigate(PATH_MACHINE.machines.settings.root(machineId));
     } catch (err) {
       enqueueSnackbar(Snacks.failedDeleteSetting, { variant: `error` });
       console.log('Error:', err);
     }
   };
 
-  const handleEdit = async () => {
-    await dispatch(getSetting(machine._id, setting._id));
-    await dispatch(setSettingViewFormVisibility(false));
-    await dispatch(setSettingEditFormVisibility(true));
-  };
+  const handleEdit = () => navigate(PATH_MACHINE.machines.settings.edit(machineId, id ));
 
   const defaultValues = useMemo(
     () => ({
@@ -64,7 +59,7 @@ export default function SettingViewForm() {
     <Grid item md={12} mt={2}>
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons isActive={defaultValues.isActive} 
-        backLink={()=> dispatch(setSettingViewFormVisibility(false))} 
+        backLink={()=> navigate(PATH_MACHINE.machines.settings.root(machineId))} 
         handleEdit={handleEdit} onDelete={onDelete}
         disableEditButton={machine?.status?.slug==='transferred'}
         disableDeleteButton={machine?.status?.slug==='transferred'}

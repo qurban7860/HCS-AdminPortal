@@ -158,7 +158,7 @@ export function addSetting (machineId, params){
 // ----------------------------------------------------------------------
 
 
-export function getSettings (id){
+export function getSettings (id ){
 
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());

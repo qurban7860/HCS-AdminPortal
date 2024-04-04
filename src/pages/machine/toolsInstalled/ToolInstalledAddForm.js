@@ -5,27 +5,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Autocomplete, TextField, Button } from '@mui/material';
+import { Container, Box, Card, Grid, Stack, Autocomplete, TextField, Button } from '@mui/material';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 import useResponsive from '../../../hooks/useResponsive'; 
 // slice
-import {
-  setToolInstalledFormVisibility, 
-  addToolInstalled,
-  getToolsInstalled,
-} from '../../../redux/slices/products/toolInstalled';  
+import {  addToolInstalled, getToolsInstalled } from '../../../redux/slices/products/toolInstalled';  
 import { getActiveTools } from '../../../redux/slices/products/tools'; 
 // components
 import { useSnackbar } from '../../../components/snackbar'; 
 import Iconify from '../../../components/iconify';
 // assets
-import FormProvider, {
-  RHFTextField,
-  RHFSwitch,
-  RHFDatePicker,
-} from '../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch, RHFDatePicker } from '../../../components/hook-form';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { CONFIG } from '../../../config-global'
 import { checkValuesNotNull } from '../util/index'
+import MachineTabContainer from '../util/MachineTabContainer';
 
 // ----------------------------------------------------------------------
 
@@ -33,7 +29,8 @@ function ToolsInstalledAddForm() {
 
   const dispatch = useDispatch();
   const isMobile = useResponsive('down', 'sm');
-
+  const { machineId } = useParams()
+  const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar();
   const { machine } = useSelector((state) => state.machine);
   const { activeTools } = useSelector((state) => state.tool);
@@ -44,8 +41,8 @@ function ToolsInstalledAddForm() {
 
   useLayoutEffect(() => {
     dispatch(getActiveTools());
-    dispatch(getToolsInstalled);
-  }, [dispatch, machine]);
+    dispatch(getToolsInstalled( machineId ));
+  }, [dispatch, machineId ]);
 
   useLayoutEffect(() => {
     const filterTool = [];
@@ -244,21 +241,21 @@ function ToolsInstalledAddForm() {
       data.twoWayCheckDelayTime = twoWayCheckDelayTime;
       data.compositeToolConfig = compositToolVal;
       await dispatch(addToolInstalled(machine._id, data));
-      reset();
-      dispatch(setToolInstalledFormVisibility(false));
+      await reset();
+      await navigate(PATH_MACHINE.machines.toolsInstalled.root(machineId))
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
     }
   };
   const handleCompositToolNumberIncrease = () => { setCompositToolNumber(compositToolNumber + 1); };
-  const toggleCancel = () => {
-    dispatch(setToolInstalledFormVisibility(false));
-  };
+  const toggleCancel = () => navigate(PATH_MACHINE.machines.toolsInstalled.root(machineId));
 
   return (
+    <Container maxWidth={false} >
+        <MachineTabContainer currentTabValue='toolsinstalled' />
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={4}>
+      <Grid container spacing={2}>
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={2}>
@@ -681,6 +678,7 @@ function ToolsInstalledAddForm() {
         </Grid>
       </Grid>
     </FormProvider>
+  </Container>
   );
 }
 

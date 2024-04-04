@@ -8,6 +8,7 @@ import { useSettingsContext } from '../../../components/settings';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 // sections
 import SiteAddForm from './RepairHistoryAddForm';
+import MachineTabContainer from '../util/MachineTabContainer';
 
 // ----------------------------------------------------------------------
 
@@ -15,7 +16,6 @@ export default function RepairHistoryAdd() {
   const { themeStretch } = useSettingsContext();
 
   return (
-    <>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Create a new Site"
@@ -30,6 +30,5 @@ export default function RepairHistoryAdd() {
         />
         <SiteAddForm />
       </Container>
-    </>
   );
 }

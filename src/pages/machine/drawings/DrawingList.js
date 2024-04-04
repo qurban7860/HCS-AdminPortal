@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
 import {
+  Container,
   Table,
   TableBody,
   TableContainer,
@@ -38,6 +39,7 @@ import {
   resetDrawing} from '../../../redux/slices/products/drawing';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
+import MachineTabContainer from '../util/MachineTabContainer';
 
 // ----------------------------------------------------------------------
 
@@ -144,6 +146,8 @@ export default function DrawingList() {
   };
 
   return (
+    <Container maxWidth={false}>
+      <MachineTabContainer currentTabValue='drawings' />
       <TableCard>
         <DrawingListTableToolbar
           filterName={filterName}
@@ -203,6 +207,7 @@ export default function DrawingList() {
           onRowsPerPageChange={onChangeRowsPerPage}
         />
       </TableCard>
+  </Container>
   );
 }
 

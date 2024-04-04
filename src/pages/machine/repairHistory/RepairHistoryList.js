@@ -39,6 +39,7 @@ import SiteListTableRow from './RepairHistoryListTableRow';
 import SiteListTableToolbar from './RepairHistoryListTableToolbar';
 import { getSites, deleteSite } from '../../../redux/slices/customer/site';
 import CustomerDashboardNavbar from '../util/CustomerDashboardNavbar';
+import MachineTabContainer from '../util/MachineTabContainer';
 
 
 // ----------------------------------------------------------------------
@@ -187,10 +188,7 @@ export default function RepairHistoryList() {
   };
 
   return (
-    <>
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        
-
+      <Container maxWidth={themeStretch ? false : 'lg'}> 
         <Grid container spacing={3}>
           <CustomerDashboardNavbar/>
           </Grid>
@@ -276,30 +274,6 @@ export default function RepairHistoryList() {
           />
         </Card>
       </Container>
-
-      <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRows(selected);
-              handleCloseConfirm();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      />
-    </>
   );
 }
 

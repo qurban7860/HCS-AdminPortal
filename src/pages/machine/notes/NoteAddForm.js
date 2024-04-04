@@ -1,22 +1,23 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useEffect, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import {
-  Card,
-  Grid,
-  Stack
-} from '@mui/material';
+import { Container, Card, Grid, Stack } from '@mui/material';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
+// 
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 // slice
-import { addNote, setNoteFormVisibility } from '../../../redux/slices/products/machineNote';
+import { addNote } from '../../../redux/slices/products/machineNote';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
+import MachineTabContainer from '../util/MachineTabContainer';
 
 // ----------------------------------------------------------------------
 
@@ -26,10 +27,11 @@ NoteAddForm.propTypes = {
   currentNote: PropTypes.object,
 };
 export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
-  const { machine } = useSelector((state) => state.machine);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  // a note can be archived.
+  const { machineId } = useParams();
+  const navigate = useNavigate();
+
   const AddNoteSchema = Yup.object().shape({
     note: Yup.string().max(10000).required('Note Field is required!'),
     isActive: Yup.boolean(),
@@ -61,19 +63,21 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(addNote(machine._id, data));
+      await dispatch(addNote(machineId, data));
       reset();
       enqueueSnackbar('Note Added Successfully!');
+      await navigate(PATH_MACHINE.machines.notes.root( machineId ))
     } catch (error) {
       enqueueSnackbar('Note Save failed!', { variant: `error` });
       console.error(error);
     }
   };
 
-  const toggleCancel = () => {
-    dispatch(setNoteFormVisibility(false));
-  };
+  const toggleCancel = () => navigate(PATH_MACHINE.machines.notes.root( machineId ));
+
   return (
+    <Container maxWidth={false} >
+    <MachineTabContainer currentTabValue='notes' />
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={18} md={12}>
@@ -87,5 +91,6 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
         </Grid>
       </Grid>
     </FormProvider>
+    </Container>
   );
 }
