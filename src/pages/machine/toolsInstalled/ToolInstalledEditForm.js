@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Autocomplete, TextField, Button } from '@mui/material';
+import { Container, Box, Card, Grid, Stack, Autocomplete, TextField, Button } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import { PATH_MACHINE } from '../../../routes/paths';
@@ -32,7 +32,6 @@ import MachineTabContainer from '../util/MachineTabContainer';
 function ToolsInstalledEditForm() {
   const { toolsInstalled, toolInstalled, toolTypesObj,movingPunchConditions, engageOnConditions, engageOffConditions} = useSelector((state) => state.toolInstalled);
   const { activeTools } = useSelector((state) => state.tool);
-  const { machine } = useSelector((state) => state.machine);
   const { machineId, id } = useParams()
   const navigate = useNavigate()
   const [compositToolVal, setCompositToolVal] = useState([]);
@@ -363,9 +362,9 @@ function ToolsInstalledEditForm() {
     data.compositeToolConfig = compositToolVal;
     try {
       data.toolType = toolType;
-      await dispatch(updateToolInstalled(machine._id, toolInstalled._id, data));
+      await dispatch(updateToolInstalled(machineId, id, data));
       reset();
-      // setToolVal('');
+      navigate(PATH_MACHINE.machines.toolsInstalled.view(machineId, id))
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
@@ -374,9 +373,10 @@ function ToolsInstalledEditForm() {
 
 
   return (
+    <Container maxWidth={false} >
+        <MachineTabContainer currentTabValue='toolsinstalled' />
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
-        <MachineTabContainer currentTabValue='toolsinstalled' />
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
@@ -773,6 +773,7 @@ function ToolsInstalledEditForm() {
         </Grid>
       </Grid>
     </FormProvider>
+    </Container>
   );
 }
 

@@ -1,6 +1,6 @@
-import { useMemo, useEffect} from 'react';
+import { useMemo, useEffect, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Card, Grid, Box, Stack, Container } from '@mui/material';
@@ -34,10 +34,15 @@ export default function DocumentCategoryeEditForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
+  const { id } = useParams();
 
   useEffect(()=>{
     dispatch(getActiveServiceCategories())
   },[dispatch])
+
+  useLayoutEffect(()=>{
+    dispatch(getCheckItem(id))
+  },[ dispatch, id ])
 
   const defaultValues = useMemo(
     () => ({
@@ -75,10 +80,9 @@ export default function DocumentCategoryeEditForm() {
   const onSubmit = async (data) => {
     try {
       await dispatch(updateCheckItem(checkItem._id, data));
-      dispatch(getCheckItem(checkItem._id))
-      navigate(PATH_MACHINE.machines.machineSettings.checkItems.view(checkItem._id));
       enqueueSnackbar(Snacks.checkItemUpdate, { variant: `success` });
       reset();
+      navigate(PATH_MACHINE.machines.machineSettings.checkItems.view(checkItem._id));
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.error(error);
@@ -91,7 +95,6 @@ export default function DocumentCategoryeEditForm() {
         <Cover
           name={FORMLABELS.COVER.MACHINE_CHECK_ITEM_SERVICE_PARAM_EDIT}
           setting
-          backLink={PATH_MACHINE.machines.machineSettings.checkItems.view(checkItem?._id)}
         />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

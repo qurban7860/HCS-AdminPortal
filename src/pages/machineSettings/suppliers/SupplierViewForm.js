@@ -34,9 +34,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
   const { id } = useParams();
   const dispatch = useDispatch();
   
-  const toggleEdit = () => {
-    navigate(PATH_MACHINE.machines.machineSettings.suppliers.edit(id));
-  };
+  const toggleEdit = () => navigate(PATH_MACHINE.machines.machineSettings.suppliers.edit(id));
 
   useLayoutEffect(() => {
     if (id != null) {

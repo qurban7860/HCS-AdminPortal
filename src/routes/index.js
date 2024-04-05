@@ -465,18 +465,18 @@ export default function Router() {
             { path: ':customerId/sites',
             children: [
                 { element: <CustomerSiteDynamicList />, index: true  },
-                { path: 'new', element: <CustomerSiteDynamicList siteAdd /> },
-                { path: ':id/edit', element: <CustomerSiteDynamicList siteEdit />},
-                { path: ':id/view', element: <CustomerSiteDynamicList siteView />}
+                { path: 'new', element: <CustomerSiteDynamicList siteAddForm /> },
+                { path: ':id/edit', element: <CustomerSiteDynamicList siteEditForm />},
+                { path: ':id/view', element: <CustomerSiteDynamicList siteViewForm />}
               ],
             },
             { path: ':customerId/contacts',
               children: [
                 { element: <CustomerContactDynamicList />, index: true  },
-                { path: 'new', element: <CustomerContactDynamicList contactAdd /> },
-                { path: ':id/edit', element: <CustomerContactDynamicList contactEdit />},
-                { path: ':id/view', element: <CustomerContactDynamicList contactView />},
-                { path: ':id/move', element: <CustomerContactDynamicList contactMove />},
+                { path: 'new', element: <CustomerContactDynamicList contactAddForm /> },
+                { path: ':id/edit', element: <CustomerContactDynamicList contactEditForm />},
+                { path: ':id/view', element: <CustomerContactDynamicList contactViewForm />},
+                { path: ':id/move', element: <CustomerContactDynamicList contactMoveForm />},
               ],
             },
             { path: ':customerId/notes',

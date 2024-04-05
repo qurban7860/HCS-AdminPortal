@@ -74,9 +74,9 @@ export default function ModelEditForm() {
   const onSubmit = async (data) => {
     try {
       await dispatch(updateMachineModel(data, id));
-      navigate(PATH_MACHINE.machines.machineSettings.models.view(id));
-      reset();
-      enqueueSnackbar(Snacks.modelUpdated);
+      await reset();
+      await enqueueSnackbar(Snacks.modelUpdated);
+      await navigate(PATH_MACHINE.machines.machineSettings.models.view(id));
     } catch (error) {
       console.log(error);
       enqueueSnackbar( error, { variant: 'error' } );

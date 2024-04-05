@@ -3,8 +3,6 @@ import {  useParams } from 'react-router-dom';
 // @mui
 import {  Card, Container } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-// routes
-import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 import { getCheckItem } from '../../../redux/slices/products/machineCheckItems';
 // sections
@@ -38,7 +36,6 @@ export default function CheckItemView() {
           <Cover
             name={checkItem?.name}
             setting
-            backLink={PATH_MACHINE.machines.machineSettings.checkItems.root}
             titleLength={30}
           />
         </Card>

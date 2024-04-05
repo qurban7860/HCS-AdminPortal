@@ -30,7 +30,6 @@ export default function ContactViewForm({
   const { isAllAccessAllowed } = useAuthContext()
   const { enqueueSnackbar } = useSnackbar();
   const { customerId, id } = useParams() 
-  
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

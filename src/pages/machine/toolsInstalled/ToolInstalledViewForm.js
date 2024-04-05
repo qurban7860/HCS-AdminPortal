@@ -24,6 +24,7 @@ import MachineTabContainer from '../util/MachineTabContainer';
 export default function ToolInstalledViewForm() {
   const { toolInstalled, isLoading } = useSelector((state) => state.toolInstalled);
   const { machine } = useSelector((state) => state.machine);
+  const dispatch = useDispatch();
 
   const { enqueueSnackbar } = useSnackbar();
   const { machineId, id } = useParams()
@@ -45,7 +46,6 @@ export default function ToolInstalledViewForm() {
     },
   }));
   
-  const dispatch = useDispatch();
   const onDelete = async () => {
     try {
       await dispatch(deleteToolInstalled(machineId, id));

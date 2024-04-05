@@ -1,5 +1,5 @@
 
-import {  useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import {  useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
@@ -17,7 +17,6 @@ import FormProvider, {
 // slice
 import {
   updateSupplier,
-  getSupplier,
 } from '../../../redux/slices/products/supplier';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
@@ -72,10 +71,6 @@ export default function SupplierEditForm() {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
-  useLayoutEffect(() => {
-    dispatch(getSupplier(id));
-  }, [dispatch, id]);
 
   useEffect(() => {
     if (supplier) {
