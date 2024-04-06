@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 // @mui
 import { Table, Tooltip, TableBody, IconButton, TableContainer, Grid, Container, Typography } from '@mui/material';
 // routes
@@ -24,10 +24,7 @@ import { useSnackbar } from '../../../components/snackbar';
 // sections
 import MachineServiceRecordHistoryListTableRow from './MachineServiceRecordHistoryListTableRow';
 import {
-  getMachineServiceRecordVersion,
-  getMachineServiceRecord,
-  setHistoricalFlag,
-  resetMachineServiceRecord,
+  getMachineServiceHistoryRecords,
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy
@@ -79,6 +76,10 @@ export default function MachineServiceRecordHistoryList({ serviceId }) {
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
 
+  useLayoutEffect(()=>{
+    dispatch(getMachineServiceHistoryRecords( machineId, id))
+  },[ dispatch,  machineId, id ])
+
   useEffect(() => {
     if (initial) {
       setTableData(machineServiceRecordHistory);
@@ -109,21 +110,7 @@ export default function MachineServiceRecordHistoryList({ serviceId }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-  const handleViewRow = async (Id, isHistory, ServiceId) => {
-    try{
-      navigate(PATH_MACHINE.machines.serviceRecords.view(machineId, id))
-      await dispatch(resetMachineServiceRecord())
-      if(isHistory) {
-        await dispatch(getMachineServiceRecordVersion(machineId, Id));
-      }else{
-        await dispatch(getMachineServiceRecord(machineId, Id));
-        await dispatch(setHistoricalFlag(true));
-      }
-    }catch(e){
-      enqueueSnackbar(e, { variant: `error` });
-      console.error(e);
-    }
-  };
+  const handleViewRow = async (Id) => navigate(PATH_MACHINE.machines.serviceRecords.view(machineId, Id )) ;
 
 
   return (
@@ -191,7 +178,7 @@ export default function MachineServiceRecordHistoryList({ serviceId }) {
                         <MachineServiceRecordHistoryListTableRow
                           key={row._id}
                           row={row}
-                          onViewRow={() => handleViewRow(row._id, row?.isHistory, row?.serviceId)}
+                          onViewRow={() => handleViewRow(row._id)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                           isHistory
                         />

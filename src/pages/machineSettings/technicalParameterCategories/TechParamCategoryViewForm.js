@@ -60,7 +60,7 @@ export default function TechParamCategoryViewForm() {
         isActive={defaultValues.isActive} 
         handleEdit={toggleEdit} 
         onDelete={onDelete} 
-        backLink={() => navigate(PATH_MACHINE.machines.settings.technicalParameterCategories.list)}  
+        backLink={() => navigate(PATH_MACHINE.machines.machineSettings.technicalParameterCategories.root)}  
         machineSettingPage
       />
       <Grid container sx={{mt:2}}>

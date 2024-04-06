@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { PDFViewer } from '@react-pdf/renderer';
 import { useSelector, useDispatch } from 'react-redux';
 import { Dialog, Button, DialogTitle } from '@mui/material';
@@ -7,14 +6,11 @@ import {
 } from '../../redux/slices/products/machineServiceRecord';
 import { MachineServiceRecordPDF } from '../../pages/machine/serviceRecords/MachineServiceRecordPDF';
 
-PDFViewerDialog.propTypes = {
-  machineServiceRecord: PropTypes.object
-};
 
-function PDFViewerDialog({machineServiceRecord}) {
+function PDFViewerDialog() {
     
   const dispatch = useDispatch();
-  const { pdfViewerDialog } = useSelector((state) => state.machineServiceRecord);
+  const { machineServiceRecord, pdfViewerDialog } = useSelector((state) => state.machineServiceRecord);
   const handleCloseDialog = ()=>{ 
     dispatch(setPDFViewerDialog(false)) 
   }

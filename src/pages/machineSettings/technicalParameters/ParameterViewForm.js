@@ -13,8 +13,8 @@ import { useSnackbar } from '../../../components/snackbar';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
-
-// ----------------------------------------------------------------------
+import { Cover } from '../../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -44,7 +44,7 @@ export default function ParameterViewForm() {
       updatedIP: techparam?.updatedIP || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [techparam]
+    [ techparam ]
   );
 
   const onDelete = () => {
@@ -58,6 +58,13 @@ export default function ParameterViewForm() {
   };
 
   return (
+  <Grid >
+    <StyledCardContainer>
+      <Cover
+        name={techparam?.name}
+        setting
+        />
+    </StyledCardContainer>
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons 
         isActive={defaultValues.isActive} 
@@ -66,7 +73,7 @@ export default function ParameterViewForm() {
         onDelete={onDelete} 
         backLink={() => navigate(PATH_MACHINE.machines.machineSettings.technicalParameters.root)}
         machineSettingPage
-      />
+        />
       <Grid container sx={{mt:2}}>
         <ViewFormField isLoading={isLoading} sm={12} heading="Category Name" param={defaultValues?.category} />
         <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues?.name} />
@@ -75,5 +82,6 @@ export default function ParameterViewForm() {
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>
     </Card>
+  </Grid>
   );
 }

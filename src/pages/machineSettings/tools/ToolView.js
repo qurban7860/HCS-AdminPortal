@@ -30,7 +30,6 @@ export default function ToolView() {
             setting
           />
         </StyledCardContainer>
-
         <ToolViewForm />
       </Container>
   );

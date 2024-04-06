@@ -68,7 +68,7 @@ export default function GroupViewForm() {
 
   return (
     <Container maxWidth={false}>
-        <StyledCardContainer><Cover name={defaultValues?.name} /></StyledCardContainer>
+        <StyledCardContainer><Cover name={defaultValues?.name} setting /></StyledCardContainer>
         <Card sx={{ p: 2 }}>
           <ViewFormEditDeleteButtons 
             isActive={defaultValues.isActive} 

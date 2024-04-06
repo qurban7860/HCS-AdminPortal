@@ -24,7 +24,7 @@ export default function CheckItemCategoryViewForm() {
   const { enqueueSnackbar } = useSnackbar();
   
   const navigate = useNavigate();
-  const { serviceCategory, editFormVisibility, isLoading } = useSelector((state) => state.serviceCategory);
+  const { serviceCategory, isLoading } = useSelector((state) => state.serviceCategory);
   const { id } = useParams();
   
   const dispatch = useDispatch();
@@ -32,7 +32,8 @@ export default function CheckItemCategoryViewForm() {
     if (id != null) {
       dispatch(getServiceCategory(id));
     }
-  }, [dispatch, id, editFormVisibility]);
+  }, [dispatch, id ]);
+
   const defaultValues = useMemo(
     () => ({
       name: serviceCategory?.name || '',

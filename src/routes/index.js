@@ -561,6 +561,7 @@ export default function Router() {
               children:[
                 {element: <MachineDrawingList/>, index: true},
                 {path: 'new', element: <MachineDrawingAdd/>},
+                {path: 'attach', element: <MachineDrawingAdd/>},
                 {path: 'multipleNew', element: <MachineDrawingListAdd/>},
                 {path: ':id/view', element: <MachineDrawingView/>},
                 {path: ':id/edit', element: <MachineDrawingEdit/>}, 

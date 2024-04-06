@@ -1,41 +1,33 @@
-import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
-import { useLayoutEffect } from 'react';
+import { useEffect } from 'react';
 // @mui
 import { Container } from '@mui/material';
-import {  useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 // sections
 import ParameterViewForm from './ParameterViewForm';
-import { Cover } from '../../../components/Defaults/Cover';
-import { StyledCardContainer } from '../../../theme/styles/default-styles';
-import { getTechparam } from '../../../redux/slices/products/machineTechParam';
-
-ParameterViewPage.propTypes = {
-  editPage: PropTypes.bool,
-};
+import { getTechparam, resetTechParam } from '../../../redux/slices/products/machineTechParam';
 
 // ----------------------------------------------------------------------
 
-export default function ParameterViewPage({ editPage }) {
+export default function ParameterViewPage() {
 
   const { id } = useParams();
   const dispatch = useDispatch();
 
-  const { techparam } = useSelector((state) => state.techparam);
-  
-  useLayoutEffect(() => {
-    dispatch(getTechparam(id));
-  }, [dispatch, id]);
+  useEffect(() => {
+    if(id ){
+      dispatch(getTechparam(id));
+    }
+    return ()=>{
+      dispatch(resetTechParam())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ ]);
 
   return (
     <Container maxWidth={false}>
-      <StyledCardContainer>
-        <Cover
-          name={techparam?.name}
-          setting
-        />
-      </StyledCardContainer>
       <ParameterViewForm />
     </Container>
   );
 }
+

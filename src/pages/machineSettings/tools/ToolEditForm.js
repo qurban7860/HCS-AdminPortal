@@ -1,22 +1,14 @@
 import * as Yup from 'yup';
-import { useEffect, useLayoutEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useSelector,useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import {
-  Box,
-  Card,
-  Grid,
-  Stack,
-} from '@mui/material';
+import { Box, Card, Grid, Stack } from '@mui/material';
 // slice
-import {
-  updateTool,
-  getTool,
-} from '../../../redux/slices/products/tools';
+import { updateTool } from '../../../redux/slices/products/tools';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
@@ -62,11 +54,6 @@ export default function ToolEditForm() {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
-
-  useLayoutEffect(() => {
-    dispatch(getTool(id));;
-  }, [dispatch, id]);
 
   useEffect(() => {
     if (tool) {

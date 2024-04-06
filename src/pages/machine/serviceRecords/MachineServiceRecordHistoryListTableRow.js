@@ -31,7 +31,6 @@ export default function MachineServiceRecordListTableRow({
   onEditRow,
   onViewRow,
 }) {
-
   const { isHistory, versionNo, serviceDate, isActive, createdAt, createdBy } = row;
 
   return (
