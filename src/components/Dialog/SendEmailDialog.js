@@ -62,8 +62,9 @@ function SendEmailDialog({machineServiceRecord, fileName}) {
   const onSubmit = async (data) => {    
     try {
       const PDFBlob = await ReactPDF.pdf(<MachineServiceRecordPDF machineServiceRecord={machineServiceRecord} />).toBlob();
+      console.log("PDFBlob : ",PDFBlob)
       const file = new File([PDFBlob], fileName, { type: PDFBlob.type });
-      
+      console.log("file : ",file)
       data.id = machineServiceRecord?._id;
       data.pdf = file; 
       

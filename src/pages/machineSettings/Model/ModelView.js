@@ -1,15 +1,7 @@
 import PropTypes from 'prop-types';
-import { useLayoutEffect, useState } from 'react';
 // @mui
 import { Container } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-// routes
-import { PATH_MACHINE } from '../../../routes/paths';
-// redux
-
-import {
-  setMachinemodelsEditFormVisibility,
-} from '../../../redux/slices/products/model';
+import { useSelector } from 'react-redux';
 // sections
 import ModelViewForm from './ModelViewForm';
 import { Cover } from '../../../components/Defaults/Cover';
@@ -22,16 +14,7 @@ ModelViewPage.propTypes = {
 // ----------------------------------------------------------------------
 
 export default function ModelViewPage({ editPage }) {
-  const dispatch = useDispatch();
-
-  const [editFlag] = useState(false);
   const { machineModel } = useSelector((state) => state.machinemodel);
-
-  useLayoutEffect(() => {
-    dispatch(setMachinemodelsEditFormVisibility(editFlag));
-  }, [dispatch, editFlag]);
-
-
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
@@ -39,7 +22,6 @@ export default function ModelViewPage({ editPage }) {
           model={machineModel?.name}
           name={machineModel?.name}
           setting
-          backLink={PATH_MACHINE.machines.machineSettings.models.root}
         />
       </StyledCardContainer>
       <ModelViewForm />

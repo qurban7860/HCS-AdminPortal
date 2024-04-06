@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 // @mui
-import {
-  Switch,
-  TableCell,
-} from '@mui/material';
+import { Switch, TableCell } from '@mui/material';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 // utils
 import { fDate } from '../../../utils/formatTime';
 // components
@@ -35,16 +35,15 @@ export default function MachineServiceRecordListTableRow({
   onEditRow,
   onViewRow,
 }) {
-
+  const navigate = useNavigate();
+  const { machineId } = useParams();
   const { machine } = useSelector((state) => state.machine);
-  const { serviceRecordConfig, versionNo, serviceDate, isActive, createdAt, createdBy } = row;
+  const { serviceRecordConfig, serviceId, versionNo, serviceDate, isActive, createdAt, createdBy } = row;
 
   const dispatch = useDispatch();
 
-  const handleServiceRecordHistory = () => {
-    dispatch(setMachineServiceRecordHistoryFormVisibility(true));
-    dispatch(getMachineServiceHistoryRecords( machine?._id ,row?.serviceId ))
-  }
+  const handleServiceRecordHistory = () => navigate(PATH_MACHINE.machines.serviceRecords.history(machineId, serviceId ))
+
   return (
       <StyledTableRow hover selected={selected}>
         <TableCell align="left">{fDate(serviceDate)}</TableCell>

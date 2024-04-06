@@ -83,9 +83,7 @@ export default function ParameterEditForm() {
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [techparam]);
 
-  const toggleCancel = () => {
-    navigate(PATH_MACHINE.machines.machineSettings.technicalParameters.view(id));
-  };
+  const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.technicalParameters.view(id));
 
   const onSubmit = async (data) => {
     try {
@@ -105,7 +103,7 @@ export default function ParameterEditForm() {
         <Cover name="Edit Parameter" icon="ic:round-flare" />
       </StyledCardContainer>
       <Grid container>
-        <Grid item xs={18} md={12} sx={{ mt: 3 }}>
+        <Grid item xs={18} md={12} >
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
                 <RHFAutocomplete

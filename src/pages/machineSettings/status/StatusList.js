@@ -14,7 +14,6 @@ import { useDispatch, useSelector } from 'react-redux';
 // routes
 import {
   getMachinestatuses,
-  getMachineStatus,
   deleteMachinestatus,
   ChangeRowsPerPage,
   ChangePage,
@@ -173,10 +172,8 @@ export default function StatusList() {
     }
   };
 
-  const handleViewRow = (id) => {
-    dispatch(getMachineStatus(id));
-    navigate(PATH_MACHINE.machines.machineSettings.status.view(id));
-  };
+  const handleViewRow = (id) => navigate(PATH_MACHINE.machines.machineSettings.status.view(id));
+
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))

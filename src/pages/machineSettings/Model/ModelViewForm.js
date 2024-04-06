@@ -1,5 +1,4 @@
-import PropTypes from 'prop-types';
-import { useEffect, useMemo } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
@@ -13,15 +12,10 @@ import { useSnackbar } from '../../../components/snackbar';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
-// ----------------------------------------------------------------------
-
-ModelViewForm.propTypes = {
-  currentMachinemodel: PropTypes.object,
-};
 
 // ----------------------------------------------------------------------
 
-export default function ModelViewForm({ currentMachinemodel = null }) {
+export default function ModelViewForm() {
   
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -30,8 +24,10 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
   const dispatch = useDispatch();
   const toggleEdit = () => { navigate(PATH_MACHINE.machines.machineSettings.models.edit(id)) };
 
-  useEffect(()=>{
-    dispatch(getMachineModel(id));
+  useLayoutEffect(()=>{
+    if(id){
+      dispatch(getMachineModel(id));
+    }
   },[dispatch, id])
   
   const defaultValues = useMemo(
@@ -50,7 +46,7 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
       updatedIP: machineModel?.updatedIP || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentMachinemodel, machineModel]
+    [ machineModel]
   );
 
   const onDelete = async () => {

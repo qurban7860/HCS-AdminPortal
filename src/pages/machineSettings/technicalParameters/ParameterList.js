@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from 'react-redux';
 // routes
 import {
   getTechparams,
-  getTechparam,
   deleteTechparams,
   ChangeRowsPerPage,
   ChangePage,
@@ -166,10 +165,7 @@ export default function StatusList() {
     }
   };
 
-  const handleViewRow = async (id) => {
-    await dispatch(getTechparam(id));
-    navigate(PATH_MACHINE.machines.machineSettings.technicalParameters.view(id));
-  };
+  const handleViewRow = (id) => navigate(PATH_MACHINE.machines.machineSettings.technicalParameters.view(id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))

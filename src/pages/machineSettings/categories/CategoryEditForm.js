@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useEffect, useLayoutEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
@@ -9,7 +9,6 @@ import { Box, Card, Grid, Stack } from '@mui/material';
 // slice
 import {
   updateCategory,
-  getCategory,
 } from '../../../redux/slices/products/category';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
@@ -56,16 +55,9 @@ export default function CategoryEditForm() {
 
   const {
     reset,
-    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
-   watch();
-
-  useLayoutEffect(() => {
-    dispatch(getCategory(id));
-  }, [dispatch, id]);
 
   useEffect(() => {
     if (category) {

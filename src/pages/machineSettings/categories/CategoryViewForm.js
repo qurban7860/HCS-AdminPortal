@@ -31,7 +31,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const navigate = useNavigate();
-  const { category, editFormVisibility, isLoading } = useSelector((state) => state.category);
+  const { category, isLoading } = useSelector((state) => state.category);
 
   const { id } = useParams();
 
@@ -40,7 +40,8 @@ export default function CategoryViewForm({ currentCategory = null }) {
     if (id != null) {
       dispatch(getCategory(id));
     }
-  }, [dispatch, id, editFormVisibility]);
+  }, [dispatch, id ]);
+
   const defaultValues = useMemo(
     () => ({
       name: category?.name || '',

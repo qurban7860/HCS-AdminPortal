@@ -7,6 +7,9 @@ import {
   TableBody,
   TableContainer,
 } from '@mui/material';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // components
@@ -54,6 +57,8 @@ export default function DrawingList() {
   });
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { machineId } = useParams();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);

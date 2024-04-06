@@ -34,9 +34,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
   const { id } = useParams();
   const dispatch = useDispatch();
   
-  const toggleEdit = () => {
-    navigate(PATH_MACHINE.machines.machineSettings.suppliers.edit(id));
-  };
+  const toggleEdit = () => navigate(PATH_MACHINE.machines.machineSettings.suppliers.edit(id));
 
   useLayoutEffect(() => {
     if (id != null) {
@@ -89,7 +87,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
         isDefault={defaultValues.isDefault} 
         handleEdit={toggleEdit} 
         onDelete={onDelete} b
-        backLink={() => navigate(PATH_MACHINE.machines.machineSettings.suppliers.root)}  
+        backLink={() => navigate(PATH_MACHINE.machines.machineSettings.status.root)}  
         machineSettingPage
       />
       <Grid container sx={{mt:2}}>

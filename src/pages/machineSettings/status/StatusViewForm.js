@@ -15,6 +15,8 @@ import { deleteMachinestatus } from '../../../redux/slices/products/statuses';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
+import { Cover } from '../../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -62,20 +64,25 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
     }
   };
 
-  const toggleEdit = () => {
-    navigate(PATH_MACHINE.machines.machineSettings.status.edit(id));
-  };
+  const toggleEdit = () => navigate(PATH_MACHINE.machines.machineSettings.status.edit(id));
 
   return (
+  <Grid>
+    <StyledCardContainer>
+      <Cover
+        name={machinestatus?.name}
+        setting
+        />
+    </StyledCardContainer>
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons 
         isActive={defaultValues.isActive} 
         isDefault={defaultValues.isDefault} 
         handleEdit={toggleEdit} 
         onDelete={onDelete} b
-        backLink={() => navigate(PATH_MACHINE.machines.settings.status.list)} 
+        backLink={() => navigate(PATH_MACHINE.machines.machineSettings.status.root)} 
         machineSettingPage
-      />
+        />
       <Grid container sx={{mt:2}}>
         <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues?.name} />
         <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
@@ -83,7 +90,7 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
           sm={12}
           heading="Display Order No."
           param={defaultValues?.displayOrderNo?.toString()}
-        />
+          />
         <ViewFormField isLoading={isLoading} sm={12} heading="Slug" param={defaultValues?.slug} />
         <ViewFormField isLoading={isLoading} sm={12} heading="Order Number" param={defaultValues?.order} />
         <Grid container>
@@ -91,5 +98,6 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
         </Grid>
       </Grid>
     </Card>
+  </Grid>
   );
 }

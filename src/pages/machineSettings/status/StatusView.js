@@ -1,34 +1,26 @@
-import PropTypes from 'prop-types';
+import {  useLayoutEffect } from 'react';
 // @mui
 import { Container } from '@mui/material';
-import { useSelector } from 'react-redux';
-// routes
-import { PATH_MACHINE } from '../../../routes/paths';
+import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 // sections
 import StatusViewForm from './StatusViewForm';
-import { Cover } from '../../../components/Defaults/Cover';
-import { StyledCardContainer } from '../../../theme/styles/default-styles';
-
-
-StatusView.propTypes = {
-  editPage: PropTypes.bool,
-};
+import { getMachineStatus} from '../../../redux/slices/products/statuses';
 
 // ----------------------------------------------------------------------
 
-export default function StatusView({ editPage }) {
+export default function StatusView() {
+  const { id } = useParams()
+  const dispatch = useDispatch()
 
-  const { machinestatus } = useSelector((state) => state.machinestatus);
+  useLayoutEffect(()=>{
+    if(id){
+      dispatch(getMachineStatus(id))
+    }
+  },[dispatch, id ])
 
   return (
     <Container maxWidth={false}>
-      <StyledCardContainer>
-        <Cover
-          name={machinestatus?.name}
-          setting
-          backLink={PATH_MACHINE.machines.machineSettings.status.root}
-        />
-      </StyledCardContainer>
       <StatusViewForm />
     </Container>
   );

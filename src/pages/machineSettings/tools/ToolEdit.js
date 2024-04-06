@@ -5,12 +5,12 @@ import { Container } from '@mui/material';
 import { getTool } from '../../../redux/slices/products/tools';
 import ToolEditForm from './ToolEditForm';
 
-
 // ----------------------------------------------------------------------
 
 export default function ToolEdit() {
   const dispatch = useDispatch();
   const { id } = useParams(); 
+
   useLayoutEffect(() => {
     dispatch(getTool(id));
   }, [dispatch, id]);

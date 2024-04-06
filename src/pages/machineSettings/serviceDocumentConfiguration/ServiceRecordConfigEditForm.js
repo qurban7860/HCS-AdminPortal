@@ -9,7 +9,6 @@ import { Box, Card, Grid, Stack, Typography } from '@mui/material';
 import {
   updateServiceRecordConfig,
   setServiceRecordConfigEditFormVisibility,
-  getServiceRecordConfig,
 } from '../../../redux/slices/products/serviceRecordConfig';
 import { getActiveMachineModels, resetActiveMachineModels } from '../../../redux/slices/products/model';
 import { getActiveServiceCategories } from '../../../redux/slices/products/serviceCategory';
@@ -97,11 +96,10 @@ export default function ServiceRecordConfigEditForm() {
 
   /* eslint-disable */
   useLayoutEffect(() => {
-    dispatch(getServiceRecordConfig(id));
     // dispatch(getActiveMachineModels())
     dispatch(getActiveCategories());
     dispatch(getActiveServiceCategories());
-  }, [dispatch, id]);
+  }, [dispatch]);
 
   /* eslint-enable */
   useEffect(() => {

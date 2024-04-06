@@ -82,14 +82,13 @@ export default function LicenseAddForm() {
 
   return (
     <Container maxWidth={false} >
-      <MachineTabContainer currentTabValue='license' />
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} mb={5}>
+    <MachineTabContainer currentTabValue='license' />
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} mb={5} >
       <Grid
         container
         spacing={2}>
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
-            
             <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}>
               <RHFTextField name="deviceGUID" label="Device GUID" disabled/>
               <RHFTextField name="deviceName" label="Device Name" disabled/>
@@ -100,14 +99,13 @@ export default function LicenseAddForm() {
               <RHFTextField name="version" label="Version"/>
               </Box>
               <Box sx={{marginTop:2}}  rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)',}}>
-                <RHFTextField name='licenseKey' label='License Key' minRows={5} multiline/>
+                <RHFTextField name='licenseKey' label='License Key*' minRows={5} multiline/>
             </Box>
             <Box sx={{marginTop:2}} rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}>
-           
               <RHFTextField name="production" label="Production"/>
               <RHFTextField name="waste" label="Waste"/>
-              <RHFDatePicker inputFormat='dd/MM/yyyy' name="extensionTime" label="Extension Date" />
-              <RHFDatePicker inputFormat='dd/MM/yyyy' name="requestTime" label="Request Date" />
+              <RHFDatePicker inputFormat='dd/MM/yyyy' name="extensionTime" label="Extension Date*" />
+              <RHFDatePicker inputFormat='dd/MM/yyyy' name="requestTime" label="Request Date*" />
 
               <RHFSwitch name="isActive"  label="Active"/>
             </Box>

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState, useCallback , memo} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -10,7 +10,7 @@ import { pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import { Box, Card, Grid, Stack, Dialog } from '@mui/material';
 // PATH
-import { PATH_CRM, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_CRM, PATH_DOCUMENT, PATH_MACHINE } from '../../../routes/paths';
 // slice
 import {
   resetActiveDocuments,
@@ -66,6 +66,7 @@ function DocumentAddForm({
   handleFormVisibility,
 }) {
   const navigate = useNavigate();
+  const { machineId } = useParams()
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -357,7 +358,9 @@ function DocumentAddForm({
       if(customerPage && !machinePage){
         navigate(PATH_CRM.customers.documents.viewHistory(customer?._id  ));
       }
-      dispatch(setViewHistoryVisiilityNoOthers(false))
+      else if(!customerPage && machinePage){
+        navigate(PATH_MACHINE.machines.documents.root( machineId ));
+      }
     }else if(machineDrawings && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility)){
       dispatch(setDrawingAndDocumentVisibility())
       navigate(PATH_DOCUMENT.document.machineDrawings.view(documentHistory._id))

@@ -95,11 +95,13 @@ export default function MachineEditForm() {
   } = watch();
 
   useEffect(() => {
-      dispatch(resetMachineConnections());
-      dispatch(resetActiveSites());
-      dispatch(getActiveSites(customer?._id));
-      dispatch(getMachineConnections(customer?._id));
-  },[dispatch, customer, spContacts, setValue])
+    dispatch(getActiveSites(customer?._id));
+    dispatch(getMachineConnections(customer?._id));
+    return ()=>{
+        dispatch(resetActiveSites());
+        dispatch(resetMachineConnections());
+      }
+  },[dispatch, customer?._id ])
 
   useEffect(() => {
     if(category === null && machineModel ){

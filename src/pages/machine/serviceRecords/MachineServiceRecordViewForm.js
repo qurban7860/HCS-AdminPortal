@@ -30,7 +30,7 @@ import MachineTabContainer from '../util/MachineTabContainer';
 
 function MachineServiceParamViewForm() {
 
-  const { machineServiceRecord, isLoading } = useSelector((state) => state.machineServiceRecord);
+  const { machineServiceRecord, isLoading, pdfViewerDialog, sendEmailDialog } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine)
 
   const dispatch = useDispatch();
@@ -43,6 +43,8 @@ function MachineServiceParamViewForm() {
     if(machineId && id ){
       dispatch(getMachineServiceRecord(machineId, id));
     }
+    dispatch(setPDFViewerDialog(false))
+    dispatch(setSendEmailDialog(false))
   },[ dispatch, machineId, id ])
 
   const onDelete = async () => {
@@ -57,7 +59,7 @@ function MachineServiceParamViewForm() {
   };
 
   const handleEdit = async () => navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, id));
-  const handleServiceRecordHistory = async () => navigate(PATH_MACHINE.machines.serviceRecords.history(machineId, id));
+  const handleServiceRecordHistory = async () => navigate(PATH_MACHINE.machines.serviceRecords.history(machineId, machineServiceRecord?.serviceId));
 
   const handleCurrentServiceRecord = async() => {
     try{
@@ -204,8 +206,8 @@ function MachineServiceParamViewForm() {
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
       </Grid>
-      {!isLoading && <PDFViewerDialog machineServiceRecord={machineServiceRecord} />}
-      {!isLoading && <SendEmailDialog machineServiceRecord={machineServiceRecord} fileName={fileName}/>}
+      {pdfViewerDialog && <PDFViewerDialog machineServiceRecord={machineServiceRecord} />}
+      {sendEmailDialog && <SendEmailDialog machineServiceRecord={machineServiceRecord} fileName={fileName}/>}
     </Card>
   </Container>
   );

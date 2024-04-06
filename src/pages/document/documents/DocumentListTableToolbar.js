@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
 // @mui
 import { Stack } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useDispatch } from '../../../redux/store';
 // components
-import { PATH_DOCUMENT, PATH_CRM } from '../../../routes/paths';
+import { PATH_DOCUMENT, PATH_CRM, PATH_MACHINE } from '../../../routes/paths';
 import { 
   setDocumentFormVisibility, 
   setDocumentHistoryNewVersionFormVisibility, 
@@ -53,6 +53,7 @@ export default function DocumentListTableToolbar({
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { customerId, machineId } = useParams();
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
 
@@ -62,7 +63,7 @@ export default function DocumentListTableToolbar({
     if(customerPage && !machinePage){
       await navigate(PATH_CRM.customers.documents.new(customer?._id))
     } else if(!customerPage && machinePage){
-      await dispatch(setDocumentFormVisibility(true));
+      await navigate(PATH_MACHINE.machines.documents.new(machineId))
     }else if(machineDrawings){
       navigate(PATH_DOCUMENT.document.machineDrawings.new)
     }

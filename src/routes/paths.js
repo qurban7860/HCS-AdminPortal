@@ -159,6 +159,7 @@ export const PATH_MACHINE = {
     drawings: {
       root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/drawings`),
       new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/drawings/new`),
+      attach: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/drawings/attach`),
       multipleNew: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/drawings/multipleNew`),
       view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/drawings/${id}/view`),
       edit: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/drawings/${id}/edit`),
