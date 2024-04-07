@@ -37,10 +37,6 @@ import MachineTabContainer from '../util/MachineTabContainer';
 
 // ----------------------------------------------------------------------
 
-MachineServiceRecordHistoryList.propTypes = {
-  serviceId: PropTypes.string,
-};
-
 const TABLE_HEAD = [
   { id: 'serviceDate', label: 'Service Date', align: 'left' },
   { id: 'versionNo', visibility: 'xs5', label: 'Version', align: 'left' },
@@ -50,11 +46,11 @@ const TABLE_HEAD = [
 ];
 // ----------------------------------------------------------------------
 
-export default function MachineServiceRecordHistoryList({ serviceId }) {
+export default function MachineServiceRecordHistoryList() {
   const { machineServiceRecordHistory, isDetailPage, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceRecord);
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const { machineId, id } = useParams();
+  const { machineId, serviceId } = useParams();
 
   const {
     order,
@@ -77,8 +73,8 @@ export default function MachineServiceRecordHistoryList({ serviceId }) {
   const [tableData, setTableData] = useState([]);
 
   useLayoutEffect(()=>{
-    dispatch(getMachineServiceHistoryRecords( machineId, id))
-  },[ dispatch,  machineId, id ])
+    dispatch(getMachineServiceHistoryRecords( machineId, serviceId))
+  },[ dispatch,  machineId, serviceId ])
 
   useEffect(() => {
     if (initial) {
@@ -110,7 +106,7 @@ export default function MachineServiceRecordHistoryList({ serviceId }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-  const handleViewRow = async (Id) => navigate(PATH_MACHINE.machines.serviceRecords.view(machineId, Id )) ;
+  const handleViewRow = async (Id) => navigate(PATH_MACHINE.machines.serviceRecords.history.view(machineId, serviceId, Id )) ;
 
 
   return (
@@ -126,7 +122,7 @@ export default function MachineServiceRecordHistoryList({ serviceId }) {
             title='Back'
             color='#008000'
             icon="mdi:arrow-left"
-            onClick={() => navigate(PATH_MACHINE.machines.serviceRecords.view(machineId, id)) }
+            onClick={() => navigate(PATH_MACHINE.machines.serviceRecords.view(machineId, serviceId)) }
             size="small"
             />
         </StyledStack>

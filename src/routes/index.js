@@ -145,7 +145,6 @@ import {
   MachineServiceRecordView,
   MachineServiceRecordEdit,
   MachineServiceRecordHistoryList,
-  MachineServiceRecordPDF,
 
   // --------------------------- MACHINE INI -------------------------------------
   MachineINIList,
@@ -599,8 +598,11 @@ export default function Router() {
                 {path: 'new', element: <MachineServiceRecordAdd/>},
                 {path: ':id/view', element: <MachineServiceRecordView/>},
                 {path: ':id/edit', element: <MachineServiceRecordEdit/>}, 
-                {path: ':id/history', element: <MachineServiceRecordHistoryList/>}, 
-                {path: ':id/pdf', element: <MachineServiceRecordPDF/>}, 
+                {path: ':serviceId/history',children:[
+                    {element: <MachineServiceRecordHistoryList/>, index: true}, 
+                    {path: ':id/view', element: <MachineServiceRecordView serviceHistoryView />},
+                  ]
+                }, 
               ]
             },
             { path: ':machineId/ini',

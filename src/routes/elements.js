@@ -173,7 +173,6 @@ export const MachineServiceRecordAdd = Loadable(lazy(() => import('../pages/mach
 export const MachineServiceRecordView = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordViewForm')));
 export const MachineServiceRecordEdit = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordEditForm')));
 export const MachineServiceRecordHistoryList = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordHistoryList')));
-export const MachineServiceRecordPDF = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordPDF')));
 
 // --------------------------- MACHINE INI -------------------------------------
 

@@ -38,18 +38,18 @@ export default function MachineServiceRecordListTableRow({
   const navigate = useNavigate();
   const { machineId } = useParams();
   const { machine } = useSelector((state) => state.machine);
-  const { serviceRecordConfig, serviceId, versionNo, serviceDate, isActive, createdAt, createdBy } = row;
+  const { serviceRecordConfig, versionNo, serviceDate, serviceId, isActive, createdAt, createdBy } = row;
 
   const dispatch = useDispatch();
 
-  const handleServiceRecordHistory = () => navigate(PATH_MACHINE.machines.serviceRecords.history(machineId, serviceId ))
+  const handleServiceRecordHistory = () => navigate(PATH_MACHINE.machines.serviceRecords.history.root(machineId, serviceId ))
 
   return (
       <StyledTableRow hover selected={selected}>
         <TableCell align="left">{fDate(serviceDate)}</TableCell>
         <LinkTableCell align="left" onClick={onViewRow} param={`${serviceRecordConfig?.docTitle ? serviceRecordConfig?.docTitle	: ''	} ${serviceRecordConfig?.recordType ? ' - ' : ''} ${serviceRecordConfig?.recordType ? serviceRecordConfig?.recordType : ''}`} />
         <TableCell align="left" sx={{display: 'flex', alignItems:'center'}} >{versionNo} 
-              {versionNo > 1 && <HistoryIcon callFunction={handleServiceRecordHistory} /> }</TableCell>
+              {versionNo > 1 && serviceId && <HistoryIcon callFunction={handleServiceRecordHistory} /> }</TableCell>
         <TableCell align="center">
           {' '}
           <Switch checked={isActive} disabled size="small" />{' '}
