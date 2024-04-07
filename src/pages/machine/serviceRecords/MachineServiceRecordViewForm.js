@@ -158,8 +158,8 @@ function MachineServiceParamViewForm() {
           handleEdit={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleEdit} 
           onDelete={!machineServiceRecord?.isHistory && machineServiceRecord?._id && onDelete} 
           backLink={() => navigate(PATH_MACHINE.machines.serviceRecords.root(machineId))}
-          // handleSendPDFEmail={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleSendEmail}
-          // handleViewPDF={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handlePDFViewer}
+          handleSendPDFEmail={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleSendEmail}
+          handleViewPDF={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handlePDFViewer}
         />
         
         <Grid container>

@@ -8,12 +8,9 @@ import { MachineServiceRecordPDF } from '../../pages/machine/serviceRecords/Mach
 
 
 function PDFViewerDialog() {
-    
   const dispatch = useDispatch();
   const { machineServiceRecord, pdfViewerDialog } = useSelector((state) => state.machineServiceRecord);
-  const handleCloseDialog = ()=>{ 
-    dispatch(setPDFViewerDialog(false)) 
-  }
+  const handleCloseDialog = ()=> dispatch(setPDFViewerDialog(false));
   
   return (
     <Dialog fullWidth maxWidth='' open={pdfViewerDialog} style={{marginBottom:10}} onClose={handleCloseDialog}>
@@ -22,7 +19,7 @@ function PDFViewerDialog() {
           <Button variant='outlined' onClick={handleCloseDialog}>Close</Button>
       </DialogTitle>
       <PDFViewer style={{height:'842px', width:'100%', paddingBottom:10}}>
-        <MachineServiceRecordPDF key={machineServiceRecord?._id} machineServiceRecord={machineServiceRecord} />
+        <MachineServiceRecordPDF machineServiceRecord={machineServiceRecord} />
       </PDFViewer>
       {/* <DialogActions style={{paddingTop:10, paddingBottom:10}}>
         <Button size='small' variant='outlined' onClick={handleCloseDialog}>Close</Button>

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
 import { Container } from '@mui/material'
-import { Document, Page, Text, View, StyleSheet, Font, Image } from '@react-pdf/renderer';
+import { Document, Page, Image, View, Text, StyleSheet, Font  } from '@react-pdf/renderer';
 import { fDate } from '../../../utils/formatTime';
 
 MachineServiceRecordPDF.propTypes = {
@@ -9,63 +9,63 @@ MachineServiceRecordPDF.propTypes = {
 };
 
 export function MachineServiceRecordPDF({machineServiceRecord}) {
-console.log("origin : ",origin)
-    // const defaultValues = useMemo(
-    //     () => ({
-    //         customer:                             machineServiceRecord?.customer || null,
-    //         site:                                 machineServiceRecord?.site || null,
-    //         machine:                              machineServiceRecord?.machine || null,
-    //         recordType:                           machineServiceRecord?.recordType || null,
-    //         serviceRecordConfig:                  machineServiceRecord?.serviceRecordConfig?.docTitle	 || '',
-    //         serviceRecordConfigRecordType:        machineServiceRecord?.serviceRecordConfig?.recordType || '',
-    //         serviceDate:                          machineServiceRecord?.serviceDate || null,
-    //         versionNo:                            machineServiceRecord?.versionNo || null,
-    //         decoilers:                            machineServiceRecord?.decoilers ,
-    //         technician:                           machineServiceRecord?.technician || null,
-    //         textBeforeCheckItems:                 machineServiceRecord?.textBeforeCheckItems || '',
-    //         textAfterCheckItems:                  machineServiceRecord?.textAfterCheckItems || '',
-    //         headerLeftText:                       machineServiceRecord?.serviceRecordConfig?.header?.leftText || '',
-    //         headerCenterText:                     machineServiceRecord?.serviceRecordConfig?.header?.centerText || '',
-    //         headerRightText:                      machineServiceRecord?.serviceRecordConfig?.header?.rightText || '',
-    //         footerLeftText:                       machineServiceRecord?.serviceRecordConfig?.footer?.leftText || '',
-    //         footerCenterText:                     machineServiceRecord?.serviceRecordConfig?.footer?.centerText || '',
-    //         footerRightText:                      machineServiceRecord?.serviceRecordConfig?.footer?.rightText || '',
-    //         internalComments:                     machineServiceRecord?.internalComments || '',
-    //         serviceNote:                          machineServiceRecord?.serviceNote || '',
-    //         recommendationNote:                   machineServiceRecord?.recommendationNote || '',
-    //         suggestedSpares:                      machineServiceRecord?.suggestedSpares || '',
-    //         internalNote:                         machineServiceRecord?.internalNote || '',
-    //         files:                                machineServiceRecord?.files || [],
-    //         operators:                            machineServiceRecord?.operators || [],
-    //         operatorNotes:                        machineServiceRecord?.operatorNotes || '',
-    //         technicianNotes:                      machineServiceRecord?.technicianNotes ||'',
-    //         isActive:                             machineServiceRecord?.isActive,
-    //         createdAt:                            machineServiceRecord?.createdAt || '',
-    //         createdByFullName:                    machineServiceRecord?.createdBy?.name || '',
-    //         createdIP:                            machineServiceRecord?.createdIP || '',
-    //         updatedAt:                            machineServiceRecord?.updatedAt || '',
-    //         updatedByFullName:                    machineServiceRecord?.updatedBy?.name || '',
-    //         updatedIP:                            machineServiceRecord?.updatedIP || '',
-    //     }),
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    //     [ machineServiceRecord]
-    // );
 
-    // const decoilers = defaultValues?.decoilers?.map((decoilerMachine) => (`${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`)).join(', ');
-    // const checkItemLists = machineServiceRecord?.serviceRecordConfig?.checkItemLists || [];
-    // const operators = machineServiceRecord?.operators?.map(operator => `${operator?.firstName || ''} ${operator?.lastName || ''}`).join(', ');
+    const defaultValues = useMemo(
+        () => ({
+            customer:                             machineServiceRecord?.customer || null,
+            site:                                 machineServiceRecord?.site || null,
+            machine:                              machineServiceRecord?.machine || null,
+            recordType:                           machineServiceRecord?.recordType || null,
+            serviceRecordConfig:                  machineServiceRecord?.serviceRecordConfig?.docTitle	 || '',
+            serviceRecordConfigRecordType:        machineServiceRecord?.serviceRecordConfig?.recordType || '',
+            serviceDate:                          machineServiceRecord?.serviceDate || null,
+            versionNo:                            machineServiceRecord?.versionNo || null,
+            decoilers:                            machineServiceRecord?.decoilers ,
+            technician:                           machineServiceRecord?.technician || null,
+            textBeforeCheckItems:                 machineServiceRecord?.textBeforeCheckItems || '',
+            textAfterCheckItems:                  machineServiceRecord?.textAfterCheckItems || '',
+            headerLeftText:                       machineServiceRecord?.serviceRecordConfig?.header?.leftText || '',
+            headerCenterText:                     machineServiceRecord?.serviceRecordConfig?.header?.centerText || '',
+            headerRightText:                      machineServiceRecord?.serviceRecordConfig?.header?.rightText || '',
+            footerLeftText:                       machineServiceRecord?.serviceRecordConfig?.footer?.leftText || '',
+            footerCenterText:                     machineServiceRecord?.serviceRecordConfig?.footer?.centerText || '',
+            footerRightText:                      machineServiceRecord?.serviceRecordConfig?.footer?.rightText || '',
+            internalComments:                     machineServiceRecord?.internalComments || '',
+            serviceNote:                          machineServiceRecord?.serviceNote || '',
+            recommendationNote:                   machineServiceRecord?.recommendationNote || '',
+            suggestedSpares:                      machineServiceRecord?.suggestedSpares || '',
+            internalNote:                         machineServiceRecord?.internalNote || '',
+            files:                                machineServiceRecord?.files || [],
+            operators:                            machineServiceRecord?.operators || [],
+            operatorNotes:                        machineServiceRecord?.operatorNotes || '',
+            technicianNotes:                      machineServiceRecord?.technicianNotes ||'',
+            isActive:                             machineServiceRecord?.isActive,
+            createdAt:                            machineServiceRecord?.createdAt || '',
+            createdByFullName:                    machineServiceRecord?.createdBy?.name || '',
+            createdIP:                            machineServiceRecord?.createdIP || '',
+            updatedAt:                            machineServiceRecord?.updatedAt || '',
+            updatedByFullName:                    machineServiceRecord?.updatedBy?.name || '',
+            updatedIP:                            machineServiceRecord?.updatedIP || '',
+        }),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [ machineServiceRecord]
+    );
+
+    const decoilers = defaultValues?.decoilers?.map((decoilerMachine) => (`${decoilerMachine?.serialNo ? decoilerMachine?.serialNo : ''}${decoilerMachine?.name ? '-' : ''}${decoilerMachine?.name ? decoilerMachine?.name : ''}`)).join(', ');
+    const checkItemLists = machineServiceRecord?.serviceRecordConfig?.checkItemLists || [];
+    const operators = machineServiceRecord?.operators?.map(operator => `${operator?.firstName || ''} ${operator?.lastName || ''}`).join(', ');
     
-    // const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceRecordConfigRecordType}_${defaultValues?.versionNo}`;
+    const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceRecordConfigRecordType}_${defaultValues?.versionNo}`;
 
     return (
     <Container maxWidth={false} >
-        {/* <Document title={fileName} subject='Serevice Record'
+        <Document title={fileName} subject='Serevice Record'
             author={defaultValues?.createdByFullName}
             creator='HOWICK'
             keywords={`Version ${defaultValues.versionNo}`}
             producer={defaultValues?.createdByFullName}
-        > */}
-    {/* <Page style={styles.page}>
+        >
+    <Page style={styles.page}>
         <Image fixed src={`${origin}/assets/background/pdf-background.jpg`} style={styles.backgroundImage} />
         {(defaultValues.headerLeftText || defaultValues.headerCenterText || defaultValues.headerRightText) &&
             <View style={styles.header} fixed>
@@ -232,162 +232,162 @@ console.log("origin : ",origin)
             }
         </View>
 
-    </Page> */}
-    {/* </Document> */}
+    </Page>
+    </Document>
     </Container>
 )};
 
-//     Font.register({
-//         family: 'Yantramanav',
-//         fonts: [
-//         // { src: `${origin}/fonts/Yantramanav/Yantramanav-Regular.ttf` }, // font-style: normal, font-weight: normal
-//         // { src: `${origin}/fonts/Yantramanav/Yantramanav-Medium.ttf`, fontWeight: 'medium' },
-//         // { src: `${origin}/fonts/Yantramanav/Yantramanav-Bold.ttf`, fontWeight: 'bold' },
-//         // { src: `${origin}/fonts/Yantramanav/Yantramanav-Black.ttf`, fontWeight: 'black' },
-//         ]
-//     });
+    Font.register({
+        family: 'Yantramanav',
+        fonts: [
+        // { src: `${origin}/fonts/Yantramanav/Yantramanav-Regular.ttf` }, // font-style: normal, font-weight: normal
+        // { src: `${origin}/fonts/Yantramanav/Yantramanav-Medium.ttf`, fontWeight: 'medium' },
+        // { src: `${origin}/fonts/Yantramanav/Yantramanav-Bold.ttf`, fontWeight: 'bold' },
+        // { src: `${origin}/fonts/Yantramanav/Yantramanav-Black.ttf`, fontWeight: 'black' },
+        ]
+    });
 
-//     Font.register({
-//         family: 'Arimo',
-//         fonts: [
-//             // { src: `${origin}/fonts/Arimo/static/Arimo-Regular.ttf` }, // font-style: normal, font-weight: normal
-//             // { src: `${origin}/fonts/Arimo/static/Arimo-Medium.ttf`, fontWeight: 'medium' },
-//             // { src: `${origin}/fonts/Arimo/static/Arimo-Bold.ttf`, fontWeight: 'bold' },
-//         ]
-//     });
+    Font.register({
+        family: 'Arimo',
+        fonts: [
+            // { src: `${origin}/fonts/Arimo/static/Arimo-Regular.ttf` }, // font-style: normal, font-weight: normal
+            // { src: `${origin}/fonts/Arimo/static/Arimo-Medium.ttf`, fontWeight: 'medium' },
+            // { src: `${origin}/fonts/Arimo/static/Arimo-Bold.ttf`, fontWeight: 'bold' },
+        ]
+    });
 
-//   const styles = StyleSheet.create({
-//     page:{
-//         paddingTop:32,
-//         paddingBottom:44,
-//     },
-//     body: {
-//         paddingHorizontal: 25,
-//     },
-//     header: {
-//         flexDirection: "row",
-//         position:'absolute',
-//         top:0,
-//         fontSize: 10,
-//         paddingHorizontal:10,
-//         paddingVertical:10,
-//         fontFamily:'Arimo',
-//         backgroundColor:'#2065D1', 
-//         color:'#fff',
-//     },
-//     footer: {
-//         position:'absolute',
-//         bottom:0,
-//         fontSize: 10,
-//         paddingHorizontal:10,
-//         fontFamily:'Arimo',
-//         backgroundColor:'#2065D1', 
-//         color:'#fff',
-//         width:'100%'
-//     },
-//     footer_line_1:{
-//         display:'flex',
-//         flexDirection: "row",
-//         alignSelf:'center',
-//         paddingVertical:5,
-//     },
-//     footer_line_2:{
-//         display:'flex',
-//         flexDirection: "row",
-//         paddingVertical:5,
-//         width:'100%',
-//         borderTop:'1px solid #fff'
-//     },
-//     backgroundImage: {
-//         position: 'absolute',
-//         top: 0,
-//         left: 0,
-//         width: '100%',
-//         height: '110%',
-//     },
-//     logo: {
-//         width: '150px',
-//         alignSelf:'flex-start',
-//         marginHorizontal:25,
-//         marginVertical:10
-//     },
-//     text_left:{
-//         textAlign:'left'
-//     },
-//     text_center:{
-//         textAlign:'center'
-//     },
-//     text_right:{
-//         textAlign:'right'
-//     },
-//     title: {
-//         fontSize: 14,
-//         padding:5,
-//         marginTop:5,
-//         marginBottom:5,
-//         color: '#fff',
-//         backgroundColor:'#2065D1',
-//         fontFamily:'Yantramanav',
-//         fontWeight:'black',
-//         borderRadius:4,
-//     },
-//     row: {
-//         display:'flex',
-//         flexDirection: "row",
-//         marginBottom:10,
-//         paddingHorizontal:0,
-//         width:'100%',
-//         columnGap:5,
-//     },
-//     contatiner: {
-//         flexDirection: "column",
-//         marginBottom:5,
-//         borderRadius:4,
-//         border:'1px solid #c3c3c3',
-//         backgroundColor:'#ebebeb',
-//         padding:4,
-//     },
-//     inner_contatiner: {
-//         flexDirection: "column",
-//       	borderRadius:4,
-//         border:'1px solid #c3c3c3',
-//         backgroundColor:'#fff',
-//         padding:4,
-//         marginTop:5
-//     },
-//     col:   { width: "100%", flexDirection: "column"},
-//     col_10: { width: "10%", flexDirection: "column"},
-//     col_20: { width: "20%", flexDirection: "column"},
-//     col_30: { width: "30%", flexDirection: "column"},
-//     col_40: { width: "40%", flexDirection: "column"},
-//     col_50: { width: "50%", flexDirection: "column"},
-//     col_60: { width: "60%", flexDirection: "column"},
-//     col_70: { width: "70%", flexDirection: "column"},
-//     col_80: { width: "80%", flexDirection: "column"},
-//     col_90: { width: "90%", flexDirection: "column"},
-//     lable: {
-//         fontSize: 10,
-//         textTransform:'uppercase',
-//         fontFamily:'Yantramanav',
-//         fontWeight:'bold',
-//         backgroundColor:'lightgray',
-//         paddingHorizontal:2,
-//         paddingVertical:2,
-//         borderRadius:3,
-//     },
-//     text: {
-//         paddingTop:2,
-//         fontSize: 14,
-//         fontFamily:'Arimo',
-//         color:'#212B36'
-//     },
-//     text_sm: {
-//         paddingTop:2,
-//         fontSize: 10,
-//         fontFamily:'Arimo',
-//         color:'#212B36',
-//     },
-//     bold: {
-//         fontWeight:'bold',
-//     }
-//   });
+  const styles = StyleSheet.create({
+    page:{
+        paddingTop:32,
+        paddingBottom:44,
+    },
+    body: {
+        paddingHorizontal: 25,
+    },
+    header: {
+        flexDirection: "row",
+        position:'absolute',
+        top:0,
+        fontSize: 10,
+        paddingHorizontal:10,
+        paddingVertical:10,
+        fontFamily:'Arimo',
+        backgroundColor:'#2065D1', 
+        color:'#fff',
+    },
+    footer: {
+        position:'absolute',
+        bottom:0,
+        fontSize: 10,
+        paddingHorizontal:10,
+        fontFamily:'Arimo',
+        backgroundColor:'#2065D1', 
+        color:'#fff',
+        width:'100%'
+    },
+    footer_line_1:{
+        display:'flex',
+        flexDirection: "row",
+        alignSelf:'center',
+        paddingVertical:5,
+    },
+    footer_line_2:{
+        display:'flex',
+        flexDirection: "row",
+        paddingVertical:5,
+        width:'100%',
+        borderTop:'1px solid #fff'
+    },
+    backgroundImage: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '110%',
+    },
+    logo: {
+        width: '150px',
+        alignSelf:'flex-start',
+        marginHorizontal:25,
+        marginVertical:10
+    },
+    text_left:{
+        textAlign:'left'
+    },
+    text_center:{
+        textAlign:'center'
+    },
+    text_right:{
+        textAlign:'right'
+    },
+    title: {
+        fontSize: 14,
+        padding:5,
+        marginTop:5,
+        marginBottom:5,
+        color: '#fff',
+        backgroundColor:'#2065D1',
+        fontFamily:'Yantramanav',
+        fontWeight:'black',
+        borderRadius:4,
+    },
+    row: {
+        display:'flex',
+        flexDirection: "row",
+        marginBottom:10,
+        paddingHorizontal:0,
+        width:'100%',
+        columnGap:5,
+    },
+    contatiner: {
+        flexDirection: "column",
+        marginBottom:5,
+        borderRadius:4,
+        border:'1px solid #c3c3c3',
+        backgroundColor:'#ebebeb',
+        padding:4,
+    },
+    inner_contatiner: {
+        flexDirection: "column",
+      	borderRadius:4,
+        border:'1px solid #c3c3c3',
+        backgroundColor:'#fff',
+        padding:4,
+        marginTop:5
+    },
+    col:   { width: "100%", flexDirection: "column"},
+    col_10: { width: "10%", flexDirection: "column"},
+    col_20: { width: "20%", flexDirection: "column"},
+    col_30: { width: "30%", flexDirection: "column"},
+    col_40: { width: "40%", flexDirection: "column"},
+    col_50: { width: "50%", flexDirection: "column"},
+    col_60: { width: "60%", flexDirection: "column"},
+    col_70: { width: "70%", flexDirection: "column"},
+    col_80: { width: "80%", flexDirection: "column"},
+    col_90: { width: "90%", flexDirection: "column"},
+    lable: {
+        fontSize: 10,
+        textTransform:'uppercase',
+        fontFamily:'Yantramanav',
+        fontWeight:'bold',
+        backgroundColor:'lightgray',
+        paddingHorizontal:2,
+        paddingVertical:2,
+        borderRadius:3,
+    },
+    text: {
+        paddingTop:2,
+        fontSize: 14,
+        fontFamily:'Arimo',
+        color:'#212B36'
+    },
+    text_sm: {
+        paddingTop:2,
+        fontSize: 10,
+        fontFamily:'Arimo',
+        color:'#212B36',
+    },
+    bold: {
+        fontWeight:'bold',
+    }
+  });
