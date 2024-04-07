@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
-import { Container } from '@mui/material'
 import { Document, Page, Image, View, Text, StyleSheet, Font  } from '@react-pdf/renderer';
 import { fDate } from '../../../utils/formatTime';
 
@@ -58,7 +57,6 @@ export function MachineServiceRecordPDF({machineServiceRecord}) {
     const fileName = `${defaultValues?.serviceDate?.substring(0,10).replaceAll('-','')}_${defaultValues?.serviceRecordConfigRecordType}_${defaultValues?.versionNo}`;
 
     return (
-    <Container maxWidth={false} >
         <Document title={fileName} subject='Serevice Record'
             author={defaultValues?.createdByFullName}
             creator='HOWICK'
@@ -234,25 +232,24 @@ export function MachineServiceRecordPDF({machineServiceRecord}) {
 
     </Page>
     </Document>
-    </Container>
 )};
 
     Font.register({
         family: 'Yantramanav',
         fonts: [
-        // { src: `${origin}/fonts/Yantramanav/Yantramanav-Regular.ttf` }, // font-style: normal, font-weight: normal
-        // { src: `${origin}/fonts/Yantramanav/Yantramanav-Medium.ttf`, fontWeight: 'medium' },
-        // { src: `${origin}/fonts/Yantramanav/Yantramanav-Bold.ttf`, fontWeight: 'bold' },
-        // { src: `${origin}/fonts/Yantramanav/Yantramanav-Black.ttf`, fontWeight: 'black' },
+        { src: `${origin}/fonts/Yantramanav/Yantramanav-Regular.ttf` }, // font-style: normal, font-weight: normal
+        { src: `${origin}/fonts/Yantramanav/Yantramanav-Medium.ttf`, fontWeight: 'medium' },
+        { src: `${origin}/fonts/Yantramanav/Yantramanav-Bold.ttf`, fontWeight: 'bold' },
+        { src: `${origin}/fonts/Yantramanav/Yantramanav-Black.ttf`, fontWeight: 'black' },
         ]
     });
 
     Font.register({
         family: 'Arimo',
         fonts: [
-            // { src: `${origin}/fonts/Arimo/static/Arimo-Regular.ttf` }, // font-style: normal, font-weight: normal
-            // { src: `${origin}/fonts/Arimo/static/Arimo-Medium.ttf`, fontWeight: 'medium' },
-            // { src: `${origin}/fonts/Arimo/static/Arimo-Bold.ttf`, fontWeight: 'bold' },
+            { src: `${origin}/fonts/Arimo/static/Arimo-Regular.ttf` }, // font-style: normal, font-weight: normal
+            { src: `${origin}/fonts/Arimo/static/Arimo-Medium.ttf`, fontWeight: 'medium' },
+            { src: `${origin}/fonts/Arimo/static/Arimo-Bold.ttf`, fontWeight: 'bold' },
         ]
     });
 
