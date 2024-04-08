@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 // @mui
@@ -20,7 +19,6 @@ import {
 } from '../../../components/table';
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
-import { useSnackbar } from '../../../components/snackbar';
 // sections
 import MachineServiceRecordHistoryListTableRow from './MachineServiceRecordHistoryListTableRow';
 import {
@@ -47,8 +45,7 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function MachineServiceRecordHistoryList() {
-  const { machineServiceRecordHistory, isDetailPage, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceRecord);
-  const { enqueueSnackbar } = useSnackbar();
+  const { machineServiceRecordHistory, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceRecord);
   const navigate = useNavigate();
   const { machineId, serviceId } = useParams();
 

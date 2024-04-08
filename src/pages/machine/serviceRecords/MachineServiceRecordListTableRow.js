@@ -7,8 +7,6 @@ import { PATH_MACHINE } from '../../../routes/paths';
 // utils
 import { fDate } from '../../../utils/formatTime';
 // components
-import { setMachineServiceRecordHistoryFormVisibility, getMachineServiceHistoryRecords } from '../../../redux/slices/products/machineServiceRecord';
-import { useDispatch, useSelector } from '../../../redux/store';
 import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 import HistoryIcon from '../../../components/Icons/HistoryIcon';
 import { StyledTableRow } from '../../../theme/styles/default-styles'
@@ -37,10 +35,7 @@ export default function MachineServiceRecordListTableRow({
 }) {
   const navigate = useNavigate();
   const { machineId } = useParams();
-  const { machine } = useSelector((state) => state.machine);
   const { serviceRecordConfig, versionNo, serviceDate, serviceId, isActive, createdAt, createdBy } = row;
-
-  const dispatch = useDispatch();
 
   const handleServiceRecordHistory = () => navigate(PATH_MACHINE.machines.serviceRecords.history.root(machineId, serviceId ))
 
