@@ -137,8 +137,8 @@ export const MachineNoteEdit = Loadable(lazy(() => import('../pages/machine/note
 // --------------------------- MACHINE Drawings  -------------------------------------
 
 export const MachineDrawingList = Loadable(lazy(() => import('../pages/machine/drawings/DrawingList')));
-// export const MachineDrawingAdd = Loadable(lazy(() => import('../pages/machine/drawings/')));
-export const MachineDrawingAdd = Loadable(lazy(() => import('../pages/machine/drawings/DrawingList')));
+export const MachineDrawingAdd = Loadable(lazy(() => import('../pages/machine/drawings/DrawingAdd')));
+export const MachineDrawingAttach = Loadable(lazy(() => import('../pages/machine/drawings/DrawingAttach')));
 export const MachineDrawingListAdd = Loadable(lazy(() => import('../pages/machine/drawings/DrawingListAdd')));
 export const MachineDrawingView = Loadable(lazy(() => import('../pages/machine/drawings/DrawingView')));
 export const MachineDrawingEdit = Loadable(lazy(() => import('../pages/machine/drawings/DrawingEdit')));

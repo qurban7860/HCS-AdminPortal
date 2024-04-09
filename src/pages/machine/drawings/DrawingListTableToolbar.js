@@ -5,8 +5,6 @@ import { useSelector } from 'react-redux';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import { PATH_MACHINE } from '../../../routes/paths';
-// 
-import { useDispatch } from '../../../redux/store';
 // components
 import { SearchBarCombo } from '../../../components/ListTableTools';
 // constants
@@ -41,12 +39,13 @@ export default function DrawingListTableToolbar({
   typeVal,
   setTypeVal,
 }) {
-  const dispatch = useDispatch();
+
   const navigate = useNavigate();
   const { machineId } = useParams();
 
   const { machine } = useSelector((state) => state.machine);
-  const handleAattach = () => navigate(PATH_MACHINE.machines.drawings.new(machineId));
+
+  const handleAattach = () => navigate(PATH_MACHINE.machines.drawings.attach(machineId));
   const handleAdd = () => navigate(PATH_MACHINE.machines.drawings.new(machineId));
   const handleAddList = () => navigate(PATH_MACHINE.machines.drawings.multipleNew(machineId));
 

@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
-import React, { useMemo, memo, useState, useEffect } from 'react';
+import React, { useMemo, memo, useState, useEffect, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { Grid, Card, Box, Dialog, DialogTitle, Button, DialogContent, Divider, Typography } from '@mui/material'
 import download from 'downloadjs';
 import { StyledVersionChip } from '../../../theme/styles/default-styles';
-import { PATH_CRM, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_CRM, PATH_DOCUMENT, PATH_MACHINE } from '../../../routes/paths';
 import {
   deleteDocument,
   getDocumentHistory,
@@ -46,9 +46,16 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
   const { enqueueSnackbar } = useSnackbar();
-
+  const { customerId, machineId, id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useLayoutEffect(()=>{
+    if( machinePage ){
+      dispatch(getDocument(id))
+    }
+  },[ dispatch, id, machinePage ]);
+
   const onDelete = async () => {
     try {
       await dispatch(deleteDocument(document._id));
@@ -291,16 +298,14 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
     setPages(numPages);
   };
 
-  const handleBackLink = () => {
-    if(customerPage || machinePage ) {
-      dispatch(setDocumentHistoryViewFormVisibility(false)); 
-      dispatch(setDocumentViewFormVisibility(false))
-      if(customerPage && !machinePage ) {
-        navigate(PATH_CRM.customers.documents.root( customer?._id ));
-      }
-    } else {
+  const handleBackLink = ()=>{
+    if(customerPage) {
+      navigate(PATH_CRM.customers.documents.view( customerId, id ));
+    } else if( machinePage ){
+      navigate(PATH_MACHINE.machines.documents.root(machineId)) 
+    } else{
       navigate(PATH_DOCUMENT.document.list)
-    } 
+    }
   }
 
   return (

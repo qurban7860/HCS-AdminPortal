@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import {  useEffect, useMemo, useState, memo} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -21,7 +21,7 @@ import {
 } from '../../../redux/slices/document/document';
 import { setDrawingEditFormVisibility, setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
 import { Snacks } from '../../../constants/document-constants';
-import { PATH_CRM, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_CRM, PATH_DOCUMENT, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 DocumentEditForm.propTypes = {
@@ -42,6 +42,7 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
   const [customerAccessVal, setCustomerAccessVal] = useState(false);
   const [isActive, setIsActive] = useState(false);
   const navigate = useNavigate();
+  const { machineId, customerId, id } = useParams();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -119,19 +120,21 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
   };
 
   const toggleCancel = () => {
-    if( customerPage && !machinePage ){
-      navigate(PATH_CRM.customers.documents.view( customer?._id, document?._id ));
-    } else if(drawingPage){
-      dispatch(setDrawingViewFormVisibility(true));
-      dispatch(setDrawingEditFormVisibility(false));
-    }else{
-      dispatch(setDocumentEditFormVisibility(false));
+    if( customerPage ){
+      navigate(PATH_CRM.customers.documents.root( customerId ));
+    } else if( machinePage ){
+      navigate(PATH_MACHINE.machines.documents.root(machineId));
+    } else if( drawingPage ){
+      navigate(PATH_MACHINE.machines.drawings.root(machineId));
+    }else if( !customerPage && !drawingPage && !machinePage ){
+      navigate(PATH_DOCUMENT.root())
     }
-  };
+  }
 
   const handleChange = () => {
     setCustomerAccessVal(!customerAccessVal);
   };
+  
   const handleIsActiveChange = () => {
     setIsActive(!isActive);
   };

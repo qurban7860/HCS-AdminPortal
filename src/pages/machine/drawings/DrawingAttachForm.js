@@ -1,12 +1,15 @@
 import * as Yup from 'yup';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { TextField, Autocomplete, Box, Card, Grid, Stack } from '@mui/material';
+// routes
+import { PATH_MACHINE } from '../../../routes/paths';
 // slice
-import { addDrawing, setDrawingFormVisibility } from '../../../redux/slices/products/drawing';
+import { addDrawing } from '../../../redux/slices/products/drawing';
 import { getActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
 import { getActiveDocumentTypesWithCategory, resetActiveDocumentTypes } from '../../../redux/slices/document/documentType';
 import { resetActiveDocuments, getActiveDocumentsByType } from '../../../redux/slices/document/document';
@@ -18,8 +21,9 @@ import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
-export default function DrawingAddForm() {
-  const { machine } = useSelector((state) => state.machine);
+export default function DrawingAttachForm() {
+  const navigate = useNavigate(); 
+  const { machineId } = useParams();
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocuments } = useSelector((state) => state.document);
@@ -83,23 +87,23 @@ export default function DrawingAddForm() {
 
     const onSubmit = async (data) => {
         try {
-            data.machine = machine._id;
+            data.machine = machineId;
         await dispatch(addDrawing(data));
             reset();
             enqueueSnackbar('Drawing created successfully!');
-            dispatch(setDrawingFormVisibility(false));
+            navigate(PATH_MACHINE.machines.drawings.root(machineId));
         } catch (error) {
             enqueueSnackbar(error, {variant: 'error'});
             console.error( error);
         };
     }
 
-  const toggleCancel = () => dispatch(setDrawingFormVisibility(false));
+  const toggleCancel = () => navigate(PATH_MACHINE.machines.drawings.root(machineId));
 
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container>
-          <Grid item xs={18} md={12} sx={{ mt: 3 }}>
+          <Grid item xs={18} md={12} >
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
                 <Box

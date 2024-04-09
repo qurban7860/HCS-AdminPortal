@@ -37,7 +37,7 @@ import {
   setDocumentHistoryViewFormVisibility,
   setDocumentVersionEditDialogVisibility
 } from '../../../redux/slices/document/document';
-import { deleteDrawing, getDrawings, resetDrawings,
+import { deleteDrawing, getDrawings, getDrawing, resetDrawings,
   setDrawingEditFormVisibility, setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
 
 import { deleteDocumentFile, downloadFile, getDocumentDownload } from '../../../redux/slices/document/documentFile';
@@ -47,7 +47,7 @@ import FormLabel from '../../../components/DocumentForms/FormLabel';
 import DocumentCover from '../../../components/DocumentForms/DocumentCover';
 import CustomerDialog from '../../../components/Dialog/CustomerDialog';
 import MachineDialog from '../../../components/Dialog/MachineDialog';
-import { PATH_DOCUMENT, PATH_CRM } from '../../../routes/paths';
+import { PATH_DOCUMENT, PATH_CRM, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
 import { Snacks } from '../../../constants/document-constants';
 import UpdateDocumentVersionDialog from '../../../components/Dialog/UpdateDocumentVersionDialog';
@@ -59,12 +59,13 @@ import Lightbox from '../../../components/lightbox/Lightbox';
 DocumentHistoryViewForm.propTypes = {
   customerPage: PropTypes.bool,
   machinePage: PropTypes.bool,
-  drawingPage: PropTypes.bool,
+  machineDrawingPage: PropTypes.bool,
   machineDrawings: PropTypes.bool,
 };
-function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machineDrawings }) {
+function DocumentHistoryViewForm({ customerPage, machinePage, machineDrawingPage, machineDrawings }) {
+  
   const dispatch = useDispatch();
-  const { id } = useParams();
+  const { customerId, machineId, id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const { documentHistory, documentVersionEditDialogVisibility, isLoading } = useSelector((state) => state.document);
@@ -73,13 +74,7 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
   const { drawing } = useSelector((state) => state.drawing);
 
   useEffect(() => {
-    if(!machinePage && !drawingPage){
-      dispatch(resetMachine());
-    }
-    if(!customerPage && !drawingPage){
-      dispatch(resetCustomer());
-    }
-    if(!machinePage && !customerPage && !drawingPage && id){
+    if( id ){
       dispatch(getDocumentHistory(id));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -87,10 +82,10 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
 
 // get machine data for machine portal
   useEffect(() => {
-    if (documentHistory?.machine && !machinePage && !drawingPage) {
+    if (documentHistory?.machine && !machinePage && !machineDrawingPage) {
       dispatch(setMachineDialog(false));
     }
-  }, [documentHistory, machinePage, drawingPage, dispatch]);
+  }, [documentHistory, machinePage, machineDrawingPage, dispatch]);
 
 // get customer data for customer portal
   useEffect(() => {
@@ -137,32 +132,15 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
   );
 
 const handleNewVersion = async () => {
-  if(customerPage){
-    dispatch(setDocumentHistoryNewVersionFormVisibility(true));
-    navigate(PATH_CRM.customers.documents.new( customer?._id ));
-  } else if( machinePage){
-    dispatch(setDocumentHistoryViewFormVisibility(false));
-    dispatch(setDocumentFormVisibility(true));
-    dispatch(setDocumentHistoryNewVersionFormVisibility(true));
-    dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
-    dispatch(setDocumentAddFilesViewFormVisibility(false));
-    dispatch(setDocumentNewVersionFormVisibility(false));
-    dispatch(resetDocument());
-  }else if(!customerPage && !machinePage && !machineDrawings){
-    dispatch(setDocumentHistoryNewVersionFormVisibility(true));
-    dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
-    dispatch(setDocumentAddFilesViewFormVisibility(false));
-    dispatch(setDocumentNewVersionFormVisibility(false));
-    navigate(PATH_DOCUMENT.document.new,"drawingPage");
-    dispatch(resetDocument());
-  }else if(machineDrawings){
-    dispatch(setDocumentHistoryNewVersionFormVisibility(true));
-    dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
-    dispatch(setDocumentAddFilesViewFormVisibility(false));
-    dispatch(setDocumentNewVersionFormVisibility(false));
-    navigate(PATH_DOCUMENT.document.machineDrawings.new);
-    dispatch(resetDocument());
-  }
+  // if(customerPage){
+  //   navigate(PATH_CRM.customers.documents.new( customer?._id ));
+  // } else if( machinePage){
+
+  // }else if(!customerPage && !machinePage && !machineDrawings){
+
+  // }else if(machineDrawings){
+
+  // }
 }
 
 const handleUpdateVersion = async () => {
@@ -170,46 +148,28 @@ const handleUpdateVersion = async () => {
 }
 
 const handleNewFile = async () => {
-  if(customerPage || machinePage){
-    if( customerPage && !machinePage ){
-      dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
-      navigate(PATH_CRM.customers.documents.new( customer?._id ));
-    }
-    dispatch(setDocumentHistoryViewFormVisibility(false));
-    dispatch(setDocumentHistoryAddFilesViewFormVisibility(true));
-    dispatch(setDocumentHistoryNewVersionFormVisibility(false));
-    dispatch(setDocumentAddFilesViewFormVisibility(false));
-    dispatch(setDocumentNewVersionFormVisibility(false));
-    dispatch(setDocumentFormVisibility(true));
-    dispatch(resetDocument());
-  }else if(!customerPage && !machinePage && !machineDrawings){
-    dispatch(setDocumentAddFilesViewFormVisibility(false));
-    dispatch(setDocumentNewVersionFormVisibility(false));
-    dispatch(setDocumentHistoryAddFilesViewFormVisibility(true));
-    dispatch(setDocumentHistoryNewVersionFormVisibility(false));
-    dispatch(resetDocument());
-    navigate(PATH_DOCUMENT.document.new);
-  }
-  else if(machineDrawings){
-    dispatch(setDocumentAddFilesViewFormVisibility(false));
-    dispatch(setDocumentNewVersionFormVisibility(false));
-    dispatch(setDocumentHistoryAddFilesViewFormVisibility(true));
-    dispatch(setDocumentHistoryNewVersionFormVisibility(false));
-    navigate(PATH_DOCUMENT.document.machineDrawings.new);
-    dispatch(resetDocument());
-  }
+  // if( customerPage ){
+  //     dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
+  //     navigate(PATH_CRM.customers.documents.new( customer?._id ));
+  // } else if(machinePage){
+
+  // } else if(!customerPage && !machinePage && !machineDrawings){
+  //   navigate(PATH_DOCUMENT.document.new);
+  // } else if(machineDrawings){
+  //   navigate(PATH_DOCUMENT.document.machineDrawings.new);
+  // }
 }
+
   const handleCustomerDialog = () =>{
     if (documentHistory?.customer && !customerPage) {
       dispatch(setCustomerDialog(true));
       dispatch(getCustomer(documentHistory.customer._id));
     }
   }
-  const handleMachineDialog = (machineId) =>{
-    // if (documentHistory?.machine && !machinePage && !drawingPage) {
+
+  const handleMachineDialog = (Id) =>{
       dispatch(setMachineDialog(true));
-      dispatch(getMachineForDialog(machineId));
-    // }
+      dispatch(getMachineForDialog(Id));
   }
 
   const handleEditDrawing = async () => {
@@ -379,22 +339,22 @@ const handleNewFile = async () => {
   };
 
   const handleBackLink = ()=>{
-    if(customerPage && !machinePage ) {
-      dispatch(getDocument(documentHistory?._id));
-      navigate(PATH_CRM.customers.documents.view( customer?._id, documentHistory?._id ));
-    } else if( machinePage || drawingPage ){
-      dispatch(setDrawingViewFormVisibility(false))
-      dispatch(setDocumentHistoryViewFormVisibility(false)); 
+    if(customerPage) {
+      navigate(PATH_CRM.customers.documents.view( customerId, documentHistory?._id ));
+    } else if( machinePage ){
+      navigate(PATH_MACHINE.machines.documents.root(machineId)) 
+    } else if( machineDrawingPage ){
+      navigate(PATH_MACHINE.machines.drawings.root(machineId)) 
     } else if(machineDrawings){
-      navigate(PATH_DOCUMENT.document.machineDrawings.list) 
+      navigate(PATH_MACHINE_DRAWING.root) 
     } else{
-      navigate(PATH_DOCUMENT.document.list)
+      navigate(PATH_DOCUMENT.root)
     }
   }
   
   return (
-    <Container maxWidth={false} sx={{padding:(machineDrawings || customerPage || machinePage || drawingPage) ?'0 !important':''}}>
-      {!customerPage && !machinePage && !drawingPage &&
+    <Container maxWidth={false} sx={{padding:(machineDrawings || customerPage || machinePage || machineDrawingPage) ?'0 !important':''}}>
+      {!customerPage && !machinePage && !machineDrawingPage &&
         <DocumentCover content={defaultValues?.displayName} generalSettings />
       }
 
@@ -403,13 +363,13 @@ const handleNewFile = async () => {
           <ViewFormEditDeleteButtons
           customerPage={customerPage} 
           machinePage={machinePage} 
-          drawingPage={drawingPage}
+          drawingPage={machineDrawingPage}
           customerAccess={defaultValues?.customerAccess}
           isActive={defaultValues.isActive}
-          handleEdit={drawingPage && handleEditDrawing}
-          onDelete={drawingPage?handleDeleteDrawing : handleDelete }
-          disableDeleteButton={drawingPage && machine?.status?.slug==="transferred"}
-          disableEditButton={drawingPage && machine?.status?.slug==="transferred"}
+          handleEdit={machineDrawingPage && handleEditDrawing}
+          onDelete={machineDrawingPage ? handleDeleteDrawing : handleDelete }
+          disableDeleteButton={machineDrawingPage && machine?.status?.slug==="transferred"}
+          disableEditButton={machineDrawingPage && machine?.status?.slug==="transferred"}
           backLink={handleBackLink}
       />
             <Grid container sx={{mt:2}}>
@@ -456,7 +416,7 @@ const handleNewFile = async () => {
               <ViewFormField isLoading={isLoading} sm={6} heading="Reference Number" param={defaultValues?.referenceNumber} />
               <ViewFormField isLoading={isLoading} sm={6} heading="Stock Number" param={defaultValues?.stockNumber} />
 
-              {!customerPage && !machineDrawings && !drawingPage && defaultValues.customer && (
+              {!customerPage && !machineDrawings && !machineDrawingPage && defaultValues.customer && (
                 <ViewFormField isLoading={isLoading}
                   sm={6}
                   variant='h4'
@@ -471,7 +431,7 @@ const handleNewFile = async () => {
                 />
               )}
 
-              {!machinePage && !machineDrawings && !drawingPage &&  defaultValues?.machine && (
+              {!machinePage && !machineDrawings && !machineDrawingPage &&  defaultValues?.machine && (
                 <ViewFormField isLoading={isLoading}
                   sm={6}
                   heading="Machine"
@@ -487,7 +447,7 @@ const handleNewFile = async () => {
               )}
 
               <ViewFormField isLoading={isLoading} sm={12} heading="Description" param={defaultValues?.description} />
-              {((drawingPage && documentHistory?.productDrawings?.length > 1) || machineDrawings) &&
+              {((machineDrawingPage && documentHistory?.productDrawings?.length > 1) || machineDrawings) &&
                 <ViewFormField isLoading={isLoading} sm={12} heading="Attached with Machines" chipDialogArrayParam={linkedDrawingMachines} />
               }
               <Grid container sx={{ mt: '1rem', mb: '-1rem' }}>
@@ -504,7 +464,7 @@ const handleNewFile = async () => {
                       updatedIP: version?.updatedIP || '',
                     }
 
-                 return (
+                return (
                   <Grid container key={index}>
                     <Grid container sx={{ pt: '2rem' }} mb={1}>
                       <FormLabel content={`Version No. ${version?.versionNo}`} />
@@ -584,8 +544,6 @@ const handleNewFile = async () => {
                   onGetCurrentIndex={(index) => handleOpenLightbox(index)}
                   disabledSlideshow
                 />
-
-
             </Grid>
           </Card>
         </Grid>
@@ -593,7 +551,7 @@ const handleNewFile = async () => {
       <MachineDialog />
       {documentVersionEditDialogVisibility && <UpdateDocumentVersionDialog />}
     </Container>
-     
+    
   );
 }
 

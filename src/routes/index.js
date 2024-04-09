@@ -115,6 +115,7 @@ import {
   // --------------------------- MACHINE Drawings  -------------------------------------
   MachineDrawingList,
   MachineDrawingAdd,
+  MachineDrawingAttach,
   MachineDrawingListAdd,
   MachineDrawingView,
   MachineDrawingEdit,
@@ -559,8 +560,8 @@ export default function Router() {
             { path: ':machineId/drawings',
               children:[
                 {element: <MachineDrawingList/>, index: true},
-                {path: 'new', element: <MachineDrawingAdd/>},
-                {path: 'attach', element: <MachineDrawingAdd/>},
+                {path: 'new', element: <MachineDrawingAdd />},
+                {path: 'attach', element: <MachineDrawingAttach/>},
                 {path: 'multipleNew', element: <MachineDrawingListAdd/>},
                 {path: ':id/view', element: <MachineDrawingView/>},
                 {path: ':id/edit', element: <MachineDrawingEdit/>}, 
@@ -909,23 +910,29 @@ export default function Router() {
         </AuthGuard>
       ),
       children: [
-        {element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-        {path: 'list',element: <DocumentList />},
+        {element: <DocumentList />, index: true},
         {path: 'new', element: <DocumentAdd /> },
         {path: 'newList', element: <DocumentAddList /> },
         {path: ':id/edit', element: <DocumentEdit /> },
         {path: ':id/view', element: <DocumentView /> },
         {path: ':id/gallery', element: <DocumentGallery /> },
-        {path: 'machineDrawings',
-          children: [
-            { path: 'list', element: <MachineDrawings/> },
-            { path: 'new', element: <MachineDrawingsAdd/> },
-            {path: 'newList', element: <DocumentAddList machineDrawings /> },
-            { path: ':id/view', element: <MachineDrawingsView /> },
-          ]
-        }
       ],
     },
+        // ------------------------------ Drawings ----------------------------------
+        {
+          path: 'machineDrawings',
+          element: (
+            <AuthGuard>
+              <DashboardLayout />
+            </AuthGuard>
+          ),
+          children: [
+            { element: <MachineDrawings/>, index: true  },
+            { path: 'new', element: <MachineDrawingsAdd/> },
+            { path: 'newList', element: <DocumentAddList machineDrawings /> },
+            { path: ':id/view', element: <MachineDrawingsView /> },
+          ],
+        },
     // ----------------------------- Sites Report -----------------------------------
     {
       // Sites

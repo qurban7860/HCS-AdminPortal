@@ -12,6 +12,7 @@ const ROOTS_EMAIL =   '/email';
 const ROOTS_SECURITY = '/security';
 const ROOTS_SETTING = '/settings';
 const ROOTS_DOCUMENT = '/documents';
+const ROOTS_MACHINE_DRAWING = '/machineDrawings';
 const ROOTS_SITEMAP = '/site';
 
 // ----------------------------------------------------------------------
@@ -423,7 +424,6 @@ export const PATH_DOCUMENT = {
   permissionDenied: path(ROOTS_DOCUMENT, '/permission-denied'),
   // ----------------------- Documents -----------------------------------------
   document: {
-    list: path(ROOTS_DOCUMENT, '/list'),
     new: path(ROOTS_DOCUMENT, '/new'),
     newList: path(ROOTS_DOCUMENT, '/newList'),
     gallery: (id) => path(ROOTS_DOCUMENT, `/${id}/gallery`),
@@ -431,16 +431,21 @@ export const PATH_DOCUMENT = {
     view: (id) => path(ROOTS_DOCUMENT, `/${id}/view`),
     customer: (id) => path(ROOTS_DOCUMENT, `/${id}/customer`),
     machine: (id) => path(ROOTS_DOCUMENT, `/${id}/machine`),
-    // ----------------------- Documents: Machine Drawings -----------------------------------------
-    machineDrawings:{
-      list: path(ROOTS_DOCUMENT, '/machineDrawings/list'),
-      new: path(ROOTS_DOCUMENT, '/machineDrawings/new'),
-      newList: path(ROOTS_DOCUMENT, '/machineDrawings/newList'),
-      view: (id) => path(ROOTS_DOCUMENT, `/machineDrawings/${id}/view`),
-    }
-
   },
 };
+
+// ----------------------- MACHINE DRAWINGS -----------------------------------------
+export const PATH_MACHINE_DRAWING = {
+  root: ROOTS_MACHINE_DRAWING,
+  permissionDenied: path(ROOTS_MACHINE_DRAWING, '/permission-denied'),
+  // ----------------------- Documents -----------------------------------------
+  machineDrawings:{
+    new: path(ROOTS_MACHINE_DRAWING, '/new'),
+    newList: path(ROOTS_MACHINE_DRAWING, '/newList'),
+    view: (id) => path(ROOTS_MACHINE_DRAWING, `/${id}/view`),
+  }
+};
+
 // ----------------------- Emails -----------------------------------------
 export const PATH_EMAIL = {
   root: ROOTS_EMAIL,

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Box, Card, Typography, Stack, Container, TablePagination, Grid } from '@mui/material';
@@ -16,7 +16,7 @@ import { downloadFile } from '../../../redux/slices/document/documentFile';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { Cover } from '../../../components/Defaults/Cover';
-import { PATH_CRM, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_CRM, PATH_DOCUMENT, PATH_MACHINE } from '../../../routes/paths';
 import EmptyContent from '../../../components/empty-content/EmptyContent';
 import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
 
@@ -31,6 +31,7 @@ export default function DocumentGallery({customerPage, machinePage}) {
   
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { machineId, customerId } = useParams();
   const regEx = /^[^2]*/;
   
   const { machine } = useSelector((state) => state.machine);
@@ -125,8 +126,7 @@ export default function DocumentGallery({customerPage, machinePage}) {
     if( customerPage ){
       navigate(PATH_CRM.customers.documents.root(customer?._id))
     } else if( machinePage ){
-      dispatch(setDocumentGalleryVisibility(false))
-      // () =>  navigate(PATH_DOCUMENT.document.list)
+      navigate(PATH_MACHINE.machines.documents.root(machineId))
     }
   };
   return (

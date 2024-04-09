@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { useEffect, useLayoutEffect, useState, memo} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -11,10 +11,9 @@ import { pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import { Box, Card, Grid, Stack, Dialog, Container } from '@mui/material';
 // PATH
-import { PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_DOCUMENT, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../../routes/paths';
 // slice
-// import { checkDocument } from '../../../redux/slices/document/document';
-import { addDrawingsList, setDrawingListAddFormVisibility } from '../../../redux/slices/products/drawing';
+import { addDrawingsList } from '../../../redux/slices/products/drawing';
 import { getActiveDocumentCategories, resetActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
 import { getActiveDrawingTypes, resetActiveDocumentTypes } from '../../../redux/slices/document/documentType';
 // components
@@ -36,23 +35,22 @@ import LinearProgressWithLabel from '../../../components/progress-bar/LinearProg
 DocumentListAddForm.propTypes = {
   currentDocument: PropTypes.object,
   customerPage: PropTypes.bool,
-  machinePage: PropTypes.bool,
+  machineDrawingPage: PropTypes.bool,
   drawingPage: PropTypes.bool,
   machineDrawings: PropTypes.bool,
-  handleFormVisibility: PropTypes.func,
 };
 
 function DocumentListAddForm({
   currentDocument,
   customerPage,
-  machinePage,
+  machineDrawingPage,
   drawingPage,
   machineDrawings,
-  handleFormVisibility,
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  const { machineId }= useParams();
 
   const { machine } = useSelector((state) => state.machine);
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
@@ -60,7 +58,7 @@ function DocumentListAddForm({
 
   // ------------------ document values states ------------------------------
 
-  const [ previewVal, setPreviewVal ] = useState('');
+  // const [ previewVal, setPreviewVal ] = useState('');
   const [ preview, setPreview ] = useState(false);
 
   const [ progress, setProgress ] = useState(0);
@@ -151,9 +149,9 @@ const onChangeVersionNo = (index, value) => {
       await dispatch(addDrawingsList( data));
       enqueueSnackbar(Snacks.addedDrawing);
       if (machineDrawings){
-        navigate(PATH_DOCUMENT.document.machineDrawings.list);
-      } else{
-        await dispatch(setDrawingListAddFormVisibility(false));
+        navigate(PATH_MACHINE_DRAWING.root);
+      } else if(machineDrawingPage){
+        navigate(PATH_MACHINE.machines.drawings.root(machineId));
       }
       reset();
     } catch (error) {
@@ -284,11 +282,12 @@ const onChangeVersionNo = (index, value) => {
     }
     trigger('files');
   }
+  
   const toggleCancel = () => { 
     if(machineDrawings){
-      navigate(PATH_DOCUMENT.document.machineDrawings.list) 
-    }else {
-      dispatch(setDrawingListAddFormVisibility(false));
+      navigate(PATH_MACHINE_DRAWING.root) 
+    }else if(machineDrawingPage) {
+      navigate(PATH_MACHINE.machines.drawings.root(machineId)) 
     } 
   }
 
@@ -296,7 +295,7 @@ const onChangeVersionNo = (index, value) => {
     <Container maxWidth={false} sx={{mb:3}}>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       { machineDrawings &&
-        <DocumentCover content="Upload Multiple Drawings" backLink={!customerPage && !machinePage && !machineDrawings} machineDrawingsBackLink={machineDrawings} generalSettings />
+        <DocumentCover content="Upload Multiple Drawings" backLink={!customerPage && !machineDrawingPage && !machineDrawings} machineDrawingsBackLink={machineDrawings} generalSettings />
       }
       <Box column={12} rowGap={2} columnGap={2} gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} mt={3} >
         <Grid container item xs={12} md={12} lg={12}>
@@ -339,7 +338,7 @@ const onChangeVersionNo = (index, value) => {
                     { progressBar &&  <Box sx={{ width: '100%' }}>
                         <LinearProgressWithLabel variant="buffer"  value={progress}  /> 
                     </Box>}
-                <AddFormButtons drawingPage={ !customerPage && !machinePage } isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+                <AddFormButtons drawingPage={ !customerPage && !machineDrawingPage } isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>
           </Grid>
@@ -358,7 +357,7 @@ const onChangeVersionNo = (index, value) => {
           component="img"
           sx={{ minWidth: '400px', minHeight: '400px' }}
           alt='document_image'
-          src={previewVal}
+          // src={previewVal}
         />
       </Dialog>
       
