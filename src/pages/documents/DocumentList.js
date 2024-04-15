@@ -156,7 +156,7 @@ const onChangePage = (event, newPage) => {
   }
 
   useEffect(() => {
-    if(machineDrawingPage || machineDrawings ){
+    if(machineDrawingPage || machineDrawings || machinePage ){
       dispatch(getActiveDocumentCategories(null));
       dispatch(getActiveDocumentTypes());
       if(machineDrawings){

@@ -87,13 +87,13 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
 
   const toggleCancel = () => {
     if( customerPage && customerId && id ){
-      navigate(PATH_CRM.customers.documents.view( customerId, id ));
+      navigate(PATH_CRM.customers.documents.view.root( customerId, id ));
     } else if( machinePage && machineId && id ){
-      navigate(PATH_MACHINE.machines.documents.view(machineId, id));
+      navigate(PATH_MACHINE.machines.documents.view.root(machineId, id));
     } else if( drawingPage && machineId && id ){
-      navigate(PATH_MACHINE.machines.drawings.view(machineId, id));
+      navigate(PATH_MACHINE.machines.drawings.view.root(machineId, id));
     }else if( !customerPage && !drawingPage && !machinePage && id ){
-      navigate(PATH_DOCUMENT.document.view(id))
+      navigate(PATH_DOCUMENT.document.view.root(id))
     }
   }
 

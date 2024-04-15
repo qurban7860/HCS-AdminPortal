@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useDispatch,useSelector } from 'react-redux';
 import { Container } from '@mui/material';
 import { getDrawing } from '../../../redux/slices/products/drawing';
-import DrawingEditForm from './DrawingEditForm';
+import DocumentEditForm from '../../documents/DocumentEditForm';
 // redux
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
@@ -24,8 +24,8 @@ export default function DrawingEdit() {
 
   return (
       <Container maxWidth={false }>
-                <MachineTabContainer currentTabValue='drawings' />
-        <DrawingEditForm/>
+        <MachineTabContainer currentTabValue='drawings' />
+        <DocumentEditForm drawingPage />
       </Container>
   );
 }

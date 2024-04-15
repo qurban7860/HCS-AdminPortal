@@ -144,9 +144,11 @@ function DocumentAddForm({
       if( selectedValue === 'newVersion' ) dispatch(getMachineDrawingsDocuments());
     }
 
-    if( customerPage && customer?._id && selectedValue === 'newVersion' && Array.isArray(activeDocuments) && activeDocuments.length < 1 ){
+    if( customerPage && customerId && selectedValue === 'newVersion'){
       dispatch(getCustomerDocuments(customer?._id));
-    } 
+    } else if( machinePage && machineId && selectedValue === 'newVersion' ){
+      dispatch(getMachineDocuments(machineId));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, categoryBy, customerPage, customer, machinePage, machine, machineDrawings, selectedValue]);
   
@@ -232,7 +234,7 @@ function DocumentAddForm({
         enqueueSnackbar(drawingPage || machineDrawings ?Snacks.addedDrawing:Snacks.addedDoc);
       } else if (selectedVersionValue === 'newVersion') {
         // NEW VERSION 
-        await dispatch(addDocumentVersion( id, data));
+        await dispatch(addDocumentVersion( documentVal?._id, data));
         enqueueSnackbar(Snacks.updatedDoc);
       } else {
         // UPDATE VERSION / ADD FILES
@@ -444,7 +446,7 @@ function DocumentAddForm({
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
-                {!drawingPage && 
+                {!drawingPage && !machineDrawings && 
                   <RadioButtons
                     radioDisaled={ newVersion || addFiles || historyNewVersion || historyAddFiles }
                     value={selectedValue} radioOnChange={handleRadioChange} 

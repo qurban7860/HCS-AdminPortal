@@ -78,11 +78,10 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
   };
 
   const handleEdit = async () => {
-    dispatch(getDocument(document?._id));
-    dispatch(setDocumentViewFormVisibility(false));
-    dispatch(setDocumentEditFormVisibility(true));
-    if( customerPage && !machinePage ){
-      navigate(PATH_CRM.customers.documents.edit( customer?._id, document?._id ));
+    if( customerPage ){
+      navigate(PATH_CRM.customers.documents.edit( customerId, id ));
+    } else if( machinePage ){
+      navigate(PATH_MACHINE.machines.documents.edit( machineId, id ));
     }
   };
 

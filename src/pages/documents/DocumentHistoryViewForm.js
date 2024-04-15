@@ -175,11 +175,7 @@ const handleNewFile = async () => {
       dispatch(getMachineForDialog(Id));
   }
 
-  const handleEditDrawing = async () => {
-    await dispatch(getDocument(documentHistory._id));
-    dispatch(setDrawingViewFormVisibility(false));
-    dispatch(setDrawingEditFormVisibility(true));
-  };
+  const handleEditDrawing = async () => navigate(PATH_MACHINE.machines.drawings.edit( machineId, id));
 
   const handleDelete = async () => {
     try {
