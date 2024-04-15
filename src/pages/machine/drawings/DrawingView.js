@@ -1,5 +1,5 @@
 import { Container } from '@mui/material';
-import DocumentHistoryViewForm from '../../document/documents/DocumentHistoryViewForm'
+import DocumentHistoryViewForm from '../../documents/DocumentHistoryViewForm'
 import MachineTabContainer from '../util/MachineTabContainer';
 
 export default function DrawingView() {

@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 import { Stack } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useDispatch } from '../../../redux/store';
+import { useDispatch } from '../../redux/store';
 // components
-import { PATH_DOCUMENT, PATH_CRM, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../../routes/paths';
+import { PATH_DOCUMENT, PATH_CRM, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
 import { 
   setDocumentFormVisibility, 
   setDocumentHistoryNewVersionFormVisibility, 
   setDocumentNewVersionFormVisibility 
-} from '../../../redux/slices/document/document';
-import SearchBarCombo from '../../../components/ListTableTools/SearchBarCombo';
-import { BUTTONS } from '../../../constants/default-constants';
+} from '../../redux/slices/document/document';
+import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
+import { BUTTONS } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 

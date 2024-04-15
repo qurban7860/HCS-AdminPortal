@@ -10,9 +10,9 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 // redux
-import { useDispatch, useSelector } from '../../../redux/store';
+import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_CRM, PATH_DOCUMENT, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../../routes/paths';
+import { PATH_CRM, PATH_DOCUMENT, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
 // components
 import {
   useTable,
@@ -21,8 +21,8 @@ import {
   TableSkeleton,
   TableHeadCustom,
   TablePaginationCustom,
-} from '../../../components/table';
-import Scrollbar from '../../../components/scrollbar';
+} from '../../components/table';
+import Scrollbar from '../../components/scrollbar';
 // sections
 import DocumentListTableRow from './DocumentListTableRow';
 import DocumentListTableToolbar from './DocumentListTableToolbar';
@@ -47,18 +47,18 @@ import {
   setMachineDrawingsFilterBy,
   machineDrawingsChangePage,
   machineDrawingsChangeRowsPerPage,
-} from '../../../redux/slices/document/document';
-import { getMachineForDialog,  setMachineDialog } from '../../../redux/slices/products/machine';
-import { getActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
-import { getActiveDocumentTypes } from '../../../redux/slices/document/documentType';
-import { getCustomer, setCustomerDialog } from '../../../redux/slices/customer/customer';
-import { Cover } from '../../../components/Defaults/Cover';
-import { StyledCardContainer } from '../../../theme/styles/default-styles';
-import { FORMLABELS } from '../../../constants/default-constants';
-import { fDate } from '../../../utils/formatTime';
-import TableCard from '../../../components/ListTableTools/TableCard';
-import MachineDialog from '../../../components/Dialog/MachineDialog';
-import CustomerDialog from '../../../components/Dialog/CustomerDialog';
+} from '../../redux/slices/document/document';
+import { getMachineForDialog,  setMachineDialog } from '../../redux/slices/products/machine';
+import { getActiveDocumentCategories } from '../../redux/slices/document/documentCategory';
+import { getActiveDocumentTypes } from '../../redux/slices/document/documentType';
+import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
+import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../theme/styles/default-styles';
+import { FORMLABELS } from '../../constants/default-constants';
+import { fDate } from '../../utils/formatTime';
+import TableCard from '../../components/ListTableTools/TableCard';
+import MachineDialog from '../../components/Dialog/MachineDialog';
+import CustomerDialog from '../../components/Dialog/CustomerDialog';
 
 // ----------------------------------------------------------------------
 DocumentList.propTypes = {
@@ -293,15 +293,15 @@ const onChangePage = (event, newPage) => {
 
   const handleViewRow = (Id) => {
     if ( customerPage ) {
-        navigate(PATH_CRM.customers.documents.view( customer?._id, Id));
+        navigate(PATH_CRM.customers.documents.view.root( customer?._id, Id));
     } else if( machineDrawingPage ){
-        navigate(PATH_MACHINE.machines.drawings.view( machineId, Id));
+        navigate(PATH_MACHINE.machines.drawings.view.root( machineId, Id));
     } else if( machinePage ){
-        navigate(PATH_MACHINE.machines.documents.view(machineId, Id));
+        navigate(PATH_MACHINE.machines.documents.view.root(machineId, Id));
     } else if( machineDrawings ){
-        navigate(PATH_MACHINE_DRAWING.machineDrawings.view(Id));
+        navigate(PATH_MACHINE_DRAWING.machineDrawings.view.root(Id));
     } else if( !customerPage && !machinePage && !machineDrawingPage && !machineDrawings ){
-        navigate(PATH_DOCUMENT.document.view(Id));
+        navigate(PATH_DOCUMENT.document.view.root(Id));
     }
   };
 

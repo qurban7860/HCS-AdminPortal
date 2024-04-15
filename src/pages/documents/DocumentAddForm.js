@@ -10,41 +10,38 @@ import { pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import { Box, Card, Grid, Stack, Dialog } from '@mui/material';
 // PATH
-import { PATH_CRM, PATH_DOCUMENT, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../../routes/paths';
+import { PATH_CRM, PATH_DOCUMENT, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
 // slice
 import {
   resetActiveDocuments,
   getDocument,
-  getDocumentHistory,
+  resetDocument,
   getCustomerDocuments,
   getMachineDocuments,
-  getDocuments,
   getMachineDrawingsDocuments,
   addDocument,
   setViewVisiilityNoOthers,
-  setViewHistoryVisiilityNoOthers,
-  setDrawingAndDocumentVisibility,
   checkDocument,
-} from '../../../redux/slices/document/document';
-import { getActiveDocumentCategories, resetActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
-import { getActiveDocumentTypesWithCategory, resetActiveDocumentTypes } from '../../../redux/slices/document/documentType';
-import { addDocumentVersion, updateDocumentVersion,} from '../../../redux/slices/document/documentVersion';
-import { getActiveCustomers } from '../../../redux/slices/customer/customer';
-import { getCustomerMachines, resetCustomerMachines} from '../../../redux/slices/products/machine';
-import { getDrawings, resetDrawings, setDrawingAddFormVisibility } from '../../../redux/slices/products/drawing';
+} from '../../redux/slices/document/document';
+import { getActiveDocumentCategories, resetActiveDocumentCategories } from '../../redux/slices/document/documentCategory';
+import { getActiveDocumentTypesWithCategory, resetActiveDocumentTypes } from '../../redux/slices/document/documentType';
+import { addDocumentVersion, updateDocumentVersion,} from '../../redux/slices/document/documentVersion';
+import { getActiveCustomers } from '../../redux/slices/customer/customer';
+import { getCustomerMachines, resetCustomerMachines} from '../../redux/slices/products/machine';
+import { getDrawings, resetDrawings } from '../../redux/slices/products/drawing';
 // components
-import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFAutocomplete, RHFTextField, RHFUpload,} from '../../../components/hook-form';
+import { useSnackbar } from '../../components/snackbar';
+import FormProvider, { RHFAutocomplete, RHFTextField, RHFUpload,} from '../../components/hook-form';
 // assets
-import DialogLabel from '../../../components/Dialog/DialogLabel';
-import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import RadioButtons from '../../../components/DocumentForms/RadioButtons';
-import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
-import { DocRadioValue, DocRadioLabel, Snacks,} from '../../../constants/document-constants';
-import DocumentCover from '../../../components/DocumentForms/DocumentCover';
-import { FORMLABELS } from '../../../constants/default-constants';
-import { documentSchema } from '../../schemas/document';
-import ConfirmDialog from '../../../components/confirm-dialog';
+import DialogLabel from '../../components/Dialog/DialogLabel';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import RadioButtons from '../../components/DocumentForms/RadioButtons';
+import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
+import { DocRadioValue, DocRadioLabel, Snacks,} from '../../constants/document-constants';
+import DocumentCover from '../../components/DocumentForms/DocumentCover';
+import { FORMLABELS } from '../../constants/default-constants';
+import { documentSchema } from '../schemas/document';
+import ConfirmDialog from '../../components/confirm-dialog';
 
 
 // ----------------------------------------------------------------------
@@ -55,6 +52,9 @@ DocumentAddForm.propTypes = {
   drawingPage: PropTypes.bool,
   machineDrawings: PropTypes.bool,
   newVersion: PropTypes.bool,
+  historyNewVersion: PropTypes.bool,
+  addFiles: PropTypes.bool,
+  historyAddFiles: PropTypes.bool,
 };
 
 function DocumentAddForm({
@@ -64,8 +64,11 @@ function DocumentAddForm({
   drawingPage,
   machineDrawings,
   newVersion,
+  historyNewVersion,
+  addFiles,
+  historyAddFiles,
 }) {
-  
+
   const navigate = useNavigate();
   const { customerId, machineId, id } = useParams()
   const dispatch = useDispatch();
@@ -74,7 +77,7 @@ function DocumentAddForm({
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const { machine, customerMachines } = useSelector((state) => state.machine);
-  const { document ,documentHistory, activeDocuments, documentAddFilesViewFormVisibility, documentNewVersionFormVisibility, documentHistoryAddFilesViewFormVisibility, documentHistoryNewVersionFormVisibility } = useSelector((state) => state.document);
+  const { document, activeDocuments } = useSelector((state) => state.document);
   const { customer, activeCustomers } = useSelector((state) => state.customer);
 
   // ------------------ document values states ------------------------------
@@ -88,6 +91,16 @@ function DocumentAddForm({
   const [ selectedValue, setSelectedValue ] = useState('new');
   const [ selectedVersionValue, setSelectedVersionValue ] = useState('newVersion');
   
+  useEffect(() => {
+    if( ( newVersion || addFiles || historyAddFiles || historyNewVersion ) && id ){
+      dispatch(getDocument(id))
+    }
+    return ()=>{
+      dispatch(resetDocument())
+    }
+  }, [ dispatch, id, historyAddFiles, historyNewVersion, newVersion, addFiles ]);
+  
+
   const methods = useForm({
     resolver: yupResolver(documentSchema( selectedValue )),
     defaultValues:{
@@ -118,17 +131,19 @@ function DocumentAddForm({
   const { documentCategory, documentType, displayName, versionNo, documentVal, files, isActive, customerAccess  } = watch();
 
   useEffect(() => {
-    if( customerPage && !machinePage && !machineDrawings && !categoryBy ){
+    if( customerPage && !categoryBy ){
       setCategoryBy( {customer: true} )
-      console.log("newVersion : newVersion")
       if( customer?._id && selectedValue === 'newVersion' ) dispatch(getCustomerDocuments(customer?._id));
-    } else if ( machinePage && !customerPage && !machineDrawings && !categoryBy ) { // machinePage 
+    } else if ( machinePage && !categoryBy ) { // machinePage 
       setCategoryBy( { machine: true } )
       if (machine?._id && selectedValue === 'newVersion') dispatch(getMachineDocuments(machine?._id));
-    } else if( machineDrawings && !customerPage && !machinePage && !categoryBy ){ //  machineDrawings 
+    } else if( drawingPage && !categoryBy ){ //  machineDrawings 
+      setCategoryBy( { drawing: true } )
+    } else if( machineDrawings && !categoryBy ){ //  machineDrawings 
       setCategoryBy( { drawing: true } )
       if( selectedValue === 'newVersion' ) dispatch(getMachineDrawingsDocuments());
     }
+
     if( customerPage && customer?._id && selectedValue === 'newVersion' && Array.isArray(activeDocuments) && activeDocuments.length < 1 ){
       dispatch(getCustomerDocuments(customer?._id));
     } 
@@ -136,16 +151,23 @@ function DocumentAddForm({
   }, [dispatch, categoryBy, customerPage, customer, machinePage, machine, machineDrawings, selectedValue]);
   
 
-  useEffect( () => { // Get Active Document Types And Active Document Categoories
-    if( !isDocumentCategoryLoaded && categoryBy  ){
-      dispatch( getActiveDocumentCategories( categoryBy ) );  dispatch( getActiveDocumentTypesWithCategory( null, categoryBy ) ) 
-      setIsDocumentCategoryLoaded( true )
+  useEffect( () => { 
+    // Get Active Document Types And Active Document Categoories
+    if( !newVersion && !addFiles && !historyNewVersion && !historyAddFiles ){
+      if( ( customerPage || machinePage || drawingPage || machineDrawings ) && categoryBy){
+        dispatch( getActiveDocumentCategories( categoryBy ) );  
+        dispatch( getActiveDocumentTypesWithCategory( null, categoryBy ) ) 
+      }
     }
+      return  ()=>{
+        dispatch(resetActiveDocumentCategories())
+        dispatch(resetActiveDocumentTypes())
+      }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ categoryBy ] )
+  }, [ dispatch, categoryBy ] )
 
   useEffect(() => { // Set Default Document Type Value
-    if( activeDocumentTypes?.length > 0 && activeDocumentCategories?.length > 0  && !documentHistoryNewVersionFormVisibility && !isDocumentTypesLoaded ){
+    if( activeDocumentTypes?.length > 0 && activeDocumentCategories?.length > 0  && !historyNewVersion && !isDocumentTypesLoaded ){
       if(activeDocumentTypes.find((el)=> el.isDefault === true )?._id === activeDocumentCategories.find((el)=> el.isDefault === true )?._id){
         setValue('documentType', activeDocumentTypes.find((el)=> el.isDefault === true ))
         setValue('documentCategory', activeDocumentCategories.find((el)=>  el.isDefault === true ))
@@ -159,19 +181,20 @@ function DocumentAddForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ activeDocumentTypes, activeDocumentCategories ] )
 
-  useEffect(()=>{ // Get Active Document Types Against Document Categoory
-    if( documentCategory?._id && categoryBy ){ dispatch( getActiveDocumentTypesWithCategory( documentCategory?._id, categoryBy ) ); 
-      if(!isDocumentTypesLoaded) setIsDocumentTypesLoaded( true ); }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ documentCategory ])
+
+  // ------------------------------------------------------ 
+  // ------------------------------------------------------
+  // ------------------------------------------------------ 
 
   useEffect(() => {
-    if (!documentNewVersionFormVisibility && !documentAddFilesViewFormVisibility && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility) {
+    if (!newVersion && !addFiles && !historyNewVersion && !historyAddFiles ) {
       reset();
       setSelectedValue('new');
       setReadOnlyDocument(false);
     }
-    dispatch(resetActiveDocuments()); dispatch(resetCustomerMachines()); dispatch(getActiveCustomers());
+    dispatch(resetActiveDocuments()); 
+    dispatch(resetCustomerMachines()); 
+    // dispatch(getActiveCustomers());
     if (customerPage)  setValue('customer', customer?._id);
     if (machinePage)  setValue('machine', machine?._id);
     return () =>  { dispatch(resetActiveDocumentTypes()); dispatch(resetActiveDocumentCategories()) }
@@ -179,79 +202,68 @@ function DocumentAddForm({
   }, [dispatch, customer, machine ]);
 
   useEffect(()=>{
-    if( documentHistoryNewVersionFormVisibility ){
+    if( ( historyNewVersion || historyAddFiles || newVersion || addFiles ) && document ){
       setReadOnlyDocument(true);
-      setSelectedValue('newVersion');
-      setSelectedVersionValue('newVersion');
-      setValue('documentVal',documentHistory)
-      setValue('displayName', documentHistory.displayName);
-      setValue('documentType', documentHistory.docType);
-      setValue('documentCategory', documentHistory.docCategory);
-      setValue('customerAccess', documentHistory.customerAccess);
-      setValue('isActive', documentHistory.isActive);
-      setReadOnlyVal(true);
-    }else if( documentHistoryAddFilesViewFormVisibility ){
-      setReadOnlyDocument(true);
-      setSelectedVersionValue('existingVersion');
-      setSelectedValue('newVersion');
-      setValue('documentVal',documentHistory)
-      setValue('displayName', documentHistory.displayName);
-      setValue('documentType', documentHistory.docType);
-      setValue('documentCategory', documentHistory.docCategory);
-      setValue('customerAccess', documentHistory.customerAccess);
-      setValue('isActive', documentHistory.isActive);
-      setReadOnlyVal(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ documentHistoryNewVersionFormVisibility, documentHistoryAddFilesViewFormVisibility, documentHistory ])
-
-  useEffect(()=>{
-    if( documentNewVersionFormVisibility ){
-      setReadOnlyDocument(true);
-      setSelectedValue('newVersion');
-      setSelectedVersionValue('newVersion');
-      setValue('documentVal',document)
-      setValue('displayName', document.displayName);
-      setValue('documentType', document.docType);
-      setValue('documentCategory', document.docCategory);
-      setValue('customerAccess', document.customerAccess);
-      setValue('isActive', document.isActive);
-      setReadOnlyVal(true);
-    }else if( documentAddFilesViewFormVisibility ){
-      setReadOnlyDocument(true);
-      setSelectedVersionValue('existingVersion');
       setSelectedValue('newVersion');
       setValue('documentVal',document)
-      setValue('displayName', document.displayName);
-      setValue('documentType', document.docType);
-      setValue('documentCategory', document.docCategory);
-      setValue('customerAccess', document.customerAccess);
-      setValue('isActive', document.isActive);
+      setValue('displayName', document?.displayName);
+      setValue('documentType', document?.docType);
+      setValue('documentCategory', document?.docCategory);
+      setValue('customerAccess', document?.customerAccess);
+      setValue('isActive', document?.isActive);
       setReadOnlyVal(true);
+      if( historyNewVersion || newVersion ){
+        setSelectedVersionValue('newVersion');
+      }else if( historyAddFiles || addFiles ){
+        setSelectedVersionValue('existingVersion');
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ documentNewVersionFormVisibility, documentAddFilesViewFormVisibility, document ])
+  },[ historyNewVersion, historyAddFiles, newVersion, addFiles, document, setValue ])
 
   const onSubmit = async (data) => {
     try {
+
       if (selectedValue === 'new') {
+        // NEW DOCUMENT
         if( drawingPage ){
-          data.machine = machineId;
+          data.drawingMachine = machineId;
         }
         await dispatch(addDocument( customerPage ? customerId : null, ( drawingPage || machinePage ) ? machineId : null, data));
         enqueueSnackbar(drawingPage || machineDrawings ?Snacks.addedDrawing:Snacks.addedDoc);
       } else if (selectedVersionValue === 'newVersion') {
-        await dispatch(addDocumentVersion(documentVal._id, data));
+        // NEW VERSION 
+        await dispatch(addDocumentVersion( id, data));
+        enqueueSnackbar(Snacks.updatedDoc);
+      } else {
+        // UPDATE VERSION / ADD FILES
+        await dispatch(updateDocumentVersion( id, documentVal?.documentVersions[0]?._id, data));
         enqueueSnackbar(Snacks.updatedDoc);
       }
 
-
-      if( customerPage ){
-        navigate(PATH_CRM.customers.documents.root( customerId));
+      // Routes Directions
+      if( newVersion || addFiles ){
+        if( customerPage && customerId ){
+          await navigate(PATH_CRM.customers.documents.view.root( customerId, id ));
+        } else if( drawingPage && machineId ){
+          await navigate(PATH_MACHINE.machines.drawings.view.root( machineId, id ));
+        } else if( machinePage && machineId ){
+          await navigate(PATH_MACHINE.machines.documents.view.root( machineId, id ));
+        } 
+      } else if( historyNewVersion || historyAddFiles ) {
+        if( customerPage && customerId ){
+          await navigate(PATH_CRM.customers.documents.history.root( customerId, id ));
+        } else if( machinePage ){
+          await navigate(PATH_MACHINE.machines.documents.history.root( machineId, id ));
+        } else if ( machineDrawings ) {
+          await navigate(PATH_MACHINE_DRAWING.machineDrawings.view.root( id ));
+        } else if( !customerPage && !drawingPage && !machinePage && !machineDrawings ){
+          await navigate(PATH_DOCUMENT.document.view.root( id ));
+        }
+      } else if( customerPage ){
+        navigate(PATH_CRM.customers.documents.root( customerId ));
       } else if( machinePage ){
         navigate(PATH_MACHINE.machines.documents.root(machineId));
       } else if( drawingPage ){
-        data.machine = machineId;
         navigate(PATH_MACHINE.machines.drawings.root(machineId));
       }else if( machineDrawings ){
         navigate(PATH_MACHINE_DRAWING.root)
@@ -259,89 +271,6 @@ function DocumentAddForm({
         navigate(PATH_DOCUMENT.root)
       }
 
-      // if (selectedValue === 'new') {
-      //   // New Document Part
-      //   await dispatch(addDocument( customerPage ? customer?._id : null, machinePage ? machine?._id : null, data));
-      //   enqueueSnackbar(drawingPage || machineDrawings ?Snacks.addedDrawing:Snacks.addedDoc);
-      //   if( drawingPage ){
-      //     dispatch(resetDrawings());
-      //     dispatch(getDrawings(machine?._id));
-      //     dispatch(setDrawingAddFormVisibility(false));
-      //   } else if( customerPage && !machinePage ){
-      //     await dispatch(setViewVisiilityNoOthers())
-      //     await navigate(PATH_CRM.customers.documents.root( customer?._id ));
-      //   } else if (  machineDrawings && !customerPage && !machinePage ) {
-      //     navigate(PATH_DOCUMENT.document.machineDrawings.list);
-      //   } else if( handleFormVisibility ){
-      //     handleFormVisibility();
-      //   }
-      // } else if (selectedVersionValue === 'newVersion') {
-      //   // New versions Part
-      //   await dispatch(addDocumentVersion(documentVal._id, data));
-      //   enqueueSnackbar(Snacks.updatedDoc);
-      //   // page Navigation conditions for new versions
-      //   if ( machineDrawings && !customerPage && !machinePage && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility) ){
-      //     dispatch(setDrawingAndDocumentVisibility())
-      //     navigate(PATH_DOCUMENT.document.machineDrawings.view(documentHistory._id));
-      //   } else if( customerPage && !machinePage ){
-      //     await dispatch(setViewVisiilityNoOthers())
-      //     if(documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility  ){
-      //       await dispatch(getDocumentHistory(documentVal._id))
-      //       await navigate(PATH_CRM.customers.documents.viewHistory( customer?._id, documentVal._id ));
-      //     } else if(documentNewVersionFormVisibility || documentAddFilesViewFormVisibility  ){
-      //       await dispatch(getDocument(documentVal._id))
-      //       await navigate(PATH_CRM.customers.documents.view( customer?._id, documentVal._id ));
-      //     } else {
-      //       await dispatch(getDocument(documentVal._id))
-      //       await navigate(PATH_CRM.customers.documents.view( customer?._id, documentVal._id ));
-      //     }
-      //   } else if( machineDrawings && !customerPage && !machinePage && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility ){
-      //     navigate(PATH_DOCUMENT.document.machineDrawings.list);
-      //   } else if( (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility) && !customerPage && !machinePage && !machineDrawings ){
-      //     dispatch(setDrawingAndDocumentVisibility())
-      //     navigate(PATH_DOCUMENT.document.view(documentHistory._id));
-      //   } else if( (documentNewVersionFormVisibility || documentAddFilesViewFormVisibility) && (customerPage  || machinePage) ){
-      //     dispatch(setViewVisiilityNoOthers())
-      //     dispatch(getDocument(documentVal._id))
-      //   } else if( (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility) && (customerPage  || machinePage) ){
-      //     dispatch(setViewHistoryVisiilityNoOthers(false))
-      //     dispatch(getDocumentHistory(documentVal._id))
-      //   } else if( handleFormVisibility ){
-      //     handleFormVisibility();
-      //   }
-      // } else {
-
-      //   // Update versions Part
-      //   await dispatch(updateDocumentVersion(documentVal._id, documentVal?.documentVersions[0]?._id, data));
-      //   enqueueSnackbar(Snacks.updatedDoc);
-      //   // Page Navigation conditions for update versions
-      //   if (machineDrawings && !customerPage && !machinePage && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility)) {
-      //     dispatch(setDrawingAndDocumentVisibility())
-      //     navigate(PATH_DOCUMENT.document.machineDrawings.view(documentHistory._id));
-      //   } else if( customerPage && !machinePage ){
-      //     await dispatch(setViewVisiilityNoOthers())
-      //     if(documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility ){
-      //       await dispatch(getDocumentHistory(documentVal._id))
-      //       await navigate(PATH_CRM.customers.documents.viewHistory( customer?._id, documentVal._id ));
-      //     } else if(documentNewVersionFormVisibility || documentAddFilesViewFormVisibility ){
-      //       await dispatch(getDocument(documentVal._id))
-      //       await navigate(PATH_CRM.customers.documents.view( customer?._id, documentVal._id ));
-      //     }
-      //   } else if(!customerPage && !machinePage && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility ){
-      //     dispatch(setDrawingAndDocumentVisibility())
-      //   }else if(!customerPage && !machinePage && !machineDrawings && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility)){
-      //     dispatch(setDrawingAndDocumentVisibility())
-      //     navigate(PATH_DOCUMENT.document.view(documentHistory._id));
-      //   }else if((documentNewVersionFormVisibility || documentAddFilesViewFormVisibility) && (customerPage  || machinePage)){
-      //     dispatch(setViewVisiilityNoOthers())
-      //     dispatch(getDocument(documentVal._id))
-      //   }else if((documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility) && (customerPage  || machinePage)){
-      //     dispatch(setViewHistoryVisiilityNoOthers(false))
-      //     dispatch(getDocumentHistory(documentVal._id))
-      //   }else if(handleFormVisibility){
-      //     handleFormVisibility();
-      //   }
-      // }
       setReadOnlyVal(false);
       setPreview(false);
       setPreviewVal('');
@@ -353,7 +282,25 @@ function DocumentAddForm({
   };
 
   const toggleCancel = () => {
-    if( customerPage ){
+    if( newVersion || addFiles ){
+      if( customerPage && customerId ){
+        navigate(PATH_CRM.customers.documents.view.root( customerId, documentVal._id ));
+      } else if( drawingPage && machineId ){
+        navigate(PATH_MACHINE.machines.drawings.view.root( machineId, documentVal._id ));
+      } else if( machinePage && machineId ){
+        navigate(PATH_MACHINE.machines.documents.view.root( machineId, documentVal._id ));
+      } else if ( machineDrawings ) {
+        navigate(PATH_MACHINE_DRAWING.machineDrawings.view.root( documentVal._id ));
+      } else if( !customerPage && !drawingPage && !machinePage && !machineDrawings ){
+        navigate(PATH_DOCUMENT.document.view.root( documentVal._id ));
+      }
+    } else if( historyNewVersion || historyAddFiles ) {
+      if( customerPage && customerId ){
+        navigate(PATH_CRM.customers.documents.history.root( customerId, documentVal._id ));
+      } else if( machinePage ){
+        navigate(PATH_MACHINE.machines.documents.history.root( machineId, documentVal._id ));
+      } 
+    } else if( customerPage ){
       navigate(PATH_CRM.customers.documents.root( customerId ));
     } else if( machinePage ){
       navigate(PATH_MACHINE.machines.documents.root(machineId));
@@ -379,7 +326,7 @@ function DocumentAddForm({
   const handleVersionRadioChange = (event) => setSelectedVersionValue(event.target.value);
   const handleIsActiveChange = () => setValue('isActive' ,!isActive);
 
-  const [machineVal, setMachineVal] = useState(null);
+  const [machineVal, setMachineVal] = useState(false);
   const [duplicate, setDuplicate] = useState(false);
 
   const handleDropMultiFile = useCallback(
@@ -398,7 +345,6 @@ function DocumentAddForm({
                 isFound = true;
                 setValue('stockNumber', textContent.items[index+2].str)
               }
-
             });
             if(!isFound) {
               textContent.items.forEach((item,index) => {
@@ -406,11 +352,8 @@ function DocumentAddForm({
                   isFound = true;
                   setValue('stockNumber', textContent.items[index-2].str)
                 }
-
               });
             }
-
-
           }catch(e) {
             console.log(e)
           }
@@ -448,26 +391,21 @@ function DocumentAddForm({
   const hashFilesMD5 = async (_files) => {
     const hashPromises = _files.map((file) => new Promise((resolve, reject) => {
       const reader = new FileReader();
-  
       reader.onload = () => {
         const arrayBuffer = reader.result;
         const wordArray = MD5(lib.WordArray.create(arrayBuffer));
         const hashHex = wordArray.toString(enc.Hex);
         resolve(hashHex);
       };
-  
       reader.onerror = () => {
         reject(new Error(`Error reading file: ${file.name}`));
       };
-  
       reader.readAsArrayBuffer(file);
     }));
-  
     try {
       const hashes = await Promise.all(hashPromises);
       return hashes;
     } catch (error) {
-      // Handle errors if needed
       console.error(error);
       throw error;
     }
@@ -508,7 +446,7 @@ function DocumentAddForm({
               <Stack spacing={2}>
                 {!drawingPage && 
                   <RadioButtons
-                    radioDisaled={ documentNewVersionFormVisibility || documentAddFilesViewFormVisibility || documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility }
+                    radioDisaled={ newVersion || addFiles || historyNewVersion || historyAddFiles }
                     value={selectedValue} radioOnChange={handleRadioChange} 
                     newValue={DocRadioValue.new} newLabel={DocRadioLabel.new} 
                     secondValue={DocRadioValue.newVersion} secondLabel={DocRadioLabel.existing}
@@ -566,13 +504,13 @@ function DocumentAddForm({
                             if (newValue) {
                               setValue('documentCategory', newValue);
                               if (newValue?._id !== documentType?.docCategory?._id) {
-                                dispatch(resetActiveDocumentTypes());
+                                // dispatch(resetActiveDocumentTypes());
                                 setValue('documentType', null);
                               }
                             } else {
                               setValue('documentCategory', null);
                               setValue('documentType', null);
-                              dispatch(getActiveDocumentTypesWithCategory(null, categoryBy ));
+                              // dispatch(getActiveDocumentTypesWithCategory(null, categoryBy ));
                             }
                             }}
                           renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
@@ -584,7 +522,8 @@ function DocumentAddForm({
                           name="documentType"
                           label="Document Type*"
                           disabled={readOnlyVal}
-                          options={activeDocumentTypes}
+                          options={activeDocumentTypes?.filter(el => ( el?.docCategory?._id && documentCategory) ? el?.docCategory?._id === documentCategory?._id : !documentCategory)}
+                          // options={activeDocumentTypes}
                           isOptionEqualToValue={( option, value ) => option._id === value._id }
                           getOptionLabel={(option) => `${option?.name || ''}`}
                           renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option.name || ''}`}</li>)}

@@ -1,6 +1,6 @@
 // @mui
 import { Container } from '@mui/material';
-import DocumentViewForm from '../../document/documents/DocumentViewForm';
+import DocumentViewForm from '../../documents/DocumentViewForm';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 import MachineTabContainer from '../util/MachineTabContainer';

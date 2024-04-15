@@ -250,7 +250,7 @@ export default function MachineViewForm() {
               disableEditButton={disableEditButton}
               disableDeleteButton={disableDeleteButton}
               handleEdit={handleEdit}
-              handleJiraNaviagte={handleJiraNaviagte}
+              // handleJiraNaviagte={handleJiraNaviagte}
               onDelete={onDelete}
               handleTransfer={ () => navigate(PATH_MACHINE.machines.transfer(machine?._id))}
               backLink={() => navigate(PATH_MACHINE.machines.root)}

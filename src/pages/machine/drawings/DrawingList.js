@@ -137,11 +137,7 @@ export default function DrawingList() {
     setFilterStatus(event.target.value);
   };
 
-  const handleViewRow = (drawingId, documentId) => navigate(PATH_MACHINE.machines.drawings.view(machineId, documentId ))
-    // dispatch(resetDocumentHistory());
-    // dispatch(resetDrawing());
-    // dispatch(getDrawing(drawingId));
-    // dispatch(getDocumentHistory(documentId));
+  const handleViewRow = (drawingId, documentId) => navigate(PATH_MACHINE.machines.drawings.view.root(machineId, documentId ))
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))

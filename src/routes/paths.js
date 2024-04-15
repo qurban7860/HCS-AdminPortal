@@ -94,9 +94,17 @@ export const PATH_CRM = {
       root: ( customerId ) => path(ROOTS_CRM, `/customers/${customerId}/documents`),
       new: ( customerId ) => path(ROOTS_CRM, `/customers/${customerId}/documents/new`),
       viewGallery: ( customerId ) => path(ROOTS_CRM, `/customers/${customerId}/documents/viewGallery`),
-      view: ( customerId, id ) => path(ROOTS_CRM, `/customers/${customerId}/documents/${id}/view`),
-      viewHistory: ( customerId, id ) => path(ROOTS_CRM, `/customers/${customerId}/documents/${id}/viewHistory`),
       edit: ( customerId, id ) => path(ROOTS_CRM, `/customers/${customerId}/documents/${id}/edit`),
+      view: {
+        root: ( customerId, id ) => path(ROOTS_CRM, `/customers/${customerId}/documents/${id}/view`),
+        addFile: ( customerId, id ) => path(ROOTS_CRM, `/customers/${customerId}/documents/${id}/view/addFile`),
+        newVersion: ( customerId, id ) => path(ROOTS_CRM, `/customers/${customerId}/documents/${id}/view/newVersion`),
+      },
+      history: {
+        root: ( customerId, id ) => path(ROOTS_CRM, `/customers/${customerId}/documents/${id}/history`),
+        addFile: ( customerId, id ) => path(ROOTS_CRM, `/customers/${customerId}/documents/${id}/history/addFile`),
+        newVersion: ( customerId, id ) => path(ROOTS_CRM, `/customers/${customerId}/documents/${id}/history/newVersion`),
+      },
     },
     // --------------------- Customer Machines -----------------------
     machines: {
@@ -162,17 +170,29 @@ export const PATH_MACHINE = {
       new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/drawings/new`),
       attach: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/drawings/attach`),
       multipleNew: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/drawings/multipleNew`),
-      view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/drawings/${id}/view`),
       edit: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/drawings/${id}/edit`),
+      view: {
+        root: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/drawings/${id}/view`),
+        addFile: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/drawings/${id}/view/addFile`),
+        newVersion: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/drawings/${id}/view/newVersion`),
+      },
     },
     // --------------------- Machine Tool Installed -----------------------
     documents: {
       root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/documents`),
       new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/documents/new`),
       gallery: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/documents/gallery`),
-      view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/documents/${id}/view`),
-      history: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/documents/${id}/history`),
       edit: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/documents/${id}/edit`),
+      view: {
+        root: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/documents/${id}/view`),
+        addFile: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/documents/${id}/view/addFile`),
+        newVersion: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/documents/${id}/view/newVersion`),
+      },
+      history: {
+        root: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/documents/${id}/history`),
+        addFile: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/documents/${id}/history/addFile`),
+        newVersion: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/documents/${id}/history/newVersion`),
+      },
     },
     // --------------------- Machine Tool Installed -----------------------
     licenses: {
@@ -428,7 +448,11 @@ export const PATH_DOCUMENT = {
     newList: path(ROOTS_DOCUMENT, '/newList'),
     gallery: (id) => path(ROOTS_DOCUMENT, `/${id}/gallery`),
     edit: (id) => path(ROOTS_DOCUMENT, `/${id}/edit`),
-    view: (id) => path(ROOTS_DOCUMENT, `/${id}/view`),
+    view: {
+      root: ( id ) => path(ROOTS_DOCUMENT, `/${id}/view`),
+      addFile: ( id ) => path(ROOTS_DOCUMENT, `/${id}/view/addFile`),
+      newVersion: ( id ) => path(ROOTS_DOCUMENT, `/${id}/view/newVersion`),
+    },
     customer: (id) => path(ROOTS_DOCUMENT, `/${id}/customer`),
     machine: (id) => path(ROOTS_DOCUMENT, `/${id}/machine`),
   },
@@ -442,7 +466,11 @@ export const PATH_MACHINE_DRAWING = {
   machineDrawings:{
     new: path(ROOTS_MACHINE_DRAWING, '/new'),
     newList: path(ROOTS_MACHINE_DRAWING, '/newList'),
-    view: (id) => path(ROOTS_MACHINE_DRAWING, `/${id}/view`),
+    view: {
+      root: ( id ) => path(ROOTS_MACHINE_DRAWING, `/${id}/view`),
+      addFile: ( id ) => path(ROOTS_MACHINE_DRAWING, `/${id}/view/addFile`),
+      newVersion: ( id ) => path(ROOTS_MACHINE_DRAWING, `/${id}/view/newVersion`),
+    },
   }
 };
 

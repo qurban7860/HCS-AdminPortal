@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { Snacks } from '../../constants/machine-constants';
 import { allowedExtensions, fileTypesMessage } from '../../constants/document-constants';
-import { NotRequiredValidateFileType } from '../document/documents/Utills/Util'
+import { NotRequiredValidateFileType } from '../documents/util/Util'
 import { future5yearDate, tomorrow, pastDate } from '../machine/util/index';
 import { fDate } from '../../utils/formatTime';
 

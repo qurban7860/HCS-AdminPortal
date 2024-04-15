@@ -321,12 +321,10 @@ export function addDocument(customerId , machineId ,  params) {
             formData.append('customer', customerId);
           }
 
-          if(machineId){
+          if(params?.drawingMachine){
+            formData.append('drawingMachine', params?.drawingMachine);
+          } else if(machineId){
             formData.append('machine', machineId);
-          }
-
-          if(params?.machine){
-            formData.append('drawingMachine', params?.machine);
           }
 
           formData.append('customerAccess', params.customerAccess);

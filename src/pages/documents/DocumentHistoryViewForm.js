@@ -18,11 +18,11 @@ import {
   Typography,
   Divider
 } from '@mui/material';
-import { ThumbnailDocButton } from '../../../components/Thumbnails'
-import { StyledVersionChip } from '../../../theme/styles/default-styles';
-import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
-import ViewFormField from '../../../components/ViewForms/ViewFormField';
-import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
+import { ThumbnailDocButton } from '../../components/Thumbnails'
+import { StyledVersionChip } from '../../theme/styles/default-styles';
+import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 
 import {
   getDocumentHistory,
@@ -36,23 +36,23 @@ import {
   deleteDocument,
   setDocumentHistoryViewFormVisibility,
   setDocumentVersionEditDialogVisibility
-} from '../../../redux/slices/document/document';
+} from '../../redux/slices/document/document';
 import { deleteDrawing, getDrawings, getDrawing, resetDrawings,
-  setDrawingEditFormVisibility, setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
+  setDrawingEditFormVisibility, setDrawingViewFormVisibility } from '../../redux/slices/products/drawing';
 
-import { deleteDocumentFile, downloadFile, getDocumentDownload } from '../../../redux/slices/document/documentFile';
-import { getCustomer, resetCustomer, setCustomerDialog} from '../../../redux/slices/customer/customer';
-import { getMachineForDialog, resetMachine, setMachineDialog } from '../../../redux/slices/products/machine';
-import FormLabel from '../../../components/DocumentForms/FormLabel';
-import DocumentCover from '../../../components/DocumentForms/DocumentCover';
-import CustomerDialog from '../../../components/Dialog/CustomerDialog';
-import MachineDialog from '../../../components/Dialog/MachineDialog';
-import { PATH_DOCUMENT, PATH_CRM, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../../routes/paths';
-import { useSnackbar } from '../../../components/snackbar';
-import { Snacks } from '../../../constants/document-constants';
-import UpdateDocumentVersionDialog from '../../../components/Dialog/UpdateDocumentVersionDialog';
-import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
-import Lightbox from '../../../components/lightbox/Lightbox';
+import { deleteDocumentFile, downloadFile, getDocumentDownload } from '../../redux/slices/document/documentFile';
+import { getCustomer, resetCustomer, setCustomerDialog} from '../../redux/slices/customer/customer';
+import { getMachineForDialog, resetMachine, setMachineDialog } from '../../redux/slices/products/machine';
+import FormLabel from '../../components/DocumentForms/FormLabel';
+import DocumentCover from '../../components/DocumentForms/DocumentCover';
+import CustomerDialog from '../../components/Dialog/CustomerDialog';
+import MachineDialog from '../../components/Dialog/MachineDialog';
+import { PATH_DOCUMENT, PATH_CRM, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
+import { useSnackbar } from '../../components/snackbar';
+import { Snacks } from '../../constants/document-constants';
+import UpdateDocumentVersionDialog from '../../components/Dialog/UpdateDocumentVersionDialog';
+import { DocumentGalleryItem } from '../../components/gallery/DocumentGalleryItem';
+import Lightbox from '../../components/lightbox/Lightbox';
 
 // ----------------------------------------------------------------------
 
@@ -131,33 +131,36 @@ function DocumentHistoryViewForm({ customerPage, machinePage, machineDrawingPage
     <Chip sx={{ml:index===0?0:1}} onClick={() => handleMachineDialog(pdrawing?.machine?._id)} label={`${pdrawing?.machine?.serialNo || '' } ${pdrawing?.machine?.name ? '-' : '' } ${pdrawing?.machine?.name || '' } `} />
   );
 
-const handleNewVersion = async () => {
-  // if(customerPage){
-  //   navigate(PATH_CRM.customers.documents.new( customer?._id ));
-  // } else if( machinePage){
-
-  // }else if(!customerPage && !machinePage && !machineDrawings){
-
-  // }else if(machineDrawings){
-
-  // }
-}
+  const handleNewVersion = async () => {
+    if(customerPage){
+      navigate(PATH_CRM.customers.documents.history.newVersion( customerId, id ));
+    } else if( machineDrawingPage ){
+      navigate(PATH_MACHINE.machines.drawings.view.newVersion( machineId, id ));
+    } else if( machinePage ){
+      navigate(PATH_MACHINE.machines.documents.history.newVersion( machineId, id ));
+    }else if(!customerPage && !machineDrawingPage && !machinePage && !machineDrawings ){
+      navigate(PATH_DOCUMENT.document.view.newVersion( id ));
+    }else if(machineDrawings){
+      navigate(PATH_MACHINE_DRAWING.machineDrawings.view.newVersion( id ));
+    }
+  }
 
 const handleUpdateVersion = async () => {
   dispatch(setDocumentVersionEditDialogVisibility(true));
 }
 
 const handleNewFile = async () => {
-  // if( customerPage ){
-  //     dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
-  //     navigate(PATH_CRM.customers.documents.new( customer?._id ));
-  // } else if(machinePage){
-
-  // } else if(!customerPage && !machinePage && !machineDrawings){
-  //   navigate(PATH_DOCUMENT.document.new);
-  // } else if(machineDrawings){
-  //   navigate(PATH_DOCUMENT.document.machineDrawings.new);
-  // }
+  if(customerPage){
+    navigate(PATH_CRM.customers.documents.history.addFile( customerId, id ));
+  } else if( machineDrawingPage ){
+    navigate(PATH_MACHINE.machines.drawings.view.addFile( machineId, id ));
+  } else if( machinePage ){
+    navigate(PATH_MACHINE.machines.documents.history.addFile( machineId, id ));
+  }else if(!customerPage && !machineDrawingPage && !machinePage && !machineDrawings){
+    navigate(PATH_DOCUMENT.document.view.addFile( id ));
+  }else if(machineDrawings){
+    navigate(PATH_MACHINE_DRAWING.machineDrawings.view.addFile( id ));
+  }
 }
 
   const handleCustomerDialog = () =>{
@@ -340,11 +343,11 @@ const handleNewFile = async () => {
 
   const handleBackLink = ()=>{
     if(customerPage) {
-      navigate(PATH_CRM.customers.documents.view( customerId, documentHistory?._id ));
+      navigate(PATH_CRM.customers.documents.view.root( customerId, documentHistory?._id ));
     } else if( machinePage ){
-      navigate(PATH_MACHINE.machines.documents.root(machineId)) 
+      navigate(PATH_MACHINE.machines.documents.view.root( machineId, documentHistory?._id )) 
     } else if( machineDrawingPage ){
-      navigate(PATH_MACHINE.machines.drawings.root(machineId)) 
+      navigate(PATH_MACHINE.machines.drawings.root( machineId )) 
     } else if(machineDrawings){
       navigate(PATH_MACHINE_DRAWING.root) 
     } else{

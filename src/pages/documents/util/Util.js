@@ -1,4 +1,4 @@
-import { allowedExtensions } from '../../../../constants/document-constants';
+import { allowedExtensions } from '../../../constants/document-constants';
 
 const maxFiles = JSON.parse( localStorage.getItem('configurations'))?.find( ( c )=> c?.name === 'MAX_UPLOAD_FILES' )
 

@@ -1,12 +1,12 @@
 import { Container } from '@mui/material';
 import CustomerTabContainer from '../customers/util/CustomerTabContainer'
-import DocumentGallery from '../../documents/DocumentGallery';
+import DocumentAddForm from '../../documents/DocumentAddForm';
 // ----------------------------------------------------------------------
 
-export default function CustomerDocumentGallery() {
+export default function CustomerDocumentNewVersion() {
 
 return (<Container maxWidth={false} >
             <CustomerTabContainer currentTabValue='documents' />
-            <DocumentGallery customerPage />
+            <DocumentAddForm customerPage newVersion />
         </Container> );
 }

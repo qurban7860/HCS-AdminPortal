@@ -6,19 +6,19 @@ import { useNavigate, useParams } from 'react-router';
 import { useTheme } from '@mui/material/styles';
 import { Box, Card, Typography, Stack, Container, TablePagination, Grid } from '@mui/material';
 // utils
-import { bgBlur } from '../../../utils/cssStyles';
+import { bgBlur } from '../../utils/cssStyles';
 // components
-import Image from '../../../components/image';
-import Lightbox from '../../../components/lightbox';
-import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
-import { getDocumentGallery, setDocumentGalleryVisibility } from '../../../redux/slices/document/document';
-import { downloadFile } from '../../../redux/slices/document/documentFile';
-import { FORMLABELS } from '../../../constants/default-constants';
-import { StyledCardContainer } from '../../../theme/styles/default-styles';
-import { Cover } from '../../../components/Defaults/Cover';
-import { PATH_CRM, PATH_DOCUMENT, PATH_MACHINE } from '../../../routes/paths';
-import EmptyContent from '../../../components/empty-content/EmptyContent';
-import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
+import Image from '../../components/image';
+import Lightbox from '../../components/lightbox';
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import { getDocumentGallery, setDocumentGalleryVisibility } from '../../redux/slices/document/document';
+import { downloadFile } from '../../redux/slices/document/documentFile';
+import { FORMLABELS } from '../../constants/default-constants';
+import { StyledCardContainer } from '../../theme/styles/default-styles';
+import { Cover } from '../../components/Defaults/Cover';
+import { PATH_CRM, PATH_DOCUMENT, PATH_MACHINE } from '../../routes/paths';
+import EmptyContent from '../../components/empty-content/EmptyContent';
+import { DocumentGalleryItem } from '../../components/gallery/DocumentGalleryItem';
 
 // ----------------------------------------------------------------------
 

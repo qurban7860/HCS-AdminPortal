@@ -11,24 +11,24 @@ import { pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import { Box, Card, Grid, Stack, Dialog, Container } from '@mui/material';
 // PATH
-import { PATH_DOCUMENT, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../../routes/paths';
+import { PATH_DOCUMENT, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
 // slice
-import { addDrawingsList } from '../../../redux/slices/products/drawing';
-import { getActiveDocumentCategories, resetActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
-import { getActiveDrawingTypes, resetActiveDocumentTypes } from '../../../redux/slices/document/documentType';
+import { addDrawingsList } from '../../redux/slices/products/drawing';
+import { getActiveDocumentCategories, resetActiveDocumentCategories } from '../../redux/slices/document/documentCategory';
+import { getActiveDrawingTypes, resetActiveDocumentTypes } from '../../redux/slices/document/documentType';
 // components
-import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFUpload, RHFAutocomplete } from '../../../components/hook-form';
+import { useSnackbar } from '../../components/snackbar';
+import FormProvider, { RHFUpload, RHFAutocomplete } from '../../components/hook-form';
 // assets
-import DialogLabel from '../../../components/Dialog/DialogLabel';
-import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import { Snacks } from '../../../constants/document-constants';
-import DocumentCover from '../../../components/DocumentForms/DocumentCover';
-import { FORMLABELS } from '../../../constants/default-constants';
-import FormLabel from '../../../components/DocumentForms/FormLabel';
-import ConfirmDialog from '../../../components/confirm-dialog';
-import validateMultipleDrawingsFileType from '../util/validateMultipleDrawingsFileType';
-import LinearProgressWithLabel from '../../../components/progress-bar/LinearProgressWithLabel';
+import DialogLabel from '../../components/Dialog/DialogLabel';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import { Snacks } from '../../constants/document-constants';
+import DocumentCover from '../../components/DocumentForms/DocumentCover';
+import { FORMLABELS } from '../../constants/default-constants';
+import FormLabel from '../../components/DocumentForms/FormLabel';
+import ConfirmDialog from '../../components/confirm-dialog';
+import validateMultipleDrawingsFileType from './util/validateMultipleDrawingsFileType';
+import LinearProgressWithLabel from '../../components/progress-bar/LinearProgressWithLabel';
 
 // ----------------------------------------------------------------------
 

@@ -2,20 +2,20 @@ import * as Yup from 'yup';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { TextField, Autocomplete, Box, Card, Grid, Stack } from '@mui/material';
+import { Box, Card, Grid, Stack } from '@mui/material';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 // slice
 import { addDrawing } from '../../../redux/slices/products/drawing';
-import { getActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
-import { getActiveDocumentTypesWithCategory, resetActiveDocumentTypes } from '../../../redux/slices/document/documentType';
-import { resetActiveDocuments, getActiveDocumentsByType } from '../../../redux/slices/document/document';
+import { getActiveDocumentCategories, resetActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
+import { getActiveDocumentTypes, resetActiveDocumentTypes } from '../../../redux/slices/document/documentType';
+import { getActiveDocumentsByType, resetActiveDocuments } from '../../../redux/slices/document/document';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, {  RHFSwitch } from '../../../components/hook-form';
+import FormProvider, { RHFAutocomplete, RHFSwitch } from '../../../components/hook-form';
 // util
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 
@@ -34,7 +34,13 @@ export default function DrawingAttachForm() {
 
   useEffect(() => {
     dispatch(getActiveDocumentCategories({drawing: true}));
+    dispatch(getActiveDocumentTypes());
     setFilteredDocuments([]);
+    return ()=> {
+      dispatch(resetActiveDocumentCategories())
+      dispatch(resetActiveDocumentTypes())
+      dispatch(resetActiveDocuments())
+    }
   },[dispatch]);
 
   useEffect(() => {
@@ -66,18 +72,17 @@ export default function DrawingAttachForm() {
     reset,
     watch,
     setValue,
-    control,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const { documentCategory, documentType, document} = watch();
+  const { documentCategory, documentType } = watch();
 
-  useEffect(() => {
-    if(documentCategory?._id){
-      dispatch(getActiveDocumentTypesWithCategory(documentCategory?._id, { drawing: true } ));
-    }
-  },[ dispatch, documentCategory ]);
+  // useEffect(() => {
+  //   if(documentCategory?._id){
+  //     dispatch(getActiveDocumentTypesWithCategory(documentCategory?._id, { drawing: true } ));
+  //   }
+  // },[ dispatch, documentCategory ]);
 
   useEffect(() => {
     if(documentCategory?._id && documentType?._id){
@@ -112,15 +117,11 @@ export default function DrawingAttachForm() {
                   display="grid"
                   gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                 >
-                <Controller
-                  name="documentCategory"
-                  clearOnBlur 
-                  clearOnEscape 
-                  control={control}
-                  defaultValue={documentCategory || null}
-                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                  <Autocomplete
-                    {...field}
+                  <RHFAutocomplete
+                    name="documentCategory"
+                    label="Document Category*" 
+                    clearOnBlur 
+                    clearOnEscape 
                     options={activeDocumentCategories}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
@@ -137,42 +138,26 @@ export default function DrawingAttachForm() {
                         setValue("documentType", null);
                         setValue("document", null);
                         setFilteredDocuments([]);
-                        dispatch(resetActiveDocumentTypes())
+                        // dispatch(resetActiveDocumentTypes())
                         dispatch(resetActiveDocuments())
                       }
                     }}
-                    id="controllable-states-demo"
-                    renderInput={(params) => <TextField 
-                              {...params} 
-                              id="documentCategory"  
-                              name='documentCategory' 
-                              label="Document Category*" 
-                              error={!!error}
-                              helperText={error?.message} 
-                              inputRef={ref}
-                              />}
-                    ChipProps={{ size: 'small' }}
                   />
-                  )}
-                />
 
-                <Controller
-                  name="documentType"
-                  clearOnBlur 
-                  clearOnEscape 
-                  control={control}
-                  defaultValue={documentType || null}
-                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                  <Autocomplete
-                    {...field}
-                    options={activeDocumentTypes}
+                  <RHFAutocomplete
+                    name="documentType"
+                    label="Document Type*" 
+                    clearOnBlur 
+                    clearOnEscape 
+                    options={activeDocumentTypes?.filter(el => ( el?.docCategory?._id && documentCategory) ? el?.docCategory?._id === documentCategory?._id : !documentCategory)}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => option.name}
-                    
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
                     onChange={(event, newValue) => {
                           if (newValue) {
-                            field.onChange(newValue);
-                            if(newValue._id !== documentCategory._id){
+                            setValue("documentType", newValue);
+                            if(newValue?._id !== documentCategory?._id){
+                            setValue("documentCategory", newValue?.docCategory);
                             setValue("document", null);
                             setFilteredDocuments([]);
                             }
@@ -183,22 +168,7 @@ export default function DrawingAttachForm() {
                             dispatch(resetActiveDocuments())
                           }
                         }}
-                    id="controllable-states-demo"
-                    renderInput={(params) => <TextField 
-                              {...params} 
-                              id="documentType"  
-                              name='documentType' 
-                              label="Document Type*" 
-                              error={!!error}
-                              helperText={error?.message} 
-                              inputRef={ref}
-                              />}
-                    ChipProps={{ size: 'small' }}
                   />
-                  )}
-                />
-
-
 
                 </Box>
 
@@ -206,37 +176,21 @@ export default function DrawingAttachForm() {
                   rowGap={2}
                   columnGap={2}
                   display="grid"
-                  gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(1, 1fr)' }}>
-                <Controller
-                  name="document"
-                  clearOnBlur 
-                  clearOnEscape 
-                  control={control}
-                  defaultValue={document || null}
-                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                  <Autocomplete
-                    {...field}
+                  gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(1, 1fr)' }} >
+
+                  <RHFAutocomplete
+                    name="document"
+                    clearOnBlur 
+                    clearOnEscape 
+                    label="Document*" 
                     options={filteredDocuments}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => option.displayName}
-                    onChange={(event, value) => field.onChange(value)}
-                    id="controllable-states-demo"
-                    renderInput={(params) => <TextField 
-                              {...params} 
-                              id="document"  
-                              name='document' 
-                              label="Document*" 
-                              error={!!error}
-                              helperText={error?.message} 
-                              inputRef={ref}
-                              />}
-                    ChipProps={{ size: 'small' }}
                   />
-                  )}
-                />
+                  
                 </Box>
 
-                    <RHFSwitch name="isActive" label="Active"/>
+                <RHFSwitch name="isActive" label="Active"/>
 
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>

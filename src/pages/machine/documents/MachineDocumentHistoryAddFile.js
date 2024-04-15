@@ -1,16 +1,17 @@
 // @mui
 import { Container } from '@mui/material';
-import DocumentList from '../../documents/DocumentList';
-// 
+import DocumentAddForm from '../../documents/DocumentAddForm';
+// routes
+import { PATH_MACHINE } from '../../../routes/paths';
 import MachineTabContainer from '../util/MachineTabContainer';
 
 // ----------------------------------------------------------------------
 
-export default function MachineDocumentList() {
+export default function MachineDocumentHistoryAddFile() {
     return (
             <Container maxWidth={false }>
                 <MachineTabContainer currentTabValue='documents' />
-                <DocumentList machinePage />
+                <DocumentAddForm machinePage historyAddFiles />
             </Container>
     );
 }
