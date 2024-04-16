@@ -274,7 +274,7 @@ export function updateSupplier(params,Id) {
       await axios.patch(`${CONFIG.SERVER_URL}products/suppliers/${Id}`,
         data
       );
-      dispatch(getSupplier(Id));
+      
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

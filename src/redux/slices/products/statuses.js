@@ -161,7 +161,6 @@ export function getActiveMachineStatuses ( cancelToken ){
       });
       dispatch(slice.actions.getActiveMachineStatusesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('statuses loaded successfully'));
-      // dispatch(slice.actions)
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -249,10 +248,7 @@ export function updateMachinestatus(params,Id) {
         slug: params.slug,
       };
      /* eslint-enable */
-      await axios.patch(`${CONFIG.SERVER_URL}products/statuses/${Id}`,
-        data
-      );
-      dispatch(getMachineStatus(Id));
+      await axios.patch(`${CONFIG.SERVER_URL}products/statuses/${Id}`, data );
       dispatch(slice.actions.setMachinestatusesEditFormVisibility(false));
     } catch (error) {
       console.error(error);

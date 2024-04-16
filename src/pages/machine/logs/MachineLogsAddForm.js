@@ -19,6 +19,8 @@ import Iconify from '../../../components/iconify/Iconify';
 import { ICONS } from '../../../constants/icons/default-icons';
 import { HeaderArr, unitHeaders } from './Index';
 import MachineTabContainer from '../util/MachineTabContainer';
+import { isValidDate } from '../../../utils/formatTime';
+
 
 // ----------------------------------------------------------------------
 
@@ -68,15 +70,24 @@ export default function MachineLogsAddForm() {
   useEffect(() => {
     if(error) setError(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ erpLog ])
+  },[ erpLog ]);
 
-  const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
   const onSubmit = async (data) => {
     try{
         const csvData = JSON.parse(data.erpLog)
-        if(Array.isArray(csvData) && csvData?.length > 5000){
-          setError(true)
-        }else{
+        if(Array.isArray(csvData)){
+          if(csvData?.length > 5000){
+            setError(true)
+          } else if( !csvData.some(item => item && ( item?.date ))){
+            enqueueSnackbar("date is Missing!", { variant: `error` });
+          } else if( !csvData.some(item => item && isValidDate( item?.date ))){
+            enqueueSnackbar("Invalid Date Format!", { variant: `error` });
+          }
+        } else if(typeof csvData === 'object' && !('date' in csvData )){
+            enqueueSnackbar("date is Missing!", { variant: `error` });
+        } else if(typeof csvData === 'object' && !isValidDate( csvData.date )){
+            enqueueSnackbar("Invalid Date Format!", { variant: `error` });
+        } else {
           setError(false);
           try {
             const action = {}
@@ -179,6 +190,9 @@ const readFile = (selectedFile) =>
   };
 
 const HandleChangeIniJson = async (e) => { setValue('erpLog', e) }
+
+const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
+
   return (
     <Container maxWidth={false} >
       <MachineTabContainer currentTabValue='logs' />

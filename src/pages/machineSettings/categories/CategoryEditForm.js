@@ -65,7 +65,9 @@ export default function CategoryEditForm() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category]);
+  
   const toggleCancel = () => navigate(PATH_MACHINE.machines.machineSettings.categories.view(id));
+
   const onSubmit = async (data) => {
     try {
       await dispatch(updateCategory(data, id));

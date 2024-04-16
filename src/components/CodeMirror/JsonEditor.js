@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import CodeMirror from '@uiw/react-codemirror';
 import { langs } from '@uiw/codemirror-extensions-langs';
 import { search } from '@codemirror/search';
 import { Grid, Typography } from '@mui/material';
+import Iconify from '../iconify';
+import JsonEditorPopover from './JsonEditorPopover';
 
 JsonEditor.propTypes = {
   value: PropTypes.string,
@@ -11,6 +14,8 @@ JsonEditor.propTypes = {
 };
 
 function JsonEditor({value, HandleChangeIniJson, readOnly }) {
+
+  const [ anchorEl, setAnchorEl ] = useState(null);
 
   const codeMirrorOptions = {
     lineNumbers: true,
@@ -40,8 +45,30 @@ function JsonEditor({value, HandleChangeIniJson, readOnly }) {
     mode: 'application/json',
   };
 
+  const handlePopoverOpen = (event) => setAnchorEl(event.currentTarget);
+  const handlePopoverClose = () => setAnchorEl(null);
+
+
   return  <Grid item md={12}>
-          <Typography variant='subtitle2' display="flex" alignItems="center">Note: <Typography variant='caption' sx={{ml:1}}> Ctrl + F / Cmd + F to find text in Code Editer</Typography></Typography>
+          <Grid sx={{ display: { sm: 'block', md: 'flex' }, justifyContent: 'space-between' }} >
+            <Typography variant='subtitle2' display="flex" alignItems="center">
+              Note: 
+              <Typography variant='caption' sx={{ml:1}}> 
+                Ctrl + F / Cmd + F to find text in Code Editer
+              </Typography>
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', ml: 2, mt: 0.5 }}
+            >
+              Format:
+              <Iconify
+                onClick={handlePopoverOpen}
+                icon="iconamoon:question-mark-circle-bold"
+                sx={{ cursor: 'pointer' }}
+                />
+            </Typography>
+          </Grid>
           <CodeMirror 
             value={value} 
             onChange={(e) => HandleChangeIniJson(e)}
@@ -51,6 +78,10 @@ function JsonEditor({value, HandleChangeIniJson, readOnly }) {
             options={codeMirrorOptions}
             readOnly={readOnly}
           />
+      <JsonEditorPopover
+        open={anchorEl}
+        onClose={handlePopoverClose}
+      />
     </Grid>
 }
 

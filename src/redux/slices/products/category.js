@@ -251,10 +251,7 @@ export function updateCategory(params,Id) {
         connections: params.connections
       };
      /* eslint-enable */
-      await axios.patch(`${CONFIG.SERVER_URL}products/categories/${Id}`,
-        data
-      );
-      dispatch(getCategories(params.id));
+      await axios.patch(`${CONFIG.SERVER_URL}products/categories/${Id}`, data);
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

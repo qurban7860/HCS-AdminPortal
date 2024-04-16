@@ -241,22 +241,16 @@ export function updateMachineModel(params,Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{
-      /* eslint-disable */
-      let data = {
+      const data = {
         name: params.name,
         category: params?.category?._id,
         isActive: params.isActive,
         isDefault: params.isDefault,
         description: params.description,
       };
-     /* eslint-enable */
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/models/${Id}`,
-        data
-      );
-      if(regEx.test(response.status)){
-        dispatch(getMachineModel(Id));
-        dispatch(slice.actions.setMachinemodelsEditFormVisibility(false));
-      }
+      
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/models/${Id}`, data);
+      return response
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

@@ -126,10 +126,9 @@ export default function ServiceRecordConfigEditForm() {
         data.status = 'SUBMITTED'
       }
       await dispatch(updateServiceRecordConfig(data, id));
-      reset();
-      dispatch(setServiceRecordConfigEditFormVisibility(false));
       enqueueSnackbar('Update success!');
       navigate(PATH_MACHINE.machines.machineSettings.serviceRecordsConfig.view(id));
+      reset();
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
