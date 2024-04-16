@@ -60,6 +60,10 @@ import {
   // customer Documents
   CustomerDocumentList,
   CustomerDocumentAdd,
+  CustomerDocumentAddFiles,
+  CustomerDocumentNewVersion,
+  CustomerDocumentHistoryAddFiles,
+  CustomerDocumentHistoryNewVersion,
   CustomerDocumentEdit,
   CustomerDocumentView,
   CustomerDocumentHistoryView,
@@ -115,6 +119,9 @@ import {
   // --------------------------- MACHINE Drawings  -------------------------------------
   MachineDrawingList,
   MachineDrawingAdd,
+  MachineDrawingAddFile,
+  MachineDrawingNewVersion,
+  MachineDrawingAttach,
   MachineDrawingListAdd,
   MachineDrawingView,
   MachineDrawingEdit,
@@ -122,6 +129,10 @@ import {
   // --------------------------- Machine Documents -------------------------------------
   MachineDocumentList,
   MachineDocumentAdd,
+  MachineDocumentAddFile,
+  MachineDocumentNewVersion,
+  MachineDocumentHistoryAddFile,
+  MachineDocumentHistoryNewVersion,
   MachineDocumentEditForm,
   MachineDocumentGallery,
   MachineDocumentViewForm,
@@ -145,7 +156,6 @@ import {
   MachineServiceRecordView,
   MachineServiceRecordEdit,
   MachineServiceRecordHistoryList,
-  MachineServiceRecordPDF,
 
   // --------------------------- MACHINE INI -------------------------------------
   MachineINIList,
@@ -243,6 +253,8 @@ import {
   // DOCUMENT dashboard  
   DocumentList, 
   DocumentAdd, 
+  DocumentAddFile,
+  DocumentNewVersion,
   DocumentAddList,
   DocumentEdit, 
   DocumentView,
@@ -264,9 +276,11 @@ import {
 
   // ----------------------------------------------------------------
 
-  // MachineDocumentView,
+  // MACHINE DRAWINGS
   MachineDrawings,
   MachineDrawingsAdd,
+  MachineDrawingsAddFiles,
+  MachineDrawingsNewVersion,
   MachineDrawingsView,
 
   // ----------------------------------------------------------------
@@ -493,9 +507,21 @@ export default function Router() {
                 { path: 'new', element: <CustomerDocumentAdd /> },
                 { path: 'viewGallery', element: <CustomerDocumentGallery />},
                 { path: ':id/edit', element: <CustomerDocumentEdit />},
-                { path: ':id/view', element: <CustomerDocumentView />},
-                { path: ':id/viewHistory', element: <CustomerDocumentHistoryView />},
                 { path: 'gallery', element: <CustomerDocumentGallery />},
+                {path: ':id/view', 
+                  children:[
+                    { element: <CustomerDocumentView/>, index: true },
+                    { path: 'addFile', element: <CustomerDocumentAddFiles /> },
+                    { path: 'newVersion', element: <CustomerDocumentNewVersion /> },
+                  ]
+                },
+                {path: ':id/history', 
+                  children:[
+                    { element: <CustomerDocumentHistoryView/>, index: true },
+                    { path: 'addFile', element: <CustomerDocumentHistoryAddFiles /> },
+                    { path: 'newVersion', element: <CustomerDocumentHistoryNewVersion /> },
+                  ]
+                },
               ],
             },        
             { path: ':customerId/machines',
@@ -560,11 +586,17 @@ export default function Router() {
             { path: ':machineId/drawings',
               children:[
                 {element: <MachineDrawingList/>, index: true},
-                {path: 'new', element: <MachineDrawingAdd/>},
-                {path: 'attach', element: <MachineDrawingAdd/>},
+                {path: 'new', element: <MachineDrawingAdd />},
+                {path: 'attach', element: <MachineDrawingAttach/>},
                 {path: 'multipleNew', element: <MachineDrawingListAdd/>},
-                {path: ':id/view', element: <MachineDrawingView/>},
                 {path: ':id/edit', element: <MachineDrawingEdit/>}, 
+                {path: ':id/view', 
+                  children:[
+                    { element: <MachineDrawingView />, index: true },
+                    { path: 'addFile', element: <MachineDrawingAddFile /> },
+                    { path: 'newVersion', element: <MachineDrawingNewVersion /> },
+                  ]
+                },
               ]
             },
             { path: ':machineId/documents',
@@ -572,9 +604,23 @@ export default function Router() {
                 {element: <MachineDocumentList/>, index: true},
                 {path: 'new', element: <MachineDocumentAdd/>},
                 {path: 'gallery', element: <MachineDocumentGallery/>},
-                {path: ':id/view', element: <MachineDocumentViewForm/>},
-                {path: ':id/history', element: <MachineDocumentHistoryViewForm/>},
-                {path: ':id/edit', element: <MachineDocumentEditForm/>}, 
+                {path: ':id/edit', element: <MachineDocumentEditForm/>},
+                {path: ':id/newFile', element: <MachineDocumentViewForm/>},
+                {path: ':id/newVersion', element: <MachineDocumentViewForm/>},
+                {path: ':id/view', 
+                  children:[
+                    { element: <MachineDocumentViewForm />, index: true },
+                    { path: 'addFile', element: <MachineDocumentAddFile /> },
+                    { path: 'newVersion', element: <MachineDocumentNewVersion /> },
+                  ]
+                },
+                {path: ':id/history', 
+                  children:[
+                    { element: <MachineDocumentHistoryViewForm />, index: true },
+                    { path: 'addFile', element: <MachineDocumentHistoryAddFile /> },
+                    { path: 'newVersion', element: <MachineDocumentHistoryNewVersion /> },
+                  ]
+                },
               ]
             },
             { path: ':machineId/licenses',
@@ -599,8 +645,11 @@ export default function Router() {
                 {path: 'new', element: <MachineServiceRecordAdd/>},
                 {path: ':id/view', element: <MachineServiceRecordView/>},
                 {path: ':id/edit', element: <MachineServiceRecordEdit/>}, 
-                {path: ':id/history', element: <MachineServiceRecordHistoryList/>}, 
-                {path: ':id/pdf', element: <MachineServiceRecordPDF/>}, 
+                {path: ':serviceId/history',children:[
+                    {element: <MachineServiceRecordHistoryList/>, index: true}, 
+                    {path: ':id/view', element: <MachineServiceRecordView serviceHistoryView />},
+                  ]
+                }, 
               ]
             },
             { path: ':machineId/ini',
@@ -907,23 +956,41 @@ export default function Router() {
         </AuthGuard>
       ),
       children: [
-        {element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-        {path: 'list',element: <DocumentList />},
+        {element: <DocumentList />, index: true},
         {path: 'new', element: <DocumentAdd /> },
         {path: 'newList', element: <DocumentAddList /> },
         {path: ':id/edit', element: <DocumentEdit /> },
-        {path: ':id/view', element: <DocumentView /> },
         {path: ':id/gallery', element: <DocumentGallery /> },
-        {path: 'machineDrawings',
-          children: [
-            { path: 'list', element: <MachineDrawings/> },
-            { path: 'new', element: <MachineDrawingsAdd/> },
-            {path: 'newList', element: <DocumentAddList machineDrawings /> },
-            { path: ':id/view', element: <MachineDrawingsView /> },
+        {path: ':id/view', 
+          children:[
+            { element: <DocumentView />, index: true },
+            { path: 'addFile', element: <DocumentAddFile /> },
+            { path: 'newVersion', element: <DocumentNewVersion /> },
           ]
-        }
+        },
       ],
     },
+        // ------------------------------ Drawings ----------------------------------
+        {
+          path: 'machineDrawings',
+          element: (
+            <AuthGuard>
+              <DashboardLayout />
+            </AuthGuard>
+          ),
+          children: [
+            { element: <MachineDrawings/>, index: true  },
+            { path: 'new', element: <MachineDrawingsAdd/> },
+            { path: 'newList', element: <DocumentAddList machineDrawings /> },
+            {path: ':id/view', 
+              children:[
+                { element: <MachineDrawingsView />, index: true },
+                { path: 'addFile', element: <MachineDrawingsAddFiles /> },
+                { path: 'newVersion', element: <MachineDrawingsNewVersion /> },
+              ]
+            },
+          ],
+        },
     // ----------------------------- Sites Report -----------------------------------
     {
       // Sites

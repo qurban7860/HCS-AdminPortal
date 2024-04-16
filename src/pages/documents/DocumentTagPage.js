@@ -12,7 +12,7 @@ import {
   setDocumentNewVersionFormVisibility,
   setDocumentAddFilesViewFormVisibility,
   setDocumentGalleryVisibility,
-} from '../../../redux/slices/document/document';
+} from '../../redux/slices/document/document';
 // components
 import DocumentList from './DocumentList';
 import DocumentAddForm from './DocumentAddForm';

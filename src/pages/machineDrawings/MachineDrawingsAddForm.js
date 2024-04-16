@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import DocumentAddForm from './DocumentAddForm'
+import DocumentAddForm from '../documents/DocumentAddForm'
 
 const MachineDrawingsAddForm = () => (
     <DocumentAddForm machineDrawings />

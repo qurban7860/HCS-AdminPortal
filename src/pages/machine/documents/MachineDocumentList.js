@@ -1,8 +1,7 @@
 // @mui
 import { Container } from '@mui/material';
-import DocumentList from '../../document/documents/DocumentList';
-// routes
-import { PATH_MACHINE } from '../../../routes/paths';
+import DocumentList from '../../documents/DocumentList';
+// 
 import MachineTabContainer from '../util/MachineTabContainer';
 
 // ----------------------------------------------------------------------

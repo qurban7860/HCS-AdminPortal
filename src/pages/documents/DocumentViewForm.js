@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
-import React, { useMemo, memo, useState, useEffect } from 'react';
+import React, { useMemo, memo, useState, useEffect, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { Grid, Card, Box, Dialog, DialogTitle, Button, DialogContent, Divider, Typography } from '@mui/material'
 import download from 'downloadjs';
-import { StyledVersionChip } from '../../../theme/styles/default-styles';
-import { PATH_CRM, PATH_DOCUMENT } from '../../../routes/paths';
+import { StyledVersionChip } from '../../theme/styles/default-styles';
+import { PATH_CRM, PATH_DOCUMENT, PATH_MACHINE } from '../../routes/paths';
 import {
   deleteDocument,
   getDocumentHistory,
@@ -21,18 +21,18 @@ import {
   setDocumentNewVersionFormVisibility,
   setDocumentHistoryAddFilesViewFormVisibility,
   setDocumentHistoryNewVersionFormVisibility,
-} from '../../../redux/slices/document/document';
-import { deleteDocumentFile, downloadFile, getDocumentDownload } from '../../../redux/slices/document/documentFile';
+} from '../../redux/slices/document/document';
+import { deleteDocumentFile, downloadFile, getDocumentDownload } from '../../redux/slices/document/documentFile';
 // components
-import { ThumbnailDocButton } from '../../../components/Thumbnails';
-import { useSnackbar } from '../../../components/snackbar';
-import { Snacks } from '../../../constants/document-constants';
-import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
-import ViewFormField from '../../../components/ViewForms/ViewFormField';
-import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
-import { DocumentGalleryItem } from '../../../components/gallery/DocumentGalleryItem';
-import Lightbox from '../../../components/lightbox/Lightbox';
-import FormLabel from '../../../components/DocumentForms/FormLabel';
+import { ThumbnailDocButton } from '../../components/Thumbnails';
+import { useSnackbar } from '../../components/snackbar';
+import { Snacks } from '../../constants/document-constants';
+import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import { DocumentGalleryItem } from '../../components/gallery/DocumentGalleryItem';
+import Lightbox from '../../components/lightbox/Lightbox';
+import FormLabel from '../../components/DocumentForms/FormLabel';
 
 DocumentViewForm.propTypes = {
   customerPage: PropTypes.bool,
@@ -46,9 +46,16 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
   const { enqueueSnackbar } = useSnackbar();
-
+  const { customerId, machineId, id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useLayoutEffect(()=>{
+    if( machinePage || customerPage ){
+      dispatch(getDocument(id))
+    }
+  },[ dispatch, id, machinePage, customerPage ]);
+
   const onDelete = async () => {
     try {
       await dispatch(deleteDocument(document._id));
@@ -71,21 +78,18 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
   };
 
   const handleEdit = async () => {
-    dispatch(getDocument(document?._id));
-    dispatch(setDocumentViewFormVisibility(false));
-    dispatch(setDocumentEditFormVisibility(true));
-    if( customerPage && !machinePage ){
-      navigate(PATH_CRM.customers.documents.edit( customer?._id, document?._id ));
+    if( customerPage ){
+      navigate(PATH_CRM.customers.documents.edit( customerId, id ));
+    } else if( machinePage ){
+      navigate(PATH_MACHINE.machines.documents.edit( machineId, id ));
     }
   };
 
   const linkDocumentView = async () => {
-    dispatch(setDocumentViewFormVisibility(false));
-    dispatch(setDocumentHistoryViewFormVisibility(true));
-    dispatch(resetDocumentHistory())
-    dispatch(getDocumentHistory(document?._id));
-    if( customerPage && !machinePage ){
-      navigate(PATH_CRM.customers.documents.viewHistory( customer?._id, document?._id ));
+    if( customerPage ){
+      navigate(PATH_CRM.customers.documents.history.root( customerId, document?._id ));
+    } else if( machinePage ){
+      navigate(PATH_MACHINE.machines.documents.history.root( machineId, document?._id ));
     }
   };
 
@@ -124,40 +128,21 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
   );
 
   const handleNewVersion = async () => {
-    if(customerPage || machinePage){
-      dispatch(setDocumentHistoryNewVersionFormVisibility(false));
-      dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
-      dispatch(setDocumentAddFilesViewFormVisibility(false));
-      dispatch(resetDocumentHistory());
-      dispatch(setDocumentViewFormVisibility(false));
-      dispatch(setDocumentFormVisibility(true));
-      dispatch(setDocumentNewVersionFormVisibility(true));
-      if( customerPage && !machinePage ){
-        navigate(PATH_CRM.customers.documents.new( customer?._id ));
+      await dispatch(resetDocumentHistory());
+      if( customerPage && customerId && id ){
+        await navigate(PATH_CRM.customers.documents.view.newVersion( customerId, id ));
+      }else if( machinePage && machineId && id ){
+        await navigate(PATH_MACHINE.machines.documents.view.newVersion( machineId, id ));
       }
-  }else{
-    dispatch(setDocumentNewVersionFormVisibility(true));
-    navigate(PATH_DOCUMENT.document.new);
-  }
   }
 
   const handleNewFile = async () => {
-    if(customerPage || machinePage){
-      if( customerPage && !machinePage ){
-        dispatch(setDocumentAddFilesViewFormVisibility(true));
-        navigate(PATH_CRM.customers.documents.new( customer?._id ));
-      }
-      dispatch(setDocumentHistoryNewVersionFormVisibility(false));
-      dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
-      dispatch(setDocumentNewVersionFormVisibility(false));
-      dispatch(resetDocumentHistory());
-      dispatch(setDocumentViewFormVisibility(false));
-      dispatch(setDocumentFormVisibility(true));
-      dispatch(setDocumentAddFilesViewFormVisibility(true));
-  }else{
-    dispatch(setDocumentAddFilesViewFormVisibility(true));
-    navigate(PATH_DOCUMENT.document.new);
-  }
+    await dispatch(resetDocumentHistory());
+    if( customerPage && customerId && id ){
+      await navigate(PATH_CRM.customers.documents.view.addFile( customerId, id ));
+    } else if( machinePage && machineId && id ){
+      await navigate(PATH_MACHINE.machines.documents.view.addFile( machineId, id ));
+    }
   }
 
   const regEx = /^[^2]*/;
@@ -291,16 +276,12 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
     setPages(numPages);
   };
 
-  const handleBackLink = () => {
-    if(customerPage || machinePage ) {
-      dispatch(setDocumentHistoryViewFormVisibility(false)); 
-      dispatch(setDocumentViewFormVisibility(false))
-      if(customerPage && !machinePage ) {
-        navigate(PATH_CRM.customers.documents.root( customer?._id ));
-      }
-    } else {
-      navigate(PATH_DOCUMENT.document.list)
-    } 
+  const handleBackLink = ()=>{
+    if(customerPage) {
+      navigate(PATH_CRM.customers.documents.root( customerId ));
+    } else if( machinePage ){
+      navigate(PATH_MACHINE.machines.documents.root(machineId)) 
+    }
   }
 
   return (

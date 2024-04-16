@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 // @mui
@@ -20,7 +19,6 @@ import {
 } from '../../../components/table';
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
-import { useSnackbar } from '../../../components/snackbar';
 // sections
 import MachineServiceRecordHistoryListTableRow from './MachineServiceRecordHistoryListTableRow';
 import {
@@ -37,10 +35,6 @@ import MachineTabContainer from '../util/MachineTabContainer';
 
 // ----------------------------------------------------------------------
 
-MachineServiceRecordHistoryList.propTypes = {
-  serviceId: PropTypes.string,
-};
-
 const TABLE_HEAD = [
   { id: 'serviceDate', label: 'Service Date', align: 'left' },
   { id: 'versionNo', visibility: 'xs5', label: 'Version', align: 'left' },
@@ -50,11 +44,10 @@ const TABLE_HEAD = [
 ];
 // ----------------------------------------------------------------------
 
-export default function MachineServiceRecordHistoryList({ serviceId }) {
-  const { machineServiceRecordHistory, isDetailPage, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceRecord);
-  const { enqueueSnackbar } = useSnackbar();
+export default function MachineServiceRecordHistoryList() {
+  const { machineServiceRecordHistory, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineServiceRecord);
   const navigate = useNavigate();
-  const { machineId, id } = useParams();
+  const { machineId, serviceId } = useParams();
 
   const {
     order,
@@ -77,8 +70,8 @@ export default function MachineServiceRecordHistoryList({ serviceId }) {
   const [tableData, setTableData] = useState([]);
 
   useLayoutEffect(()=>{
-    dispatch(getMachineServiceHistoryRecords( machineId, id))
-  },[ dispatch,  machineId, id ])
+    dispatch(getMachineServiceHistoryRecords( machineId, serviceId))
+  },[ dispatch,  machineId, serviceId ])
 
   useEffect(() => {
     if (initial) {
@@ -110,7 +103,7 @@ export default function MachineServiceRecordHistoryList({ serviceId }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-  const handleViewRow = async (Id) => navigate(PATH_MACHINE.machines.serviceRecords.view(machineId, Id )) ;
+  const handleViewRow = async (Id) => navigate(PATH_MACHINE.machines.serviceRecords.history.view(machineId, serviceId, Id )) ;
 
 
   return (
@@ -126,7 +119,7 @@ export default function MachineServiceRecordHistoryList({ serviceId }) {
             title='Back'
             color='#008000'
             icon="mdi:arrow-left"
-            onClick={() => navigate(PATH_MACHINE.machines.serviceRecords.view(machineId, id)) }
+            onClick={() => navigate(PATH_MACHINE.machines.serviceRecords.view(machineId, serviceId)) }
             size="small"
             />
         </StyledStack>

@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import { Container } from '@mui/system'
-import DocumentHistoryViewForm from './DocumentHistoryViewForm'
+import DocumentHistoryViewForm from '../documents/DocumentHistoryViewForm'
 
 const MachineDrawingsViewForm = () => (
     <Container maxWidth={false}>

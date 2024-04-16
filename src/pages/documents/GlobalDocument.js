@@ -1,11 +1,10 @@
-import { memo, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux';
-
 import { Container } from '@mui/material'
-import { resetMachine } from '../../../redux/slices/products/machine';
+import { resetMachine } from '../../redux/slices/products/machine';
 import DocumentList from './DocumentList'
 
-const MachineDrawings = () =>{
+function GlobalDocument(){
 
   const dispatch = useDispatch();
 
@@ -13,11 +12,11 @@ const MachineDrawings = () =>{
     dispatch(resetMachine())
   },[dispatch])
 
-  return(
+  return (
     <Container maxWidth={false}>
-      <DocumentList machineDrawings />
+        <DocumentList />
     </Container>
   )
-} 
+}
 
-export default memo(MachineDrawings)
+export default GlobalDocument

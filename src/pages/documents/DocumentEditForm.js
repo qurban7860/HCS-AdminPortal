@@ -2,26 +2,26 @@ import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import {  useEffect, useMemo, useState, memo} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Card, Grid, Stack, Autocomplete, TextField } from '@mui/material';
 // components
-import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFTextField } from '../../../components/hook-form';
-import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
+import { useSnackbar } from '../../components/snackbar';
+import FormProvider, { RHFTextField } from '../../components/hook-form';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 // slice
 import {
   setDocumentEditFormVisibility,
   getDocument,
   updateDocument,
   getDocumentHistory,
-} from '../../../redux/slices/document/document';
-import { setDrawingEditFormVisibility, setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
-import { Snacks } from '../../../constants/document-constants';
-import { PATH_CRM, PATH_DOCUMENT } from '../../../routes/paths';
+} from '../../redux/slices/document/document';
+import { setDrawingEditFormVisibility, setDrawingViewFormVisibility } from '../../redux/slices/products/drawing';
+import { Snacks } from '../../constants/document-constants';
+import { PATH_CRM, PATH_DOCUMENT, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
 
 // ----------------------------------------------------------------------
 DocumentEditForm.propTypes = {
@@ -42,6 +42,7 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
   const [customerAccessVal, setCustomerAccessVal] = useState(false);
   const [isActive, setIsActive] = useState(false);
   const navigate = useNavigate();
+  const { machineId, customerId, id } = useParams();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -84,32 +85,27 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
     formState: { isSubmitting },
   } = methods;
 
+  const toggleCancel = () => {
+    if( customerPage && customerId && id ){
+      navigate(PATH_CRM.customers.documents.view.root( customerId, id ));
+    } else if( machinePage && machineId && id ){
+      navigate(PATH_MACHINE.machines.documents.view.root(machineId, id));
+    } else if( drawingPage && machineId && id ){
+      navigate(PATH_MACHINE.machines.drawings.view.root(machineId, id));
+    }else if( !customerPage && !drawingPage && !machinePage && id ){
+      navigate(PATH_DOCUMENT.document.view.root(id))
+    }
+  }
+
   const onSubmit = async (data) => {
     try {
       data.customerAccess = customerAccessVal;
       data.isActive = isActive;
-      await dispatch(
-        updateDocument(
-          document?._id,
-          data,
-          customerPage ? customer?._id : null,
-          machinePage ? machine?._id : null
-        )
-      );
-      if( customerPage && !machinePage ){
-        await dispatch(getDocument(document?._id));
-        navigate(PATH_CRM.customers.documents.view( customer?._id, document?._id ));
-      } else if(drawingPage){
-        await dispatch(getDocumentHistory(document?._id));
-        dispatch(setDrawingViewFormVisibility(true));
-        dispatch(setDrawingEditFormVisibility(false));
-      }else{
-        await dispatch(getDocument(document?._id));
-        setDocumentCategoryVal('');
-        setDocumentTypeVal('');
-        reset();
-      }
-
+        await dispatch( updateDocument( id, data, customerPage ? customerId : null, machinePage ? machineId : null ) );
+        await toggleCancel();
+      await setDocumentCategoryVal('');
+      await setDocumentTypeVal('');
+      await reset();
       enqueueSnackbar(`${drawingPage?"Drawing ":""} ${Snacks.updatedDoc}`, { variant: `success` });
       
     } catch (err) {
@@ -118,20 +114,10 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
     }
   };
 
-  const toggleCancel = () => {
-    if( customerPage && !machinePage ){
-      navigate(PATH_CRM.customers.documents.view( customer?._id, document?._id ));
-    } else if(drawingPage){
-      dispatch(setDrawingViewFormVisibility(true));
-      dispatch(setDrawingEditFormVisibility(false));
-    }else{
-      dispatch(setDocumentEditFormVisibility(false));
-    }
-  };
-
   const handleChange = () => {
     setCustomerAccessVal(!customerAccessVal);
   };
+  
   const handleIsActiveChange = () => {
     setIsActive(!isActive);
   };

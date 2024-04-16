@@ -1,5 +1,5 @@
 import React, {  useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 import PropTypes from 'prop-types';
 // @mui
@@ -10,9 +10,9 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 // redux
-import { useDispatch, useSelector } from '../../../redux/store';
+import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_CRM, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_CRM, PATH_DOCUMENT, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
 // components
 import {
   useTable,
@@ -21,8 +21,8 @@ import {
   TableSkeleton,
   TableHeadCustom,
   TablePaginationCustom,
-} from '../../../components/table';
-import Scrollbar from '../../../components/scrollbar';
+} from '../../components/table';
+import Scrollbar from '../../components/scrollbar';
 // sections
 import DocumentListTableRow from './DocumentListTableRow';
 import DocumentListTableToolbar from './DocumentListTableToolbar';
@@ -32,7 +32,6 @@ import {
   getDocuments,
   resetDocuments,
   resetDocumentHistory,
-  setDocumentViewFormVisibility,
   setFilterBy,
   ChangePage,
   ChangeRowsPerPage,
@@ -48,30 +47,31 @@ import {
   setMachineDrawingsFilterBy,
   machineDrawingsChangePage,
   machineDrawingsChangeRowsPerPage,
-  setDocumentGalleryVisibility,
-} from '../../../redux/slices/document/document';
-import { getMachineForDialog,  setMachineDialog } from '../../../redux/slices/products/machine';
-import { getActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
-import { getActiveDocumentTypes } from '../../../redux/slices/document/documentType';
-import { getCustomer, setCustomerDialog } from '../../../redux/slices/customer/customer';
-import { Cover } from '../../../components/Defaults/Cover';
-import { StyledCardContainer } from '../../../theme/styles/default-styles';
-import { FORMLABELS } from '../../../constants/default-constants';
-import { fDate } from '../../../utils/formatTime';
-import TableCard from '../../../components/ListTableTools/TableCard';
-import MachineDialog from '../../../components/Dialog/MachineDialog';
-import CustomerDialog from '../../../components/Dialog/CustomerDialog';
+} from '../../redux/slices/document/document';
+import { getMachineForDialog,  setMachineDialog } from '../../redux/slices/products/machine';
+import { getActiveDocumentCategories } from '../../redux/slices/document/documentCategory';
+import { getActiveDocumentTypes } from '../../redux/slices/document/documentType';
+import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
+import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../theme/styles/default-styles';
+import { FORMLABELS } from '../../constants/default-constants';
+import { fDate } from '../../utils/formatTime';
+import TableCard from '../../components/ListTableTools/TableCard';
+import MachineDialog from '../../components/Dialog/MachineDialog';
+import CustomerDialog from '../../components/Dialog/CustomerDialog';
 
 // ----------------------------------------------------------------------
 DocumentList.propTypes = {
   customerPage: PropTypes.bool,
   machinePage: PropTypes.bool,
+  machineDrawingPage: PropTypes.bool,
   machineDrawings: PropTypes.bool,
 };
 
-function DocumentList({ customerPage, machinePage, machineDrawings }) {
+function DocumentList({ customerPage, machinePage, machineDrawingPage, machineDrawings }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { customerId, machineId, id } = useParams();
   const axiosToken = () => axios.CancelToken.source();
   const cancelTokenSource = axiosToken();
   const [filterName, setFilterName] = useState('');
@@ -84,10 +84,10 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
   const { documents,
-    documentFilterBy,  documentPage,  documentRowsPerPage, documentRowsTotal,
-    machineDrawingsFilterBy,  machineDrawingsPage,  machineDrawingsRowsPerPage,
-    customerDocumentsFilterBy,   customerDocumentsPage,   customerDocumentsRowsPerPage,
-    machineDocumentsFilterBy,  machineDocumentsPage,  machineDocumentsRowsPerPage,
+    documentFilterBy, documentPage, documentRowsPerPage, documentRowsTotal,
+    machineDrawingsFilterBy, machineDrawingsPage, machineDrawingsRowsPerPage,
+    customerDocumentsFilterBy, customerDocumentsRowsPerPage,
+    machineDocumentsFilterBy, machineDocumentsRowsPerPage,
     isLoading } = useSelector((state) => state.document );
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory );
   const { activeDocumentTypes } = useSelector((state) => state.documentType );
@@ -103,7 +103,7 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
   });
 
 const onChangeRowsPerPage = (event) => {
-  if(machinePage){
+  if(machineDrawingPage){
     dispatch(machineDocumentChangePage(0))
     dispatch(machineDocumentChangeRowsPerPage(parseInt(event.target.value, 10)))
   }else if(customerPage){
@@ -112,20 +112,20 @@ const onChangeRowsPerPage = (event) => {
   }else if(machineDrawings){
     dispatch(machineDrawingsChangePage(0))
     dispatch(machineDrawingsChangeRowsPerPage(parseInt(event.target.value, 10)))
-  }else if(!machineDrawings && !customerPage && !machinePage){
+  }else if(!machineDrawings && !customerPage && !machineDrawingPage){
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10)));
   }
 };
 
 const onChangePage = (event, newPage) => {
-  if(machinePage){
+  if(machineDrawingPage){
     dispatch(machineDocumentChangePage(newPage))
   }else if(customerPage){
     dispatch(customerDocumentChangePage(newPage))
   }else if(machineDrawings){
     dispatch(machineDrawingsChangePage(newPage))
-  }else if(!machineDrawings && !customerPage && !machinePage){
+  }else if(!machineDrawings && !customerPage && !machineDrawingPage){
     dispatch(ChangePage(newPage))
   }
 }
@@ -147,7 +147,7 @@ const onChangePage = (event, newPage) => {
     );
   }
 
-  if (!customerPage && !machinePage && !machineDrawings) {
+  if (!customerPage && !machineDrawingPage && !machineDrawings) {
     const insertIndex = 4; // Index after which you want to insert the new objects
     TABLE_HEAD.splice(insertIndex, 0,// 0 indicates that we're not removing any elements
       // { id: 'customer.name', visibility: 'md3', label: 'Customer', align: 'left' },
@@ -156,7 +156,7 @@ const onChangePage = (event, newPage) => {
   }
 
   useEffect(() => {
-    if(machinePage || machineDrawings ){
+    if(machineDrawingPage || machineDrawings || machinePage ){
       dispatch(getActiveDocumentCategories(null));
       dispatch(getActiveDocumentTypes());
       if(machineDrawings){
@@ -176,16 +176,18 @@ const onChangePage = (event, newPage) => {
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [ dispatch, machinePage, machineDrawings ]);
+}, [ dispatch, machineDrawingPage, machineDrawings ]);
 
   useEffect(() => {
-      if (customerPage && customer?._id) {
+      if (customerPage && customerId) {
         dispatch(getDocuments( customer?._id , null, null, page, customerDocumentsRowsPerPage, cancelTokenSource));
-      } else if(machinePage &&  machine?._id ){
-        dispatch(getDocuments( null, machine?._id, null, page, machineDocumentsRowsPerPage, cancelTokenSource));
+      } else if(machineDrawingPage &&  machineId ){
+        dispatch(getDocuments( null, machineId, null, page, machineDocumentsRowsPerPage, cancelTokenSource));
+      } else if( machinePage ){
+        dispatch(getDocuments(null, machineId, null, page, machineDrawingsRowsPerPage, cancelTokenSource));
       } else if( machineDrawings ){
         dispatch(getDocuments(null, null, machineDrawings, page, machineDrawingsRowsPerPage, cancelTokenSource));
-      } else {
+      } else if(!customerPage && !machineDrawingPage && !machinePage && !machineDrawings  ) {
         dispatch(getDocuments(null, null, null, page, documentRowsPerPage, cancelTokenSource));
       }
       return()=>{ cancelTokenSource.cancel(); dispatch(resetDocuments()) }
@@ -193,7 +195,7 @@ const onChangePage = (event, newPage) => {
   }, [
     dispatch, 
     customerPage, 
-    machinePage, 
+    machineDrawingPage, 
     machineDrawings, 
     page, 
     customerDocumentsRowsPerPage, 
@@ -207,17 +209,17 @@ const onChangePage = (event, newPage) => {
   },[ documentRowsTotal ])
 
   useEffect(()=>{
-    if(machinePage || customerPage){
+    if(machineDrawingPage || customerPage){
       setPage(0)
     }else if(machineDrawings){
       setPage(machineDrawingsPage)
-    }else if(!customerPage && !machinePage && !machineDrawings){
+    }else if(!customerPage && !machineDrawingPage && !machineDrawings){
       setPage(documentPage)
     }
-  },[customerPage, machinePage, machineDrawings, machineDrawingsPage, documentPage])
+  },[customerPage, machineDrawingPage, machineDrawings, machineDrawingsPage, documentPage])
 
   useEffect(()=>{
-    if(machinePage){
+    if(machineDrawingPage){
       setRowsPerPage(machineDocumentsRowsPerPage)
     }else if(customerPage){
       setRowsPerPage(customerDocumentsRowsPerPage)
@@ -226,7 +228,7 @@ const onChangePage = (event, newPage) => {
     }else{
       setRowsPerPage(documentRowsPerPage)
     }
-  },[customerPage, machinePage, machineDrawings, machineDocumentsRowsPerPage, customerDocumentsRowsPerPage, machineDrawingsRowsPerPage, documentRowsPerPage])
+  },[customerPage, machineDrawingPage, machineDrawings, machineDocumentsRowsPerPage, customerDocumentsRowsPerPage, machineDrawingsRowsPerPage, documentRowsPerPage])
 
   useEffect(() => {
     setTableData(documents?.data || []);
@@ -247,13 +249,13 @@ const onChangePage = (event, newPage) => {
   const isNotFound = (!dataFiltered?.length && !!filterName) || (!isLoading && !dataFiltered?.length);
 
   const filterNameDebounce = (value) => {
-    if(machinePage){
+    if(machineDrawingPage){
       dispatch(setMachineDocumentFilterBy(value))
     }else if(customerPage){
       dispatch(setCustomerDocumentFilterBy(value))
     }else if(machineDrawings){
       dispatch(setMachineDrawingsFilterBy(value))
-    }else if(!customerPage && !machinePage && !machineDrawings){
+    }else if(!customerPage && !machineDrawingPage && !machineDrawings){
       dispatch(setFilterBy(value))
     }
   }
@@ -271,13 +273,13 @@ const onChangePage = (event, newPage) => {
   }, [debouncedSearch]);
 
   useEffect(()=>{
-    if(machinePage){
+    if(machineDrawingPage){
       setFilterName(machineDocumentsFilterBy)
     }else if(customerPage){
       setFilterName(customerDocumentsFilterBy)
     }else if(machineDrawings){
       setFilterName(machineDrawingsFilterBy)
-    }else if(!customerPage && !machinePage && !machineDrawings){
+    }else if(!customerPage && !machineDrawingPage && !machineDrawings){
       setFilterName(documentFilterBy)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -289,59 +291,56 @@ const onChangePage = (event, newPage) => {
     setFilterStatus(event.target.value);
   };
 
-  const handleViewRow = (id) => {
-      dispatch(resetDocument())
-    if (customerPage || machinePage) {
-      dispatch(getDocument(id));
-      if( customerPage ){
-        navigate(PATH_CRM.customers.documents.view( customer?._id, id));
-      }else{
-        dispatch(setDocumentViewFormVisibility(true));
-      }
-    } else if(machineDrawings){
-      dispatch(resetDocumentHistory())
-      navigate(PATH_DOCUMENT.document.machineDrawings.view(id));
-    } else{
-      dispatch(resetDocumentHistory())
-      navigate(PATH_DOCUMENT.document.view(id));
+  const handleViewRow = (Id) => {
+    if ( customerPage ) {
+        navigate(PATH_CRM.customers.documents.view.root( customer?._id, Id));
+    } else if( machineDrawingPage ){
+        navigate(PATH_MACHINE.machines.drawings.view.root( machineId, Id));
+    } else if( machinePage ){
+        navigate(PATH_MACHINE.machines.documents.view.root(machineId, Id));
+    } else if( machineDrawings ){
+        navigate(PATH_MACHINE_DRAWING.machineDrawings.view.root(Id));
+    } else if( !customerPage && !machinePage && !machineDrawingPage && !machineDrawings ){
+        navigate(PATH_DOCUMENT.document.view.root(Id));
     }
   };
 
   const handleResetFilter = () => {
     setFilterName('');
-    if(machinePage){
+    if(machineDrawingPage){
       dispatch(setMachineDocumentFilterBy(""))
     }else if(customerPage){
       dispatch(setCustomerDocumentFilterBy(""))
     }else if(machineDrawings){
       dispatch(setMachineDrawingsFilterBy(""))
-    }else if(!customerPage && !machinePage && !machineDrawings){
+    }else if(!customerPage && !machineDrawingPage && !machineDrawings){
       dispatch(setFilterBy(""))
     }
     setFilterStatus([]);
   };
 
-  const handleCustomerDialog = (e, id) => {
-    dispatch(getCustomer(id))
+  const handleCustomerDialog = (e, Id) => {
+    dispatch(getCustomer(Id))
     dispatch(setCustomerDialog(true))
   }
   
-  const handleMachineDialog = (e, id) => {
-    dispatch(getMachineForDialog(id))
+  const handleMachineDialog = (e, Id) => {
+    dispatch(getMachineForDialog(Id))
     dispatch(setMachineDialog(true))
   }
 
   const handleGalleryView = () => {
-    dispatch(setDocumentGalleryVisibility(true));
-    if( customerPage && !machinePage){
+    if( customerPage ){
       navigate(PATH_CRM.customers.documents.viewGallery(customer?._id))
+    } else if(machinePage){
+      navigate(PATH_MACHINE.machines.documents.gallery(machineId))
     }
   };
 
   return (
     <>
     {/* <Container sx={{mb:3}}> */}
-      {!customerPage && !machinePage &&
+      {!customerPage && !machineDrawingPage && !machinePage &&
       <StyledCardContainer>
         <Cover name={machineDrawings ? FORMLABELS.COVER.MACHINE_DRAWINGS :  FORMLABELS.COVER.DOCUMENTS} />
       </StyledCardContainer>}
@@ -390,7 +389,7 @@ const onChangePage = (event, newPage) => {
                         onViewRow={() => handleViewRow(row._id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         customerPage={customerPage}
-                        machinePage={machinePage}
+                        machinePage={machineDrawingPage}
                         machineDrawings={machineDrawings}
                         handleCustomerDialog={(e)=> row?.customer && handleCustomerDialog(e,row?.customer?._id)}
                         handleMachineDialog={(e)=> row?.machine && handleMachineDialog(e,row?.machine?._id)}

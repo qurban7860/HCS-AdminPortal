@@ -4,7 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { TextField, Autocomplete, Box, Card, Grid, Stack, Typography } from '@mui/material';
+import { TextField, Autocomplete, Box, Card, Grid, Stack } from '@mui/material';
+// 
+import { useNavigate, useParams } from 'react-router-dom';
 // slice
 import { updateDrawing } from '../../../redux/slices/products/drawing';
 import { getActiveDocumentCategories  } from '../../../redux/slices/document/documentCategory';
@@ -15,16 +17,19 @@ import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFSwitch } from '../../../components/hook-form';
 // util
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
+import { PATH_MACHINE } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
 export default function DrawingEditForm() {
     const { machine } = useSelector((state) => state.machine);
+    const { machineId, id } = useParams();
     const { activeDocumentTypes } = useSelector((state) => state.documentType);
     const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
     const { activeDocuments } = useSelector((state) => state.document);
     useSelector((state) => state.drawing );
-
+    
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
 
@@ -71,7 +76,7 @@ export default function DrawingEditForm() {
         };
     }
 
-    const toggleCancel = () => {};
+    const toggleCancel = () => navigate(PATH_MACHINE.machines.drawings.view(machineId, id));
 
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

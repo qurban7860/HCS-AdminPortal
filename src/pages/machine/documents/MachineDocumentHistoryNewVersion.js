@@ -2,15 +2,16 @@
 import { Container } from '@mui/material';
 import DocumentAddForm from '../../documents/DocumentAddForm';
 // routes
+import { PATH_MACHINE } from '../../../routes/paths';
 import MachineTabContainer from '../util/MachineTabContainer';
 
 // ----------------------------------------------------------------------
 
-export default function DrawingAttach() {
+export default function MachineDocumentHistoryNewVersion() {
     return (
             <Container maxWidth={false }>
-                <MachineTabContainer currentTabValue='drawings' />
-                <DocumentAddForm drawingPage />
+                <MachineTabContainer currentTabValue='documents' />
+                <DocumentAddForm machinePage historyNewVersion />
             </Container>
     );
 }

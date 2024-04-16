@@ -1,17 +1,17 @@
 // @mui
 import { Container } from '@mui/material';
-import DrawingAddForm from './DrawingAddForm';
+import DocumentAddForm from '../../documents/DocumentAddForm';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 import MachineTabContainer from '../util/MachineTabContainer';
 
 // ----------------------------------------------------------------------
 
-export default function ModelEdit() {
+export default function MachineDocumentNewVersion() {
     return (
             <Container maxWidth={false }>
-                <MachineTabContainer currentTabValue='drawings' />
-                <DrawingAddForm/>
+                <MachineTabContainer currentTabValue='documents' />
+                <DocumentAddForm machinePage newVersion />
             </Container>
     );
 }

@@ -206,7 +206,7 @@ export function getDocumentTypes() {
 
 // -----------------------------------Get Active Document Types-----------------------------------
 
-export function getActiveDocumentTypes(cancelToken) {
+export function getActiveDocumentTypes(cancelToken, drawing ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {

@@ -1,6 +1,6 @@
 import { Container } from '@mui/material';
 import CustomerTabContainer from '../customers/util/CustomerTabContainer'
-import DocumentEditForm from '../../document/documents/DocumentEditForm';
+import DocumentEditForm from '../../documents/DocumentEditForm';
 // ----------------------------------------------------------------------
 
 export default function CustomerDocumentEditForm() {

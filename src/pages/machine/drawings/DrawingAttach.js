@@ -1,18 +1,16 @@
 // @mui
 import { Container } from '@mui/material';
-import DocumentListAddForm from '../../documents/DocumentListAddForm';
-// 
+import DrawingAttachForm from './DrawingAttachForm';
+// routes
 import MachineTabContainer from '../util/MachineTabContainer';
 
 // ----------------------------------------------------------------------
 
-export default function DrawingListAdd() {
+export default function DrawingAttach() {
     return (
-        <>
             <Container maxWidth={false }>
                 <MachineTabContainer currentTabValue='drawings' />
+                <DrawingAttachForm/>
             </Container>
-            <DocumentListAddForm machineDrawingPage />
-        </>
     );
 }

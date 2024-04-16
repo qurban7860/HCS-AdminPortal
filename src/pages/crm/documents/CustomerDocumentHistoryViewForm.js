@@ -1,6 +1,6 @@
 import { Container } from '@mui/material';
 import CustomerTabContainer from '../customers/util/CustomerTabContainer'
-import DocumentHistoryViewForm from '../../document/documents/DocumentHistoryViewForm';
+import DocumentHistoryViewForm from '../../documents/DocumentHistoryViewForm';
 // ----------------------------------------------------------------------
 
 export default function CustomerDocumentHistoryViewForm() {

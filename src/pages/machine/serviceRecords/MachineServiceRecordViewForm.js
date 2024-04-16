@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useMemo, memo, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
@@ -28,16 +29,20 @@ import PDFViewerDialog from '../../../components/Dialog/PDFViewerDialog';
 import Iconify from '../../../components/iconify';
 import MachineTabContainer from '../util/MachineTabContainer';
 
-function MachineServiceParamViewForm() {
+MachineServiceParamViewForm.propTypes = {
+  serviceHistoryView: PropTypes.bool,
+}
+
+function MachineServiceParamViewForm( {serviceHistoryView} ) {
 
   const { machineServiceRecord, isLoading, pdfViewerDialog, sendEmailDialog } = useSelector((state) => state.machineServiceRecord);
   const { machine } = useSelector((state) => state.machine)
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { machineId, id } = useParams();
-
   const { enqueueSnackbar } = useSnackbar();
+  const { machineId, serviceId, id } = useParams();
+  console.log("machineId, serviceId, id, serviceHistoryView: ",machineId, serviceId, id, serviceHistoryView)
 
   useLayoutEffect(()=>{
     if(machineId && id ){
@@ -58,17 +63,13 @@ function MachineServiceParamViewForm() {
     }
   };
 
-  const handleEdit = async () => navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, id));
-  const handleServiceRecordHistory = async () => navigate(PATH_MACHINE.machines.serviceRecords.history(machineId, machineServiceRecord?.serviceId));
+  const handleEdit = () => navigate(PATH_MACHINE.machines.serviceRecords.edit(machineId, id));
 
-  const handleCurrentServiceRecord = async() => {
-    try{
-      await dispatch(getMachineServiceRecord(machineId , machineServiceRecord?.currentVersion?._id))
-    }catch(error){
-      enqueueSnackbar(error, { variant: `error` });
-      console.error(error);
-    }
-  }
+  const handleServiceRecordHistory = () =>  navigate(PATH_MACHINE.machines.serviceRecords.history.root(
+          machineId, serviceHistoryView ? serviceId : machineServiceRecord?.serviceId 
+        ));
+
+  const handleCurrentServiceRecord = () => navigate(PATH_MACHINE.machines.serviceRecords.view( machineId, machineServiceRecord?.currentVersion?._id ));
 
   const defaultValues = useMemo(
     () => ({
@@ -144,7 +145,13 @@ function MachineServiceParamViewForm() {
       />
   ));
 
-  
+  const handleBackLink = ()=>{
+    if(serviceHistoryView && serviceId ){
+      navigate(PATH_MACHINE.machines.serviceRecords.history.root(machineId, serviceId))
+    }else{
+      navigate(PATH_MACHINE.machines.serviceRecords.root(machineId))
+    }
+  }
   
   return (
     <Container maxWidth={false} >
@@ -157,7 +164,7 @@ function MachineServiceParamViewForm() {
           skeletonIcon={ isLoading && !machineServiceRecord?._id }
           handleEdit={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleEdit} 
           onDelete={!machineServiceRecord?.isHistory && machineServiceRecord?._id && onDelete} 
-          backLink={() => navigate(PATH_MACHINE.machines.serviceRecords.root(machineId))}
+          backLink={handleBackLink}
           handleSendPDFEmail={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handleSendEmail}
           handleViewPDF={!machineServiceRecord?.isHistory && machineServiceRecord?._id && handlePDFViewer}
         />
@@ -169,7 +176,7 @@ function MachineServiceParamViewForm() {
           <ViewFormField isLoading={isLoading} variant='h4' sm={6} heading="Service Record Configuration" param={`${defaultValues.serviceRecordConfig} ${defaultValues.serviceRecordConfigRecordType ? '-' : ''} ${defaultValues.serviceRecordConfigRecordType ? defaultValues.serviceRecordConfigRecordType : ''}`} />
           <ViewFormField isLoading={isLoading} variant='h4' sm={3} heading="Version No" node={
             <>{defaultValues?.versionNo}{machineServiceRecord?.isHistory && <CurrentIcon callFunction={handleCurrentServiceRecord} />}
-              {!machineServiceRecord?.isHistory && (machineServiceRecord?.currentVersion?.versionNo || defaultValues?.versionNo) > 1 && <HistoryIcon callFunction={handleServiceRecordHistory} /> }
+              {!machineServiceRecord?.isHistory && (machineServiceRecord?.currentVersion?.versionNo || defaultValues?.versionNo) > 1 &&  machineServiceRecord?.serviceId && <HistoryIcon callFunction={handleServiceRecordHistory} /> }
             </>  
           } />
           

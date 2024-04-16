@@ -77,12 +77,16 @@ export const CustomerNoteEdit = Loadable(lazy(() => import('../pages/crm/notes/N
 export const CustomerNoteView = Loadable(lazy(() => import('../pages/crm/notes/NoteViewForm')));
 
 // CUSTOMER DOCUMENTS
-export const CustomerDocumentList             = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentList')));
-export const CustomerDocumentAdd          = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentAddForm')));
-export const CustomerDocumentEdit        = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentEditForm')));
-export const CustomerDocumentView         = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentViewForm')));
-export const CustomerDocumentHistoryView  = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentHistoryViewForm')));
-export const CustomerDocumentGallery          = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentGallery')));
+export const CustomerDocumentList               = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentList')));
+export const CustomerDocumentAdd                = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentAddForm')));
+export const CustomerDocumentAddFiles           = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentAddFiles')));
+export const CustomerDocumentNewVersion         = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentNewVersion')));
+export const CustomerDocumentHistoryAddFiles    = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentHistoryAddFiles')));
+export const CustomerDocumentHistoryNewVersion  = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentHistoryNewVersion')));
+export const CustomerDocumentEdit               = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentEditForm')));
+export const CustomerDocumentView               = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentViewForm')));
+export const CustomerDocumentHistoryView        = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentHistoryViewForm')));
+export const CustomerDocumentGallery            = Loadable(lazy(() => import('../pages/crm/documents/CustomerDocumentGallery')));
 
 // CUSTOMER MACHINESS
 export const CustomerMachines = Loadable(lazy(() => import('../pages/crm/machines/machine_list/CustomerMachines')));
@@ -137,8 +141,10 @@ export const MachineNoteEdit = Loadable(lazy(() => import('../pages/machine/note
 // --------------------------- MACHINE Drawings  -------------------------------------
 
 export const MachineDrawingList = Loadable(lazy(() => import('../pages/machine/drawings/DrawingList')));
-// export const MachineDrawingAdd = Loadable(lazy(() => import('../pages/machine/drawings/')));
-export const MachineDrawingAdd = Loadable(lazy(() => import('../pages/machine/drawings/DrawingList')));
+export const MachineDrawingAdd = Loadable(lazy(() => import('../pages/machine/drawings/DrawingAddForm')));
+export const MachineDrawingAddFile = Loadable(lazy(() => import('../pages/machine/drawings/DrawingAddFile')));
+export const MachineDrawingNewVersion = Loadable(lazy(() => import('../pages/machine/drawings/DrawingNewVersion')));
+export const MachineDrawingAttach = Loadable(lazy(() => import('../pages/machine/drawings/DrawingAttach')));
 export const MachineDrawingListAdd = Loadable(lazy(() => import('../pages/machine/drawings/DrawingListAdd')));
 export const MachineDrawingView = Loadable(lazy(() => import('../pages/machine/drawings/DrawingView')));
 export const MachineDrawingEdit = Loadable(lazy(() => import('../pages/machine/drawings/DrawingEdit')));
@@ -147,6 +153,10 @@ export const MachineDrawingEdit = Loadable(lazy(() => import('../pages/machine/d
 
 export const MachineDocumentList = Loadable(lazy(() => import('../pages/machine/documents/MachineDocumentList')));
 export const MachineDocumentAdd = Loadable(lazy(() => import('../pages/machine/documents/MachineDocumentAdd')));
+export const MachineDocumentAddFile = Loadable(lazy(() => import('../pages/machine/documents/MachineDocumentAddFile')));
+export const MachineDocumentNewVersion = Loadable(lazy(() => import('../pages/machine/documents/MachineDocumentNewVersion')));
+export const MachineDocumentHistoryAddFile = Loadable(lazy(() => import('../pages/machine/documents/MachineDocumentHistoryAddFile')));
+export const MachineDocumentHistoryNewVersion = Loadable(lazy(() => import('../pages/machine/documents/MachineDocumentHistoryNewVersion')));
 export const MachineDocumentEditForm = Loadable(lazy(() => import('../pages/machine/documents/MachineDocumentEdit')));
 export const MachineDocumentGallery = Loadable(lazy(() => import('../pages/machine/documents/MachineDocumentGallery')));
 export const MachineDocumentViewForm = Loadable(lazy(() => import('../pages/machine/documents/MachineDocumentView')));
@@ -173,7 +183,6 @@ export const MachineServiceRecordAdd = Loadable(lazy(() => import('../pages/mach
 export const MachineServiceRecordView = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordViewForm')));
 export const MachineServiceRecordEdit = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordEditForm')));
 export const MachineServiceRecordHistoryList = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordHistoryList')));
-export const MachineServiceRecordPDF = Loadable(lazy(() => import('../pages/machine/serviceRecords/MachineServiceRecordPDF')));
 
 // --------------------------- MACHINE INI -------------------------------------
 
@@ -272,12 +281,14 @@ export const TechnicalParameterEdit = Loadable(lazy(() => import('../pages/machi
 // ----------------------------------------------------------------
 
 // DOCUMENT dashboard
-export const DocumentList = Loadable(lazy(() => import('../pages/document/documents/GlobalDocument')));
-export const DocumentAdd = Loadable(lazy(() => import('../pages/document/documents/DocumentAddForm')));
-export const DocumentAddList = Loadable(lazy(() => import('../pages/document/documents/DocumentListAddForm')));
-export const DocumentEdit = Loadable(lazy(() => import('../pages/document/documents/DocumentEditForm')));
-export const DocumentView = Loadable(lazy(() => import('../pages/document/documents/DocumentHistoryViewForm')));
-export const DocumentGallery = Loadable(lazy(() => import('../pages/document/documents/DocumentGallery')));
+export const DocumentList = Loadable(lazy(() => import('../pages/documents/GlobalDocument')));
+export const DocumentAdd = Loadable(lazy(() => import('../pages/documents/DocumentAddForm')));
+export const DocumentAddFile = Loadable(lazy(() => import('../pages/documents/DocumentAddFile')));
+export const DocumentNewVersion = Loadable(lazy(() => import('../pages/documents/DocumentNewVersion')));
+export const DocumentAddList = Loadable(lazy(() => import('../pages/documents/DocumentListAddForm')));
+export const DocumentEdit = Loadable(lazy(() => import('../pages/documents/DocumentEditForm')));
+export const DocumentView = Loadable(lazy(() => import('../pages/documents/DocumentHistoryViewForm')));
+export const DocumentGallery = Loadable(lazy(() => import('../pages/documents/DocumentGallery')));
 
 // ----------------------------------------------------------------
 
@@ -296,9 +307,11 @@ export const DocumentCategoryEdit = Loadable(lazy(() => import('../pages/Setting
 // ----------------------------------------------------------------
 
 // Machine Drawings dashboard
-export const MachineDrawings    = Loadable(lazy(() => import('../pages/document/documents/MachineDrawings')));
-export const MachineDrawingsAdd = Loadable(lazy(() => import('../pages/document/documents/MachineDrawingsAddForm')));
-export const MachineDrawingsView = Loadable(lazy(() => import('../pages/document/documents/MachineDrawingsViewForm')));
+export const MachineDrawings            = Loadable(lazy(() => import('../pages/machineDrawings/MachineDrawings')));
+export const MachineDrawingsAdd         = Loadable(lazy(() => import('../pages/machineDrawings/MachineDrawingsAddForm')));
+export const MachineDrawingsAddFiles    = Loadable(lazy(() => import('../pages/machineDrawings/MachineDrawingsAddFiles')));
+export const MachineDrawingsNewVersion  = Loadable(lazy(() => import('../pages/machineDrawings/MachineDrawingsNewVersion')));
+export const MachineDrawingsView        = Loadable(lazy(() => import('../pages/machineDrawings/MachineDrawingsViewForm')));
 
 // ----------------------------------------------------------------
 

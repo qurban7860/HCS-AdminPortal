@@ -5,10 +5,10 @@ import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 import { Container } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 // redux
-import { getDocumentCategory } from '../../../redux/slices/document/documentCategory';
+import { getDocumentCategory } from '../../redux/slices/document/documentCategory';
 // components
 import DocumentViewForm from './DocumentHistoryViewForm';
-import DocumentCover from '../../../components/DocumentForms/DocumentCover';
+import DocumentCover from '../../components/DocumentForms/DocumentCover';
 /* eslint-disable */
 
 // ----------------------------------------------------------------------

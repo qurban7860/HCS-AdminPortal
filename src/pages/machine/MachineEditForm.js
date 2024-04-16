@@ -9,16 +9,16 @@ import { useForm } from 'react-hook-form';
 // routes
 import { PATH_MACHINE } from '../../routes/paths';
 // slice
-import { getSPContacts } from '../../redux/slices/customer/contact';
-import { getActiveCustomers, getFinancialCompanies } from '../../redux/slices/customer/customer';
+import { getActiveSPContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
+import { getActiveCustomers, resetActiveCustomers } from '../../redux/slices/customer/customer';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
-import { getActiveMachineStatuses } from '../../redux/slices/products/statuses';
+import { getActiveMachineStatuses, resetActiveMachineStatuses } from '../../redux/slices/products/statuses';
 import { getActiveMachineModels, resetActiveMachineModels } from '../../redux/slices/products/model';
-import { getActiveSuppliers } from '../../redux/slices/products/supplier';
+import { getActiveSuppliers, resetActiveSuppliers } from '../../redux/slices/products/supplier';
 // slice
-import { getActiveMachines, updateMachine, setMachineEditFormVisibility, setTransferMachineFlag } from '../../redux/slices/products/machine';
+import { updateMachine, getActiveMachines, resetActiveMachines } from '../../redux/slices/products/machine';
 import { getMachineConnections, resetMachineConnections } from '../../redux/slices/products/machineConnections';
-import { getActiveCategories } from '../../redux/slices/products/category';
+import { getActiveCategories, resetActiveCategories } from '../../redux/slices/products/category';
 // hooks
 import { useSnackbar } from '../../components/snackbar';
 // components
@@ -38,10 +38,10 @@ export default function MachineEditForm() {
   const { activeMachines, machine } = useSelector((state) => state.machine);
   const { activeSuppliers } = useSelector((state) => state.supplier);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
-  const { activeCustomers, financialCompanies } = useSelector((state) => state.customer);
+  const { activeCustomers } = useSelector((state) => state.customer);
   const { activeSites } = useSelector((state) => state.site);
   const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
-  const { spContacts } = useSelector((state) => state.contact);
+  const { activeSpContacts } = useSelector((state) => state.contact);
   const { machineConnections } = useSelector((state) => state.machineConnections);
   const { activeCategories } = useSelector((state) => state.category);
 
@@ -89,54 +89,43 @@ export default function MachineEditForm() {
   const {
     parentSerialNo,
     category,
-    machineModel,
     customer,
-    financialCompany,
   } = watch();
 
   useEffect(() => {
-    dispatch(getActiveSites(customer?._id));
-    dispatch(getMachineConnections(customer?._id));
+    if(customer?._id ){
+      dispatch(getActiveSites(customer?._id));
+      dispatch(getMachineConnections(customer?._id));
+    }
     return ()=>{
         dispatch(resetActiveSites());
         dispatch(resetMachineConnections());
       }
   },[dispatch, customer?._id ])
 
-  useEffect(() => {
-    if(category === null && machineModel ){
-      dispatch(getActiveMachineModels());
-      setValue('machineModel',null);
-    }else if(category && category?._id !== machineModel?.category?._id){
-      dispatch(getActiveMachineModels(category?._id));
-      setValue('machineModel',null);
-    }
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ category, machineModel ]);
 
   useEffect(() => {
     dispatch(getActiveSuppliers());
     dispatch(getActiveCategories());
-    dispatch(resetActiveMachineModels());
-    if(machine?.machineModel?.category?._id){
-      dispatch(getActiveMachineModels(machine?.machineModel?.category?._id));
-    }
+    dispatch(getActiveMachineModels());
     dispatch(getActiveMachineStatuses());
     dispatch(getActiveCustomers());
     dispatch(getActiveMachines());
-    dispatch(getSPContacts());
-  }, [dispatch, machine]);
+    dispatch(getActiveSPContacts());
 
-  useEffect(()=>{
-    dispatch(getFinancialCompanies());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ activeCustomers ])
+    return () => {
+      dispatch(resetActiveSuppliers());
+      dispatch(resetActiveCategories());
+      dispatch(resetActiveMachineModels());
+      dispatch(resetActiveMachineStatuses());
+      dispatch(resetActiveCustomers());
+      dispatch(resetActiveMachines());
+      dispatch(resetActiveSPContacts());
+    }
 
-  const toggleCancel = () => {
-    dispatch(setMachineEditFormVisibility(false));
-    navigate(PATH_MACHINE.machines.view(machine._id));
-    dispatch(setTransferMachineFlag(false));
-  };
+  }, [dispatch ]);
+
+  const toggleCancel = () => navigate(PATH_MACHINE.machines.view(machine._id));
 
   const onSubmit = async (data) => {
     if (data?.status?.slug === 'intransfer') {
@@ -162,8 +151,8 @@ export default function MachineEditForm() {
         <Grid container>
           <Grid item xs={18} md={12} >
             <Card sx={{ p: 3 }}>
-              <Stack spacing={3}>
-                <Box rowGap={3} columnGap={2} display="grid"
+              <Stack spacing={2}>
+                <Box rowGap={2} columnGap={2} display="grid"
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 2fr 6fr)', md: 'repeat(1, 1fr 5fr)' }}
                 >
                   <RHFTextField name="serialNo" label="Serial No.*" disabled />
@@ -194,7 +183,7 @@ export default function MachineEditForm() {
                         renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.serialNo || ''}  ${option?.name ? '-' : ''} ${option?.name || ''} `}</li> )}
                         ChipProps={{ size: 'small' }}
                       />)}
-                <Box rowGap={3} columnGap={2} display="grid"
+                <Box rowGap={2} columnGap={2} display="grid"
                   gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
                     <RHFAutocomplete 
@@ -209,16 +198,15 @@ export default function MachineEditForm() {
                     <RHFAutocomplete 
                       name="machineModel"
                       label="Machine Model"
-                      options={activeMachineModels}
+                      options={activeMachineModels.filter(el => (el.category && category) ? el.category._id === category._id : !category)}
                       isOptionEqualToValue={(option, value) => option?._id === value?._id}
                       getOptionLabel={(option) => `${option.name || ''}`}
                       renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
                       onChange={(event, newValue) => {
                           if (newValue) {
                             setValue('machineModel', newValue);
-                            if(category === null){
-                            dispatch(getActiveMachineModels(newValue?.category?._id));
-                            setValue('category', newValue?.category);
+                            if(!category ){
+                              setValue('category',newValue?.category)
                             }
                           } else {
                             setValue('machineModel', null);
@@ -231,7 +219,6 @@ export default function MachineEditForm() {
                   <RHFAutocomplete
                     name="supplier"
                     label="Supplier"
-                    id="controllable-states-demo"
                     options={activeSuppliers}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
@@ -252,7 +239,6 @@ export default function MachineEditForm() {
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
                     onChange={async (event, newValue) => {
-                      
                       setValue('customer',newValue);
                       setValue('installationSite', null);
                       setValue('billingSite', null);
@@ -262,20 +248,18 @@ export default function MachineEditForm() {
                       setValue('supportManager', [])  
                       
                       if(newValue){
-                        // setValue('customer',newValue);
-                        setValue('accountManager', spContacts.filter(item => Array.isArray(newValue?.accountManager) && newValue?.accountManager.includes(item?._id)))
-                        setValue('projectManager', spContacts.filter(item => Array.isArray(newValue?.projectManager) && newValue?.projectManager.includes(item?._id)))
-                        setValue('supportManager', spContacts.filter(item => Array.isArray(newValue?.supportManager) && newValue?.supportManager.includes(item?._id)))
+                        setValue('accountManager', activeSpContacts.filter(item => Array.isArray(newValue?.accountManager) && newValue?.accountManager.includes(item?._id)))
+                        setValue('projectManager', activeSpContacts.filter(item => Array.isArray(newValue?.projectManager) && newValue?.projectManager.includes(item?._id)))
+                        setValue('supportManager', activeSpContacts.filter(item => Array.isArray(newValue?.supportManager) && newValue?.supportManager.includes(item?._id)))
                       }
                     }}
                     ChipProps={{ size: 'small' }}
                   />
 
                   <RHFAutocomplete
-                    value={financialCompany}
                     name="financialCompany"
                     label="Financing Company"
-                    options={financialCompanies}
+                    options={activeCustomers.filter(el => el?.isFinancialCompany )}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.name || ''}`}
                     renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || '' }`}</li> )}
@@ -325,7 +309,7 @@ export default function MachineEditForm() {
                     getOptionLabel={(option) => `${option?.connectedMachine?.serialNo ? option?.connectedMachine?.serialNo : option?.serialNo} ${option?.name ? '-' : ''} ${option?.name ? option.name : ''}`}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   />
-                <Box rowGap={3} columnGap={2} display="grid"
+                <Box rowGap={2} columnGap={2} display="grid"
                   gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
                   <RHFAutocomplete
@@ -347,7 +331,7 @@ export default function MachineEditForm() {
                     disableCloseOnSelect
                     filterSelectedOptions
                     name="accountManager"
-                    options={spContacts}
+                    options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
                     renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
@@ -361,7 +345,7 @@ export default function MachineEditForm() {
                     disableCloseOnSelect
                     filterSelectedOptions
                     name="projectManager"
-                    options={spContacts}
+                    options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
                     renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
@@ -375,7 +359,7 @@ export default function MachineEditForm() {
                     disableCloseOnSelect
                     filterSelectedOptions
                     name="supportManager"
-                    options={spContacts}
+                    options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
                     renderOption={(props, option) => (  <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}

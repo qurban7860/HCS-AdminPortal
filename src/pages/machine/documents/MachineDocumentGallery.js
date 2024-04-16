@@ -1,6 +1,6 @@
 // @mui
 import { Container } from '@mui/material';
-import DocumentGallery from '../../document/documents/DocumentGallery';
+import DocumentGallery from '../../documents/DocumentGallery';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 import MachineTabContainer from '../util/MachineTabContainer';

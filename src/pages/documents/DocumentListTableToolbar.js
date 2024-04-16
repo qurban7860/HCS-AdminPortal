@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 import { Stack } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useDispatch } from '../../../redux/store';
+import { useDispatch } from '../../redux/store';
 // components
-import { PATH_DOCUMENT, PATH_CRM, PATH_MACHINE } from '../../../routes/paths';
+import { PATH_DOCUMENT, PATH_CRM, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
 import { 
   setDocumentFormVisibility, 
   setDocumentHistoryNewVersionFormVisibility, 
   setDocumentNewVersionFormVisibility 
-} from '../../../redux/slices/document/document';
-import SearchBarCombo from '../../../components/ListTableTools/SearchBarCombo';
-import { BUTTONS } from '../../../constants/default-constants';
+} from '../../redux/slices/document/document';
+import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
+import { BUTTONS } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -56,20 +56,18 @@ export default function DocumentListTableToolbar({
   const { customerId, machineId } = useParams();
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
-
+  
   const toggleAdd = async () => {
-      await  dispatch(setDocumentHistoryNewVersionFormVisibility(false));
-      await  dispatch(setDocumentNewVersionFormVisibility(false));
-    if(customerPage && !machinePage){
-      await navigate(PATH_CRM.customers.documents.new(customer?._id))
-    } else if(!customerPage && machinePage){
+    if(customerPage){
+      await navigate(PATH_CRM.customers.documents.new(customerId))
+    } else if(machinePage){
       await navigate(PATH_MACHINE.machines.documents.new(machineId))
-    }else if(machineDrawings){
-      navigate(PATH_DOCUMENT.document.machineDrawings.new)
+    } else if(machineDrawings){
+      await navigate(PATH_MACHINE_DRAWING.machineDrawings.new)
     }
   };
 
-  const toggleAddList = async () => navigate(PATH_DOCUMENT.document.machineDrawings.newList);
+  const toggleAddList = async () => navigate(PATH_MACHINE_DRAWING.machineDrawings.newList);
 
   let addButton;
   if (machineDrawings) {
@@ -96,7 +94,7 @@ export default function DocumentListTableToolbar({
         SubOnClick={toggleAdd}
         SubOnClick2={ machineDrawings && toggleAddList || undefined }
         addButton={addButton}
-        transferredMachine={machinePage && machine?.status?.slug==='transferred'}
+        transferredMachine={machinePage && machine?.status?.slug === 'transferred'}
         categoryVal={categoryVal}
         setCategoryVal={(machineDrawings || machinePage) ? setCategoryVal : null }
         typeVal={typeVal}

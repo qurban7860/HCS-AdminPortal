@@ -72,7 +72,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
       lastName: contact?.lastName || '',
       title: contact?.title || '',
       contactTypes: contact?.contactTypes || [],
-      phoneNumbers: contact?.phoneNumbers || [{ type: '', countryCode: '64' }, { type: 'Fax', countryCode: '64' }],
+      phoneNumbers: contact?.phoneNumbers.length > 0 ? contact?.phoneNumbers : [{ type: '', countryCode: '64' }, { type: 'Fax', countryCode: '64' }],
       email: contact?.email || '',
       reportingTo: contact?.reportingTo || null,
       department: contact?.department || null,
