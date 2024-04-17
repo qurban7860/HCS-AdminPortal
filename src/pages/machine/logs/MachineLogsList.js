@@ -43,7 +43,6 @@ const TABLE_HEAD = [
 
 export default function MachineLogsList(){
   const { machineErpLogs, machineErpLogstotalCount, dateFrom, dateTo, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineErpLogs );
-  console.log("dateFrom, dateTo : ",dateFrom, dateTo)
   const navigate = useNavigate();
   const { machineId } = useParams();
   const {
