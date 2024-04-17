@@ -101,8 +101,6 @@ export default function CustomerViewForm() {
                 <ViewFormField isLoading={isLoading} variant='h4' sm={6} md={6} heading={formLABELS.CUSTOMER.CODE.label} param={defaultValues?.code} />
                 <ViewFormField isLoading={isLoading} sm={12} md={12} heading={formLABELS.CUSTOMER.TRADING_NAME.label} chips={defaultValues?.tradingName} />
                 <ViewFormField isLoading={isLoading} md={6} heading='Reference Number' param={defaultValues?.ref} />
-                {/* <ViewFormField isLoading={isLoading} sm={6} md={6} heading={formLABELS.CUSTOMER.PHONE} param={defaultValues?.mainSite?.phone} />
-                <ViewFormField isLoading={isLoading} sm={6} md={6} heading={formLABELS.CUSTOMER.FAX} param={defaultValues?.mainSite?.fax} /> */}
 
                 <ViewFormField isLoading={isLoading} sm={6}
                   heading={formLABELS.CUSTOMER.BILLING_CONTACT}

@@ -470,7 +470,6 @@ export function updateServiceRecordConfig(params,Id) {
       await axios.patch(`${CONFIG.SERVER_URL}products/serviceRecordsConfig/${Id}`,
         data
       );
-      dispatch(getServiceRecordConfigs(params.id));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

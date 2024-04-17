@@ -1,7 +1,7 @@
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 // @mui
-import { Container, Table, TableBody, TableContainer } from '@mui/material';
+import { Container, Table, Checkbox, TableBody, TableContainer, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import { PATH_MACHINE } from '../../../routes/paths';
@@ -13,7 +13,6 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TableHeadCustom,
   TablePaginationCustom,
 } from '../../../components/table';
 import Scrollbar from '../../../components/scrollbar';
@@ -64,16 +63,17 @@ export default function MachineLogsList(){
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
+  const [ isCreatedAt, setIsCreatedAt ] = useState(false);
 
   useLayoutEffect(() => {
     if (machineId) {
       if (dateFrom && dateTo) {
-        dispatch(getMachineErpLogRecords(machineId, page, rowsPerPage, dateFrom, dateTo ));
+        dispatch(getMachineErpLogRecords(machineId, page, rowsPerPage, dateFrom, dateTo, isCreatedAt ));
       } else if(!dateFrom && !dateTo) {
-        dispatch(getMachineErpLogRecords(machineId, page, rowsPerPage));
-      }
+        dispatch(getMachineErpLogRecords(machineId, page, rowsPerPage, null, null, isCreatedAt ));
+      } 
     }
-  }, [dispatch, machineId, page, rowsPerPage, dateFrom, dateTo ]);
+  }, [dispatch, machineId, page, rowsPerPage, dateFrom, dateTo, isCreatedAt ]);
 
   useEffect(() => {
     if (initial) {
@@ -149,13 +149,56 @@ export default function MachineLogsList(){
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
-                <TableHeadCustom
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  onSort={onSort}
-                  numSelected={selected.length}
+<TableHead >
+      <TableRow>
+        {TABLE_HEAD.map((headCell, index ) => 
+          (
+          <TableCell
+            key={headCell.id}
+            align={headCell.align || 'left'}
+            sortDirection={orderBy === headCell.id ? order : false}
+            sx={{ width: headCell.width, 
+              minWidth: headCell.minWidth, }}
+            >
+            {onSort ? (
+              <TableSortLabel
+                hideSortIcon
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : 'asc'}
+                onClick={() => onSort(headCell.id)}
+                sx={{ textTransform: 'capitalize' }}
+              >
+                {headCell.label}
+
+              
+              </TableSortLabel>
+            ) : (
+              headCell.label
+            )
+            }
+              { index+1 === TABLE_HEAD?.length  &&
+                <Checkbox
+                  checked={isCreatedAt}
+                  onChange={(event) => setIsCreatedAt(!isCreatedAt)}
                 />
+              }   
+          </TableCell>
+        ))}
+      </TableRow>
+    </TableHead>
+                {/* <Grid  >
+                  <TableHeadCustom
+                    order={order}
+                    orderBy={orderBy}
+                    headLabel={TABLE_HEAD}
+                    onSort={onSort}
+                    numSelected={selected.length}
+                  />
+                  <Checkbox
+                    checked={isCreatedAt}
+                    onChange={(event) => setIsCreatedAt(!isCreatedAt)}
+                  />
+                </Grid> */}
                 <TableBody>
                   {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
                     .map((row, index) =>

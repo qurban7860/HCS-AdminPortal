@@ -240,7 +240,6 @@ export function updateServiceCategory(params,Id) {
       await axios.patch(`${CONFIG.SERVER_URL}products/CheckItemCategories/${Id}`,
         data
       );
-      dispatch(getServiceCategories(params.id));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

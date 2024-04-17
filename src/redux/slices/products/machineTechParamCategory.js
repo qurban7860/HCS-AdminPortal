@@ -250,12 +250,7 @@ export function updateTechparamcategory(params,Id) {
         // tradingName: params.tradingName
       };
      /* eslint-enable */
-      await axios.patch(`${CONFIG.SERVER_URL}products/techparamcategories/${Id}`,
-        data
-      );
-      dispatch(getTechparamcategory(Id));
-      // dispatch(slice.actions.setTechparamcategoriesEditFormVisibility(false));
-
+      await axios.patch(`${CONFIG.SERVER_URL}products/techparamcategories/${Id}`, data );
     } catch (error) {
       dispatch(slice.actions.hasError(error.Message));
       throw error;

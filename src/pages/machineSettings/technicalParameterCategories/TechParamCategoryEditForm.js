@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useEffect, useLayoutEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
@@ -10,7 +10,6 @@ import { Box, Card, Grid, Stack } from '@mui/material';
 // slice
 import {
   updateTechparamcategory,
-  getTechparamcategory,
 } from '../../../redux/slices/products/machineTechParamCategory';
 // import { useSettingsContext } from '../../../components/settings';
 // routes
@@ -59,10 +58,6 @@ export default function TechParamCategoryEditForm() {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
-  useLayoutEffect(() => {
-    dispatch(getTechparamcategory(id));
-  }, [dispatch, id]);
 
   useEffect(() => {
     if (techparamcategory) {

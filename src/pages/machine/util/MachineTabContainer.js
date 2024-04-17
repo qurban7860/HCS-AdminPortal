@@ -1,7 +1,9 @@
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
 import { Tab, tabsClasses } from '@mui/material';
+import { useDispatch } from 'react-redux';
 import TabContainer from '../../../components/Tabs/TabContainer';
 // redux
 import { useSelector } from '../../../redux/store';
@@ -10,6 +12,7 @@ import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import  TABS from './index';
 import { PATH_MACHINE } from '../../../routes/paths';
+import { getMachine } from '../../../redux/slices/products/machine';
 
 // ----------------------------------------------------------------------
 
@@ -19,8 +22,15 @@ MachineTabContainer.propTypes = {
 
 export default function MachineTabContainer({ currentTabValue }) {
   const { machine } = useSelector((state) => state.machine);
-  
   const { machineId } = useParams();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if ( !machine && machineId ) {
+      dispatch(getMachine(machineId));
+    }
+  }, [dispatch, machine, machineId]);
+
   const navigate = useNavigate();
   const navigatePage = (tab)=>{
     if(tab === 'machine' && machineId ){
@@ -47,6 +57,7 @@ export default function MachineTabContainer({ currentTabValue }) {
       navigate( PATH_MACHINE.machines.logs.root(machineId) )
     }
   }
+
   return (
       <StyledCardContainer>
         <Cover name={machine ? `${machine?.serialNo ? machine?.serialNo : ''} ${machine?.machineModel?.name ? `- ${machine?.machineModel?.name}` : '' }` : 'New Machine'} setting  />

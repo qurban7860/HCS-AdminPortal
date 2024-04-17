@@ -5,10 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 // @mui
 import { Card, Grid } from '@mui/material';
 // redux
-import {
-
-  deleteTool,
-} from '../../../redux/slices/products/tools';
+import { deleteTool } from '../../../redux/slices/products/tools';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
@@ -28,9 +25,7 @@ export default function ToolViewForm() {
   const { enqueueSnackbar } = useSnackbar();
   const { tool, isLoading } = useSelector((state) => state.tool);
   const { id } = useParams();
-  
   const dispatch = useDispatch();
-  
   const handleEdit = () => navigate(PATH_MACHINE.machines.machineSettings.tools.edit(id));
 
   
