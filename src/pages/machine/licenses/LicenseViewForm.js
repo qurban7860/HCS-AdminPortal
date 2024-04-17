@@ -40,7 +40,8 @@ export default function LicenseViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteLicense(machineId, id));
-      enqueueSnackbar(Snacks.licenseDeleted);
+      await enqueueSnackbar(Snacks.licenseDeleted);
+      await navigate(PATH_MACHINE.machines.licenses.root( machineId ))
       ;
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });

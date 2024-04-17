@@ -176,12 +176,12 @@ export default function MachineLogsList(){
               headCell.label
             )
             }
-              { index+1 === TABLE_HEAD?.length  &&
+              {/* { index+1 === TABLE_HEAD?.length  &&
                 <Checkbox
                   checked={isCreatedAt}
                   onChange={(event) => setIsCreatedAt(!isCreatedAt)}
                 />
-              }   
+              }    */}
           </TableCell>
         ))}
       </TableRow>

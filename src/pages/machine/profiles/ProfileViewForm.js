@@ -35,6 +35,7 @@ export default function ProfileViewForm() {
     try {
       await dispatch(deleteProfile(machineId, id));
       enqueueSnackbar("Profile deleted successfully");
+      navigate(PATH_MACHINE.machines.profiles.root( machineId ))
     } catch (err) {
       enqueueSnackbar("Failed to delete profile", { variant: `error` });
       console.log('Error:', err);

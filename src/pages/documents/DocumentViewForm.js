@@ -53,21 +53,16 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
 
   const onDelete = async () => {
     try {
-      await dispatch(deleteDocument(document._id));
-      if (customerPage || machinePage) {
-        if (customer?._id || machine?._id) {
-          await dispatch( getDocuments(customerPage ? customer?._id : null, machinePage ? machine?._id : null) );
-        }
-        if(customerPage && !machinePage ) {
-          navigate(PATH_CRM.customers.documents.root( customer?._id ));
-        }
-      } else {
-        await dispatch(getDocuments());
+      await dispatch(deleteDocument(id));
+      if( customerPage ) {
+        navigate(PATH_CRM.customers.documents.root( customer?._id ));
+      }else if( machinePage ){
+        navigate(PATH_MACHINE.machines.documents.root( machineId ));;
       }
       enqueueSnackbar(Snacks.deletedDoc, { variant: `success` });
     } catch (err) {
       console.log(err);
-      enqueueSnackbar(Snacks.failedDeleteDoc, { variant: `error` });
+      enqueueSnackbar(err, { variant: `error` });
     }
   };
 

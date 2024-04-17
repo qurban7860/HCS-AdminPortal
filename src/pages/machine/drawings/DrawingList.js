@@ -141,7 +141,10 @@ export default function DrawingList() {
     setFilterStatus(event.target.value);
   };
 
-  const handleViewRow = (drawingId, documentId) => navigate(PATH_MACHINE.machines.drawings.view.root(machineId, documentId ))
+  const handleViewRow = async (drawingId, documentId) => {
+    await dispatch(getDrawing(drawingId))
+    await navigate(PATH_MACHINE.machines.drawings.view.root(machineId, documentId ))
+  } 
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
