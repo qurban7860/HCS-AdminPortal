@@ -194,7 +194,7 @@ const handleNewFile = async () => {
 
   const handleDeleteDrawing = async () => {
     try {
-      await dispatch(deleteDrawing(documentHistory?._id));
+      await dispatch(deleteDrawing(drawing?._id));
       enqueueSnackbar(Snacks.deletedDrawing, { variant: `success` });
       if( customerPage ) {
         navigate(PATH_CRM.customers.documents.root( customer?._id ));
