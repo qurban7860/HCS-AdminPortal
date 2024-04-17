@@ -9,18 +9,10 @@ import { StyledVersionChip } from '../../theme/styles/default-styles';
 import { PATH_CRM, PATH_DOCUMENT, PATH_MACHINE } from '../../routes/paths';
 import {
   deleteDocument,
-  getDocumentHistory,
   resetDocumentHistory,
   getDocument,
+  resetDocument,
   getDocuments,
-  setDocumentEditFormVisibility,
-  setDocumentViewFormVisibility,
-  setDocumentHistoryViewFormVisibility,
-  setDocumentFormVisibility,
-  setDocumentAddFilesViewFormVisibility,
-  setDocumentNewVersionFormVisibility,
-  setDocumentHistoryAddFilesViewFormVisibility,
-  setDocumentHistoryNewVersionFormVisibility,
 } from '../../redux/slices/document/document';
 import { deleteDocumentFile, downloadFile, getDocumentDownload } from '../../redux/slices/document/documentFile';
 // components
@@ -54,6 +46,9 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
     if( machinePage || customerPage ){
       dispatch(getDocument(id))
     }
+    return () => {
+      dispatch(resetDocument())
+    }
   },[ dispatch, id, machinePage, customerPage ]);
 
   const onDelete = async () => {
@@ -69,7 +64,6 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
       } else {
         await dispatch(getDocuments());
       }
-      dispatch(setDocumentViewFormVisibility(false));
       enqueueSnackbar(Snacks.deletedDoc, { variant: `success` });
     } catch (err) {
       console.log(err);

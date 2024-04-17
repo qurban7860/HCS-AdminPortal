@@ -68,28 +68,24 @@ function SearchBarCombo({
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const { spContacts } = useSelector((state) => state.contact);
   const { activeRegions } = useSelector((state) => state.region);
-  const [ isDateFrom, setIsDateFrom ] = useState();
-  const [ isDateTo, setIsDateTo ] = useState();
+  const [ isDateFrom, setIsDateFrom ] = useState(new Date( Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
+  const [ isDateTo, setIsDateTo ] = useState(new Date(Date.now()).toISOString().split('T')[0]);
 
   const isMobile = useResponsive('sm', 'down');
   const dispatch = useDispatch()
 
   const { isAllAccessAllowed, isSettingReadOnly, isSecurityReadOnly } = useAuthContext();
 
-  // useEffect(()=>{
-  //   if(dateFrom){
-  //     setIsDateFrom(dateFrom)
-  //   } else if(dateTo){
-  //     setIsDateTo(dateTo)
-  //   }
-  // },[ dateFrom, dateTo ])
-
   useDebouncedEffect(()=>{
-    dispatch(setDateFrom(isDateFrom));
+    if( isDateFrom ){
+      dispatch(setDateFrom(isDateFrom));
+    }
   }, [ isDateFrom ], 1000 )
 
   useDebouncedEffect(()=>{
-    dispatch(setDateTo(isDateTo));
+    if( isDateTo ){
+      dispatch(setDateTo(isDateTo));
+    }
   }, [ isDateTo ], 1000 )
 
   const onChangeStartDate = (e) => setIsDateFrom(e.target.value);

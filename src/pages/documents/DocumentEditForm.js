@@ -15,6 +15,7 @@ import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 // slice
 import {
   getDocument,
+  resetDocument,
   updateDocument,
   getDocumentHistory,
 } from '../../redux/slices/document/document';
@@ -27,9 +28,11 @@ DocumentEditForm.propTypes = {
   machinePage: PropTypes.bool,
   drawingPage: PropTypes.bool,
 };
+
 function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
   
   const { document } = useSelector((state) => state.document);
+  console.log("edit page document : ",document)
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const { customer } = useSelector((state) => state.customer);
@@ -46,6 +49,9 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
   useLayoutEffect(()=>{
     if( id ){
       dispatch(getDocument(id))
+    }
+    return () =>{
+      dispatch(resetDocument())
     }
   },[ dispatch, id ])
 
@@ -87,6 +93,10 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+
+  useEffect(()=>{
+    reset(defaultValues);
+  },[ reset, document, defaultValues ])
 
   const toggleCancel = () => {
     if( customerPage && customerId && id ){
