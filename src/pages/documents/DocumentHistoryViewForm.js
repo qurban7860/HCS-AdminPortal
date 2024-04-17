@@ -174,11 +174,17 @@ const handleNewFile = async () => {
 
   const handleDelete = async () => {
     try {
-      await dispatch(deleteDocument(documentHistory?._id));
-      if(customerPage && !machinePage ) {
+      await dispatch(deleteDocument( id));
+      if( customerPage ) {
         navigate(PATH_CRM.customers.documents.root( customer?._id ));
-      }else{
-        navigate(PATH_DOCUMENT.document.machineDrawings.list);
+      }else if( machinePage ){
+        navigate(PATH_MACHINE.machines.documents.root( machineId ));;
+      }else if( machineDrawingPage ){
+        navigate(PATH_MACHINE.machines.drawings.root( machineId ));
+      }else if( !customerPage && !machineDrawingPage && !machinePage && !machineDrawings ){
+        navigate(PATH_DOCUMENT.root);
+      }else if( machineDrawings ){
+        navigate(PATH_MACHINE_DRAWING.root);
       }
       enqueueSnackbar("Document Deleted Successfully!", { variant: `success` });
     }catch(error) {
@@ -188,10 +194,19 @@ const handleNewFile = async () => {
 
   const handleDeleteDrawing = async () => {
     try {
-      await dispatch(deleteDrawing(drawing?._id));
-      await dispatch(resetDrawings());
-      await dispatch(getDrawings(machine?._id));
+      await dispatch(deleteDrawing(documentHistory?._id));
       enqueueSnackbar(Snacks.deletedDrawing, { variant: `success` });
+      if( customerPage ) {
+        navigate(PATH_CRM.customers.documents.root( customer?._id ));
+      }else if( machinePage ){
+        navigate(PATH_MACHINE.machines.documents.root( machineId ));;
+      }else if( machineDrawingPage ){
+        navigate(PATH_MACHINE.machines.drawings.root( machineId ));
+      }else if( !customerPage && !machineDrawingPage && !machinePage && !machineDrawings ){
+        navigate(PATH_DOCUMENT.root);
+      }else if( machineDrawings ){
+        navigate(PATH_MACHINE_DRAWING.root);
+      }
     } catch (err) {
       console.log(err);
       enqueueSnackbar(Snacks.failedDeleteDrawing, { variant: `error` });

@@ -48,7 +48,9 @@ export default function ToolInstalledViewForm() {
   
   const onDelete = async () => {
     try {
-      await dispatch(deleteToolInstalled(machineId, id));
+      if( machineId && id){
+        await dispatch(deleteToolInstalled(machineId, id, toolInstalled?.toolType));
+      }
       enqueueSnackbar('Tool Installed deleted successfully!');
       await navigate(PATH_MACHINE.machines.toolsInstalled.root(machineId));
     } catch (err) {

@@ -77,15 +77,15 @@ function SearchBarCombo({
   const { isAllAccessAllowed, isSettingReadOnly, isSecurityReadOnly } = useAuthContext();
 
   useDebouncedEffect(()=>{
-    if( isDateFrom ){
+    // if( isDateFrom ){
       dispatch(setDateFrom(isDateFrom));
-    }
+    // }
   }, [ isDateFrom ], 1000 )
 
   useDebouncedEffect(()=>{
-    if( isDateTo ){
+    // if( isDateTo ){
       dispatch(setDateTo(isDateTo));
-    }
+    // }
   }, [ isDateTo ], 1000 )
 
   const onChangeStartDate = (e) => setIsDateFrom(e.target.value);

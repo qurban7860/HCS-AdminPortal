@@ -18,7 +18,7 @@ const initialState = {
   machineErpLogs: [],
   machineErpLogstotalCount: 0,
   dateFrom: new Date( Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-  dateTo: new Date(),
+  dateTo: new Date(Date.now()).toISOString().split('T')[0],
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
