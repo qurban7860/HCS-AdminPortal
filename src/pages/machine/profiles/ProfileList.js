@@ -2,15 +2,17 @@ import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
 import {
+  Container,
   Table,
   TableBody,
   TableContainer,
 } from '@mui/material';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-// routes
 // components
-import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -23,16 +25,10 @@ import Scrollbar from '../../../components/scrollbar';
 // sections
 import ProfileListTableRow from './ProfileListTableRow';
 import ProfileListTableToolbar from './ProfileListTableToolbar';
-
-import {
-  getProfile, 
-  getProfiles,
-  ChangeRowsPerPage,
-  ChangePage,
-  setFilterBy,
-  setProfileViewFormVisibility } from '../../../redux/slices/products/profile';
+import { getProfiles, ChangeRowsPerPage, ChangePage, setFilterBy } from '../../../redux/slices/products/profile';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
+import MachineTabContainer from '../util/MachineTabContainer';
 
 export default function ProfileList() {
   const {
@@ -44,14 +40,15 @@ export default function ProfileList() {
     defaultOrderBy: 'createdAt',
   });
 
+  const navigate = useNavigate();
+  const { machineId } = useParams();
   const dispatch = useDispatch();
-  useSettingsContext();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  const { machine } = useSelector((state) => state.machine);
 
   const { profiles, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.profile );
+
   const TABLE_HEAD = [
     { id: 'defaultName', label: 'Default Name', align: 'left' },
     { id: 'names', label: 'Other Names', align: 'left' },
@@ -70,10 +67,10 @@ export default function ProfileList() {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useEffect(() => {
-    if(machine?._id){
-      dispatch(getProfiles(machine?._id));
+    if(machineId){
+      dispatch(getProfiles(machineId));
     }
-  }, [dispatch, machine]);
+  }, [dispatch, machineId]);
 
   useEffect(() => {
     setTableData(profiles);
@@ -115,10 +112,7 @@ export default function ProfileList() {
   };
 
 
-  const handleViewRow = (profileid) => {
-      dispatch(getProfile(machine._id,profileid));
-      dispatch(setProfileViewFormVisibility(true));
-  };
+  const handleViewRow = (id) => navigate(PATH_MACHINE.machines.profiles.view(machineId, id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
@@ -126,6 +120,8 @@ export default function ProfileList() {
   };
 
   return (
+    <Container maxWidth={false} >
+      <MachineTabContainer currentTabValue='profile' />
       <TableCard>
         <ProfileListTableToolbar
           filterName={filterName}
@@ -181,6 +177,7 @@ export default function ProfileList() {
           onRowsPerPageChange={onChangeRowsPerPage}
         />}
       </TableCard>
+    </Container>
   );
 }
 

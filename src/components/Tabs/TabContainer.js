@@ -21,8 +21,6 @@ function TabContainer({
   const options = {
     value: currentTab,
     onChange: (event, newValue) => setCurrentTab(newValue),
-    variant: 'scrollable',
-    'aria-label': 'scrollable force tabs example',
     sx: {
       [`& .${tabsClasses.scrollButtons}`]: {
         '&.Mui-disabled': { opacity: 0.3 },
@@ -33,12 +31,6 @@ function TabContainer({
       display:'flex',
       position: 'absolute',
       backgroundColor: theme.palette.background.paper,
-      '& .MuiTabs-flexContainer': {
-        pr: 2.5,
-        pl: 2.5,
-        ml:'auto',
-        // justifyContent: 'flex-end' ,
-      },
     },
 
   };
@@ -46,8 +38,10 @@ function TabContainer({
   return <Tabs 
   {...options}     
   variant="scrollable"
-  scrollButtons="auto"
-  aria-label="scrollable auto tabs example" 
+  // scrollButtons="auto"
+  scrollButtons
+  // scrollButtons={false}
+  // aria-label="scrollable auto tabs example" 
   >{children}</Tabs>;
 }
 

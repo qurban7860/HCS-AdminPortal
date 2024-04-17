@@ -45,7 +45,7 @@ export default function RHFCustomPhoneInput({ name, value, index, label, ...othe
                   disableClearable
                   size='small'
                   value={ value?.type || null }
-                  sx={{width: '90px', mx:1 }} 
+                  sx={{width: '120px', mx:1 }} 
                   options={ PHONE_TYPES }
                   onChange={(event, newValue) => { setValue( name, { ...value, type: newValue } , { shouldValidate: true } ) }}
                   renderInput={(params) => ( <TextField {...params} variant="standard" size='small' placeholder='Type' sx={{mb:0.9}}/> )}

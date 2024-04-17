@@ -1,37 +1,28 @@
 import * as Yup from 'yup';
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 // @mui
-import {
-  Box,
-  Card,
-  Grid,
-  Stack
-} from '@mui/material';
+import { Box, Card, Grid, Stack } from '@mui/material';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 // global
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, {
-  RHFTextField,
-  RHFSwitch,
-} from '../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
 // slice
-import {
-  getSetting,
-  setSettingEditFormVisibility,
-  setSettingViewFormVisibility,
-  updateSetting,
-} from '../../../redux/slices/products/machineSetting';
+import { updateSetting } from '../../../redux/slices/products/machineSetting';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
 export default function SettingEditForm() {
   const { setting } = useSelector((state) => state.machineSetting);
-  const { machine } = useSelector((state) => state.machine);
+  const { machineId, id } = useParams()
+  const navigate = useNavigate()
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const defaultValues = useMemo(
@@ -61,22 +52,19 @@ export default function SettingEditForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const toggleCancel = () => {
-    dispatch(setSettingEditFormVisibility(false));
-    dispatch(setSettingViewFormVisibility(true));
-  };
-
+  
   const onSubmit = async (data) => {
     try {
-      await dispatch(await updateSetting(machine._id, setting._id, data));
-      await dispatch(setSettingViewFormVisibility(true));
-      await dispatch(getSetting(machine._id, setting._id));
+      await dispatch(await updateSetting(machineId, id, data));
+      await navigate(PATH_MACHINE.machines.settings.view( machineId, id ));
       reset();
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
     }
   };
+  
+  const toggleCancel = () => navigate(PATH_MACHINE.machines.settings.view( machineId, id ));
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

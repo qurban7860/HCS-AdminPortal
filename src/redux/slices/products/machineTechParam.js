@@ -280,9 +280,7 @@ export function updateTechparam(params,id) {
         code: params.code
       };
 
-      await axios.patch(`${CONFIG.SERVER_URL}products/techparams/${id}`,
-        data
-      );
+      await axios.patch(`${CONFIG.SERVER_URL}products/techparams/${id}`, data );
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

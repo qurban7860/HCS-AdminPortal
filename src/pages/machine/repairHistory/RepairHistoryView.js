@@ -13,7 +13,7 @@ import Iconify from '../../../components/iconify';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
 // sections
-
+import MachineTabContainer from '../util/MachineTabContainer';
 import RepairHistoryViewForm from './RepairHistoryViewForm'
 // ----------------------------------------------------------------------
 

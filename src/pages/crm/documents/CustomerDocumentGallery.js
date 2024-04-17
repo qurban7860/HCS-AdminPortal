@@ -1,6 +1,6 @@
 import { Container } from '@mui/material';
 import CustomerTabContainer from '../customers/util/CustomerTabContainer'
-import DocumentGallery from '../../document/documents/DocumentGallery';
+import DocumentGallery from '../../documents/DocumentGallery';
 // ----------------------------------------------------------------------
 
 export default function CustomerDocumentGallery() {

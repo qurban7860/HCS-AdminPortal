@@ -1,7 +1,10 @@
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 // @mui
-import { Table, TableBody, TableContainer } from '@mui/material';
+import { Container, Table, Checkbox, TableBody, TableContainer, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // components
@@ -10,25 +13,21 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TableHeadCustom,
   TablePaginationCustom,
 } from '../../../components/table';
 import Scrollbar from '../../../components/scrollbar';
-import { useSnackbar } from '../../../components/snackbar';
 // sections
 import MachineLogsListTableToolbar from './MachineLogsListTableToolbar';
 import MachineLogsTableRow from './MachineLogsTableRow';
 import {
   getMachineErpLogRecords,
-  getMachineErpLogRecord,
-  resetMachineErpLogRecord,
-  setMachineErpLogViewFormVisibility,
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy
 } from '../../../redux/slices/products/machineErpLogs';
 import { fDateTime } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
+import MachineTabContainer from '../util/MachineTabContainer';
 
 // ----------------------------------------------------------------------
 
@@ -44,8 +43,8 @@ const TABLE_HEAD = [
 
 export default function MachineLogsList(){
   const { machineErpLogs, machineErpLogstotalCount, dateFrom, dateTo, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.machineErpLogs );
-  const { machine } = useSelector((state) => state.machine);
-  const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
+  const { machineId } = useParams();
   const {
     order,
     orderBy,
@@ -64,16 +63,17 @@ export default function MachineLogsList(){
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
+  const [ isCreatedAt, setIsCreatedAt ] = useState(false);
 
   useLayoutEffect(() => {
-    if (machine?._id) {
+    if (machineId) {
       if (dateFrom && dateTo) {
-        dispatch(getMachineErpLogRecords(machine?._id, page, rowsPerPage, dateFrom, dateTo ));
+        dispatch(getMachineErpLogRecords(machineId, page, rowsPerPage, dateFrom, dateTo, isCreatedAt ));
       } else if(!dateFrom && !dateTo) {
-        dispatch(getMachineErpLogRecords(machine?._id, page, rowsPerPage));
-      }
+        dispatch(getMachineErpLogRecords(machineId, page, rowsPerPage, null, null, isCreatedAt ));
+      } 
     }
-  }, [dispatch, machine?._id, page, rowsPerPage, dateFrom, dateTo ]);
+  }, [dispatch, machineId, page, rowsPerPage, dateFrom, dateTo, isCreatedAt ]);
 
   useEffect(() => {
     if (initial) {
@@ -116,16 +116,7 @@ export default function MachineLogsList(){
     setFilterStatus(event.target.value);
   };
 
-  const handleViewRow = async (id) => {
-    try{
-      await dispatch(setMachineErpLogViewFormVisibility(true));
-      await dispatch(resetMachineErpLogRecord())
-      await dispatch(getMachineErpLogRecord(machine._id, id));
-    }catch(e){
-      enqueueSnackbar(e, { variant: `error` });
-      console.error(e);
-    }
-  };
+  const handleViewRow = async (id) => navigate(PATH_MACHINE.machines.logs.view(machineId, id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
@@ -133,6 +124,8 @@ export default function MachineLogsList(){
   };
 
   return (
+    <Container maxWidth={false} >
+          <MachineTabContainer currentTabValue='logs' />
         <TableCard>
           <MachineLogsListTableToolbar
             filterName={filterName}
@@ -156,13 +149,56 @@ export default function MachineLogsList(){
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
-                <TableHeadCustom
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  onSort={onSort}
-                  numSelected={selected.length}
+<TableHead >
+      <TableRow>
+        {TABLE_HEAD.map((headCell, index ) => 
+          (
+          <TableCell
+            key={headCell.id}
+            align={headCell.align || 'left'}
+            sortDirection={orderBy === headCell.id ? order : false}
+            sx={{ width: headCell.width, 
+              minWidth: headCell.minWidth, }}
+            >
+            {onSort ? (
+              <TableSortLabel
+                hideSortIcon
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : 'asc'}
+                onClick={() => onSort(headCell.id)}
+                sx={{ textTransform: 'capitalize' }}
+              >
+                {headCell.label}
+
+              
+              </TableSortLabel>
+            ) : (
+              headCell.label
+            )
+            }
+              { index+1 === TABLE_HEAD?.length  &&
+                <Checkbox
+                  checked={isCreatedAt}
+                  onChange={(event) => setIsCreatedAt(!isCreatedAt)}
                 />
+              }   
+          </TableCell>
+        ))}
+      </TableRow>
+    </TableHead>
+                {/* <Grid  >
+                  <TableHeadCustom
+                    order={order}
+                    orderBy={orderBy}
+                    headLabel={TABLE_HEAD}
+                    onSort={onSort}
+                    numSelected={selected.length}
+                  />
+                  <Checkbox
+                    checked={isCreatedAt}
+                    onChange={(event) => setIsCreatedAt(!isCreatedAt)}
+                  />
+                </Grid> */}
                 <TableBody>
                   {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
                     .map((row, index) =>
@@ -192,6 +228,7 @@ export default function MachineLogsList(){
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
         </TableCard>
+      </Container>
   );
 }
 

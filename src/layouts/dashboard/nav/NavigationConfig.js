@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { PATH_CRM, PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_SETTING, PATH_SITEMAP, PATH_SECURITY, PATH_EMAIL } from '../../../routes/paths';
+import { PATH_CRM, PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_SETTING, PATH_SITEMAP, PATH_SECURITY, PATH_EMAIL, PATH_MACHINE_DRAWING } from '../../../routes/paths';
 // components
 import Iconify from '../../../components/iconify';
 import SvgColor from '../../../components/svg-color';
@@ -68,7 +68,7 @@ function NavigationConfig() {
       items: [
         { title: 'Dashboard', path: PATH_DASHBOARD.root, icon: ICONS.dashboard },
         { title: 'Customers', path: PATH_CRM.customers.list, icon: ICONS.users },
-        { title: 'Machines', path: PATH_MACHINE.machines.list, icon: ICONS.machines },
+        { title: 'Machines', path: PATH_MACHINE.machines.root, icon: ICONS.machines },
       ],
     },
   ]);
@@ -80,11 +80,11 @@ function NavigationConfig() {
     updatedConfig[0].items.splice(7, 0, { title: 'Sites Map', path: PATH_SITEMAP.app, icon: ICONS.map });
 
     if (isDocumentAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'documents')) {
-      updatedConfig[0].items.splice(3, 0, { title: 'Documents', path: PATH_DOCUMENT.document.list, icon: ICONS.document });
+      updatedConfig[0].items.splice(3, 0, { title: 'Documents', path: PATH_DOCUMENT.root, icon: ICONS.document });
     }
 
     if (isDrawingAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'machine drawings')) {
-      updatedConfig[0].items.splice(4, 0, { title: 'Machine Drawings', path: PATH_DOCUMENT.document.machineDrawings.list, icon: ICONS.drawing });
+      updatedConfig[0].items.splice(4, 0, { title: 'Machine Drawings', path: PATH_MACHINE_DRAWING.root, icon: ICONS.drawing });
     }
 
     if (isSettingAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'settings')) {

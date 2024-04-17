@@ -2,13 +2,10 @@ import PropTypes from 'prop-types';
 // @mui
 import { Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { useDispatch } from '../../../redux/store';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 // components
-import { 
-  setDrawingFormVisibility,
-  setDrawingAddFormVisibility,
-  setDrawingListAddFormVisibility,
-} from '../../../redux/slices/products/drawing';
 import { SearchBarCombo } from '../../../components/ListTableTools';
 // constants
 import { BUTTONS } from '../../../constants/default-constants';
@@ -42,12 +39,15 @@ export default function DrawingListTableToolbar({
   typeVal,
   setTypeVal,
 }) {
-  const dispatch = useDispatch();
-  const toggleAattach = () => dispatch(setDrawingFormVisibility(true));
-  const toggleAdd = () => dispatch(setDrawingAddFormVisibility(true));
+
+  const navigate = useNavigate();
+  const { machineId } = useParams();
+
   const { machine } = useSelector((state) => state.machine);
 
-  const toggleAddList = () =>  dispatch(setDrawingListAddFormVisibility(true));
+  const handleAattach = () => navigate(PATH_MACHINE.machines.drawings.attach(machineId));
+  const handleAdd = () => navigate(PATH_MACHINE.machines.drawings.new(machineId));
+  const handleAddList = () => navigate(PATH_MACHINE.machines.drawings.multipleNew(machineId));
 
   return (
     <Stack
@@ -61,10 +61,10 @@ export default function DrawingListTableToolbar({
       value={filterName}
       onChange={onFilterName}
       onClick={onResetFilter}
-      SubOnClick={toggleAdd}
-      SubOnClick2={ toggleAddList }
+      SubOnClick={handleAdd}
+      SubOnClick2={ handleAddList }
       addButton={BUTTONS.ADDDRAWING}
-      handleAttach={toggleAattach}
+      handleAttach={handleAattach}
       transferredMachine={machine?.status?.slug==='transferred'}
       categoryVal={categoryVal}
       setCategoryVal={setCategoryVal}

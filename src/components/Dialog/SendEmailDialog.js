@@ -13,7 +13,7 @@ import {
   sendEmail,
   setSendEmailDialog,
 } from '../../redux/slices/products/machineServiceRecord';
-import { MachineServiceRecordPDF } from '../../pages/machine/machineServiceRecords/MachineServiceRecordPDF';
+import { MachineServiceRecordPDF } from '../../pages/machine/serviceRecords/MachineServiceRecordPDF';
 import FormProvider from '../hook-form/FormProvider';
 
 import { RHFTextField } from '../hook-form';
@@ -62,8 +62,9 @@ function SendEmailDialog({machineServiceRecord, fileName}) {
   const onSubmit = async (data) => {    
     try {
       const PDFBlob = await ReactPDF.pdf(<MachineServiceRecordPDF machineServiceRecord={machineServiceRecord} />).toBlob();
+      console.log("PDFBlob : ",PDFBlob)
       const file = new File([PDFBlob], fileName, { type: PDFBlob.type });
-      
+      console.log("file : ",file)
       data.id = machineServiceRecord?._id;
       data.pdf = file; 
       

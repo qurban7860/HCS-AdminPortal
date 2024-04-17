@@ -2,10 +2,14 @@ import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
 import {
+  Container,
   Table,
   TableBody,
   TableContainer,
 } from '@mui/material';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // components
@@ -25,8 +29,8 @@ import {
   getDocumentHistory,
   resetDocumentHistory,
 } from '../../../redux/slices/document/document';
-import { getActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
-import { getActiveDocumentTypes } from '../../../redux/slices/document/documentType';
+import { getActiveDocumentCategories, resetActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
+import { getActiveDocumentTypes, resetActiveDocumentTypes } from '../../../redux/slices/document/documentType';
 import {
   getDrawings,
   ChangeRowsPerPage,
@@ -38,6 +42,7 @@ import {
   resetDrawing} from '../../../redux/slices/products/drawing';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
+import MachineTabContainer from '../util/MachineTabContainer';
 
 // ----------------------------------------------------------------------
 
@@ -52,6 +57,8 @@ export default function DrawingList() {
   });
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { machineId } = useParams();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
@@ -79,13 +86,17 @@ export default function DrawingList() {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useEffect(() => {
-    if(machine?._id){
-      dispatch(resetDrawings());
-      dispatch(getDrawings(machine?._id));
+    if( machineId ){
+      dispatch(getDrawings( machineId ));
       dispatch(getActiveDocumentCategories());
       dispatch(getActiveDocumentTypes());
+    } 
+    return () => {
+      dispatch(resetDrawings());
+      dispatch(resetActiveDocumentCategories());
+      dispatch(resetActiveDocumentTypes());
     }
-  }, [dispatch, machine]);
+  }, [dispatch, machineId ]);
 
   useEffect(() => {
     setTableData(drawings);
@@ -130,13 +141,7 @@ export default function DrawingList() {
     setFilterStatus(event.target.value);
   };
 
-  const handleViewRow = (drawingId, documentId) => {
-      dispatch(resetDocumentHistory());
-      dispatch(resetDrawing());
-      dispatch(getDrawing(drawingId));
-      dispatch(getDocumentHistory(documentId));
-      dispatch(setDrawingViewFormVisibility(true));
-  };
+  const handleViewRow = (drawingId, documentId) => navigate(PATH_MACHINE.machines.drawings.view.root(machineId, documentId ))
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
@@ -144,6 +149,8 @@ export default function DrawingList() {
   };
 
   return (
+    <Container maxWidth={false}>
+      <MachineTabContainer currentTabValue='drawings' />
       <TableCard>
         <DrawingListTableToolbar
           filterName={filterName}
@@ -203,6 +210,7 @@ export default function DrawingList() {
           onRowsPerPageChange={onChangeRowsPerPage}
         />
       </TableCard>
+  </Container>
   );
 }
 

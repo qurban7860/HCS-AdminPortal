@@ -1,0 +1,111 @@
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+// import { sentenceCase } from 'change-case';
+// @mui
+import {
+  Switch,
+  Button,
+  TableRow,
+  MenuItem,
+  TableCell,
+} from '@mui/material';
+// utils
+// import { fData, fCurrency } from '../../../utils/formatNumber';
+// components
+import Iconify from '../../../components/iconify/Iconify';
+import MenuPopover from '../../../components/menu-popover/MenuPopover';
+import ConfirmDialog from '../../../components/confirm-dialog';
+// import Label from '../../../components/label';
+import { fDate } from '../../../utils/formatTime';
+// import { useSelector } from '../../../redux/store';
+import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
+
+// ----------------------------------------------------------------------
+
+ToolListTableRow.propTypes = {
+  row: PropTypes.object,
+  selected: PropTypes.bool,
+  onEditRow: PropTypes.func,
+  onViewRow: PropTypes.func,
+  onSelectRow: PropTypes.func,
+  onDeleteRow: PropTypes.func,
+};
+
+export default function ToolListTableRow({
+  row,
+  selected,
+  onSelectRow,
+  onDeleteRow,
+  onEditRow,
+  onViewRow,
+}) {
+  const { name, isActive, createdAt } = row;
+
+  const [openConfirm, setOpenConfirm] = useState(false);
+
+  const [openPopover, setOpenPopover] = useState(null);
+
+  const handleOpenConfirm = () => {
+    setOpenConfirm(true);
+  };
+
+  const handleCloseConfirm = () => {
+    setOpenConfirm(false);
+  };
+
+  const handleClosePopover = () => {
+    setOpenPopover(null);
+  };
+
+  return (
+    <>
+      <TableRow hover selected={selected}>
+        <LinkTableCell align="left" onClick={onViewRow} param={name} />
+        <TableCell align="center">
+          <Switch checked={isActive} disabled size="small" sx={{ my: -1 }} />{' '}
+        </TableCell>
+        <TableCell align="right">{fDate(createdAt)}</TableCell>
+      </TableRow>
+
+      <MenuPopover
+        open={openPopover}
+        onClose={handleClosePopover}
+        arrow="right-top"
+        sx={{ width: 140 }}
+      >
+        <MenuItem
+          onClick={() => {
+            handleOpenConfirm();
+            handleClosePopover();
+          }}
+          sx={{ color: 'error.main' }}
+        >
+          <Iconify icon="eva:trash-2-outline" />
+          Delete
+        </MenuItem>
+
+        <MenuItem
+          onClick={() => {
+            onEditRow();
+            handleClosePopover();
+          }}
+        >
+          <Iconify icon="eva:edit-fill" />
+          Edit
+        </MenuItem>
+      </MenuPopover>
+
+      <ConfirmDialog
+        open={openConfirm}
+        onClose={handleCloseConfirm}
+        title="Delete"
+        content="Are you sure want to delete?"
+        action={
+          <Button variant="contained" color="error" onClick={onDeleteRow}>
+            Delete
+          </Button>
+        }
+      />
+    </>
+  );
+}

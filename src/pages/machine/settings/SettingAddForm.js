@@ -5,8 +5,11 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, Grid } from '@mui/material';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 // slice
-import { addSetting, setSettingFormVisibility } from '../../../redux/slices/products/machineSetting';
+import { addSetting } from '../../../redux/slices/products/machineSetting';
 import { getActiveTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
 import { getTechparamsByCategory, resetTechParamByCategory } from '../../../redux/slices/products/machineTechParam';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../../redux/slices/products/machine';
@@ -30,6 +33,8 @@ export default function SettingAddForm() {
   const [techParamVal, setTechParamVal] = useState(null);
   const { activeCustomers } = useSelector((state) => state.customer);
   const { machine, activeCustomerMachines } = useSelector((state) => state.machine);
+  const { machineId } = useParams()
+  const navigate = useNavigate()
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -99,17 +104,17 @@ export default function SettingAddForm() {
         data.techParam = techParamVal;
       }
       await dispatch(addSetting(machine._id, data));
-      dispatch(setSettingFormVisibility(false));
-      reset();
-      setTechParamVal('');
-      enqueueSnackbar(Snacks.settingAdded);
+      await setTechParamVal('');
+      await enqueueSnackbar(Snacks.settingAdded);
+      await navigate(PATH_MACHINE.machines.settings.root(machineId));
+      await reset();
     } catch (err) {
       enqueueSnackbar(Snacks.failedAddSetting, { variant: `error` });
       console.error(err.message);
     }
   };
 
-  const toggleCancel = () => dispatch(setSettingFormVisibility(false));
+  const toggleCancel = () => navigate(PATH_MACHINE.machines.settings.root(machineId));
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

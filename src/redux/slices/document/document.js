@@ -321,12 +321,10 @@ export function addDocument(customerId , machineId ,  params) {
             formData.append('customer', customerId);
           }
 
-          if(machineId){
+          if(params?.drawingMachine){
+            formData.append('drawingMachine', params?.drawingMachine);
+          } else if(machineId){
             formData.append('machine', machineId);
-          }
-
-          if(params?.machine){
-            formData.append('drawingMachine', params?.machine);
           }
 
           formData.append('customerAccess', params.customerAccess);
@@ -370,10 +368,6 @@ export function addDocument(customerId , machineId ,  params) {
           }
 
       await axios.post(`${CONFIG.SERVER_URL}documents/document/`, formData );
-      dispatch(slice.actions.setResponseMessage('Document saved successfully'));
-      dispatch(getDocuments( customerId, machineId ));
-      dispatch(setDocumentFormVisibility(false));
-      dispatch(setDocumentEditFormVisibility(false));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -424,8 +418,18 @@ export function updateDocument(documentId , params, customerId, machineId) {
     dispatch(slice.actions.startLoading());
     try {
       const formData = new FormData();
-      formData.append('isActive', params?.isActive);
-      formData.append('customerAccess', params.customerAccess);
+      if(params?.documentCategory){
+        formData.append('documentCategory', params?.documentCategory?._id);
+        formData.append('docCategory', params?.documentCategory?._id);
+      }
+      if(params?.documentType){
+        formData.append('documentType', params?.documentType?._id);
+        formData.append('doctype', params?.documentType?._id);
+      }
+      if(params?.displayName){
+        formData.append('displayName', params?.displayName);
+        formData.append('name', params?.displayName);
+      }
       formData.append('referenceNumber', params.referenceNumber);
       formData.append('stockNumber', params.stockNumber);
       if(params?.versionNo){
@@ -434,31 +438,17 @@ export function updateDocument(documentId , params, customerId, machineId) {
       if(params.newVersion){
         formData.append('newVersion', params.newVersion);
       }
-      // if(params?.displayName){
-        formData.append('displayName', params?.displayName);
-        formData.append('name', params?.displayName);
-      // }
       if(params?.description){
         formData.append('description', params?.description);
       }
-      if(params?.documentCategory){
-        formData.append('documentCategory', params?.documentCategory);
-      }
-      if(params?.documentType){
-        formData.append('documentType', params?.documentType?._id);
-        formData.append('doctype', params?.documentType?._id);
-      }
+      formData.append('isActive', params?.isActive);
+      formData.append('customerAccess', params.customerAccess);
       if(params?.images){
         formData.append('images', params?.images);
       }
 
       await axios.patch(`${CONFIG.SERVER_URL}documents/document/${documentId}`, formData);
-
-      dispatch(getDocuments(customerId, machineId))
-      dispatch(slice.actions.setResponseMessage(' Document updated successfully'));
-      dispatch(setDocumentFormVisibility(false));
-      dispatch(setDocumentEditFormVisibility(false));
-      dispatch(setDocumentViewFormVisibility(true));
+      
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));

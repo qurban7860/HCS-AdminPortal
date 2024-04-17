@@ -17,247 +17,361 @@ import {
   NewPasswordPage,
   ResetPasswordPage,
   Authenticate,
-  // Dashboard: General
-  GeneralAppPage,
-  MachineByModelsViewForm,
-  MachineByYearsViewForm,
-  MachineByCountriesViewForm,
-  // User
-  SecurityUserList,
-  SecurityUserEdit,
-  SecurityUserAdd,
-  SecurityUserProfile,
-  SecurityUserProfileEditForm,
-  SecurityUserChangePassword,
-  SecurityUserChangePasswordByAdmin,
 
-  SecurityUserViewForm,
+  // ----------------------------------------------------------------
+
+  // AUTH SECURITY USER 
+  SecurityUserProfile,
+  SecurityUserProfileEdit,
+  SecurityUserChangePassword,
+
+  // ----------------------------------------------------------------
+
+  // Dashboard
+  Dashboard,
+  MachineByModelsView,
+  MachineByYearsView,
+  MachineByCountriesView,
+
   // Customer
   CustomerList,
   CustomerAdd,
   CustomerEdit,
   CustomerView,
 
-  // Customer Machines
-  CustomerMachines,
-  CustomerMachineMove,
-  CustomerMachineAddForm,
-  // Machine
-  MachineSetting,
-  MachineAddForm,
-  MachineList,
-  MachineView,
-  GetMachineId,
-  MachineEdit,
-  MachineTransfer,
-
-  // Supplier
-  SupplierAddForm,
-  SupplierList,
-  SupplierView,
-  SupplierEdit,
-  // SupplierEditForm,
-
-  // Check Items
-  CheckItemList, 
-  CheckItemViewForm,
-  CheckItemEditForm,
-  CheckItemAddForm,
-
-  // License
-  // MachineLicenses,
-  // LicenseList,
-  // Categories
-
-  CategoryAddForm,
-  CategoryList,
-  CategoryView,
-  CategoryViewForm,
-  CategoryEditForm,
-  CategoryEdit,
-
-  // Parameters
-  ParameterAddForm,
-  ParameterList,
-  ParameterView,
-  ParameterViewForm,
-  ParameterEditForm,
-  ParameterEdit,
-
-  // Tool
-  ToolAddForm,
-  ToolList,
-  ToolView,
-  ToolViewForm,
-  ToolEdit,
-  ToolEditForm,
-
-  // MachineTechParamCategory
-  TechParamCategoryAddForm,
-  TechParamList,
-  TechParamCategoryViewForm,
-  TechParamCategoryView,
-  TechParamCategoryEdit,
-  TechParamCategoryEditForm,
-
-  // Status
-  StatusAddForm,
-  StatusViewForm,
-  StatusView,
-  StatusEdit,
-  StatusEditForm,
-  StatusList,
-
-  // Model
-  ModelAddForm,
-  ModelList,
-  ModelViewForm,
-  ModelView,
-  ModelEdit,
-  ModelEditForm,
-
-  // Role
-  RoleList,
-  RoleAdd,
-  RoleView,
-  RoleEdit,
-
-  // Site
-  CustomerSiteDynamicList,
+  // SITE REPORTS
   CustomerSiteList,
 
-  // Contact
-  CustomerContactDynamicList,
+  // CONTACT REPORTS
   CustomerContactList,
-  // Note
-  NoteList,
-  NoteAddForm,
-  NoteEditForm,
-  NoteViewForm,
+
+  // CUSTOMERS SITES
+  CustomerSiteDynamicList,
+
+  // CUSTOMERS CONTACTS
+  CustomerContactDynamicList,
+  
+  // Customer Notes
+  CustomerNoteList,
+  CustomerNoteAdd,
+  CustomerNoteEdit,
+  CustomerNoteView,
 
   // customer Documents
   CustomerDocumentList,
-  CustomerDocumentAddForm,
-  CustomerDocumentEditForm,
-  CustomerDocumentViewForm,
-  CustomerDocumentHistoryViewForm,
+  CustomerDocumentAdd,
+  CustomerDocumentAddFiles,
+  CustomerDocumentNewVersion,
+  CustomerDocumentHistoryAddFiles,
+  CustomerDocumentHistoryNewVersion,
+  CustomerDocumentEdit,
+  CustomerDocumentView,
+  CustomerDocumentHistoryView,
   CustomerDocumentGallery,
-
-  // Document Name
-  DocumentNameAddForm  ,
-  DocumentNameList     ,
-  DocumentNameViewForm ,
-  DocumentNameEditForm ,
-
-// File Category
-  DocumentCategoryAddForm  ,
-  DocumentCategoryList     ,
-  DocumentCategoryView ,
-  DocumentCategoryEditForm ,
-  // Service Record Config
-  ServiceRecordConfigAddForm,
-  ServiceRecordConfigList,
-  ServiceRecordConfigView,
-  ServiceRecordConfigViewForm,
-  ServiceRecordConfigEditForm,
-  ServiceRecordConfigEdit,
-
-  // Servivce Categories
-  ServiceCategoryAddForm,
-  ServiceCategoryList,
-  ServiceCategoryView,
-  ServiceCategoryViewForm,
-  ServiceCategoryEditForm,
-  ServiceCategoryEdit,
-
-  // DocumentDashboard    
-  DocumentList, 
-  DocumentAddForm, 
-  DocumentAddListForm,
-  DocumentEditForm, 
-  DocumentViewForm,
-  DocumentGallery, 
   
-  // MachineDocumentView,
-  MachineDrawings,
-  MachineDrawingsAddForm,
-  MachineDrawingsViewForm,
+  // Customer Machines
+  CustomerMachines,
+  CustomerMachineMove,
+  CustomerMachineAdd,
 
-  // Setting
-  Setting,
-  // Email 
-  Email,
-  Emailviewform,
+  // ----------------------------------------------------------------
 
-  // Reports
-  Reports,
-  SignInLogList,
-
-  // Regions
-  RegionList,
-  RegionAdd,
-  RegionView,
-  RegionEdit,
-
-   // modules
-  ModuleList,
-  ModuleAdd,
-  ModuleEdit,
-  ModuleView,
-
-  // Configs
-  ConfigList,
-  ConfigAdd,
-  ConfigView,
-  ConfigEdit,
-
-  // Configuration
-  ConfigurationAdd,
-  ConfigurationList,
-  ConfigurationEdit,
-  ConfigurationView, 
-
-   // User Invite
-  UserInvitationList,
-  UserInvitationView,
-
-  // RELEASES
-  ReleasesList,
-  ReleasesViewForm,
-
-  //   
-  BlankPage,
-  PermissionDeniedPage,
-
-  // Departmennts
+  // CUSTOMER SETTING DEPARTMENTS
   DepartmentAdd, 
   DepartmentList,
   DepartmentEdit,
   DepartmentView,
 
-//
+  // CUSTOMER SETTING REGIONS
+  RegionList,
+  RegionAdd,
+  RegionView,
+  RegionEdit,
+
+  // ----------------------------------------------------------------
+
+  // Machine
+  MachineList,
+  MachineAdd,
+  MachineView,
+  MachineEdit,
+  GetMachineId,
+  MachineTransfer,
+  
+  // --------------------------- SETTING -------------------------------------
+  SettingList,
+  SettingAdd,
+  SettingView,
+  SettingEdit,
+
+  // --------------------------- Tool Installed -------------------------------------
+  MachineToolInstalledList,
+  MachineToolInstalledAdd,
+  MachineToolInstalledView,
+  MachineToolInstalledEdit,
+
+  // --------------------------- Machine Notes -------------------------------------
+  MachineNoteList,
+  MachineNoteAdd,
+  MachineNoteView,
+  MachineNoteEdit,
+
+  // --------------------------- MACHINE Drawings  -------------------------------------
+  MachineDrawingList,
+  MachineDrawingAdd,
+  MachineDrawingAddFile,
+  MachineDrawingNewVersion,
+  MachineDrawingAttach,
+  MachineDrawingListAdd,
+  MachineDrawingView,
+  MachineDrawingEdit,
+
+  // --------------------------- Machine Documents -------------------------------------
+  MachineDocumentList,
+  MachineDocumentAdd,
+  MachineDocumentAddFile,
+  MachineDocumentNewVersion,
+  MachineDocumentHistoryAddFile,
+  MachineDocumentHistoryNewVersion,
+  MachineDocumentEditForm,
+  MachineDocumentGallery,
+  MachineDocumentViewForm,
+  MachineDocumentHistoryViewForm,
+
+  // --------------------------- MACHINE Licenses -------------------------------------
+  MachineLicenseList,
+  MachineLicenseAdd,
+  MachineLicenseView,
+  MachineLicenseEdit,
+
+  // --------------------------- MACHINE Profile -------------------------------------
+  MachineProfileList,
+  MachineProfileAdd,
+  MachineProfileView,
+  MachineProfileEdit,
+
+  // --------------------------- MACHINE Service Records -------------------------------------
+  MachineServiceRecordList,
+  MachineServiceRecordAdd,
+  MachineServiceRecordView,
+  MachineServiceRecordEdit,
+  MachineServiceRecordHistoryList,
+
+  // --------------------------- MACHINE INI -------------------------------------
+  MachineINIList,
+  MachineINIAdd,
+  MachineINIView,
+  MachineINICompareView,
+
+  // --------------------------- MACHINE LOGS -------------------------------------
+  MachineLogsList,
+  MachineLogsAdd,
+  MachineLogsView,
+  MachineLogsGraphView,
+
+  // MACHINE SETTINGS
+  MachineSetting,
+
+  // --------------------- Categories & Models ----------------------
+
+  // MACHINE SETTINGS Machine Groups
+  MachineGroupList,  
+  MachineGroupAdd,
+  MachineGroupView,
+  MachineGroupEdit,
+
+  // MACHINE SETTINGS: MACHINE Categories
+  MachineCategoryList,
+  MachineCategoryAdd, 
+  MachineCategoryView,
+  MachineCategoryEdit,
+
+  // MACHINE SETTINGS: MACHINE Model
+  MachineModelList,
+  MachineModelAdd,
+  MachineModelView,
+  MachineModelEdit,
+
+  // MACHINE SETTINGS: MACHINE Supplier
+  MachineSupplierList,
+  MachineSupplierAdd, 
+  MachineSupplierView,
+  MachineSupplierEdit,
+
+  // ----------------------- Tools Information -----------------------
+
+  // MACHINE SETTINGS: MACHINE Tools
+  MachineToolList,
+  MachineToolAdd, 
+  MachineToolView,
+  MachineToolEdit,
+
+  // --------------- Service Record Configuration --------------------
+
+  // MACHINE SETTINGS CHECK Item Categories
+  CheckItemCategoryList,
+  CheckItemCategoryAdd, 
+  CheckItemCategoryView,
+  CheckItemCategoryEdit,
+
+  // MACHINE SETTINGS CHECK ITEM
+  CheckItemList, 
+  CheckItemAdd,
+  CheckItemView,
+  CheckItemEdit,
+
+  // MACHINE SETTINGS Service Record Config / Document
+  ServiceRecordConfigList,
+  ServiceRecordConfigAdd, 
+  ServiceRecordConfigView,
+  ServiceRecordConfigEdit,
+
+  // ------------------------ Others / Machine Status ------------------------
+
+  // MACHINE SETTINGS: MACHINE Statuses
+  MachineStatusList,
+  MachineStatusAdd, 
+  MachineStatusView,
+  MachineStatusEdit,
+
+  // --------------------- Machine Settings --------------------------
+
+  // MACHINE SETTINGS: MACHINE Technical Parameters 
+  TechnicalParameterCategoryList,
+  TechnicalParameterCategoryAdd, 
+  TechnicalParameterCategoryView,
+  TechnicalParameterCategoryEdit,
+
+  // MACHINE SETTINGS: MACHINE Parameters
+  TechnicalParameterList,
+  TechnicalParameterAdd, 
+  TechnicalParameterView,
+  TechnicalParameterEdit,
+
+  // ----------------------------------------------------------------
+  
+  // DOCUMENT dashboard  
+  DocumentList, 
+  DocumentAdd, 
+  DocumentAddFile,
+  DocumentNewVersion,
+  DocumentAddList,
+  DocumentEdit, 
+  DocumentView,
+  DocumentGallery, 
+  
+  // ----------------------------------------------------------------
+
+  // DOCUMENT SETTING Document Type
+  DocumentTypeList,
+  DocumentTypeAdd, 
+  DocumentTypeView,
+  DocumentTypeEdit,
+
+  // DOCUMENT SETTING Document Category
+  DocumentCategoryList,
+  DocumentCategoryAdd, 
+  DocumentCategoryView,
+  DocumentCategoryEdit,
+
+  // ----------------------------------------------------------------
+
+  // MACHINE DRAWINGS
+  MachineDrawings,
+  MachineDrawingsAdd,
+  MachineDrawingsAddFiles,
+  MachineDrawingsNewVersion,
+  MachineDrawingsView,
+
+  // ----------------------------------------------------------------
+
+// REPORTS / SETTINGS
+  Setting,
+
+  // modules
+  ModuleList,
+  ModuleAdd,
+  ModuleEdit,
+  ModuleView,
+
+  // System Configs
+  SystemConfigList,
+  SystemConfigAdd,
+  SystemConfigEdit,
+  SystemConfigView,
+
+  // ----------------------------------------------------------------
+
+  // REPORTS 
+
+  // REPORTS: User Blocked Customers
+  BlockedCustomerAdd,
+  BlockedCustomerList,
+
+  // REPORTS: User Blocked Users
+  BlockedUserList,
+  BlockedUserAdd,
+
+  // REPORTS: Blacklist IP
+  BlacklistIPList,
+  BlacklistIPAdd,
+
+  // REPORTS: Whitelist IP
+  WhitelistIPList,
+  WhitelistIPAdd,
+
+  // REPORTS: Signin Logs
+  SignInLogList,  
+
+  // REPORTS: User Invitations List
+  UserInvitationList,
+  UserInvitationView,
+
+  // REPORTS: RELEASES
+  ReleasesList,
+  ReleasesView,
+
+  // ----------------------------------------------------------------
+
+  // SECURITY USER
+  SecurityUserList,
+  SecurityUserAdd,
+  SecurityUserEdit,
+  SecurityUserView,
+  SecurityUserChangePasswordByAdmin,
+
+  // SECURITY SETTIGS ROLES
+  RoleList,
+  RoleAdd,
+  RoleView,
+  RoleEdit,
+
+  // ----------------------------------------------------------------
+
+  // SITE MAP / SITES REPORT
+  SitesReport,
+
+  // ----------------------------------------------------------------
+
+  // Email 
+  Email,
+  Emailview,
+  
+  // ----------------------------------------------------------------
+
+  // MAIN
   Page500,
   Page403,
   Page404,
   MachineNotFoundPage,
+  UserInviteLanding,
   ComingSoonPage,
   MaintenancePage,
   ErrorPage,
-  UserInviteLanding,
-  BlockedCustomerAddForm,
-  BlockedCustomerList,
-  BlockedUserList,
-  BlockedUserAddForm,
-  BlacklistIPList,
-  BlacklistIPAddForm,
-  WhitelistIPList,
-  WhitelistIPAddForm,
-  GroupAddForm,
-  GroupViewForm,
-  GroupEditForm,
-  GroupList,
-  
+  BlankPage,
+  PermissionDeniedPage,
 } from './elements';
+
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -302,8 +416,34 @@ export default function Router() {
         },
       ],
     },
+
+    // ----------------------------- Main Routes ----------------------------------
+
     {
-      // Dashboard
+      element: <DashboardLayout />,
+      children: [
+        { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
+      ],
+    },
+    { element: <SimpleLayout />},
+    { path: 'invite/:id/:code/:expiry', element: <UserInviteLanding /> },
+    { path: '500', element: <Page500 /> },
+    { path: '403', element: <Page403 /> },
+    { path: '404', element: <Page404 /> },
+    { path: 'machineNotFound', element: <MachineNotFoundPage /> },
+    {
+      element: <CompactLayout />,
+      children: [
+        { path: 'coming-soon', element: <ComingSoonPage /> },
+        { path: 'maintenance', element: <MaintenancePage /> },
+        { path: 'invalidErrorPage', element: <ErrorPage title='Invalid Code' /> },
+        { path: 'expiredErrorPage', element: <ErrorPage title='Invitation Expired' /> },
+      ],
+    },
+    { path: '*', element: <Navigate to="/404" replace /> },
+
+    // --------------------- Dashboard ----------------------
+    {
       path: 'dashboard',
       element: (
         <AuthGuard>
@@ -311,13 +451,15 @@ export default function Router() {
         </AuthGuard>
       ),
       children: [
-        { element: <GeneralAppPage to={PATH_AFTER_LOGIN} replace />, index: true },
-        { path: 'machineByCountries', element: <MachineByCountriesViewForm /> },
-        { path: 'machineByModels', element: <MachineByModelsViewForm /> },
-        { path: 'machineByYears', element: <MachineByYearsViewForm /> },
+        { element: <Dashboard to={PATH_AFTER_LOGIN} replace />, index: true },
+        { path: 'machineByCountries', element: <MachineByCountriesView /> },
+        { path: 'machineByModels', element: <MachineByModelsView /> },
+        { path: 'machineByYears', element: <MachineByYearsView /> },
         { path: 'permission-denied', element: <PermissionDeniedPage /> },
       ],
     },
+    // --------------------- Customer -----------------------
+
     {
       path: 'crm',
       element: (
@@ -353,27 +495,39 @@ export default function Router() {
             },
             { path: ':customerId/notes',
               children: [
-                { element: <NoteList />, index: true  },
-                { path: 'new', element: <NoteAddForm /> },
-                { path: ':id/edit', element: <NoteEditForm />},
-                { path: ':id/view', element: <NoteViewForm />}
+                { element: <CustomerNoteList />, index: true  },
+                { path: 'new', element: <CustomerNoteAdd /> },
+                { path: ':id/edit', element: <CustomerNoteEdit />},
+                { path: ':id/view', element: <CustomerNoteView />}
               ],
             },
             { path: ':customerId/documents',
               children: [
                 { element: <CustomerDocumentList />, index: true  },
-                { path: 'new', element: <CustomerDocumentAddForm /> },
+                { path: 'new', element: <CustomerDocumentAdd /> },
                 { path: 'viewGallery', element: <CustomerDocumentGallery />},
-                { path: ':id/edit', element: <CustomerDocumentEditForm />},
-                { path: ':id/view', element: <CustomerDocumentViewForm />},
-                { path: ':id/viewHistory', element: <CustomerDocumentHistoryViewForm />},
+                { path: ':id/edit', element: <CustomerDocumentEdit />},
                 { path: 'gallery', element: <CustomerDocumentGallery />},
+                {path: ':id/view', 
+                  children:[
+                    { element: <CustomerDocumentView/>, index: true },
+                    { path: 'addFile', element: <CustomerDocumentAddFiles /> },
+                    { path: 'newVersion', element: <CustomerDocumentNewVersion /> },
+                  ]
+                },
+                {path: ':id/history', 
+                  children:[
+                    { element: <CustomerDocumentHistoryView/>, index: true },
+                    { path: 'addFile', element: <CustomerDocumentHistoryAddFiles /> },
+                    { path: 'newVersion', element: <CustomerDocumentHistoryNewVersion /> },
+                  ]
+                },
               ],
             },        
             { path: ':customerId/machines',
               children: [
                 { element: <CustomerMachines />, index: true  },
-                { path: 'new',element: <CustomerMachineAddForm />  },
+                { path: 'new',element: <CustomerMachineAdd />  },
                 { path: ':id/move',element: <CustomerMachineMove />  },
               ],
             },
@@ -383,7 +537,7 @@ export default function Router() {
         },
       ],
     },
-    // Machine
+    // ------------------------- Machine ---------------------------
     { path: 'products',
       element: (
         <AuthGuard>
@@ -391,15 +545,13 @@ export default function Router() {
         </AuthGuard>
       ),
       children: [
-        { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'machines',
           children: [
-            { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-            { path: 'new', element: <MachineAddForm /> }, 
-            { path: 'list', element: <MachineList /> }, 
-            { path: ':id/view', element: <MachineView /> }, 
-            { path: ':id/edit', element: <MachineEdit /> }, 
-            { path: ':id/transfer', element: <MachineTransfer />},
+            { element: <MachineList />, index: true },
+            { path: 'new', element: <MachineAdd /> },  
+            { path: ':machineId/view', element: <MachineView /> }, 
+            { path: ':machineId/edit', element: <MachineEdit /> }, 
+            { path: ':machineId/transfer', element: <MachineTransfer />},
             { path: 'serialNo',                 
               children: [
                   { path: ':serialNo/customer/:ref/view', element: <GetMachineId /> },
@@ -407,123 +559,217 @@ export default function Router() {
                   { path: ':serialNo/:ref', element: <GetMachineId /> },
               ]
             },
-            { path: 'settings',
+            { path: ':machineId/settings',
+              children:[
+                {element: <SettingList/>, index: true },
+                {path: 'new', element: <SettingAdd/>},
+                {path: ':id/view', element: <SettingView/>},
+                {path: ':id/edit', element: <SettingEdit/>}, 
+              ]
+            },
+            { path: ':machineId/toolsInstalled',
+              children:[
+                {element: <MachineToolInstalledList/>, index: true},
+                {path: 'new', element: <MachineToolInstalledAdd/>},
+                {path: ':id/view', element: <MachineToolInstalledView/>},
+                {path: ':id/edit', element: <MachineToolInstalledEdit/>}, 
+              ]
+            },
+            { path: ':machineId/notes',
+              children:[
+                {element: <MachineNoteList/>, index: true},
+                {path: 'new', element: <MachineNoteAdd/>},
+                {path: ':id/view', element: <MachineNoteView/>},
+                {path: ':id/edit', element: <MachineNoteEdit/>}, 
+              ]
+            },
+            { path: ':machineId/drawings',
+              children:[
+                {element: <MachineDrawingList/>, index: true},
+                {path: 'new', element: <MachineDrawingAdd />},
+                {path: 'attach', element: <MachineDrawingAttach/>},
+                {path: 'multipleNew', element: <MachineDrawingListAdd/>},
+                {path: ':id/edit', element: <MachineDrawingEdit/>}, 
+                {path: ':id/view', 
+                  children:[
+                    { element: <MachineDrawingView />, index: true },
+                    { path: 'addFile', element: <MachineDrawingAddFile /> },
+                    { path: 'newVersion', element: <MachineDrawingNewVersion /> },
+                  ]
+                },
+              ]
+            },
+            { path: ':machineId/documents',
+              children:[
+                {element: <MachineDocumentList/>, index: true},
+                {path: 'new', element: <MachineDocumentAdd/>},
+                {path: 'gallery', element: <MachineDocumentGallery/>},
+                {path: ':id/edit', element: <MachineDocumentEditForm/>},
+                {path: ':id/newFile', element: <MachineDocumentViewForm/>},
+                {path: ':id/newVersion', element: <MachineDocumentViewForm/>},
+                {path: ':id/view', 
+                  children:[
+                    { element: <MachineDocumentViewForm />, index: true },
+                    { path: 'addFile', element: <MachineDocumentAddFile /> },
+                    { path: 'newVersion', element: <MachineDocumentNewVersion /> },
+                  ]
+                },
+                {path: ':id/history', 
+                  children:[
+                    { element: <MachineDocumentHistoryViewForm />, index: true },
+                    { path: 'addFile', element: <MachineDocumentHistoryAddFile /> },
+                    { path: 'newVersion', element: <MachineDocumentHistoryNewVersion /> },
+                  ]
+                },
+              ]
+            },
+            { path: ':machineId/licenses',
+              children:[
+                {element: <MachineLicenseList/>, index: true},
+                {path: 'new', element: <MachineLicenseAdd/>},
+                {path: ':id/view', element: <MachineLicenseView/>},
+                {path: ':id/edit', element: <MachineLicenseEdit/>}, 
+              ]
+            },
+            { path: ':machineId/profiles',
+              children:[
+                {element: <MachineProfileList/>, index: true},
+                {path: 'new', element: <MachineProfileAdd/>},
+                {path: ':id/view', element: <MachineProfileView/>},
+                {path: ':id/edit', element: <MachineProfileEdit/>}, 
+              ]
+            },
+            { path: ':machineId/serviceRecords',
+              children:[
+                {element: <MachineServiceRecordList/>, index: true},
+                {path: 'new', element: <MachineServiceRecordAdd/>},
+                {path: ':id/view', element: <MachineServiceRecordView/>},
+                {path: ':id/edit', element: <MachineServiceRecordEdit/>}, 
+                {path: ':serviceId/history',children:[
+                    {element: <MachineServiceRecordHistoryList/>, index: true}, 
+                    {path: ':id/view', element: <MachineServiceRecordView serviceHistoryView />},
+                  ]
+                }, 
+              ]
+            },
+            { path: ':machineId/ini',
+              children:[
+                {element: <MachineINIList/>, index: true},
+                {path: 'new', element: <MachineINIAdd/>},
+                {path: ':id/view', element: <MachineINIView/>},
+                {path: ':id1/:id2/compare', element: <MachineINICompareView/>}, 
+              ]
+            },
+            { path: ':machineId/logs',
+              children:[
+                {element: <MachineLogsList/>, index: true},
+                {path: 'new', element: <MachineLogsAdd/>},
+                {path: 'graph', element: <MachineLogsGraphView/>}, 
+                {path: ':id/view', element: <MachineLogsView/>},
+              ]
+            },
+            // --------------------------- Machine Settings --------------------------------
+            { path: 'machineSettings',
               children: [
-              { path: 'app', element: <MachineSetting />},
+              { element: <MachineSetting />, index: true },
+              // --------------------- Machine Groups --------------------------------
               {
                 path: 'groups',
                 children:[
-                  {path: 'new', element: <GroupAddForm />},
-                  {path: 'list', element: <GroupList />},
-                  {path: ':id/view', element: <GroupViewForm />},
-                  {path: ':id/edit', element: <GroupEditForm />},
+                  {element: <MachineGroupList />, index: true },
+                  {path: 'new', element: <MachineGroupAdd />},
+                  {path: ':id/view', element: <MachineGroupView />},
+                  {path: ':id/edit', element: <MachineGroupEdit />},
                 ]
               },
+              // --------------------- Machine Categories --------------------------------
               { path: 'categories',
                 children:[
-                  {path: 'new', element: <CategoryAddForm/>},
-                  {path: 'list', element: <CategoryList/>},
-                  {path: ':id/view', element: <CategoryView/>},
-                  {path: 'viewform', element: <CategoryViewForm/>},
-                  {path: ':id/edit', element: <CategoryEdit/>}, 
-                  {path: 'editform', element: <CategoryEditForm/>},
+                  {element: <MachineCategoryList/>, index: true },
+                  {path: 'new', element: <MachineCategoryAdd/>},
+                  {path: ':id/view', element: <MachineCategoryView/>},
+                  {path: ':id/edit', element: <MachineCategoryEdit/>}, 
                 ]
               },
-              { path: 'serviceCategories',
+              // ---------------------------- Machine Model -----------------------------
+              { path: 'models',
                 children:[
-                  {path: 'new', element: <ServiceCategoryAddForm/>},
-                  {path: 'list', element: <ServiceCategoryList/>},
-                  {path: ':id/view', element: <ServiceCategoryView/>},
-                  {path: 'viewform', element: <ServiceCategoryViewForm/>},
-                  {path: ':id/edit', element: <ServiceCategoryEdit/>}, 
-                  {path: 'editform', element: <ServiceCategoryEditForm/>},
+                  {element: <MachineModelList/>, index: true },
+                  {path: 'new', element: <MachineModelAdd/>},
+                  {path: ':id/view', element: <MachineModelView/>},
+                  {path: ':id/edit', element: <MachineModelEdit/>},
                 ]
               },
-              { path: 'serviceRecordConfigs',
+              // ---------------------------- Machine Model Supplier ------------------------------------
+              { path : 'suppliers',
                 children:[
-                  {path: 'new', element: <ServiceRecordConfigAddForm/>},
-                  {path: ':id/copy', element: <ServiceRecordConfigAddForm/>},
-                  {path: 'list', element: <ServiceRecordConfigList/>},
-                  {path: ':id/view', element: <ServiceRecordConfigView/>},
-                  {path: 'viewform', element: <ServiceRecordConfigViewForm/>},
-                  {path: ':id/edit', element: <ServiceRecordConfigEdit/>}, 
-                  {path: 'editform', element: <ServiceRecordConfigEditForm/>},
+                  { element: <MachineSupplierList/>, index: true }, 
+                  { path: 'new', element: <MachineSupplierAdd /> },
+                  { path: ':id/view', element: <MachineSupplierView/>},
+                  { path: ':id/edit', element: <MachineSupplierEdit/>},
                 ]
               },
-              { path: 'model',
+              // -------------------------- Machine Tools ------------------------------
+              { path: 'tools',
                 children:[
-                  {path: 'new', element: <ModelAddForm/>},
-                  {path: 'list', element: <ModelList/>},
-                  {path: 'viewform', element: <ModelViewForm/>},
-                  {path: ':id/view', element: <ModelView/>},
-                  {path: ':id/edit', element: <ModelEdit/>}, 
-                  {path: 'editform', element: <ModelEditForm/>},
+                  {element: <MachineToolList/>, index: true },
+                  {path: 'new', element: <MachineToolAdd/>},
+                  {path: ':id/view', element: <MachineToolView/>},
+                  {path: ':id/edit', element: <MachineToolEdit/>},
                 ]
               },
-              { path : 'supplier',
+              // --------------------- Check Item Categories --------------------------------
+              { path: 'checkItemCategories',
                 children:[
-                  { path: 'new', element: <SupplierAddForm /> },
-                  { path: 'list', element: <SupplierList/>}, 
-                  { path: ':id/view', element: <SupplierView/>},
-                  // { path: 'viewform', element: <SupplierViewForm/>},
-                  { path: ':id/edit', element: <SupplierEdit/>}, 
-                  // { path: 'editform', element: <SupplierEditForm/>},
+                  {element: <CheckItemCategoryList/>, index: true },
+                  {path: 'new', element: <CheckItemCategoryAdd/>},
+                  {path: ':id/view', element: <CheckItemCategoryView/>},
+                  {path: ':id/edit', element: <CheckItemCategoryEdit/>},
                 ]
               },
-              { path: 'status',
-                children:[
-                  {path: 'new', element: <StatusAddForm/>},
-                  {path: 'list', element: <StatusList/>},
-                  {path: 'viewform', element: <StatusViewForm/>},
-                  {path: ':id/view', element: <StatusView/>},
-                  {path: ':id/edit', element: <StatusEdit/>}, 
-                  {path: 'editform', element: <StatusEditForm/>},
-                ]
-              },
-              { path: 'technicalParameterCategories',
-                children:[
-                  {path: 'new', element: <TechParamCategoryAddForm/>},
-                  {path: 'list', element: <TechParamList/>},
-                  {path: 'viewform', element: <TechParamCategoryViewForm/>},
-                  {path: ':id/view', element: <TechParamCategoryView/>},
-                  {path: ':id/edit', element: <TechParamCategoryEdit/>}, 
-                  {path: 'editform', element: <TechParamCategoryEditForm/>},
-                ]
-              },
+              // ------------------------ Check Item----------------------------------------
               { path: 'checkItems',
                 children:[
-                  {path: 'new', element: <CheckItemAddForm/>},
-                  {path: 'list', element: <CheckItemList/>},
-                  {path: ':id/view', element: <CheckItemViewForm/>},
-                  {path: ':id/edit', element: <CheckItemEditForm/>},
+                  {element: <CheckItemList/>, index: true },
+                  {path: 'new', element: <CheckItemAdd/>},
+                  {path: ':id/view', element: <CheckItemView/>},
+                  {path: ':id/edit', element: <CheckItemEdit/>},
                 ]
               },
-              { path: 'parameters',
+              { path: 'serviceRecordsConfig',
                 children:[
-                  {path: 'new', element: <ParameterAddForm/>},
-                  {path: 'list', element: <ParameterList/>},
-                  {path: ':id/view', element: <ParameterView/>},
-                  {path: 'viewform', element: <ParameterViewForm/>},
-                  {path: ':id/edit', element: <ParameterEdit/>}, 
-                  {path: 'editform', element: <ParameterEditForm/>},
+                  {element: <ServiceRecordConfigList/>, index: true },
+                  {path: 'new', element: <ServiceRecordConfigAdd/>},
+                  {path: ':id/copy', element: <ServiceRecordConfigAdd/>},
+                  {path: ':id/view', element: <ServiceRecordConfigView/>},
+                  {path: ':id/edit', element: <ServiceRecordConfigEdit/>},
                 ]
               },
-              { path: 'tool',
+              // ----------------------------- Others / Machine Status -----------------------------------
+              { path: 'status',
                 children:[
-                  {path: 'new', element: <ToolAddForm/>},
-                  {path: 'list', element: <ToolList/>},
-                  {path: ':id/view', element: <ToolView/>},
-                  {path: 'viewform', element: <ToolViewForm/>},
-                  {path: ':id/edit', element: <ToolEdit/>}, 
-                  {path: 'editform', element: <ToolEditForm/>},
+                  {element: <MachineStatusList/>, index: true },
+                  {path: 'new', element: <MachineStatusAdd/>},
+                  {path: ':id/view', element: <MachineStatusView/>},
+                  {path: ':id/edit', element: <MachineStatusEdit/>},
                 ]
               },
-              { path: 'configuration',
+              // ----------------- MACHINE Technical Parameters Categories ------------------------
+              { path: 'technicalParameterCategories',
                 children:[
-                  {path: 'new', element: <ConfigurationAdd/>},
-                  {path: 'list', element: <ConfigurationList/>},
-                  {path: ':id/view', element: <ConfigurationView/>},
-                  {path: ':id/edit', element: <ConfigurationEdit/>}, 
+                  {element: <TechnicalParameterCategoryList/>, index: true },
+                  {path: 'new', element: <TechnicalParameterCategoryAdd/>},
+                  {path: ':id/view', element: <TechnicalParameterCategoryView/>},
+                  {path: ':id/edit', element: <TechnicalParameterCategoryEdit/>},
+                ]
+              },
+              // ----------------------------- MACHINE Parameters -----------------------------------
+              { path: 'technicalParameters',
+                children:[
+                  {element: <TechnicalParameterList/>, index: true },
+                  {path: 'new', element: <TechnicalParameterAdd/>},
+                  {path: ':id/view', element: <TechnicalParameterView/>},
+                  {path: ':id/edit', element: <TechnicalParameterEdit/>},
                 ]
               },
             ]
@@ -534,19 +780,7 @@ export default function Router() {
         { path: 'blank', element: <BlankPage /> },
       ],
     },
-    // Email
-    { path: 'email',
-      element: (
-        <AuthGuard>
-          <DashboardLayout />
-        </AuthGuard>
-      ),
-      children: [
-        { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-        { path: 'list', element: <Email /> },
-        { path: ':id/view', element: <Emailviewform/> }
-      ]
-    },
+
     // SECURITY
     {
       path: 'security',
@@ -561,13 +795,13 @@ export default function Router() {
           path: 'users',
           children: [
             { path: 'profile', element: <SecurityUserProfile/> },
-            { path: 'editProfile', element: <SecurityUserProfileEditForm/> },
+            { path: 'editProfile', element: <SecurityUserProfileEdit/> },
             { path: 'password', element: <SecurityUserChangePassword/> },
             { path: 'changePassword', element: <SecurityUserChangePasswordByAdmin/> },
             { path: 'new', element: <SecurityUserAdd /> },
             { path: 'invite', element: <SecurityUserAdd isInvite /> },
             { path: ':id/edit', element: <SecurityUserEdit /> },
-            { path: ':id/view', element: <SecurityUserViewForm /> },
+            { path: ':id/view', element: <SecurityUserView /> },
           ],
         },
         {
@@ -577,28 +811,28 @@ export default function Router() {
               path: 'blockedCustomer',
               children: [
                 { path: 'list', element: <BlockedCustomerList /> },
-                { path: 'new', element: <BlockedCustomerAddForm /> },
+                { path: 'new', element: <BlockedCustomerAdd /> },
               ],
             },
             {
               path: 'blockedUser',
               children: [
                 { path: 'list', element: <BlockedUserList /> },
-                { path: 'new', element: <BlockedUserAddForm /> },
+                { path: 'new', element: <BlockedUserAdd /> },
               ],
             },
             {
               path: 'blacklistIP',
               children: [
                 { path: 'list', element: <BlacklistIPList /> },
-                { path: 'new', element: <BlacklistIPAddForm /> },
+                { path: 'new', element: <BlacklistIPAdd /> },
               ],
             },
             {
               path: 'whitelistIP',
               children: [
                 { path: 'list', element: <WhitelistIPList /> },
-                { path: 'new', element: <WhitelistIPAddForm /> },
+                { path: 'new', element: <WhitelistIPAdd /> },
               ],
             },
           ]
@@ -607,8 +841,9 @@ export default function Router() {
         { path: 'blank', element: <BlankPage /> },
       ],
     },
+
+    // ----------------------------- SETTING -----------------------------------
     {
-      // SETTING
       path: 'settings',
       element: (
         <AuthGuard>
@@ -617,24 +852,27 @@ export default function Router() {
       ),
       children: [
         {element: <Setting  />, index: true },
+        // ------------------------------ document Category ----------------------------------
         {
           path: 'documentCategory',
           children: [
             { path: 'list', element: <DocumentCategoryList /> },
-            { path: 'new', element: <DocumentCategoryAddForm /> },
-            { path: ':id/edit', element: <DocumentCategoryEditForm />},
+            { path: 'new', element: <DocumentCategoryAdd /> },
+            { path: ':id/edit', element: <DocumentCategoryEdit />},
             { path: ':id/view', element: <DocumentCategoryView />}
           ],
         },
+        // ------------------------------ document Type ----------------------------------
         {
           path: 'documentType',
           children: [
-            { path: 'list', element: <DocumentNameList /> },
-            { path: 'new', element: <DocumentNameAddForm /> },
-            { path: ':id/edit', element: <DocumentNameEditForm />},
-            { path: ':id/view', element: <DocumentNameViewForm />}
+            { path: 'list', element: <DocumentTypeList /> },
+            { path: 'new', element: <DocumentTypeAdd /> },
+            { path: ':id/edit', element: <DocumentTypeEdit />},
+            { path: ':id/view', element: <DocumentTypeView />}
           ],
         },
+        // ------------------------------ role ----------------------------------
         {
           path: 'role',
           children: [
@@ -644,12 +882,14 @@ export default function Router() {
             { path: ':id/view', element: <RoleView />}
           ],
         },
+        // ------------------------------ Sign In Logs ----------------------------------
         {
           path: 'signInLogs',
           children: [
             { path: 'list', element: <SignInLogList /> },
           ],
         },
+        // ------------------------------ regions ----------------------------------
         {
           path: 'regions',
           children: [
@@ -659,6 +899,7 @@ export default function Router() {
             { path: ':id/edit', element: <RegionEdit /> }
           ],
         },
+        // ------------------------------ modules ----------------------------------
         {
           path: 'modules',
           children: [
@@ -668,15 +909,17 @@ export default function Router() {
             { path: ':id/edit', element: <ModuleEdit /> }
           ],
         },
+        // ------------------------------ System Configuration ----------------------------------
         {
           path: 'configs',
           children: [
-            { path: 'list', element: <ConfigList /> },
-            { path: 'new', element: <ConfigAdd /> },
-            { path: ':id/view', element: <ConfigView /> },
-            { path: ':id/edit', element: <ConfigEdit /> }
+            { path: 'list', element: <SystemConfigList /> },
+            { path: 'new', element: <SystemConfigAdd /> },
+            { path: ':id/view', element: <SystemConfigView /> },
+            { path: ':id/edit', element: <SystemConfigEdit /> }
           ],
         },
+        // ------------------------------ departments ----------------------------------
         {
           path: 'departments',
           children: [
@@ -686,6 +929,7 @@ export default function Router() {
             { path: ':id/edit', element: <DepartmentEdit /> }
           ],
         },
+        // ------------------------------ invite ----------------------------------
         {
           path: 'invite',
           children: [
@@ -693,17 +937,18 @@ export default function Router() {
             { path: ':id/view', element: <UserInvitationView /> },
           ],
         },
+        // ------------------------------ releases ----------------------------------
         {
           path: 'releases',
           children: [
             { path: 'list', element: <ReleasesList /> },
-            { path: ':id/view', element: <ReleasesViewForm /> },
+            { path: ':id/view', element: <ReleasesView /> },
           ],
         }
       ],
     },
+    // ------------------------------ DOCUMENNT ----------------------------------
     {
-      // DOCUMENNT
       path: 'documents',
       element: (
         <AuthGuard>
@@ -711,25 +956,42 @@ export default function Router() {
         </AuthGuard>
       ),
       children: [
-        {element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-        {path: 'list',element: <DocumentList />},
-        {path: 'new', element: <DocumentAddForm /> },
-        {path: 'newList', element: <DocumentAddListForm /> },
-        {path: ':id/edit', element: <DocumentEditForm /> },
-        {path: ':id/view', element: <DocumentViewForm /> },
+        {element: <DocumentList />, index: true},
+        {path: 'new', element: <DocumentAdd /> },
+        {path: 'newList', element: <DocumentAddList /> },
+        {path: ':id/edit', element: <DocumentEdit /> },
         {path: ':id/gallery', element: <DocumentGallery /> },
-        // {path: ':id/customer',element: <CustomerDocumentView />},
-        // {path: ':id/machine',element: <MachineDocumentView/>},
-        {path: 'machineDrawings',
-          children: [
-            { path: 'list', element: <MachineDrawings/> },
-            { path: 'new', element: <MachineDrawingsAddForm/> },
-            {path: 'newList', element: <DocumentAddListForm machineDrawings /> },
-            { path: ':id/view', element: <MachineDrawingsViewForm /> },
+        {path: ':id/view', 
+          children:[
+            { element: <DocumentView />, index: true },
+            { path: 'addFile', element: <DocumentAddFile /> },
+            { path: 'newVersion', element: <DocumentNewVersion /> },
           ]
-        }
+        },
       ],
     },
+        // ------------------------------ Drawings ----------------------------------
+        {
+          path: 'machineDrawings',
+          element: (
+            <AuthGuard>
+              <DashboardLayout />
+            </AuthGuard>
+          ),
+          children: [
+            { element: <MachineDrawings/>, index: true  },
+            { path: 'new', element: <MachineDrawingsAdd/> },
+            { path: 'newList', element: <DocumentAddList machineDrawings /> },
+            {path: ':id/view', 
+              children:[
+                { element: <MachineDrawingsView />, index: true },
+                { path: 'addFile', element: <MachineDrawingsAddFiles /> },
+                { path: 'newVersion', element: <MachineDrawingsNewVersion /> },
+              ]
+            },
+          ],
+        },
+    // ----------------------------- Sites Report -----------------------------------
     {
       // Sites
       path: 'site',
@@ -740,35 +1002,22 @@ export default function Router() {
       ),
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-        { path: 'app', element: <Reports /> },
+        { path: 'app', element: <SitesReport /> },
       ]
     },
-    {
-      // Main Routes
-      element: <DashboardLayout />,
+    // ----------------------------- Email ----------------------------------
+    { path: 'email',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-      ],
+        { path: 'list', element: <Email /> },
+        { path: ':id/view', element: <Emailview/> }
+      ]
     },
-    {
-      element: <SimpleLayout />,
-      children: [
-      ],
-    },
-    { path: 'invite/:id/:code/:expiry', element: <UserInviteLanding /> },
-    { path: '500', element: <Page500 /> },
-    { path: '403', element: <Page403 /> },
-    { path: '404', element: <Page404 /> },
-    { path: 'machineNotFound', element: <MachineNotFoundPage /> },
-    {
-      element: <CompactLayout />,
-      children: [
-        { path: 'coming-soon', element: <ComingSoonPage /> },
-        { path: 'maintenance', element: <MaintenancePage /> },
-        { path: 'invalidErrorPage', element: <ErrorPage title='Invalid Code' /> },
-        { path: 'expiredErrorPage', element: <ErrorPage title='Invitation Expired' /> },
-      ],
-    },
-    { path: '*', element: <Navigate to="/404" replace /> },
+
   ]);
 }

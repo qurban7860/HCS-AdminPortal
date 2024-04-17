@@ -1,16 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
-import {
-  Table,
-  TableBody,
-  TableContainer,
-} from '@mui/material';
+import { Container, Table, TableBody, TableContainer } from '@mui/material';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-// routes
 // components
-import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -25,14 +22,13 @@ import LicenseListTableRow from './LicenseListTableRow';
 import LicenseListTableToolbar from './LicenseListTableToolbar';
 
 import {
-  getLicense, 
   getLicenses,
   ChangeRowsPerPage,
   ChangePage,
-  setFilterBy,
-  setLicenseViewFormVisibility } from '../../../redux/slices/products/license';
+  setFilterBy } from '../../../redux/slices/products/license';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
+import MachineTabContainer from '../util/MachineTabContainer';
 
 export default function LicenseList() {
   const {
@@ -45,11 +41,13 @@ export default function LicenseList() {
   });
 
   const dispatch = useDispatch();
-  useSettingsContext();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  const { machine } = useSelector((state) => state.machine);
+
+
+  const { machineId } = useParams();
+  const navigate = useNavigate();
 
   const { licenses, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.license );
   const TABLE_HEAD = [
@@ -68,10 +66,10 @@ export default function LicenseList() {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useEffect(() => {
-    if(machine?._id){
-      dispatch(getLicenses(machine?._id));
+    if(machineId){
+      dispatch(getLicenses(machineId));
     }
-  }, [dispatch, machine]);
+  }, [dispatch, machineId]);
 
   useEffect(() => {
     setTableData(licenses);
@@ -113,10 +111,7 @@ export default function LicenseList() {
   };
 
 
-  const handleViewRow = (licenseid) => {
-      dispatch(getLicense(machine._id,licenseid));
-      dispatch(setLicenseViewFormVisibility(true));
-  };
+  const handleViewRow = (id) => navigate(PATH_MACHINE.machines.licenses.view( machineId, id)) ;
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
@@ -124,6 +119,8 @@ export default function LicenseList() {
   };
 
   return (
+    <Container maxWidth={false} >
+      <MachineTabContainer currentTabValue='license' />
       <TableCard>
         <LicenseListTableToolbar
           filterName={filterName}
@@ -179,6 +176,7 @@ export default function LicenseList() {
           onRowsPerPageChange={onChangeRowsPerPage}
         />}
       </TableCard>
+    </Container>
   );
 }
 

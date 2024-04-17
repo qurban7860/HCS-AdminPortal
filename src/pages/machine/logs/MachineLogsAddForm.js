@@ -3,10 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 // @mui
-import { Card, Grid, Stack, Button, FormHelperText, Checkbox, Typography } from '@mui/material';
+import { Container ,Card, Grid, Stack, Button, FormHelperText, Checkbox, Typography } from '@mui/material';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 // slice
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import { setMachineErpLogListViewFormVisibility, addMachineErpLogRecord } from '../../../redux/slices/products/machineErpLogs';
+import { addMachineErpLogRecord } from '../../../redux/slices/products/machineErpLogs';
 // components
 import { useSnackbar } from '../../../components/snackbar';
   import FormProvider from '../../../components/hook-form';
@@ -15,13 +18,19 @@ import CodeMirror from '../../../components/CodeMirror/JsonEditor';
 import Iconify from '../../../components/iconify/Iconify';
 import { ICONS } from '../../../constants/icons/default-icons';
 import { HeaderArr, unitHeaders } from './Index';
+import MachineTabContainer from '../util/MachineTabContainer';
+import { isValidDate } from '../../../utils/formatTime';
+
 
 // ----------------------------------------------------------------------
 
 export default function MachineLogsAddForm() {
 
   const { machine } = useSelector((state) => state.machine);
+  
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { machineId } = useParams();
   const { enqueueSnackbar } = useSnackbar();
   const [ error, setError ] = useState(false);
 
@@ -62,33 +71,41 @@ export default function MachineLogsAddForm() {
   useEffect(() => {
     if(error) setError(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ erpLog ])
+  },[ erpLog ]);
 
-  const toggleCancel = () => { dispatch(setMachineErpLogListViewFormVisibility(true)) };
   const onSubmit = async (data) => {
     try{
-
+      
         const csvData = JSON.parse(data.erpLog)
-        if(Array.isArray(csvData) && csvData?.length > 5000){
-          setError(true)
-        }else{
-          setError(false);
           try {
-            const action = {}
-            if( selectedCheckbox === 0 ){
-              action.skipExistingRecords = true;
-            } else if( selectedCheckbox){
-              action.updateExistingRecords = true;
+            if(Array.isArray(csvData) && csvData?.length > 5000 ){
+              setError(true)
+            } else if( Array.isArray(csvData) &&  !csvData?.some(item => item && ( item?.date ))){
+              enqueueSnackbar("date is Missing!", { variant: `error` });
+            } else if( Array.isArray(csvData) && csvData?.some(item => !isValidDate( item?.date ))){
+              enqueueSnackbar("Invalid Date Format!", { variant: `error` });
+            } else if( !Array.isArray(csvData) && typeof csvData === 'object' && !('date' in csvData )){
+                enqueueSnackbar("date is Missing!", { variant: `error` });
+            } else if( !Array.isArray(csvData) && typeof csvData === 'object' && !isValidDate( csvData.date )){
+                enqueueSnackbar("Invalid Date Format!", { variant: `error` });
+            } else {
+              setError(false);
+              // ADD Log
+              const action = {}
+              if( selectedCheckbox === 0 ){
+                action.skipExistingRecords = true;
+              } else if( selectedCheckbox){
+                action.updateExistingRecords = true;
+              }
+              await dispatch(addMachineErpLogRecord(machineId, machine?.customer?._id, csvData, action));
+              await enqueueSnackbar(`Log's uploaded successfully!`);
+              await navigate(PATH_MACHINE.machines.logs.root(machineId))
+              await reset();
             }
-            await dispatch(addMachineErpLogRecord(machine?._id, machine?.customer?._id, csvData, action));
-            reset();
-            enqueueSnackbar(`Log's uploaded successfully!`);
-            dispatch(setMachineErpLogListViewFormVisibility(true))
           } catch (err) {
             enqueueSnackbar(err, { variant: `error` });
             console.error(err);
           }
-        }
     }catch(err){
       enqueueSnackbar('JSON validation Failed!',{ variant: `error` });
     }
@@ -174,7 +191,12 @@ const readFile = (selectedFile) =>
   };
 
 const HandleChangeIniJson = async (e) => { setValue('erpLog', e) }
+
+const toggleCancel = () => navigate(PATH_MACHINE.machines.logs.root(machineId));
+
   return (
+    <Container maxWidth={false} >
+      <MachineTabContainer currentTabValue='logs' />
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container>
           <Grid item xs={18} md={12} >
@@ -208,5 +230,6 @@ const HandleChangeIniJson = async (e) => { setValue('erpLog', e) }
           </Grid>
         </Grid>
       </FormProvider>
+    </Container>
   );
 }

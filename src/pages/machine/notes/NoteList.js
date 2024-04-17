@@ -1,16 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
-import {
-  Table,
-  TableBody,
-  TableContainer,
-} from '@mui/material';
+import { Container, Table, TableBody, TableContainer } from '@mui/material';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-// routes
 // components
-import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -23,16 +20,10 @@ import Scrollbar from '../../../components/scrollbar';
 // sections
 import NoteListTableRow from './NoteListTableRow';
 import NoteListTableToolbar from './NoteListTableToolbar';
-
-import {
-  getNote, 
-  getNotes,
-  ChangeRowsPerPage,
-  ChangePage,
-  setFilterBy,
-  setNoteViewFormVisibility } from '../../../redux/slices/products/machineNote';
+import {  getNotes, ChangeRowsPerPage, ChangePage, setFilterBy } from '../../../redux/slices/products/machineNote';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
+import MachineTabContainer from '../util/MachineTabContainer';
 
 export default function NoteList() {
   const {
@@ -43,11 +34,12 @@ export default function NoteList() {
   } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
 
   const dispatch = useDispatch();
-  useSettingsContext();
+  const { machineId } = useParams();
+  const navigate = useNavigate();
+
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  const { machine } = useSelector((state) => state.machine);
 
   const { notes, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.machineNote );
   const TABLE_HEAD = [
@@ -64,10 +56,10 @@ export default function NoteList() {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useEffect(() => {
-    if(machine?._id){
-      dispatch(getNotes(machine?._id));
+    if(machineId){
+      dispatch(getNotes(machineId));
     }
-  }, [dispatch, machine]);
+  }, [dispatch, machineId ]);
 
   useEffect(() => {
     setTableData(notes);
@@ -108,10 +100,7 @@ export default function NoteList() {
     setFilterStatus(event.target.value);
   };
 
-  const handleViewRow = (noteid) => {
-      dispatch(getNote(machine._id,noteid));
-      dispatch(setNoteViewFormVisibility(true));
-  };
+  const handleViewRow = (id) => navigate(PATH_MACHINE.machines.notes.view(machineId, id));
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
@@ -119,6 +108,8 @@ export default function NoteList() {
   };
 
   return (
+    <Container maxWidth={false} >
+      <MachineTabContainer currentTabValue='notes' />
       <TableCard>
         <NoteListTableToolbar
           filterName={filterName}
@@ -174,6 +165,7 @@ export default function NoteList() {
           onRowsPerPageChange={onChangeRowsPerPage}
         />
       </TableCard>
+    </Container>
   );
 }
 

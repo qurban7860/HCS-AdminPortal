@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { Snacks, fileTypesMessage, allowedExtensions } from '../../constants/document-constants';
-import validateFileType from '../document/util/validateFileType';
+import validateFileType from '../documents/util/validateFileType';
 
 const maxFiles = JSON.parse( localStorage.getItem('configurations'))?.find( ( c )=> c?.name === 'MAX_UPLOAD_FILES' )
 

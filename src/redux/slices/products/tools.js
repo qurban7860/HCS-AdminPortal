@@ -225,18 +225,14 @@ export function updateTool(params) {
     dispatch(slice.actions.startLoading());
     try {
 
-      /* eslint-disable */
-      let data = {
+      const data = {
         id: params.id,
         name: params.name,
         isActive: params.isActive,
         description: params.description,
       };
-     /* eslint-enable */
-      await axios.patch(`${CONFIG.SERVER_URL}products/tools/${params.id}`,
-        data
-      );
-      dispatch(getTool(params.id));
+    
+      await axios.patch(`${CONFIG.SERVER_URL}products/tools/${params.id}`, data );
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

@@ -1,28 +1,41 @@
-import { useMemo } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 // @mui
-import {  Grid,  Table, TableBody, TableCell, TableHead, TableRow,  Paper, TableContainer,tableCellClasses , styled, Card } from '@mui/material';
+import { Container, Grid,  Table, TableBody, TableCell, TableHead, TableRow,  Paper, TableContainer,tableCellClasses , styled, Card } from '@mui/material';
 // hooks
 import { useDispatch, useSelector } from 'react-redux';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
+// 
 import { fDateTime } from '../../../utils/formatTime';
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import { useSnackbar } from '../../../components/snackbar';
 // components
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import {
-  setToolInstalledEditFormVisibility,
   getToolInstalled,
   deleteToolInstalled,
-  setToolInstalledViewFormVisibility,
 } from '../../../redux/slices/products/toolInstalled';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 // constants
 import ViewFormSwitch from '../../../components/ViewForms/ViewFormSwitch';
+import MachineTabContainer from '../util/MachineTabContainer';
 
 export default function ToolInstalledViewForm() {
   const { toolInstalled, isLoading } = useSelector((state) => state.toolInstalled);
   const { machine } = useSelector((state) => state.machine);
+  const dispatch = useDispatch();
+
   const { enqueueSnackbar } = useSnackbar();
-  
+  const { machineId, id } = useParams()
+  const navigate = useNavigate()
+
+  useLayoutEffect(()=>{
+    if( machineId && id ){
+      dispatch(getToolInstalled( machineId, id ))
+    }
+  },[ dispatch, machineId, id ])
+
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: theme.palette.primary.dark,
@@ -33,23 +46,18 @@ export default function ToolInstalledViewForm() {
     },
   }));
   
-  const dispatch = useDispatch();
   const onDelete = async () => {
     try {
-      await dispatch(deleteToolInstalled(machine._id, toolInstalled));
+      await dispatch(deleteToolInstalled(machineId, id));
       enqueueSnackbar('Tool Installed deleted successfully!');
-      dispatch(setToolInstalledViewFormVisibility(false));
+      await navigate(PATH_MACHINE.machines.toolsInstalled.root(machineId));
     } catch (err) {
       enqueueSnackbar(err.message, { variant: `error` });
       console.log('Error:', err);
     }
   };
 
-  const handleEdit = async () => {
-    dispatch(getToolInstalled(machine._id, toolInstalled._id));
-    dispatch(setToolInstalledViewFormVisibility(false));
-    dispatch(setToolInstalledEditFormVisibility(true));
-  };
+  const handleEdit = () => navigate(PATH_MACHINE.machines.toolsInstalled.edit(machineId, id));
 
   const defaultValues = useMemo(
     () => ({
@@ -73,26 +81,22 @@ export default function ToolInstalledViewForm() {
       updatedIP: toolInstalled?.updatedIP || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [toolInstalled, machine]
+    [ toolInstalled ]
   );
 
   return (
-    // needs cleanup
+    <Container maxWidth={false} >
+      <MachineTabContainer currentTabValue='toolsinstalled' />
     <Grid item md={12} mt={2}>
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons 
         isActive={defaultValues.isActive} 
-        backLink={()=> dispatch(setToolInstalledViewFormVisibility(false))} 
+        backLink={()=> navigate(PATH_MACHINE.machines.toolsInstalled.root(machineId)) } 
         handleEdit={handleEdit} 
         onDelete={onDelete} 
         disableEditButton={machine?.status?.slug==="transferred"}
         disableDeleteButton={machine?.status?.slug==="transferred"}
         />
-      {/* <Grid display="inline-flex">
-        <Tooltip>
-          <ViewFormField isActive={defaultValues.isActive} />
-        </Tooltip>
-      </Grid> */}
       <Grid container>
         <ViewFormField isLoading={isLoading} sm={6} heading="Tool" param={defaultValues?.toolName}/>
         <ViewFormField isLoading={isLoading} sm={6} heading="Offset" param={defaultValues?.offset}/>
@@ -153,5 +157,6 @@ export default function ToolInstalledViewForm() {
       </Grid>
     </Card>
     </Grid>
+    </Container>
   );
 }

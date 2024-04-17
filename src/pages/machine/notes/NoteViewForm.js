@@ -1,45 +1,48 @@
-import { useMemo } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 // @mui
-import { Card, Grid } from '@mui/material';
+import { Container, Card, Grid } from '@mui/material';
 // hooks
 import { useDispatch, useSelector } from 'react-redux';
-// import { fDate } from 'src/utils/formatTime';
+// routes
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_MACHINE } from '../../../routes/paths';
+//
 import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import { useSnackbar } from '../../../components/snackbar';
 // components
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
-import {
-  setNoteEditFormVisibility,
-  getNote,
-  deleteNote,
-  setNoteViewFormVisibility,
-} from '../../../redux/slices/products/machineNote';
+import { getNote, deleteNote } from '../../../redux/slices/products/machineNote';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
 // constants
 import { Snacks } from '../../../constants/machine-constants';
+import MachineTabContainer from '../util/MachineTabContainer';
 
 export default function NoteViewForm() {
   const { note, isLoading } = useSelector((state) => state.machineNote);
   const { machine } = useSelector((state) => state.machine);
   const { enqueueSnackbar } = useSnackbar();
-  
   const dispatch = useDispatch();
+  const { machineId, id } = useParams();
+  const navigate = useNavigate();
+
+  useLayoutEffect(()=>{
+    if(machineId && id){
+      dispatch(getNote(machineId, id));
+    }
+  },[ dispatch, machineId, id ])
+
   const onDelete = async () => {
     try {
-      dispatch(deleteNote(machine._id, note._id));
+      dispatch(deleteNote(machineId, id));
       enqueueSnackbar(Snacks.noteDeleted);
-      dispatch(setNoteViewFormVisibility(false));
+      await navigate(PATH_MACHINE.machines.notes.root(machineId));
     } catch (err) {
       enqueueSnackbar(Snacks.failedDeleteNote, { variant: `error` });
       console.log('Error:', err);
     }
   }
 
-  const handleEdit = async () => {
-    dispatch(getNote(machine._id, note._id));
-    dispatch(setNoteViewFormVisibility(false));
-    dispatch(setNoteEditFormVisibility(true));
-  };
+  const handleEdit = () => navigate(PATH_MACHINE.machines.notes.edit(machineId, id));
 
   const defaultValues = useMemo(
     () => ({
@@ -53,16 +56,15 @@ export default function NoteViewForm() {
       updatedIP: note?.updatedIP || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [note, machine]
+    [note]
   );
   return (
-    // needs cleanup
-    <>
-    {/* <DocumentCover content={defaultValues?.displayName} backLink="true"  generalSettings /> */}
+    <Container maxWidth={false} >
+      <MachineTabContainer currentTabValue='notes' />
     <Grid item md={12} mt={2}>
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons isActive={defaultValues.isActive} 
-      backLink={()=> dispatch(setNoteViewFormVisibility(false))} 
+      backLink={()=> navigate(PATH_MACHINE.machines.notes.root(machineId))} 
       handleEdit={handleEdit} onDelete={onDelete}
       disableEditButton={machine?.status?.slug==='transferred'}
       disableDeleteButton={machine?.status?.slug==='transferred'}
@@ -73,6 +75,6 @@ export default function NoteViewForm() {
       </Grid>
     </Card>
     </Grid>
-    </>
+    </Container>
   );
 }

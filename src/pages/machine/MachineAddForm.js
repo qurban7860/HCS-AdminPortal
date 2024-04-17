@@ -8,7 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, styled, Grid, Stack, TextField } from '@mui/material';
 // slice
-import { getSPContacts } from '../../redux/slices/customer/contact';
+import { getActiveSPContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
 import { getActiveCustomers, setCustomerTab, setNewMachineCustomer } from '../../redux/slices/customer/customer';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import  { addMachine } from '../../redux/slices/products/machine';
@@ -41,7 +41,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const { activeCustomers, newMachineCustomer } = useSelector((state) => state.customer);
   const { activeSites } = useSelector((state) => state.site);
   const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
-  const { spContacts } = useSelector((state) => state.contact);
+  const { activeSpContacts } = useSelector((state) => state.contact);
   const { machineConnections } = useSelector((state) => state.machineConnections);
   const { activeCategories } = useSelector((state) => state.category);
   // const [ hasEffectRun, setHasEffectRun ] = useState(false);
@@ -54,7 +54,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     dispatch(getActiveMachineModels());
     dispatch(getActiveSuppliers());
     dispatch(getActiveMachineStatuses());
-    dispatch(getSPContacts());
+    dispatch(getActiveSPContacts());
     return ()=> { 
       dispatch(resetActiveMachineModels()); 
       dispatch(resetActiveCategories()); 
@@ -119,18 +119,18 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       dispatch(getActiveSites(customer?._id));
       dispatch(getMachineConnections(customer?._id));
     }
-  },[dispatch, customer, spContacts, setValue])
+  },[dispatch, customer, activeSpContacts, setValue])
 
   useEffect(() => {
     if(newMachineCustomer){
       setValue('customer',newMachineCustomer);
       setLandToCustomerMachinePage(true);
-      setValue('accountManager', spContacts.filter(item => Array.isArray(customer?.accountManager) && customer?.accountManager.some(manager => manager._id === item?._id)))
-      setValue('projectManager', spContacts.filter(item => Array.isArray(customer?.projectManager) && customer?.projectManager.some(manager => manager._id === item?._id)))
-      setValue('supportManager', spContacts.filter(item => Array.isArray(customer?.supportManager) && customer?.supportManager.some(manager => manager._id === item?._id)))
+      setValue('accountManager', activeSpContacts.filter(item => Array.isArray(customer?.accountManager) && customer?.accountManager.some(manager => manager._id === item?._id)))
+      setValue('projectManager', activeSpContacts.filter(item => Array.isArray(customer?.projectManager) && customer?.projectManager.some(manager => manager._id === item?._id)))
+      setValue('supportManager', activeSpContacts.filter(item => Array.isArray(customer?.supportManager) && customer?.supportManager.some(manager => manager._id === item?._id)))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[newMachineCustomer, spContacts])
+  },[newMachineCustomer, activeSpContacts ])
 
   useEffect(() => {
     setValue('supplier', activeSuppliers.find((element) => element?.isDefault === true) )
@@ -156,7 +156,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       }else if(response?.data?.Machine?._id){
         await navigate(PATH_MACHINE.machines.view(response?.data?.Machine?._id));
       } else {
-        await navigate(PATH_MACHINE.machines.list);
+        await navigate(PATH_MACHINE.machines.root);
       }
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
@@ -169,50 +169,9 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       await dispatch(setCustomerTab('machines'));
       navigate(PATH_CRM.customers.machines.root(newMachineCustomer._id));
     }else{
-      navigate(PATH_MACHINE.machines.list);
+      navigate(PATH_MACHINE.machines.root);
     }
   };
-
-
-  // const CategoryValHandler = (event, newValue) => {
-  //   if (newValue) {
-  //     setValue('category', newValue);
-  //     dispatch(getActiveMachineModels(newValue?._id));
-  //     if(  machineModel?.category?._id !== newValue?._id ){
-  //       setValue('machineModel', null);
-  //     }
-  //   } else {
-  //     setValue('category', null);
-  //     setValue('machineModel', null);
-  //     dispatch(getActiveMachineModels());
-  //   }
-  // }
-
-  // const MachineModelValHandler = (event, newValue) => {
-  //   if (newValue) {
-  //     setValue('machineModel', newValue);
-  //     if(category === null){
-  //     dispatch(getActiveMachineModels(newValue?.category?._id));
-  //     setValue('category', newValue?.category);
-  //     }
-  //   } else {
-  //     setValue('machineModel', null);
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   if(activeMachineModels.length > 0 && activeCategories.length > 0 ){
-  //     if(!hasEffectRun){
-  //       if ( activeCategories.find((ele) => ele?.isDefault === true) === activeMachineModels.find((ele)=> ele.isDefault === true)?.category?._id || !activeMachineModels.some((ele)=> ele.isDefault === true) ){
-  //         CategoryValHandler(null, activeCategories.find((ele) => ele?.isDefault === true) ) 
-  //       } else {
-  //         MachineModelValHandler(null, activeMachineModels.find((element)=> element.isDefault === true) )
-  //       }
-  //     }
-  //     setHasEffectRun(true)
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // },[activeMachineModels, activeCategories, hasEffectRun])
 
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
@@ -306,9 +265,9 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                       
                       if(newValue){
                         // setValue('customer',newValue);
-                        setValue('accountManager', spContacts.filter(item => Array.isArray(newValue?.accountManager) && newValue?.accountManager.includes(item?._id)))
-                        setValue('projectManager', spContacts.filter(item => Array.isArray(newValue?.projectManager) && newValue?.projectManager.includes(item?._id)))
-                        setValue('supportManager', spContacts.filter(item => Array.isArray(newValue?.supportManager) && newValue?.supportManager.includes(item?._id)))
+                        setValue('accountManager', activeSpContacts.filter(item => Array.isArray(newValue?.accountManager) && newValue?.accountManager.includes(item?._id)))
+                        setValue('projectManager', activeSpContacts.filter(item => Array.isArray(newValue?.projectManager) && newValue?.projectManager.includes(item?._id)))
+                        setValue('supportManager', activeSpContacts.filter(item => Array.isArray(newValue?.supportManager) && newValue?.supportManager.includes(item?._id)))
                       }
                     }}
                     ChipProps={{ size: 'small' }}
@@ -392,7 +351,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     disableCloseOnSelect
                     filterSelectedOptions
                     name="accountManager"
-                    options={spContacts}
+                    options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
                     renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
@@ -406,7 +365,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     disableCloseOnSelect
                     filterSelectedOptions
                     name="projectManager"
-                    options={spContacts}
+                    options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
                     renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
@@ -420,7 +379,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     disableCloseOnSelect
                     filterSelectedOptions
                     name="supportManager"
-                    options={spContacts}
+                    options={activeSpContacts}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
                     renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>)}

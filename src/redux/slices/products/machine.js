@@ -677,11 +677,7 @@ export function updateMachine(machineId, params) {
         financialCompany: params?.financialCompany?._id, 
       };
      /* eslint-enable */
-      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}`,
-        data
-      );
-
-      dispatch(getMachine(machineId));
+      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}`, data );
       dispatch(slice.actions.setMachineEditFormVisibility(false));
       // this.updateCustomerSuccess(response);
     } catch (error) {

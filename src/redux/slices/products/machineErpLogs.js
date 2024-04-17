@@ -18,7 +18,7 @@ const initialState = {
   machineErpLogs: [],
   machineErpLogstotalCount: 0,
   dateFrom: new Date( Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-  dateTo: new Date(Date.now()).toISOString().split('T')[0],
+  dateTo: new Date(),
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
@@ -197,7 +197,7 @@ export function getMachineErpLogRecord(machineId, id) {
 
 // -------------------------- GET RECORD'S ----------------------------------------------------------------------
 
-export function getMachineErpLogRecords(machineId, page, pageSize, fromDate, toDate ) {
+export function getMachineErpLogRecords(machineId, page, pageSize, fromDate, toDate, isCreatedAt ) {
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
@@ -210,6 +210,9 @@ export function getMachineErpLogRecords(machineId, page, pageSize, fromDate, toD
       params.pagination = {
         page,
         pageSize  
+      }
+      if(isCreatedAt){
+        params.isCreatedAt = isCreatedAt
       }
       const response = await axios.get(`${CONFIG.SERVER_URL}logs/erp/`, { params } );
       dispatch(slice.actions.getMachineErpLogRecordsSuccess(response.data));

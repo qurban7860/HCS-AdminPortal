@@ -2,6 +2,13 @@ import { format, isValid, getTime, parseISO, formatDistanceToNow, differenceInDa
 
 // ----------------------------------------------------------------------
 
+export function isValidDate(date) {
+  if(isValid(new Date(date))){
+    return true;
+  }
+    return false;
+}
+
 export function fDate(date, newFormat) {
 
   const fm = newFormat || 'dd MMM yyyy';

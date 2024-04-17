@@ -13,8 +13,7 @@ import { saveSite, setFormVisibility } from '../../../redux/slices/customer/site
 import { useSnackbar } from '../../../components/snackbar';
 // assets
 import { countries } from '../../../assets/data';
-
-
+import MachineTabContainer from '../util/MachineTabContainer';
 import FormProvider, {
   RHFSelect,
   RHFTextField,

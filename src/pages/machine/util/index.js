@@ -1,5 +1,7 @@
-export function checkValuesNotNull(obj) {
-    return Object.values(obj).some(value => value !== null);
+import Iconify from '../../../components/iconify';
+
+  export function checkValuesNotNull(obj) {
+      return Object.values(obj).some(value => value !== null);
   }
 
   export  const inputTypes = [
@@ -64,3 +66,63 @@ export function checkValuesNotNull(obj) {
   future20yearDate.setFullYear(today.getFullYear() + 20);
 
   export const pastDate = new Date(1960, 0, 1);
+
+const TABS = [
+  {
+    value: 'machine',
+    label: 'Machine Info',
+    icon: <Iconify icon="mdi:window-open-variant" />,
+  },
+  {
+    value: 'settings',
+    label: 'Settings',
+    icon: <Iconify icon="mdi:cogs" />,
+  },
+  {
+    value: 'toolsinstalled',
+    label: 'Tools Installed',
+    icon: <Iconify icon="mdi:folder-wrench" />,
+  },
+  {
+    value: 'notes',
+    label: 'Notes',
+    icon: <Iconify icon="mdi:note-multiple" />,
+  },
+  {
+    value: 'drawings',
+    label: 'Drawings',
+    icon: <Iconify icon="mdi:folder-open" />,
+  },
+  {
+    value: 'documents',
+    label: 'Documents',
+    icon: <Iconify icon="mdi:folder-open" />,
+  },
+  {
+    value: 'license',
+    label: 'Licenses',
+    icon: <Iconify icon="mdi:book-cog-outline" />,
+  },
+  {
+    value: 'profile',
+    label: 'Profiles',
+    icon: <Iconify icon="mdi:window-open-variant" />,
+  },
+  {
+    value: 'serviceRecords',
+    label: 'Service Records',
+    icon: <Iconify icon="mdi:clipboard-text-clock" />,
+  },
+  {
+    value: 'ini',
+    label: 'INI',
+    icon: <Iconify icon="ic:round-manage-history" />,
+  },
+  {
+    value: 'logs',
+    label: 'Logs',
+    icon: <Iconify icon="entypo:bar-graph" />,
+  },
+];
+
+export default TABS
