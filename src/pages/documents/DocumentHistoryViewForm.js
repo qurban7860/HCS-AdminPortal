@@ -26,19 +26,11 @@ import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDe
 
 import {
   getDocumentHistory,
-  resetDocument,
-  setDocumentFormVisibility,
-  setDocumentHistoryAddFilesViewFormVisibility,
-  setDocumentHistoryNewVersionFormVisibility,
-  setDocumentAddFilesViewFormVisibility,
-  setDocumentNewVersionFormVisibility,
-  getDocument,
+  resetDocumentHistory,
   deleteDocument,
-  setDocumentHistoryViewFormVisibility,
-  setDocumentVersionEditDialogVisibility
+  setDocumentVersionEditDialogVisibility,
 } from '../../redux/slices/document/document';
-import { deleteDrawing, getDrawings, getDrawing, resetDrawings,
-  setDrawingEditFormVisibility, setDrawingViewFormVisibility } from '../../redux/slices/products/drawing';
+import { deleteDrawing, getDrawings, getDrawing, resetDrawings } from '../../redux/slices/products/drawing';
 
 import { deleteDocumentFile, downloadFile, getDocumentDownload } from '../../redux/slices/document/documentFile';
 import { getCustomer, resetCustomer, setCustomerDialog} from '../../redux/slices/customer/customer';
@@ -76,6 +68,9 @@ function DocumentHistoryViewForm({ customerPage, machinePage, machineDrawingPage
   useEffect(() => {
     if( id ){
       dispatch(getDocumentHistory(id));
+    }
+    return () => {
+      dispatch(resetDocumentHistory());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, id]);
@@ -196,7 +191,6 @@ const handleNewFile = async () => {
       await dispatch(deleteDrawing(drawing?._id));
       await dispatch(resetDrawings());
       await dispatch(getDrawings(machine?._id));
-      dispatch(setDrawingViewFormVisibility(false))
       enqueueSnackbar(Snacks.deletedDrawing, { variant: `success` });
     } catch (err) {
       console.log(err);

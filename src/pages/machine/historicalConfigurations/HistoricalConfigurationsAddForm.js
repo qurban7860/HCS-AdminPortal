@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 // @mui
-import { Card, Grid, Stack, Button } from '@mui/material';
+import { Card, Grid, Stack, Button, Container } from '@mui/material';
 // routes
 import { useNavigate, useParams } from 'react-router-dom';
 import { PATH_MACHINE } from '../../../routes/paths';
@@ -160,7 +160,7 @@ const toggleCancel = () => navigate(PATH_MACHINE.machines.ini.root(machineId));
 
 return (
   <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Grid container>
+        <Container maxWidth={false} >
           <MachineTabContainer currentTabValue='ini' />
           <Grid item xs={18} md={12} >
             <Card sx={{ p: 3 }}>
@@ -184,7 +184,7 @@ return (
               </Stack>
             </Card>
           </Grid>
-        </Grid>
+        </Container>
       </FormProvider>
   );
 }
