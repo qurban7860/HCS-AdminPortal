@@ -144,9 +144,6 @@ export function addSetting (machineId, params){
           isActive: params.isActive,
       }
       await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/`, data);
-      dispatch(slice.actions.setResponseMessage('Setting saved successfully'));
-      dispatch(getSettings(machineId));
-      await dispatch(setSettingFormVisibility(false));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -234,8 +231,6 @@ export async function updateSetting(machineId,settingId,params) {
         isActive: params.isActive,
       }
       await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${settingId}`, data, );
-      dispatch(slice.actions.setResponseMessage('Setting updated successfully'));
-      dispatch(setSettingEditFormVisibility (false));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));

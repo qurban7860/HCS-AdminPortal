@@ -104,10 +104,10 @@ export default function SettingAddForm() {
         data.techParam = techParamVal;
       }
       await dispatch(addSetting(machine._id, data));
-      await reset();
       await setTechParamVal('');
       await enqueueSnackbar(Snacks.settingAdded);
       await navigate(PATH_MACHINE.machines.settings.root(machineId));
+      await reset();
     } catch (err) {
       enqueueSnackbar(Snacks.failedAddSetting, { variant: `error` });
       console.error(err.message);

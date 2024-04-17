@@ -26,7 +26,7 @@ import {
 import { getActiveDocumentCategories, resetActiveDocumentCategories } from '../../redux/slices/document/documentCategory';
 import { getActiveDocumentTypesWithCategory, resetActiveDocumentTypes } from '../../redux/slices/document/documentType';
 import { addDocumentVersion, updateDocumentVersion,} from '../../redux/slices/document/documentVersion';
-import { getActiveCustomers } from '../../redux/slices/customer/customer';
+import { getActiveCustomers, resetActiveCustomers } from '../../redux/slices/customer/customer';
 import { getCustomerMachines, resetCustomerMachines} from '../../redux/slices/products/machine';
 import { getDrawings, resetDrawings } from '../../redux/slices/products/drawing';
 // components
@@ -90,7 +90,8 @@ function DocumentAddForm({
   const [ readOnlyDocument, setReadOnlyDocument ] = useState(false);
   const [ selectedValue, setSelectedValue ] = useState('new');
   const [ selectedVersionValue, setSelectedVersionValue ] = useState('newVersion');
-  
+  const [ duplicate, setDuplicate ] = useState(false);
+
   useEffect(() => {
     if( ( newVersion || addFiles || historyAddFiles || historyNewVersion ) && id ){
       dispatch(getDocument(id))
@@ -115,8 +116,8 @@ function DocumentAddForm({
       files: null,
       isActive: true,
       customerAccess:false,
-      customer: null,
-      machine: null,
+      customerVal: null,
+      machineVal: null,
     },
   });
 
@@ -128,7 +129,7 @@ function DocumentAddForm({
     formState: { isSubmitting },
   } = methods;
 
-  const { documentCategory, documentType, displayName, versionNo, documentVal, files, isActive, customerAccess  } = watch();
+  const { documentCategory, documentType, displayName, versionNo, documentVal, machineVal, files, isActive, customerAccess  } = watch();
 
   useEffect(() => {
     if( customerPage && !categoryBy ){
@@ -194,12 +195,16 @@ function DocumentAddForm({
       setSelectedValue('new');
       setReadOnlyDocument(false);
     }
-    dispatch(resetActiveDocuments()); 
-    dispatch(resetCustomerMachines()); 
-    // dispatch(getActiveCustomers());
-    if (customerPage)  setValue('customer', customer?._id);
-    if (machinePage)  setValue('machine', machine?._id);
-    return () =>  { dispatch(resetActiveDocumentTypes()); dispatch(resetActiveDocumentCategories()) }
+    if(machineDrawings){
+      dispatch(getActiveCustomers());
+    }
+    return () =>  { 
+      dispatch(resetActiveDocuments()); 
+      dispatch(resetActiveCustomers()); 
+      dispatch(resetCustomerMachines()); 
+      dispatch(resetActiveDocumentTypes()); 
+      dispatch(resetActiveDocumentCategories()) 
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, customer, machine ]);
 
@@ -224,11 +229,13 @@ function DocumentAddForm({
 
   const onSubmit = async (data) => {
     try {
-
       if (selectedValue === 'new') {
         // NEW DOCUMENT
         if( drawingPage ){
           data.drawingMachine = machineId;
+        }
+        if( machineDrawings ){
+          data.drawingMachine = machineVal?._id;
         }
         await dispatch(addDocument( customerPage ? customerId : null, ( drawingPage || machinePage ) ? machineId : null, data));
         enqueueSnackbar(drawingPage || machineDrawings ?Snacks.addedDrawing:Snacks.addedDoc);
@@ -327,9 +334,6 @@ function DocumentAddForm({
   };
   const handleVersionRadioChange = (event) => setSelectedVersionValue(event.target.value);
   const handleIsActiveChange = () => setValue('isActive' ,!isActive);
-
-  const [machineVal, setMachineVal] = useState(false);
-  const [duplicate, setDuplicate] = useState(false);
 
   const handleDropMultiFile = useCallback(
     async (acceptedFiles) => {
@@ -593,13 +597,12 @@ function DocumentAddForm({
                         }}
                       />
                       <RHFAutocomplete
-                        name="machine"
+                        name="machineVal"
                         label="Machine"
                         options={customerMachines}
-                        value={machineVal}
+                        // value={machineVal}
                         isOptionEqualToValue={( option, value ) => option._id === value._id }
                         getOptionLabel={(option) => `${ option.serialNo || '' } ${option?.name ? '-' : ''} ${option?.name || ''}`}
-                        onChange={(eve, newValue)=> setMachineVal(newValue)}
                         renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}</li> )}
                       />
                     </Box>

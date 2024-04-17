@@ -29,8 +29,8 @@ import {
   getDocumentHistory,
   resetDocumentHistory,
 } from '../../../redux/slices/document/document';
-import { getActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
-import { getActiveDocumentTypes } from '../../../redux/slices/document/documentType';
+import { getActiveDocumentCategories, resetActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
+import { getActiveDocumentTypes, resetActiveDocumentTypes } from '../../../redux/slices/document/documentType';
 import {
   getDrawings,
   ChangeRowsPerPage,
@@ -86,13 +86,17 @@ export default function DrawingList() {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useEffect(() => {
-    if(machine?._id){
-      dispatch(resetDrawings());
-      dispatch(getDrawings(machine?._id));
+    if( machineId ){
+      dispatch(getDrawings( machineId ));
       dispatch(getActiveDocumentCategories());
       dispatch(getActiveDocumentTypes());
+    } 
+    return () => {
+      dispatch(resetDrawings());
+      dispatch(resetActiveDocumentCategories());
+      dispatch(resetActiveDocumentTypes());
     }
-  }, [dispatch, machine]);
+  }, [dispatch, machineId ]);
 
   useEffect(() => {
     setTableData(drawings);

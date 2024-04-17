@@ -368,10 +368,6 @@ export function addDocument(customerId , machineId ,  params) {
           }
 
       await axios.post(`${CONFIG.SERVER_URL}documents/document/`, formData );
-      dispatch(slice.actions.setResponseMessage('Document saved successfully'));
-      dispatch(getDocuments( customerId, machineId ));
-      dispatch(setDocumentFormVisibility(false));
-      dispatch(setDocumentEditFormVisibility(false));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -451,12 +447,7 @@ export function updateDocument(documentId , params, customerId, machineId) {
       }
 
       await axios.patch(`${CONFIG.SERVER_URL}documents/document/${documentId}`, formData);
-
-      dispatch(getDocuments(customerId, machineId))
-      dispatch(slice.actions.setResponseMessage(' Document updated successfully'));
-      dispatch(setDocumentFormVisibility(false));
-      dispatch(setDocumentEditFormVisibility(false));
-      dispatch(setDocumentViewFormVisibility(true));
+      
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
