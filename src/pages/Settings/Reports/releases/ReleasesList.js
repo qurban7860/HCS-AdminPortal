@@ -142,7 +142,7 @@ export default function ReleasesList() {
                     .map((row, index) =>
                       row ? (
                         <ReleasesListTableRow
-                          key={row._id}
+                          key={row.id}
                           row={row}
                           onViewRow={() => handleViewRow(row?.id)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}

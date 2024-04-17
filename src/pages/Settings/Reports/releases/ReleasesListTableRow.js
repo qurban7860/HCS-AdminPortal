@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Switch, TableCell } from '@mui/material';
+import { Switch, TableCell, Typography, Grid } from '@mui/material';
 // utils
 import { fDate } from '../../../../utils/formatTime';
 // components
@@ -24,13 +24,17 @@ export default function ReleasesListTableRow({
   const { name, startDate, releaseDate, released, description  } = row;
 
   return (
-      <StyledTableRow hover selected={selected} style={{ display: 'block' }}  >
-        { ( released && description ) ? <LinkTableCell align="left" param={`Name: ${name}`} onClick={onViewRow} />
-        : <TableCell align="left" sx={{ display: 'flex' }} ><b>Name: </b>{name}</TableCell>}
-        <TableCell sx={{ display: 'flex' }} ><b>Start Date: </b>{fDate(startDate)}</TableCell>
-        <TableCell sx={{ display: 'flex' }} ><b>Release Date: </b>{fDate(releaseDate)}</TableCell>
-        <TableCell align="center" sx={{ display: 'flex' }} ><b>Is Released: </b>{released && <Switch checked={released} disabled size="small" /> || '' }</TableCell>
-        <TableCell ><b>Description: </b>{description}</TableCell>
+      <StyledTableRow hover selected={selected} style={{ display: 'block' }} >
+          { ( released && description ) ? <TableCell align="left" onClick={onViewRow} sx={{  cursor: released && 'pointer',  display: { sm: 'block', md: 'flex'}, justifyContent: 'space-between', pt: 2 }} >
+                  <Typography variant="body2" ><b>Version:  </b>{`  ${name}`} {released && <Switch checked={released} disabled size="small" sx={{ ml:2}} />} </Typography> 
+                  {releaseDate && <Typography variant="body2" ><b>Release Date:  </b>{fDate(releaseDate)} </Typography> }
+          </TableCell>
+          : <TableCell align="left" sx={{ display: { sm: 'block', md: 'flex'}, justifyContent: 'space-between', py:2 }}  >
+                  <Typography variant="body2" ><b  >Version:  </b>{` ${name}`} {released && <Switch checked={released} disabled size="small" sx={{ ml:2}} /> }</Typography> 
+                  {releaseDate && <Typography variant="body2" ><b>Release Date:  </b>{fDate(releaseDate)}</Typography> }
+            </TableCell>
+          }
+          {description && <TableCell align='left' sx={{ pb: 2 }}  >{description}</TableCell>}
       </StyledTableRow>
   );
 }
