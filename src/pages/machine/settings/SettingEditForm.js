@@ -52,8 +52,7 @@ export default function SettingEditForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const toggleCancel = () => navigate(PATH_MACHINE.machines.settings.view( machineId, id ));
-
+  
   const onSubmit = async (data) => {
     try {
       await dispatch(await updateSetting(machineId, id, data));
@@ -64,6 +63,8 @@ export default function SettingEditForm() {
       console.error(err.message);
     }
   };
+  
+  const toggleCancel = () => navigate(PATH_MACHINE.machines.settings.view( machineId, id ));
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

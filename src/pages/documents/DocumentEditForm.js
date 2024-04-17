@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
-import {  useEffect, useMemo, useState, memo} from 'react';
+import {  useEffect, useLayoutEffect, useMemo, useState, memo} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
@@ -9,17 +9,15 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Card, Grid, Stack, Autocomplete, TextField } from '@mui/material';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, { RHFTextField } from '../../components/hook-form';
+import FormProvider, { RHFTextField, RHFAutocomplete } from '../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 // slice
 import {
-  setDocumentEditFormVisibility,
   getDocument,
   updateDocument,
   getDocumentHistory,
 } from '../../redux/slices/document/document';
-import { setDrawingEditFormVisibility, setDrawingViewFormVisibility } from '../../redux/slices/products/drawing';
 import { Snacks } from '../../constants/document-constants';
 import { PATH_CRM, PATH_DOCUMENT, PATH_MACHINE, PATH_MACHINE_DRAWING } from '../../routes/paths';
 
@@ -36,18 +34,22 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
-  const { enqueueSnackbar } = useSnackbar();
-  const [documentTypeVal, setDocumentTypeVal] = useState('');
-  const [documentCategoryVal, setDocumentCategoryVal] = useState('');
-  const [customerAccessVal, setCustomerAccessVal] = useState(false);
-  const [isActive, setIsActive] = useState(false);
+  // States
+  const [ customerAccessVal, setCustomerAccessVal ] = useState(false);
+  const [ isActive, setIsActive ] = useState(false);
+
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
   const { machineId, customerId, id } = useParams();
   const dispatch = useDispatch();
 
+  useLayoutEffect(()=>{
+    if( id ){
+      dispatch(getDocument(id))
+    }
+  },[ dispatch, id ])
+
   useEffect(() => {
-    setDocumentCategoryVal(document?.docCategory);
-    setDocumentTypeVal(document?.docType);
     setCustomerAccessVal(document?.customerAccess);
     setIsActive(document?.isActive);
   }, [dispatch, document]);
@@ -63,6 +65,8 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
 
   const defaultValues = useMemo(
     () => ({
+      documentCategory: document?.docCategory || null,
+      documentType: document?.docType || null,
       displayName: document?.displayName || '',
       description: document?.description || '',
       referenceNumber: document?.referenceNumber || '',
@@ -70,8 +74,7 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
       versionNo: document?.versionNo || '',
       isActive: document?.isActive,
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [ document ]
   );
 
   const methods = useForm({
@@ -98,13 +101,12 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
   }
 
   const onSubmit = async (data) => {
+    
     try {
       data.customerAccess = customerAccessVal;
       data.isActive = isActive;
-        await dispatch( updateDocument( id, data, customerPage ? customerId : null, machinePage ? machineId : null ) );
-        await toggleCancel();
-      await setDocumentCategoryVal('');
-      await setDocumentTypeVal('');
+      await dispatch( updateDocument( id, data, customerPage ? customerId : null, machinePage ? machineId : null ) );
+      await toggleCancel();
       await reset();
       enqueueSnackbar(`${drawingPage?"Drawing ":""} ${Snacks.updatedDoc}`, { variant: `success` });
       
@@ -135,34 +137,22 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
 
-                  <Autocomplete
-                    // freeSolo
+                  <RHFAutocomplete
                     disabled
                     name="documentCategory"
-                    value={documentCategoryVal || null}
+                    label="Document Category*"
                     options={activeDocumentCategories}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => option.name}
-                    id="controllable-states-demo"
-                    renderInput={(params) => (
-                      <TextField {...params} required label="Document Category" />
-                    )}
-                    ChipProps={{ size: 'small' }}
                   />
 
-                  <Autocomplete
-                    // freeSolo
+                  <RHFAutocomplete
                     disabled
                     name="documentType"
-                    value={documentTypeVal || null}
+                    label="Document Type*"
                     options={activeDocumentTypes}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     getOptionLabel={(option) => option.name}
-                    id="controllable-states-demo"
-                    renderInput={(params) => (
-                      <TextField {...params} required label="Document Type" />
-                    )}
-                    ChipProps={{ size: 'small' }}
                   />
 
                 </Box>

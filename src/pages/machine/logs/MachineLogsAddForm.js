@@ -27,6 +27,7 @@ import { isValidDate } from '../../../utils/formatTime';
 export default function MachineLogsAddForm() {
 
   const { machine } = useSelector((state) => state.machine);
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { machineId } = useParams();
@@ -74,37 +75,37 @@ export default function MachineLogsAddForm() {
 
   const onSubmit = async (data) => {
     try{
+      
         const csvData = JSON.parse(data.erpLog)
-        if(Array.isArray(csvData)){
-          if(csvData?.length > 5000){
-            setError(true)
-          } else if( !csvData.some(item => item && ( item?.date ))){
-            enqueueSnackbar("date is Missing!", { variant: `error` });
-          } else if( !csvData.some(item => item && isValidDate( item?.date ))){
-            enqueueSnackbar("Invalid Date Format!", { variant: `error` });
-          }
-        } else if(typeof csvData === 'object' && !('date' in csvData )){
-            enqueueSnackbar("date is Missing!", { variant: `error` });
-        } else if(typeof csvData === 'object' && !isValidDate( csvData.date )){
-            enqueueSnackbar("Invalid Date Format!", { variant: `error` });
-        } else {
-          setError(false);
           try {
-            const action = {}
-            if( selectedCheckbox === 0 ){
-              action.skipExistingRecords = true;
-            } else if( selectedCheckbox){
-              action.updateExistingRecords = true;
+            if(Array.isArray(csvData) && csvData?.length > 5000 ){
+              setError(true)
+            } else if( Array.isArray(csvData) &&  !csvData?.some(item => item && ( item?.date ))){
+              enqueueSnackbar("date is Missing!", { variant: `error` });
+            } else if( Array.isArray(csvData) && csvData?.some(item => !isValidDate( item?.date ))){
+              enqueueSnackbar("Invalid Date Format!", { variant: `error` });
+            } else if( !Array.isArray(csvData) && typeof csvData === 'object' && !('date' in csvData )){
+                enqueueSnackbar("date is Missing!", { variant: `error` });
+            } else if( !Array.isArray(csvData) && typeof csvData === 'object' && !isValidDate( csvData.date )){
+                enqueueSnackbar("Invalid Date Format!", { variant: `error` });
+            } else {
+              setError(false);
+              // ADD Log
+              const action = {}
+              if( selectedCheckbox === 0 ){
+                action.skipExistingRecords = true;
+              } else if( selectedCheckbox){
+                action.updateExistingRecords = true;
+              }
+              await dispatch(addMachineErpLogRecord(machineId, machine?.customer?._id, csvData, action));
+              await enqueueSnackbar(`Log's uploaded successfully!`);
+              await navigate(PATH_MACHINE.machines.logs.root(machineId))
+              await reset();
             }
-            await dispatch(addMachineErpLogRecord(machineId, machine?.customer?._id, csvData, action));
-            await reset();
-            await enqueueSnackbar(`Log's uploaded successfully!`);
-            await navigate(PATH_MACHINE.machines.logs.root(machineId))
           } catch (err) {
             enqueueSnackbar(err, { variant: `error` });
             console.error(err);
           }
-        }
     }catch(err){
       enqueueSnackbar('JSON validation Failed!',{ variant: `error` });
     }

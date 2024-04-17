@@ -1,4 +1,4 @@
-import React, {  useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 import PropTypes from 'prop-types';
@@ -185,8 +185,8 @@ const onChangePage = (event, newPage) => {
         dispatch(getDocuments( null, machineId, null, page, machineDocumentsRowsPerPage, cancelTokenSource));
       } else if( machinePage ){
         dispatch(getDocuments(null, machineId, null, page, machineDrawingsRowsPerPage, cancelTokenSource));
-      } else if( machineDrawings ){
-        dispatch(getDocuments(null, null, machineDrawings, page, machineDrawingsRowsPerPage, cancelTokenSource));
+      } else if( machineDrawings || machineDrawingPage ){
+        dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, cancelTokenSource));
       } else if(!customerPage && !machineDrawingPage && !machinePage && !machineDrawings  ) {
         dispatch(getDocuments(null, null, null, page, documentRowsPerPage, cancelTokenSource));
       }

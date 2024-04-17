@@ -18,10 +18,6 @@ export default function DrawingEdit() {
   const { id } = useParams(); 
   const { drawing } = useSelector((state) => state.drawing);
 
-  useEffect(() => {
-     dispatch(getDrawing(id));
-  }, [dispatch, id]);
-
   return (
       <Container maxWidth={false }>
         <MachineTabContainer currentTabValue='drawings' />
