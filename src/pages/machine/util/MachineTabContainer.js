@@ -26,7 +26,7 @@ export default function MachineTabContainer({ currentTabValue }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if ( !machine && machineId ) {
+    if ( !machine?._id && machineId ) {
       dispatch(getMachine(machineId));
     }
   }, [dispatch, machine, machineId]);
