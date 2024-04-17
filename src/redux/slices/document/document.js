@@ -418,8 +418,18 @@ export function updateDocument(documentId , params, customerId, machineId) {
     dispatch(slice.actions.startLoading());
     try {
       const formData = new FormData();
-      formData.append('isActive', params?.isActive);
-      formData.append('customerAccess', params.customerAccess);
+      if(params?.documentCategory){
+        formData.append('documentCategory', params?.documentCategory?._id);
+        formData.append('docCategory', params?.documentCategory?._id);
+      }
+      if(params?.documentType){
+        formData.append('documentType', params?.documentType?._id);
+        formData.append('doctype', params?.documentType?._id);
+      }
+      if(params?.displayName){
+        formData.append('displayName', params?.displayName);
+        formData.append('name', params?.displayName);
+      }
       formData.append('referenceNumber', params.referenceNumber);
       formData.append('stockNumber', params.stockNumber);
       if(params?.versionNo){
@@ -428,20 +438,11 @@ export function updateDocument(documentId , params, customerId, machineId) {
       if(params.newVersion){
         formData.append('newVersion', params.newVersion);
       }
-      // if(params?.displayName){
-        formData.append('displayName', params?.displayName);
-        formData.append('name', params?.displayName);
-      // }
       if(params?.description){
         formData.append('description', params?.description);
       }
-      if(params?.documentCategory){
-        formData.append('documentCategory', params?.documentCategory);
-      }
-      if(params?.documentType){
-        formData.append('documentType', params?.documentType?._id);
-        formData.append('doctype', params?.documentType?._id);
-      }
+      formData.append('isActive', params?.isActive);
+      formData.append('customerAccess', params.customerAccess);
       if(params?.images){
         formData.append('images', params?.images);
       }
