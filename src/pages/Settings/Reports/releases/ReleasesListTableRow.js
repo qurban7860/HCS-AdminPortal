@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Switch, TableCell, Typography, Grid } from '@mui/material';
+import { Switch, TableCell, Typography, Grid, Link } from '@mui/material';
 // utils
 import { fDate } from '../../../../utils/formatTime';
 // components
@@ -25,16 +25,20 @@ export default function ReleasesListTableRow({
 
   return (
       <StyledTableRow hover selected={selected} style={{ display: 'block' }} >
-          { ( released && description ) ? <TableCell align="left" onClick={onViewRow} sx={{  cursor: released && 'pointer',  display: { sm: 'block', md: 'flex'}, justifyContent: 'space-between', pt: 2 }} >
-                  <Typography variant="body2" ><b>Version:  </b>{`  ${name}`} {released && <Switch checked={released} disabled size="small" sx={{ ml:2}} />} </Typography> 
+          { ( released && description ) ? <TableCell align="left" sx={{ display: { sm: 'block', md: 'flex'}, justifyContent: 'space-between', pt: 1, mb: -1 }} >
+                  <Link onClick={onViewRow} sx={{ cursor: 'pointer' }} ><b>Version:  </b>{`  ${name}`} {released && <Switch checked={released} disabled size="small" sx={{ ml:2}} />} </Link> 
                   {releaseDate && <Typography variant="body2" ><b>Release Date:  </b>{fDate(releaseDate)} </Typography> }
           </TableCell>
-          : <TableCell align="left" sx={{ display: { sm: 'block', md: 'flex'}, justifyContent: 'space-between', py:2 }}  >
+          : <TableCell align="left" sx={{ display: { sm: 'block', md: 'flex'}, justifyContent: 'space-between', py:1.5 }}  >
                   <Typography variant="body2" ><b  >Version:  </b>{` ${name}`} {released && <Switch checked={released} disabled size="small" sx={{ ml:2}} /> }</Typography> 
                   {releaseDate && <Typography variant="body2" ><b>Release Date:  </b>{fDate(releaseDate)}</Typography> }
             </TableCell>
           }
-          {description && <TableCell align='left' sx={{ pb: 2 }}  >{description}</TableCell>}
+          {description && <TableCell align='left' sx={{ pb: 1, 
+            display: 'flex',
+            alignItems: 'center',
+            whiteSpace: 'pre-line',
+            wordBreak: 'break-word' }}  >{description}</TableCell>}
       </StyledTableRow>
   );
 }
