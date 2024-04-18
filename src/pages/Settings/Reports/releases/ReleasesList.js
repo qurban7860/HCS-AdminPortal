@@ -129,13 +129,6 @@ export default function ReleasesList() {
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
-                {/* <TableHeadCustom
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  onSort={onSort}
-                /> */}
-
                 <TableBody>
                   {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
