@@ -359,7 +359,8 @@ const handleNewFile = async () => {
       navigate(PATH_DOCUMENT.root)
     }
   }
-  
+
+  console.log("check : ", !( ( documentHistory?.machine?._id ) || ( documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) )
   return (
     <Container maxWidth={false} sx={{padding:(machineDrawings || customerPage || machinePage || machineDrawingPage) ?'0 !important':''}}>
       {!customerPage && !machinePage && !machineDrawingPage &&
@@ -403,8 +404,8 @@ const handleNewFile = async () => {
               <ViewFormField isLoading={isLoading}
                 sm={6}
                 NewVersion={!defaultValues.isArchived}
-                handleNewVersion={handleNewVersion}
-                handleUpdateVersion={handleUpdateVersion}
+                handleNewVersion={ !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && handleNewVersion || undefined } 
+                handleUpdateVersion={ !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && handleUpdateVersion || undefined }
                 heading="Active Version"
                 node={
                   defaultValues.documentVersion && (
@@ -538,7 +539,7 @@ const handleNewFile = async () => {
                         return null;
                       })}
 
-                      {index === 0 && !defaultValues.isArchived && (<ThumbnailDocButton onClick={handleNewFile}/>)}
+                      {index === 0 && !defaultValues.isArchived && !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && (<ThumbnailDocButton onClick={handleNewFile}/>)}
                     </Box>
                     <ViewFormAudit key={`${index}-files`} defaultValues={fileValues} />
                   </Grid>

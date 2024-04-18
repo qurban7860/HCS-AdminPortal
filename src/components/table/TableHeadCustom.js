@@ -49,19 +49,13 @@ export default function TableHeadCustom({
 
   let displayHeadIs
 
-// isDisabled isActive active created_at createdAt
   return (
-    <TableHead sx={sx} >
+    <TableHead  sx={{   
+      position: 'sticky !important',
+      top: '0 !important',
+      zIndex: '1000 !important' 
+      }} >
       <TableRow>
-        {/* {onSelectAllRows && (
-          <TableCell padding="checkbox">
-            <Checkbox
-              indeterminate={numSelected > 0 && numSelected < rowCount}
-              checked={rowCount > 0 && numSelected === rowCount}
-              onChange={(event) => onSelectAllRows(event.target.checked)}
-            />
-          </TableCell>
-        )} */}
 
         {headLabel.map((headCell) => {
           if( width === 'md' ) {
@@ -82,7 +76,7 @@ export default function TableHeadCustom({
             sx={{ width: headCell.width, 
             minWidth: headCell.minWidth,
             display: displayHeadIs ? 'none' : 'table-cell',
-             }}
+            }}
           >
             {onSort ? (
               <TableSortLabel
