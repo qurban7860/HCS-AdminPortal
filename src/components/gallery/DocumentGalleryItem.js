@@ -83,12 +83,13 @@ export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFi
                             top:0,
                             opacity: isHovered?1:0,
                             transition: 'opacity 0.3s ease-in-out',
-                            width:'100%'
+                            width:'100%',
+                            // justifyContent:'space-evenly'
                         }}
                     >       
-                        <Button sx={{width:'33%', borderRadius:0}} disabled={!(fileType?.startsWith('image') || fileType?.startsWith('application/pdf'))} onClick={fileType?.startsWith('image')?onOpenLightbox:onOpenFile}><Iconify icon="carbon:view" /></Button>
-                        <Button sx={{width:'33%'}}><Iconify icon="solar:download-square-linear" onClick={onDownloadFile} /></Button>
-                        <Button sx={{width:'34%', borderRadius:0}} color='error' onClick={()=> seDeleteConfirm(true)}><Iconify icon="radix-icons:cross-circled" /></Button>
+                        <Button sx={{width: onDeleteFile ? '33%' : '50%', borderRadius:0}} disabled={!(fileType?.startsWith('image') || fileType?.startsWith('application/pdf'))} onClick={fileType?.startsWith('image')?onOpenLightbox:onOpenFile}><Iconify icon="carbon:view" /></Button>
+                        <Button sx={{width: onDeleteFile ? '33%' : '50%'}}><Iconify icon="solar:download-square-linear" onClick={onDownloadFile} /></Button>
+                        {onDeleteFile && <Button sx={{width:'34%', borderRadius:0}} color='error' onClick={()=> seDeleteConfirm(true)}><Iconify icon="radix-icons:cross-circled" /></Button>}
                     </ButtonGroup>
                 }
 
@@ -126,7 +127,7 @@ export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFi
                         onDeleteFile()
                         seDeleteConfirm(false);
                     }} color='error'>Delete</Button>
-                  }
+                }
                 SubButton="Cancel"
             />
 
