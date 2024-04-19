@@ -345,21 +345,24 @@ function DocumentAddForm({
           const page = await pdfDocument.getPage(1);
           const textContent = await page.getTextContent();
           try{
-            let isFound = false;
-            textContent.items.forEach((item,index) => {
-              if(item.str==='DRAWN BY'){
-                isFound = true;
-                setValue('stockNumber', textContent.items[index+2].str)
+            textContent.items.some((item, index) => {
+              if (item.str === 'DRAWN BY' && textContent?.items[index + 2]?.str?.length < 15) {
+                setValue('stockNumber', textContent.items[index + 2].str);
+                return true;
               }
+              
+              if (item.str === "STOCK NO." && textContent?.items[index + 2]?.str?.length < 15) {
+                setValue('stockNumber', textContent.items[index + 2].str);
+                return true;
+              }
+              
+              if (item.str === 'APPROVED' && textContent?.items[index - 2]?.str?.length < 15) {
+                setValue('stockNumber', textContent.items[index - 2].str);
+                return true;
+              }
+              
+              return false; // Continue iterating if condition is not met
             });
-            if(!isFound) {
-              textContent.items.forEach((item,index) => {
-                if(item.str==='APPROVED'){
-                  isFound = true;
-                  setValue('stockNumber', textContent.items[index-2].str)
-                }
-              });
-            }
           }catch(e) {
             console.log(e)
           }
