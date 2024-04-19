@@ -53,7 +53,8 @@ export default function TableHeadCustom({
     <TableHead  sx={{   
       position: 'sticky !important',
       top: '0 !important',
-      zIndex: '1000 !important' 
+      zIndex: '1000 !important',
+      ...sx
       }} >
       <TableRow>
 

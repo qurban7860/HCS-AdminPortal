@@ -376,7 +376,7 @@ const handleNewFile = async () => {
           customerAccess={defaultValues?.customerAccess}
           isActive={defaultValues.isActive}
           handleEdit={machineDrawingPage && handleEditDrawing}
-          onDelete={machineDrawingPage ? handleDeleteDrawing : handleDelete }
+          onDelete={machineDrawingPage ? handleDeleteDrawing : !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && handleDelete || undefined }
           disableDeleteButton={machineDrawingPage && machine?.status?.slug==="transferred"}
           disableEditButton={machineDrawingPage && machine?.status?.slug==="transferred"}
           backLink={handleBackLink}
@@ -499,7 +499,7 @@ const handleNewFile = async () => {
                             <DocumentGalleryItem isLoading={isLoading} key={file?.id} image={file} 
                               onOpenLightbox={()=> handleOpenLightbox(_index)}
                               onDownloadFile={()=> handleDownloadFile(documentHistory._id, version._id, file._id, file?.name, file?.extension)}
-                              onDeleteFile={()=> handleDeleteFile(documentHistory._id, version._id, file._id)}
+                              onDeleteFile={ !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && (()=> handleDeleteFile(documentHistory._id, version._id, file._id)) || undefined }
                               toolbar
                             />
                           )
@@ -530,7 +530,7 @@ const handleNewFile = async () => {
                               isLoading={isLoading} 
                               // onOpenLightbox={() => handleOpenLightbox(index)}
                               onDownloadFile={() => handleDownloadFile(documentHistory._id, version._id, file._id, file?.name, file?.extension)}
-                              onDeleteFile={() => handleDeleteFile(documentHistory._id, version._id, file._id)}
+                              onDeleteFile={ !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && (() => handleDeleteFile(documentHistory._id, version._id, file._id) ) || undefined }
                               onOpenFile={() => handleOpenFile(documentHistory._id, version._id, file._id, file)}
                               toolbar
                             />
