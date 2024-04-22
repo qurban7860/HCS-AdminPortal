@@ -472,6 +472,7 @@ export const PATH_MACHINE_DRAWING = {
   machineDrawings:{
     new: path(ROOTS_MACHINE_DRAWING, '/new'),
     newList: path(ROOTS_MACHINE_DRAWING, '/newList'),
+    edit: ( id ) => path(ROOTS_MACHINE_DRAWING, `/${id}/edit`),
     view: {
       root: ( id ) => path(ROOTS_MACHINE_DRAWING, `/${id}/view`),
       addFile: ( id ) => path(ROOTS_MACHINE_DRAWING, `/${id}/view/addFile`),

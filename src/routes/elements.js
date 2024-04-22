@@ -312,6 +312,7 @@ export const MachineDrawingsAdd         = Loadable(lazy(() => import('../pages/m
 export const MachineDrawingsAddFiles    = Loadable(lazy(() => import('../pages/machineDrawings/MachineDrawingsAddFiles')));
 export const MachineDrawingsNewVersion  = Loadable(lazy(() => import('../pages/machineDrawings/MachineDrawingsNewVersion')));
 export const MachineDrawingsView        = Loadable(lazy(() => import('../pages/machineDrawings/MachineDrawingsViewForm')));
+export const MachineDrawingsEdit        = Loadable(lazy(() => import('../pages/machineDrawings/MachineDrawingsEditForm')));
 
 // ----------------------------------------------------------------
 

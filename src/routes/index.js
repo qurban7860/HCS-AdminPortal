@@ -282,6 +282,7 @@ import {
   MachineDrawingsAddFiles,
   MachineDrawingsNewVersion,
   MachineDrawingsView,
+  MachineDrawingsEdit,
 
   // ----------------------------------------------------------------
 
@@ -998,6 +999,7 @@ export default function Router() {
             { element: <MachineDrawings/>, index: true  },
             { path: 'new', element: <MachineDrawingsAdd/> },
             { path: 'newList', element: <DocumentAddList machineDrawings /> },
+            { path: ':id/edit', element: <MachineDrawingsEdit machineDrawings /> },
             {path: ':id/view', 
               children:[
                 { element: <MachineDrawingsView />, index: true },
