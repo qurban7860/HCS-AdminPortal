@@ -170,7 +170,13 @@ const handleNewFile = async () => {
       dispatch(getMachineForDialog(Id));
   }
 
-  const handleEditDrawing = async () => navigate(PATH_MACHINE.machines.drawings.edit( machineId, id));
+  const handleEditDrawing = async () =>{
+    if( machineDrawingPage ){
+      navigate(PATH_MACHINE.machines.drawings.edit( machineId, id));
+    } else if( machineDrawings ){
+      navigate(PATH_MACHINE_DRAWING.machineDrawings.edit( id));
+    }
+  } 
 
   const handleDelete = async () => {
     try {
@@ -360,7 +366,6 @@ const handleNewFile = async () => {
     }
   }
 
-  console.log("check : ", !( ( documentHistory?.machine?._id ) || ( documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) )
   return (
     <Container maxWidth={false} sx={{padding:(machineDrawings || customerPage || machinePage || machineDrawingPage) ?'0 !important':''}}>
       {!customerPage && !machinePage && !machineDrawingPage &&
@@ -375,7 +380,7 @@ const handleNewFile = async () => {
           drawingPage={machineDrawingPage}
           customerAccess={defaultValues?.customerAccess}
           isActive={defaultValues.isActive}
-          handleEdit={machineDrawingPage && handleEditDrawing}
+          handleEdit={( machineDrawingPage || !( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && handleEditDrawing }
           onDelete={machineDrawingPage ? handleDeleteDrawing : !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && handleDelete || undefined }
           disableDeleteButton={machineDrawingPage && machine?.status?.slug==="transferred"}
           disableEditButton={machineDrawingPage && machine?.status?.slug==="transferred"}
