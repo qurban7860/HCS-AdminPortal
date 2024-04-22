@@ -394,6 +394,10 @@ export const ICONS = {
   DEPARTMENNTS: {
     icon: 'mingcute:department-line',
     heading: 'Departments',
+  },  
+  PM2LOGS: {
+    icon: 'simple-icons:pm2',
+    heading: 'PM2 Logs',
   },
 
   MOVE_MACHINE: {

@@ -293,16 +293,16 @@ export const DocumentGallery = Loadable(lazy(() => import('../pages/documents/Do
 // ----------------------------------------------------------------
 
 // DOCUMENT SETTING Document Type
-export const DocumentTypeList = Loadable(lazy(() => import('../pages/Settings/documentSettings/documentType/DocumentTypeList')));
-export const DocumentTypeAdd  = Loadable(lazy(() => import('../pages/Settings/documentSettings/documentType/DocumentTypeAddForm')));
-export const DocumentTypeView = Loadable(lazy(() => import('../pages/Settings/documentSettings/documentType/DocumentTypeView')));
-export const DocumentTypeEdit = Loadable(lazy(() => import('../pages/Settings/documentSettings/documentType/DocumentTypeEditForm')));
+export const DocumentTypeList = Loadable(lazy(() => import('../pages/settings/documentSettings/documentType/DocumentTypeList')));
+export const DocumentTypeAdd  = Loadable(lazy(() => import('../pages/settings/documentSettings/documentType/DocumentTypeAddForm')));
+export const DocumentTypeView = Loadable(lazy(() => import('../pages/settings/documentSettings/documentType/DocumentTypeView')));
+export const DocumentTypeEdit = Loadable(lazy(() => import('../pages/settings/documentSettings/documentType/DocumentTypeEditForm')));
 
 // DOCUMENT SETTING Document Category
-export const DocumentCategoryList = Loadable(lazy(() => import('../pages/Settings/documentSettings/documentCategory/DocumentCategoryList')));
-export const DocumentCategoryAdd  = Loadable(lazy(() => import('../pages/Settings/documentSettings/documentCategory/DocumentCategoryAddForm')));
-export const DocumentCategoryView = Loadable(lazy(() => import('../pages/Settings/documentSettings/documentCategory/DocumentCategoryView')));
-export const DocumentCategoryEdit = Loadable(lazy(() => import('../pages/Settings/documentSettings/documentCategory/DocumentCategoryEditForm')));
+export const DocumentCategoryList = Loadable(lazy(() => import('../pages/settings/documentSettings/documentCategory/DocumentCategoryList')));
+export const DocumentCategoryAdd  = Loadable(lazy(() => import('../pages/settings/documentSettings/documentCategory/DocumentCategoryAddForm')));
+export const DocumentCategoryView = Loadable(lazy(() => import('../pages/settings/documentSettings/documentCategory/DocumentCategoryView')));
+export const DocumentCategoryEdit = Loadable(lazy(() => import('../pages/settings/documentSettings/documentCategory/DocumentCategoryEditForm')));
 
 // ----------------------------------------------------------------
 
@@ -316,48 +316,53 @@ export const MachineDrawingsView        = Loadable(lazy(() => import('../pages/m
 // ----------------------------------------------------------------
 
 // REPORTS / SETTINGS
-export const Setting = Loadable(lazy(() => import('../pages/Settings/Setting')));
+export const Setting = Loadable(lazy(() => import('../pages/settings/Setting')));
 
 // UNKNOWN: Modules
-export const ModuleList = Loadable(lazy(() => import('../pages/Settings/configuration/modules/ModuleList')));
-export const ModuleAdd  = Loadable(lazy(() => import('../pages/Settings/configuration/modules/ModuleAdd')));
-export const ModuleEdit = Loadable(lazy(() => import('../pages/Settings/configuration/modules/ModuleEdit')));
-export const ModuleView = Loadable(lazy(() => import('../pages/Settings/configuration/modules/ModuleView')));
+export const ModuleList = Loadable(lazy(() => import('../pages/settings/configuration/modules/ModuleList')));
+export const ModuleAdd  = Loadable(lazy(() => import('../pages/settings/configuration/modules/ModuleAdd')));
+export const ModuleEdit = Loadable(lazy(() => import('../pages/settings/configuration/modules/ModuleEdit')));
+export const ModuleView = Loadable(lazy(() => import('../pages/settings/configuration/modules/ModuleView')));
 
 // System Configs
-export const SystemConfigList = Loadable(lazy(() => import('../pages/Settings/configuration/systemConfigs/ConfigList')));
-export const SystemConfigAdd  = Loadable(lazy(() => import('../pages/Settings/configuration/systemConfigs/ConfigAdd')));
-export const SystemConfigEdit = Loadable(lazy(() => import('../pages/Settings/configuration/systemConfigs/ConfigEdit')));
-export const SystemConfigView = Loadable(lazy(() => import('../pages/Settings/configuration/systemConfigs/ConfigView')));
+export const SystemConfigList = Loadable(lazy(() => import('../pages/settings/configuration/systemConfigs/ConfigList')));
+export const SystemConfigAdd  = Loadable(lazy(() => import('../pages/settings/configuration/systemConfigs/ConfigAdd')));
+export const SystemConfigEdit = Loadable(lazy(() => import('../pages/settings/configuration/systemConfigs/ConfigEdit')));
+export const SystemConfigView = Loadable(lazy(() => import('../pages/settings/configuration/systemConfigs/ConfigView')));
 
 // REPORTS 
 
 // REPORTS: User Blocked Customers
-export const BlockedCustomerList = Loadable(lazy(() => import('../pages/Settings/securitySettings/blocked_customer/BlockedCustomerList')));
-export const BlockedCustomerAdd = Loadable(lazy(() => import('../pages/Settings/securitySettings/blocked_customer/BlockedCustomerAddForm')));
+export const BlockedCustomerList = Loadable(lazy(() => import('../pages/settings/securitySettings/blocked_customer/BlockedCustomerList')));
+export const BlockedCustomerAdd = Loadable(lazy(() => import('../pages/settings/securitySettings/blocked_customer/BlockedCustomerAddForm')));
 
 // REPORTS: User Blocked Users
-export const BlockedUserList = Loadable(lazy(() => import('../pages/Settings/securitySettings/blocked_user/BlockedUserList')));
-export const BlockedUserAdd = Loadable(lazy(() => import('../pages/Settings/securitySettings/blocked_user/BlockedUserAddForm')));
+export const BlockedUserList = Loadable(lazy(() => import('../pages/settings/securitySettings/blocked_user/BlockedUserList')));
+export const BlockedUserAdd = Loadable(lazy(() => import('../pages/settings/securitySettings/blocked_user/BlockedUserAddForm')));
 
 // REPORTS: Blacklist IP
-export const BlacklistIPList = Loadable(lazy(() => import('../pages/Settings/securitySettings/blacklist_IP/BlacklistIPList')));
-export const BlacklistIPAdd = Loadable(lazy(() => import('../pages/Settings/securitySettings/blacklist_IP/BlacklistIPAddForm')));
+export const BlacklistIPList = Loadable(lazy(() => import('../pages/settings/securitySettings/blacklist_IP/BlacklistIPList')));
+export const BlacklistIPAdd = Loadable(lazy(() => import('../pages/settings/securitySettings/blacklist_IP/BlacklistIPAddForm')));
 
 // REPORTS: Whitelist IP
-export const WhitelistIPList = Loadable(lazy(() => import('../pages/Settings/securitySettings/whitelist_IP/WhitelistIPList')));
-export const WhitelistIPAdd = Loadable(lazy(() => import('../pages/Settings/securitySettings/whitelist_IP/WhitelistIPAddForm')));
+export const WhitelistIPList = Loadable(lazy(() => import('../pages/settings/securitySettings/whitelist_IP/WhitelistIPList')));
+export const WhitelistIPAdd = Loadable(lazy(() => import('../pages/settings/securitySettings/whitelist_IP/WhitelistIPAddForm')));
 
 // REPORTS: Signin Logs
-export const SignInLogList = Loadable(lazy(() => import('../pages/Settings/Reports/signInLog/SignInLogList')));
+export const SignInLogList = Loadable(lazy(() => import('../pages/settings/Reports/signInLog/SignInLogList')));
 
 // REPORTS: User Invitations List
-export const UserInvitationList = Loadable(lazy(() => import('../pages/Settings/Reports/invite/UserInviteList')));
-export const UserInvitationView = Loadable(lazy(() => import('../pages/Settings/Reports/invite/UserInviteViewForm')));
+export const UserInvitationList = Loadable(lazy(() => import('../pages/settings/Reports/invite/UserInviteList')));
+export const UserInvitationView = Loadable(lazy(() => import('../pages/settings/Reports/invite/UserInviteViewForm')));
 
 // REPORTS: RELEASES
-export const ReleasesList = Loadable(lazy(() => import('../pages/Settings/Reports/releases/ReleasesList')));
-export const ReleasesView = Loadable(lazy(() => import('../pages/Settings/Reports/releases/ReleasesViewForm')));
+export const ReleasesList = Loadable(lazy(() => import('../pages/settings/Reports/releases/ReleasesList')));
+export const ReleasesView = Loadable(lazy(() => import('../pages/settings/Reports/releases/ReleasesViewForm')));
+
+// LOGS: PM2 LOGS
+export const Pm2LogsList = Loadable(lazy(() => import('../pages/settings/logs/pm2Logs/Pm2LogsList')));
+
+export const Pm2LogView = Loadable(lazy(() => import('../pages/settings/logs/pm2Logs/Pm2LogsViewForm')));
 
 // ----------------------------------------------------------------
 
@@ -369,10 +374,10 @@ export const SecurityUserEdit = Loadable(lazy(() => import('../pages/security/se
 export const SecurityUserChangePasswordByAdmin = Loadable(lazy(() => import('../pages/security/passwordChange/SecurityUserChangePasswordByAdmin')));
 
 // SECURITY SETTIGS ROLES
-export const RoleList = Loadable(lazy(() => import('../pages/Settings/securitySettings/role/RoleList')));
-export const RoleAdd = Loadable(lazy(() => import('../pages/Settings/securitySettings/role/RoleAddForm')));
-export const RoleEdit = Loadable(lazy(() => import('../pages/Settings/securitySettings/role/RoleEditForm')));
-export const RoleView = Loadable(lazy(() => import('../pages/Settings/securitySettings/role/RoleView')));
+export const RoleList = Loadable(lazy(() => import('../pages/settings/securitySettings/role/RoleList')));
+export const RoleAdd = Loadable(lazy(() => import('../pages/settings/securitySettings/role/RoleAddForm')));
+export const RoleEdit = Loadable(lazy(() => import('../pages/settings/securitySettings/role/RoleEditForm')));
+export const RoleView = Loadable(lazy(() => import('../pages/settings/securitySettings/role/RoleView')));
 
 // ----------------------------------------------------------------
 

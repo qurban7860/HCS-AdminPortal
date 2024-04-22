@@ -49,6 +49,7 @@ import departmentReducer from './slices/department/department';
 import historicalConfigurationReducer from './slices/products/historicalConfiguration';
 import configurationReducer from './slices/products/configuration';
 import machineErpLogsReducer from './slices/products/machineErpLogs';
+import pm2logsReducer from './slices/logs/pm2Logs';
 
 // ----------------------------------------------------------------------
 
@@ -368,6 +369,12 @@ export const machineErpLogsPersistConfig = {
   blacklist: ['error', 'initial', 'responseMessage']
 }
 
+export const pm2LogsPersistConfig = {
+  key: 'pm2Logs',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
 
 
 const rootReducer = combineReducers({
@@ -418,6 +425,7 @@ const rootReducer = combineReducers({
   historicalConfiguration: persistReducer(historicalConfigurationPersistConfig, historicalConfigurationReducer),
   configuration: persistReducer(configurationPersistConfig, configurationReducer),
   machineErpLogs: persistReducer(machineErpLogsPersistConfig, machineErpLogsReducer),
+  pm2Logs: persistReducer(pm2LogsPersistConfig, pm2logsReducer),
 });
 
 export default rootReducer;

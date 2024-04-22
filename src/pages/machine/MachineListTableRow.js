@@ -39,6 +39,7 @@ export default function MachineListTableRow({
     verifications,
     serialNo,
     name,
+    profile,
     machineModel,
     customer,
     // instalationSite,
@@ -61,8 +62,9 @@ export default function MachineListTableRow({
         isVerified={verifications?.length > 0}
       />
       
-      {  useScreenSize('lg') && <TableCell >{name || ''}</TableCell>}
-      {  useScreenSize('sm') && <TableCell >{machineModel?.name || ''}</TableCell>}
+      {  useScreenSize('lg') && <TableCell >{ name || ''}</TableCell>}
+      {  useScreenSize('lg') && <TableCell >{ profile?.defaultName || ''}</TableCell>}
+      {  useScreenSize('sm') && <TableCell >{ machineModel?.name || ''}</TableCell>}
       {  useScreenSize('lg') && 
       
       <LinkDialogTableCell onClick={handleCustomerDialog} align='center' param={customer?.name}/>  
