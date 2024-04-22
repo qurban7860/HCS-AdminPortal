@@ -22,6 +22,7 @@ const initialState = {
   isSecurityUserAccessAllowed: false,
   isDocumentAccessAllowed: false,
   isDrawingAccessAllowed: false,
+  isDeveloper: false,
 };
 
 const reducer = (state, action) => {
@@ -36,6 +37,7 @@ const reducer = (state, action) => {
       isSecurityUserAccessAllowed: action.payload.isSecurityUserAccessAllowed,
       isDocumentAccessAllowed: action.payload.isDocumentAccessAllowed,
       isDrawingAccessAllowed: action.payload.isDrawingAccessAllowed,
+      isDeveloper: action.payload.isDeveloper,
     };
   }
   if (action.type === 'LOGIN') {
@@ -50,6 +52,7 @@ const reducer = (state, action) => {
       isSecurityUserAccessAllowed: action.payload.isSecurityUserAccessAllowed,
       isDocumentAccessAllowed: action.payload.isDocumentAccessAllowed,
       isDrawingAccessAllowed: action.payload.isDrawingAccessAllowed,
+      isDeveloper: action.payload.isDeveloper,
     };
   }
   if (action.type === 'LOGOUT') {
@@ -64,6 +67,7 @@ const reducer = (state, action) => {
       isSecurityUserAccessAllowed: false,
       isDocumentAccessAllowed: false,
       isDrawingAccessAllowed: false,
+      isDeveloper: false,
     };
   }
 
@@ -115,6 +119,7 @@ export function AuthProvider({ children }) {
               ...isSecurityUserAccessAllowed,
               ...isDocumentAccessAllowed,
               ...isDrawingAccessAllowed,
+              ...isDeveloper,
               displayName: user?.name,
               photoURL: user?.picture,
             },
@@ -133,6 +138,7 @@ export function AuthProvider({ children }) {
             isSecurityUserAccessAllowed,
             isDocumentAccessAllowed,
             isDrawingAccessAllowed,
+            isDeveloper,
           },
         });
       }
@@ -150,6 +156,7 @@ export function AuthProvider({ children }) {
           isSecurityUserAccessAllowed: false,
           isDocumentAccessAllowed: false,
           isDrawingAccessAllowed: false,
+          isDeveloper: false,
         },
       });
     }
@@ -201,6 +208,7 @@ export function AuthProvider({ children }) {
       isSecurityUserAccessAllowed: state.isSecurityUserAccessAllowed, 
       isDocumentAccessAllowed: state.isDocumentAccessAllowed, 
       isDrawingAccessAllowed: state.isDrawingAccessAllowed, 
+      isDeveloper: state.isDeveloper,
       userId: state.userId,
       method: 'auth0',
       login,
@@ -213,6 +221,7 @@ export function AuthProvider({ children }) {
       state.isSecurityUserAccessAllowed, 
       state.isDocumentAccessAllowed, 
       state.isDrawingAccessAllowed, 
+      state.isDeveloper,
       state.userId, login, logout]
   );
 

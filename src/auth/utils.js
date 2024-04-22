@@ -103,9 +103,23 @@ export const getUserAccess = ( roles, accessLevel ) => {
     let isSettingAccessAllowed = false;
     let isSecurityUserAccessAllowed = false;
     let isEmailAccessAllowed = false;
+    let isDeveloper = false;
     
-    if( userRoles?.some((role) => role?.roleType?.toLowerCase() === 'superadmin') ){
+    if(userRoles?.some((role) => role?.roleType?.toLowerCase() === 'developer')){
+      
+      isAllAccessAllowed = true
+      isDisableDelete = userRoles?.some((role) => role?.disableDelete || false )
+      isDashboardAccessLimited = false
+      isDocumentAccessAllowed = true
+      isDrawingAccessAllowed = true
+      isSettingReadOnly = false
+      isSecurityReadOnly = false
+      isSettingAccessAllowed = true
+      isSecurityUserAccessAllowed = true
+      isEmailAccessAllowed = true
+      isDeveloper = true
 
+    } else if( userRoles?.some((role) => role?.roleType?.toLowerCase() === 'superadmin') ){
         isAllAccessAllowed = true
         isDisableDelete = userRoles?.some((role) => role?.disableDelete || false )
         isDashboardAccessLimited = false
@@ -116,19 +130,6 @@ export const getUserAccess = ( roles, accessLevel ) => {
         isSettingAccessAllowed = true
         isSecurityUserAccessAllowed = true
         isEmailAccessAllowed = false
-
-    } else if(userRoles?.some((role) => role?.roleType?.toLowerCase() === 'developer')){
-
-      isAllAccessAllowed = true
-      isDisableDelete = userRoles?.some((role) => role?.disableDelete || false )
-      isDashboardAccessLimited = false
-      isDocumentAccessAllowed = true
-      isDrawingAccessAllowed = true
-      isSettingReadOnly = false
-      isSecurityReadOnly = false
-      isSettingAccessAllowed = true
-      isSecurityUserAccessAllowed = true
-      isEmailAccessAllowed = false
 
     } else if(userRoles?.some((role) => role?.roleType?.toLowerCase() === 'globalmanager' || dataAccessibilityLevel?.toUpperCase() === 'GLOBAL')){
 
