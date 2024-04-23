@@ -129,6 +129,7 @@ export const {
 // ----------------------------------------------------------------------
 
 export function getPm2Logs(page, pageSize, app, cancelToken ) {
+  console.log("page, pageSize, app : ",page, pageSize, app)
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {

@@ -51,9 +51,9 @@ export default function Pm2LogsList() {
 
   const fetchPm2Logs = useCallback(()=>{
     if (pm2Environment) {
-      dispatch(getPm2Logs());
+      dispatch(getPm2Logs( page, rowsPerPage, pm2Environment ));
     }
-  },[ dispatch, pm2Environment ] )
+  },[ dispatch, pm2Environment, page, rowsPerPage ] )
 
   useEffect(() => {
       dispatch(getPm2Environments());
@@ -67,7 +67,7 @@ export default function Pm2LogsList() {
     return () => {
       dispatch(resetPm2Logs());
     }
-}, [dispatch, page, rowsPerPage, fetchPm2Logs, pm2Environment ]);
+}, [dispatch, fetchPm2Logs, pm2Environment ]);
 
   useEffect(() => {
     if (initial) {
