@@ -9,6 +9,7 @@ import Iconify from '../iconify';
 import useResponsive from '../../hooks/useResponsive';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 import { getActiveDocumentTypesWithCategory } from '../../redux/slices/document/documentType';
+import { setPm2Environment } from '../../redux/slices/logs/pm2Logs';
 import { fDate } from '../../utils/formatTime';
 import { setDateFrom, setDateTo } from '../../redux/slices/products/machineErpLogs';
 import { useAuthContext } from '../../auth/useAuthContext';
@@ -61,16 +62,17 @@ function SearchBarCombo({
   securityUserPage,
   settingPage,
   isDateFromDateTo,
+  isPm2Environments,
   ...other
 }) {
   
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
+  const { pm2Environment, pm2Environments } = useSelector((state) => state.pm2Logs );
   const { spContacts } = useSelector((state) => state.contact);
   const { activeRegions } = useSelector((state) => state.region);
   const [ isDateFrom, setIsDateFrom ] = useState(new Date( Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
   const [ isDateTo, setIsDateTo ] = useState(new Date(Date.now()).toISOString().split('T')[0]);
-
   const isMobile = useResponsive('sm', 'down');
   const dispatch = useDispatch()
 
@@ -350,7 +352,23 @@ function SearchBarCombo({
             />
           </Grid>}
 
-          
+          {isPm2Environments && 
+            <Grid item xs={12} sm={6} md={5} lg={4} xl={3}>
+            <Autocomplete 
+              value={pm2Environment || null}
+              options={pm2Environments}
+              isOptionEqualToValue={(option, val) => option === val}
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  dispatch(setPm2Environment(newValue));
+                } else {
+                  dispatch(setPm2Environment(''));
+                }
+              }}
+              renderInput={(params) => <TextField {...params} size='small' label="Select Environment" />}
+
+            />
+          </Grid> }
 
           {onSignInLogsFilter &&
             <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
@@ -608,6 +626,7 @@ SearchBarCombo.propTypes = {
   machineSettingPage: PropTypes.bool,
   securityUserPage: PropTypes.bool,
   settingPage: PropTypes.bool,
+  isPm2Environments: PropTypes.bool,
 };
 
 export default SearchBarCombo;
