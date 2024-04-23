@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
 import { Table, TableBody, TableContainer, Container, Card } from '@mui/material';
@@ -18,9 +18,9 @@ import {
 } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
 // sections
-import ReleasesListTableRow from './Pm2LogsTableRow';
-import ReleasesListTableToolbar from './Pm2LogsListTableToolbar';
-import { getPm2Logs, setFilterBy } from '../../../../redux/slices/logs/pm2Logs';
+import Pm2LogsTableRow from './Pm2LogsTableRow';
+import Pm2LogsListTableToolbar from './Pm2LogsListTableToolbar';
+import { getPm2Logs, resetPm2Logs, getPm2Environments, resetPm2Environments, setFilterBy } from '../../../../redux/slices/logs/pm2Logs';
 import { fDate } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 
@@ -43,22 +43,35 @@ export default function Pm2LogsList() {
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
 
-  const { pm2Logs, filterBy, isLoading, initial } = useSelector((state) => state.pm2Logs );
+  const { pm2Logs, pm2Environment, filterBy, isLoading, initial } = useSelector((state) => state.pm2Logs );
 
   const TABLE_HEAD = [
-    { id: 'name', label: 'Name', align: 'left' },
-    { id: 'startDate', label: 'Start Date', align: 'left' },
-    { id: 'releaseDate', label: 'Release Date', align: 'left' },
-    { id: 'released', label: 'Released', align: 'center' },
+    { id: 'pm2Logs', label: 'PM 2 Logs', align: 'left' },
   ];
 
+  const fetchPm2Logs = useCallback(()=>{
+    if (pm2Environment) {
+      dispatch(getPm2Logs());
+    }
+  },[ dispatch, pm2Environment ] )
+
   useEffect(() => {
-      dispatch(getPm2Logs( page, rowsPerPage ));
-  }, [dispatch, page, rowsPerPage ]);
+      dispatch(getPm2Environments());
+      return () => {
+        dispatch(resetPm2Environments());
+      }
+  }, [ dispatch ]);
+
+  useEffect(() => {
+    fetchPm2Logs();
+    return () => {
+      dispatch(resetPm2Logs());
+    }
+}, [dispatch, page, rowsPerPage, fetchPm2Logs, pm2Environment ]);
 
   useEffect(() => {
     if (initial) {
-      setTableData(pm2Logs || [] ); 
+      setTableData(pm2Logs?.data || [] ); 
     }
   }, [ dispatch, initial, pm2Logs ]);
 
@@ -109,41 +122,46 @@ export default function Pm2LogsList() {
   return (
       <Container maxWidth={false}>
         <Card sx={{mb: 3, height: 160, position: 'relative'}}>
-          <Cover name="Releases" icon="ph:users-light" generalSettings />
+          <Cover name="PM2 Logs" icon="simple-icons:pm2" generalSettings />
         </Card>
         <TableCard>
-          <ReleasesListTableToolbar
+          <Pm2LogsListTableToolbar
             filterName={filterName}
             onFilterName={handleFilterName}
             onFilterStatus={handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
+            isPm2Environments
           />
             <TablePaginationCustom
-              count={dataFiltered?.length}
+              count={pm2Logs?.totalPages || 0 }
               page={page}
               rowsPerPage={rowsPerPage}
               onPageChange={onChangePage}
               onRowsPerPageChange={onChangeRowsPerPage}
+              refresh={ fetchPm2Logs }
             />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
                 <TableBody>
-                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) =>
-                      row ? (
-                        <ReleasesListTableRow
-                          key={row.id}
+                {(
+                  isLoading
+                    ? [...Array(rowsPerPage)]
+                    : dataFiltered
+                  )
+                  // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) =>
+                    row ? (
+                        <Pm2LogsTableRow
+                          key={index}
                           row={row}
                           // onViewRow={() => handleViewRow(row?.id)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         />
-                      ) : (
-                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                      )
-                    )}
+                      
+                    ) : !isNotFound && isLoading && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                  )}
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
@@ -151,7 +169,7 @@ export default function Pm2LogsList() {
           </TableContainer>
 
           <TablePaginationCustom
-            count={dataFiltered?.length}
+            count={pm2Logs?.totalPages}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
@@ -166,7 +184,7 @@ export default function Pm2LogsList() {
 
 function applyFilter({ inputData, comparator, filterName }) {
 
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
+  const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -178,10 +196,7 @@ function applyFilter({ inputData, comparator, filterName }) {
   if (filterName) {
     return inputData.filter(
       (release) => 
-        release.name.indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(release.startDate)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(release.releaseDate)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        release.released >= 0
+        release.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 
     );
   }
   return inputData;

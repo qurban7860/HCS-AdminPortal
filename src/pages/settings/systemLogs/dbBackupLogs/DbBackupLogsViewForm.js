@@ -11,7 +11,7 @@ import { getRelease } from '../../../../redux/slices/reports/releases';
 import ViewFormField from '../../../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../../../components/ViewForms/ViewFormEditDeleteButtons';
 
-export default function ReleasesViewForm() {
+export default function DbBackupLogsViewForm() {
   
   const { release, isLoading } = useSelector((state) => state.releases);
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ export default function ReleasesViewForm() {
   return (
     <Container maxWidth={false}>
       <Card sx={{mb: 3, height: 160, position: 'relative'}}>
-        <Cover name="Release" icon="ph:users-light" generalSettings />
+        <Cover name="DB Backup Log" generalSettings />
       </Card>
       <Grid item md={12} mt={2}>
         <Card sx={{ p: 2 }}>

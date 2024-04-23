@@ -31,6 +31,7 @@ export const ICONS = {
     color: '#008000',
     heading: 'Released',
   },
+
   NOTRELEASE: {
     icon: 'fluent-mdl2:release-gate',
     color: '#FF0000',
@@ -398,6 +399,10 @@ export const ICONS = {
   PM2LOGS: {
     icon: 'simple-icons:pm2',
     heading: 'PM2 Logs',
+  },  
+  DBBACKUPLOGS: {
+    icon: 'iconoir:database-backup',
+    heading: 'DB Backup Logs',
   },
 
   MOVE_MACHINE: {

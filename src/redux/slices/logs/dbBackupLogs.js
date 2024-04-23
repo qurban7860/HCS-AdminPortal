@@ -9,17 +9,15 @@ const initialState = {
   success: false,
   isLoading: false,
   error: null,
-  pm2Logs: [],
-  pm2Log: {},
-  pm2Environments: [],
-  pm2Environment: '',
+  dbBackupLogs: [],
+  dbBackupLog: {},
   page: 0,
   rowsPerPage: 100,
   filterBy: ''
 };
 
 const slice = createSlice({
-  name: 'pm2Logs',
+  name: 'dbBackupLogs',
   initialState,
   reducers: {
     // START LOADING
@@ -39,24 +37,18 @@ const slice = createSlice({
     },
 
     // GET PM 2 LOGS
-    getPm2LogsSuccess(state, action) {
+    getDbBackupLogsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.pm2Logs = action.payload;
+      state.dbBackupLogs = action.payload;
       state.initial = true;
     },
 
     // GET PM 2 LOG
-    getPm2LogSuccess(state, action) {
+    getDbBackupLogSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.pm2Log = action.payload;
-      state.initial = true;
-    },
-    getPm2EnvironmentsSuccess(state, action) {
-      state.isLoading = false;
-      state.success = true;
-      state.pm2Environments = action.payload;
+      state.dbBackupLog = action.payload;
       state.initial = true;
     },
 
@@ -68,27 +60,21 @@ const slice = createSlice({
     },
 
     // RESET LOGS
-    resetPm2Log(state){
-      state.pm2Log = {};
+    resetDbBackupLog(state){
+      state.dbBackupLog = {};
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
 
     // RESET PM 2 LOGS
-    resetPm2Logs(state){
-      state.pm2Logs = [];
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },    // RESET PM 2 LOGS
-    resetPm2Environments(state){
-      state.pm2Environments = [];
+    resetDbBackupLogs(state){
+      state.dbBackupLogs = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
-    
+
     // Set PageRowCount
     ChangeRowsPerPage(state, action) {
       state.rowsPerPage = action.payload;
@@ -102,12 +88,6 @@ const slice = createSlice({
     setFilterBy(state, action) {
       state.filterBy = action.payload;
     },
-
-    // Set pm2 Environment
-    setPm2Environment(state, action) {
-      state.pm2Environment = action.payload;
-    },
-    
   },
 });
 
@@ -116,34 +96,31 @@ export default slice.reducer;
 
 // Actions
 export const {
-  resetPm2Log,
-  resetPm2Logs,
-  resetPm2Environments,
+  resetDbBackupLogs,
+  resetDbBackupLog,
   setResponseMessage,
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
-  setPm2Environment,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
 
-export function getPm2Logs(page, pageSize, app, cancelToken ) {
+export function getDbBackupLogs(page, pageSize, cancelToken ) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.startLoading(page, pageSize));
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}logs/pm2/`,
+      const response = await axios.get(`${CONFIG.SERVER_URL}dbbackups/backups/`,
       {
         params: {
-          out_log: true,
-          err_log: true,
-          app,
-          pageNumber: page,
-          pageSize
+          pagination:{
+            page,
+            pageSize
+          }
         },
         cancelToken: cancelToken?.token
       });
-      dispatch(slice.actions.getPm2LogsSuccess(response.data));
+      dispatch(slice.actions.getDbBackupLogsSuccess(response.data));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -154,12 +131,12 @@ export function getPm2Logs(page, pageSize, app, cancelToken ) {
 
 // ------------------------------ GET PM2 LOG ----------------------------------------
 
-export function getPm2Log(id) {
+export function getDbBackupLog(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}logs/pm2/${id}`);
-      dispatch(slice.actions.getPm2LogSuccess(response.data));
+      const response = await axios.get(`${CONFIG.SERVER_URL}dbbackups/backups/${id}`);
+      dispatch(slice.actions.getDbBackupLogSuccess(response.data));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -167,18 +144,3 @@ export function getPm2Log(id) {
     }
   };
 }
-
-export function getPm2Environments(id) {
-  return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}logs/pm2/pm2list/`);
-      dispatch(slice.actions.getPm2EnvironmentsSuccess(response.data));
-    } catch (error) {
-      console.error(error);
-      dispatch(slice.actions.hasError(error.Message));
-      throw error;
-    }
-  };
-}
-

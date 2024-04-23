@@ -379,7 +379,13 @@ export const PATH_SETTING = {
         root: path(ROOTS_SETTING, '/pm2/logs/'),
         view: (id) => path(ROOTS_SETTING, `/pm2/logs/${id}/view`),
       }
-  },
+  },  
+  dbBackup: {
+    logs: {
+      root: path(ROOTS_SETTING, '/dbBackup/logs/'),
+      view: (id) => path(ROOTS_SETTING, `/dbBackup/logs/${id}/view`),
+    }
+},
   // ------------------------ SECURITY USER INVITES ----------------------------------------
   invite: {
     list: path(ROOTS_SETTING, '/invite/list'),

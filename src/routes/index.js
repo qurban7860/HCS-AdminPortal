@@ -332,9 +332,16 @@ import {
   ReleasesList,
   ReleasesView,
 
+  // ----------------------------------------------------------------
+
   // LOGS: PM2 LOGS
   Pm2LogsList,
   Pm2LogView,
+
+  // LOGS: DB BACKUP LOGS
+  DbBackupLogsList,
+  DbBackupLogsViewForm,
+
   // ----------------------------------------------------------------
 
   // SECURITY USER
@@ -933,7 +940,20 @@ export default function Router() {
             { path: ':id/edit', element: <DepartmentEdit /> }
           ],
         },
-        // ------------------------------ departments ----------------------------------
+        // ------------------------------ PM2 Logs ----------------------------------
+        {
+          path: 'dbBackup',
+          children: [
+            {
+              path: 'logs',
+              children: [
+                { element: <DbBackupLogsList /> , index: true },
+                { path: ':id/view', element: <DbBackupLogsViewForm /> },
+              ]
+            }
+          ],
+        },
+        // ------------------------------ DB BACKUP LOGS ----------------------------------
         {
           path: 'pm2',
           children: [

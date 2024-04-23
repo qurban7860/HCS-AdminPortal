@@ -93,7 +93,7 @@ export const FORMLABELS = {
   SELECT_DOCUMENT_CATEGORY: 'Select Document Category',
   SELECT_DOCUMENT_TYPE: 'Select Document Type',
   SELECT_CATEGORY: 'Select Category',
-
+  SYSTEM_LOGS: 'System Logs',
   DOCUMENT_NAME: 'Document Name',
   DOCUMENT_DESC: 'Description',
 

@@ -130,6 +130,7 @@ export const getUserAccess = ( roles, accessLevel ) => {
         isSettingAccessAllowed = true
         isSecurityUserAccessAllowed = true
         isEmailAccessAllowed = false
+        isDeveloper = false 
 
     } else if(userRoles?.some((role) => role?.roleType?.toLowerCase() === 'globalmanager' || dataAccessibilityLevel?.toUpperCase() === 'GLOBAL')){
 
@@ -143,6 +144,7 @@ export const getUserAccess = ( roles, accessLevel ) => {
         isSettingAccessAllowed = true
         isSecurityUserAccessAllowed = true
         isEmailAccessAllowed = false
+        isDeveloper = false
 
     } else if(userRoles?.some((role) => role?.roleType?.toLowerCase() === 'regionalmanager' || dataAccessibilityLevel?.toUpperCase() === 'RESTRICTED')){
 
@@ -156,6 +158,7 @@ export const getUserAccess = ( roles, accessLevel ) => {
         isSettingAccessAllowed = false
         isSecurityUserAccessAllowed = false
         isEmailAccessAllowed = false
+        isDeveloper = false 
 
     } else if(userRoles?.some((role) => role?.roleType?.toLowerCase() === 'supportmanager' || dataAccessibilityLevel?.toUpperCase() === 'RESTRICTED' )){
 
@@ -169,7 +172,7 @@ export const getUserAccess = ( roles, accessLevel ) => {
       isSettingAccessAllowed = false
       isSecurityUserAccessAllowed = false
       isEmailAccessAllowed = false
-
+      isDeveloper = false
     }
 
     return {
@@ -183,5 +186,6 @@ export const getUserAccess = ( roles, accessLevel ) => {
       isSettingAccessAllowed,
       isSecurityUserAccessAllowed,
       isEmailAccessAllowed,
+      isDeveloper
     };
 };

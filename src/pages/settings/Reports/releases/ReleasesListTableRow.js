@@ -1,11 +1,14 @@
 import PropTypes from 'prop-types';
 // @mui
 import { Switch, TableCell, Typography, Grid, Link } from '@mui/material';
+import { createTheme } from '@mui/material/styles';
+import { green } from '@mui/material/colors';
 // utils
 import { fDate } from '../../../../utils/formatTime';
 // components
 import LinkTableCell from '../../../../components/ListTableTools/LinkTableCell';
-import { StyledTableRow } from '../../../../theme/styles/default-styles'
+import { StyledTableRow, StyledTooltip } from '../../../../theme/styles/default-styles'
+import { ICONS } from '../../../../constants/icons/default-icons';
 
 // ----------------------------------------------------------------------
 
@@ -21,19 +24,30 @@ export default function ReleasesListTableRow({
   onViewRow
 }) {
   
+  const theme = createTheme({
+    palette: {
+      success: green,
+    },
+  });
+
   const { name, startDate, releaseDate, released, description  } = row;
 
   return (
       <StyledTableRow hover selected={selected} style={{ display: 'block' }} >
-          { ( released && description ) ? <TableCell align="left" sx={{ display: { sm: 'block', md: 'flex'}, justifyContent: 'space-between', pt: 1, mb: -1 }} >
-                  <Link onClick={onViewRow} sx={{ cursor: 'pointer' }} ><b>Version:  </b>{`  ${name}`} {released && <Switch checked={released} disabled size="small" sx={{ ml:2}} />} </Link> 
-                  {releaseDate && <Typography variant="body2" ><b>Release Date:  </b>{fDate(releaseDate)} </Typography> }
-          </TableCell>
-          : <TableCell align="left" sx={{ display: { sm: 'block', md: 'flex'}, justifyContent: 'space-between', py:1.5 }}  >
-                  <Typography variant="body2" ><b  >Version:  </b>{` ${name}`} {released && <Switch checked={released} disabled size="small" sx={{ ml:2}} /> }</Typography> 
-                  {releaseDate && <Typography variant="body2" ><b>Release Date:  </b>{fDate(releaseDate)}</Typography> }
-            </TableCell>
-          }
+          { released && <TableCell align="left" sx={{ display: { sm: 'block', md: 'flex'}, justifyContent: 'space-between', pt: 1, mb: -1 }} >
+            <b>Version: <Link onClick={onViewRow} sx={{ cursor: 'pointer' }} >{`  ${name}`}</Link>
+                <StyledTooltip 
+                  placement="top" 
+                  disableFocusListener  
+                  color={ released ? ICONS.RELEASE.color : ICONS.NOTRELEASE.color } 
+                  title={ released ? ICONS.RELEASE.heading : ICONS.NOTRELEASE.heading } 
+                  tooltipcolor={ released ? theme.palette.primary.main : theme.palette.error.main } 
+                > 
+                  <Switch checked={released} disabled size="small" sx={{ ml:2}} color={ released ? 'primary' : 'error'} />
+                </StyledTooltip>
+            </b>
+            {releaseDate && <Typography variant="body2" ><b>Release Date:  </b>{fDate(releaseDate)} </Typography> }
+          </TableCell> }
           {description && <TableCell align='left' sx={{ pb: 1, 
             display: 'flex',
             alignItems: 'center',

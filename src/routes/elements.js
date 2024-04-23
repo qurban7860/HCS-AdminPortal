@@ -360,10 +360,15 @@ export const UserInvitationView = Loadable(lazy(() => import('../pages/settings/
 export const ReleasesList = Loadable(lazy(() => import('../pages/settings/Reports/releases/ReleasesList')));
 export const ReleasesView = Loadable(lazy(() => import('../pages/settings/Reports/releases/ReleasesViewForm')));
 
-// LOGS: PM2 LOGS
-export const Pm2LogsList = Loadable(lazy(() => import('../pages/settings/logs/pm2Logs/Pm2LogsList')));
+// ----------------------- SYSTEM LOGS -----------------------------------------
 
-export const Pm2LogView = Loadable(lazy(() => import('../pages/settings/logs/pm2Logs/Pm2LogsViewForm')));
+// LOGS: PM2 LOGS
+export const Pm2LogsList = Loadable(lazy(() => import('../pages/settings/systemLogs/pm2Logs/Pm2LogsList')));
+export const Pm2LogView = Loadable(lazy(() => import('../pages/settings/systemLogs/pm2Logs/Pm2LogsViewForm')));
+
+// LOGS: DB BACKUP LOGS
+export const DbBackupLogsList = Loadable(lazy(() => import('../pages/settings/systemLogs/dbBackupLogs/DbBackupLogsList')));
+export const DbBackupLogsViewForm = Loadable(lazy(() => import('../pages/settings/systemLogs/dbBackupLogs/DbBackupLogsViewForm')));
 
 // ----------------------------------------------------------------
 
