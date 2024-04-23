@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import {  useMemo, useEffect, memo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Document, Page, pdfjs } from 'react-pdf';
 import download from 'downloadjs';
 import {
   Grid,
@@ -316,17 +315,16 @@ const handleNewFile = async () => {
   };
 
   const [pdf, setPDF] = useState(null);
-  const [pages, setPages] = useState(null);
+  const [PDFName, setPDFName] = useState('');
+  // const [pages, setPages] = useState(null);
   const [PDFViewerDialog, setPDFViewerDialog] = useState(false);
 
-  pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
-
   const handleOpenFile = async (documentId, versionId, fileId, fileName, fileExtension) => {
+    setPDFName(`${fileName}.${fileExtension}`);
     setPDFViewerDialog(true);
     setPDF(null);
     try {
       const response = await dispatch(getDocumentDownload(documentId, versionId, fileId));
-
       if (regEx.test(response.status)) {
         const pdfData = `data:application/pdf;base64,${encodeURI(response.data)}`;
         setPDF(pdfData);
@@ -342,9 +340,9 @@ const handleNewFile = async () => {
     }
   };
 
-  const onDocumentLoadSuccess = ({ numPages }) => {
-    setPages(numPages);
-  };
+  // const onDocumentLoadSuccess = ({ numPages }) => {
+  //   setPages(numPages);
+  // };
 
   const handleBackLink = ()=>{
     if(customerPage) {
@@ -362,6 +360,7 @@ const handleNewFile = async () => {
 
   console.log("check : ", !( ( documentHistory?.machine?._id ) || ( documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) )
   return (
+    <>
     <Container maxWidth={false} sx={{padding:(machineDrawings || customerPage || machinePage || machineDrawingPage) ?'0 !important':''}}>
       {!customerPage && !machinePage && !machineDrawingPage &&
         <DocumentCover content={defaultValues?.displayName} generalSettings />
@@ -382,24 +381,6 @@ const handleNewFile = async () => {
           backLink={handleBackLink}
       />
             <Grid container sx={{mt:2}}>
-            {PDFViewerDialog && (
-              <Dialog fullWidth maxWidth='md' open={PDFViewerDialog} style={{marginBottom:10}} onClose={()=> setPDFViewerDialog(false)}>
-                <DialogTitle variant='h3' sx={{pb:1, pt:2, display:'flex', justifyContent:'space-between'}}>
-                    PDF View
-                    <Button variant='outlined' onClick={()=> setPDFViewerDialog(false)}>Close</Button>
-                </DialogTitle>
-                <Divider variant='fullWidth' />
-                <DialogContent dividers sx={{height:'-webkit-fill-available'}}>
-                  {pdf?(
-                    <Document file={pdf} onLoadSuccess={onDocumentLoadSuccess}>
-                      {Array.from(new Array(pages), (el, index) => (
-                        <Page width={840} key={`page_${index + 1}`} renderTextLayer={false} pageNumber={index + 1} />
-                      ))}
-                    </Document>
-                  ):(<Typography variant='body1' sx={{mt:2}}>Loading PDF....</Typography>)}
-                </DialogContent>
-              </Dialog>
-            )}
               <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.displayName} />
               <ViewFormField isLoading={isLoading}
                 sm={6}
@@ -560,7 +541,34 @@ const handleNewFile = async () => {
       <MachineDialog />
       {documentVersionEditDialogVisibility && <UpdateDocumentVersionDialog />}
     </Container>
-    
+    {PDFViewerDialog && (
+      <Dialog fullWidth maxWidth='' open={PDFViewerDialog} style={{marginBottom:10}} onClose={()=> setPDFViewerDialog(false)}>
+        <DialogTitle variant='h3' sx={{pb:1, pt:2, display:'flex', justifyContent:'space-between'}}>
+            PDF View
+              <Button variant='outlined' onClick={()=> setPDFViewerDialog(false)}>Close</Button>
+        </DialogTitle>
+        <Divider variant='fullWidth' />
+          {pdf?(
+            <iframe title={PDFName} src={pdf} style={{paddingBottom:10}} width='100%' height='842px'/>
+          ):(
+            <DialogContent dividers sx={{height:'-webkit-fill-available'}}>
+              <Typography variant='body1' sx={{mt:2}}>Loading PDF....</Typography>
+            </DialogContent>
+          )}
+        
+        {/* <DialogContent dividers sx={{height:'-webkit-fill-available'}}>
+          {pdf?(
+            <Document file={pdf} onLoadSuccess={onDocumentLoadSuccess}>
+              {Array.from(new Array(pages), (el, index) => (
+                <Page width={840} rotate={pageRotation} key={`page_${index + 1}`} renderAnnotationLayer={false} renderTextLayer={false} pageNumber={index + 1} />
+              ))}
+            </Document>
+          ):(<Typography variant='body1' sx={{mt:2}}>Loading PDF....</Typography>)}
+        </DialogContent> */}
+        
+      </Dialog>
+    )}
+    </>
   );
 }
 
