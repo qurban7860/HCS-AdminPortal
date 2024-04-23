@@ -108,7 +108,7 @@
     "react-markdown": "^8.0.3",
     "react-material-ui-carousel": "^3.4.2",
     "react-organizational-chart": "^2.2.0",
-    "react-pdf": "^7.6.0",
+    "react-pdf": "^7.7.1",
     "react-pdf-viewer": "^0.1.0",
     "react-quill": "^2.0.0",
     "react-redux": "^8.0.5",
