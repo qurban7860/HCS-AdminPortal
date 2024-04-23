@@ -62,6 +62,7 @@ import { exportCSV } from '../../utils/exportCSV';
 const TABLE_HEAD = [
   { id: 'serialNo', label: 'Serial Number', align: 'left' },
   { id: 'name', visibility: 'md1',label: 'Name', align: 'left' },
+  { id: 'profile.defaultName', visibility: 'md2',label: 'Profile', align: 'left' },
   { id: 'machineModel.name', visibility: 'xs1', label: 'Model', align: 'left' },
   { id: 'customer.name', visibility: 'md2', label: 'Customer', align: 'left' },
   { id: 'installationDate', visibility: 'md3', label: 'Installation Date', align: 'left' },

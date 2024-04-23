@@ -27,6 +27,7 @@ const initialState = {
   isSettingAccessAllowed: false,
   isSecurityUserAccessAllowed: false,
   isEmailAccessAllowed: false,
+  isDeveloper: false,
   // resetTokenTime: null,
 };
 
@@ -49,6 +50,7 @@ const reducer = (state, action) => {
         isSettingAccessAllowed: action.payload.isSettingAccessAllowed,
         isSecurityUserAccessAllowed: action.payload.isSecurityUserAccessAllowed,
         isEmailAccessAllowed: action.payload.isEmailAccessAllowed,
+        isDeveloper: action.payload.isDeveloper,
         // resetTokenTime: action.payload.resetTokenTime, // keeps track to avoid repeating the request
       };
     }
@@ -66,6 +68,7 @@ const reducer = (state, action) => {
               isSettingAccessAllowed,
               isSecurityUserAccessAllowed,
               isEmailAccessAllowed,
+              isDeveloper,
             } = action.payload;
       return {
         ...state,
@@ -82,6 +85,7 @@ const reducer = (state, action) => {
         isSettingAccessAllowed,
         isSecurityUserAccessAllowed,
         isEmailAccessAllowed,
+        isDeveloper,
       };
     }
     case 'REGISTER': {
@@ -108,6 +112,7 @@ const reducer = (state, action) => {
         isSettingAccessAllowed: false,
         isSecurityUserAccessAllowed: false,
         isEmailAccessAllowed: false,
+        isDeveloper: false,
         // resetTokenTime: null, // reset the timeout ID when logging out
       };
     }
@@ -156,6 +161,7 @@ export function AuthProvider({ children }) {
                 isSettingAccessAllowed,
                 isSecurityUserAccessAllowed,
                 isEmailAccessAllowed,
+                isDeveloper,
             } = getUserAccess()
 
         dispatch({
@@ -174,6 +180,7 @@ export function AuthProvider({ children }) {
             isSettingAccessAllowed,
             isSecurityUserAccessAllowed,
             isEmailAccessAllowed,
+            isDeveloper,
             // resetTokenTime, // added the timeout ID to the payload
           },
         });
@@ -193,6 +200,7 @@ export function AuthProvider({ children }) {
             isSettingAccessAllowed: false,
             isSecurityUserAccessAllowed: false,
             isEmailAccessAllowed: false,
+            isDeveloper: false,
             // resetTokenTime: null, // reset the timeout ID when not authenticated
           },
         });
@@ -214,6 +222,7 @@ export function AuthProvider({ children }) {
           isSettingAccessAllowed: false,
           isSecurityUserAccessAllowed: false,
           isEmailAccessAllowed: false,
+          isDeveloper: false,
           // resetTokenTime: null,
         },
       });
@@ -277,6 +286,7 @@ export function AuthProvider({ children }) {
         isSettingAccessAllowed,
         isSecurityUserAccessAllowed,
         isEmailAccessAllowed,
+        isDeveloper,
     } = getUserAccess( user?.roles, user?.dataAccessibilityLevel )
 
       const rolesArrayString = JSON.stringify(user.roles);
@@ -303,6 +313,7 @@ export function AuthProvider({ children }) {
                 isSettingAccessAllowed,
                 isSecurityUserAccessAllowed,
                 isEmailAccessAllowed,
+                isDeveloper,
               },
       });
     }
@@ -325,6 +336,7 @@ export function AuthProvider({ children }) {
         isSettingAccessAllowed,
         isSecurityUserAccessAllowed,
         isEmailAccessAllowed,
+        isDeveloper,
     } = getUserAccess( user?.roles , user?.dataAccessibilityLevel )
 
       const rolesArrayString = JSON.stringify(user.roles);
@@ -351,6 +363,7 @@ export function AuthProvider({ children }) {
           isSettingAccessAllowed,
           isSecurityUserAccessAllowed,
           isEmailAccessAllowed,
+          isDeveloper,
         },
       });
   }, []);
@@ -406,6 +419,7 @@ export function AuthProvider({ children }) {
         isSettingAccessAllowed: state.isSettingAccessAllowed,
         isSecurityUserAccessAllowed: state.isSecurityUserAccessAllowed,
         isEmailAccessAllowed: state.isEmailAccessAllowed,
+        isDeveloper: state.isDeveloper,
         method: 'jwt',
         login,
         register,
@@ -424,6 +438,7 @@ export function AuthProvider({ children }) {
       state.isSettingAccessAllowed,
       state.isSecurityUserAccessAllowed,
       state.isEmailAccessAllowed,
+      state.isDeveloper,
       state.user, state.userId, login, logout, register, muliFactorAuthentication, clearStorageAndNaviagteToLogin]
   );
 

@@ -334,6 +334,16 @@ import {
 
   // ----------------------------------------------------------------
 
+  // LOGS: PM2 LOGS
+  Pm2LogsList,
+  Pm2LogView,
+
+  // LOGS: DB BACKUP LOGS
+  DbBackupLogsList,
+  DbBackupLogsViewForm,
+
+  // ----------------------------------------------------------------
+
   // SECURITY USER
   SecurityUserList,
   SecurityUserAdd,
@@ -928,6 +938,32 @@ export default function Router() {
             { path: 'new', element: <DepartmentAdd /> },
             { path: ':id/view', element: <DepartmentView /> },
             { path: ':id/edit', element: <DepartmentEdit /> }
+          ],
+        },
+        // ------------------------------ PM2 Logs ----------------------------------
+        {
+          path: 'dbBackup',
+          children: [
+            {
+              path: 'logs',
+              children: [
+                { element: <DbBackupLogsList /> , index: true },
+                { path: ':id/view', element: <DbBackupLogsViewForm /> },
+              ]
+            }
+          ],
+        },
+        // ------------------------------ DB BACKUP LOGS ----------------------------------
+        {
+          path: 'pm2',
+          children: [
+            {
+              path: 'logs',
+              children: [
+                { element: <Pm2LogsList /> , index: true },
+                { path: ':id/view', element: <Pm2LogView /> },
+              ]
+            }
           ],
         },
         // ------------------------------ invite ----------------------------------
