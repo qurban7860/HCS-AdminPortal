@@ -187,7 +187,35 @@ export const ICONS = {
     icon: 'mingcute:user-x-line',
     color: '#878787',
     heading: 'Customer Not Allowed',
+  }, 
+  // ------------------------------------------------------------
+  
+  // FOR CUSTOMERS
+  FORCUSTOMER: {
+    icon: 'fa-solid:users',
+    color: '#008000',
+    heading: 'For Customer',
   },
+
+  NOTFORCUSTOMER: {
+    icon: 'fa-solid:users-slash',
+    color: '#878787',
+    heading: 'Not For Customer',
+  },
+
+  FORMEREMPLOYEE: {
+    icon: 'ri:user-location-fill',
+    color: '#878787',
+    heading: 'Former Employee',
+  },
+
+  NOTFORMEREMPLOYEE: {
+    icon: 'ri:user-location-fill',
+    color: '#878787',
+    heading: 'Not Former Employee',
+  },
+  // ------------------------------------------------------------
+
   TRANSFERHISTORY: {
     icon: 'ic:outline-manage-history',
     color: '#008000',

@@ -34,6 +34,8 @@ function ViewFormEditDeleteButtons({
   isManufacture,
   isDeleteDisabled,
   customerAccess,
+  forCustomer,
+  formerEmployee,
   isRequired,
   multiAuth,
   currentEmp,
@@ -465,6 +467,22 @@ function ViewFormEditDeleteButtons({
             />
           }
 
+          {forCustomer !== undefined &&
+            <IconTooltip
+              title={forCustomer ? ICONS.FORCUSTOMER.heading : ICONS.NOTFORCUSTOMER.heading}
+              color={forCustomer ? ICONS.FORCUSTOMER.color : ICONS.NOTFORCUSTOMER.color}
+              icon={forCustomer ? ICONS.FORCUSTOMER.icon : ICONS.NOTFORCUSTOMER.icon}
+            />
+          }
+
+          {formerEmployee !== undefined &&
+            <IconTooltip
+              title={formerEmployee ? ICONS.FORMEREMPLOYEE.heading : ICONS.NOTFORMEREMPLOYEE.heading}
+              color={formerEmployee ? ICONS.FORMEREMPLOYEE.color : ICONS.NOTFORMEREMPLOYEE.color}
+              icon={formerEmployee ? ICONS.FORMEREMPLOYEE.icon : ICONS.NOTFORMEREMPLOYEE.icon}
+            />
+          }
+
           {isRequired !== undefined &&
             <IconTooltip
               title={isRequired ? ICONS.REQUIRED.heading : ICONS.NOTREQUIRED.heading}
@@ -873,6 +891,8 @@ ViewFormEditDeleteButtons.propTypes = {
   isSubmitted: PropTypes.func,
   returnToSubmitted: PropTypes.func,
   customerAccess:PropTypes.bool,
+  forCustomer: PropTypes.bool,
+  formerEmployee: PropTypes.bool,
   multiAuth:PropTypes.bool,
   currentEmp:PropTypes.bool,
   isRequired:PropTypes.bool,

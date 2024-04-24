@@ -17,7 +17,7 @@ import {
   getActiveContacts,
   resetActiveContacts,
 } from '../../../redux/slices/customer/contact';
-import { getActiveDepartments, resetDepartments } from '../../../redux/slices/department/department'
+import { getActiveCustomerDepartments, resetActiveCustomerDepartments } from '../../../redux/slices/department/department'
 // components
 import Iconify from '../../../components/iconify';
 import { useSnackbar } from '../../../components/snackbar';
@@ -26,10 +26,10 @@ import FormProvider, {
   RHFMultiSelect,
   RHFTextField,
   RHFCountryAutocomplete,
-  RHFCustomPhoneInput
+  RHFCustomPhoneInput,
+  RHFSwitch,
 } from '../../../components/hook-form';
 import { AddFormLabel } from '../../../components/DocumentForms/FormLabel';
-import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
 // assets
 import { countries } from '../../../assets/data';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
@@ -57,7 +57,7 @@ const theme = createTheme({
 
 export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   const { contact, activeContacts } = useSelector((state) => state.contact);
-  const { departments } = useSelector((state) => state.department);
+  const { activeCustomerDepartments } = useSelector((state) => state.department);
   const { enqueueSnackbar } = useSnackbar();
   const { customerId, id } = useParams() 
 
@@ -82,6 +82,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
       region: contact?.address?.region || '',
       postcode: contact?.address?.postcode || '',
       isActive: contact?.isActive,
+      formerEmployee: contact?.formerEmployee || false,
       country: countries.find((contry) => contry?.label?.toLocaleLowerCase() === contact?.address?.country?.toLocaleLowerCase()) || null,
     }),
     [contact]
@@ -104,11 +105,11 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
 
   useEffect(() => {
     dispatch(getActiveContacts(customerId))
-    dispatch(getActiveDepartments())
+    dispatch(getActiveCustomerDepartments())
     dispatch(getContact( customerId, id ));
     return () => {
       dispatch(resetActiveContacts())
-      dispatch(resetDepartments())
+      dispatch(resetActiveCustomerDepartments())
     }
   }, [dispatch, customerId, id ])
 
@@ -205,7 +206,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                 <RHFAutocomplete
                   name={FORMLABELS.DEPARTMENT.name}
                   label={FORMLABELS.DEPARTMENT.label}
-                  options={departments}
+                  options={activeCustomerDepartments}
                   getOptionLabel={(option) => option?.departmentName || ''}
                   isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   renderOption={(props, option) => (
@@ -258,7 +259,10 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                 </Grid>
               </Grid>
                 <RHFTextField name={FORMLABELS.EMAIL.name} label={FORMLABELS.EMAIL.label} />
-                <ToggleButtons isMachine name={formLABELS.isACTIVE.name} />
+              <Grid sx={{ display: 'flex' }} >  
+                <RHFSwitch name="isActive" label="Active" />
+                <RHFSwitch name="formerEmployee" label="Former Employee" />
+              </Grid>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Stack>
           </Card>

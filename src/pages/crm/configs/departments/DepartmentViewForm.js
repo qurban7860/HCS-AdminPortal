@@ -48,6 +48,7 @@ export default function DepartmentViewForm() {
       departmentName: department?.departmentName || '',
       isActive: department?.isActive,
       isDefault: department?.isDefault,
+      forCustomer: department?.forCustomer || false,
       createdByFullName: department?.createdBy?.name || '',
       createdAt: department?.createdAt || '',
       createdIP: department?.createdIP || '',
@@ -74,6 +75,7 @@ export default function DepartmentViewForm() {
       <ViewFormEditDeleteButtons 
         isActive={defaultValues.isActive} 
         isDefault={defaultValues.isDefault} 
+        forCustomer={defaultValues.forCustomer}
         handleEdit={toggleEdit} 
         onDelete={onDelete} 
         backLink={() => navigate(PATH_SETTING.departments.list)}
