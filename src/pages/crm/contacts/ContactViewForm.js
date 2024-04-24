@@ -81,7 +81,7 @@ export default function ContactViewForm({
       country: contact?.address?.country || '',
       serviceRecords: contact?.serviceRecords || [],
       isActive: contact?.isActive,
-      formerEmployee: contact?.formerEmployee || false,
+      formerEmployee: contact?.formerEmployee,
       createdAt: contact?.createdAt || '',
       createdByFullName: contact?.createdBy?.name || '',
       createdIP: contact?.createdIP || '',

@@ -205,7 +205,7 @@ export const ICONS = {
 
   FORMEREMPLOYEE: {
     icon: 'ri:user-location-fill',
-    color: '#878787',
+    color: '#008000',
     heading: 'Former Employee',
   },
 

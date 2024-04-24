@@ -215,6 +215,7 @@ export function addContact(params) {
         reportingTo: params.reportingTo?._id || null,
         department: params.department?._id || null,
         isActive: params.isActive,
+        formerEmployee: params.formerEmployee,
         address: {}
       };
 
@@ -274,6 +275,7 @@ export function updateContact(customerId, contactId, params) {
         reportingTo: params.reportingTo?._id || null,
         department: params.department?._id || null,
         isActive: params.isActive,
+        formerEmployee: params.formerEmployee,
         address: {}
       };
 
