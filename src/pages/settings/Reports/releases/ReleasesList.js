@@ -2,8 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
 import { Table, TableBody, TableContainer, Container, Card } from '@mui/material';
-import { useNavigate } from 'react-router';
-import { PATH_SETTING } from '../../../../routes/paths';
 import { Cover } from '../../../../components/Defaults/Cover';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
@@ -13,7 +11,6 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TableHeadCustom,
   TablePaginationCustom,
 } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
@@ -31,7 +28,6 @@ export default function ReleasesList() {
     page, 
     rowsPerPage,
     setPage,
-    onSort,
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
@@ -39,18 +35,10 @@ export default function ReleasesList() {
   });
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
 
   const { releases, filterBy,  isLoading, initial } = useSelector((state) => state.releases );
-
-  const TABLE_HEAD = [
-    { id: 'name', label: 'Name', align: 'left' },
-    { id: 'startDate', label: 'Start Date', align: 'left' },
-    { id: 'releaseDate', label: 'Release Date', align: 'left' },
-    { id: 'released', label: 'Released', align: 'center' },
-  ];
 
   useEffect(() => {
       dispatch(getReleases());
@@ -136,6 +124,8 @@ export default function ReleasesList() {
                       row ? (
                         <ReleasesListTableRow
                           key={row.id}
+                          index={index}
+                          page={page}
                           row={row}
                           onViewRow={() => handleViewRow(row?.id)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}

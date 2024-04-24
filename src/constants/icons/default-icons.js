@@ -27,13 +27,24 @@ export const ICONS = {
 
   //  Releases
   RELEASE: {
-    icon: 'fluent-mdl2:release-gate',
+    icon: 'mdi:source-branch',
+    color: '#008000',
+    heading: 'Release',
+  },
+
+  RELEASES: {
+    icon: 'mdi:source-branch',
+    heading: 'Releases',
+  },
+  
+  RELEASED: {
+    icon: 'mdi:source-branch-check',
     color: '#008000',
     heading: 'Released',
   },
 
   NOTRELEASE: {
-    icon: 'fluent-mdl2:release-gate',
+    icon: 'mdi:source-branch-minus',
     color: '#FF0000',
     heading: 'Not Release',
   },
@@ -387,10 +398,6 @@ export const ICONS = {
   USER_INVITE: {
     icon: 'ph:user-plus-bold',
     heading: 'User Invites',
-  },
-  RELEASES: {
-    icon: 'fluent-mdl2:release-gate',
-    heading: 'Releases',
   },
   BLOCKED_CUSTOMER: {
     icon: 'tabler:home-off',
