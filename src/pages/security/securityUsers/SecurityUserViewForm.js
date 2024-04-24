@@ -30,6 +30,7 @@ import ContactDialog from '../../../components/Dialog/ContactDialog';
 import { StyledTooltip } from '../../../theme/styles/default-styles';
 import Iconify from '../../../components/iconify';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
+import { ICONS } from '../../../constants/icons/default-icons';
 
 // ----------------------------------------------------------------------
 
@@ -234,15 +235,27 @@ export default function SecurityUserViewForm() {
                 sm={12}
                 heading="Contact"
                 node={
-                  defaultValues?.contact && (
-                    <Link onClick={handleContactDialog} href="#" underline="none">
-                      {defaultValues?.contact?.firstName || ''} {defaultValues?.contact?.lastName || ''}
-                      {!defaultValues?.contact?.isActive &&
-                        <StyledTooltip title="Contact is Inactive" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
-                          <Iconify color="#FF0000" sx={{height: '24px', width: '24px', verticalAlign:"middle", ml:1 }} icon="mdi:ban" />
-                        </StyledTooltip>
-                      }
-                    </Link>)}
+                  <>
+                    {defaultValues?.contact && (
+                      <Link onClick={handleContactDialog} href="#" underline="none">
+                        {defaultValues?.contact?.firstName || ''} {defaultValues?.contact?.lastName || ''}
+                        {!defaultValues?.contact?.isActive &&
+                          <StyledTooltip title="Contact is Inactive" placement='top' disableFocusListener tooltipcolor="#FF0000" color="#FF0000">
+                            <Iconify color="#FF0000" sx={{height: '24px', width: '24px', verticalAlign:"middle", ml:1 }} icon="mdi:ban" />
+                          </StyledTooltip>
+                        }
+                      </Link>)
+                    }
+                    <StyledTooltip
+                      placement="top" 
+                      title={defaultValues?.contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.heading:ICONS.NOTFORMEREMPLOYEE.heading} 
+                      disableFocusListener tooltipcolor={defaultValues?.contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.color:ICONS.NOTFORMEREMPLOYEE.color} 
+                      color={defaultValues?.contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.color:ICONS.NOTFORMEREMPLOYEE.color}
+                    >
+                      <Iconify icon={ICONS.FORMEREMPLOYEE.icon} sx={{ml:1.5, height: 20, width: 20 }}/>
+                    </StyledTooltip>
+                  </>
+                    }
               />
             </Grid>
             </Grid>

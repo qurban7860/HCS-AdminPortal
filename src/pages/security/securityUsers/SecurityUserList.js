@@ -52,6 +52,7 @@ const TABLE_HEAD = [
   // { id: 'regions.name.[]', visibility: 'md1', label: 'Regions', align: 'left' },
   { id: 'isOnline', label: 'Online', align: 'center' },
   { id: 'currentEmployee', label: 'Employed', align: 'center' },
+  { id: 'contact.firstName', label: 'Contact', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];

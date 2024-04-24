@@ -36,7 +36,7 @@ export default function SecurityUserTableRow({
   onSelectRow,
   onDeleteRow,
 }) {
-  const { email, name, roles, phone, createdAt, currentEmployee, isActive, isOnline } = row;
+  const { email, name, roles, phone, createdAt, currentEmployee, contact, isActive, isOnline } = row;
 
   const smScreen = useScreenSize('sm')
   const lgScreen = useScreenSize('lg')
@@ -67,13 +67,26 @@ export default function SecurityUserTableRow({
           </TableCell>
         } */}
         <TableCell align="center" key={isOnline}>
-          <StyledTooltip title={isOnline?ICONS.ONLINE.heading:ICONS.OFFLINE.heading} placement="top" 
+          <StyledTooltip 
+            placement="top" 
+            title={isOnline?ICONS.ONLINE.heading:ICONS.OFFLINE.heading} 
             disableFocusListener tooltipcolor={isOnline?ICONS.ONLINE.color:ICONS.OFFLINE.color} 
-            color={isOnline?ICONS.ONLINE.color:ICONS.OFFLINE.color}>
+            color={isOnline?ICONS.ONLINE.color:ICONS.OFFLINE.color}
+          >
             <Iconify color={isOnline?ICONS.ONLINE.color:ICONS.OFFLINE.color} sx={{ height: 20, width: 20 }} icon={isOnline?ICONS.ONLINE.icon:ICONS.OFFLINE.icon} />
           </StyledTooltip>
         </TableCell>
         <TableCell align="center"><Switch checked={currentEmployee} disabled size="small" /></TableCell>
+        <TableCell align="left">{`${contact?.firstName || ''} ${contact?.lastName || '' }`}
+          <StyledTooltip
+            placement="top" 
+            title={contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.heading:ICONS.NOTFORMEREMPLOYEE.heading} 
+            disableFocusListener tooltipcolor={contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.color:ICONS.NOTFORMEREMPLOYEE.color} 
+            color={contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.color:ICONS.NOTFORMEREMPLOYEE.color}
+          >
+            <Iconify icon={ICONS.FORMEREMPLOYEE.icon} sx={{ml:1.5, height: 20, width: 20 }}/>
+          </StyledTooltip>
+        </TableCell>
         <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>
       </TableRow>

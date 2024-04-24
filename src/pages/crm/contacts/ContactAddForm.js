@@ -21,8 +21,8 @@ import {
   resetActiveContacts,
 } from '../../../redux/slices/customer/contact';
 import {
-  getActiveDepartments,
-  resetDepartments,
+  getActiveCustomerDepartments,
+  resetActiveCustomerDepartments,
 } from '../../../redux/slices/department/department';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -33,12 +33,12 @@ import FormProvider, {
   RHFAutocomplete,
   RHFCountryAutocomplete,
   RHFCustomPhoneInput,
+  RHFSwitch,
 } from '../../../components/hook-form';
 // assets
 
 import { countries } from '../../../assets/data';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
-import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
 import { FORMLABELS as FORM_LABELS } from '../../../constants/default-constants';
 import { FORMLABELS } from '../../../constants/customer-constants';
 import { AddFormLabel } from '../../../components/DocumentForms/FormLabel';
@@ -58,7 +58,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
 
   const { activeContacts } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
-  const { departments } = useSelector((state) => state.department);
+  const { activeCustomerDepartments } = useSelector((state) => state.department);
   const { userId, user } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
   const { customerId } = useParams() 
@@ -81,6 +81,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
       title: '',
       contactTypes: [],
       isActive: true,
+      formerEmployee: false,
       // phone: '',
       phoneNumbers: [
         { type: PHONE_TYPES[0], countryCode: '64' },
@@ -120,6 +121,10 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
   const { phoneNumbers, country } = watch();
 
   useEffect(() => {
+    setValue('department', activeCustomerDepartments?.find(el => el?.isDefault))
+  },[ setValue, activeCustomerDepartments ]);
+
+  useEffect(() => {
     phoneNumbers?.forEach((pN, index) => {
       if (!phoneNumbers[index]?.contactNumber || phoneNumbers[index]?.contactNumber === undefined) {
         setValue(`phoneNumbers[${index}].countryCode`, country?.phone?.replace(/[^0-9]/g, ''));
@@ -127,10 +132,10 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
     });
 
     dispatch(getActiveContacts( customerId ));
-    dispatch(getActiveDepartments());
+    dispatch(getActiveCustomerDepartments());
     return () => {
       dispatch(resetActiveContacts());
-      dispatch(resetDepartments());
+      dispatch(resetActiveCustomerDepartments());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
@@ -206,7 +211,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
               <RHFAutocomplete
                 name={FORMLABELS.DEPARTMENT.name}
                 label={FORMLABELS.DEPARTMENT.label}
-                options={departments}
+                options={activeCustomerDepartments}
                 getOptionLabel={(option) => option?.departmentName || ''}
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 renderOption={(props, option) => (
@@ -318,7 +323,10 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
               </Grid>
             </Grid>
               <RHFTextField name={FORMLABELS.EMAIL.name} label={FORMLABELS.EMAIL.label} />
-            <ToggleButtons isMachine name={FORMLABELS.isACTIVE.name} />
+              <Grid sx={{ display: 'flex' }} >  
+                <RHFSwitch name="isActive" label="Active" />
+                <RHFSwitch name="formerEmployee" label="Former Employee" />
+              </Grid>
           </Stack>
           <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
         </Card>
