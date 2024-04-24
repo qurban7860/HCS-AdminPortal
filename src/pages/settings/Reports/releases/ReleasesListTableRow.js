@@ -1,14 +1,12 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Switch, TableCell, Typography, Grid, Link } from '@mui/material';
-import { createTheme } from '@mui/material/styles';
-import { green } from '@mui/material/colors';
+import { TableCell, Typography, Link } from '@mui/material';
 // utils
 import { fDate } from '../../../../utils/formatTime';
 // components
-import LinkTableCell from '../../../../components/ListTableTools/LinkTableCell';
 import { StyledTableRow, StyledTooltip } from '../../../../theme/styles/default-styles'
 import { ICONS } from '../../../../constants/icons/default-icons';
+import Iconify from '../../../../components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -16,22 +14,20 @@ ReleasesListTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onViewRow: PropTypes.func,
+  index: PropTypes.number,
+  page: PropTypes.number,
 };
 
 export default function ReleasesListTableRow({
   row,
   selected,
-  onViewRow
+  onViewRow,
+  index,
+  page,
 }) {
+
+  const { name, releaseDate, released, description  } = row;
   
-  const theme = createTheme({
-    palette: {
-      success: green,
-    },
-  });
-
-  const { name, startDate, releaseDate, released, description  } = row;
-
   return (
       <StyledTableRow hover selected={selected} style={{ display: 'block' }} >
           { released && <TableCell align="left" sx={{ display: { sm: 'block', md: 'flex'}, justifyContent: 'space-between', pt: 1, mb: -1 }} >
@@ -41,9 +37,9 @@ export default function ReleasesListTableRow({
                   disableFocusListener  
                   color={ released ? ICONS.RELEASE.color : ICONS.NOTRELEASE.color } 
                   title={ released ? ICONS.RELEASE.heading : ICONS.NOTRELEASE.heading } 
-                  tooltipcolor={ released ? theme.palette.primary.main : theme.palette.error.main } 
+                  tooltipcolor={ released ? ICONS.RELEASE.color : ICONS.NOTRELEASE.color  } 
                 > 
-                  <Switch checked={released} disabled size="small" sx={{ ml:2}} color={ released ? 'primary' : 'error'} />
+                  <Iconify icon={ ( ( index === 0 || index === 1 ) && page === 0 && released ) ? ICONS.RELEASED.icon : ICONS.RELEASE.icon} sx={{ml:1.5, height: 20, width: 20 }}/>
                 </StyledTooltip>
             </b>
             {releaseDate && <Typography variant="body2" ><b>Release Date:  </b>{fDate(releaseDate)} </Typography> }
