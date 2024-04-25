@@ -17,7 +17,7 @@ import {
   getActiveContacts,
   resetActiveContacts,
 } from '../../../redux/slices/customer/contact';
-import { getActiveCustomerDepartments, resetActiveCustomerDepartments } from '../../../redux/slices/department/department'
+import { getActiveDepartments, resetDepartments } from '../../../redux/slices/department/department'
 // components
 import Iconify from '../../../components/iconify';
 import { useSnackbar } from '../../../components/snackbar';
@@ -57,7 +57,8 @@ const theme = createTheme({
 
 export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   const { contact, activeContacts } = useSelector((state) => state.contact);
-  const { activeCustomerDepartments } = useSelector((state) => state.department);
+  const { customer } = useSelector((state) => state.customer);
+  const { departments } = useSelector((state) => state.department);
   const { enqueueSnackbar } = useSnackbar();
   const { customerId, id } = useParams() 
 
@@ -105,11 +106,11 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
 
   useEffect(() => {
     dispatch(getActiveContacts(customerId))
-    dispatch(getActiveCustomerDepartments())
+    dispatch(getActiveDepartments())
     dispatch(getContact( customerId, id ));
     return () => {
       dispatch(resetActiveContacts())
-      dispatch(resetActiveCustomerDepartments())
+      dispatch(resetDepartments())
     }
   }, [dispatch, customerId, id ])
 
@@ -206,7 +207,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                 <RHFAutocomplete
                   name={FORMLABELS.DEPARTMENT.name}
                   label={FORMLABELS.DEPARTMENT.label}
-                  options={activeCustomerDepartments}
+                  options={departments?.filter( el => (customer?.type?.toLowerCase() !== 'sp' && el.forCustomer ) ? el.forCustomer : customer?.type?.toLowerCase() === 'sp' )}
                   getOptionLabel={(option) => option?.departmentName || ''}
                   isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   renderOption={(props, option) => (

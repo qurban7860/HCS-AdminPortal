@@ -374,6 +374,17 @@ export const PATH_SETTING = {
     view: (id) => path(ROOTS_SETTING, `/departments/${id}/view`),
     edit: (id) => path(ROOTS_SETTING, `/departments/${id}/edit`)
   },
+  // ------------------------ ARCHIVED CUSTOMERS ----------------------------------------
+  archivedCustomers: {
+    root: path(ROOTS_SETTING, '/archivedCustomers'),
+    view: (id) => path(ROOTS_SETTING, `/archivedCustomers/${id}/view`),
+  },
+  // ------------------------ ARCHIVED MACHINES ----------------------------------------
+  archivedMachines: {
+    root: path(ROOTS_SETTING, '/archivedMachines'),
+    view: (id) => path(ROOTS_SETTING, `/archivedMachines/${id}/view`),
+  },
+  // ------------------------ PM2 LOGS ----------------------------------------
   pm2: {
       logs: {
         root: path(ROOTS_SETTING, '/pm2/logs/'),

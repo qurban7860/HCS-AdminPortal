@@ -24,6 +24,7 @@ CustomerListTableRow.propTypes = {
   onViewRow: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
+  isArchived: PropTypes.bool,
 };
 
 
@@ -35,6 +36,7 @@ export default function CustomerListTableRow({
   onDeleteRow,
   onEditRow,
   onViewRow,
+  isArchived,
 }) {
   const { clientCode, name, tradingName, mainSite, isActive, createdAt, verifications } = row;
   const address = [];
@@ -49,7 +51,7 @@ export default function CustomerListTableRow({
     <StyledTableRow hover selected={selected}>
       <LinkTableCellWithIcon
         align="left"
-        onClick={onViewRow}
+        onClick={ !isArchived ? onViewRow : undefined }
         param={name}
         isVerified={verifications?.length > 0}
       />

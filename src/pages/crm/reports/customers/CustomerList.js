@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useState, useEffect , useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
@@ -51,8 +52,11 @@ const TABLE_HEAD = [
 ];
 
 // ----------------------------------------------------------------------
-
-export default function CustomerList() {
+CustomerList.propTypes = {
+  isArchived: PropTypes.bool,
+}
+ 
+export default function CustomerList({ isArchived }) {
   const {
     order,
     orderBy,
@@ -87,10 +91,10 @@ export default function CustomerList() {
   }
 
   useEffect(() => {
-    dispatch(getCustomers( null, null, cancelTokenSource ));
+    dispatch(getCustomers( null, null, isArchived, cancelTokenSource ));
     return ()=> { dispatch( resetCustomers() ) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+  }, [dispatch, isArchived ]);
 
   useEffect(() => {
     setTableData(customers || []);
@@ -179,7 +183,7 @@ export default function CustomerList() {
   return (
     <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name={FORMLABELS.COVER.CUSTOMERS} customerSites customerContacts />
+          <Cover name={FORMLABELS.COVER.CUSTOMERS} customerSites customerContacts isArchived={isArchived} />
         </StyledCardContainer>
       <TableCard >
         <CustomerListTableToolbar
@@ -197,6 +201,7 @@ export default function CustomerList() {
           onExportLoading={exportingCSV}
           filterExcludeRepoting={filterExcludeRepoting}
           handleExcludeRepoting={handleExcludeRepoting}
+          isArchived={isArchived}
         />
 
         {!isNotFound && <TablePaginationCustom
@@ -230,6 +235,7 @@ export default function CustomerList() {
                         onSelectRow={() => onSelectRow(row._id)}
                         onViewRow={() => handleViewRow(row._id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                        isArchived={isArchived}
                       />
                     ) : (
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

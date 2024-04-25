@@ -21,8 +21,8 @@ import {
   resetActiveContacts,
 } from '../../../redux/slices/customer/contact';
 import {
-  getActiveCustomerDepartments,
-  resetActiveCustomerDepartments,
+  getActiveDepartments,
+  resetDepartments,
 } from '../../../redux/slices/department/department';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -58,7 +58,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
 
   const { activeContacts } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
-  const { activeCustomerDepartments } = useSelector((state) => state.department);
+  const { departments } = useSelector((state) => state.department);
   const { userId, user } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
   const { customerId } = useParams() 
@@ -121,8 +121,8 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
   const { phoneNumbers, country } = watch();
 
   useEffect(() => {
-    setValue('department', activeCustomerDepartments?.find(el => el?.isDefault))
-  },[ setValue, activeCustomerDepartments ]);
+    setValue('department', departments?.filter( el => (customer?.type?.toLowerCase() !== 'sp' && el.forCustomer ) ? el.forCustomer : customer?.type?.toLowerCase() === 'sp' )?.find(el => el?.isDefault))
+  },[ setValue, departments, customer?.type ]);
 
   useEffect(() => {
     phoneNumbers?.forEach((pN, index) => {
@@ -132,10 +132,10 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
     });
 
     dispatch(getActiveContacts( customerId ));
-    dispatch(getActiveCustomerDepartments());
+    dispatch(getActiveDepartments());
     return () => {
       dispatch(resetActiveContacts());
-      dispatch(resetActiveCustomerDepartments());
+      dispatch(resetDepartments());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
@@ -211,7 +211,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
               <RHFAutocomplete
                 name={FORMLABELS.DEPARTMENT.name}
                 label={FORMLABELS.DEPARTMENT.label}
-                options={activeCustomerDepartments}
+                options={departments?.filter( el => (customer?.type?.toLowerCase() !== 'sp' && el.forCustomer ) ? el.forCustomer : customer?.type?.toLowerCase() === 'sp' )}
                 getOptionLabel={(option) => option?.departmentName || ''}
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 renderOption={(props, option) => (

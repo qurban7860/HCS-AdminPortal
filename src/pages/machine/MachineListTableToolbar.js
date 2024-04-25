@@ -35,6 +35,7 @@ MachineListTableToolbar.propTypes = {
   accountManagerFilter:PropTypes.object,
   setSupportManagerFilter:PropTypes.func,
   supportManagerFilter:PropTypes.object,
+  isArchived: PropTypes.bool,
 };
 
 export default function MachineListTableToolbar({
@@ -53,6 +54,7 @@ export default function MachineListTableToolbar({
   accountManagerFilter,
   setSupportManagerFilter,
   supportManagerFilter,
+  isArchived,
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -74,9 +76,9 @@ export default function MachineListTableToolbar({
         onFilterVerify={onFilterVerify}
         filterVerify={filterVerify}
         SubOnClick={toggleAdd}
-        addButton={BUTTONS.ADDMACHINE}
-        onExportCSV={onExportCSV}
-        onExportLoading={onExportLoading}
+        addButton={ !isArchived ? BUTTONS.ADDMACHINE : undefined }
+        onExportCSV={ !isArchived ? onExportCSV : undefined }
+        onExportLoading={ onExportLoading  }
         setAccountManagerFilter={setAccountManagerFilter}
         accountManagerFilter={accountManagerFilter}
         setSupportManagerFilter={setSupportManagerFilter}
