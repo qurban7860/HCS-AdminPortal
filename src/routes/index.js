@@ -940,6 +940,22 @@ export default function Router() {
             { path: ':id/edit', element: <DepartmentEdit /> }
           ],
         },
+        // ------------------------------ ARCHIVED CUSTOMERS ----------------------------------
+        {
+          path: 'archivedCustomers',
+          children: [
+            { element: <CustomerList isArchived />, index: true },
+            { path: ':id/view', element: <CustomerView isArchived/> },
+          ],
+        },
+        // ------------------------------ ARCHIVED MACHINES ----------------------------------
+        {
+          path: 'archivedMachines',
+          children: [
+            { element: <MachineList isArchived />, index: true },
+            { path: ':id/view', element: <MachineView isArchived /> },
+          ],
+        },
         // ------------------------------ PM2 Logs ----------------------------------
         {
           path: 'dbBackup',

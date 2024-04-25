@@ -284,14 +284,14 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getMachines(page, pageSize, cancelToken ) {
+export function getMachines(page, pageSize, isArchived, cancelToken ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, 
       {
         params: {
-          isArchived: false,
+          isArchived: isArchived || false,
           orderBy : {
             createdAt:-1
           },

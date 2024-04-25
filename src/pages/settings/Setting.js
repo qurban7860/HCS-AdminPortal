@@ -135,6 +135,16 @@ return (
                     icon={ICONS.DEPARTMENNTS.icon}
                     content={ICONS.DEPARTMENNTS.heading}
                   />
+                  <ListItem
+                    onClick={()=> navigate(PATH_SETTING.archivedCustomers.root)}
+                    icon={ICONS.ARCHIVEDCUSTOMERS.icon}
+                    content={ICONS.ARCHIVEDCUSTOMERS.heading}
+                  />
+                  <ListItem
+                    onClick={()=> navigate(PATH_SETTING.archivedMachines.root)}
+                    icon={ICONS.ARCHIVEDMACHINES.icon}
+                    content={ICONS.ARCHIVEDMACHINES.heading}
+                  />
                 </List>
                 { isDeveloper && <List
                   component="nav"

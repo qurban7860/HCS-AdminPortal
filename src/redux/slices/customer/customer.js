@@ -209,14 +209,14 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getCustomers(page, pageSize, cancelToken ) {
+export function getCustomers(page, pageSize, isArchived,cancelToken ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers`,
       {
         params: {
-          isArchived: false,
+          isArchived: isArchived || false,
           orderBy : {
             createdAt:-1
           },

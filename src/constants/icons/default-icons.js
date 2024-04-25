@@ -431,6 +431,14 @@ export const ICONS = {
     icon: 'mingcute:department-line',
     heading: 'Departments',
   },  
+  ARCHIVEDCUSTOMERS: {
+    icon: 'fa6-solid:users-slash',
+    heading: 'Archived Customers',
+  }, 
+  ARCHIVEDMACHINES: {
+    icon: 'fluent:table-delete-column-16-filled',
+    heading: 'Archived Machines',
+  }, 
   PM2LOGS: {
     icon: 'simple-icons:pm2',
     heading: 'PM2 Logs',

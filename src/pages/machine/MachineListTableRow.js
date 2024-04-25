@@ -22,6 +22,7 @@ MachineListTableRow.propTypes = {
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
   handleCustomerDialog:PropTypes.func,
+  isArchived: PropTypes.bool,
 };
 
 export default function MachineListTableRow({
@@ -32,7 +33,8 @@ export default function MachineListTableRow({
   onEditRow,
   onViewRow,
   openInNewPage,
-  handleCustomerDialog
+  handleCustomerDialog,
+  isArchived,
 }) {
   // console.log("rowrow : ", row)
   const {
@@ -56,7 +58,7 @@ export default function MachineListTableRow({
     <TableRow hover selected={selected}>
       <LinkTableCellWithIconTargetBlank
         align="left"
-        onViewRow={onViewRow}
+        onViewRow={ !isArchived ? onViewRow : undefined }
         onClick={openInNewPage}
         param={serialNo}
         isVerified={verifications?.length > 0}
