@@ -142,6 +142,7 @@ export default function MachineViewForm() {
       console.log('Error:', err);
     }
   };
+
   const handleVerification = async () => {
     try {
       await dispatch(setMachineVerification(machine._id, machine?.isVerified));
@@ -201,7 +202,7 @@ export default function MachineViewForm() {
       machineModel: machine?.machineModel?.name || '',
       manufactureDate: machine?.manufactureDate || '',
       machineConnections: machine?.machineModel?.category?.connections || false,
-      machineProfile: machine?.machineProfile?.defaultName || '',
+      machineProfiles: machine?.machineProfiles || [],
       machineweb:machine?.machineProfile?.web || '',
       machineflange:machine?.machineProfile?.flange || '',
       status: machine?.status?.name || '',
@@ -307,7 +308,8 @@ export default function MachineViewForm() {
                 </Grid>
               }
             />
-            <ViewFormField isLoading={isLoading} sm={6} variant='h4' heading="Profile" param={`${defaultValues?.machineProfile} ${(defaultValues?.machineweb && defaultValues?.machineflange)? `(${defaultValues?.machineweb} X ${defaultValues?.machineflange})` :""}`} />
+            
+            <ViewFormField isLoading={isLoading} sm={12} variant='h4' heading="Profiles" param={ Array.isArray(defaultValues?.machineProfiles) && defaultValues?.machineProfiles?.map( el => `${el?.defaultName} ${(el?.web && el?.flange)? `(${el?.web} X ${el?.flange})` :""}`)?.join(', ') || ''} />
                        {/* 4 FULL ROW */}
             {defaultValues?.alias?.length > 0 && <ViewFormField isLoading={isLoading} sm={12} heading="Alias" chips={defaultValues?.alias} />}
                        {/* 5 FULL ROW */}

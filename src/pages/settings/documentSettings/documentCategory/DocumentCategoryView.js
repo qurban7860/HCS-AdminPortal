@@ -40,7 +40,6 @@ export default function DocumentCategoryView() {
           <Cover
             name={documentCategory?.name}
             generalSettings
-            backLink={PATH_SETTING.documentCategory.list}
           />
         </Card>
         <DocumentCategoryViewForm />

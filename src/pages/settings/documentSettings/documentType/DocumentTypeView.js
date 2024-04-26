@@ -38,7 +38,6 @@ export default function DocumentTypeView() {
           <Cover
             name={documentType?.name}
             generalSettings
-            backLink={PATH_SETTING.documentType.list}
           />
         </Card>
 

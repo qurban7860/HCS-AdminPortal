@@ -83,6 +83,7 @@ export const FORMLABELS = {
   SECURITY_SETTINGS: 'Security Settings',
   REPORTS: 'Reports',
   CONFIG: 'Configuration',
+  ARCHIVED_REPORTS: 'Archived Reports',
   LOGS_SETTINGS: 'Logs',
   // @root DocumentAddForm in dashboard/documents
   SELECT_CUSTOMER: 'Select Customer',
