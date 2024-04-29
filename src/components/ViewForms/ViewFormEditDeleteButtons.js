@@ -695,11 +695,11 @@ function ViewFormEditDeleteButtons({
         {/* delete button */}
         {id !== userId  && !mainSite && onDelete && (
           <IconTooltip
-            title="Delete"
+            title="Archive"
             disabled={ isDisableDelete || disableDeleteButton }
             onClick={() => {  handleOpenConfirm('delete') }}
             color={( isDisableDelete || disableDeleteButton ) ? "#c3c3c3":"#FF0000"}
-            icon="mdi:trash-can-outline"
+            icon="mdi:archive"
           />
         )}
       </StyledStack>
@@ -826,8 +826,8 @@ function ViewFormEditDeleteButtons({
         onClose={() => {
           handleCloseConfirm('delete');
         }}
-        title="Delete"
-        content="Are you sure you want to delete?"
+        title="Archive"
+        content="Are you sure you want to Archive?"
         action={
           <LoadingButton
             variant="contained"
@@ -836,7 +836,7 @@ function ViewFormEditDeleteButtons({
             disabled={isSubmitting}
             onClick={handleSubmit(onDelete)}
           >
-            Delete
+            Archive
           </LoadingButton>
         }
       />

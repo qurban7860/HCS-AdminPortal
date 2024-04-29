@@ -87,29 +87,23 @@ return (
                     content={ICONS.WHITELIST_IP.heading}
                   />
                 </List>
-
                 <List
-                  component="nav"
-                  aria-labelledby="nested-list-subheader"
-                  subheader={<ListItemsHeader header={FORMLABELS.REPORTS} />}
-                >
-
-                  <ListItem
-                    onClick={linkSignInLogs}
-                    icon={ICONS.SIGNIN_LOGS.icon}
-                    content={ICONS.SIGNIN_LOGS.heading}
-                  /> 
-                  <ListItem
-                    onClick={linkUserInvites}
-                    icon={ICONS.USER_INVITE.icon}
-                    content={ICONS.USER_INVITE.heading}
-                  />
-                  {isAllAccessAllowed && <ListItem
-                    onClick={releases}
-                    icon={ICONS.RELEASES.icon}
-                    content={ICONS.RELEASES.heading}
-                  />}
+                component="nav"
+                aria-labelledby="nested-list-subheader"
+                subheader={<ListItemsHeader header={FORMLABELS.DOCUMENT_SETTINGS} />}
+              >
+                <ListItem
+                  onClick={linkDocumentCategory}
+                  icon={ICONS.DOCUMENT_CATEGORY.icon}
+                  content={ICONS.DOCUMENT_CATEGORY.heading}
+                />
+                <ListItem
+                  onClick={linkDocumentType}
+                  icon={ICONS.DOCUMENT_TYPE.icon}
+                  content={ICONS.DOCUMENT_TYPE.heading}
+                />
                 </List>
+                
             </StyledSettingsCardContainer>
             }
             <StyledSettingsCardContainer>
@@ -134,6 +128,32 @@ return (
                     icon={ICONS.DEPARTMENNTS.icon}
                     content={ICONS.DEPARTMENNTS.heading}
                   />
+                </List>
+
+            </StyledSettingsCardContainer>
+
+            <StyledSettingsCardContainer >
+                <List
+                  component="nav"
+                  aria-labelledby="nested-list-subheader"
+                  subheader={<ListItemsHeader header={FORMLABELS.REPORTS} />}
+                >
+
+                  <ListItem
+                    onClick={linkSignInLogs}
+                    icon={ICONS.SIGNIN_LOGS.icon}
+                    content={ICONS.SIGNIN_LOGS.heading}
+                  /> 
+                  <ListItem
+                    onClick={linkUserInvites}
+                    icon={ICONS.USER_INVITE.icon}
+                    content={ICONS.USER_INVITE.heading}
+                  />
+                  {isAllAccessAllowed && <ListItem
+                    onClick={releases}
+                    icon={ICONS.RELEASES.icon}
+                    content={ICONS.RELEASES.heading}
+                  />}
                 </List>
 
                 { isAllAccessAllowed && !isSettingReadOnly && <List
@@ -169,25 +189,6 @@ return (
                     content={ICONS.DBBACKUPLOGS.heading}
                   />
                 </List>}
-            </StyledSettingsCardContainer>
-
-            <StyledSettingsCardContainer >
-              <List
-                component="nav"
-                aria-labelledby="nested-list-subheader"
-                subheader={<ListItemsHeader header={FORMLABELS.DOCUMENT_SETTINGS} />}
-              >
-                <ListItem
-                  onClick={linkDocumentCategory}
-                  icon={ICONS.DOCUMENT_CATEGORY.icon}
-                  content={ICONS.DOCUMENT_CATEGORY.heading}
-                />
-                <ListItem
-                  onClick={linkDocumentType}
-                  icon={ICONS.DOCUMENT_TYPE.icon}
-                  content={ICONS.DOCUMENT_TYPE.heading}
-                />
-                </List>
             </StyledSettingsCardContainer>
           </Box>
     </Container>

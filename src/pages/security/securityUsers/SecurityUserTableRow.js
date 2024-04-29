@@ -77,15 +77,16 @@ export default function SecurityUserTableRow({
           </StyledTooltip>
         </TableCell>
         {/* <TableCell align="center"><Switch checked={currentEmployee} disabled size="small" /></TableCell> */}
-        <TableCell align="left">{`${contact?.firstName || ''} ${contact?.lastName || '' }`}
-          <StyledTooltip
+        <TableCell align="left">
+          {contact?.firstName && <StyledTooltip
             placement="top" 
             title={contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.heading:ICONS.NOTFORMEREMPLOYEE.heading} 
             disableFocusListener tooltipcolor={contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.color:ICONS.NOTFORMEREMPLOYEE.color} 
             color={contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.color:ICONS.NOTFORMEREMPLOYEE.color}
           >
-            <Iconify icon={ICONS.FORMEREMPLOYEE.icon} sx={{ml:1.5, height: 20, width: 20 }}/>
-          </StyledTooltip>
+            <Iconify icon={ICONS.FORMEREMPLOYEE.icon} sx={{mr:1, height: 20, width: 20 }}/>
+          </StyledTooltip>}
+            {`${contact?.firstName || ''} ${contact?.lastName || '' }`}
         </TableCell>
         <TableCell align="center"><Switch checked={isActive} disabled size="small" /></TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>

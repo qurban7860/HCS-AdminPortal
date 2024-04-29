@@ -188,19 +188,19 @@ export default function CustomerList({ isArchived }) {
       <TableCard >
         <CustomerListTableToolbar
           filterName={filterName}
-          filterStatus={filterStatus}
           onFilterName={handleFilterName}
-          filterVerify={filterVerify}
-          onFilterVerify={handleFilterVerify}
-          onFilterStatus={handleFilterStatus}
+          filterVerify={ isArchived ? undefined : filterVerify}
+          onFilterVerify={ isArchived ? undefined : handleFilterVerify}
+          filterStatus={ isArchived ? undefined : filterStatus}
+          onFilterStatus={ isArchived ? undefined : handleFilterStatus}
           isFiltered={isFiltered}
           onResetFilter={handleResetFilter}
           customerDocList
           machineDocList
           onExportCSV={onExportCSV}
           onExportLoading={exportingCSV}
-          filterExcludeRepoting={filterExcludeRepoting}
-          handleExcludeRepoting={handleExcludeRepoting}
+          filterExcludeRepoting={ isArchived ? undefined : filterExcludeRepoting}
+          handleExcludeRepoting={ isArchived ? undefined : handleExcludeRepoting}
           isArchived={isArchived}
         />
 

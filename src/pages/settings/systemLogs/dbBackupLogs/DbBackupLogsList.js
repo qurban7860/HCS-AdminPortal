@@ -35,7 +35,7 @@ export default function DbBackupLogsList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'name', defaultOrder: 'desc',
+    defaultOrderBy: 'createdAt', defaultOrder: 'desc',
   });
 
   const dispatch = useDispatch();
@@ -46,13 +46,11 @@ export default function DbBackupLogsList() {
   const { dbBackupLogs, filterBy, isLoading, initial } = useSelector((state) => state.dbBackupLogs );
 
   const TABLE_HEAD = [
-    { id: 'name', label: 'Name', align: 'left' },
-    { id: 'backupSize', label: 'Backup Size', align: 'left' },
-    { id: 'databaseName', label: 'Database Name', align: 'left' },
-    { id: 'databaseVersion', label: 'Database Version', align: 'left' },
-    { id: 'backupStatus', label: 'Backup Status', align: 'left' },
-    { id: 'backupLocation', label: 'Backup Location', align: 'left' },
-    { id: 'createdAt', label: 'Created At', align: 'left' },
+    { id: 'createdAt', label: 'Date', align: 'left' },
+    { id: 'backupLocation', label: 'Name', align: 'left' },
+    { id: 'backupSize', label: 'Size', align: 'left' },
+    { id: 'databaseName', label: 'User', align: 'left' },
+    { id: 'backupStatus', label: 'Status', align: 'right' },
   ];
 
   useEffect(() => {

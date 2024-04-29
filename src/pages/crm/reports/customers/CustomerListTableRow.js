@@ -38,7 +38,7 @@ export default function CustomerListTableRow({
   onViewRow,
   isArchived,
 }) {
-  const { clientCode, name, tradingName, mainSite, isActive, createdAt, verifications } = row;
+  const { clientCode, name, tradingName, mainSite, isActive, createdAt, verifications, type } = row;
   const address = [];
   if (mainSite?.address?.city) {
     address.push(mainSite?.address?.city);
@@ -54,6 +54,7 @@ export default function CustomerListTableRow({
         onClick={ !isArchived ? onViewRow : undefined }
         param={name}
         isVerified={verifications?.length > 0}
+        main={type?.toLowerCase() === 'sp'}
       />
       <LinkTableCell
         align="left"

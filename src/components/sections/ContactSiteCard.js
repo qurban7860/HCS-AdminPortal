@@ -91,17 +91,19 @@ export default function ContactSiteCard({ name, title, email, phone, image, isMa
               </Grid>
             }            
             
-            { isFormerEmployee && 
+            { isFormerEmployee !== undefined && 
               <Grid
                 sx={{ position: 'absolute', top: 5, right: 5 }}
               >
                 <StyledTooltip
-                  title="Former Employee"
+                  title={ isFormerEmployee ? ICONS.FORMEREMPLOYEE.heading : ICONS.NOTFORMEREMPLOYEE.heading }
+                  color={ isFormerEmployee ? ICONS.FORMEREMPLOYEE.color : ICONS.NOTFORMEREMPLOYEE.color } 
                   placement="top" 
                   disableFocusListener 
-                  tooltipcolor={theme.palette.primary.main} 
                   >
-                  <Iconify icon={ICONS.FORMEREMPLOYEE.icon} color="#1769aa" />
+                  <Iconify 
+                    icon={ isFormerEmployee ? ICONS.FORMEREMPLOYEE.icon : ICONS.NOTFORMEREMPLOYEE.icon } 
+                    color={ isFormerEmployee ? ICONS.FORMEREMPLOYEE.color : ICONS.NOTFORMEREMPLOYEE.color } />
                 </StyledTooltip>
               </Grid>
             }
