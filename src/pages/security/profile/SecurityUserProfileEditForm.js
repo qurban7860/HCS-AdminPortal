@@ -104,7 +104,6 @@ useEffect(() => {
   const onSubmit = async (data) => {
     try {
       await  dispatch(updateSecurityUser(data, securityUser._id));
-      await  dispatch(getSecurityUser(securityUser._id));
       reset()
       navigate(PATH_SECURITY.users.profile);
     } catch (error) {

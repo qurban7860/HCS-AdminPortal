@@ -41,7 +41,7 @@ export default function MachineListTableRow({
     verifications,
     serialNo,
     name,
-    profile,
+    profiles,
     machineModel,
     customer,
     // instalationSite,
@@ -65,7 +65,7 @@ export default function MachineListTableRow({
       />
       
       {  useScreenSize('lg') && <TableCell >{ name || ''}</TableCell>}
-      {  useScreenSize('lg') && <TableCell >{ profile?.defaultName || ''}</TableCell>}
+      {  useScreenSize('lg') && <TableCell >{ Array.isArray(profiles) && profiles.map( el => el?.defaultName)?.join(', ') || ''}</TableCell>}
       {  useScreenSize('sm') && <TableCell >{ machineModel?.name || ''}</TableCell>}
       {  useScreenSize('lg') && 
       

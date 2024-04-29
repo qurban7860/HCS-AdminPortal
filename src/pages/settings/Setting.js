@@ -18,7 +18,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 
 export default function Setting() {
 
-  const { isSettingAccessAllowed, isAllAccessAllowed, isDeveloper } = useAuthContext()
+  const { isSettingAccessAllowed, isSettingReadOnly, isAllAccessAllowed, isDeveloper } = useAuthContext()
 
   const navigate = useNavigate();
 
@@ -58,7 +58,6 @@ return (
                   aria-labelledby="nested-list-subheader"
                   subheader={<ListItemsHeader header={FORMLABELS.SECURITY_SETTINGS} />}
                 >
-                 
                   <ListItem
                     onClick={linkRole}
                     icon={ICONS.SECURITY_ROLES.icon}
@@ -135,6 +134,13 @@ return (
                     icon={ICONS.DEPARTMENNTS.icon}
                     content={ICONS.DEPARTMENNTS.heading}
                   />
+                </List>
+
+                { isAllAccessAllowed && !isSettingReadOnly && <List
+                  component="nav"
+                  aria-labelledby="nested-list-subheader"
+                  subheader={<ListItemsHeader header={FORMLABELS.ARCHIVED_REPORTS} />}
+                >
                   <ListItem
                     onClick={()=> navigate(PATH_SETTING.archivedCustomers.root)}
                     icon={ICONS.ARCHIVEDCUSTOMERS.icon}
@@ -145,7 +151,8 @@ return (
                     icon={ICONS.ARCHIVEDMACHINES.icon}
                     content={ICONS.ARCHIVEDMACHINES.heading}
                   />
-                </List>
+                </List>}
+
                 { isDeveloper && <List
                   component="nav"
                   aria-labelledby="nested-list-subheader"

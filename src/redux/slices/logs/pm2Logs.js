@@ -13,6 +13,7 @@ const initialState = {
   pm2Log: {},
   pm2Environments: [],
   pm2Environment: '',
+  pm2LogType: '',
   page: 0,
   rowsPerPage: 100,
   filterBy: ''
@@ -107,6 +108,11 @@ const slice = createSlice({
     setPm2Environment(state, action) {
       state.pm2Environment = action.payload;
     },
+
+    // Set pm2 LOG TYPES
+    setPm2LogType(state, action) {
+      state.pm2LogType = action.payload;
+    },
     
   },
 });
@@ -124,20 +130,20 @@ export const {
   ChangePage,
   setFilterBy,
   setPm2Environment,
+  setPm2LogType,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
 
-export function getPm2Logs(page, pageSize, app, cancelToken ) {
-  console.log("page, pageSize, app : ",page, pageSize, app)
+export function getPm2Logs(page, pageSize, type, app, cancelToken ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}logs/pm2/`,
       {
         params: {
-          out_log: true,
-          err_log: true,
+          out_log: type?.toLowerCase() === 'logs' || false,
+          err_log: type?.toLowerCase() === 'error' || false,
           app,
           pageNumber: page,
           pageSize

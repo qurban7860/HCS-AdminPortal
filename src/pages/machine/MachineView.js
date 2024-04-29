@@ -15,12 +15,6 @@ export default function MachineView( ) {
   const { machineId } = useParams();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (machineId ) {
-      dispatch(getMachine(machineId));
-    }
-  }, [dispatch, machineId]);
-
   return (
     <Container maxWidth={false} sx={{mb:3}}>
       <MachineTabContainer currentTabValue="machine" />

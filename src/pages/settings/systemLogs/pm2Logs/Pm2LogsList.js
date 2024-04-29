@@ -34,26 +34,19 @@ export default function Pm2LogsList() {
     onSort,
     onChangePage,
     onChangeRowsPerPage,
-  } = useTable({
-    defaultOrderBy: 'id', defaultOrder: 'desc',
-  });
+  } = useTable();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
 
-  const { pm2Logs, pm2Environment, filterBy, isLoading, initial } = useSelector((state) => state.pm2Logs );
+  const { pm2Logs, pm2Environment, pm2LogType, filterBy, isLoading, initial } = useSelector((state) => state.pm2Logs );
 
   const TABLE_HEAD = [
     { id: 'pm2Logs', label: 'PM 2 Logs', align: 'left' },
   ];
 
-  const fetchPm2Logs = useCallback(()=>{
-    if (pm2Environment) {
-      dispatch(getPm2Logs( page, rowsPerPage, pm2Environment ));
-    }
-  },[ dispatch, pm2Environment, page, rowsPerPage ] )
 
   useEffect(() => {
       dispatch(getPm2Environments());
@@ -62,24 +55,36 @@ export default function Pm2LogsList() {
       }
   }, [ dispatch ]);
 
+  const fetchPm2Logs = useCallback(()=>{
+    if (pm2Environment && pm2LogType ) {
+      dispatch(getPm2Logs( page, rowsPerPage, pm2LogType, pm2Environment ));
+    }
+  },[ dispatch, pm2LogType, pm2Environment, page, rowsPerPage ] )
+
   useEffect(() => {
     fetchPm2Logs();
     return () => {
       dispatch(resetPm2Logs());
     }
-}, [dispatch, fetchPm2Logs, pm2Environment ]);
+}, [dispatch, fetchPm2Logs ]);
 
   useEffect(() => {
+    // console.log('pm2Logs.data:', pm2Logs?.data);
     if (initial) {
       setTableData(pm2Logs?.data || [] ); 
     }
-  }, [ dispatch, initial, pm2Logs ]);
+  }, [ initial, pm2Logs ]);
+
 
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
   });  
+
+  console.log('dataFiltered:', dataFiltered );
+
+
   const denseHeight = 60;
   const isFiltered = filterName !== '';
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
@@ -108,12 +113,6 @@ export default function Pm2LogsList() {
     setPage(0);
   };
 
-  // const handleViewRow = (id) => {
-  //   const url = `https://howickltd.atlassian.net/projects/HPS/versions/${id}/tab/release-report-all-issues`
-  //   window.open(url, '_blank');
-  //   // navigate(PATH_SETTING.releases.view(link))
-  // };
-
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
@@ -132,6 +131,7 @@ export default function Pm2LogsList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
             isPm2Environments
+            handleRefresh={ fetchPm2Logs }
           />
             <TablePaginationCustom
               count={pm2Logs?.totalPages || 0 }
@@ -139,7 +139,6 @@ export default function Pm2LogsList() {
               rowsPerPage={rowsPerPage}
               onPageChange={onChangePage}
               onRowsPerPageChange={onChangeRowsPerPage}
-              refresh={ fetchPm2Logs }
             />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
@@ -150,17 +149,14 @@ export default function Pm2LogsList() {
                     ? [...Array(rowsPerPage)]
                     : dataFiltered
                   )
-                  // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) =>
                     row ? (
                         <Pm2LogsTableRow
                           key={index}
                           row={row}
-                          // onViewRow={() => handleViewRow(row?.id)}
-                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         />
                       
-                    ) : !isNotFound && isLoading && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                    ) : !isNotFound && isLoading && <TableSkeleton sx={{ height: denseHeight }} />
                   )}
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>

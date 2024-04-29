@@ -63,7 +63,7 @@ export default function DbBackupLogsList() {
     if (initial) {
       setTableData(dbBackupLogs?.data || [] ); 
     }
-  }, [ dispatch, initial, dbBackupLogs ]);
+  }, [ initial, dbBackupLogs ]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
