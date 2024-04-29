@@ -67,12 +67,12 @@ MachineList.propTypes = {
 const TABLE_HEAD = [
   { id: 'serialNo', label: 'Serial Number', align: 'left' },
   { id: 'name', visibility: 'md1',label: 'Name', align: 'left' },
-  { id: 'profile.defaultName', visibility: 'md2',label: 'Profile', align: 'left' },
   { id: 'machineModel.name', visibility: 'xs1', label: 'Model', align: 'left' },
   { id: 'customer.name', visibility: 'md2', label: 'Customer', align: 'left' },
   { id: 'installationDate', visibility: 'md3', label: 'Installation Date', align: 'left' },
   { id: 'shippingDate', visibility: 'md3', label: 'Shipping Date', align: 'left' },
   { id: 'status.name', visibility: 'xs2',  label: 'Status', align: 'left' },
+  { id: 'profiles.defaultName', visibility: 'md2',label: 'Profile', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
 ];
 
@@ -253,7 +253,7 @@ export default function MachineList({ isArchived }) {
   return (
     <Container maxWidth={false} sx={{mb:3}}>
         <StyledCardContainer>
-          <Cover  name="Machines" icon="arcticons:materialistic" setting isArchived={isArchived} />
+          <Cover  name={ isArchived ? "Archived Machines" : "Machines" } icon="arcticons:materialistic" setting isArchived={isArchived} />
         </StyledCardContainer>
         <TableCard>
           <MachineListTableToolbar

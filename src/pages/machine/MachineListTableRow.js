@@ -65,7 +65,6 @@ export default function MachineListTableRow({
       />
       
       {  useScreenSize('lg') && <TableCell >{ name || ''}</TableCell>}
-      {  useScreenSize('lg') && <TableCell >{ Array.isArray(profiles) && profiles.map( el => el?.defaultName)?.join(', ') || ''}</TableCell>}
       {  useScreenSize('sm') && <TableCell >{ machineModel?.name || ''}</TableCell>}
       {  useScreenSize('lg') && 
       
@@ -85,12 +84,13 @@ export default function MachineListTableRow({
               tooltipcolor="#008000" 
               color="#008000"
               sx={{maxWidth:'200px'}}
-            >
+              >
               <Iconify icon="mdi:info" sx={{position:'relative', bottom:'-5px'}} />
             </StyledTooltip>
           }
         </TableCell>
       }
+      {  useScreenSize('lg') && <TableCell >{ Array.isArray(profiles) && profiles.map( el => el?.defaultName)?.join(', ') || ''}</TableCell>}
       <TableCell align="center">  <Switch checked={isActive} disabled size="small"/>  </TableCell>
 
     </TableRow>
