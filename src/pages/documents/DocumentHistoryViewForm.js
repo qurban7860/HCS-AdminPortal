@@ -379,7 +379,7 @@ const handleNewFile = async () => {
           drawingPage={machineDrawingPage}
           customerAccess={defaultValues?.customerAccess}
           isActive={defaultValues.isActive}
-          handleEdit={( machineDrawingPage || ( machineDrawings && documentHistory?.productDrawings?.length === 0 ) ) && handleEditDrawing }
+          handleEdit={( machineDrawingPage || ( machineDrawings && !documentHistory?.machine && documentHistory?.productDrawings?.length === 0 ) ) && handleEditDrawing }
           onDelete={machineDrawingPage ? handleDeleteDrawing : !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && handleDelete || undefined }
           disableDeleteButton={machineDrawingPage && machine?.status?.slug==="transferred"}
           disableEditButton={machineDrawingPage && machine?.status?.slug==="transferred"}
