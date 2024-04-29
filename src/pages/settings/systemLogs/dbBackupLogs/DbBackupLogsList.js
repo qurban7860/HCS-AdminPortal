@@ -35,7 +35,7 @@ export default function DbBackupLogsList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'id', defaultOrder: 'desc',
+    defaultOrderBy: 'name', defaultOrder: 'desc',
   });
 
   const dispatch = useDispatch();

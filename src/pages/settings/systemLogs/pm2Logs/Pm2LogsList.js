@@ -82,8 +82,6 @@ export default function Pm2LogsList() {
     filterName,
   });  
 
-  console.log('dataFiltered:', dataFiltered );
-
 
   const denseHeight = 60;
   const isFiltered = filterName !== '';

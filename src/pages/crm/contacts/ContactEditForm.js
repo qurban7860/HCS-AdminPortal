@@ -194,17 +194,6 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
               >
 
                 <RHFAutocomplete
-                  name={FORMLABELS.REPORTINGTO.name}
-                  label={FORMLABELS.REPORTINGTO.label}
-                  options={activeContacts.filter((activeContact) => contact?._id !== activeContact?._id)}
-                  getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
-                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                  renderOption={(props, option) => (
-                    <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>
-                  )}
-                />
-
-                <RHFAutocomplete
                   name={FORMLABELS.DEPARTMENT.name}
                   label={FORMLABELS.DEPARTMENT.label}
                   options={departments?.filter( el => (customer?.type?.toLowerCase() !== 'sp' && el.forCustomer ) ? el.forCustomer : customer?.type?.toLowerCase() === 'sp' )}
@@ -212,6 +201,17 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                   isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   renderOption={(props, option) => (
                     <li {...props} key={option?._id}>{option?.departmentName || ''}</li>
+                  )}
+                />
+
+                <RHFAutocomplete
+                  name={FORMLABELS.REPORTINGTO.name}
+                  label={FORMLABELS.REPORTINGTO.label}
+                  options={activeContacts.filter((activeContact) => contact?._id !== activeContact?._id)}
+                  getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>
                   )}
                 />
               </Box>
