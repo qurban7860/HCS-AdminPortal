@@ -216,20 +216,20 @@ export const ICONS = {
 
   FORMEREMPLOYEE: {
     icon: 'ri:user-location-fill',
-    color: '#008000',
+    color: '#878787',
     heading: 'Former Employee',
   },
 
   NOTFORMEREMPLOYEE: {
     icon: 'ri:user-location-fill',
-    color: '#878787',
-    heading: 'Not Former Employee',
+    color: '#008000',
+    heading: 'Current Employee',
   },
   // ------------------------------------------------------------
 
   TRANSFERHISTORY: {
     icon: 'ic:outline-manage-history',
-    color: '#008000',
+    color: '#878787',
     heading: 'Transfer History',
   },
 

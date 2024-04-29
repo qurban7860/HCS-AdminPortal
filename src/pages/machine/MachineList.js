@@ -258,19 +258,19 @@ export default function MachineList({ isArchived }) {
         <TableCard>
           <MachineListTableToolbar
             filterName={filterName}
-            filterStatus={filterStatus}
             onFilterName={handleFilterName}
-            filterVerify={filterVerify}
-            onFilterVerify={handleFilterVerify}
-            onFilterStatus={handleFilterStatus}
+            filterVerify={ isArchived ? undefined : filterVerify}
+            onFilterVerify={ isArchived ? undefined : handleFilterVerify}
+            filterStatus={ isArchived ? undefined : filterStatus}
+            onFilterStatus={ isArchived ? undefined : handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
             onExportCSV={onExportCSV}
             onExportLoading={exportingCSV}
             accountManagerFilter={accountManager}
-            setAccountManagerFilter={setAccountManagerFilter}
+            setAccountManagerFilter={ isArchived ? undefined : setAccountManagerFilter}
             supportManagerFilter={supportManager}
-            setSupportManagerFilter={setSupportManagerFilter}
+            setSupportManagerFilter={ isArchived ? undefined : setSupportManagerFilter}
             isArchived={isArchived}
           />
 
