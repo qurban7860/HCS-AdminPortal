@@ -236,6 +236,14 @@ export default function SecurityUserViewForm() {
                 heading="Contact"
                 node={
                   <>
+                    { defaultValues?.contact?.firstName && <StyledTooltip
+                      placement="top" 
+                      title={defaultValues?.contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.heading:ICONS.NOTFORMEREMPLOYEE.heading} 
+                      disableFocusListener tooltipcolor={defaultValues?.contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.color:ICONS.NOTFORMEREMPLOYEE.color} 
+                      color={defaultValues?.contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.color:ICONS.NOTFORMEREMPLOYEE.color}
+                    >
+                      <Iconify icon={ICONS.FORMEREMPLOYEE.icon} sx={{mr:1, height: 20, width: 20 }}/>
+                    </StyledTooltip>}
                     {defaultValues?.contact && (
                       <Link onClick={handleContactDialog} href="#" underline="none">
                         {defaultValues?.contact?.firstName || ''} {defaultValues?.contact?.lastName || ''}
@@ -246,14 +254,6 @@ export default function SecurityUserViewForm() {
                         }
                       </Link>)
                     }
-                    <StyledTooltip
-                      placement="top" 
-                      title={defaultValues?.contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.heading:ICONS.NOTFORMEREMPLOYEE.heading} 
-                      disableFocusListener tooltipcolor={defaultValues?.contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.color:ICONS.NOTFORMEREMPLOYEE.color} 
-                      color={defaultValues?.contact?.formerEmployee ? ICONS.FORMEREMPLOYEE.color:ICONS.NOTFORMEREMPLOYEE.color}
-                    >
-                      <Iconify icon={ICONS.FORMEREMPLOYEE.icon} sx={{ml:1.5, height: 20, width: 20 }}/>
-                    </StyledTooltip>
                   </>
                     }
               />
