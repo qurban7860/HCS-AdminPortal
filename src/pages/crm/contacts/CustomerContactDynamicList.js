@@ -211,9 +211,8 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
               snapAlign="start"
               contacts={contacts.length}
               disabled={contactEditForm || contactAddForm || contactMoveForm}
-              maxHeight={100}
             >
-              <Grid container direction="column" gap={1} >
+              <Grid container direction="column" gap={1}>
                 {dataFiltered.map((_contact, index) => (
                   <ContactSiteCard
                     key={_contact?._id || index }

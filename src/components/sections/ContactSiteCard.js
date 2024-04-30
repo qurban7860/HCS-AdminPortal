@@ -63,7 +63,7 @@ export default function ContactSiteCard({ name, title, email, phone, image, isMa
   
   return (
     <Card sx={{ display: 'flex', height:smScreen && '200px', width:'100%', borderRadius:'8px', background:isActive?'#e9ecfe':''}}>
-      <CardActionArea sx={{display:'flex', height:'100%', p:0, m:0}} disabled={isActive || disableClick} onClick={handleOnClick}>
+      <CardActionArea sx={{display:'flex', height:'100%', p:0, m:0}} disabled={disableClick} onClick={handleOnClick}>
         {smScreen &&
           <>
             {image ? (
@@ -93,11 +93,11 @@ export default function ContactSiteCard({ name, title, email, phone, image, isMa
             
             { isFormerEmployee !== undefined && 
               <Grid
-                sx={{ position: 'absolute', top: 5, right: 5 }}
+                sx={{ position: 'absolute', top: 5, right: 5, zIndex:'10' }}
               >
                 <StyledTooltip
                   title={ isFormerEmployee ? ICONS.FORMEREMPLOYEE.heading : ICONS.NOTFORMEREMPLOYEE.heading }
-                  color={ isFormerEmployee ? ICONS.FORMEREMPLOYEE.color : ICONS.NOTFORMEREMPLOYEE.color } 
+                  tooltipcolor={ isFormerEmployee ? ICONS.FORMEREMPLOYEE.color : ICONS.NOTFORMEREMPLOYEE.color } 
                   placement="top" 
                   disableFocusListener 
                   >

@@ -192,9 +192,8 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
               </Grid>
             )}
             <StyledScrollbar
-              maxHeight={155}
               snap
-              snapOffset={50}
+              snapOffset={100}
               onClick={(e) => e.stopPropagation()}
               snapAlign="start"
               contacts={sites.length}
