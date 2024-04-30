@@ -51,7 +51,7 @@ export default function CustomerListTableRow({
     <StyledTableRow hover selected={selected}>
       <LinkTableCellWithIcon
         align="left"
-        onClick={ !isArchived ? onViewRow : undefined }
+        onClick={ onViewRow }
         param={name}
         isVerified={verifications?.length > 0}
         main={type?.toLowerCase() === 'sp'}

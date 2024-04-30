@@ -58,7 +58,7 @@ export default function MachineListTableRow({
     <TableRow hover selected={selected}>
       <LinkTableCellWithIconTargetBlank
         align="left"
-        onViewRow={ !isArchived ? onViewRow : undefined }
+        onViewRow={ onViewRow }
         onClick={openInNewPage}
         param={serialNo}
         isVerified={verifications?.length > 0}

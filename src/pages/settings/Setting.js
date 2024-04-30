@@ -18,7 +18,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 
 export default function Setting() {
 
-  const { isSettingAccessAllowed, isSettingReadOnly, isAllAccessAllowed, isDeveloper } = useAuthContext()
+  const { isSettingAccessAllowed, isAllAccessAllowed, isDeveloper } = useAuthContext()
 
   const navigate = useNavigate();
 
@@ -156,7 +156,7 @@ return (
                   />}
                 </List>
 
-                { isAllAccessAllowed && !isSettingReadOnly && <List
+                {/* { isAllAccessAllowed && !isSettingReadOnly && <List
                   component="nav"
                   aria-labelledby="nested-list-subheader"
                   subheader={<ListItemsHeader header={FORMLABELS.ARCHIVED_REPORTS} />}
@@ -171,7 +171,7 @@ return (
                     icon={ICONS.ARCHIVEDMACHINES.icon}
                     content={ICONS.ARCHIVEDMACHINES.heading}
                   />
-                </List>}
+                </List>} */}
 
                 { isDeveloper && <List
                   component="nav"

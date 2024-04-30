@@ -542,6 +542,14 @@ export default function Router() {
                 { path: ':id/move',element: <CustomerMachineMove />  },
               ],
             },
+            // ------------------------------ ARCHIVED CUSTOMERS ----------------------------------
+            {
+              path: 'archived',
+              children: [
+                { element: <CustomerList isArchived />, index: true },
+                { path: ':id/view', element: <CustomerView isArchived/> },
+              ],
+            },
             { path: 'permission-denied', element: <PermissionDeniedPage /> },
             { path: 'blank', element: <BlankPage /> },
           ]
@@ -784,7 +792,15 @@ export default function Router() {
                 ]
               },
             ]
-            }
+            },
+            // ------------------------------ ARCHIVED MACHINES ----------------------------------
+            {
+              path: 'archived',
+              children: [
+                { element: <MachineList isArchived />, index: true },
+                { path: ':id/view', element: <MachineView isArchived /> },
+              ],
+            },
           ]
         }, 
         { path: 'permission-denied', element: <PermissionDeniedPage /> },
@@ -938,22 +954,6 @@ export default function Router() {
             { path: 'new', element: <DepartmentAdd /> },
             { path: ':id/view', element: <DepartmentView /> },
             { path: ':id/edit', element: <DepartmentEdit /> }
-          ],
-        },
-        // ------------------------------ ARCHIVED CUSTOMERS ----------------------------------
-        {
-          path: 'archivedCustomers',
-          children: [
-            { element: <CustomerList isArchived />, index: true },
-            { path: ':id/view', element: <CustomerView isArchived/> },
-          ],
-        },
-        // ------------------------------ ARCHIVED MACHINES ----------------------------------
-        {
-          path: 'archivedMachines',
-          children: [
-            { element: <MachineList isArchived />, index: true },
-            { path: ':id/view', element: <MachineView isArchived /> },
           ],
         },
         // ------------------------------ PM2 Logs ----------------------------------
