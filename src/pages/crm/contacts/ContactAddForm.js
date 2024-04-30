@@ -28,7 +28,6 @@ import {
 import { useSnackbar } from '../../../components/snackbar';
 import { useAuthContext } from '../../../auth/useAuthContext';
 import FormProvider, {
-  RHFCheckboxAutocomplete,
   RHFTextField,
   RHFAutocomplete,
   RHFCountryAutocomplete,

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
@@ -61,10 +61,25 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   const { departments } = useSelector((state) => state.department);
   const { enqueueSnackbar } = useSnackbar();
   const { customerId, id } = useParams() 
+  const [ contactTypes, setContactTypes ] = useState([]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate()
 
+  const systemConfig= JSON.parse( localStorage.getItem('configurations'))
+  
+  const sPContactTypes = systemConfig?.find( ( c )=> c?.name?.trim() === 'SP_CONTACT_TYPES' )?.value?.split(',')?.map(item => item?.trim());
+  const CustomerContactTypes = systemConfig?.find( ( c )=> c?.name?.trim() === 'CUSTOMER_CONTACT_TYPES')?.value?.split(',')?.map(item => item?.trim());
+
+  useEffect(()=>{
+    if( customer?.type?.toLowerCase() === 'sp'){
+      setContactTypes(sPContactTypes)
+    } else {
+      setContactTypes(CustomerContactTypes)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ customer?.type ])
+  
   // --------------------------------hooks----------------------------------
   const defaultValues = useMemo(
     () => ({
@@ -174,12 +189,14 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                 <RHFTextField name={FORMLABELS.LASTNAME.name} label={FORMLABELS.LASTNAME.label} />
                 <RHFTextField name={FORMLABELS.TITLE.name} label={FORMLABELS.TITLE.label} />
 
-                <RHFMultiSelect
-                  chip
-                  checkbox
+                <RHFAutocomplete
+                  multiple
+                  disableCloseOnSelect
+                  filterSelectedOptions
                   name={FORMLABELS.CONTACT_TYPES.name}
                   label={FORMLABELS.CONTACT_TYPES.label}
-                  options={FORMLABELS.CONTACT_TYPES.options}
+                  options={contactTypes || []}
+                  isOptionEqualToValue={(option, value) => option === value}
                 />
               </Box>
 
