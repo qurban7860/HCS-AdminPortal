@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
@@ -28,7 +28,7 @@ import {
 import { useSnackbar } from '../../../components/snackbar';
 import { useAuthContext } from '../../../auth/useAuthContext';
 import FormProvider, {
-  RHFMultiSelect,
+  RHFCheckboxAutocomplete,
   RHFTextField,
   RHFAutocomplete,
   RHFCountryAutocomplete,
@@ -62,17 +62,32 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
   const { userId, user } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
   const { customerId } = useParams() 
+  const [ contactTypes, setContactTypes ] = useState([]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const theme = createTheme({ palette: { success: green } });
+  const systemConfig= JSON.parse( localStorage.getItem('configurations'))
+  
+  const sPContactTypes = systemConfig?.find( ( c )=> c?.name?.trim() === 'SP_CONTACT_TYPES' )?.value?.split(',')?.map(item => item?.trim());
+  const CustomerContactTypes = systemConfig?.find( ( c )=> c?.name?.trim() === 'CUSTOMER_CONTACT_TYPES')?.value?.split(',')?.map(item => item?.trim());
 
-  const PHONE_TYPES_ = JSON.parse( localStorage.getItem('configurations'))?.find( ( c )=> c?.name === 'PHONE_TYPES' )
+  useEffect(()=>{
+    if( customer?.type?.toLowerCase() === 'sp'){
+      setContactTypes(sPContactTypes)
+    } else {
+      setContactTypes(CustomerContactTypes)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ customer?.type ])
+
+  const PHONE_TYPES_ = systemConfig?.find( ( c )=> c?.name === 'PHONE_TYPES' )
   let PHONE_TYPES = ['Mobile', 'Home', 'Work', 'Fax', 'Others'];
   if(PHONE_TYPES_) {
     PHONE_TYPES = PHONE_TYPES_.value.split(',').map(item => item.trim());
   }
+
   const defaultValues = useMemo(
     () => ({
       customer: customer?._id,
@@ -191,13 +206,17 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
               <RHFTextField name={FORMLABELS.FIRSTNAME.name} label={FORMLABELS.FIRSTNAME.label} />
               <RHFTextField name={FORMLABELS.LASTNAME.name} label={FORMLABELS.LASTNAME.label} />
               <RHFTextField name={FORMLABELS.TITLE.name} label={FORMLABELS.TITLE.label} />
-              <RHFMultiSelect
-                chip
-                checkbox
+
+              <RHFAutocomplete
+                multiple
+                disableCloseOnSelect
+                filterSelectedOptions
                 name={FORMLABELS.CONTACT_TYPES.name}
                 label={FORMLABELS.CONTACT_TYPES.label}
-                options={FORMLABELS.CONTACT_TYPES.options}
+                options={contactTypes || []}
+                isOptionEqualToValue={(option, value) => option === value}
               />
+
             </Box>
             <Box
               rowGap={2}

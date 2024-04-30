@@ -99,7 +99,7 @@ export default function DepartmentEditForm() {
                   <Grid display="flex">
                     <RHFSwitch name="isActive" label="Active"/>
                     <RHFSwitch name="isDefault" label="Default"/>
-                    <RHFSwitch name="forCustomer" label="Customer" />
+                    <RHFSwitch name="forCustomer" label="Customers" />
                   </Grid>
                 </Box>
               </Stack>
