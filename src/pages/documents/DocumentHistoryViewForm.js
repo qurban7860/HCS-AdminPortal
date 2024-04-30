@@ -17,6 +17,7 @@ import {
   Typography,
   Divider
 } from '@mui/material';
+import b64toBlob from 'b64-to-blob';
 import { ThumbnailDocButton } from '../../components/Thumbnails'
 import { StyledVersionChip } from '../../theme/styles/default-styles';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
@@ -44,6 +45,7 @@ import { Snacks } from '../../constants/document-constants';
 import UpdateDocumentVersionDialog from '../../components/Dialog/UpdateDocumentVersionDialog';
 import { DocumentGalleryItem } from '../../components/gallery/DocumentGalleryItem';
 import Lightbox from '../../components/lightbox/Lightbox';
+import SkeletonPDF from '../../components/skeleton/SkeletonPDF';
 
 // ----------------------------------------------------------------------
 
@@ -53,6 +55,7 @@ DocumentHistoryViewForm.propTypes = {
   machineDrawingPage: PropTypes.bool,
   machineDrawings: PropTypes.bool,
 };
+
 function DocumentHistoryViewForm({ customerPage, machinePage, machineDrawingPage, machineDrawings }) {
   
   const dispatch = useDispatch();
@@ -333,7 +336,9 @@ const handleNewFile = async () => {
       const response = await dispatch(getDocumentDownload(documentId, versionId, fileId));
       if (regEx.test(response.status)) {
         const pdfData = `data:application/pdf;base64,${encodeURI(response.data)}`;
-        setPDF(pdfData);
+        const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
+        const url = URL.createObjectURL(blob);
+        setPDF(url);
       } else {
         enqueueSnackbar(response.statusText, { variant: 'error' });
       }
@@ -345,6 +350,7 @@ const handleNewFile = async () => {
       }
     }
   };
+
 
   // const onDocumentLoadSuccess = ({ numPages }) => {
   //   setPages(numPages);
@@ -556,21 +562,8 @@ const handleNewFile = async () => {
           {pdf?(
             <iframe title={PDFName} src={pdf} style={{paddingBottom:10}} width='100%' height='842px'/>
           ):(
-            <DialogContent dividers sx={{height:'-webkit-fill-available'}}>
-              <Typography variant='body1' sx={{mt:2}}>Loading PDF....</Typography>
-            </DialogContent>
+            <SkeletonPDF />
           )}
-        
-        {/* <DialogContent dividers sx={{height:'-webkit-fill-available'}}>
-          {pdf?(
-            <Document file={pdf} onLoadSuccess={onDocumentLoadSuccess}>
-              {Array.from(new Array(pages), (el, index) => (
-                <Page width={840} rotate={pageRotation} key={`page_${index + 1}`} renderAnnotationLayer={false} renderTextLayer={false} pageNumber={index + 1} />
-              ))}
-            </Document>
-          ):(<Typography variant='body1' sx={{mt:2}}>Loading PDF....</Typography>)}
-        </DialogContent> */}
-        
       </Dialog>
     )}
     </>
