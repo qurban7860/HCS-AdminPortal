@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Grid, Card, Box, Dialog, DialogTitle, Button, DialogContent, Divider, Typography } from '@mui/material'
 import download from 'downloadjs';
+import b64toBlob from 'b64-to-blob';
 import { StyledVersionChip } from '../../theme/styles/default-styles';
 import { PATH_CRM, PATH_DOCUMENT, PATH_MACHINE } from '../../routes/paths';
 import {
@@ -24,6 +25,7 @@ import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDe
 import { DocumentGalleryItem } from '../../components/gallery/DocumentGalleryItem';
 import Lightbox from '../../components/lightbox/Lightbox';
 import FormLabel from '../../components/DocumentForms/FormLabel';
+import SkeletonPDF from '../../components/skeleton/SkeletonPDF';
 
 DocumentViewForm.propTypes = {
   customerPage: PropTypes.bool,
@@ -244,10 +246,11 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
     setPDF(null);
     try {
       const response = await dispatch(getDocumentDownload(documentId, versionId, fileId));
-
       if (regEx.test(response.status)) {
         const pdfData = `data:application/pdf;base64,${encodeURI(response.data)}`;
-        setPDF(pdfData);
+        const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
+        const url = URL.createObjectURL(blob);
+        setPDF(url);
       } else {
         enqueueSnackbar(response.statusText, { variant: 'error' });
       }
@@ -391,13 +394,10 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
         </DialogTitle>
         <Divider variant='fullWidth' />
           {pdf?(
-            <iframe title={PDFName} src={pdf} style={{paddingBottom:10}} width='100%' height='842px'/>
-          ):(
-            <DialogContent dividers sx={{height:'-webkit-fill-available'}}>
-              <Typography variant='body1' sx={{mt:2}}>Loading PDF....</Typography>
-            </DialogContent>
-          )}
-        
+              <iframe title={PDFName} src={pdf} style={{paddingBottom:10}} width='100%' height='842px'/>
+            ):(
+              <SkeletonPDF />
+            )}
         {/* <DialogContent dividers sx={{height:'-webkit-fill-available'}}>
           {pdf?(
             <Document file={pdf} onLoadSuccess={onDocumentLoadSuccess}>
