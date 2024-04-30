@@ -112,7 +112,13 @@ export const PATH_CRM = {
       move: ( customerId, id ) => path(ROOTS_CRM, `/customers/${customerId}/machines/${id}/move`),
       new: ( customerId ) => path(ROOTS_CRM, `/customers/${customerId}/machines/new`),
     },
-  }
+    // ------------------------ ARCHIVED CUSTOMERS ----------------------------------------
+    archived: {
+      root: path(ROOTS_CRM, '/customers/archived'),
+      view: (id) => path(ROOTS_CRM, `/customers/archived/${id}/view`),
+    },
+  },
+  
 };
 
 // MACHINE
@@ -232,7 +238,12 @@ export const PATH_MACHINE = {
       new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/new`),
       graph: (machineId ) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/graph`),
       view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/${id}/view`),
-    },    
+    },   
+    // ------------------------ ARCHIVED MACHINES ----------------------------------------
+    archived: {
+      root: path(ROOTS_MACHINE, '/machines/archived'),
+      view: (id) => path(ROOTS_MACHINE, `/machines/archived/${id}/view`),
+    }, 
     // --------------------- MACHINE SETTINGS -----------------------
     machineSettings: {
       root: path(ROOTS_MACHINE, '/machines/machineSettings'),
@@ -373,16 +384,6 @@ export const PATH_SETTING = {
     new: path(ROOTS_SETTING, '/departments/new'),
     view: (id) => path(ROOTS_SETTING, `/departments/${id}/view`),
     edit: (id) => path(ROOTS_SETTING, `/departments/${id}/edit`)
-  },
-  // ------------------------ ARCHIVED CUSTOMERS ----------------------------------------
-  archivedCustomers: {
-    root: path(ROOTS_SETTING, '/archivedCustomers'),
-    view: (id) => path(ROOTS_SETTING, `/archivedCustomers/${id}/view`),
-  },
-  // ------------------------ ARCHIVED MACHINES ----------------------------------------
-  archivedMachines: {
-    root: path(ROOTS_SETTING, '/archivedMachines'),
-    view: (id) => path(ROOTS_SETTING, `/archivedMachines/${id}/view`),
   },
   // ------------------------ PM2 LOGS ----------------------------------------
   pm2: {

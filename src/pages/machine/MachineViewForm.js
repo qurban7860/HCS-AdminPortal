@@ -319,23 +319,23 @@ export default function MachineViewForm() {
             <ViewFormField isLoading={isLoading} sm={6} heading="Purchase Date" param={fDate(defaultValues?.purchaseDate)} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Work Order / Purchase Order" param={defaultValues?.workOrderRef}/>
                        {/* 7 FULL ROW */}
-            <ViewFormField isLoading={isLoading} sm={6} heading="Financing Company"
-                    node={ defaultValues.financialCompany && (
-                        <Link onClick={(event)=> handleCustomerDialog(event, defaultValues.financialCompany?._id)} underline="none" sx={{ cursor: 'pointer'}} >
-                          {defaultValues.financialCompany?.name}
-                        </Link> )} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Billing Site"
                 node={ defaultValues.billingSite && (
                   <Link onClick={ handleBillingSiteDialog } underline="none" sx={{ cursor: 'pointer'}} >
                     {defaultValues.billingSite?.name}
                   </Link> )} />
                        {/* 8 FULL ROW */}
+            <ViewFormField isLoading={isLoading} sm={6} heading="Financing Company"
+                node={ defaultValues.financialCompany && (
+                    <Link onClick={(event)=> handleCustomerDialog(event, defaultValues.financialCompany?._id)} underline="none" sx={{ cursor: 'pointer'}} >
+                      {defaultValues.financialCompany?.name}
+                    </Link> )} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Installation Site"
               node={ defaultValues.instalationSite && (
                   <Link onClick={ handleInstallationSiteDialog } underline="none" sx={{ cursor: 'pointer'}} >
                     {defaultValues.instalationSite?.name}
                   </Link> )} />
-            <ViewFormField isLoading={isLoading} sm={12} heading="Landmark for Installation site" param={defaultValues?.siteMilestone} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Landmark for Installation site" param={defaultValues?.siteMilestone} />
                        {/* 9 FULL ROW */}
             <ViewFormField isLoading={isLoading} sm={6} heading="Shipping Date" param={fDate(defaultValues?.shippingDate)} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Installation Date" param={fDate(defaultValues?.installationDate)} />

@@ -42,7 +42,7 @@ export default function Pm2LogsList() {
   const [tableData, setTableData] = useState([]);
 
   const { pm2Logs, pm2Environment, pm2LogType, filterBy, isLoading, initial } = useSelector((state) => state.pm2Logs );
-
+  
   const TABLE_HEAD = [
     { id: 'pm2Logs', label: 'PM 2 Logs', align: 'left' },
   ];
@@ -132,7 +132,7 @@ export default function Pm2LogsList() {
             handleRefresh={ fetchPm2Logs }
           />
             <TablePaginationCustom
-              count={pm2Logs?.totalPages || 0 }
+              count={pm2Logs?.totalCount || 0 }
               page={page}
               rowsPerPage={rowsPerPage}
               onPageChange={onChangePage}
@@ -163,7 +163,7 @@ export default function Pm2LogsList() {
           </TableContainer>
 
           <TablePaginationCustom
-            count={pm2Logs?.totalPages}
+            count={pm2Logs?.totalCount || 0 }
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}

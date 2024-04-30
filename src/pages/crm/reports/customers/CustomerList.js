@@ -183,7 +183,7 @@ export default function CustomerList({ isArchived }) {
   return (
     <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name={ isArchived ? FORMLABELS.COVER.ARCHIVED_CUSTOMERS : FORMLABELS.COVER.CUSTOMERS  } customerSites customerContacts isArchived={isArchived} />
+          <Cover name={ isArchived ? FORMLABELS.COVER.ARCHIVED_CUSTOMERS : FORMLABELS.COVER.CUSTOMERS  } customerSites customerContacts isArchivedCustomers={!isArchived} isArchived={isArchived} />
         </StyledCardContainer>
       <TableCard >
         <CustomerListTableToolbar

@@ -20,15 +20,13 @@ export default function Pm2LogsTableRow({
   selected,
   onViewRow
 }) {
+  
   return (
-      <StyledTableRow hover selected={selected} style={{ display: 'block' }} >
-          <TableCell align="left" sx={{ pb: 1 }} > 
-<Typography variant="body2" 
-  sx={{
-    display: 'flex',
+      <StyledTableRow hover selected={selected} >
+          <TableCell align="left" sx={{ pb: 1,    display: 'flex',
     alignItems: 'center',
-    whiteSpace: 'pre-line',
-    wordBreak: 'break-word' }} > {row} </Typography> </TableCell>
+    whiteSpace: 'pre',
+    wordBreak: 'break-word' }} >{row}</TableCell>
       </StyledTableRow>
   );
 }

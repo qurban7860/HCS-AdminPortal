@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router';
 import { Button, Grid } from '@mui/material';
 import { StyledRoot, StyledInfo } from '../../theme/styles/default-styles';
 // utils
-import { PATH_CRM, PATH_SETTING } from '../../routes/paths';
+import { PATH_CRM, PATH_MACHINE, PATH_SETTING } from '../../routes/paths';
 // auth
 import CoverSettingsIcons from './CoverSettingsIcons';
 import CoverTitles from './CoverTitles';
 import useResponsive from '../../hooks/useResponsive';
 import CoverAvatar from './CoverAvatar';
 import Iconify from '../iconify';
+import { useAuthContext } from '../../auth/useAuthContext';
 
 // ----------------------------------------------------------------------
 
@@ -23,6 +24,8 @@ Cover.propTypes = {
   customerContacts: PropTypes.bool,
   backLink: PropTypes.bool,
   isArchived: PropTypes.bool,
+  isArchivedCustomers: PropTypes.bool,
+  isArchivedMachines: PropTypes.bool,
 };
 export function Cover({
   name,
@@ -34,25 +37,19 @@ export function Cover({
   customerContacts,
   backLink,
   isArchived,
+  isArchivedCustomers,
+  isArchivedMachines,
 }) {
   const navigate = useNavigate();
+  const { isSettingReadOnly, isAllAccessAllowed } = useAuthContext()
 
-  const handleSettingsNavigate = () => {
-    navigate(PATH_SETTING.root);
-  };
+  const handleSettingsNavigate = () => navigate(PATH_SETTING.root);
+  const linkCustomerSites = () => navigate(PATH_CRM.sites);
+  const linkCustomerContacts = () =>  navigate(PATH_CRM.contacts);
+  const linkArchivedCustomers = () =>  navigate(PATH_CRM.customers.archived.root);
+  const linkArchivedMachines = () =>  navigate(PATH_MACHINE.machines.archived.root);
+  const handleBackLink = () => window.history.back();
 
-  const linkCustomerSites = () => {
-    navigate(PATH_CRM.sites)
-  }
-
-  const linkCustomerContacts = () => {
-    navigate(PATH_CRM.contacts)
-  }
-
-  const handleBackLink = () => {
-    window.history.back();
-  }
-  
   const isMobile = useResponsive('down', 'sm');
 
   return (
@@ -69,6 +66,9 @@ export function Cover({
           <Grid item>
             { !isArchived && customerSites && <Button size='small' startIcon={<Iconify icon="mdi:map-legend" />} variant='outlined' onClick={linkCustomerSites}>Sites</Button>}
             { !isArchived && customerContacts && <Button size='small' startIcon={<Iconify icon="mdi:account-multiple" />} variant='outlined' sx={{ml:2}} onClick={linkCustomerContacts}>Contacts</Button>}
+            { isAllAccessAllowed && !isSettingReadOnly && isArchivedCustomers && <Button size='small' startIcon={<Iconify icon="fa6-solid:users-slash" />} variant='outlined' sx={{ml:2}} onClick={linkArchivedCustomers}>Archived Customers</Button>}
+            { isAllAccessAllowed && !isSettingReadOnly && isArchivedMachines && <Button size='small' startIcon={<Iconify icon="fluent:table-delete-column-16-filled" />} variant='outlined' sx={{ml:2}} onClick={linkArchivedMachines}>Archived Machines</Button>}
+            
           </Grid>
       </Grid>
     </StyledRoot>
