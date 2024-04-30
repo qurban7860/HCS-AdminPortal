@@ -59,7 +59,7 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
   const [filterName, setFilterName] = useState('');
   const [filterStatus, setFilterStatus] = useState([]);
   const [tableData, setTableData] = useState([]);
-  const [filterFormer, setFilterFormer] = useState('');
+  const [filterFormer, setFilterFormer] = useState('All');
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const { order, orderBy } = useTable({ defaultOrderBy: '-createdAt' });
   // ------------------------------------------------------------
@@ -154,7 +154,7 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
             <Autocomplete 
               freeSolo
               value={ filterFormer }
-              options={[ 'Former Employee', 'Not Former Employee' ]}
+              options={[ 'All', 'Former Employee', 'Current Employee' ]}
               isOptionEqualToValue={(option, val) => option === val}
               onChange={(event, newValue) => {
                 if (newValue) {

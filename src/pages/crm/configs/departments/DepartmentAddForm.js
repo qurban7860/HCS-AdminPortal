@@ -85,7 +85,7 @@ export default function DepartmentAddForm() {
                 <Grid display="flex" justifyContent="flex-start">
                   <RHFSwitch name="isActive" label="Active"/>
                   <RHFSwitch name="isDefault" label="Default"/>
-                  <RHFSwitch name="forCustomer" label="Customer" />
+                  <RHFSwitch name="forCustomer" label="Customers" />
                 </Grid>
                 <AddFormButtons settingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>

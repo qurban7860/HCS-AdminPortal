@@ -205,13 +205,13 @@ export const ICONS = {
   FORCUSTOMER: {
     icon: 'fa-solid:users',
     color: '#008000',
-    heading: 'For Customer',
+    heading: 'For Customers',
   },
 
   NOTFORCUSTOMER: {
     icon: 'fa-solid:users-slash',
     color: '#878787',
-    heading: 'Not For Customer',
+    heading: 'For SP Customers only',
   },
 
   FORMEREMPLOYEE: {

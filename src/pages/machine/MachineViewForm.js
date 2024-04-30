@@ -116,7 +116,7 @@ export default function MachineViewForm() {
     if (machine?.status?.slug === 'transferred') {
       setDisableTransferButton(true);
       setDisableEditButton(true);
-      setDisableDeleteButton(true);
+      // setDisableDeleteButton(true);
     } else {
       setDisableTransferButton(false);
       setDisableEditButton(false);

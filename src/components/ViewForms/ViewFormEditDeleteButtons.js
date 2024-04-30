@@ -379,7 +379,7 @@ function ViewFormEditDeleteButtons({
             />
           }
           
-          {isDefault !==undefined &&
+          {isDefault &&
             <IconTooltip
               title={isDefault?ICONS.DEFAULT.heading:ICONS.CONTRAST.heading}
               color={isDefault?ICONS.DEFAULT.color:ICONS.CONTRAST.color}
