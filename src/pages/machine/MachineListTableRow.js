@@ -1,13 +1,16 @@
 import PropTypes from 'prop-types';
-// import { useEffect, useState } from 'react';
+import { useState } from 'react';
 // @mui
-import { Switch, TableRow, TableCell } from '@mui/material';
+import { Switch, TableRow, TableCell, Grid } from '@mui/material';
+import { green } from '@mui/material/colors';
+import { createTheme } from '@mui/material/styles';
 // utils
 import { fDate } from '../../utils/formatTime';
 // components
 import LinkTableCellWithIconTargetBlank from '../../components/ListTableTools/LinkTableCellWithIconTargetBlank';
 import { useScreenSize } from '../../hooks/useResponsive';
 import LinkDialogTableCell from '../../components/ListTableTools/LinkDialogTableCell';
+import ChipInPopover from '../../components/ViewForms/ChipInPopover';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 import Iconify from '../../components/iconify';
 
@@ -36,7 +39,13 @@ export default function MachineListTableRow({
   handleCustomerDialog,
   isArchived,
 }) {
-  // console.log("rowrow : ", row)
+
+  
+  const [ manufactureProfilesAnchorEl, setManufactureProfilesAnchorEl] = useState(null);
+  const [ manufactureProfiles, setManufactureProfiles] = useState([]);
+
+
+
   const {
     verifications,
     serialNo,
@@ -54,7 +63,24 @@ export default function MachineListTableRow({
     // createdAt,
   } = row;
  
+  const handleManufacturePopoverOpen = (event) => {
+    setManufactureProfilesAnchorEl(event.currentTarget);
+    setManufactureProfiles(profiles)
+  };
+
+  const handleManufacturePopoverClose = () => {
+    setManufactureProfilesAnchorEl(null);
+    setManufactureProfiles([])
+  };
+
+  const theme = createTheme({
+    palette: {
+      success: green,
+    },
+  });
+
   return (
+    <>
     <TableRow hover selected={selected}>
       <LinkTableCellWithIconTargetBlank
         align="left"
@@ -90,9 +116,23 @@ export default function MachineListTableRow({
           }
         </TableCell>
       }
-      {  useScreenSize('lg') && <TableCell >{ Array.isArray(profiles) && profiles.map( el => el?.defaultName)?.join(', ') || ''}</TableCell>}
+      {  useScreenSize('lg') && <TableCell >{ Array.isArray(profiles) && profiles?.length > 0 && profiles?.length === 1 ? profiles[0]?.defaultName :
+      (profiles?.length > 1 && <Grid sx={{ display: "flex", alignItems: "center", alignContent:"center" }} >
+          {`${profiles[0]?.defaultName}, ` }
+          <StyledTooltip title="Profiles" placement="top" disableFocusListener tooltipcolor={theme.palette.primary.main}  color="primary.main" >
+              <Iconify icon="mingcute:profile-line" onClick={handleManufacturePopoverOpen} sx={{mr: 0.5}} /> 
+          </StyledTooltip>
+      </Grid>)
+      || ''}</TableCell>}
       <TableCell align="center">  <Switch checked={isActive} disabled size="small"/>  </TableCell>
 
     </TableRow>
+    <ChipInPopover         
+      open={manufactureProfilesAnchorEl}
+      onClose={handleManufacturePopoverClose}
+      ListArr={manufactureProfiles || [] }
+      ListTitle= "Manufacture Profiles" 
+    /> 
+    </>
   );
 } 

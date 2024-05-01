@@ -72,8 +72,8 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   const CustomerContactTypes = systemConfig?.find( ( c )=> c?.name?.trim() === 'CUSTOMER_CONTACT_TYPES')?.value?.split(',')?.map(item => item?.trim());
 
   useEffect(()=>{
-    if( customer?.type?.toLowerCase() === 'sp'){
-      setContactTypes(sPContactTypes)
+    if( contact?.type?.toLowerCase() === 'sp'){
+      setContactTypes([ ...sPContactTypes, ...CustomerContactTypes ])
     } else {
       setContactTypes(CustomerContactTypes)
     }
@@ -195,7 +195,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                   filterSelectedOptions
                   name={FORMLABELS.CONTACT_TYPES.name}
                   label={FORMLABELS.CONTACT_TYPES.label}
-                  options={contactTypes || []}
+                  options={contactTypes?.sort() || []}
                   isOptionEqualToValue={(option, value) => option === value}
                 />
               </Box>

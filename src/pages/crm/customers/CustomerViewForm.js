@@ -87,10 +87,10 @@ export default function CustomerViewForm() {
             <ViewFormEditDeleteButtons
               isActive={defaultValues.isActive}
               verifiers={customer?.verifications}
-              handleVerification={handleVerification}
+              handleVerification={ customer?.isArchived ? undefined : handleVerification}
               financingCompany={defaultValues.isFinancialCompany}
-              handleEdit={handleEdit}
-              onDelete={onDelete}
+              handleEdit={ customer?.isArchived ? undefined : handleEdit }
+              onDelete={ customer?.isArchived ? undefined : onDelete }
               supportSubscription={defaultValues.supportSubscription}
               backLink={() => navigate(PATH_CRM.customers.list)}
               excludeReports={defaultValues.excludeReports}

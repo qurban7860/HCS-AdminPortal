@@ -74,7 +74,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
 
   useEffect(()=>{
     if( customer?.type?.toLowerCase() === 'sp'){
-      setContactTypes(sPContactTypes)
+      setContactTypes([...sPContactTypes, ...CustomerContactTypes ])
     } else {
       setContactTypes(CustomerContactTypes)
     }
@@ -212,7 +212,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
                 filterSelectedOptions
                 name={FORMLABELS.CONTACT_TYPES.name}
                 label={FORMLABELS.CONTACT_TYPES.label}
-                options={contactTypes || []}
+                options={contactTypes?.sort() || []}
                 isOptionEqualToValue={(option, value) => option === value}
               />
 

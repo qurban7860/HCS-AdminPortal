@@ -93,7 +93,7 @@ export default function DocumentListTableToolbar({
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
         SubOnClick2={ machineDrawings && toggleAddList || undefined }
-        addButton={addButton}
+        addButton={ ( !machineDrawings && ( customer?.isArchived || machine?.isArchived ) ) ? undefined :addButton}
         transferredMachine={machinePage && machine?.status?.slug === 'transferred'}
         categoryVal={categoryVal}
         setCategoryVal={(machineDrawings || machinePage) ? setCategoryVal : null }

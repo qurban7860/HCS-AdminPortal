@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
-import { Table, TableBody, TableContainer, Container, Card } from '@mui/material';
+import { Table, TableBody, TableContainer, Container, Card, Grid } from '@mui/material';
 import { useNavigate } from 'react-router';
 import { PATH_SETTING } from '../../../../routes/paths';
 import { Cover } from '../../../../components/Defaults/Cover';
@@ -23,6 +23,7 @@ import Pm2LogsListTableToolbar from './Pm2LogsListTableToolbar';
 import { getPm2Logs, resetPm2Logs, getPm2Environments, resetPm2Environments, setFilterBy } from '../../../../redux/slices/logs/pm2Logs';
 import { fDate } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
+import JsonEditor from '../../../../components/CodeMirror/JsonEditor';
 
 export default function Pm2LogsList() {
   const {
@@ -39,7 +40,7 @@ export default function Pm2LogsList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
-  const [tableData, setTableData] = useState([]);
+  const [tableData, setTableData] = useState("");
 
   const { pm2Logs, pm2Environment, pm2LogType, filterBy, isLoading, initial } = useSelector((state) => state.pm2Logs );
   
@@ -71,21 +72,21 @@ export default function Pm2LogsList() {
   useEffect(() => {
     // console.log('pm2Logs.data:', pm2Logs?.data);
     if (initial) {
-      setTableData(pm2Logs?.data || [] ); 
+      setTableData(pm2Logs?.data || "" ); 
     }
   }, [ initial, pm2Logs ]);
 
 
-  const dataFiltered = applyFilter({
-    inputData: tableData,
-    comparator: getComparator(order, orderBy),
-    filterName,
-  });  
+  // const dataFiltered = applyFilter({
+  //   inputData: tableData,
+  //   comparator: getComparator(order, orderBy),
+  //   filterName,
+  // });  
 
 
   const denseHeight = 60;
   const isFiltered = filterName !== '';
-  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+  const isNotFound = !tableData;
 
   const debouncedSearch = useRef(debounce((value) => {
     setPage(0)
@@ -123,8 +124,8 @@ export default function Pm2LogsList() {
         </Card>
         <TableCard>
           <Pm2LogsListTableToolbar
-            filterName={filterName}
-            onFilterName={handleFilterName}
+            // filterName={filterName}
+            // onFilterName={handleFilterName}
             onFilterStatus={handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
@@ -138,25 +139,30 @@ export default function Pm2LogsList() {
               onPageChange={onChangePage}
               onRowsPerPageChange={onChangeRowsPerPage}
             />
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          <TableContainer >
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
                 <TableBody>
                 {(
-                  isLoading
-                    ? [...Array(rowsPerPage)]
-                    : dataFiltered
-                  )
-                  .map((row, index) =>
-                    row ? (
-                        <Pm2LogsTableRow
-                          key={index}
-                          row={row}
-                        />
-                      
-                    ) : !isNotFound && isLoading && <TableSkeleton sx={{ height: denseHeight }} />
+                  !isLoading
+                    ? 
+                      <JsonEditor value={tableData} readOnly />
+                        : isLoading && (
+                          <>
+                            <TableSkeleton sx={{ height: denseHeight }} />
+                            <TableSkeleton sx={{ height: denseHeight }} />
+                            <TableSkeleton sx={{ height: denseHeight }} />
+                            <TableSkeleton sx={{ height: denseHeight }} />
+                            <TableSkeleton sx={{ height: denseHeight }} />
+                            <TableSkeleton sx={{ height: denseHeight }} />
+                            <TableSkeleton sx={{ height: denseHeight }} />
+                            <TableSkeleton sx={{ height: denseHeight }} />
+                            <TableSkeleton sx={{ height: denseHeight }} />
+                            <TableSkeleton sx={{ height: denseHeight }} />
+                          </>
+                        )
                   )}
-                  <TableNoData isNotFound={isNotFound} />
+                  {isNotFound && <TableNoData isNotFound={isNotFound} />}
                 </TableBody>
               </Table>
             </Scrollbar>
@@ -176,22 +182,22 @@ export default function Pm2LogsList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName }) {
+// function applyFilter({ inputData, comparator, filterName }) {
 
-  const stabilizedThis = inputData?.map((el, index) => [el, index]);
+//   const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
+//   stabilizedThis.sort((a, b) => {
+//     const order = comparator(a[0], b[0]);
+//     if (order !== 0) return order;
+//     return a[1] - b[1];
+//   });
 
-  inputData = stabilizedThis.map((el) => el[0]);
-  if (filterName) {
-    return inputData.filter(
-      (release) => 
-        release.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 
-    );
-  }
-  return inputData;
-}
+//   inputData = stabilizedThis.map((el) => el[0]);
+//   if (filterName) {
+//     return inputData.filter(
+//       (release) => 
+//         release.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 
+//     );
+//   }
+//   return inputData;
+// }

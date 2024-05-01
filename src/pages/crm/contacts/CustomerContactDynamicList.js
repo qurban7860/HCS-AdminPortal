@@ -153,6 +153,7 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
           <Stack direction='row' alignContent='flex-end' spacing={1}>
             <Autocomplete 
               freeSolo
+              disableClearable
               value={ filterFormer }
               options={[ 'All', 'Former Employee', 'Current Employee' ]}
               isOptionEqualToValue={(option, val) => option === val}
@@ -166,18 +167,18 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
               sx={{ width: '240px' }}
               renderInput={(params) => <TextField {...params} size='small' label="Filter Contacts" />}
             />  
-            {isAllAccessAllowed && contacts.length>0 &&
+            {!customer?.isArchived && isAllAccessAllowed && contacts.length>0 &&
               <LoadingButton variant='contained' onClick={onExportCSV} loading={exportingCSV} startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />} >
                   {BUTTONS.EXPORT.label}
               </LoadingButton>
             }
-             <AddButtonAboveAccordion
+            {!customer?.isArchived && <AddButtonAboveAccordion
               name={BUTTONS.NEWCONTACT}
               toggleChecked={toggleChecked}
               FormVisibility={contactAddForm}
               toggleCancel={toggleCancel}
               disabled={contactEditForm || contactMoveForm}
-            />
+            />}
           </Stack>            
         </Grid>
       </Grid>
@@ -259,7 +260,7 @@ export function applyFilter({ inputData, comparator, filterName, filterStatus, f
 
   if(filterFormer?.toLowerCase() === 'former employee' ){
     inputData = inputData.filter((contact) => contact?.formerEmployee );
-  } else if(filterFormer?.toLowerCase() === 'not former employee'){
+  } else if(filterFormer?.toLowerCase() === 'current employee'){
     inputData = inputData.filter((contact) => !contact?.formerEmployee );
   }
 
