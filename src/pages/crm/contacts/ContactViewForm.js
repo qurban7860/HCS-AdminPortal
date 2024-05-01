@@ -27,6 +27,8 @@ export default function ContactViewForm({
   setCurrentContactData,
 }) {
   const { contact, isLoading } = useSelector((state) => state.contact);
+  const { customer } = useSelector((state) => state.customer);
+
   const { isAllAccessAllowed } = useAuthContext()
   const { enqueueSnackbar } = useSnackbar();
   const { customerId, id } = useParams() 
@@ -110,9 +112,9 @@ export default function ContactViewForm({
     <Grid sx={{mt:1}}>
 
       <ViewFormEditDeleteButtons 
-        moveCustomerContact={ isAllAccessAllowed && handleMoveConatct } 
-        handleEdit={handleEdit} 
-        onDelete={onDelete} 
+        moveCustomerContact={!customer?.isArchived && isAllAccessAllowed && handleMoveConatct } 
+        handleEdit={customer?.isArchived ? undefined : handleEdit} 
+        onDelete={customer?.isArchived ? undefined : onDelete} 
         isActive={defaultValues.isActive} 
         formerEmployee={defaultValues.formerEmployee}
       />

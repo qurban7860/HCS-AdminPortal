@@ -166,18 +166,18 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
               sx={{ width: '240px' }}
               renderInput={(params) => <TextField {...params} size='small' label="Filter Contacts" />}
             />  
-            {isAllAccessAllowed && contacts.length>0 &&
+            {!customer?.isArchived && isAllAccessAllowed && contacts.length>0 &&
               <LoadingButton variant='contained' onClick={onExportCSV} loading={exportingCSV} startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />} >
                   {BUTTONS.EXPORT.label}
               </LoadingButton>
             }
-             <AddButtonAboveAccordion
+            {!customer?.isArchived && <AddButtonAboveAccordion
               name={BUTTONS.NEWCONTACT}
               toggleChecked={toggleChecked}
               FormVisibility={contactAddForm}
               toggleCancel={toggleCancel}
               disabled={contactEditForm || contactMoveForm}
-            />
+            />}
           </Stack>            
         </Grid>
       </Grid>

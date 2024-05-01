@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 // @mui
 import { Stack } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 // components
 import { SearchBarCombo } from '../../../components/ListTableTools';
 // constants
@@ -31,6 +32,7 @@ export default function NoteListTableToolbar({
 }) {
 
   const { customerId } = useParams() 
+  const { customer } = useSelector((state) => state.customer);
 
   const navigate = useNavigate();
 
@@ -48,8 +50,8 @@ export default function NoteListTableToolbar({
       value={filterName}
       onChange={onFilterName}
       onClick={onResetFilter}
-      SubOnClick={toggleAdd}
-      addButton={BUTTONS.ADDNOTE}
+      SubOnClick={customer?.isArchived ? undefined : toggleAdd}
+      addButton={customer?.isArchived ? undefined : BUTTONS.ADDNOTE}
     />
   </Stack>
   );

@@ -98,8 +98,8 @@ export default function SiteViewForm({ handleMap }) {
       <Grid container justifyContent="flex-end">
         <ViewFormEditDeleteButtons
           isActive={defaultValues?.isActive}
-          handleEdit={handleEdit}
-          onDelete={onDelete}
+          handleEdit={customer?.isArchived ? undefined : handleEdit}
+          onDelete={customer?.isArchived ? undefined : onDelete}
           // sites={sites}
           mainSite={customer.mainSite?._id === site?._id}
         // handleMap={handleMap}

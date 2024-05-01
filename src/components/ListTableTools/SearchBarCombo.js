@@ -98,7 +98,7 @@ function SearchBarCombo({
 
   return (
     <Grid container rowSpacing={1} columnSpacing={1} sx={{display:'flex', }}>
-          <Grid item xs={12} sm={12} md={12} lg={setAccountManagerFilter && setSupportManagerFilter ? 4:6} xl={setAccountManagerFilter && setSupportManagerFilter ? 4:6}>
+          { onChange && <Grid item xs={12} sm={12} md={12} lg={setAccountManagerFilter && setSupportManagerFilter ? 4:6} xl={setAccountManagerFilter && setSupportManagerFilter ? 4:6}>
             <TextField
               fullWidth
               value={value}
@@ -121,7 +121,7 @@ function SearchBarCombo({
                 ),
               }}
             />
-          </Grid>
+          </Grid>}
 
           {onFilterVerify &&
           <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
