@@ -153,6 +153,7 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
           <Stack direction='row' alignContent='flex-end' spacing={1}>
             <Autocomplete 
               freeSolo
+              disableClearable
               value={ filterFormer }
               options={[ 'All', 'Former Employee', 'Current Employee' ]}
               isOptionEqualToValue={(option, val) => option === val}
@@ -259,7 +260,7 @@ export function applyFilter({ inputData, comparator, filterName, filterStatus, f
 
   if(filterFormer?.toLowerCase() === 'former employee' ){
     inputData = inputData.filter((contact) => contact?.formerEmployee );
-  } else if(filterFormer?.toLowerCase() === 'not former employee'){
+  } else if(filterFormer?.toLowerCase() === 'current employee'){
     inputData = inputData.filter((contact) => !contact?.formerEmployee );
   }
 

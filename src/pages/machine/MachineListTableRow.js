@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 // @mui
-import { Switch, TableRow, TableCell } from '@mui/material';
+import { Switch, TableRow, TableCell, Grid } from '@mui/material';
 import { green } from '@mui/material/colors';
 import { createTheme } from '@mui/material/styles';
 // utils
@@ -116,10 +116,13 @@ export default function MachineListTableRow({
           }
         </TableCell>
       }
-      {  useScreenSize('lg') && <TableCell >{ Array.isArray(profiles) && profiles?.length > 0 && 
+      {  useScreenSize('lg') && <TableCell >{ Array.isArray(profiles) && profiles?.length > 0 && profiles?.length === 1 ? profiles[0]?.defaultName :
+      (profiles?.length > 1 && <Grid sx={{ display: "flex", alignItems: "center", alignContent:"center" }} >
+          {`${profiles[0]?.defaultName}, ` }
           <StyledTooltip title="Profiles" placement="top" disableFocusListener tooltipcolor={theme.palette.primary.main}  color="primary.main" >
-            <Iconify icon="mingcute:profile-line" onClick={handleManufacturePopoverOpen} sx={{bottom:'-5px'}} /> 
+              <Iconify icon="mingcute:profile-line" onClick={handleManufacturePopoverOpen} sx={{mr: 0.5}} /> 
           </StyledTooltip>
+      </Grid>)
       || ''}</TableCell>}
       <TableCell align="center">  <Switch checked={isActive} disabled size="small"/>  </TableCell>
 

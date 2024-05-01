@@ -10,6 +10,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { PATH_MACHINE } from '../../../routes/paths';
 // slice
 import { ProfileTypes, addProfile, getProfiles } from '../../../redux/slices/products/profile';
+import { getMachine } from '../../../redux/slices/products/machine';
 // schema
 import { ProfileSchema } from './schemas/ProfileSchema';
 // components
@@ -78,6 +79,7 @@ export default function ProfileAddForm() {
     try {
           await dispatch(addProfile(machineId, data));
           await enqueueSnackbar('Profile added successfully');
+          await dispatch(getMachine(machineId));
           await reset();
           await navigate(PATH_MACHINE.machines.profiles.root(machineId))
     } catch (err) {
