@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import CodeMirror from '@uiw/react-codemirror';
 import { langs } from '@uiw/codemirror-extensions-langs';
 import { search } from '@codemirror/search';
-import { Grid, Typography } from '@mui/material';
+import { Grid, Typography, useTheme } from '@mui/material';
 import Iconify from '../iconify';
 import JsonEditorPopover from './JsonEditorPopover';
 
@@ -48,9 +48,10 @@ function JsonEditor({value, HandleChangeIniJson, readOnly, autoHeight }) {
 
   const handlePopoverOpen = (event) => setAnchorEl(event.currentTarget);
   const handlePopoverClose = () => setAnchorEl(null);
-
+  const theme = useTheme();
+  
   return  <Grid item md={12}>
-          <Grid sx={{ display: { sm: 'block', md: 'flex', position:'sticky', top:0, background:'#fff', zIndex:1 },  justifyContent: 'space-between' }} >
+          <Grid sx={{ display: { sm: 'block', md: 'flex', position:'sticky', top:0, background:theme.palette.background.default, zIndex:1 },  justifyContent: 'space-between' }} >
             <Typography variant='subtitle2' sx={{ml:2}} display="flex" alignItems="center">
               Note :
               <Typography variant='caption' sx={{ml:0.5}}>Ctrl + F / Cmd + F to find text in Code Editer</Typography>
@@ -68,6 +69,7 @@ function JsonEditor({value, HandleChangeIniJson, readOnly, autoHeight }) {
             extensions={[langs.json(), search({top: true, searchPanelOpen: true,})]} 
             options={codeMirrorOptions}
             readOnly={readOnly}
+            theme={theme?.palette?.mode}
           />
           <JsonEditorPopover open={anchorEl} onClose={handlePopoverClose} />
     </Grid>
