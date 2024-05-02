@@ -12,6 +12,7 @@ Pm2LogsListTableToolbar.propTypes = {
   onResetFilter: PropTypes.func,
   isPm2Environments: PropTypes.bool,
   handleRefresh: PropTypes.func,
+  handleFullScreen: PropTypes.func,
 };
 
 export default function Pm2LogsListTableToolbar({
@@ -21,6 +22,7 @@ export default function Pm2LogsListTableToolbar({
   onResetFilter,
   isPm2Environments,
   handleRefresh,
+  handleFullScreen
 }) {
 
   return (
@@ -33,6 +35,7 @@ export default function Pm2LogsListTableToolbar({
         isPm2Environments
         isPm2LogTypes
         handleRefresh={handleRefresh}
+        handleFullScreen={handleFullScreen}
       />
     </Stack>
   );

@@ -9,7 +9,7 @@ import Iconify from '../iconify';
 import useResponsive from '../../hooks/useResponsive';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 import { getActiveDocumentTypesWithCategory } from '../../redux/slices/document/documentType';
-import { setPm2Environment, setPm2LogType } from '../../redux/slices/logs/pm2Logs';
+import { setPm2Environment, setPm2LogType, setPm2LinesPerPage } from '../../redux/slices/logs/pm2Logs';
 import { fDate } from '../../utils/formatTime';
 import { setDateFrom, setDateTo } from '../../redux/slices/products/machineErpLogs';
 import { useAuthContext } from '../../auth/useAuthContext';
@@ -65,12 +65,13 @@ function SearchBarCombo({
   isPm2Environments,
   isPm2LogTypes,
   handleRefresh,
+  handleFullScreen,
   ...other
 }) {
   
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
-  const { pm2Environment, pm2Environments ,pm2LogType } = useSelector((state) => state.pm2Logs );
+  const { pm2Environment, pm2Environments ,pm2LogType, pm2Lines } = useSelector((state) => state.pm2Logs);
   const { spContacts } = useSelector((state) => state.contact);
   const { activeRegions } = useSelector((state) => state.region);
   const [ isDateFrom, setIsDateFrom ] = useState(new Date( Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
@@ -372,22 +373,50 @@ function SearchBarCombo({
           </Grid> }
 
           {isPm2LogTypes && 
+            <>
             <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
-            <Autocomplete 
-              value={ pm2LogType || null}
-              options={[ 'Error', 'Logs']}
-              isOptionEqualToValue={(option, val) => option === val}
-              onChange={(event, newValue) => {
-                if (newValue) {
-                  dispatch(setPm2LogType(newValue));
-                } else {
-                  dispatch(setPm2LogType(''));
-                }
-              }}
-              renderInput={(params) => <TextField {...params} size='small' label="Logs Type" />}
-            />
-          </Grid> }
-
+              <Autocomplete 
+                disableClearable
+                value={ pm2LogType || null}
+                options={[ 'Error', 'Logs']}
+                isOptionEqualToValue={(option, val) => option === val}
+                onChange={(event, newValue) => {
+                  if (newValue) {
+                    dispatch(setPm2LogType(newValue));
+                  } else {
+                    dispatch(setPm2LogType(''));
+                  }
+                }}
+                renderInput={(params) => <TextField {...params} size='small' label="Logs Type" />}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Lines</InputLabel>
+              <Select
+                fullWidth
+                size='small'
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                name="pm2Lines"
+                value={pm2Lines}
+                label="Lines"
+                onChange={(event) => {
+                  if (event.target.value) {
+                    dispatch(setPm2LinesPerPage(event.target.value));
+                  }
+                }}
+              >
+                <MenuItem value={100}>100</MenuItem>
+                <MenuItem value={250}>250</MenuItem>
+                <MenuItem value={500}>500</MenuItem>
+                <MenuItem value={1000}>1000</MenuItem>
+                <MenuItem value={2000}>2000</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            </> 
+          }
           {onSignInLogsFilter &&
             <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
               <Stack alignItems="flex-start">
@@ -496,6 +525,20 @@ function SearchBarCombo({
                 </StyledTooltip>
               </Grid>}
 
+              {isPm2Environments &&
+                <Grid item>
+                    <StyledTooltip title="Full Screen" placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
+                      <IconButton onClick={handleFullScreen} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
+                        '&:hover': {
+                          background:"#103996", 
+                          color:"#fff"
+                        }
+                      }}>
+                        <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon='icon-park-outline:full-screen-two' />
+                      </IconButton>
+                    </StyledTooltip>
+                </Grid>
+              }
               {handleRefresh && 
                 <Grid item>
                     <StyledTooltip title="Refresh" placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
@@ -662,6 +705,7 @@ SearchBarCombo.propTypes = {
   isPm2Environments: PropTypes.bool,
   handleRefresh: PropTypes.func,
   isPm2LogTypes: PropTypes.bool,
+  handleFullScreen: PropTypes.func,
 };
 
 export default SearchBarCombo;
