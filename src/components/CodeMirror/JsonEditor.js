@@ -11,9 +11,10 @@ JsonEditor.propTypes = {
   value: PropTypes.string,
   HandleChangeIniJson: PropTypes.func,
   readOnly: PropTypes.bool,
+  autoHeight: PropTypes.bool,
 };
 
-function JsonEditor({value, HandleChangeIniJson, readOnly }) {
+function JsonEditor({value, HandleChangeIniJson, readOnly, autoHeight }) {
 
   const [ anchorEl, setAnchorEl ] = useState(null);
 
@@ -48,40 +49,27 @@ function JsonEditor({value, HandleChangeIniJson, readOnly }) {
   const handlePopoverOpen = (event) => setAnchorEl(event.currentTarget);
   const handlePopoverClose = () => setAnchorEl(null);
 
-
   return  <Grid item md={12}>
-          <Grid sx={{ display: { sm: 'block', md: 'flex' }, justifyContent: 'space-between' }} >
-            <Typography variant='subtitle2' display="flex" alignItems="center">
-              Note: 
-              <Typography variant='caption' sx={{ml:1}}> 
-                Ctrl + F / Cmd + F to find text in Code Editer
-              </Typography>
+          <Grid sx={{ display: { sm: 'block', md: 'flex', position:'sticky', top:0, background:'#fff', zIndex:1 },  justifyContent: 'space-between' }} >
+            <Typography variant='subtitle2' sx={{ml:2}} display="flex" alignItems="center">
+              Note :
+              <Typography variant='caption' sx={{ml:0.5}}>Ctrl + F / Cmd + F to find text in Code Editer</Typography>
             </Typography>
-            <Typography
-              variant="body2"
-              sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', ml: 2, mt: 0.5 }}
-            >
+            {!readOnly && <Typography variant="body2" sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', ml: 2, mt: 0.5, mr:2 }}>
               Format:
-              <Iconify
-                onClick={handlePopoverOpen}
-                icon="iconamoon:question-mark-circle-bold"
-                sx={{ cursor: 'pointer' }}
-                />
-            </Typography>
+              <Iconify onClick={handlePopoverOpen} icon="iconamoon:question-mark-circle-bold" sx={{ cursor: 'pointer' }} />
+            </Typography>}
           </Grid>
           <CodeMirror 
             value={value} 
             onChange={(e) => HandleChangeIniJson(e)}
-            height="500px" 
+            height={!autoHeight && '500px'} 
             width='auto' 
-            extensions={[ langs.json(),   search({top: true, searchPanelOpen: true,}) ]} 
+            extensions={[langs.json(), search({top: true, searchPanelOpen: true,})]} 
             options={codeMirrorOptions}
             readOnly={readOnly}
           />
-      <JsonEditorPopover
-        open={anchorEl}
-        onClose={handlePopoverClose}
-      />
+          <JsonEditorPopover open={anchorEl} onClose={handlePopoverClose} />
     </Grid>
 }
 
