@@ -99,7 +99,7 @@ export default function DocumentListTableToolbar({
         setCategoryVal={(machineDrawings || machinePage) ? setCategoryVal : null }
         typeVal={typeVal}
         setTypeVal={(machineDrawings || machinePage) ? setTypeVal : null }
-        handleGalleryView={handleGalleryView}
+        handleGalleryView={ ( customer?.isArchived || machine?.isArchived ) ? undefined : handleGalleryView}
       />
     </Stack>
   );

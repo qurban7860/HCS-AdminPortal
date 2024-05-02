@@ -53,11 +53,11 @@ export function Cover({
   const isMobile = useResponsive('down', 'sm');
 
   return (
-    <StyledRoot style={{ p: { xs: 0, md: 0 } }}>
+    <StyledRoot style={{ p: { xs: 0, md: 0 } }} isArchived={isArchived} >
       <StyledInfo style={{ width: '100%', flex: 1, display: 'flex', justifyContent: 'space-between' }} >
         {avatar && <CoverAvatar avatar={name} />}
         <CoverTitles title={avatar && isMobile ? '' : name} />
-        <CoverSettingsIcons setting={ !isArchived && setting} handleSettingsNavigate={handleSettingsNavigate} generalSettings={generalSettings || isArchived } />
+        <CoverSettingsIcons setting={ !isArchived && setting} handleSettingsNavigate={handleSettingsNavigate} generalSettings={generalSettings && !isArchived } />
       </StyledInfo>
       <Grid container justifyContent='space-between' columnGap={2} sx={{ position: 'absolute', bottom:10, px:3}}>
           <Grid item>
@@ -66,8 +66,8 @@ export function Cover({
           <Grid item>
             { !isArchived && customerSites && <Button size='small' startIcon={<Iconify icon="mdi:map-legend" />} variant='outlined' onClick={linkCustomerSites}>Sites</Button>}
             { !isArchived && customerContacts && <Button size='small' startIcon={<Iconify icon="mdi:account-multiple" />} variant='outlined' sx={{ml:2}} onClick={linkCustomerContacts}>Contacts</Button>}
-            { isAllAccessAllowed && !isSettingReadOnly && isArchivedCustomers && <Button size='small' startIcon={<Iconify icon="fa6-solid:users-slash" />} variant='outlined' sx={{ml:2}} onClick={linkArchivedCustomers}>Archived Customers</Button>}
-            { isAllAccessAllowed && !isSettingReadOnly && isArchivedMachines && <Button size='small' startIcon={<Iconify icon="fluent:table-delete-column-16-filled" />} variant='outlined' sx={{ml:2}} onClick={linkArchivedMachines}>Archived Machines</Button>}
+            {/* { isAllAccessAllowed && !isSettingReadOnly && isArchivedCustomers && <Button size='small' startIcon={<Iconify icon="fa6-solid:users-slash" />} variant='outlined' sx={{ml:2}} onClick={linkArchivedCustomers}>Archived Customers</Button>} */}
+            {/* { isAllAccessAllowed && !isSettingReadOnly && isArchivedMachines && <Button size='small' startIcon={<Iconify icon="fluent:table-delete-column-16-filled" />} variant='outlined' sx={{ml:2}} onClick={linkArchivedMachines}>Archived Machines</Button>} */}
             
           </Grid>
       </Grid>

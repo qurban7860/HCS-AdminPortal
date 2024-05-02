@@ -7,10 +7,10 @@ import { bgBlur } from '../../utils/cssStyles';
  * @cover :components ____________________________________________________________________________________________
  */
 
-export const StyledRoot = styled('div')(({ theme }) => ({
+export const StyledRoot = styled('div')(({ theme, isArchived }) => ({
   '&:before': {
     ...bgBlur({
-      color: theme.palette.primary.dark,
+      color: isArchived ? theme.palette.grey[600] : theme.palette.primary.dark,
     }),
     top: 0,
     zIndex: 9,

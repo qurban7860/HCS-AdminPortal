@@ -244,19 +244,19 @@ export default function MachineViewForm() {
         <Card sx={{ width: '100%', p: '1rem', mb:3 }}>
             <ViewFormEditDeleteButtons
               sx={{ pt: 5 }}
-              verifiers={machine?.verifications}
-              isActive={defaultValues?.isActive}
-              handleVerification={machine?.status?.slug !== 'transferred' && handleVerification}
+              verifiers={ machine?.isArchived ? undefined : machine?.verifications}
+              isActive={  machine?.isArchived ? undefined : defaultValues?.isActive}
+              handleVerification={ ( machine?.status?.slug === 'transferred' || machine?.isArchived ) ? undefined : handleVerification}
               disableTransferButton={disableTransferButton}
               disableEditButton={disableEditButton}
               disableDeleteButton={disableDeleteButton}
-              handleEdit={handleEdit}
+              handleEdit={ machine?.isArchived ? undefined : handleEdit}
               // handleJiraNaviagte={handleJiraNaviagte}
-              onDelete={onDelete}
-              handleTransfer={ () => navigate(PATH_MACHINE.machines.transfer(machine?._id))}
+              onDelete={ machine?.isArchived ? undefined : onDelete}
+              handleTransfer={ machine?.isArchived ? undefined : () => navigate(PATH_MACHINE.machines.transfer(machine?._id))}
               backLink={() => navigate(PATH_MACHINE.machines.root)}
-              machineSupportDate={defaultValues?.supportExpireDate}
-              transferredHistory={machine?.transferredHistory || []}
+              machineSupportDate={ machine?.isArchived ? undefined : defaultValues?.supportExpireDate}
+              transferredHistory={ machine?.isArchived ? undefined : machine?.transferredHistory || []}
             />
             <FormLabel content={FORMLABELS.KEYDETAILS} />
             <Grid container>

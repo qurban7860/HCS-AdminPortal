@@ -72,8 +72,8 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   const CustomerContactTypes = systemConfig?.find( ( c )=> c?.name?.trim() === 'CUSTOMER_CONTACT_TYPES')?.value?.split(',')?.map(item => item?.trim());
 
   useEffect(()=>{
-    if( contact?.type?.toLowerCase() === 'sp'){
-      setContactTypes([ ...sPContactTypes, ...CustomerContactTypes ])
+    if( customer?.type?.toLowerCase() === 'sp'){
+      setContactTypes(sPContactTypes)
     } else {
       setContactTypes(CustomerContactTypes)
     }

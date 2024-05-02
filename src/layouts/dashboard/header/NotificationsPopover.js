@@ -86,7 +86,7 @@ function NotificationsPopover() {
         {notifications && notifications?.length>0 &&
           <>
           <Divider sx={{ borderStyle: 'solid' }} />
-          <Scrollbar key='scrollbar' sx={{ maxHeight: 300 }}>
+          <Scrollbar key='scrollbar' >
             <List key={notifications?.length} disablePadding
               // subheader={
               //   <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>

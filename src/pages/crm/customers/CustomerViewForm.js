@@ -85,15 +85,15 @@ export default function CustomerViewForm() {
       <Grid container direction="row" mt={isMobile && 2}>
           <Card sx={{ width: '100%', p: '1rem', mb:3 }}>
             <ViewFormEditDeleteButtons
-              isActive={defaultValues.isActive}
-              verifiers={customer?.verifications}
+              isActive={ customer?.isArchived ? undefined : defaultValues.isActive}
+              verifiers={customer?.isArchived ? undefined : customer?.verifications}
               handleVerification={ customer?.isArchived ? undefined : handleVerification}
-              financingCompany={defaultValues.isFinancialCompany}
+              financingCompany={ customer?.isArchived ? undefined : defaultValues.isFinancialCompany}
               handleEdit={ customer?.isArchived ? undefined : handleEdit }
               onDelete={ customer?.isArchived ? undefined : onDelete }
-              supportSubscription={defaultValues.supportSubscription}
+              supportSubscription={ customer?.isArchived ? undefined : defaultValues.supportSubscription}
               backLink={() => navigate(PATH_CRM.customers.list)}
-              excludeReports={defaultValues.excludeReports}
+              excludeReports={ customer?.isArchived ? undefined : defaultValues.excludeReports}
             />
 
               <Grid container>
