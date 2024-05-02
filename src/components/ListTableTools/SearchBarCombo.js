@@ -376,7 +376,6 @@ function SearchBarCombo({
             <>
             <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
               <Autocomplete 
-                disableClearable
                 value={ pm2LogType || null}
                 options={[ 'Error', 'Logs']}
                 isOptionEqualToValue={(option, val) => option === val}
