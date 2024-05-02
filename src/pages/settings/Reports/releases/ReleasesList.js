@@ -86,7 +86,6 @@ export default function ReleasesList() {
   const handleViewRow = (id) => {
     const url = `https://howickltd.atlassian.net/projects/HPS/versions/${id}/tab/release-report-all-issues`
     window.open(url, '_blank');
-    // navigate(PATH_SETTING.releases.view(link))
   };
 
   const handleResetFilter = () => {
@@ -155,9 +154,7 @@ export default function ReleasesList() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName }) {
-
   const stabilizedThis = inputData.map((el, index) => [el, index]);
-
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -169,9 +166,8 @@ function applyFilter({ inputData, comparator, filterName }) {
     return inputData.filter(
       (release) => 
         release.name.indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(release.startDate)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(release.releaseDate)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        release.released >= 0
+        release?.description?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(release.releaseDate)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
   return inputData;
