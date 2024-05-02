@@ -54,7 +54,7 @@ function JsonEditor({value, HandleChangeIniJson, readOnly, autoHeight }) {
           <Grid sx={{ display: { sm: 'block', md: 'flex', position:'sticky', top:0, background:theme.palette.background.default, zIndex:1 },  justifyContent: 'space-between' }} >
             <Typography variant='subtitle2' sx={{ml:2}} display="flex" alignItems="center">
               Note :
-              <Typography variant='caption' sx={{ml:0.5}}>Ctrl + F / Cmd + F to find text in Code Editer</Typography>
+              <Typography variant='caption' sx={{ml:0.5}}>Ctrl + F / Cmd + F to find text in Code Editor</Typography>
             </Typography>
             {!readOnly && <Typography variant="body2" sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', ml: 2, mt: 0.5, mr:2 }}>
               Format:
