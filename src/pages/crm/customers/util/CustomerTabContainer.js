@@ -40,7 +40,7 @@ export default function CustomerTabContainer({ currentTabValue }) {
   }
   return (
       <StyledCardContainer>
-        <Cover name={customer ? customer.name : 'New Customer'} avatar />
+        <Cover name={customer ? customer.name : 'New Customer'} avatar isArchived={ customer?.isArchived } />
         <TabContainer
           tabsClasses={tabsClasses.scrollButtons}
           currentTab={currentTabValue}

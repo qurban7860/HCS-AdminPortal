@@ -74,7 +74,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
 
   useEffect(()=>{
     if( customer?.type?.toLowerCase() === 'sp'){
-      setContactTypes([...sPContactTypes, ...CustomerContactTypes ])
+      setContactTypes(sPContactTypes)
     } else {
       setContactTypes(CustomerContactTypes)
     }
