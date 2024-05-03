@@ -431,20 +431,7 @@ export function addCustomer(params) {
               region: params?.region,
             },
           },
-          // billingContact: {
-          //   firstName: params?.billingContactFirstName,
-          //   lastName: params?.billingContactLastName,
-          //   title: params?.billingContactTitle,
-          //   phone: params?.billingContactPhone,
-          //   email: params?.billingContactEmail,
-          // },
-          // technicalContact: {
-          //   firstName: params?.isSameContact ? params?.billingContactFirstName : params?.technicalContactFirstName,
-          //   lastName: params?.isSameContact ? params?.billingContactLastName : params?.technicalContactLastName,
-          //   title: params?.isSameContact ? params?.billingContactTitle : params?.technicalContactTitle,
-          //   phone: params?.isSameContact ? params?.billingContactPhone : params?.technicalContactPhone,
-          //   email: params?.isSameContact ? params?.billingContactEmail : params?.technicalContactEmail,
-          // },
+          isTechnicalContactSameAsBillingContact: params.isTechnicalContactSameAsBillingContact,
           type: params.type,
           isActive: params.isActive,
           supportSubscription: params?.supportSubscription,
@@ -488,12 +475,6 @@ export function addCustomer(params) {
           technicalContact.firstName = params?.technicalContactFirstName
           data.technicalContact = technicalContact
         }
-
-        if( params?.isSameContact && params?.billingContactFirstName ){
-          data.technicalContact = billingContact
-        }
-
-        
         
         const response = await axios.post(`${CONFIG.SERVER_URL}crm/customers`, data);
         return response
