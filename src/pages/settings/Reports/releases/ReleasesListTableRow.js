@@ -44,11 +44,25 @@ export default function ReleasesListTableRow({
             </b>
             {releaseDate && <Typography variant="body2" ><b>Release Date:  </b>{fDate(releaseDate)} </Typography> }
           </TableCell> }
-          {description && <TableCell align='left' sx={{ pb: 1, 
-            display: 'flex',
-            alignItems: 'center',
-            whiteSpace: 'pre-line',
-            wordBreak: 'break-word' }}  >{description}</TableCell>}
+          {description && <TableCell align='left' sx={{ pb: 1 }}  >
+                <Typography variant="body2" sx={{ 
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  whiteSpace: 'pre-line',
+                  wordBreak: 'break-word'}}
+                  >
+                    <StyledTooltip 
+                      placement="top" 
+                      disableFocusListener  
+                      color={ ICONS.NOTE.color } 
+                      title={ ICONS.NOTE.heading } 
+                      tooltipcolor={ ICONS.NOTE.color } 
+                    >
+                      <Iconify icon={ICONS.NOTE.icon} sx={{mx: 0.3, flexShrink: 0, width: "20px", height: "20px"}} />
+                    </StyledTooltip>
+                    {description}
+                </Typography>
+              </TableCell>}
       </StyledTableRow>
   );
 }

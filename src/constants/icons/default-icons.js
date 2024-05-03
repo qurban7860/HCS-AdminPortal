@@ -33,7 +33,8 @@ export const ICONS = {
   },
 
   RELEASES: {
-    icon: 'mdi:source-branch',
+    // icon: 'mdi:source-branch',
+    icon: 'tabler:speedboat',
     heading: 'Releases',
   },
   
@@ -47,6 +48,12 @@ export const ICONS = {
     icon: 'mdi:source-branch-minus',
     color: '#FF0000',
     heading: 'Not Release',
+  },
+
+  NOTE: {
+    icon: 'gg:notes',
+    color: '#103996',
+    heading: 'Note',
   },
 
   // isIniRead
@@ -93,6 +100,10 @@ export const ICONS = {
     icon: 'mdi:circle',
     color: '#bdbdbd',
     heading: 'Offline',
+  },  
+  EMAIL: {
+    icon: 'mdi:email',
+    color: '#103996',
   },
 
   // isAPPROVED
