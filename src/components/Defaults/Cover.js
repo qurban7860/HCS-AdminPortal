@@ -41,8 +41,6 @@ export function Cover({
   isArchivedMachines,
 }) {
   const navigate = useNavigate();
-  const { isSettingReadOnly, isSettingAccessAllowed, isAllAccessAllowed } = useAuthContext();
-
   const handleSettingsNavigate = () => navigate(PATH_SETTING.root);
   const linkCustomerSites = () => navigate(PATH_CRM.sites);
   const linkCustomerContacts = () =>  navigate(PATH_CRM.contacts);

@@ -486,25 +486,18 @@ function SearchBarCombo({
                 </Grid>
               }
                 
-                {inviteButton && 
+                {inviteButton && !isSettingReadOnly && !isSecurityReadOnly &&
                   <Grid item>
-                    <StyledTooltip title={inviteButton} placement="top" disableFocusListener 
-                      tooltipcolor={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#103996"} 
-                      color={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#103996"} 
-                    >
+                    <StyledTooltip title={inviteButton} placement="top" disableFocusListener  tooltipcolor="#103996" color="#fff">
                       <IconButton onClick={inviteOnClick} 
-                        disabled={ ( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) } 
-                        color={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#fff"}
+                        color="#fff"
                         sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
                         '&:hover': {
                           background:"#103996", 
                           color:"#fff"
                         }
                       }}>
-                        <Iconify 
-                          color={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#fff"} 
-                          sx={{ height: '24px', width: '24px'}} icon={buttonIcon || 'mdi:user-plus'} 
-                        />
+                        <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon='mdi:user-plus' />
                       </IconButton>
                     </StyledTooltip>
                   </Grid>
@@ -621,28 +614,17 @@ function SearchBarCombo({
                 </Grid>
               }
 
-              {addButton && !transferredMachine && 
+              {addButton && !transferredMachine && !isSettingReadOnly && !isSecurityReadOnly &&
                 <Grid item >
-                    <StyledTooltip 
-                      title={addButton} 
-                      placement="top" 
-                      disableFocusListener 
-                      tooltipcolor={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#103996"} 
-                      color={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#103996"} 
-                    >
-                    <IconButton 
-                      disabled={ ( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) } 
-                      color={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#fff"}
-                      onClick={SubOnClick} 
+                    <StyledTooltip title={addButton} placement="top" disableFocusListener tooltipcolor="#103996" color="#fff">
+                    <IconButton color="#fff" onClick={SubOnClick} 
                       sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
-                      '&:hover': {
-                        background:"#103996", 
-                        color:"#fff"
-                      }
-                    }}>
-                      <Iconify 
-                        color={( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ) ? "#c3c3c3":"#fff"} 
-                        sx={{ height: '24px', width: '24px'}} icon={buttonIcon || 'eva:plus-fill'} 
+                            '&:hover': {
+                              background:"#103996", 
+                              color:"#fff"
+                            }
+                          }}>
+                      <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon={buttonIcon || 'eva:plus-fill'} 
                       />
                     </IconButton>
                   </StyledTooltip>
