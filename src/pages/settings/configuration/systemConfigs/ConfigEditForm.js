@@ -88,8 +88,8 @@ export default function ConfigEditForm() {
               </Box>
               <Box sx={{marginTop:2}}  rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)',}}>
                 <RHFTextField name="name" label="Name*"/>
-                <RHFTextField name="value" label="Value*"/>
-                <RHFTextField name='notes' label='Notes' minRows={5} multiline/>
+                <RHFTextField name="value" label="Value*"minRows={3} multiline />
+                <RHFTextField name='notes' label='Notes' minRows={3} multiline />
                 <RHFSwitch name="isActive" label="Active" />
               </Box>
               <AddFormButtons settingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
