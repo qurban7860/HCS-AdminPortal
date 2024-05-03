@@ -71,7 +71,7 @@ function SearchBarCombo({
   
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
-  const { pm2Environment, pm2Environments ,pm2LogType, pm2Lines } = useSelector((state) => state.pm2Logs);
+  const { pm2Logs, pm2Environment, pm2Environments ,pm2LogType, pm2Lines } = useSelector((state) => state.pm2Logs);
   const { spContacts } = useSelector((state) => state.contact);
   const { activeRegions } = useSelector((state) => state.region);
   const [ isDateFrom, setIsDateFrom ] = useState(new Date( Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
@@ -517,7 +517,7 @@ function SearchBarCombo({
                 </StyledTooltip>
               </Grid>}
 
-              {isPm2Environments &&
+              {isPm2Environments && pm2Logs?.data &&
                 <Grid item>
                     <StyledTooltip title="Full Screen" placement="top" disableFocusListener tooltipcolor="#103996" color="#103996">
                       <IconButton onClick={handleFullScreen} color="#fff" sx={{background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
@@ -613,8 +613,9 @@ function SearchBarCombo({
                   </StyledTooltip>
                 </Grid>
               }
-
-              {addButton && !transferredMachine && !isSettingReadOnly && !isSecurityReadOnly &&
+              
+              {addButton && !transferredMachine 
+              && !(( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly )) &&
                 <Grid item >
                     <StyledTooltip title={addButton} placement="top" disableFocusListener tooltipcolor="#103996" color="#fff">
                     <IconButton color="#fff" onClick={SubOnClick} 
