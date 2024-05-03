@@ -1,4 +1,3 @@
-import * as Yup from 'yup';
 import { useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -16,6 +15,8 @@ import FormProvider, { RHFAutocomplete, RHFSwitch, RHFTextField } from '../../..
 import { addConfig, ConfigTypes } from '../../../../redux/slices/config/config';
 // current user
 import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
+import { configSchema } from "../../../schemas/setting"
+
 // ----------------------------------------------------------------------
 
 export default function ConfigAddForm() {
@@ -23,14 +24,6 @@ export default function ConfigAddForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-
-  const NewConfigSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required!').min(2, 'Name must be at least 2 characters long').max(40, 'Name must not exceed 40 characters!'),
-    type: Yup.string().nullable().required('Type is required!'),
-    value: Yup.string().required('Value is required!').max(200, 'Value must not exceed 70 characters!'),
-    notes: Yup.string().max(5000),
-    isActive: Yup.boolean(),
-  });
 
   const defaultValues = useMemo(
     () => ({
@@ -45,7 +38,7 @@ export default function ConfigAddForm() {
   );
 
   const methods = useForm({
-    resolver: yupResolver(NewConfigSchema),
+    resolver: yupResolver( configSchema ),
     defaultValues,
   });
 
@@ -88,26 +81,21 @@ export default function ConfigAddForm() {
        <Grid container spacing={3}>
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
-              <Box sx={{marginTop:2}}  rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)',}}>
-                <RHFTextField name="name" label="Name"/>
-              </Box>
-              <Box rowGap={2} sx={{marginTop:2}} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}>
+              <Box display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)',}}>
                 <RHFAutocomplete
-                    // multiple 
                     value={type}
                     name="type"
                     label="Type*"
                     options={ConfigTypes}
                     isOptionEqualToValue={(option, value) => option === value}
                     getOptionLabel={(option) => option}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option}>{option}</li>
-                    )}
+                    renderOption={(props, option) => ( <li {...props} key={option}>{option}</li> )}
                   />
 
-                <RHFTextField name="value" label="Value"/>
               </Box>
               <Box sx={{marginTop:2}}  rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)',}}>
+                <RHFTextField name="name" label="Name"/>
+                <RHFTextField name="value" label="Value"/>
                 <RHFTextField name='notes' label='Notes' minRows={5} multiline/>
                 <RHFSwitch name="isActive" label="Active" />
               </Box>
