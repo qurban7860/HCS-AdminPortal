@@ -553,7 +553,7 @@ const handleNewFile = async () => {
       {documentVersionEditDialogVisibility && <UpdateDocumentVersionDialog />}
     </Container>
     {PDFViewerDialog && (
-      <Dialog fullWidth maxWidth='' open={PDFViewerDialog} style={{marginBottom:10}} onClose={()=> setPDFViewerDialog(false)}>
+      <Dialog fullScreen open={PDFViewerDialog} onClose={()=> setPDFViewerDialog(false)}>
         <DialogTitle variant='h3' sx={{pb:1, pt:2, display:'flex', justifyContent:'space-between'}}>
             PDF View
               <Button variant='outlined' onClick={()=> setPDFViewerDialog(false)}>Close</Button>
