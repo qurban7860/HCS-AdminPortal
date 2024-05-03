@@ -91,7 +91,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       billingContactPhone: { type: PHONE_TYPES[0], countryCode: '64' },
       billingContactEmail: '',
       // Is Same Contact
-      isSameContact: true,
+      isTechnicalContactSameAsBillingContact: true,
       // Technical Information
       technicalContactFirstName: '',
       technicalContactLastName: '',
@@ -125,7 +125,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     formState: { isSubmitting },
   } = methods;
 
-  const { isSameContact, phoneNumbers, country, billingContactPhone, technicalContactPhone } = watch();
+  const { isTechnicalContactSameAsBillingContact, phoneNumbers, country, billingContactPhone, technicalContactPhone } = watch();
 
   const addContactNumber = () => {
     const updatedPhoneNumbers = [
@@ -305,8 +305,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
         <Card component={MotionContainer} sx={{ p: 3, mb: 3 }}>
           <m.div variants={varBounce().in}>
                 <FormLabel  content={FORMLABELS.CUSTOMER.TECHNICALCONTACTINFORMATION} />
-                <RHFCheckbox name="isSameContact" label="Same as billing contact" />
-              {!isSameContact && (
+                <RHFCheckbox name="isTechnicalContactSameAsBillingContact" label="Same as billing contact" />
+              {!isTechnicalContactSameAsBillingContact && (
                 <Box
                   rowGap={2} columnGap={2} display="grid"
                   gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
