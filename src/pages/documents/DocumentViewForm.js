@@ -387,7 +387,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
       </Grid>
     </Card>
     {PDFViewerDialog && (
-      <Dialog fullWidth maxWidth='' open={PDFViewerDialog} style={{marginBottom:10}} onClose={()=> setPDFViewerDialog(false)}>
+      <Dialog fullScreen open={PDFViewerDialog} onClose={()=> setPDFViewerDialog(false)}>
         <DialogTitle variant='h3' sx={{pb:1, pt:2, display:'flex', justifyContent:'space-between'}}>
             PDF View
               <Button variant='outlined' onClick={()=> setPDFViewerDialog(false)}>Close</Button>
@@ -398,16 +398,6 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
             ):(
               <SkeletonPDF />
             )}
-        {/* <DialogContent dividers sx={{height:'-webkit-fill-available'}}>
-          {pdf?(
-            <Document file={pdf} onLoadSuccess={onDocumentLoadSuccess}>
-              {Array.from(new Array(pages), (el, index) => (
-                <Page width={840} rotate={pageRotation} key={`page_${index + 1}`} renderAnnotationLayer={false} renderTextLayer={false} pageNumber={index + 1} />
-              ))}
-            </Document>
-          ):(<Typography variant='body1' sx={{mt:2}}>Loading PDF....</Typography>)}
-        </DialogContent> */}
-        
       </Dialog>
     )}
     </>

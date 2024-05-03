@@ -46,9 +46,9 @@ export default function Pm2LogsList() {
 
   const fetchPm2Logs = useCallback(()=>{
     if (pm2Environment && pm2LogType) {
-      dispatch(getPm2Logs( pm2Lines, pm2LogType, pm2Environment ));
+      dispatch(getPm2Logs(pm2Lines, pm2LogType, pm2Environment));
     }
-  },[ dispatch, pm2LogType, pm2Environment, pm2Lines ])
+  },[ dispatch, pm2LogType, pm2Environment, pm2Lines])
 
   const handleFullScreen = ()=>{
     dispatch(setPM2FullScreenDialog(true));
