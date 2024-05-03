@@ -75,9 +75,9 @@ export default function ConfigViewForm() {
           settingPage
         />
         <Grid container sx={{mt:2}}>
-          <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues.name} />
           <ViewFormField isLoading={isLoading} sm={6} heading="Type" param={defaultValues.type} />
-          <ViewFormField isLoading={isLoading} sm={6} heading="Value" param={defaultValues.value} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues.name} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Value" param={defaultValues.value} />
           <ViewFormField isLoading={isLoading} sm={12} heading="Notes" param={defaultValues.notes} />
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

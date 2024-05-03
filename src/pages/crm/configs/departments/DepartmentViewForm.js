@@ -84,8 +84,8 @@ export default function DepartmentViewForm() {
       <Grid container sx={{mt:2}}>
         <ViewFormField isLoading={isLoading} sm={12} heading="Department Name" param={defaultValues?.departmentName} />
         <Grid display="flex" >
-          <FormControlLabel control={<Switch checked={defaultValues?.isDefault} />} label={<Typography variant='body2'sx={{fontWeight:'bold'}}>Default</Typography>} />
-          <FormControlLabel control={<Switch checked={defaultValues?.forCustomer} />} label={<Typography variant='body2'sx={{fontWeight:'bold'}}> Customers</Typography>} />
+          <FormControlLabel control={<Switch disabled checked={defaultValues?.isDefault} />} label={<Typography variant='body2'sx={{fontWeight:'bold'}}>Default</Typography>} />
+          <FormControlLabel control={<Switch disabled checked={defaultValues?.forCustomer} />} label={<Typography variant='body2'sx={{fontWeight:'bold'}}> Customers</Typography>} />
         </Grid>
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>
