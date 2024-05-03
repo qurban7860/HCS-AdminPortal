@@ -141,7 +141,7 @@ export const getUserAccess = ( roles, accessLevel ) => {
         isDrawingAccessAllowed = true
         isSettingReadOnly = true
         isSecurityReadOnly = true
-        isSettingAccessAllowed = false
+        isSettingAccessAllowed = true
         isSecurityUserAccessAllowed = true
         isEmailAccessAllowed = false
         isDeveloper = false
