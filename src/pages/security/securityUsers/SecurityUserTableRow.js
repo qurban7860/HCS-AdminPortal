@@ -64,7 +64,7 @@ export default function SecurityUserTableRow({
               tooltipcolor={ ICONS.EMAIL.color } 
               color={ ICONS.EMAIL.color }
               >
-                <Iconify sx={{ ml: 0.5, height: 20, width: 20 }} icon={ICONS.EMAIL.icon} />
+                <Iconify sx={{ ml: 0.5, height: 20, width: 20, mb: -0.5 }} icon={ICONS.EMAIL.icon} />
               </StyledTooltip>
           }
           </TableCell>}
