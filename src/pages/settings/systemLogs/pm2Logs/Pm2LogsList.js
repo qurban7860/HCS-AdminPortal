@@ -43,6 +43,8 @@ export default function Pm2LogsList() {
   const fetchPm2Logs = useCallback(()=>{
     if (pm2Environment && pm2LogType) {
       dispatch(getPm2Logs(pm2Lines, pm2LogType, pm2Environment));
+    }else{
+      dispatch(resetPm2Logs());
     }
   },[ dispatch, pm2LogType, pm2Environment, pm2Lines])
 
@@ -79,7 +81,7 @@ export default function Pm2LogsList() {
                   <SkeletonLine key={index} />
                 ))
               ): !isNotFound && <JsonEditor value={tableData} readOnly />)}
-            {!isLoading && isNotFound && <TableNoData isNotFound={isNotFound} />}
+            {!isLoading && isNotFound && <Table><TableNoData isNotFound={isNotFound} /></Table>}
         </TableCard>
       </Container>
       <PM2FullScreenDialog />
