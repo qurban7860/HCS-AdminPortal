@@ -12,7 +12,7 @@ import { Cover } from '../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import  TABS from './index';
 import { PATH_MACHINE } from '../../../routes/paths';
-import { getMachine } from '../../../redux/slices/products/machine';
+import { getMachine, resetMachine } from '../../../redux/slices/products/machine';
 
 // ----------------------------------------------------------------------
 
@@ -26,10 +26,10 @@ export default function MachineTabContainer({ currentTabValue }) {
   const dispatch = useDispatch();
 
   useLayoutEffect(() => {
-    if ( !machine?._id && machineId ) {
+    if ( machine?._id !== machineId ) {
       dispatch(getMachine(machineId));
     }
-  }, [dispatch, machine, machineId]);
+  }, [dispatch, machine?._id, machineId]);
 
   const navigate = useNavigate();
   const navigatePage = (tab)=>{
