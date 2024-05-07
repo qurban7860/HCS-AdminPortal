@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
 import { Container } from '@mui/material';
@@ -15,11 +15,11 @@ export default function MachineView( ) {
   const { machineId } = useParams();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (machineId ) {
-      dispatch(getMachine(machineId));
-    }
-  }, [dispatch, machineId]);
+  // useLayoutEffect(() => {
+  //   if (machineId ) {
+  //     dispatch(getMachine(machineId));
+  //   }
+  // }, [dispatch, machineId]);
 
   return (
     <Container maxWidth={false} sx={{mb:3}}>
