@@ -1,22 +1,15 @@
 import { useState, useEffect, useCallback, } from 'react';
 // @mui
-import { Container, Card, } from '@mui/material';
-import { useNavigate } from 'react-router';
+import { Table, Container, Card, } from '@mui/material';
 import { Cover } from '../../../../components/Defaults/Cover';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 // components
 import {
   TableNoData,
-  TableSkeleton,
-  TableHeadCustom,
-  TablePaginationCustom,
 } from '../../../../components/table';
-import Scrollbar from '../../../../components/scrollbar';
-import Pm2LogsTableRow from './Pm2LogsTableRow';
 import Pm2LogsListTableToolbar from './Pm2LogsListTableToolbar';
 import { getPm2Logs, resetPm2Logs, getPm2Environments, resetPm2Environments, setPM2FullScreenDialog } from '../../../../redux/slices/logs/pm2Logs';
-import { fDate } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import JsonEditor from '../../../../components/CodeMirror/JsonEditor';
 import PM2FullScreenDialog from '../../../../components/Dialog/PM2FullScreenDialog';
@@ -25,13 +18,8 @@ import SkeletonLine from '../../../../components/skeleton/SkeletonLine';
 export default function Pm2LogsList() {
   
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [tableData, setTableData] = useState("");
   const { pm2Logs, pm2Environment, pm2LogType, pm2Lines, isLoading, initial } = useSelector((state) => state.pm2Logs );
-  
-  const TABLE_HEAD = [
-    { id: 'pm2Logs', label: 'PM 2 Logs', align: 'left' },
-  ];
 
   useEffect(() => {
       dispatch(getPm2Environments());
@@ -65,7 +53,6 @@ export default function Pm2LogsList() {
     }
   }, [ initial, pm2Logs ]);
 
-  const denseHeight = 60;
   const isNotFound = !tableData;
 
   return (
