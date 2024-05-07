@@ -52,6 +52,7 @@ import machineErpLogsReducer from './slices/products/machineErpLogs';
 import pm2logsReducer from './slices/logs/pm2Logs';
 import dbBackupLogsReducer from './slices/logs/dbBackupLogs';
 import machineJiraReducer from './slices/products/machineJira';
+import emailsReducer from './slices/email/emails';
 
 // ----------------------------------------------------------------------
 
@@ -389,7 +390,12 @@ export const machineJiraPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
-
+export const emailsPersistConfig = {
+  key: 'emails',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
 
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
@@ -442,6 +448,7 @@ const rootReducer = combineReducers({
   pm2Logs: persistReducer(pm2LogsPersistConfig, pm2logsReducer),
   dbBackupLogs: persistReducer(dbBackupLogsPersistConfig, dbBackupLogsReducer),
   machineJira: persistReducer(machineJiraPersistConfig, machineJiraReducer),
+  emails: persistReducer(emailsPersistConfig, emailsReducer),
 });
 
 export default rootReducer;

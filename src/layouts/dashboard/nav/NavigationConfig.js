@@ -89,9 +89,9 @@ function NavigationConfig() {
       updatedConfig[0].items.splice(6, 0, { title: 'Security', path: PATH_SECURITY.root, icon: ICONS.security });
     }
 
-    if (isEmailAccessAllowed && navConfig.some((config) => config?.title?.toLowerCase() !== 'email' || isDeveloper )) {
-      updatedConfig[0].items.push({ title: 'Emails', path: PATH_EMAIL.email.list, icon: ICONS.email });
-    }
+    // if (isEmailAccessAllowed && navConfig.some((config) => config?.title?.toLowerCase() !== 'email' || isDeveloper )) {
+    //   updatedConfig[0].items.push({ title: 'Emails', path: PATH_EMAIL.email.list, icon: ICONS.email });
+    // }
 
     setConfig(updatedConfig);
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react'; 
 import { Card, Grid } from '@mui/material';
-import { useParams } from 'react-router-dom';
-import ViewFormField from '../../components/ViewForms/ViewFormField';
-import { Cover } from '../../components/Defaults/Cover';
-import { CONFIG } from '../../config-global';
-import axios from '../../utils/axios';
+import { useNavigate, useParams } from 'react-router-dom';
+import ViewFormField from '../../../components/ViewForms/ViewFormField';
+import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
+import { Cover } from '../../../components/Defaults/Cover';
+import { CONFIG } from '../../../config-global';
+import axios from '../../../utils/axios';
+import { PATH_SETTING } from '../../../routes/paths';
 
 export default function Emailviewform() {
 
 
   const [email, setEmail] = useState([]);
   const {id} = useParams()
-
+  const navigate = useNavigate();
 
 
 
@@ -36,11 +38,12 @@ export default function Emailviewform() {
   return (
     <Grid sx={{ p: 3, mt: -3 }}>
       <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
-        <Cover name="Email subject" icon="ph:users-light"  />
+        <Cover name="Email subject" icon="ph:users-light" generalSettings />
       </Card>
       <Card sx={{ p: 3 }}>
      
         <Grid container>
+          <ViewFormEditDeleteButtons backLink={()=> navigate(PATH_SETTING.email.list)} />
           <ViewFormField sm={6} heading="name" param={email?.customerName} />
           <ViewFormField sm={6} heading="subject" param={email?.subject} />
           <ViewFormField sm={12} heading="body" param={email?.body} />

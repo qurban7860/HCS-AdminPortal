@@ -397,5 +397,5 @@ export const SitesReport = Loadable(lazy(() => import('../pages/crm/reports/site
 // ----------------------------------------------------------------
 
 // Email
-export const Email = Loadable(lazy(() => import('../pages/email/Email')));
-export const Emailview = Loadable(lazy(() => import('../pages/email/EmailViewform')));
+export const Email = Loadable(lazy(() => import('../pages/settings/email/Email')));
+export const Emailview = Loadable(lazy(() => import('../pages/settings/email/EmailViewform')));

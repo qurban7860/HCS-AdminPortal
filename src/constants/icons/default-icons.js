@@ -437,6 +437,10 @@ export const ICONS = {
   SYSTEM_CONFIG: {
     icon: 'icon-park-outline:setting-config',
     heading: 'System Config',
+  },  
+  SYSTEM_EMAIL: {
+    icon: 'eva:email-fill',
+    heading: 'Emails',
   },
   DEPARTMENNTS: {
     icon: 'mingcute:department-line',
