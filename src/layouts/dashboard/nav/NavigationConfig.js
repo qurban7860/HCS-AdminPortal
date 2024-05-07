@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { PATH_CRM, PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_SETTING, PATH_SITEMAP, PATH_SECURITY, PATH_EMAIL, PATH_MACHINE_DRAWING } from '../../../routes/paths';
+import { PATH_CRM, PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_SETTING, PATH_SITEMAP, PATH_SECURITY, PATH_MACHINE_DRAWING } from '../../../routes/paths';
 // components
 import Iconify from '../../../components/iconify';
 import SvgColor from '../../../components/svg-color';
@@ -88,10 +88,6 @@ function NavigationConfig() {
     if (isSecurityUserAccessAllowed && navConfig.some((config) => config?.title?.toLowerCase() !== 'security')) {
       updatedConfig[0].items.splice(6, 0, { title: 'Security', path: PATH_SECURITY.root, icon: ICONS.security });
     }
-
-    // if (isEmailAccessAllowed && navConfig.some((config) => config?.title?.toLowerCase() !== 'email' || isDeveloper )) {
-    //   updatedConfig[0].items.push({ title: 'Emails', path: PATH_EMAIL.email.list, icon: ICONS.email });
-    // }
 
     setConfig(updatedConfig);
     // eslint-disable-next-line react-hooks/exhaustive-deps

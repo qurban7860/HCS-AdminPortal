@@ -1,10 +1,5 @@
-import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 // @mui
 import { Container } from '@mui/material';
-// redux
-import { useDispatch } from '../../redux/store';
-import { getMachine } from '../../redux/slices/products/machine';
 // sections
 import MachineViewForm from './MachineViewForm';
 import MachineTabContainer from './util/MachineTabContainer';
@@ -12,8 +7,6 @@ import MachineTabContainer from './util/MachineTabContainer';
 // ----------------------------------------------------------------------
 
 export default function MachineView( ) {
-  const { machineId } = useParams();
-  const dispatch = useDispatch();
 
   return (
     <Container maxWidth={false} sx={{mb:3}}>

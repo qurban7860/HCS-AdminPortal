@@ -223,6 +223,14 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // RESET Machine For Dialog
+    resetMachineForDialog(state) {
+      state.isLoading = false;
+      state.success = true;
+      state.machineForDialog = {};
+      state.initial = true;
+    },
+
     // Set FilterBy
     setFilterBy(state, action) {
       state.filterBy = action.payload;
@@ -267,6 +275,7 @@ export const {
   setMachineTransferDialog,
   resetCustomerMachines,
   resetActiveCustomerMachines,
+  resetMachineForDialog,
   resetMachine,
   resetMachines,
   resetActiveMachines,
