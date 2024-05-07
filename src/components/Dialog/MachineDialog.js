@@ -4,7 +4,7 @@ import { Grid, Dialog, DialogContent, DialogTitle, Divider } from '@mui/material
 import { PATH_MACHINE } from '../../routes/paths';
 import DialogLink from './DialogLink';
 import FormLabel from '../DocumentForms/FormLabel';
-import { setMachineDialog, setMachineTab, resetMachineForDialog } from '../../redux/slices/products/machine';
+import { setMachineDialog, setMachineTab, resetMachineForDialog, resetMachine } from '../../redux/slices/products/machine';
 import ViewFormField from '../ViewForms/ViewFormField';
 
 function MachineDialog() {
@@ -55,6 +55,7 @@ function MachineDialog() {
         onClose={handleMachineDialog}
         onClick={() => {
           if(machineForDialog?._id){
+            dispatch(resetMachine()); 
             navigate(PATH_MACHINE.machines.view(machineForDialog?._id)); 
             dispatch(setMachineDialog(false)); 
           }
