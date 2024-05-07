@@ -55,6 +55,8 @@ export default function MachineTabContainer({ currentTabValue }) {
       navigate( PATH_MACHINE.machines.ini.root(machineId) )
     } else if(tab === 'logs' && machineId  ){
       navigate( PATH_MACHINE.machines.logs.root(machineId) )
+    } else if(tab === 'jira' && machineId  ){
+      navigate( PATH_MACHINE.machines.jira.root(machineId) )
     }
   }
 

@@ -8,7 +8,6 @@ const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
 const ROOTS_CRM = '/crm';
 const ROOTS_MACHINE = '/products';
-const ROOTS_EMAIL =   '/email';
 const ROOTS_SECURITY = '/security';
 const ROOTS_SETTING = '/settings';
 const ROOTS_DOCUMENT = '/documents';
@@ -238,6 +237,11 @@ export const PATH_MACHINE = {
       new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/new`),
       graph: (machineId ) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/graph`),
       view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/${id}/view`),
+    },    
+    jira: {
+      root: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/jira`),
+      // new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/new`),
+      // view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/${id}/view`),
     },   
     // ------------------------ ARCHIVED MACHINES ----------------------------------------
     archived: {
@@ -378,6 +382,11 @@ export const PATH_SETTING = {
     view: (id) => path(ROOTS_SETTING, `/configs/${id}/view`),
     edit: (id) => path(ROOTS_SETTING, `/configs/${id}/edit`)
   },
+  email : {
+    list:path(ROOTS_SETTING, '/email/list'),
+    new: path(ROOTS_SETTING, '/email/new'), 
+    view: (id) => path(ROOTS_SETTING, `/email/${id}/view`),
+  },
   // ------------------------ DEPARTMENTS ----------------------------------------
   departments: {
     list: path(ROOTS_SETTING, '/departments/list'),
@@ -498,17 +507,6 @@ export const PATH_MACHINE_DRAWING = {
     },
   }
 };
-
-// ----------------------- Emails -----------------------------------------
-export const PATH_EMAIL = {
-  root: ROOTS_EMAIL,
-  permissionDenied: path(ROOTS_EMAIL, '/permission-denied'),
-  email : {
-    list:path(ROOTS_EMAIL, '/list'),
-    new: path(ROOTS_EMAIL, '/new'), 
-    view: (id) => path(ROOTS_EMAIL, `/${id}/view`),
-  },
-}
 
 export const PATH_DOCS = {
   root: 'https://www.howickltd.com/why-howick',

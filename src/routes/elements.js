@@ -198,6 +198,10 @@ export const MachineLogsAdd = Loadable(lazy(() => import('../pages/machine/logs/
 export const MachineLogsView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsViewForm')));
 export const MachineLogsGraphView = Loadable(lazy(() => import('../pages/machine/logs/MachineLogsGraphViewForm')));
 
+// --------------------------- MACHINE JIRA -------------------------------------
+
+export const MachineJiraList = Loadable(lazy(() => import('../pages/machine/jira/MachineJiraList')));
+
 // ---------------------  SETTINGS -------------------------------------------
 
 export const MachineSetting = Loadable(lazy(() => import('../pages/machineSettings/Machine')));
@@ -393,5 +397,5 @@ export const SitesReport = Loadable(lazy(() => import('../pages/crm/reports/site
 // ----------------------------------------------------------------
 
 // Email
-export const Email = Loadable(lazy(() => import('../pages/email/Email')));
-export const Emailview = Loadable(lazy(() => import('../pages/email/EmailViewform')));
+export const Email = Loadable(lazy(() => import('../pages/settings/email/Email')));
+export const Emailview = Loadable(lazy(() => import('../pages/settings/email/EmailViewform')));

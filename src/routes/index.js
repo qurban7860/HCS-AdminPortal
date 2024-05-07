@@ -169,6 +169,9 @@ import {
   MachineLogsView,
   MachineLogsGraphView,
 
+  // --------------------------- MACHINE Jira --------------------------------
+  MachineJiraList,
+
   // MACHINE SETTINGS
   MachineSetting,
 
@@ -687,6 +690,13 @@ export default function Router() {
                 {path: ':id/view', element: <MachineLogsView/>},
               ]
             },
+            { path: ':machineId/jira',
+              children:[
+                {element: <MachineJiraList/>, index: true},
+                // {path: 'new', element: </>}, 
+                // {path: ':id/view', element: </>},
+              ]
+            },
             // --------------------------- Machine Settings --------------------------------
             { path: 'machineSettings',
               children: [
@@ -946,6 +956,13 @@ export default function Router() {
             { path: ':id/edit', element: <SystemConfigEdit /> }
           ],
         },
+        { 
+          path: 'email',
+          children: [
+            { path: 'list', element: <Email /> },
+            { path: ':id/view', element: <Emailview/> }
+          ]
+        },
         // ------------------------------ departments ----------------------------------
         {
           path: 'departments',
@@ -1057,19 +1074,6 @@ export default function Router() {
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'app', element: <SitesReport /> },
-      ]
-    },
-    // ----------------------------- Email ----------------------------------
-    { path: 'email',
-      element: (
-        <AuthGuard>
-          <DashboardLayout />
-        </AuthGuard>
-      ),
-      children: [
-        { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-        { path: 'list', element: <Email /> },
-        { path: ':id/view', element: <Emailview/> }
       ]
     },
 
