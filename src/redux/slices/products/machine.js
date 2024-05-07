@@ -216,10 +216,18 @@ const slice = createSlice({
     },
 
     // RESET All Machines
-    resetAllMachines(state, action) {
+    resetAllMachines(state) {
       state.isLoading = false;
       state.success = true;
       state.allMachines = [];
+      state.initial = true;
+    },
+
+    // RESET Machine For Dialog
+    resetMachineForDialog(state) {
+      state.isLoading = false;
+      state.success = true;
+      state.machineForDialog = {};
       state.initial = true;
     },
 
@@ -262,6 +270,7 @@ export const {
   setMachineTab,
   setMachineEditFormVisibility,
   setMachineMoveFormVisibility,
+  resetMachineForDialog,
   stopLoading,
   setTransferMachineFlag,
   setMachineTransferDialog,

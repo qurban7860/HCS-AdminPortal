@@ -24,12 +24,11 @@ export default function MachineTabContainer({ currentTabValue }) {
   const { machine } = useSelector((state) => state.machine);
   const { machineId } = useParams();
   const dispatch = useDispatch();
-
   useEffect(() => {
-    if ( !machine?._id && machineId ) {
+    if ( machine?._id !== machineId ) {
       dispatch(getMachine(machineId));
     }
-  }, [dispatch, machine, machineId]);
+  }, [dispatch, machine?._id, machineId]);
 
   const navigate = useNavigate();
   const navigatePage = (tab)=>{
