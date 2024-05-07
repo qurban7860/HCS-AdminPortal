@@ -169,6 +169,9 @@ import {
   MachineLogsView,
   MachineLogsGraphView,
 
+  // --------------------------- MACHINE Jira --------------------------------
+  MachineJiraList,
+
   // MACHINE SETTINGS
   MachineSetting,
 
@@ -685,6 +688,13 @@ export default function Router() {
                 {path: 'new', element: <MachineLogsAdd/>},
                 {path: 'graph', element: <MachineLogsGraphView/>}, 
                 {path: ':id/view', element: <MachineLogsView/>},
+              ]
+            },
+            { path: ':machineId/jira',
+              children:[
+                {element: <MachineJiraList/>, index: true},
+                // {path: 'new', element: </>}, 
+                // {path: ':id/view', element: </>},
               ]
             },
             // --------------------------- Machine Settings --------------------------------

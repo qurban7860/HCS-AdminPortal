@@ -122,7 +122,13 @@ const TABS = [
     value: 'logs',
     label: 'Logs',
     icon: <Iconify icon="entypo:bar-graph" />,
+  },  
+  {
+    value: 'jira',
+    label: 'Jira',
+    icon: <Iconify icon="simple-icons:jirasoftware" />,
   },
+  
 ];
 
 export default TABS
