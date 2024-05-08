@@ -130,17 +130,17 @@ return (
                     content={ICONS.DEPARTMENNTS.heading}
                   />
                 </List>
-                <List
+                { isEmailAccessAllowed && isSettingAccessAllowed && <List
                   component="nav"
                   aria-labelledby="nested-list-subheader"
                   subheader={<ListItemsHeader header={FORMLABELS.EMAILS} />}
                 >
-                  { isEmailAccessAllowed && isSettingAccessAllowed && <ListItem
+                  <ListItem
                     onClick={linkEmails}
                     icon={ICONS.SYSTEM_EMAIL.icon}
                     content={ICONS.SYSTEM_EMAIL.heading}
-                  />}
-                </List>
+                  />
+                </List>}
 
             </StyledSettingsCardContainer>
 
