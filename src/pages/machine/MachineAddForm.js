@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, styled, Grid, Stack, TextField, Button } from '@mui/material';
+import { Box, Card, styled, Grid, Stack, TextField, Button, Link } from '@mui/material';
 // slice
 import { getActiveSPContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
 import { getActiveCustomers, setCustomerTab, setNewMachineCustomer } from '../../redux/slices/customer/customer';
@@ -28,6 +28,9 @@ import { FORMLABELS } from '../../constants/default-constants';
 import { machineSchema } from '../schemas/machine'
 import ConnectedMachineAddDialog from '../../components/Dialog/ConnectedMachineAddDialog';
 import Iconify from '../../components/iconify';
+import IconTooltip from '../../components/Icons/IconTooltip';
+import IconButtonTooltip from '../../components/Icons/IconButtonTooltip';
+import IconPopover from '../../components/Icons/IconPopover';
 
 MachineAddForm.propTypes = {
   isEdit: PropTypes.bool,
@@ -190,9 +193,9 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
 
   let connectedMachinesOption = [];
 
-  if (customer) {
-    connectedMachinesOption.push({_id: 0, serialNo: 'Add new connection'});
-  }
+  // if (customer) {
+  //   connectedMachinesOption.push({_id: 0, serialNo: 'Add new connection'});
+  // }
 
   connectedMachinesOption = connectedMachinesOption.concat(newConnectedMachines, machineConnections);
 
@@ -331,8 +334,9 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   <RHFDatePicker inputFormat='dd/MM/yyyy'  name="shippingDate" label="Shipping Date" />
                   <RHFDatePicker inputFormat='dd/MM/yyyy' name="installationDate" label="Installation Date" />
                 </Box>
-
+                <Box display="flex" columnGap={2} justifyContent='flex-end'>
                   <RHFAutocomplete
+                    fullWidth
                     multiple
                     disableCloseOnSelect
                     filterSelectedOptions
@@ -340,12 +344,13 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     id="tags-outlined"
                     defaultValues={newConnectedMachines}
                     options={connectedMachinesOption}
-                    getOptionLabel={(option) => {
-                      if (option._id === 0) {
-                        return "Add new connection";
-                      }
-                      return `${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`;
-                    }}
+                    getOptionLabel={(option) => `${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}
+                    // getOptionLabel={(option) => {
+                    //   if (option._id === 0) {
+                    //     return "Add new connection";
+                    //   }
+                    //   return `${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`;
+                    // }}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     onChange={(event, value) => {
                       if (value && value.length && value.some(option => option._id === 0)) {
@@ -354,19 +359,21 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                         setValue('machineConnectionVal', value);
                       }
                     }}
-                    renderOption={(props, option) =>
-                      option._id === 0 ? (
-                        <Button {...props} variant="outlined" startIcon={<Iconify icon='mdi:plus' />} fullWidth onClick={()=> hanldeAddNewConnectedMachine()}>
-                          {option.serialNo}
-                        </Button>
-                      ) : (
-                        <li {...props}>
-                          {option?.serialNo || ''} {option?.name ? '-' : ''} {option?.name || ''}
-                        </li>
-                      )
-                    }
+                    // renderOption={(props, option) =>
+                    //   option._id === 0 ? (
+                    //     <Button {...props} variant="outlined" startIcon={<Iconify icon='mdi:plus' />} fullWidth onClick={()=> hanldeAddNewConnectedMachine()}>
+                    //       {option.serialNo}
+                    //     </Button>
+                    //   ) : (
+                    //     <li {...props}>
+                    //       {option?.serialNo || ''} {option?.name ? '-' : ''} {option?.name || ''}
+                    //     </li>
+                    //   )
+                    // }
                     renderInput={(params) => ( <TextField  {...params}  label="Connected Machines" placeholder="Search"  /> )}
                   />
+                  {customer && <IconTooltip title='New Connectable Machine' icon='mdi:plus' onClick={()=> hanldeAddNewConnectedMachine()} />}
+                </Box>
                 <Box rowGap={2} columnGap={2} display="grid"
                   gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
