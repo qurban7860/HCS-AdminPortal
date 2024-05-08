@@ -134,7 +134,7 @@ function ViewFormField({
             </IconButton>
           </StyledTooltip>
         }
-        {NewVersion && 
+        {NewVersion && handleNewVersion && 
           <StyledTooltip title={ICONS.ADD_NEW_VERSION.heading} placement="top" disableFocusListener tooltipcolor={theme.palette.primary.main} color={theme.palette.primary.main}>
             <IconButton onClick={handleNewVersion} >
               <Iconify color={theme.palette.primary.main} sx={{ height: '20px', width: '20px' }} icon={ICONS.ADD_NEW_VERSION.icon} />

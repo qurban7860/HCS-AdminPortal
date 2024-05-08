@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { Container } from '@mui/system'
+import { Container } from '@mui/material'
 import DocumentAddForm from '../documents/DocumentAddForm'
 
 const MachineDrawingsNewVersion = () => (

@@ -8,7 +8,7 @@ import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 import { getHistoricalConfigurationRecord, getHistoricalConfigurationRecord2 } from '../../../redux/slices/products/historicalConfiguration';
 // components
-import JsonEditor from '../../../components/CodeMirror/JsonEditorMerge';
+import JsonEditorMerge from '../../../components/CodeMirror/JsonEditorMerge';
 import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEditDeleteButtons';
 import MachineTabContainer from '../util/MachineTabContainer';
 
@@ -47,7 +47,7 @@ function HistoricalConfigurationsViewForm() {
             <Skeleton animation={false} />
             <Skeleton animation={false} />
           </>
-           :  <JsonEditor  value={ historicalConfiguration } modifiedValue={ historicalConfiguration2 } readOnly />  
+           :  <JsonEditorMerge  value={ historicalConfiguration } modifiedValue={ historicalConfiguration2 } readOnly />  
            }
         </Stack>
 

@@ -6,7 +6,7 @@ import VerificationIcon from '../Icons/VerificationIcon';
 import useLimitString from '../../hooks/useLimitString';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 
-export default function LinkTableCellWithIcon({ align, onClick, param, isVerified }) {
+export default function LinkTableCellWithIcon({ align, onClick, param, isVerified, main }) {
   const limit = 25;
   return (
     <TableCell align={align}>
@@ -19,8 +19,9 @@ export default function LinkTableCellWithIcon({ align, onClick, param, isVerifie
             textDecoration: 'underline',
             textDecorationStyle: 'dotted',
             fontWeight: 'bold',
+            color: main ? (themes) => alpha(  themes.palette.primary.dark, 0.98) : 'black',
             '&:hover': {
-              color: (themes) => alpha(themes.palette.info.main, 0.98),
+              color: (themes) => alpha( main ? themes.palette.primary.main : themes.palette.info.main, 0.98),
             },
           }}
         >
@@ -36,4 +37,5 @@ LinkTableCellWithIcon.propTypes = {
   onClick: PropTypes.func,
   param: PropTypes.string,
   isVerified: PropTypes.bool,
+  main: PropTypes.bool,
 };

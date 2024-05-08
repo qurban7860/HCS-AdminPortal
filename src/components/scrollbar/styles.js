@@ -6,7 +6,10 @@ import { alpha, styled } from '@mui/material/styles';
 
 export const StyledRootScrollbar = styled('div')(() => ({
   flexGrow: 1,
-  height: '100%',
+  // minHeight: '40vh',
+  // maxHeight: '70vh',
+  height: '60vh',
+  // height: 'auto',
   overflow: 'hidden',
 }));
 

@@ -112,7 +112,13 @@ export const PATH_CRM = {
       move: ( customerId, id ) => path(ROOTS_CRM, `/customers/${customerId}/machines/${id}/move`),
       new: ( customerId ) => path(ROOTS_CRM, `/customers/${customerId}/machines/new`),
     },
-  }
+    // ------------------------ ARCHIVED CUSTOMERS ----------------------------------------
+    archived: {
+      root: path(ROOTS_CRM, '/customers/archived'),
+      view: (id) => path(ROOTS_CRM, `/customers/archived/${id}/view`),
+    },
+  },
+  
 };
 
 // MACHINE
@@ -232,7 +238,12 @@ export const PATH_MACHINE = {
       new: (machineId) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/new`),
       graph: (machineId ) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/graph`),
       view: (machineId, id) => path(ROOTS_MACHINE, `/machines/${machineId}/logs/${id}/view`),
-    },    
+    },   
+    // ------------------------ ARCHIVED MACHINES ----------------------------------------
+    archived: {
+      root: path(ROOTS_MACHINE, '/machines/archived'),
+      view: (id) => path(ROOTS_MACHINE, `/machines/archived/${id}/view`),
+    }, 
     // --------------------- MACHINE SETTINGS -----------------------
     machineSettings: {
       root: path(ROOTS_MACHINE, '/machines/machineSettings'),
@@ -374,6 +385,19 @@ export const PATH_SETTING = {
     view: (id) => path(ROOTS_SETTING, `/departments/${id}/view`),
     edit: (id) => path(ROOTS_SETTING, `/departments/${id}/edit`)
   },
+  // ------------------------ PM2 LOGS ----------------------------------------
+  pm2: {
+      logs: {
+        root: path(ROOTS_SETTING, '/pm2/logs/'),
+        view: (id) => path(ROOTS_SETTING, `/pm2/logs/${id}/view`),
+      }
+  },  
+  dbBackup: {
+    logs: {
+      root: path(ROOTS_SETTING, '/dbBackup/logs/'),
+      view: (id) => path(ROOTS_SETTING, `/dbBackup/logs/${id}/view`),
+    }
+},
   // ------------------------ SECURITY USER INVITES ----------------------------------------
   invite: {
     list: path(ROOTS_SETTING, '/invite/list'),
@@ -466,6 +490,7 @@ export const PATH_MACHINE_DRAWING = {
   machineDrawings:{
     new: path(ROOTS_MACHINE_DRAWING, '/new'),
     newList: path(ROOTS_MACHINE_DRAWING, '/newList'),
+    edit: ( id ) => path(ROOTS_MACHINE_DRAWING, `/${id}/edit`),
     view: {
       root: ( id ) => path(ROOTS_MACHINE_DRAWING, `/${id}/view`),
       addFile: ( id ) => path(ROOTS_MACHINE_DRAWING, `/${id}/view/addFile`),

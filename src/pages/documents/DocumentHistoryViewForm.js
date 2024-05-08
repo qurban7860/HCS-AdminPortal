@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import {  useMemo, useEffect, memo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Document, Page, pdfjs } from 'react-pdf';
 import download from 'downloadjs';
 import {
   Grid,
@@ -18,6 +17,7 @@ import {
   Typography,
   Divider
 } from '@mui/material';
+import b64toBlob from 'b64-to-blob';
 import { ThumbnailDocButton } from '../../components/Thumbnails'
 import { StyledVersionChip } from '../../theme/styles/default-styles';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
@@ -45,6 +45,7 @@ import { Snacks } from '../../constants/document-constants';
 import UpdateDocumentVersionDialog from '../../components/Dialog/UpdateDocumentVersionDialog';
 import { DocumentGalleryItem } from '../../components/gallery/DocumentGalleryItem';
 import Lightbox from '../../components/lightbox/Lightbox';
+import SkeletonPDF from '../../components/skeleton/SkeletonPDF';
 
 // ----------------------------------------------------------------------
 
@@ -54,6 +55,7 @@ DocumentHistoryViewForm.propTypes = {
   machineDrawingPage: PropTypes.bool,
   machineDrawings: PropTypes.bool,
 };
+
 function DocumentHistoryViewForm({ customerPage, machinePage, machineDrawingPage, machineDrawings }) {
   
   const dispatch = useDispatch();
@@ -170,7 +172,13 @@ const handleNewFile = async () => {
       dispatch(getMachineForDialog(Id));
   }
 
-  const handleEditDrawing = async () => navigate(PATH_MACHINE.machines.drawings.edit( machineId, id));
+  const handleEditDrawing = async () =>{
+    if( machineDrawingPage ){
+      navigate(PATH_MACHINE.machines.drawings.edit( machineId, id));
+    } else if( machineDrawings ){
+      navigate(PATH_MACHINE_DRAWING.machineDrawings.edit( id));
+    }
+  } 
 
   const handleDelete = async () => {
     try {
@@ -316,20 +324,21 @@ const handleNewFile = async () => {
   };
 
   const [pdf, setPDF] = useState(null);
-  const [pages, setPages] = useState(null);
+  const [PDFName, setPDFName] = useState('');
+  // const [pages, setPages] = useState(null);
   const [PDFViewerDialog, setPDFViewerDialog] = useState(false);
 
-  pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
-
   const handleOpenFile = async (documentId, versionId, fileId, fileName, fileExtension) => {
+    setPDFName(`${fileName}.${fileExtension}`);
     setPDFViewerDialog(true);
     setPDF(null);
     try {
       const response = await dispatch(getDocumentDownload(documentId, versionId, fileId));
-
       if (regEx.test(response.status)) {
         const pdfData = `data:application/pdf;base64,${encodeURI(response.data)}`;
-        setPDF(pdfData);
+        const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
+        const url = URL.createObjectURL(blob);
+        setPDF(url);
       } else {
         enqueueSnackbar(response.statusText, { variant: 'error' });
       }
@@ -342,9 +351,10 @@ const handleNewFile = async () => {
     }
   };
 
-  const onDocumentLoadSuccess = ({ numPages }) => {
-    setPages(numPages);
-  };
+
+  // const onDocumentLoadSuccess = ({ numPages }) => {
+  //   setPages(numPages);
+  // };
 
   const handleBackLink = ()=>{
     if(customerPage) {
@@ -359,8 +369,9 @@ const handleNewFile = async () => {
       navigate(PATH_DOCUMENT.root)
     }
   }
-  
+
   return (
+    <>
     <Container maxWidth={false} sx={{padding:(machineDrawings || customerPage || machinePage || machineDrawingPage) ?'0 !important':''}}>
       {!customerPage && !machinePage && !machineDrawingPage &&
         <DocumentCover content={defaultValues?.displayName} generalSettings />
@@ -374,37 +385,19 @@ const handleNewFile = async () => {
           drawingPage={machineDrawingPage}
           customerAccess={defaultValues?.customerAccess}
           isActive={defaultValues.isActive}
-          handleEdit={machineDrawingPage && handleEditDrawing}
-          onDelete={machineDrawingPage ? handleDeleteDrawing : handleDelete }
+          handleEdit={( machineDrawingPage || ( machineDrawings && !documentHistory?.machine && documentHistory?.productDrawings?.length === 0 ) ) && handleEditDrawing }
+          onDelete={machineDrawingPage ? handleDeleteDrawing : !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && handleDelete || undefined }
           disableDeleteButton={machineDrawingPage && machine?.status?.slug==="transferred"}
           disableEditButton={machineDrawingPage && machine?.status?.slug==="transferred"}
           backLink={handleBackLink}
       />
             <Grid container sx={{mt:2}}>
-            {PDFViewerDialog && (
-              <Dialog fullWidth maxWidth='md' open={PDFViewerDialog} style={{marginBottom:10}} onClose={()=> setPDFViewerDialog(false)}>
-                <DialogTitle variant='h3' sx={{pb:1, pt:2, display:'flex', justifyContent:'space-between'}}>
-                    PDF View
-                    <Button variant='outlined' onClick={()=> setPDFViewerDialog(false)}>Close</Button>
-                </DialogTitle>
-                <Divider variant='fullWidth' />
-                <DialogContent dividers sx={{height:'-webkit-fill-available'}}>
-                  {pdf?(
-                    <Document file={pdf} onLoadSuccess={onDocumentLoadSuccess}>
-                      {Array.from(new Array(pages), (el, index) => (
-                        <Page width={840} key={`page_${index + 1}`} renderTextLayer={false} pageNumber={index + 1} />
-                      ))}
-                    </Document>
-                  ):(<Typography variant='body1' sx={{mt:2}}>Loading PDF....</Typography>)}
-                </DialogContent>
-              </Dialog>
-            )}
               <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.displayName} />
               <ViewFormField isLoading={isLoading}
                 sm={6}
                 NewVersion={!defaultValues.isArchived}
-                handleNewVersion={handleNewVersion}
-                handleUpdateVersion={handleUpdateVersion}
+                handleNewVersion={ !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && handleNewVersion || undefined } 
+                handleUpdateVersion={ !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && handleUpdateVersion || undefined }
                 heading="Active Version"
                 node={
                   defaultValues.documentVersion && (
@@ -498,7 +491,7 @@ const handleNewFile = async () => {
                             <DocumentGalleryItem isLoading={isLoading} key={file?.id} image={file} 
                               onOpenLightbox={()=> handleOpenLightbox(_index)}
                               onDownloadFile={()=> handleDownloadFile(documentHistory._id, version._id, file._id, file?.name, file?.extension)}
-                              onDeleteFile={()=> handleDeleteFile(documentHistory._id, version._id, file._id)}
+                              onDeleteFile={ !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && (()=> handleDeleteFile(documentHistory._id, version._id, file._id)) || undefined }
                               toolbar
                             />
                           )
@@ -529,7 +522,7 @@ const handleNewFile = async () => {
                               isLoading={isLoading} 
                               // onOpenLightbox={() => handleOpenLightbox(index)}
                               onDownloadFile={() => handleDownloadFile(documentHistory._id, version._id, file._id, file?.name, file?.extension)}
-                              onDeleteFile={() => handleDeleteFile(documentHistory._id, version._id, file._id)}
+                              onDeleteFile={ !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && (() => handleDeleteFile(documentHistory._id, version._id, file._id) ) || undefined }
                               onOpenFile={() => handleOpenFile(documentHistory._id, version._id, file._id, file)}
                               toolbar
                             />
@@ -538,7 +531,7 @@ const handleNewFile = async () => {
                         return null;
                       })}
 
-                      {index === 0 && !defaultValues.isArchived && (<ThumbnailDocButton onClick={handleNewFile}/>)}
+                      {index === 0 && !defaultValues.isArchived && !( ( !machinePage && documentHistory?.machine?._id ) || ( !customerPage && documentHistory?.customer?._id ) || ( machineDrawings && documentHistory?.productDrawings?.length > 0 ) ) && (<ThumbnailDocButton onClick={handleNewFile}/>)}
                     </Box>
                     <ViewFormAudit key={`${index}-files`} defaultValues={fileValues} />
                   </Grid>
@@ -559,7 +552,21 @@ const handleNewFile = async () => {
       <MachineDialog />
       {documentVersionEditDialogVisibility && <UpdateDocumentVersionDialog />}
     </Container>
-    
+    {PDFViewerDialog && (
+      <Dialog fullWidth maxWidth='' open={PDFViewerDialog} style={{marginBottom:10}} onClose={()=> setPDFViewerDialog(false)}>
+        <DialogTitle variant='h3' sx={{pb:1, pt:2, display:'flex', justifyContent:'space-between'}}>
+            PDF View
+              <Button variant='outlined' onClick={()=> setPDFViewerDialog(false)}>Close</Button>
+        </DialogTitle>
+        <Divider variant='fullWidth' />
+          {pdf?(
+            <iframe title={PDFName} src={pdf} style={{paddingBottom:10}} width='100%' height='842px'/>
+          ):(
+            <SkeletonPDF />
+          )}
+      </Dialog>
+    )}
+    </>
   );
 }
 

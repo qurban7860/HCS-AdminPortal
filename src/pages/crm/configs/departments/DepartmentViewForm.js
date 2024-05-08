@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
 // @mui
-import { Card, Grid } from '@mui/material';
+import { Card, Grid, Switch, Typography, FormControlLabel } from '@mui/material';
 // import { RHFSwitch } from '../../../components/hook-form';
 // redux
 import {
@@ -48,6 +48,7 @@ export default function DepartmentViewForm() {
       departmentName: department?.departmentName || '',
       isActive: department?.isActive,
       isDefault: department?.isDefault,
+      forCustomer: department?.forCustomer || false,
       createdByFullName: department?.createdBy?.name || '',
       createdAt: department?.createdAt || '',
       createdIP: department?.createdIP || '',
@@ -73,7 +74,8 @@ export default function DepartmentViewForm() {
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons 
         isActive={defaultValues.isActive} 
-        isDefault={defaultValues.isDefault} 
+        // isDefault={defaultValues.isDefault} 
+        // forCustomer={defaultValues.forCustomer}
         handleEdit={toggleEdit} 
         onDelete={onDelete} 
         backLink={() => navigate(PATH_SETTING.departments.list)}
@@ -81,6 +83,10 @@ export default function DepartmentViewForm() {
       />
       <Grid container sx={{mt:2}}>
         <ViewFormField isLoading={isLoading} sm={12} heading="Department Name" param={defaultValues?.departmentName} />
+        <Grid display="flex" >
+          <FormControlLabel control={<Switch checked={defaultValues?.isDefault} />} label={<Typography variant='body2'sx={{fontWeight:'bold'}}>Default</Typography>} />
+          <FormControlLabel control={<Switch checked={defaultValues?.forCustomer} />} label={<Typography variant='body2'sx={{fontWeight:'bold'}}> Customers</Typography>} />
+        </Grid>
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>
     </Card>

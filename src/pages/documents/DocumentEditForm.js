@@ -27,12 +27,12 @@ DocumentEditForm.propTypes = {
   customerPage: PropTypes.bool,
   machinePage: PropTypes.bool,
   drawingPage: PropTypes.bool,
+  machineDrawings: PropTypes.bool,
 };
 
-function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
+function DocumentEditForm({ customerPage, machinePage, drawingPage, machineDrawings }) {
   
   const { document } = useSelector((state) => state.document);
-  console.log("edit page document : ",document)
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const { customer } = useSelector((state) => state.customer);
@@ -105,7 +105,9 @@ function DocumentEditForm({ customerPage, machinePage, drawingPage }) {
       navigate(PATH_MACHINE.machines.documents.view.root(machineId, id));
     } else if( drawingPage && machineId && id ){
       navigate(PATH_MACHINE.machines.drawings.view.root(machineId, id));
-    }else if( !customerPage && !drawingPage && !machinePage && id ){
+    } else if( machineDrawings && id ){
+      navigate(PATH_MACHINE_DRAWING.machineDrawings.view.root(id))
+    } else if( !customerPage && !drawingPage && !machinePage && id ){
       navigate(PATH_DOCUMENT.document.view.root(id))
     }
   }

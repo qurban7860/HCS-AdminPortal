@@ -33,8 +33,9 @@ export const FORMLABELS = {
     MACHINE_PLACEHOLDER: 'Machine',
     TOOLS: 'Tools',
     LOGS: 'Logs',
-    SETTINGS: 'Machine Settings',
+    SETTINGS: 'Settings',
     CUSTOMERS: 'Customers',
+    ARCHIVED_CUSTOMERS: 'Archived Customers',
     DOCUMENTS: 'Documents',
     ADD_DOCUMENTS: 'Add Documents',
     MACHINE_DRAWINGS: 'Machine Drawings',
@@ -83,6 +84,7 @@ export const FORMLABELS = {
   SECURITY_SETTINGS: 'Security Settings',
   REPORTS: 'Reports',
   CONFIG: 'Configuration',
+  ARCHIVED_REPORTS: 'Archived Reports',
   LOGS_SETTINGS: 'Logs',
   // @root DocumentAddForm in dashboard/documents
   SELECT_CUSTOMER: 'Select Customer',
@@ -93,7 +95,7 @@ export const FORMLABELS = {
   SELECT_DOCUMENT_CATEGORY: 'Select Document Category',
   SELECT_DOCUMENT_TYPE: 'Select Document Type',
   SELECT_CATEGORY: 'Select Category',
-
+  SYSTEM_LOGS: 'System Logs',
   DOCUMENT_NAME: 'Document Name',
   DOCUMENT_DESC: 'Description',
 

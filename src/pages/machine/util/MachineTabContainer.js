@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
@@ -21,14 +21,15 @@ MachineTabContainer.propTypes = {
 };
 
 export default function MachineTabContainer({ currentTabValue }) {
-  const { machine } = useSelector((state) => state.machine);
+  const { machine, isLoading } = useSelector((state) => state.machine);
   const { machineId } = useParams();
   const dispatch = useDispatch();
-  useEffect(() => {
-    if ( machine?._id !== machineId ) {
+
+  useLayoutEffect(() => {
+    if ( !machine?._id && machineId ) {
       dispatch(getMachine(machineId));
     }
-  }, [dispatch, machine?._id, machineId]);
+  }, [dispatch, machine, machineId]);
 
   const navigate = useNavigate();
   const navigatePage = (tab)=>{
@@ -59,8 +60,8 @@ export default function MachineTabContainer({ currentTabValue }) {
 
   return (
       <StyledCardContainer>
-        <Cover name={machine ? `${machine?.serialNo ? machine?.serialNo : ''} ${machine?.machineModel?.name ? `- ${machine?.machineModel?.name}` : '' }` : 'New Machine'} setting  />
-        <TabContainer
+        <Cover name={machine ? `${machine?.serialNo ? machine?.serialNo : ''} ${machine?.machineModel?.name ? `- ${machine?.machineModel?.name}` : '' }` : 'New Machine'} setting isArchived={machine?.isArchived}  />
+        {!machine?.isArchived && !isLoading && <TabContainer
           tabsClasses={tabsClasses.scrollButtons}
           currentTab={currentTabValue}
           setCurrentTab={(tab)=>  navigatePage(tab) }
@@ -74,7 +75,7 @@ export default function MachineTabContainer({ currentTabValue }) {
               label={tab.label}
             />
           ))}
-        </TabContainer>
+        </TabContainer>}
       </StyledCardContainer>
   );
 }

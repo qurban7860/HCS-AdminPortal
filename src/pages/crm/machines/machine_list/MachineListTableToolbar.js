@@ -58,8 +58,8 @@ export default function MachineListTableToolbar({
       radioStatus={transferStatus}
       radioStatusLabel='Show Transferred'
       handleRadioStatus={handleTransferStatus}
-      SubOnClick={toggleAdd}
-      addButton={BUTTONS.NEWMACHINE}
+      SubOnClick={ customer?.isArchived ? undefined : toggleAdd}
+      addButton={customer?.isArchived ? undefined : BUTTONS.NEWMACHINE}
       machinePage
     />
   </Stack>

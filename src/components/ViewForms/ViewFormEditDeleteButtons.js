@@ -34,6 +34,8 @@ function ViewFormEditDeleteButtons({
   isManufacture,
   isDeleteDisabled,
   customerAccess,
+  forCustomer,
+  formerEmployee,
   isRequired,
   multiAuth,
   currentEmp,
@@ -377,7 +379,7 @@ function ViewFormEditDeleteButtons({
             />
           }
           
-          {isDefault !==undefined &&
+          {isDefault &&
             <IconTooltip
               title={isDefault?ICONS.DEFAULT.heading:ICONS.CONTRAST.heading}
               color={isDefault?ICONS.DEFAULT.color:ICONS.CONTRAST.color}
@@ -462,6 +464,22 @@ function ViewFormEditDeleteButtons({
               title={customerAccess ? ICONS.ALLOWED.heading : ICONS.DISALLOWED.heading}
               color={customerAccess ? ICONS.ALLOWED.color : ICONS.DISALLOWED.color}
               icon={customerAccess ? ICONS.ALLOWED.icon : ICONS.DISALLOWED.icon}
+            />
+          }
+
+          {forCustomer !== undefined &&
+            <IconTooltip
+              title={forCustomer ? ICONS.FORCUSTOMER.heading : ICONS.NOTFORCUSTOMER.heading}
+              color={forCustomer ? ICONS.FORCUSTOMER.color : ICONS.NOTFORCUSTOMER.color}
+              icon={forCustomer ? ICONS.FORCUSTOMER.icon : ICONS.NOTFORCUSTOMER.icon}
+            />
+          }
+
+          {formerEmployee !== undefined &&
+            <IconTooltip
+              title={formerEmployee ? ICONS.FORMEREMPLOYEE.heading : ICONS.NOTFORMEREMPLOYEE.heading}
+              color={formerEmployee ? ICONS.FORMEREMPLOYEE.color : ICONS.NOTFORMEREMPLOYEE.color}
+              icon={formerEmployee ? ICONS.FORMEREMPLOYEE.icon : ICONS.NOTFORMEREMPLOYEE.icon}
             />
           }
 
@@ -677,11 +695,11 @@ function ViewFormEditDeleteButtons({
         {/* delete button */}
         {id !== userId  && !mainSite && onDelete && (
           <IconTooltip
-            title="Delete"
+            title="Archive"
             disabled={ isDisableDelete || disableDeleteButton }
             onClick={() => {  handleOpenConfirm('delete') }}
             color={( isDisableDelete || disableDeleteButton ) ? "#c3c3c3":"#FF0000"}
-            icon="mdi:trash-can-outline"
+            icon="mdi:archive"
           />
         )}
       </StyledStack>
@@ -808,8 +826,8 @@ function ViewFormEditDeleteButtons({
         onClose={() => {
           handleCloseConfirm('delete');
         }}
-        title="Delete"
-        content="Are you sure you want to delete?"
+        title="Archive"
+        content="Are you sure you want to Archive?"
         action={
           <LoadingButton
             variant="contained"
@@ -818,7 +836,7 @@ function ViewFormEditDeleteButtons({
             disabled={isSubmitting}
             onClick={handleSubmit(onDelete)}
           >
-            Delete
+            Archive
           </LoadingButton>
         }
       />
@@ -873,6 +891,8 @@ ViewFormEditDeleteButtons.propTypes = {
   isSubmitted: PropTypes.func,
   returnToSubmitted: PropTypes.func,
   customerAccess:PropTypes.bool,
+  forCustomer: PropTypes.bool,
+  formerEmployee: PropTypes.bool,
   multiAuth:PropTypes.bool,
   currentEmp:PropTypes.bool,
   isRequired:PropTypes.bool,

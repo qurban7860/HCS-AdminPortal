@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import React, { useMemo, memo, useState, useEffect, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Document, Page, pdfjs } from 'react-pdf';
 import { Grid, Card, Box, Dialog, DialogTitle, Button, DialogContent, Divider, Typography } from '@mui/material'
 import download from 'downloadjs';
+import b64toBlob from 'b64-to-blob';
 import { StyledVersionChip } from '../../theme/styles/default-styles';
 import { PATH_CRM, PATH_DOCUMENT, PATH_MACHINE } from '../../routes/paths';
 import {
@@ -25,6 +25,7 @@ import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDe
 import { DocumentGalleryItem } from '../../components/gallery/DocumentGalleryItem';
 import Lightbox from '../../components/lightbox/Lightbox';
 import FormLabel from '../../components/DocumentForms/FormLabel';
+import SkeletonPDF from '../../components/skeleton/SkeletonPDF';
 
 DocumentViewForm.propTypes = {
   customerPage: PropTypes.bool,
@@ -235,20 +236,21 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
   };
 
   const [pdf, setPDF] = useState(null);
-  const [pages, setPages] = useState(null);
+  // const [pages, setPages] = useState(null);
+  const [PDFName, setPDFName] = useState('');
   const [PDFViewerDialog, setPDFViewerDialog] = useState(false);
 
-  pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
-
   const handleOpenFile = async (documentId, versionId, fileId, fileName, fileExtension) => {
+    setPDFName(`${fileName}.${fileExtension}`);
     setPDFViewerDialog(true);
     setPDF(null);
     try {
       const response = await dispatch(getDocumentDownload(documentId, versionId, fileId));
-
       if (regEx.test(response.status)) {
         const pdfData = `data:application/pdf;base64,${encodeURI(response.data)}`;
-        setPDF(pdfData);
+        const blob = b64toBlob(encodeURI(response.data), 'application/pdf')
+        const url = URL.createObjectURL(blob);
+        setPDF(url);
       } else {
         enqueueSnackbar(response.statusText, { variant: 'error' });
       }
@@ -261,9 +263,9 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
     }
   };
 
-  const onDocumentLoadSuccess = ({ numPages }) => {
-    setPages(numPages);
-  };
+  // const onDocumentLoadSuccess = ({ numPages }) => {
+  //   setPages(numPages);
+  // };
 
   const handleBackLink = ()=>{
     if(customerPage) {
@@ -274,6 +276,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
   }
 
   return (
+    <>
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons isActive={defaultValues.isActive} 
       customerAccess={defaultValues?.customerAccess} 
@@ -286,24 +289,6 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
       customerPage={customerPage} machinePage={machinePage} drawingPage={drawingPage}
       />
       <Grid container>
-      {PDFViewerDialog && (
-        <Dialog fullWidth maxWidth='md' open={PDFViewerDialog} style={{marginBottom:10}} onClose={()=> setPDFViewerDialog(false)}>
-          <DialogTitle variant='h3' sx={{pb:1, pt:2, display:'flex', justifyContent:'space-between'}}>
-              PDF View
-              <Button variant='outlined' onClick={()=> setPDFViewerDialog(false)}>Close</Button>
-          </DialogTitle>
-          <Divider variant='fullWidth' />
-          <DialogContent dividers sx={{height:'-webkit-fill-available'}}>
-            {pdf?(
-              <Document file={pdf} onLoadSuccess={onDocumentLoadSuccess}>
-                {Array.from(new Array(pages), (el, index) => (
-                  <Page width={840} key={`page_${index + 1}`} renderTextLayer={false} pageNumber={index + 1} />
-                ))}
-              </Document>
-            ):(<Typography variant='body1' sx={{mt:2}}>Loading PDF....</Typography>)}
-          </DialogContent>
-        </Dialog>
-      )}
         <ViewFormField isLoading={isLoading} sm={6} heading="Name" param={defaultValues?.displayName} />
         <ViewFormField isLoading={isLoading}
           sm={6}
@@ -399,10 +384,33 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
           onGetCurrentIndex={(index) => handleOpenLightbox(index)}
           disabledSlideshow
         />
-
-        
       </Grid>
     </Card>
+    {PDFViewerDialog && (
+      <Dialog fullWidth maxWidth='' open={PDFViewerDialog} style={{marginBottom:10}} onClose={()=> setPDFViewerDialog(false)}>
+        <DialogTitle variant='h3' sx={{pb:1, pt:2, display:'flex', justifyContent:'space-between'}}>
+            PDF View
+              <Button variant='outlined' onClick={()=> setPDFViewerDialog(false)}>Close</Button>
+        </DialogTitle>
+        <Divider variant='fullWidth' />
+          {pdf?(
+              <iframe title={PDFName} src={pdf} style={{paddingBottom:10}} width='100%' height='842px'/>
+            ):(
+              <SkeletonPDF />
+            )}
+        {/* <DialogContent dividers sx={{height:'-webkit-fill-available'}}>
+          {pdf?(
+            <Document file={pdf} onLoadSuccess={onDocumentLoadSuccess}>
+              {Array.from(new Array(pages), (el, index) => (
+                <Page width={840} rotate={pageRotation} key={`page_${index + 1}`} renderAnnotationLayer={false} renderTextLayer={false} pageNumber={index + 1} />
+              ))}
+            </Document>
+          ):(<Typography variant='body1' sx={{mt:2}}>Loading PDF....</Typography>)}
+        </DialogContent> */}
+        
+      </Dialog>
+    )}
+    </>
   );
 }
 

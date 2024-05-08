@@ -51,7 +51,8 @@ const TABLE_HEAD = [
   { id: 'roles.name.[]', visibility: 'md1', label: 'Roles', align: 'left' },
   // { id: 'regions.name.[]', visibility: 'md1', label: 'Regions', align: 'left' },
   { id: 'isOnline', label: 'Online', align: 'center' },
-  { id: 'currentEmployee', label: 'Employed', align: 'center' },
+  // { id: 'currentEmployee', label: 'Employed', align: 'center' },
+  { id: 'contact.firstName', label: 'Contact', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
@@ -334,6 +335,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRo
         securityUser?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         securityUser?.phone?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         securityUser?.phone?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        `${securityUser?.contact?.firstName?.toLowerCase() || ''} ${securityUser?.contact?.lastName?.toLowerCase() || '' }`.indexOf(filterName.toLowerCase()) >= 0 ||
         securityUser?.roles?.map((obj) => obj.name).join(', ').toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // (securityUser?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(securityUser?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0

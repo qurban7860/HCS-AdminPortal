@@ -11,8 +11,8 @@ const Original = CodeMirrorMerge.Original;
 const Modified = CodeMirrorMerge.Modified;
 
 JsonEditorMerge.propTypes = {
-  value: PropTypes.string,
-  modifiedValue: PropTypes.string,
+  value: PropTypes.object,
+  modifiedValue: PropTypes.object,
   HandleChangeIniJson: PropTypes.func,
   readOnly: PropTypes.bool,
 };

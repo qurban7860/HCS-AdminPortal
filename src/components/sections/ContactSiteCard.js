@@ -11,6 +11,7 @@ import { CustomAvatarBase } from '../../theme/styles/customer-styles';
 import { useScreenSize } from '../../hooks/useResponsive';
 import Iconify from '../iconify';
 import { StyledTooltip } from '../../theme/styles/default-styles';
+import { ICONS } from '../../constants/icons/default-icons';
 
 ContactSiteCard.propTypes = {
   name: PropTypes.string,
@@ -19,12 +20,13 @@ ContactSiteCard.propTypes = {
   phone: PropTypes.object,
   image: PropTypes.string,
   isMain: PropTypes.bool,
+  isFormerEmployee: PropTypes.bool,
   handleOnClick:PropTypes.func,
   disableClick:PropTypes.bool,
   isActive:PropTypes.bool
 };
 
-export default function ContactSiteCard({name, title, email, phone, image, isMain, handleOnClick, disableClick, isActive}) {
+export default function ContactSiteCard({ name, title, email, phone, image, isMain, isFormerEmployee, handleOnClick, disableClick, isActive }) {
 
   const smScreen = useScreenSize('sm');
   const mdScreen = useScreenSize('md');
@@ -61,7 +63,7 @@ export default function ContactSiteCard({name, title, email, phone, image, isMai
   
   return (
     <Card sx={{ display: 'flex', height:smScreen && '200px', width:'100%', borderRadius:'8px', background:isActive?'#e9ecfe':''}}>
-      <CardActionArea sx={{display:'flex', height:'100%', p:0, m:0}} disabled={isActive || disableClick} onClick={handleOnClick}>
+      <CardActionArea sx={{display:'flex', height:'100%', p:0, m:0}} disabled={disableClick} onClick={handleOnClick}>
         {smScreen &&
           <>
             {image ? (
@@ -74,7 +76,7 @@ export default function ContactSiteCard({name, title, email, phone, image, isMai
           </> 
         }
           <CardContent sx={{ flex: '1 0 auto',  height:'100%', width:'calc(100% - 150px)'}}>
-            {isMain && 
+          {isMain && 
               <Grid
                 sx={{ position: 'absolute', top: 5, right: 5 }}
               >
@@ -87,7 +89,25 @@ export default function ContactSiteCard({name, title, email, phone, image, isMai
                   <Iconify icon="f7:dot-square-fill" color="#1769aa" />
                 </StyledTooltip>
               </Grid>
+            }            
+            
+            { isFormerEmployee !== undefined && 
+              <Grid
+                sx={{ position: 'absolute', top: 5, right: 5, zIndex:'10' }}
+              >
+                <StyledTooltip
+                  title={ isFormerEmployee ? ICONS.FORMEREMPLOYEE.heading : ICONS.NOTFORMEREMPLOYEE.heading }
+                  tooltipcolor={ isFormerEmployee ? ICONS.FORMEREMPLOYEE.color : ICONS.NOTFORMEREMPLOYEE.color } 
+                  placement="top" 
+                  disableFocusListener 
+                  >
+                  <Iconify 
+                    icon={ isFormerEmployee ? ICONS.FORMEREMPLOYEE.icon : ICONS.NOTFORMEREMPLOYEE.icon } 
+                    color={ isFormerEmployee ? ICONS.FORMEREMPLOYEE.color : ICONS.NOTFORMEREMPLOYEE.color } />
+                </StyledTooltip>
+              </Grid>
             }
+            
             <Typography variant="h4" color="#2065d1" component="div">{_name}</Typography>
             <Typography variant="body1" color="text.secondary" component="div">{_title}</Typography>
             <Typography variant="overline" color="text.secondary" component="div">{_email}</Typography>

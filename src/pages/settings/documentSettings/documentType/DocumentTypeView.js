@@ -1,33 +1,31 @@
 import {  useLayoutEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import {  useParams } from 'react-router-dom';
 // @mui
-import {  Card, Container } from '@mui/material';
+import {  Card,  Container } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 // routes
-import { PATH_SETTING } from '../../../../routes/paths';
+import {  PATH_SETTING } from '../../../../routes/paths';
 // redux
 
-import { getDocumentCategory } from '../../../../redux/slices/document/documentCategory';
-
+import { getDocumentType } from '../../../../redux/slices/document/documentType';
 // sections
 import { Cover } from '../../../../components/Defaults/Cover';
-import DocumentCategoryViewForm from './DocumentCategoryViewForm';
-/* eslint-disable */
+import DocumentTypeViewForm from './DocumentTypeViewForm';
+
 
 // ----------------------------------------------------------------------
 
-export default function DocumentCategoryView() {
+export default function DocumentTypeView() {
   const dispatch = useDispatch();
 
   const { id } = useParams();
   useLayoutEffect(() => {
-    dispatch(getDocumentCategory(id));
+    dispatch(getDocumentType(id));
   }, [id, dispatch]);
 
-  const { documentCategory } = useSelector((state) => state.documentCategory);
-  
+  const { documentType } = useSelector((state) => state.documentType);
+
   return (
-    <>
       <Container maxWidth={false}>
         <Card
           sx={{
@@ -38,13 +36,12 @@ export default function DocumentCategoryView() {
           }}
         >
           <Cover
-            name={documentCategory?.name}
+            name={documentType?.name}
             generalSettings
-            backLink={PATH_SETTING.documentCategory.list}
           />
         </Card>
-        <DocumentCategoryViewForm />
+
+        <DocumentTypeViewForm />
       </Container>
-    </>
   );
 }

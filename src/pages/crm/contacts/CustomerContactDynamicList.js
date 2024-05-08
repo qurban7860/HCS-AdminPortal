@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 // @mui
-import { Stack, Grid, Container } from '@mui/material';
+import { Stack, Grid, Container, Autocomplete, TextField } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
 import { CardBase, GridBaseViewForm, StyledScrollbar } from '../../../theme/styles/customer-styles';
@@ -59,6 +59,7 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
   const [filterName, setFilterName] = useState('');
   const [filterStatus, setFilterStatus] = useState([]);
   const [tableData, setTableData] = useState([]);
+  const [filterFormer, setFilterFormer] = useState('All');
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const { order, orderBy } = useTable({ defaultOrderBy: '-createdAt' });
   // ------------------------------------------------------------
@@ -93,6 +94,7 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
     comparator: getComparator(order, orderBy),
     filterName,
     filterStatus,
+    filterFormer,
   });
 
   useEffect(() => {
@@ -149,18 +151,34 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
         </Grid>
         <Grid item xs={12} md={6} style={{display:'flex', justifyContent:"flex-end"}}>
           <Stack direction='row' alignContent='flex-end' spacing={1}>
-            {isAllAccessAllowed && contacts.length>0 &&
+            <Autocomplete 
+              freeSolo
+              disableClearable
+              value={ filterFormer }
+              options={[ 'All', 'Former Employee', 'Current Employee' ]}
+              isOptionEqualToValue={(option, val) => option === val}
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setFilterFormer(newValue);
+                } else {
+                  setFilterFormer('');
+                }
+              }}
+              sx={{ width: '240px' }}
+              renderInput={(params) => <TextField {...params} size='small' label="Filter Contacts" />}
+            />  
+            {!customer?.isArchived && isAllAccessAllowed && contacts.length>0 &&
               <LoadingButton variant='contained' onClick={onExportCSV} loading={exportingCSV} startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />} >
                   {BUTTONS.EXPORT.label}
               </LoadingButton>
             }
-             <AddButtonAboveAccordion
+            {!customer?.isArchived && <AddButtonAboveAccordion
               name={BUTTONS.NEWCONTACT}
               toggleChecked={toggleChecked}
               FormVisibility={contactAddForm}
               toggleCancel={toggleCancel}
               disabled={contactEditForm || contactMoveForm}
-            />
+            />}
           </Stack>            
         </Grid>
       </Grid>
@@ -194,12 +212,12 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
               snapAlign="start"
               contacts={contacts.length}
               disabled={contactEditForm || contactAddForm || contactMoveForm}
-              maxHeight={100}
             >
-              <Grid container direction="column" gap={1} >
+              <Grid container direction="column" gap={1}>
                 {dataFiltered.map((_contact, index) => (
                   <ContactSiteCard
                     key={_contact?._id || index }
+                    isFormerEmployee={_contact?.formerEmployee}
                     disableClick={ contactMoveForm || contactEditForm || contactAddForm }
                     isActive={_contact._id === activeCardIndex}
                     handleOnClick={() => handleCardClick(_contact) }
@@ -230,7 +248,7 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
 
 // ----------------------------------------------------------------------
 
-export function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+export function applyFilter({ inputData, comparator, filterName, filterStatus, filterFormer }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -239,6 +257,12 @@ export function applyFilter({ inputData, comparator, filterName, filterStatus })
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
+
+  if(filterFormer?.toLowerCase() === 'former employee' ){
+    inputData = inputData.filter((contact) => contact?.formerEmployee );
+  } else if(filterFormer?.toLowerCase() === 'current employee'){
+    inputData = inputData.filter((contact) => !contact?.formerEmployee );
+  }
 
   if (filterName) {
     if(filterName.includes(" ")){

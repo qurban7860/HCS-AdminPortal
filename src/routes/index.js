@@ -282,6 +282,7 @@ import {
   MachineDrawingsAddFiles,
   MachineDrawingsNewVersion,
   MachineDrawingsView,
+  MachineDrawingsEdit,
 
   // ----------------------------------------------------------------
 
@@ -330,6 +331,16 @@ import {
   // REPORTS: RELEASES
   ReleasesList,
   ReleasesView,
+
+  // ----------------------------------------------------------------
+
+  // LOGS: PM2 LOGS
+  Pm2LogsList,
+  Pm2LogView,
+
+  // LOGS: DB BACKUP LOGS
+  DbBackupLogsList,
+  DbBackupLogsViewForm,
 
   // ----------------------------------------------------------------
 
@@ -529,6 +540,14 @@ export default function Router() {
                 { element: <CustomerMachines />, index: true  },
                 { path: 'new',element: <CustomerMachineAdd />  },
                 { path: ':id/move',element: <CustomerMachineMove />  },
+              ],
+            },
+            // ------------------------------ ARCHIVED CUSTOMERS ----------------------------------
+            {
+              path: 'archived',
+              children: [
+                { element: <CustomerList isArchived />, index: true },
+                { path: ':id/view', element: <CustomerView isArchived/> },
               ],
             },
             { path: 'permission-denied', element: <PermissionDeniedPage /> },
@@ -773,7 +792,15 @@ export default function Router() {
                 ]
               },
             ]
-            }
+            },
+            // ------------------------------ ARCHIVED MACHINES ----------------------------------
+            {
+              path: 'archived',
+              children: [
+                { element: <MachineList isArchived />, index: true },
+                { path: ':id/view', element: <MachineView isArchived /> },
+              ],
+            },
           ]
         }, 
         { path: 'permission-denied', element: <PermissionDeniedPage /> },
@@ -929,6 +956,32 @@ export default function Router() {
             { path: ':id/edit', element: <DepartmentEdit /> }
           ],
         },
+        // ------------------------------ PM2 Logs ----------------------------------
+        {
+          path: 'dbBackup',
+          children: [
+            {
+              path: 'logs',
+              children: [
+                { element: <DbBackupLogsList /> , index: true },
+                { path: ':id/view', element: <DbBackupLogsViewForm /> },
+              ]
+            }
+          ],
+        },
+        // ------------------------------ DB BACKUP LOGS ----------------------------------
+        {
+          path: 'pm2',
+          children: [
+            {
+              path: 'logs',
+              children: [
+                { element: <Pm2LogsList /> , index: true },
+                { path: ':id/view', element: <Pm2LogView /> },
+              ]
+            }
+          ],
+        },
         // ------------------------------ invite ----------------------------------
         {
           path: 'invite',
@@ -982,6 +1035,7 @@ export default function Router() {
             { element: <MachineDrawings/>, index: true  },
             { path: 'new', element: <MachineDrawingsAdd/> },
             { path: 'newList', element: <DocumentAddList machineDrawings /> },
+            { path: ':id/edit', element: <MachineDrawingsEdit machineDrawings /> },
             {path: ':id/view', 
               children:[
                 { element: <MachineDrawingsView />, index: true },

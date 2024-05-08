@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useLayoutEffect, useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -59,6 +60,10 @@ import { exportCSV } from '../../utils/exportCSV';
 
 // ----------------------------------------------------------------------
 
+MachineList.propTypes = {
+  isArchived: PropTypes.object,
+};
+
 const TABLE_HEAD = [
   { id: 'serialNo', label: 'Serial Number', align: 'left' },
   { id: 'name', visibility: 'md1',label: 'Name', align: 'left' },
@@ -67,10 +72,11 @@ const TABLE_HEAD = [
   { id: 'installationDate', visibility: 'md3', label: 'Installation Date', align: 'left' },
   { id: 'shippingDate', visibility: 'md3', label: 'Shipping Date', align: 'left' },
   { id: 'status.name', visibility: 'xs2',  label: 'Status', align: 'left' },
+  { id: 'profiles.defaultName', visibility: 'md2',label: 'Profile', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
 ];
 
-export default function MachineList() {
+export default function MachineList({ isArchived }) {
   const {
     order,
     orderBy,
@@ -127,10 +133,10 @@ export default function MachineList() {
   }, [dispatch]);
   
   useEffect(()=>{
-    dispatch(getMachines(null, null, cancelTokenSource ));
+    dispatch(getMachines(null, null, isArchived, cancelTokenSource ));
     return ()=>{ cancelTokenSource.cancel() };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[dispatch, page, rowsPerPage])
+  },[dispatch, page, rowsPerPage, isArchived])
 
   const [filterVerify, setFilterVerify] = useState(verified);
   const [filterName, setFilterName] = useState(filterBy);
@@ -247,24 +253,25 @@ export default function MachineList() {
   return (
     <Container maxWidth={false} sx={{mb:3}}>
         <StyledCardContainer>
-          <Cover  name="Machines" icon="arcticons:materialistic" setting />
+          <Cover  name={ isArchived ? "Archived Machines" : "Machines" } icon="arcticons:materialistic" setting isArchivedMachines={!isArchived} isArchived={isArchived} />
         </StyledCardContainer>
         <TableCard>
           <MachineListTableToolbar
             filterName={filterName}
-            filterStatus={filterStatus}
             onFilterName={handleFilterName}
-            filterVerify={filterVerify}
-            onFilterVerify={handleFilterVerify}
-            onFilterStatus={handleFilterStatus}
+            filterVerify={ isArchived ? undefined : filterVerify}
+            onFilterVerify={ isArchived ? undefined : handleFilterVerify}
+            filterStatus={ isArchived ? undefined : filterStatus}
+            onFilterStatus={ isArchived ? undefined : handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
             onExportCSV={onExportCSV}
             onExportLoading={exportingCSV}
             accountManagerFilter={accountManager}
-            setAccountManagerFilter={setAccountManagerFilter}
+            setAccountManagerFilter={ isArchived ? undefined : setAccountManagerFilter}
             supportManagerFilter={supportManager}
-            setSupportManagerFilter={setSupportManagerFilter}
+            setSupportManagerFilter={ isArchived ? undefined : setSupportManagerFilter}
+            isArchived={isArchived}
           />
 
           {!isNotFound && <TablePaginationCustom
@@ -320,6 +327,7 @@ export default function MachineList() {
                         openInNewPage={ () => openInNewPage(row._id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         handleCustomerDialog={(e)=> row?.customer && handleCustomerDialog(e,row?.customer?._id)}
+                        isArchived={isArchived}
                       />
                     ) : (
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
