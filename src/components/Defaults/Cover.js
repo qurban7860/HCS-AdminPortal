@@ -47,7 +47,7 @@ export function Cover({
   const linkArchivedCustomers = () =>  navigate(PATH_CRM.customers.archived.root);
   const linkArchivedMachines = () =>  navigate(PATH_MACHINE.machines.archived.root);
   const handleBackLink = () => window.history.back();
-
+  const { isAllAccessAllowed, isSettingReadOnly } = useAuthContext();
   const isMobile = useResponsive('down', 'sm');
 
   return (
@@ -63,7 +63,9 @@ export function Cover({
           </Grid>
           <Grid item>
             { !isArchived && customerSites && <Button size='small' startIcon={<Iconify icon="mdi:map-legend" />} variant='outlined' onClick={linkCustomerSites}>Sites</Button>}
-            { !isArchived && customerContacts && <Button size='small' startIcon={<Iconify icon="mdi:account-multiple" />} variant='outlined' sx={{ml:2}} onClick={linkCustomerContacts}>Contacts</Button>}
+             { !isArchived && customerContacts && <Button size='small' startIcon={<Iconify icon="mdi:account-multiple" />} variant='outlined' sx={{ml:2}} onClick={linkCustomerContacts}>Contacts</Button>}
+            { isAllAccessAllowed && !isSettingReadOnly && isArchivedCustomers && <Button size='small' startIcon={<Iconify icon="fa6-solid:users-slash" />} variant='outlined' sx={{ml:2}} onClick={linkArchivedCustomers}>Archived Customers</Button>}
+            { isAllAccessAllowed && !isSettingReadOnly && isArchivedMachines && <Button size='small' startIcon={<Iconify icon="fluent:table-delete-column-16-filled" />} variant='outlined' sx={{ml:2}} onClick={linkArchivedMachines}>Archived Machines</Button>}
           </Grid>
       </Grid>
     </StyledRoot>
