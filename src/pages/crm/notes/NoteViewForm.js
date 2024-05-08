@@ -19,7 +19,9 @@ import CustomerTabContainer from '../customers/util/CustomerTabContainer'
 import { PATH_CRM } from '../../../routes/paths';
 
 export default function NoteViewForm() {
+  const { customer } = useSelector((state) => state.customer);
   const { note, isLoading } = useSelector((state) => state.customerNote);
+
   const { enqueueSnackbar } = useSnackbar();
   const { customerId, id } = useParams() 
 
@@ -69,7 +71,7 @@ export default function NoteViewForm() {
     <Grid item md={12} >
       <CustomerTabContainer currentTabValue='notes' />
       <Card sx={{ p: 2 }}>
-        <ViewFormEditDeleteButtons isActive={defaultValues.isActive} backLink={()=> { if(customerId) navigate(PATH_CRM.customers.notes.root(customerId))}} handleEdit={handleEdit} onDelete={onDelete} />
+        <ViewFormEditDeleteButtons isActive={defaultValues.isActive} backLink={()=> { if(customerId) navigate(PATH_CRM.customers.notes.root(customerId))}} handleEdit={customer?.isArchived ? undefined : handleEdit} onDelete={customer?.isArchived ? undefined : onDelete} />
         <Grid container sx={{mt:2}}>
           <ViewFormField isLoading={isLoading} sm={6} heading="Site" param={defaultValues?.site_name} />
           <ViewFormField isLoading={isLoading} sm={6} heading="Contact" param={defaultValues?.contact_firstName}

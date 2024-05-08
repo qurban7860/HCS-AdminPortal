@@ -272,8 +272,6 @@ export function  updateSecurityUser(param,id) {
             data.password = param.password 
         }
       const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/${id}`, data);
-      await dispatch(resetSecurityUser());
-      await dispatch(getSecurityUser(id));
       return response;
     } catch (error) {
       console.error(error);

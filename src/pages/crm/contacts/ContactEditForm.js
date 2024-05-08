@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
@@ -26,10 +26,10 @@ import FormProvider, {
   RHFMultiSelect,
   RHFTextField,
   RHFCountryAutocomplete,
-  RHFCustomPhoneInput
+  RHFCustomPhoneInput,
+  RHFSwitch,
 } from '../../../components/hook-form';
 import { AddFormLabel } from '../../../components/DocumentForms/FormLabel';
-import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
 // assets
 import { countries } from '../../../assets/data';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
@@ -57,13 +57,29 @@ const theme = createTheme({
 
 export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   const { contact, activeContacts } = useSelector((state) => state.contact);
+  const { customer } = useSelector((state) => state.customer);
   const { departments } = useSelector((state) => state.department);
   const { enqueueSnackbar } = useSnackbar();
   const { customerId, id } = useParams() 
+  const [ contactTypes, setContactTypes ] = useState([]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate()
 
+  const systemConfig= JSON.parse( localStorage.getItem('configurations'))
+  
+  const sPContactTypes = systemConfig?.find( ( c )=> c?.name?.trim() === 'SP_CONTACT_TYPES' )?.value?.split(',')?.map(item => item?.trim());
+  const CustomerContactTypes = systemConfig?.find( ( c )=> c?.name?.trim() === 'CUSTOMER_CONTACT_TYPES')?.value?.split(',')?.map(item => item?.trim());
+
+  useEffect(()=>{
+    if( customer?.type?.toLowerCase() === 'sp'){
+      setContactTypes(sPContactTypes)
+    } else {
+      setContactTypes(CustomerContactTypes)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ customer?.type ])
+  
   // --------------------------------hooks----------------------------------
   const defaultValues = useMemo(
     () => ({
@@ -82,6 +98,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
       region: contact?.address?.region || '',
       postcode: contact?.address?.postcode || '',
       isActive: contact?.isActive,
+      formerEmployee: contact?.formerEmployee || false,
       country: countries.find((contry) => contry?.label?.toLocaleLowerCase() === contact?.address?.country?.toLocaleLowerCase()) || null,
     }),
     [contact]
@@ -172,12 +189,14 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                 <RHFTextField name={FORMLABELS.LASTNAME.name} label={FORMLABELS.LASTNAME.label} />
                 <RHFTextField name={FORMLABELS.TITLE.name} label={FORMLABELS.TITLE.label} />
 
-                <RHFMultiSelect
-                  chip
-                  checkbox
+                <RHFAutocomplete
+                  multiple
+                  disableCloseOnSelect
+                  filterSelectedOptions
                   name={FORMLABELS.CONTACT_TYPES.name}
                   label={FORMLABELS.CONTACT_TYPES.label}
-                  options={FORMLABELS.CONTACT_TYPES.options}
+                  options={contactTypes?.sort() || []}
+                  isOptionEqualToValue={(option, value) => option === value}
                 />
               </Box>
 
@@ -192,6 +211,17 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
               >
 
                 <RHFAutocomplete
+                  name={FORMLABELS.DEPARTMENT.name}
+                  label={FORMLABELS.DEPARTMENT.label}
+                  options={departments?.filter( el => (customer?.type?.toLowerCase() !== 'sp' && el.forCustomer ) ? el.forCustomer : customer?.type?.toLowerCase() === 'sp' )}
+                  getOptionLabel={(option) => option?.departmentName || ''}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option?._id}>{option?.departmentName || ''}</li>
+                  )}
+                />
+
+                <RHFAutocomplete
                   name={FORMLABELS.REPORTINGTO.name}
                   label={FORMLABELS.REPORTINGTO.label}
                   options={activeContacts.filter((activeContact) => contact?._id !== activeContact?._id)}
@@ -199,17 +229,6 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                   isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   renderOption={(props, option) => (
                     <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li>
-                  )}
-                />
-
-                <RHFAutocomplete
-                  name={FORMLABELS.DEPARTMENT.name}
-                  label={FORMLABELS.DEPARTMENT.label}
-                  options={departments}
-                  getOptionLabel={(option) => option?.departmentName || ''}
-                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                  renderOption={(props, option) => (
-                    <li {...props} key={option?._id}>{option?.departmentName || ''}</li>
                   )}
                 />
               </Box>
@@ -258,7 +277,10 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                 </Grid>
               </Grid>
                 <RHFTextField name={FORMLABELS.EMAIL.name} label={FORMLABELS.EMAIL.label} />
-                <ToggleButtons isMachine name={formLABELS.isACTIVE.name} />
+              <Grid sx={{ display: 'flex' }} >  
+                <RHFSwitch name="isActive" label="Active" />
+                <RHFSwitch name="formerEmployee" label="Former Employee" />
+              </Grid>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Stack>
           </Card>

@@ -27,6 +27,8 @@ export default function ContactViewForm({
   setCurrentContactData,
 }) {
   const { contact, isLoading } = useSelector((state) => state.contact);
+  const { customer } = useSelector((state) => state.customer);
+
   const { isAllAccessAllowed } = useAuthContext()
   const { enqueueSnackbar } = useSnackbar();
   const { customerId, id } = useParams() 
@@ -81,6 +83,7 @@ export default function ContactViewForm({
       country: contact?.address?.country || '',
       serviceRecords: contact?.serviceRecords || [],
       isActive: contact?.isActive,
+      formerEmployee: contact?.formerEmployee,
       createdAt: contact?.createdAt || '',
       createdByFullName: contact?.createdBy?.name || '',
       createdIP: contact?.createdIP || '',
@@ -107,7 +110,15 @@ export default function ContactViewForm({
 
   return (
     <Grid sx={{mt:1}}>
-      <ViewFormEditDeleteButtons moveCustomerContact={ isAllAccessAllowed && handleMoveConatct } isActive={defaultValues.isActive} handleEdit={handleEdit} onDelete={onDelete} />
+
+      <ViewFormEditDeleteButtons 
+        moveCustomerContact={!customer?.isArchived && isAllAccessAllowed && handleMoveConatct } 
+        handleEdit={customer?.isArchived ? undefined : handleEdit} 
+        onDelete={customer?.isArchived ? undefined : onDelete} 
+        isActive={defaultValues.isActive} 
+        formerEmployee={defaultValues.formerEmployee}
+      />
+
       <Grid container>
         <ViewFormField isLoading={isLoading} sm={6} heading="First Name" param={defaultValues?.firstName} />
         <ViewFormField isLoading={isLoading} sm={6} heading="Last Name" param={defaultValues?.lastName} />

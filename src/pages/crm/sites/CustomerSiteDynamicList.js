@@ -154,18 +154,18 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
         </Grid>
         <Grid item xs={12} md={6} style={{display:'flex', justifyContent:'flex-end'}}>
           <Stack direction='row' alignContent='flex-end' spacing={1} >
-            {isAllAccessAllowed && sites.length>0 &&
+            {!customer?.isArchived && isAllAccessAllowed && sites.length>0 &&
               <LoadingButton variant='contained' onClick={onExportCSV} loading={exportingCSV} startIcon={<Iconify icon={BUTTONS.EXPORT.icon} />} >
                   {BUTTONS.EXPORT.label}
               </LoadingButton>
             }
-            <AddButtonAboveAccordion
+            {!customer?.isArchived && <AddButtonAboveAccordion
               name={BUTTONS.NEWSITE}
               toggleChecked={toggleChecked}
               FormVisibility={siteAddForm}
               toggleCancel={toggleCancel}
               disabled={siteEditForm}
-            />
+            />}
           </Stack>
         </Grid>
       </Grid>
@@ -192,9 +192,8 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
               </Grid>
             )}
             <StyledScrollbar
-              maxHeight={155}
               snap
-              snapOffset={50}
+              snapOffset={100}
               onClick={(e) => e.stopPropagation()}
               snapAlign="start"
               contacts={sites.length}

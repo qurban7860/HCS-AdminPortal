@@ -91,6 +91,7 @@ export const ContactSchema = Yup.object().shape({
   region: Yup.string(),
   postcode: Yup.string(),
   isActive: Yup.boolean(),
+  formerEmployee: Yup.boolean(),
   country: Yup.object().nullable()
   // isPrimary: Yup.boolean(),
 });

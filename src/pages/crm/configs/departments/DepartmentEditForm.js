@@ -34,6 +34,7 @@ export default function DepartmentEditForm() {
       departmentName: department?.departmentName || '',
       isActive: department?.isActive,
       isDefault: department?.isDefault || false,
+      forCustomer: department?.forCustomer || false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [department]
@@ -43,6 +44,7 @@ export default function DepartmentEditForm() {
     departmentName: Yup.string().min(2).max(50).required('Name is required').trim(),
     isActive: Yup.boolean(),
     isDefault: Yup.boolean(),
+    forCustomer: Yup.boolean(),
   });
 
   const methods = useForm({
@@ -70,9 +72,9 @@ export default function DepartmentEditForm() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [department]);
-  const toggleCancel = () => {
-    navigate(PATH_SETTING.departments.view(department?._id));
-  };
+
+  const toggleCancel = () => navigate(PATH_SETTING.departments.view(department?._id));
+  
   const onSubmit = async (data) => {
     try {
       await dispatch(updateDepartment(data, id));
@@ -97,6 +99,7 @@ export default function DepartmentEditForm() {
                   <Grid display="flex">
                     <RHFSwitch name="isActive" label="Active"/>
                     <RHFSwitch name="isDefault" label="Default"/>
+                    <RHFSwitch name="forCustomer" label="Customers" />
                   </Grid>
                 </Box>
               </Stack>

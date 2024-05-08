@@ -209,23 +209,25 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getCustomers(page, pageSize, cancelToken ) {
+export function getCustomers(page, pageSize, isArchived,cancelToken ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
+      const params = {
+        isArchived: isArchived || false,
+        pagination:{
+          page,
+          pageSize  
+        }
+      }
+      if(isArchived){
+        params.orderBy = { updatedBy: -1 }
+      } else {
+        params.orderBy = { createdAt: -1 }
+      }
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers`,
       {
-        params: {
-          isArchived: false,
-          orderBy : {
-            createdAt:-1
-          },
-          pagination:{
-            page,
-            pageSize  
-
-          }
-        },
+        params,
         cancelToken: cancelToken?.token
       });
       dispatch(slice.actions.getCustomersSuccess(response.data));

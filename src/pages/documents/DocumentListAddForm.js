@@ -243,18 +243,21 @@ const onChangeVersionNo = (index, value) => {
         const page = await pdfDocument.getPage(1);
         const textContent = await page.getTextContent();
         try {
-          textContent.items.forEach((item, indexx) => {
-            if (item.str === 'DRAWN BY') {
+          textContent.items.some((item, indexx) => {
+            if (item.str === 'DRAWN BY' && textContent?.items[indexx + 2]?.str?.length < 15) {
               stockNumber = textContent.items[indexx + 2].str;
+              return true;
             }
+            if (item.str === "STOCK NO." && textContent?.items[indexx + 2]?.str?.length < 15) {
+              stockNumber = textContent.items[indexx + 2].str;
+              return true;
+            }
+            if (item.str === 'APPROVED' && textContent?.items[indexx - 2]?.str?.length < 15) {
+              stockNumber = textContent.items[indexx - 2].str;
+              return true;
+            }
+            return false; // Continue iterating if condition is not met
           });
-          if (!stockNumber) {
-            textContent.items.forEach((item, indexx) => {
-              if (item.str === 'APPROVED') {
-                stockNumber = textContent.items[indexx - 2].str;
-              }
-            });
-          }
         } catch (e) {
           console.log(e);
         }

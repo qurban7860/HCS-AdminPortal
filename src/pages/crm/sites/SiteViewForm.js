@@ -73,12 +73,12 @@ export default function SiteViewForm({ handleMap }) {
       website:                  site?.website || '',
       lat:                      site?.lat || '',
       long:                     site?.long || '',
-      street:                   site?.address.street || '',
-      suburb:                   site?.address.suburb || '',
-      city:                     site?.address.city || '',
-      postcode:                 site?.address.postcode || '',
-      region:                   site?.address.region || '',
-      country:                  site?.address.country || '',
+      street:                   site?.address?.street || '',
+      suburb:                   site?.address?.suburb || '',
+      city:                     site?.address?.city || '',
+      postcode:                 site?.address?.postcode || '',
+      region:                   site?.address?.region || '',
+      country:                  site?.address?.country || '',
       primaryBillingContact:    site?.primaryBillingContact || null,
       primaryTechnicalContact:  site?.primaryTechnicalContact || null,
       isActive:                 site?.isActive,
@@ -98,8 +98,8 @@ export default function SiteViewForm({ handleMap }) {
       <Grid container justifyContent="flex-end">
         <ViewFormEditDeleteButtons
           isActive={defaultValues?.isActive}
-          handleEdit={handleEdit}
-          onDelete={onDelete}
+          handleEdit={customer?.isArchived ? undefined : handleEdit}
+          onDelete={customer?.isArchived ? undefined : onDelete}
           // sites={sites}
           mainSite={customer.mainSite?._id === site?._id}
         // handleMap={handleMap}

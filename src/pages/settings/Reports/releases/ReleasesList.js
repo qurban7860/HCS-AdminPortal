@@ -2,8 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
 // @mui
 import { Table, TableBody, TableContainer, Container, Card } from '@mui/material';
-import { useNavigate } from 'react-router';
-import { PATH_SETTING } from '../../../../routes/paths';
 import { Cover } from '../../../../components/Defaults/Cover';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
@@ -13,7 +11,6 @@ import {
   getComparator,
   TableNoData,
   TableSkeleton,
-  TableHeadCustom,
   TablePaginationCustom,
 } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
@@ -31,7 +28,6 @@ export default function ReleasesList() {
     page, 
     rowsPerPage,
     setPage,
-    onSort,
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
@@ -39,18 +35,10 @@ export default function ReleasesList() {
   });
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
 
   const { releases, filterBy,  isLoading, initial } = useSelector((state) => state.releases );
-
-  const TABLE_HEAD = [
-    { id: 'name', label: 'Name', align: 'left' },
-    { id: 'startDate', label: 'Start Date', align: 'left' },
-    { id: 'releaseDate', label: 'Release Date', align: 'left' },
-    { id: 'released', label: 'Released', align: 'center' },
-  ];
 
   useEffect(() => {
       dispatch(getReleases());
@@ -98,7 +86,6 @@ export default function ReleasesList() {
   const handleViewRow = (id) => {
     const url = `https://howickltd.atlassian.net/projects/HPS/versions/${id}/tab/release-report-all-issues`
     window.open(url, '_blank');
-    // navigate(PATH_SETTING.releases.view(link))
   };
 
   const handleResetFilter = () => {
@@ -129,13 +116,6 @@ export default function ReleasesList() {
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
-                {/* <TableHeadCustom
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  onSort={onSort}
-                /> */}
-
                 <TableBody>
                   {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -143,6 +123,8 @@ export default function ReleasesList() {
                       row ? (
                         <ReleasesListTableRow
                           key={row.id}
+                          index={index}
+                          page={page}
                           row={row}
                           onViewRow={() => handleViewRow(row?.id)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
@@ -172,9 +154,7 @@ export default function ReleasesList() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName }) {
-
   const stabilizedThis = inputData.map((el, index) => [el, index]);
-
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -186,9 +166,8 @@ function applyFilter({ inputData, comparator, filterName }) {
     return inputData.filter(
       (release) => 
         release.name.indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(release.startDate)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(release.releaseDate)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        release.released >= 0
+        release?.description?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(release.releaseDate)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
   return inputData;

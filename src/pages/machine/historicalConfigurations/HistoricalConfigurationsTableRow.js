@@ -40,7 +40,7 @@ export default function HistoricalConfigurationsTableRow({
 
   return (
       <StyledTableRow hover selected={selected}>
-        <TableCell padding="checkbox">
+        <TableCell padding="checkbox" align="left" >
           <Checkbox checked={selected} onClick={ onSelectRow }  />
         </TableCell>
         <LinkTableCell align="left" onClick={onViewRow} param={backupid} />

@@ -27,12 +27,24 @@ export const ICONS = {
 
   //  Releases
   RELEASE: {
-    icon: 'fluent-mdl2:release-gate',
+    icon: 'mdi:source-branch',
+    color: '#008000',
+    heading: 'Release',
+  },
+
+  RELEASES: {
+    icon: 'mdi:source-branch',
+    heading: 'Releases',
+  },
+  
+  RELEASED: {
+    icon: 'mdi:source-branch-check',
     color: '#008000',
     heading: 'Released',
   },
+
   NOTRELEASE: {
-    icon: 'fluent-mdl2:release-gate',
+    icon: 'mdi:source-branch-minus',
     color: '#FF0000',
     heading: 'Not Release',
   },
@@ -186,10 +198,38 @@ export const ICONS = {
     icon: 'mingcute:user-x-line',
     color: '#878787',
     heading: 'Customer Not Allowed',
+  }, 
+  // ------------------------------------------------------------
+  
+  // FOR CUSTOMERS
+  FORCUSTOMER: {
+    icon: 'fa-solid:users',
+    color: '#008000',
+    heading: 'For Customers',
   },
+
+  NOTFORCUSTOMER: {
+    icon: 'fa-solid:users-slash',
+    color: '#878787',
+    heading: 'For SP Customers only',
+  },
+
+  FORMEREMPLOYEE: {
+    icon: 'ri:user-location-fill',
+    color: '#878787',
+    heading: 'Former Employee',
+  },
+
+  NOTFORMEREMPLOYEE: {
+    icon: 'ri:user-location-fill',
+    color: '#008000',
+    heading: 'Current Employee',
+  },
+  // ------------------------------------------------------------
+
   TRANSFERHISTORY: {
     icon: 'ic:outline-manage-history',
-    color: '#008000',
+    color: '#878787',
     heading: 'Transfer History',
   },
 
@@ -359,10 +399,6 @@ export const ICONS = {
     icon: 'ph:user-plus-bold',
     heading: 'User Invites',
   },
-  RELEASES: {
-    icon: 'fluent-mdl2:release-gate',
-    heading: 'Releases',
-  },
   BLOCKED_CUSTOMER: {
     icon: 'tabler:home-off',
     heading: 'Blocked Customers',
@@ -394,6 +430,22 @@ export const ICONS = {
   DEPARTMENNTS: {
     icon: 'mingcute:department-line',
     heading: 'Departments',
+  },  
+  ARCHIVEDCUSTOMERS: {
+    icon: 'fa6-solid:users-slash',
+    heading: 'Archived Customers',
+  }, 
+  ARCHIVEDMACHINES: {
+    icon: 'fluent:table-delete-column-16-filled',
+    heading: 'Archived Machines',
+  }, 
+  PM2LOGS: {
+    icon: 'simple-icons:pm2',
+    heading: 'PM2 Logs',
+  },  
+  DBBACKUPLOGS: {
+    icon: 'iconoir:database-backup',
+    heading: 'DB Backup Logs',
   },
 
   MOVE_MACHINE: {

@@ -33,6 +33,7 @@ export default function DepartmentAddForm() {
       departmentName: '',
       isActive: true,
       isDefault: false,
+      forCustomer: false,
     }),
     []
   );
@@ -41,6 +42,7 @@ export default function DepartmentAddForm() {
     departmentName: Yup.string().min(2, 'Name must be at least 2 characters long').max(50).required('Name is required').trim(),
     isActive: Yup.boolean(),
     isDefault: Yup.boolean(),
+    forCustomer: Yup.boolean(),
   });
 
   const methods = useForm({
@@ -81,8 +83,9 @@ export default function DepartmentAddForm() {
                   <RHFTextField name="departmentName" label="Name*" />
                 </Box>
                 <Grid display="flex" justifyContent="flex-start">
-                <RHFSwitch name="isActive" label="Active"/>
-                <RHFSwitch name="isDefault" label="Default"/>
+                  <RHFSwitch name="isActive" label="Active"/>
+                  <RHFSwitch name="isDefault" label="Default"/>
+                  <RHFSwitch name="forCustomer" label="Customers" />
                 </Grid>
                 <AddFormButtons settingPage isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>

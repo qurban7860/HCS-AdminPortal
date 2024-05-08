@@ -34,7 +34,7 @@ import MachineTabContainer from '../util/MachineTabContainer';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'checkboxes', label: ' ', align: 'left' },
+  // { id: 'checkboxes', label: ' ', align: 'left' },
   { id: 'backupid', label: 'Backup Id', align: 'left' },
   { id: 'backupDate', label: 'Backup Date', align: 'center' },
   { id: 'isManufacture', label: 'Manufacture', align: 'center' },
@@ -161,7 +161,8 @@ export default function HistoricalConfigurationsList() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
 
-          {selected.length === 2 && <TableSelectedAction
+          {/* {selected?.length === 2 && 
+            <TableSelectedAction
               dense
               numSelected={selected.length}
               rowCount={tableData.length}
@@ -176,24 +177,25 @@ export default function HistoricalConfigurationsList() {
                   <Iconify onClick={() => getCompareInis(selected[0], selected[1])} color={theme.palette.primary.dark} sx={{ width: '42px', height: '29px', cursor: 'pointer' }}  icon='mdi:file-compare' />
                 </StyledTooltip>
               }
-            />}
+            />
+            } */}
 
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 360 }}>
-                <TableHeadCustom
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  onSort={onSort}
-                  numSelected={selected.length}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      selected.length > 1 ? [] : tableData.slice(0, 2).map((row) => row._id)
-                    )
-                  }
-                />
-
+                  <TableHeadCustom
+                    order={order}
+                    orderBy={orderBy}
+                    headLabel={TABLE_HEAD}
+                    onSort={onSort}
+                    numSelected={selected.length}
+                    isCompareIni
+                    compareIniOnClick={ selected?.length === 2 ? () => getCompareInis(selected[0], selected[1]) : undefined } 
+                    onSelectAllRows={(checked) =>
+                      onSelectAllRows( checked,
+                        selected.length > 1 ? [] : tableData.slice(0, 2).map((row) => row._id)
+                      )}
+                  />
+                  
                 <TableBody>
                   {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)

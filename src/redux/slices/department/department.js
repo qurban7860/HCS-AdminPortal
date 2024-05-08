@@ -4,6 +4,7 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
+
 const initialState = {
   intial: false,
   responseMessage: null,
@@ -12,6 +13,7 @@ const initialState = {
   error: null,
   departments: [],
   department: null,
+  activeCustomerDepartments: [],
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
@@ -49,6 +51,14 @@ const slice = createSlice({
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
+    },    
+    
+    // RESET Departments
+    resetActiveCustomerDepartments(state){
+      state.activeCustomerDepartments = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
     // GET Contact
@@ -74,6 +84,14 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // GET Contact
+    getActiveCustomerDepartmentsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeCustomerDepartments = action.payload;
+      state.initial = true;
+    },
+    
     // Set FilterBy
     setFilterBy(state, action) {
       state.filterBy = action.payload;
@@ -96,6 +114,7 @@ export default slice.reducer;
 export const {
   resetDepartment,
   resetDepartments,
+  resetActiveCustomerDepartments,
   setResponseMessage,
   setFilterBy,
   ChangeRowsPerPage,
@@ -113,6 +132,7 @@ export function addDepartment(params) {
         departmentName: params.departmentName,
         isActive: params.isActive,
         isDefault: params.isDefault,
+        forCustomer: params.forCustomer,
       };
 
       /* eslint-enable */
@@ -143,6 +163,7 @@ export function updateDepartment(params, Id) {
         departmentName: params.departmentName,
         isActive: params.isActive,
         isDefault: params.isDefault,
+        forCustomer: params.forCustomer,
       };
 
       /* eslint-enable */
@@ -177,6 +198,31 @@ export function getDepartments( ) {
         }
         );
       dispatch(slice.actions.getDepartmentsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Departments loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// ----------------------------------------------------------------
+
+export function getActiveCustomerDepartments( ) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+       const response = await axios.get(`${CONFIG.SERVER_URL}crm/departments` , 
+        {
+          params: {
+            isArchived: false,
+            isActive: true,
+            forCustomer: true,
+          }
+        }
+        );
+      dispatch(slice.actions.getActiveCustomerDepartmentsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Departments loaded successfully'));
     } catch (error) {
       console.log(error);

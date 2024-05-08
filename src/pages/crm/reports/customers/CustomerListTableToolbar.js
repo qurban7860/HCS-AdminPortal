@@ -22,7 +22,8 @@ CustomerListTableToolbar.propTypes = {
   onExportCSV:PropTypes.func,
   onExportLoading:PropTypes.bool,
   filterExcludeRepoting:PropTypes.string,
-  handleExcludeRepoting:PropTypes.func
+  handleExcludeRepoting:PropTypes.func,
+  isArchived: PropTypes.bool,
 };
 
 export default function CustomerListTableToolbar({
@@ -38,7 +39,8 @@ export default function CustomerListTableToolbar({
   onExportCSV,
   onExportLoading,
   filterExcludeRepoting,
-  handleExcludeRepoting
+  handleExcludeRepoting,
+  isArchived,
 }) {
   const navigate = useNavigate();
   const toggleAdd = () => {
@@ -54,9 +56,9 @@ export default function CustomerListTableToolbar({
         onClick={onResetFilter}
         onFilterVerify={onFilterVerify}
         filterVerify={filterVerify}
-        SubOnClick={toggleAdd}
-        addButton={BUTTONS.ADDCUSTOMER}
-        onExportCSV={onExportCSV}
+        SubOnClick={ !isArchived ? toggleAdd : undefined }
+        addButton={ !isArchived ? BUTTONS.ADDCUSTOMER : undefined }
+        onExportCSV={ !isArchived ? onExportCSV : undefined }
         onExportLoading={onExportLoading}
         filterExcludeRepoting={filterExcludeRepoting}
         handleExcludeRepoting={handleExcludeRepoting}

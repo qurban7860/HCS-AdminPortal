@@ -52,11 +52,13 @@ export default function Main({ children, sx, ...other }) {
         flexGrow: 1,
         backgroundColor:"#63738114",
         // background: (theme) => theme.palette.background.default,
-        py: `${HEADER.H_MOBILE + SPACING}px`,
+        pt: `${HEADER.H_MOBILE + SPACING}px`,
+        pb: 2,
         // height: '100vh',
         ...(isDesktop && {
           px: 2,
-          py: `${HEADER.H_DASHBOARD_DESKTOP + SPACING}px`,
+          pt: `${HEADER.H_DASHBOARD_DESKTOP + SPACING}px`,
+          pb: 2,
           width: `calc(100% - ${NAV.W_DASHBOARD}px)`,
           ...(isNavMini && {
             width: `calc(100% - ${NAV.W_DASHBOARD_MINI}px)`,
