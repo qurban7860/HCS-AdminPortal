@@ -160,7 +160,7 @@ export default function MachineJiraList(){
                         <MachineJiraTableRow
                           key={row._id}
                           row={row}
-                          onViewRow={() => handleViewRow(row._id)}
+                          onViewRow={() => handleViewRow(row.self)}
                           selected={selected.includes(row._id)}
                           selectedLength={selected.length}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
