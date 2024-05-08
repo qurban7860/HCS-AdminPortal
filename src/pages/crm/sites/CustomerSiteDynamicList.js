@@ -93,14 +93,14 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
 
   useEffect( () => {
     if( customerId ){
-      dispatch(getSites(customerId));
+      dispatch(getSites(customerId, customer?.isArchived || false));
     }
     return ()=>{ 
       dispatch(resetSites());
       dispatch(setCardActiveIndex(null));
       dispatch(setIsExpanded(false));
     }
-  }, [dispatch, customerId ]); 
+  }, [dispatch, customerId, customer?.isArchived ]); 
 
   useEffect(()=>{
     if( Array.isArray(sites) && sites?.length > 0 && customerId && !siteAddForm && !siteEditForm && !siteViewForm ){

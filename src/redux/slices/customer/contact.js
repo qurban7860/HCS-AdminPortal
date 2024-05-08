@@ -341,20 +341,20 @@ export function getSPContacts( cancelToken ) {
 
 // ----------------------------------------------------------------------
 
-export function getContacts(customerID) {
+export function getContacts(customerID, isArchived) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts` , 
-        {
-          params: {
-            isArchived: false,
-            orderBy : {
-              createdAt:-1
-            }
-          }
+      const params = {
+        isArchived,
+        orderBy : {
+          createdAt: -1
         }
-        );
+      }
+      if(isArchived){
+        params.archivedFromCustomer = true;
+      }
+       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts`,{ params } );
       dispatch(slice.actions.getContactsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
     } catch (error) {

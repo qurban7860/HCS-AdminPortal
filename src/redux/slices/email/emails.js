@@ -102,11 +102,13 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getEmails() {
+export function getEmails(page, pageSize ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{ 
-      const response = await axios.get(`${CONFIG.SERVER_URL}emails`);
+
+      const response = await axios.get(`${CONFIG.SERVER_URL}emails`,
+      { params: { pagination:{ page, pageSize } } });
         dispatch(slice.actions.getEmailsSuccess(response.data));
       return response;
     } catch (error) {

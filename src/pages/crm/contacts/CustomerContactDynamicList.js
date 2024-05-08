@@ -98,13 +98,13 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
   });
 
   useEffect(() => {
-    dispatch(getContacts(customerId));
+    dispatch(getContacts(customerId, customer?.isArchived || false));
     return ()=>{
       dispatch(resetContacts());
       dispatch(setCardActiveIndex(null));
       dispatch(setIsExpanded(false));
     }
-  }, [ dispatch, customerId ]);
+  }, [ dispatch, customerId, customer?.isArchived ]);
 
   useEffect(() => {
     setTableData(contacts);

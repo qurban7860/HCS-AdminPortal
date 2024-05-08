@@ -172,20 +172,20 @@ export function updateNote(customerId,noteId,params) {
   }
 }
 
-export function getNotes(id) {
+export function getNotes(id, isArchived) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${id}/notes` , 
-      {
-        params: {
-          isArchived: false,
-          orderBy : {
-            createdAt:-1
-          }
+      const params = {
+        isArchived,
+        orderBy : {
+          createdAt: -1
         }
       }
-      );
+      if(isArchived){
+        params.archivedFromCustomer = true;
+      }
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${id}/notes` , { params } );
       dispatch(slice.actions.getNotesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Notes loaded successfully'));
 
