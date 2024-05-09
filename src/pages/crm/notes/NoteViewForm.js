@@ -38,7 +38,7 @@ export default function NoteViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteNote(customerId, id));
-      enqueueSnackbar("Note Deleted Successfully");
+      enqueueSnackbar("Note archived Successfully");
       if(customerId ) navigate(PATH_CRM.customers.notes.root(customerId));
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });

@@ -27,7 +27,7 @@ Chips.propTypes = {
 
 export default function Chips({ variant = 'filled' }) {
   const handleDelete = () => {
-    console.info('You clicked the delete icon.');
+    console.info('You clicked the Archive icon.');
   };
 
   return (

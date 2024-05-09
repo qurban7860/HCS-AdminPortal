@@ -207,7 +207,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
     try {
       await dispatch(deleteDocumentFile(documentId, versionId, fileId, customer?._id));
       await dispatch(getDocument(document._id))
-      enqueueSnackbar('File Deleted successfully');
+      enqueueSnackbar('File Archived successfully');
     } catch (err) {
       console.log(err);
       enqueueSnackbar('File Deletion failed!', { variant: `error` });

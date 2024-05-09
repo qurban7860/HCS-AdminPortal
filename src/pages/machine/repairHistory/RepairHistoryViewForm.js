@@ -54,7 +54,7 @@ export default function RepairHistoryViewForm({ currentSite = null }) {
       handleCloseConfirm();
       dispatch(getSites(customer._id));
     } catch (err) {
-      enqueueSnackbar("Repair history delete failed!",{ variant: `error` })
+      enqueueSnackbar("Repair history Archive failed!",{ variant: `error` })
       console.log("Error:", err);
     }
   };

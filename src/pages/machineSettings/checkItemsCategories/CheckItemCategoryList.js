@@ -221,7 +221,7 @@ export default function ServiceCategoryList() {
         title="Delete"
         content={
           <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
+            Are you sure want to Archive <strong> {selected.length} </strong> items?
           </>
         }
         action={

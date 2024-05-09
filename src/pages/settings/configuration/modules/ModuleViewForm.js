@@ -25,7 +25,7 @@ console.log("module",module);
   const onDelete = async () => {
     try {
        dispatch(deleteModule(module._id));
-      enqueueSnackbar('Module deleted successfully!', { variant: 'success' });
+      enqueueSnackbar('Module Archived successfully!', { variant: 'success' });
       navigate(PATH_SETTING.modules.list);
     } catch (error) {
       const errorMessage = error.message || 'Something went wrong!';

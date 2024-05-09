@@ -25,7 +25,7 @@ export default function RegionViewForm() {
     try {
       await dispatch(deleteRegion(region?._id));
       navigate(PATH_SETTING.regions.list);
-      enqueueSnackbar('Region delete Successfully!');
+      enqueueSnackbar('Region Archived Successfully!');
     } catch (error) {
       if (error.Message) {
         enqueueSnackbar(error.Message, { variant: `error` });
@@ -34,7 +34,7 @@ export default function RegionViewForm() {
       } else {
         enqueueSnackbar('Something went wrong!', { variant: `error` });
       }
-      enqueueSnackbar('Region delete failed!', { variant: `error` });
+      enqueueSnackbar('Region Archived failed!', { variant: `error` });
       console.log('Error:', error);
     }
   };

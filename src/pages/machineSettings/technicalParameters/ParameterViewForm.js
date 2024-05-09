@@ -52,7 +52,7 @@ export default function ParameterViewForm() {
       dispatch(deleteTechparams(id));
       navigate(PATH_MACHINE.machines.machineSettings.technicalParameters.root);
     } catch (err) {
-      enqueueSnackbar('Parameter value delete failed!', { variant: `error` });
+      enqueueSnackbar('Parameter value Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };

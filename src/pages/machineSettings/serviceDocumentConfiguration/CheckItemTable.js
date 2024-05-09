@@ -69,9 +69,9 @@ const CheckItemTable = ({ checkParams, setCheckParams, checkItemList, setCheckIt
     try {
       const newArray =  checkItemList.filter((_, index) => index !== indexToRemove);
       setCheckItemList(newArray);
-      enqueueSnackbar('Check Item deleted successfully!');
+      enqueueSnackbar('Check Item Archived successfully!');
     } catch (err) {
-      enqueueSnackbar('Check Item Delete failed!', { variant: 'error' });
+      enqueueSnackbar('Check Item Archive failed!', { variant: 'error' });
       console.error(err.message);
     }
   };
@@ -82,9 +82,9 @@ const CheckItemTable = ({ checkParams, setCheckParams, checkItemList, setCheckIt
     try {
       const newArray =  checkParams.filter((_, index) => index !== indexToRemove);
       setCheckParams(newArray);
-      enqueueSnackbar('Check Item deleted successfully!');
+      enqueueSnackbar('Check Item Archived successfully!');
     } catch (err) {
-      enqueueSnackbar('Check Item delete failed!', { variant: `error` });
+      enqueueSnackbar('Check Item Archive failed!', { variant: `error` });
       console.error(err.message);
     }
   };

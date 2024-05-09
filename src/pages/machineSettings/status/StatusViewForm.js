@@ -59,7 +59,7 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
       dispatch(deleteMachinestatus(id));
       navigate(PATH_MACHINE.machines.machineSettings.status.root);
     } catch (err) {
-      enqueueSnackbar('Status delete failed!', { variant: `error` });
+      enqueueSnackbar('Status Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };

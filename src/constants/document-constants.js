@@ -178,30 +178,30 @@ export const Snacks = {
   // @root - DocumentCategoryAddForm - documents dashboard
   addedDocCategory: 'Document Category ADD Successfully!', // Add Success message
   updatedDocCategory: 'Document Category Update Successfully!', // Update Success message
-  deletedDocCategory: 'Document Category Delete Successfully!', // Delete Success message
+  deletedDocCategory: 'Document Category Archived Successfully!', // Archived Success message
   failedSaveDocCategory: 'Failed to Save Document Category', // Add Failed message
 
   // @root - DocumentAddForm - machine documents
   addedMachineDoc: 'Machine Document Upload Successfully!', // Upload Success message
   updatedMachineDoc: 'Machine Document Update Successfully!', // Update Success message
   updatedVersionMachineDoc: 'Machine Document Version Update Successfully!', // Update Success message
-  deletedMachineDoc: 'Machine Document Delete Successfully!', // Delete Success message
+  deletedMachineDoc: 'Machine Document Archived Successfully!', // Archived Success message
 
   addedDoc: 'Document Uploaded Successfully!', // Upload Success message
   updatedDoc: 'Document Update Successfully!', // Update Success message
-  deletedDoc: 'Document Deleted Successfully!', // Delete Success message
+  deletedDoc: 'Document archived Successfully!', // Archived Success message
 
   failedDoc: 'Failed to Upload Document', // Update Failed message
   failedUpdateDoc: 'Failed to Update Document', // Update Failed message
-  failedDeleteDoc: 'Failed to Delete Document', // Delete Failed message
+  failedDeleteDoc: 'Failed to Archived Document', // Archived Failed message
 
   addedDrawing: 'Drawing Uploaded Successfully!', // Upload Success message
   updatedDrawing: 'Drawing Update Successfully!', // Update Success message
-  deletedDrawing: 'Drawing Deleted Successfully!', // Delete Success message
+  deletedDrawing: 'Drawing archived Successfully!', // Archived Success message
 
   failedDrawing: 'Failed to Upload Drawing', // Update Failed message
   failedUpdateDrawing: 'Failed to Update Drawing', // Update Failed message
-  failedDeleteDrawing: 'Failed to Delete Drawing', // Delete Failed message
+  failedDeleteDrawing: 'Failed to Archived Drawing', // Archived Failed message
 
   // documentAddForm -documents dashboard
   fileRequired: 'File is required',

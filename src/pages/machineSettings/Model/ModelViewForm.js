@@ -52,10 +52,10 @@ export default function ModelViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteMachineModel(id));
-      enqueueSnackbar('Model deleted Successfully!');
+      enqueueSnackbar('Model Archived Successfully!');
       navigate(PATH_MACHINE.machines.machineSettings.models.root);
     } catch (err) {
-      enqueueSnackbar('Model delete failed!', { variant: `error` });
+      enqueueSnackbar('Model Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };

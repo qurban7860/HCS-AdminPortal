@@ -51,7 +51,7 @@ export default function SiteViewForm({ handleMap }) {
   const onDelete = async () => {
     try {
       await dispatch(deleteSite(customerId, id));
-      enqueueSnackbar('Site deleted Successfully!');
+      enqueueSnackbar('Site Archived Successfully!');
       await dispatch(setIsExpanded(false));
       await dispatch(getSites( customerId ));
       if(customerId ) await navigate(PATH_CRM.customers.sites.root( customerId ))

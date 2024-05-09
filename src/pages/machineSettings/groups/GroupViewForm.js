@@ -58,10 +58,10 @@ export default function GroupViewForm() {
   const handleDelete = async () => {
     try {
       await dispatch(deleteGroup(id));
-      enqueueSnackbar('Group Deleted Successfully!');
+      enqueueSnackbar('Group Archived Successfully!');
       navigate(PATH_MACHINE.machines.machineSettings.groups.root);
     } catch (err) {
-      enqueueSnackbar("Group Delete Failed", { variant: `error` });
+      enqueueSnackbar("Group Archive Failed", { variant: `error` });
       console.log('Error:', err);
     }
   };
