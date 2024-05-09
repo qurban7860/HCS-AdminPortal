@@ -143,10 +143,11 @@ export function AuthProvider({ children }) {
 
       if (accessToken && isValidToken(accessToken)) {
         setSession(accessToken);
-        const user = {
-                  email: localStorage.getItem('email'),
-                  displayName: localStorage.getItem('name'),
-              };
+        const user = {}
+        user.customer = localStorage.getItem('customer')
+        user.email = localStorage.getItem('email')
+        user.displayName = localStorage.getItem('name')
+
 
         const userId = localStorage.getItem('userId');
 
@@ -274,6 +275,8 @@ export function AuthProvider({ children }) {
       localStorage.setItem("MFA", true);
     } else{
       const { accessToken, user, userId} = response.data;
+      
+      localStorage.setItem("customer", user?.customer);
 
       const {
         isAllAccessAllowed,
