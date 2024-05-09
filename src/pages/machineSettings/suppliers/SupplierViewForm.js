@@ -73,10 +73,10 @@ export default function SupplierViewForm({ currentSupplier = null }) {
   const onDelete = async () => {
     try {
       await dispatch(deleteSupplier(id));
-      enqueueSnackbar('Supplier Deleted Successfully!');
+      enqueueSnackbar('Supplier Archived Successfully!');
       navigate(PATH_MACHINE.machines.machineSettings.suppliers.root);
     } catch (err) {
-      enqueueSnackbar('Supplier Delete failed!', { variant: `error` } );
+      enqueueSnackbar('Supplier Archive failed!', { variant: `error` } );
       console.log('Error:', err);
     }
   };

@@ -121,7 +121,7 @@ export default function SecurityUserViewForm() {
       dispatch(getSecurityUsers());
       navigate(PATH_SECURITY.list);
     } catch (error) {
-      enqueueSnackbar('User delete failed!', { variant: `error` });
+      enqueueSnackbar('User Archive failed!', { variant: `error` });
       console.log('Error:', error);
     }
   };

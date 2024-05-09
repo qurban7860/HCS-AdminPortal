@@ -9,7 +9,7 @@ export const Snacks = {
   CREATED_SUCCESS: 'Created SUCCESS',
 
   // @root - CustomerViewForm
-  FAILED_DELETE: 'Customer delete failed!',
+  FAILED_DELETE: 'Customer Archive failed!',
   // failed verfify
   FAILED_VERIFY: 'Customer verify failed!',
 

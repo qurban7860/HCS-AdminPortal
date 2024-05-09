@@ -34,10 +34,10 @@ export default function ProfileViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteProfile(machineId, id));
-      enqueueSnackbar("Profile deleted successfully");
+      enqueueSnackbar("Profile Archived successfully");
       navigate(PATH_MACHINE.machines.profiles.root( machineId ))
     } catch (err) {
-      enqueueSnackbar("Failed to delete profile", { variant: `error` });
+      enqueueSnackbar("Failed to Archive profile", { variant: `error` });
       console.log('Error:', err);
     }
   };

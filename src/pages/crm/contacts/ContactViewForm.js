@@ -56,7 +56,7 @@ export default function ContactViewForm({
     try {
       await dispatch(deleteContact(customerId, id));
       dispatch(setIsExpanded(false));
-      enqueueSnackbar('Contact deleted Successfully!');
+      enqueueSnackbar('Contact Archived Successfully!');
       await dispatch(getContacts( customerId ))
       navigate(PATH_CRM.customers.contacts.root(customerId))
     } catch (err) {

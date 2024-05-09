@@ -55,7 +55,7 @@ function MachineServiceParamViewForm( {serviceHistoryView} ) {
   const onDelete = async () => {
     try {
       await dispatch(deleteMachineServiceRecord(machineId, id));
-      await enqueueSnackbar('Machine Service Record deleted Successfully!');
+      await enqueueSnackbar('Machine Service Record Archived Successfully!');
       await navigate(PATH_MACHINE.machines.serviceRecords.root(machineId))
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });

@@ -28,9 +28,9 @@ export default function DocumentTypeViewForm() {
     try {
       await dispatch(deleteDocumentType(documentType?._id));
       navigate(PATH_SETTING.documentType.list);
-      enqueueSnackbar('Document Type delete Successfully!');
+      enqueueSnackbar('Document Type Archive Successfully!');
     } catch (error) {
-      enqueueSnackbar('Document Type delete failed!', { variant: `error` });
+      enqueueSnackbar('Document Type Archive failed!', { variant: `error` });
       console.error(error);
     }
   };

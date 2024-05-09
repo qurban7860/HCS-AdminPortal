@@ -135,13 +135,13 @@ export const ICONS = {
   DELETE_ENABLED: {
     icon: 'mdi:trash-can-outline',
     color: '#008000',
-    heading: 'Delete Enabled',
+    heading: 'Archive Enabled',
   },
 
   DELETE_DISABLED: {
     icon: 'mdi:delete-off',
     color: '#FF0000',
-    heading: 'Delete Disabled',
+    heading: 'Archive Disabled',
   },
 
   // ------------------------------------------------------------

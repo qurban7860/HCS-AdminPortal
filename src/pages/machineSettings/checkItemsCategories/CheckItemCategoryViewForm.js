@@ -55,10 +55,10 @@ export default function CheckItemCategoryViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteServiceCategory(id));
-      enqueueSnackbar('Service Category Deleted Successfullty!');
+      enqueueSnackbar('Service Category Archived Successfullty!');
       navigate(PATH_MACHINE.machines.machineSettings.checkItemCategories.root);
     } catch (err) {
-      enqueueSnackbar('Service Category delete failed!', { variant: `error` });
+      enqueueSnackbar('Service Category Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };

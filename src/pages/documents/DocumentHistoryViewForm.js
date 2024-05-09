@@ -194,7 +194,7 @@ const handleNewFile = async () => {
       }else if( machineDrawings ){
         navigate(PATH_MACHINE_DRAWING.root);
       }
-      enqueueSnackbar("Document Deleted Successfully!", { variant: `success` });
+      enqueueSnackbar("Document Archived Successfully!", { variant: `success` });
     }catch(error) {
       enqueueSnackbar(error, { variant: `error` });
     }
@@ -295,7 +295,7 @@ const handleNewFile = async () => {
     try {
       await dispatch(deleteDocumentFile(documentId, versionId, fileId, customer?._id));
       await dispatch(getDocumentHistory(documentHistory._id))
-      enqueueSnackbar('File Deleted successfully');
+      enqueueSnackbar('File Archived successfully');
     } catch (err) {
       console.log(err);
       enqueueSnackbar('File Deletion failed!', { variant: `error` });

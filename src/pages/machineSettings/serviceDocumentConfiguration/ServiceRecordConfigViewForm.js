@@ -86,10 +86,10 @@ export default function ServiceRecordConfigViewForm({ currentServiceRecordConfig
   const onDelete = async () => {
     try {
       await dispatch(deleteServiceRecordConfig(id));
-      enqueueSnackbar('Service record configuration Deleted Successfullty!');
+      enqueueSnackbar('Service record configuration Archived Successfullty!');
       navigate(PATH_MACHINE.machines.machineSettings.serviceRecordsConfig.root);
     } catch (err) {
-      enqueueSnackbar('Service record configuration delete failed!', { variant: `error` });
+      enqueueSnackbar('Service record configuration Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };

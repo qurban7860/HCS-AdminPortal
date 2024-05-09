@@ -51,7 +51,7 @@ export default function ToolInstalledViewForm() {
       if( machineId && id){
         await dispatch(deleteToolInstalled(machineId, id, toolInstalled?.toolType));
       }
-      enqueueSnackbar('Tool Installed deleted successfully!');
+      enqueueSnackbar('Tool Installed Archived successfully!');
       await navigate(PATH_MACHINE.machines.toolsInstalled.root(machineId));
     } catch (err) {
       enqueueSnackbar(err.message, { variant: `error` });

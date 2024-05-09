@@ -63,10 +63,10 @@ export default function DepartmentViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteDepartment(id));
-      enqueueSnackbar('Department Deleted Successfullty!');
+      enqueueSnackbar('Department Archived Successfullty!');
       navigate(PATH_SETTING.departments.list);
     } catch (err) {
-      enqueueSnackbar('Department delete failed!', { variant: `error` });
+      enqueueSnackbar('Department Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };
