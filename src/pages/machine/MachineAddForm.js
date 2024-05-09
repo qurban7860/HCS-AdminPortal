@@ -50,7 +50,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const { activeSpContacts } = useSelector((state) => state.contact);
   const { machineConnections } = useSelector((state) => state.machineConnections);
   const { activeCategories } = useSelector((state) => state.category);
-  // const [ hasEffectRun, setHasEffectRun ] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const [ landToCustomerMachinePage, setLandToCustomerMachinePage ] = useState(false);
 
@@ -69,7 +68,10 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       dispatch(setNewMachineCustomer(null)); 
       dispatch(setNewConnectedMachines([]));
     }
-  }, [dispatch]);
+  }, [dispatch]);  
+
+  const decoilerCategories = activeCategories.filter(cat => cat?.connections);
+  const decoilerModels = activeMachineModels.filter(model => decoilerCategories.some(cat => cat?._id === model?.category?._id));
 
   const methods = useForm({
     resolver: yupResolver(machineSchema),
@@ -442,7 +444,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
           </Grid>
         </Grid>
       </FormProvider>
-      <ConnectedMachineAddDialog activeCategories={activeCategories} activeMachineModels={activeMachineModels} />
+      <ConnectedMachineAddDialog activeCategories={decoilerCategories} activeMachineModels={decoilerModels} />
     </>
   );
 }
