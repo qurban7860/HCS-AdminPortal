@@ -38,18 +38,27 @@ function ConnectedMachineAddDialog({activeCategories, activeMachineModels}) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const [newMachines, setNewMachines] = useState([]);
-  const [serialNoError, setSerialNoError] = useState('');
-
   const { connectedMachineAddDialog, isLoading } = useSelector((state) => state.machine);
-  
+  const [decoilerCategories, setDecoilerCategories] = useState([]);
+  const [decoilerModels, setDecoilerModels] = useState([]);
+
   const handleConnectedMachineAddDialog = () => {
     dispatch(setConnectedMachineAddDialog(false));
+    reset();
   }
   
   const connectedMachineSchema = Yup.object().shape({
-    serialNo: Yup.string().max(6).required().label('Serial Number'),
+    serialNo: Yup.string().trim().max(6).required().test('unique-serial-no', 'Serial number already exists', (value) => {
+      const existingSerialNos = newMachines.map(machine => machine.serialNo);
+      return !existingSerialNos.includes(value);
+    }).label('Serial Number'),
     name: Yup.string().max(250),
-    machineModel: Yup.object().shape({name: Yup.string()}).nullable(),
+    category: Yup.object().shape({
+      _id: Yup.string().required('Category is required'),
+    }).label('Category').nullable().required('Category is required'), // Make category required
+    machineModel: Yup.object().shape({
+      _id: Yup.string().required('Model is required'),
+    }).label('Model').nullable().required('Model is required'), // Make category required
   });
 
   const methods = useForm({
@@ -67,7 +76,8 @@ function ConnectedMachineAddDialog({activeCategories, activeMachineModels}) {
     handleSubmit,
     watch,
     setValue,
-    formState: { isSubmitting, errors},
+    formState: { isSubmitting },
+    clearErrors 
   } = methods;
   
   const {
@@ -75,23 +85,23 @@ function ConnectedMachineAddDialog({activeCategories, activeMachineModels}) {
     machineModel,
   } = watch();
 
+  useEffect(() => {
+    const _decoilerCategories = activeCategories.filter(cat => cat?.connections);
+    const _decoilerModels = activeMachineModels.filter(model => _decoilerCategories.some(cat => cat?._id === model?.category?._id));
+
+    setDecoilerCategories(_decoilerCategories);
+    setDecoilerModels(_decoilerModels);  
+  }, [activeCategories, activeMachineModels]);
   
+  
+
   useEffect(() => {
     reset();
   }, [reset, newMachines]);
   
   const handleAdd = async (data) => {
-     const isMachineExists = newMachines.some(
-      (machine) => machine.serialNo === data.serialNo
-    );
-
-    if (!isMachineExists) {
-      const newMachineWithId = { ...data, _id: uuidv4() };
-      setNewMachines((prevMachines) => [newMachineWithId, ...prevMachines]);
-      setSerialNoError(''); // Reset serial number error
-    } else {
-      setSerialNoError('Duplicate Serial number !'); // Set serial number error
-    }
+     const newMachineWithId = { ...data, _id: uuidv4() };
+    setNewMachines((prevMachines) => [newMachineWithId, ...prevMachines]);
   };
 
   const handleRemove = (index) => {
@@ -122,40 +132,31 @@ function ConnectedMachineAddDialog({activeCategories, activeMachineModels}) {
           <Box rowGap={2} columnGap={2} display="grid"
             gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 2fr 6fr)', md: 'repeat(1, 1fr 5fr)' }}
           >
-            <RHFTextField name="serialNo" label="Serial No.*"
-              onChange={(e) => {
-                setValue('serialNo', e.target.value); // Update form control value
-                setSerialNoError(''); // Clear error on change
-              }}
-              error={errors.serialNo || !!serialNoError} helperText={errors.serialNo?.message || serialNoError} />
-            {/* <RHFTextField name="serialNo" label="Serial No.*"  /> */}
+            <RHFTextField name="serialNo" label="Serial No.*"  />
             <RHFTextField name="name" label="Name" />
           </Box>
           <Box rowGap={2} columnGap={2} sx={{mt:2}} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
               <RHFAutocomplete 
                 name="category"
-                label="Machine Category"
+                label="Machine Category*"
                 options={activeCategories}
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 getOptionLabel={(option) => `${option.name || ''}`}
                 renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
                 onChange={(event, newValue) =>{
-                    if(newValue){
-                      setValue('category',newValue)
-                      if(newValue?._id !== machineModel?.category?._id){
-                        setValue('machineModel',null)
-                      }
-                    } else {
-                      setValue('machineModel',null )
-                      setValue('category',null )
-                    }
+                  if(newValue){
+                    setValue('category', newValue);
+                    setValue('machineModel', null); // Reset machineModel when category is selected
+                    clearErrors('category'); // clearErrors is a method provided by useForm
+                  } else {
+                    setValue('category', null); // Reset category value when it's not selected
                   }
-                }
+                }}
               />
 
               <RHFAutocomplete 
                 name="machineModel"
-                label="Machine Model"
+                label="Machine Model*"
                 options={activeMachineModels.filter(el => (el.category && category) ? el.category._id === category._id : !category)}
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 getOptionLabel={(option) => `${option.name || ''}`}
@@ -166,6 +167,8 @@ function ConnectedMachineAddDialog({activeCategories, activeMachineModels}) {
                     if(!category ){
                       setValue('category',newValue?.category)
                     }
+                    clearErrors('category'); // clearErrors is a method provided by useForm
+                    clearErrors('machineModel'); // clearErrors is a method provided by useForm
                   } else {
                     setValue('machineModel',null )
                   }
