@@ -33,6 +33,8 @@ const initialState = {
   supportManager:null,
   page: 0,
   rowsPerPage: 100,
+  connectedMachineAddDialog:false,
+  newConnectedMachines: [],
 };
 
 const slice = createSlice({
@@ -167,6 +169,14 @@ const slice = createSlice({
       state.machineForDialog = action.payload;
       state.initial = true;
     },
+
+    setConnectedMachineAddDialog(state, action){
+      state.connectedMachineAddDialog = action.payload;
+    },
+
+    setNewConnectedMachines(state, action){
+      state.newConnectedMachines = action.payload;
+    },
     
     // GET Machine Gallery
     getMachineGallerySuccess(state, action) {
@@ -286,6 +296,8 @@ export const {
   setVerified,
   setAccountManager,
   setSupportManager,
+  setConnectedMachineAddDialog,
+  setNewConnectedMachines,
   ChangeRowsPerPage,
   ChangePage,
   setMachineDialog,
@@ -637,13 +649,14 @@ export function addMachine(params) {
           supportManager: params?.supportManager,
           description: params?.description,
           customerTags: params?.customerTags,
-          machineConnections: params?.machineConnectionVal.map(obj => obj._id),
+          machineConnections: params?.machineConnectionVal.filter(machine => machine?.customer).map(obj => obj._id),
+          newConnectedMachines : params?.machineConnectionVal.filter(machine => !machine?.customer),
           isActive: params?.isActive,
           supportExpireDate : params?.supportExpireDate,
           financialCompany: params?.financialCompany?._id,
         };
         const response = await axios.post(`${CONFIG.SERVER_URL}products/machines`, data);
-        dispatch(slice.actions.getMachineSuccess(response.data.Machine));
+        // dispatch(slice.actions.getMachineSuccess(response.data.Machine));
         return response
       } catch (error) {
         console.error(error);

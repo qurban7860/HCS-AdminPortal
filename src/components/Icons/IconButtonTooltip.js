@@ -14,29 +14,25 @@ export default function IconButtonTooltip({
   icon,
   disabled,
 }) {
-  return (
-    <>
-      {disabled ? (
+    return (
+      <StyledTooltip title={title} placement={placement} disableFocusListener tooltipcolor={color} color={color}>
+        {disabled ? (
           <IconButton
             variant="outlined"
             sx={{ ml:1, cursor: 'default', color, borderColor: color, ':hover': { borderColor: alpha(color, 0.5),},}}
           >
-            <StyledTooltip title={title} placement={placement} disableFocusListener tooltipcolor={color} color={color}>
               <Iconify color={color} sx={{ height: '20px', width: '20px' }} icon={icon} />
-            </StyledTooltip>
           </IconButton>
-      ) : (
-        <IconButton onClick={onClick}
-          sx={{ ml:1, cursor: onClick ? 'pointer' : 'default', color, borderColor: color, ':hover': { borderColor: alpha(color, 0.5)}}}
-        >
-          <StyledTooltip title={title} placement={placement} disableFocusListener tooltipcolor={color} color={color}>
+        ) : (
+          <IconButton onClick={onClick}
+            sx={{ ml:1, cursor: onClick ? 'pointer' : 'default', color, borderColor: color, ':hover': { borderColor: alpha(color, 0.5)}}}
+          >
             <Iconify color={color} sx={{ height: '20px', width: '20px' }} icon={icon} />
-          </StyledTooltip>
-        </IconButton>
-      )}
-    </>
-  );
-}
+          </IconButton>
+        )}
+      </StyledTooltip>
+    );
+  }
 
 
 IconButtonTooltip.propTypes = {

@@ -6,12 +6,12 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, styled, Grid, Stack, TextField } from '@mui/material';
+import { Box, Card, styled, Grid, Stack, TextField, Button, Link } from '@mui/material';
 // slice
 import { getActiveSPContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
 import { getActiveCustomers, setCustomerTab, setNewMachineCustomer } from '../../redux/slices/customer/customer';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
-import  { addMachine } from '../../redux/slices/products/machine';
+import  { addMachine, setConnectedMachineAddDialog, setNewConnectedMachines } from '../../redux/slices/products/machine';
 import { getActiveCategories, resetActiveCategories } from '../../redux/slices/products/category';
 import { getActiveMachineModels, resetActiveMachineModels } from '../../redux/slices/products/model';
 import { getActiveMachineStatuses, resetActiveMachineStatuses } from '../../redux/slices/products/statuses';
@@ -26,6 +26,11 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import { FORMLABELS } from '../../constants/default-constants';
 import { machineSchema } from '../schemas/machine'
+import ConnectedMachineAddDialog from '../../components/Dialog/ConnectedMachineAddDialog';
+import Iconify from '../../components/iconify';
+import IconTooltip from '../../components/Icons/IconTooltip';
+import IconButtonTooltip from '../../components/Icons/IconButtonTooltip';
+import IconPopover from '../../components/Icons/IconPopover';
 
 MachineAddForm.propTypes = {
   isEdit: PropTypes.bool,
@@ -36,6 +41,7 @@ MachineAddForm.propTypes = {
 export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { connectedMachineAddDialog, newConnectedMachines } = useSelector((state) => state.machine);
   const { activeSuppliers } = useSelector((state) => state.supplier);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
   const { activeCustomers, newMachineCustomer } = useSelector((state) => state.customer);
@@ -61,6 +67,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       dispatch(resetActiveMachineStatuses()); 
       dispatch(resetActiveSuppliers())
       dispatch(setNewMachineCustomer(null)); 
+      dispatch(setNewConnectedMachines([]));
     }
   }, [dispatch]);
 
@@ -147,6 +154,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   }));
 
   const onSubmit = async (data) => {
+    
     try {
       const response = await dispatch(addMachine(data));
       reset();
@@ -173,7 +181,26 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     }
   };
 
+  const hanldeAddNewConnectedMachine = () => {
+    dispatch(setConnectedMachineAddDialog(true))
+  };
+
+  useEffect(() => {
+    const currentValue = watch('machineConnectionVal') || [];
+    const filteredValue = currentValue.filter(machine => machine?.customer); // Remove previously added machine
+    setValue('machineConnectionVal', [...filteredValue, ...newConnectedMachines]);
+  }, [setValue, watch, newConnectedMachines]);
+
+  let connectedMachinesOption = [];
+
+  // if (customer) {
+  //   connectedMachinesOption.push({_id: 0, serialNo: 'Add new connection'});
+  // }
+
+  connectedMachinesOption = connectedMachinesOption.concat(newConnectedMachines, machineConnections);
+
   return (
+    <>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
         <Grid container>
           <Grid item xs={18} md={12} >
@@ -229,9 +256,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                       }
                     }
                     />
-
                   <RHFDatePicker inputFormat='dd/MM/yyyy' name="manufactureDate" label="Manufacture Date" />
-
                   <RHFAutocomplete
                     name="supplier"
                     label="Supplier"
@@ -304,31 +329,51 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     ChipProps={{ size: 'small' }}
                   />
                 </Box>
-
-                  <RHFTextField name="siteMilestone" label="Landmark for Installation site" multiline />
-                  
-                <Box rowGap={2} columnGap={2} display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
-                >
-                  
+                <RHFTextField name="siteMilestone" label="Landmark for Installation site" multiline />
+                <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}>
                   <RHFDatePicker inputFormat='dd/MM/yyyy'  name="shippingDate" label="Shipping Date" />
-
                   <RHFDatePicker inputFormat='dd/MM/yyyy' name="installationDate" label="Installation Date" />
-
                 </Box>
-
+                <Box display="flex" columnGap={2} justifyContent='flex-end'>
                   <RHFAutocomplete
+                    fullWidth
                     multiple
                     disableCloseOnSelect
                     filterSelectedOptions
                     name="machineConnectionVal"
                     id="tags-outlined"
-                    options={machineConnections}
-                    getOptionLabel={(option) => `${option.serialNo || ''} ${option.name ? '-' : ''} ${option.name || ''}`}
+                    defaultValues={newConnectedMachines}
+                    options={connectedMachinesOption}
+                    getOptionLabel={(option) => `${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}
+                    // getOptionLabel={(option) => {
+                    //   if (option._id === 0) {
+                    //     return "Add new connection";
+                    //   }
+                    //   return `${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`;
+                    // }}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                    renderInput={(params) => ( <TextField  {...params}  label="Connected Machines"   placeholder="Search"  /> )}
+                    onChange={(event, value) => {
+                      if (value && value.length && value.some(option => option._id === 0)) {
+                        dispatch(setConnectedMachineAddDialog(true));
+                      } else {
+                        setValue('machineConnectionVal', value);
+                      }
+                    }}
+                    // renderOption={(props, option) =>
+                    //   option._id === 0 ? (
+                    //     <Button {...props} variant="outlined" startIcon={<Iconify icon='mdi:plus' />} fullWidth onClick={()=> hanldeAddNewConnectedMachine()}>
+                    //       {option.serialNo}
+                    //     </Button>
+                    //   ) : (
+                    //     <li {...props}>
+                    //       {option?.serialNo || ''} {option?.name ? '-' : ''} {option?.name || ''}
+                    //     </li>
+                    //   )
+                    // }
+                    renderInput={(params) => ( <TextField  {...params}  label="Connected Machines" placeholder="Search"  /> )}
                   />
-                  
+                  {customer && <IconTooltip title='New Connectable Machine' icon='mdi:plus' onClick={()=> hanldeAddNewConnectedMachine()} />}
+                </Box>
                 <Box rowGap={2} columnGap={2} display="grid"
                   gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
@@ -397,5 +442,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
           </Grid>
         </Grid>
       </FormProvider>
+      <ConnectedMachineAddDialog activeCategories={activeCategories} activeMachineModels={activeMachineModels} />
+    </>
   );
 }
