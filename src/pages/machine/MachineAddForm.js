@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, styled, Grid, Stack, TextField, Button, Link } from '@mui/material';
+import { Box, Card, styled, Grid, Stack, TextField, Button, Link, lighten, darken } from '@mui/material';
 // slice
 import { getActiveSPContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
 import { getActiveCustomers, setCustomerTab, setNewMachineCustomer } from '../../redux/slices/customer/customer';
@@ -31,6 +31,7 @@ import Iconify from '../../components/iconify';
 import IconTooltip from '../../components/Icons/IconTooltip';
 import IconButtonTooltip from '../../components/Icons/IconButtonTooltip';
 import IconPopover from '../../components/Icons/IconPopover';
+import { GroupHeader, GroupItems } from '../../theme/styles/default-styles';
 
 MachineAddForm.propTypes = {
   isEdit: PropTypes.bool,
@@ -194,11 +195,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   }, [setValue, watch, newConnectedMachines]);
 
   let connectedMachinesOption = [];
-
-  // if (customer) {
-  //   connectedMachinesOption.push({_id: 0, serialNo: 'Add new connection'});
-  // }
-
   connectedMachinesOption = connectedMachinesOption.concat(newConnectedMachines, machineConnections);
 
   return (
@@ -346,13 +342,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     id="tags-outlined"
                     defaultValues={newConnectedMachines}
                     options={connectedMachinesOption}
+                    groupBy={(option) => option?.listType}
                     getOptionLabel={(option) => `${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}
-                    // getOptionLabel={(option) => {
-                    //   if (option._id === 0) {
-                    //     return "Add new connection";
-                    //   }
-                    //   return `${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`;
-                    // }}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     onChange={(event, value) => {
                       if (value && value.length && value.some(option => option._id === 0)) {
@@ -361,18 +352,13 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                         setValue('machineConnectionVal', value);
                       }
                     }}
-                    // renderOption={(props, option) =>
-                    //   option._id === 0 ? (
-                    //     <Button {...props} variant="outlined" startIcon={<Iconify icon='mdi:plus' />} fullWidth onClick={()=> hanldeAddNewConnectedMachine()}>
-                    //       {option.serialNo}
-                    //     </Button>
-                    //   ) : (
-                    //     <li {...props}>
-                    //       {option?.serialNo || ''} {option?.name ? '-' : ''} {option?.name || ''}
-                    //     </li>
-                    //   )
-                    // }
-                    renderInput={(params) => ( <TextField  {...params}  label="Connected Machines" placeholder="Search"  /> )}
+                    renderInput={(params) => ( <TextField  {...params}  label="Select connected machine (decoilers, etc.)" placeholder="Search"  /> )}
+                    renderGroup={(params) => (
+                      <li key={params.key} style={{borderBottom:params.group==='New'?'1px solid #ababab':'', borderRadius:'10px'}}>
+                        {params.group && <GroupHeader>{params.group || "Others"}</GroupHeader>}
+                        <GroupItems>{params.children}</GroupItems>
+                      </li>
+                    )}
                   />
                   {customer && <IconTooltip title='New Connectable Machine' icon='mdi:plus' onClick={()=> hanldeAddNewConnectedMachine()} />}
                 </Box>
