@@ -1,4 +1,4 @@
-import { styled, alpha } from '@mui/material/styles';
+import { styled, alpha, lighten, darken } from '@mui/material/styles';
 import { Popover, Stack, Card, Chip, Container, TableRow, Badge } from '@mui/material';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { bgBlur } from '../../utils/cssStyles';
@@ -234,3 +234,19 @@ export const options = {
   direction: { xs: 'column', md: 'row' },
   sx: { px: 2.5, py: 3 },
 };
+
+
+export const GroupHeader = styled('div')(({ theme }) => ({
+  position: 'sticky',
+  top: '0px',
+  padding: '5px 16px',
+  marginTop:'5px',
+  color: '#707070',
+  borderRadius:'10px',
+  fontSize:'small',
+  backgroundColor:'#ededed',
+}));
+
+export const GroupItems = styled('ul')({
+  padding: 0,
+});

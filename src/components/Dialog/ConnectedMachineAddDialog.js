@@ -18,7 +18,7 @@ import ViewPhoneComponent from '../ViewForms/ViewPhoneComponent';
 import FormProvider from '../hook-form/FormProvider';
 import { RHFAutocomplete, RHFTextField } from '../hook-form';
 import TableCard from '../ListTableTools/TableCard';
-import { TableHeadCustom } from '../table';
+import { TableHeadCustom, TableNoData } from '../table';
 import IconTooltip from '../Icons/IconTooltip';
 import Iconify from '../iconify';
 import IconButtonTooltip from '../Icons/IconButtonTooltip';
@@ -100,7 +100,7 @@ function ConnectedMachineAddDialog({activeCategories, activeMachineModels}) {
   }, [reset, newMachines]);
   
   const handleAdd = async (data) => {
-     const newMachineWithId = { ...data, _id: uuidv4() };
+     const newMachineWithId = { ...data, _id: uuidv4(), listType:"New" };
     setNewMachines((prevMachines) => [newMachineWithId, ...prevMachines]);
   };
 
@@ -178,44 +178,40 @@ function ConnectedMachineAddDialog({activeCategories, activeMachineModels}) {
             
           </Box>
           <Grid item display='flex' justifyContent='flex-end' columnGap={2} sx={{mt:2.5}}>
-            <Button variant='contained' type='submit'>Add</Button>
+            <Button variant='contained' type='submit' endIcon={<Iconify icon="mdi:arrow-down"/>} >Add To List</Button>
           </Grid>
-          {newMachines?.length > 0 &&
-            // <TableCard>
-              <TableContainer sx={{border:'1px solid #dce0e4', borderRadius:'10px', mt:2}}>
-              <Table size="small">
-                <TableHeadCustom headLabel={TABLE_HEAD} />
-                <TableBody>
-                  {newMachines.map((row, index) => (
-                    row ? (
-                      <TableRow key={index}>
-                        <TableCell>{row?.serialNo}</TableCell>
-                        <TableCell>{row?.name}</TableCell>
-                        <TableCell>{row?.category?.name}</TableCell>
-                        <TableCell>{row?.machineModel?.name}</TableCell>
-                        <TableCell sx={{width:2}}>
-                          <IconButtonTooltip 
-                            onClick={()=>  handleRemove(index)}  
-                            color='#ed0707' 
-                            icon='lets-icons:dell' 
-                            title='Remove' 
-                            sx={{p:0, minWidth:'30px', border:'none'}} 
-                            placement='left'
-                            />
-                        </TableCell>
-                      </TableRow>
-                    ) : null
-                  ))}
-                </TableBody>
-              </Table>
-              </TableContainer>
-            // </TableCard>
-          }
+          <TableContainer sx={{border:'1px solid #dce0e4', borderRadius:'10px', mt:2}}>
+            <Table size="small">
+              <TableHeadCustom headLabel={TABLE_HEAD} />
+              <TableBody>
+                {newMachines.map((row, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{row?.serialNo}</TableCell>
+                      <TableCell>{row?.name}</TableCell>
+                      <TableCell>{row?.category?.name}</TableCell>
+                      <TableCell>{row?.machineModel?.name}</TableCell>
+                      <TableCell sx={{width:2}}>
+                        <IconButtonTooltip 
+                          onClick={()=>  handleRemove(index)}  
+                          color='#ed0707' 
+                          icon='lets-icons:dell' 
+                          title='Remove' 
+                          sx={{p:0, minWidth:'30px', border:'none'}} 
+                          placement='left'
+                          />
+                      </TableCell>
+                    </TableRow>
+                ))}
+
+                {newMachines.length===0 && <TableRow><TableCell colSpan={5}>No Record</TableCell></TableRow>}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </FormProvider>
       </DialogContent>
       <DialogActions>
         <Button variant='outlined' onClick={handleConnectedMachineAddDialog}>Cancel</Button>
-        <Button variant='contained' onClick={handleSave}>Save</Button>
+        <Button variant='contained' endIcon={<Iconify icon="mdi:arrow-right"/>} onClick={handleSave}>Connect With Machine</Button>
       </DialogActions>
     </Dialog>
   );
