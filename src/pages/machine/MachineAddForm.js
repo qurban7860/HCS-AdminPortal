@@ -342,7 +342,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     id="tags-outlined"
                     defaultValues={newConnectedMachines}
                     options={connectedMachinesOption}
-                    groupBy={(option) => option?.listType}
+                    groupBy={(option) => option?.group}
                     getOptionLabel={(option) => `${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
                     onChange={(event, value) => {
@@ -352,10 +352,10 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                         setValue('machineConnectionVal', value);
                       }
                     }}
-                    renderInput={(params) => ( <TextField  {...params}  label="Select connected machine (decoilers, etc.)" placeholder="Search"  /> )}
+                    renderInput={(params) => ( <TextField  {...params}  label="Select Connected Machine (decoilers, etc.)" placeholder="Search"  /> )}
                     renderGroup={(params) => (
                       <li key={params.key} style={{borderBottom:params.group==='New'?'1px solid #ababab':'', borderRadius:'10px'}}>
-                        {params.group && <GroupHeader>{params.group || "Others"}</GroupHeader>}
+                        {params.group && <GroupHeader>{params.group}</GroupHeader>}
                         <GroupItems>{params.children}</GroupItems>
                       </li>
                     )}

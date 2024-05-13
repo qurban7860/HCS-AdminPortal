@@ -100,7 +100,7 @@ function ConnectedMachineAddDialog({activeCategories, activeMachineModels}) {
   }, [reset, newMachines]);
   
   const handleAdd = async (data) => {
-     const newMachineWithId = { ...data, _id: uuidv4(), listType:"New" };
+     const newMachineWithId = { ...data, _id: uuidv4(), group:"New" };
     setNewMachines((prevMachines) => [newMachineWithId, ...prevMachines]);
   };
 
