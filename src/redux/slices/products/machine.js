@@ -445,17 +445,19 @@ export function getActiveModelMachines(modelId) {
 
 // ----------------------------------------------------------------------
 
-export function getCustomerMachines(customerId) {
+export function getCustomerMachines(customerId, isCustomerArchived ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, 
-      {
-        params: {
-          customer: customerId,
-          isArchived: false,
-        }
-      });
+      const params = {
+        customer: customerId,
+        isArchived: false,
+      }
+      if(isCustomerArchived){
+        params.archivedFromCustomer = true;
+        params.isArchived= true;
+      }
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, { params } );
       dispatch(slice.actions.getCustomerMachinesSuccess(response.data));
       return response.data;
       // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));

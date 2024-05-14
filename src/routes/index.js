@@ -33,6 +33,12 @@ import {
   MachineByYearsView,
   MachineByCountriesView,
 
+  // Visits
+  Visits,
+  NewVisits,
+  EditVisits,
+  ViewVisits,
+
   // Customer
   CustomerList,
   CustomerAdd,
@@ -470,6 +476,22 @@ export default function Router() {
         { path: 'machineByModels', element: <MachineByModelsView /> },
         { path: 'machineByYears', element: <MachineByYearsView /> },
         { path: 'permission-denied', element: <PermissionDeniedPage /> },
+      ],
+    },
+
+    // --------------------- VISITS  ----------------------
+    {
+      path: 'visits',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children: [
+        { element: <Visits to={PATH_AFTER_LOGIN} replace />, index: true },
+        { path: 'new', element: <MachineByCountriesView /> },
+        { path: 'edit', element: <MachineByModelsView /> },
+        { path: 'view', element: <MachineByYearsView /> },
       ],
     },
     // --------------------- Customer -----------------------

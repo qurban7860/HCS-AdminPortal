@@ -124,13 +124,12 @@ export function getMachineJira(machineId, page, pageSize ) {
 
 // -------------------------- GET RECORD'S ----------------------------------------------------------------------
 
-export function getMachineJiras(machineId, page, pageSize ) {
+export function getMachineJiras(machine, page, pageSize ) {
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
       const params= {
-        machine: machineId,
-        // orderBy = { createdAt: -1 }
+        machine,
       }
       params.pagination = {
         page,

@@ -36,9 +36,10 @@ export default function MachineJiraTableRow({
 
   return (
       <StyledTableRow hover selected={selected}>
-        <LinkTableCell align="left" onClick={() => onViewRow(self)} param={id} />
-        <TableCell align="left">{key}</TableCell>
-        <TableCell align="left">{expand}</TableCell>
+        <LinkTableCell align="left" onClick={() => onViewRow(self)} param={key || ''} />
+        <TableCell align="left">{fields?.status?.name || ''}</TableCell>
+        <TableCell align="left">{fields?.summary || ''}</TableCell>
+        <TableCell align="left">{fields?.description?.content[0]?.content[0]?.text || ''}</TableCell>
       </StyledTableRow>
   );
 }

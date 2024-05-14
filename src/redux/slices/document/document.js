@@ -473,7 +473,7 @@ export function updateDocumentVersionNo(documentId , data) {
 
 // -----------------------------------Get Documents-----------------------------------
 
-export function getDocuments(customerId, machineId, drawing, page, pageSize, cancelToken) {
+export function getDocuments(customerId, machineId, drawing, page, pageSize, isCustomerArchived, isMachineArchived, cancelToken) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     const params = {
@@ -501,6 +501,10 @@ export function getDocuments(customerId, machineId, drawing, page, pageSize, can
     params.pagination = {
       page,
       pageSize  
+    }
+    if(isCustomerArchived){
+      params.archivedFromCustomer = true;
+      params.isArchived= true;
     }
 
     try {
