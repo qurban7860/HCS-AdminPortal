@@ -162,6 +162,7 @@ export default function SignInLogList() {
             buttonAction={reloadList}
             filterRequestStatus={filterRequestStatus}
             onFilterRequestStatus={handleFilterRequestStatus}
+            onReload={reloadList}
           />
           {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
@@ -169,7 +170,6 @@ export default function SignInLogList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            refresh={reloadList}
           />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>

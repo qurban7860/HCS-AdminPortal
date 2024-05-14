@@ -100,7 +100,10 @@ function ConnectedMachineAddDialog({activeCategories, activeMachineModels}) {
   }, [reset, newMachines]);
   
   const handleAdd = async (data) => {
-     const newMachineWithId = { ...data, _id: uuidv4(), group:"New" };
+    data.category = data.category._id;
+    data.machineModel = data.machineModel._id;
+    console.log("data:::",data);
+    const newMachineWithId = { ...data, _id: uuidv4(), group:"New" };
     setNewMachines((prevMachines) => [newMachineWithId, ...prevMachines]);
   };
 
@@ -196,7 +199,7 @@ function ConnectedMachineAddDialog({activeCategories, activeMachineModels}) {
                           color='#ed0707' 
                           icon='lets-icons:dell' 
                           title='Remove' 
-                          sx={{p:0, minWidth:'30px', border:'none'}} 
+                          // sx={{p:0, minWidth:'30px', border:'none'}} 
                           placement='left'
                           />
                       </TableCell>

@@ -251,9 +251,9 @@ export default function MachineList({ isArchived }) {
   };
 
   return (
-    <Container maxWidth={false} sx={{mb:3}}>
+    <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover  name={ isArchived ? "Archived Machines" : "Machines" } icon="arcticons:materialistic" setting isArchivedMachines={!isArchived} isArchived={isArchived} />
+          <Cover name={ isArchived ? "Archived Machines" : "Machines" } icon="arcticons:materialistic" setting isArchivedMachines={!isArchived} isArchived={isArchived} />
         </StyledCardContainer>
         <TableCard>
           <MachineListTableToolbar

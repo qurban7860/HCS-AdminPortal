@@ -650,7 +650,7 @@ export function addMachine(params) {
           description: params?.description,
           customerTags: params?.customerTags,
           machineConnections: params?.machineConnectionVal.filter(machine => machine?.customer).map(obj => obj._id),
-          newConnectedMachines : params?.machineConnectionVal.filter(machine => !machine?.customer),
+          newConnectedMachines: params?.machineConnectionVal.filter(machine => !machine?.customer),
           isActive: params?.isActive,
           supportExpireDate : params?.supportExpireDate,
           financialCompany: params?.financialCompany?._id,
