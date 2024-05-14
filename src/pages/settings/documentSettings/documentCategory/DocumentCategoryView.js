@@ -12,6 +12,7 @@ import { getDocumentCategory } from '../../../../redux/slices/document/documentC
 // sections
 import { Cover } from '../../../../components/Defaults/Cover';
 import DocumentCategoryViewForm from './DocumentCategoryViewForm';
+import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 /* eslint-disable */
 
 // ----------------------------------------------------------------------
@@ -29,19 +30,9 @@ export default function DocumentCategoryView() {
   return (
     <>
       <Container maxWidth={false}>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            // mt: '24px',
-          }}
-        >
-          <Cover
-            name={documentCategory?.name}
-            generalSettings
-          />
-        </Card>
+        <StyledCardContainer>
+          <Cover name={documentCategory?.name} generalSettings />
+        </StyledCardContainer>
         <DocumentCategoryViewForm />
       </Container>
     </>

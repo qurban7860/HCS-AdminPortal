@@ -18,7 +18,7 @@ import { Cover } from '../../../components/Defaults/Cover';
 import { SecurityUserPasswordUpdate, sendResetPasswordEmail, resetLoadingResetPasswordEmail } from '../../../redux/slices/securityUser/securityUser';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import { PATH_SECURITY } from '../../../routes/paths';
-import { StyledTooltip } from '../../../theme/styles/default-styles';
+import { StyledCardContainer, StyledTooltip } from '../../../theme/styles/default-styles';
 import { useAuthContext } from '../../../auth/useAuthContext';
 
 // ----------------------------------------------------------------------
@@ -98,12 +98,12 @@ export default function SecurityUserChangePassword() {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
       <Container maxWidth={false}>
-        <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+        <StyledCardContainer>
           <Cover name="Change Password" icon="mdi:user-circle" />
-        </Card>
+        </StyledCardContainer>
         <Grid container spacing={2} sx={{ justifyContent: 'center', allignItem: 'center' }}>
-          <Grid item xs={12} md={8}>
-            <Card sx={{ p: 3 }}>
+          <Grid item xs={12} md={12}>
+            <Card sx={{ p: 3}}>
               <Stack spacing={3} alignItems="flex-end" sx={{ pb: 3 }}>
                 <RHFTextField
                   name="name"

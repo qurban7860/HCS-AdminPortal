@@ -37,6 +37,7 @@ import { getActiveRegions, resetActiveRegions } from '../../../redux/slices/regi
 import { fDate } from '../../../utils/formatTime';
 // constants
 import TableCard from '../../../components/ListTableTools/TableCard';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -222,9 +223,9 @@ useEffect(()=>{
 
   return (
       <Container maxWidth={false}>
-        <Card sx={{ height: 160, position: 'relative' }}>
-          <Cover name="Users" icon="ph:users-light" />
-        </Card>
+        <StyledCardContainer>
+          <Cover name="Users" />
+        </StyledCardContainer>
         <TableCard>
           <SecurityUserTableToolbar
             isFiltered={isFiltered}

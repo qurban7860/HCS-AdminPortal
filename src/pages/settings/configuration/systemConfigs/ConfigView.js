@@ -8,7 +8,7 @@ import { getConfig } from '../../../../redux/slices/config/config';
 // sections
 import ConfigViewForm from './ConfigViewForm';
 import { Cover } from '../../../../components/Defaults/Cover';
-
+import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -23,9 +23,9 @@ export default function ConfigView() {
   const { config, isLoading } = useSelector((state) => state.config );
   return (
       <Container maxWidth={false}>
-        <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+        <StyledCardContainer>
           <Cover name={isLoading?"":config?.name} generalSettings />
-        </Card>
+        </StyledCardContainer>
         <ConfigViewForm />
       </Container>
   );

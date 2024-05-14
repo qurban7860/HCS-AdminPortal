@@ -27,6 +27,7 @@ export const FORMLABELS = {
     NEW_CUSTOMER: 'New Customer',
     NEW_DOCUMENT: 'New Document',
     NEW_DOCUMENT_CATEGORY: 'New Document Category',
+    NEW_DOCUMENT_TYPE: 'New Document Type',
     EDIT_DOCUMENT_TYPE: 'Edit Document Type',
     EDIT_MODEL: 'Edit Model',
     EDIT_DOCUMENT_CATEGORY: 'Edit Document Category',

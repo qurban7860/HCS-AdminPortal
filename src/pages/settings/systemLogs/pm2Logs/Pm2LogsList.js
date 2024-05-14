@@ -14,6 +14,7 @@ import TableCard from '../../../../components/ListTableTools/TableCard';
 import JsonEditor from '../../../../components/CodeMirror/JsonEditor';
 import PM2FullScreenDialog from '../../../../components/Dialog/PM2FullScreenDialog';
 import SkeletonLine from '../../../../components/skeleton/SkeletonLine';
+import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 
 export default function Pm2LogsList() {
   
@@ -58,9 +59,9 @@ export default function Pm2LogsList() {
   return (
     <>
       <Container maxWidth={false}>
-        <Card sx={{mb: 3, height: 160, position: 'relative'}}>
+        <StyledCardContainer>
           <Cover name="PM2 Logs" icon="simple-icons:pm2" generalSettings />
-        </Card>
+        </StyledCardContainer>
         <TableCard>
           <Pm2LogsListTableToolbar isPm2Environments handleRefresh={ fetchPm2Logs } handleFullScreen={handleFullScreen} />
             {(isLoading?

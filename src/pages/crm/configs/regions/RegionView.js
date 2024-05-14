@@ -8,6 +8,7 @@ import { getRegion } from '../../../../redux/slices/region/region';
 // sections
 import { Cover } from '../../../../components/Defaults/Cover';
 import RegionViewForm from './RegionViewForm';
+import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -22,15 +23,9 @@ export default function RegionView() {
   const { region } = useSelector((state) => state.region );
   return (
       <Container maxWidth={false}>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-          }}
-        >
+        <StyledCardContainer>
           <Cover name={region?.name} generalSettings />
-        </Card>
+        </StyledCardContainer>
         <RegionViewForm />
       </Container>
   );

@@ -4,7 +4,7 @@ import { Card, CardActions, CardContent } from '@mui/material';
 
 export default function DocumentCover({ content, backLink, generalSettings, machineDrawingsBackLink }) {
   return (
-    <Card sx={{alignItems:'flex-end'}}>
+    <Card sx={{alignItems:'flex-end,', position:'sticky', top:'60px', zIndex:'2'}}>
       <CardContent sx={{
                         background:"#103996cc", 
                         color:'#fff', 

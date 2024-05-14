@@ -7,15 +7,13 @@ import { Cover } from '../../../components/Defaults/Cover';
 import { CONFIG } from '../../../config-global';
 import axios from '../../../utils/axios';
 import { PATH_SETTING } from '../../../routes/paths';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 
 export default function Emailviewform() {
-
 
   const [email, setEmail] = useState([]);
   const {id} = useParams()
   const navigate = useNavigate();
-
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,9 +35,9 @@ export default function Emailviewform() {
 
   return (
     <Grid sx={{ p: 3, mt: -3 }}>
-      <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+      <StyledCardContainer>
         <Cover name="Email subject" icon="ph:users-light" generalSettings />
-      </Card>
+      </StyledCardContainer>
       <Card sx={{ p: 3 }}>
      
         <Grid container>

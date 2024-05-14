@@ -9,6 +9,7 @@ import { Cover } from '../../../../components/Defaults/Cover';
 import { fDate } from '../../../../utils/formatTime';
 import ViewFormField from '../../../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../../../components/ViewForms/ViewFormEditDeleteButtons';
+import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 
 export default function UserInviteViewForm() {
   
@@ -33,9 +34,9 @@ export default function UserInviteViewForm() {
   
   return (
     <Container maxWidth={false}>
-      <Card sx={{mb: 3, height: 160, position: 'relative'}}>
-        <Cover name="User Invite Detail" icon="ph:users-light" generalSettings />
-      </Card>
+      <StyledCardContainer>
+        <Cover name="User Invite Detail" generalSettings />
+      </StyledCardContainer>
       <Grid item md={12} mt={2}>
         <Card sx={{ p: 2 }}>
         <ViewFormEditDeleteButtons 

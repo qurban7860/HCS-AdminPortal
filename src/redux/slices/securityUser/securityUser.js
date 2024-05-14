@@ -8,6 +8,8 @@ const regEx = /^[^2]*/
 const initialState = {
   securityUserFormVisibility: false,
   securityUserEditFormVisibility: false,
+  changePasswordByAdminDialog: false,
+  changePasswordDialog: false,
   intial: false,
   responseMessage: null,
   success: false,
@@ -62,6 +64,19 @@ const slice = createSlice({
     setSecurityUserEditFormVisibility(state, action){
       state.editFormVisibility = action.payload;
     },
+
+    // SET VISIBILITY
+    setChangePasswordByAdminDialog(state, action){
+      state.changePasswordByAdminDialog = action.payload;
+    },
+
+    
+    // SET VISIBILITY
+    setChangePasswordDialog(state, action){
+      state.changePasswordDialog = action.payload;
+    },
+
+    
 
     // SET ACTIVE RESTRICTED LIST
     setActiveFilterList(state, action){
@@ -196,6 +211,8 @@ export default slice.reducer;
 export const {
   setSecurityUserFormVisibility,
   setSecurityUserEditFormVisibility,
+  setChangePasswordByAdminDialog,
+  setChangePasswordDialog,
   setSecurityUserProperties,
   resetSecurityUsers,
   resetSecurityUser,

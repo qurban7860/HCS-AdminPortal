@@ -33,6 +33,7 @@ import { Cover } from '../../../../components/Defaults/Cover';
 import { fDateTime } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { PATH_SECURITY } from '../../../../routes/paths';
+import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -147,9 +148,9 @@ export default function SignInLogList() {
   
   return (
       <Container maxWidth={false}>
-        <Card sx={{ mb: 3, height: 160, position: 'relative'}}>
+        <StyledCardContainer>
           <Cover name="Sign In Logs" icon="ph:users-light" generalSettings />
-        </Card>
+        </StyledCardContainer>
 
         <TableCard>
           <RoleListTableToolbar

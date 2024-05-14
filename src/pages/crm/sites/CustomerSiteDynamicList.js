@@ -35,6 +35,7 @@ import ContactSiteCard from '../../../components/sections/ContactSiteCard';
 import { exportCSV } from '../../../utils/exportCSV';
 import { useAuthContext } from '../../../auth/useAuthContext';
 import CustomerTabContainer from '../customers/util/CustomerTabContainer';
+import ContactSiteScrollbar from '../../../components/scrollbar/ContactSiteScrollbar';
 
 // ----------------------------------------------------------------------
 
@@ -191,12 +192,9 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
                 />
               </Grid>
             )}
-            <StyledScrollbar
-              snap
-              snapOffset={100}
+            <ContactSiteScrollbar
               onClick={(e) => e.stopPropagation()}
               snapAlign="start"
-              contacts={sites.length}
               disabled={siteEditForm || siteAddForm}
             >
               <Grid container direction="column" gap={1}>
@@ -212,11 +210,10 @@ export default function CustomerSiteDynamicList({ siteAddForm, siteEditForm, sit
                     phone={_site?.phoneNumbers?.find( n => n?.type?.toLowerCase() === 'mobile' && n?.contactNumber !== undefined && n?.contactNumber !== '' )}
                     email={_site?.website || ""}
                     image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
-                  />)
-                )}
+                    />)
+                  )}
               </Grid>
-
-            </StyledScrollbar>
+            </ContactSiteScrollbar>
             </>
         )}
         </Grid>
