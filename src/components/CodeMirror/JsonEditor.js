@@ -64,7 +64,7 @@ function JsonEditor({value, HandleChangeIniJson, readOnly, autoHeight }) {
           <CodeMirror 
             value={value} 
             onChange={(e) => HandleChangeIniJson(e)}
-            height={!autoHeight && '500px'} 
+            height={!autoHeight && 'calc(100vh - 400px)'} 
             width='auto' 
             extensions={[langs.json(), search({top: true, searchPanelOpen: true,})]} 
             options={codeMirrorOptions}

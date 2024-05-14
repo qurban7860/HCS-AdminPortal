@@ -30,6 +30,7 @@ import {
 import { fDateTime } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import { Cover } from '../../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 
 
 // ----------------------------------------------------------------------
@@ -121,9 +122,9 @@ export default function EmailList(){
   
   return (
     <Container maxWidth={false} >
-      <Card sx={{ mb: 3, height: 160, position: 'relative' }} >
+      <StyledCardContainer>
         <Cover name="Email" icon="ph:users-light" generalSettings />
-      </Card>
+      </StyledCardContainer>
         <TableCard>
           <EmailListTableToolbar
             filterName={filterName}

@@ -319,7 +319,7 @@ export function getMachines(page, pageSize, isArchived, cancelToken ) {
       if(isArchived){
         params.orderBy = { updatedBy: -1 }
       } else {
-        params.orderBy = { createdAt: -1 }
+        params.orderBy = { serialNo: -1 }
       }
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, 
       {

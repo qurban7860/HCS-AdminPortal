@@ -11,6 +11,7 @@ import { getDocumentType } from '../../../../redux/slices/document/documentType'
 // sections
 import { Cover } from '../../../../components/Defaults/Cover';
 import DocumentTypeViewForm from './DocumentTypeViewForm';
+import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 
 
 // ----------------------------------------------------------------------
@@ -27,19 +28,9 @@ export default function DocumentTypeView() {
 
   return (
       <Container maxWidth={false}>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            // mt: '24px',
-          }}
-        >
-          <Cover
-            name={documentType?.name}
-            generalSettings
-          />
-        </Card>
+        <StyledCardContainer>
+          <Cover name={documentType?.name} generalSettings />
+        </StyledCardContainer>
 
         <DocumentTypeViewForm />
       </Container>

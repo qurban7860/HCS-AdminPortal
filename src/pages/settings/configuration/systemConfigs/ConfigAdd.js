@@ -3,20 +3,15 @@ import { Container, Card } from '@mui/material';
 // sections
 import ConfigAddForm from './ConfigAddForm';
 import { Cover } from '../../../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 // ----------------------------------------------------------------------
 
 export default function RegionAdd() {
   return (
     <Container maxWidth={false}>
-      <Card
-        sx={{
-          mb: 3,
-          height: 160,
-          position: 'relative',
-        }}
-      >
+      <StyledCardContainer>
         <Cover name="Create Config" icon="mdi:user-circle" />
-      </Card>
+      </StyledCardContainer>
       <ConfigAddForm />
     </Container>
   );

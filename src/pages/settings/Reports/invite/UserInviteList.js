@@ -31,6 +31,7 @@ import {
   setFilterBy } from '../../../../redux/slices/securityUser/invite';
 import { fDate } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
+import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 
 export default function UserInviteList() {
   const {
@@ -122,9 +123,9 @@ export default function UserInviteList() {
 
   return (
       <Container maxWidth={false}>
-        <Card sx={{mb: 3, height: 160, position: 'relative'}}>
-          <Cover name="User Invites" icon="ph:users-light" generalSettings />
-        </Card>
+        <StyledCardContainer>
+          <Cover name="User Invites"  generalSettings />
+        </StyledCardContainer>
         <TableCard>
           <UserInviteListTableToolbar
             filterName={filterName}

@@ -14,6 +14,7 @@ import FormProvider, { RHFTextField, RHFSwitch, RHFAutocomplete } from '../../..
 import { getRole, updateRole } from '../../../../redux/slices/securityUser/role';
 import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
 import { Cover } from '../../../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -78,16 +79,9 @@ export default function RoleEditForm() {
 
   return (
     <Container maxWidth={false}>
-      <Card
-        sx={{
-          mb: 3,
-          height: 160,
-          position: 'relative',
-          // mt: '24px',
-        }}
-      >
+      <StyledCardContainer>
         <Cover name={role?.name} />
-      </Card>
+      </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={4}>
           <Grid item xs={18} md={12}>

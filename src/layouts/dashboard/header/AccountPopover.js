@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 // @mui
 import { alpha, useTheme } from '@mui/material/styles';
 import {
@@ -38,6 +39,8 @@ import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import { TITLES } from '../../../constants/default-constants';
 import { OPTIONS } from './util/OptionsListItems';
+import { setChangePasswordDialog } from '../../../redux/slices/securityUser/securityUser';
+import ChangePasswordDialog from '../../../components/Dialog/ChangePasswordDialog';
 
 // ----------------------------------------------------------------------
 const SPACING = 2.5;
@@ -47,6 +50,7 @@ const SPACING = 2.5;
 export default function AccountPopover() {
   const theme = useTheme();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { user, logout } = useAuthContext();
   const email = localStorage.getItem('email')
   const displayName = localStorage.getItem('name')
@@ -71,6 +75,10 @@ export default function AccountPopover() {
 
   const handleClosePopover = () => {
     setOpenPopover(null);
+  };
+
+  const handleChangePassword = () => {
+    dispatch(setChangePasswordDialog(true));
   };
 
   const handleLogout = async () => {
@@ -164,13 +172,12 @@ export default function AccountPopover() {
         </Stack>
 
         <Divider sx={{ borderStyle: 'solid' }} />
-
-        <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
-          {TITLES.LOGOUT}
-        </MenuItem>
+        <Stack sx={{ p: 1 }}>
+          <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>
+          <MenuItem onClick={handleLogout}>{TITLES.LOGOUT}</MenuItem>
+        </Stack>
       </MenuPopover>
-      <>
-        {!open && <Drawer open={open} notDefault={notDefault} onToggle={handleToggle} />}
+      {!open && <Drawer open={open} notDefault={notDefault} onToggle={handleToggle} />}
         <Drawer
           anchor="left"
           open={open}
@@ -245,7 +252,7 @@ export default function AccountPopover() {
             <FullScreenOptions />
           </Box>
         </Drawer>
-      </>
+        <ChangePasswordDialog />
     </>
   );
 }

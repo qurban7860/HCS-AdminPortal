@@ -3,6 +3,7 @@ import { Container, Card } from '@mui/material';
 // sections
 import RegionEditForm from './RegionEditForm';
 import { Cover } from '../../../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -10,9 +11,9 @@ export default function RegionEdit() {
 
   return (
     <Container maxWidth={false}>
-      <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+      <StyledCardContainer>
         <Cover name="Edit Region" icon="mdi:user-circle" />
-      </Card>
+      </StyledCardContainer>
       <RegionEditForm />
     </Container>
   );

@@ -48,12 +48,16 @@ function ConnectedMachineAddDialog({activeCategories, activeMachineModels}) {
   }
   
   const connectedMachineSchema = Yup.object().shape({
-    serialNo: Yup.string().trim().max(6).required().test('unique-serial-no', 'Serial number already exists', (value) => {
-      const existingSerialNos = newMachines.map(machine => machine.serialNo);
-      return !existingSerialNos.includes(value);
-    }).label('Serial Number'),
+    
+    serialNo: Yup.string().trim().required('Serial Number is required')
+            .test('unique-serial-no', 'Serial number already exists', (value) => {
+              const existingSerialNos = newMachines.map(machine => machine.serialNo);
+              return !existingSerialNos.includes(value);
+            })
+            .matches(/^[0-9]+$/, 'Must be a number')
+            .max(6, 'Serial Number at most 6 digits').label('Serial Number'),
     name: Yup.string().max(250),
-    category: Yup.object().shape({
+    machineCategory: Yup.object().shape({
       _id: Yup.string().required('Category is required'),
     }).label('Category').nullable().required('Category is required'), // Make category required
     machineModel: Yup.object().shape({
@@ -66,7 +70,7 @@ function ConnectedMachineAddDialog({activeCategories, activeMachineModels}) {
     defaultValues: {
       serialNo: '',
       name: '',
-      category: null,
+      machineCategory: null,
       machineModel: null
     },
   });
@@ -81,7 +85,7 @@ function ConnectedMachineAddDialog({activeCategories, activeMachineModels}) {
   } = methods;
   
   const {
-    category,
+    machineCategory,
     machineModel,
   } = watch();
 
@@ -100,10 +104,7 @@ function ConnectedMachineAddDialog({activeCategories, activeMachineModels}) {
   }, [reset, newMachines]);
   
   const handleAdd = async (data) => {
-    data.category = data.category._id;
-    data.machineModel = data.machineModel._id;
-    console.log("data:::",data);
-    const newMachineWithId = { ...data, _id: uuidv4(), group:"New" };
+    const newMachineWithId = { ...data, _id: uuidv4(), model:data.machineModel._id, category:data.machineCategory._id, group: "New" };
     setNewMachines((prevMachines) => [newMachineWithId, ...prevMachines]);
   };
 
@@ -140,7 +141,7 @@ function ConnectedMachineAddDialog({activeCategories, activeMachineModels}) {
           </Box>
           <Box rowGap={2} columnGap={2} sx={{mt:2}} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
               <RHFAutocomplete 
-                name="category"
+                name="machineCategory"
                 label="Machine Category*"
                 options={activeCategories}
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
@@ -148,11 +149,11 @@ function ConnectedMachineAddDialog({activeCategories, activeMachineModels}) {
                 renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
                 onChange={(event, newValue) =>{
                   if(newValue){
-                    setValue('category', newValue);
+                    setValue('machineCategory', newValue);
                     setValue('machineModel', null); // Reset machineModel when category is selected
-                    clearErrors('category'); // clearErrors is a method provided by useForm
+                    clearErrors('machineCategory'); // clearErrors is a method provided by useForm
                   } else {
-                    setValue('category', null); // Reset category value when it's not selected
+                    setValue('machineCategory', null); // Reset category value when it's not selected
                   }
                 }}
               />
@@ -160,17 +161,17 @@ function ConnectedMachineAddDialog({activeCategories, activeMachineModels}) {
               <RHFAutocomplete 
                 name="machineModel"
                 label="Machine Model*"
-                options={activeMachineModels.filter(el => (el.category && category) ? el.category._id === category._id : !category)}
+                options={activeMachineModels.filter(el => (el.category && machineCategory) ? el.category._id === machineCategory._id : !machineCategory)}
                 isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 getOptionLabel={(option) => `${option.name || ''}`}
                 renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
                 onChange={(event, newValue) =>{
                   if(newValue){
                     setValue('machineModel',newValue)
-                    if(!category ){
-                      setValue('category',newValue?.category)
+                    if(!machineCategory ){
+                      setValue('machineCategory',newValue?.category)
                     }
-                    clearErrors('category'); // clearErrors is a method provided by useForm
+                    clearErrors('machineCategory'); // clearErrors is a method provided by useForm
                     clearErrors('machineModel'); // clearErrors is a method provided by useForm
                   } else {
                     setValue('machineModel',null )
@@ -191,7 +192,7 @@ function ConnectedMachineAddDialog({activeCategories, activeMachineModels}) {
                     <TableRow key={index}>
                       <TableCell>{row?.serialNo}</TableCell>
                       <TableCell>{row?.name}</TableCell>
-                      <TableCell>{row?.category?.name}</TableCell>
+                      <TableCell>{row?.machineCategory?.name}</TableCell>
                       <TableCell>{row?.machineModel?.name}</TableCell>
                       <TableCell sx={{width:2}}>
                         <IconButtonTooltip 
