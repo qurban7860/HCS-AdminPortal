@@ -11,7 +11,6 @@ TablePaginationCustom.propTypes = {
   onChangeDense: PropTypes.func,
   rowsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
   sx: PropTypes.object,
-  refresh: PropTypes.func,
 };
 
 function TablePaginationCustom({
@@ -19,7 +18,6 @@ function TablePaginationCustom({
   onChangeDense,
   rowsPerPageOptions = [10, 20,50,100],
   sx,
-  refresh,
   ...other
 }) {
 
@@ -33,15 +31,6 @@ function TablePaginationCustom({
         },
       }}
       />
-
-      {refresh && (
-        <Button sx={{ top: 10, left:25, position: {md: 'absolute',}}} 
-          onClick={refresh} variant="outlined"  
-          startIcon={<Iconify icon="mdi:reload" />}>
-          Reload
-        </Button>
-      )}
-
       {onChangeDense && (
         <FormControlLabel
           label="Dense"

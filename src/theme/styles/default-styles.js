@@ -215,7 +215,9 @@ export const StyledBg = styled('div')(({ theme }) => ({
 export const StyledCardContainer = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(3),
   height: 160,
-  position: 'relative',
+  position: 'sticky',
+  top:'60px',
+  zIndex:'2'
 }));
 
 // @root - MachineEditForm - spacing

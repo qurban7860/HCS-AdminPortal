@@ -277,7 +277,7 @@ export default function MachineViewForm() {
             </Grid>
         </Card>
               
-        <Card sx={{ width: '100%', p: '1rem', mb:3 }}>
+        <Card sx={{ width: '100%', p: '1rem'}}>
           <Grid container>
                        {/* 1 FULL ROW */}
             <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues?.name} />
