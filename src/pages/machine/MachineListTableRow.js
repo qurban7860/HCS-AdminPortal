@@ -26,6 +26,7 @@ MachineListTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
   handleCustomerDialog:PropTypes.func,
   isArchived: PropTypes.bool,
+  hiddenColumns: PropTypes.object,
 };
 
 export default function MachineListTableRow({
@@ -38,13 +39,11 @@ export default function MachineListTableRow({
   openInNewPage,
   handleCustomerDialog,
   isArchived,
+  hiddenColumns
 }) {
-
   
   const [ manufactureProfilesAnchorEl, setManufactureProfilesAnchorEl] = useState(null);
   const [ manufactureProfiles, setManufactureProfiles] = useState([]);
-
-
 
   const {
     verifications,
@@ -90,16 +89,14 @@ export default function MachineListTableRow({
         isVerified={verifications?.length > 0}
       />
       
-      {  useScreenSize('lg') && <TableCell >{ name || ''}</TableCell>}
-      {  useScreenSize('sm') && <TableCell >{ machineModel?.name || ''}</TableCell>}
-      {  useScreenSize('lg') && 
-      
-      <LinkDialogTableCell onClick={handleCustomerDialog} align='center' param={customer?.name}/>  
-          
+      { useScreenSize('lg') && !hiddenColumns?.name && <TableCell>{name || ''}</TableCell>}
+      {  useScreenSize('sm') && !hiddenColumns?.machineModel && <TableCell >{ machineModel?.name || ''}</TableCell>}
+      {  useScreenSize('lg') &&  !hiddenColumns?.customer &&
+        <LinkDialogTableCell onClick={handleCustomerDialog} align='center' param={customer?.name}/>  
       }
-      {  useScreenSize('lg') && <TableCell >{fDate(installationDate)}</TableCell>}
-      {  useScreenSize('lg') && <TableCell >{fDate(shippingDate)}</TableCell>}
-      {  useScreenSize('sm') && 
+      {  useScreenSize('lg') && !hiddenColumns?.installationDate && <TableCell >{fDate(installationDate)}</TableCell>}
+      {  useScreenSize('lg') && !hiddenColumns?.shippingDate && <TableCell >{fDate(shippingDate)}</TableCell>}
+      {  useScreenSize('sm') && !hiddenColumns?.status &&
         <TableCell>
           <span style={{color:row?.status?.slug==='transferred'?'red':''}}>{status?.name || ''} </span>
           {row?.status?.slug ==='transferred' &&
@@ -116,7 +113,7 @@ export default function MachineListTableRow({
           }
         </TableCell>
       }
-      {  useScreenSize('lg') && <TableCell >{ Array.isArray(profiles) && profiles?.length > 0 && profiles?.length === 1 ? profiles[0]?.defaultName :
+      {  useScreenSize('lg') && !hiddenColumns?.profiles && <TableCell >{ Array.isArray(profiles) && profiles?.length > 0 && profiles?.length === 1 ? profiles[0]?.defaultName :
       (profiles?.length > 1 && <Grid sx={{ display: "flex", alignItems: "center", alignContent:"center" }} >
           {`${profiles[0]?.defaultName}, ` }
           <StyledTooltip title="Profiles" placement="top" disableFocusListener tooltipcolor={theme.palette.primary.main}  color="primary.main" >
@@ -124,7 +121,9 @@ export default function MachineListTableRow({
           </StyledTooltip>
       </Grid>)
       || ''}</TableCell>}
-      <TableCell align="center">  <Switch checked={isActive} disabled size="small"/>  </TableCell>
+      {!hiddenColumns?.isActive &&
+        <TableCell align="center">  <Switch checked={isActive} disabled size="small"/>  </TableCell>
+      }
 
     </TableRow>
     <ChipInPopover         
