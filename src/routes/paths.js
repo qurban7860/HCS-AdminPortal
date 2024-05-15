@@ -6,6 +6,7 @@ function path(root, sublink) {
 
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
+const ROOTS_VISITS = '/visits';
 const ROOTS_CRM = '/crm';
 const ROOTS_MACHINE = '/products';
 const ROOTS_SECURITY = '/security';
@@ -41,6 +42,7 @@ export const PATH_PAGE = {
   expiredErrorPage:'/ExpiredErrorPage',
   machineNotFound:'/machineNotFound',
 };
+
     // --------------------- Dashboard ----------------------
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
@@ -51,6 +53,14 @@ export const PATH_DASHBOARD = {
     machineByModels: path(ROOTS_DASHBOARD, '/machineByModels'),
     machineByYears: path(ROOTS_DASHBOARD, '/machineByYears'),
   },
+};
+
+// --------------------- VISITS ----------------------
+export const PATH_VISITS = {
+  root: ROOTS_VISITS,
+  new: path(ROOTS_VISITS, `/new`),
+  edit: (id) => path(ROOTS_VISITS, `/{id}/edit`),
+  view: (id) => path(ROOTS_VISITS, `/{id}/view`),
 };
 
     // --------------------- Customer -----------------------

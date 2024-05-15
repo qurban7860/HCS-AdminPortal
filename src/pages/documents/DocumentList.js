@@ -187,7 +187,7 @@ const onChangePage = (event, newPage) => {
 
   useEffect(() => {
       if (customerPage && customerId) {
-        dispatch(getDocuments( customer?._id , null, null, page, customerDocumentsRowsPerPage, cancelTokenSource));
+        dispatch(getDocuments( customer?._id , null, null, page, customerDocumentsRowsPerPage, customer?._id , customer?.isArchived, null, cancelTokenSource));
       } else if(machineDrawingPage &&  machineId ){
         dispatch(getDocuments( null, machineId, null, page, machineDocumentsRowsPerPage, cancelTokenSource));
       } else if( machinePage ){

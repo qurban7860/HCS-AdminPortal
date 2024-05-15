@@ -3,7 +3,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
-export default function LinearProgressWithLabel( value , props ) {
+export default function LinearProgressWithLabel( {value , ...props} ) {
 
     return (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>

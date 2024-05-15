@@ -49,6 +49,7 @@ export default function MachineList() {
   const [transferStatus, setTransferStatus] = useState(false);
   
   const { customerMachines, page, rowsPerPage, isLoading } = useSelector((state) => state.machine);
+  const { customer } = useSelector((state) => state.customer);
   const { customerId } = useParams() 
   const navigate = useNavigate();
 
@@ -70,10 +71,10 @@ export default function MachineList() {
 
   useEffect(()=>{
     if(customerId){
-      dispatch(getCustomerMachines(customerId));
+      dispatch(getCustomerMachines(customerId , customer?.isArchived ));
     }
     return ()=> { dispatch(resetCustomerMachines())}
-},[dispatch, customerId])
+},[dispatch, customerId, customer?.isArchived ])
 
   useEffect(() => {
     setTableData(customerMachines);

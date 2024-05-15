@@ -34,18 +34,20 @@ import MachineTabContainer from '../util/MachineTabContainer';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'id', label: 'Id', align: 'left' },
-  { id: 'key', label: 'Key', align: 'left' },
-  { id: 'fields', label: 'Fields', align: 'left' },
+  { id: 'key', label: 'Ticket No.', align: 'left' },
+  { id: 'fields?.status?.name', label: 'Status', align: 'left' },
+  { id: 'fields?.summary', label: 'Subject', align: 'left' },
+  { id: 'fields?.description?.content[0]?.content[0]?.text', label: 'Description', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------
 
 export default function MachineJiraList(){
   const { initial, machineJiras, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.machineJira );
-
+  const { machine } = useSelector((state) => state.machine);
   const navigate = useNavigate();
   const { machineId } = useParams();
+
   const {
     order,
     orderBy,
@@ -67,12 +69,11 @@ export default function MachineJiraList(){
   const [ isCreatedAt, setIsCreatedAt ] = useState(false);
 
   useLayoutEffect(() => {
-        dispatch(getMachineJiras(machineId, page, rowsPerPage ));
+        dispatch(getMachineJiras(machine?.serialNo, page, rowsPerPage ));
         return () => {
-          dispatch(resetMachineJiraRecords(machineId, page, rowsPerPage ));
+          dispatch(resetMachineJiraRecords());
         }
-
-  }, [dispatch, machineId, page, rowsPerPage ]);
+  }, [dispatch, machine?.serialNo, page, rowsPerPage ]);
 
   useEffect(() => {
     if (initial) {
