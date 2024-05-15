@@ -35,6 +35,7 @@ const initialState = {
   rowsPerPage: 100,
   connectedMachineAddDialog:false,
   newConnectedMachines: [],
+  reportHiddenColumns: {},
 };
 
 const slice = createSlice({
@@ -177,6 +178,10 @@ const slice = createSlice({
     setNewConnectedMachines(state, action){
       state.newConnectedMachines = action.payload;
     },
+
+    setReportHiddenColumns(state, action){
+      state.reportHiddenColumns = action.payload;  
+    },
     
     // GET Machine Gallery
     getMachineGallerySuccess(state, action) {
@@ -301,6 +306,7 @@ export const {
   ChangeRowsPerPage,
   ChangePage,
   setMachineDialog,
+  setReportHiddenColumns,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -319,7 +325,7 @@ export function getMachines(page, pageSize, isArchived, cancelToken ) {
       if(isArchived){
         params.orderBy = { updatedBy: -1 }
       } else {
-        params.orderBy = { serialNo: -1 }
+        params.orderBy = { createdAt: -1 }
       }
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, 
       {
