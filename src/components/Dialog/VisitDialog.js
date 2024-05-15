@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import React,{ useEffect } from 'react';
 import * as Yup from 'yup';
 import merge from 'lodash/merge';
 import { isBefore } from 'date-fns';
@@ -14,29 +15,30 @@ import { LoadingButton } from '@mui/lab';
 import { onCloseModal } from '../../redux/slices/visit/visit';
 import DialogLink from './DialogLink';
 import Iconify from '../iconify';
-import { getActiveCustomers } from '../../redux/slices/customer/customer';
-import { getActiveSPContacts } from '../../redux/slices/customer/contact';
-import { getActiveCustomerMachines } from '../../redux/slices/products/machine';
-import { getActiveSites } from '../../redux/slices/customer/site';
+import { getActiveCustomers, resetActiveCustomers } from '../../redux/slices/customer/customer';
+import { getActiveSPContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
+import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
+import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import FormProvider, { RHFDateTimePicker, RHFTextField, RHFAutocomplete, RHFSwitch } from '../hook-form';
 
-const getInitialValues = (event, range) => {
+const getInitialValues = (visit, range) => {
+  console.log("visit : ",visit)
   const initialEvent = {
-    visitDate: new Date().toISOString(),
-    customer: null,
-    machine: null,
-    site: null,
-    jiraTicket: '',
-    primaryTechnician: null,
-    supportingTechnicians: [],
-    notifyContacts: [],
-    // status: '',
-    purposeOfVisit: '',
+    visitDate: visit ? visit?.visitDate : new Date().toISOString(),
+    customer: visit ? visit?.customer : null,
+    machine: visit ? visit?.machine :  null,
+    site: visit ? visit?.site :  null,
+    jiraTicket: visit ? visit?.jiraTicket :  '',
+    primaryTechnician: visit ? visit?.primaryTechnician :  null,
+    supportingTechnicians: visit ? visit?.t :  [],
+    notifyContacts: visit ? visit?.notifyContacts :  [],
+    // status: visit ? visit?.status :  '',
+    purposeOfVisit: visit ? visit?.purposeOfVisit :  '',
   };
 
-  if (event || range) {
-    return merge({}, initialEvent, event);
-  }
+  // if (visit || range) {
+  //   return merge({}, initialEvent, visit );
+  // }
 
   return initialEvent;
 };
@@ -45,7 +47,6 @@ const getInitialValues = (event, range) => {
   VisitDialog.propTypes = {
     event: PropTypes.object,
     range: PropTypes.object,
-    onCancel: PropTypes.func,
     onDeleteEvent: PropTypes.func,
     onCreateUpdateEvent: PropTypes.func,
     colorOptions: PropTypes.arrayOf(PropTypes.string),
@@ -57,21 +58,31 @@ function VisitDialog({
     colorOptions,
     onCreateUpdateEvent,
     onDeleteEvent,
-    onCancel,
   }) {
-
+console.log("event : ",event)
     const dispatch = useDispatch();
 
     const { openModal } = useSelector((state) => state.visit );
     const { activeCustomers } = useSelector((state) => state.customer);
     const { activeContacts, activeSpContacts } = useSelector((state) => state.contact);
     const { activeSites } = useSelector((state) => state.site);
-    const { activeMachines } = useSelector( (state) => state.machine );
+    const { activeCustomerMachines } = useSelector( (state) => state.machine );
     
     const hasEventData = !!event;
-  
+
+    useEffect(()=>{
+      dispatch(getActiveCustomers())
+      dispatch(getActiveSPContacts())
+      return () => {
+        dispatch(resetActiveCustomers())
+        dispatch(resetActiveSPContacts())
+        dispatch(resetActiveCustomerMachines())
+        dispatch(resetActiveSites())
+      }
+    },[ dispatch ])
+
     const EventSchema = Yup.object().shape({
-      visitDate: Yup.date().label('Visit Date').required(),
+      visitDate: Yup.date().nullable().label('Visit Date').typeError('Date should be a valid Date').required(),
       jiraTicket: Yup.string().max(200).label('Jira Ticket').required(),
       customer: Yup.object().nullable().label('Customer').required(),
       machine: Yup.object().nullable().label('Machine').required(),
@@ -85,31 +96,27 @@ function VisitDialog({
   
     const methods = useForm({
       resolver: yupResolver(EventSchema),
-      defaultValues: getInitialValues(event, range),
+      defaultValues: getInitialValues(event?.extendedProps, range),
     });
   
+
     const {
       reset,
       watch,
+      setValue,
       control,
       handleSubmit,
       formState: { isSubmitting },
     } = methods;
   
-    const values = watch();
-  
+    useEffect(() => {
+      reset(getInitialValues(event?.extendedProps, range));
+    }, [event, range, reset]);
+    
     const onSubmit = async (data) => {
       try {
-        const newEvent = {
-          title: data.title,
-          description: data.description,
-          textColor: data.textColor,
-          allDay: data.allDay,
-          start: data.start,
-          end: data.end,
-        };
-        onCreateUpdateEvent(newEvent);
-        onCancel();
+        onCreateUpdateEvent(data);
+        dispatch(onCloseModal());
         reset();
       } catch (error) {
         console.error(error);
@@ -117,23 +124,24 @@ function VisitDialog({
     };
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
     <Dialog
-      scroll="paper" 
+      fullWidth
       disableEnforceFocus
-      maxWidth="lg"
+      maxWidth="md"
       open={openModal} 
       onClose={()=> dispatch(onCloseModal()) }
       aria-describedby="alert-dialog-slide-description"
     >
-      <DialogTitle variant='h3' sx={{pb:1, pt:2}}>Customer</DialogTitle>
+      <DialogTitle variant='h3' sx={{pb:1, pt:2}}>{hasEventData ? 'Update Visit' : 'New Visit'}</DialogTitle>
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Divider orientation="horizontal" flexItem />
       <DialogContent dividers sx={{px:3}}>
         <Stack spacing={2} sx={{ p: 2 }}>
-          <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
+          <Box rowGap={2} columnGap={2} display="flex" >
             <RHFDateTimePicker label="Visit Date" name="visitDate" />
+            <RHFSwitch name="allDay" label="All Day" />
+           </Box>
             <RHFTextField name="jiraTicket" label="Jira Ticket" />
-          </Box>
 
           <RHFAutocomplete 
             label="Customer"
@@ -142,17 +150,38 @@ function VisitDialog({
             isOptionEqualToValue={(option, value) => option?._id === value?._id}
             getOptionLabel={(option) => `${option.name || ''}`}
             renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
+            onChange={( e ,newValue) => {  
+              if(newValue){
+                setValue('customer',newValue);
+                  dispatch(getActiveCustomerMachines(newValue?._id))
+                  dispatch(getActiveSites(newValue?._id))
+              } else {
+                setValue('customer',null);
+                  dispatch(resetActiveCustomerMachines())
+                  dispatch(resetActiveSites())
+              }
+            }}
           />
 
           <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
-
+          
             <RHFAutocomplete 
               label="Machine"
               name="machine"
-              options={activeMachines}
+              options={activeCustomerMachines}
               isOptionEqualToValue={(option, value) => option?._id === value?._id}
-              getOptionLabel={(option) => `${option.name || ''}`}
-              renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
+              getOptionLabel={(option) => `${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}
+              renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}</li> )}
+              onChange={( e ,newValue) => {  
+                if(newValue){
+                  setValue('machine',newValue);
+                  if(newValue?.instalationSite){
+                    setValue('site',newValue?.instalationSite)
+                  }
+                } else {
+                  setValue('machine',null);
+                }
+              }}
             />     
 
             <RHFAutocomplete 
@@ -165,7 +194,6 @@ function VisitDialog({
             />   
 
           </Box>
-          <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
             <RHFAutocomplete 
               label="Primary Technician"
               name="primaryTechnician"
@@ -175,10 +203,10 @@ function VisitDialog({
               renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
             />   
 
-          </Box>
-
           <RHFAutocomplete 
             multiple
+            disableCloseOnSelect
+            filterSelectedOptions
             label="Supporting Technicians"
             name="supportingTechnicians"
             options={activeSpContacts}
@@ -189,6 +217,8 @@ function VisitDialog({
 
           <RHFAutocomplete 
             multiple
+            disableCloseOnSelect
+            filterSelectedOptions
             label="Notify Contacts"
             name="notifyContacts"
             options={activeSpContacts}
@@ -213,7 +243,7 @@ function VisitDialog({
 
         <Box sx={{ flexGrow: 1 }} />
 
-        <Button variant="outlined" color="inherit" onClick={onCancel}>
+        <Button variant="outlined" color="inherit" onClick={()=> dispatch(onCloseModal())}>
           Cancel
         </Button>
 
@@ -221,8 +251,8 @@ function VisitDialog({
           {hasEventData ? 'Update' : 'Add'}
         </LoadingButton>
       </DialogActions>
+      </FormProvider>
     </Dialog>
-  </FormProvider>
   );
 }
 

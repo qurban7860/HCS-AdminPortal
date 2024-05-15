@@ -12,11 +12,13 @@ import { Card, Button, Container, DialogTitle, Dialog, Divider } from '@mui/mate
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
-  getEvents,
-  createEvent,
-  updateEvent,
-  deleteEvent,
-  selectEvent,
+  getVisits,
+  resetVisits,
+  newVisit,
+  updateVisitDate,
+  updateVisit,
+  deleteVisit,
+  selectVisit,
   selectRange,
   onOpenModal,
   onCloseModal,
@@ -35,10 +37,10 @@ import { useSettingsContext } from '../../components/settings';
 import { useDateRangePicker } from '../../components/date-range-picker';
 // sections
 import {
-  CalendarForm,
+  // CalendarForm,
   StyledCalendar,
   CalendarToolbar,
-  CalendarFilterDrawer,
+  // CalendarFilterDrawer,
 } from '../calendar';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
@@ -58,11 +60,13 @@ export default function CalendarPage() {
 
   const calendarRef = useRef(null);
 
-  const { events, openModal, selectedRange, selectedEventId } = useSelector((state) => state.visit );
+  const { visits, openModal, selectedRange, selectedEventId } = useSelector((state) => state.visit );
+
+  const [data, setData] = useState([]);
 
   const selectedEvent = useSelector(() => {
     if (selectedEventId) {
-      return events.find((event) => event.id === selectedEventId);
+      return data.find((event) => event.id === selectedEventId);
     }
     return null;
   });
@@ -78,7 +82,23 @@ export default function CalendarPage() {
   const [view, setView] = useState(isDesktop ? 'dayGridMonth' : 'listWeek');
 
   useEffect(() => {
-    dispatch(getEvents());
+    if (Array.isArray(visits) && visits.length > 0) {
+      const formattedData = visits.map((v) => ({
+        id: v?._id,
+        title: v?.customer?.name,
+        date: v?.visitDate,
+        textColor: "#1890FF",
+        extendedProps: {
+          ...v
+        }
+      }));
+      
+      setData(formattedData);
+    }
+  }, [visits]);
+
+  useEffect(() => {
+    dispatch(getVisits());
   }, [dispatch]);
 
   useEffect(() => {
@@ -143,13 +163,13 @@ export default function CalendarPage() {
   };
 
   const handleSelectEvent = (arg) => {
-    dispatch(selectEvent(arg.event.id));
+    dispatch(selectVisit(arg.event.id));
   };
 
   const handleResizeEvent = async ({ event }) => {
     try {
       dispatch(
-        updateEvent(event.id, {
+        updateVisit(event.id, {
           allDay: event.allDay,
           start: event.start,
           end: event.end,
@@ -162,13 +182,9 @@ export default function CalendarPage() {
 
   const handleDropEvent = async ({ event }) => {
     try {
-      dispatch(
-        updateEvent(event.id, {
-          allDay: event.allDay,
-          start: event.start,
-          end: event.end,
-        })
-      );
+      setData([])
+      await dispatch(updateVisitDate(event.id,  event?._instance?.range?.start?.toISOString() ));
+      await dispatch(getVisits());
     } catch (error) {
       console.error(error);
     }
@@ -178,10 +194,12 @@ export default function CalendarPage() {
 
   const handleCreateUpdateEvent = (newEvent) => {
     if (selectedEventId) {
-      dispatch(updateEvent(selectedEventId, newEvent));
+      dispatch(updateVisit(selectedEventId, newEvent));
+      dispatch(getVisits());
       enqueueSnackbar('Update success!');
     } else {
-      dispatch(createEvent(newEvent));
+      dispatch(newVisit(newEvent));
+      dispatch(getVisits());
       enqueueSnackbar('Create success!');
     }
   };
@@ -189,8 +207,9 @@ export default function CalendarPage() {
   const handleDeleteEvent = async () => {
     try {
       if (selectedEventId) {
-        dispatch(deleteEvent(selectedEventId));
+        dispatch(deleteVisit(selectedEventId));
         handleCloseModal();
+        dispatch(getVisits());
         enqueueSnackbar('Delete success!');
       }
     } catch (error) {
@@ -198,16 +217,9 @@ export default function CalendarPage() {
     }
   };
 
-  const handleFilterEventColor = (eventColor) => {
-    const checked = filterEventColor.includes(eventColor)
-      ? filterEventColor.filter((value) => value !== eventColor)
-      : [...filterEventColor, eventColor];
-
-    setFilterEventColor(checked);
-  };
 
   const dataFiltered = applyFilter({
-    inputData: events,
+    inputData: data,
     filterEventColor,
     filterStartDate: picker.startDate,
     filterEndDate: picker.endDate,
@@ -238,7 +250,7 @@ export default function CalendarPage() {
               allDayMaintainDuration
               eventResizableFromStart
               events={dataFiltered}
-              initialEvents={events}
+              initialEvents={data}
               ref={calendarRef}
               initialDate={date}
               initialView={view}
@@ -265,7 +277,6 @@ export default function CalendarPage() {
       <VisitDialog
         event={selectedEvent}
         range={selectedRange}
-        onCancel={handleCloseModal}
         onCreateUpdateEvent={handleCreateUpdateEvent}
         onDeleteEvent={handleDeleteEvent}
       />
@@ -277,7 +288,7 @@ export default function CalendarPage() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, filterEventColor, filterStartDate, filterEndDate, isError }) {
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
+  const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
   inputData = stabilizedThis.map((el) => el[0]);
 
