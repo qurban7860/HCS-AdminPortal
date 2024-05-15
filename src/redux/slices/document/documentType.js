@@ -210,15 +210,20 @@ export function getActiveDocumentTypes(cancelToken, drawing ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}documents/documentType/` , 
-      {
+
+      const query = {
         params: {
           isArchived: false,
           isActive: true,
         },
         cancelToken: cancelToken?.token,
       }
-      );
+
+      if(drawing) {
+        query.params.drawing = true;
+      }
+
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/documentType/`, query);
       dispatch(slice.actions.getActiveDocumentTypesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Document Types loaded successfully'));
     } catch (error) {

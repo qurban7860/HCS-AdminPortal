@@ -157,8 +157,15 @@ const onChangePage = (event, newPage) => {
 
   useEffect(() => {
     if(machineDrawingPage || machineDrawings || machinePage ){
-      dispatch(getActiveDocumentCategories(null));
-      dispatch(getActiveDocumentTypes());
+
+      if(machineDrawings){
+        dispatch(getActiveDocumentCategories(null, null, machineDrawings));
+        dispatch(getActiveDocumentTypes(null, machineDrawings));
+      }else{
+        dispatch(getActiveDocumentCategories(null));  
+        dispatch(getActiveDocumentTypes());
+      }
+
       if(machineDrawings){
         const defaultType = activeDocumentTypes.find((typ) => typ?.isDefault === true);
         const defaultCategory = activeDocumentCategories.find((cat) => cat?.isDefault === true);
