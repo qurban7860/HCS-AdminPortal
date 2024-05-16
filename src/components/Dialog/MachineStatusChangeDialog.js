@@ -34,7 +34,6 @@ function MachineStatusChangeDialog() {
     dispatch(getActiveMachineStatuses(cancelTokenSource))
     return ()=>{  
       // cancelTokenSource.cancel()
-      dispatch(getMachine(machine?._id))
       dispatch(resetActiveMachineStatuses())
       dispatch(setMachineStatusChangeDialog(false))
     }
@@ -74,6 +73,7 @@ function MachineStatusChangeDialog() {
       try {
         const response = await dispatch(changeMachineStatus(machine?._id, data));
         enqueueSnackbar(Snacks.machineStatusSuccess);
+        dispatch(getMachine(machine?._id));
         handleMachineDialog()
         reset();
       } catch (error) {
@@ -100,6 +100,9 @@ function MachineStatusChangeDialog() {
                   name="status"
                   label="Status*"
                   options={activeMachineStatuses.filter((st) => st?.slug !== 'intransfer')}
+                  getOptionDisabled={(option) =>
+                    option._id === machine.status._id
+                  }
                   isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   getOptionLabel={(option) => `${option.name || ''}`}
                   renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}

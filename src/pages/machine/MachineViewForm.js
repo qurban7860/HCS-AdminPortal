@@ -229,6 +229,7 @@ export default function MachineViewForm() {
       projectManager: machine?.projectManager || [],
       supportManager: machine?.supportManager || [],
       supportExpireDate: machine?.supportExpireDate  || null,
+      decommissionedDate: machine?.decommissionedDate  || null,
       isActive: machine?.isActive,
       createdByFullName: machine?.createdBy?.name,
       createdAt: machine?.createdAt,
@@ -294,11 +295,12 @@ export default function MachineViewForm() {
                   node={ 
                     <>
                       <Typography variant='h4' sx={{mr: 1,color: machine?.status?.slug === "transferred" && 'red'  }}>{ defaultValues?.status }</Typography> 
-                      <IconButtonTooltip title='Chnage Status' icon="grommet-icons:sync" onClick={handleStatusChangeDialog} />
+                      <IconButtonTooltip title='Change Status' icon="grommet-icons:sync" onClick={handleStatusChangeDialog} />
                     </>
                     } />
-            <ViewFormField isLoading={isLoading} sm={6} heading="Support Expiry Date" param={fDate(defaultValues?.supportExpireDate)} />
-                       {/* 3 FULL ROW */}
+            <ViewFormField isLoading={isLoading} sm={6} heading="De-Commissioned Date" param={fDate(defaultValues?.deCommissionedDate)} />
+            {machine?.status?.slug==='transferred' && 
+
             <ViewFormField isLoading={isLoading} sm={6} heading="Transfer Detail"
               node={
                 <Grid display="flex" alignItems="center">
@@ -322,6 +324,7 @@ export default function MachineViewForm() {
                 </Grid>
               }
             />
+            }
             
             <ViewFormField isLoading={isLoading} sm={12} variant='h4' heading="Profiles" param={ Array.isArray(defaultValues?.machineProfiles) && defaultValues?.machineProfiles?.map( el => `${el?.defaultName} ${(el?.web && el?.flange)? `(${el?.web} X ${el?.flange})` :""}`)?.join(', ') || ''} />
                        {/* 4 FULL ROW */}
@@ -368,6 +371,7 @@ export default function MachineViewForm() {
             <ViewFormField isLoading={isLoading} sm={6} heading="Account Manager" customerContacts={defaultValues?.accountManager} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Project Manager" customerContacts={defaultValues?.projectManager} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Suppport Manager" customerContacts={defaultValues?.supportManager} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Support Expiry Date" param={fDate(defaultValues?.supportExpireDate)} />
           </Grid>
 
           <Grid container>

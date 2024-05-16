@@ -55,9 +55,7 @@ function TablePaginationFilter({
       setSelectedOptions([...selectedOptions, option]);
     }
   };
-
-  console.log("asdasdda::",selectedOptions,columns)
-
+  
   return (
     <Box rowGap={2} columnGap={2} display="grid" sx={{borderTop:'1px solid #919eab3d'}}
         gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}>
