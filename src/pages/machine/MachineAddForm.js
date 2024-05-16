@@ -377,7 +377,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     ChipProps={{ size: 'small' }}
                   />
 
-                  <RHFDatePicker inputFormat='dd/MM/yyyy' name="supportExpireDate" label="Support Expiry Date" />
+                  <RHFDatePicker inputFormat='dd/MM/yyyy' name="decommissionedDate" label="De-Commissioned Date" />
 
                   <RHFAutocomplete
                     multiple
@@ -420,7 +420,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     ChipProps={{ size: 'small' }}
                     id="controllable-states-demo"
                   />
-                  
+                  <RHFDatePicker inputFormat='dd/MM/yyyy' name="supportExpireDate" label="Support Expiry Date" />
                 </Box>
                   <RHFTextField name="description" label="Description" minRows={3} multiline />
                   <ToggleButtons name={FORMLABELS.isACTIVE.name} isMachine />
