@@ -502,10 +502,10 @@ export function getDocuments(customerId, machineId, drawing, page, pageSize, isC
       page,
       pageSize  
     }
-    if(isCustomerArchived){
-      params.archivedFromCustomer = true;
-      params.isArchived= true;
-    }
+    // if(isCustomerArchived){
+    //   params.archivedFromCustomer = true;
+    //   params.isArchived= true;
+    // }
 
     try {
 

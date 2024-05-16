@@ -102,6 +102,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       projectManager: [],
       supportManager: [],
       supportExpireDate: null,
+      decommissionedDate: null,
       customerTags: [],
       description: '',
       isActive: true,

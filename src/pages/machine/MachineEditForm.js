@@ -72,6 +72,7 @@ export default function MachineEditForm() {
       supportManager: machine?.supportManager || [],
       accountManager: machine?.accountManager || [],
       supportExpireDate: machine.supportExpireDate || null,
+      decommissionedDate: machine.decommissionedDate || null,
       description: machine.description || '',
       isActive: machine.isActive || false,
     },
@@ -325,7 +326,7 @@ export default function MachineEditForm() {
                   />
 
 
-                  <RHFDatePicker inputFormat='dd/MM/yyyy'  name="deCommissionedDate" label="De-Commissioned Date" />
+                  <RHFDatePicker inputFormat='dd/MM/yyyy'  name="decommissionedDate" label="De-Commissioned Date" />
 
                   <RHFAutocomplete
                     multiple
