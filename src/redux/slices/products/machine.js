@@ -669,6 +669,7 @@ export function addMachine(params) {
           newConnectedMachines: params?.machineConnectionVal.filter(machine => !machine?.customer),
           isActive: params?.isActive,
           supportExpireDate : params?.supportExpireDate,
+          decommissionedDate : params?.decommissionedDate,
           financialCompany: params?.financialCompany?._id,
         };
         const response = await axios.post(`${CONFIG.SERVER_URL}products/machines`, data);
@@ -715,6 +716,7 @@ export function updateMachine(machineId, params) {
         machineConnections: params?.machineConnectionVal.map(obj => obj._id),
         isActive: params?.isActive,
         supportExpireDate : params?.supportExpireDate,
+        decommissionedDate : params?.decommissionedDate,
         financialCompany: params?.financialCompany?._id, 
       };
      /* eslint-enable */
