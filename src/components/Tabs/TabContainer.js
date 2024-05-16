@@ -40,6 +40,7 @@ function TabContainer({
   variant="scrollable"
   // scrollButtons="auto"
   scrollButtons
+  // indicatorColor='#fff'
   // scrollButtons={false}
   // aria-label="scrollable auto tabs example" 
   >{children}</Tabs>;
