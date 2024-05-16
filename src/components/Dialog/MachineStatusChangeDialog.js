@@ -101,7 +101,7 @@ function MachineStatusChangeDialog() {
                   label="Status*"
                   options={activeMachineStatuses.filter((st) => st?.slug !== 'intransfer')}
                   getOptionDisabled={(option) =>
-                    option._id === machine.status._id
+                    option._id === machine?.status?._id
                   }
                   isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   getOptionLabel={(option) => `${option.name || ''}`}

@@ -298,7 +298,7 @@ export default function MachineViewForm() {
                       <IconButtonTooltip title='Change Status' icon="grommet-icons:sync" onClick={handleStatusChangeDialog} />
                     </>
                     } />
-            <ViewFormField isLoading={isLoading} sm={6} heading="De-Commissioned Date" param={fDate(defaultValues?.deCommissionedDate)} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="De-Commissioned Date" param={fDate(defaultValues?.decommissionedDate)} />
             {machine?.status?.slug==='transferred' && 
 
             <ViewFormField isLoading={isLoading} sm={6} heading="Transfer Detail"
