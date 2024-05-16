@@ -8,6 +8,8 @@ export const Snacks = {
   machineFailedDelete: 'Failed to Archive Machine',
   machineTransferSuccess: 'Machine Transferred Successfully!',
   machineFailedTransfer: 'Failed to Transfer Machine',
+  machineStatusSuccess: 'Machine Status Changed Successfully!',
+  machineStatusFailed: 'Failed to Change Machine Status!',
   
   // @root Machine Service Parameter
   checkItemAdd: 'Machine Check Item Added',

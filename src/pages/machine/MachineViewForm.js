@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Grid, Link, Chip, Typography} from '@mui/material';
+import { Card, Grid, Link, Chip, Typography, IconButton} from '@mui/material';
 // routes
 import { PATH_CRM, PATH_MACHINE } from '../../routes/paths';
 // slices
@@ -14,7 +14,8 @@ import {
   setMachineVerification,
   setMachineDialog,
   getMachineForDialog,
-  setMachineTransferDialog
+  setMachineTransferDialog,
+  setMachineStatusChangeDialog
 } from '../../redux/slices/products/machine';
 import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
 import { getSite, resetSite, setSiteDialog } from '../../redux/slices/customer/site';
@@ -42,6 +43,8 @@ import MachineTransferDialog from '../../components/Dialog/MachineTransferDialog
 import SiteDialog from '../../components/Dialog/SiteDialog';
 import OpenInNewPage from '../../components/Icons/OpenInNewPage';
 import Iconify from '../../components/iconify';
+import IconButtonTooltip from '../../components/Icons/IconButtonTooltip';
+import MachineStatusChangeDialog from '../../components/Dialog/MachineStatusChangeDialog';
 
 // ----------------------------------------------------------------------
 
@@ -50,7 +53,7 @@ export default function MachineViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { machine, machineDialog, machineTransferDialog, isLoading } = useSelector((state) => state.machine);
+  const { machine, machineDialog, machineTransferDialog, machineStatusChangeDialog, isLoading } = useSelector((state) => state.machine);
   const { customerDialog } = useSelector((state) => state.customer);
   const { siteDialog } = useSelector((state) => state.site);
   const [disableTransferButton, setDisableTransferButton] = useState(true);
@@ -99,6 +102,7 @@ export default function MachineViewForm() {
   );
 
   useEffect(() => {
+    dispatch(setMachineStatusChangeDialog(false));
     dispatch(setMachineTransferDialog(false));
     dispatch(setSiteDialog(false))
     dispatch(setCustomerDialog(false));
@@ -163,6 +167,10 @@ export default function MachineViewForm() {
   const handleMachineDialog = (MachineID) => {
     dispatch(getMachineForDialog(MachineID));
     dispatch(setMachineDialog(true)); 
+  };
+
+  const handleStatusChangeDialog = () => {
+    dispatch(setMachineStatusChangeDialog(true));
   };
   
   const linkedMachines = machine?.machineConnections?.map((machineConnection, index) => (
@@ -282,7 +290,13 @@ export default function MachineViewForm() {
                        {/* 1 FULL ROW */}
             <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues?.name} />
                        {/* 2 FULL ROW */}
-            <ViewFormField isLoading={isLoading} sm={6} heading="Status" node={ <Typography variant='h4' sx={{mr: 1,color: machine?.status?.slug === "transferred" && 'red'  }}>{ defaultValues?.status }</Typography> } />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Status" 
+                  node={ 
+                    <>
+                      <Typography variant='h4' sx={{mr: 1,color: machine?.status?.slug === "transferred" && 'red'  }}>{ defaultValues?.status }</Typography> 
+                      <IconButtonTooltip title='Chnage Status' icon="grommet-icons:sync" onClick={handleStatusChangeDialog} />
+                    </>
+                    } />
             <ViewFormField isLoading={isLoading} sm={6} heading="Support Expiry Date" param={fDate(defaultValues?.supportExpireDate)} />
                        {/* 3 FULL ROW */}
             <ViewFormField isLoading={isLoading} sm={6} heading="Transfer Detail"
@@ -375,6 +389,7 @@ export default function MachineViewForm() {
       { machineDialog  && <MachineDialog />}
       { customerDialog  && <CustomerDialog />}
       { machineTransferDialog && <MachineTransferDialog />}
+      { machineStatusChangeDialog && <MachineStatusChangeDialog />}
       
     </>
   );

@@ -9,6 +9,7 @@ const initialState = {
   machineTab:'info',
   machineEditFormFlag: false,
   machineTransferDialog: false,
+  machineStatusChangeDialog: false,
   machineMoveFormVisibility: false,
   transferMachineFlag: false,
   responseMessage: null,
@@ -85,6 +86,12 @@ const slice = createSlice({
     setMachineTransferDialog(state, action){
       state.machineTransferDialog = action.payload;
     },
+
+    // SET TOGGLE
+    setMachineStatusChangeDialog(state, action){
+      state.machineStatusChangeDialog = action.payload;
+    },
+    
     
     // HAS ERROR
     hasError(state, action) {
@@ -288,6 +295,7 @@ export const {
   stopLoading,
   setTransferMachineFlag,
   setMachineTransferDialog,
+  setMachineStatusChangeDialog,
   resetCustomerMachines,
   resetActiveCustomerMachines,
   resetMachineForDialog,
@@ -794,6 +802,20 @@ export function moveMachine(params) {
       console.error(error);
       throw error;
       // dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
+export function changeMachineStatus(machineId, params) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const data = {dated: params?.date};
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/updateStatus/${params?.status?._id}`,data);
+    } catch (error) {
+      dispatch(slice.actions.stopLoading());
+      console.error(error);
+      throw error;
     }
   };
 }
