@@ -25,7 +25,7 @@ const getInitialValues = (visit, range) => {
   
   const initialEvent = {
     visitDate: visit ? visit?.visitDate : (range?.start || new Date() ) ,
-    start: visit ? visit?.start : new Date(new Date().setHours(7, 0, 0)),
+    start: visit ? visit?.start : (range?.start.setHours(7, 0, 0)  || new Date(new Date().setHours(7, 0, 0)) ) ,
     end: visit ? visit?.end : null,
     allDay: visit ? visit?.allDay : false,
     customer: visit ? visit?.customer : null,
