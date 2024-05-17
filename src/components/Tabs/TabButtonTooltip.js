@@ -16,8 +16,8 @@ export default function TabButtonTooltip({
 
     return (
       <>
-      {/* <StyledTooltip title={title} placement={placement} tooltipcolor={color} color={color}> */}
-        <Tooltip title={title} placement='bottom'>
+      <StyledTooltip title={title} placement={placement} tooltipcolor={color} color={color}>
+        {/* <Tooltip title={title} placement='bottom'> */}
           <IconButton
             sx={{ cursor:'pointer', 
             border:'1px solid',
@@ -30,8 +30,8 @@ export default function TabButtonTooltip({
             <Iconify color={selected?'#fff':color} width="20px" icon={icon} />
           </IconButton>
           {selected && ` ${title}`}
-        </Tooltip>
-      {/* </StyledTooltip> */}
+        {/* </Tooltip> */}
+      </StyledTooltip>
       </>
     );
   }
