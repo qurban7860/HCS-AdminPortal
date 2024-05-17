@@ -52,9 +52,8 @@ export default function CustomerTabContainer({ currentTabValue }) {
               disabled={tab.disabled}
               key={tab.value}
               value={tab.value}
+              label={tab?.value===currentTabValue?tab.label:""}
               icon={<TabButtonTooltip selected={tab?.value===currentTabValue} title={tab.label} icon={tab.icon}/>}
-              sx={{marginRight:'5px !important'}}
-              // label={tab.label}
             />
           ))}
         </TabContainer>

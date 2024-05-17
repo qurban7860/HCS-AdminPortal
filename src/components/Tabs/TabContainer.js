@@ -32,8 +32,6 @@ function TabContainer({
       position: 'absolute',
       backgroundColor: theme.palette.background.paper,
       '& .MuiTabs-scrollButtons': {
-        // Apply your CSS properties for the scroll buttons
-        // For example:
         backgroundColor: '#426fcd', // Change background color
         borderRadius: '15px', // Make the buttons circular
         color:'#fff',
@@ -44,12 +42,10 @@ function TabContainer({
       },
       '& .MuiButtonBase-root':{
         pr:1,
-        marginRight:'2px !important',
-        // border:'1px solid #426fcd',
-        // borderRadius:1,
-        // color:'#426fcd',
-        // minHeight:'35px !important',
-        // mt:0.5
+        marginRight:'0px !important',
+      },
+      '& .MuiIconButton-root':{
+        mr:'5px  !important'
       }
     },
 
