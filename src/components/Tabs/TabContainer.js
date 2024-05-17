@@ -26,7 +26,6 @@ function TabContainer({
         '&.Mui-disabled': { opacity: 0.3 },
       },
       width: 1,
-      // left:25,
       bottom: 0,
       zIndex: 9,
       display:'flex',
@@ -43,6 +42,15 @@ function TabContainer({
           backgroundColor: 'blue', // Change background color on hover
         },
       },
+      '& .MuiButtonBase-root':{
+        pr:1,
+        marginRight:'2px !important',
+        // border:'1px solid #426fcd',
+        // borderRadius:1,
+        // color:'#426fcd',
+        // minHeight:'35px !important',
+        // mt:0.5
+      }
     },
 
   };

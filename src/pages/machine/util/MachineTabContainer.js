@@ -9,11 +9,12 @@ import TabContainer from '../../../components/Tabs/TabContainer';
 import { useSelector } from '../../../redux/store';
 // sections
 import { Cover } from '../../../components/Defaults/Cover';
-import { StyledCardContainer } from '../../../theme/styles/default-styles';
+import { StyledCardContainer, StyledTooltip } from '../../../theme/styles/default-styles';
 import  TABS from './index';
 import { PATH_MACHINE } from '../../../routes/paths';
 import { getMachine, resetMachine } from '../../../redux/slices/products/machine';
 import TabButtonTooltip from '../../../components/Tabs/TabButtonTooltip';
+import Iconify from '../../../components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -74,10 +75,9 @@ export default function MachineTabContainer({ currentTabValue }) {
               disabled={tab.disabled}
               key={tab.value}
               value={tab.value}
+              label={tab?.value===currentTabValue?tab.label:""}
               icon={<TabButtonTooltip selected={tab?.value===currentTabValue} title={tab.label} icon={tab.icon}/>}
-              sx={{marginRight:'5px !important'}}
-              // label={tab.label}
-            />
+              />
           ))}
         </TabContainer>}
       </StyledCardContainer>

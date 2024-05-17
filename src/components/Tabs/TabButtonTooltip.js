@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { IconButton, Tooltip, alpha } from '@mui/material';
+import { IconButton, alpha } from '@mui/material';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 import Iconify from '../iconify';
 // import theme from '../../../theme';
@@ -15,9 +15,7 @@ export default function TabButtonTooltip({
 }) {
 
     return (
-      <>
-      <StyledTooltip title={title} placement={placement} tooltipcolor={color} color={color}>
-        {/* <Tooltip title={title} placement='bottom'> */}
+      <StyledTooltip title={title} placement={placement} disableFocusListener tooltipcolor={color} color={color}>
           <IconButton
             sx={{ cursor:'pointer', 
             border:'1px solid',
@@ -29,10 +27,7 @@ export default function TabButtonTooltip({
             >
             <Iconify color={selected?'#fff':color} width="20px" icon={icon} />
           </IconButton>
-          {selected && ` ${title}`}
-        {/* </Tooltip> */}
       </StyledTooltip>
-      </>
     );
   }
 
@@ -46,6 +41,6 @@ TabButtonTooltip.propTypes = {
 };
 
 TabButtonTooltip.defaultProps = {
-  placement: 'top',
+  placement: 'bottom',
   color:'#2b64cd'
 };
