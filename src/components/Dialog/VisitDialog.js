@@ -24,7 +24,7 @@ import FormProvider, { RHFDatePicker, RHFTimePicker, RHFTextField, RHFAutocomple
 const getInitialValues = (visit, range) => {
   
   const initialEvent = {
-    visitDate: visit ? visit?.visitDate : new Date(),
+    visitDate: visit ? visit?.visitDate : (range?.start || new Date() ) ,
     start: visit ? visit?.start : new Date(new Date().setHours(7, 0, 0)),
     end: visit ? visit?.end : null,
     allDay: visit ? visit?.allDay : false,
@@ -60,7 +60,6 @@ function VisitDialog({
   }) {
     
     const dispatch = useDispatch();
-
     const { openModal } = useSelector((state) => state.visit );
     const { activeCustomers } = useSelector((state) => state.customer);
     const { activeContacts, activeSpContacts } = useSelector((state) => state.contact);
