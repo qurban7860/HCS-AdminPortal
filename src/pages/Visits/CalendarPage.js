@@ -24,6 +24,7 @@ import {
   onOpenModal,
   onCloseModal,
 } from '../../redux/slices/visit/visit';
+import { getActiveCustomers } from '../../redux/slices/customer/customer';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // utils
@@ -59,10 +60,19 @@ export default function CalendarPage() {
   const isDesktop = useResponsive('up', 'sm');
 
   const calendarRef = useRef(null);
-
   const { visits, openModal, selectedRange, selectedEventId } = useSelector((state) => state.visit );
+  const { activeCustomers } = useSelector((state) => state.customer);
+  const userCustomer = localStorage.getItem('customer')
 
   const [data, setData] = useState([]);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+
+  useEffect(() =>{
+    if(userCustomer && Array.isArray(activeCustomers) && activeCustomers.length > 0 ){
+      const filteredCustomer = activeCustomers?.find(c => c?._id === userCustomer )
+      setSelectedCustomer(filteredCustomer)
+    }
+  },[ userCustomer, activeCustomers ])
 
   const selectedEvent = useSelector(() => {
     if (selectedEventId) {
@@ -97,8 +107,19 @@ export default function CalendarPage() {
   }, [visits]);
 
   useEffect(() => {
-      dispatch(getVisits(date));
-}, [dispatch, date ]);
+    dispatch(getActiveCustomers());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if(selectedCustomer && date && !openModal ){
+      dispatch(getVisits(date, selectedCustomer?._id ));
+    }
+      return () => {
+        dispatch(resetVisits());
+        setData([])
+      }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, date, selectedCustomer ]);
 
   useEffect(() => {
     const calendarEl = calendarRef.current;
@@ -183,16 +204,8 @@ export default function CalendarPage() {
     try {
       const visitDate = new Date(event?._def?.extendedProps?.visitDate)
       const newDate = new Date(event?._instance?.range?.start); 
-      newDate.setHours(visitDate.getHours(), visitDate.getMinutes(), visitDate.getSeconds(), visitDate.getMilliseconds());
-      const updatedData = data.map(e => {
-        if (e?.id === event.id) {
-          return { ...e, date: newDate };
-        }
-        return e;
-      });
-      
-      setData(updatedData);
-      console.log('updatedData : ',updatedData)
+      newDate.setHours(visitDate.getHours(), visitDate.getMinutes());
+      setData(prevData =>  prevData.map(e =>  e?.id === event.id ? { ...e, date: newDate } : e ) );
       dispatch(updateVisitDate(event.id,  newDate));
     } catch (error) {
       enqueueSnackbar('Event Date Update Failed!', { variant: `error` });
@@ -216,24 +229,25 @@ export default function CalendarPage() {
   const handleDeleteEvent = async () => {
     try {
       if (selectedEventId) {
-        await dispatch(deleteVisit(selectedEventId));
+        await setData(prevData => prevData.filter(e =>  e?.id !== selectedEventId) );
         await handleCloseModal();
-        await dispatch(getVisits(date));
-        enqueueSnackbar('Delete success!');
+        await dispatch(deleteVisit(selectedEventId));
       }
     } catch (error) {
-      console.error(error);
+      enqueueSnackbar('Event Delete Failed!', { variant: 'error'});
+      dispatch(getVisits(date));
     }
   };
 
 
-  const dataFiltered = applyFilter({
-    inputData: data,
-    filterEventColor,
-    filterStartDate: picker.startDate,
-    filterEndDate: picker.endDate,
-    isError: !!picker.isError,
-  });
+  // const dataFiltered = applyFilter({
+  //   inputData: data,
+  //   filterEventColor,
+  //   filterStartDate: picker.startDate,
+  //   filterEndDate: picker.endDate,
+  //   selectedCustomer,
+  //   isError: !!picker.isError,
+  // });
 
   return (
     <>
@@ -244,6 +258,8 @@ export default function CalendarPage() {
         <Card>
           <StyledCalendar>
             <CalendarToolbar
+              selectedCustomer={selectedCustomer}
+              setSelectedCustomer={setSelectedCustomer}
               date={date}
               view={view}
               onNextDate={handleClickDateNext}
@@ -258,7 +274,7 @@ export default function CalendarPage() {
               selectable
               allDayMaintainDuration
               eventResizableFromStart
-              events={dataFiltered}
+              events={data}
               initialEvents={data}
               ref={calendarRef}
               initialDate={date}
@@ -297,22 +313,17 @@ export default function CalendarPage() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, filterEventColor, filterStartDate, filterEndDate, isError }) {
-  const stabilizedThis = inputData?.map((el, index) => [el, index]);
+// function applyFilter({ inputData, filterEventColor, filterStartDate, filterEndDate, selectedCustomer }) {
+//   if(selectedCustomer && selectedCustomer._id ){
+//     const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
-  inputData = stabilizedThis.map((el) => el[0]);
+//     inputData = stabilizedThis.map((el) => el[0]);
 
-  if (filterEventColor.length) {
-    inputData = inputData.filter((event) => filterEventColor.includes(event.textColor));
-  }
+//     inputData = inputData.filter(
+//       (event) =>
+//         event?.extendedProps?.customer?._id.indexOf(selectedCustomer?._id) >= 0 
+//     );
+//   }
 
-  if (filterStartDate && filterEndDate && !isError) {
-    inputData = inputData.filter(
-      (event) =>
-        fTimestamp(event.start) >= fTimestamp(filterStartDate) &&
-        fTimestamp(event.end) <= fTimestamp(filterEndDate)
-    );
-  }
-
-  return inputData;
-}
+//   return inputData;
+// }

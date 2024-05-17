@@ -25,7 +25,7 @@ const getInitialValues = (visit, range) => {
   
   const initialEvent = {
     visitDate: visit ? visit?.visitDate : (range?.start || new Date() ) ,
-    start: visit ? visit?.start : (range?.start.setHours(7, 0, 0)  || new Date(new Date().setHours(7, 0, 0)) ) ,
+    start: visit ? visit?.start : (range?.start  || new Date(new Date().setHours(7, 0, 0)) ) ,
     end: visit ? visit?.end : null,
     allDay: visit ? visit?.allDay : false,
     customer: visit ? visit?.customer : null,
@@ -69,15 +69,17 @@ function VisitDialog({
     const hasEventData = !!event;
 
     useEffect(()=>{
-      dispatch(getActiveCustomers())
-      dispatch(getActiveSPContacts())
+      if(openModal){
+        dispatch(getActiveCustomers())
+        dispatch(getActiveSPContacts())
+      }
       return () => {
         dispatch(resetActiveCustomers())
         dispatch(resetActiveSPContacts())
         dispatch(resetActiveCustomerMachines())
         dispatch(resetActiveSites())
       }
-    },[ dispatch ])
+    },[ dispatch, openModal ])
 
     const EventSchema = Yup.object().shape({
       visitDate: Yup.date().nullable().label('Visit Date').typeError('Date should be a valid Date').required(),
