@@ -10,6 +10,7 @@ import { Cover } from '../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 import  TABS from '../index';
 import { PATH_CRM } from '../../../../routes/paths';
+import TabButtonTooltip from '../../../../components/Tabs/TabButtonTooltip';
 
 // ----------------------------------------------------------------------
 
@@ -51,8 +52,9 @@ export default function CustomerTabContainer({ currentTabValue }) {
               disabled={tab.disabled}
               key={tab.value}
               value={tab.value}
-              icon={tab.icon}
-              label={tab.label}
+              icon={<TabButtonTooltip selected={tab?.value===currentTabValue} title={tab.label} icon={tab.icon}/>}
+              sx={{marginRight:'5px !important'}}
+              // label={tab.label}
             />
           ))}
         </TabContainer>

@@ -416,14 +416,14 @@ function ViewFormEditDeleteButtons({
           }
 
           {Array.isArray(verifiers) && verifiers?.length>0 &&
-          <Badge badgeContent={verifiers.length} color="info">
-            <IconTooltip
-              title={isVerifiedTitle || 'Verified'}
-              color={ICONS.ALLOWED.color}
-              icon="ic:outline-verified-user"
-              onClick={handleVerifiedPopoverOpen}
-              />
-          </Badge>
+            <Badge badgeContent={verifiers.length} color="info">
+              <IconTooltip
+                title={isVerifiedTitle || 'Verified'}
+                color={ICONS.ALLOWED.color}
+                icon="ic:outline-verified-user"
+                onClick={handleVerifiedPopoverOpen}
+                />
+            </Badge>
           }
 
           {transferredHistory !== undefined &&

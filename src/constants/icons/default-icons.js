@@ -240,7 +240,7 @@ export const ICONS = {
 
   TRANSFERHISTORY: {
     icon: 'ic:outline-manage-history',
-    color: '#878787',
+    color: '#008000',
     heading: 'Transfer History',
   },
 

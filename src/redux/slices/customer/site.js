@@ -321,9 +321,9 @@ export function getSites(customerID, isArchived ) {
           createdAt: -1
         }
       }
-      if(isArchived){
-        params.archivedFromCustomer = true;
-      }
+      // if(isArchived){
+      //   params.archivedFromCustomer = true;
+      // }
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites`, { params } );
         dispatch(slice.actions.getSitesSuccess(response.data));
         dispatch(slice.actions.setResponseMessage('Sites loaded successfully'));

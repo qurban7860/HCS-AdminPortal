@@ -71,7 +71,7 @@ const TABS = [
   {
     value: 'machine',
     label: 'Machine Info',
-    icon: "mdi:window-open-variant",
+    icon: "mdi:gate-open",
   },
   {
     value: 'settings',

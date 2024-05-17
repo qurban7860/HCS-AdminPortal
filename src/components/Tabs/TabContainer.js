@@ -26,24 +26,30 @@ function TabContainer({
         '&.Mui-disabled': { opacity: 0.3 },
       },
       width: 1,
+      // left:25,
       bottom: 0,
       zIndex: 9,
       display:'flex',
       position: 'absolute',
       backgroundColor: theme.palette.background.paper,
+      '& .MuiTabs-scrollButtons': {
+        // Apply your CSS properties for the scroll buttons
+        // For example:
+        backgroundColor: '#426fcd', // Change background color
+        borderRadius: '15px', // Make the buttons circular
+        color:'#fff',
+        width:'20px',
+        '&:hover': {
+          backgroundColor: 'blue', // Change background color on hover
+        },
+      },
     },
 
   };
 
-  return <Tabs 
-  {...options}     
-  variant="scrollable"
-  // scrollButtons="auto"
-  scrollButtons
-  // indicatorColor='#fff'
-  // scrollButtons={false}
-  // aria-label="scrollable auto tabs example" 
-  >{children}</Tabs>;
+  return <Tabs variant="scrollable" scrollButtons  {...options}>
+          {children}
+         </Tabs>;
 }
 
 export default TabContainer;

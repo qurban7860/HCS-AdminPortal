@@ -313,7 +313,7 @@ export default function MachineEditForm() {
                 <Box rowGap={2} columnGap={2} display="grid"
                   gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
-                  <RHFAutocomplete
+                  {/* <RHFAutocomplete
                     name="status"
                     label="Status" 
                     options={activeMachineStatuses}
@@ -323,10 +323,10 @@ export default function MachineEditForm() {
                     renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
                     id="controllable-states-demo"
                     ChipProps={{ size: 'small' }}
-                  />
-
-
-                  <RHFDatePicker inputFormat='dd/MM/yyyy'  name="decommissionedDate" label="De-Commissioned Date" />
+                    />
+                    
+                    
+                  <RHFDatePicker inputFormat='dd/MM/yyyy'  name="decommissionedDate" label="De-Commissioned Date" /> */}
 
                   <RHFAutocomplete
                     multiple
