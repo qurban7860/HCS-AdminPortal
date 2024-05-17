@@ -83,7 +83,7 @@ function NavigationConfig() {
       updatedConfig[0].items.splice(5, 0, { title: 'Settings', path: PATH_SETTING.root, icon: ICONS.setting });
     }
 
-    if (navConfig.some((config) => config.title?.toLowerCase() !== 'visits')) {
+    if (navConfig.some((config) => config.title?.toLowerCase() !== 'Calendar')) {
       updatedConfig[0].items.splice(6, 0, { title: 'Visits', path: PATH_VISITS.root, icon: ICONS.calendar });
     }
 

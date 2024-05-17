@@ -143,7 +143,7 @@ function VisitDialog({
       keepMounted
       aria-describedby="alert-dialog-slide-description"
     >
-      <DialogTitle variant='h3' sx={{pb:1, pt:2 }}>{hasEventData ? 'Update Visit' : 'New Visit'}</DialogTitle>
+      <DialogTitle variant='h3' sx={{pb:1, pt:2 }}>{hasEventData ? 'Update Event' : 'New Event'}</DialogTitle>
       <Divider orientation="horizontal" flexItem />
       <DialogContent dividers sx={{px:3}}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

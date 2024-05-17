@@ -230,7 +230,7 @@ export default function CalendarPage() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-            <Cover name="Visits" />
+            <Cover name="Calendar Events" />
         </StyledCardContainer>
         <Card>
           <StyledCalendar>
