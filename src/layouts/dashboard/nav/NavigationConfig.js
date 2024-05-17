@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { PATH_CRM, PATH_VISITS, PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_SETTING, PATH_SITEMAP, PATH_SECURITY, PATH_MACHINE_DRAWING } from '../../../routes/paths';
+import { PATH_CRM, PATH_CALENDAR, PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_SETTING, PATH_SITEMAP, PATH_SECURITY, PATH_MACHINE_DRAWING } from '../../../routes/paths';
 // components
 import Iconify from '../../../components/iconify';
 import SvgColor from '../../../components/svg-color';
@@ -84,7 +84,7 @@ function NavigationConfig() {
     }
 
     if (navConfig.some((config) => config.title?.toLowerCase() !== 'Calendar')) {
-      updatedConfig[0].items.splice(6, 0, { title: 'Visits', path: PATH_VISITS.root, icon: ICONS.calendar });
+      updatedConfig[0].items.splice(6, 0, { title: 'Calendar', path: PATH_CALENDAR.root, icon: ICONS.calendar });
     }
 
     if (isSecurityUserAccessAllowed && navConfig.some((config) => config?.title?.toLowerCase() !== 'security')) {

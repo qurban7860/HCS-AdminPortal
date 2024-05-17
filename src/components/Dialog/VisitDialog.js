@@ -124,10 +124,10 @@ function VisitDialog({
       reset(getInitialValues(event?.extendedProps, range));
     }, [event, range, reset]);
     
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
       try {
-        onCreateUpdateEvent(data);
-        reset();
+        await onCreateUpdateEvent(data);
+        await reset();
       } catch (error) {
         console.error(error);
       }
