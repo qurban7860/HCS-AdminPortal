@@ -26,15 +26,12 @@ function TabContainer({
         '&.Mui-disabled': { opacity: 0.3 },
       },
       width: 1,
-      // left:25,
       bottom: 0,
       zIndex: 9,
       display:'flex',
       position: 'absolute',
       backgroundColor: theme.palette.background.paper,
       '& .MuiTabs-scrollButtons': {
-        // Apply your CSS properties for the scroll buttons
-        // For example:
         backgroundColor: '#426fcd', // Change background color
         borderRadius: '15px', // Make the buttons circular
         color:'#fff',
@@ -43,6 +40,13 @@ function TabContainer({
           backgroundColor: 'blue', // Change background color on hover
         },
       },
+      '& .MuiButtonBase-root':{
+        pr:1,
+        marginRight:'0px !important',
+      },
+      '& .MuiIconButton-root':{
+        mr:'5px  !important'
+      }
     },
 
   };

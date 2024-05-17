@@ -15,22 +15,19 @@ export default function TabButtonTooltip({
 }) {
 
     return (
-      <>
-      {/* <StyledTooltip title={title} placement={placement} disableFocusListener tooltipcolor={color} color={color}> */}
-          <IconButton
-            sx={{ cursor:'pointer', 
-            border:'1px solid',
-            borderRadius:1,
-            borderColor:`${selected?color:"#dbdbdb"}`,
-              background:`${selected?color:"#fff"} !important`,
-              ':hover':  { borderColor: color},
-            }}
-            >
-            <Iconify color={selected?'#fff':color} width="20px" icon={icon} />
-          </IconButton>
-          {selected && ` ${title}`}
-      {/* </StyledTooltip> */}
-      </>
+      <StyledTooltip title={title} placement={placement} disableFocusListener tooltipcolor={color} color={color}>
+            <IconButton
+              sx={{ cursor:'pointer', 
+              border:'1px solid',
+              borderRadius:1,
+              borderColor:`${selected?color:"#dbdbdb"}`,
+                background:`${selected?color:"#fff"} !important`,
+                ':hover':  { borderColor: color},
+              }}
+              >
+              <Iconify color={selected?'#fff':color} width="20px" icon={icon} />
+            </IconButton>
+      </StyledTooltip>
     );
   }
 
@@ -44,6 +41,6 @@ TabButtonTooltip.propTypes = {
 };
 
 TabButtonTooltip.defaultProps = {
-  placement: 'top',
+  placement: 'bottom',
   color:'#2b64cd'
 };
