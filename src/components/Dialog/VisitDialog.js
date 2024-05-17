@@ -19,26 +19,25 @@ import { getActiveCustomers, resetActiveCustomers } from '../../redux/slices/cus
 import { getActiveSPContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
-import FormProvider, { RHFDateTimePicker, RHFTextField, RHFAutocomplete, RHFSwitch } from '../hook-form';
+import FormProvider, { RHFDatePicker, RHFTimePicker, RHFTextField, RHFAutocomplete, RHFSwitch } from '../hook-form';
 
 const getInitialValues = (visit, range) => {
-  console.log("visit : ",visit)
+  
   const initialEvent = {
-    visitDate: visit ? visit?.visitDate : new Date().toISOString(),
+    visitDate: visit ? visit?.visitDate : new Date(),
+    start: visit ? visit?.start : new Date(new Date().setHours(7, 0, 0)),
+    end: visit ? visit?.end : null,
+    allDay: visit ? visit?.allDay : false,
     customer: visit ? visit?.customer : null,
     machine: visit ? visit?.machine :  null,
     site: visit ? visit?.site :  null,
     jiraTicket: visit ? visit?.jiraTicket :  '',
     primaryTechnician: visit ? visit?.primaryTechnician :  null,
-    supportingTechnicians: visit ? visit?.t :  [],
+    supportingTechnicians: visit ? visit?.supportingTechnicians :  [],
     notifyContacts: visit ? visit?.notifyContacts :  [],
     // status: visit ? visit?.status :  '',
     purposeOfVisit: visit ? visit?.purposeOfVisit :  '',
   };
-
-  // if (visit || range) {
-  //   return merge({}, initialEvent, visit );
-  // }
 
   return initialEvent;
 };
@@ -59,7 +58,7 @@ function VisitDialog({
     onCreateUpdateEvent,
     onDeleteEvent,
   }) {
-console.log("event : ",event)
+    
     const dispatch = useDispatch();
 
     const { openModal } = useSelector((state) => state.visit );
@@ -83,6 +82,9 @@ console.log("event : ",event)
 
     const EventSchema = Yup.object().shape({
       visitDate: Yup.date().nullable().label('Visit Date').typeError('Date should be a valid Date').required(),
+      start: Yup.date().nullable().label('Start Time').typeError('Start Time should be a valid Time'),
+      end: Yup.date().nullable().label('End Time').typeError('End Time should be a valid Time'),
+      allDay: Yup.bool().label('All Day'),
       jiraTicket: Yup.string().max(200).label('Jira Ticket').required(),
       customer: Yup.object().nullable().label('Customer').required(),
       machine: Yup.object().nullable().label('Machine').required(),
@@ -98,25 +100,33 @@ console.log("event : ",event)
       resolver: yupResolver(EventSchema),
       defaultValues: getInitialValues(event?.extendedProps, range),
     });
-  
-
+    
     const {
       reset,
       watch,
       setValue,
+      trigger,
       control,
       handleSubmit,
       formState: { isSubmitting },
     } = methods;
-  
+
+    const { visitDate, jiraTicket, customer, machine, primaryTechnician, allDay } = watch();
+
+    useEffect(() => { 
+      if( jiraTicket || customer || machine || primaryTechnician ){
+        trigger() 
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[ visitDate, jiraTicket, customer, machine, primaryTechnician  ]);
+
     useEffect(() => {
       reset(getInitialValues(event?.extendedProps, range));
     }, [event, range, reset]);
     
-    const onSubmit = async (data) => {
+    const onSubmit = (data) => {
       try {
         onCreateUpdateEvent(data);
-        dispatch(onCloseModal());
         reset();
       } catch (error) {
         console.error(error);
@@ -130,17 +140,21 @@ console.log("event : ",event)
       maxWidth="md"
       open={openModal} 
       onClose={()=> dispatch(onCloseModal()) }
+      keepMounted
       aria-describedby="alert-dialog-slide-description"
     >
-      <DialogTitle variant='h3' sx={{pb:1, pt:2}}>{hasEventData ? 'Update Visit' : 'New Visit'}</DialogTitle>
-      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      <DialogTitle variant='h3' sx={{pb:1, pt:2 }}>{hasEventData ? 'Update Visit' : 'New Visit'}</DialogTitle>
       <Divider orientation="horizontal" flexItem />
       <DialogContent dividers sx={{px:3}}>
-        <Stack spacing={2} sx={{ p: 2 }}>
-          <Box rowGap={2} columnGap={2} display="flex" >
-            <RHFDateTimePicker label="Visit Date" name="visitDate" />
-            <RHFSwitch name="allDay" label="All Day" />
-           </Box>
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      <Grid container >
+        <Stack spacing={2} sx={{ pt: 2 }}>
+          <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' }} >
+            <RHFDatePicker label="Visit Date" name="visitDate" />
+            {allDay ? <div /> : <RHFTimePicker label="Start" name="start" />}
+            {allDay ? <div /> : <RHFTimePicker label="End" name="end" />}
+            <RHFSwitch name="allDay" label="All Day" sx={{ ml: 'auto'}} />
+          </Box>
             <RHFTextField name="jiraTicket" label="Jira Ticket" />
 
           <RHFAutocomplete 
@@ -230,9 +244,10 @@ console.log("event : ",event)
           <RHFTextField name="purposeOfVisit" label="Purpose of Visit" multiline rows={3} />
 
         </Stack>
-
+      </Grid>
+      </FormProvider>
       </DialogContent>
-      <DialogActions>
+      <DialogActions >
         {hasEventData && (
           <Tooltip title="Delete Event">
             <IconButton onClick={onDeleteEvent} >
@@ -247,11 +262,10 @@ console.log("event : ",event)
           Cancel
         </Button>
 
-        <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+        <LoadingButton type="submit" variant="contained" onClick={handleSubmit(onSubmit)} loading={isSubmitting}>
           {hasEventData ? 'Update' : 'Add'}
         </LoadingButton>
       </DialogActions>
-      </FormProvider>
     </Dialog>
   );
 }

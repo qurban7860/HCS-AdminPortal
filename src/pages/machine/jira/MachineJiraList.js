@@ -34,10 +34,10 @@ import MachineTabContainer from '../util/MachineTabContainer';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
+  { id: 'fields?.created', label: 'Date', align: 'left' },
   { id: 'key', label: 'Ticket No.', align: 'left' },
   { id: 'fields?.status?.name', label: 'Status', align: 'left' },
   { id: 'fields?.summary', label: 'Subject', align: 'left' },
-  { id: 'fields?.description?.content[0]?.content[0]?.text', label: 'Description', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------
@@ -161,7 +161,7 @@ export default function MachineJiraList(){
                         <MachineJiraTableRow
                           key={row._id}
                           row={row}
-                          onViewRow={() => handleViewRow(row.self)}
+                          onViewRow={(url) => handleViewRow(url)}
                           selected={selected.includes(row._id)}
                           selectedLength={selected.length}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}

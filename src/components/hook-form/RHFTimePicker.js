@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
 import { useFormContext, Controller } from 'react-hook-form';
-import { DatePicker } from '@mui/x-date-pickers';
+import { TimePicker } from '@mui/x-date-pickers';
 import {
   TextField,
 } from '@mui/material';
 
-RHFDatePicker.propTypes = {
+RHFTimePicker.propTypes = {
   name: PropTypes.string,
   label: PropTypes.string,
   size: PropTypes.string,
@@ -13,7 +13,7 @@ RHFDatePicker.propTypes = {
   Error: PropTypes.bool,
 };
 
-export default function RHFDatePicker({ name, label, size, helperText, Error, ...other }) {
+export default function RHFTimePicker({ name, label, size, helperText, Error, ...other }) {
 
   const { control } = useFormContext();
 
@@ -23,10 +23,9 @@ export default function RHFDatePicker({ name, label, size, helperText, Error, ..
       control={control}
       control={control}
       render={({ field, fieldState: { error } }) => (
-        <DatePicker
+        <TimePicker
           {...field}
           name={name}
-          inputFormat="dd/MM/yyyy"
           label={label}
           onChange={newValue => field.onChange(newValue)}
           renderInput={params => (

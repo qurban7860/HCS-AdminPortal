@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
+import { fDate, fTimestamp } from '../../../utils/formatTime';
 // ----------------------------------------------------------------------
 
 const initialState = {
@@ -42,15 +43,18 @@ const slice = createSlice({
 
     // CREATE VISIT
     createVisitSuccess(state, action) {
-      const newEvent = action.payload;
+      const newEvent = action?.payload;
+      console.log("newEvent : ",newEvent)
       state.isLoading = false;
       state.visits = [...state.visits, newEvent];
+      console.log("state.visits : ",state.visits)
     },
 
     // UPDATE VISIT
     updateVisitSuccess(state, action) {
       state.isLoading = false;
       state.visits = state.visits.map((event) => {
+        console.log("event : ",event, "action.payload : ",action.payload)
         if (event.id === action.payload.id) {
           return action.payload;
         }
@@ -110,16 +114,19 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getVisits() {
+export function getVisits(date) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}calender/visits`, {
-        params: {
-          isArchived: false,
-          isActive: true
-        }
-      });
+      const params= {
+        isArchived: false,
+        isActive: true,
+      }
+      if(date){
+        params.month = (Number(date?.getMonth())+1)
+        params.year = date?.getFullYear()
+      }
+      const response = await axios.get(`${CONFIG.SERVER_URL}calender/visits`, { params } );
       dispatch(slice.actions.getVisitsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
@@ -143,11 +150,32 @@ export function getVisit(id) {
 
 // ----------------------------------------------------------------------
 
-export function newVisit(newEvent) {
+export function newVisit(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post(`${CONFIG.SERVER_URL}calender/visits`, newEvent);
+      const newStartDate = new Date(params?.start )
+      const newDate = new Date(params?.visitDate); 
+      newDate.setHours(newStartDate.getHours(), newStartDate.getMinutes(), newStartDate.getSeconds(), newStartDate.getMilliseconds());
+      const data = {
+        visitDate: newDate || null,
+        start: params?.start,
+        end: params?.end,
+        customer: params?.customer?._id || null,
+        machine: params?.machine?._id || null,
+        site: params?.site?._id || null,
+        jiraTicket: params?.jiraTicket || '',
+        primaryTechnician: params?.primaryTechnician?._id || '',
+        supportingTechnicians: params?.supportingTechnicians?.map((el)=> el?._id) || [] ,
+        notifyContacts: params?.notifyContacts?.map((el)=> el?._id) || [],
+        purposeOfVisit: params?.purposeOfVisit || '',
+      };
+      
+      if(params?.allDay){
+        data.start = new Date(new Date().setHours(7, 0, 0));
+        data.end = new Date(new Date().setHours(18, 0, 0));
+      }
+      const response = await axios.post(`${CONFIG.SERVER_URL}calender/visits`, data);
       dispatch(slice.actions.createVisitSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
@@ -155,7 +183,7 @@ export function newVisit(newEvent) {
     }
   };
 }
-
+ 
 // ----------------------------------------------------------------------
 
 export function updateVisitDate(id, date) {
@@ -163,10 +191,10 @@ export function updateVisitDate(id, date) {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        visitDate: date,
+        visitDate:  date,
       };
       const response = await axios.patch(`${CONFIG.SERVER_URL}calender/visits/${id}`, data);
-      dispatch(slice.actions.updateVisitSuccess(response.data));
+      dispatch(slice.actions.updateVisitSuccess(response?.data?.Visit));
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
@@ -175,12 +203,32 @@ export function updateVisitDate(id, date) {
 }
 
 export function updateVisit(id, params) {
+  
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
+      const newStartDate = new Date(params?.start )
+      const newDate = new Date(params?.visitDate); 
+      newDate.setHours(newStartDate.getHours(), newStartDate.getMinutes(), newStartDate.getSeconds(), newStartDate.getMilliseconds());
       const data = {
-        visitDate: params.visitDate,
+        visitDate: newDate || null,
+        start: params?.start,
+        end: params?.end,
+        customer: params?.customer?._id || null,
+        machine: params?.machine?._id || null,
+        site: params?.site?._id || null,
+        jiraTicket: params?.jiraTicket || '',
+        primaryTechnician: params?.primaryTechnician?._id || '',
+        supportingTechnicians: params?.supportingTechnicians?.map((el)=> el?._id) || [] ,
+        notifyContacts: params?.notifyContacts?.map((el)=> el?._id) || [],
+        purposeOfVisit: params?.purposeOfVisit || '',
       };
+
+      if(params?.allDay){
+        data.start = new Date(new Date().setHours(7, 0, 0));
+        data.end = new Date(new Date().setHours(18, 0, 0));
+      }
+
       const response = await axios.patch(`${CONFIG.SERVER_URL}calender/visits/${id}`, data);
       dispatch(slice.actions.updateVisitSuccess(response.data));
     } catch (error) {
