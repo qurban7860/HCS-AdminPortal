@@ -22,7 +22,7 @@ export default function RHFDateTimePicker({ name, label, size, helperText, Error
       render={({ field, fieldState: { error } }) => (
             <DateTimePicker
               {...field}
-              name="serviceDate"
+              name={name}
               inputFormat="dd/MM/yyyy hh:mm aa"
               label={label}
               onChange={newValue => field.onChange(newValue)}

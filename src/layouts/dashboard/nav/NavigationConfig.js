@@ -28,7 +28,7 @@ function NavigationConfig() {
     banking: icon('ic_banking'),
     booking: icon('ic_booking'),
     invoice: icon('ic_invoice'),
-    calendar: icon('ic_calendar'),
+    calendar: <Iconify icon="lets-icons:date-range-light" /> ,
     disabled: icon('ic_disabled'),
     external: icon('ic_external'),
     menuItem: icon('ic_menu_item'),
@@ -61,7 +61,6 @@ function NavigationConfig() {
       subheader: 'general',
       items: [
         { title: 'Dashboard', path: PATH_DASHBOARD.root, icon: ICONS.dashboard },
-        { title: 'Visits', path: PATH_VISITS.root, icon: ICONS.calendar },
         { title: 'Customers', path: PATH_CRM.customers.list, icon: ICONS.users },
         { title: 'Machines', path: PATH_MACHINE.machines.root, icon: ICONS.machines },
       ],
@@ -72,22 +71,27 @@ function NavigationConfig() {
   useEffect(() => {
     const updatedConfig = [...navConfig];
 
-    updatedConfig[0].items.splice(8, 0, { title: 'Sites Map', path: PATH_SITEMAP.app, icon: ICONS.map });
-
     if (isDocumentAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'documents')) {
-      updatedConfig[0].items.splice(4, 0, { title: 'Documents', path: PATH_DOCUMENT.root, icon: ICONS.document });
+      updatedConfig[0].items.splice(3, 0, { title: 'Documents', path: PATH_DOCUMENT.root, icon: ICONS.document });
     }
 
     if (isDrawingAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'machine drawings')) {
-      updatedConfig[0].items.splice(5, 0, { title: 'Machine Drawings', path: PATH_MACHINE_DRAWING.root, icon: ICONS.drawing });
+      updatedConfig[0].items.splice(4, 0, { title: 'Machine Drawings', path: PATH_MACHINE_DRAWING.root, icon: ICONS.drawing });
     }
 
     if (isSettingAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'settings')) {
-      updatedConfig[0].items.splice(6, 0, { title: 'Settings', path: PATH_SETTING.root, icon: ICONS.setting });
+      updatedConfig[0].items.splice(5, 0, { title: 'Settings', path: PATH_SETTING.root, icon: ICONS.setting });
+    }
+
+    if (navConfig.some((config) => config.title?.toLowerCase() !== 'Calendar')) {
+      updatedConfig[0].items.splice(6, 0, { title: 'Visits', path: PATH_VISITS.root, icon: ICONS.calendar });
     }
 
     if (isSecurityUserAccessAllowed && navConfig.some((config) => config?.title?.toLowerCase() !== 'security')) {
       updatedConfig[0].items.splice(7, 0, { title: 'Security', path: PATH_SECURITY.root, icon: ICONS.security });
+    }
+    if ( navConfig.some((config) => config?.title?.toLowerCase() !== 'sites map')) {
+      updatedConfig[0].items.splice(8, 0, { title: 'Sites Map', path: PATH_SITEMAP.app, icon: ICONS.map });
     }
 
     setConfig(updatedConfig);

@@ -20,7 +20,7 @@ export default function RHFSwitch({ name, label, helperText, ...other }) {
       control={control}
       render={({ field, fieldState: { error } }) => (
         <div style={{display:'flex'}}>
-          <FormControlLabel control={<Switch {...field} checked={field.value} />} label={<Typography variant='body2'sx={{fontWeight:'bold'}}>{label}</Typography>} {...other} />
+          <FormControlLabel control={<Switch {...field} checked={field.value} />} label={<Typography variant='body2'sx={{fontWeight:'bold',  whiteSpace: 'nowrap' }}>{label}</Typography>} {...other} />
           {(!!error || helperText) && (
             <FormHelperText error={!!error}>{error ? error?.message : helperText}</FormHelperText>
           )}

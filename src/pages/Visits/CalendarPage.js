@@ -44,7 +44,6 @@ import {
 } from '../calendar';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
-import FormLabel from '../../components/DocumentForms/FormLabel';
 import VisitDialog from '../../components/Dialog/VisitDialog';
 
 // ----------------------------------------------------------------------
@@ -92,14 +91,13 @@ export default function CalendarPage() {
           ...v
         }
       }));
-      
       setData(formattedData);
     }
   }, [visits]);
 
   useEffect(() => {
-    dispatch(getVisits());
-  }, [dispatch]);
+      dispatch(getVisits(date));
+}, [dispatch, date ]);
 
   useEffect(() => {
     const calendarEl = calendarRef.current;
@@ -162,9 +160,7 @@ export default function CalendarPage() {
     );
   };
 
-  const handleSelectEvent = (arg) => {
-    dispatch(selectVisit(arg.event.id));
-  };
+  const handleSelectEvent = (arg) => dispatch(selectVisit(arg.event.id));
 
   const handleResizeEvent = async ({ event }) => {
     try {
@@ -182,9 +178,11 @@ export default function CalendarPage() {
 
   const handleDropEvent = async ({ event }) => {
     try {
-      setData([])
-      await dispatch(updateVisitDate(event.id,  event?._instance?.range?.start?.toISOString() ));
-      await dispatch(getVisits());
+      const visitDate = new Date(event?._def?.extendedProps?.visitDate)
+      const newDate = new Date(event?._instance?.range?.start); 
+      newDate.setHours(visitDate.getHours(), visitDate.getMinutes(), visitDate.getSeconds(), visitDate.getMilliseconds());
+      await dispatch(updateVisitDate(event.id,  newDate));
+      // await dispatch(getVisits(date));
     } catch (error) {
       console.error(error);
     }
@@ -192,14 +190,16 @@ export default function CalendarPage() {
 
   const handleCloseModal = () => dispatch(onCloseModal());
 
-  const handleCreateUpdateEvent = (newEvent) => {
+  const handleCreateUpdateEvent = async (newEvent) => {
     if (selectedEventId) {
-      dispatch(updateVisit(selectedEventId, newEvent));
-      dispatch(getVisits());
+      await dispatch(updateVisit(selectedEventId, newEvent));
+      await dispatch(onCloseModal());
+      // await dispatch(getVisits(date));
       enqueueSnackbar('Update success!');
     } else {
-      dispatch(newVisit(newEvent));
-      dispatch(getVisits());
+      await dispatch(newVisit(newEvent));
+      await dispatch(onCloseModal());
+      // await dispatch(getVisits(date));
       enqueueSnackbar('Create success!');
     }
   };
@@ -207,9 +207,9 @@ export default function CalendarPage() {
   const handleDeleteEvent = async () => {
     try {
       if (selectedEventId) {
-        dispatch(deleteVisit(selectedEventId));
-        handleCloseModal();
-        dispatch(getVisits());
+        await dispatch(deleteVisit(selectedEventId));
+        await handleCloseModal();
+        await dispatch(getVisits(date));
         enqueueSnackbar('Delete success!');
       }
     } catch (error) {
@@ -230,7 +230,7 @@ export default function CalendarPage() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-            <Cover name="Visits" />
+            <Cover name="Calendar Events" />
         </StyledCardContainer>
         <Card>
           <StyledCalendar>
