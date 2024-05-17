@@ -16,6 +16,7 @@ import {
   resetVisits,
   newVisit,
   updateVisitDate,
+  updateVisitDateLocal,
   updateVisit,
   deleteVisit,
   selectVisit,
@@ -112,6 +113,7 @@ export default function CalendarPage() {
 
   const handleClickToday = () => {
     const calendarEl = calendarRef.current;
+    console.log("calendarEl : ",calendarEl)
     if (calendarEl) {
       const calendarApi = calendarEl.getApi();
       calendarApi.today();
@@ -163,6 +165,7 @@ export default function CalendarPage() {
   const handleSelectEvent = (arg) => dispatch(selectVisit(arg.event.id));
 
   const handleResizeEvent = async ({ event }) => {
+
     try {
       dispatch(
         updateVisit(event.id, {
@@ -176,15 +179,24 @@ export default function CalendarPage() {
     }
   };
 
-  const handleDropEvent = async ({ event }) => {
+  const handleDropEvent = ({ event }) => {
     try {
       const visitDate = new Date(event?._def?.extendedProps?.visitDate)
       const newDate = new Date(event?._instance?.range?.start); 
       newDate.setHours(visitDate.getHours(), visitDate.getMinutes(), visitDate.getSeconds(), visitDate.getMilliseconds());
-      await dispatch(updateVisitDate(event.id,  newDate));
-      // await dispatch(getVisits(date));
+      const updatedData = data.map(e => {
+        if (e?.id === event.id) {
+          return { ...e, date: newDate };
+        }
+        return e;
+      });
+      
+      setData(updatedData);
+      console.log('updatedData : ',updatedData)
+      dispatch(updateVisitDate(event.id,  newDate));
     } catch (error) {
-      console.error(error);
+      enqueueSnackbar('Event Date Update Failed!', { variant: `error` });
+      dispatch(getVisits(date));
     }
   };
 
@@ -194,12 +206,9 @@ export default function CalendarPage() {
     if (selectedEventId) {
       await dispatch(updateVisit(selectedEventId, newEvent));
       await dispatch(onCloseModal());
-      // await dispatch(getVisits(date));
-      enqueueSnackbar('Update success!');
     } else {
       await dispatch(newVisit(newEvent));
       await dispatch(onCloseModal());
-      // await dispatch(getVisits(date));
       enqueueSnackbar('Create success!');
     }
   };
@@ -275,6 +284,7 @@ export default function CalendarPage() {
       </Container>
 
       <VisitDialog
+        date={date}
         event={selectedEvent}
         range={selectedRange}
         onCreateUpdateEvent={handleCreateUpdateEvent}

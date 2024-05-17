@@ -24,8 +24,8 @@ import FormProvider, { RHFDatePicker, RHFTimePicker, RHFTextField, RHFAutocomple
 const getInitialValues = (visit, range) => {
   
   const initialEvent = {
-    visitDate: visit ? visit?.visitDate : new Date(),
-    start: visit ? visit?.start : new Date(new Date().setHours(7, 0, 0)),
+    visitDate: visit ? visit?.visitDate : (range?.start || new Date() ) ,
+    start: visit ? visit?.start : (range?.start.setHours(7, 0, 0)  || new Date(new Date().setHours(7, 0, 0)) ) ,
     end: visit ? visit?.end : null,
     allDay: visit ? visit?.allDay : false,
     customer: visit ? visit?.customer : null,
@@ -60,7 +60,6 @@ function VisitDialog({
   }) {
     
     const dispatch = useDispatch();
-
     const { openModal } = useSelector((state) => state.visit );
     const { activeCustomers } = useSelector((state) => state.customer);
     const { activeContacts, activeSpContacts } = useSelector((state) => state.contact);
@@ -124,10 +123,10 @@ function VisitDialog({
       reset(getInitialValues(event?.extendedProps, range));
     }, [event, range, reset]);
     
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
       try {
-        onCreateUpdateEvent(data);
-        reset();
+        await onCreateUpdateEvent(data);
+        await reset();
       } catch (error) {
         console.error(error);
       }

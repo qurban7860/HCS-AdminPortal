@@ -44,28 +44,29 @@ const slice = createSlice({
     // CREATE VISIT
     createVisitSuccess(state, action) {
       const newEvent = action?.payload;
-      console.log("newEvent : ",newEvent)
       state.isLoading = false;
       state.visits = [...state.visits, newEvent];
-      console.log("state.visits : ",state.visits)
     },
 
     // UPDATE VISIT
     updateVisitSuccess(state, action) {
       state.isLoading = false;
       state.visits = state.visits.map((event) => {
-        console.log("event : ",event, "action.payload : ",action.payload)
-        if (event.id === action.payload.id) {
+        if (event._id === action.payload._id) {
           return action.payload;
         }
         return event;
       });
     },
+    // UPDATE VISIT
+    updateVisitDateLocal(state, action) {
+      state.visits = action.payload
+    },
 
     // DELETE VISITS
     deleteVisitSuccess(state, action) {
       const eventId = action.payload;
-      state.visits = state.visits.filter((event) => event.id !== eventId);
+      state.visits = state.visits.filter((event) => event._id !== eventId);
     },
 
     // SELECT VISITS
@@ -109,6 +110,7 @@ export const {
   onCloseModal, 
   selectVisit, 
   selectRange,
+  updateVisitDateLocal,
   resetVisits,
 } = slice.actions;
 
@@ -176,7 +178,7 @@ export function newVisit(params) {
         data.end = new Date(new Date().setHours(18, 0, 0));
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}calender/visits`, data);
-      dispatch(slice.actions.createVisitSuccess(response.data));
+      dispatch(slice.actions.createVisitSuccess(response.data.Visit));
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
@@ -194,7 +196,7 @@ export function updateVisitDate(id, date) {
         visitDate:  date,
       };
       const response = await axios.patch(`${CONFIG.SERVER_URL}calender/visits/${id}`, data);
-      dispatch(slice.actions.updateVisitSuccess(response?.data?.Visit));
+      // dispatch(slice.actions.updateVisitSuccess(response?.data?.Visit));
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
@@ -230,7 +232,7 @@ export function updateVisit(id, params) {
       }
 
       const response = await axios.patch(`${CONFIG.SERVER_URL}calender/visits/${id}`, data);
-      dispatch(slice.actions.updateVisitSuccess(response.data));
+      dispatch(slice.actions.updateVisitSuccess(response.data.Visit));
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
@@ -244,9 +246,10 @@ export function deleteVisit(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      await axios.patch(`${CONFIG.SERVER_URL}calender/visits/${id}`, { 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}calender/visits/${id}`, { 
         isArchived: true, 
        });
+       dispatch(slice.actions.deleteVisitSuccess(response.data.Visit));
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;

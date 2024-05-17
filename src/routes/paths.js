@@ -6,7 +6,7 @@ function path(root, sublink) {
 
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
-const ROOTS_VISITS = '/visits';
+const ROOTS_CALENDAR = '/Calendar';
 const ROOTS_CRM = '/crm';
 const ROOTS_MACHINE = '/products';
 const ROOTS_SECURITY = '/security';
@@ -55,12 +55,12 @@ export const PATH_DASHBOARD = {
   },
 };
 
-// --------------------- VISITS ----------------------
-export const PATH_VISITS = {
-  root: ROOTS_VISITS,
-  new: path(ROOTS_VISITS, `/new`),
-  edit: (id) => path(ROOTS_VISITS, `/{id}/edit`),
-  view: (id) => path(ROOTS_VISITS, `/{id}/view`),
+// --------------------- CALENDAR ----------------------
+export const PATH_CALENDAR = {
+  root: ROOTS_CALENDAR,
+  new: path(ROOTS_CALENDAR, `/new`),
+  edit: (id) => path(ROOTS_CALENDAR, `/{id}/edit`),
+  view: (id) => path(ROOTS_CALENDAR, `/{id}/view`),
 };
 
     // --------------------- Customer -----------------------

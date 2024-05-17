@@ -479,9 +479,9 @@ export default function Router() {
       ],
     },
 
-    // --------------------- VISITS  ----------------------
+    // --------------------- CALENDAR  ----------------------
     {
-      path: 'visits',
+      path: 'Calendar',
       element: (
         <AuthGuard>
           <DashboardLayout />
