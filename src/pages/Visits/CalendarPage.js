@@ -184,11 +184,15 @@ export default function CalendarPage() {
       const visitDate = new Date(event?._def?.extendedProps?.visitDate)
       const newDate = new Date(event?._instance?.range?.start); 
       newDate.setHours(visitDate.getHours(), visitDate.getMinutes(), visitDate.getSeconds(), visitDate.getMilliseconds());
-      const findEvent = visits.find(e => e?._id === event.id);
-      const updatedEvent = {...findEvent, visitDate: newDate };
-      const filteredEvents = visits.filter((e)=> e?._id !== event.id )
-      const updateEvents = [...filteredEvents, updatedEvent];
-      dispatch(updateVisitDateLocal(updateEvents));
+      const updatedData = data.map(e => {
+        if (e?.id === event.id) {
+          return { ...e, date: newDate };
+        }
+        return e;
+      });
+      
+      setData(updatedData);
+      console.log('updatedData : ',updatedData)
       dispatch(updateVisitDate(event.id,  newDate));
     } catch (error) {
       enqueueSnackbar('Event Date Update Failed!', { variant: `error` });
