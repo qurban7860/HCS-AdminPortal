@@ -65,7 +65,7 @@ export const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 export const StyledTooltip = styled(({ className, ...props }) => (
-  <Tooltip {...props} arrow classes={{ popper: className }} />
+  <Tooltip {...props} arrow classes={{ popper: className || "" }} />
 ))(({ theme, tooltipcolor }) => ({
   [`& .${tooltipClasses.arrow}`]: {
     color: tooltipcolor,
