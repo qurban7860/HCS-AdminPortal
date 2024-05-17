@@ -4,32 +4,32 @@ const TABS = [
     {
         value: 'customer',
         label: 'Customer Info',
-        icon: <Iconify icon="mdi:badge-account" />,
+        icon: 'mdi:account',
     },
     {
         value: 'sites',
         label: 'Sites',
-        icon: <Iconify icon="mdi:map-legend" />,
+        icon: 'mdi:map-legend',
     },
     {
         value: 'contacts',
         label: 'Contacts',
-        icon: <Iconify icon="mdi:account-multiple" />,
+        icon: 'mdi:account-multiple',
     },
     {
         value: 'notes',
         label: 'Notes',
-        icon: <Iconify icon="mdi:note-multiple" />,
+        icon: 'fluent:note-20-filled',
     },
     {
         value: 'documents',
         label: 'Documents',
-        icon: <Iconify icon="mdi:folder-open" />,
+        icon: 'mingcute:document-fill',
     },
     {
         value: 'machines',
         label: 'Machines',
-        icon: <Iconify icon="mdi:greenhouse" />,
+        icon: 'mdi:gate-open',
     },
 ];
 

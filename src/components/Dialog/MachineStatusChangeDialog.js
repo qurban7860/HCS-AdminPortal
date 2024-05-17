@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import axios from 'axios';
-import { Box, Grid, Dialog, DialogContent,  Divider, Stepper, Step, TextField, Button,  StepLabel, StepContent, DialogActions } from '@mui/material';
+import { Box, Grid, Dialog, DialogContent,  Divider, Stepper, Step, TextField, Button,  StepLabel, StepContent, DialogActions, Checkbox, FormControlLabel } from '@mui/material';
 import { PATH_MACHINE } from '../../routes/paths';
 import DialogLabel from './DialogLabel';
 import ViewFormField from '../ViewForms/ViewFormField';
@@ -29,6 +29,8 @@ function MachineStatusChangeDialog() {
 
   const { machine, machineStatusChangeDialog } = useSelector((state) => state.machine);
   const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
+  const [ updateConnectedMachines, setUpdateConnectedMachines ] = useState(false);
+  const [ dateLabel, setDateLabel ] = useState('Date');
 
   useEffect(()=> {
     dispatch(getActiveMachineStatuses(cancelTokenSource))
@@ -50,7 +52,7 @@ function MachineStatusChangeDialog() {
   const methods = useForm({
     resolver: yupResolver(statusChangeSchema),
     defaultValues: {
-      date: null,
+      date: new Date(),
       status: null,
     },
   });
@@ -71,6 +73,7 @@ function MachineStatusChangeDialog() {
 
   const onSubmit = async (data) => {
       try {
+        data.updateConnectedMachines = updateConnectedMachines;
         const response = await dispatch(changeMachineStatus(machine?._id, data));
         enqueueSnackbar(Snacks.machineStatusSuccess);
         dispatch(getMachine(machine?._id));
@@ -103,17 +106,44 @@ function MachineStatusChangeDialog() {
                   getOptionDisabled={(option) =>
                     option._id === machine?.status?._id
                   }
+
+                  onChange={(option, newValue)=>
+                    { 
+                      setValue('status',newValue);
+
+                      if(newValue?.name?.toUpperCase()==='ASSEMBLY'){
+                        setDateLabel('Manufacture Date')
+                      }else if(newValue?.name?.toUpperCase()==='FREIGHT'){
+                        setDateLabel('Shipping Date')
+                      }else if(newValue?.name?.toUpperCase()==='COMMISSIONED'){
+                        setDateLabel('Installation Date')
+                      }else if(newValue?.name?.toUpperCase()==='DECOMMISSIONED'){
+                        setDateLabel('Decommissioned Date')
+                      }else {
+                        setDateLabel('Date')
+                      }
+                    } 
+
+                  }
                   isOptionEqualToValue={(option, value) => option?._id === value?._id}
                   getOptionLabel={(option) => `${option.name || ''}`}
                   renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
                 />
-                <RHFDatePicker inputFormat='dd/MM/yyyy' name="date" label="Date*" />
+                <RHFDatePicker inputFormat='dd/MM/yyyy' name="date" label={`${dateLabel} *`} />
             </Box> 
         </FormProvider>
       </DialogContent>
       <DialogActions>
-        <Button variant='outlined' onClick={handleMachineDialog}>Cancel</Button>
-        <Button variant='contained' onClick={handleSubmit(onSubmit)}>Save</Button>
+        <Grid container justifyContent="space-between">
+          <Grid item>
+            <FormControlLabel control={<Checkbox checked={updateConnectedMachines} 
+              onChange={(event, value)=>setUpdateConnectedMachines(value)} /> } label="Update Connected Machines" />
+          </Grid>
+          <Grid item columnGap={1} sx={{display:'flex'}}>
+            <Button variant='outlined' onClick={handleMachineDialog}>Cancel</Button>
+            <Button variant='contained' onClick={handleSubmit(onSubmit)}>Save</Button>
+          </Grid>
+        </Grid>
       </DialogActions>
     </Dialog>
   );

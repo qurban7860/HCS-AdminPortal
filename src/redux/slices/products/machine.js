@@ -812,7 +812,7 @@ export function changeMachineStatus(machineId, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = {dated: params?.date};
+      const data = {dated: params?.date, updateConnectedMachines:params?.updateConnectedMachines};
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/updateStatus/${params?.status?._id}`,data);
     } catch (error) {
       dispatch(slice.actions.stopLoading());

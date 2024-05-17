@@ -13,7 +13,6 @@ import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import  TABS from './index';
 import { PATH_MACHINE } from '../../../routes/paths';
 import { getMachine, resetMachine } from '../../../redux/slices/products/machine';
-import TabButtonTooltip from '../../../components/Tabs/TabButtonTooltip';
 
 // ----------------------------------------------------------------------
 
@@ -74,9 +73,8 @@ export default function MachineTabContainer({ currentTabValue }) {
               disabled={tab.disabled}
               key={tab.value}
               value={tab.value}
-              icon={<TabButtonTooltip selected={tab?.value===currentTabValue} title={tab.label} icon={tab.icon}/>}
-              sx={{marginRight:'5px !important'}}
-              // label={tab.label}
+              icon={tab.icon}
+              label={tab.label}
             />
           ))}
         </TabContainer>}

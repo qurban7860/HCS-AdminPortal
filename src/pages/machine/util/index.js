@@ -71,62 +71,62 @@ const TABS = [
   {
     value: 'machine',
     label: 'Machine Info',
-    icon: <Iconify icon="mdi:window-open-variant" />,
+    icon: "mdi:gate-open",
   },
   {
     value: 'settings',
     label: 'Settings',
-    icon: <Iconify icon="mdi:cogs" />,
+    icon: "mdi:cog",
   },
   {
     value: 'toolsinstalled',
     label: 'Tools Installed',
-    icon: <Iconify icon="mdi:folder-wrench" />,
+    icon: "fa-solid:tools",
   },
   {
     value: 'notes',
     label: 'Notes',
-    icon: <Iconify icon="mdi:note-multiple" />,
+    icon: "fluent:note-20-filled",
   },
   {
     value: 'drawings',
     label: 'Drawings',
-    icon: <Iconify icon="mdi:folder-open" />,
+    icon: "streamline:hand-held-tablet-drawing-solid",
   },
   {
     value: 'documents',
     label: 'Documents',
-    icon: <Iconify icon="mdi:folder-open" />,
+    icon: "mingcute:document-fill",
   },
   {
     value: 'license',
     label: 'Licenses',
-    icon: <Iconify icon="mdi:book-cog-outline" />,
+    icon: "mdi:book-cog-outline",
   },
   {
     value: 'profile',
     label: 'Profiles',
-    icon: <Iconify icon="mdi:window-open-variant" />,
+    icon: "fluent:document-flowchart-24-filled",
   },
   {
     value: 'serviceRecords',
     label: 'Service Records',
-    icon: <Iconify icon="mdi:clipboard-text-clock" />,
+    icon: "mdi:clipboard-text-clock",
   },
   {
     value: 'ini',
     label: 'INI',
-    icon: <Iconify icon="ic:round-manage-history" />,
+    icon: "ph:file-ini-fill",
   },
   {
     value: 'logs',
     label: 'Logs',
-    icon: <Iconify icon="entypo:bar-graph" />,
+    icon: "lucide:list-end",
   },  
   {
     value: 'jira',
     label: 'Jira',
-    icon: <Iconify icon="simple-icons:jirasoftware" />,
+    icon: "simple-icons:jirasoftware",
   },
   
 ];
