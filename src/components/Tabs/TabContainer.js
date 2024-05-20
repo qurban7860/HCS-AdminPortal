@@ -41,11 +41,13 @@ function TabContainer({
         },
       },
       '& .MuiButtonBase-root':{
-        pr:1,
         marginRight:'0px !important',
       },
       '& .MuiIconButton-root':{
         mr:'5px  !important'
+      },
+      '& .Mui-selected':{
+        pr:1,
       }
     },
 
