@@ -52,7 +52,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const { enqueueSnackbar } = useSnackbar();
   const theme = createTheme({ palette: { success: green } });
   const { activeSpContacts } = useSelector((state) => state.contact);
-  const { activeCustomers } = useSelector((state) => state.contact);
+  const { activeCustomers } = useSelector((state) => state.customer);
 
   const PHONE_TYPES_ = JSON.parse( localStorage.getItem('configurations'))?.find( ( c )=> c?.name === 'PHONE_TYPES' )
   let PHONE_TYPES = ['Mobile', 'Home', 'Work', 'Fax', 'Others'];
