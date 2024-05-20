@@ -41,6 +41,8 @@ export default function CustomerTabContainer({ currentTabValue }) {
       navigate( PATH_CRM.customers.jira.root(customerId) )
     } 
   }
+
+
   return (
       <StyledCardContainer>
         <Cover name={customer ? customer.name : 'New Customer'} avatar isArchived={ customer?.isArchived } />
@@ -49,7 +51,8 @@ export default function CustomerTabContainer({ currentTabValue }) {
           currentTab={currentTabValue}
           setCurrentTab={(tab)=>  navigatePage(tab) }
         >
-          {TABS.map((tab) => (
+          {TABS.map((tab) =>
+          (!customer?.isArchived || tab.value !== "machines") ? (
             <Tab
               disabled={tab.disabled}
               key={tab.value}
@@ -57,7 +60,7 @@ export default function CustomerTabContainer({ currentTabValue }) {
               label={tab?.value===currentTabValue?tab.label:""}
               icon={<TabButtonTooltip selected={tab?.value===currentTabValue} title={tab.label} icon={tab.icon}/>}
             />
-          ))}
+          ):null)}
         </TabContainer>
       </StyledCardContainer>
   );

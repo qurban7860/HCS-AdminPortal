@@ -414,7 +414,7 @@ export function addCustomer(params) {
           clientCode: params?.code,
           tradingName: params?.tradingName,
           ref: params?.ref,
-          groupCustomer: params?.groupCustomer?.id,
+          groupCustomer: params?.groupCustomer?._id,
           accountManager: params?.accountManager?.map((account) => account?._id),
           projectManager: params?.projectManager?.map((project) => project?._id),
           supportManager: params?.supportManager?.map((support) => support?._id),

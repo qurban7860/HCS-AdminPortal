@@ -86,7 +86,8 @@ function ViewFormEditDeleteButtons({
   excludeReports,
   isConectable,
   hanldeViewGallery,
-  customerPage, 
+  customerPage,
+  archived, 
   machinePage, 
   drawingPage,
   history,
@@ -663,7 +664,7 @@ function ViewFormEditDeleteButtons({
         }
 
         {/* edit button */}
-        {handleEdit && <IconTooltip
+        {handleEdit && !archived && <IconTooltip
           title="Edit"
           disabled={disableEditButton || (( machineSettingPage || settingPage || securityUserPage ) && ( isSettingReadOnly || isSecurityReadOnly ))}
           onClick={() => {
@@ -693,7 +694,7 @@ function ViewFormEditDeleteButtons({
           />
         )}
         {/* delete button */}
-        {id !== userId  && !mainSite && onDelete && (
+        {id !== userId  && !mainSite && onDelete && !archived && (
           <IconTooltip
             title="Archive"
             disabled={ isDisableDelete || disableDeleteButton }
@@ -931,6 +932,7 @@ ViewFormEditDeleteButtons.propTypes = {
   securityUserPage: PropTypes.bool,
   hanldeViewGallery: PropTypes.func,
   customerPage: PropTypes.bool, 
+  archived: PropTypes.bool,
   machinePage: PropTypes.bool, 
   drawingPage: PropTypes.bool,
   history: PropTypes.array,

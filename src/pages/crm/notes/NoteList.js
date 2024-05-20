@@ -66,7 +66,7 @@ export default function NoteList() {
 
   useEffect(() => {
     if(customerId){
-      dispatch(getNotes(customerId, customer?.isArchived || false));
+      dispatch(getNotes(customerId, customer?.isArchived));
     }
     return ()=>{ dispatch(resetNotes()) };
   }, [dispatch, customerId, customer?.isArchived ]);
