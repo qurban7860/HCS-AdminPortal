@@ -7,7 +7,7 @@ import timelinePlugin from '@fullcalendar/timeline';
 //
 import { useState, useRef, useEffect } from 'react';
 // @mui
-import { Card, Button, Container, DialogTitle, Dialog, Divider } from '@mui/material';
+import { Card, Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -25,24 +25,17 @@ import {
   onCloseModal,
 } from '../../redux/slices/visit/visit';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
-// routes
-import { PATH_DASHBOARD } from '../../routes/paths';
-// utils
-import { fTimestamp } from '../../utils/formatTime';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
 // components
 import Iconify from '../../components/iconify';
 import { useSnackbar } from '../../components/snackbar';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
 import { useDateRangePicker } from '../../components/date-range-picker';
 // sections
 import {
-  // CalendarForm,
   StyledCalendar,
   CalendarToolbar,
-  // CalendarFilterDrawer,
 } from '../calendar';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
@@ -65,6 +58,8 @@ export default function CalendarPage() {
   const userCustomer = localStorage.getItem('customer')
 
   const [data, setData] = useState([]);
+  const [previousDate, setPreviousDate] = useState(null);
+
   const [selectedCustomer, setSelectedCustomer] = useState(null);
 
   useEffect(() =>{
@@ -112,7 +107,10 @@ export default function CalendarPage() {
 
   useEffect(() => {
     if(selectedCustomer && date && !openModal ){
-      dispatch(getVisits(date, selectedCustomer?._id ));
+      // if(previousDate?.getFullYear() !== date?.getFullYear() && (Number(previousDate?.getMonth())+1) !== (Number(date?.getMonth())+1)){
+        setPreviousDate(date);
+        dispatch(getVisits(date, selectedCustomer?._id ));
+      // }
     }
       return () => {
         dispatch(resetVisits());
