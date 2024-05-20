@@ -93,7 +93,7 @@ export default function CustomerViewForm() {
               handleEdit={ customer?.isArchived ? undefined : handleEdit }
               onDelete={ customer?.isArchived ? undefined : onDelete }
               supportSubscription={ customer?.isArchived ? undefined : defaultValues.supportSubscription}
-              backLink={() => navigate(PATH_CRM.customers.list)}
+              backLink={() => customer?.isArchived ? navigate(PATH_CRM.customers.archived.root):navigate(PATH_CRM.customers.list)}
               excludeReports={ customer?.isArchived ? undefined : defaultValues.excludeReports}
             />
 
