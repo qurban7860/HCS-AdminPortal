@@ -80,6 +80,9 @@ import {
   CustomerMachineMove,
   CustomerMachineAdd,
 
+  // Customer Jira
+  CustomerJiraList,
+
   // ----------------------------------------------------------------
 
   // CUSTOMER SETTING DEPARTMENTS
@@ -559,12 +562,19 @@ export default function Router() {
                   ]
                 },
               ],
-            },        
+            },   
+            // ------------------------------ Customer Machines ----------------------------------     
             { path: ':customerId/machines',
               children: [
                 { element: <CustomerMachines />, index: true  },
                 { path: 'new',element: <CustomerMachineAdd />  },
                 { path: ':id/move',element: <CustomerMachineMove />  },
+              ],
+            },
+            // ------------------------------ Customer Jira ----------------------------------     
+            { path: ':customerId/jira',
+              children: [
+                { element: <CustomerJiraList />, index: true  },
               ],
             },
             // ------------------------------ ARCHIVED CUSTOMERS ----------------------------------

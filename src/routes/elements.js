@@ -101,6 +101,9 @@ export const CustomerMachines = Loadable(lazy(() => import('../pages/crm/machine
 export const CustomerMachineAdd = Loadable(lazy(() => import('../pages/crm/machines/NewMachine')));
 export const CustomerMachineMove = Loadable(lazy(() => import('../pages/crm/machines/machine_move/CustomerMachineMove')));
 
+// CUSTOMER Jira
+export const CustomerJiraList = Loadable(lazy(() => import('../pages/crm/jira/CustomerJiraList')));
+
 // ----------------------------------------------------------------
 
 // CUSTOMER SETTING DEPARTMENTS

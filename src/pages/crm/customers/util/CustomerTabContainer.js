@@ -37,6 +37,8 @@ export default function CustomerTabContainer({ currentTabValue }) {
       navigate( PATH_CRM.customers.documents.root(customerId) )
     } else if(tab === 'machines' && customerId  ){
       navigate( PATH_CRM.customers.machines.root(customerId) )
+    } else if(tab === 'jira' && customerId  ){
+      navigate( PATH_CRM.customers.jira.root(customerId) )
     } 
   }
   return (
