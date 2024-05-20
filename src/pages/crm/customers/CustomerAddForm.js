@@ -12,7 +12,7 @@ import { createTheme } from '@mui/material/styles';
 import { green } from '@mui/material/colors';
 import { Box, Card, Grid, Stack, IconButton, Typography } from '@mui/material';
 // slice
-import { addCustomer } from '../../../redux/slices/customer/customer';
+import { addCustomer, getActiveCustomers } from '../../../redux/slices/customer/customer';
 import { getActiveSPContacts, resetActiveSPContacts } from '../../../redux/slices/customer/contact';
 // routes
 import { PATH_CRM } from '../../../routes/paths';
@@ -52,6 +52,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const { enqueueSnackbar } = useSnackbar();
   const theme = createTheme({ palette: { success: green } });
   const { activeSpContacts } = useSelector((state) => state.contact);
+  const { activeCustomers } = useSelector((state) => state.contact);
 
   const PHONE_TYPES_ = JSON.parse( localStorage.getItem('configurations'))?.find( ( c )=> c?.name === 'PHONE_TYPES' )
   let PHONE_TYPES = ['Mobile', 'Home', 'Work', 'Fax', 'Others'];
@@ -60,6 +61,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   }
 
   useLayoutEffect(() => {
+    dispatch(getActiveCustomers());
     dispatch(getActiveSPContacts());
     return () => { resetActiveSPContacts() }
   }, [dispatch]);
@@ -71,6 +73,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       code:'',
       tradingName: [],
       ref: '',
+      groupCustomer:null,
       phoneNumbers: [
         { type: PHONE_TYPES[0], countryCode: '64' },
         { type: PHONE_TYPES[0], countryCode: '64' },
@@ -187,12 +190,20 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               rowGap={2} columnGap={2} display="grid"
               gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
             >
+              <RHFAutocomplete
+                  name="groupCustomer"
+                  label='Group Customer'
+                  options={activeCustomers || []}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                  getOptionLabel={(option) => `${option?.name || ''}`}
+                  renderOption={(props, option) => ( <li {...props} key={option?._id}>{option?.name || ''} </li>)}
+                />
               <RHFTextField name="ref" label="Reference Number"  />
             </Box>
               {/* 
-                  <RHFPhoneInput name="phone" label="Phone Number"  />
-                  <RHFPhoneInput name="fax" label="Fax" /> 
-                */}
+                <RHFPhoneInput name="phone" label="Phone Number"  />
+                <RHFPhoneInput name="fax" label="Fax" /> 
+              */}
 
           </Stack>
         </Card>

@@ -192,7 +192,6 @@ export default function CalendarPage() {
       });
       
       setData(updatedData);
-      console.log('updatedData : ',updatedData)
       dispatch(updateVisitDate(event.id,  newDate));
     } catch (error) {
       enqueueSnackbar('Event Date Update Failed!', { variant: `error` });

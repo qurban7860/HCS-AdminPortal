@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from '../../../components/snackbar';
 // slice
-import { updateCustomer, setCustomerTab } from '../../../redux/slices/customer/customer';
+import { updateCustomer, setCustomerTab, getActiveCustomers } from '../../../redux/slices/customer/customer';
 import { getActiveContacts, getActiveSPContacts } from '../../../redux/slices/customer/contact';
 import { getActiveSites } from '../../../redux/slices/customer/site';
 // routes
@@ -25,7 +25,7 @@ import FormLabel from '../../../components/DocumentForms/FormLabel';
 // ----------------------------------------------------------------------
 
 export default function CustomerEditForm() {
-  const { customer } = useSelector((state) => state.customer);
+  const { customer, activeCustomers } = useSelector((state) => state.customer);
   const { activeSites } = useSelector((state) => state.site);
   const { activeSpContacts, activeContacts } = useSelector((state) => state.contact);
 
@@ -35,6 +35,7 @@ export default function CustomerEditForm() {
   const { customerId } = useParams();
 
   useEffect(() => {
+    dispatch(getActiveCustomers());
     dispatch(getActiveContacts(customerId));
     dispatch(getActiveSites(customerId));
     dispatch(getActiveSPContacts());
@@ -47,6 +48,7 @@ export default function CustomerEditForm() {
       name: customer?.name || '',
       tradingName: customer?.tradingName || [],
       ref: customer?.ref || '',
+      groupCustomer: customer?.groupCustomer || null,
       mainSite: customer?.mainSite || null,
       primaryTechnicalContact: customer?.primaryTechnicalContact || null,
       primaryBillingContact: customer?.primaryBillingContact || null,
@@ -98,6 +100,8 @@ export default function CustomerEditForm() {
     }
   };
 
+  // console.log('allActiveCustomers::',allActiveCustomers)
+
   return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container >
@@ -119,8 +123,14 @@ export default function CustomerEditForm() {
                   rowGap={2} columnGap={2} display="grid"
                   gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                 >
-                  <RHFTextField name="ref" label="Reference Number"  />
-
+                  <RHFAutocomplete
+                    name="groupCustomer"
+                    label='Group Customer'
+                    options={activeCustomers || []}
+                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                    getOptionLabel={(option) => `${option?.name || ''}`}
+                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{option?.name || ''} </li>)}
+                  />
                   <RHFAutocomplete
                     name="mainSite"
                     label={FORMLABELS.CUSTOMER.MAINSITE.label}
@@ -154,6 +164,9 @@ export default function CustomerEditForm() {
                       renderOption={(props, option) => (<li {...props} key={option?._id}>{option?.firstName || ''}{' '}{option?.lastName || ''}</li>)}
                     />
                   </Box>
+                  
+                  <RHFTextField name="ref" label="Reference Number"  />
+
               </Stack>
                 </Card>
                 <Card sx={{ p: 3 }}>
