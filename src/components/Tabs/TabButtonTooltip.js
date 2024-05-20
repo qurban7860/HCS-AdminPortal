@@ -15,7 +15,7 @@ export default function TabButtonTooltip({
 }) {
 
     return (
-      <StyledTooltip title={title} placement={placement} disableFocusListener tooltipcolor={color} color={color}>
+      <StyledTooltip title={selected?'':title} placement={placement} disableFocusListener tooltipcolor={color} color={color}>
             <IconButton
               sx={{ cursor:'pointer', 
               border:'1px solid',

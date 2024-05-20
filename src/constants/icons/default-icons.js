@@ -482,4 +482,22 @@ export const ICONS = {
   MAP_MARKER: {
     url: '/logo/howick_map-marker.svg',
   },
+
+  // Tabs Icons
+  CUSTOMER:{ icon: 'mdi:account' },
+  SITES:{ icon:'mdi:map-legend'},
+  CONTACTS:{ icon:'mdi:account-multiple'},
+  MACHINES:{ icon:'mdi:gate-open'},
+  DOCUMENTS: { icon:'ph:files-fill' },
+  MACHINE: { icon:'mdi:gate-open' },
+  SETTINGS:{ icon:'mdi:cog' },
+  TOOLS_INSTALLED:{ icon:'fa-solid:tools' },
+  NOTES:{ icon:'fluent:note-20-filled' },
+  DRAWINGS:{ icon:'streamline:hand-held-tablet-drawing-solid' },
+  LICENSES:{ icon:'mdi:book-cog-outline' },
+  PROFILES:{ icon:'fluent:document-flowchart-24-filled' },
+  SERVICE_RECORDS:{ icon:'mdi:clipboard-text-clock' },
+  INI:{ icon:'ph:file-ini-fill' },
+  LOGS:{ icon:'lucide:list-end' },
+  JIRA:{ icon:'simple-icons:jirasoftware' },
 };
