@@ -5,7 +5,9 @@ import { TableCell } from '@mui/material';
 import { fDate, fDateTime } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
-import { StyledTableRow } from '../../../theme/styles/default-styles'
+import { StyledTableRow } from '../../../theme/styles/default-styles';
+import { CONFIG } from '../../../config-global';
+
 
 // ----------------------------------------------------------------------
 
@@ -33,13 +35,11 @@ export default function MachineJiraTableRow({
 }) {
 
   const { id, self, key, fields, expand } = row;
-
-  const jiraServiceManagemntUrl = `https://howickltd.atlassian.net/jira/servicedesk/projects/HWKSC/queues/custom/3/${key}`
-
+  
   return (
       <StyledTableRow hover selected={selected}>
         <TableCell align="left">{fDateTime(fields?.created) || ''}</TableCell>
-        <LinkTableCell align="left" onClick={() => onViewRow( jiraServiceManagemntUrl )} param={key || ''} />
+        <LinkTableCell align="left" onClick={() => onViewRow( `${CONFIG}${key}` )} param={key || ''} />
         <TableCell align="left">{fields?.status?.name || ''}</TableCell>
         <TableCell align="left">{fields?.summary || ''}</TableCell>
       </StyledTableRow>
