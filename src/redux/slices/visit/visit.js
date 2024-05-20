@@ -116,13 +116,14 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getVisits(date) {
+export function getVisits(date, customer) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const params= {
         isArchived: false,
         isActive: true,
+        customer,
       }
       if(date){
         params.month = (Number(date?.getMonth())+1)
@@ -249,7 +250,7 @@ export function deleteVisit(id) {
       const response = await axios.patch(`${CONFIG.SERVER_URL}calender/visits/${id}`, { 
         isArchived: true, 
        });
-       dispatch(slice.actions.deleteVisitSuccess(response.data.Visit));
+      //  dispatch(slice.actions.deleteVisitSuccess(response.data.Visit));
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;

@@ -20,12 +20,13 @@ export default function TabButtonTooltip({
               sx={{ cursor:'pointer', 
               border:'1px solid',
               borderRadius:1,
+              padding:'4px !important',
               borderColor:`${selected?color:"#dbdbdb"}`,
                 background:`${selected?color:"#fff"} !important`,
                 ':hover':  { borderColor: color},
               }}
               >
-              <Iconify color={selected?'#fff':color} width="20px" icon={icon} />
+              <Iconify color={selected?'#fff':color} width="25px" icon={icon} />
             </IconButton>
       </StyledTooltip>
     );

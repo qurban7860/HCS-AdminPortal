@@ -15,17 +15,16 @@ import { LoadingButton } from '@mui/lab';
 import { onCloseModal } from '../../redux/slices/visit/visit';
 import DialogLink from './DialogLink';
 import Iconify from '../iconify';
-import { getActiveCustomers, resetActiveCustomers } from '../../redux/slices/customer/customer';
+// import { getActiveCustomers, resetActiveCustomers } from '../../redux/slices/customer/customer';
 import { getActiveSPContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import FormProvider, { RHFDatePicker, RHFTimePicker, RHFTextField, RHFAutocomplete, RHFSwitch } from '../hook-form';
 
 const getInitialValues = (visit, range) => {
-  
   const initialEvent = {
     visitDate: visit ? visit?.visitDate : (range?.start || new Date() ) ,
-    start: visit ? visit?.start : (range?.start.setHours(7, 0, 0)  || new Date(new Date().setHours(7, 0, 0)) ) ,
+    start: visit ? visit?.start : (range?.start  || new Date(new Date().setHours(7, 0, 0)) ) ,
     end: visit ? visit?.end : null,
     allDay: visit ? visit?.allDay : false,
     customer: visit ? visit?.customer : null,
@@ -69,15 +68,17 @@ function VisitDialog({
     const hasEventData = !!event;
 
     useEffect(()=>{
-      dispatch(getActiveCustomers())
-      dispatch(getActiveSPContacts())
+      if(openModal){
+        // dispatch(getActiveCustomers())
+        dispatch(getActiveSPContacts())
+      }
       return () => {
-        dispatch(resetActiveCustomers())
+        // dispatch(resetActiveCustomers())
         dispatch(resetActiveSPContacts())
         dispatch(resetActiveCustomerMachines())
         dispatch(resetActiveSites())
       }
-    },[ dispatch ])
+    },[ dispatch, openModal ])
 
     const EventSchema = Yup.object().shape({
       visitDate: Yup.date().nullable().label('Visit Date').typeError('Date should be a valid Date').required(),
@@ -112,6 +113,17 @@ function VisitDialog({
 
     const { visitDate, jiraTicket, customer, machine, primaryTechnician, allDay } = watch();
 
+    useEffect(()=>{
+      if(customer){
+        dispatch(getActiveCustomerMachines(customer?._id))
+        dispatch(getActiveSites(customer?._id))
+      } else {
+        dispatch(resetActiveCustomerMachines())
+        dispatch(resetActiveSites())
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[ dispatch, customer ])
+
     useEffect(() => { 
       if( jiraTicket || customer || machine || primaryTechnician ){
         trigger() 
@@ -132,13 +144,21 @@ function VisitDialog({
       }
     };
 
+    const closeModel = ()=> {
+      dispatch(onCloseModal()) 
+      // dispatch(resetActiveCustomers())
+      dispatch(resetActiveSPContacts())
+      dispatch(resetActiveCustomerMachines())
+      dispatch(resetActiveSites())
+    } 
+
   return (
     <Dialog
       fullWidth
       disableEnforceFocus
       maxWidth="md"
       open={openModal} 
-      onClose={()=> dispatch(onCloseModal()) }
+      onClose={ closeModel }
       keepMounted
       aria-describedby="alert-dialog-slide-description"
     >
@@ -163,17 +183,6 @@ function VisitDialog({
             isOptionEqualToValue={(option, value) => option?._id === value?._id}
             getOptionLabel={(option) => `${option.name || ''}`}
             renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
-            onChange={( e ,newValue) => {  
-              if(newValue){
-                setValue('customer',newValue);
-                  dispatch(getActiveCustomerMachines(newValue?._id))
-                  dispatch(getActiveSites(newValue?._id))
-              } else {
-                setValue('customer',null);
-                  dispatch(resetActiveCustomerMachines())
-                  dispatch(resetActiveSites())
-              }
-            }}
           />
 
           <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
@@ -257,7 +266,7 @@ function VisitDialog({
 
         <Box sx={{ flexGrow: 1 }} />
 
-        <Button variant="outlined" color="inherit" onClick={()=> dispatch(onCloseModal())}>
+        <Button variant="outlined" color="inherit" onClick={closeModel}>
           Cancel
         </Button>
 
