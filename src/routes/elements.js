@@ -55,10 +55,10 @@ export const MachineByYearsView = Loadable(lazy(() => import('../pages/dashboard
 // ----------------------------------------------------------------
 
 // DASHBOARD
-export const Visits = Loadable(lazy(() => import('../pages/Visits/CalendarPage')));
-export const NewVisits = Loadable(lazy(() => import('../pages/Visits/CalendarPage')));
-export const EditVisits = Loadable(lazy(() => import('../pages/Visits/CalendarPage')));
-export const ViewVisits = Loadable(lazy(() => import('../pages/Visits/CalendarPage')));
+export const Visits = Loadable(lazy(() => import('../pages/calendar/CalendarPage')));
+export const NewVisits = Loadable(lazy(() => import('../pages/calendar/CalendarPage')));
+export const EditVisits = Loadable(lazy(() => import('../pages/calendar/CalendarPage')));
+export const ViewVisits = Loadable(lazy(() => import('../pages/calendar/CalendarPage')));
 
 // CUSTOMER
 export const CustomerList = Loadable(lazy(() => import('../pages/crm/reports/customers/CustomerList')));
@@ -100,6 +100,9 @@ export const CustomerDocumentGallery            = Loadable(lazy(() => import('..
 export const CustomerMachines = Loadable(lazy(() => import('../pages/crm/machines/machine_list/CustomerMachines')));
 export const CustomerMachineAdd = Loadable(lazy(() => import('../pages/crm/machines/NewMachine')));
 export const CustomerMachineMove = Loadable(lazy(() => import('../pages/crm/machines/machine_move/CustomerMachineMove')));
+
+// CUSTOMER Jira
+export const CustomerJiraList = Loadable(lazy(() => import('../pages/crm/jira/CustomerJiraList')));
 
 // ----------------------------------------------------------------
 

@@ -121,6 +121,10 @@ export const PATH_CRM = {
       move: ( customerId, id ) => path(ROOTS_CRM, `/customers/${customerId}/machines/${id}/move`),
       new: ( customerId ) => path(ROOTS_CRM, `/customers/${customerId}/machines/new`),
     },
+    // --------------------- Customer Jira -----------------------
+    jira: {
+      root: ( customerId ) => path(ROOTS_CRM, `/customers/${customerId}/jira`),
+    },
     // ------------------------ ARCHIVED CUSTOMERS ----------------------------------------
     archived: {
       root: path(ROOTS_CRM, '/customers/archived'),

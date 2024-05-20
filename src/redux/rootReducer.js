@@ -54,6 +54,7 @@ import dbBackupLogsReducer from './slices/logs/dbBackupLogs';
 import machineJiraReducer from './slices/products/machineJira';
 import emailsReducer from './slices/email/emails';
 import visitReducer from './slices/visit/visit';
+import customerJiraReducer from './slices/customer/customerJira';
 
 // ----------------------------------------------------------------------
 
@@ -403,6 +404,12 @@ export const visitPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
+export const customerJiraPersistConfig = {
+  key: 'customerJira',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
 
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
@@ -457,6 +464,7 @@ const rootReducer = combineReducers({
   machineJira: persistReducer(machineJiraPersistConfig, machineJiraReducer),
   emails: persistReducer(emailsPersistConfig, emailsReducer),
   visit: persistReducer(visitPersistConfig, visitReducer),
+  customerJira: persistReducer(customerJiraPersistConfig, customerJiraReducer),  
 });
 
 export default rootReducer;

@@ -11,16 +11,16 @@ const initialState = {
   success: false,
   isLoading: false,
   error: null,
-  machineJira: {},
-  machineJiras: [],
-  machineJiraTotalCount: 0,
+  customerJira: {},
+  customerJiras: [],
+  customerJiraTotalCount: 0,
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
 };
 
 const slice = createSlice({
-  name: 'machineJira',
+  name: 'customerJira',
   initialState,
   reducers: {
     // START LOADING
@@ -34,17 +34,17 @@ const slice = createSlice({
       state.initial = true;
     },
     // GET MACHINE LOG
-    getMachineJiraRecordSuccess(state, action) {
+    getCustomerJiraRecordSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.machineJira = action.payload;
+      state.customerJira = action.payload;
       state.initial = true;
     },
     // GET MACHINE LOGS
-    getMachineJiraRecordsSuccess(state, action) {
+    getCustomerJiraRecordsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.machineJiras = action.payload;
+      state.customerJiras = action.payload;
       state.initial = true;
     },
     // RESPONSE MESSAGE
@@ -55,18 +55,18 @@ const slice = createSlice({
       state.initial = true;
     },
     // RESET MACHINE TECH PARAM
-    resetMachineJiraRecord(state){
-      state.machineJira = {};
+    resetCustomerJiraRecord(state){
+      state.customerJira = {};
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
     // RESET MACHINE TECH PARAM
-    resetMachineJiraRecords(state){
-      state.machineJiras = [];
+    resetCustomerJiraRecords(state){
+      state.customerJiras = [];
       state.responseMessage = null;
       state.success = false;
-      state.machineJiraTotalCount = 0;
+      state.customerJiraTotalCount = 0;
       // state.isLoading = false;
     },
     // Set FilterBy
@@ -89,8 +89,8 @@ export default slice.reducer;
 
 // Actions
 export const {
-  resetMachineJiraRecord,
-  resetMachineJiraRecords,
+  resetCustomerJiraRecord,
+  resetCustomerJiraRecords,
   setResponseMessage,
   setFilterBy,
   ChangeRowsPerPage,
@@ -100,20 +100,19 @@ export const {
 
 // -------------------------- GET RECORD ----------------------------------------------------------------------
 
-export function getMachineJira(machineId, page, pageSize ) {
+export function getCustomerJira(ref, page, pageSize ) {
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
       const params= {
-        machine: machineId,
-
+        ref,
       }
       params.pagination = {
         page,
         pageSize  
       }
       const response = await axios.get(`${CONFIG.SERVER_URL}logs/erp/`, { params } );
-      dispatch(slice.actions.getMachineJiraRecordSuccess(response.data));
+      dispatch(slice.actions.getCustomerJiraRecordSuccess(response.data));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -124,19 +123,19 @@ export function getMachineJira(machineId, page, pageSize ) {
 
 // -------------------------- GET RECORD'S ----------------------------------------------------------------------
 
-export function getMachineJiras(serialNo, page, pageSize ) {
+export function getCustomerJiras(ref, page, pageSize ) {
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
       const params= {
-        serialNo,
+        ref,
       }
       params.pagination = {
         page,
         pageSize  
       }
       const response = await axios.get(`${CONFIG.SERVER_URL}/jira/tickets?orderBy=-created&startAt=0&maxResults=1`, { params } );
-      dispatch(slice.actions.getMachineJiraRecordsSuccess(response.data));
+      dispatch(slice.actions.getCustomerJiraRecordsSuccess(response.data));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));

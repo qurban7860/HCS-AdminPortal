@@ -91,9 +91,8 @@ export default function CalendarToolbar({
 
       <Stack direction="row" alignItems="center" spacing={2}>
         {isAllAccessAllowed && !isSettingReadOnly && <Autocomplete 
-          disableClearable
           value={ selectedCustomer || null}
-          options={[{ name: 'All Customers' }, ...activeCustomers]}
+          options={activeCustomers}
           isOptionEqualToValue={(option, val) => option?._id === val?._id}
           getOptionLabel={(option) => `${option?.name || ''}`}
           onChange={(event, newValue) => {
