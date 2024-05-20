@@ -214,13 +214,23 @@ export default function CalendarPage() {
   const handleCloseModal = () => dispatch(onCloseModal());
 
   const handleCreateUpdateEvent = async (newEvent) => {
+
     if (selectedEventId) {
-      await dispatch(updateVisit(selectedEventId, newEvent));
-      await dispatch(onCloseModal());
+      try{
+        await dispatch(updateVisit(selectedEventId, newEvent));
+        await dispatch(onCloseModal());
+        enqueueSnackbar('Event Updated Successfully!');
+      } catch(e){
+        enqueueSnackbar('Event Update Failed!');
+      }
     } else {
-      await dispatch(newVisit(newEvent));
-      await dispatch(onCloseModal());
-      enqueueSnackbar('Create success!');
+      try{
+        await dispatch(newVisit(newEvent));
+        await dispatch(onCloseModal());
+        enqueueSnackbar('Event Created Successfully!');
+      } catch(e){
+      enqueueSnackbar('Event Create Failed!');
+      }
     }
   };
 
@@ -231,6 +241,7 @@ export default function CalendarPage() {
         await handleCloseModal();
         await dispatch(deleteVisit(selectedEventId));
       }
+      enqueueSnackbar('Event Deleted Successfully!');
     } catch (error) {
       enqueueSnackbar('Event Delete Failed!', { variant: 'error'});
       dispatch(getVisits(date));
