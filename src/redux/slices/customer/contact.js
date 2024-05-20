@@ -352,7 +352,7 @@ export function getContacts(customerID, isArchived) {
         }
       }
       if(isArchived){
-        params.archivedFromCustomer = true;
+        params.archivedByCustomer = true;
       }
        const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts`,{ params } );
       dispatch(slice.actions.getContactsSuccess(response.data));
