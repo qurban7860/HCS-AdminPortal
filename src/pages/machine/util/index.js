@@ -1,3 +1,4 @@
+import { ICONS } from '../../../constants/icons/default-icons';
 import Iconify from '../../../components/iconify';
 
   export function checkValuesNotNull(obj) {
@@ -71,62 +72,62 @@ const TABS = [
   {
     value: 'machine',
     label: 'Machine Info',
-    icon: "mdi:gate-open",
+    icon: ICONS.MACHINE.icon,
   },
   {
     value: 'settings',
     label: 'Settings',
-    icon: "mdi:cog",
+    icon: ICONS.SETTINGS.icon,
   },
   {
     value: 'toolsinstalled',
     label: 'Tools Installed',
-    icon: "fa-solid:tools",
+    icon: ICONS.TOOLS_INSTALLED.icon,
   },
   {
     value: 'notes',
     label: 'Notes',
-    icon: "fluent:note-20-filled",
+    icon: ICONS.NOTES.icon,
   },
   {
     value: 'drawings',
     label: 'Drawings',
-    icon: "streamline:hand-held-tablet-drawing-solid",
+    icon: ICONS.DRAWINGS.icon,
   },
   {
     value: 'documents',
     label: 'Documents',
-    icon: "mingcute:document-fill",
+    icon: ICONS.DOCUMENTS.icon,
   },
   {
     value: 'license',
     label: 'Licenses',
-    icon: "mdi:book-cog-outline",
+    icon: ICONS.LICENSES.icon,
   },
   {
     value: 'profile',
     label: 'Profiles',
-    icon: "fluent:document-flowchart-24-filled",
+    icon: ICONS.PROFILES.icon,
   },
   {
     value: 'serviceRecords',
     label: 'Service Records',
-    icon: "mdi:clipboard-text-clock",
+    icon: ICONS.SERVICE_RECORDS.icon,
   },
   {
     value: 'ini',
     label: 'INI',
-    icon: "ph:file-ini-fill",
+    icon: ICONS.INI.icon,
   },
   {
     value: 'logs',
     label: 'Logs',
-    icon: "lucide:list-end",
+    icon: ICONS.LOGS.icon,
   },  
   {
     value: 'jira',
     label: 'Jira',
-    icon: "simple-icons:jirasoftware",
+    icon: ICONS.JIRA.icon,
   },
   
 ];
