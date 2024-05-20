@@ -311,19 +311,23 @@ export function createCustomerStiesCSV(customerID) {
   };
 }
 
-export function getSites(customerID, isArchived ) {
+export function getSites(customerID, isCustomerArchived) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const params = {
-        isArchived,
         orderBy : {
           createdAt: -1
         }
       }
-      // if(isArchived){
-      //   params.archivedFromCustomer = true;
-      // }
+
+      if(isCustomerArchived){
+        params.archivedByCustomer = true;
+        params.isArchived = true;
+      }else{
+        params.isArchived = false;
+      }
+
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites`, { params } );
         dispatch(slice.actions.getSitesSuccess(response.data));
         dispatch(slice.actions.setResponseMessage('Sites loaded successfully'));
