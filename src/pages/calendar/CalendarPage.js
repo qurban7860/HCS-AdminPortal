@@ -106,7 +106,7 @@ export default function CalendarPage() {
   }, [dispatch]);
 
   useEffect(() => {
-    if(selectedCustomer && date && !openModal ){
+    if( date && !openModal ){
       // if(previousDate?.getFullYear() !== date?.getFullYear() && (Number(previousDate?.getMonth())+1) !== (Number(date?.getMonth())+1)){
         setPreviousDate(date);
         dispatch(getVisits(date, selectedCustomer?._id ));
