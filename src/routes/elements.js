@@ -55,10 +55,10 @@ export const MachineByYearsView = Loadable(lazy(() => import('../pages/dashboard
 // ----------------------------------------------------------------
 
 // DASHBOARD
-export const Visits = Loadable(lazy(() => import('../pages/Visits/CalendarPage')));
-export const NewVisits = Loadable(lazy(() => import('../pages/Visits/CalendarPage')));
-export const EditVisits = Loadable(lazy(() => import('../pages/Visits/CalendarPage')));
-export const ViewVisits = Loadable(lazy(() => import('../pages/Visits/CalendarPage')));
+export const Visits = Loadable(lazy(() => import('../pages/calendar/CalendarPage')));
+export const NewVisits = Loadable(lazy(() => import('../pages/calendar/CalendarPage')));
+export const EditVisits = Loadable(lazy(() => import('../pages/calendar/CalendarPage')));
+export const ViewVisits = Loadable(lazy(() => import('../pages/calendar/CalendarPage')));
 
 // CUSTOMER
 export const CustomerList = Loadable(lazy(() => import('../pages/crm/reports/customers/CustomerList')));

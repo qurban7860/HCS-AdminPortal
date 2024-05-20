@@ -36,7 +36,7 @@ import { useDateRangePicker } from '../../components/date-range-picker';
 import {
   StyledCalendar,
   CalendarToolbar,
-} from '../calendar';
+} from '.';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 import VisitDialog from '../../components/Dialog/VisitDialog';
