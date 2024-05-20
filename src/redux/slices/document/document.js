@@ -477,7 +477,6 @@ export function getDocuments(customerId, machineId, drawing, page, pageSize, isC
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     const params = {
-      isArchived: false,
       basic: true,
     }
     if(!drawing) {
@@ -502,10 +501,13 @@ export function getDocuments(customerId, machineId, drawing, page, pageSize, isC
       page,
       pageSize  
     }
-    // if(isCustomerArchived){
-    //   params.archivedFromCustomer = true;
-    //   params.isArchived= true;
-    // }
+    
+    if(isCustomerArchived){
+      params.archivedByCustomer = true;
+      params.isArchived = true;
+    }else{
+      params.isArchived = false;
+    }
 
     try {
 
