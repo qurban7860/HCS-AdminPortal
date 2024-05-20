@@ -1,14 +1,7 @@
-// import React, { useState} from 'react';
 import PropTypes from 'prop-types';
 // @mui
-import { Stack, Tooltip, Typography, IconButton, ToggleButton } from '@mui/material';
-import { useDispatch } from 'react-redux';
-
-// import { DemoContainer, DemoItem  } from '@mui/x-date-pickers/internals/demo';
-// import { LocalizationProvider } from '@mui/x-date-pickers-pro';
-// import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
-// import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-
+import { Stack, Tooltip, Typography, IconButton, ToggleButton, Autocomplete, TextField } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 // utils
 import { fDate } from '../../utils/formatTime';
 // hooks
@@ -17,6 +10,8 @@ import useResponsive from '../../hooks/useResponsive';
 import Iconify from '../../components/iconify';
 import { onOpenModal } from '../../redux/slices/visit/visit';
 import { StyledTooltip } from '../../theme/styles/default-styles';
+// import IconButtonTooltip from '../../components/Icons/IconButtonTooltip';
+import { useAuthContext } from '../../auth/useAuthContext';  
 
 // ----------------------------------------------------------------------
 
@@ -30,6 +25,8 @@ const VIEW_OPTIONS = [
 // ----------------------------------------------------------------------
 
 CalendarToolbar.propTypes = {
+  selectedCustomer: PropTypes.object,
+  setSelectedCustomer: PropTypes.func,
   onToday: PropTypes.func,
   onNextDate: PropTypes.func,
   onPrevDate: PropTypes.func,
@@ -40,6 +37,8 @@ CalendarToolbar.propTypes = {
 };
 
 export default function CalendarToolbar({
+  selectedCustomer,
+  setSelectedCustomer,
   date,
   view,
   onToday,
@@ -48,9 +47,11 @@ export default function CalendarToolbar({
   onChangeView,
   onOpenFilter,
 }) {
-  // const [value, setValue] = useState([ '2022-04-17', '2022-04-21' ]);
+  
+  const { isAllAccessAllowed, isSettingReadOnly } = useAuthContext();
   const dispatch= useDispatch();
   const isDesktop = useResponsive('up', 'sm');
+  const { activeCustomers } = useSelector((state) => state.customer);
 
   return (
     <Stack
@@ -81,16 +82,33 @@ export default function CalendarToolbar({
           <Iconify icon="eva:arrow-ios-back-fill" />
         </IconButton>
 
-        <Typography variant="h5">{fDate(date, 'MMM yyyy')}</Typography>
+        <Typography variant="h5">{  (view === 'dayGridMonth' && fDate(date, 'MMM yyyy')) || fDate(date, 'dd MMM yyyy')}</Typography>
 
         <IconButton onClick={onNextDate}>
           <Iconify icon="eva:arrow-ios-forward-fill" />
         </IconButton>
       </Stack>
 
-      <Stack direction="row" alignItems="center" spacing={1}>
-        {/* <DateRangePicker value={value} onChange={(newValue) => setValue(newValue)}/> */}
-        <StyledTooltip title="New Visit" placement="top" disableFocusListener tooltipcolor="#103996" color="#fff">
+      <Stack direction="row" alignItems="center" spacing={2}>
+        {isAllAccessAllowed && !isSettingReadOnly && <Autocomplete 
+          disableClearable
+          value={ selectedCustomer || null}
+          options={[{ name: 'All Customers' }, ...activeCustomers]}
+          isOptionEqualToValue={(option, val) => option?._id === val?._id}
+          getOptionLabel={(option) => `${option?.name || ''}`}
+          onChange={(event, newValue) => {
+            if (newValue) {
+              setSelectedCustomer(newValue);
+            } else {
+              setSelectedCustomer(null);
+            }
+          }}
+          sx={{width: '225px'}}
+          renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option?.name || ''}`}</li>)}
+          renderInput={(params) => <TextField {...params} size='small' label="Customer" />}
+        />}
+        {/* <IconButtonTooltip icon="eva:plus-fill" title="New Event" /> */}
+        <StyledTooltip title="New Event" placement="top" disableFocusListener tooltipcolor="#103996" color="#fff">
           <IconButton color="#fff" onClick={()=> dispatch(onOpenModal())} 
             sx={{ background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
                   '&:hover': { background:"#103996", color:"#fff" } }}>
