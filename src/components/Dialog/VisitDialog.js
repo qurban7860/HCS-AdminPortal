@@ -35,13 +35,11 @@ const getInitialValues = (visit, range) => {
     primaryTechnician: visit ? visit?.primaryTechnician :  null,
     supportingTechnicians: visit ? visit?.supportingTechnicians :  [],
     notifyContacts: visit ? visit?.notifyContacts :  [],
-    // status: visit ? visit?.status :  '',
     purposeOfVisit: visit ? visit?.purposeOfVisit :  '',
   };
 
   return initialEvent;
 };
-
 
   VisitDialog.propTypes = {
     event: PropTypes.object,
@@ -70,11 +68,9 @@ function VisitDialog({
 
     useEffect(()=>{
       if(openModal){
-        // dispatch(getActiveCustomers())
         dispatch(getActiveSPContacts())
       }
       return () => {
-        // dispatch(resetActiveCustomers())
         dispatch(resetActiveSPContacts())
         dispatch(resetActiveCustomerMachines())
         dispatch(resetActiveSites())
@@ -86,14 +82,13 @@ function VisitDialog({
       start: Yup.date().nullable().label('Start Time').typeError('Start Time should be a valid Time'),
       end: Yup.date().nullable().label('End Time').typeError('End Time should be a valid Time'),
       allDay: Yup.bool().label('All Day'),
-      jiraTicket: Yup.string().max(200).label('Jira Ticket').required(),
+      jiraTicket: Yup.string().max(200).label('Jira Ticket'),
       customer: Yup.object().nullable().label('Customer').required(),
       machine: Yup.object().nullable().label('Machine').required(),
       site: Yup.object().nullable().label('Site'),
       primaryTechnician: Yup.object().nullable().label('Primary Technician').required(),
       supportingTechnicians: Yup.array().nullable().label('Supporting Technicians').required(),
       notifyContacts: Yup.array().nullable().label('Notify Contacts').required(),
-      // status: Yup.string().nullable().label('Status').required(),
       purposeOfVisit: Yup.string().max(500).label('purposeOfVisit'),
     });
   
@@ -106,10 +101,10 @@ function VisitDialog({
       reset,
       watch,
       setValue,
-      trigger,
       control,
       handleSubmit,
-      formState: { isSubmitting },
+      formState: { isSubmitting, errors },
+      clearErrors
     } = methods;
 
     const { visitDate, jiraTicket, customer, machine, primaryTechnician, allDay } = watch();
@@ -125,13 +120,6 @@ function VisitDialog({
       // eslint-disable-next-line react-hooks/exhaustive-deps
     },[ dispatch, customer ])
 
-    useEffect(() => { 
-      if( jiraTicket || customer || machine || primaryTechnician ){
-        trigger() 
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[ visitDate, jiraTicket, customer, machine, primaryTechnician  ]);
-
     useEffect(() => {
       reset(getInitialValues(event?.extendedProps, range));
     }, [event, range, reset]);
@@ -146,8 +134,8 @@ function VisitDialog({
     };
 
     const closeModel = ()=> {
+      reset()
       dispatch(onCloseModal()) 
-      // dispatch(resetActiveCustomers())
       dispatch(resetActiveSPContacts())
       dispatch(resetActiveCustomerMachines())
       dispatch(resetActiveSites())
@@ -180,7 +168,7 @@ function VisitDialog({
             <RHFTextField name="jiraTicket" label="Jira Ticket" />
 
           <RHFAutocomplete 
-            label="Customer"
+            label="Customer*"
             name="customer"
             options={activeCustomers}
             isOptionEqualToValue={(option, value) => option?._id === value?._id}
@@ -191,7 +179,7 @@ function VisitDialog({
           <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
           
             <RHFAutocomplete 
-              label="Machine"
+              label="Machine*"
               name="machine"
               options={activeCustomerMachines}
               isOptionEqualToValue={(option, value) => option?._id === value?._id}
@@ -203,6 +191,7 @@ function VisitDialog({
                   if(newValue?.instalationSite){
                     setValue('site',newValue?.instalationSite)
                   }
+                  clearErrors('machine');
                 } else {
                   setValue('machine',null);
                 }
@@ -220,7 +209,7 @@ function VisitDialog({
 
           </Box>
             <RHFAutocomplete 
-              label="Primary Technician"
+              label="Primary Technician*"
               name="primaryTechnician"
               options={activeSpContacts}
               isOptionEqualToValue={(option, value) => option?._id === value?._id}
