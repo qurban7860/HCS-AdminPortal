@@ -207,7 +207,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
     try {
       await dispatch(deleteDocumentFile(documentId, versionId, fileId, customer?._id));
       await dispatch(getDocument(document._id))
-      enqueueSnackbar('File Deleted successfully');
+      enqueueSnackbar('File Archived successfully');
     } catch (err) {
       console.log(err);
       enqueueSnackbar('File Deletion failed!', { variant: `error` });
@@ -263,10 +263,6 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
     }
   };
 
-  // const onDocumentLoadSuccess = ({ numPages }) => {
-  //   setPages(numPages);
-  // };
-
   const handleBackLink = ()=>{
     if(customerPage) {
       navigate(PATH_CRM.customers.documents.root( customerId ));
@@ -286,6 +282,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
       backLink={ handleBackLink} 
       disableEditButton={machine?.status?.slug==='transferred'}
       // drawingPage={ !customerPage || !machinePage }
+      archived={customer?.isArchived}
       customerPage={customerPage} machinePage={machinePage} drawingPage={drawingPage}
       />
       <Grid container>
@@ -303,8 +300,8 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
             />
           }
           // objectParam={`${defaultValues.versionPrefix} ${defaultValues.documentVersion}`}
-          ViewAllVersions
-          NewVersion
+          ViewAllVersions = {document?.isArchived}
+          NewVersion = {document?.isArchived}
           isNewVersion
         />
         <ViewFormField isLoading={isLoading} sm={6} heading="Document Category" param={defaultValues?.docCategory} />
@@ -343,6 +340,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
               onDownloadFile={()=> handleDownloadFile(document._id, document?.documentVersions[0]._id, file._id, file?.name, file?.extension)}
               onDeleteFile={()=> handleDeleteFile(document._id, document?.documentVersions[0]._id, file._id)}
               toolbar
+              customerArchived={customer?.isArchived}
             />
           ))}
 
@@ -364,16 +362,17 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
                     height: '100%',
                   }} isLoading={isLoading} 
                   onDownloadFile={()=> handleDownloadFile(document._id, document?.documentVersions[0]._id, file._id, file?.name, file?.extension)}
-                  onDeleteFile={()=> handleDeleteFile(document._id, document?.documentVersions[0]._id, file._id)}
+                  onDeleteFile={()=> customerPage && !customer?.isArchived && handleDeleteFile(document._id, document?.documentVersions[0]._id, file._id)}
                   onOpenFile={()=> handleOpenFile(document._id, document?.documentVersions[0]._id, file._id, file?.name, file?.extension)}
                   toolbar
+                  customerArchived={customer?.isArchived}
                   />
                 }
                 return null;
               }
           )}
 
-          <ThumbnailDocButton onClick={handleNewFile}/>
+          {!customer?.isArchived && <ThumbnailDocButton onClick={handleNewFile}/>}
         </Box>
         
         <Lightbox
@@ -387,7 +386,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
       </Grid>
     </Card>
     {PDFViewerDialog && (
-      <Dialog fullWidth maxWidth='' open={PDFViewerDialog} style={{marginBottom:10}} onClose={()=> setPDFViewerDialog(false)}>
+      <Dialog fullScreen open={PDFViewerDialog} onClose={()=> setPDFViewerDialog(false)}>
         <DialogTitle variant='h3' sx={{pb:1, pt:2, display:'flex', justifyContent:'space-between'}}>
             PDF View
               <Button variant='outlined' onClick={()=> setPDFViewerDialog(false)}>Close</Button>
@@ -398,16 +397,6 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
             ):(
               <SkeletonPDF />
             )}
-        {/* <DialogContent dividers sx={{height:'-webkit-fill-available'}}>
-          {pdf?(
-            <Document file={pdf} onLoadSuccess={onDocumentLoadSuccess}>
-              {Array.from(new Array(pages), (el, index) => (
-                <Page width={840} rotate={pageRotation} key={`page_${index + 1}`} renderAnnotationLayer={false} renderTextLayer={false} pageNumber={index + 1} />
-              ))}
-            </Document>
-          ):(<Typography variant='body1' sx={{mt:2}}>Loading PDF....</Typography>)}
-        </DialogContent> */}
-        
       </Dialog>
     )}
     </>

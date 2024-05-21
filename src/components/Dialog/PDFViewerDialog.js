@@ -13,7 +13,7 @@ function PDFViewerDialog() {
   const handleCloseDialog = ()=> dispatch(setPDFViewerDialog(false));
   
   return (
-    <Dialog fullWidth maxWidth='' open={pdfViewerDialog} style={{marginBottom:10}} onClose={handleCloseDialog}>
+    <Dialog fullScreen open={pdfViewerDialog} onClose={handleCloseDialog}>
       <DialogTitle variant='h3' sx={{pb:1, pt:2, display:'flex', justifyContent:'space-between'}}>
           PDF View
           <Button variant='outlined' onClick={handleCloseDialog}>Close</Button>

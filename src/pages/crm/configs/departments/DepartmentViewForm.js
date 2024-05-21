@@ -63,10 +63,10 @@ export default function DepartmentViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteDepartment(id));
-      enqueueSnackbar('Department Deleted Successfullty!');
+      enqueueSnackbar('Department Archived Successfullty!');
       navigate(PATH_SETTING.departments.list);
     } catch (err) {
-      enqueueSnackbar('Department delete failed!', { variant: `error` });
+      enqueueSnackbar('Department Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };
@@ -84,8 +84,8 @@ export default function DepartmentViewForm() {
       <Grid container sx={{mt:2}}>
         <ViewFormField isLoading={isLoading} sm={12} heading="Department Name" param={defaultValues?.departmentName} />
         <Grid display="flex" >
-          <FormControlLabel control={<Switch checked={defaultValues?.isDefault} />} label={<Typography variant='body2'sx={{fontWeight:'bold'}}>Default</Typography>} />
-          <FormControlLabel control={<Switch checked={defaultValues?.forCustomer} />} label={<Typography variant='body2'sx={{fontWeight:'bold'}}> Customers</Typography>} />
+          <FormControlLabel control={<Switch disabled checked={defaultValues?.isDefault} />} label={<Typography variant='body2'sx={{fontWeight:'bold'}}>Default</Typography>} />
+          <FormControlLabel control={<Switch disabled checked={defaultValues?.forCustomer} />} label={<Typography variant='body2'sx={{fontWeight:'bold'}}> Customers</Typography>} />
         </Grid>
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>

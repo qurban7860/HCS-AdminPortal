@@ -33,7 +33,8 @@ export const ICONS = {
   },
 
   RELEASES: {
-    icon: 'mdi:source-branch',
+    // icon: 'mdi:source-branch',
+    icon: 'tabler:speedboat',
     heading: 'Releases',
   },
   
@@ -47,6 +48,12 @@ export const ICONS = {
     icon: 'mdi:source-branch-minus',
     color: '#FF0000',
     heading: 'Not Release',
+  },
+
+  NOTE: {
+    icon: 'gg:notes',
+    color: '#103996',
+    heading: 'Note',
   },
 
   // isIniRead
@@ -93,6 +100,10 @@ export const ICONS = {
     icon: 'mdi:circle',
     color: '#bdbdbd',
     heading: 'Offline',
+  },  
+  EMAIL: {
+    icon: 'mdi:email',
+    color: '#103996',
   },
 
   // isAPPROVED
@@ -124,13 +135,13 @@ export const ICONS = {
   DELETE_ENABLED: {
     icon: 'mdi:trash-can-outline',
     color: '#008000',
-    heading: 'Delete Enabled',
+    heading: 'Archive Enabled',
   },
 
   DELETE_DISABLED: {
     icon: 'mdi:delete-off',
     color: '#FF0000',
-    heading: 'Delete Disabled',
+    heading: 'Archive Disabled',
   },
 
   // ------------------------------------------------------------
@@ -229,7 +240,7 @@ export const ICONS = {
 
   TRANSFERHISTORY: {
     icon: 'ic:outline-manage-history',
-    color: '#878787',
+    color: '#008000',
     heading: 'Transfer History',
   },
 
@@ -426,6 +437,10 @@ export const ICONS = {
   SYSTEM_CONFIG: {
     icon: 'icon-park-outline:setting-config',
     heading: 'System Config',
+  },  
+  SYSTEM_EMAIL: {
+    icon: 'eva:email-fill',
+    heading: 'Emails',
   },
   DEPARTMENNTS: {
     icon: 'mingcute:department-line',
@@ -467,4 +482,22 @@ export const ICONS = {
   MAP_MARKER: {
     url: '/logo/howick_map-marker.svg',
   },
+
+  // Tabs Icons
+  CUSTOMER:{ icon: 'mdi:account' },
+  SITES:{ icon:'mdi:map-legend'},
+  CONTACTS:{ icon:'mdi:account-multiple'},
+  MACHINES:{ icon:'mdi:gate-open'},
+  DOCUMENTS: { icon:'ph:files-fill' },
+  MACHINE: { icon:'mdi:gate-open' },
+  SETTINGS:{ icon:'mdi:cog' },
+  TOOLS_INSTALLED:{ icon:'fa-solid:tools' },
+  NOTES:{ icon:'fluent:note-20-filled' },
+  DRAWINGS:{ icon:'streamline:hand-held-tablet-drawing-solid' },
+  LICENSES:{ icon:'mdi:book-cog-outline' },
+  PROFILES:{ icon:'fluent:document-flowchart-24-filled' },
+  SERVICE_RECORDS:{ icon:'mdi:clipboard-text-clock' },
+  INI:{ icon:'ph:file-ini-fill' },
+  LOGS:{ icon:'lucide:list-end' },
+  JIRA:{ icon:'simple-icons:jirasoftware' },
 };

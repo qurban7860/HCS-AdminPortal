@@ -33,6 +33,12 @@ import {
   MachineByYearsView,
   MachineByCountriesView,
 
+  // Visits
+  Visits,
+  NewVisits,
+  EditVisits,
+  ViewVisits,
+
   // Customer
   CustomerList,
   CustomerAdd,
@@ -73,6 +79,9 @@ import {
   CustomerMachines,
   CustomerMachineMove,
   CustomerMachineAdd,
+
+  // Customer Jira
+  CustomerJiraList,
 
   // ----------------------------------------------------------------
 
@@ -168,6 +177,9 @@ import {
   MachineLogsAdd,
   MachineLogsView,
   MachineLogsGraphView,
+
+  // --------------------------- MACHINE Jira --------------------------------
+  MachineJiraList,
 
   // MACHINE SETTINGS
   MachineSetting,
@@ -469,6 +481,22 @@ export default function Router() {
         { path: 'permission-denied', element: <PermissionDeniedPage /> },
       ],
     },
+
+    // --------------------- CALENDAR  ----------------------
+    {
+      path: 'Calendar',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children: [
+        { element: <Visits to={PATH_AFTER_LOGIN} replace />, index: true },
+        { path: 'new', element: <MachineByCountriesView /> },
+        { path: 'edit', element: <MachineByModelsView /> },
+        { path: 'view', element: <MachineByYearsView /> },
+      ],
+    },
     // --------------------- Customer -----------------------
 
     {
@@ -534,12 +562,19 @@ export default function Router() {
                   ]
                 },
               ],
-            },        
+            },   
+            // ------------------------------ Customer Machines ----------------------------------     
             { path: ':customerId/machines',
               children: [
                 { element: <CustomerMachines />, index: true  },
                 { path: 'new',element: <CustomerMachineAdd />  },
                 { path: ':id/move',element: <CustomerMachineMove />  },
+              ],
+            },
+            // ------------------------------ Customer Jira ----------------------------------     
+            { path: ':customerId/jira',
+              children: [
+                { element: <CustomerJiraList />, index: true  },
               ],
             },
             // ------------------------------ ARCHIVED CUSTOMERS ----------------------------------
@@ -685,6 +720,13 @@ export default function Router() {
                 {path: 'new', element: <MachineLogsAdd/>},
                 {path: 'graph', element: <MachineLogsGraphView/>}, 
                 {path: ':id/view', element: <MachineLogsView/>},
+              ]
+            },
+            { path: ':machineId/jira',
+              children:[
+                {element: <MachineJiraList/>, index: true},
+                // {path: 'new', element: </>}, 
+                // {path: ':id/view', element: </>},
               ]
             },
             // --------------------------- Machine Settings --------------------------------
@@ -946,6 +988,13 @@ export default function Router() {
             { path: ':id/edit', element: <SystemConfigEdit /> }
           ],
         },
+        { 
+          path: 'email',
+          children: [
+            { path: 'list', element: <Email /> },
+            { path: ':id/view', element: <Emailview/> }
+          ]
+        },
         // ------------------------------ departments ----------------------------------
         {
           path: 'departments',
@@ -1057,19 +1106,6 @@ export default function Router() {
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'app', element: <SitesReport /> },
-      ]
-    },
-    // ----------------------------- Email ----------------------------------
-    { path: 'email',
-      element: (
-        <AuthGuard>
-          <DashboardLayout />
-        </AuthGuard>
-      ),
-      children: [
-        { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-        { path: 'list', element: <Email /> },
-        { path: ':id/view', element: <Emailview/> }
       ]
     },
 

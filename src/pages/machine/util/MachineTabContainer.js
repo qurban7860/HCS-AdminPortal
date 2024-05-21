@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate, useParams } from 'react-router-dom';
 // @mui
@@ -9,10 +9,12 @@ import TabContainer from '../../../components/Tabs/TabContainer';
 import { useSelector } from '../../../redux/store';
 // sections
 import { Cover } from '../../../components/Defaults/Cover';
-import { StyledCardContainer } from '../../../theme/styles/default-styles';
+import { StyledCardContainer, StyledTooltip } from '../../../theme/styles/default-styles';
 import  TABS from './index';
 import { PATH_MACHINE } from '../../../routes/paths';
-import { getMachine } from '../../../redux/slices/products/machine';
+import { getMachine, resetMachine } from '../../../redux/slices/products/machine';
+import TabButtonTooltip from '../../../components/Tabs/TabButtonTooltip';
+import Iconify from '../../../components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -21,10 +23,11 @@ MachineTabContainer.propTypes = {
 };
 
 export default function MachineTabContainer({ currentTabValue }) {
-  const { machine } = useSelector((state) => state.machine);
+  const { machine, isLoading } = useSelector((state) => state.machine);
   const { machineId } = useParams();
   const dispatch = useDispatch();
-  useEffect(() => {
+
+  useLayoutEffect(() => {
     if ( machine?._id !== machineId ) {
       dispatch(getMachine(machineId));
     }
@@ -54,13 +57,15 @@ export default function MachineTabContainer({ currentTabValue }) {
       navigate( PATH_MACHINE.machines.ini.root(machineId) )
     } else if(tab === 'logs' && machineId  ){
       navigate( PATH_MACHINE.machines.logs.root(machineId) )
+    } else if(tab === 'jira' && machineId  ){
+      navigate( PATH_MACHINE.machines.jira.root(machineId) )
     }
   }
 
   return (
       <StyledCardContainer>
-        <Cover name={machine ? `${machine?.serialNo ? machine?.serialNo : ''} ${machine?.machineModel?.name ? `- ${machine?.machineModel?.name}` : '' }` : 'New Machine'} setting  />
-        <TabContainer
+        <Cover name={machine ? `${machine?.serialNo ? machine?.serialNo : ''} ${machine?.machineModel?.name ? `- ${machine?.machineModel?.name}` : '' }` : 'New Machine'} setting isArchived={machine?.isArchived}  />
+        {!machine?.isArchived && !isLoading && <TabContainer
           tabsClasses={tabsClasses.scrollButtons}
           currentTab={currentTabValue}
           setCurrentTab={(tab)=>  navigatePage(tab) }
@@ -70,11 +75,11 @@ export default function MachineTabContainer({ currentTabValue }) {
               disabled={tab.disabled}
               key={tab.value}
               value={tab.value}
-              icon={tab.icon}
-              label={tab.label}
-            />
+              label={tab?.value===currentTabValue?tab.label:""}
+              icon={<TabButtonTooltip selected={tab?.value===currentTabValue} title={tab.label} icon={tab.icon}/>}
+              />
           ))}
-        </TabContainer>
+        </TabContainer>}
       </StyledCardContainer>
   );
 }

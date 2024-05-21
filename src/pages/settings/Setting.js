@@ -18,7 +18,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 
 export default function Setting() {
 
-  const { isSettingAccessAllowed, isAllAccessAllowed, isDeveloper } = useAuthContext()
+  const { isEmailAccessAllowed, isSettingAccessAllowed, isAllAccessAllowed, isDeveloper } = useAuthContext()
 
   const navigate = useNavigate();
 
@@ -28,6 +28,7 @@ export default function Setting() {
   const linkSignInLogs = () => navigate(PATH_SETTING.signInLogs.list);
   const linkRegions = () => navigate(PATH_SETTING.regions.list);
   const linkConfigs = () => navigate(PATH_SETTING.configs.list);
+  const linkEmails = () => navigate(PATH_SETTING.email.list);
   const linkUserInvites = () => navigate(PATH_SETTING.invite.list);
   const releases = () => navigate(PATH_SETTING.releases.list);
   const linkBlockedCustomer = () => navigate(PATH_SECURITY.config.blockedCustomer.list);
@@ -112,7 +113,7 @@ return (
                   aria-labelledby="nested-list-subheader"
                   subheader={<ListItemsHeader header={FORMLABELS.CONFIG} />}
                 >
-                   <ListItem
+                  <ListItem
                     onClick={linkRegions}
                     icon={ICONS.REGION.icon}
                     content={ICONS.REGION.heading}
@@ -129,6 +130,17 @@ return (
                     content={ICONS.DEPARTMENNTS.heading}
                   />
                 </List>
+                { isEmailAccessAllowed && isSettingAccessAllowed && <List
+                  component="nav"
+                  aria-labelledby="nested-list-subheader"
+                  subheader={<ListItemsHeader header={FORMLABELS.EMAILS} />}
+                >
+                  <ListItem
+                    onClick={linkEmails}
+                    icon={ICONS.SYSTEM_EMAIL.icon}
+                    content={ICONS.SYSTEM_EMAIL.heading}
+                  />
+                </List>}
 
             </StyledSettingsCardContainer>
 

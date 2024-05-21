@@ -9,6 +9,7 @@ import { getAssignedSecurityUsers } from '../../../../redux/slices/securityUser/
 // sections
 import { Cover } from '../../../../components/Defaults/Cover';
 import RoleViewForm from './RoleViewForm';
+import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -24,15 +25,9 @@ export default function RoleView() {
   const { role } = useSelector((state) => state.role);
   return (
     <Container maxWidth={false}>
-      <Card
-        sx={{
-          mb: 3,
-          height: 160,
-          position: 'relative',
-        }}
-      >
+      <StyledCardContainer>
         <Cover name={role?.name} generalSettings />
-      </Card>
+      </StyledCardContainer>
       <RoleViewForm />
     </Container>
   );

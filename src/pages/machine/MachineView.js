@@ -1,4 +1,3 @@
-
 // @mui
 import { Container } from '@mui/material';
 // sections
@@ -10,7 +9,7 @@ import MachineTabContainer from './util/MachineTabContainer';
 export default function MachineView( ) {
 
   return (
-    <Container maxWidth={false} sx={{mb:3}}>
+    <Container maxWidth={false}>
       <MachineTabContainer currentTabValue="machine" />
       <MachineViewForm />
     </Container>

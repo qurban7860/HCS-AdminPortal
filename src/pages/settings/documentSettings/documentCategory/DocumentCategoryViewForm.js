@@ -29,9 +29,9 @@ export default function DocumentCategoryViewForm() {
     try {
       await dispatch(deleteDocumentCategory(documentCategory?._id));
       navigate(PATH_SETTING.documentCategory.list);
-      enqueueSnackbar('Document Category delete Successfully!');
+      enqueueSnackbar('Document Category Archive Successfully!');
     } catch (error) {
-      enqueueSnackbar('Document Category delete failed!', { variant: `error` });
+      enqueueSnackbar('Document Category Archive failed!', { variant: `error` });
       console.error(error);
     }
   };

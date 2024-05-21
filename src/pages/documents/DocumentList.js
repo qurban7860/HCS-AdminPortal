@@ -157,8 +157,15 @@ const onChangePage = (event, newPage) => {
 
   useEffect(() => {
     if(machineDrawingPage || machineDrawings || machinePage ){
-      dispatch(getActiveDocumentCategories(null));
-      dispatch(getActiveDocumentTypes());
+
+      if(machineDrawings){
+        dispatch(getActiveDocumentCategories(null, null, machineDrawings));
+        dispatch(getActiveDocumentTypes(null, machineDrawings));
+      }else{
+        dispatch(getActiveDocumentCategories(null));  
+        dispatch(getActiveDocumentTypes());
+      }
+
       if(machineDrawings){
         const defaultType = activeDocumentTypes.find((typ) => typ?.isDefault === true);
         const defaultCategory = activeDocumentCategories.find((cat) => cat?.isDefault === true);
@@ -180,15 +187,15 @@ const onChangePage = (event, newPage) => {
 
   useEffect(() => {
       if (customerPage && customerId) {
-        dispatch(getDocuments( customer?._id , null, null, page, customerDocumentsRowsPerPage, cancelTokenSource));
+        dispatch(getDocuments( customer?._id , null, null, page, customerDocumentsRowsPerPage, customer?.isArchived, null, cancelTokenSource));
       } else if(machineDrawingPage &&  machineId ){
-        dispatch(getDocuments( null, machineId, null, page, machineDocumentsRowsPerPage, cancelTokenSource));
+        dispatch(getDocuments( null, machineId, null, page, machineDocumentsRowsPerPage, null, null, cancelTokenSource));
       } else if( machinePage ){
-        dispatch(getDocuments(null, machineId, null, page, machineDrawingsRowsPerPage, cancelTokenSource));
+        dispatch(getDocuments(null, machineId, null, page, machineDrawingsRowsPerPage, null, null, cancelTokenSource));
       } else if( machineDrawings || machineDrawingPage ){
-        dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, cancelTokenSource));
+        dispatch(getDocuments(null, null, ( machineDrawings || machineDrawingPage ), page, machineDrawingsRowsPerPage, null, null, cancelTokenSource));
       } else if(!customerPage && !machineDrawingPage && !machinePage && !machineDrawings  ) {
-        dispatch(getDocuments(null, null, null, page, documentRowsPerPage, cancelTokenSource));
+        dispatch(getDocuments(null, null, null, page, documentRowsPerPage, null, null, cancelTokenSource));
       }
       return()=>{ cancelTokenSource.cancel(); dispatch(resetDocuments()) }
     // eslint-disable-next-line react-hooks/exhaustive-deps

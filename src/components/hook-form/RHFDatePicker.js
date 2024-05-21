@@ -21,10 +21,12 @@ export default function RHFDatePicker({ name, label, size, helperText, Error, ..
     <Controller
       name={name}
       control={control}
+      control={control}
       render={({ field, fieldState: { error } }) => (
         <DatePicker
           {...field}
-          name="serviceDate"
+          name={name}
+          inputFormat="dd/MM/yyyy"
           label={label}
           onChange={newValue => field.onChange(newValue)}
           renderInput={params => (

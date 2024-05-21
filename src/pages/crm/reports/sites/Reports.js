@@ -4,6 +4,7 @@ import { getMachineLatLongData } from '../../../../redux/slices/products/machine
 import { useDispatch, useSelector } from '../../../../redux/store';
 import { Cover } from '../../../../components/Defaults/Cover';
 import GoogleMaps from '../../../../assets/GoogleMaps';
+import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -18,15 +19,7 @@ export default function Reports() {
 
   return (
     <Container maxWidth={false}>
-      <Card
-        sx={{
-          mb: 3,
-          height: 160,
-          position: 'relative',
-        }}
-      >
-        <Cover name="Sites Map" icon="material-symbols:list-alt-outline" />
-      </Card>
+      <StyledCardContainer><Cover name="Sites Map"/></StyledCardContainer>
       <Grid container spacing={3}>
         <Grid item sm={12} xs={12}>
           <Card>

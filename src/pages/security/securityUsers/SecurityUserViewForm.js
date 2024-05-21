@@ -13,6 +13,7 @@ import {
   sendUserInvite,
   getSecurityUser,
   changeUserStatus,
+  setChangePasswordByAdminDialog,
 } from '../../../redux/slices/securityUser/securityUser';
 import { getBlockedCustomer } from '../../../redux/slices/securityConfig/blockedCustomers';
 import { getBlockedUser } from '../../../redux/slices/securityConfig/blockedUsers';
@@ -27,10 +28,11 @@ import LogoAvatar from '../../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../../components/custom-avatar/CustomAvatar';
 import CustomerDialog from '../../../components/Dialog/CustomerDialog';
 import ContactDialog from '../../../components/Dialog/ContactDialog';
-import { StyledTooltip } from '../../../theme/styles/default-styles';
+import { StyledCardContainer, StyledTooltip } from '../../../theme/styles/default-styles';
 import Iconify from '../../../components/iconify';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { ICONS } from '../../../constants/icons/default-icons';
+import ChangePasswordByAdminDialog from '../../../components/Dialog/ChangePasswordByAdminDialog';
 
 // ----------------------------------------------------------------------
 
@@ -81,7 +83,7 @@ export default function SecurityUserViewForm() {
   }
 
   const handleUpdatePassword = () => {
-    navigate(PATH_SECURITY.users.userPassword);
+    dispatch(setChangePasswordByAdminDialog(true))
   };
 
   const userStatus = {
@@ -121,7 +123,7 @@ export default function SecurityUserViewForm() {
       dispatch(getSecurityUsers());
       navigate(PATH_SECURITY.list);
     } catch (error) {
-      enqueueSnackbar('User delete failed!', { variant: `error` });
+      enqueueSnackbar('User Archive failed!', { variant: `error` });
       console.log('Error:', error);
     }
   };
@@ -156,13 +158,9 @@ export default function SecurityUserViewForm() {
   return (
     <>
       <Grid sx={{ p: 3, mt: -3 }}>
-        <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
-          <Cover
-            name={defaultValues.name}
-            photoURL={defaultValues.name === 'HOWICK LTD.' ? <LogoAvatar /> : <CustomAvatar />}
-            icon="ph:users-light"
-          />
-        </Card>
+        <StyledCardContainer>
+          <Cover name={defaultValues.name} />
+        </StyledCardContainer>
         <Card sx={{ p: 3 }}>
           <ViewFormEditDeleteButtons
             handleEdit={handleEdit}
@@ -306,6 +304,7 @@ export default function SecurityUserViewForm() {
       
       <CustomerDialog />
       <ContactDialog />
+      <ChangePasswordByAdminDialog />
       
     </>
   );

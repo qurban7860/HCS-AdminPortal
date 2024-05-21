@@ -33,6 +33,7 @@ import { Cover } from '../../../../components/Defaults/Cover';
 import { fDateTime } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { PATH_SECURITY } from '../../../../routes/paths';
+import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -147,9 +148,9 @@ export default function SignInLogList() {
   
   return (
       <Container maxWidth={false}>
-        <Card sx={{ mb: 3, height: 160, position: 'relative'}}>
+        <StyledCardContainer>
           <Cover name="Sign In Logs" icon="ph:users-light" generalSettings />
-        </Card>
+        </StyledCardContainer>
 
         <TableCard>
           <RoleListTableToolbar
@@ -162,6 +163,7 @@ export default function SignInLogList() {
             buttonAction={reloadList}
             filterRequestStatus={filterRequestStatus}
             onFilterRequestStatus={handleFilterRequestStatus}
+            onReload={reloadList}
           />
           {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
@@ -169,7 +171,6 @@ export default function SignInLogList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            refresh={reloadList}
           />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>

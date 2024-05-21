@@ -225,8 +225,7 @@ export function updateSite(params,customerId,Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
       try {
-        /* eslint-disable */
-        let data = {
+        const data = {
           name: params.name,
           customer: params.customer,
           email: params.email,
@@ -241,19 +240,7 @@ export function updateSite(params,customerId,Id) {
           updateAddressPrimaryTechnicalContact: params?.updateAddressPrimaryTechnicalContact,
           address: {}
         };
-        // const phoneNumbers = []
 
-        // if( params?.phone?.number ){
-        //   phoneNumbers.push( { ...params?.phone, type:'PHONE' } );
-        // }
-
-        // if( params?.fax?.number ){
-        //   phoneNumbers.push( { ...params?.fax, type:'FAX' } );
-        // }
-
-        // data.phoneNumbers = phoneNumbers;
-
-        /* eslint-enable */
         if(params.street){
           data.address.street = params.street;        
         }
@@ -324,20 +311,24 @@ export function createCustomerStiesCSV(customerID) {
   };
 }
 
-export function getSites(customerID) {
+export function getSites(customerID, isCustomerArchived) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites` , 
-        {
-          params: {
-            isArchived: false,
-            orderBy : {
-              createdAt:-1
-            }
-          }
+      const params = {
+        orderBy : {
+          createdAt: -1
         }
-        );
+      }
+
+      if(isCustomerArchived){
+        params.archivedByCustomer = true;
+        params.isArchived = true;
+      }else{
+        params.isArchived = false;
+      }
+
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites`, { params } );
         dispatch(slice.actions.getSitesSuccess(response.data));
         dispatch(slice.actions.setResponseMessage('Sites loaded successfully'));
     } catch (error) {

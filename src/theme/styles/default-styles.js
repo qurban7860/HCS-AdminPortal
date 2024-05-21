@@ -1,4 +1,4 @@
-import { styled, alpha } from '@mui/material/styles';
+import { styled, alpha, lighten, darken } from '@mui/material/styles';
 import { Popover, Stack, Card, Chip, Container, TableRow, Badge } from '@mui/material';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { bgBlur } from '../../utils/cssStyles';
@@ -65,7 +65,7 @@ export const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 export const StyledTooltip = styled(({ className, ...props }) => (
-  <Tooltip {...props} arrow classes={{ popper: className }} />
+  <Tooltip {...props} arrow classes={{ popper: className || "" }} />
 ))(({ theme, tooltipcolor }) => ({
   [`& .${tooltipClasses.arrow}`]: {
     color: tooltipcolor,
@@ -215,7 +215,9 @@ export const StyledBg = styled('div')(({ theme }) => ({
 export const StyledCardContainer = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(3),
   height: 160,
-  position: 'relative',
+  position: 'sticky',
+  top:'60px',
+  zIndex:'2'
 }));
 
 // @root - MachineEditForm - spacing
@@ -234,3 +236,19 @@ export const options = {
   direction: { xs: 'column', md: 'row' },
   sx: { px: 2.5, py: 3 },
 };
+
+
+export const GroupHeader = styled('div')(({ theme }) => ({
+  position: 'sticky',
+  top: '0px',
+  padding: '5px 16px',
+  marginTop:'5px',
+  color: '#707070',
+  borderRadius:'10px',
+  fontSize:'small',
+  backgroundColor:'#ededed',
+}));
+
+export const GroupItems = styled('ul')({
+  padding: 0,
+});

@@ -64,7 +64,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
   const onDelete = async () => {
     try {
       await dispatch(deleteCategory(id));
-      enqueueSnackbar('Category Deleted Successfullty!');
+      enqueueSnackbar('Category Archived Successfullty!');
       navigate(PATH_MACHINE.machines.machineSettings.categories.root);
     } catch (err) {
       enqueueSnackbar(err, { variant: `error` });

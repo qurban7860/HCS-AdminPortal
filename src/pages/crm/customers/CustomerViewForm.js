@@ -38,6 +38,7 @@ export default function CustomerViewForm() {
       code: customer?.clientCode || '',
       name: customer?.name || '',
       ref: customer?.ref || '',
+      groupCustomer: customer?.groupCustomer || null,
       tradingName: customer?.tradingName || '',
       accountManager: customer?.accountManager || [],
       projectManager: customer?.projectManager || [],
@@ -92,14 +93,15 @@ export default function CustomerViewForm() {
               handleEdit={ customer?.isArchived ? undefined : handleEdit }
               onDelete={ customer?.isArchived ? undefined : onDelete }
               supportSubscription={ customer?.isArchived ? undefined : defaultValues.supportSubscription}
-              backLink={() => navigate(PATH_CRM.customers.list)}
+              backLink={() => customer?.isArchived ? navigate(PATH_CRM.customers.archived.root):navigate(PATH_CRM.customers.list)}
               excludeReports={ customer?.isArchived ? undefined : defaultValues.excludeReports}
             />
 
               <Grid container>
                 <ViewFormField isLoading={isLoading} variant='h4' sm={6} md={6} heading={formLABELS.CUSTOMER.NAME.label} param={defaultValues?.name} />
                 <ViewFormField isLoading={isLoading} variant='h4' sm={6} md={6} heading={formLABELS.CUSTOMER.CODE.label} param={defaultValues?.code} />
-                <ViewFormField isLoading={isLoading} sm={12} md={12} heading={formLABELS.CUSTOMER.TRADING_NAME.label} chips={defaultValues?.tradingName} />
+                <ViewFormField isLoading={isLoading} sm={6} md={6}  heading={formLABELS.CUSTOMER.TRADING_NAME.label} chips={defaultValues?.tradingName} />
+                <ViewFormField isLoading={isLoading} sm={6} md={6}  heading='Group Customer' param={defaultValues?.groupCustomer?.name} />
                 <ViewFormField isLoading={isLoading} md={6} heading='Reference Number' param={defaultValues?.ref} />
 
                 <ViewFormField isLoading={isLoading} sm={6}

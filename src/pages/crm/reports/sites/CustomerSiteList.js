@@ -28,6 +28,7 @@ import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 import CustomerSiteListTableRow from './CustomerSiteListTableRow';
 import CustomerSiteListTableToolbar from './CustomerSiteListTableToolbar';
 import { getSites, resetSites, ChangePage, ChangeRowsPerPage, setFilterBy, setIsExpanded, setCardActiveIndex  } from '../../../../redux/slices/customer/site';
+import { getCustomer } from '../../../../redux/slices/customer/customer';
 import { Cover } from '../../../../components/Defaults/Cover';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { fDate } from '../../../../utils/formatTime';
@@ -122,6 +123,7 @@ export default function CustomerSiteList() {
   const handleViewCustomerInNewPage = (id) => window.open(PATH_CRM.customers.view(id), '_blank');
 
   const handleViewSite = async (customerId, siteId ) => {
+    await dispatch(getCustomer(customerId));
     await dispatch(setCardActiveIndex(siteId));
     await dispatch(setIsExpanded(true));
     await navigate(PATH_CRM.customers.sites.view(customerId, siteId))

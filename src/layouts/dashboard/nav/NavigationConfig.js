@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { PATH_CRM, PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_SETTING, PATH_SITEMAP, PATH_SECURITY, PATH_EMAIL, PATH_MACHINE_DRAWING } from '../../../routes/paths';
+import { PATH_CRM, PATH_CALENDAR, PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_SETTING, PATH_SITEMAP, PATH_SECURITY, PATH_MACHINE_DRAWING } from '../../../routes/paths';
 // components
 import Iconify from '../../../components/iconify';
 import SvgColor from '../../../components/svg-color';
@@ -28,7 +28,7 @@ function NavigationConfig() {
     banking: icon('ic_banking'),
     booking: icon('ic_booking'),
     invoice: icon('ic_invoice'),
-    calendar: icon('ic_calendar'),
+    calendar: <Iconify icon="lets-icons:date-range-light" /> ,
     disabled: icon('ic_disabled'),
     external: icon('ic_external'),
     menuItem: icon('ic_menu_item'),
@@ -71,8 +71,6 @@ function NavigationConfig() {
   useEffect(() => {
     const updatedConfig = [...navConfig];
 
-    updatedConfig[0].items.splice(7, 0, { title: 'Sites Map', path: PATH_SITEMAP.app, icon: ICONS.map });
-
     if (isDocumentAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'documents')) {
       updatedConfig[0].items.splice(3, 0, { title: 'Documents', path: PATH_DOCUMENT.root, icon: ICONS.document });
     }
@@ -85,12 +83,15 @@ function NavigationConfig() {
       updatedConfig[0].items.splice(5, 0, { title: 'Settings', path: PATH_SETTING.root, icon: ICONS.setting });
     }
 
-    if (isSecurityUserAccessAllowed && navConfig.some((config) => config?.title?.toLowerCase() !== 'security')) {
-      updatedConfig[0].items.splice(6, 0, { title: 'Security', path: PATH_SECURITY.root, icon: ICONS.security });
+    if (navConfig.some((config) => config.title?.toLowerCase() !== 'Calendar')) {
+      updatedConfig[0].items.splice(6, 0, { title: 'Calendar', path: PATH_CALENDAR.root, icon: ICONS.calendar });
     }
 
-    if (isEmailAccessAllowed && navConfig.some((config) => config?.title?.toLowerCase() !== 'email' || isDeveloper )) {
-      updatedConfig[0].items.push({ title: 'Emails', path: PATH_EMAIL.email.list, icon: ICONS.email });
+    if (isSecurityUserAccessAllowed && navConfig.some((config) => config?.title?.toLowerCase() !== 'security')) {
+      updatedConfig[0].items.splice(7, 0, { title: 'Security', path: PATH_SECURITY.root, icon: ICONS.security });
+    }
+    if ( navConfig.some((config) => config?.title?.toLowerCase() !== 'sites map')) {
+      updatedConfig[0].items.splice(8, 0, { title: 'Sites Map', path: PATH_SITEMAP.app, icon: ICONS.map });
     }
 
     setConfig(updatedConfig);

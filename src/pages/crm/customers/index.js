@@ -1,36 +1,42 @@
+import { ICONS } from '../../../constants/icons/default-icons';
 import Iconify from '../../../components/iconify';
 
 const TABS = [
     {
         value: 'customer',
         label: 'Customer Info',
-        icon: <Iconify icon="mdi:badge-account" />,
+        icon: ICONS.CUSTOMER.icon,
     },
     {
         value: 'sites',
         label: 'Sites',
-        icon: <Iconify icon="mdi:map-legend" />,
+        icon: ICONS.SITES.icon,
     },
     {
         value: 'contacts',
         label: 'Contacts',
-        icon: <Iconify icon="mdi:account-multiple" />,
+        icon: ICONS.CONTACTS.icon,
     },
     {
         value: 'notes',
         label: 'Notes',
-        icon: <Iconify icon="mdi:note-multiple" />,
+        icon: ICONS.NOTES.icon,
     },
     {
         value: 'documents',
         label: 'Documents',
-        icon: <Iconify icon="mdi:folder-open" />,
+        icon: ICONS.DOCUMENTS.icon,
     },
     {
         value: 'machines',
         label: 'Machines',
-        icon: <Iconify icon="mdi:greenhouse" />,
+        icon: ICONS.MACHINES.icon,
     },
+    // {
+    //     value: 'jira',
+    //     label: 'Jira',
+    //     icon: ICONS.JIRA.icon,
+    // },
 ];
 
 export default TABS

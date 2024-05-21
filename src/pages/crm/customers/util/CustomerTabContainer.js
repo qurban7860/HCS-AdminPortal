@@ -10,6 +10,7 @@ import { Cover } from '../../../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 import  TABS from '../index';
 import { PATH_CRM } from '../../../../routes/paths';
+import TabButtonTooltip from '../../../../components/Tabs/TabButtonTooltip';
 
 // ----------------------------------------------------------------------
 
@@ -36,8 +37,12 @@ export default function CustomerTabContainer({ currentTabValue }) {
       navigate( PATH_CRM.customers.documents.root(customerId) )
     } else if(tab === 'machines' && customerId  ){
       navigate( PATH_CRM.customers.machines.root(customerId) )
+    } else if(tab === 'jira' && customerId  ){
+      navigate( PATH_CRM.customers.jira.root(customerId) )
     } 
   }
+
+
   return (
       <StyledCardContainer>
         <Cover name={customer ? customer.name : 'New Customer'} avatar isArchived={ customer?.isArchived } />
@@ -46,15 +51,16 @@ export default function CustomerTabContainer({ currentTabValue }) {
           currentTab={currentTabValue}
           setCurrentTab={(tab)=>  navigatePage(tab) }
         >
-          {TABS.map((tab) => (
+          {TABS.map((tab) =>
+          (!customer?.isArchived || tab.value !== "machines") ? (
             <Tab
               disabled={tab.disabled}
               key={tab.value}
               value={tab.value}
-              icon={tab.icon}
-              label={tab.label}
+              label={tab?.value===currentTabValue?tab.label:""}
+              icon={<TabButtonTooltip selected={tab?.value===currentTabValue} title={tab.label} icon={tab.icon}/>}
             />
-          ))}
+          ):null)}
         </TabContainer>
       </StyledCardContainer>
   );

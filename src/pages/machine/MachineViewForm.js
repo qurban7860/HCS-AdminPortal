@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Grid, Link, Chip, Typography} from '@mui/material';
+import { Card, Grid, Link, Chip, Typography, IconButton, Tab, tabsClasses} from '@mui/material';
 // routes
 import { PATH_CRM, PATH_MACHINE } from '../../routes/paths';
 // slices
@@ -14,7 +14,8 @@ import {
   setMachineVerification,
   setMachineDialog,
   getMachineForDialog,
-  setMachineTransferDialog
+  setMachineTransferDialog,
+  setMachineStatusChangeDialog
 } from '../../redux/slices/products/machine';
 import { getCustomer, setCustomerDialog } from '../../redux/slices/customer/customer';
 import { getSite, resetSite, setSiteDialog } from '../../redux/slices/customer/site';
@@ -42,6 +43,8 @@ import MachineTransferDialog from '../../components/Dialog/MachineTransferDialog
 import SiteDialog from '../../components/Dialog/SiteDialog';
 import OpenInNewPage from '../../components/Icons/OpenInNewPage';
 import Iconify from '../../components/iconify';
+import IconButtonTooltip from '../../components/Icons/IconButtonTooltip';
+import MachineStatusChangeDialog from '../../components/Dialog/MachineStatusChangeDialog';
 
 // ----------------------------------------------------------------------
 
@@ -50,7 +53,7 @@ export default function MachineViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { machine, machineDialog, machineTransferDialog, isLoading } = useSelector((state) => state.machine);
+  const { machine, machineDialog, machineTransferDialog, machineStatusChangeDialog, isLoading } = useSelector((state) => state.machine);
   const { customerDialog } = useSelector((state) => state.customer);
   const { siteDialog } = useSelector((state) => state.site);
   const [disableTransferButton, setDisableTransferButton] = useState(true);
@@ -99,6 +102,7 @@ export default function MachineViewForm() {
   );
 
   useEffect(() => {
+    dispatch(setMachineStatusChangeDialog(false));
     dispatch(setMachineTransferDialog(false));
     dispatch(setSiteDialog(false))
     dispatch(setCustomerDialog(false));
@@ -135,7 +139,7 @@ export default function MachineViewForm() {
     try {
       await dispatch(deleteMachine(machine._id));
       dispatch(getMachines());
-      enqueueSnackbar('Machine Deleted Successfully!');
+      enqueueSnackbar('Machine Archived Successfully!');
       navigate(PATH_MACHINE.machines.root);
     } catch (err) {
       enqueueSnackbar(Snacks.machineFailedDelete, { variant: `error` });
@@ -163,6 +167,10 @@ export default function MachineViewForm() {
   const handleMachineDialog = (MachineID) => {
     dispatch(getMachineForDialog(MachineID));
     dispatch(setMachineDialog(true)); 
+  };
+
+  const handleStatusChangeDialog = () => {
+    dispatch(setMachineStatusChangeDialog(true));
   };
   
   const linkedMachines = machine?.machineConnections?.map((machineConnection, index) => (
@@ -221,6 +229,7 @@ export default function MachineViewForm() {
       projectManager: machine?.projectManager || [],
       supportManager: machine?.supportManager || [],
       supportExpireDate: machine?.supportExpireDate  || null,
+      decommissionedDate: machine?.decommissionedDate  || null,
       isActive: machine?.isActive,
       createdByFullName: machine?.createdBy?.name,
       createdAt: machine?.createdAt,
@@ -277,14 +286,21 @@ export default function MachineViewForm() {
             </Grid>
         </Card>
               
-        <Card sx={{ width: '100%', p: '1rem', mb:3 }}>
+        <Card sx={{ width: '100%', p: '1rem'}}>
           <Grid container>
                        {/* 1 FULL ROW */}
             <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues?.name} />
                        {/* 2 FULL ROW */}
-            <ViewFormField isLoading={isLoading} sm={6} heading="Status" node={ <Typography variant='h4' sx={{mr: 1,color: machine?.status?.slug === "transferred" && 'red'  }}>{ defaultValues?.status }</Typography> } />
-            <ViewFormField isLoading={isLoading} sm={6} heading="Support Expiry Date" param={fDate(defaultValues?.supportExpireDate)} />
-                       {/* 3 FULL ROW */}
+            <ViewFormField isLoading={isLoading} sm={6} heading="Status" 
+                  node={ 
+                    <>
+                      <Typography variant='h4' sx={{mr: 1,color: machine?.status?.slug === "transferred" && 'red'  }}>{ defaultValues?.status }</Typography> 
+                      { machine?.status?.slug!=='transferred' && <IconButtonTooltip title='Change Status' icon="grommet-icons:sync" onClick={handleStatusChangeDialog} />}
+                    </>
+                    } />
+            <ViewFormField isLoading={isLoading} sm={6} heading="De-Commissioned Date" param={fDate(defaultValues?.decommissionedDate)} />
+            {machine?.status?.slug==='transferred' && 
+
             <ViewFormField isLoading={isLoading} sm={6} heading="Transfer Detail"
               node={
                 <Grid display="flex" alignItems="center">
@@ -308,6 +324,7 @@ export default function MachineViewForm() {
                 </Grid>
               }
             />
+            }
             
             <ViewFormField isLoading={isLoading} sm={12} variant='h4' heading="Profiles" param={ Array.isArray(defaultValues?.machineProfiles) && defaultValues?.machineProfiles?.map( el => `${el?.defaultName} ${(el?.web && el?.flange)? `(${el?.web} X ${el?.flange})` :""}`)?.join(', ') || ''} />
                        {/* 4 FULL ROW */}
@@ -354,6 +371,7 @@ export default function MachineViewForm() {
             <ViewFormField isLoading={isLoading} sm={6} heading="Account Manager" customerContacts={defaultValues?.accountManager} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Project Manager" customerContacts={defaultValues?.projectManager} />
             <ViewFormField isLoading={isLoading} sm={6} heading="Suppport Manager" customerContacts={defaultValues?.supportManager} />
+            <ViewFormField isLoading={isLoading} sm={6} heading="Support Expiry Date" param={fDate(defaultValues?.supportExpireDate)} />
           </Grid>
 
           <Grid container>
@@ -375,6 +393,7 @@ export default function MachineViewForm() {
       { machineDialog  && <MachineDialog />}
       { customerDialog  && <CustomerDialog />}
       { machineTransferDialog && <MachineTransferDialog />}
+      { machineStatusChangeDialog && <MachineStatusChangeDialog />}
       
     </>
   );

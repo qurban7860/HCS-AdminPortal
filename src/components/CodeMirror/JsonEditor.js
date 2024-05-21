@@ -51,8 +51,8 @@ function JsonEditor({value, HandleChangeIniJson, readOnly, autoHeight }) {
   const theme = useTheme();
   
   return  <Grid item md={12}>
-          <Grid sx={{ display: { sm: 'block', md: 'flex', position:'sticky', top:0, background:theme.palette.background.default, zIndex:1 },  justifyContent: 'space-between' }} >
-            <Typography variant='subtitle2' sx={{ml:2}} display="flex" alignItems="center">
+          <Grid sx={{ display: { sm: 'block', md: 'flex', position:'sticky', borderBottom:'1px solid #cfcfcf',borderTop:'1px solid #cfcfcf', top:0, background:'#f5f5f5', zIndex:1 },  justifyContent: 'space-between' }} >
+            <Typography variant='subtitle2' sx={{ml:3}} display="flex" alignItems="center">
               Note :
               <Typography variant='caption' sx={{ml:0.5}}>Ctrl + F / Cmd + F to find text in Code Editor</Typography>
             </Typography>
@@ -64,7 +64,7 @@ function JsonEditor({value, HandleChangeIniJson, readOnly, autoHeight }) {
           <CodeMirror 
             value={value} 
             onChange={(e) => HandleChangeIniJson(e)}
-            height={!autoHeight && '500px'} 
+            height={!autoHeight && 'calc(100vh - 400px)'} 
             width='auto' 
             extensions={[langs.json(), search({top: true, searchPanelOpen: true,})]} 
             options={codeMirrorOptions}

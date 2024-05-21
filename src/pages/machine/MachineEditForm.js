@@ -72,6 +72,7 @@ export default function MachineEditForm() {
       supportManager: machine?.supportManager || [],
       accountManager: machine?.accountManager || [],
       supportExpireDate: machine.supportExpireDate || null,
+      decommissionedDate: machine.decommissionedDate || null,
       description: machine.description || '',
       isActive: machine.isActive || false,
     },
@@ -312,7 +313,7 @@ export default function MachineEditForm() {
                 <Box rowGap={2} columnGap={2} display="grid"
                   gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
-                  <RHFAutocomplete
+                  {/* <RHFAutocomplete
                     name="status"
                     label="Status" 
                     options={activeMachineStatuses}
@@ -322,9 +323,10 @@ export default function MachineEditForm() {
                     renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
                     id="controllable-states-demo"
                     ChipProps={{ size: 'small' }}
-                  />
-
-                  <RHFDatePicker inputFormat='dd/MM/yyyy'  name="supportExpireDate" label="Support Expire Date" />
+                    />
+                    
+                    
+                  <RHFDatePicker inputFormat='dd/MM/yyyy'  name="decommissionedDate" label="De-Commissioned Date" /> */}
 
                   <RHFAutocomplete
                     multiple
@@ -367,6 +369,7 @@ export default function MachineEditForm() {
                     ChipProps={{ size: 'small' }}
                     id="controllable-states-demo"
                   />
+                  <RHFDatePicker inputFormat='dd/MM/yyyy' name="supportExpireDate" label="Support Expiry Date" />
                 </Box>
                   <RHFTextField name="description" label="Description" minRows={3} multiline />
                 <ToggleButtons name={FORMLABELS.isACTIVE.name} isMachine />

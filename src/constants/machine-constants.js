@@ -5,20 +5,22 @@ export const Snacks = {
   machineVerifiedSuccess: 'Machine Verified',
   machineFailedVerification: 'Failed to Verify Machine',
   machineDeleted: 'Machine Deleted',
-  machineFailedDelete: 'Failed to Delete Machine',
+  machineFailedDelete: 'Failed to Archive Machine',
   machineTransferSuccess: 'Machine Transferred Successfully!',
   machineFailedTransfer: 'Failed to Transfer Machine',
+  machineStatusSuccess: 'Machine Status Changed Successfully!',
+  machineStatusFailed: 'Failed to Change Machine Status!',
   
   // @root Machine Service Parameter
   checkItemAdd: 'Machine Check Item Added',
   checkItemAddFailed: 'Failed to add Machine Check Item',
   checkItemUpdate: 'Check Item is Updated',
   checkItemUpdateFailed: 'Failed to Update Machine Check Item',
-  checkItemDeleteFailed: 'Failed to Delete Machine Check Item',
+  checkItemDeleteFailed: 'Failed to Archive Machine Check Item',
   checkItemDelete: 'Machine Check Item Deleted',
 
   // @root noteDeleted
-  noteDeleted: 'Note deleted Successfully!',
+  noteDeleted: 'Note Archived Successfully!',
   // @root - ModelEditForm
   modelUpdated: 'Model Updated Successfully',
   failedUpdateModel: 'Failed to Update Model',
@@ -33,8 +35,8 @@ export const Snacks = {
   licenseUpdated: 'License Updated Successfully',
   failedUpdateLicense: 'Failed to Update License',
   
-  licenseDeleted: 'License Deleted Successfully',
-  failedDeleteLicense: 'Failed to Delete License',
+  licenseDeleted: 'License Archived Successfully',
+  failedDeleteLicense: 'Failed to Archive License',
 
   // @root - LicenseAddForm - submit
   licenseAdded: 'License Added Successfully',

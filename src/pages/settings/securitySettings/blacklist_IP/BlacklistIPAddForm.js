@@ -21,6 +21,7 @@ import { useSnackbar } from '../../../../components/snackbar';
 import FormProvider, { RHFTextField } from '../../../../components/hook-form';
 import AddFormButtons from '../../../../components/DocumentForms/AddFormButtons';
 import { Cover } from '../../../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 
 export default function BlacklistIPAddForm() {
 
@@ -65,16 +66,9 @@ export default function BlacklistIPAddForm() {
  
   return (
     <Container maxWidth={false}>
-      <Card
-        sx={{
-          mb: 3,
-          height: 160,
-          position: 'relative',
-          // mt: '24px',
-        }}
-      >
+      <StyledCardContainer>
         <Cover name="Blacklist IP" />
-      </Card>
+      </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
           <Grid item xs={18} md={12}>

@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { isNaN } from 'lodash';
 import { Snacks } from '../../constants/machine-constants';
 import { allowedExtensions, fileTypesMessage } from '../../constants/document-constants';
 import { NotRequiredValidateFileType } from '../documents/util/Util'
@@ -6,7 +7,9 @@ import { future5yearDate, tomorrow, pastDate } from '../machine/util/index';
 import { fDate } from '../../utils/formatTime';
 
 export const machineSchema = Yup.object().shape({
-  serialNo: Yup.string().max(6).required().label('Serial Number'),
+  serialNo: Yup.string().trim().required('Serial Number is required')
+            .matches(/^[0-9]+$/, 'Must be a number')
+            .max(6, 'Serial Number at most 6 digits').label('Serial Number'),
   name: Yup.string().max(250),
   parentSerialNo: Yup.object().shape({
     serialNo: Yup.string()

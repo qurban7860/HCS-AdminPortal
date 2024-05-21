@@ -28,10 +28,11 @@ DocumentGalleryItem.propTypes = {
     onOpenFile: PropTypes.func,
     onDownloadFile: PropTypes.func,
     onDeleteFile: PropTypes.func,
-    toolbar: PropTypes.bool
+    toolbar: PropTypes.bool,
+    customerArchived: PropTypes.bool
   };
   
-export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFile, onDownloadFile, onDeleteFile, toolbar }) {
+export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFile, onDownloadFile, onDeleteFile, toolbar, customerArchived }) {
 
     const [deleteConfirm, seDeleteConfirm] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
@@ -87,9 +88,9 @@ export function DocumentGalleryItem({ image, isLoading, onOpenLightbox, onOpenFi
                             // justifyContent:'space-evenly'
                         }}
                     >       
-                        <Button sx={{width: onDeleteFile ? '33%' : '50%', borderRadius:0}} disabled={!(fileType?.startsWith('image') || fileType?.startsWith('application/pdf'))} onClick={fileType?.startsWith('image')?onOpenLightbox:onOpenFile}><Iconify icon="carbon:view" /></Button>
-                        <Button sx={{width: onDeleteFile ? '33%' : '50%'}}><Iconify icon="solar:download-square-linear" onClick={onDownloadFile} /></Button>
-                        {onDeleteFile && <Button sx={{width:'34%', borderRadius:0}} color='error' onClick={()=> seDeleteConfirm(true)}><Iconify icon="radix-icons:cross-circled" /></Button>}
+                        <Button sx={{width: onDeleteFile && !customerArchived ? '33%' : '50%', borderRadius:0}} disabled={!(fileType?.startsWith('image') || fileType?.startsWith('application/pdf'))} onClick={fileType?.startsWith('image')?onOpenLightbox:onOpenFile}><Iconify icon="carbon:view" /></Button>
+                        <Button sx={{width: onDeleteFile && !customerArchived ? '33%' : '50%', borderRadius:0}}><Iconify icon="solar:download-square-linear" onClick={onDownloadFile} /></Button>
+                        {onDeleteFile && !customerArchived && <Button sx={{width:'34%', borderRadius:0}} color='error' onClick={()=> seDeleteConfirm(true)}><Iconify icon="radix-icons:cross-circled" /></Button>}
                     </ButtonGroup>
                 }
 

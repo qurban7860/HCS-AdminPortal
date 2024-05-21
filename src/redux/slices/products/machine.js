@@ -9,6 +9,7 @@ const initialState = {
   machineTab:'info',
   machineEditFormFlag: false,
   machineTransferDialog: false,
+  machineStatusChangeDialog: false,
   machineMoveFormVisibility: false,
   transferMachineFlag: false,
   responseMessage: null,
@@ -33,6 +34,9 @@ const initialState = {
   supportManager:null,
   page: 0,
   rowsPerPage: 100,
+  connectedMachineAddDialog:false,
+  newConnectedMachines: [],
+  reportHiddenColumns: {},
 };
 
 const slice = createSlice({
@@ -82,6 +86,12 @@ const slice = createSlice({
     setMachineTransferDialog(state, action){
       state.machineTransferDialog = action.payload;
     },
+
+    // SET TOGGLE
+    setMachineStatusChangeDialog(state, action){
+      state.machineStatusChangeDialog = action.payload;
+    },
+    
     
     // HAS ERROR
     hasError(state, action) {
@@ -166,6 +176,18 @@ const slice = createSlice({
       state.success = true;
       state.machineForDialog = action.payload;
       state.initial = true;
+    },
+
+    setConnectedMachineAddDialog(state, action){
+      state.connectedMachineAddDialog = action.payload;
+    },
+
+    setNewConnectedMachines(state, action){
+      state.newConnectedMachines = action.payload;
+    },
+
+    setReportHiddenColumns(state, action){
+      state.reportHiddenColumns = action.payload;  
     },
     
     // GET Machine Gallery
@@ -274,8 +296,10 @@ export const {
   stopLoading,
   setTransferMachineFlag,
   setMachineTransferDialog,
+  setMachineStatusChangeDialog,
   resetCustomerMachines,
   resetActiveCustomerMachines,
+  resetMachineForDialog,
   resetMachine,
   resetMachines,
   resetActiveMachines,
@@ -286,9 +310,12 @@ export const {
   setVerified,
   setAccountManager,
   setSupportManager,
+  setConnectedMachineAddDialog,
+  setNewConnectedMachines,
   ChangeRowsPerPage,
   ChangePage,
   setMachineDialog,
+  setReportHiddenColumns,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -433,17 +460,19 @@ export function getActiveModelMachines(modelId) {
 
 // ----------------------------------------------------------------------
 
-export function getCustomerMachines(customerId) {
+export function getCustomerMachines(customerId, isCustomerArchived ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, 
-      {
-        params: {
-          customer: customerId,
-          isArchived: false,
-        }
-      });
+      const params = {
+        customer: customerId,
+        isArchived: false,
+      }
+      if(isCustomerArchived){
+        params.archivedFromCustomer = true;
+        params.isArchived= true;
+      }
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, { params } );
       dispatch(slice.actions.getCustomerMachinesSuccess(response.data));
       return response.data;
       // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
@@ -637,13 +666,15 @@ export function addMachine(params) {
           supportManager: params?.supportManager,
           description: params?.description,
           customerTags: params?.customerTags,
-          machineConnections: params?.machineConnectionVal.map(obj => obj._id),
+          machineConnections: params?.machineConnectionVal.filter(machine => machine?.customer).map(obj => obj._id),
+          newConnectedMachines: params?.machineConnectionVal.filter(machine => !machine?.customer),
           isActive: params?.isActive,
           supportExpireDate : params?.supportExpireDate,
+          decommissionedDate : params?.decommissionedDate,
           financialCompany: params?.financialCompany?._id,
         };
         const response = await axios.post(`${CONFIG.SERVER_URL}products/machines`, data);
-        dispatch(slice.actions.getMachineSuccess(response.data.Machine));
+        // dispatch(slice.actions.getMachineSuccess(response.data.Machine));
         return response
       } catch (error) {
         console.error(error);
@@ -686,6 +717,7 @@ export function updateMachine(machineId, params) {
         machineConnections: params?.machineConnectionVal.map(obj => obj._id),
         isActive: params?.isActive,
         supportExpireDate : params?.supportExpireDate,
+        decommissionedDate : params?.decommissionedDate,
         financialCompany: params?.financialCompany?._id, 
       };
      /* eslint-enable */
@@ -773,6 +805,20 @@ export function moveMachine(params) {
       console.error(error);
       throw error;
       // dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
+export function changeMachineStatus(machineId, params) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const data = {dated: params?.date, updateConnectedMachines:params?.updateConnectedMachines};
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/updateStatus/${params?.status?._id}`,data);
+    } catch (error) {
+      dispatch(slice.actions.stopLoading());
+      console.error(error);
+      throw error;
     }
   };
 }

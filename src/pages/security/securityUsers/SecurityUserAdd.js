@@ -5,6 +5,7 @@ import { Container, Card } from '@mui/material';
 // sections
 import SecurityUserAddForm from './SecurityUserAddForm';
 import { Cover } from '../../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 // ----------------------------------------------------------------------
 
 SecurityUserAdd.propTypes = {
@@ -15,15 +16,9 @@ export default function SecurityUserAdd({isInvite}) {
   const title = isInvite?"Invite User":"Create User";
   return (
     <Container maxWidth={false}>
-      <Card
-        sx={{
-          mb: 3,
-          height: 160,
-          position: 'relative',
-        }}
-      >
-        <Cover name={title} icon="mdi:user-circle" />
-      </Card>
+      <StyledCardContainer>
+        <Cover name={title}/>
+      </StyledCardContainer>
       <SecurityUserAddForm isInvite={isInvite} />
     </Container>
   );

@@ -37,6 +37,7 @@ import { getBlockedUsers , deleteBlockedUser,
 import { Cover } from '../../../../components/Defaults/Cover';
 import { fDate } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
+import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -162,16 +163,9 @@ export default function BlockedUserList() {
   return (
     <>
       <Container maxWidth={false}>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            // mt: '24px',
-          }}
-        >
+        <StyledCardContainer>
           <Cover name="Blocked User" icon="ph:users-light" generalSettings />
-        </Card>
+        </StyledCardContainer>
 
         <TableCard>
           <BlockedUserListTableToolbar

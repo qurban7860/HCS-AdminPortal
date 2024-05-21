@@ -31,18 +31,31 @@ function TabContainer({
       display:'flex',
       position: 'absolute',
       backgroundColor: theme.palette.background.paper,
+      '& .MuiTabs-scrollButtons': {
+        backgroundColor: '#426fcd', // Change background color
+        borderRadius: '15px', // Make the buttons circular
+        color:'#fff',
+        width:'20px',
+        '&:hover': {
+          backgroundColor: 'blue', // Change background color on hover
+        },
+      },
+      '& .MuiButtonBase-root':{
+        marginRight:'0px !important',
+      },
+      '& .MuiIconButton-root':{
+        mr:'5px  !important'
+      },
+      '& .Mui-selected':{
+        pr:1,
+      }
     },
 
   };
 
-  return <Tabs 
-  {...options}     
-  variant="scrollable"
-  // scrollButtons="auto"
-  scrollButtons
-  // scrollButtons={false}
-  // aria-label="scrollable auto tabs example" 
-  >{children}</Tabs>;
+  return <Tabs variant="scrollable" scrollButtons  {...options}>
+          {children}
+         </Tabs>;
 }
 
 export default TabContainer;

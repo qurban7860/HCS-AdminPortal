@@ -14,18 +14,13 @@ export default function TableNoData({ isNotFound }) {
     <>
       {isNotFound ? (
         <TableRow>
-        <TableCell colSpan={12}>
-          <EmptyContent
-            title="Empty"
-            sx={{
-              color: '#DFDFDF'
-            }}
-          />
-        </TableCell>
+          <TableCell colSpan={12}>
+            <EmptyContent title="Empty" sx={{color: '#DFDFDF'}} />
+          </TableCell>
         </TableRow>
       ) : (
         <TableRow>
-        <TableCell colSpan={12} sx={{ p: 0 }} />
+          <TableCell colSpan={12} sx={{ p: 0 }} />
         </TableRow>
       )}
     </>

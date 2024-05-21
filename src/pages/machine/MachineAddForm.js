@@ -6,12 +6,12 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, styled, Grid, Stack, TextField } from '@mui/material';
+import { Box, Card, styled, Grid, Stack, TextField, Button, Link, lighten, darken } from '@mui/material';
 // slice
 import { getActiveSPContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
 import { getActiveCustomers, setCustomerTab, setNewMachineCustomer } from '../../redux/slices/customer/customer';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
-import  { addMachine } from '../../redux/slices/products/machine';
+import  { addMachine, setConnectedMachineAddDialog, setNewConnectedMachines } from '../../redux/slices/products/machine';
 import { getActiveCategories, resetActiveCategories } from '../../redux/slices/products/category';
 import { getActiveMachineModels, resetActiveMachineModels } from '../../redux/slices/products/model';
 import { getActiveMachineStatuses, resetActiveMachineStatuses } from '../../redux/slices/products/statuses';
@@ -26,6 +26,12 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import { FORMLABELS } from '../../constants/default-constants';
 import { machineSchema } from '../schemas/machine'
+import ConnectedMachineAddDialog from '../../components/Dialog/ConnectedMachineAddDialog';
+import Iconify from '../../components/iconify';
+import IconTooltip from '../../components/Icons/IconTooltip';
+import IconButtonTooltip from '../../components/Icons/IconButtonTooltip';
+import IconPopover from '../../components/Icons/IconPopover';
+import { GroupHeader, GroupItems } from '../../theme/styles/default-styles';
 
 MachineAddForm.propTypes = {
   isEdit: PropTypes.bool,
@@ -36,6 +42,7 @@ MachineAddForm.propTypes = {
 export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { connectedMachineAddDialog, newConnectedMachines } = useSelector((state) => state.machine);
   const { activeSuppliers } = useSelector((state) => state.supplier);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
   const { activeCustomers, newMachineCustomer } = useSelector((state) => state.customer);
@@ -44,7 +51,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const { activeSpContacts } = useSelector((state) => state.contact);
   const { machineConnections } = useSelector((state) => state.machineConnections);
   const { activeCategories } = useSelector((state) => state.category);
-  // const [ hasEffectRun, setHasEffectRun ] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const [ landToCustomerMachinePage, setLandToCustomerMachinePage ] = useState(false);
 
@@ -61,8 +67,12 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       dispatch(resetActiveMachineStatuses()); 
       dispatch(resetActiveSuppliers())
       dispatch(setNewMachineCustomer(null)); 
+      dispatch(setNewConnectedMachines([]));
     }
-  }, [dispatch]);
+  }, [dispatch]);  
+
+  const decoilerCategories = activeCategories.filter(cat => cat?.connections);
+  const decoilerModels = activeMachineModels.filter(model => decoilerCategories.some(cat => cat?._id === model?.category?._id));
 
   const methods = useForm({
     resolver: yupResolver(machineSchema),
@@ -92,6 +102,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       projectManager: [],
       supportManager: [],
       supportExpireDate: null,
+      decommissionedDate: null,
       customerTags: [],
       description: '',
       isActive: true,
@@ -147,6 +158,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   }));
 
   const onSubmit = async (data) => {
+    
     try {
       const response = await dispatch(addMachine(data));
       reset();
@@ -173,7 +185,21 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     }
   };
 
+  const hanldeAddNewConnectedMachine = () => {
+    dispatch(setConnectedMachineAddDialog(true))
+  };
+
+  useEffect(() => {
+    const currentValue = watch('machineConnectionVal') || [];
+    const filteredValue = currentValue.filter(machine => machine?.customer); // Remove previously added machine
+    setValue('machineConnectionVal', [...filteredValue, ...newConnectedMachines]);
+  }, [setValue, watch, newConnectedMachines]);
+
+  let connectedMachinesOption = [];
+  connectedMachinesOption = connectedMachinesOption.concat(newConnectedMachines, machineConnections);
+
   return (
+    <>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
         <Grid container>
           <Grid item xs={18} md={12} >
@@ -229,9 +255,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                       }
                     }
                     />
-
                   <RHFDatePicker inputFormat='dd/MM/yyyy' name="manufactureDate" label="Manufacture Date" />
-
                   <RHFAutocomplete
                     name="supplier"
                     label="Supplier"
@@ -304,47 +328,57 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     ChipProps={{ size: 'small' }}
                   />
                 </Box>
-
-                  <RHFTextField name="siteMilestone" label="Landmark for Installation site" multiline />
-                  
-                <Box rowGap={2} columnGap={2} display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
-                >
-                  
+                <RHFTextField name="siteMilestone" label="Landmark for Installation site" multiline />
+                <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}>
                   <RHFDatePicker inputFormat='dd/MM/yyyy'  name="shippingDate" label="Shipping Date" />
-
                   <RHFDatePicker inputFormat='dd/MM/yyyy' name="installationDate" label="Installation Date" />
-
                 </Box>
-
+                <Box display="flex" columnGap={2} justifyContent='flex-end'>
                   <RHFAutocomplete
+                    fullWidth
                     multiple
                     disableCloseOnSelect
                     filterSelectedOptions
                     name="machineConnectionVal"
                     id="tags-outlined"
-                    options={machineConnections}
-                    getOptionLabel={(option) => `${option.serialNo || ''} ${option.name ? '-' : ''} ${option.name || ''}`}
+                    defaultValues={newConnectedMachines}
+                    options={connectedMachinesOption}
+                    groupBy={(option) => option?.group}
+                    getOptionLabel={(option) => `${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}
                     isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                    renderInput={(params) => ( <TextField  {...params}  label="Connected Machines"   placeholder="Search"  /> )}
+                    onChange={(event, value) => {
+                      if (value && value.length && value.some(option => option._id === 0)) {
+                        dispatch(setConnectedMachineAddDialog(true));
+                      } else {
+                        setValue('machineConnectionVal', value);
+                      }
+                    }}
+                    renderInput={(params) => ( <TextField  {...params}  label="Select Connected Machine (decoilers, etc.)" placeholder="Search"  /> )}
+                    renderGroup={(params) => (
+                      <li key={params.key} style={{borderBottom:params.group==='New'?'1px solid #ababab':'', borderRadius:'10px'}}>
+                        {params.group && <GroupHeader>{params.group}</GroupHeader>}
+                        <GroupItems>{params.children}</GroupItems>
+                      </li>
+                    )}
                   />
-                  
+                  {customer && <IconTooltip title='New Connectable Machine' icon='mdi:plus' onClick={()=> hanldeAddNewConnectedMachine()} />}
+                </Box>
+                <RHFAutocomplete
+                  name="status" 
+                  label="Status" 
+                  options={activeMachineStatuses}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                  getOptionLabel={(option) => `${option.name || ''}`}
+                  getOptionDisabled={(option) => option.slug === 'intransfer' || option.slug === 'transferred' || option.slug === 'decommissioned' }
+                  renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.name || ''}`}</li> )}
+                  id="controllable-states-demo"
+                  ChipProps={{ size: 'small' }}
+                />
                 <Box rowGap={2} columnGap={2} display="grid"
                   gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
-                  <RHFAutocomplete
-                    name="status" 
-                    label="Status" 
-                    options={activeMachineStatuses}
-                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                    getOptionLabel={(option) => `${option.name || ''}`}
-                    getOptionDisabled={(option) => option.slug === 'intransfer' || option.slug === 'transferred' }
-                    renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.name || ''}`}</li> )}
-                    id="controllable-states-demo"
-                    ChipProps={{ size: 'small' }}
-                  />
 
-                  <RHFDatePicker inputFormat='dd/MM/yyyy' name="supportExpireDate" label="Support Expiry Date" />
+                  {/* <RHFDatePicker inputFormat='dd/MM/yyyy' name="decommissionedDate" label="De-Commissioned Date" /> */}
 
                   <RHFAutocomplete
                     multiple
@@ -387,7 +421,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     ChipProps={{ size: 'small' }}
                     id="controllable-states-demo"
                   />
-                  
+                    <RHFDatePicker inputFormat='dd/MM/yyyy' name="supportExpireDate" label="Support Expiry Date" />
                 </Box>
                   <RHFTextField name="description" label="Description" minRows={3} multiline />
                   <ToggleButtons name={FORMLABELS.isACTIVE.name} isMachine />
@@ -397,5 +431,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
           </Grid>
         </Grid>
       </FormProvider>
+      <ConnectedMachineAddDialog activeCategories={decoilerCategories} activeMachineModels={decoilerModels} />
+    </>
   );
 }

@@ -35,6 +35,7 @@ import { fDate } from '../../../../utils/formatTime';
 // constants
 import { DIALOGS } from '../../../../constants/default-constants';
 import TableCard from '../../../../components/ListTableTools/TableCard';
+import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -210,9 +211,9 @@ export default function ConfigList() {
   return (
     <>
       <Container maxWidth={false}>
-        <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+        <StyledCardContainer>
           <Cover generalSettings name="Configs" icon="ph:users-light" />
-        </Card>
+        </StyledCardContainer>
         <TableCard>
           <ConfigListTableToolbar
             isFiltered={isFiltered}

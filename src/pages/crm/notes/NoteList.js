@@ -45,6 +45,7 @@ export default function NoteList() {
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const { customerId } = useParams() 
+  const { customer } = useSelector((state) => state.customer);
   
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -65,10 +66,10 @@ export default function NoteList() {
 
   useEffect(() => {
     if(customerId){
-      dispatch(getNotes(customerId));
+      dispatch(getNotes(customerId, customer?.isArchived));
     }
     return ()=>{ dispatch(resetNotes()) };
-  }, [dispatch, customerId]);
+  }, [dispatch, customerId, customer?.isArchived ]);
 
   useEffect(() => {
     setTableData(notes);

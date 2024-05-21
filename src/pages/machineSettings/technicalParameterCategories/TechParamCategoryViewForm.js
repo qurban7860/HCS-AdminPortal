@@ -46,11 +46,11 @@ export default function TechParamCategoryViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteTechparamcategory(techparamcategory._id));
-      enqueueSnackbar('Deleted Successfully!');
+      enqueueSnackbar('Archived Successfully!');
       navigate(PATH_MACHINE.machines.machineSettings.technicalParameterCategories.root);
     } catch (err) {
 
-      enqueueSnackbar('Techparam category delete failed!', { variant: `error` });
+      enqueueSnackbar('Techparam category Archive failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };

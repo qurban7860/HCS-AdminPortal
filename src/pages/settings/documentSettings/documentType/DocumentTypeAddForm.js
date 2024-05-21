@@ -96,7 +96,7 @@ export default function DocumentTypeAddForm({ currentDocument }) {
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
-        <Cover name={FORMLABELS.COVER.EDIT_DOCUMENT_TYPE} />
+        <Cover name={FORMLABELS.COVER.NEW_DOCUMENT_TYPE} />
       </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>

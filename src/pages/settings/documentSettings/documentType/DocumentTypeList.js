@@ -52,6 +52,7 @@ import {
 import { Cover } from '../../../../components/Defaults/Cover';
 import { fDate } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
+import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -201,15 +202,9 @@ export default function DocumentTypeList() {
   return (
     <>
       <Container maxWidth={false}>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-          }}
-        >
+        <StyledCardContainer>
           <Cover name="Document Types" icon="ph:users-light" generalSettings />
-        </Card>
+        </StyledCardContainer>
 
         <TableCard>
           <DocumentTypeListTableToolbar
@@ -296,7 +291,7 @@ export default function DocumentTypeList() {
         title="Delete"
         content={
           <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
+            Are you sure want to Archive <strong> {selected.length} </strong> items?
           </>
         }
         action={

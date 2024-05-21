@@ -29,7 +29,7 @@ export default function ConfigViewForm() {
     try {
       await dispatch(deleteConfig(config?._id));
       navigate(PATH_SETTING.configs.list);
-      enqueueSnackbar('Config delete Successfully!');
+      enqueueSnackbar('Config Archive Successfully!');
     } catch (error) {
       if (error.Message) {
         enqueueSnackbar(error.Message, { variant: `error` });
@@ -38,7 +38,7 @@ export default function ConfigViewForm() {
       } else {
         enqueueSnackbar('Something went wrong!', { variant: `error` });
       }
-      enqueueSnackbar('Config delete failed!', { variant: `error` });
+      enqueueSnackbar('Config Archive failed!', { variant: `error` });
       console.log('Error:', error);
     }
   };
@@ -75,9 +75,9 @@ export default function ConfigViewForm() {
           settingPage
         />
         <Grid container sx={{mt:2}}>
-          <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues.name} />
           <ViewFormField isLoading={isLoading} sm={6} heading="Type" param={defaultValues.type} />
-          <ViewFormField isLoading={isLoading} sm={6} heading="Value" param={defaultValues.value} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Name" param={defaultValues.name} />
+          <ViewFormField isLoading={isLoading} sm={12} heading="Value" param={defaultValues.value} />
           <ViewFormField isLoading={isLoading} sm={12} heading="Notes" param={defaultValues.notes} />
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

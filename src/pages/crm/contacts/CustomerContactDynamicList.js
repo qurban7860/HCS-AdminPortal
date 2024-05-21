@@ -37,6 +37,7 @@ import ContactSiteCard from '../../../components/sections/ContactSiteCard';
 import { exportCSV } from '../../../utils/exportCSV';
 import { useAuthContext } from '../../../auth/useAuthContext';
 import CustomerTabContainer from '../customers/util/CustomerTabContainer';
+import ContactSiteScrollbar from '../../../components/scrollbar/ContactSiteScrollbar';
 
 // ----------------------------------------------------------------------
 
@@ -98,13 +99,13 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
   });
 
   useEffect(() => {
-    dispatch(getContacts(customerId));
+    dispatch(getContacts(customerId, customer?.isArchived));
     return ()=>{
       dispatch(resetContacts());
       dispatch(setCardActiveIndex(null));
       dispatch(setIsExpanded(false));
     }
-  }, [ dispatch, customerId ]);
+  }, [ dispatch, customerId, customer?.isArchived ]);
 
   useEffect(() => {
     setTableData(contacts);
@@ -205,12 +206,9 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
                 />
               </Grid>
             )}
-            <StyledScrollbar
-              snap
-              snapOffset={100}
+            <ContactSiteScrollbar
               onClick={(e) => e.stopPropagation()}
               snapAlign="start"
-              contacts={contacts.length}
               disabled={contactEditForm || contactAddForm || contactMoveForm}
             >
               <Grid container direction="column" gap={1}>
@@ -226,7 +224,7 @@ export default function CustomerContactDynamicList({ contactAddForm, contactEdit
                   />)
                 )}
               </Grid>
-            </StyledScrollbar>
+            </ContactSiteScrollbar>
           </Grid>
         )}
 

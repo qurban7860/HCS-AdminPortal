@@ -24,17 +24,19 @@ export default function HowickOperators({ title, subheader, list }) {
     <Card>
       <CardHeader 
           title={title} 
-          titleTypographyProps={{variant:'h4', color:'#fff'}} 
+          titleTypographyProps={{ variant: 'h4', color: '#fff' }} 
           subheader={subheader} 
-          subheaderTypographyProps={{color:'#fff', fontSize:16}} 
-          sx={{background:'#2065D1', p:2}} 
+          subheaderTypographyProps={{ color: '#fff', fontSize: 16 }} 
+          sx={{ background: '#2065D1', p: 2 }} 
       />
       <Divider />
-      <Stack sx={{p:2}}>
-        {spContacts.map((operator, index) => (
-          <OperatorItem key={operator._id || index} operator={operator} index={index} />
-        ))}
-      </Stack>
+      <Box sx={{ overflowY: 'auto', maxHeight: '410px' }}>
+        <Stack sx={{ p: 2 }}>
+          {spContacts.map((operator, index) => (
+            <OperatorItem key={operator._id || index} operator={operator} index={index} />
+          ))}
+        </Stack>
+      </Box>
     </Card>
   );
 }

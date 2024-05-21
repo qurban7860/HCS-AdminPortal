@@ -11,7 +11,7 @@ function MachineDialog() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { machineForDialog, machineDialog, isLoading } = useSelector((state) => state.machine);
-  const handleMachineDialog = ()=>{ dispatch(setMachineDialog(false)); dispatch(resetMachineForDialog()) }
+  const handleMachineDialog = ()=>{ dispatch(setMachineDialog(false)); dispatch(resetMachineForDialog());  }
 
   return (
     <Dialog
@@ -54,11 +54,11 @@ function MachineDialog() {
       <DialogLink
         onClose={handleMachineDialog}
         onClick={() => {
-          if(machineForDialog?._id){
-            dispatch(resetMachine()); 
-            navigate(PATH_MACHINE.machines.view(machineForDialog?._id)); 
-            dispatch(setMachineDialog(false)); 
-          }
+            if( machineForDialog?._id){
+              dispatch(resetMachine());
+              navigate(PATH_MACHINE.machines.view(machineForDialog?._id)); 
+              dispatch(setMachineDialog(false)); 
+            }
           }}
         content="Go to machine"
       />

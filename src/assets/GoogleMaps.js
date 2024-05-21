@@ -65,7 +65,6 @@ export default function GoogleMaps({
   }, [map, lat, lng]);
 
   const handleZoomClick = (newZoomLevel) => {
-    console.log('aaaa')
     setZoomLevel(newZoomLevel);
     map.setZoom(newZoomLevel);
   };
@@ -151,7 +150,7 @@ export default function GoogleMaps({
                       <Typography variant='body2' textAlign='left'>{infoWindowData?.stringAddress}</Typography>  
                       <Button variant='' disableRipple
                         onClick={() => {
-                          handleZoomClick(zoomLevel !== 15 ? 15 : 2);
+                          // handleZoomClick(zoomLevel !== 15 ? 15 : 2);
                           map.setCenter({ lat: parseFloat(lat), lng: parseFloat(lng) });
                         }}
                         startIcon={<Iconify icon={zoomLevel !== 15 ? 'iconamoon:zoom-in-bold' : 'iconamoon:zoom-out-bold'} />}>

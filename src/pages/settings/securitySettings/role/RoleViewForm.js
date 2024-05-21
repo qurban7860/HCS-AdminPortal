@@ -27,7 +27,7 @@ export default function RoleViewForm() {
     try {
       await dispatch(deleteRole(role?._id));
       navigate(PATH_SETTING.role.list);
-      enqueueSnackbar('Role delete Successfully!');
+      enqueueSnackbar('Role Archive Successfully!');
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.log('Error:', error);

@@ -6,15 +6,16 @@ import axios from 'axios';
 import debounce from 'lodash/debounce';
 // form
 // @mui
-import { Container, Table, TableBody, TableContainer , Tooltip, IconButton} from '@mui/material';
+import { Container, Table, TableBody, TableContainer , Tooltip, IconButton, Autocomplete, TextField, TableHead, TableRow, TableCell, Checkbox, Chip} from '@mui/material';
 import {
   useTable,
   getComparator,
   TableNoData,
   TableSkeleton,
-  TableHeadCustom,
+  TableHeadFilter,
   TableSelectedAction,
   TablePaginationCustom,
+  TablePaginationFilter
 } from '../../components/table';
 import Scrollbar from '../../components/scrollbar';
 import Iconify from '../../components/iconify';
@@ -65,14 +66,14 @@ MachineList.propTypes = {
 };
 
 const TABLE_HEAD = [
-  { id: 'serialNo', label: 'Serial Number', align: 'left' },
+  { id: 'serialNo', label: 'Serial Number', align: 'left', hideable:false },
   { id: 'name', visibility: 'md1',label: 'Name', align: 'left' },
-  { id: 'machineModel.name', visibility: 'xs1', label: 'Model', align: 'left' },
-  { id: 'customer.name', visibility: 'md2', label: 'Customer', align: 'left' },
+  { id: 'machineModel', visibility: 'xs1', label: 'Model', align: 'left' },
+  { id: 'customer', visibility: 'md2', label: 'Customer', align: 'left' },
   { id: 'installationDate', visibility: 'md3', label: 'Installation Date', align: 'left' },
   { id: 'shippingDate', visibility: 'md3', label: 'Shipping Date', align: 'left' },
-  { id: 'status.name', visibility: 'xs2',  label: 'Status', align: 'left' },
-  { id: 'profiles.defaultName', visibility: 'md2',label: 'Profile', align: 'left' },
+  { id: 'status', visibility: 'xs2',  label: 'Status', align: 'left' },
+  { id: 'profiles', visibility: 'md2',label: 'Profile', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
 ];
 
@@ -81,7 +82,6 @@ export default function MachineList({ isArchived }) {
     order,
     orderBy,
     setPage,
-    selected,
     onSelectRow,
     onSelectAllRows,
     onSort,
@@ -95,6 +95,7 @@ export default function MachineList({ isArchived }) {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   const [tableData, setTableData] = useState([]);
+  
   const dispatch = useDispatch();
   const axiosToken = () => axios.CancelToken.source();
   const cancelTokenSource = axiosToken();
@@ -109,7 +110,8 @@ export default function MachineList({ isArchived }) {
     isLoading, 
     error, 
     initial, 
-    responseMessage 
+    responseMessage,
+    reportHiddenColumns
   } = useSelector( (state) => state.machine );
 
   const navigate = useNavigate();
@@ -251,9 +253,9 @@ export default function MachineList({ isArchived }) {
   };
 
   return (
-    <Container maxWidth={false} sx={{mb:3}}>
+    <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover  name={ isArchived ? "Archived Machines" : "Machines" } icon="arcticons:materialistic" setting isArchivedMachines={!isArchived} isArchived={isArchived} />
+          <Cover name={ isArchived ? "Archived Machines" : "Machines" } icon="arcticons:materialistic" setting isArchivedMachines={!isArchived} isArchived={isArchived} />
         </StyledCardContainer>
         <TableCard>
           <MachineListTableToolbar
@@ -274,44 +276,32 @@ export default function MachineList({ isArchived }) {
             isArchived={isArchived}
           />
 
-          {!isNotFound && <TablePaginationCustom
+          {!isNotFound && <TablePaginationFilter
+            columns={TABLE_HEAD}
             count={machines? machines.length : 0}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            
           />}
+          
+          {/* {!isNotFound && <TablePaginationCustom
+            count={machines? machines.length : 0}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />} */}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            {selected.length > 1 ? "" :
-
-            <TableSelectedAction
-
-              numSelected={selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row._id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            />
-          }
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 360 }}>
-                <TableHeadCustom
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  onSort={onSort}
-                />
+              <Table stickyHeader size="small" sx={{ minWidth: 360 }}>
+              <TableHeadFilter
+                order={order}
+                orderBy={orderBy}
+                headLabel={TABLE_HEAD}
+                hiddenColumns={reportHiddenColumns}
+                onSort={onSort}
+              />
 
               <TableBody>
                 {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
@@ -321,7 +311,7 @@ export default function MachineList({ isArchived }) {
                       <MachineListTableRow
                         key={row._id}
                         row={row}
-                        selected={selected.includes(row._id)}
+                        hiddenColumns={reportHiddenColumns}
                         onSelectRow={() => onSelectRow(row._id)}
                         onViewRow={() => handleViewRow(row._id)}
                         openInNewPage={ () => openInNewPage(row._id)}

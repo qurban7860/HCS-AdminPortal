@@ -20,6 +20,7 @@ import ReleasesListTableToolbar from './ReleasesListTableToolbar';
 import { getReleases, setFilterBy } from '../../../../redux/slices/reports/releases';
 import { fDate } from '../../../../utils/formatTime';
 import TableCard from '../../../../components/ListTableTools/TableCard';
+import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 
 export default function ReleasesList() {
   const {
@@ -95,9 +96,9 @@ export default function ReleasesList() {
 
   return (
       <Container maxWidth={false}>
-        <Card sx={{mb: 3, height: 160, position: 'relative'}}>
+        <StyledCardContainer>
           <Cover name="Releases" icon="ph:users-light" generalSettings />
-        </Card>
+        </StyledCardContainer>
         <TableCard>
           <ReleasesListTableToolbar
             filterName={filterName}

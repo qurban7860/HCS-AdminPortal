@@ -1,3 +1,4 @@
+import { ICONS } from '../../../constants/icons/default-icons';
 import Iconify from '../../../components/iconify';
 
   export function checkValuesNotNull(obj) {
@@ -71,58 +72,64 @@ const TABS = [
   {
     value: 'machine',
     label: 'Machine Info',
-    icon: <Iconify icon="mdi:window-open-variant" />,
+    icon: ICONS.MACHINE.icon,
   },
   {
     value: 'settings',
     label: 'Settings',
-    icon: <Iconify icon="mdi:cogs" />,
+    icon: ICONS.SETTINGS.icon,
   },
   {
     value: 'toolsinstalled',
     label: 'Tools Installed',
-    icon: <Iconify icon="mdi:folder-wrench" />,
+    icon: ICONS.TOOLS_INSTALLED.icon,
   },
   {
     value: 'notes',
     label: 'Notes',
-    icon: <Iconify icon="mdi:note-multiple" />,
+    icon: ICONS.NOTES.icon,
   },
   {
     value: 'drawings',
     label: 'Drawings',
-    icon: <Iconify icon="mdi:folder-open" />,
+    icon: ICONS.DRAWINGS.icon,
   },
   {
     value: 'documents',
     label: 'Documents',
-    icon: <Iconify icon="mdi:folder-open" />,
+    icon: ICONS.DOCUMENTS.icon,
   },
   {
     value: 'license',
     label: 'Licenses',
-    icon: <Iconify icon="mdi:book-cog-outline" />,
+    icon: ICONS.LICENSES.icon,
   },
   {
     value: 'profile',
     label: 'Profiles',
-    icon: <Iconify icon="mdi:window-open-variant" />,
+    icon: ICONS.PROFILES.icon,
   },
   {
     value: 'serviceRecords',
     label: 'Service Records',
-    icon: <Iconify icon="mdi:clipboard-text-clock" />,
+    icon: ICONS.SERVICE_RECORDS.icon,
   },
   {
     value: 'ini',
     label: 'INI',
-    icon: <Iconify icon="ic:round-manage-history" />,
+    icon: ICONS.INI.icon,
   },
   {
     value: 'logs',
     label: 'Logs',
-    icon: <Iconify icon="entypo:bar-graph" />,
+    icon: ICONS.LOGS.icon,
+  },  
+  {
+    value: 'jira',
+    label: 'Jira',
+    icon: ICONS.JIRA.icon,
   },
+  
 ];
 
 export default TABS

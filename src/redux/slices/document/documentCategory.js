@@ -230,7 +230,7 @@ export function getDocumentCategory(Id) {
 
 // -----------------------------------Get Active Document Categories-----------------------------------
 
-export function getActiveDocumentCategories(categoryBy, cancelToken) {
+export function getActiveDocumentCategories(categoryBy, cancelToken, drawing) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -241,6 +241,11 @@ export function getActiveDocumentCategories(categoryBy, cancelToken) {
         },
         cancelToken: cancelToken?.token,
       }
+
+      if(drawing) {
+        query.params.drawing = true;
+      }
+
       Object.assign(query.params, categoryBy)
       const response = await axios.get(`${CONFIG.SERVER_URL}documents/categories/` , query );
       dispatch(slice.actions.getActiveDocumentCategoriesSuccess(response.data));
