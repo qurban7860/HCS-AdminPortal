@@ -299,7 +299,6 @@ export const {
   setMachineStatusChangeDialog,
   resetCustomerMachines,
   resetActiveCustomerMachines,
-  resetMachineForDialog,
   resetMachine,
   resetMachines,
   resetActiveMachines,
