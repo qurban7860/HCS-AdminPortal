@@ -118,6 +118,7 @@ export const {
 
 export function getVisits(date, customer) {
   return async (dispatch) => {
+    dispatch(resetVisits());
     dispatch(slice.actions.startLoading());
     try {
       const params= {

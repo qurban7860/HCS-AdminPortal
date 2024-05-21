@@ -12,6 +12,8 @@ import { onOpenModal } from '../../redux/slices/visit/visit';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 // import IconButtonTooltip from '../../components/Icons/IconButtonTooltip';
 import { useAuthContext } from '../../auth/useAuthContext';  
+import { getWeekRange } from './util';  
+
 
 // ----------------------------------------------------------------------
 
@@ -19,7 +21,7 @@ const VIEW_OPTIONS = [
   { value: 'dayGridMonth', label: 'Month', icon: 'ic:round-view-module' },
   { value: 'timeGridWeek', label: 'Week', icon: 'ic:round-view-week' },
   { value: 'timeGridDay', label: 'Day', icon: 'ic:round-view-day' },
-  { value: 'listWeek', label: 'Agenda', icon: 'ic:round-view-agenda' },
+  { value: 'listMonth', label: 'Agenda', icon: 'ic:round-view-agenda' },
 ];
 
 // ----------------------------------------------------------------------
@@ -33,7 +35,7 @@ CalendarToolbar.propTypes = {
   onOpenFilter: PropTypes.func,
   onChangeView: PropTypes.func,
   date: PropTypes.instanceOf(Date),
-  view: PropTypes.oneOf(['dayGridMonth', 'timeGridWeek', 'timeGridDay', 'listWeek']),
+  view: PropTypes.oneOf(['dayGridMonth', 'timeGridWeek', 'timeGridDay', 'listMonth']),
 };
 
 export default function CalendarToolbar({
@@ -52,7 +54,8 @@ export default function CalendarToolbar({
   const dispatch= useDispatch();
   const isDesktop = useResponsive('up', 'sm');
   const { activeCustomers } = useSelector((state) => state.customer);
-
+  const { startOfWeek, endOfWeek } = getWeekRange(date)
+  // console.log("startOfWeek, endOfWeek : ",startOfWeek, endOfWeek)
   return (
     <Stack
       alignItems="center"
@@ -80,9 +83,9 @@ export default function CalendarToolbar({
       <Stack direction="row" alignItems="center" spacing={2}>
         <IconButton onClick={onPrevDate}>
           <Iconify icon="eva:arrow-ios-back-fill" />
-        </IconButton>
+        </IconButton> 
 
-        <Typography variant="h5">{  (view === 'dayGridMonth' && fDate(date, 'MMM yyyy')) || fDate(date, 'dd MMM yyyy')}</Typography>
+        <Typography variant="h5">{  ((( view === 'dayGridMonth' ) || ( view === 'listMonth' ) ) && fDate(date, 'MMM yyyy')) || ( view === 'timeGridWeek' && `${fDate(startOfWeek, 'dd MMM')} - ${fDate(endOfWeek, 'dd MMM')} ${fDate(date, 'yyyy')}`)  || fDate(date, 'dd MMM yyyy')}</Typography>
 
         <IconButton onClick={onNextDate}>
           <Iconify icon="eva:arrow-ios-forward-fill" />
