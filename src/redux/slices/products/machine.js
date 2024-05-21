@@ -238,7 +238,7 @@ const slice = createSlice({
     },
 
     // RESET All Machines
-    resetAllMachines(state, action) {
+    resetAllMachines(state) {
       state.isLoading = false;
       state.success = true;
       state.allMachines = [];
@@ -292,6 +292,7 @@ export const {
   setMachineTab,
   setMachineEditFormVisibility,
   setMachineMoveFormVisibility,
+  resetMachineForDialog,
   stopLoading,
   setTransferMachineFlag,
   setMachineTransferDialog,
