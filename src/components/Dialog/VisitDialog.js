@@ -20,6 +20,7 @@ import { getActiveSPContacts, resetActiveSPContacts } from '../../redux/slices/c
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import FormProvider, { RHFDatePicker, RHFTimePicker, RHFTextField, RHFAutocomplete, RHFSwitch } from '../hook-form';
+import IconTooltip from '../Icons/IconTooltip';
 
 const getInitialValues = (visit, range) => {
   const initialEvent = {
@@ -162,7 +163,9 @@ function VisitDialog({
       keepMounted
       aria-describedby="alert-dialog-slide-description"
     >
-      <DialogTitle variant='h3' sx={{pb:1, pt:2 }}>{hasEventData ? 'Update Event' : 'New Event'}</DialogTitle>
+      <DialogTitle display='flex' justifyContent='space-between' variant='h3' sx={{pb:1, pt:2 }}>
+        {hasEventData ? 'Update Event' : 'New Event'}
+      </DialogTitle>
       <Divider orientation="horizontal" flexItem />
       <DialogContent dividers sx={{px:3}}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -248,31 +251,21 @@ function VisitDialog({
             getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
             renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
           />   
-
           <RHFTextField name="purposeOfVisit" label="Purpose of Visit" multiline rows={3} />
-
         </Stack>
       </Grid>
       </FormProvider>
       </DialogContent>
       <DialogActions >
         {hasEventData && (
-          <Tooltip title="Delete Event">
-            <IconButton onClick={onDeleteEvent} >
-              <Iconify icon="eva:trash-2-outline" />
-            </IconButton>
-          </Tooltip>
+          <IconTooltip color='#FF0000' title='Delete Event' icon='eva:trash-2-outline' onClick={onDeleteEvent}/>
         )}
-
+        
         <Box sx={{ flexGrow: 1 }} />
-
-        <Button variant="outlined" color="inherit" onClick={closeModel}>
-          Cancel
-        </Button>
-
-        <LoadingButton type="submit" variant="contained" onClick={handleSubmit(onSubmit)} loading={isSubmitting}>
-          {hasEventData ? 'Update' : 'Add'}
-        </LoadingButton>
+          <Button variant="outlined" color="inherit" onClick={closeModel}>Cancel</Button>
+          <LoadingButton type="submit" variant="contained" onClick={handleSubmit(onSubmit)} loading={isSubmitting}>
+            {hasEventData ? 'Update' : 'Add'}
+          </LoadingButton>
       </DialogActions>
     </Dialog>
   );
