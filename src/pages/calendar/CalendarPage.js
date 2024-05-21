@@ -59,11 +59,13 @@ export default function CalendarPage() {
 
   const [data, setData] = useState([]);
   const [previousDate, setPreviousDate] = useState(null);
+  const [isCustomerSelected, setIsCustomerSelected] = useState(false);
 
   const [selectedCustomer, setSelectedCustomer] = useState(null);
 
   useEffect(() =>{
     if(userCustomer && Array.isArray(activeCustomers) && activeCustomers.length > 0 ){
+      setIsCustomerSelected(true);
       const filteredCustomer = activeCustomers?.find(c => c?._id === userCustomer )
       setSelectedCustomer(filteredCustomer)
     }
@@ -102,11 +104,12 @@ export default function CalendarPage() {
   }, [visits]);
 
   useEffect(() => {
+    dispatch(resetVisits());
     dispatch(getActiveCustomers());
   }, [dispatch]);
 
   useEffect(() => {
-    if( date && !openModal ){
+    if( isCustomerSelected && date && !openModal ){
       // if(previousDate?.getFullYear() !== date?.getFullYear() && (Number(previousDate?.getMonth())+1) !== (Number(date?.getMonth())+1)){
         setPreviousDate(date);
         dispatch(getVisits(date, selectedCustomer?._id ));
@@ -132,7 +135,6 @@ export default function CalendarPage() {
 
   const handleClickToday = () => {
     const calendarEl = calendarRef.current;
-    console.log("calendarEl : ",calendarEl)
     if (calendarEl) {
       const calendarApi = calendarEl.getApi();
       calendarApi.today();
@@ -144,6 +146,10 @@ export default function CalendarPage() {
     const calendarEl = calendarRef.current;
     if (calendarEl) {
       const calendarApi = calendarEl.getApi();
+      if (newView === 'listMonth') {
+        const monthFirstDate = new Date(date.getFullYear(), date.getMonth(), 1)
+        calendarApi.gotoDate(date);
+      }
       calendarApi.changeView(newView);
       setView(newView);
     }
