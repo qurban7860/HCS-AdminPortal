@@ -8,7 +8,7 @@ import { fDate } from '../../utils/formatTime';
 import useResponsive from '../../hooks/useResponsive';
 // components
 import Iconify from '../../components/iconify';
-import { onOpenModal } from '../../redux/slices/visit/visit';
+import { onOpenModal } from '../../redux/slices/event/event';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 // import IconButtonTooltip from '../../components/Icons/IconButtonTooltip';
 import { useAuthContext } from '../../auth/useAuthContext';  

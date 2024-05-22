@@ -8,15 +8,15 @@ import { fDate, fTimestamp } from '../../../utils/formatTime';
 const initialState = {
   isLoading: false,
   error: null,
-  visit: {},
-  visits: [],
+  event: {},
+  events: [],
   openModal: false,
   selectedEventId: null,
   selectedRange: null,
 };
 
 const slice = createSlice({
-  name: 'visit',
+  name: 'event',
   initialState,
   reducers: {
     // START LOADING
@@ -29,48 +29,48 @@ const slice = createSlice({
       state.error = action.payload;
     },
 
-    // GET VISITS
-    getVisitsSuccess(state, action) {
+    // GET EVENTS
+    getEventsSuccess(state, action) {
       state.isLoading = false;
-      state.visits = action.payload;
+      state.events = action.payload;
     },
 
-    // GET VISIT
-    getVisitSuccess(state, action) {
+    // GET EVENT
+    getEventSuccess(state, action) {
       state.isLoading = false;
-      state.visit = action.payload;
+      state.event = action.payload;
     },
 
-    // CREATE VISIT
-    createVisitSuccess(state, action) {
+    // CREATE EVENT
+    createEventSuccess(state, action) {
       const newEvent = action?.payload;
       state.isLoading = false;
-      state.visits = [...state.visits, newEvent];
+      state.events = [...state.events, newEvent];
     },
 
-    // UPDATE VISIT
-    updateVisitSuccess(state, action) {
+    // UPDATE EVENT
+    updateEventSuccess(state, action) {
       state.isLoading = false;
-      state.visits = state.visits.map((event) => {
+      state.events = state.events.map((event) => {
         if (event._id === action.payload._id) {
           return action.payload;
         }
         return event;
       });
     },
-    // UPDATE VISIT
-    updateVisitDateLocal(state, action) {
-      state.visits = action.payload
+    // UPDATE EVENT
+        updateEventDateLocal(state, action) {
+      state.events = action.payload
     },
 
-    // DELETE VISITS
-    deleteVisitSuccess(state, action) {
+    // DELETE EVENTS
+    deleteEventSuccess(state, action) {
       const eventId = action.payload;
-      state.visits = state.visits.filter((event) => event._id !== eventId);
+      state.events = state.events.filter((event) => event._id !== eventId);
     },
 
-    // SELECT VISITS
-    selectVisit(state, action) {
+    // SELECT EVENTS
+    selectEvent(state, action) {
       const eventId = action.payload;
       state.openModal = true;
       state.selectedEventId = eventId;
@@ -94,9 +94,9 @@ const slice = createSlice({
       state.selectedEventId = null;
       state.selectedRange = null;
     },
-    // RESET VISIS
-    resetVisits(state) {
-      state.visits = [];
+    // RESET EVENTS
+    resetEvents(state) {
+      state.events = [];
     },
   },
 });
@@ -108,17 +108,17 @@ export default slice.reducer;
 export const { 
   onOpenModal, 
   onCloseModal, 
-  selectVisit, 
+  selectEvent, 
   selectRange,
-  updateVisitDateLocal,
-  resetVisits,
+  updateEventDateLocal,
+  resetEvents,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
 
-export function getVisits(date, customer) {
+export function getEvents(date, customer) {
   return async (dispatch) => {
-    dispatch(resetVisits());
+    dispatch(resetEvents());
     dispatch(slice.actions.startLoading());
     try {
       const params= {
@@ -130,8 +130,8 @@ export function getVisits(date, customer) {
         params.month = (Number(date?.getMonth())+1)
         params.year = date?.getFullYear()
       }
-      const response = await axios.get(`${CONFIG.SERVER_URL}calender/visits`, { params } );
-      dispatch(slice.actions.getVisitsSuccess(response.data));
+      const response = await axios.get(`${CONFIG.SERVER_URL}calender/events`, { params } );
+      dispatch(slice.actions.getEventsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
@@ -139,12 +139,12 @@ export function getVisits(date, customer) {
   };
 }
 
-export function getVisit(id) {
+export function getEvent(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}calender/visits/${id}`);
-      dispatch(slice.actions.getVisitSuccess(response.data));
+      const response = await axios.get(`${CONFIG.SERVER_URL}calender/events/${id}`);
+      dispatch(slice.actions.getEventSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
@@ -154,16 +154,15 @@ export function getVisit(id) {
 
 // ----------------------------------------------------------------------
 
-export function newVisit(params) {
+export function createEvent(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const newStartDate = new Date(params?.start )
-      const newDate = new Date(params?.visitDate); 
+      const newDate = new Date(params?.eventDate); 
       newDate.setHours(newStartDate.getHours(), newStartDate.getMinutes(), newStartDate.getSeconds(), newStartDate.getMilliseconds());
       const data = {
-        visitDate: newDate || null,
-        start: params?.start,
+        start: newDate || null,
         end: params?.end,
         customer: params?.customer?._id || null,
         machine: params?.machine?._id || null,
@@ -172,15 +171,15 @@ export function newVisit(params) {
         primaryTechnician: params?.primaryTechnician?._id || '',
         supportingTechnicians: params?.supportingTechnicians?.map((el)=> el?._id) || [] ,
         notifyContacts: params?.notifyContacts?.map((el)=> el?._id) || [],
-        purposeOfVisit: params?.purposeOfVisit || '',
+        description: params?.description || '',
       };
       
       if(params?.allDay){
         data.start = new Date(new Date().setHours(7, 0, 0));
         data.end = new Date(new Date().setHours(18, 0, 0));
       }
-      const response = await axios.post(`${CONFIG.SERVER_URL}calender/visits`, data);
-      dispatch(slice.actions.createVisitSuccess(response.data.Visit));
+      const response = await axios.post(`${CONFIG.SERVER_URL}calender/events`, data);
+      dispatch(slice.actions.createEventSuccess(response.data.Event));
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
@@ -190,15 +189,15 @@ export function newVisit(params) {
  
 // ----------------------------------------------------------------------
 
-export function updateVisitDate(id, date) {
+export function updateEventDate(id, date) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        visitDate:  date,
+        start:  date,
+        end: date,
       };
-      const response = await axios.patch(`${CONFIG.SERVER_URL}calender/visits/${id}`, data);
-      // dispatch(slice.actions.updateVisitSuccess(response?.data?.Visit));
+      const response = await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, data);
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
@@ -206,17 +205,16 @@ export function updateVisitDate(id, date) {
   };
 }
 
-export function updateVisit(id, params) {
+export function updateEvent(id, params) {
   
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const newStartDate = new Date(params?.start )
-      const newDate = new Date(params?.visitDate); 
+      const newDate = new Date(params?.start); 
       newDate.setHours(newStartDate.getHours(), newStartDate.getMinutes(), newStartDate.getSeconds(), newStartDate.getMilliseconds());
       const data = {
-        visitDate: newDate || null,
-        start: params?.start,
+        start: newDate || null,,
         end: params?.end,
         customer: params?.customer?._id || null,
         machine: params?.machine?._id || null,
@@ -225,7 +223,7 @@ export function updateVisit(id, params) {
         primaryTechnician: params?.primaryTechnician?._id || '',
         supportingTechnicians: params?.supportingTechnicians?.map((el)=> el?._id) || [] ,
         notifyContacts: params?.notifyContacts?.map((el)=> el?._id) || [],
-        purposeOfVisit: params?.purposeOfVisit || '',
+        description: params?.description || '',
       };
 
       if(params?.allDay){
@@ -233,8 +231,8 @@ export function updateVisit(id, params) {
         data.end = new Date(new Date().setHours(18, 0, 0));
       }
 
-      const response = await axios.patch(`${CONFIG.SERVER_URL}calender/visits/${id}`, data);
-      dispatch(slice.actions.updateVisitSuccess(response.data.Visit));
+      const response = await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, data);
+      dispatch(slice.actions.updateEventSuccess(response.data.Event));
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
@@ -244,14 +242,13 @@ export function updateVisit(id, params) {
 
 // ----------------------------------------------------------------------
 
-export function deleteVisit(id) {
+export function deleteEvent(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}calender/visits/${id}`, { 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, { 
         isArchived: true, 
        });
-      //  dispatch(slice.actions.deleteVisitSuccess(response.data.Visit));
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;

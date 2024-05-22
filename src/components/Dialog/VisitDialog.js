@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 
 // components
-import { onCloseModal } from '../../redux/slices/visit/visit';
+import { onCloseModal } from '../../redux/slices/event/event';
 import DialogLink from './DialogLink';
 import Iconify from '../iconify';
 // import { getActiveCustomers, resetActiveCustomers } from '../../redux/slices/customer/customer';

@@ -23,7 +23,7 @@ import {
   selectRange,
   onOpenModal,
   onCloseModal,
-} from '../../redux/slices/visit/visit';
+} from '../../redux/slices/event/event';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
 // hooks
 import useResponsive from '../../hooks/useResponsive';

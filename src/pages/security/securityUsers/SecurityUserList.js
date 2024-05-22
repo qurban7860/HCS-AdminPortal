@@ -47,7 +47,7 @@ const ROLE_OPTIONS = ['Administrator', 'Normal User', 'Guest User', 'Restriced U
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'email', visibility: 'xs1', label: 'Email', align: 'left' },
+  { id: 'login', visibility: 'xs1', label: 'Login', align: 'left' },
   { id: 'phone', visibility: 'xs2', label: 'Phone Number', align: 'left' },
   { id: 'roles.name.[]', visibility: 'md1', label: 'Roles', align: 'left' },
   // { id: 'regions.name.[]', visibility: 'md1', label: 'Regions', align: 'left' },

@@ -53,7 +53,7 @@ import pm2logsReducer from './slices/logs/pm2Logs';
 import dbBackupLogsReducer from './slices/logs/dbBackupLogs';
 import machineJiraReducer from './slices/products/machineJira';
 import emailsReducer from './slices/email/emails';
-import visitReducer from './slices/visit/visit';
+import eventReducer from './slices/event/event';
 import customerJiraReducer from './slices/customer/customerJira';
 
 // ----------------------------------------------------------------------
@@ -398,8 +398,8 @@ export const emailsPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
-export const visitPersistConfig = {
-  key: 'visit',
+export const eventPersistConfig = {
+  key: 'event',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
@@ -463,7 +463,7 @@ const rootReducer = combineReducers({
   dbBackupLogs: persistReducer(dbBackupLogsPersistConfig, dbBackupLogsReducer),
   machineJira: persistReducer(machineJiraPersistConfig, machineJiraReducer),
   emails: persistReducer(emailsPersistConfig, emailsReducer),
-  visit: persistReducer(visitPersistConfig, visitReducer),
+  event: persistReducer(eventPersistConfig, eventReducer),
   customerJira: persistReducer(customerJiraPersistConfig, customerJiraReducer),  
 });
 
