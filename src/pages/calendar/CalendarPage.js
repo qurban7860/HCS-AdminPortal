@@ -86,7 +86,7 @@ export default function CalendarPage() {
       const formattedData = events.map((v) => ({
         id: v?._id,
         title: v?.customer?.name,
-        date: v?.visitDate,
+        date: v?.start,
         textColor: "#1890FF",
         extendedProps: {
           ...v
@@ -181,11 +181,18 @@ export default function CalendarPage() {
 
   const handleDropEvent = ({ event }) => {
     try {
-      const visitDate = new Date(event?._def?.extendedProps?.visitDate)
       const newDate = new Date(event?._instance?.range?.start); 
-      newDate.setHours(visitDate.getHours(), visitDate.getMinutes());
-      setData(prevData =>  prevData.map(e =>  e?.id === event.id ? { ...e, date: newDate } : e ) );
-      dispatch(updateEventDate(event.id,  newDate));
+
+      const startDateTime = new Date(event?._def?.extendedProps?.start)
+      const endDateTime = new Date(event?._def?.extendedProps?.end)
+      const modifiedStartDateTime = new Date(newDate);
+      const modifiedEndDateTime = new Date(newDate);
+
+      modifiedStartDateTime.setHours(startDateTime.getHours(), startDateTime.getMinutes());
+      modifiedEndDateTime.setHours(endDateTime.getHours(), endDateTime.getMinutes());
+
+      setData(prevData =>  prevData.map(e =>  e?.id === event.id ? { ...e, date: modifiedStartDateTime } : e ) );
+      dispatch(updateEventDate(event.id,  modifiedStartDateTime, modifiedEndDateTime ));
     } catch (error) {
       enqueueSnackbar('Event Date Update Failed!', { variant: `error` });
       dispatch(getEvents(date));

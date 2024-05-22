@@ -35,7 +35,7 @@ const getInitialValues = (selectedEvent, range) => {
     primaryTechnician: selectedEvent ? selectedEvent?.primaryTechnician :  null,
     supportingTechnicians: selectedEvent ? selectedEvent?.supportingTechnicians :  [],
     notifyContacts: selectedEvent ? selectedEvent?.notifyContacts :  [],
-    description: selectedEvent ? selectedEvent?.purposeOfVisit :  '',
+    description: selectedEvent ? selectedEvent?.description :  '',
   };
 
   return initialEvent;
@@ -86,7 +86,7 @@ function EventDialog({
       primaryTechnician: Yup.object().nullable().label('Primary Technician').required(),
       supportingTechnicians: Yup.array().nullable().label('Supporting Technicians').required(),
       notifyContacts: Yup.array().nullable().label('Notify Contacts').required(),
-      purposeOfEvent: Yup.string().max(500).label('purposeOfEvent'),
+      description: Yup.string().max(500).label('Description'),
     });
   
     const methods = useForm({
