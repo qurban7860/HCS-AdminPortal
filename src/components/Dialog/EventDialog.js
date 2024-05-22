@@ -12,45 +12,43 @@ import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 
 // components
-import { onCloseModal } from '../../redux/slices/event/event';
+import { setEventModel } from '../../redux/slices/event/event';
 import DialogLink from './DialogLink';
 import Iconify from '../iconify';
-// import { getActiveCustomers, resetActiveCustomers } from '../../redux/slices/customer/customer';
 import { getActiveSPContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import FormProvider, { RHFDatePicker, RHFTimePicker, RHFTextField, RHFAutocomplete, RHFSwitch } from '../hook-form';
 import IconTooltip from '../Icons/IconTooltip';
 
-const getInitialValues = (visit, range) => {
+const getInitialValues = (selectedEvent, range) => {
   const initialEvent = {
-    visitDate: visit ? visit?.visitDate : (range?.start || new Date() ) ,
-    start: visit ? visit?.start : (range?.start  || new Date(new Date().setHours(7, 0, 0)) ) ,
-    end: visit ? visit?.end : null,
-    allDay: visit ? visit?.allDay : false,
-    customer: visit ? visit?.customer : null,
-    machine: visit ? visit?.machine :  null,
-    site: visit ? visit?.site :  null,
-    jiraTicket: visit ? visit?.jiraTicket :  '',
-    primaryTechnician: visit ? visit?.primaryTechnician :  null,
-    supportingTechnicians: visit ? visit?.supportingTechnicians :  [],
-    notifyContacts: visit ? visit?.notifyContacts :  [],
-    purposeOfVisit: visit ? visit?.purposeOfVisit :  '',
+    _id: selectedEvent ? selectedEvent?._id : null ,
+    date: selectedEvent ? selectedEvent?.start : (range?.start || new Date() ) ,
+    start: selectedEvent ? selectedEvent?.start : (range?.start  || new Date(new Date().setHours(7, 0, 0)) ) ,
+    end: selectedEvent ? selectedEvent?.end : null,
+    allDay: selectedEvent ? selectedEvent?.allDay : false,
+    customer: selectedEvent ? selectedEvent?.customer : null,
+    machine: selectedEvent ? selectedEvent?.machine :  null,
+    site: selectedEvent ? selectedEvent?.site :  null,
+    jiraTicket: selectedEvent ? selectedEvent?.jiraTicket :  '',
+    primaryTechnician: selectedEvent ? selectedEvent?.primaryTechnician :  null,
+    supportingTechnicians: selectedEvent ? selectedEvent?.supportingTechnicians :  [],
+    notifyContacts: selectedEvent ? selectedEvent?.notifyContacts :  [],
+    description: selectedEvent ? selectedEvent?.purposeOfVisit :  '',
   };
 
   return initialEvent;
 };
 
-  VisitDialog.propTypes = {
-    event: PropTypes.object,
-    range: PropTypes.object,
-    onDeleteEvent: PropTypes.func,
-    onCreateUpdateEvent: PropTypes.func,
-    colorOptions: PropTypes.arrayOf(PropTypes.string),
-  };
+EventDialog.propTypes = {
+  range: PropTypes.object,
+  onDeleteEvent: PropTypes.func,
+  onCreateUpdateEvent: PropTypes.func,
+  colorOptions: PropTypes.arrayOf(PropTypes.string),
+};
   
-function VisitDialog({
-    event,
+function EventDialog({
     range,
     colorOptions,
     onCreateUpdateEvent,
@@ -58,16 +56,16 @@ function VisitDialog({
   }) {
     
     const dispatch = useDispatch();
-    const { openModal } = useSelector((state) => state.visit );
+    const { selectedEvent, eventModel } = useSelector((state) => state.event );
     const { activeCustomers } = useSelector((state) => state.customer);
     const { activeContacts, activeSpContacts } = useSelector((state) => state.contact);
     const { activeSites } = useSelector((state) => state.site);
     const { activeCustomerMachines } = useSelector( (state) => state.machine );
     
-    const hasEventData = !!event;
+    // const hasEventData = !!event;
 
     useEffect(()=>{
-      if(openModal){
+      if(eventModel){
         dispatch(getActiveSPContacts())
       }
       return () => {
@@ -75,10 +73,9 @@ function VisitDialog({
         dispatch(resetActiveCustomerMachines())
         dispatch(resetActiveSites())
       }
-    },[ dispatch, openModal ])
+    },[ dispatch, eventModel ])
 
     const EventSchema = Yup.object().shape({
-      visitDate: Yup.date().nullable().label('Visit Date').typeError('Date should be a valid Date').required(),
       start: Yup.date().nullable().label('Start Time').typeError('Start Time should be a valid Time'),
       end: Yup.date().nullable().label('End Time').typeError('End Time should be a valid Time'),
       allDay: Yup.bool().label('All Day'),
@@ -89,12 +86,12 @@ function VisitDialog({
       primaryTechnician: Yup.object().nullable().label('Primary Technician').required(),
       supportingTechnicians: Yup.array().nullable().label('Supporting Technicians').required(),
       notifyContacts: Yup.array().nullable().label('Notify Contacts').required(),
-      purposeOfVisit: Yup.string().max(500).label('purposeOfVisit'),
+      purposeOfEvent: Yup.string().max(500).label('purposeOfEvent'),
     });
   
     const methods = useForm({
       resolver: yupResolver(EventSchema),
-      defaultValues: getInitialValues(event?.extendedProps, range),
+      defaultValues: getInitialValues(selectedEvent?.extendedProps, range)
     });
     
     const {
@@ -107,7 +104,7 @@ function VisitDialog({
       clearErrors
     } = methods;
 
-    const { visitDate, jiraTicket, customer, machine, primaryTechnician, allDay } = watch();
+    const { jiraTicket, customer, machine, primaryTechnician, allDay } = watch();
 
     useEffect(()=>{
       if(customer){
@@ -120,12 +117,13 @@ function VisitDialog({
       // eslint-disable-next-line react-hooks/exhaustive-deps
     },[ dispatch, customer ])
 
+    
     useEffect(() => {
-      reset(getInitialValues(event?.extendedProps, range));
-    }, [event, range, reset]);
+      reset(getInitialValues(selectedEvent?.extendedProps, range));
+    }, [reset, range, selectedEvent]);
     
     const onSubmit = async (data) => {
-      try {
+     try {
         await onCreateUpdateEvent(data);
         await reset();
       } catch (error) {
@@ -133,12 +131,12 @@ function VisitDialog({
       }
     };
 
-    const closeModel = ()=> {
+    const handleCloseModel = async ()=> {
+      await dispatch(setEventModel(false)) 
+      await dispatch(resetActiveSPContacts())
+      await dispatch(resetActiveCustomerMachines())
+      await dispatch(resetActiveSites())
       reset()
-      dispatch(onCloseModal()) 
-      dispatch(resetActiveSPContacts())
-      dispatch(resetActiveCustomerMachines())
-      dispatch(resetActiveSites())
     } 
 
   return (
@@ -146,13 +144,13 @@ function VisitDialog({
       fullWidth
       disableEnforceFocus
       maxWidth="md"
-      open={openModal} 
-      onClose={ closeModel }
+      open={eventModel} 
+      onClose={ handleCloseModel }
       keepMounted
       aria-describedby="alert-dialog-slide-description"
     >
       <DialogTitle display='flex' justifyContent='space-between' variant='h3' sx={{pb:1, pt:2 }}>
-        {hasEventData ? 'Update Event' : 'New Event'}
+        {selectedEvent ? 'Update Event' : 'New Event'}
       </DialogTitle>
       <Divider orientation="horizontal" flexItem />
       <DialogContent dividers sx={{px:3}}>
@@ -160,7 +158,7 @@ function VisitDialog({
       <Grid container >
         <Stack spacing={2} sx={{ pt: 2 }}>
           <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' }} >
-            <RHFDatePicker label="Visit Date" name="visitDate" />
+            <RHFDatePicker label="Event Date" name="date" />
             {allDay ? <div /> : <RHFTimePicker label="Start" name="start" />}
             {allDay ? <div /> : <RHFTimePicker label="End" name="end" />}
             <RHFSwitch name="allDay" label="All Day" sx={{ ml: 'auto'}} />
@@ -240,20 +238,20 @@ function VisitDialog({
             getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
             renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
           />   
-          <RHFTextField name="purposeOfVisit" label="Purpose of Visit" multiline rows={3} />
+          <RHFTextField name="purposeOfEvent" label="Purpose of Event" multiline rows={3} />
         </Stack>
       </Grid>
       </FormProvider>
       </DialogContent>
       <DialogActions >
-        {hasEventData && (
+        {selectedEvent && (
           <IconTooltip color='#FF0000' title='Delete Event' icon='eva:trash-2-outline' onClick={onDeleteEvent}/>
         )}
         
         <Box sx={{ flexGrow: 1 }} />
-          <Button variant="outlined" color="inherit" onClick={closeModel}>Cancel</Button>
+          <Button variant="outlined" color="inherit" onClick={handleCloseModel}>Cancel</Button>
           <LoadingButton type="submit" variant="contained" onClick={handleSubmit(onSubmit)} loading={isSubmitting}>
-            {hasEventData ? 'Update' : 'Add'}
+            {selectedEvent ? 'Update' : 'Add'}
           </LoadingButton>
       </DialogActions>
     </Dialog>
@@ -261,4 +259,4 @@ function VisitDialog({
 }
 
 
-export default VisitDialog;
+export default EventDialog;

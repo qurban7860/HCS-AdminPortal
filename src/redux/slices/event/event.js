@@ -10,8 +10,8 @@ const initialState = {
   error: null,
   event: {},
   events: [],
-  openModal: false,
-  selectedEventId: null,
+  eventModel: false,
+  selectedEvent: {},
   selectedRange: null,
 };
 
@@ -43,9 +43,16 @@ const slice = createSlice({
 
     // CREATE EVENT
     createEventSuccess(state, action) {
+
+      console.log("events::",state.events)
+      console.log("new event::",action?.payload)
+      
       const newEvent = action?.payload;
       state.isLoading = false;
       state.events = [...state.events, newEvent];
+      
+      console.log("events after::",state.events)
+      
     },
 
     // UPDATE EVENT
@@ -69,31 +76,27 @@ const slice = createSlice({
       state.events = state.events.filter((event) => event._id !== eventId);
     },
 
-    // SELECT EVENTS
-    selectEvent(state, action) {
-      const eventId = action.payload;
-      state.openModal = true;
-      state.selectedEventId = eventId;
-    },
-
     // SELECT RANGE
     selectRange(state, action) {
       const { start, end } = action.payload;
-      state.openModal = true;
+      state.selectedEvent = null;
       state.selectedRange = { start, end };
+      state.eventModel = true;
     },
 
-    // OPEN MODAL
-    onOpenModal(state) {
-      state.openModal = true;
+    setEventModel(state, action) {
+      state.eventModel = action.payload;
     },
 
-    // CLOSE MODAL
-    onCloseModal(state) {
-      state.openModal = false;
-      state.selectedEventId = null;
-      state.selectedRange = null;
+    setSelectedEvent(state, action) {
+      state.selectedEvent = action.payload;
     },
+    
+    // RESET EVENTS
+    resetEvent(state) {
+      state.event = {};
+    },
+
     // RESET EVENTS
     resetEvents(state) {
       state.events = [];
@@ -106,11 +109,11 @@ export default slice.reducer;
 
 // Actions
 export const { 
-  onOpenModal, 
-  onCloseModal, 
-  selectEvent, 
+  setEventModel,
+  setSelectedEvent, 
   selectRange,
   updateEventDateLocal,
+  resetEvent,
   resetEvents,
 } = slice.actions;
 
@@ -130,7 +133,7 @@ export function getEvents(date, customer) {
         params.month = (Number(date?.getMonth())+1)
         params.year = date?.getFullYear()
       }
-      const response = await axios.get(`${CONFIG.SERVER_URL}calender/events`, { params } );
+      const response = await axios.get(`${CONFIG.SERVER_URL}calender/visits`, { params } );
       dispatch(slice.actions.getEventsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
@@ -143,7 +146,7 @@ export function getEvent(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}calender/events/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}calender/visits/${id}`);
       dispatch(slice.actions.getEventSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
@@ -158,11 +161,23 @@ export function createEvent(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const newStartDate = new Date(params?.start )
-      const newDate = new Date(params?.eventDate); 
-      newDate.setHours(newStartDate.getHours(), newStartDate.getMinutes(), newStartDate.getSeconds(), newStartDate.getMilliseconds());
+      
+      const { date, start, end } = params;
+
+      if (date) {
+        // Extract the time part from 'start' and 'end' fields, if available
+        const eventDate = new Date(date);
+        const startTime = start ? new Date(start).getTime() : null;
+        const endTime = end ? new Date(end).getTime() : null;
+
+        // Update 'start' and 'end' fields with the date part from 'date' and time part from 'start' and 'end'
+        params.start = start && new Date(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate(), startTime ? new Date(startTime).getHours() : 0, 0, 0);
+        params.end = end && new Date(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate(), endTime ? new Date(endTime).getHours() : 23, 59, 59);
+      }
+
       const data = {
-        start: newDate || null,
+        visitDate: params?.start,
+        start: params?.start,
         end: params?.end,
         customer: params?.customer?._id || null,
         machine: params?.machine?._id || null,
@@ -178,8 +193,8 @@ export function createEvent(params) {
         data.start = new Date(new Date().setHours(7, 0, 0));
         data.end = new Date(new Date().setHours(18, 0, 0));
       }
-      const response = await axios.post(`${CONFIG.SERVER_URL}calender/events`, data);
-      dispatch(slice.actions.createEventSuccess(response.data.Event));
+      const response = await axios.post(`${CONFIG.SERVER_URL}calender/visits`, data);
+      dispatch(slice.actions.createEventSuccess(response.data.Visit));
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
@@ -194,10 +209,11 @@ export function updateEventDate(id, date) {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
+        visitDate: date,
         start:  date,
         end: date,
       };
-      const response = await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, data);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}calender/visits/${id}`, data);
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
@@ -210,11 +226,23 @@ export function updateEvent(id, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const newStartDate = new Date(params?.start )
-      const newDate = new Date(params?.start); 
-      newDate.setHours(newStartDate.getHours(), newStartDate.getMinutes(), newStartDate.getSeconds(), newStartDate.getMilliseconds());
+
+      const { date, start, end } = params;
+
+      if (date) {
+        // Extract the time part from 'start' and 'end' fields, if available
+        const eventDate = new Date(date);
+        const startTime = start ? new Date(start).getTime() : null;
+        const endTime = end ? new Date(end).getTime() : null;
+
+        // Update 'start' and 'end' fields with the date part from 'date' and time part from 'start' and 'end'
+        params.start = start && new Date(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate(), startTime ? new Date(startTime).getHours() : 0, 0, 0);
+        params.end = end && new Date(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate(), endTime ? new Date(endTime).getHours() : 23, 59, 59);
+      }
+
       const data = {
-        start: newDate || null,,
+        visitDate: params?.start,
+        start: params?.start,
         end: params?.end,
         customer: params?.customer?._id || null,
         machine: params?.machine?._id || null,
@@ -231,8 +259,8 @@ export function updateEvent(id, params) {
         data.end = new Date(new Date().setHours(18, 0, 0));
       }
 
-      const response = await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, data);
-      dispatch(slice.actions.updateEventSuccess(response.data.Event));
+      const response = await axios.patch(`${CONFIG.SERVER_URL}calender/visits/${id}`, data);
+      dispatch(slice.actions.updateEventSuccess(response.data.Visit));
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
