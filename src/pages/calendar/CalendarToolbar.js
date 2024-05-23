@@ -28,6 +28,8 @@ const VIEW_OPTIONS = [
 CalendarToolbar.propTypes = {
   selectedCustomer: PropTypes.object,
   setSelectedCustomer: PropTypes.func,
+  selectedContact: PropTypes.object,
+  setSelectedContact: PropTypes.func,
   onNextDate: PropTypes.func,
   onPrevDate: PropTypes.func,
   onOpenFilter: PropTypes.func,
@@ -39,6 +41,8 @@ CalendarToolbar.propTypes = {
 export default function CalendarToolbar({
   selectedCustomer,
   setSelectedCustomer,
+  selectedContact,
+  setSelectedContact,
   date,
   view,
   onNextDate,
@@ -51,6 +55,7 @@ export default function CalendarToolbar({
   const dispatch= useDispatch();
   const isDesktop = useResponsive('up', 'sm');
   const { activeCustomers } = useSelector((state) => state.customer);
+  const { activeSpContacts } = useSelector((state) => state.contact);
   const { startOfWeek, endOfWeek } = getWeekRange(date)
 
   return (
@@ -90,6 +95,25 @@ export default function CalendarToolbar({
       </Stack>
 
       <Stack direction="row" alignItems="center" spacing={2}>
+        {isAllAccessAllowed && !isSettingReadOnly && 
+          <Autocomplete 
+            value={ selectedContact || null}
+            options={activeSpContacts}
+            isOptionEqualToValue={(option, val) => option?._id === val?._id}
+            getOptionLabel={(option) => `${option?.firstName || ''}`}
+            onChange={(event, newValue) => {
+              if (newValue) {
+                setSelectedContact(newValue);
+              } else {
+                setSelectedContact(null);
+              }
+            }}
+            sx={{width: '225px'}}
+            renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option?.firstName || ''}`}</li>)}
+            renderInput={(params) => <TextField {...params} size='small' label="Contact" />}
+          />
+        }
+
         {isAllAccessAllowed && !isSettingReadOnly && <Autocomplete 
           value={ selectedCustomer || null}
           options={activeCustomers}

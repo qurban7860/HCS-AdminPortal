@@ -15,7 +15,6 @@ import { LoadingButton } from '@mui/lab';
 import { setEventModel } from '../../redux/slices/event/event';
 import DialogLink from './DialogLink';
 import Iconify from '../iconify';
-import { getActiveSPContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import FormProvider, { RHFDatePicker, RHFTimePicker, RHFTextField, RHFAutocomplete, RHFSwitch } from '../hook-form';
@@ -25,7 +24,7 @@ const getInitialValues = (selectedEvent, range) => {
   const initialEvent = {
     _id: selectedEvent ? selectedEvent?._id : null ,
     date: selectedEvent ? selectedEvent?.start : (range?.start || new Date() ) ,
-    start: selectedEvent ? selectedEvent?.start : (range?.start  || new Date(new Date().setHours(7, 0, 0)) ) ,
+    start: selectedEvent ? selectedEvent?.start : new Date(new Date().setHours(7, 0, 0)),
     end: selectedEvent ? selectedEvent?.end : null,
     allDay: selectedEvent ? selectedEvent?.allDay : false,
     customer: selectedEvent ? selectedEvent?.customer : null,
@@ -63,17 +62,6 @@ function EventDialog({
     const { activeCustomerMachines } = useSelector( (state) => state.machine );
     
     // const hasEventData = !!event;
-
-    useEffect(()=>{
-      if(eventModel){
-        dispatch(getActiveSPContacts())
-      }
-      return () => {
-        dispatch(resetActiveSPContacts())
-        dispatch(resetActiveCustomerMachines())
-        dispatch(resetActiveSites())
-      }
-    },[ dispatch, eventModel ])
 
     const EventSchema = Yup.object().shape({
       start: Yup.date().nullable().label('Start Time').typeError('Start Time should be a valid Time'),
@@ -133,7 +121,6 @@ function EventDialog({
 
     const handleCloseModel = async ()=> {
       await dispatch(setEventModel(false)) 
-      await dispatch(resetActiveSPContacts())
       await dispatch(resetActiveCustomerMachines())
       await dispatch(resetActiveSites())
       reset()
@@ -159,9 +146,13 @@ function EventDialog({
         <Stack spacing={2} sx={{ pt: 2 }}>
           <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' }} >
             <RHFDatePicker label="Event Date" name="date" />
-            {allDay ? <div /> : <RHFTimePicker label="Start" name="start" />}
-            {allDay ? <div /> : <RHFTimePicker label="End" name="end" />}
-            <RHFSwitch name="allDay" label="All Day" sx={{ ml: 'auto'}} />
+            {/* {allDay ? <div /> : <RHFTimePicker label="Start" name="start" />}
+            {allDay ? <div /> : <RHFTimePicker label="End" name="end" />} */}
+            {/* <RHFSwitch name="allDay" label="All Day"/> */}
+            <RHFTimePicker disabled={allDay} label="Start" name="start" />
+            <RHFTimePicker disabled={allDay} label="End" name="end" />
+            <Button variant={allDay?'contained':'outlined'} onClick={()=> setValue('allDay', !allDay)} 
+            startIcon={<Iconify icon={allDay?'icon-park-solid:check-one':'icon-park-outline:check-one'}/>}>All Day</Button>
           </Box>
             <RHFTextField name="jiraTicket" label="Jira Ticket" />
 
@@ -238,7 +229,7 @@ function EventDialog({
             getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
             renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
           />   
-          <RHFTextField name="purposeOfEvent" label="Purpose of Event" multiline rows={3} />
+          <RHFTextField name="description" label="Description" multiline rows={3} />
         </Stack>
       </Grid>
       </FormProvider>
