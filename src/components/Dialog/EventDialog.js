@@ -25,7 +25,7 @@ const getInitialValues = (selectedEvent, range) => {
   const initialEvent = {
     _id: selectedEvent ? selectedEvent?._id : null ,
     date: selectedEvent ? selectedEvent?.start : (range?.start || new Date() ) ,
-    start: selectedEvent ? selectedEvent?.start : (range?.start  || new Date(new Date().setHours(7, 0, 0)) ) ,
+    start: selectedEvent ? selectedEvent?.start : new Date(new Date().setHours(7, 0, 0)),
     end: selectedEvent ? selectedEvent?.end : null,
     allDay: selectedEvent ? selectedEvent?.allDay : false,
     customer: selectedEvent ? selectedEvent?.customer : null,
@@ -159,9 +159,13 @@ function EventDialog({
         <Stack spacing={2} sx={{ pt: 2 }}>
           <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' }} >
             <RHFDatePicker label="Event Date" name="date" />
-            {allDay ? <div /> : <RHFTimePicker label="Start" name="start" />}
-            {allDay ? <div /> : <RHFTimePicker label="End" name="end" />}
-            <RHFSwitch name="allDay" label="All Day" sx={{ ml: 'auto'}} />
+            {/* {allDay ? <div /> : <RHFTimePicker label="Start" name="start" />}
+            {allDay ? <div /> : <RHFTimePicker label="End" name="end" />} */}
+            {/* <RHFSwitch name="allDay" label="All Day"/> */}
+            <RHFTimePicker disabled={allDay} label="Start" name="start" />
+            <RHFTimePicker disabled={allDay} label="End" name="end" />
+            <Button variant={allDay?'contained':'outlined'} onClick={()=> setValue('allDay', !allDay)} 
+            startIcon={<Iconify icon={allDay?'icon-park-solid:check-one':'icon-park-outline:check-one'}/>}>All Day</Button>
           </Box>
             <RHFTextField name="jiraTicket" label="Jira Ticket" />
 
