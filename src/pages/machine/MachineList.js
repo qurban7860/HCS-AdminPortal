@@ -85,7 +85,7 @@ export default function MachineList({ isArchived }) {
     onSelectRow,
     onSelectAllRows,
     onSort,
-  } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
+  } = useTable({ defaultOrderBy: 'serialNo', defaultOrder: 'desc' });
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));

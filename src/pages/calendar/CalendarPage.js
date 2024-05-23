@@ -12,18 +12,19 @@ import { Card, Container } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
-  getVisits,
-  resetVisits,
-  newVisit,
-  updateVisitDate,
-  updateVisitDateLocal,
-  updateVisit,
-  deleteVisit,
-  selectVisit,
+  getEvents,
+  resetEvents,
+  createEvent,
+  updateEventDate,
+  updateEventDateLocal,
+  updateEvent,
+  deleteEvent,
   selectRange,
-  onOpenModal,
-  onCloseModal,
-} from '../../redux/slices/visit/visit';
+  setEventModel,
+  getEvent,
+  resetEvent,
+  setSelectedEvent
+} from '../../redux/slices/event/event';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
@@ -39,21 +40,19 @@ import {
 } from '.';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
-import VisitDialog from '../../components/Dialog/VisitDialog';
+import EventDialog from '../../components/Dialog/EventDialog';
 
 // ----------------------------------------------------------------------
 
 export default function CalendarPage() {
+  
   const { enqueueSnackbar } = useSnackbar();
-
   const { themeStretch } = useSettingsContext();
-
   const dispatch = useDispatch();
-
   const isDesktop = useResponsive('up', 'sm');
 
   const calendarRef = useRef(null);
-  const { visits, openModal, selectedRange, selectedEventId } = useSelector((state) => state.visit );
+  const { events, eventModel, selectedRange } = useSelector((state) => state.event );
   const { activeCustomers } = useSelector((state) => state.customer);
   const userCustomer = localStorage.getItem('customer')
 
@@ -71,29 +70,23 @@ export default function CalendarPage() {
     }
   },[ userCustomer, activeCustomers ])
 
-  const selectedEvent = useSelector(() => {
-    if (selectedEventId) {
-      return data.find((event) => event.id === selectedEventId);
-    }
-    return null;
-  });
+  const handleSelectEvent = async (_event) => {
+    await dispatch(setSelectedEvent(_event.event));
+    await dispatch(setEventModel(true));
+  };
 
   const picker = useDateRangePicker(null, null);
-
   const [date, setDate] = useState(new Date());
-
   const [openFilter, setOpenFilter] = useState(false);
-
   const [filterEventColor, setFilterEventColor] = useState([]);
-
   const [view, setView] = useState(isDesktop ? 'dayGridMonth' : 'listWeek');
 
   useEffect(() => {
-    if (Array.isArray(visits) && visits.length > 0) {
-      const formattedData = visits.map((v) => ({
+    if (Array.isArray(events) && events.length > 0) {
+      const formattedData = events.map((v) => ({
         id: v?._id,
         title: v?.customer?.name,
-        date: v?.visitDate,
+        date: v?.start,
         textColor: "#1890FF",
         extendedProps: {
           ...v
@@ -101,24 +94,18 @@ export default function CalendarPage() {
       }));
       setData(formattedData);
     }
-  }, [visits]);
+  }, [events]);
 
   useEffect(() => {
-    dispatch(resetVisits());
+    dispatch(resetEvents());
     dispatch(getActiveCustomers());
   }, [dispatch]);
 
   useEffect(() => {
-    if( isCustomerSelected && date && !openModal ){
-      // if(previousDate?.getFullYear() !== date?.getFullYear() && (Number(previousDate?.getMonth())+1) !== (Number(date?.getMonth())+1)){
+    if( isCustomerSelected && date && !eventModel ){
         setPreviousDate(date);
-        dispatch(getVisits(date, selectedCustomer?._id ));
-      // }
+        dispatch(getEvents(date, selectedCustomer?._id ));
     }
-      return () => {
-        dispatch(resetVisits());
-        setData([])
-      }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, date, selectedCustomer ]);
 
@@ -131,16 +118,6 @@ export default function CalendarPage() {
       setView(newView);
     }
   }, [isDesktop]);
-
-
-  const handleClickToday = () => {
-    const calendarEl = calendarRef.current;
-    if (calendarEl) {
-      const calendarApi = calendarEl.getApi();
-      calendarApi.today();
-      setDate(calendarApi.getDate());
-    }
-  };
 
   const handleChangeView = (newView) => {
     const calendarEl = calendarRef.current;
@@ -173,7 +150,7 @@ export default function CalendarPage() {
     }
   };
 
-  const handleSelectRange = (arg) => {
+  const handleSelectDate = (arg) => {
     const calendarEl = calendarRef.current;
     if (calendarEl) {
       const calendarApi = calendarEl.getApi();
@@ -187,13 +164,11 @@ export default function CalendarPage() {
     );
   };
 
-  const handleSelectEvent = (arg) => dispatch(selectVisit(arg.event.id));
-
   const handleResizeEvent = async ({ event }) => {
 
     try {
       dispatch(
-        updateVisit(event.id, {
+        updateEvent(event.id, {
           allDay: event.allDay,
           start: event.start,
           end: event.end,
@@ -206,33 +181,37 @@ export default function CalendarPage() {
 
   const handleDropEvent = ({ event }) => {
     try {
-      const visitDate = new Date(event?._def?.extendedProps?.visitDate)
       const newDate = new Date(event?._instance?.range?.start); 
-      newDate.setHours(visitDate.getHours(), visitDate.getMinutes());
-      setData(prevData =>  prevData.map(e =>  e?.id === event.id ? { ...e, date: newDate } : e ) );
-      dispatch(updateVisitDate(event.id,  newDate));
+
+      const startDateTime = new Date(event?._def?.extendedProps?.start)
+      const endDateTime = new Date(event?._def?.extendedProps?.end)
+      const modifiedStartDateTime = new Date(newDate);
+      const modifiedEndDateTime = new Date(newDate);
+
+      modifiedStartDateTime.setHours(startDateTime.getHours(), startDateTime.getMinutes());
+      modifiedEndDateTime.setHours(endDateTime.getHours(), endDateTime.getMinutes());
+
+      setData(prevData =>  prevData.map(e =>  e?.id === event.id ? { ...e, date: modifiedStartDateTime } : e ) );
+      dispatch(updateEventDate(event.id,  modifiedStartDateTime, modifiedEndDateTime ));
     } catch (error) {
       enqueueSnackbar('Event Date Update Failed!', { variant: `error` });
-      dispatch(getVisits(date));
+      dispatch(getEvents(date));
     }
   };
 
-  const handleCloseModal = () => dispatch(onCloseModal());
-
   const handleCreateUpdateEvent = async (newEvent) => {
-
-    if (selectedEventId) {
+    if (newEvent?._id) {
       try{
-        await dispatch(updateVisit(selectedEventId, newEvent));
-        await dispatch(onCloseModal());
+        await dispatch(updateEvent(newEvent?._id, newEvent));
+        await dispatch(setEventModel(false));
         enqueueSnackbar('Event Updated Successfully!');
       } catch(e){
         enqueueSnackbar('Event Update Failed!');
       }
     } else {
       try{
-        await dispatch(newVisit(newEvent));
-        await dispatch(onCloseModal());
+        await dispatch(createEvent(newEvent));
+        await dispatch(setEventModel(false));
         enqueueSnackbar('Event Created Successfully!');
       } catch(e){
       enqueueSnackbar('Event Create Failed!');
@@ -240,29 +219,19 @@ export default function CalendarPage() {
     }
   };
 
-  const handleDeleteEvent = async () => {
+  const handleDeleteEvent = async (eventId) => {
     try {
-      if (selectedEventId) {
-        await setData(prevData => prevData.filter(e =>  e?.id !== selectedEventId) );
-        await handleCloseModal();
-        await dispatch(deleteVisit(selectedEventId));
+      if (eventId) {
+        await setData(prevData => prevData.filter(e =>  e?.id !== eventId) );
+        await dispatch(setEventModel(false));
+        await dispatch(deleteEvent(eventId));
       }
       enqueueSnackbar('Event Deleted Successfully!');
     } catch (error) {
       enqueueSnackbar('Event Delete Failed!', { variant: 'error'});
-      dispatch(getVisits(date));
+      dispatch(getEvents(date));
     }
   };
-
-
-  // const dataFiltered = applyFilter({
-  //   inputData: data,
-  //   filterEventColor,
-  //   filterStartDate: picker.startDate,
-  //   filterEndDate: picker.endDate,
-  //   selectedCustomer,
-  //   isError: !!picker.isError,
-  // });
 
   return (
     <>
@@ -279,7 +248,6 @@ export default function CalendarPage() {
               view={view}
               onNextDate={handleClickDateNext}
               onPrevDate={handleClickDatePrev}
-              onToday={handleClickToday}
               onChangeView={handleChangeView}
             />
             <FullCalendar
@@ -297,7 +265,7 @@ export default function CalendarPage() {
               dayMaxEventRows={3}
               eventDisplay="block"
               headerToolbar={false}
-              select={handleSelectRange}
+              select={handleSelectDate}
               eventDrop={handleDropEvent}
               eventClick={handleSelectEvent}
               eventResize={handleResizeEvent}
@@ -314,9 +282,8 @@ export default function CalendarPage() {
         </Card>
       </Container>
 
-      <VisitDialog
+      <EventDialog
         date={date}
-        event={selectedEvent}
         range={selectedRange}
         onCreateUpdateEvent={handleCreateUpdateEvent}
         onDeleteEvent={handleDeleteEvent}
@@ -325,20 +292,3 @@ export default function CalendarPage() {
     </>
   );
 }
-
-// ----------------------------------------------------------------------
-
-// function applyFilter({ inputData, filterEventColor, filterStartDate, filterEndDate, selectedCustomer }) {
-//   if(selectedCustomer && selectedCustomer._id ){
-//     const stabilizedThis = inputData?.map((el, index) => [el, index]);
-
-//     inputData = stabilizedThis.map((el) => el[0]);
-
-//     inputData = inputData.filter(
-//       (event) =>
-//         event?.extendedProps?.customer?._id.indexOf(selectedCustomer?._id) >= 0 
-//     );
-//   }
-
-//   return inputData;
-// }

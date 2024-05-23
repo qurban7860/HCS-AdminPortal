@@ -56,7 +56,7 @@ export default function EmailList(){
     setPage,
     selected,
     onSort,
-  } = useTable({ defaultOrderBy: 'date', defaultOrder: 'asc' });
+  } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));

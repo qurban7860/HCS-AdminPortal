@@ -8,9 +8,8 @@ import { fDate } from '../../utils/formatTime';
 import useResponsive from '../../hooks/useResponsive';
 // components
 import Iconify from '../../components/iconify';
-import { onOpenModal } from '../../redux/slices/visit/visit';
+import { setEventModel, setSelectedEvent } from '../../redux/slices/event/event';
 import { StyledTooltip } from '../../theme/styles/default-styles';
-// import IconButtonTooltip from '../../components/Icons/IconButtonTooltip';
 import { useAuthContext } from '../../auth/useAuthContext';  
 import { getWeekRange } from './util';  
 
@@ -29,7 +28,6 @@ const VIEW_OPTIONS = [
 CalendarToolbar.propTypes = {
   selectedCustomer: PropTypes.object,
   setSelectedCustomer: PropTypes.func,
-  onToday: PropTypes.func,
   onNextDate: PropTypes.func,
   onPrevDate: PropTypes.func,
   onOpenFilter: PropTypes.func,
@@ -43,7 +41,6 @@ export default function CalendarToolbar({
   setSelectedCustomer,
   date,
   view,
-  onToday,
   onNextDate,
   onPrevDate,
   onChangeView,
@@ -55,7 +52,7 @@ export default function CalendarToolbar({
   const isDesktop = useResponsive('up', 'sm');
   const { activeCustomers } = useSelector((state) => state.customer);
   const { startOfWeek, endOfWeek } = getWeekRange(date)
-  // console.log("startOfWeek, endOfWeek : ",startOfWeek, endOfWeek)
+
   return (
     <Stack
       alignItems="center"
@@ -109,9 +106,11 @@ export default function CalendarToolbar({
           renderOption={(props, option) => (<li {...props} key={option?._id}>{`${option?.name || ''}`}</li>)}
           renderInput={(params) => <TextField {...params} size='small' label="Customer" />}
         />}
-        {/* <IconButtonTooltip icon="eva:plus-fill" title="New Event" /> */}
         <StyledTooltip title="New Event" placement="top" disableFocusListener tooltipcolor="#103996" color="#fff">
-          <IconButton color="#fff" onClick={()=> dispatch(onOpenModal())} 
+          <IconButton color="#fff" onClick={()=> {
+            dispatch(setEventModel(true))
+            dispatch(setSelectedEvent(null))
+          }} 
             sx={{ background:"#2065D1", borderRadius:1, height:'1.7em', p:'8.5px 14px',
                   '&:hover': { background:"#103996", color:"#fff" } }}>
             <Iconify color="#fff" sx={{ height: '24px', width: '24px'}} icon='eva:plus-fill' />
