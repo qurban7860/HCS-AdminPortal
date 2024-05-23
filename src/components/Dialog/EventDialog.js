@@ -15,7 +15,6 @@ import { LoadingButton } from '@mui/lab';
 import { setEventModel } from '../../redux/slices/event/event';
 import DialogLink from './DialogLink';
 import Iconify from '../iconify';
-import { getActiveSPContacts, resetActiveSPContacts } from '../../redux/slices/customer/contact';
 import { getActiveCustomerMachines, resetActiveCustomerMachines } from '../../redux/slices/products/machine';
 import { getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import FormProvider, { RHFDatePicker, RHFTimePicker, RHFTextField, RHFAutocomplete, RHFSwitch } from '../hook-form';
@@ -63,17 +62,6 @@ function EventDialog({
     const { activeCustomerMachines } = useSelector( (state) => state.machine );
     
     // const hasEventData = !!event;
-
-    useEffect(()=>{
-      if(eventModel){
-        dispatch(getActiveSPContacts())
-      }
-      return () => {
-        dispatch(resetActiveSPContacts())
-        dispatch(resetActiveCustomerMachines())
-        dispatch(resetActiveSites())
-      }
-    },[ dispatch, eventModel ])
 
     const EventSchema = Yup.object().shape({
       start: Yup.date().nullable().label('Start Time').typeError('Start Time should be a valid Time'),
@@ -133,7 +121,6 @@ function EventDialog({
 
     const handleCloseModel = async ()=> {
       await dispatch(setEventModel(false)) 
-      await dispatch(resetActiveSPContacts())
       await dispatch(resetActiveCustomerMachines())
       await dispatch(resetActiveSites())
       reset()
@@ -242,7 +229,7 @@ function EventDialog({
             getOptionLabel={(option) => `${option.firstName || ''} ${ option.lastName || ''}`}
             renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.firstName || ''} ${option?.lastName || ''}`}</li> )}
           />   
-          <RHFTextField name="purposeOfEvent" label="Purpose of Event" multiline rows={3} />
+          <RHFTextField name="description" label="Description" multiline rows={3} />
         </Stack>
       </Grid>
       </FormProvider>

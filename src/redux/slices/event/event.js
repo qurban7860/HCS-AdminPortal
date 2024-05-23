@@ -112,7 +112,7 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getEvents(date, customer) {
+export function getEvents(date, customer, contact) {
   return async (dispatch) => {
     dispatch(resetEvents());
     dispatch(slice.actions.startLoading());
@@ -121,6 +121,7 @@ export function getEvents(date, customer) {
         isArchived: false,
         isActive: true,
         customer,
+        contact
       }
       if(date){
         params.month = (Number(date?.getMonth())+1)
