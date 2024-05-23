@@ -52,7 +52,7 @@ export default function CalendarPage() {
   const isDesktop = useResponsive('up', 'sm');
 
   const calendarRef = useRef(null);
-  const { events, eventModel, selectedRange } = useSelector((state) => state.event );
+  const { events, selectedEvent, eventModel, selectedRange } = useSelector((state) => state.event );
   const { activeCustomers } = useSelector((state) => state.customer);
   const userCustomer = localStorage.getItem('customer')
 
@@ -165,7 +165,6 @@ export default function CalendarPage() {
   };
 
   const handleResizeEvent = async ({ event }) => {
-
     try {
       dispatch(
         updateEvent(event.id, {
@@ -179,7 +178,7 @@ export default function CalendarPage() {
     }
   };
 
-  const handleDropEvent = ({ event }) => {
+  const handleDropEvent = async ({ event }) => {
     try {
       const newDate = new Date(event?._instance?.range?.start); 
 
@@ -190,8 +189,24 @@ export default function CalendarPage() {
 
       modifiedStartDateTime.setHours(startDateTime.getHours(), startDateTime.getMinutes());
       modifiedEndDateTime.setHours(endDateTime.getHours(), endDateTime.getMinutes());
-
-      setData(prevData =>  prevData.map(e =>  e?.id === event.id ? { ...e, date: modifiedStartDateTime } : e ) );
+      setData(prevData => {
+        const updatedData = prevData.map(e => {
+            if (e?.id === event.id) {
+                return { 
+                    ...e, 
+                    date: modifiedStartDateTime,
+                    extendedProps: {
+                      ...e.extendedProps,
+                      start: modifiedStartDateTime,
+                      end: modifiedEndDateTime
+                  }
+                };
+            }
+            return e;
+        });
+        return updatedData;
+    });
+      
       dispatch(updateEventDate(event.id,  modifiedStartDateTime, modifiedEndDateTime ));
     } catch (error) {
       enqueueSnackbar('Event Date Update Failed!', { variant: `error` });
@@ -219,12 +234,12 @@ export default function CalendarPage() {
     }
   };
 
-  const handleDeleteEvent = async (eventId) => {
+  const handleDeleteEvent = async () => {
     try {
-      if (eventId) {
-        await setData(prevData => prevData.filter(e =>  e?.id !== eventId) );
+      if (selectedEvent && selectedEvent?.extendedProps?._id) {
+        await setData(prevData => prevData.filter(e =>  e?.id !== selectedEvent?.extendedProps?._id) );
         await dispatch(setEventModel(false));
-        await dispatch(deleteEvent(eventId));
+        await dispatch(deleteEvent(selectedEvent?.extendedProps?._id));
       }
       enqueueSnackbar('Event Deleted Successfully!');
     } catch (error) {

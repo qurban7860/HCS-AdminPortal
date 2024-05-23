@@ -43,16 +43,9 @@ const slice = createSlice({
 
     // CREATE EVENT
     createEventSuccess(state, action) {
-
-      console.log("events::",state.events)
-      console.log("new event::",action?.payload)
-      
       const newEvent = action?.payload;
       state.isLoading = false;
       state.events = [...state.events, newEvent];
-      
-      console.log("events after::",state.events)
-      
     },
 
     // UPDATE EVENT
@@ -66,7 +59,7 @@ const slice = createSlice({
       });
     },
     // UPDATE EVENT
-        updateEventDateLocal(state, action) {
+    updateEventDateLocal(state, action) {
       state.events = action.payload
     },
 

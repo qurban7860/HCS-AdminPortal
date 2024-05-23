@@ -16,7 +16,7 @@ import { getActiveMachineStatuses, resetActiveMachineStatuses } from '../../redu
 import { getActiveMachineModels, resetActiveMachineModels } from '../../redux/slices/products/model';
 import { getActiveSuppliers, resetActiveSuppliers } from '../../redux/slices/products/supplier';
 // slice
-import { updateMachine, getActiveMachines, resetActiveMachines } from '../../redux/slices/products/machine';
+import { updateMachine, getActiveMachines, resetActiveMachines, getMachine } from '../../redux/slices/products/machine';
 import { getMachineConnections, resetMachineConnections } from '../../redux/slices/products/machineConnections';
 import { getActiveCategories, resetActiveCategories } from '../../redux/slices/products/category';
 // hooks
@@ -137,6 +137,7 @@ export default function MachineEditForm() {
     }else{
       try {
         await dispatch(updateMachine(machine._id ,data));
+        await dispatch(getMachine(machine._id));
         enqueueSnackbar('Machine updated successfully!');
         reset();
         navigate(PATH_MACHINE.machines.view(machine._id));
