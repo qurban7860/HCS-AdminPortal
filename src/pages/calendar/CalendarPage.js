@@ -26,6 +26,7 @@ import {
   setSelectedEvent
 } from '../../redux/slices/event/event';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
+import { getActiveSPContacts } from '../../redux/slices/customer/contact';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
 // components
@@ -54,17 +55,17 @@ export default function CalendarPage() {
   const calendarRef = useRef(null);
   const { events, selectedEvent, eventModel, selectedRange } = useSelector((state) => state.event );
   const { activeCustomers } = useSelector((state) => state.customer);
+  const { activeSpContacts } = useSelector((state) => state.contact);
   const userCustomer = localStorage.getItem('customer')
 
   const [data, setData] = useState([]);
   const [previousDate, setPreviousDate] = useState(null);
-  const [isCustomerSelected, setIsCustomerSelected] = useState(false);
-
+  
   const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [selectedContact, setSelectedContact] = useState(null);
 
   useEffect(() =>{
     if(userCustomer && Array.isArray(activeCustomers) && activeCustomers.length > 0 ){
-      setIsCustomerSelected(true);
       const filteredCustomer = activeCustomers?.find(c => c?._id === userCustomer )
       setSelectedCustomer(filteredCustomer)
     }
@@ -93,21 +94,24 @@ export default function CalendarPage() {
         }
       }));
       setData(formattedData);
+    }else{
+      setData(null);
     }
   }, [events]);
 
   useEffect(() => {
     dispatch(resetEvents());
     dispatch(getActiveCustomers());
+    dispatch(getActiveSPContacts());
   }, [dispatch]);
 
   useEffect(() => {
-    if( isCustomerSelected && date && !eventModel ){
+    if( date && !eventModel ){
         setPreviousDate(date);
-        dispatch(getEvents(date, selectedCustomer?._id ));
+        dispatch(getEvents(date, selectedCustomer?._id, selectedContact?._id ));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, date, selectedCustomer ]);
+  }, [dispatch, date, selectedCustomer, selectedContact ]);
 
   useEffect(() => {
     const calendarEl = calendarRef.current;
@@ -210,7 +214,7 @@ export default function CalendarPage() {
       dispatch(updateEventDate(event.id,  modifiedStartDateTime, modifiedEndDateTime ));
     } catch (error) {
       enqueueSnackbar('Event Date Update Failed!', { variant: `error` });
-      dispatch(getEvents(date));
+      dispatch(getEvents(date, selectedCustomer?._id, selectedContact?._id ));
     }
   };
 
@@ -244,7 +248,7 @@ export default function CalendarPage() {
       enqueueSnackbar('Event Deleted Successfully!');
     } catch (error) {
       enqueueSnackbar('Event Delete Failed!', { variant: 'error'});
-      dispatch(getEvents(date));
+      dispatch(getEvents(date, selectedCustomer?._id, selectedContact?._id ));
     }
   };
 
@@ -259,6 +263,8 @@ export default function CalendarPage() {
             <CalendarToolbar
               selectedCustomer={selectedCustomer}
               setSelectedCustomer={setSelectedCustomer}
+              selectedContact={selectedContact}
+              setSelectedContact={setSelectedContact}
               date={date}
               view={view}
               onNextDate={handleClickDateNext}
