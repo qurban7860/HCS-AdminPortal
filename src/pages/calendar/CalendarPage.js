@@ -22,6 +22,7 @@ import {
 } from '../../redux/slices/event/event';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
 import { getActiveSPContacts } from '../../redux/slices/customer/contact';
+import { getSecurityUser } from '../../redux/slices/securityUser/securityUser';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
 // components
@@ -33,12 +34,14 @@ import { StyledCalendar, CalendarToolbar } from '.';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 import EventDialog from '../../components/Dialog/EventDialog';
+import { useAuthContext } from '../../auth/useAuthContext';
 
 // ----------------------------------------------------------------------
 
 export default function CalendarPage() {
   
   const { enqueueSnackbar } = useSnackbar();
+  const { userId } = useAuthContext();
   const { themeStretch } = useSettingsContext();
   const dispatch = useDispatch();
   const isDesktop = useResponsive('up', 'sm');
@@ -48,6 +51,7 @@ export default function CalendarPage() {
   const { events, selectedEvent, eventModel, selectedRange } = useSelector((state) => state.event );
   const { activeCustomers } = useSelector((state) => state.customer);
   const { activeSpContacts } = useSelector((state) => state.contact);
+  const { securityUser } = useSelector((state) => state.user);
 
   const [ previousDate, setPreviousDate ] = useState(null);
   const [ selectedCustomer, setSelectedCustomer ] = useState(null);
@@ -57,19 +61,16 @@ export default function CalendarPage() {
   const [ filterEventColor, setFilterEventColor ] = useState([]);
   const [ view, setView ] = useState(isDesktop ? 'dayGridMonth' : 'listWeek');
 
-  // useEffect(() =>{
-  //   if(userCustomer && Array.isArray(activeCustomers) && activeCustomers.length > 0 ){
-  //     const filteredCustomer = activeCustomers?.find(c => c?._id === userCustomer )
-  //     setSelectedCustomer(filteredCustomer)
-  //   }
-  // },[ userCustomer, activeCustomers ])
-
-
   useLayoutEffect(() => {
     dispatch(setEventModel(false));
     dispatch(getActiveCustomers());
     dispatch(getActiveSPContacts());
-  }, [dispatch]);
+    dispatch(getSecurityUser(userId))
+  }, [dispatch, userId]);
+
+  useLayoutEffect(()=>{
+    setSelectedContact(securityUser?.contact)
+  },[securityUser])
 
   useLayoutEffect(() => {
     if( date && previousDate 
@@ -216,7 +217,7 @@ export default function CalendarPage() {
     selectedCustomer,
     selectedContact
   });
-console.log('dataFiltered : ',dataFiltered)
+  
   return (
     <>
       <Container maxWidth={false}>
@@ -256,10 +257,6 @@ console.log('dataFiltered : ',dataFiltered)
               eventClick={handleSelectEvent}
               eventResize={handleResizeEvent}
               height={isDesktop ? 720 : 'auto'}
-              // eventDidMount={(info) => {
-              //   const tooltip = new EventTooltip({ event: info.event });
-              //   info.el.appendChild(tooltip);
-              // }}
               eventTimeFormat={{
                 hour: 'numeric',
                 minute: '2-digit',
@@ -288,23 +285,22 @@ console.log('dataFiltered : ',dataFiltered)
 }
 
 function applyFilter({ inputData, selectedCustomer, selectedContact }) {
-  if(selectedCustomer && selectedCustomer._id ){
 
-    const stabilizedThis = inputData?.map((el, index) => [el, index]);
+  const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
-    inputData = stabilizedThis.map((el) => el[0]);
-    if(selectedCustomer){
-      inputData = inputData.filter((e) => e?.extendedProps?.customer?._id === selectedCustomer?._id);
-    }
-    if(selectedContact){
-      inputData = inputData.filter(
-        (e) =>
-          e?.extendedProps?.primaryTechnician?._id === selectedContact?._id >= 0 ||
-          e?.extendedProps?.supportingTechnicians?.some((c)=> c?._id === selectedContact?._id >= 0 ) ||
-          e?.extendedProps?.notifyContacts?.some((c)=> c?._id === selectedContact?._id >= 0 )
-      );
-    }
+  inputData = stabilizedThis.map((el) => el[0]);
+  if(selectedCustomer){
+    inputData = inputData.filter((e) => e?.extendedProps?.customer?._id === selectedCustomer?._id);
   }
+  if (selectedContact) {
+    inputData = inputData.filter(
+      (e) =>
+        e?.extendedProps?.primaryTechnician?._id === selectedContact?._id ||
+        e?.extendedProps?.supportingTechnicians?.some((c) => c?._id === selectedContact?._id) ||
+        e?.extendedProps?.notifyContacts?.some((c) => c?._id === selectedContact?._id)
+    );
+  }
+  
 
   return inputData;
 }
