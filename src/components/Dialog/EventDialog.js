@@ -64,7 +64,15 @@ function EventDialog({
     // const hasEventData = !!event;
 
     const EventSchema = Yup.object().shape({
-      start: Yup.date().nullable().label('Start Time').typeError('Start Time should be a valid Time'),
+      start: Yup.date()
+        .nullable()
+        .label('Start Time')
+        .typeError('Start Time should be a valid Time')
+        .test('is-before-end', 'Start Time must be before End Time', (value, context) => {
+            const endValue = context.parent.end; // Access the value of 'end' directly from the parent context
+            return !value || !endValue || value < endValue;
+        }),
+      // start: Yup.date().nullable().label('Start Time').typeError('Start Time should be a valid Time'),
       end: Yup.date().nullable().label('End Time').typeError('End Time should be a valid Time'),
       allDay: Yup.bool().label('All Day'),
       jiraTicket: Yup.string().max(200).label('Jira Ticket'),
@@ -146,10 +154,7 @@ function EventDialog({
         <Stack spacing={2} sx={{ pt: 2 }}>
           <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' }} >
             <RHFDatePicker label="Event Date" name="date" />
-            {/* {allDay ? <div /> : <RHFTimePicker label="Start" name="start" />}
-            {allDay ? <div /> : <RHFTimePicker label="End" name="end" />} */}
-            {/* <RHFSwitch name="allDay" label="All Day"/> */}
-            <RHFTimePicker disabled={allDay} label="Start" name="start" />
+            <RHFTimePicker label="Start" name="start" />
             <RHFTimePicker disabled={allDay} label="End" name="end" />
             <Button variant={allDay?'contained':'outlined'} onClick={()=> setValue('allDay', !allDay)} 
             startIcon={<Iconify icon={allDay?'icon-park-solid:check-one':'icon-park-outline:check-one'}/>}>All Day</Button>
