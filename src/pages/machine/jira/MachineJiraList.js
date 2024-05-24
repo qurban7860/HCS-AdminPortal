@@ -7,6 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
+import { CONFIG } from '../../../config-global';
 // components
 import {
   useTable,
@@ -117,7 +118,9 @@ export default function MachineJiraList(){
     setFilterStatus(event.target.value);
   };
 
-  const handleViewRow = async (url) => window.open(url, '_blank');
+  const handleViewRow = (machineIssueKey) => {
+    window.open(`${CONFIG.JIRA_URL}${machineIssueKey}`, '_blank');
+  }
 
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
@@ -161,7 +164,7 @@ export default function MachineJiraList(){
                         <MachineJiraTableRow
                           key={row._id}
                           row={row}
-                          onViewRow={(url) => handleViewRow(url)}
+                          onViewRow={handleViewRow}
                           selected={selected.includes(row._id)}
                           selectedLength={selected.length}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}

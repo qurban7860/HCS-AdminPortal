@@ -6,8 +6,6 @@ import { fDate, fDateTime } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 import { StyledTableRow } from '../../../theme/styles/default-styles';
-import { CONFIG } from '../../../config-global';
-
 
 // ----------------------------------------------------------------------
 
@@ -39,7 +37,7 @@ export default function MachineJiraTableRow({
   return (
       <StyledTableRow hover selected={selected}>
         <TableCell align="left">{fDateTime(fields?.created) || ''}</TableCell>
-        <LinkTableCell align="left" onClick={() => onViewRow( `${CONFIG}${key}` )} param={key || ''} />
+        <LinkTableCell align="left" onClick={() => onViewRow( key )} param={key || ''} />
         <TableCell align="left">{fields?.status?.name || ''}</TableCell>
         <TableCell align="left">{fields?.summary || ''}</TableCell>
       </StyledTableRow>

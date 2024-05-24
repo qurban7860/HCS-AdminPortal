@@ -16,12 +16,12 @@ export const CONFIG = {
   MESSAGE_LOGIN_USER: process.env.REACT_APP_MESSAGE_LOGIN_USER,
   GOOGLE_MAPS_API_KEY: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
   IDLE_TIME: process.env.REACT_APP_IDLE_TIME,
-  JIRA_TASK_MANAGMENT_URL: process.env.JIRA_TASK_MANAGMENT_URL,
+  JIRA_URL: 'https://howickltd.atlassian.net/jira/servicedesk/projects/HWKSC/queues/custom/3/',
   COMPOSITE_TOOL_CONFIG_MAX_LENGTH: process.env.COMPOSITE_TOOL_CONFIG_MAX_LENGTH = 10,
 };
 
 export const HOST_API_KEY = process.env.REACT_APP_HOST_API_KEY || '';
-// console.log('APP_HOST', HOST_API_KEY);
+
 
 export const FIREBASE_API = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
