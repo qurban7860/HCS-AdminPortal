@@ -64,6 +64,7 @@ function EventDialog({
     // const hasEventData = !!event;
 
     const EventSchema = Yup.object().shape({
+      date: Yup.date().nullable().label('Event Date').typeError('End Time should be a valid Date').required(),
       start: Yup.date()
         .nullable()
         .label('Start Time')
@@ -71,20 +72,26 @@ function EventDialog({
         .test('is-before-end', 'Start Time must be before End Time', (value, context) => {
             const endValue = context.parent.end; // Access the value of 'end' directly from the parent context
             return !value || !endValue || value < endValue;
+        }).required(),
+      end: Yup.date()
+        .when('allDay', {
+          is: false,
+          then: Yup.date().nullable().label('End Time').typeError('End Time should be a valid Time').required(),
+          otherwise: Yup.date().nullable().label('End Time').typeError('End Time should be a valid Time'),
         }),
-      // start: Yup.date().nullable().label('Start Time').typeError('Start Time should be a valid Time'),
-      end: Yup.date().nullable().label('End Time').typeError('End Time should be a valid Time'),
       allDay: Yup.bool().label('All Day'),
       jiraTicket: Yup.string().max(200).label('Jira Ticket'),
       customer: Yup.object().nullable().label('Customer').required(),
-      machine: Yup.object().nullable().label('Machine').required(),
+      machine: Yup.object().nullable().label('Machine'),
       site: Yup.object().nullable().label('Site'),
       primaryTechnician: Yup.object().nullable().label('Primary Technician').required(),
       supportingTechnicians: Yup.array().nullable().label('Supporting Technicians').required(),
       notifyContacts: Yup.array().nullable().label('Notify Contacts').required(),
       description: Yup.string().max(500).label('Description'),
     });
-  
+
+   
+
     const methods = useForm({
       resolver: yupResolver(EventSchema),
       defaultValues: getInitialValues(selectedEvent?.extendedProps, range)
@@ -96,9 +103,19 @@ function EventDialog({
       setValue,
       control,
       handleSubmit,
-      formState: { isSubmitting, errors },
-      clearErrors
+      formState: { isSubmitting, isSubmitted, errors },
+      clearErrors,
+      setError
     } = methods;
+
+    const handleAllDayChange = (value) => {
+      if (isSubmitted && !value) {
+        setError('end', { type: 'required', message: 'End Time is required' });
+      } else {
+        clearErrors('end');
+      }
+      setValue('allDay', value);
+    }  
 
     const { jiraTicket, customer, machine, primaryTechnician, allDay } = watch();
 
@@ -153,10 +170,10 @@ function EventDialog({
       <Grid container >
         <Stack spacing={2} sx={{ pt: 2 }}>
           <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' }} >
-            <RHFDatePicker label="Event Date" name="date" />
-            <RHFTimePicker label="Start" name="start" />
-            <RHFTimePicker disabled={allDay} label="End" name="end" />
-            <Button variant={allDay?'contained':'outlined'} onClick={()=> setValue('allDay', !allDay)} 
+            <RHFDatePicker label="Event Date*" name="date" />
+            <RHFTimePicker label="Start*" name="start" />
+            <RHFTimePicker disabled={allDay} label={allDay?"End":"End*"} name="end" />
+            <Button variant={allDay?'contained':'outlined'} onClick={()=> handleAllDayChange(!allDay)} 
             startIcon={<Iconify icon={allDay?'icon-park-solid:check-one':'icon-park-outline:check-one'}/>}>All Day</Button>
           </Box>
             <RHFTextField name="jiraTicket" label="Jira Ticket" />
@@ -173,7 +190,7 @@ function EventDialog({
           <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
           
             <RHFAutocomplete 
-              label="Machine*"
+              label="Machine"
               name="machine"
               options={activeCustomerMachines}
               isOptionEqualToValue={(option, value) => option?._id === value?._id}
