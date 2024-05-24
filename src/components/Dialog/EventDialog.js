@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React,{ useEffect } from 'react';
+import React,{ useEffect, useLayoutEffect } from 'react';
 import * as Yup from 'yup';
 import merge from 'lodash/merge';
 import { isBefore } from 'date-fns';
@@ -61,8 +61,6 @@ function EventDialog({
     const { activeSites } = useSelector((state) => state.site);
     const { activeCustomerMachines } = useSelector( (state) => state.machine );
     
-    // const hasEventData = !!event;
-
     const EventSchema = Yup.object().shape({
       date: Yup.date().nullable().label('Event Date').typeError('End Time should be a valid Date').required(),
       start: Yup.date()
@@ -89,8 +87,6 @@ function EventDialog({
       notifyContacts: Yup.array().nullable().label('Notify Contacts').required(),
       description: Yup.string().max(500).label('Description'),
     });
-
-   
 
     const methods = useForm({
       resolver: yupResolver(EventSchema),
@@ -131,14 +127,14 @@ function EventDialog({
     },[ dispatch, customer ])
 
     
-    useEffect(() => {
+    useLayoutEffect(() => {
       reset(getInitialValues(selectedEvent?.extendedProps, range));
     }, [reset, range, selectedEvent]);
     
-    const onSubmit = async (data) => {
+    const onSubmit = (data) => {
      try {
-        await onCreateUpdateEvent(data);
-        await reset();
+        onCreateUpdateEvent(data);
+        reset();
       } catch (error) {
         console.error(error);
       }

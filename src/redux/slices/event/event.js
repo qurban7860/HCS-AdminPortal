@@ -186,21 +186,27 @@ export function createEvent(params) {
     dispatch(slice.actions.startLoading());
     try {
       
-      const { date, start, end } = params;
+      if (params?.date && !params?.allDay) {
+        const eventDate = new Date(params.date);
 
-      if (date) {
-        // Extract the time part from 'start' and 'end' fields, if available
-        const eventDate = new Date(date);
-        const startTime = start ? new Date(start).getTime() : null;
-        const endTime = end ? new Date(end).getTime() : null;
+        const startTime = params.start ? new Date(params.start) : null;
+        if (startTime) {
+          startTime.setFullYear(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate());
+        }
 
-        // Update 'start' and 'end' fields with the date part from 'date' and time part from 'start' and 'end'
-        params.start = start && new Date(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate(), startTime ? new Date(startTime).getHours() : 0, 0, 0);
-        params.end = end && new Date(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate(), endTime ? new Date(endTime).getHours() : 23, 59, 59);
+        const endTime = params.end ? new Date(params.end) : null;
+        if (endTime) {
+          endTime.setFullYear(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate());
+        }
+
+        params.start = startTime;
+        params.end = endTime;
+      }else{
+        params.start = new Date(new Date().setHours(7, 0, 0));
+        params.end = new Date(new Date().setHours(18, 0, 0));
       }
 
       const data = {
-        visitDate: params?.start,
         start: params?.start,
         end: params?.end,
         customer: params?.customer?._id || null,
@@ -213,10 +219,6 @@ export function createEvent(params) {
         description: params?.description || '',
       };
       
-      if(params?.allDay){
-        data.start = new Date(new Date().setHours(7, 0, 0));
-        data.end = new Date(new Date().setHours(18, 0, 0));
-      }
       const response = await axios.post(`${CONFIG.SERVER_URL}calender/events`, data);
       dispatch(slice.actions.createEventSuccess(response.data.Event));
     } catch (error) {
@@ -242,26 +244,31 @@ export function updateEventDate(id, start, end) {
 }
 
 export function updateEvent(id, params) {
-  
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
 
-      const { date, start, end } = params;
+      if (params?.date && !params?.allDay) {
+        const eventDate = new Date(params.date);
 
-      if (date) {
-        // Extract the time part from 'start' and 'end' fields, if available
-        const eventDate = new Date(date);
-        const startTime = start ? new Date(start).getTime() : null;
-        const endTime = end ? new Date(end).getTime() : null;
+        const startTime = params.start ? new Date(params.start) : null;
+        if (startTime) {
+          startTime.setFullYear(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate());
+        }
 
-        // Update 'start' and 'end' fields with the date part from 'date' and time part from 'start' and 'end'
-        params.start = start && new Date(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate(), startTime ? new Date(startTime).getHours() : 0, 0, 0);
-        params.end = end && new Date(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate(), endTime ? new Date(endTime).getHours() : 23, 59, 59);
+        const endTime = params.end ? new Date(params.end) : null;
+        if (endTime) {
+          endTime.setFullYear(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate());
+        }
+
+        params.start = startTime;
+        params.end = endTime;
+      }else{
+        params.start = new Date(new Date().setHours(7, 0, 0));
+        params.end = new Date(new Date().setHours(18, 0, 0));
       }
 
       const data = {
-        visitDate: params?.start,
         start: params?.start,
         end: params?.end,
         customer: params?.customer?._id || null,
@@ -273,11 +280,6 @@ export function updateEvent(id, params) {
         notifyContacts: params?.notifyContacts?.map((el)=> el?._id) || [],
         description: params?.description || '',
       };
-
-      if(params?.allDay){
-        data.start = new Date(new Date().setHours(7, 0, 0));
-        data.end = new Date(new Date().setHours(18, 0, 0));
-      }
 
       const response = await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, data);
       dispatch(slice.actions.updateEventSuccess(response.data.Event));
