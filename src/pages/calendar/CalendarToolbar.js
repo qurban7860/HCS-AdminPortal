@@ -68,16 +68,11 @@ export default function CalendarToolbar({
       {isDesktop && (
         <Stack direction="row" spacing={1}>
           {VIEW_OPTIONS.map((viewOption) => (
-            <Tooltip key={viewOption.value} title={viewOption.label}>
-              <ToggleButton
-                size="small"
-                value={view}
-                selected={viewOption.value === view}
-                onChange={() => onChangeView(viewOption.value)}
-              >
+            <StyledTooltip placement="top" key={viewOption.value} title={viewOption.label}>
+              <ToggleButton size="medium" value={view} selected={viewOption.value === view} onChange={() => onChangeView(viewOption.value)}>
                 <Iconify icon={viewOption.icon} />
               </ToggleButton>
-            </Tooltip>
+            </StyledTooltip>
           ))}
         </Stack>
       )}
