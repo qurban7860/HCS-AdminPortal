@@ -271,7 +271,7 @@ export function  updateSecurityUser(param,id) {
     try{
       const data = {
         customer: param.customer,
-        contact: param.contact?._id,
+        contact: param.contact?._id || null,
         name: param.name,
         phone:  param.phone,
         email: param.email,
