@@ -112,9 +112,9 @@ const onChangeContact = (contact) => {
 
   const onSubmit = async (data) => {
     try {
-      dispatch(updateSecurityUser(data, securityUser._id));
-      reset();
-      navigate(PATH_SECURITY.users.view(securityUser._id));
+      await dispatch(updateSecurityUser(data, securityUser._id));
+      await reset();
+      await navigate(PATH_SECURITY.users.view(securityUser._id));
     } catch (error) {
       enqueueSnackbar(error, { variant: `error` });
       console.log('Error:', error);

@@ -6,7 +6,7 @@ function path(root, sublink) {
 
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
-const ROOTS_CALENDAR = '/Calendar';
+const ROOTS_CALENDAR = '/calendar';
 const ROOTS_CRM = '/crm';
 const ROOTS_MACHINE = '/products';
 const ROOTS_SECURITY = '/security';

@@ -106,9 +106,12 @@ export function getEmails(page, pageSize ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{ 
+        const params= {
+            orderBy : { createdAt: -1 },
+            pagination:{ page, pageSize } 
+          }
 
-      const response = await axios.get(`${CONFIG.SERVER_URL}emails`,
-      { params: { pagination:{ page, pageSize } } });
+      const response = await axios.get(`${CONFIG.SERVER_URL}emails`, { params });
         dispatch(slice.actions.getEmailsSuccess(response.data));
       return response;
     } catch (error) {
