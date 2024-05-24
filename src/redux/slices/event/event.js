@@ -77,8 +77,9 @@ const slice = createSlice({
           return {
             ...event,
             date: start,
-            extendedProps: { start, end, ...event }
+            extendedProps: { ...event.extendedProps, start, end }
           };
+          
         }
         return event;
       });
