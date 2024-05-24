@@ -484,7 +484,7 @@ export default function Router() {
 
     // --------------------- CALENDAR  ----------------------
     {
-      path: 'Calendar',
+      path: 'calendar',
       element: (
         <AuthGuard>
           <DashboardLayout />

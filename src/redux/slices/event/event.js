@@ -2,7 +2,6 @@ import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
-import { fDate, fTimestamp } from '../../../utils/formatTime';
 // ----------------------------------------------------------------------
 
 const initialState = {
@@ -43,7 +42,13 @@ const slice = createSlice({
 
     // CREATE EVENT
     createEventSuccess(state, action) {
-      const newEvent = action?.payload;
+      const newEvent = {
+        id: action.payload._id,
+        title: `${action.payload?.createdBy?.name || ''}, ${action.payload?.customer?.name || ''}`,
+        date: action.payload?.start,
+        textColor: "#1890FF",
+        extendedProps: { ...action.payload }
+      }
       state.isLoading = false;
       state.events = [...state.events, newEvent];
     },
@@ -52,21 +57,37 @@ const slice = createSlice({
     updateEventSuccess(state, action) {
       state.isLoading = false;
       state.events = state.events.map((event) => {
-        if (event._id === action.payload._id) {
-          return action.payload;
+        if (event.id === action.payload._id) {
+          return {
+            id: action.payload._id,
+            title: `${action.payload?.createdBy?.name || ''}, ${action.payload?.customer?.name || ''}`,
+            date: action.payload?.start,
+            textColor: "#1890FF",
+            extendedProps: { ...action.payload }
+          };
         }
         return event;
       });
     },
     // UPDATE EVENT
     updateEventDateLocal(state, action) {
-      state.events = action.payload
+      const { id, start, end } = action.payload;
+      state.events = state.events.map((event) => {
+        if (event.id === id) {
+          return {
+            ...event,
+            date: start,
+            extendedProps: { start, end, ...event }
+          };
+        }
+        return event;
+      });
     },
 
     // DELETE EVENTS
     deleteEventSuccess(state, action) {
       const eventId = action.payload;
-      state.events = state.events.filter((event) => event._id !== eventId);
+      state.events = state.events.filter((event) => event.id !== eventId);
     },
 
     // SELECT RANGE
@@ -105,7 +126,6 @@ export const {
   setEventModel,
   setSelectedEvent, 
   selectRange,
-  updateEventDateLocal,
   resetEvent,
   resetEvents,
 } = slice.actions;
@@ -128,7 +148,16 @@ export function getEvents(date, customer, contact) {
         params.year = date?.getFullYear()
       }
       const response = await axios.get(`${CONFIG.SERVER_URL}calender/events`, { params } );
-      dispatch(slice.actions.getEventsSuccess(response.data));
+      const formattedData = response?.data?.map((v) => ({
+        id: v?._id,
+        title: `${v?.createdBy?.name || ''}, ${v?.customer?.name || ''}`,
+        date: v?.start,
+        textColor: "#1890FF",
+        extendedProps: {
+          ...v
+        }
+      }));
+      dispatch(slice.actions.getEventsSuccess(formattedData));
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
@@ -200,13 +229,10 @@ export function createEvent(params) {
 
 export function updateEventDate(id, start, end) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
     try {
-      const data = {
-        start,
-        end,
-      };
-      const response = await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, data);
+      const data = { start, end };
+    dispatch(slice.actions.updateEventDateLocal({ id, start, end }));
+      await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, data);
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
@@ -267,9 +293,7 @@ export function deleteEvent(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, { 
-        isArchived: true, 
-       });
+       await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, { isArchived: true, });
     } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
