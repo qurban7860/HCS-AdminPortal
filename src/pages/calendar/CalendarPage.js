@@ -179,24 +179,20 @@ export default function CalendarPage() {
     }
   };
 
-  const handleCreateUpdateEvent = async (newEvent) => {
-    if (newEvent?._id) {
-      try{
-        await dispatch(updateEvent(newEvent?._id, newEvent));
-        await dispatch(setEventModel(false));
-        enqueueSnackbar('Event Updated Successfully!');
+  const handleCreateUpdateEvent = (newEvent) => {
+
+    try{
+        if(newEvent?._id){
+          dispatch(updateEvent(newEvent?._id, newEvent));
+          enqueueSnackbar('Event Updated Successfully!');
+        } else {
+          dispatch(createEvent(newEvent));
+          enqueueSnackbar('Event Created Successfully!');
+        }
+        dispatch(setEventModel(false));
       } catch(e){
         enqueueSnackbar('Event Update Failed!');
       }
-    } else {
-      try{
-        await dispatch(createEvent(newEvent));
-        await dispatch(setEventModel(false));
-        enqueueSnackbar('Event Created Successfully!');
-      } catch(e){
-      enqueueSnackbar('Event Create Failed!');
-      }
-    }
   };
 
   const handleDeleteEvent = async () => {
