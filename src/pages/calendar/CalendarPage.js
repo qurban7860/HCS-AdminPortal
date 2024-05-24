@@ -1,44 +1,35 @@
-import FullCalendar from '@fullcalendar/react'; // => request placed at the top
+import { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import FullCalendar from '@fullcalendar/react';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
-//
-import { useState, useRef, useEffect } from 'react';
 // @mui
 import { Card, Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
-  getEvents,
-  resetEvents,
-  createEvent,
-  updateEventDate,
-  updateEventDateLocal,
-  updateEvent,
-  deleteEvent,
-  selectRange,
-  setEventModel,
-  getEvent,
-  resetEvent,
-  setSelectedEvent
+ getEvents,
+ createEvent,
+ updateEventDate,
+ updateEvent,
+ deleteEvent,
+ selectRange,
+ setEventModel,
+ setSelectedEvent
 } from '../../redux/slices/event/event';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
 import { getActiveSPContacts } from '../../redux/slices/customer/contact';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
 // components
-import Iconify from '../../components/iconify';
 import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
 import { useDateRangePicker } from '../../components/date-range-picker';
 // sections
-import {
-  StyledCalendar,
-  CalendarToolbar,
-} from '.';
+import { StyledCalendar, CalendarToolbar } from '.';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 import EventDialog from '../../components/Dialog/EventDialog';
@@ -51,67 +42,49 @@ export default function CalendarPage() {
   const { themeStretch } = useSettingsContext();
   const dispatch = useDispatch();
   const isDesktop = useResponsive('up', 'sm');
-
   const calendarRef = useRef(null);
+  const picker = useDateRangePicker(null, null);
+
   const { events, selectedEvent, eventModel, selectedRange } = useSelector((state) => state.event );
   const { activeCustomers } = useSelector((state) => state.customer);
   const { activeSpContacts } = useSelector((state) => state.contact);
-  const userCustomer = localStorage.getItem('customer')
 
-  const [data, setData] = useState([]);
-  const [previousDate, setPreviousDate] = useState(null);
-  
-  const [selectedCustomer, setSelectedCustomer] = useState(null);
-  const [selectedContact, setSelectedContact] = useState(null);
+  const [ previousDate, setPreviousDate ] = useState(null);
+  const [ selectedCustomer, setSelectedCustomer ] = useState(null);
+  const [ selectedContact, setSelectedContact ] = useState(null);
+  const [ date, setDate ] = useState(new Date());
+  const [ openFilter, setOpenFilter ] = useState(false);
+  const [ filterEventColor, setFilterEventColor ] = useState([]);
+  const [ view, setView ] = useState(isDesktop ? 'dayGridMonth' : 'listWeek');
 
-  useEffect(() =>{
-    if(userCustomer && Array.isArray(activeCustomers) && activeCustomers.length > 0 ){
-      const filteredCustomer = activeCustomers?.find(c => c?._id === userCustomer )
-      setSelectedCustomer(filteredCustomer)
-    }
-  },[ userCustomer, activeCustomers ])
+  // useEffect(() =>{
+  //   if(userCustomer && Array.isArray(activeCustomers) && activeCustomers.length > 0 ){
+  //     const filteredCustomer = activeCustomers?.find(c => c?._id === userCustomer )
+  //     setSelectedCustomer(filteredCustomer)
+  //   }
+  // },[ userCustomer, activeCustomers ])
 
-  const handleSelectEvent = async (_event) => {
-    await dispatch(setSelectedEvent(_event.event));
-    await dispatch(setEventModel(true));
-  };
 
-  const picker = useDateRangePicker(null, null);
-  const [date, setDate] = useState(new Date());
-  const [openFilter, setOpenFilter] = useState(false);
-  const [filterEventColor, setFilterEventColor] = useState([]);
-  const [view, setView] = useState(isDesktop ? 'dayGridMonth' : 'listWeek');
-
-  useEffect(() => {
-    if (Array.isArray(events) && events.length > 0) {
-      const formattedData = events.map((v) => ({
-        id: v?._id,
-        title: v?.customer?.name,
-        date: v?.start,
-        textColor: "#1890FF",
-        extendedProps: {
-          ...v
-        }
-      }));
-      setData(formattedData);
-    }else{
-      setData(null);
-    }
-  }, [events]);
-
-  useEffect(() => {
-    dispatch(resetEvents());
+  useLayoutEffect(() => {
+    dispatch(setEventModel(false));
     dispatch(getActiveCustomers());
     dispatch(getActiveSPContacts());
   }, [dispatch]);
 
-  useEffect(() => {
-    if( date && !eventModel ){
-        setPreviousDate(date);
-        dispatch(getEvents(date, selectedCustomer?._id, selectedContact?._id ));
+  useLayoutEffect(() => {
+    if( date && previousDate 
+        && (( date?.getFullYear() !== previousDate?.getFullYear()) 
+        || ( Number(date?.getMonth()) !== Number(previousDate?.getMonth())))
+      )
+    {
+      setPreviousDate(date);
+      dispatch(getEvents(date));
+    } else if( !previousDate && date ){
+      setPreviousDate(date);
+      dispatch(getEvents(date));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, date, selectedCustomer, selectedContact ]);
+  }, [dispatch, date,]);
 
   useEffect(() => {
     const calendarEl = calendarRef.current;
@@ -128,12 +101,16 @@ export default function CalendarPage() {
     if (calendarEl) {
       const calendarApi = calendarEl.getApi();
       if (newView === 'listMonth') {
-        const monthFirstDate = new Date(date.getFullYear(), date.getMonth(), 1)
         calendarApi.gotoDate(date);
       }
       calendarApi.changeView(newView);
       setView(newView);
     }
+  };
+
+  const handleSelectEvent = async (_event) => {
+    await dispatch(setSelectedEvent(_event.event));
+    await dispatch(setEventModel(true));
   };
 
   const handleClickDatePrev = () => {
@@ -193,24 +170,7 @@ export default function CalendarPage() {
 
       modifiedStartDateTime.setHours(startDateTime.getHours(), startDateTime.getMinutes());
       modifiedEndDateTime.setHours(endDateTime.getHours(), endDateTime.getMinutes());
-      setData(prevData => {
-        const updatedData = prevData.map(e => {
-            if (e?.id === event.id) {
-                return { 
-                    ...e, 
-                    date: modifiedStartDateTime,
-                    extendedProps: {
-                      ...e.extendedProps,
-                      start: modifiedStartDateTime,
-                      end: modifiedEndDateTime
-                  }
-                };
-            }
-            return e;
-        });
-        return updatedData;
-    });
-      
+
       dispatch(updateEventDate(event.id,  modifiedStartDateTime, modifiedEndDateTime ));
     } catch (error) {
       enqueueSnackbar('Event Date Update Failed!', { variant: `error` });
@@ -241,7 +201,6 @@ export default function CalendarPage() {
   const handleDeleteEvent = async () => {
     try {
       if (selectedEvent && selectedEvent?.extendedProps?._id) {
-        await setData(prevData => prevData.filter(e =>  e?.id !== selectedEvent?.extendedProps?._id) );
         await dispatch(setEventModel(false));
         await dispatch(deleteEvent(selectedEvent?.extendedProps?._id));
       }
@@ -252,6 +211,12 @@ export default function CalendarPage() {
     }
   };
 
+  const dataFiltered = applyFilter({
+    inputData: events,
+    selectedCustomer,
+    selectedContact
+  });
+console.log('dataFiltered : ',dataFiltered)
   return (
     <>
       <Container maxWidth={false}>
@@ -278,8 +243,8 @@ export default function CalendarPage() {
               selectable
               allDayMaintainDuration
               eventResizableFromStart
-              events={data}
-              initialEvents={data}
+              events={dataFiltered}
+              initialEvents={dataFiltered}
               ref={calendarRef}
               initialDate={date}
               initialView={view}
@@ -291,6 +256,14 @@ export default function CalendarPage() {
               eventClick={handleSelectEvent}
               eventResize={handleResizeEvent}
               height={isDesktop ? 720 : 'auto'}
+              // eventDidMount={(info) => {
+              //   const tooltip = new EventTooltip({ event: info.event });
+              //   info.el.appendChild(tooltip);
+              // }}
+              eventTimeFormat={{
+                hour: 'numeric',
+                minute: '2-digit',
+              }}
               plugins={[
                 listPlugin,
                 dayGridPlugin,
@@ -312,4 +285,26 @@ export default function CalendarPage() {
 
     </>
   );
+}
+
+function applyFilter({ inputData, selectedCustomer, selectedContact }) {
+  if(selectedCustomer && selectedCustomer._id ){
+
+    const stabilizedThis = inputData?.map((el, index) => [el, index]);
+
+    inputData = stabilizedThis.map((el) => el[0]);
+    if(selectedCustomer){
+      inputData = inputData.filter((e) => e?.extendedProps?.customer?._id === selectedCustomer?._id);
+    }
+    if(selectedContact){
+      inputData = inputData.filter(
+        (e) =>
+          e?.extendedProps?.primaryTechnician?._id === selectedContact?._id >= 0 ||
+          e?.extendedProps?.supportingTechnicians?.some((c)=> c?._id === selectedContact?._id >= 0 ) ||
+          e?.extendedProps?.notifyContacts?.some((c)=> c?._id === selectedContact?._id >= 0 )
+      );
+    }
+  }
+
+  return inputData;
 }

@@ -135,7 +135,7 @@ export function getMachineJiras(serialNo, page, pageSize ) {
         page,
         pageSize  
       }
-      const response = await axios.get(`${CONFIG.SERVER_URL}jira/tickets?orderBy=-created&startAt=0&maxResults=1`, { params } );
+      const response = await axios.get(`${CONFIG.SERVER_URL}jira/tickets?orderBy=-created&startAt=0&maxResults=100`, { params } );
       dispatch(slice.actions.getMachineJiraRecordsSuccess(response.data));
     } catch (error) {
       console.log(error);
