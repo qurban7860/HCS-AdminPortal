@@ -32,7 +32,8 @@ export default function EmailListTableRow({
           alt={subject}
           sx={{ ml: 1, my: 0.5, width: '30px', height: '30px' }} 
         />
-        <LinkTableCell align="left" onClick={onViewRow} param={subject} />
+        {/* <LinkTableCell align="left" onClick={onViewRow} param={subject} /> */}
+        <TableCell align='left' > { subject || ''} </TableCell> 
       </Stack>
       <TableCell align='left' > { customer?.name || ''} </TableCell> 
       <TableCell align='left' > { fromEmail } </TableCell>

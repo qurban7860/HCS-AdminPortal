@@ -278,6 +278,7 @@ function DocumentViewForm({ customerPage, machinePage, drawingPage, DocId }) {
       customerAccess={defaultValues?.customerAccess} 
       handleEdit={handleEdit}
       onDelete={onDelete}
+      isLoading={isLoading}
       disableDeleteButton={machinePage && machine?.status?.slug==="transferred"}
       backLink={ handleBackLink} 
       disableEditButton={machine?.status?.slug==='transferred'}

@@ -120,8 +120,8 @@ export default function SecurityUserViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteSecurityUser(id));
-      dispatch(getSecurityUsers());
-      navigate(PATH_SECURITY.list);
+      await navigate(PATH_SECURITY.root);
+      await dispatch(getSecurityUsers());
     } catch (error) {
       enqueueSnackbar('User Archive failed!', { variant: `error` });
       console.log('Error:', error);
@@ -167,6 +167,7 @@ export default function SecurityUserViewForm() {
             handleUserInvite={securityUser?.invitationStatus ? handleUserInvite : undefined }
             handleUpdatePassword={handleUpdatePassword}
             onDelete={onDelete}
+            isLoading={isLoading}
             isInviteLoading={isLoading}
             backLink={() => navigate(PATH_SECURITY.root)}
             isActive={defaultValues.isActive}
