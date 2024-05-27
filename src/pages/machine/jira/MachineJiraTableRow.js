@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 // @mui
-import { TableCell } from '@mui/material';
+import { TableCell, Chip } from '@mui/material';
 // utils
 import { fDate, fDateTime } from '../../../utils/formatTime';
 // components
@@ -33,13 +33,25 @@ export default function MachineJiraTableRow({
 }) {
 
   const { id, self, key, fields, expand } = row;
-  
+
+  const getStatusColor=(color)=>{
+    if(color === 'blue-gray'){
+      return 'bluegray';
+    }
+    if(color === 'green'){
+      return 'lightgreen';
+    }
+    if( color === 'yellow'){
+      return 'lightyellow';
+    }
+    return '';
+  }
   return (
       <StyledTableRow hover selected={selected}>
         <TableCell align="left">{fDateTime(fields?.created) || ''}</TableCell>
         <LinkTableCell align="left" onClick={() => onViewRow( key )} param={key || ''} />
         <TableCell align="left">{fields?.summary || ''}</TableCell>
-        <TableCell align="left">{fields?.status?.statusCategory?.name || ''}</TableCell>
+        <TableCell align="left">{fields?.status?.statusCategory?.name && <Chip sx={{ bgcolor: getStatusColor(fields?.status?.statusCategory?.colorName) }} label={fields?.status?.statusCategory?.name || ''} />}</TableCell>
       </StyledTableRow>
   );
 }

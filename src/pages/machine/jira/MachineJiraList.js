@@ -38,7 +38,7 @@ const TABLE_HEAD = [
   { id: 'fields.created', label: 'Date', align: 'left' },
   { id: 'key', label: 'Ticket No.', align: 'left' },
   { id: 'fields.summary', label: 'Subject', align: 'left' },
-  { id: 'fields?.status?.statusCategory?.name', label: 'Status', align: 'left' },
+  { id: 'fields.status.name', label: 'Status', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------
@@ -48,14 +48,14 @@ export default function MachineJiraList(){
   const { machine } = useSelector((state) => state.machine);
   const navigate = useNavigate();
   const { machineId } = useParams();
-console.log('machineJiras : ',machineJiras)
+  
   const {
     order,
     orderBy,
     setPage,
     selected,
     onSort,
-  } = useTable({ defaultOrderBy: 'fields?.created', defaultOrder: 'desc' });
+  } = useTable({ defaultOrderBy: 'fields.created', defaultOrder: 'desc' });
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
