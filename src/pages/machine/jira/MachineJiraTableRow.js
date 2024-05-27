@@ -38,8 +38,8 @@ export default function MachineJiraTableRow({
       <StyledTableRow hover selected={selected}>
         <TableCell align="left">{fDateTime(fields?.created) || ''}</TableCell>
         <LinkTableCell align="left" onClick={() => onViewRow( key )} param={key || ''} />
-        <TableCell align="left">{fields?.status?.name || ''}</TableCell>
         <TableCell align="left">{fields?.summary || ''}</TableCell>
+        <TableCell align="left">{fields?.status?.statusCategory?.name || ''}</TableCell>
       </StyledTableRow>
   );
 }
