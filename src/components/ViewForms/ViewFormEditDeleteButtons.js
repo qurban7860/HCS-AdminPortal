@@ -256,7 +256,12 @@ function ViewFormEditDeleteButtons({
     handleVerification();
     handleCloseConfirm('Verification');
   };
-  
+
+  const handleDelete = async () => {
+    await onDelete();
+    await handleCloseConfirm('delete');
+  };
+
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
 
@@ -833,9 +838,9 @@ function ViewFormEditDeleteButtons({
           <LoadingButton
             variant="contained"
             color="error"
-            loading={(isSubmitSuccessful || isSubmitting) && isLoading}
-            disabled={isSubmitting}
-            onClick={handleSubmit(onDelete)}
+            loading={isSubmitted || isSubmitting || isLoading}
+            disabled={isSubmitted || isSubmitting || isLoading}
+            onClick={handleSubmit(handleDelete)}
           >
             Archive
           </LoadingButton>
