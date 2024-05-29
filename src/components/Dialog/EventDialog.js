@@ -81,7 +81,7 @@ function EventDialog({
       allDay: Yup.bool().label('All Day'),
       jiraTicket: Yup.string().max(200).label('Jira Ticket'),
       customer: Yup.object().nullable().label('Customer').required(),
-      machines: Yup.object().nullable().label('Machines'),
+      machines: Yup.array().nullable().label('Machines'),
       site: Yup.object().nullable().label('Site'),
       primaryTechnician: Yup.object().nullable().label('Primary Technician').required(),
       supportingTechnicians: Yup.array().nullable().label('Supporting Technicians').required(),
@@ -93,7 +93,7 @@ function EventDialog({
       resolver: yupResolver(EventSchema),
       defaultValues: getInitialValues(selectedEvent?.extendedProps, range)
     });
-    
+
     const {
       reset,
       watch,
@@ -114,7 +114,7 @@ function EventDialog({
       setValue('allDay', value);
     }  
 
-    const { jiraTicket, customer, machine, primaryTechnician, allDay } = watch();
+    const { jiraTicket, customer, primaryTechnician, allDay } = watch();
 
     useEffect(()=>{
       if(customer){
@@ -188,24 +188,15 @@ function EventDialog({
           
             <RHFAutocomplete 
               multiple
+              disableCloseOnSelect
+              filterSelectedOptions
               label="Machines"
               name="machines"
               options={activeCustomerMachines}
               isOptionEqualToValue={(option, value) => option?._id === value?._id}
               getOptionLabel={(option) => `${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}
               renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}</li> )}
-              onChange={( e ,newValue) => {  
-                if(newValue){
-                  setValue('machines',newValue);
-                  if(newValue?.instalationSite){
-                    setValue('site',newValue?.instalationSite)
-                  }
-                  clearErrors('machines');
-                } else {
-                  setValue('machines',null);
-                }
-              }}
-            />     
+            />  
 
             <RHFAutocomplete 
               label="Site"
