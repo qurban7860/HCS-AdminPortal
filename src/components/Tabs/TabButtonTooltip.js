@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { IconButton, alpha } from '@mui/material';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 import Iconify from '../iconify';
+import { MachineIcon } from '../../theme/overrides/CustomIcons';
 // import theme from '../../../theme';
 
 export default function TabButtonTooltip({
@@ -11,9 +12,10 @@ export default function TabButtonTooltip({
   color,
   placement,
   disabled,
-  selected
+  selected,
+  value
 }) {
-
+  
     return (
       <StyledTooltip title={selected?'':title} placement={placement} disableFocusListener tooltipcolor={color} color={color}>
             <IconButton
@@ -26,7 +28,10 @@ export default function TabButtonTooltip({
                 ':hover':  { borderColor: color},
               }}
               >
-              <Iconify color={selected?'#fff':color} width="25px" icon={icon} />
+              {value==='machine' || value==='machines' ?
+                <MachineIcon width="25px" fill={selected?'#fff':color}/>: 
+                <Iconify color={selected?'#fff':color} width="25px" icon={icon} />
+              }
             </IconButton>
       </StyledTooltip>
     );
@@ -39,6 +44,7 @@ TabButtonTooltip.propTypes = {
   placement: PropTypes.string,
   disabled: PropTypes.bool,
   selected: PropTypes.bool,
+  value: PropTypes.string,
 };
 
 TabButtonTooltip.defaultProps = {

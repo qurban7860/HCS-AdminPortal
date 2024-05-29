@@ -21,6 +21,7 @@ import ViewFormEditDeleteButtons from '../../../components/ViewForms/ViewFormEdi
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { FORMLABELS as formLABELS } from '../../../constants/customer-constants';
+import { MachineIcon } from '../../../theme/overrides/CustomIcons';
 
 // ----------------------------------------------------------------------
 

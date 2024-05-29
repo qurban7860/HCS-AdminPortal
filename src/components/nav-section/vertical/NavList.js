@@ -45,6 +45,7 @@ export default function NavList({ data, depth, hasChild }) {
         depth={depth}
         open={open}
         active={active}
+        key={data}
         isExternalLink={isExternalLink}
         onClick={handleToggle}
       />

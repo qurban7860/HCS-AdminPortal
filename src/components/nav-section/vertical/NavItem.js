@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
+import { cloneElement } from 'react';
 // @mui
 import { Box, Tooltip, Link, ListItemText } from '@mui/material';
 // locales
@@ -23,15 +24,13 @@ NavItem.propTypes = {
 
 export default function NavItem({ item, depth, open, active, isExternalLink, ...other }) {
   const { translate } = useLocales();
-
   const { title, path, icon, info, children, disabled, caption, roles } = item;
-
   const subItem = depth !== 1;
 
   const renderContent = (
     <StyledItem depth={depth} active={active} disabled={disabled} caption={!!caption} {...other}>
-      {icon && <StyledIcon>{icon}</StyledIcon>}
-
+      {icon && 
+        <StyledIcon>{icon?.key==='machine' && active? cloneElement(icon, { fill: "#2065D1" }): icon}</StyledIcon>}
       {subItem && (
         <StyledIcon>
           <StyledDotIcon active={active && subItem} />

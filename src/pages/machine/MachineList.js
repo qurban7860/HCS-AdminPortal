@@ -36,7 +36,8 @@ import {
   setVerified,
   setMachineTab,
   setAccountManager,
-  setSupportManager
+  setSupportManager,
+  setReportHiddenColumns
 } from '../../redux/slices/products/machine';
 import { resetToolInstalled, resetToolsInstalled } from '../../redux/slices/products/toolInstalled';
 import { resetSetting, resetSettings } from '../../redux/slices/products/machineSetting';
@@ -72,6 +73,7 @@ const TABLE_HEAD = [
   { id: 'customer', visibility: 'md2', label: 'Customer', align: 'left' },
   { id: 'installationDate', visibility: 'md3', label: 'Installation Date', align: 'left' },
   { id: 'shippingDate', visibility: 'md3', label: 'Shipping Date', align: 'left' },
+  { id: 'manufactureDate', visibility: 'md3', label: 'Manufacture Date', align: 'left'},
   { id: 'status', visibility: 'xs2',  label: 'Status', align: 'left' },
   { id: 'profiles', visibility: 'md2',label: 'Profile', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
@@ -112,12 +114,25 @@ export default function MachineList({ isArchived }) {
     initial, 
     responseMessage,
     reportHiddenColumns
-  } = useSelector( (state) => state.machine );
+  } = useSelector( (state) => state.machine);
 
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
   useLayoutEffect(() => {
+
+    console.log("reportHiddenColumns:::::",reportHiddenColumns)
+    // if(!reportHiddenColumns){
+    //   const newHiddenColumns = {};
+    //   TABLE_HEAD.forEach((column) => {
+    //     if (column?.hideable !== false) {
+    //       newHiddenColumns[column.id] = column?.hidden;
+    //     }
+    //   });
+    
+    //   // Dispatch the action with the new hidden columns
+    //   dispatch(setReportHiddenColumns(newHiddenColumns));
+    // }
     dispatch(resetMachine());
     dispatch(resetMachines());
     dispatch(resetToolInstalled());
@@ -133,6 +148,12 @@ export default function MachineList({ isArchived }) {
     dispatch(getSPContacts( cancelTokenSource ));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
+
+  // useEffect(()=>{
+
+  //   console.log("reportHiddenColumns::::",reportHiddenColumns)
+
+  // },[reportHiddenColumns])
   
   useEffect(()=>{
     dispatch(getMachines(null, null, isArchived, cancelTokenSource ));
@@ -278,6 +299,7 @@ export default function MachineList({ isArchived }) {
 
           {!isNotFound && <TablePaginationFilter
             columns={TABLE_HEAD}
+            hiddenColumns={TABLE_HEAD.filter(head => reportHiddenColumns[head.id])}
             count={machines? machines.length : 0}
             page={page}
             rowsPerPage={rowsPerPage}
