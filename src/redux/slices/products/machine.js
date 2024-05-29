@@ -36,7 +36,17 @@ const initialState = {
   rowsPerPage: 100,
   connectedMachineAddDialog:false,
   newConnectedMachines: [],
-  reportHiddenColumns: {},
+  reportHiddenColumns: {
+                        "name": false,
+                        "machineModel": false,
+                        "customer": false,
+                        "installationDate": false,
+                        "shippingDate": false,
+                        "manufactureDate": true,
+                        "status": false,
+                        "profiles": false,
+                        "isActive": false
+                    },
 };
 
 const slice = createSlice({

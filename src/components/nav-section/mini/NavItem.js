@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { forwardRef } from 'react';
+import { cloneElement, forwardRef } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { Tooltip, Link, ListItemText } from '@mui/material';
@@ -22,7 +22,7 @@ const NavItem = forwardRef(({ item, depth, open, active, isExternalLink, ...othe
 
   const renderContent = (
     <StyledItem ref={ref} open={open} depth={depth} active={active} disabled={disabled} {...other}>
-      {icon && <StyledIcon>{icon}</StyledIcon>}
+      {icon && <StyledIcon>{icon?.key==='machine' && active? cloneElement(icon, { fill: "#2065D1" }): icon}</StyledIcon>}
 
       <ListItemText
         primary={`${translate(title)}`}

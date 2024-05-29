@@ -28,7 +28,7 @@ const getInitialValues = (selectedEvent, range) => {
     end: selectedEvent ? selectedEvent?.end : null,
     allDay: selectedEvent ? selectedEvent?.allDay : false,
     customer: selectedEvent ? selectedEvent?.customer : null,
-    machine: selectedEvent ? selectedEvent?.machine :  null,
+    machines: selectedEvent ? selectedEvent?.machines :  [],
     site: selectedEvent ? selectedEvent?.site :  null,
     jiraTicket: selectedEvent ? selectedEvent?.jiraTicket :  '',
     primaryTechnician: selectedEvent ? selectedEvent?.primaryTechnician :  null,
@@ -67,10 +67,11 @@ function EventDialog({
         .nullable()
         .label('Start Time')
         .typeError('Start Time should be a valid Time')
-        .test('is-before-end', 'Start Time must be before End Time', (value, context) => {
-            const endValue = context.parent.end; // Access the value of 'end' directly from the parent context
-            return !value || !endValue || value < endValue;
-        }).required(),
+        // .test('is-before-end', 'Start Time must be before End Time', (value, context) => {
+        //     const endValue = context.parent.end; // Access the value of 'end' directly from the parent context
+        //     return !value || !endValue || value < endValue;
+        // })
+        .required(),
       end: Yup.date()
         .when('allDay', {
           is: false,
@@ -80,7 +81,7 @@ function EventDialog({
       allDay: Yup.bool().label('All Day'),
       jiraTicket: Yup.string().max(200).label('Jira Ticket'),
       customer: Yup.object().nullable().label('Customer').required(),
-      machine: Yup.object().nullable().label('Machine'),
+      machines: Yup.object().nullable().label('Machines'),
       site: Yup.object().nullable().label('Site'),
       primaryTechnician: Yup.object().nullable().label('Primary Technician').required(),
       supportingTechnicians: Yup.array().nullable().label('Supporting Technicians').required(),
@@ -183,24 +184,25 @@ function EventDialog({
             renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
           />
 
-          <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
+          {/* <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} > */}
           
             <RHFAutocomplete 
-              label="Machine"
-              name="machine"
+              multiple
+              label="Machines"
+              name="machines"
               options={activeCustomerMachines}
               isOptionEqualToValue={(option, value) => option?._id === value?._id}
               getOptionLabel={(option) => `${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}
               renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option?.serialNo || ''} ${option?.name ? '-' : ''} ${option?.name || ''}`}</li> )}
               onChange={( e ,newValue) => {  
                 if(newValue){
-                  setValue('machine',newValue);
+                  setValue('machines',newValue);
                   if(newValue?.instalationSite){
                     setValue('site',newValue?.instalationSite)
                   }
-                  clearErrors('machine');
+                  clearErrors('machines');
                 } else {
-                  setValue('machine',null);
+                  setValue('machines',null);
                 }
               }}
             />     
@@ -214,7 +216,7 @@ function EventDialog({
               renderOption={(props, option) => ( <li {...props} key={option?._id}>{`${option.name || ''}`}</li> )}
             />   
 
-          </Box>
+          {/* </Box> */}
             <RHFAutocomplete 
               label="Primary Technician*"
               name="primaryTechnician"

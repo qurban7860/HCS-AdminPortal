@@ -4,6 +4,7 @@ import { PATH_CRM, PATH_CALENDAR, PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, P
 import Iconify from '../../../components/iconify';
 import SvgColor from '../../../components/svg-color';
 import { useAuthContext } from '../../../auth/useAuthContext';   
+import { MachineIcon } from '../../../theme/overrides/CustomIcons';
 
 // ----------------------------------------------------------------------
 
@@ -42,7 +43,7 @@ function NavigationConfig() {
     drawing: <Iconify icon="streamline:hand-held-tablet-drawing-solid" />,
     reports: <Iconify icon="mdi:report-box-outline" />,
     map: <Iconify icon="mdi:map-marker" />,
-    machines: <Iconify icon="mdi:gate-open" />,
+    machines: <MachineIcon key="machine"/>,
     users: <Iconify icon="mdi:account-group" />,
     security: <Iconify icon="mdi:security-account" />,
   };
@@ -100,6 +101,4 @@ function NavigationConfig() {
 
   return navConfig;
 };
-// NavigationConfig()
-// console.log("inside NavigationConfig : ",NavigationConfig)
 export default NavigationConfig;
