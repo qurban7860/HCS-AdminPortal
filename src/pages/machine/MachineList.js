@@ -69,8 +69,8 @@ MachineList.propTypes = {
 const TABLE_HEAD = [
   { id: 'serialNo', label: 'Serial Number', align: 'left', hideable:false },
   { id: 'name', visibility: 'md1',label: 'Name', align: 'left' },
-  { id: 'machineModel', visibility: 'xs1', label: 'Model', align: 'left' },
-  { id: 'customer', visibility: 'md2', label: 'Customer', align: 'left' },
+  { id: 'machineModel.name', visibility: 'xs1', label: 'Model', align: 'left' },
+  { id: 'customer.name', visibility: 'md2', label: 'Customer', align: 'left' },
   { id: 'installationDate', visibility: 'md3', label: 'Installation Date', align: 'left' },
   { id: 'shippingDate', visibility: 'md3', label: 'Shipping Date', align: 'left' },
   { id: 'manufactureDate', visibility: 'md3', label: 'Manufacture Date', align: 'left'},
@@ -120,19 +120,6 @@ export default function MachineList({ isArchived }) {
   const { enqueueSnackbar } = useSnackbar();
 
   useLayoutEffect(() => {
-
-    console.log("reportHiddenColumns:::::",reportHiddenColumns)
-    // if(!reportHiddenColumns){
-    //   const newHiddenColumns = {};
-    //   TABLE_HEAD.forEach((column) => {
-    //     if (column?.hideable !== false) {
-    //       newHiddenColumns[column.id] = column?.hidden;
-    //     }
-    //   });
-    
-    //   // Dispatch the action with the new hidden columns
-    //   dispatch(setReportHiddenColumns(newHiddenColumns));
-    // }
     dispatch(resetMachine());
     dispatch(resetMachines());
     dispatch(resetToolInstalled());
@@ -149,12 +136,6 @@ export default function MachineList({ isArchived }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
-  // useEffect(()=>{
-
-  //   console.log("reportHiddenColumns::::",reportHiddenColumns)
-
-  // },[reportHiddenColumns])
-  
   useEffect(()=>{
     dispatch(getMachines(null, null, isArchived, cancelTokenSource ));
     return ()=>{ cancelTokenSource.cancel() };
@@ -273,6 +254,10 @@ export default function MachineList({ isArchived }) {
     });
   };
 
+  const handleHiddenColumns = async (arg) => {
+   dispatch(setReportHiddenColumns(arg))
+  };
+
   return (
     <Container maxWidth={false}>
         <StyledCardContainer>
@@ -299,7 +284,8 @@ export default function MachineList({ isArchived }) {
 
           {!isNotFound && <TablePaginationFilter
             columns={TABLE_HEAD}
-            hiddenColumns={TABLE_HEAD.filter(head => reportHiddenColumns[head.id])}
+            hiddenColumns={reportHiddenColumns}
+            handleHiddenColumns={handleHiddenColumns}
             count={machines? machines.length : 0}
             page={page}
             rowsPerPage={rowsPerPage}
@@ -307,13 +293,6 @@ export default function MachineList({ isArchived }) {
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
           
-          {/* {!isNotFound && <TablePaginationCustom
-            count={machines? machines.length : 0}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />} */}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
               <Table stickyHeader size="small" sx={{ minWidth: 360 }}>

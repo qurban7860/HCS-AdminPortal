@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux';
 // @mui
 import { Box, Switch, TablePagination, FormControlLabel, Button, Grid, Select, OutlinedInput, MenuItem, Checkbox, ListItemText, Menu, IconButton } from '@mui/material';
 import Iconify from '../iconify';
-import { setReportHiddenColumns } from '../../redux/slices/products/machine';
 
 // ----------------------------------------------------------------------
 
@@ -13,7 +12,8 @@ const ITEM_HEIGHT = 48;
 TablePaginationFilter.propTypes = {
   rowsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
   columns:PropTypes.array,
-  hiddenColumns:PropTypes.array,
+  hiddenColumns:PropTypes.object,
+  handleHiddenColumns:PropTypes.func,
   sx: PropTypes.object,
 };
 
@@ -21,6 +21,7 @@ function TablePaginationFilter({
   rowsPerPageOptions = [10, 20,50,100],
   columns,
   hiddenColumns,
+  handleHiddenColumns,
   sx,
   ...other
 }) {
@@ -28,7 +29,7 @@ function TablePaginationFilter({
   const dispatch = useDispatch();
   
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedColumns, setSelectedColumns] = useState(hiddenColumns || []);
+  const [selectedColumns, setSelectedColumns] = useState(columns.filter(head => hiddenColumns[head.id]));
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -37,26 +38,6 @@ function TablePaginationFilter({
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  // useEffect(()=>{
-    
-  //   const newHiddenColumns = {};
-  //   columns.forEach((column) => {
-  //     if(column?.hideable!==false){
-  //       newHiddenColumns[column.id] = selectedColumns.includes(column);
-  //     }  
-  //   });
-  //   dispatch(setReportHiddenColumns(newHiddenColumns));
-  // },[dispatch, columns, selectedColumns])
-
-  // const handleColumnClick = async (option) => {
-  //   if (selectedColumns.includes(option)) {
-  //     setSelectedColumns(selectedColumns.filter((item) => item !== option));
-  //   } else {
-  //     setSelectedColumns([...selectedColumns, option]);
-  //   }
-
-  // };
 
   const handleColumnClick = (option) => {
     setSelectedColumns((prevSelectedColumns) => {
@@ -75,7 +56,7 @@ function TablePaginationFilter({
       });
   
       // Dispatch the action with the new hidden columns
-      dispatch(setReportHiddenColumns(newHiddenColumns));
+      handleHiddenColumns(newHiddenColumns);
   
       // Return the new state
       return newSelectedColumns;
