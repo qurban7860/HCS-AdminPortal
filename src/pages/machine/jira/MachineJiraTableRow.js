@@ -6,6 +6,7 @@ import { fDate, fDateTime } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 import { StyledTableRow } from '../../../theme/styles/default-styles';
+import { getJiraStatusSX } from '../../../utils/jira';
 
 // ----------------------------------------------------------------------
 
@@ -34,24 +35,12 @@ export default function MachineJiraTableRow({
 
   const { id, self, key, fields, expand } = row;
 
-  const getStatusColor=(color)=>{
-    if(color === 'blue-gray'){
-      return 'bluegray';
-    }
-    if(color === 'green'){
-      return 'lightgreen';
-    }
-    if( color === 'yellow'){
-      return 'lightyellow';
-    }
-    return '';
-  }
   return (
       <StyledTableRow hover selected={selected}>
         <TableCell align="left">{fDateTime(fields?.created) || ''}</TableCell>
         <LinkTableCell align="left" onClick={() => onViewRow( key )} param={key || ''} />
         <TableCell align="left">{fields?.summary || ''}</TableCell>
-        <TableCell align="left">{fields?.status?.statusCategory?.name && <Chip sx={{ bgcolor: getStatusColor(fields?.status?.statusCategory?.colorName) }} label={fields?.status?.statusCategory?.name || ''} />}</TableCell>
+        <TableCell align="left">{fields?.status?.statusCategory?.name && <Chip sx={getJiraStatusSX(fields)} label={fields?.status?.statusCategory?.name || ''} />}</TableCell>
       </StyledTableRow>
   );
 }

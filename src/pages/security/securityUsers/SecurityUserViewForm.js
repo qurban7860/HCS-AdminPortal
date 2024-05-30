@@ -143,7 +143,7 @@ export default function SecurityUserViewForm() {
       customers: securityUser?.customers || [],
       machines: securityUser?.machines || [],
       isActive: securityUser?.isActive,
-      currentEmployee: securityUser?.currentEmployee || false,
+      formerEmployee: securityUser?.contact?.formerEmployee || false,
       multiFactorAuthentication: securityUser?.multiFactorAuthentication,
       createdByFullName: securityUser?.createdBy?.name,
       createdAt: securityUser?.createdAt,
@@ -172,7 +172,7 @@ export default function SecurityUserViewForm() {
             backLink={() => navigate(PATH_SECURITY.root)}
             isActive={defaultValues.isActive}
             multiAuth={defaultValues?.multiFactorAuthentication} 
-            currentEmp={defaultValues?.currentEmployee}
+            formerEmployee={defaultValues?.formerEmployee}
             userStatus={userStatus}
             onUserStatusChange={handleChangeUserStatus}
             securityUserPage

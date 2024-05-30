@@ -198,7 +198,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   getOptionLabel={(option) => `${option?.name || ''}`}
                   renderOption={(props, option) => ( <li {...props} key={option?._id}>{option?.name || ''} </li>)}
                 />
-              <RHFTextField name="ref" label="Reference Number"  />
+              <RHFTextField name="ref" label="Reference ID"  />
             </Box>
               {/* 
                 <RHFPhoneInput name="phone" label="Phone Number"  />
