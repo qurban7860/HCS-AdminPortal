@@ -13,7 +13,7 @@ import { Alert, Box, IconButton, InputAdornment, Stack, Typography, Grid } from 
 import { useSnackbar } from 'notistack';
 import { MuiTelInput } from 'mui-tel-input';
 import { StyledRoot, StyledContent } from '../layouts/login/styles';
-import FormProvider, { RHFTextField} from '../components/hook-form';
+import FormProvider, { RHFPhoneInput, RHFTextField} from '../components/hook-form';
 import Iconify from '../components/iconify';
 import Logo from '../components/logo';
 //
@@ -34,10 +34,10 @@ function UserInviteLanding() {
   const { enqueueSnackbar } = useSnackbar();
   const expired = new Date(expiry).getTime() > new Date().getTime();
   const { verifiedInvite} = useSelector((state) => state.user);
-  const [phone, setPhone] = useState(verifiedInvite?.phone);
-
+  
   const ChangePassWordSchema = Yup.object().shape({
     fullName:Yup.string().trim().max(50, 'Name must be less than 50 characters').required('Name is required'),
+    phone: Yup.string().label('Phone Number'),
     password: Yup.string().trim()
       .min(6, 'Password must be at least 6 characters').max(18, 'Password must be less than 18 characters').required('Password is required'),
     confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match').required('Please confirm password'),
@@ -134,17 +134,7 @@ function UserInviteLanding() {
             <RHFTextField name="customerName" label="Customer" disabled/>
             <RHFTextField name="contactName" label="Contact" disabled/>
             <RHFTextField name="fullName" label="Full Name*" />
-            <MuiTelInput
-              name="phone"
-              label="Phone Number"
-              flagSize="medium"
-              value={phone || defaultValues?.phone}
-              defaultCountry="NZ"
-              onChange={(newValue)=>setPhone(newValue)}
-              inputProps={{maxLength:13}}
-
-              forceCallingCode
-            />
+            <RHFPhoneInput name="phone" label="Phone Number" />
           </Box>
             <RHFTextField name="login" label="Login" disabled />
             <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)'}}>
