@@ -64,7 +64,7 @@ export default function SecurityUserEditForm() {
       machines: securityUser?.machines || [],
       isActive: securityUser?.isActive,
       multiFactorAuthentication: securityUser?.multiFactorAuthentication,
-      currentEmployee: securityUser?.currentEmployee
+      // currentEmployee: securityUser?.currentEmployee
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [ securityUser ]
@@ -245,7 +245,7 @@ const onChangeContact = (contact) => {
             <Grid item md={12} display="flex">
               <RHFSwitch name="isActive" label="Active" />
               <RHFSwitch name="multiFactorAuthentication" label="Multi-Factor Authentication" />
-              <RHFSwitch name="currentEmployee" label="Current Employee" />
+              {/* <RHFSwitch name="currentEmployee" label="Current Employee" /> */}
             </Grid>
 
             <Stack sx={{ mt: 3 }}>

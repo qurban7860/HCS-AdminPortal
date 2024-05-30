@@ -143,14 +143,13 @@ const onChangePage = (event, newPage) => {
     const insertIndex = 4; // Index after which you want to insert the new objects
     TABLE_HEAD.splice(insertIndex, 0,// 0 indicates that we're not removing any elements
     { id: 'stockNumber', visibility: 'xs2', label: 'Stock No.', align: 'left' },
-    { id: 'productDrawings.serialNumbers', visibility: 'xs2', label: 'Machines', align: 'left' },
+    { id: 'productDrawings', visibility: 'xs2', label: 'Machines', align: 'left' },
     );
   }
 
   if (!customerPage && !machineDrawingPage && !machineDrawings) {
     const insertIndex = 4; // Index after which you want to insert the new objects
     TABLE_HEAD.splice(insertIndex, 0,// 0 indicates that we're not removing any elements
-      // { id: 'customer.name', visibility: 'md3', label: 'Customer', align: 'left' },
       { id: 'machine.serialNo', visibility: 'md4', label: 'Machine', align: 'left' }
     );
   }

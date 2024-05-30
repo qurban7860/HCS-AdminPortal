@@ -165,7 +165,7 @@ export default function CustomerEditForm() {
                     />
                   </Box>
                   
-                  <RHFTextField name="ref" label="Reference Number"  />
+                  <RHFTextField name="ref" label="Reference ID"  />
 
               </Stack>
                 </Card>

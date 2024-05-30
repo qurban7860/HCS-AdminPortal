@@ -134,7 +134,7 @@ export function getCustomerJiras(ref, page, pageSize ) {
         page,
         pageSize  
       }
-      const response = await axios.get(`${CONFIG.SERVER_URL}/jira/tickets?orderBy=-created&startAt=0&maxResults=1`, { params } );
+      const response = await axios.get(`${CONFIG.SERVER_URL}/jira/tickets?orderBy=-created&startAt=0&maxResults=${pageSize}`, { params } );
       dispatch(slice.actions.getCustomerJiraRecordsSuccess(response.data));
     } catch (error) {
       console.log(error);

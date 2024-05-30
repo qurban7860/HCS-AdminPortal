@@ -160,7 +160,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
       await dispatch(getContacts(customerId));
       await navigate(PATH_CRM.customers.contacts.view( customerId, id ))
       await reset();
-      enqueueSnackbar(Snacks.SAVE_SUCCESS);
+      enqueueSnackbar('Contact updated successfully!');
     } catch (err) {
       enqueueSnackbar(err, { variant: 'error' });
       console.error(err);

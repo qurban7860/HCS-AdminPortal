@@ -30,14 +30,15 @@ import {
 import { fDateTime } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import CustomerTabContainer from '../customers/util/CustomerTabContainer';
+import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'fields?.created', label: 'Date', align: 'left' },
+  { id: 'fields.created', label: 'Date', align: 'left' },
   { id: 'key', label: 'Ticket No.', align: 'left' },
-  { id: 'fields?.status?.name', label: 'Status', align: 'left' },
-  { id: 'fields?.summary', label: 'Subject', align: 'left' },
+  { id: 'fields.summary', label: 'Subject', align: 'left' },
+  { id: 'fields.status.name', label: 'Status', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------
@@ -69,7 +70,9 @@ export default function CustomerJiraList(){
   const [ isCreatedAt, setIsCreatedAt ] = useState(false);
 
   useLayoutEffect(() => {
-        dispatch(getCustomerJiras(customer?.ref, page, rowsPerPage ));
+        if(customer?.ref){
+          dispatch(getCustomerJiras(customer?.ref, page, rowsPerPage));
+        }
         return () => {
           dispatch(resetCustomerJiraRecords());
         }
@@ -117,8 +120,10 @@ export default function CustomerJiraList(){
     setFilterStatus(event.target.value);
   };
 
-  const handleViewRow = async (url) => window.open(url, '_blank');
-
+  const handleViewRow = (key) => {
+    window.open(`${CONFIG.JIRA_URL}${key}`, '_blank');
+  }
+  
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
@@ -161,7 +166,7 @@ export default function CustomerJiraList(){
                         <CustomerJiraTableRow
                           key={row._id}
                           row={row}
-                          onViewRow={(url) => handleViewRow(url)}
+                          onViewRow={handleViewRow}
                           selected={selected.includes(row._id)}
                           selectedLength={selected.length}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
