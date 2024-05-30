@@ -38,8 +38,8 @@ const initialState = {
   newConnectedMachines: [],
   reportHiddenColumns: {
                         "name": false,
-                        "machineModel": false,
-                        "customer": false,
+                        "machineModel.name": false,
+                        "customer.name": false,
                         "installationDate": false,
                         "shippingDate": false,
                         "manufactureDate": true,

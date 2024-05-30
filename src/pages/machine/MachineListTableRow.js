@@ -88,10 +88,9 @@ export default function MachineListTableRow({
         param={serialNo}
         isVerified={verifications?.length > 0}
       />
-      
       { useScreenSize('lg') && !hiddenColumns?.name && <TableCell>{name || ''}</TableCell>}
-      {  useScreenSize('sm') && !hiddenColumns?.machineModel && <TableCell >{ machineModel?.name || ''}</TableCell>}
-      {  useScreenSize('lg') &&  !hiddenColumns?.customer &&
+      {  useScreenSize('sm') && !hiddenColumns['machineModel.name'] && <TableCell>{ machineModel?.name || ''}</TableCell>}
+      {  useScreenSize('lg') &&  !hiddenColumns['customer.name'] &&
         <LinkDialogTableCell onClick={handleCustomerDialog} align='center' param={customer?.name}/>  
       }
       {  useScreenSize('lg') && !hiddenColumns?.installationDate && <TableCell >{fDate(installationDate)}</TableCell>}
