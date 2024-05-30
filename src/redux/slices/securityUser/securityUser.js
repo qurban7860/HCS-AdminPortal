@@ -307,7 +307,8 @@ export function getActiveSecurityUsers(type) {
       const query = {
         params: {
           isArchived: false,
-          isActive: true
+          isActive: true,
+          invitationStatus: false,
         }
       }
 
@@ -335,7 +336,8 @@ export function getSecurityUsers() {
       const response = await axios.get(`${CONFIG.SERVER_URL}security/users`,
       {
         params: {
-          isArchived: false
+          isArchived: false,
+          invitationStatus: false
         }
       }
       );
