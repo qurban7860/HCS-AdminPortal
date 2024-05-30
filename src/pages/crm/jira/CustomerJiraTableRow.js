@@ -7,7 +7,6 @@ import { fDate, fDateTime } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
 import { StyledTableRow } from '../../../theme/styles/default-styles'
-// import Chip from '../../../theme/overrides/Chip';
 
 // ----------------------------------------------------------------------
 
@@ -35,12 +34,12 @@ export default function CustomerJiraTableRow({
 }) {
 
   const { id, self, key, fields, expand } = row;
-
   return (
       <StyledTableRow hover selected={selected}>
         <TableCell align="left">{fDateTime(fields?.created) || ''}</TableCell>
         <LinkTableCell align="left" onClick={() => onViewRow( key )} param={key || ''} />
         <TableCell align="left">{fields?.summary || ''}</TableCell>
+        <TableCell align="left">{fields?.customfield_10069 || ''}</TableCell>
         <TableCell align="left">{fields?.status?.statusCategory?.name && <Chip sx={getJiraStatusSX(fields)} label={fields?.status?.statusCategory?.name || ''} />}</TableCell>
       
       </StyledTableRow>
