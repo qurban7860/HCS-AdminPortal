@@ -8,6 +8,10 @@ function isNumeric(value) {
   return !isNaN(value) && !isNaN(parseFloat(value));
 }
 
+function isValidDate(value) {
+  return !isNaN(Date.parse(value));
+}
+
 function getValue(obj, orderBy) {
   if (orderBy.includes('[]')) {
     const orderByArray = orderBy.split('.');
@@ -32,6 +36,10 @@ function getValue(obj, orderBy) {
 function ascending(a, b, orderBy) {
   const aValue = getValue(a, orderBy);
   const bValue = getValue(b, orderBy);
+  
+  if (isValidDate(aValue) && isValidDate(bValue)) {
+    return new Date(aValue) - new Date(bValue);
+  }
 
   if (isNumeric(aValue) && isNumeric(bValue)) {
     return parseFloat(aValue) - parseFloat(bValue);
@@ -52,7 +60,11 @@ function ascending(a, b, orderBy) {
 function descending(a, b, orderBy) {
   const aValue = getValue(a, orderBy);
   const bValue = getValue(b, orderBy);
-
+  
+  if (isValidDate(aValue) && isValidDate(bValue)) {
+    return new Date(bValue) - new Date(aValue);
+  }
+  
   if (isNumeric(aValue) && isNumeric(bValue)) {
     return parseFloat(bValue) - parseFloat(aValue);
   }

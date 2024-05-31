@@ -70,7 +70,9 @@ export default function MachineJiraList(){
   const [ isCreatedAt, setIsCreatedAt ] = useState(false);
 
   useLayoutEffect(() => {
-        dispatch(getMachineJiras(machine?.serialNo, page, rowsPerPage ));
+        if(machine?.serialNo){
+          dispatch(getMachineJiras(machine?.serialNo, page, rowsPerPage ));
+        }
         return () => {
           dispatch(resetMachineJiraRecords());
         }
@@ -78,9 +80,9 @@ export default function MachineJiraList(){
 
   useEffect(() => {
     if (initial) {
-      setTableData(machineJiras?.issues || [] );
+      setTableData(machineJiras?.issues || []);
     }
-  }, [machineJiras?.issues, initial]);
+  }, [machineJiras, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -194,21 +196,24 @@ export default function MachineJiraList(){
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   const stabilizedThis =  inputData && inputData.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
+  stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
+  
 
   inputData = stabilizedThis.map((el) => el[0]);
-  // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
 
   if (filterName) {
     inputData = inputData.filter(
       (jira) =>
       jira?.id?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
       jira?.key?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-      jira?.expand?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+      jira?.expand?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+      fDateTime(jira?.fields?.created)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+      jira?.fields?.summary?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+      jira?.fields?.status?.statusCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 

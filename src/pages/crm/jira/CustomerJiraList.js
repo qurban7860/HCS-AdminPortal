@@ -204,14 +204,17 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-  // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
 
   if (filterName) {
     inputData = inputData.filter(
       (jira) =>
-      jira?.id?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-      jira?.key?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-      jira?.expand?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+        jira?.id?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        jira?.key?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        jira?.expand?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDateTime(jira?.fields?.created)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        jira?.fields?.summary?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        jira?.fields?.customfield_10069?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        jira?.fields?.status?.statusCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 
