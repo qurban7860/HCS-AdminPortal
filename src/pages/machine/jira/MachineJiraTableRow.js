@@ -37,7 +37,7 @@ export default function MachineJiraTableRow({
 
   return (
       <StyledTableRow hover selected={selected}>
-        <TableCell align="left">{fDateTime(fields?.created) || ''}</TableCell>
+        <TableCell align="left">{fDateTime(fields?.created)}</TableCell>
         <LinkTableCell align="left" onClick={() => onViewRow( key )} param={key || ''} />
         <TableCell align="left">{fields?.summary || ''}</TableCell>
         <TableCell align="left">{fields?.status?.statusCategory?.name && <Chip sx={getJiraStatusSX(fields)} label={fields?.status?.statusCategory?.name || ''} />}</TableCell>
