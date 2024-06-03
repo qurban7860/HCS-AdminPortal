@@ -200,7 +200,7 @@ export default function CalendarPage() {
       if (selectedEvent && selectedEvent?.extendedProps?._id) {
         await dispatch(setEventModel(false));
         await dispatch(deleteEvent(selectedEvent?.extendedProps?._id));
-        await dispatch(getEvents(date, selectedCustomer?._id, selectedContact?._id ));
+        // await dispatch(getEvents(date, selectedCustomer?._id, selectedContact?._id ));
       }
       enqueueSnackbar('Event Deleted Successfully!');
     } catch (error) {

@@ -87,7 +87,7 @@ const slice = createSlice({
 
     // DELETE EVENTS
     deleteEventSuccess(state, action) {
-      const eventId = action.payload;
+      const eventId = action.payload._id;
       state.events = state.events.filter((event) => event.id !== eventId);
     },
 
@@ -255,8 +255,9 @@ export function deleteEvent(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-       await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, { isArchived: true, });
-    } catch (error) {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}calender/events/${id}`, { isArchived: true, });
+      await dispatch(slice.actions.deleteEventSuccess(response.data.Event));
+      } catch (error) {
       dispatch(slice.actions.hasError(error?.Message));
       throw error;
     }
