@@ -186,35 +186,9 @@ export function createEvent(params) {
     dispatch(slice.actions.startLoading());
     try {
       
-      if (params?.date && !params?.allDay) {
-        const eventDate = new Date(params.date);
-
-        const startTime = params.start ? new Date(params.start) : null;
-        if (startTime) {
-          startTime.setFullYear(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate());
-        }
-
-        const endTime = params.end ? new Date(params.end) : null;
-        if (endTime) {
-          endTime.setFullYear(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate());
-        }
-
-        if (startTime && endTime && startTime > endTime) {
-          // Add a day to endTime if endTime is less than startTime
-          endTime.setDate(endTime.getDate() + 1);
-        }
-      
-
-        params.start = startTime;
-        params.end = endTime;
-      }else{
-        params.start = new Date(new Date().setHours(7, 0, 0));
-        params.end = new Date(new Date().setHours(18, 0, 0));
-      }
-
       const data = {
-        start: params?.start,
-        end: params?.end,
+        start: params?.start_time,
+        end: params?.end_time,
         customer: params?.customer?._id || null,
         machines: params?.machines?.map((machine)=> machine?._id) || [] ,
         site: params?.site?._id || null,
@@ -253,35 +227,9 @@ export function updateEvent(id, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-
-      if (params?.date && !params?.allDay) {
-        const eventDate = new Date(params.date);
-
-        const startTime = params.start ? new Date(params.start) : null;
-        if (startTime) {
-          startTime.setFullYear(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate());
-        }
-
-        const endTime = params.end ? new Date(params.end) : null;
-        if (endTime) {
-          endTime.setFullYear(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate());
-        }
-
-        if (startTime && endTime && startTime > endTime) {
-          // Add a day to endTime if endTime is less than startTime
-          endTime.setDate(endTime.getDate() + 1);
-        }
-
-        params.start = startTime;
-        params.end = endTime;
-      }else{
-        params.start = new Date(new Date().setHours(7, 0, 0));
-        params.end = new Date(new Date().setHours(18, 0, 0));
-      }
-
       const data = {
-        start: params?.start,
-        end: params?.end,
+        start: params?.start_time,
+        end: params?.end_time,
         customer: params?.customer?._id || null,
         machines: params?.machines?.map((machine)=> machine?._id) || [] ,
         site: params?.site?._id || null,
