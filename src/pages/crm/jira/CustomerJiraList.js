@@ -38,7 +38,8 @@ const TABLE_HEAD = [
   { id: 'fields.created', label: 'Date', align: 'left' },
   { id: 'key', label: 'Ticket No.', align: 'left' },
   { id: 'fields.summary', label: 'Subject', align: 'left' },
-  { id: 'fields.customfield_10069', label: 'Machine', align: 'left' },
+  { id: 'fields.customfield_10069', label: 'Serial No', align: 'left' },
+  { id: 'fields.customfield_10070.value', label: 'Machine', align: 'left' },
   { id: 'fields.status.name', label: 'Status', align: 'left' },
 ];
 

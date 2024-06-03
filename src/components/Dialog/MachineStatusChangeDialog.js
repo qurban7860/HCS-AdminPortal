@@ -30,7 +30,7 @@ function MachineStatusChangeDialog() {
   const { machine, machineStatusChangeDialog } = useSelector((state) => state.machine);
   const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
   const [ updateConnectedMachines, setUpdateConnectedMachines ] = useState(false);
-  const [ dateLabel, setDateLabel ] = useState('Date');
+  const [ dateLabel, setDateLabel ] = useState(null);
 
   useEffect(()=> {
     dispatch(getActiveMachineStatuses(cancelTokenSource))
@@ -102,7 +102,7 @@ function MachineStatusChangeDialog() {
                 <RHFAutocomplete
                   name="status"
                   label="Status*"
-                  options={activeMachineStatuses.filter((st) => st?.slug !== 'intransfer')}
+                  options={activeMachineStatuses.filter((st) => st?.slug !== 'intransfer' && st?.slug !== 'transferred')}
                   getOptionDisabled={(option) =>
                     option._id === machine?.status?._id
                   }
@@ -113,14 +113,14 @@ function MachineStatusChangeDialog() {
 
                       if(newValue?.name?.toUpperCase()==='ASSEMBLY'){
                         setDateLabel('Manufacture Date')
-                      }else if(newValue?.name?.toUpperCase()==='FREIGHT'){
+                      }else if(newValue?.name?.toUpperCase()==='FREIGHT' || newValue?.name?.toUpperCase()==='READY FOR SHIPMENT'){
                         setDateLabel('Shipping Date')
                       }else if(newValue?.name?.toUpperCase()==='COMMISSIONED'){
                         setDateLabel('Installation Date')
                       }else if(newValue?.name?.toUpperCase()==='DECOMMISSIONED'){
                         setDateLabel('Decommissioned Date')
-                      }else {
-                        setDateLabel('Date')
+                      }else{
+                        setDateLabel(null)
                       }
                     } 
 
@@ -129,7 +129,7 @@ function MachineStatusChangeDialog() {
                   getOptionLabel={(option) => `${option.name || ''}`}
                   renderOption={(props, option) => (<li {...props} key={option?._id}> {option.name && option.name} </li> )}
                 />
-                <RHFDatePicker inputFormat='dd/MM/yyyy' name="date" label={`${dateLabel} *`} />
+                { dateLabel && <RHFDatePicker inputFormat='dd/MM/yyyy' name="date" label={`${dateLabel} *`} />}
             </Box> 
         </FormProvider>
       </DialogContent>

@@ -40,12 +40,12 @@ const initialState = {
                         "name": false,
                         "machineModel.name": false,
                         "customer.name": false,
-                        "installationDate": false,
+                        "installationDate": true,
                         "shippingDate": false,
                         "manufactureDate": true,
                         "status": false,
                         "profiles": false,
-                        "isActive": false
+                        "isActive": true
                     },
 };
 
