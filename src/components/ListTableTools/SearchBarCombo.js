@@ -66,6 +66,8 @@ function SearchBarCombo({
   isPm2LogTypes,
   handleRefresh,
   handleFullScreen,
+  filterStatus,
+  onFilterStatus,
   ...other
 }) {
   
@@ -296,6 +298,30 @@ function SearchBarCombo({
                 <MenuItem key="all" value="all">All</MenuItem>
                 <MenuItem key="verified" value="active">Active</MenuItem>
                 <MenuItem key="unverified" value="inActive">In-Active</MenuItem>
+                </Select>
+            </FormControl>
+            </Stack>
+          </Grid>}
+
+          {onFilterStatus &&
+          <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+            <Stack alignItems="flex-start">
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Status</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                size='small'
+                name="status"
+                value={filterStatus}
+                label="Status"
+                onChange={onFilterStatus}
+              >
+                <MenuItem key="all" value="all">All</MenuItem>
+                <MenuItem key="open" value="open">Open</MenuItem>
+                <MenuItem key="to-do" value="to-do">To Do</MenuItem>
+                <MenuItem key="in-progress" value="in-progress">In Progress</MenuItem>
+                <MenuItem key="done" value="done">Done</MenuItem>
                 </Select>
             </FormControl>
             </Stack>
@@ -688,6 +714,9 @@ SearchBarCombo.propTypes = {
   handleRefresh: PropTypes.func,
   isPm2LogTypes: PropTypes.bool,
   handleFullScreen: PropTypes.func,
+  filterStatus: PropTypes.string,
+  onFilterStatus: PropTypes.func,
+  
 };
 
 export default SearchBarCombo;

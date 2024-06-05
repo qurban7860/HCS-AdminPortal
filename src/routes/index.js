@@ -393,6 +393,7 @@ import {
   ErrorPage,
   BlankPage,
   PermissionDeniedPage,
+  JiraList,
 } from './elements';
 
 // ----------------------------------------------------------------------
@@ -479,6 +480,19 @@ export default function Router() {
         { path: 'machineByModels', element: <MachineByModelsView /> },
         { path: 'machineByYears', element: <MachineByYearsView /> },
         { path: 'permission-denied', element: <PermissionDeniedPage /> },
+      ],
+    },
+
+    // --------------------- CALENDAR  ----------------------
+    {
+      path: 'jira',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children: [
+        { element: <JiraList />, index: true },
       ],
     },
 
