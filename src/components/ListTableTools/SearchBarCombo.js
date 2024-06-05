@@ -317,11 +317,11 @@ function SearchBarCombo({
                 label="Status"
                 onChange={onFilterStatus}
               >
-                <MenuItem key="all" value="all">All</MenuItem>
-                <MenuItem key="open" value="open">Open</MenuItem>
-                <MenuItem key="to-do" value="to-do">To Do</MenuItem>
-                <MenuItem key="in-progress" value="in-progress">In Progress</MenuItem>
-                <MenuItem key="done" value="done">Done</MenuItem>
+                <MenuItem key="all" value="All">All</MenuItem>
+                <MenuItem key="open" value="Open">Open</MenuItem>
+                <MenuItem key="to-do" value="To Do">To Do</MenuItem>
+                <MenuItem key="in-progress" value="In Progress">In Progress</MenuItem>
+                <MenuItem key="done" value="Done">Done</MenuItem>
                 </Select>
             </FormControl>
             </Stack>
