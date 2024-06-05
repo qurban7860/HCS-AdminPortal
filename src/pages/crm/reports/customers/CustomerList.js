@@ -24,29 +24,42 @@ import {
   TableSkeleton,
   TableHeadCustom,
   TablePaginationCustom,
+  TablePaginationFilter,
+  TableHeadFilter,
 } from '../../../../components/table';
 import Scrollbar from '../../../../components/scrollbar';
-import ConfirmDialog from '../../../../components/confirm-dialog';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
 import { FORMLABELS } from '../../../../constants/default-constants';
 
 // sections
 import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
-import { getCustomers, resetCustomers, resetCustomer, ChangePage, ChangeRowsPerPage, setFilterBy, setVerified, setExcludeReporting } from '../../../../redux/slices/customer/customer';
+import { getCustomers, 
+  resetCustomers, 
+  resetCustomer, 
+  ChangePage, 
+  ChangeRowsPerPage, 
+  setFilterBy, 
+  setVerified, 
+  setExcludeReporting, 
+  setReportHiddenColumns, 
+  getCustomer,
+  setCustomerDialog} from '../../../../redux/slices/customer/customer';
 import { Cover } from '../../../../components/Defaults/Cover';
 import TableCard from '../../../../components/ListTableTools/TableCard';
 import { fDate } from '../../../../utils/formatTime';
 import { useSnackbar } from '../../../../components/snackbar';
 import { exportCSV } from '../../../../utils/exportCSV';
+import CustomerDialog from '../../../../components/Dialog/CustomerDialog';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Customer', align: 'left' },
+  { id: 'name', label: 'Customer', align: 'left', hideable:false },
   { id: 'clientCode', label: 'Code', align: 'left' },
   { id: 'tradingName', visibility: 's1', label: 'Trading Name', align: 'left' },
-  { id: 'mainSite.address.country', visibility: 'xs2', label: 'Address', align: 'left' },
+  { id: 'groupCustomer.name', visibility: 's1', label: 'Group Customer', align: 'left' },
+  { id: 'address', visibility: 'xs2', label: 'Address', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'left' },
 ];
@@ -76,8 +89,7 @@ export default function CustomerList({ isArchived }) {
 
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  const [openConfirm, setOpenConfirm] = useState(false);
-  const { customers, filterBy, verified, excludeReporting, page, rowsPerPage, isLoading } = useSelector((state) => state.customer);
+  const { customers, reportHiddenColumns, filterBy, verified, excludeReporting, page, rowsPerPage, isLoading } = useSelector((state) => state.customer);
   const [filterVerify, setFilterVerify] = useState(verified);
   const [filterExcludeRepoting, setFilterExcludeRepoting] = useState(excludeReporting);
   const [filterName, setFilterName] = useState(filterBy);
@@ -112,8 +124,6 @@ export default function CustomerList({ isArchived }) {
   const denseHeight = 60;
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
-
-  const handleCloseConfirm = () => setOpenConfirm(false);
 
   const debouncedSearch = useRef(debounce((value) => {
       dispatch(ChangePage(0))
@@ -170,15 +180,21 @@ export default function CustomerList({ isArchived }) {
 
   const [exportingCSV, setExportingCSV] = useState(false);
   const onExportCSV = async (fetchAllContacts, fetchAllSites) => {
-
-    
-
     const response = dispatch(await exportCSV( 'Customers' ));
     response.then((res) => {
         setExportingCSV(false);
       enqueueSnackbar(res.message, {variant:`${res.hasError?"error":""}`});
     });
   };
+
+  const handleHiddenColumns = async (arg) => {
+    dispatch(setReportHiddenColumns(arg))
+  };
+
+  const handleCustomerDialog = (id) => {
+    dispatch(getCustomer(id))
+    dispatch(setCustomerDialog(true))
+  }
 
   return (
     <Container maxWidth={false}>
@@ -204,7 +220,10 @@ export default function CustomerList({ isArchived }) {
           isArchived={isArchived}
         />
 
-        {!isNotFound && <TablePaginationCustom
+        {!isNotFound && <TablePaginationFilter
+          columns={TABLE_HEAD}
+          hiddenColumns={reportHiddenColumns}
+          handleHiddenColumns={handleHiddenColumns}
           count={customers?customers.length : 0}
           page={page}
           rowsPerPage={rowsPerPage}
@@ -213,13 +232,13 @@ export default function CustomerList({ isArchived }) {
         />}
         
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-
           <Scrollbar>
             <Table size="small" sx={{ minWidth: 360 }}>
-              <TableHeadCustom
+              <TableHeadFilter
                 order={order}
                 orderBy={orderBy}
                 headLabel={TABLE_HEAD}
+                hiddenColumns={reportHiddenColumns}
                 onSort={onSort}
               />
 
@@ -229,11 +248,13 @@ export default function CustomerList({ isArchived }) {
                   .map((row, index) =>
                     row ? (
                       <CustomerListTableRow
+                        hiddenColumns={reportHiddenColumns}
                         key={row._id}
                         row={row}
                         selected={selected.includes(row._id)}
                         onSelectRow={() => onSelectRow(row._id)}
                         onViewRow={() => handleViewRow(row._id)}
+                        onViewGroupCustomer={() => handleCustomerDialog(row?.groupCustomer?._id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         isArchived={isArchived}
                       />
@@ -256,29 +277,7 @@ export default function CustomerList({ isArchived }) {
         />}
 
       </TableCard>
-
-      <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to Archive <strong> {selected.length} </strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              // handleDeleteRows(selected);
-              handleCloseConfirm();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      />
+      <CustomerDialog />
     </Container>
   );
 }
@@ -308,12 +307,15 @@ function applyFilter({ inputData, comparator, filterName, filterVerify, filterEx
   }
 
   if (filterName) {
+    filterName = filterName.trim();
+    
     inputData = inputData.filter(
       (customer) =>
         customer?.clientCode?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         customer?.tradingName?.some((tName) => tName.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ) ||
         `${customer?.mainSite?.address?.city}, ${customer?.mainSite?.address?.country}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        customer?.groupCustomer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // customer?.mainSite?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // (customer?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(customer?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0

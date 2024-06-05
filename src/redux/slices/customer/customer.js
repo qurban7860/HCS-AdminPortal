@@ -24,6 +24,15 @@ const initialState = {
   excludeReporting: 'included',
   page: 0,
   rowsPerPage: 100,
+  reportHiddenColumns: {
+      "name": false,
+      "clientCode": false,
+      "tradingName": false,
+      "groupCustomer.name": true,
+      "mainSite.address.country": false,
+      "isActive": false,
+      "createdAt": false
+  },
 };
 
 const slice = createSlice({
@@ -182,6 +191,11 @@ const slice = createSlice({
     ChangePage(state, action) {
       state.page = action.payload;
     },
+
+    setReportHiddenColumns(state, action){
+      state.reportHiddenColumns = action.payload;  
+    },
+    
   },
 });
 
@@ -205,6 +219,7 @@ export const {
   ChangeRowsPerPage,
   ChangePage,
   setCustomerDialog,
+  setReportHiddenColumns
 } = slice.actions;
 
 // ----------------------------------------------------------------------

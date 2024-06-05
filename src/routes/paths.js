@@ -14,6 +14,7 @@ const ROOTS_SETTING = '/settings';
 const ROOTS_DOCUMENT = '/documents';
 const ROOTS_MACHINE_DRAWING = '/machineDrawings';
 const ROOTS_SITEMAP = '/site';
+const ROOTS_JIRA = '/jira';
 
 // ----------------------------------------------------------------------
 
@@ -520,6 +521,11 @@ export const PATH_MACHINE_DRAWING = {
       newVersion: ( id ) => path(ROOTS_MACHINE_DRAWING, `/${id}/view/newVersion`),
     },
   }
+};
+
+// ----------------------- JIRA REPORT -----------------------------------------
+export const PATH_JIRA = {
+  root: ROOTS_JIRA,
 };
 
 export const PATH_DOCS = {

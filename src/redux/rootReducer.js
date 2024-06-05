@@ -55,6 +55,7 @@ import machineJiraReducer from './slices/products/machineJira';
 import emailsReducer from './slices/email/emails';
 import eventReducer from './slices/event/event';
 import customerJiraReducer from './slices/customer/customerJira';
+import jiraReducer from './slices/jira/jira';
 
 // ----------------------------------------------------------------------
 
@@ -410,6 +411,12 @@ export const customerJiraPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
+export const jiraPersistConfig = {
+  key: 'jira',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
 
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
@@ -464,7 +471,8 @@ const rootReducer = combineReducers({
   machineJira: persistReducer(machineJiraPersistConfig, machineJiraReducer),
   emails: persistReducer(emailsPersistConfig, emailsReducer),
   event: persistReducer(eventPersistConfig, eventReducer),
-  customerJira: persistReducer(customerJiraPersistConfig, customerJiraReducer),  
+  customerJira: persistReducer(customerJiraPersistConfig, customerJiraReducer),
+  jira: persistReducer(jiraPersistConfig, jiraReducer),  
 });
 
 export default rootReducer;

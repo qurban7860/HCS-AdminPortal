@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { PATH_CRM, PATH_CALENDAR, PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_SETTING, PATH_SITEMAP, PATH_SECURITY, PATH_MACHINE_DRAWING } from '../../../routes/paths';
+import { PATH_CRM, PATH_CALENDAR, PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_SETTING, PATH_SITEMAP, PATH_SECURITY, PATH_MACHINE_DRAWING, PATH_JIRA } from '../../../routes/paths';
 // components
 import Iconify from '../../../components/iconify';
 import SvgColor from '../../../components/svg-color';
@@ -38,6 +38,7 @@ function NavigationConfig() {
     analytics: icon('ic_analytics'),
     dashboard: <Iconify icon="mdi:view-dashboard" />,
     setting: <Iconify icon="ant-design:setting-filled" />,
+    jira: <Iconify icon="simple-icons:jirasoftware" />,
     email: <Iconify icon ="eva:email-fill"/>,
     document: <Iconify icon="lets-icons:file-dock-fill" />,
     drawing: <Iconify icon="streamline:hand-held-tablet-drawing-solid" />,
@@ -73,26 +74,36 @@ function NavigationConfig() {
     const updatedConfig = [...navConfig];
 
     if (isDocumentAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'documents')) {
-      updatedConfig[0].items.splice(3, 0, { title: 'Documents', path: PATH_DOCUMENT.root, icon: ICONS.document });
+      updatedConfig[0].items.push({ title: 'Documents', path: PATH_DOCUMENT.root, icon: ICONS.document });
+      // updatedConfig[0].items.splice(3, 0, { title: 'Documents', path: PATH_DOCUMENT.root, icon: ICONS.document });
     }
 
     if (isDrawingAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'machine drawings')) {
-      updatedConfig[0].items.splice(4, 0, { title: 'Machine Drawings', path: PATH_MACHINE_DRAWING.root, icon: ICONS.drawing });
+      updatedConfig[0].items.push({ title: 'Machine Drawings', path: PATH_MACHINE_DRAWING.root, icon: ICONS.drawing });
+      // updatedConfig[0].items.splice(4, 0, { title: 'Machine Drawings', path: PATH_MACHINE_DRAWING.root, icon: ICONS.drawing });
     }
 
+    // Jira Report
+    updatedConfig[0].items.push({ title: 'Jira Report', path: PATH_JIRA.root, icon: ICONS.jira });
+
     if (isSettingAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'settings')) {
-      updatedConfig[0].items.splice(5, 0, { title: 'Settings', path: PATH_SETTING.root, icon: ICONS.setting });
+      updatedConfig[0].items.push({ title: 'Settings', path: PATH_SETTING.root, icon: ICONS.setting });
+      // updatedConfig[0].items.splice(5, 0, { title: 'Settings', path: PATH_SETTING.root, icon: ICONS.setting });
     }
 
     if (navConfig.some((config) => config.title?.toLowerCase() !== 'Calendar')) {
-      updatedConfig[0].items.splice(6, 0, { title: 'Calendar', path: PATH_CALENDAR.root, icon: ICONS.calendar });
+      updatedConfig[0].items.push({ title: 'Calendar', path: PATH_CALENDAR.root, icon: ICONS.calendar });
+      // updatedConfig[0].items.splice(6, 0, { title: 'Calendar', path: PATH_CALENDAR.root, icon: ICONS.calendar });
     }
 
     if (isSecurityUserAccessAllowed && navConfig.some((config) => config?.title?.toLowerCase() !== 'security')) {
-      updatedConfig[0].items.splice(7, 0, { title: 'Security', path: PATH_SECURITY.root, icon: ICONS.security });
+      updatedConfig[0].items.push({ title: 'Security', path: PATH_SECURITY.root, icon: ICONS.security });
+      // updatedConfig[0].items.splice(7, 0, { title: 'Security', path: PATH_SECURITY.root, icon: ICONS.security });
     }
+
     if ( navConfig.some((config) => config?.title?.toLowerCase() !== 'sites map')) {
-      updatedConfig[0].items.splice(8, 0, { title: 'Sites Map', path: PATH_SITEMAP.app, icon: ICONS.map });
+      updatedConfig[0].items.push({ title: 'Sites Map', path: PATH_SITEMAP.app, icon: ICONS.map });
+      // updatedConfig[0].items.splice(8, 0, { title: 'Sites Map', path: PATH_SITEMAP.app, icon: ICONS.map });
     }
 
     setConfig(updatedConfig);

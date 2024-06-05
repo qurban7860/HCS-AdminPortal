@@ -71,14 +71,6 @@ export default function NavVertical({ openNav, onCloseNav }) {
       >
         <Logo sx={{ width: '70%', margin: '0 auto' }} />
         <Grid sx={{ margin: '0 auto', mb:2, display:'flex', alignItems:'baseline'}}>
-          {/* {CONFIG.ENV.toLocaleLowerCase()!=='live' &&
-            <Typography sx={{background:envColor, borderRadius:'50px', fontSize:'10px', padding:'2px 5px', color:"#FFF"}}>{`${CONFIG.ENV.toLocaleUpperCase()} ${CONFIG.Version}`}</Typography>
-          }
-
-          {CONFIG.ENV.toLocaleLowerCase()==='live' &&
-            <Typography sx={{ color: '#897A69', fontSize:'10px'}}>{CONFIG.Version}</Typography>
-          } */}
-
           <Link
             sx={{ margin: '0 auto', mb: 2, display: 'flex', alignItems: 'baseline', textDecoration: 'none' }}
             href={PATH_SETTING.releases.list}
