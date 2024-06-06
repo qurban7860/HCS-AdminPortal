@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 // components
 import Iconify from '../../components/iconify';
-import { fDate, fDateTime } from '../../utils/formatTime';
+import { fDate } from '../../utils/formatTime';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import { useScreenSize } from '../../hooks/useResponsive';
@@ -48,7 +48,7 @@ export default function JiraTableRow({
 
   return (
     <StyledTableRow hover selected={selected}>
-      <TableCell align="left">{fDateTime(fields?.created)}</TableCell>
+      <TableCell align="left">{fDate(fields?.created)}</TableCell>
       <LinkTableCell align="left" onClick={() => onViewRow( key )} param={key || ''} />
       <TableCell align="left">{fields?.summary || ''}</TableCell>
       <TableCell align="left">{fields?.customfield_10078 || ''}</TableCell>
