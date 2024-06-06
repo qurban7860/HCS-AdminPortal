@@ -12,11 +12,13 @@ import { options } from '../../theme/styles/default-styles';
 JiraTableToolbar.propTypes = {
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
-  filterStatus: PropTypes.array,
+  filterStatus: PropTypes.string,
   onFilterStatus: PropTypes.func,
+  filterPeriod: PropTypes.number,
+  onFilterPeriod: PropTypes.func,
   isFiltered: PropTypes.bool,
   onResetFilter: PropTypes.func,
-  onReload: PropTypes.func,
+  onReload: PropTypes.func
 };
 
 export default function JiraTableToolbar({
@@ -24,14 +26,13 @@ export default function JiraTableToolbar({
   onFilterName,
   filterStatus,
   onFilterStatus,
+  filterPeriod,
+  onFilterPeriod,
   isFiltered,
   onResetFilter,
   onReload
 }) {
   
-  // const navigate = useNavigate();
-  // const dispatch = useDispatch();
-
   return (
     <Stack {...options}>
       <SearchBarCombo
@@ -40,6 +41,8 @@ export default function JiraTableToolbar({
         onChange={onFilterName}
         filterStatus={filterStatus}
         onFilterStatus={onFilterStatus}
+        filterPeriod={filterPeriod}
+        onFilterPeriod={onFilterPeriod}
         onClick={onResetFilter}
         onReload={onReload}
       />

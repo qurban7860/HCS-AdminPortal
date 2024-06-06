@@ -393,7 +393,7 @@ import {
   ErrorPage,
   BlankPage,
   PermissionDeniedPage,
-  JiraList,
+  SupportTickets,
 } from './elements';
 
 // ----------------------------------------------------------------------
@@ -485,14 +485,14 @@ export default function Router() {
 
     // --------------------- CALENDAR  ----------------------
     {
-      path: 'jira',
+      path: 'supportTickets',
       element: (
         <AuthGuard>
           <DashboardLayout />
         </AuthGuard>
       ),
       children: [
-        { element: <JiraList />, index: true },
+        { element: <SupportTickets />, index: true },
       ],
     },
 

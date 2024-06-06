@@ -1,19 +1,21 @@
 
-export const getJiraStatusSX=(fields)=>{
+export const getJiraStatusSX=(fields)=> getJiraStatusChipColor(fields?.status?.statusCategory?.colorName);
+
+export const getJiraStatusChipColor=(colorName)=>{
 
   const jiraStatus = {background:'#919eab29', color:'#000'}
   
-  if(fields?.status?.statusCategory?.colorName === 'blue-gray'){
+  if(colorName === 'blue-gray'){
     jiraStatus.background='#919eab29';
     jiraStatus.color='#000';
   }
 
-  if(fields?.status?.statusCategory?.colorName === 'green'){
+  if(colorName === 'green'){
     jiraStatus.background='#1f8524';
     jiraStatus.color='#fff';
   }
 
-  if(fields?.status?.statusCategory?.colorName === 'yellow'){
+  if(colorName === 'yellow'){
     jiraStatus.background='#2b64cd';
     jiraStatus.color='#fff';
   }

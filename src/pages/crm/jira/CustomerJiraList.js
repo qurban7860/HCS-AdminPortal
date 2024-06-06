@@ -46,7 +46,7 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function CustomerJiraList(){
-  const { initial, customerJiras, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.customerJira );
+  const { initial, customerJiras, filterBy, page, rowsPerPage, totalRows, isLoading } = useSelector((state) => state.customerJira );
   const { customer } = useSelector((state) => state.customer);
   const navigate = useNavigate();
   const { machineId } = useParams();
@@ -70,14 +70,15 @@ export default function CustomerJiraList(){
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [ isCreatedAt, setIsCreatedAt ] = useState(false);
+  const [ total, setTotal ] = useState(0);
 
   useLayoutEffect(() => {
-        if(customer?.ref){
-          dispatch(getCustomerJiras(customer?.ref, page, rowsPerPage));
-        }
-        return () => {
-          dispatch(resetCustomerJiraRecords());
-        }
+    if(customer?.ref){
+      dispatch(getCustomerJiras(customer?.ref, page, rowsPerPage));
+    }
+    return () => {
+      dispatch(resetCustomerJiraRecords());
+    }
   }, [dispatch, customer?.ref, page, rowsPerPage ]);
 
   useEffect(() => {
@@ -113,9 +114,10 @@ export default function CustomerJiraList(){
   }, [debouncedSearch]);
   
   useEffect(()=>{
-      setFilterName(filterBy)
+      setFilterName(filterBy);
+      setTotal(totalRows);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+  },[totalRows])
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -145,7 +147,7 @@ export default function CustomerJiraList(){
           />
 
           {!isNotFound && <TablePaginationCustom
-            count={ customerJiras?.issues?.length || 0 }
+            count={ total }
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
@@ -183,7 +185,7 @@ export default function CustomerJiraList(){
             </Scrollbar>
           </TableContainer>
           {!isNotFound && <TablePaginationCustom
-            count={ customerJiras?.issues?.length || 0 }
+            count={ total }
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}

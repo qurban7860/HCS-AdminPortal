@@ -44,7 +44,7 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function MachineJiraList(){
-  const { initial, machineJiras, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.machineJira );
+  const { initial, machineJiras, filterBy, page, rowsPerPage, totalRows, isLoading } = useSelector((state) => state.machineJira );
   const { machine } = useSelector((state) => state.machine);
   const navigate = useNavigate();
   const { machineId } = useParams();
@@ -68,14 +68,15 @@ export default function MachineJiraList(){
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [ isCreatedAt, setIsCreatedAt ] = useState(false);
+  const [ total, setTotal ] = useState(0);
 
   useLayoutEffect(() => {
-        if(machine?.serialNo){
-          dispatch(getMachineJiras(machine?.serialNo, page, rowsPerPage ));
-        }
-        return () => {
-          dispatch(resetMachineJiraRecords());
-        }
+      if(machine?.serialNo){
+        dispatch(getMachineJiras(machine?.serialNo, page, rowsPerPage ));
+      }
+      return () => {
+        dispatch(resetMachineJiraRecords());
+      }
   }, [dispatch, machine?.serialNo, page, rowsPerPage ]);
 
   useEffect(() => {
@@ -111,9 +112,10 @@ export default function MachineJiraList(){
   }, [debouncedSearch]);
   
   useEffect(()=>{
-      setFilterName(filterBy)
+      setFilterName(filterBy);
+      setTotal(totalRows);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+  },[totalRows])
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -143,7 +145,7 @@ export default function MachineJiraList(){
           />
 
           {!isNotFound && <TablePaginationCustom
-            count={ machineJiras?.issues?.length || 0 }
+            count={ total }
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
@@ -181,7 +183,7 @@ export default function MachineJiraList(){
             </Scrollbar>
           </TableContainer>
           {!isNotFound && <TablePaginationCustom
-            count={ machineJiras?.issues?.length || 0 }
+            count={ total }
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
