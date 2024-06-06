@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { PATH_CRM, PATH_CALENDAR, PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_SETTING, PATH_SITEMAP, PATH_SECURITY, PATH_MACHINE_DRAWING, PATH_JIRA } from '../../../routes/paths';
+import { PATH_CRM, PATH_CALENDAR, PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_SETTING, PATH_SITEMAP, PATH_SECURITY, PATH_MACHINE_DRAWING, PATH_SUPPORT_TICKETS } from '../../../routes/paths';
 // components
 import Iconify from '../../../components/iconify';
 import SvgColor from '../../../components/svg-color';
@@ -38,7 +38,7 @@ function NavigationConfig() {
     analytics: icon('ic_analytics'),
     dashboard: <Iconify icon="mdi:view-dashboard" />,
     setting: <Iconify icon="ant-design:setting-filled" />,
-    jira: <Iconify icon="simple-icons:jirasoftware" />,
+    supportTickets: <Iconify icon="icomoon-free:ticket" />,
     email: <Iconify icon ="eva:email-fill"/>,
     document: <Iconify icon="lets-icons:file-dock-fill" />,
     drawing: <Iconify icon="streamline:hand-held-tablet-drawing-solid" />,
@@ -84,7 +84,7 @@ function NavigationConfig() {
     }
 
     // Jira Report
-    updatedConfig[0].items.push({ title: 'Jira Report', path: PATH_JIRA.root, icon: ICONS.jira });
+    updatedConfig[0].items.push({ title: 'Support Tickets', path: PATH_SUPPORT_TICKETS.root, icon: ICONS.supportTickets });
 
     if (isSettingAccessAllowed && navConfig.some((config) => config.title?.toLowerCase() !== 'settings')) {
       updatedConfig[0].items.push({ title: 'Settings', path: PATH_SETTING.root, icon: ICONS.setting });

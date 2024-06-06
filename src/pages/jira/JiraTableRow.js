@@ -38,16 +38,23 @@ export default function JiraTableRow({
   onDeleteRow,
 }) {
 
-  const { id, self, key, fields, expand } = row;
+  const { id, self, key, Organizations, fields, expand } = row;
   const smScreen = useScreenSize('sm')
   const lgScreen = useScreenSize('lg')
   
+  // fields.customfield_10069 -> Serial No
+  // fields.customfield_10070.value -> Model Name
+  // fields.customfield_10078 -> oragnization
+
   return (
     <StyledTableRow hover selected={selected}>
       <TableCell align="left">{fDateTime(fields?.created)}</TableCell>
       <LinkTableCell align="left" onClick={() => onViewRow( key )} param={key || ''} />
       <TableCell align="left">{fields?.summary || ''}</TableCell>
-      <TableCell align="left">{fields?.status?.statusCategory?.name && <Chip sx={getJiraStatusSX(fields)} label={fields?.status?.statusCategory?.name || ''} />}</TableCell>
+      <TableCell align="left">{fields?.customfield_10078 || ''}</TableCell>
+      <TableCell align="left">{fields?.customfield_10069 || ''}</TableCell>
+      <TableCell align="left">{fields?.customfield_10070?.value || ''}</TableCell>
+      <TableCell align="left">{fields?.status?.statusCategory?.name && <Chip sx={getJiraStatusSX(fields)} label={fields?.status?.name || ''} />}</TableCell>
     </StyledTableRow>
   );
 }

@@ -14,7 +14,7 @@ const ROOTS_SETTING = '/settings';
 const ROOTS_DOCUMENT = '/documents';
 const ROOTS_MACHINE_DRAWING = '/machineDrawings';
 const ROOTS_SITEMAP = '/site';
-const ROOTS_JIRA = '/jira';
+const ROOTS_SUPPORT_TICKETS = '/supportTickets';
 
 // ----------------------------------------------------------------------
 
@@ -524,8 +524,8 @@ export const PATH_MACHINE_DRAWING = {
 };
 
 // ----------------------- JIRA REPORT -----------------------------------------
-export const PATH_JIRA = {
-  root: ROOTS_JIRA,
+export const PATH_SUPPORT_TICKETS = {
+  root: ROOTS_SUPPORT_TICKETS,
 };
 
 export const PATH_DOCS = {

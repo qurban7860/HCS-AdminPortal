@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
+import { fDate } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 const regEx = /^[^2]*/
@@ -16,7 +17,9 @@ const initialState = {
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
-  filterStatus: 'open',
+  totalRows: 0,
+  filterStatus: 'Open',
+  filterPeriod: 3,
 };
 
 const slice = createSlice({
@@ -35,16 +38,23 @@ const slice = createSlice({
       state.initial = true;
     },
     
-    // SET EMPLOYEE RESTRICTED LIST
+    // SET FILTER STATUS
     setFilterStatus(state, action){
       state.filterStatus = action.payload;
     },
+
+    // SET FILTER PERIOD
+    setFilterPeriod(state, action){
+      state.filterPeriod = action.payload;
+    },
+
 
     // GET JiraTickets
     getJiraTicketsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
       state.jiraTickets = action.payload;
+      state.totalRows = action.payload?.total;
       state.initial = true;
     },
     // GET JiraTicket
@@ -104,23 +114,34 @@ export const {
   resetJiraTickets,
   setFilterBy,
   setFilterStatus,
+  setFilterPeriod,
   ChangeRowsPerPage,
   ChangePage,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
 
-export function getJiraTickets(pageSize, status) {
+export function getJiraTickets(page, pageSize, period) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{ 
-      const response = await axios.get(`${CONFIG.SERVER_URL}jira/tickets?startAt=0&maxResults=${pageSize}&state`,
-      {
-        params: {
-          status
-        }
+
+      const params = {};
+      if(period){
+        const startDate = new Date();
+        startDate.setMonth(startDate.getMonth()-period);
+        params.startDate = fDate(startDate, 'yyyy-MM-dd');
       }
-      );
+
+      if(pageSize){
+        params.maxResults = pageSize;
+      }
+
+      if(page && pageSize){
+        params.startAt = page * pageSize;
+      }
+
+      const response = await axios.get(`${CONFIG.SERVER_URL}jira/tickets`,{params});
       if(regEx.test(response.status)){
         dispatch(slice.actions.getJiraTicketsSuccess(response.data));
       }
