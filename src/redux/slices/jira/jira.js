@@ -121,7 +121,7 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getJiraTickets(page, pageSize, period) {
+export function getJiraTickets(period) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{ 
@@ -131,14 +131,6 @@ export function getJiraTickets(page, pageSize, period) {
         const startDate = new Date();
         startDate.setMonth(startDate.getMonth()-period);
         params.startDate = fDate(startDate, 'yyyy-MM-dd');
-      }
-
-      if(pageSize){
-        params.maxResults = pageSize;
-      }
-
-      if(page && pageSize){
-        params.startAt = page * pageSize;
       }
 
       const response = await axios.get(`${CONFIG.SERVER_URL}jira/tickets`,{params});
