@@ -17,6 +17,7 @@ const initialState = {
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
+  totalRows: 0,
 };
 
 const slice = createSlice({
@@ -45,6 +46,7 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.customerJiras = action.payload;
+      state.totalRows = action.payload.total;
       state.initial = true;
     },
     // RESPONSE MESSAGE
@@ -123,18 +125,23 @@ export function getCustomerJira(ref, page, pageSize ) {
 
 // -------------------------- GET RECORD'S ----------------------------------------------------------------------
 
-export function getCustomerJiras(ref, page, pageSize ) {
+export function getCustomerJiras(ref, page, pageSize) {
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
       const params= {
         ref,
       }
-      params.pagination = {
-        page,
-        pageSize  
+
+      if(pageSize){
+        params.maxResults=pageSize;
       }
-      const response = await axios.get(`${CONFIG.SERVER_URL}/jira/tickets?orderBy=-created&startAt=0&maxResults=1`, { params } );
+
+      if(page && pageSize){
+        params.startAt = page * pageSize;
+      }
+      
+      const response = await axios.get(`${CONFIG.SERVER_URL}/jira/tickets?orderBy=-created`, { params } );
       dispatch(slice.actions.getCustomerJiraRecordsSuccess(response.data));
     } catch (error) {
       console.log(error);

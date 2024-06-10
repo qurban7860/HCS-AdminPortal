@@ -30,20 +30,23 @@ import {
 import { fDateTime } from '../../../utils/formatTime';
 import TableCard from '../../../components/ListTableTools/TableCard';
 import CustomerTabContainer from '../customers/util/CustomerTabContainer';
+import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'fields?.created', label: 'Date', align: 'left' },
+  { id: 'fields.created', label: 'Date', align: 'left' },
   { id: 'key', label: 'Ticket No.', align: 'left' },
-  { id: 'fields?.status?.name', label: 'Status', align: 'left' },
-  { id: 'fields?.summary', label: 'Subject', align: 'left' },
+  { id: 'fields.summary', label: 'Subject', align: 'left' },
+  { id: 'fields.customfield_10069', label: 'Serial No', align: 'left' },
+  { id: 'fields.customfield_10070.value', label: 'Machine', align: 'left' },
+  { id: 'fields.status.name', label: 'Status', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------
 
 export default function CustomerJiraList(){
-  const { initial, customerJiras, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.customerJira );
+  const { initial, customerJiras, filterBy, page, rowsPerPage, totalRows, isLoading } = useSelector((state) => state.customerJira );
   const { customer } = useSelector((state) => state.customer);
   const navigate = useNavigate();
   const { machineId } = useParams();
@@ -54,7 +57,7 @@ export default function CustomerJiraList(){
     setPage,
     selected,
     onSort,
-  } = useTable({ defaultOrderBy: 'date', defaultOrder: 'asc' });
+  } = useTable({ defaultOrderBy: 'fields.created', defaultOrder: 'desc' });
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
@@ -67,12 +70,15 @@ export default function CustomerJiraList(){
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [ isCreatedAt, setIsCreatedAt ] = useState(false);
+  const [ total, setTotal ] = useState(0);
 
   useLayoutEffect(() => {
-        dispatch(getCustomerJiras(customer?.ref, page, rowsPerPage ));
-        return () => {
-          dispatch(resetCustomerJiraRecords());
-        }
+    if(customer?.ref){
+      dispatch(getCustomerJiras(customer?.ref, page, rowsPerPage));
+    }
+    return () => {
+      dispatch(resetCustomerJiraRecords());
+    }
   }, [dispatch, customer?.ref, page, rowsPerPage ]);
 
   useEffect(() => {
@@ -108,17 +114,20 @@ export default function CustomerJiraList(){
   }, [debouncedSearch]);
   
   useEffect(()=>{
-      setFilterName(filterBy)
+      setFilterName(filterBy);
+      setTotal(totalRows);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+  },[totalRows])
 
   const handleFilterStatus = (event) => {
     setPage(0);
     setFilterStatus(event.target.value);
   };
 
-  const handleViewRow = async (url) => window.open(url, '_blank');
-
+  const handleViewRow = (key) => {
+    window.open(`${CONFIG.JIRA_URL}${key}`, '_blank');
+  }
+  
   const handleResetFilter = () => {
     dispatch(setFilterBy(''))
     setFilterName('');
@@ -138,7 +147,7 @@ export default function CustomerJiraList(){
           />
 
           {!isNotFound && <TablePaginationCustom
-            count={ customerJiras?.issues?.length || 0 }
+            count={ total }
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
@@ -161,7 +170,7 @@ export default function CustomerJiraList(){
                         <CustomerJiraTableRow
                           key={row._id}
                           row={row}
-                          onViewRow={(url) => handleViewRow(url)}
+                          onViewRow={handleViewRow}
                           selected={selected.includes(row._id)}
                           selectedLength={selected.length}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
@@ -176,7 +185,7 @@ export default function CustomerJiraList(){
             </Scrollbar>
           </TableContainer>
           {!isNotFound && <TablePaginationCustom
-            count={ customerJiras?.issues?.length || 0 }
+            count={ total }
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
@@ -198,14 +207,17 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-  // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
 
   if (filterName) {
     inputData = inputData.filter(
       (jira) =>
-      jira?.id?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-      jira?.key?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-      jira?.expand?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+        jira?.id?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        jira?.key?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        jira?.expand?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDateTime(jira?.fields?.created)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        jira?.fields?.summary?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        jira?.fields?.customfield_10069?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        jira?.fields?.status?.statusCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 

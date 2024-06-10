@@ -17,7 +17,7 @@ import NavigationConfig from './NavigationConfig';
 function NavHorizontal() {
   const theme = useTheme();
   const navConfig = NavigationConfig();
-console.log("NavigationConfig : ",navConfig)
+  
   return (
     <AppBar
       component="nav"

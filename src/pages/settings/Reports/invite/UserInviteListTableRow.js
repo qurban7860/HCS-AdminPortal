@@ -4,7 +4,7 @@ import {
   TableCell,
 } from '@mui/material';
 // utils
-import { fDate } from '../../../../utils/formatTime';
+import { fDate, fDateTime } from '../../../../utils/formatTime';
 // components
 import LinkTableCell from '../../../../components/ListTableTools/LinkTableCell';
 import { useScreenSize } from '../../../../hooks/useResponsive';
@@ -30,7 +30,7 @@ export default function UserInviteListTableRow({
         {/* <TableCell>{row?.receiverInvitationUser?.name} ({row?.receiverInvitationEmail})</TableCell> */}
         { smScreen && <TableCell>{row?.senderInvitationUser?.name}</TableCell>}
         <TableCell>{row.invitationStatus}</TableCell>
-        <TableCell>{fDate(row.inviteExpireTime)}</TableCell>
+        <TableCell>{fDateTime(row.inviteExpireTime)}</TableCell>
         { smScreen && <TableCell>{fDate(row.createdAt)}</TableCell>}
       </StyledTableRow>
   );

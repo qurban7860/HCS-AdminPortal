@@ -36,7 +36,8 @@ import {
   setVerified,
   setMachineTab,
   setAccountManager,
-  setSupportManager
+  setSupportManager,
+  setReportHiddenColumns
 } from '../../redux/slices/products/machine';
 import { resetToolInstalled, resetToolsInstalled } from '../../redux/slices/products/toolInstalled';
 import { resetSetting, resetSettings } from '../../redux/slices/products/machineSetting';
@@ -68,10 +69,11 @@ MachineList.propTypes = {
 const TABLE_HEAD = [
   { id: 'serialNo', label: 'Serial Number', align: 'left', hideable:false },
   { id: 'name', visibility: 'md1',label: 'Name', align: 'left' },
-  { id: 'machineModel', visibility: 'xs1', label: 'Model', align: 'left' },
-  { id: 'customer', visibility: 'md2', label: 'Customer', align: 'left' },
+  { id: 'machineModel.name', visibility: 'xs1', label: 'Model', align: 'left' },
+  { id: 'customer.name', visibility: 'md2', label: 'Customer', align: 'left' },
   { id: 'installationDate', visibility: 'md3', label: 'Installation Date', align: 'left' },
   { id: 'shippingDate', visibility: 'md3', label: 'Shipping Date', align: 'left' },
+  { id: 'manufactureDate', visibility: 'md3', label: 'Manufacture Date', align: 'left'},
   { id: 'status', visibility: 'xs2',  label: 'Status', align: 'left' },
   { id: 'profiles', visibility: 'md2',label: 'Profile', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
@@ -112,7 +114,7 @@ export default function MachineList({ isArchived }) {
     initial, 
     responseMessage,
     reportHiddenColumns
-  } = useSelector( (state) => state.machine );
+  } = useSelector( (state) => state.machine);
 
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -133,7 +135,7 @@ export default function MachineList({ isArchived }) {
     dispatch(getSPContacts( cancelTokenSource ));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
-  
+
   useEffect(()=>{
     dispatch(getMachines(null, null, isArchived, cancelTokenSource ));
     return ()=>{ cancelTokenSource.cancel() };
@@ -252,6 +254,10 @@ export default function MachineList({ isArchived }) {
     });
   };
 
+  const handleHiddenColumns = async (arg) => {
+   dispatch(setReportHiddenColumns(arg))
+  };
+
   return (
     <Container maxWidth={false}>
         <StyledCardContainer>
@@ -278,6 +284,8 @@ export default function MachineList({ isArchived }) {
 
           {!isNotFound && <TablePaginationFilter
             columns={TABLE_HEAD}
+            hiddenColumns={reportHiddenColumns}
+            handleHiddenColumns={handleHiddenColumns}
             count={machines? machines.length : 0}
             page={page}
             rowsPerPage={rowsPerPage}
@@ -285,13 +293,6 @@ export default function MachineList({ isArchived }) {
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
           
-          {/* {!isNotFound && <TablePaginationCustom
-            count={machines? machines.length : 0}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />} */}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
               <Table stickyHeader size="small" sx={{ minWidth: 360 }}>

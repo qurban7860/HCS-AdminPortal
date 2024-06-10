@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 // @mui
-import { TableCell } from '@mui/material';
+import { Chip, TableCell } from '@mui/material';
 // utils
+import { getJiraStatusSX } from '../../../utils/jira';
 import { fDate, fDateTime } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
@@ -34,14 +35,14 @@ export default function CustomerJiraTableRow({
 
   const { id, self, key, fields, expand } = row;
 
-  const jiraServiceManagemntUrl = `https://howickltd.atlassian.net/jira/servicedesk/projects/HWKSC/queues/custom/3/${key}`
-
   return (
       <StyledTableRow hover selected={selected}>
         <TableCell align="left">{fDateTime(fields?.created) || ''}</TableCell>
-        <LinkTableCell align="left" onClick={() => onViewRow( jiraServiceManagemntUrl )} param={key || ''} />
-        <TableCell align="left">{fields?.status?.name || ''}</TableCell>
+        <LinkTableCell align="left" onClick={() => onViewRow( key )} param={key || ''} />
         <TableCell align="left">{fields?.summary || ''}</TableCell>
+        <TableCell align="left">{fields?.customfield_10069 || ''}</TableCell>
+        <TableCell align="left">{fields?.customfield_10070?.value || ''}</TableCell>
+        <TableCell align="left">{fields?.status?.statusCategory?.name && <Chip sx={getJiraStatusSX(fields)} label={fields?.status?.statusCategory?.name || ''} />}</TableCell>
       </StyledTableRow>
   );
 }

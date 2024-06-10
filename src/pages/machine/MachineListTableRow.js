@@ -52,9 +52,9 @@ export default function MachineListTableRow({
     profiles,
     machineModel,
     customer,
-    // instalationSite,
     installationDate,
     shippingDate,
+    manufactureDate,
     status,
     isActive,
     transferredDate,
@@ -88,14 +88,14 @@ export default function MachineListTableRow({
         param={serialNo}
         isVerified={verifications?.length > 0}
       />
-      
       { useScreenSize('lg') && !hiddenColumns?.name && <TableCell>{name || ''}</TableCell>}
-      {  useScreenSize('sm') && !hiddenColumns?.machineModel && <TableCell >{ machineModel?.name || ''}</TableCell>}
-      {  useScreenSize('lg') &&  !hiddenColumns?.customer &&
+      {  useScreenSize('sm') && !hiddenColumns['machineModel.name'] && <TableCell>{ machineModel?.name || ''}</TableCell>}
+      {  useScreenSize('lg') &&  !hiddenColumns['customer.name'] &&
         <LinkDialogTableCell onClick={handleCustomerDialog} align='center' param={customer?.name}/>  
       }
       {  useScreenSize('lg') && !hiddenColumns?.installationDate && <TableCell >{fDate(installationDate)}</TableCell>}
       {  useScreenSize('lg') && !hiddenColumns?.shippingDate && <TableCell >{fDate(shippingDate)}</TableCell>}
+      {  useScreenSize('lg') && !hiddenColumns?.manufactureDate && <TableCell >{fDate(manufactureDate)}</TableCell>}
       {  useScreenSize('sm') && !hiddenColumns?.status &&
         <TableCell>
           <span style={{color:row?.status?.slug==='transferred'?'red':''}}>{status?.name || ''} </span>

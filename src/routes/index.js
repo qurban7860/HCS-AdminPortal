@@ -393,6 +393,7 @@ import {
   ErrorPage,
   BlankPage,
   PermissionDeniedPage,
+  SupportTickets,
 } from './elements';
 
 // ----------------------------------------------------------------------
@@ -479,6 +480,19 @@ export default function Router() {
         { path: 'machineByModels', element: <MachineByModelsView /> },
         { path: 'machineByYears', element: <MachineByYearsView /> },
         { path: 'permission-denied', element: <PermissionDeniedPage /> },
+      ],
+    },
+
+    // --------------------- CALENDAR  ----------------------
+    {
+      path: 'supportTickets',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children: [
+        { element: <SupportTickets />, index: true },
       ],
     },
 

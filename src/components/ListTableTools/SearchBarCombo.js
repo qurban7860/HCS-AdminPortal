@@ -66,6 +66,10 @@ function SearchBarCombo({
   isPm2LogTypes,
   handleRefresh,
   handleFullScreen,
+  filterStatus,
+  onFilterStatus,
+  filterPeriod,
+  onFilterPeriod,
   ...other
 }) {
   
@@ -297,6 +301,47 @@ function SearchBarCombo({
                 <MenuItem key="verified" value="active">Active</MenuItem>
                 <MenuItem key="unverified" value="inActive">In-Active</MenuItem>
                 </Select>
+            </FormControl>
+            </Stack>
+          </Grid>}
+          {onFilterStatus &&
+          <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+            <Stack alignItems="flex-start">
+            <FormControl fullWidth>
+              <InputLabel>Status Category</InputLabel>
+              <Select
+                size='small'
+                name="status"
+                value={filterStatus}
+                label="Status Category"
+                onChange={onFilterStatus}
+              >
+                <MenuItem key="all" value="All">All</MenuItem>
+                <MenuItem key="open" value="Open">All Open</MenuItem>
+                <MenuItem key="to-do" value="To Do">To Do</MenuItem>
+                <MenuItem key="in-progress" value="In Progress">In Progress</MenuItem>
+                <MenuItem key="done" value="Done">Done</MenuItem>
+                </Select>
+            </FormControl>
+            </Stack>
+          </Grid>}
+          {onFilterPeriod &&
+          <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
+            <Stack alignItems="flex-start">
+            <FormControl fullWidth>
+              <InputLabel>Period</InputLabel>
+              <Select
+                size='small'
+                name="period"
+                value={filterPeriod}
+                label="Period"
+                onChange={onFilterPeriod}
+              >
+                <MenuItem key="3" value={3}>Last 3 months</MenuItem>
+                <MenuItem key="6" value={6}>Last 6 months</MenuItem>
+                <MenuItem key="9" value={9}>Last 9 months</MenuItem>
+                <MenuItem key="12" value={12}>Last year</MenuItem>
+              </Select>
             </FormControl>
             </Stack>
           </Grid>}
@@ -688,6 +733,11 @@ SearchBarCombo.propTypes = {
   handleRefresh: PropTypes.func,
   isPm2LogTypes: PropTypes.bool,
   handleFullScreen: PropTypes.func,
+  filterStatus: PropTypes.string,
+  onFilterStatus: PropTypes.func,
+  filterPeriod: PropTypes.number,
+  onFilterPeriod: PropTypes.func,
+  
 };
 
 export default SearchBarCombo;

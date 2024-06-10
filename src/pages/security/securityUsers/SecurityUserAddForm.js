@@ -74,7 +74,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser, isInv
       isActive: true,
       isInvite,
       multiFactorAuthentication: false,
-      currentEmployee: false,
+      // currentEmployee: false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [ currentUser ]
@@ -124,8 +124,10 @@ const { customer, contact } = watch();
       const message = !isInvite ? "User Added Successfully":"User Invitation Sent Successfulllfy";
       const response = await dispatch(addSecurityUser(data, isInvite));
       reset();
-      navigate(PATH_SECURITY.users.view(response.data.user._id));
       enqueueSnackbar(message);
+      if(!isInvite){
+        navigate(PATH_SECURITY.users.view(response.data.user._id));
+      }
     } catch (error) {
         enqueueSnackbar(error, { variant: `error` });
         console.log('Error:', error);
@@ -256,7 +258,7 @@ const { customer, contact } = watch();
                   <RHFSwitch name="multiFactorAuthentication" label="Multi-Factor Authentication" />
                   </>
               ))}
-              <RHFSwitch name="currentEmployee" label="Current Employee" />
+              {/* <RHFSwitch name="currentEmployee" label="Current Employee" /> */}
             </Grid>
             <Stack sx={{ mt: 3 }}>
               <AddFormButtons securityUserPage saveButtonName={isInvite?"Invite":"Save"} isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

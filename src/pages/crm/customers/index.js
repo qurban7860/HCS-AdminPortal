@@ -32,11 +32,11 @@ const TABS = [
         label: 'Machines',
         icon: ICONS.MACHINES.icon,
     },
-    // {
-    //     value: 'jira',
-    //     label: 'Jira',
-    //     icon: ICONS.JIRA.icon,
-    // },
+    {
+        value: 'jira',
+        label: 'Jira',
+        icon: ICONS.JIRA.icon,
+    },
 ];
 
 export default TABS
